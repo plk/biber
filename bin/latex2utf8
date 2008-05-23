@@ -1,0 +1,13 @@
+#!/usr/bin/perl 
+
+use strict;
+use warnings;
+#no warnings 'utf8';
+use LaTeX_Decode;
+use File::Slurp;
+use Encode;
+binmode(STDOUT, ':utf8');
+my $text = read_file($ARGV[0]);
+$text = decode_utf8($text);
+print latex_decode($text);
+
