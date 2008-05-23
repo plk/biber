@@ -48,7 +48,6 @@
 # use lib '/home/francois/dev/biber/LaTeX-Decode/lib'; # this is temporary
 
 use strict;
-#no strict 'refs';
 use warnings;
 no warnings 'utf8';
 use Carp;
@@ -71,27 +70,16 @@ GetOptions(
 use Regexp::Common qw /balanced/;
 #use Data::Dumper;    # for debug only
 
-#use YAML::Syck ; # to read and write hypothetical biblatex yaml format?
-#$YAML::Syck::ImplicitUnicode = 1;
-#use Time::HiRes qw/gettimeofday tv_interval/; # for debugging/optimizing
-#my $iter = 0;
-#my $t0 = [gettimeofday];
-#sub PTOD {
-#     $iter++;
-#     my $elapsed = tv_interval($t0, [gettimeofday]) ;
-#     print "### $iter ### $elapsed\n";
-#}
 use IO::File;
 use LaTeX::Decode;    #new package
 use Encode;
 
-#use open IN => ':utf8', OUT => ':utf8'; ##
 use open IO => ':encoding(utf8)';
 binmode( STDOUT, ':utf8' );
-our $VERSION = "0.1";
-croak usage() if exists $opts->{'help'};
+our $VERSION = "0.2";
+die usage() if exists $opts->{'help'};
 
-croak version() if exists $opts->{'version'};
+die version() if exists $opts->{'version'};
 
 #TODO read config file (e.g. biber.cfg to change default options)
 
