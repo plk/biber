@@ -1,9 +1,9 @@
 #!/usr/bin/perl 
-
+use lib '/home/francois/dev/biblatex-biber/trunk/lib/';
 use strict;
 use warnings;
 #no warnings 'utf8';
-use LaTeX_Decode;
+use LaTeX::Decode;
 use File::Slurp;
 use Encode;
 binmode(STDOUT, ':utf8');
