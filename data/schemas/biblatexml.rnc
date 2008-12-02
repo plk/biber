@@ -84,7 +84,7 @@ BibLaTeXML.common.fields =
 
 
 BibLaTeXML.additional.fields =
-   reprintinfo? &
+   reprintinfo* &
    reviews? &
    topics? &
    remarks?
@@ -154,16 +154,21 @@ BibLaTeXML.additional.fields =
 #########################################################
 ## We now define the biblatexml elements
 
-# these are extensions for multilingual and multiscript bibliographies  
-romanized.or.translated = element romanized { text }? & element translated {text}?    
-romanized.or.uniform = element romanized { text }? & element uniform {text}?
+# many textual element can contain emphasis or superscript elements 
+formattext = (emphasis?, superscript?, text?)*
+emphasis = element emphasis { text }
+superscript = element superscript { text }
 
-abstract = element abstract { text }
-addendum = element addendum { text }
-annotation = element annotation { text }
-booksubtitle = element booksubtitle { text, romanized.or.translated? }
-booktitle = element booktitle { text, romanized.or.translated? }
-booktitleaddon = element booktitleaddon { text, romanized.or.translated? }
+# these are extensions for multilingual and multiscript bibliographies  
+romanized.or.translated = element romanized { formattext }? & element translated {formattext}?    
+romanized.or.uniform = element romanized { formattext }? & element uniform {formattext}?
+
+abstract = element abstract { formattext }
+addendum = element addendum { formattext }
+annotation = element annotation { formattext }
+booksubtitle = element booksubtitle { formattext, romanized.or.translated? }
+booktitle = element booktitle { formattext, romanized.or.translated? }
+booktitleaddon = element booktitleaddon { formattext, romanized.or.translated? }
 chapter = element chapter { text }
 doi = element doi { text }
 eid = element eid { text }
@@ -178,37 +183,37 @@ lccn = element lccn { text } # validate with pattern ?
 ismn = element ismn { text }
 isrn = element isrn { text }
 issn = element issn { text }
-issue = element issue { text, romanized.or.translated? }
-issuetitle = element issuetitle { text, romanized.or.translated? }
-issuetitleaddon = element issuetitleaddon { text, romanized.or.translated? }
-issuesubtitle = element issuesubtitle { text, romanized.or.translated? }
+issue = element issue { formattext, romanized.or.translated? }
+issuetitle = element issuetitle { formattext, romanized.or.translated? }
+issuetitleaddon = element issuetitleaddon { formattext, romanized.or.translated? }
+issuesubtitle = element issuesubtitle { formattext, romanized.or.translated? }
 iswc = element iswc { text }
-journal = element journal { text, romanized.or.translated? }
-journaltitle = element journaltitle { text, romanized.or.translated? }
-journalsubtitle = element journalsubtitle { text, romanized.or.translated? }
+journal = element journal { formattext, romanized.or.translated? }
+journaltitle = element journaltitle { formattext, romanized.or.translated? }
+journalsubtitle = element journalsubtitle { formattext, romanized.or.translated? }
 label = element label { text }
 library = element library { text | user+ }
 user = element user {attribute id { text }, libraryitem+ }
 libraryitem = element item { attribute location {text}?, attribute url {xsd:anyURI}?, text }
-mainsubtitle = element mainsubtitle { text, romanized.or.translated? }
-maintitle = element maintitle { text, romanized.or.translated? }
-maintitleaddon = element maintitleaddon { text, romanized.or.translated? }
+mainsubtitle = element mainsubtitle { formattext, romanized.or.translated? }
+maintitle = element maintitle { formattext, romanized.or.translated? }
+maintitleaddon = element maintitleaddon { formattext, romanized.or.translated? }
 nameaddon = element nameaddon { text, romanized.or.translated? }
-note = element note { text }
+note = element note { formattext }
 number = element number { text }
-origtitle = element origtitle { text, element romanized {text}? }
+origtitle = element origtitle { formattext, element romanized {text}? }
 pagetotal = element pagetotal { text }
 part = element part { text }
-reprinttitle = element reprinttitle { text, romanized.or.translated?}
-series = element series { text, romanized.or.translated? }
+reprinttitle = element reprinttitle { formattext, romanized.or.translated?}
+series = element series { formattext, romanized.or.translated? }
 shorthand = element shorthand { text }
 shorthandintro = element shorthandintro { text }
-shorttitle = element shorttitle { text }
-subtitle = element subtitle { text, romanized.or.translated?}
-title = element title { text, romanized.or.translated?}
-titleaddon = element titleaddon { text, romanized.or.translated?}
+shorttitle = element shorttitle { formattext }
+subtitle = element subtitle { formattext, romanized.or.translated?}
+title = element title { formattext, romanized.or.translated?}
+titleaddon = element titleaddon { formattext, romanized.or.translated?}
 url = element url { xsd:anyURI }
-venue = element venue { text }
+venue = element venue { formattext }
 version = element version { text }
 volume = element volume { text }
 volumes = element volumes { text }
@@ -239,7 +244,9 @@ useprefix = element useprefix { text }
 xref = element xref { text }
 # RANGE FIELDS
 origyear = element origyear { text | range }
-year = element year { text | range }
+year = element year { attlist.year?, (text | range) }
+attlist.year =
+  attribute type { "approximate" }
 range = range.start, range.end
 range.start = element start { text }
 range.end = element end { text }
@@ -267,15 +274,15 @@ location = element location { attlist.lists?, ((text, romanized.or.uniform?) | i
 address = element address { attlist.lists?, ((text, romanized.or.uniform?) | itemb+) }
 organization = element organization { attlist.lists?, ((text, romanized.or.translated?) | itema+) }
 origlocation = element origlocation { attlist.lists?, ((text, romanized.or.uniform?) | itemb+) }
-publisher = element publisher { attlist.lists?, ((text, romanized.or.translated?) | itema+) }
+publisher = element publisher { attlist.lists?, ((formattext, romanized.or.translated?) | itema+) }
 lista = element lista { attlist.lists?, (text | item+) }
 listb = element listb { attlist.lists?, (text | item+) }
 listc = element listc { attlist.lists?, (text | item+) }
 liste = element liste { attlist.lists?, (text | item+) }
 listf = element listf { attlist.lists?, (text | item+) }
-item = element item { text }
-itema = element item { text, romanized.or.translated? }
-itemb = element item { text, romanized.or.uniform? }
+item = element item { formattext }
+itema = element item { formattext, romanized.or.translated? }
+itemb = element item { formattext, romanized.or.uniform? }
 # KEY LISTS
 # TODO add attribute type = babel, xml:lang, ISO-XXX etc 
 language = element language { text | item+ }   #xml:lang ?
@@ -331,7 +338,13 @@ last = element last { text }
 prefix = element prefix { text }
 suffix = element suffix { text }
 keywords |= element keywords { list {xsd:string+} | item+ }  #NB in biblatex this list is comma-separated, here it is separated by whitespace or itemized
-reprintinfo = element reprintinfo { text }
+reprintinfo = element reprintinfo { attlist.reprintinfo | text }
+attlist.reprintinfo |=
+   attribute crossref {text},
+   attribute volume {text}?,
+   attribute pages {text}?,
+   attribute year {text}?,
+   attribute note {text}?
 reviews = element reviews {reviewitem*}
 reviewitem = element item {attlist.review?, text?}
 attlist.review |= 
@@ -342,7 +355,7 @@ attlist.review |=
    attribute crossref {text }?
 topics = element topics { topic* }
 topic = element * {text}
-remarks = element remarks {text|item+}
+remarks = element remarks {formattext|item+}
 ## culture
 ## language
 ## country
@@ -393,13 +406,13 @@ article.electronic = element entry {attlist.article.electronic, (url & title & B
 attlist.article.electronic = attribute id {text}, attribute entrytype { "article" }, attribute type {"electronic"}
 #########################################################
 # for reviews we need attribute ref or title or both
-review = element entry { attlist.review, ((attribute ref { text }|title|(attribute ref { text },title)) & 
-              url? & BibLaTeXML.article.fields) }
+review = element entry { attlist.review & (crossref | title) & 
+              url? & BibLaTeXML.article.fields }
 attlist.review = attribute id {text}, attribute entrytype { "review" }, attribute type {"printed"}?
 #########################################################
 # url mandatory if type is electronic
-review.electronic = element entry { attlist.review.electronic, ((attribute ref { text }|title|(attribute ref { text },title)) & 
-              url & BibLaTeXML.article.fields) }
+review.electronic = element entry { attlist.review.electronic & (crossref | title) &  
+              url & BibLaTeXML.article.fields }
 attlist.review.electronic = attribute id {text}, attribute entrytype { "review" }, attribute type {"electronic"}
 #########################################################
 BibLaTeXML.book.standard.fields =

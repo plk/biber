@@ -177,9 +177,9 @@
   </define>
   <define name="BibLaTeXML.additional.fields">
     <interleave>
-      <optional>
+      <zeroOrMore>
         <ref name="reprintinfo"/>
-      </optional>
+      </zeroOrMore>
       <optional>
         <ref name="reviews"/>
       </optional>
@@ -218,8 +218,8 @@
     
     LITERAL FIELDS (incl. verbatim)
   -->
-  <!-- these are extensions for multilingual and multiscript bibliographies  -->
-  <define name="romanized.or.translated">
+  <!-- many textual element can contain emphasis or superscript elements -->
+  <define name="formattext">
     <a:documentation>non-biblatex fields</a:documentation>
     <!--
       affiliation?,
@@ -263,15 +263,39 @@ topic_works</a:documentation>
     -->
     <a:documentation>
 We now define the biblatexml elements</a:documentation>
+    <zeroOrMore>
+      <optional>
+        <ref name="emphasis"/>
+      </optional>
+      <optional>
+        <ref name="superscript"/>
+      </optional>
+      <optional>
+        <text/>
+      </optional>
+    </zeroOrMore>
+  </define>
+  <define name="emphasis">
+    <element name="emphasis">
+      <text/>
+    </element>
+  </define>
+  <define name="superscript">
+    <element name="superscript">
+      <text/>
+    </element>
+  </define>
+  <!-- these are extensions for multilingual and multiscript bibliographies  -->
+  <define name="romanized.or.translated">
     <interleave>
       <optional>
         <element name="romanized">
-          <text/>
+          <ref name="formattext"/>
         </element>
       </optional>
       <optional>
         <element name="translated">
-          <text/>
+          <ref name="formattext"/>
         </element>
       </optional>
     </interleave>
@@ -280,34 +304,34 @@ We now define the biblatexml elements</a:documentation>
     <interleave>
       <optional>
         <element name="romanized">
-          <text/>
+          <ref name="formattext"/>
         </element>
       </optional>
       <optional>
         <element name="uniform">
-          <text/>
+          <ref name="formattext"/>
         </element>
       </optional>
     </interleave>
   </define>
   <define name="abstract">
     <element name="abstract">
-      <text/>
+      <ref name="formattext"/>
     </element>
   </define>
   <define name="addendum">
     <element name="addendum">
-      <text/>
+      <ref name="formattext"/>
     </element>
   </define>
   <define name="annotation">
     <element name="annotation">
-      <text/>
+      <ref name="formattext"/>
     </element>
   </define>
   <define name="booksubtitle">
     <element name="booksubtitle">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -315,7 +339,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="booktitle">
     <element name="booktitle">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -323,7 +347,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="booktitleaddon">
     <element name="booktitleaddon">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -400,7 +424,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="issue">
     <element name="issue">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -408,7 +432,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="issuetitle">
     <element name="issuetitle">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -416,7 +440,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="issuetitleaddon">
     <element name="issuetitleaddon">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -424,7 +448,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="issuesubtitle">
     <element name="issuesubtitle">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -437,7 +461,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="journal">
     <element name="journal">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -445,7 +469,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="journaltitle">
     <element name="journaltitle">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -453,7 +477,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="journalsubtitle">
     <element name="journalsubtitle">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -497,7 +521,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="mainsubtitle">
     <element name="mainsubtitle">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -505,7 +529,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="maintitle">
     <element name="maintitle">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -513,7 +537,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="maintitleaddon">
     <element name="maintitleaddon">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -529,7 +553,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="note">
     <element name="note">
-      <text/>
+      <ref name="formattext"/>
     </element>
   </define>
   <define name="number">
@@ -539,7 +563,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="origtitle">
     <element name="origtitle">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <element name="romanized">
           <text/>
@@ -559,7 +583,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="reprinttitle">
     <element name="reprinttitle">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -567,7 +591,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="series">
     <element name="series">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -585,12 +609,12 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="shorttitle">
     <element name="shorttitle">
-      <text/>
+      <ref name="formattext"/>
     </element>
   </define>
   <define name="subtitle">
     <element name="subtitle">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -598,7 +622,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="title">
     <element name="title">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -606,7 +630,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="titleaddon">
     <element name="titleaddon">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -619,7 +643,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="venue">
     <element name="venue">
-      <text/>
+      <ref name="formattext"/>
     </element>
   </define>
   <define name="version">
@@ -770,11 +794,19 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="year">
     <element name="year">
+      <optional>
+        <ref name="attlist.year"/>
+      </optional>
       <choice>
         <text/>
         <ref name="range"/>
       </choice>
     </element>
+  </define>
+  <define name="attlist.year">
+    <attribute name="type">
+      <value>approximate</value>
+    </attribute>
   </define>
   <define name="range">
     <ref name="range.start"/>
@@ -992,7 +1024,7 @@ We now define the biblatexml elements</a:documentation>
       </optional>
       <choice>
         <group>
-          <text/>
+          <ref name="formattext"/>
           <optional>
             <ref name="romanized.or.translated"/>
           </optional>
@@ -1070,12 +1102,12 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="item">
     <element name="item">
-      <text/>
+      <ref name="formattext"/>
     </element>
   </define>
   <define name="itema">
     <element name="item">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.translated"/>
       </optional>
@@ -1083,7 +1115,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="itemb">
     <element name="item">
-      <text/>
+      <ref name="formattext"/>
       <optional>
         <ref name="romanized.or.uniform"/>
       </optional>
@@ -1604,8 +1636,26 @@ We now define the biblatexml elements</a:documentation>
   <!-- NB in biblatex this list is comma-separated, here it is separated by whitespace or itemized -->
   <define name="reprintinfo">
     <element name="reprintinfo">
-      <text/>
+      <choice>
+        <ref name="attlist.reprintinfo"/>
+        <text/>
+      </choice>
     </element>
+  </define>
+  <define name="attlist.reprintinfo" combine="choice">
+    <attribute name="crossref"/>
+    <optional>
+      <attribute name="volume"/>
+    </optional>
+    <optional>
+      <attribute name="pages"/>
+    </optional>
+    <optional>
+      <attribute name="year"/>
+    </optional>
+    <optional>
+      <attribute name="note"/>
+    </optional>
   </define>
   <define name="reviews">
     <element name="reviews">
@@ -1659,7 +1709,7 @@ We now define the biblatexml elements</a:documentation>
   <define name="remarks">
     <element name="remarks">
       <choice>
-        <text/>
+        <ref name="formattext"/>
         <oneOrMore>
           <ref name="item"/>
         </oneOrMore>
@@ -1838,15 +1888,11 @@ works
   <define name="review">
     <a:documentation/>
     <element name="entry">
-      <ref name="attlist.review"/>
       <interleave>
+        <ref name="attlist.review"/>
         <choice>
-          <attribute name="ref"/>
+          <ref name="crossref"/>
           <ref name="title"/>
-          <group>
-            <attribute name="ref"/>
-            <ref name="title"/>
-          </group>
         </choice>
         <optional>
           <ref name="url"/>
@@ -1870,15 +1916,11 @@ works
   <define name="review.electronic">
     <a:documentation/>
     <element name="entry">
-      <ref name="attlist.review.electronic"/>
       <interleave>
+        <ref name="attlist.review.electronic"/>
         <choice>
-          <attribute name="ref"/>
+          <ref name="crossref"/>
           <ref name="title"/>
-          <group>
-            <attribute name="ref"/>
-            <ref name="title"/>
-          </group>
         </choice>
         <ref name="url"/>
         <ref name="BibLaTeXML.article.fields"/>
