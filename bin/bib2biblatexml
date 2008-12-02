@@ -9,6 +9,7 @@ use IO::File;
 use Encode;
 use File::Copy;
 
+my $biblatexmlnew = 1; # this is now default FIXME !
 
 use open IO => ':encoding(utf8)';
 binmode( STDOUT, ':utf8' );
@@ -263,7 +264,7 @@ foreach ( keys %bibentries ) {
 # Instantiate an XML::Writer object.  
 my $outfile = $filename; 
 $outfile =~ s/\.bib$//;
-$outfile .= ".biblatexml";
+$outfile .= ".xml";
 if ( -f $outfile ) {
 	move($outfile, "$outfile.bak") or die "Can't move existing $outfile to $outfile.bak!: $!";
 	print "Backuped existing $outfile as $outfile.bak\n";
@@ -383,14 +384,6 @@ for my $id ( sort keys %bibentries ) {
 				$writer->characters($entry->{$field}->[0]);
 				$writer->endTag(); #field
 			}
-		}
-	};
-	
-	foreach my $field (@otherfieldsml) {
-		if ($entry->{$field}) {
-			$writer->startTag("bib:$field");
-			$writer->characters($entry->{$field});
-			$writer->endTag(); # $field
 		}
 	};
 
