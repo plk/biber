@@ -26,6 +26,8 @@ BibLaTeXML.standard.entries =
   | report
   | thesis
   | unpublished
+
+#TODO | set
     
 #BibLaTeXML.custom.entries = empty
 # custom[a-f] 
@@ -155,9 +157,11 @@ BibLaTeXML.additional.fields =
 ## We now define the biblatexml elements
 
 # many textual element can contain emphasis or superscript elements 
-formattext = (emphasis?, superscript?, text?)*
+formattext = (nosort?, emphasis?, superscript?, subscript?, text?)*
 emphasis = element emphasis { text }
 superscript = element superscript { text }
+subscript = element subscript { text }
+nosort = element nosort { text }
 
 # these are extensions for multilingual and multiscript bibliographies  
 romanized.or.translated = element romanized { formattext }? & element translated {formattext}?    
@@ -172,6 +176,8 @@ booktitleaddon = element booktitleaddon { formattext, romanized.or.translated? }
 chapter = element chapter { text }
 doi = element doi { text }
 eid = element eid { text }
+eprint = element eprint { text }
+eprinttype = element eprinttype { text }
 file = element file { text }
 pdf = element pdf { text }
 # howpublished = element howpublished { text }  -> attribute
@@ -258,7 +264,7 @@ attlist.pages =
     
 # INTEGER FIELDS
 day = element day { xsd:integer }
-edition = element edition { xsd:integer }
+edition = element edition { xsd:integer | ( attribute string { text } ) }
 month = element month { xsd:integer }
 urlday = element urlday { xsd:integer }
 urlmonth = element urlmonth { xsd:integer }
@@ -275,6 +281,7 @@ address = element address { attlist.lists?, ((text, romanized.or.uniform?) | ite
 organization = element organization { attlist.lists?, ((text, romanized.or.translated?) | itema+) }
 origlocation = element origlocation { attlist.lists?, ((text, romanized.or.uniform?) | itemb+) }
 publisher = element publisher { attlist.lists?, ((formattext, romanized.or.translated?) | itema+) }
+origpublisher = element origpublisher { attlist.lists?, ((formattext, romanized.or.translated?) | itema+) }
 lista = element lista { attlist.lists?, (text | item+) }
 listb = element listb { attlist.lists?, (text | item+) }
 listc = element listc { attlist.lists?, (text | item+) }
@@ -385,7 +392,10 @@ BibLaTeXML.article.standard.fields =
   number? &
   location? & # added
   publisher? & #added
+  origpublisher? & #added
   eid? &
+  eprint? &
+  eprinttype? &
   pages? &
   note? &
   issn? &
@@ -441,6 +451,7 @@ BibLaTeXML.book.standard.fields =
   number? &
   note? &
   publisher? &
+  origpublisher? &
   location? &
   origlocation? &
   isbn? &
@@ -453,6 +464,9 @@ BibLaTeXML.book.standard.fields =
   addendum? &
   doi? &
   url? &
+  eprint? &
+  eprinttype? &
+
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.book.fields =
   BibLaTeXML.book.standard.fields &
@@ -477,6 +491,8 @@ BibLaTeXML.booklet.standard.fields =
   pagetotal? &
   addendum? &
   doi? &
+  eprint? &
+  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.booklet.fields =
@@ -512,6 +528,7 @@ BibLaTeXML.collection.standard.fields =
   number? &
   note? &
   publisher? &
+  origpublisher? &
   location? &
   origlocation? &
   isbn? &
@@ -523,6 +540,8 @@ BibLaTeXML.collection.standard.fields =
   pagetotal? &
   addendum? &
   doi? &
+  eprint? &
+  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.collection.fields =
@@ -560,6 +579,7 @@ BibLaTeXML.inbook.standard.fields =
   series? &
   number? &
   publisher? &
+  origpublisher? &
   location? &
   origlocation? &
   issn? &  #added
@@ -575,6 +595,8 @@ BibLaTeXML.inbook.standard.fields =
   pages? &
   addendum? &
   doi? &
+  eprint? &
+  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.inbook.fields =
@@ -609,6 +631,7 @@ BibLaTeXML.incollection.standard.fields =
   booksubtitle? &
   booktitleaddon? &
   publisher? &
+  origpublisher? &
   volumes? &
   number? &
   location? &
@@ -626,6 +649,8 @@ BibLaTeXML.incollection.standard.fields =
   pages? &
   addendum? &
   doi? &
+  eprint? &
+  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.incollection.fields =
@@ -656,6 +681,7 @@ BibLaTeXML.inproceedings.standard.fields =
   number? &
   organization? &
   publisher? &
+  origpublisher? &
   location? &
   origlocation? &
   issn? &  #added  
@@ -669,6 +695,8 @@ BibLaTeXML.inproceedings.standard.fields =
   pages? &
   addendum? &
   doi? &
+  eprint? &
+  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 
@@ -692,6 +720,7 @@ BibLaTeXML.manual.standard.fields =
   note? &
   organization? &
   publisher? &
+  origpublisher? &
   location? &
   origlocation? &
   isbn? &
@@ -702,6 +731,8 @@ BibLaTeXML.manual.standard.fields =
   pagetotal? &
   addendum? &
   doi? &
+  eprint? &
+  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.manual.fields =
@@ -722,10 +753,13 @@ BibLaTeXML.misc.standard.fields =
   note? &
   organization? &
   publisher? &
+  origpublisher? &
   location? &
   origlocation? &
   addendum? &
   doi? &
+  eprint? &
+  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.misc.fields =
@@ -742,6 +776,7 @@ BibLaTeXML.online.standard.fields =
   url & 
   subtitle? &
   titleaddon? &
+  version? &
   note? &
   organization? &
   addendum? &
@@ -750,7 +785,7 @@ BibLaTeXML.online.fields =
   BibLaTeXML.online.standard.fields &
   BibLaTeXML.common.fields &
   BibLaTeXML.additional.fields
-online = element entry { attlist.online, BibLaTeXML.online.fields }
+online = element entry { attlist.online , BibLaTeXML.online.fields }
 attlist.online = attribute id {text}, attribute entrytype {"online"}
 #########################################################
 BibLaTeXML.patent.standard.fields =
@@ -793,6 +828,8 @@ BibLaTeXML.periodical.standard.fields =
   issn? &
   addendum? &
   doi? &
+  eprint? &
+  eprinttype? &
 #  url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.periodical.fields =
@@ -825,6 +862,7 @@ BibLaTeXML.proceedings.standard.fields =
   note? &
   organization? &
   publisher? &
+  origpublisher? &
   location? &
   origlocation? &
   isbn? &
@@ -836,6 +874,8 @@ BibLaTeXML.proceedings.standard.fields =
   pagetotal? &
   addendum? &
   doi? &
+  eprint? &
+  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.proceedings.fields =
@@ -864,6 +904,8 @@ BibLaTeXML.report.standard.fields =
   pagetotal? &
   addendum? &
   doi? &
+  eprint? &
+  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.report.fields =
@@ -892,6 +934,8 @@ BibLaTeXML.thesis.standard.fields =
   lccn ? &
   addendum? &
   doi? &
+  eprint? &
+  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.thesis.fields =

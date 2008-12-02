@@ -34,6 +34,7 @@
       <ref name="unpublished"/>
     </choice>
   </define>
+  <!-- TODO | set -->
   <!--
     BibLaTeXML.custom.entries = empty
     custom[a-f] 
@@ -265,10 +266,16 @@ topic_works</a:documentation>
 We now define the biblatexml elements</a:documentation>
     <zeroOrMore>
       <optional>
+        <ref name="nosort"/>
+      </optional>
+      <optional>
         <ref name="emphasis"/>
       </optional>
       <optional>
         <ref name="superscript"/>
+      </optional>
+      <optional>
+        <ref name="subscript"/>
       </optional>
       <optional>
         <text/>
@@ -282,6 +289,16 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="superscript">
     <element name="superscript">
+      <text/>
+    </element>
+  </define>
+  <define name="subscript">
+    <element name="subscript">
+      <text/>
+    </element>
+  </define>
+  <define name="nosort">
+    <element name="nosort">
       <text/>
     </element>
   </define>
@@ -365,6 +382,16 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="eid">
     <element name="eid">
+      <text/>
+    </element>
+  </define>
+  <define name="eprint">
+    <element name="eprint">
+      <text/>
+    </element>
+  </define>
+  <define name="eprinttype">
+    <element name="eprinttype">
       <text/>
     </element>
   </define>
@@ -869,7 +896,10 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="edition">
     <element name="edition">
-      <data type="integer"/>
+      <choice>
+        <data type="integer"/>
+        <attribute name="string"/>
+      </choice>
     </element>
   </define>
   <define name="month">
@@ -1019,6 +1049,24 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="publisher">
     <element name="publisher">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <group>
+          <ref name="formattext"/>
+          <optional>
+            <ref name="romanized.or.translated"/>
+          </optional>
+        </group>
+        <oneOrMore>
+          <ref name="itema"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="origpublisher">
+    <element name="origpublisher">
       <optional>
         <ref name="attlist.lists"/>
       </optional>
@@ -1803,7 +1851,17 @@ works
       </optional>
       <optional>
         <!-- added -->
+        <ref name="origpublisher"/>
+      </optional>
+      <optional>
+        <!-- added -->
         <ref name="eid"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="pages"/>
@@ -2013,6 +2071,9 @@ works
         <ref name="publisher"/>
       </optional>
       <optional>
+        <ref name="origpublisher"/>
+      </optional>
+      <optional>
         <ref name="location"/>
       </optional>
       <optional>
@@ -2048,6 +2109,12 @@ works
       </optional>
       <optional>
         <ref name="url"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="eprinttype"/>
       </optional>
       <optional>
         <choice>
@@ -2123,6 +2190,12 @@ works
       </optional>
       <optional>
         <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -2241,6 +2314,9 @@ works
         <ref name="publisher"/>
       </optional>
       <optional>
+        <ref name="origpublisher"/>
+      </optional>
+      <optional>
         <ref name="location"/>
       </optional>
       <optional>
@@ -2273,6 +2349,12 @@ works
       </optional>
       <optional>
         <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -2389,6 +2471,9 @@ works
             <ref name="publisher"/>
           </optional>
           <optional>
+            <ref name="origpublisher"/>
+          </optional>
+          <optional>
             <ref name="location"/>
           </optional>
           <optional>
@@ -2435,6 +2520,12 @@ works
       </optional>
       <optional>
         <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -2545,6 +2636,9 @@ works
             <ref name="publisher"/>
           </optional>
           <optional>
+            <ref name="origpublisher"/>
+          </optional>
+          <optional>
             <ref name="volumes"/>
           </optional>
           <optional>
@@ -2597,6 +2691,12 @@ works
       </optional>
       <optional>
         <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -2690,6 +2790,9 @@ works
             <ref name="publisher"/>
           </optional>
           <optional>
+            <ref name="origpublisher"/>
+          </optional>
+          <optional>
             <ref name="location"/>
           </optional>
           <optional>
@@ -2730,6 +2833,12 @@ works
       </optional>
       <optional>
         <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -2802,6 +2911,9 @@ works
         <ref name="publisher"/>
       </optional>
       <optional>
+        <ref name="origpublisher"/>
+      </optional>
+      <optional>
         <ref name="location"/>
       </optional>
       <optional>
@@ -2830,6 +2942,12 @@ works
       </optional>
       <optional>
         <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -2910,6 +3028,9 @@ works
         <ref name="publisher"/>
       </optional>
       <optional>
+        <ref name="origpublisher"/>
+      </optional>
+      <optional>
         <ref name="location"/>
       </optional>
       <optional>
@@ -2920,6 +3041,12 @@ works
       </optional>
       <optional>
         <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -2987,6 +3114,9 @@ works
       </optional>
       <optional>
         <ref name="titleaddon"/>
+      </optional>
+      <optional>
+        <ref name="version"/>
       </optional>
       <optional>
         <ref name="note"/>
@@ -3183,6 +3313,12 @@ works
         <ref name="doi"/>
       </optional>
       <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="eprinttype"/>
+      </optional>
+      <optional>
         <!--  url? & -->
         <choice>
           <ref name="urldate"/>
@@ -3299,6 +3435,9 @@ works
         <ref name="publisher"/>
       </optional>
       <optional>
+        <ref name="origpublisher"/>
+      </optional>
+      <optional>
         <ref name="location"/>
       </optional>
       <optional>
@@ -3331,6 +3470,12 @@ works
       </optional>
       <optional>
         <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -3414,6 +3559,12 @@ works
       </optional>
       <optional>
         <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -3503,6 +3654,12 @@ works
       </optional>
       <optional>
         <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
