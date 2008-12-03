@@ -8,7 +8,7 @@
 #
 #  DESCRIPTION:  A BibTeX replacement for users of biblatex
 #
-#               The new biblatex package by Philipp Lehman is likely to become
+#               The biblatex package by Philipp Lehman is likely to become
 #               the definitive citation management tool for LaTeX users.
 #               Biblatex relies on the venerable bibtex program only for
 #               sorting and generating a very generic bbl file without any
@@ -21,31 +21,34 @@
 #               and reliable emulation of BibTeX with the biblatex.bst style
 #               file. In other words, given the same aux file as input, to
 #               output an identical bbl file as BibTeX would.
-#
+#               
+#               This version also introduces support for a new XML format
+#               tailored specifically for biblatex data: BibLaTeXML. It owes
+#               its inspiration partly to the BibTeXML format, but it is far
+#               more complex. A complete RelaXNG schema is provided, as well 
+#               as a tool for converting bib files to biblatexml. To parse 
+#               BibLaTeXML databases the perl module XML::LibXML is required.
+#               
 #               The advantages of no longer being dependent upon BibTeX are
 #               obvious: full Unicode support, no memory limitations,
-#               extensibility, etc. In the second development phase, it is
-#               planned to add support for other formats than BibTeX (e.g. RIS,
-#               YAML, BibTeXML, RDF), and for communication with databases
-#               (Berkeley DB, SQLite, MySQL, PostgreSQL) or remote resources
-#               via network protocols (such as SRU).
+#               extensibility, etc. In the future, support for communication 
+#               with databases (like Berkeley DB, SQLite, MySQL, PostgreSQL, eXisT) 
+#               or remote resources via network protocols (such as SRU).
 #
 #               TODO
 #               * Make it more modular and (perhaps) with OO interface ?
 #               * plugin facility
 #               * add option --inputencoding <latin1> (only utf8 supported as of now)
 #               * make available as par archive for maximal portability ?
-#               * SEE TODO's below!
-#               * ADD BETTER support for crossrefs !!! <see biblatex manual §2.4.1>
-#               * 
+#               * SEE also TODO's inserted below
 #
-# REQUIREMENTS:  Text::BibTeX or Parse::RecDescent; LaTeX::Decode; Regexp::Common
-#         BUGS:  for sure aplenty
+# REQUIREMENTS:  Text::BibTeX or Parse::RecDescent; Regexp::Common; 
+#                  LaTeX::Decode (included)
+#         BUGS:  No doubt many... 
 #       AUTHOR:  François Charette <firmicus ατ gmx δοτ net>
-#      VERSION:  0.1
+#      VERSION:  0.3
 #      CREATED:  29/02/08 12:43:03 CET
 #===============================================================================
-# use lib '/home/francois/dev/biber/LaTeX-Decode/lib'; # this is temporary
 
 use strict;
 use warnings;
@@ -60,8 +63,8 @@ GetOptions(
     'unicodebbl|U!',
     'unicodebib|u!',
     'use-prd|p!',
-	'bibdata|d=s',
-	'allentries|a!',
+    'bibdata|d=s',
+    'allentries|a!',
     # 'convert|c=s',
     # 'type|t=s',
     'help|h|?',
@@ -71,7 +74,8 @@ use Regexp::Common qw /balanced/;
 #use Data::Dumper;    # for debug only
 
 use IO::File;
-use lib '/home/francois/dev/biblatex-biber/trunk/lib';
+# This is of course temporary...
+use lib '/home/francois/dev/biblatex-biber/trunk/lib'; 
 use LaTeX::Decode;    #new package
 use Encode;
 
@@ -117,7 +121,7 @@ my $useprd =
 ### Biblatex default options
 my %globaloptions = (
     debug => 0, #TODO : Biber's debug info will be necessarily different 
-				#		than that given by bibtex!
+                #        than that given by bibtex!
     labelalpha  => 0,
     useauthor   => 1,
     useeditor   => 1,
@@ -145,12 +149,13 @@ my @namefields =
   qw/author editor commentator translator redactor bookauthor afterword
   introduction holder sortname namea nameb namec/;
 my @listfields =
-  qw/publisher location address institution school language origlocation
+  qw/publisher location address institution school language origlocation origpublisher
   lista listb listc listd liste listf/;
 
 my @entriestosplit = ( @namefields, @listfields );
 
 # literal and integer fields
+# FIXME ignore "library" "remarks" etc?
 my @literalfields =
   qw/abstract addendum annotation booksubtitle booktitle booktitleaddon
   chapter day edition eid howpublished indextitle isan isbn ismn isrn issn
@@ -158,12 +163,12 @@ my @literalfields =
   label library mainsubtitle maintitle maintitleaddon month nameaddon note
   number origtitle pagetotal part reprinttitle series shorthand
   shorthandintro shortjournal shortseries shorttitle subtitle title
-  titleaddon urlday urlmonth urlyear venue version volume volumes usera userb
+  titleaddon eprinttype urlday urlmonth urlyear venue version volume volumes usera userb
   userc userd usere userf hyphenation crossref entrysubtype execute gender
   indexsorttitle sortkey sorttitle sortyear xref/;
 
 my @rangefields    = qw/origyear pages year/;
-my @verbatimfields = qw/doi file pdf url verba verbb verbc/;
+my @verbatimfields = qw/doi eprint file pdf url verba verbb verbc/;
 my @keyfields =
   qw/authortype bookpagination editortype origlanguage pagination type nameatype
   namebtype namectype/;
@@ -245,58 +250,71 @@ my @auxcitekeys = () ;
 my $citeallkeys = 0  ;
 my %seenkeys    = () ;
 my $bblfile ;
+my @bibdatafiles = ();
+push(@bibdatafiles, $bibdata) if $bibdata;
 
 if ($allentries) {
-		if ($bibdata) {
-			$citeallkeys = 1;
-			$bblfile = $bibdata;
-			$bblfile =~ s/\..+$//;
-			$bblfile .= ".bbl";
-		}
-		else {
-			parse_auxfile();
-			$citeallkeys = 1;
- 		}
+        if ($bibdata) {
+            $citeallkeys = 1;
+            $bblfile = $bibdata;
+            $bblfile =~ s/\..+$//;
+            $bblfile .= ".bbl";
+        }
+        else {
+            parse_auxfile();
+            $citeallkeys = 1;
+         }
 }
 else {
-	 parse_auxfile()
+     parse_auxfile()
 }
 
 sub parse_auxfile {
-	my $auxfile = $ARGV[0] || croak usage();
-	croak "Cannot find file '$auxfile'!\n" unless -f $auxfile;
-	croak "File '$auxfile' is not an .aux file!\n" unless $auxfile =~ m/\.aux$/;
-	my $aux = new IO::File "<$auxfile" || croak "Failed to open $auxfile : $!";
-	my $basefile = $auxfile;
-	$basefile =~ s/\.aux$//;
-	$bblfile = "$basefile.bbl";
+    my $auxfile = $ARGV[0] || croak usage();
+    croak "Cannot find file '$auxfile'!\n" unless -f $auxfile;
+    croak "File '$auxfile' is not an .aux file!\n" unless $auxfile =~ m/\.aux$/;
+    my $aux = new IO::File "<$auxfile" || croak "Failed to open $auxfile : $!";
+    my $basefile = $auxfile;
+    $basefile =~ s/\.aux$//;
+    $bblfile = "$basefile.bbl";
 
-	my $bibdataaux;
-	my $ctrl_file;
+    my $ctrl_file;
 
-	local $/ = "\n";
-	while (<$aux>) {
-		if ( $_ =~ /^\\bibdata/ ) {
-			( $ctrl_file, $bibdataaux ) = m/^\\bibdata{([^},]+),([^},]+)}/;
-		};
-		$bibdata = $bibdataaux unless $bibdata;
-		if ( $_ =~ /^\\citation/ ) { 
-			m/^\\citation{([^}]+)}/;  
-			unless ( $seenkeys{$1} or $1 eq "biblatex-control" or $1 eq '*' ) {
-				push @auxcitekeys, $1;
-				$seenkeys{$1}++
-			} ;
-			if ( $1 eq '*' ) {
-				$citeallkeys = 1 
-			}
-		}
-	} ;
-	
-	parse_ctrlfile($ctrl_file) if $ctrl_file;
+    local $/ = "\n";
+    while (<$aux>) {
+        if ( $_ =~ /^\\bibdata/ ) {
+            # There can be more than one bibdata file!!! 
+            # We should be able to parse many bib and or xml files
+            # Datafile given as option -d should be parsed first, then the other ones
+            (my $bibdatastring) = m/^\\bibdata{([^}]+)}/;
+            push(@bibdatafiles, split /,/, $bibdatastring); 
+            $ctrl_file = shift @bibdatafiles;
+        }
+        if ( $_ =~ /^\\citation/ ) { 
+            m/^\\citation{([^}]+)}/;  
+            unless ( $seenkeys{$1} or $1 eq "biblatex-control" or $1 eq '*' ) {
+                push @auxcitekeys, $1;
+                $seenkeys{$1}++
+            } 
+            if ( $1 eq '*' ) {
+                $citeallkeys = 1 
+            }
+        }
+    } 
+    if ($ctrl_file) {
+        parse_ctrlfile($ctrl_file) 
+    }
+    else {
+        parse_ctrlfile("$basefile-blx")
+    };
+    
+    unless (@bibdatafiles) {
+        croak "No database was provided! Exiting"
+    }
 
-	unless ($citeallkeys or @auxcitekeys) {
-		croak "File '$auxfile' does not contain any citations!"
-	}
+    unless ($citeallkeys or @auxcitekeys) {
+        croak "File '$auxfile' does not contain any citations!"
+    }
 }
 
 
@@ -304,7 +322,7 @@ sub parse_auxfile {
 # PARSE CONTROL FILE with simple regex matching...
 #=====================================================
 #this is needed to generate the control macros in the bbl
-#  version			= 0.8
+#  version            = 0.8
 #  ctrl-debug       = 0,
 #  ctrl-bibtex8     = 0,     ignore
 #  ctrl-terseinits  = 0,     package option (boolean)
@@ -326,32 +344,32 @@ sub parse_auxfile {
 #     since we have the default values already...
 
 sub parse_ctrlfile {
-	my $ctrl_file = shift;
-	croak "Cannot find control file '$ctrl_file.bib'!\n" unless -f "$ctrl_file.bib";
-	my $ctrl = new IO::File "<$ctrl_file.bib"
-  		|| croak "Cannot open $ctrl_file.bib: $!";
-	while (<$ctrl>) {
-		next unless /^\s*ctrl-options/;
-		(my $opts) = /{(.+)}/;
-		(my $controlversion,
-		$globaloptions{debug},
-		$globaloptions{bibtex8},
-		$globaloptions{terseinits},
-		$globaloptions{useprefix},
-		$globaloptions{useauthor},
-		$globaloptions{useeditor},
-		$globaloptions{labelalpha},
-		$globaloptions{labelyear},
-		$globaloptions{singletitle},
-		$globaloptions{uniquename},
-		$globaloptions{sorting},
-		$globaloptions{sortlos},
-		$globaloptions{maxnames},
-		$globaloptions{minnames},
-		$globaloptions{maxline},
-		$globaloptions{alphaothers}) = split /:/, $opts; 
-		carp "Warning: You are not using biblatex version 0.8!\n" unless $controlversion eq '0.8';
-	}
+    my $ctrl_file = shift;
+    croak "Cannot find control file '$ctrl_file.bib'!\n" unless -f "$ctrl_file.bib";
+    my $ctrl = new IO::File "<$ctrl_file.bib"
+          || croak "Cannot open $ctrl_file.bib: $!";
+    while (<$ctrl>) {
+        next unless /^\s*ctrl-options/;
+        (my $opts) = /{(.+)}/;
+        (my $controlversion,
+        $globaloptions{debug},
+        $globaloptions{bibtex8},
+        $globaloptions{terseinits},
+        $globaloptions{useprefix},
+        $globaloptions{useauthor},
+        $globaloptions{useeditor},
+        $globaloptions{labelalpha},
+        $globaloptions{labelyear},
+        $globaloptions{singletitle},
+        $globaloptions{uniquename},
+        $globaloptions{sorting},
+        $globaloptions{sortlos},
+        $globaloptions{maxnames},
+        $globaloptions{minnames},
+        $globaloptions{maxline},
+        $globaloptions{alphaothers}) = split /:/, $opts; 
+        carp "Warning: You are not using biblatex version 0.8!\n" unless $controlversion eq '0.8';
+    }
 }
 
 #======================================
@@ -362,16 +380,16 @@ my %crossrefkeys = ();
 # gives the crossref key for each citekey with a crossref
 my %entrieswithcrossref = ();
 my $preamble   = "";
-my $xmldata;
 
-if ($bibdata =~ /\.xml$/) {
-	$xmldata = 1;
-	%bibentries = parse_biblatexml( $bibdata )
+#TODO : group xml and bib files together, and parse them together?
+foreach my $bib (@bibdatafiles) {
+    if ($bib =~ /\.xml$/) {
+        parse_biblatexml( $bib )
+    }
+    else {
+        parse_bibtex("$bib.bib")
+    }
 }
-else {
-	$xmldata = 0;
-	%bibentries = parse_bibtex("$bibdata.bib") 
-};
 
 ######
 # TODO move the following subs to external packages ?
@@ -381,100 +399,160 @@ else {
 #=====================================================
 
 sub parse_bibtex {
-	my $filename = shift;
+    my $filename = shift;
 
-	if ( !$unicodebib && $unicodebbl ) {
-		require File::Slurp;    #
-		my $ufilename = "$filename.utf8";
-		my $ubib      = new IO::File ">$ufilename";
-		my $buf       = File::Slurp::read_file($filename);
+    if ( !$unicodebib && $unicodebbl ) {
+        require File::Slurp;    #
+        my $ufilename = "$filename.utf8";
+        my $ubib      = new IO::File ">$ufilename";
+        my $buf       = File::Slurp::read_file($filename);
 
-		#TODO decode $buf if encoding is not UTF-8 : cmd-line option --inputencoding
-		print $ubib latex_decode($buf) || croak "Can't write to $ufilename : $!";
-		$ubib->close;
-		$filename    = $ufilename;
-		$unicodebib = 1;
-	}
+        #TODO decode $buf if encoding is not UTF-8 : cmd-line option --inputencoding
+        print $ubib latex_decode($buf) || croak "Can't write to $ufilename : $!";
+        $ubib->close;
+        $filename    = $ufilename;
+        $unicodebib = 1;
+    }
 
-	if ( !$useprd and eval { require Text::BibTeX; 1 } ) {
+    if ( !$useprd and eval { require Text::BibTeX; 1 } ) {
 
-		require Text::BibTeX;
-		my $bib = new Text::BibTeX::File $filename
-		  || croak "Cannot create Text::BibTeX::File object from $filename: $!";
+        require Text::BibTeX;
+        my $bib = new Text::BibTeX::File $filename
+          || croak "Cannot create Text::BibTeX::File object from $filename: $!";
 
-		#TODO validate with Text::BibTeX::Structure ?
+        #TODO validate with Text::BibTeX::Structure ?
 
-		while ( my $entry = new Text::BibTeX::Entry $bib) {
-			next unless $entry->parse_ok;
-			if ( $entry->type eq "preamble" ) {
-				$preamble .= $entry->value;
-			}
-			elsif ( $entry->type ne "string" ) {
-				foreach my $f ( $entry->fieldlist ) {
-					$bibentries{ $entry->key }->{$f} =
-					  decode_utf8( $entry->get($f) );
-				}
-				$bibentries{ $entry->key }->{entrytype} = $entry->type;
-			}
-		}
-	}
-	else {
-		require Parse::RecDescent;
-		undef $/;
+        while ( my $entry = new Text::BibTeX::Entry $bib) {
+            my $key = $entry->key;
+            if ( $bibentries{ $key } ) {
+                carp "We already have key $key! Ignoring in $filename...";
+                next;
+            }
+            next unless $entry->parse_ok;
+            if ( $entry->type eq "preamble" ) {
+                $preamble .= $entry->value;
+            }
+            elsif ( $entry->type ne "string" ) {
+                foreach my $f ( $entry->fieldlist ) {
+                    $bibentries{ $key }->{$f} =
+                      decode_utf8( $entry->get($f) );
+                }
+                $bibentries{ $key }->{entrytype} = $entry->type;
+            }
+        }
+    }
+    else {
+        require Parse::RecDescent;
+        undef $/;
 
-	   #my $bib = new IO::File "<$filename" || croak "Failed to open $filename: $!";
-	   #TODO specify another encoding if not UTF-8 : cmd-line option --inputencoding
-		open my $bib, "<:encoding(utf8)",
-		  $filename || croak "Failed to open $filename: $!";
+       #my $bib = new IO::File "<$filename" || croak "Failed to open $filename: $!";
+       #TODO specify another encoding if not UTF-8 : cmd-line option --inputencoding
+        open my $bib, "<:encoding(utf8)",
+          $filename || croak "Failed to open $filename: $!";
 
-		#$bib =~ s/\%+.*$//mg; # this gets rid of all comments
+        #$bib =~ s/\%+.*$//mg; # this gets rid of all comments
 
-		my $btparser = Parse::RecDescent->new($grammar) || croak "Bad grammar: $!";
-		my $bf       = $btparser->BibFile(<$bib>)       || croak "bad bib: $!";
-		close $bib;
+        my $btparser = Parse::RecDescent->new($grammar) || croak "Bad grammar: $!";
+        my $bf       = $btparser->BibFile(<$bib>)       || croak "bad bib: $!";
+        close $bib;
 
-		my @tmp = @$bf;
+        my @tmp = @$bf;
 
-		for my $n ( 0 .. $#tmp ) {
-			my @tmpk   = keys %{ $tmp[$n] };
-			my $tmpkey = $tmpk[0];
-			if ( $tmpkey eq 'preamble' ) {
-				$preamble = $tmp[$n]->{preamble};
-			}
-			elsif ( $tmpkey eq 'entries' ) {
-				my @entries = @{ $tmp[$n]->{entries} };
-				foreach my $i ( 0 .. $#entries ) {
-					my @tmpa   = keys %{ $entries[$i] };
-					my $tmpkey = $tmpa[0];
-					$bibentries{$tmpkey} = $entries[$i]->{$tmpkey};
-				}
-			}
-		}
-	}
+        for my $n ( 0 .. $#tmp ) {
+            my @tmpk   = keys %{ $tmp[$n] };
+            my $tmpkey = $tmpk[0];
+            if ( $tmpkey eq 'preamble' ) {
+                $preamble = $tmp[$n]->{preamble};
+            }
+            elsif ( $tmpkey eq 'entries' ) {
+                my @entries = @{ $tmp[$n]->{entries} };
+                foreach my $i ( 0 .. $#entries ) {
+                    my @tmpa   = keys %{ $entries[$i] };
+                    my $tmpkey = $tmpa[0];
+                    if ( $bibentries{ $tmpkey } ) {
+                        carp "We already have key $tmpkey! Ignoring in $filename...";
+                        next;
+                    }
+                    $bibentries{$tmpkey} = $entries[$i]->{$tmpkey};
+                }
+            }
+        }
+    }
 
-	foreach ( keys %bibentries ) {
-		foreach my $ets (@entriestosplit) {
-			if ( exists $bibentries{$_}->{$ets} ) {
-				my $tmp = $bibentries{$_}->{$ets};
+    foreach my $key ( keys %bibentries ) {
+        $bibentries{$key}->{datatype} = 'bibtex';
+        foreach my $ets (@entriestosplit) {
+            if ( exists $bibentries{$key}->{$ets} ) {
+                my $tmp = $bibentries{$key}->{$ets};
 
-				# "and" within { } must be preserved: see biblatex manual §2.3.3
-				#      (this can probably be optimized)
-				foreach my $x ( $tmp =~ m/($RE{balanced}{-parens => '{}'})/g ) {
-					( my $xr = $x ) =~ s/\s+and\s+/_\x{ff08}_/g;
-					$tmp =~ s/\Q$x/$xr/g;
-				}
-				my @y = split /\s+and\s+/, $tmp;
-				my @z;
-				foreach (@y) {
-					s/_\x{ff08}_/ and /g;
-					push @z, $_;
-				}
-				$bibentries{$_}->{$ets} = [@z];
-			}
-		}
-	}
+                # "and" within { } must be preserved: see biblatex manual §2.3.3
+                #      (this can probably be optimized)
+                foreach my $x ( $tmp =~ m/($RE{balanced}{-parens => '{}'})/g ) {
+                    ( my $xr = $x ) =~ s/\s+and\s+/_\x{ff08}_/g;
+                    $tmp =~ s/\Q$x/$xr/g;
+                }
+                my @y = split /\s+and\s+/, $tmp;
+                my @z;
+                foreach (@y) {
+                    s/_\x{ff08}_/ and /g;
+                    push @z, $_;
+                }
+                $bibentries{$key}->{$ets} = [@z];
+            }
+        }
+    }
 
-	return %bibentries
+    # Handling of crossrefs
+    foreach my $citekey (@auxcitekeys) {
+        if ($bibentries{$citekey}->{crossref}) {
+            my $crefkey = $bibentries{$citekey}->{crossref};
+            $crossrefkeys{$crefkey}++;
+            $entrieswithcrossref{$citekey} = $crefkey;
+        }
+    }
+    
+    # copied from parse_biblatexml below: TODO make it an external function
+    foreach my $citekeyx (keys %entrieswithcrossref) {
+        my $xref = $entrieswithcrossref{$citekeyx}; 
+        next if $crossrefkeys{$xref} >= $mincrossrefs;
+        my $type = $bibentries{$citekeyx}->{entrytype};
+        if ($type eq 'review') {
+                #TODO
+        };
+        if ($type =~ /^in(proceedings|collection|book)$/) {
+            # inherit all that is undefined, except title etc
+            foreach my $field (keys %{$bibentries{$xref}}) {
+                next if $field =~ /title/;
+                if (! $bibentries{$citekeyx}->{$field}) {
+                    $bibentries{$citekeyx}->{$field} = $bibentries{$xref}->{$field};
+                    #print "$citekeyx inherits $field from $xref\n";
+                }
+            };
+            # inherit title etc as booktitle etc
+            $bibentries{$citekeyx}->{booktitle} = $bibentries{$xref}->{title}; 
+            if ($bibentries{$xref}->{titleaddon}) {
+                $bibentries{$citekeyx}->{booktitleaddon} = $bibentries{$xref}->{titleaddon}
+            };
+            if ($bibentries{$xref}->{subtitle}) {
+                $bibentries{$citekeyx}->{booksubtitle} = $bibentries{$xref}->{subtitle}
+            };
+        };
+        if ($type eq 'inbook') {
+            $bibentries{$citekeyx}->{bookauthor} = $bibentries{$xref}->{author} 
+        }
+        # MORE?
+        #$bibentries{$citekeyx}->{} = $bibentries{$xref}->{} 
+    }
+
+    # we make sure that keys that are cross-referenced 
+    # less than $mincrossrefs are not included the bibliography
+    foreach my $k ( keys %crossrefkeys ) {
+        if ( $crossrefkeys{$k} >= $mincrossrefs ) {
+            delete $crossrefkeys{$k};
+        }
+    }    
+
+#    return %bibentries
 }
 
 
@@ -486,256 +564,243 @@ sub parse_bibtex {
 
 #TODO package Biber::BibLaTeXML ?
 sub parse_biblatexml {
-	my $xmlfile = shift; 
-	my %bibentries = ();
-	require XML::LibXML;
-	my $parser = XML::LibXML->new();
-	my $db = $parser->parse_file($xmlfile) 
-		or croak "Can't parse file $xmlfile";
+    my $xmlfile = shift; 
+    require XML::LibXML;
+    my $parser = XML::LibXML->new();
+    my $db = $parser->parse_file($xmlfile) 
+        or croak "Can't parse file $xmlfile";
 
-	# TODO : add option "validate xml" 
-	# if ($validatexml) {
-	# 		my $rngschema = XML::LibXML::RelaxNG->new( location => "biblatexml.rng");
-	# 		my $validation = eval { $rngschema->validate($db) ; } ; 
-	# 		unless ($validation) {
-	# 			carp "The file $xmldata does not validate against the biblatexml RelaxNG schema!\n$@"
-	# 		};
-	# };
-	
-	if ($citeallkeys) {
-		@auxcitekeys = ();
-		my $res = $db->findnodes('/*/bib:entry');
-		foreach my $r ($res->get_nodelist) {
-			push @auxcitekeys, $r->findnodes('@id')->string_value
-		};
-	};
-	print "Processing ", $#auxcitekeys+1 , " entries in $xmlfile ...\n";
+    # TODO : add option "validate xml" 
+    # if ($validatexml) {
+    #         my $rngschema = XML::LibXML::RelaxNG->new( location => "biblatexml.rng");
+    #         my $validation = eval { $rngschema->validate($db) ; } ; 
+    #         unless ($validation) {
+    #             carp "The file $xmlfile does not validate against the biblatexml RelaxNG schema!\n$@"
+    #         };
+    # };
+    
+    if ($citeallkeys) {
+        @auxcitekeys = ();
+        my $res = $db->findnodes('/*/bib:entry');
+        foreach my $r ($res->get_nodelist) {
+            push @auxcitekeys, $r->findnodes('@id')->string_value
+        };
+    };
+    print "Processing ", $#auxcitekeys+1 , " entries in $xmlfile ...\n";
 
-	# Contrary to the bibtex approach, we are not extracting all data to
-	# the bibentries hash, but only the ones corresponding to @auxcitekeys
-	foreach my $citekey (@auxcitekeys) {
-		my $xpath = '/*/bib:entry[@id="' . $citekey . '"]';
-		my $results = $db->findnodes($xpath);
-		unless ( $results ) {
-			carp "Can't find entry with citekey $citekey" ;
-			next 
-		};
-		if ( $results->size() > 1 ) { 
-			carp "The database contains more than one bib:entry with id=\"$citekey\" !!!" 
-		};
-		my $bibrecord = $results->get_node(1); 
+    # Contrary to the bibtex approach, we are not extracting all data to
+    # the bibentries hash, but only the ones corresponding to @auxcitekeys
+    foreach my $citekey (@auxcitekeys) {
+        next if $bibentries{$citekey}; # skip if this is already found in another database
+        my $xpath = '/*/bib:entry[@id="' . $citekey . '"]';
+        my $results = $db->findnodes($xpath);
+        unless ( $results ) {
+            carp "Can't find entry with citekey $citekey" unless $#bibdatafiles > 0;
+            next
+        };
+        if ( $results->size() > 1 ) { 
+            carp "The database contains more than one bib:entry with id=\"$citekey\" !!!" 
+        };
+        my $bibrecord = $results->get_node(1); 
 
-		# if there is a crossref, we increment its citekey in %crossrefkeys
-		if ( $bibrecord->findnodes('bib:crossref') ) {
-			my $crefkey = $bibrecord->findnodes('bib:crossref')->string_value ;
-			$crossrefkeys{$crefkey}++;
-			$entrieswithcrossref{$citekey} = $crefkey;
-		};
-	};
+        # if there is a crossref, we increment its citekey in %crossrefkeys
+        if ( $bibrecord->findnodes('bib:crossref') ) {
+            my $crefkey = $bibrecord->findnodes('bib:crossref')->string_value ;
+            $crossrefkeys{$crefkey}++;
+            $entrieswithcrossref{$citekey} = $crefkey;
+        };
+    };
 
-	#------------------------------------------------
-	# we make sure that keys that are cross-referenced 
-	# more than $mincrossrefs are included in @auxcitekeys
 
-	foreach my $k ( keys %crossrefkeys ) {
-		#if ( $crossrefkeys{$k} >= $mincrossrefs && !$seenkeys{$k} ) {
-			push @auxcitekeys, $k unless $citeallkeys ;
-			#delete $crossrefkeys{$k};
-		#}
-	};
-	#--------------------------------------------------
+    foreach my $k ( keys %crossrefkeys ) {
+        push @auxcitekeys, $k unless $citeallkeys ;
+    };
+    #--------------------------------------------------
 
-	foreach my $citekey (sort @auxcitekeys) {
-		#print "$citekey ... \n"; 
-		my $xpath = '/*/bib:entry[@id="' . $citekey . '"]';
-		my $results = $db->findnodes($xpath);
-#		unless ( $results ) {
-#			carp "Can't find entry with citekey $citekey" ;
-#			next 
-#		};
-#		if ( $results->size() > 1 ) { 
-#			carp "The database contains more than one bib:entry with id=\"$citekey\" !!!" 
-#		};
-		my $bibrecord = $results->get_node(1); 
+    foreach my $citekey (sort @auxcitekeys) {
+        my $xpath = '/*/bib:entry[@id="' . $citekey . '"]';
+        my $results = $db->findnodes($xpath);
+        my $bibrecord = $results->get_node(1); 
 
-		$bibentries{ $citekey }->{entrytype} = $bibrecord->findnodes('@entrytype')->string_value;
+        $bibentries{ $citekey }->{entrytype} = $bibrecord->findnodes('@entrytype')->string_value;
+        $bibentries{ $citekey }->{datatype} = 'xml';
 
-		#TODO get the options field first 
-		#options/text or option: key+value
-		if ($bibrecord->findnodes("bib:options")) {
-			if ($bibrecord->findnodes("bib:options/bib:option")) {
-				my @opts; 
-				foreach my $o ($bibrecord->findnodes("bib:options/bib:option")->get_nodelist) {
-					my $k = $o->findnodes("bib:key")->string_value; 
-					my $v = $o->findnodes("bib:value")->string_value;
-					push @opts, "$k=$v";
-				};
-				$bibentries{$citekey}->{options} = join(",", @opts);
-			}
-			else {
-				$bibentries{$citekey}->{options} = $bibrecord->findnodes("bib:options")->string_value;
-			}
-		};
-		
-		# then we extract in turn the data from each type of fields
+        #TODO get the options field first 
+        #options/text or option: key+value
+        if ($bibrecord->findnodes("bib:options")) {
+            if ($bibrecord->findnodes("bib:options/bib:option")) {
+                my @opts; 
+                foreach my $o ($bibrecord->findnodes("bib:options/bib:option")->get_nodelist) {
+                    my $k = $o->findnodes("bib:key")->string_value; 
+                    my $v = $o->findnodes("bib:value")->string_value;
+                    push @opts, "$k=$v";
+                };
+                $bibentries{$citekey}->{options} = join(",", @opts);
+            }
+            else {
+                $bibentries{$citekey}->{options} = $bibrecord->findnodes("bib:options")->string_value;
+            }
+        };
+        
+        # then we extract in turn the data from each type of fields
 
-		foreach my $f (@literalfields, @verbatimfields) {
-			$bibentries{$citekey}->{$f} = $bibrecord->findnodes("bib:$f")->string_value 
-				if $bibrecord->findnodes("bib:$f");
-		};
+        foreach my $f (@literalfields, @verbatimfields) {
+            $bibentries{$citekey}->{$f} = $bibrecord->findnodes("bib:$f")->string_value 
+                if $bibrecord->findnodes("bib:$f");
+        };
 
-		foreach my $lf (@listfields) {
-			my @z;
-			if ($bibrecord->findnodes("bib:$lf")) {
-				if ($bibrecord->findnodes("bib:$lf/bib:item")) {
-					foreach my $item ($bibrecord->findnodes("bib:$lf/bib:item")->get_nodelist) {
-						push @z, $item->string_value;
-					}
-				}
-				else {
-					 push @z, $bibrecord->findnodes("bib:$lf")->string_value
-				};
-				if ($bibrecord->findnodes("bib:$lf\[\@andothers='true'\]")) {
-					push @z, "others"
-				};
-				$bibentries{$citekey}->{$lf} = [ @z ]
-			}
-		};
+        foreach my $lf (@listfields) {
+            my @z;
+            if ($bibrecord->findnodes("bib:$lf")) {
+                if ($bibrecord->findnodes("bib:$lf/bib:item")) {
+                    foreach my $item ($bibrecord->findnodes("bib:$lf/bib:item")->get_nodelist) {
+                        push @z, $item->string_value;
+                    }
+                }
+                else {
+                     push @z, $bibrecord->findnodes("bib:$lf")->string_value
+                };
+                if ($bibrecord->findnodes("bib:$lf\[\@andothers='true'\]")) {
+                    push @z, "others"
+                };
+                $bibentries{$citekey}->{$lf} = [ @z ]
+            }
+        };
 
-		foreach my $rf (@rangefields) {
-			if ($bibrecord->findnodes("bib:$rf")) {
-				if ($bibrecord->findnodes("bib:$rf/bib:start")) {
-					 my $fieldstart = $bibrecord->findnodes("bib:$rf/bib:start")->string_value;
-					 my $fieldend   = $bibrecord->findnodes("bib:$rf/bib:end")->string_value;
-					$bibentries{$citekey}->{$rf} = "$fieldstart--$fieldend";
-				}
-				elsif ($bibrecord->findnodes("bib:$rf/bib:list")) {
-					$bibentries{$citekey}->{$rf} = 
-						$bibrecord->findnodes("bib:$rf/bib:list")->string_value
-				}
-				else {
-					$bibentries{$citekey}->{$rf} = 
-						$bibrecord->findnodes("bib:$rf")->string_value
-				}
-			};
-		};
+        foreach my $rf (@rangefields) {
+            if ($bibrecord->findnodes("bib:$rf")) {
+                if ($bibrecord->findnodes("bib:$rf/bib:start")) {
+                     my $fieldstart = $bibrecord->findnodes("bib:$rf/bib:start")->string_value;
+                     my $fieldend   = $bibrecord->findnodes("bib:$rf/bib:end")->string_value;
+                    $bibentries{$citekey}->{$rf} = "$fieldstart--$fieldend";
+                }
+                elsif ($bibrecord->findnodes("bib:$rf/bib:list")) {
+                    $bibentries{$citekey}->{$rf} = 
+                        $bibrecord->findnodes("bib:$rf/bib:list")->string_value
+                }
+                else {
+                    $bibentries{$citekey}->{$rf} = 
+                        $bibrecord->findnodes("bib:$rf")->string_value
+                }
+            };
+        };
 
-		#the name fields are somewhat more complex
-		my $usepre = getoption($citekey, 'useprefix');
-		foreach my $nf (@namefields) {
-			if ($bibrecord->findnodes("bib:$nf")) {
-				my @z;
-				if ($bibrecord->findnodes("bib:$nf/bib:person")) {
-					foreach my $person ($bibrecord->findnodes("bib:$nf/bib:person")->get_nodelist) {
-						my $last; 
-						my $first; 
-						my $prefix; 
-						my $suffix;
-						my $namestr = "";
-						my $nameinitstr = undef;
-						if ($person->findnodes('bib:last')) {
-							$last = $person->findnodes('bib:last')->string_value ;
-							$first = $person->findnodes('bib:first')->string_value ; 
-							$prefix = $person->findnodes('bib:prefix')->string_value 
-								if $person->findnodes('bib:prefix');
-							$suffix = $person->findnodes('bib:suffix')->string_value
-								if $person->findnodes('bib:suffix');
-							$namestr .= $prefix if $prefix;
-							$namestr .= $last;
-							$namestr .= ", " . $first if $first;
-							if ( $globaloptions{uniquename} == 2 ) {
-								$nameinitstr = "";
-								$nameinitstr .= substr( $prefix, 0, 1 ) . " "
-								  if ( $usepre and $prefix );
-								$nameinitstr .= $last;
-								$nameinitstr .= ", " . terseinitials($first) if $first;
-							} ;
+        #the name fields are somewhat more complex
+        my $usepre = getoption($citekey, 'useprefix');
+        foreach my $nf (@namefields) {
+            if ($bibrecord->findnodes("bib:$nf")) {
+                my @z;
+                if ($bibrecord->findnodes("bib:$nf/bib:person")) {
+                    foreach my $person ($bibrecord->findnodes("bib:$nf/bib:person")->get_nodelist) {
+                        my $last; 
+                        my $first; 
+                        my $prefix; 
+                        my $suffix;
+                        my $namestr = "";
+                        my $nameinitstr = undef;
+                        if ($person->findnodes('bib:last')) {
+                            $last = $person->findnodes('bib:last')->string_value ;
+                            $first = $person->findnodes('bib:first')->string_value ; 
+                            $prefix = $person->findnodes('bib:prefix')->string_value 
+                                if $person->findnodes('bib:prefix');
+                            $suffix = $person->findnodes('bib:suffix')->string_value
+                                if $person->findnodes('bib:suffix');
+                            $namestr .= $prefix if $prefix;
+                            $namestr .= $last;
+                            $namestr .= ", " . $first if $first;
+                            if ( $globaloptions{uniquename} == 2 ) {
+                                $nameinitstr = "";
+                                $nameinitstr .= substr( $prefix, 0, 1 ) . " "
+                                  if ( $usepre and $prefix );
+                                $nameinitstr .= $last;
+                                $nameinitstr .= ", " . terseinitials($first) if $first;
+                            } ;
 
-							push @z, 
-								{ lastname => $last, firstname => $first, 
-								  prefix => $prefix, suffix => $suffix,
-								  namestring => $namestr, 
-								  nameinitstring => $nameinitstr }
-						  }
-						  # Schema allows <person>text<person>
-						  else {
-							  push @z, parsename( $person->string_value, 
-												  { useprefix => $usepre } )
-						  }
-					};
-				} 
-				# only one name as string, without <person>
-				else {
-					push @z, parsename( $bibrecord->findnodes("bib:$nf")->string_value,
-								   { useprefix => $usepre } )
-				};
+                            push @z, 
+                                { lastname => $last, firstname => $first, 
+                                  prefix => $prefix, suffix => $suffix,
+                                  namestring => $namestr, 
+                                  nameinitstring => $nameinitstr }
+                          }
+                          # Schema allows <person>text<person>
+                          else {
+                              push @z, parsename( $person->string_value, 
+                                                  { useprefix => $usepre } )
+                          }
+                    };
+                } 
+                # only one name as string, without <person>
+                else {
+                    push @z, parsename( $bibrecord->findnodes("bib:$nf")->string_value,
+                                   { useprefix => $usepre } )
+                };
 
-				if ($bibrecord->findnodes("bib:$nf\[\@andothers='true'\]")) {
-					push @z, { lastname => "others", namestring => "others" }
-				};
-				
-				$bibentries{$citekey}->{$nf} = [ @z ]
-			}
-		};
+                if ($bibrecord->findnodes("bib:$nf\[\@andothers='true'\]")) {
+                    push @z, { lastname => "others", namestring => "others" }
+                };
+                
+                $bibentries{$citekey}->{$nf} = [ @z ]
+            }
+        };
 
-		# now we extract the attributes
-		my %xmlattributes = ( 
-			'bib:pages/@pagination' => 'pagination',
-			'bib:pages/@bookpagination' => 'bookpagination',
-			'bib:author/@type' => 'authortype',
-			'bib:editor/@type' => 'editortype',
-			'bib:author/@gender' => 'gender',
-			# 'bib:editor/@gender' => 'gender', (ignored for now)
-			'@howpublished' => 'howpublished'
-			); 
-		foreach my $attr (keys %xmlattributes) {
-			if ($bibrecord->findnodes($attr)) {
-				$bibentries{ $citekey }->{ $xmlattributes{$attr} } 
-					= $bibrecord->findnodes($attr)->string_value ;
-			}
-		}
-	};
-	# 
-	foreach my $citekeyx (keys %entrieswithcrossref) {
-		my $xref = $entrieswithcrossref{$citekeyx}; 
-		next if $crossrefkeys{$xref} >= $mincrossrefs;
-		my $type = $bibentries{$citekeyx}->{entrytype};
-		if ($type eq 'review') {
-				#TODO
-		};
-		if ($type =~ /^in(proceedings|collection|book)$/) {
-			# inherit all that is undefined, except title etc
-			foreach my $field (keys %{$bibentries{$xref}}) {
-				next if $field =~ /title/;
-				if (! $bibentries{$citekeyx}->{$field}) {
-					$bibentries{$citekeyx}->{$field} = $bibentries{$xref}->{$field};
-					#print "$citekeyx inherits $field from $xref\n";
-				}
-			};
-			# inherit title etc as booktitle etc
-			$bibentries{$citekeyx}->{booktitle} = $bibentries{$xref}->{title}; 
-			if ($bibentries{$xref}->{titleaddon}) {
-				$bibentries{$citekeyx}->{booktitleaddon} = $bibentries{$xref}->{titleaddon}
-			};
-			if ($bibentries{$xref}->{subtitle}) {
-				$bibentries{$citekeyx}->{booksubtitle} = $bibentries{$xref}->{subtitle}
-			};
-		};
-		if ($type eq 'inbook') {
-			$bibentries{$citekeyx}->{bookauthor} = $bibentries{$xref}->{author} 
-		};
-		# MORE?
-		#$bibentries{$citekeyx}->{} = $bibentries{$xref}->{} 
-	};
+        # now we extract the attributes
+        my %xmlattributes = ( 
+            'bib:pages/@pagination' => 'pagination',
+            'bib:pages/@bookpagination' => 'bookpagination',
+            'bib:author/@type' => 'authortype',
+            'bib:editor/@type' => 'editortype',
+            'bib:author/@gender' => 'gender',
+            # 'bib:editor/@gender' => 'gender', (ignored for now)
+            '@howpublished' => 'howpublished'
+            ); 
+        foreach my $attr (keys %xmlattributes) {
+            if ($bibrecord->findnodes($attr)) {
+                $bibentries{ $citekey }->{ $xmlattributes{$attr} } 
+                    = $bibrecord->findnodes($attr)->string_value ;
+            }
+        }
+    };
+    # 
+    foreach my $citekeyx (keys %entrieswithcrossref) {
+        my $xref = $entrieswithcrossref{$citekeyx}; 
+        next if $crossrefkeys{$xref} >= $mincrossrefs;
+        my $type = $bibentries{$citekeyx}->{entrytype};
+        if ($type eq 'review') {
+                #TODO
+        };
+        if ($type =~ /^in(proceedings|collection|book)$/) {
+            # inherit all that is undefined, except title etc
+            foreach my $field (keys %{$bibentries{$xref}}) {
+                next if $field =~ /title/;
+                if (! $bibentries{$citekeyx}->{$field}) {
+                    $bibentries{$citekeyx}->{$field} = $bibentries{$xref}->{$field};
+                    #print "$citekeyx inherits $field from $xref\n";
+                }
+            };
+            # inherit title etc as booktitle etc
+            $bibentries{$citekeyx}->{booktitle} = $bibentries{$xref}->{title}; 
+            if ($bibentries{$xref}->{titleaddon}) {
+                $bibentries{$citekeyx}->{booktitleaddon} = $bibentries{$xref}->{titleaddon}
+            };
+            if ($bibentries{$xref}->{subtitle}) {
+                $bibentries{$citekeyx}->{booksubtitle} = $bibentries{$xref}->{subtitle}
+            };
+        };
+        if ($type eq 'inbook') {
+            $bibentries{$citekeyx}->{bookauthor} = $bibentries{$xref}->{author} 
+        };
+        # MORE?
+        #$bibentries{$citekeyx}->{} = $bibentries{$xref}->{} 
+    };
 
-	# we make sure that keys that are cross-referenced 
-	# less than $mincrossrefs are not included the bibliography
-	foreach my $k ( keys %crossrefkeys ) {
-		if ( $crossrefkeys{$k} >= $mincrossrefs ) {
-			delete $crossrefkeys{$k};
-		}
-	};
-	return %bibentries
+    # we make sure that keys that are cross-referenced 
+    # less than $mincrossrefs are not included the bibliography
+    foreach my $k ( keys %crossrefkeys ) {
+        if ( $crossrefkeys{$k} >= $mincrossrefs ) {
+            delete $crossrefkeys{$k};
+        }
+    }
+#    return %bibentries
 }
 
 #=====================================================
@@ -753,8 +818,8 @@ my %localoptions = ();
 # split list entries
 
 # if aux file contains \citation{*} then we create the complete bibliography
-if ($citeallkeys and !$xmldata) {
-	@auxcitekeys = keys %bibentries ;
+if ($citeallkeys) {
+    @auxcitekeys = keys %bibentries ;
 }
 
 #=====================================================
@@ -763,21 +828,21 @@ if ($citeallkeys and !$xmldata) {
 
 sub parsename {
     my ($namestr, $argref) = @_;
-	my $usepre = $argref->{useprefix} || $globaloptions{useprefix} ;
+    my $usepre = $argref->{useprefix} || $globaloptions{useprefix} ;
     my $lastname;
     my $firstname = undef;
     my $prefix   = undef;
     my $suffix   = undef;
-	my $nameinitstr = undef;
-	
-	#  Arabic last names could begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
-	my $diacritics = qr/[\x{2bf}\x{2018}]/; # more? FIXME
-	#  Arabic names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
-	my $articleprefix = qr/\p{Ll}{2}-/; # etc
+    my $nameinitstr = undef;
+    
+    #  Arabic last names could begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
+    my $diacritics = qr/[\x{2bf}\x{2018}]/; # more? FIXME
+    #  Arabic names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
+    my $articleprefix = qr/\p{Ll}{2}-/; # etc
 
     if ( $namestr =~ /,.+,/ ) {    # pre? Lastname, suffix, Firstname
         ( $prefix, $lastname, $suffix, $firstname ) = $namestr =~
-			m/^(\p{Ll}(?:\p{Ll}|\s)+)?\s*(\p{Lu}[^,]+|{[^\\][^,]+}),\s+([^,]+),\s+([^,]+)$/x;
+            m/^(\p{Ll}(?:\p{Ll}|\s)+)?\s*(\p{Lu}[^,]+|{[^\\][^,]+}),\s+([^,]+),\s+([^,]+)$/x;
 
         #$lastname =~ s/^{(.+)}$/$1/g ;
         #$firstname =~ s/^{(.+)}$/$1/g ;
@@ -785,7 +850,7 @@ sub parsename {
     }
     elsif ( $namestr =~ /,/ ) {    # <pre> Lastname, Firstname
         ( $prefix, $lastname, $firstname ) = $namestr =~
-			m/^(\p{Ll}(?:\p{Ll}|\s)+\s+)?($articleprefix?$diacritics?\p{L}[^,]+|{[^,]+}),\s+([^,]+|{.+})$/x;
+            m/^(\p{Ll}(?:\p{Ll}|\s)+\s+)?($articleprefix?$diacritics?\p{L}[^,]+|{[^,]+}),\s+([^,]+|{.+})$/x;
 
         #$lastname =~ s/^{(.+)}$/$1/g ;
         #$firstname =~ s/^{(.+)}$/$1/g ;
@@ -811,15 +876,15 @@ sub parsename {
         #$lastname =~ s/^{(.+)}$/$1/;
     }
 
-	#TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g;
-	## remove punctuation, symbols, separator and control ???
+    #TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g;
+    ## remove punctuation, symbols, separator and control ???
 
     if ( $globaloptions{uniquename} == 2 ) {
         $nameinitstr = "";
         $nameinitstr .= substr( $prefix, 0, 1 ) . " " if ( $usepre and $prefix );
         $nameinitstr .= $lastname;
         $nameinitstr .= ", " . terseinitials($firstname) if $firstname;
-	};
+    };
 
     return {
             namestring     => $namestr,
@@ -833,11 +898,11 @@ sub parsename {
 
 sub terseinitials {
     my $str = shift;    #FIXME decode_latex first ?
-	croak "String not defined" unless ($str) ;
+    croak "String not defined" unless ($str) ;
     $str =~ s/^{(\p{L}).+}$/$1/g;    # Aaaaa{ de }Bbbb -> A
     $str =~ s/{\s+(\S+)\s+}/~$1~/g;  # {Aaaa Bbbbb Ccccc} -> A
-	# get rid of Punctuation (except DashPunctuation), Symbol and Other characters
-	$str =~ s/[\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g; 
+    # get rid of Punctuation (except DashPunctuation), Symbol and Other characters
+    $str =~ s/[\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g; 
     $str =~ s/\B\p{L}//g;
     $str =~ s/\s+//g;
     return $str;
@@ -926,7 +991,7 @@ sub makenameinitid {
 
 sub cleanstring {
     my $str = shift;
-	croak "String not defined" unless ($str) ;
+    croak "String not defined" unless ($str) ;
     $str =~ s/\\[A-Za-z]+//g;  ### (hyphen|q?quad|e[nm]space|-)//g; #FIXME more?
     $str =~ s/[\p{P}\p{S}\p{C}]+//g
       ;    # remove punctuation, symbols, separator and control
@@ -936,8 +1001,9 @@ sub cleanstring {
 
 sub normalize_string {
     my $str = shift;
-	croak "String not defined" unless ($str) ;
-    $str = latex_decode($str) unless ( $unicodebib or $fastsorting or $xmldata );
+    my $datatype = shift;
+    croak "String not defined" unless ($str) ;
+    $str = latex_decode($str) unless ( $unicodebib or $fastsorting or $datatype eq 'xml' );
     $str =~ s/\\[A-Za-z]+//g;  ### (hyphen|q?quad|e[nm]space|-)//g; #FIXME more?
     $str =~ s/[\p{P}\p{S}\p{C}]+//g
       ;    # remove punctuation, symbols, separator and control
@@ -976,13 +1042,14 @@ sub getinitstring {
 
 sub getnamestring {
     my $citekey = shift;
+    my $dt = $bibentries{$citekey}->{datatype};
 
-	# see biblatex manual §3.4 "if both are disabled, the sortname field is ignored as well"
+    # see biblatex manual §3.4 "if both are disabled, the sortname field is ignored as well"
     if (
         $bibentries{$citekey}->{sortname}
         and (     getoption( $citekey, "useauthor" )
                or getoption( $citekey, "useeditor" )  
-	        )
+            )
       )
     {
         return $bibentries{$citekey}->{sortname};
@@ -997,7 +1064,7 @@ sub getnamestring {
             $str .= $_->{firstname} . " " if $_->{firstname};
         }
         $str =~ s/\s+$//;
-        return normalize_string($str);
+        return normalize_string($str, $dt);
     }
     elsif ( getoption( $citekey, "useeditor" ) and $bibentries{$citekey}->{editor} ) {
         my $str = "";
@@ -1010,7 +1077,7 @@ sub getnamestring {
             $str .= " ";
         }
         $str =~ s/\s+$//;
-        return normalize_string($str);
+        return normalize_string($str, $dt);
     }
     else {
         return gettitlestring($citekey);
@@ -1051,21 +1118,22 @@ sub getdecyearstring {
 
 sub gettitlestring {
     my $citekey = shift;
+    my $dt = $bibentries{$citekey}->{datatype};
     if ( $bibentries{$citekey}->{sorttitle} ) {
-        return normalize_string( $bibentries{$citekey}->{sorttitle} );
+        return normalize_string( $bibentries{$citekey}->{sorttitle}, $dt );
     }
     elsif ( $bibentries{$citekey}->{title} ) {
-        return normalize_string( $bibentries{$citekey}->{title} );
+        return normalize_string( $bibentries{$citekey}->{title}, $dt );
     }
-	elsif ($bibentries{$citekey}->{issuetitle}) {
-        return normalize_string( $bibentries{$citekey}->{issuetitle} );
+    elsif ($bibentries{$citekey}->{issuetitle}) {
+        return normalize_string( $bibentries{$citekey}->{issuetitle}, $dt );
     }
-	elsif ($bibentries{$citekey}->{journal}) {
-        return normalize_string( $bibentries{$citekey}->{journal} );
+    elsif ($bibentries{$citekey}->{journal}) {
+        return normalize_string( $bibentries{$citekey}->{journal}, $dt );
     }
-	else {
-		croak "No title available for gettitlestring()"
-	}
+    else {
+        croak "No title available for gettitlestring()"
+    }
 }
 
 sub getvolumestring {
@@ -1094,23 +1162,25 @@ sub getvolumestring {
 # "labelalpha", "sortstrings", etc
 
 foreach my $citekey (@auxcitekeys) {
-	#print "postprocessing $citekey\n";
+    croak "Could not find key $citekey in the database(s)!" unless $bibentries{$citekey};
+    #print "postprocessing $citekey\n";
+    my $dt = $bibentries{$citekey}->{datatype};
     
-	# TODO move this to parse_bibtex() function ?
-	unless ($xmldata) {
-		# parse name entries into hashes containing the different parts of each name
-		foreach my $field (@namefields) {
-			next unless $bibentries{$citekey}->{$field};
-			my @names = @{ $bibentries{$citekey}->{$field} };
-			my @nameAoH;    # array of hashes
-			foreach my $name (@names) {
-				push @nameAoH, parsename( $name, { useprefix => getoption($citekey, 'useprefix') } );
-			}
-			$bibentries{$citekey}->{$field} = [@nameAoH];
-		}
-	}
+    # TODO move this to parse_bibtex() function ?
+    unless ($dt eq 'xml') {
+        # parse name entries into hashes containing the different parts of each name
+        foreach my $field (@namefields) {
+            next unless $bibentries{$citekey}->{$field};
+            my @names = @{ $bibentries{$citekey}->{$field} };
+            my @nameAoH;    # array of hashes
+            foreach my $name (@names) {
+                push @nameAoH, parsename( $name, { useprefix => getoption($citekey, 'useprefix') } );
+            }
+            $bibentries{$citekey}->{$field} = [@nameAoH];
+        }
+    }
 
-	# get day month year from date field if no year is supplied
+    # get day month year from date field if no year is supplied
     if ( $bibentries{$citekey}->{date} && !$bibentries{$citekey}->{year} ) {
         my $date = $bibentries{$citekey}->{date};
         $bibentries{$citekey}->{year}  = substr $date, 0, 4;
@@ -1118,7 +1188,7 @@ foreach my $citekey (@auxcitekeys) {
         $bibentries{$citekey}->{day}   = substr $date, 8, 2;
     }
     
-	## set local options to override global options for individual entries
+    ## set local options to override global options for individual entries
     if ( $bibentries{$citekey}->{options} ) {
         my @entryoptions = split /\s*,\s*/, $bibentries{$citekey}->{options};
         foreach (@entryoptions) {
@@ -1140,13 +1210,13 @@ foreach my $citekey (@auxcitekeys) {
 
     # determine "namehash" field for biblatex
     my $namehash;
-	my $fullhash;
+    my $fullhash;
     my $nameid;
     my $nameinitid;
     if ( $bibentries{$citekey}->{sortname}
          and (   getoption( $citekey, "useauthor" ) 
-			  or getoption( $citekey, "useeditor" ) 
-	         )
+              or getoption( $citekey, "useeditor" ) 
+             )
        )
     {
         my @aut = @{ $bibentries{$citekey}->{sortname} };
@@ -1157,7 +1227,7 @@ foreach my $citekey (@auxcitekeys) {
           if ( $globaloptions{uniquename} == 2 );
     }
     elsif ( getoption( $citekey, "useauthor" ) 
-			and $bibentries{$citekey}->{author} ) {
+            and $bibentries{$citekey}->{author} ) {
         my @aut = @{ $bibentries{$citekey}->{author} };
         $namehash   = getnameinitials( $citekey, @aut );
         $fullhash   = getallnameinitials( $citekey, @aut );
@@ -1166,7 +1236,7 @@ foreach my $citekey (@auxcitekeys) {
           if ( $globaloptions{uniquename} == 2 );
     }
     elsif ( getoption( $citekey, "useeditor" ) 
-			and $bibentries{$citekey}->{editor} ) {
+            and $bibentries{$citekey}->{editor} ) {
         my @edt = @{ $bibentries{$citekey}->{editor} };
         $namehash   = getnameinitials( $citekey, @edt );
         $fullhash   = getallnameinitials( $citekey, @edt );
@@ -1177,13 +1247,13 @@ foreach my $citekey (@auxcitekeys) {
     else {    # initials of title
         if ( $bibentries{$citekey}->{sorttitle} ) {
             $namehash   = terseinitials( $bibentries{$citekey}->{sorttitle} );
-			$fullhash   = $namehash;
+            $fullhash   = $namehash;
             $nameid     = cleanstring( $bibentries{$citekey}->{sorttitle} );
             $nameinitid = $nameid if ( $globaloptions{uniquename} == 2 );
         }
         else {
             $namehash   = terseinitials( $bibentries{$citekey}->{title} );
-			$fullhash   = $namehash;
+            $fullhash   = $namehash;
             $nameid     = cleanstring( $bibentries{$citekey}->{title} );
             $nameinitid = $nameid if ( $globaloptions{uniquename} == 2 );
         }
@@ -1203,91 +1273,83 @@ foreach my $citekey (@auxcitekeys) {
         $seenuniquename{$nameid}++;
         $bibentries{$citekey}->{uniquename} = $nameid;
     }
+
+
     ### Generate the labelalpha --- TODO : check for labelname ??
     if ( $globaloptions{labelalpha} ) {
-    	my $label;
+        my $label;
 
-		#          if ($bibentries{$citekey}->{shorthand}) {
-		#               $label = $bibentries{$citekey}->{shorthand}
-		#          } else {
-		#               if ($bibentries{$citekey}->{label}) {
-		#                    $label = $bibentries{$citekey}->{label}
-		#               } else { … }
-		#          }
-		#               
-		#               
-		my @lastnames;
-		my @names;
-		my $noofauth;
-
-		# TODO option $useprefix needs to be taken into account!
-		# TODO CHECK FOR  $useauthor and $useeditor also in $bibentry{$citekey}->{options}
-		if ( $bibentries{$citekey}->{author} and getoption( $citekey, "useauthor" ) ) {
-        	@names     = @{ $bibentries{$citekey}->{author} };
-            @lastnames = map { normalize_string( $_->{lastname} ) } @names;
-            $noofauth  = scalar @names;
-            if ( $noofauth > 3 ) {
-                $label =
-                  substr( $lastnames[0], 0, 3 ) . $globaloptions{alphaothers};
-            }
-            elsif ( $noofauth == 1 ) {
-                $label = substr( $lastnames[0], 0, 3 );
-            }
-            else {
-                foreach my $n (@lastnames) {
-                    $n =~ s/\P{Lu}//g;
-                    $label .= $n;
-                }
-            }
-        }
-        elsif ( $bibentries{$citekey}->{editor} and getoption( $citekey, "useeditor" ) )
+        if ($bibentries{$citekey}->{shorthand}) 
         {
-            @names     = @{ $bibentries{$citekey}->{editor} };
-            @lastnames = map { normalize_string( $_->{lastname} ) } @names;
-            $noofauth  = scalar @names;
-            if ( $noofauth > 3 ) {
-                $label =
-                  substr( $lastnames[0], 0, 3 ) . $globaloptions{alphaothers};
-            }
-            elsif ( $noofauth == 1 ) {
-                $label = substr( $lastnames[0], 0, 3 );
-            }
-            else {
-                foreach my $n (@lastnames) {
-                    $n =~ s/\P{Lu}//g;
-                    $label .= $n;
+            $label = $bibentries{$citekey}->{shorthand} 
+        }
+        else 
+        {
+            if ($bibentries{$citekey}->{label}) 
+            {
+                $label = $bibentries{$citekey}->{label}
+            } 
+            elsif ( $bibentries{$citekey}->{author} and getoption( $citekey, "useauthor" ) ) 
+            { 
+            # TODO option $useprefix needs to be taken into account!
+            # TODO CHECK FOR  $useauthor and $useeditor also in $bibentry{$citekey}->{options}
+                my @names     = @{ $bibentries{$citekey}->{author} };
+                my @lastnames = map { normalize_string( $_->{lastname}, $dt ) } @names;
+                my $noofauth  = scalar @names;
+                if ( $noofauth > 3 ) {
+                    $label =
+                      substr( $lastnames[0], 0, 3 ) . $globaloptions{alphaothers};
+                }
+                elsif ( $noofauth == 1 ) {
+                    $label = substr( $lastnames[0], 0, 3 );
+                }
+                else {
+                    foreach my $n (@lastnames) {
+                        $n =~ s/\P{Lu}//g;
+                        $label .= $n;
+                    }
                 }
             }
-        }
-        elsif ( $bibentries{$citekey}->{label} ) {
-            $label = $bibentries{$citekey}->{label};
-        }
-        else {
-            $label = "Zzz"    # ??? FIXME
-        }
-        my $yr;
-        if ( $bibentries{$citekey}->{year} ) {
-            $yr = substr $bibentries{$citekey}->{year}, 2, 2;
+            elsif ( $bibentries{$citekey}->{editor} and getoption( $citekey, "useeditor" ) )
+            {
+                my @names     = @{ $bibentries{$citekey}->{editor} };
+                my @lastnames = map { normalize_string( $_->{lastname}, $dt ) } @names;
+                my $noofauth  = scalar @names;
+                if ( $noofauth > 3 ) {
+                    $label =
+                      substr( $lastnames[0], 0, 3 ) . $globaloptions{alphaothers};
+                }
+                elsif ( $noofauth == 1 ) {
+                    $label = substr( $lastnames[0], 0, 3 );
+                }
+                else {
+                    foreach my $n (@lastnames) {
+                        $n =~ s/\P{Lu}//g;
+                        $label .= $n;
+                    }
+                }
+            }
+            else 
+            {
+                $label = "Zzz"    # ??? FIXME
+            };
+            my $yr;
+            if ( $bibentries{$citekey}->{year} ) {
+                $yr = substr $bibentries{$citekey}->{year}, 2, 2;
+            }
+            else {
+                $yr = "00";
+            }
 
-            #          } elsif ($bibentries{$citekey}->{date}) {
-            #               $yr = substr $bibentries{$citekey}->{date}, 2, 2;
-        }
-        else {
-            $yr = "00";
-        }
-
-        $label .= $yr;
-        $label .= $bibentries{$citekey}->{labelyear}
-          if $bibentries{key}->{labelyear};
-
-        #          };
+            $label .= $yr;
+        };
 
         $bibentries{$citekey}->{labelalpha} = $label;
     }
 
-	my $tmp = getnamestring($citekey) . " " . getyearstring($citekey);
-	$seenauthoryear{$tmp}++;
-	$bibentries{$citekey}->{authoryear} = $tmp;
+    my $tmp = getnamestring($citekey) . " " . getyearstring($citekey);
+    $seenauthoryear{$tmp}++;
+    $bibentries{$citekey}->{authoryear} = $tmp;
 
     if ( $bibentries{$citekey}->{shorthand} ) {
         push @listofshorthands, $citekey;
@@ -1335,8 +1397,7 @@ foreach my $citekey (@auxcitekeys) {
     }
     else {
         # do nothing!
-        print
-"Warning: the sorting code $globaloptions{sorting} is not defined, ignoring!\n";
+        carp "Warning: the sorting code $globaloptions{sorting} is not defined, ignoring!\n";
     }
 }
 
@@ -1365,11 +1426,11 @@ if ( $globaloptions{sorting} ) {
 sub getpartinitials {
     my $part = shift;
     $part = terseinitials($part);
-	unless ( $globaloptions{terseinits} ) {
-	    $part =~ s/(\p{L})/$1\.~/g ;
-    	$part =~ s/~-/-/g ; 
-	    $part =~ s/~$//;
-	}
+    unless ( $globaloptions{terseinits} ) {
+        $part =~ s/(\p{L})/$1\.~/g ;
+        $part =~ s/~-/-/g ; 
+        $part =~ s/~$//;
+    }
     return $part;
 }
 
@@ -1406,10 +1467,10 @@ sub print_for_biblatex {
     foreach my $namefield (@namefields) {
         if ( defined $be->{$namefield} ) {
             my @nf    = @{ $be->{$namefield} };
-			if ( $be->{$namefield}->[-1]->{namestring} eq 'others' ) {
-				$str .= "  \\true{more$namefield}\n";
-				pop @nf; # remove the last element in the array
-			};
+            if ( $be->{$namefield}->[-1]->{namestring} eq 'others' ) {
+                $str .= "  \\true{more$namefield}\n";
+                pop @nf; # remove the last element in the array
+            };
             my $total = $#nf + 1;
             $str .= "  \\name{$namefield}{$total}{%\n";
             foreach my $n (@nf) {
@@ -1421,10 +1482,10 @@ sub print_for_biblatex {
     foreach my $listfield (@listfields) {
         if ( defined $be->{$listfield} ) {
             my @nf    = @{ $be->{$listfield} };
-			if ( $be->{$listfield}->[-1] eq 'others' ) {
-				$str .= "  \\true{more$listfield}\n";
-				pop @nf; # remove the last element in the array
-			};
+            if ( $be->{$listfield}->[-1] eq 'others' ) {
+                $str .= "  \\true{more$listfield}\n";
+                pop @nf; # remove the last element in the array
+            };
             my $total = $#nf + 1;
             $str .= "  \\list{$listfield}{$total}{%\n";
             foreach my $n (@nf) {
@@ -1444,26 +1505,35 @@ sub print_for_biblatex {
         $str .= "  \\field{labelalpha}{$label}\n";
     }
     $str .= "  \\field{sortinit}{$sortinit}\n";
-	
-	if ( $globaloptions{labelyear} ) {
-		my $authoryear = $be->{authoryear};
-		if ( $seenauthoryear{$authoryear} > 1) {
-			$seenlabelyear{$authoryear}++;
-			$str .= "  \\field{labelyear}{" 
-			  . $seenlabelyear{$authoryear} . "}\n";
-		}
-	}
+    
+    if ( $globaloptions{labelyear} ) {
+        my $authoryear = $be->{authoryear};
+        if ( $seenauthoryear{$authoryear} > 1) {
+            $seenlabelyear{$authoryear}++;
+            $str .= "  \\field{labelyear}{" 
+              . $seenlabelyear{$authoryear} . "}\n";
+        }
+    }
 
-	if ( $globaloptions{extraalpha} ) {
-		my $authoryear = $be->{authoryear};
-		if ( $seenauthoryear{$authoryear} > 1) {
-			$seenlabelyear{$authoryear}++;
-			$str .= "  \\field{extraalpha}{" 
-			  . $seenlabelyear{$authoryear} . "}\n";
-		}
-	}
+    if ( $globaloptions{extraalpha} ) {
+        my $authoryear = $be->{authoryear};
+        if ( $seenauthoryear{$authoryear} > 1) {
+            $seenlabelyear{$authoryear}++;
+            $str .= "  \\field{extraalpha}{" 
+              . $seenlabelyear{$authoryear} . "}\n";
+        }
+    }
 
-
+    if ( $globaloptions{labelnumber} ) {
+        if ($be->{shorthand}) {
+            $str .= "  \\field{labelnumber}{"
+              . $be->{shorthand} . "}\n";
+        } 
+        elsif ($be->{labelnumber}) {
+            $str .= "  \\field{labelnumber}{"
+              . $be->{labelnumber} . "}\n";
+        } 
+    }
 
     # FIXME : currently bibtex only outputs \count{uniquename}{0} !
     if ( $globaloptions{uniquename} > 0 ) {
@@ -1482,10 +1552,10 @@ sub print_for_biblatex {
             next
               if $lfield eq "crossref"
                   and $seenkeys{ $be->{crossref} };  # belongs to @auxcitekeys ;
-			my $lfieldprint = $lfield ;
-			if ($lfield eq 'journal') {
-				$lfieldprint = 'journaltitle' 
-			};
+            my $lfieldprint = $lfield ;
+            if ($lfield eq 'journal') {
+                $lfieldprint = 'journaltitle' 
+            };
             $str .= "  \\field{$lfieldprint}{" . $be->{$lfield} . "}\n";
         }
     }
@@ -1535,8 +1605,8 @@ Options:
   --mincrossrefs|-m <n> Set treshold for crossrefs.
   --fastsort|-f         Do not use LaTeX_Decode and Unicode::Collate for sorting
   --use-prd|-p          Force parsing with Parse::RecDescent
-  --bibdata|-d <file>	Use <file> as the bibliography database
-  --allentries|-a		Output all entries in the database
+  --bibdata|-d <file>    Use <file> as the bibliography database
+  --allentries|-a        Output all entries in the database
   --unicodebib|-u       Assume bib file is UTF-8 and skip latex_decode
   --unicodebbl|-U       Encode the bbl output in UTF-8
     \n]
@@ -1576,7 +1646,7 @@ EOF
 $BBL .= "\\preamble{%\n$preamble\n}\n" if $preamble;
 
 foreach my $k (@auxcitekeys) {
-	next if $crossrefkeys{$k};
+    next if $crossrefkeys{$k};
     $BBL .= print_for_biblatex($k);
 }
 if ( $globaloptions{sortlos} and @listofshorthands ) {
