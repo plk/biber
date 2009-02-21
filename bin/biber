@@ -67,6 +67,7 @@ GetOptions(
     'allentries|a!',
     # 'convert|c=s',
     # 'type|t=s',
+	'debug!',
     'help|h|?',
     'version|v'
 );
@@ -117,11 +118,15 @@ my $useprd =
   exists $opts->{'use-prd'}
   ? $opts->{'use-prd'}
   : 0;
+my $biberdebug =
+  exists $opts->{'debug'}
+  ? $opts->{'debug'}
+  : 0;
 
 ### Biblatex default options
 my %globaloptions = (
-    debug => 0, #TODO : Biber's debug info will be necessarily different 
-                #        than that given by bibtex!
+    debug => 	$biberdebug, #TODO : Biber's debug info will be necessarily different 
+							 #       than that given by bibtex!
     labelalpha  => 0,
     useauthor   => 1,
     useeditor   => 1,
@@ -149,31 +154,35 @@ my @namefields =
   qw/author editor commentator translator redactor bookauthor afterword
   introduction holder sortname namea nameb namec/;
 my @listfields =
-  qw/publisher location address institution school language origlocation origpublisher
-  lista listb listc listd liste listf/;
+  qw/publisher location address institution school language origlocation
+  origpublisher lista listb listc listd liste listf/;
 
 my @entriestosplit = ( @namefields, @listfields );
 
 # literal and integer fields
-# FIXME ignore "library" "remarks" etc?
 my @literalfields =
-  qw/abstract addendum annotation booksubtitle booktitle booktitleaddon
-  chapter day edition eid howpublished indextitle isan isbn ismn isrn issn
-  issue issuesubtitle issuetitle iswc journalsubtitle journaltitle journal
-  label library mainsubtitle maintitle maintitleaddon month nameaddon note
-  number origtitle pagetotal part reprinttitle series shorthand
-  shorthandintro shortjournal shortseries shorttitle subtitle title
-  titleaddon eprinttype urlday urlmonth urlyear venue version volume volumes usera userb
-  userc userd usere userf hyphenation crossref entrysubtype execute gender
-  indexsorttitle sortkey sorttitle sortyear xref/;
+  qw/abstract addendum annotation booksubtitle booktitle booktitleaddon chapter
+  day edition eid howpublished indextitle isan isbn ismn isrn issn issue
+  issuesubtitle issuetitle iswc journalsubtitle journaltitle journal label
+  mainsubtitle maintitle maintitleaddon month nameaddon note number
+  origtitle pagetotal part reprinttitle series shorthand shorthandintro
+  shortjournal shortseries shorttitle subtitle title titleaddon eprinttype
+  urlday urlmonth urlyear venue version volume volumes usera userb userc userd
+  usere userf hyphenation crossref entrysubtype execute gender indexsorttitle
+  sortkey sorttitle sortyear xref/;
+
+# ignored by default: library remarks (more?)
+# TODO add option to insert them if needed
 
 my @rangefields    = qw/origyear pages year/;
 my @verbatimfields = qw/doi eprint file pdf url verba verbb verbc/;
 my @keyfields =
   qw/authortype bookpagination editortype origlanguage pagination type nameatype
   namebtype namectype/;
+# TODO add keys for selecting script, language, translation, transliteration.
 
-#TODO validate the keys in the @keyfields ?
+# TODO validate the keys in the @keyfields ?
+
 push @literalfields, @keyfields;
 
 #=====================================================
@@ -284,16 +293,17 @@ sub parse_auxfile {
     while (<$aux>) {
         if ( $_ =~ /^\\bibdata/ ) {
             # There can be more than one bibdata file!!! 
-            # We should be able to parse many bib and or xml files
+            # We should be able to parse many bib and/or xml files
             # Datafile given as option -d should be parsed first, then the other ones
             (my $bibdatastring) = m/^\\bibdata{([^}]+)}/;
-            push(@bibdatafiles, split /,/, $bibdatastring); 
-            $ctrl_file = shift @bibdatafiles;
+            my @tmp = split/,/, $bibdatastring; 
+            $ctrl_file = shift @tmp;
+			push(@bibdatafiles, @tmp), 
         }
         if ( $_ =~ /^\\citation/ ) { 
             m/^\\citation{([^}]+)}/;  
             unless ( $seenkeys{$1} or $1 eq "biblatex-control" or $1 eq '*' ) {
-                push @auxcitekeys, $1;
+                push @auxcitekeys, decode_utf8($1);
                 $seenkeys{$1}++
             } 
             if ( $1 eq '*' ) {
@@ -317,6 +327,11 @@ sub parse_auxfile {
     }
 }
 
+print "Found ", $#auxcitekeys+1 , " citekeys in aux file\n";
+
+@auxcitekeys = sort @auxcitekeys if $biberdebug;
+
+print "The citekeys are:\n", "@auxcitekeys", "\n\n" if $biberdebug;
 
 #=====================================================
 # PARSE CONTROL FILE with simple regex matching...
@@ -381,15 +396,22 @@ my %crossrefkeys = ();
 my %entrieswithcrossref = ();
 my $preamble   = "";
 
+
+
 #TODO : group xml and bib files together, and parse them together?
 foreach my $bib (@bibdatafiles) {
     if ($bib =~ /\.xml$/) {
         parse_biblatexml( $bib )
     }
+	elsif ($bib =~ /\.bib$/) {
+        parse_bibtex($bib)
+	}
     else {
         parse_bibtex("$bib.bib")
     }
 }
+
+@auxcitekeys = grep { defined $bibentries{$_} } @auxcitekeys;
 
 ######
 # TODO move the following subs to external packages ?
@@ -400,12 +422,15 @@ foreach my $bib (@bibdatafiles) {
 
 sub parse_bibtex {
     my $filename = shift;
+	# citekeys that are in this database
+	my @localkeys;
+	print "Processing bibtex file $filename\n";
 
     if ( !$unicodebib && $unicodebbl ) {
         require File::Slurp;    #
         my $ufilename = "$filename.utf8";
         my $ubib      = new IO::File ">$ufilename";
-        my $buf       = File::Slurp::read_file($filename);
+        my $buf       = File::Slurp::read_file($filename) || croak "Can't read $filename";
 
         #TODO decode $buf if encoding is not UTF-8 : cmd-line option --inputencoding
         print $ubib latex_decode($buf) || croak "Can't write to $ufilename : $!";
@@ -424,11 +449,16 @@ sub parse_bibtex {
 
         while ( my $entry = new Text::BibTeX::Entry $bib) {
             my $key = $entry->key;
+			print "Processing $key\n" if $biberdebug;
             if ( $bibentries{ $key } ) {
-                carp "We already have key $key! Ignoring in $filename...";
+                print "We already have key $key! Ignoring in $filename...\n";
                 next;
             }
-            next unless $entry->parse_ok;
+			push @localkeys, $key;
+            unless ($entry->parse_ok) {
+				carp "Entry $key does not parse correctly: skipping" ;
+				next ;
+			}
             if ( $entry->type eq "preamble" ) {
                 $preamble .= $entry->value;
             }
@@ -438,6 +468,7 @@ sub parse_bibtex {
                       decode_utf8( $entry->get($f) );
                 }
                 $bibentries{ $key }->{entrytype} = $entry->type;
+				$bibentries{ $key }->{datatype} = 'bibtex';
             }
         }
     }
@@ -473,14 +504,15 @@ sub parse_bibtex {
                         carp "We already have key $tmpkey! Ignoring in $filename...";
                         next;
                     }
+					push @localkeys, $tmpkey;
                     $bibentries{$tmpkey} = $entries[$i]->{$tmpkey};
+					$bibentries{$tmpkey}->{datatype} = 'bibtex';
                 }
             }
         }
     }
 
-    foreach my $key ( keys %bibentries ) {
-        $bibentries{$key}->{datatype} = 'bibtex';
+    foreach my $key ( @localkeys ) {
         foreach my $ets (@entriestosplit) {
             if ( exists $bibentries{$key}->{$ets} ) {
                 my $tmp = $bibentries{$key}->{$ets};
@@ -503,7 +535,7 @@ sub parse_bibtex {
     }
 
     # Handling of crossrefs
-    foreach my $citekey (@auxcitekeys) {
+    foreach my $citekey (@localkeys) {
         if ($bibentries{$citekey}->{crossref}) {
             my $crefkey = $bibentries{$citekey}->{crossref};
             $crossrefkeys{$crefkey}++;
@@ -564,7 +596,7 @@ sub parse_bibtex {
 
 #TODO package Biber::BibLaTeXML ?
 sub parse_biblatexml {
-    my $xmlfile = shift; 
+    my $xmlfile = shift;
     require XML::LibXML;
     my $parser = XML::LibXML->new();
     my $db = $parser->parse_file($xmlfile) 
@@ -578,6 +610,9 @@ sub parse_biblatexml {
     #             carp "The file $xmlfile does not validate against the biblatexml RelaxNG schema!\n$@"
     #         };
     # };
+	
+	# keep track of citekeys that were not found in this database
+	my %citekeysnotfound = ();
     
     if ($citeallkeys) {
         @auxcitekeys = ();
@@ -586,20 +621,24 @@ sub parse_biblatexml {
             push @auxcitekeys, $r->findnodes('@id')->string_value
         };
     };
-    print "Processing ", $#auxcitekeys+1 , " entries in $xmlfile ...\n";
+    print "Processing $xmlfile ...\n";
 
     # Contrary to the bibtex approach, we are not extracting all data to
     # the bibentries hash, but only the ones corresponding to @auxcitekeys
     foreach my $citekey (@auxcitekeys) {
         next if $bibentries{$citekey}; # skip if this is already found in another database
+		print "Looking for $citekey\n" if $biberdebug;
         my $xpath = '/*/bib:entry[@id="' . $citekey . '"]';
         my $results = $db->findnodes($xpath);
         unless ( $results ) {
-            carp "Can't find entry with citekey $citekey" unless $#bibdatafiles > 0;
+			# print "Can't find entry with citekey $citekey... skipping\n";
+			# we remove $citekey from @auxcitekeys
+			$citekeysnotfound{$citekey} = 1;
+			#@auxcitekeys = grep { $_ ne $citekey } @auxcitekeys;
             next
         };
         if ( $results->size() > 1 ) { 
-            carp "The database contains more than one bib:entry with id=\"$citekey\" !!!" 
+            carp "The database contains more than one bib:entry with id=\"$citekey\" !" 
         };
         my $bibrecord = $results->get_node(1); 
 
@@ -611,13 +650,15 @@ sub parse_biblatexml {
         };
     };
 
-
     foreach my $k ( keys %crossrefkeys ) {
         push @auxcitekeys, $k unless $citeallkeys ;
     };
     #--------------------------------------------------
 
-    foreach my $citekey (sort @auxcitekeys) {
+    foreach my $citekey (@auxcitekeys) {
+		next if $citekeysnotfound{$citekey};
+        next if $bibentries{$citekey}; # skip if this is already found in another database
+		print "Processing key $citekey\n" if $biberdebug;
         my $xpath = '/*/bib:entry[@id="' . $citekey . '"]';
         my $results = $db->findnodes($xpath);
         my $bibrecord = $results->get_node(1); 
@@ -898,11 +939,12 @@ sub parsename {
 
 sub terseinitials {
     my $str = shift;    #FIXME decode_latex first ?
-    croak "String not defined" unless ($str) ;
+    carp "String not defined" unless ($str) ;
     $str =~ s/^{(\p{L}).+}$/$1/g;    # Aaaaa{ de }Bbbb -> A
     $str =~ s/{\s+(\S+)\s+}/~$1~/g;  # {Aaaa Bbbbb Ccccc} -> A
     # get rid of Punctuation (except DashPunctuation), Symbol and Other characters
-    $str =~ s/[\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g; 
+    $str =~ s/[\x{2bf}\x{2018}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g; 
+	$str =~ s/[\b~]a.-\p{L}//; # remove arabic prefix: al-Khwarizmi -> K as-Saleh -> S ʿAbd~al-Raḥmān -> A etc
     $str =~ s/\B\p{L}//g;
     $str =~ s/\s+//g;
     return $str;
@@ -1154,6 +1196,11 @@ sub getvolumestring {
     }
 }
 
+open DUMP, ">BIBENTRIES.TMP";
+print DUMP Dumper \%bibentries;
+close DUMP;
+
+
 ###############################################
 # internal post-processing to prepare output
 
@@ -1162,7 +1209,10 @@ sub getvolumestring {
 # "labelalpha", "sortstrings", etc
 
 foreach my $citekey (@auxcitekeys) {
-    croak "Could not find key $citekey in the database(s)!" unless $bibentries{$citekey};
+	unless ( $bibentries{$citekey} ) {
+	    print "Could not find key $citekey in the database(s)! Skipping...\n" ;
+		next;
+	};
     #print "postprocessing $citekey\n";
     my $dt = $bibentries{$citekey}->{datatype};
     
@@ -1657,7 +1707,7 @@ if ( $globaloptions{sortlos} and @listofshorthands ) {
     $BBL .= "\\endlossort\n";
 }
 $BBL .= "\\endinput\n";
-carp ">>> Something's wrong! The output does not appear to be valid UTF-8 <<<" unless Encode::is_utf8($BBL);
+carp "The output does not appear to be valid UTF-8!" unless Encode::is_utf8($BBL);
 
 #$BBL = decode('utf8', $BBL) ; #if $unicodebbl;
 print BBL $BBL;
