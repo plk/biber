@@ -8,9 +8,6 @@ use XML::Writer;
 use IO::File;
 use Encode;
 use File::Copy;
-
-my $biblatexmlnew = 1; # this is now default FIXME !
-
 use open IO => ':encoding(utf8)';
 binmode( STDOUT, ':utf8' );
 
@@ -136,6 +133,12 @@ my @cb_topicfields = qw/
 	works
 	/;
 
+my %aliases = ( 
+	'address' => 'location',
+	'school'  => 'institution',
+	'annote'  => 'annotation',
+	'key'     => 'sortkey'
+);
 
 my @entriestosplit = ( @namefields, @listfields); 
 
@@ -212,7 +215,11 @@ while ( my $entry = new Text::BibTeX::Entry $bib) {
     }
     elsif ( $entry->type ne "string" ) {
         foreach my $f ( $entry->fieldlist ) {
-            $bibentries{ $entry->key }->{$f} =
+			my $fname = $f;
+			if ( $aliases{$f} ) {
+				$fname = $aliases{$f};
+			};
+            $bibentries{ $entry->key }->{$fname} =
               decode_utf8( $entry->get($f) );
         }
         $bibentries{ $entry->key }->{entrytype} = $entry->type;
@@ -229,9 +236,48 @@ my %localoptions = ();
 
 # split list entries
 
+my %numericalmonth = (
+	'January' => 1,
+	'February' => 2,
+	'March' => 3,
+	'April' => 4,
+	'May' => 5,
+	'June' => 6,
+	'July' => 7,
+	'August' => 8,
+	'September' => 9,
+	'October' => 10,
+	'November' => 11,
+	'December' => 12,
+	'january' => 1,
+	'february' => 2,
+	'march' => 3,
+	'april' => 4,
+	'may' => 5,
+	'june' => 6,
+	'july' => 7,
+	'august' => 8,
+	'september' => 9,
+	'october' => 10,
+	'november' => 11,
+	'december' => 12,
+	'jan' => 1,
+	'feb' => 2,
+	'mar' => 3,
+	'apr' => 4,
+	'may' => 5,
+	'jun' => 6,
+	'jul' => 7,
+	'aug' => 8,
+	'sep' => 9,
+	'oct' => 10,
+	'nov' => 11,
+	'dec' => 12
+	);
+
 foreach ( keys %bibentries ) {
     foreach my $ets (@entriestosplit) {
-        if ( exists $bibentries{$_}->{$ets} ) {
+        if ( defined $bibentries{$_}->{$ets} ) {
             my $tmp = $bibentries{$_}->{$ets};
 
             # "and" within { } must be preserved: see biblatex manual §2.3.3
@@ -249,6 +295,35 @@ foreach ( keys %bibentries ) {
             $bibentries{$_}->{$ets} = [@z];
         }
     } ;
+	
+	#Change month names to numbers
+	if ($bibentries{$_}->{month}) {
+		my $monthname = $bibentries{$_}->{month};
+		if (exists $numericalmonth{$monthname}) {
+			$bibentries{$_}->{month} = $numericalmonth{$monthname};
+		}
+	}
+
+	# remove publisher for journal articles
+	if ( $bibentries{$_}->{entrytype} eq 'article' and $bibentries{$_}->{publisher} ) {
+		delete $bibentries{$_}->{publisher}
+	}
+
+	# remove url if identical to doi
+	if ($bibentries{$_}->{doi} and $bibentries{$_}->{url} 
+			and ($bibentries{$_}->{doi} eq $bibentries{$_}->{url})) {
+		delete $bibentries{$_}->{url}
+	}
+
+	#Fix doi
+	if ($bibentries{$_}->{doi}) {
+		my $doi = $bibentries{$_}->{doi};
+		if ( $doi =~ /^http/ ) {
+			$doi =~ s|http://dx\.doi\.org/||;
+		}
+		$doi =~ s|\\_|_|g;
+		$bibentries{$_}->{doi} = $doi
+	}
 
     foreach my $field (@namefields) {
         next unless $bibentries{$_}->{$field};
@@ -281,56 +356,37 @@ $writer->startTag("bib:entries", 'xmlns:bib'=>'http://ankabut.net/biblatexml');
 my $count = 0;
 
 for my $id ( sort keys %bibentries ) {
-	# last if $count > 100;
 	$count++;
 	my $entry = $bibentries{$id};
-	if ($biblatexmlnew) {
-		if ($entry->{howpublished} and $entry->{type}) {
-			$writer->startTag("bib:entry", 
-				'id' => $id, 
-				'entrytype' => $entry->{entrytype}, 
-				'type' => $entry->{type},
-				'howpublished' => $entry->{howpublished}); 
-		}
-		elsif ( $entry->{type} ) { 
-			$writer->startTag('bib:entry',
-				'id' => $id, 
-				'entrytype' => $entry->{entrytype}, 
-				'type' => $entry->{type}); 
-		}
-		elsif ( $entry->{howpublished} ) { 
-			$writer->startTag('bib:entry',
-				'id' => $id, 
-				'entrytype' => $entry->{entrytype}, 
-				'howpublished' => $entry->{howpublished}); 
-		} else {
-			$writer->startTag('bib:entry',
-				'id' => $id, 
-				'entrytype' => $entry->{entrytype}); 
-		 };
-	} 
-	else {
-		$writer->startTag("bib:entry", 'id' => $id);
-		if ($entry->{howpublished} and $entry->{type}) {
-			$writer->startTag("bib:". $entry->{entrytype}, 
-				'howpublished' => $entry->{howpublished}, 
-				'type' => $entry->{type}) ;
-		}
-		elsif ( $entry->{type} ) { 
-			$writer->startTag("bib:". $entry->{entrytype}, 'type' => $entry->{type}); 
-		}
-		elsif ( $entry->{howpublished} ) { 
-			$writer->startTag("bib:". $entry->{entrytype}, 'howpublished' => $entry->{howpublished}); 
-		} else {
-		   $writer->startTag("bib:". $entry->{entrytype}); 
-		 };
-    };
+	if ($entry->{howpublished} and $entry->{type}) {
+		$writer->startTag("bib:entry", 
+			'id' => $id, 
+			'entrytype' => $entry->{entrytype}, 
+			'type' => $entry->{type},
+			'howpublished' => $entry->{howpublished}); 
+	}
+	elsif ( $entry->{type} ) { 
+		$writer->startTag('bib:entry',
+			'id' => $id, 
+			'entrytype' => $entry->{entrytype}, 
+			'type' => $entry->{type}); 
+	}
+	elsif ( $entry->{howpublished} ) { 
+		$writer->startTag('bib:entry',
+			'id' => $id, 
+			'entrytype' => $entry->{entrytype}, 
+			'howpublished' => $entry->{howpublished}); 
+	} else {
+		$writer->startTag('bib:entry',
+			'id' => $id, 
+			'entrytype' => $entry->{entrytype}); 
+	 };
 	
 
 	foreach my $field (@namefields) {
 		if ($entry->{$field}) {
 			my @nf = @{$entry->{$field}};
-			if ( @nf and $nf[-1]->{"lastname"} eq "others" ) {
+			if ( @nf and $nf[-1]->{"lastname"} and $nf[-1]->{"lastname"} eq "others" ) {
 				$writer->startTag("bib:$field", "andothers" => "true");
 				pop @nf;
 			}
@@ -388,35 +444,40 @@ for my $id ( sort keys %bibentries ) {
 	};
 
 	foreach my $field (@otherfields) {
-		if ($entry->{$field}) {
+		if ($entry->{$field} and ($field ne 'pages')) {
 			$writer->dataElement("bib:$field", $entry->{$field});
 		}
-	};
+		# we do it separately to get range and to fix pages -> pagetotal
+		elsif ($field eq 'pages' and $entry->{pages}) {
+			if ($entry->{entrytype} =~ /^(book|collection|proceedings|report|conference|unpublished|thesis|misc)/) {
+				$writer->dataElement('bib:pagetotal', $entry->{pages})
+			} 
+			# 1-3, 7 => <pages>1-3, 7</pages>
+			elsif ( $entry->{pages} =~ /[,;]/ ) { 
+				$writer->startTag('bib:pages');
+				$writer->dataElement('bib:list', $entry->{pages});
+				$writer->endTag(); #pages
+			}
+			elsif ( $entry->{pages} =~ /(-|\x{2013})/ ) {
+				my ($startpage, $endpage) = $entry->{pages} =~ /([^\s\-]+)[\s\-\x{2013}]+([^\s\-]+)/;
+				$writer->startTag('bib:pages');
+				$writer->dataElement('bib:start', $startpage);
+				$writer->dataElement('bib:end', $endpage);
+				$writer->endTag(); #pages
+			}
+			else {
+				$writer->dataElement('bib:pages', $entry->{pages});
+			}
+		}
+	}
+
+	if ($entry->{'citeulike-article-id'}) {
+		my $id = $entry->{'citeulike-article-id'};
+		$writer->startTag('bib:library', "user"=>'FC');
+		$writer->dataElement('bib:item', '', 'location'=>"citeulike", 'ref'=>$id);
+		$writer->endTag(); #library
+	}
 	
-	# we do it separately to get range and to fix pages -> pagetotal
-	if ($entry->{pages}) {
-		if ($entry->{entrytype} =~ /^(book|collection|proceedings|report|conference|unpublished|thesis|misc)/) {
-			$writer->dataElement('bib:pagetotal', $entry->{pages})
-		} 
-		# 1-3, 7 => <pages>1-3, 7</pages>
-		elsif ( $entry->{pages} =~ /,/ ) { 
-			$writer->startTag('bib:pages');
-			$writer->dataElement('bib:list', $entry->{pages});
-			$writer->endTag(); #pages
-		}
-		elsif ( $entry->{pages} =~ /(-|\x{2013})/ ) {
-			my ($startpage, $endpage) = $entry->{pages} =~ /([^\ṣ\-]+)[\s\-\x{2013}]+([^\s\-]+)/;
-			$writer->startTag('bib:pages');
-			$writer->dataElement('bib:start', $startpage);
-			$writer->dataElement('bib:end', $endpage);
-			$writer->endTag(); #pages
-		}
-		else {
-			$writer->dataElement('bib:pages', $entry->{pages});
-		}
-	};
-	
-	$writer->endTag() unless $biblatexmlnew ; #entrytype
 	$writer->endTag(); #entry
 };
 
