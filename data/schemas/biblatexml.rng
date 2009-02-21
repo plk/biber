@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- THIS IS AN EXPERIMENTAL ATTEMPT TO ADAPT and EXTEND BIBTEXML TO BIBLATEX -->
+<!-- THIS IS AN ATTEMPT TO ADAPT and EXTEND BIBTEXML TO BIBLATEX -->
 <grammar ns="http://ankabut.net/biblatexml" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <start>
     <ref name="entries"/>
   </start>
-  <define name="BibLaTeXML.xmlns.extra.attrib">
-    <empty/>
-  </define>
-  <define name="BibLaTeXML.xmlns.attrib">
-    <ref name="BibLaTeXML.xmlns.extra.attrib"/>
-  </define>
-  <define name="BibLaTeXML.NamespaceDecl.attrib">
-    <ref name="BibLaTeXML.xmlns.attrib"/>
-  </define>
+  <!--
+    BibLaTeXML.xmlns.extra.attrib = empty
+    BibLaTeXML.xmlns.attrib = BibLaTeXML.xmlns.extra.attrib
+    BibLaTeXML.NamespaceDecl.attrib = BibLaTeXML.xmlns.attrib
+  -->
   <define name="BibLaTeXML.standard.entries">
     <choice>
       <ref name="article"/>
@@ -66,15 +62,12 @@
   -->
   <define name="entries">
     <element name="entries">
-      <ref name="attlist.entries"/>
       <zeroOrMore>
         <ref name="BibLaTeXML.entries"/>
       </zeroOrMore>
     </element>
   </define>
-  <define name="attlist.entries" combine="interleave">
-    <ref name="BibLaTeXML.NamespaceDecl.attrib"/>
-  </define>
+  <!-- attlist.entries &= BibLaTeXML.NamespaceDecl.attrib -->
   <define name="BibLaTeXML.common.fields">
     <a:documentation/>
     <interleave>
@@ -125,9 +118,9 @@
           <ref name="pdf"/>
         </choice>
       </optional>
-      <optional>
+      <zeroOrMore>
         <ref name="library"/>
-      </optional>
+      </zeroOrMore>
       <optional>
         <!--
           crossref? &
@@ -517,17 +510,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="library">
     <element name="library">
-      <choice>
-        <text/>
-        <oneOrMore>
-          <ref name="user"/>
-        </oneOrMore>
-      </choice>
-    </element>
-  </define>
-  <define name="user">
-    <element name="user">
-      <attribute name="id"/>
+      <attribute name="user"/>
       <oneOrMore>
         <ref name="libraryitem"/>
       </oneOrMore>
@@ -539,11 +522,16 @@ We now define the biblatexml elements</a:documentation>
         <attribute name="location"/>
       </optional>
       <optional>
+        <attribute name="ref"/>
+      </optional>
+      <optional>
         <attribute name="url">
           <data type="anyURI"/>
         </attribute>
       </optional>
-      <text/>
+      <optional>
+        <attribute name="note"/>
+      </optional>
     </element>
   </define>
   <define name="mainsubtitle">
@@ -618,10 +606,17 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="series">
     <element name="series">
-      <ref name="formattext"/>
-      <optional>
-        <ref name="romanized.or.translated"/>
-      </optional>
+      <choice>
+        <group>
+          <ref name="formattext"/>
+          <optional>
+            <ref name="romanized.or.translated"/>
+          </optional>
+        </group>
+        <oneOrMore>
+          <ref name="itema"/>
+        </oneOrMore>
+      </choice>
     </element>
   </define>
   <define name="shorthand">
@@ -828,12 +823,46 @@ We now define the biblatexml elements</a:documentation>
         <text/>
         <ref name="range"/>
       </choice>
+      <optional>
+        <ref name="localyear"/>
+      </optional>
     </element>
   </define>
+  <!--
+    approximage when exact date is uncertain, assumed when it is known but not stated on the document
+    and converted when it is stated in a different calendar
+  -->
   <define name="attlist.year">
     <attribute name="type">
-      <value>approximate</value>
+      <choice>
+        <value>approximate</value>
+        <value>assumed</value>
+        <value>converted</value>
+      </choice>
     </attribute>
+  </define>
+  <define name="localyear">
+    <element name="localyear">
+      <ref name="attlist.localyear"/>
+      <choice>
+        <text/>
+        <ref name="range"/>
+      </choice>
+    </element>
+  </define>
+  <define name="attlist.localyear">
+    <attribute name="calendar">
+      <choice>
+        <value>julian</value>
+        <value>hebrew</value>
+        <value>islamic</value>
+        <value>hijrishamsi</value>
+        <value>revolutionary</value>
+      </choice>
+    </attribute>
+    <optional>
+      <attribute name="note"/>
+    </optional>
   </define>
   <define name="range">
     <ref name="range.start"/>
@@ -867,27 +896,35 @@ We now define the biblatexml elements</a:documentation>
     </element>
   </define>
   <define name="attlist.pages">
-    <attribute name="pagination">
-      <choice>
-        <value>page</value>
-        <value>column</value>
-        <value>line</value>
-        <value>verse</value>
-        <value>paragraph</value>
-        <value>none</value>
-      </choice>
-    </attribute>
-    <attribute name="bookpagination">
-      <choice>
-        <value>page</value>
-        <value>column</value>
-        <value>line</value>
-        <value>verse</value>
-        <value>paragraph</value>
-        <value>none</value>
-      </choice>
-    </attribute>
+    <optional>
+      <attribute name="pagination">
+        <choice>
+          <value>page</value>
+          <value>column</value>
+          <value>line</value>
+          <value>verse</value>
+          <value>paragraph</value>
+          <value>none</value>
+        </choice>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="bookpagination">
+        <choice>
+          <value>page</value>
+          <value>column</value>
+          <value>line</value>
+          <value>verse</value>
+          <value>paragraph</value>
+          <value>none</value>
+        </choice>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="part"/>
+    </optional>
   </define>
+  <!-- e.g. when a book has parts in different scripts, with respective paginations -->
   <!-- INTEGER FIELDS -->
   <define name="day">
     <element name="day">
@@ -1686,7 +1723,12 @@ We now define the biblatexml elements</a:documentation>
     <element name="reprintinfo">
       <choice>
         <ref name="attlist.reprintinfo"/>
-        <text/>
+        <group>
+          <optional>
+            <attribute name="note"/>
+          </optional>
+          <text/>
+        </group>
       </choice>
     </element>
   </define>
@@ -1697,6 +1739,9 @@ We now define the biblatexml elements</a:documentation>
     </optional>
     <optional>
       <attribute name="pages"/>
+    </optional>
+    <optional>
+      <attribute name="item"/>
     </optional>
     <optional>
       <attribute name="year"/>
@@ -2005,9 +2050,23 @@ works
         <ref name="editor"/>
       </optional>
       <!-- changed -->
-      <ref name="title"/>
-      <ref name="year"/>
+      <choice>
+        <interleave>
+          <ref name="title"/>
+          <ref name="year"/>
+        </interleave>
+        <interleave>
+          <optional>
+            <ref name="title"/>
+          </optional>
+          <optional>
+            <ref name="year"/>
+          </optional>
+          <ref name="crossref"/>
+        </interleave>
+      </choice>
       <optional>
+        <!-- NEW: a book can inherit its elements from another book (e.g. individual volumes with diff titles) -->
         <ref name="shorteditor"/>
       </optional>
       <optional>
@@ -2513,7 +2572,10 @@ works
         <ref name="chapter"/>
       </optional>
       <optional>
-        <ref name="pages"/>
+        <choice>
+          <ref name="pages"/>
+          <ref name="pagetotal"/>
+        </choice>
       </optional>
       <optional>
         <ref name="addendum"/>
@@ -2684,7 +2746,10 @@ works
         <ref name="chapter"/>
       </optional>
       <optional>
-        <ref name="pages"/>
+        <choice>
+          <ref name="pages"/>
+          <ref name="pagetotal"/>
+        </choice>
       </optional>
       <optional>
         <ref name="addendum"/>
@@ -2826,7 +2891,10 @@ works
         <ref name="chapter"/>
       </optional>
       <optional>
-        <ref name="pages"/>
+        <choice>
+          <ref name="pages"/>
+          <ref name="pagetotal"/>
+        </choice>
       </optional>
       <optional>
         <ref name="addendum"/>

@@ -1,12 +1,12 @@
-# THIS IS AN EXPERIMENTAL ATTEMPT TO ADAPT and EXTEND BIBTEXML TO BIBLATEX
+# THIS IS AN ATTEMPT TO ADAPT and EXTEND BIBTEXML TO BIBLATEX
 default namespace = "http://ankabut.net/biblatexml"
 namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
 datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
 
 start = entries
-BibLaTeXML.xmlns.extra.attrib = empty
-BibLaTeXML.xmlns.attrib = BibLaTeXML.xmlns.extra.attrib
-BibLaTeXML.NamespaceDecl.attrib = BibLaTeXML.xmlns.attrib
+#BibLaTeXML.xmlns.extra.attrib = empty
+#BibLaTeXML.xmlns.attrib = BibLaTeXML.xmlns.extra.attrib
+#BibLaTeXML.NamespaceDecl.attrib = BibLaTeXML.xmlns.attrib
 
 BibLaTeXML.standard.entries =
   article
@@ -48,8 +48,8 @@ BibLaTeXML.entries =
 #entry = element entry { attlist.entry, BibLaTeXML.entries }
 #attlist.entry &= attribute id { text }
 
-entries = element entries { attlist.entries, BibLaTeXML.entries* }
-attlist.entries &= BibLaTeXML.NamespaceDecl.attrib
+entries = element entries { BibLaTeXML.entries* }
+#attlist.entries &= BibLaTeXML.NamespaceDecl.attrib
 
 #########################################################
 BibLaTeXML.common.fields =
@@ -67,7 +67,7 @@ BibLaTeXML.common.fields =
   abstract? &
   annotation? &
   (file|pdf)? &
-  library? &
+  library* &
   # crossref? &
   #xref? &
   entrysubtype? &
@@ -198,9 +198,9 @@ journal = element journal { formattext, romanized.or.translated? }
 journaltitle = element journaltitle { formattext, romanized.or.translated? }
 journalsubtitle = element journalsubtitle { formattext, romanized.or.translated? }
 label = element label { text }
-library = element library { text | user+ }
-user = element user {attribute id { text }, libraryitem+ }
-libraryitem = element item { attribute location {text}?, attribute url {xsd:anyURI}?, text }
+library = element library { attribute user {text}, libraryitem+ }
+libraryitem = element item { attribute location {text}?, attribute ref {text}?, 
+                             attribute url {xsd:anyURI}?, attribute note {text}? }
 mainsubtitle = element mainsubtitle { formattext, romanized.or.translated? }
 maintitle = element maintitle { formattext, romanized.or.translated? }
 maintitleaddon = element maintitleaddon { formattext, romanized.or.translated? }
@@ -211,7 +211,7 @@ origtitle = element origtitle { formattext, element romanized {text}? }
 pagetotal = element pagetotal { text }
 part = element part { text }
 reprinttitle = element reprinttitle { formattext, romanized.or.translated?}
-series = element series { formattext, romanized.or.translated? }
+series = element series { ((formattext, romanized.or.translated?) | itema+) }
 shorthand = element shorthand { text }
 shorthandintro = element shorthandintro { text }
 shorttitle = element shorttitle { formattext }
@@ -250,17 +250,24 @@ useprefix = element useprefix { text }
 xref = element xref { text }
 # RANGE FIELDS
 origyear = element origyear { text | range }
-year = element year { attlist.year?, (text | range) }
+year = element year { attlist.year?, (text | range), localyear? }
+# approximage when exact date is uncertain, assumed when it is known but not stated on the document
+# and converted when it is stated in a different calendar
 attlist.year =
-  attribute type { "approximate" }
+  attribute type { "approximate" | "assumed" | "converted" }
+localyear = element localyear { attlist.localyear, (text | range)}
+attlist.localyear =
+  attribute calendar { "julian" | "hebrew" | "islamic" | "hijrishamsi" | "revolutionary" },
+  attribute note { text }?
 range = range.start, range.end
 range.start = element start { text }
 range.end = element end { text }
 pages = element pages { attlist.pages?, (text | range | pagelist ) }
 pagelist = element list { text }
 attlist.pages =
-  attribute pagination { "page" | "column" | "line" | "verse" | "paragraph" | "none" },
-  attribute bookpagination { "page" | "column" | "line" | "verse" | "paragraph" | "none" }
+  attribute pagination { "page" | "column" | "line" | "verse" | "paragraph" | "none" }?,
+  attribute bookpagination { "page" | "column" | "line" | "verse" | "paragraph" | "none" }?,
+  attribute part { text }? # e.g. when a book has parts in different scripts, with respective paginations
     
 # INTEGER FIELDS
 day = element day { xsd:integer }
@@ -345,11 +352,12 @@ last = element last { text }
 prefix = element prefix { text }
 suffix = element suffix { text }
 keywords |= element keywords { list {xsd:string+} | item+ }  #NB in biblatex this list is comma-separated, here it is separated by whitespace or itemized
-reprintinfo = element reprintinfo { attlist.reprintinfo | text }
+reprintinfo = element reprintinfo { attlist.reprintinfo | (attribute note {text}?, text) }
 attlist.reprintinfo |=
    attribute crossref {text},
    attribute volume {text}?,
    attribute pages {text}?,
+   attribute item {text}?,
    attribute year {text}?,
    attribute note {text}?
 reviews = element reviews {reviewitem*}
@@ -428,8 +436,8 @@ attlist.review.electronic = attribute id {text}, attribute entrytype { "review" 
 BibLaTeXML.book.standard.fields =
   author? & #changed
   editor? & #changed
-  title &
-  year &
+  ((title & year) | 
+   (title? & year? & crossref)) & #NEW: a book can inherit its elements from another book (e.g. individual volumes with diff titles)
   shorteditor? &
   translator? &
   redactor? &
@@ -592,7 +600,7 @@ BibLaTeXML.inbook.standard.fields =
   part? &
   note? &
   chapter? &
-  pages? &
+  (pages | pagetotal)? &
   addendum? &
   doi? &
   eprint? &
@@ -646,7 +654,7 @@ BibLaTeXML.incollection.standard.fields =
   part? &
   note? &
   chapter? &
-  pages? &
+  (pages | pagetotal)? &
   addendum? &
   doi? &
   eprint? &
@@ -692,7 +700,7 @@ BibLaTeXML.inproceedings.standard.fields =
   part? &
   note? &
   chapter? &
-  pages? &
+  (pages | pagetotal)? &
   addendum? &
   doi? &
   eprint? &
