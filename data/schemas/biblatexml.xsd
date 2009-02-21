@@ -1,0 +1,2830 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- THIS IS AN ATTEMPT TO ADAPT and EXTEND BIBTEXML TO BIBLATEX -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://ankabut.net/biblatexml" xmlns:biblatexml="http://ankabut.net/biblatexml">
+  <!--
+    BibLaTeXML.xmlns.extra.attrib = empty
+    BibLaTeXML.xmlns.attrib = BibLaTeXML.xmlns.extra.attrib
+    BibLaTeXML.NamespaceDecl.attrib = BibLaTeXML.xmlns.attrib
+  -->
+  <xs:group name="BibLaTeXML.standard.entries">
+    <xs:choice>
+      <xs:group ref="biblatexml:article"/>
+      <xs:group ref="biblatexml:book"/>
+      <xs:group ref="biblatexml:booklet"/>
+      <xs:group ref="biblatexml:collection"/>
+      <xs:group ref="biblatexml:inbook"/>
+      <xs:group ref="biblatexml:incollection"/>
+      <xs:group ref="biblatexml:proceedings"/>
+      <xs:group ref="biblatexml:inproceedings"/>
+      <xs:group ref="biblatexml:manual"/>
+      <xs:group ref="biblatexml:misc"/>
+      <xs:group ref="biblatexml:online"/>
+      <xs:group ref="biblatexml:patent"/>
+      <xs:group ref="biblatexml:periodical"/>
+      <xs:group ref="biblatexml:proceedings"/>
+      <xs:group ref="biblatexml:report"/>
+      <xs:group ref="biblatexml:thesis"/>
+      <xs:group ref="biblatexml:unpublished"/>
+    </xs:choice>
+  </xs:group>
+  <!-- TODO | set -->
+  <!--
+    BibLaTeXML.custom.entries = empty
+    custom[a-f] 
+  -->
+  <xs:group name="BibLaTeXML.additional.entries">
+    <xs:choice>
+      <xs:group ref="biblatexml:review"/>
+      <xs:group ref="biblatexml:review.electronic"/>
+      <xs:group ref="biblatexml:article.electronic"/>
+      <xs:group ref="biblatexml:periodical.electronic"/>
+      <xs:group ref="biblatexml:preprint"/>
+      <xs:group ref="biblatexml:software"/>
+      <xs:group ref="biblatexml:movie"/>
+    </xs:choice>
+  </xs:group>
+  <!--
+    TODO Unsupported types: artwork, audio, image, jurisdiction, legislation, legal, movie, music, performance, reference, inreference, review, software, standard, video
+    TODO add manuscript and archivalrecord ?
+  -->
+  <xs:group name="BibLaTeXML.entries">
+    <xs:choice>
+      <xs:group ref="biblatexml:BibLaTeXML.standard.entries"/>
+      <xs:group ref="biblatexml:BibLaTeXML.additional.entries"/>
+    </xs:choice>
+  </xs:group>
+  <!--
+    entry = element entry { attlist.entry, BibLaTeXML.entries }
+    attlist.entry &= attribute id { text }
+  -->
+  <xs:element name="entries">
+    <xs:complexType>
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:BibLaTeXML.entries"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- attlist.entries &= BibLaTeXML.NamespaceDecl.attrib -->
+  <xs:group name="BibLaTeXML.common.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:nameaddon"/>
+        <xs:element ref="biblatexml:shortauthor"/>
+        <xs:element ref="biblatexml:shorthand"/>
+        <xs:element ref="biblatexml:shorthandintro"/>
+        <xs:element ref="biblatexml:shorttitle"/>
+        <xs:element ref="biblatexml:origtitle"/>
+        <xs:element ref="biblatexml:origyear"/>
+        <xs:element ref="biblatexml:language"/>
+        <xs:element ref="biblatexml:origlanguage"/>
+        <xs:element ref="biblatexml:script"/>
+        <xs:element ref="biblatexml:origscript"/>
+        <xs:element ref="biblatexml:abstract"/>
+        <xs:element ref="biblatexml:annotation"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:file"/>
+          <xs:element ref="biblatexml:pdf"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:library"/>
+        <xs:element ref="biblatexml:entrysubtype"/>
+        <xs:element ref="biblatexml:execute"/>
+        <xs:element ref="biblatexml:hyphenation"/>
+        <xs:element ref="biblatexml:indexsorttitle"/>
+        <xs:element ref="biblatexml:indextitle"/>
+        <xs:element ref="biblatexml:keywords"/>
+        <xs:element ref="biblatexml:label"/>
+        <xs:element ref="biblatexml:options"/>
+        <xs:element ref="biblatexml:presort"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:sortkey"/>
+          <xs:element ref="biblatexml:key"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:sortname"/>
+        <xs:element ref="biblatexml:sorttitle"/>
+        <xs:element ref="biblatexml:sortyear"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="BibLaTeXML.additional.fields">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:reprintinfo"/>
+        <xs:element ref="biblatexml:reviews"/>
+        <xs:element ref="biblatexml:topics"/>
+        <xs:element ref="biblatexml:remarks"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <!--
+    namea?,
+    nameb?,
+    namec?,
+    nameatype?,
+    namebtype?,
+    namectype?,
+    lista?,
+    listb?,
+    listc?,
+    listd?,
+    liste?,
+    listf?,
+    usera?,
+    userb?,
+    userc?,
+    userd?,
+    usere?,
+    userf?,
+    verba?,
+    verbb?,
+    verbc?
+  -->
+  <!--
+    
+    LITERAL FIELDS (incl. verbatim)
+  -->
+  <!-- many textual element can contain emphasis or superscript elements -->
+  <xs:group name="formattext">
+    <xs:annotation>
+      <xs:documentation>non-biblatex fields</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" ref="biblatexml:nosort"/>
+        <xs:element minOccurs="0" ref="biblatexml:emphasis"/>
+        <xs:element minOccurs="0" ref="biblatexml:superscript"/>
+        <xs:element minOccurs="0" ref="biblatexml:subscript"/>
+      </xs:sequence>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="emphasis" type="xs:string"/>
+  <xs:element name="superscript" type="xs:string"/>
+  <xs:element name="subscript" type="xs:string"/>
+  <xs:element name="nosort" type="xs:string"/>
+  <!-- these are extensions for multilingual and multiscript bibliographies  -->
+  <xs:group name="romanized.or.translated">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:romanized"/>
+        <xs:element ref="biblatexml:translated"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="romanized">
+    <xs:complexType mixed="true">
+      <xs:group ref="biblatexml:formattext"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="translated">
+    <xs:complexType mixed="true">
+      <xs:group ref="biblatexml:formattext"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="romanized.or.uniform">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:romanized"/>
+        <xs:element ref="biblatexml:uniform"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="uniform">
+    <xs:complexType mixed="true">
+      <xs:group ref="biblatexml:formattext"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="abstract">
+    <xs:complexType mixed="true">
+      <xs:group ref="biblatexml:formattext"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addendum">
+    <xs:complexType mixed="true">
+      <xs:group ref="biblatexml:formattext"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="annotation">
+    <xs:complexType mixed="true">
+      <xs:group ref="biblatexml:formattext"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="booksubtitle">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="booktitle">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="booktitleaddon">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="chapter" type="xs:string"/>
+  <xs:element name="doi" type="xs:string"/>
+  <xs:element name="eid" type="xs:string"/>
+  <xs:element name="eprint" type="xs:string"/>
+  <xs:element name="eprinttype" type="xs:string"/>
+  <xs:element name="file" type="xs:string"/>
+  <xs:element name="pdf" type="xs:string"/>
+  <!-- howpublished = element howpublished { text }  -> attribute -->
+  <xs:element name="id" type="xs:string"/>
+  <xs:element name="isan" type="xs:string"/>
+  <xs:element name="isbn" type="xs:string"/>
+  <!-- validate with pattern ? -->
+  <xs:element name="oclc" type="xs:string"/>
+  <!-- validate with pattern ? -->
+  <xs:element name="lccn" type="xs:string"/>
+  <!-- validate with pattern ? -->
+  <xs:element name="ismn" type="xs:string"/>
+  <xs:element name="isrn" type="xs:string"/>
+  <xs:element name="issn" type="xs:string"/>
+  <xs:element name="issue">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="issuetitle">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="issuetitleaddon">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="issuesubtitle">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="iswc" type="xs:string"/>
+  <xs:element name="journal">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="journaltitle">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="journalsubtitle">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="label" type="xs:string"/>
+  <xs:element name="library">
+    <xs:complexType>
+      <xs:group maxOccurs="unbounded" ref="biblatexml:libraryitem"/>
+      <xs:attribute name="user" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="libraryitem">
+    <xs:sequence>
+      <xs:element name="item">
+        <xs:complexType>
+          <xs:attribute name="location"/>
+          <xs:attribute name="ref"/>
+          <xs:attribute name="url" type="xs:anyURI"/>
+          <xs:attribute name="note"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="mainsubtitle">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="maintitle">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="maintitleaddon">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="nameaddon">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="note">
+    <xs:complexType mixed="true">
+      <xs:group ref="biblatexml:formattext"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="number" type="xs:string"/>
+  <xs:element name="origtitle">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:element minOccurs="0" name="romanized" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="pagetotal" type="xs:string"/>
+  <xs:element name="part" type="xs:string"/>
+  <xs:element name="reprinttitle">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="series">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:sequence>
+          <xs:group ref="biblatexml:formattext"/>
+          <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+        </xs:sequence>
+        <xs:group maxOccurs="unbounded" ref="biblatexml:itema"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="shorthand" type="xs:string"/>
+  <xs:element name="shorthandintro" type="xs:string"/>
+  <xs:element name="shorttitle">
+    <xs:complexType mixed="true">
+      <xs:group ref="biblatexml:formattext"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="subtitle">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="title">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="titleaddon">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="url" type="xs:anyURI"/>
+  <xs:element name="venue">
+    <xs:complexType mixed="true">
+      <xs:group ref="biblatexml:formattext"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="version" type="xs:string"/>
+  <xs:element name="volume" type="xs:string"/>
+  <xs:element name="volumes" type="xs:string"/>
+  <xs:element name="usera" type="xs:string"/>
+  <xs:element name="userb" type="xs:string"/>
+  <xs:element name="userc" type="xs:string"/>
+  <xs:element name="userd" type="xs:string"/>
+  <xs:element name="usere" type="xs:string"/>
+  <xs:element name="userf" type="xs:string"/>
+  <xs:element name="crossref" type="xs:string"/>
+  <xs:element name="entrysubtype" type="xs:string"/>
+  <xs:element name="execute" type="xs:string"/>
+  <xs:element name="hyphenation" type="xs:string"/>
+  <xs:element name="indexsorttitle" type="xs:string"/>
+  <xs:element name="indextitle" type="xs:string"/>
+  <xs:element name="options">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:option"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="option">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="biblatexml:key"/>
+        <xs:element ref="biblatexml:value"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="key" type="xs:string"/>
+  <xs:element name="value" type="xs:string"/>
+  <xs:element name="presort" type="xs:string"/>
+  <xs:element name="sortkey" type="xs:string"/>
+  <xs:element name="sorttitle" type="xs:string"/>
+  <xs:element name="sortyear" type="xs:string"/>
+  <xs:element name="useprefix" type="xs:string"/>
+  <xs:element name="xref" type="xs:string"/>
+  <!-- RANGE FIELDS -->
+  <xs:element name="origyear">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" ref="biblatexml:range"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="year">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:group minOccurs="0" ref="biblatexml:range"/>
+        <xs:element minOccurs="0" ref="biblatexml:localyear"/>
+      </xs:sequence>
+      <xs:attribute name="type">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="approximate"/>
+            <xs:enumeration value="assumed"/>
+            <xs:enumeration value="converted"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <!--
+    approximage when exact date is uncertain, assumed when it is known but not stated on the document
+    and converted when it is stated in a different calendar
+  -->
+  <xs:attributeGroup name="attlist.year">
+    <xs:attribute name="type" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="approximate"/>
+          <xs:enumeration value="assumed"/>
+          <xs:enumeration value="converted"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:element name="localyear">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" ref="biblatexml:range"/>
+      <xs:attributeGroup ref="biblatexml:attlist.localyear"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="attlist.localyear">
+    <xs:attribute name="calendar" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="julian"/>
+          <xs:enumeration value="hebrew"/>
+          <xs:enumeration value="islamic"/>
+          <xs:enumeration value="hijrishamsi"/>
+          <xs:enumeration value="revolutionary"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="note"/>
+  </xs:attributeGroup>
+  <xs:group name="range">
+    <xs:sequence>
+      <xs:element ref="biblatexml:start"/>
+      <xs:element ref="biblatexml:end"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="start" type="xs:string"/>
+  <xs:element name="end" type="xs:string"/>
+  <xs:element name="pages">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0">
+        <xs:group ref="biblatexml:range"/>
+        <xs:element ref="biblatexml:list"/>
+      </xs:choice>
+      <xs:attributeGroup ref="biblatexml:attlist.pages"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="list" type="xs:string"/>
+  <xs:attributeGroup name="attlist.pages">
+    <xs:attribute name="pagination">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="page"/>
+          <xs:enumeration value="column"/>
+          <xs:enumeration value="line"/>
+          <xs:enumeration value="verse"/>
+          <xs:enumeration value="paragraph"/>
+          <xs:enumeration value="none"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="bookpagination">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="page"/>
+          <xs:enumeration value="column"/>
+          <xs:enumeration value="line"/>
+          <xs:enumeration value="verse"/>
+          <xs:enumeration value="paragraph"/>
+          <xs:enumeration value="none"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="part"/>
+  </xs:attributeGroup>
+  <!-- e.g. when a book has parts in different scripts, with respective paginations -->
+  <!-- INTEGER FIELDS -->
+  <xs:element name="day" type="xs:integer"/>
+  <xs:element name="edition">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:restriction base="xs:anyType">
+          <xs:simpleType>
+            <xs:union memberTypes="xs:integer">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:length value="0"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:union>
+          </xs:simpleType>
+          <xs:attribute name="string"/>
+        </xs:restriction>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="month" type="xs:integer"/>
+  <xs:element name="urlday" type="xs:integer"/>
+  <xs:element name="urlmonth" type="xs:integer"/>
+  <xs:element name="urlyear" type="xs:integer"/>
+  <!-- DATE FIELDS -->
+  <xs:element name="date" type="xs:date"/>
+  <xs:element name="urldate" type="xs:date"/>
+  <!-- LITERAL LISTS -->
+  <xs:attributeGroup name="attlist.lists">
+    <xs:attribute name="andothers" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="true"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:element name="institution">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+        <xs:group maxOccurs="unbounded" ref="biblatexml:itema"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="school">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+        <xs:group maxOccurs="unbounded" ref="biblatexml:itema"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="location">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:group maxOccurs="unbounded" ref="biblatexml:itemb"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="address">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:group maxOccurs="unbounded" ref="biblatexml:itemb"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="organization">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+        <xs:group maxOccurs="unbounded" ref="biblatexml:itema"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="origlocation">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:group maxOccurs="unbounded" ref="biblatexml:itemb"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="publisher">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:sequence>
+          <xs:group ref="biblatexml:formattext"/>
+          <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+        </xs:sequence>
+        <xs:group maxOccurs="unbounded" ref="biblatexml:itema"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="origpublisher">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:sequence>
+          <xs:group ref="biblatexml:formattext"/>
+          <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+        </xs:sequence>
+        <xs:group maxOccurs="unbounded" ref="biblatexml:itema"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="lista">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="listb">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="listc">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="liste">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="listf">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="item">
+    <xs:sequence>
+      <xs:element name="item">
+        <xs:complexType mixed="true">
+          <xs:group ref="biblatexml:formattext"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="itema">
+    <xs:sequence>
+      <xs:element name="item">
+        <xs:complexType mixed="true">
+          <xs:sequence>
+            <xs:group ref="biblatexml:formattext"/>
+            <xs:group minOccurs="0" ref="biblatexml:romanized.or.translated"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="itemb">
+    <xs:sequence>
+      <xs:element name="item">
+        <xs:complexType mixed="true">
+          <xs:sequence>
+            <xs:group ref="biblatexml:formattext"/>
+            <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <!--
+    KEY LISTS
+    TODO add attribute type = babel, xml:lang, ISO-XXX etc 
+  -->
+  <xs:element name="language">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- xml:lang ? -->
+  <xs:element name="origlanguage">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- xml:lang ? -->
+  <xs:element name="script" type="xs:string"/>
+  <xs:element name="origscript" type="xs:string"/>
+  <!-- NAME LISTS -->
+  <xs:attributeGroup name="attlist.author">
+    <xs:attribute name="type">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="author"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="gender">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="sf"/>
+          <xs:enumeration value="sm"/>
+          <xs:enumeration value="sn"/>
+          <xs:enumeration value="pf"/>
+          <xs:enumeration value="pm"/>
+          <xs:enumeration value="pn"/>
+          <xs:enumeration value="pp"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="andothers">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="true"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="attlist.editor">
+    <xs:attribute name="type">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="editor"/>
+          <xs:enumeration value="compiler"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="gender">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="sf"/>
+          <xs:enumeration value="sm"/>
+          <xs:enumeration value="sn"/>
+          <xs:enumeration value="pf"/>
+          <xs:enumeration value="pm"/>
+          <xs:enumeration value="pn"/>
+          <xs:enumeration value="pp"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="andothers">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="true"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:element name="author">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:element maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:choice>
+      <xs:attributeGroup ref="biblatexml:attlist.author"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="editor">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:element maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:choice>
+      <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="afterword">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:element maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="annotator">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:element maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="bookauthor">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:element maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="commentator">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:element maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="foreword">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:element maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="holder">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:element maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="introduction">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:element maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="redactor">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:element maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="translator">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:element maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="shortauthor">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:element maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="shorteditor">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:element maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sortname">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:element maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="namea">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:element maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="nameb">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:element maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="namec">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:element maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:choice>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="person">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group minOccurs="0" ref="biblatexml:romanized.or.uniform"/>
+        <xs:sequence>
+          <xs:element ref="biblatexml:first"/>
+          <xs:element minOccurs="0" ref="biblatexml:prefix"/>
+          <xs:element ref="biblatexml:last"/>
+          <xs:element minOccurs="0" ref="biblatexml:suffix"/>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="romanized">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="biblatexml:first"/>
+                  <xs:element minOccurs="0" ref="biblatexml:prefix"/>
+                  <xs:element ref="biblatexml:last"/>
+                  <xs:element minOccurs="0" ref="biblatexml:suffix"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="uniform">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="biblatexml:first"/>
+                  <xs:element minOccurs="0" ref="biblatexml:prefix"/>
+                  <xs:element ref="biblatexml:last"/>
+                  <xs:element minOccurs="0" ref="biblatexml:suffix"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+        </xs:sequence>
+      </xs:choice>
+      <xs:attributeGroup ref="biblatexml:attlist.person"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="attlist.person">
+    <xs:attribute name="id"/>
+    <xs:attribute name="email"/>
+    <xs:attribute name="url"/>
+    <xs:attribute name="yearofbirth" type="xs:integer"/>
+    <xs:attribute name="yearofdeath" type="xs:integer"/>
+    <xs:attribute name="gender">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="male"/>
+          <xs:enumeration value="female"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:element name="first" type="xs:string"/>
+  <!-- initials = element initials { text } -->
+  <xs:element name="last" type="xs:string"/>
+  <!-- middle = element middle { text } -->
+  <xs:element name="prefix" type="xs:string"/>
+  <xs:element name="suffix" type="xs:string"/>
+  <xs:element name="keywords">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- NB in biblatex this list is comma-separated, here it is separated by whitespace or itemized -->
+  <xs:element name="reprintinfo">
+    <xs:complexType mixed="true">
+      <xs:attribute name="crossref"/>
+      <xs:attribute name="volume"/>
+      <xs:attribute name="pages"/>
+      <xs:attribute name="item"/>
+      <xs:attribute name="year"/>
+      <xs:attribute name="note"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="attlist.reprintinfo">
+    <xs:attribute name="crossref" use="required"/>
+    <xs:attribute name="volume"/>
+    <xs:attribute name="pages"/>
+    <xs:attribute name="item"/>
+    <xs:attribute name="year"/>
+    <xs:attribute name="note"/>
+  </xs:attributeGroup>
+  <xs:element name="reviews">
+    <xs:complexType>
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:reviewitem"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="reviewitem">
+    <xs:sequence>
+      <xs:element name="item">
+        <xs:complexType mixed="true">
+          <xs:attributeGroup ref="biblatexml:attlist.review"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.review">
+    <xs:attribute name="type"/>
+    <xs:attribute name="url" type="xs:anyURI"/>
+    <xs:attribute name="author"/>
+    <xs:attribute name="note"/>
+    <xs:attribute name="crossref"/>
+    <xs:attribute name="id"/>
+    <xs:attribute name="entrytype">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="review"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:element name="topics">
+    <xs:complexType>
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:topic"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="topic">
+    <xs:sequence>
+      <xs:any processContents="skip"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="remarks">
+    <xs:complexType mixed="true">
+      <xs:choice>
+        <xs:group ref="biblatexml:formattext"/>
+        <xs:group maxOccurs="unbounded" ref="biblatexml:item"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="BibLaTeXML.article.standard.fields">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:author"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:journaltitle"/>
+          <xs:element ref="biblatexml:journal"/>
+        </xs:choice>
+        <xs:choice>
+          <xs:choice>
+            <xs:choice>
+              <xs:choice>
+                <xs:element ref="biblatexml:day"/>
+                <xs:element ref="biblatexml:month"/>
+              </xs:choice>
+              <xs:element ref="biblatexml:issue"/>
+            </xs:choice>
+            <xs:element ref="biblatexml:year"/>
+          </xs:choice>
+          <xs:element ref="biblatexml:date"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:editor"/>
+        <xs:element ref="biblatexml:shorteditor"/>
+        <xs:element ref="biblatexml:translator"/>
+        <xs:element ref="biblatexml:redactor"/>
+        <xs:element ref="biblatexml:annotator"/>
+        <xs:element ref="biblatexml:commentator"/>
+        <xs:element ref="biblatexml:subtitle"/>
+        <xs:element ref="biblatexml:titleaddon"/>
+        <xs:element ref="biblatexml:journalsubtitle"/>
+        <xs:element ref="biblatexml:issuetitle"/>
+        <xs:element ref="biblatexml:issuesubtitle"/>
+        <xs:element ref="biblatexml:issuetitleaddon"/>
+        <xs:element ref="biblatexml:series"/>
+        <xs:element ref="biblatexml:volume"/>
+        <xs:element ref="biblatexml:number"/>
+        <xs:element ref="biblatexml:location"/>
+        <xs:element ref="biblatexml:publisher"/>
+        <xs:element ref="biblatexml:origpublisher"/>
+        <xs:element ref="biblatexml:eid"/>
+        <xs:element ref="biblatexml:eprint"/>
+        <xs:element ref="biblatexml:eprinttype"/>
+        <xs:element ref="biblatexml:pages"/>
+        <xs:element ref="biblatexml:note"/>
+        <xs:element ref="biblatexml:issn"/>
+        <xs:element ref="biblatexml:addendum"/>
+        <xs:element ref="biblatexml:doi"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:urldate"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:urlday"/>
+            <xs:element ref="biblatexml:urlmonth"/>
+            <xs:element ref="biblatexml:urlyear"/>
+          </xs:choice>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="BibLaTeXML.article.fields">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="biblatexml:BibLaTeXML.article.standard.fields"/>
+        <xs:group ref="biblatexml:BibLaTeXML.common.fields"/>
+        <xs:group ref="biblatexml:BibLaTeXML.additional.fields"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="article">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="biblatexml:title"/>
+            <xs:element ref="biblatexml:url"/>
+            <xs:group ref="biblatexml:BibLaTeXML.article.fields"/>
+          </xs:choice>
+          <xs:attributeGroup ref="biblatexml:attlist.article"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.article">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="article"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="type">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="printed"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <!-- url mandatory if type is electronic -->
+  <xs:group name="article.electronic">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="biblatexml:url"/>
+            <xs:element ref="biblatexml:title"/>
+            <xs:group ref="biblatexml:BibLaTeXML.article.fields"/>
+          </xs:choice>
+          <xs:attributeGroup ref="biblatexml:attlist.article.electronic"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.article.electronic">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="article"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="type" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="electronic"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <!-- for reviews we need attribute ref or title or both -->
+  <xs:group name="review">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:choice>
+              <xs:element ref="biblatexml:crossref"/>
+              <xs:element ref="biblatexml:title"/>
+            </xs:choice>
+            <xs:element ref="biblatexml:url"/>
+            <xs:group ref="biblatexml:BibLaTeXML.article.fields"/>
+          </xs:choice>
+          <xs:attributeGroup ref="biblatexml:attlist.review"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <!-- url mandatory if type is electronic -->
+  <xs:group name="review.electronic">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:choice>
+              <xs:element ref="biblatexml:crossref"/>
+              <xs:element ref="biblatexml:title"/>
+            </xs:choice>
+            <xs:element ref="biblatexml:url"/>
+            <xs:group ref="biblatexml:BibLaTeXML.article.fields"/>
+          </xs:choice>
+          <xs:attributeGroup ref="biblatexml:attlist.review.electronic"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.review.electronic">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="review"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="type" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="electronic"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:group name="BibLaTeXML.book.standard.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:author"/>
+        <xs:element ref="biblatexml:editor"/>
+        <xs:choice>
+          <xs:choice>
+            <xs:element ref="biblatexml:title"/>
+            <xs:element ref="biblatexml:year"/>
+          </xs:choice>
+          <xs:choice>
+            <xs:element ref="biblatexml:title"/>
+            <xs:element ref="biblatexml:year"/>
+            <xs:element ref="biblatexml:crossref"/>
+          </xs:choice>
+        </xs:choice>
+        <xs:element ref="biblatexml:shorteditor"/>
+        <xs:element ref="biblatexml:translator"/>
+        <xs:element ref="biblatexml:redactor"/>
+        <xs:element ref="biblatexml:annotator"/>
+        <xs:element ref="biblatexml:commentator"/>
+        <xs:element ref="biblatexml:introduction"/>
+        <xs:element ref="biblatexml:foreword"/>
+        <xs:element ref="biblatexml:afterword"/>
+        <xs:element ref="biblatexml:subtitle"/>
+        <xs:element ref="biblatexml:titleaddon"/>
+        <xs:element ref="biblatexml:maintitle"/>
+        <xs:element ref="biblatexml:mainsubtitle"/>
+        <xs:element ref="biblatexml:maintitleaddon"/>
+        <xs:element ref="biblatexml:volume"/>
+        <xs:element ref="biblatexml:part"/>
+        <xs:element ref="biblatexml:edition"/>
+        <xs:element ref="biblatexml:volumes"/>
+        <xs:element ref="biblatexml:series"/>
+        <xs:element ref="biblatexml:number"/>
+        <xs:element ref="biblatexml:note"/>
+        <xs:element ref="biblatexml:publisher"/>
+        <xs:element ref="biblatexml:origpublisher"/>
+        <xs:element ref="biblatexml:location"/>
+        <xs:element ref="biblatexml:origlocation"/>
+        <xs:element ref="biblatexml:isbn"/>
+        <xs:element ref="biblatexml:oclc"/>
+        <xs:element ref="biblatexml:lccn"/>
+        <xs:element ref="biblatexml:issn"/>
+        <xs:element ref="biblatexml:chapter"/>
+        <xs:element ref="biblatexml:pages"/>
+        <xs:element ref="biblatexml:pagetotal"/>
+        <xs:element ref="biblatexml:addendum"/>
+        <xs:element ref="biblatexml:doi"/>
+        <xs:element ref="biblatexml:url"/>
+        <xs:element ref="biblatexml:eprint"/>
+        <xs:element ref="biblatexml:eprinttype"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:urldate"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:urlday"/>
+            <xs:element ref="biblatexml:urlmonth"/>
+            <xs:element ref="biblatexml:urlyear"/>
+          </xs:choice>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="BibLaTeXML.book.fields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="biblatexml:BibLaTeXML.book.standard.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.common.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.additional.fields"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:group name="book">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.book.fields">
+              <xs:attributeGroup ref="biblatexml:attlist.book"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.book">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="book"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:group name="BibLaTeXML.booklet.standard.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:author"/>
+        <xs:element ref="biblatexml:editor"/>
+        <xs:element ref="biblatexml:title"/>
+        <xs:element ref="biblatexml:year"/>
+        <xs:element ref="biblatexml:subtitle"/>
+        <xs:element ref="biblatexml:titleaddon"/>
+        <xs:element ref="biblatexml:note"/>
+        <xs:element ref="biblatexml:location"/>
+        <xs:element ref="biblatexml:origlocation"/>
+        <xs:element ref="biblatexml:chapter"/>
+        <xs:element ref="biblatexml:pages"/>
+        <xs:element ref="biblatexml:pagetotal"/>
+        <xs:element ref="biblatexml:addendum"/>
+        <xs:element ref="biblatexml:doi"/>
+        <xs:element ref="biblatexml:eprint"/>
+        <xs:element ref="biblatexml:eprinttype"/>
+        <xs:element ref="biblatexml:url"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:urldate"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:urlday"/>
+            <xs:element ref="biblatexml:urlmonth"/>
+            <xs:element ref="biblatexml:urlyear"/>
+          </xs:choice>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="BibLaTeXML.booklet.fields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="biblatexml:BibLaTeXML.booklet.standard.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.common.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.additional.fields"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:group name="booklet">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.booklet.fields">
+              <xs:attributeGroup ref="biblatexml:attlist.booklet"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.booklet">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="booklet"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="type"/>
+    <xs:attribute name="howpublished"/>
+  </xs:attributeGroup>
+  <xs:group name="BibLaTeXML.collection.standard.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:editor"/>
+        <xs:element ref="biblatexml:author"/>
+        <xs:element ref="biblatexml:title"/>
+        <xs:element ref="biblatexml:year"/>
+        <xs:element ref="biblatexml:shorteditor"/>
+        <xs:element ref="biblatexml:translator"/>
+        <xs:element ref="biblatexml:redactor"/>
+        <xs:element ref="biblatexml:annotator"/>
+        <xs:element ref="biblatexml:commentator"/>
+        <xs:element ref="biblatexml:introduction"/>
+        <xs:element ref="biblatexml:foreword"/>
+        <xs:element ref="biblatexml:afterword"/>
+        <xs:element ref="biblatexml:subtitle"/>
+        <xs:element ref="biblatexml:titleaddon"/>
+        <xs:element ref="biblatexml:maintitle"/>
+        <xs:element ref="biblatexml:mainsubtitle"/>
+        <xs:element ref="biblatexml:maintitleaddon"/>
+        <xs:element ref="biblatexml:volume"/>
+        <xs:element ref="biblatexml:part"/>
+        <xs:element ref="biblatexml:edition"/>
+        <xs:element ref="biblatexml:volumes"/>
+        <xs:element ref="biblatexml:series"/>
+        <xs:element ref="biblatexml:number"/>
+        <xs:element ref="biblatexml:note"/>
+        <xs:element ref="biblatexml:publisher"/>
+        <xs:element ref="biblatexml:origpublisher"/>
+        <xs:element ref="biblatexml:location"/>
+        <xs:element ref="biblatexml:origlocation"/>
+        <xs:element ref="biblatexml:isbn"/>
+        <xs:element ref="biblatexml:oclc"/>
+        <xs:element ref="biblatexml:lccn"/>
+        <xs:element ref="biblatexml:issn"/>
+        <xs:element ref="biblatexml:chapter"/>
+        <xs:element ref="biblatexml:pages"/>
+        <xs:element ref="biblatexml:pagetotal"/>
+        <xs:element ref="biblatexml:addendum"/>
+        <xs:element ref="biblatexml:doi"/>
+        <xs:element ref="biblatexml:eprint"/>
+        <xs:element ref="biblatexml:eprinttype"/>
+        <xs:element ref="biblatexml:url"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:urldate"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:urlday"/>
+            <xs:element ref="biblatexml:urlmonth"/>
+            <xs:element ref="biblatexml:urlyear"/>
+          </xs:choice>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="BibLaTeXML.collection.fields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="biblatexml:BibLaTeXML.collection.standard.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.common.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.additional.fields"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:group name="collection">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.collection.fields">
+              <xs:attributeGroup ref="biblatexml:attlist.collection"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.collection">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="collection"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:group name="BibLaTeXML.inbook.standard.fields">
+    <xs:annotation>
+      <xs:documentation>  </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:author"/>
+        <xs:element ref="biblatexml:title"/>
+        <xs:choice>
+          <xs:choice>
+            <xs:choice>
+              <xs:element ref="biblatexml:crossref"/>
+              <xs:element ref="biblatexml:xref"/>
+            </xs:choice>
+            <xs:element ref="biblatexml:year"/>
+          </xs:choice>
+          <xs:choice>
+            <xs:element ref="biblatexml:bookauthor"/>
+            <xs:element ref="biblatexml:booktitle"/>
+            <xs:element ref="biblatexml:maintitle"/>
+            <xs:element ref="biblatexml:mainsubtitle"/>
+            <xs:element ref="biblatexml:maintitleaddon"/>
+            <xs:element ref="biblatexml:booksubtitle"/>
+            <xs:element ref="biblatexml:booktitleaddon"/>
+            <xs:element ref="biblatexml:year"/>
+            <xs:element ref="biblatexml:editor"/>
+            <xs:element ref="biblatexml:shorteditor"/>
+            <xs:element ref="biblatexml:translator"/>
+            <xs:element ref="biblatexml:redactor"/>
+            <xs:element ref="biblatexml:annotator"/>
+            <xs:element ref="biblatexml:commentator"/>
+            <xs:element ref="biblatexml:introduction"/>
+            <xs:element ref="biblatexml:foreword"/>
+            <xs:element ref="biblatexml:afterword"/>
+            <xs:element ref="biblatexml:edition"/>
+            <xs:element ref="biblatexml:volumes"/>
+            <xs:element ref="biblatexml:series"/>
+            <xs:element ref="biblatexml:number"/>
+            <xs:element ref="biblatexml:publisher"/>
+            <xs:element ref="biblatexml:origpublisher"/>
+            <xs:element ref="biblatexml:location"/>
+            <xs:element ref="biblatexml:origlocation"/>
+            <xs:element ref="biblatexml:issn"/>
+            <xs:element ref="biblatexml:isbn"/>
+            <xs:element ref="biblatexml:oclc"/>
+            <xs:element ref="biblatexml:lccn"/>
+          </xs:choice>
+        </xs:choice>
+        <xs:element ref="biblatexml:subtitle"/>
+        <xs:element ref="biblatexml:titleaddon"/>
+        <xs:element ref="biblatexml:volume"/>
+        <xs:element ref="biblatexml:part"/>
+        <xs:element ref="biblatexml:note"/>
+        <xs:element ref="biblatexml:chapter"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:pages"/>
+          <xs:element ref="biblatexml:pagetotal"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:addendum"/>
+        <xs:element ref="biblatexml:doi"/>
+        <xs:element ref="biblatexml:eprint"/>
+        <xs:element ref="biblatexml:eprinttype"/>
+        <xs:element ref="biblatexml:url"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:urldate"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:urlday"/>
+            <xs:element ref="biblatexml:urlmonth"/>
+            <xs:element ref="biblatexml:urlyear"/>
+          </xs:choice>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="BibLaTeXML.inbook.fields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="biblatexml:BibLaTeXML.inbook.standard.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.common.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.additional.fields"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:group name="inbook">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.inbook.fields">
+              <xs:attributeGroup ref="biblatexml:attlist.inbook"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.inbook">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="inbook"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:group name="BibLaTeXML.incollection.standard.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:author"/>
+        <xs:element ref="biblatexml:title"/>
+        <xs:element ref="biblatexml:subtitle"/>
+        <xs:element ref="biblatexml:titleaddon"/>
+        <xs:choice>
+          <xs:choice>
+            <xs:choice>
+              <xs:element ref="biblatexml:crossref"/>
+              <xs:element ref="biblatexml:xref"/>
+            </xs:choice>
+            <xs:element ref="biblatexml:year"/>
+          </xs:choice>
+          <xs:choice>
+            <xs:element ref="biblatexml:editor"/>
+            <xs:element ref="biblatexml:booktitle"/>
+            <xs:element ref="biblatexml:year"/>
+            <xs:element ref="biblatexml:shorteditor"/>
+            <xs:element ref="biblatexml:translator"/>
+            <xs:element ref="biblatexml:redactor"/>
+            <xs:element ref="biblatexml:annotator"/>
+            <xs:element ref="biblatexml:commentator"/>
+            <xs:element ref="biblatexml:introduction"/>
+            <xs:element ref="biblatexml:foreword"/>
+            <xs:element ref="biblatexml:afterword"/>
+            <xs:element ref="biblatexml:maintitle"/>
+            <xs:element ref="biblatexml:mainsubtitle"/>
+            <xs:element ref="biblatexml:maintitleaddon"/>
+            <xs:element ref="biblatexml:booksubtitle"/>
+            <xs:element ref="biblatexml:booktitleaddon"/>
+            <xs:element ref="biblatexml:publisher"/>
+            <xs:element ref="biblatexml:origpublisher"/>
+            <xs:element ref="biblatexml:volumes"/>
+            <xs:element ref="biblatexml:number"/>
+            <xs:element ref="biblatexml:location"/>
+            <xs:element ref="biblatexml:origlocation"/>
+            <xs:element ref="biblatexml:edition"/>
+            <xs:element ref="biblatexml:series"/>
+            <xs:element ref="biblatexml:issn"/>
+            <xs:element ref="biblatexml:isbn"/>
+            <xs:element ref="biblatexml:oclc"/>
+            <xs:element ref="biblatexml:lccn"/>
+          </xs:choice>
+        </xs:choice>
+        <xs:element ref="biblatexml:volume"/>
+        <xs:element ref="biblatexml:part"/>
+        <xs:element ref="biblatexml:note"/>
+        <xs:element ref="biblatexml:chapter"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:pages"/>
+          <xs:element ref="biblatexml:pagetotal"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:addendum"/>
+        <xs:element ref="biblatexml:doi"/>
+        <xs:element ref="biblatexml:eprint"/>
+        <xs:element ref="biblatexml:eprinttype"/>
+        <xs:element ref="biblatexml:url"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:urldate"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:urlday"/>
+            <xs:element ref="biblatexml:urlmonth"/>
+            <xs:element ref="biblatexml:urlyear"/>
+          </xs:choice>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="BibLaTeXML.incollection.fields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="biblatexml:BibLaTeXML.incollection.standard.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.common.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.additional.fields"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:group name="incollection">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.incollection.fields">
+              <xs:attributeGroup ref="biblatexml:attlist.incollection"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.incollection">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="incollection"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:group name="BibLaTeXML.inproceedings.standard.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:author"/>
+        <xs:element ref="biblatexml:title"/>
+        <xs:element ref="biblatexml:subtitle"/>
+        <xs:element ref="biblatexml:titleaddon"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:crossref"/>
+          <xs:element ref="biblatexml:xref"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:editor"/>
+            <xs:element ref="biblatexml:booktitle"/>
+            <xs:element ref="biblatexml:year"/>
+            <xs:element ref="biblatexml:shorteditor"/>
+            <xs:element ref="biblatexml:maintitle"/>
+            <xs:element ref="biblatexml:mainsubtitle"/>
+            <xs:element ref="biblatexml:maintitleaddon"/>
+            <xs:element ref="biblatexml:booksubtitle"/>
+            <xs:element ref="biblatexml:booktitleaddon"/>
+            <xs:element ref="biblatexml:venue"/>
+            <xs:element ref="biblatexml:volumes"/>
+            <xs:element ref="biblatexml:series"/>
+            <xs:element ref="biblatexml:number"/>
+            <xs:element ref="biblatexml:organization"/>
+            <xs:element ref="biblatexml:publisher"/>
+            <xs:element ref="biblatexml:origpublisher"/>
+            <xs:element ref="biblatexml:location"/>
+            <xs:element ref="biblatexml:origlocation"/>
+            <xs:element ref="biblatexml:issn"/>
+            <xs:element ref="biblatexml:isbn"/>
+            <xs:element ref="biblatexml:oclc"/>
+            <xs:element ref="biblatexml:lccn"/>
+          </xs:choice>
+        </xs:choice>
+        <xs:element ref="biblatexml:volume"/>
+        <xs:element ref="biblatexml:part"/>
+        <xs:element ref="biblatexml:note"/>
+        <xs:element ref="biblatexml:chapter"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:pages"/>
+          <xs:element ref="biblatexml:pagetotal"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:addendum"/>
+        <xs:element ref="biblatexml:doi"/>
+        <xs:element ref="biblatexml:eprint"/>
+        <xs:element ref="biblatexml:eprinttype"/>
+        <xs:element ref="biblatexml:url"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:urldate"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:urlday"/>
+            <xs:element ref="biblatexml:urlmonth"/>
+            <xs:element ref="biblatexml:urlyear"/>
+          </xs:choice>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="BibLaTeXML.inproceedings.fields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="biblatexml:BibLaTeXML.inproceedings.standard.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.common.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.additional.fields"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:group name="inproceedings">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.inproceedings.fields">
+              <xs:attributeGroup ref="biblatexml:attlist.inproceedings"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.inproceedings">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="inproceedings"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:group name="BibLaTeXML.manual.standard.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:choice>
+          <xs:element ref="biblatexml:author"/>
+          <xs:element ref="biblatexml:editor"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:title"/>
+        <xs:element ref="biblatexml:year"/>
+        <xs:element ref="biblatexml:subtitle"/>
+        <xs:element ref="biblatexml:titleaddon"/>
+        <xs:element ref="biblatexml:edition"/>
+        <xs:element ref="biblatexml:version"/>
+        <xs:element ref="biblatexml:series"/>
+        <xs:element ref="biblatexml:number"/>
+        <xs:element ref="biblatexml:note"/>
+        <xs:element ref="biblatexml:organization"/>
+        <xs:element ref="biblatexml:publisher"/>
+        <xs:element ref="biblatexml:origpublisher"/>
+        <xs:element ref="biblatexml:location"/>
+        <xs:element ref="biblatexml:origlocation"/>
+        <xs:element ref="biblatexml:isbn"/>
+        <xs:element ref="biblatexml:oclc"/>
+        <xs:element ref="biblatexml:lccn"/>
+        <xs:element ref="biblatexml:chapter"/>
+        <xs:element ref="biblatexml:pages"/>
+        <xs:element ref="biblatexml:pagetotal"/>
+        <xs:element ref="biblatexml:addendum"/>
+        <xs:element ref="biblatexml:doi"/>
+        <xs:element ref="biblatexml:eprint"/>
+        <xs:element ref="biblatexml:eprinttype"/>
+        <xs:element ref="biblatexml:url"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:urldate"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:urlday"/>
+            <xs:element ref="biblatexml:urlmonth"/>
+            <xs:element ref="biblatexml:urlyear"/>
+          </xs:choice>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="BibLaTeXML.manual.fields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="biblatexml:BibLaTeXML.manual.standard.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.common.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.additional.fields"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:group name="manual">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.manual.fields">
+              <xs:attributeGroup ref="biblatexml:attlist.manual"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.manual">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="manual"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="type"/>
+  </xs:attributeGroup>
+  <xs:group name="BibLaTeXML.misc.standard.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:choice>
+          <xs:element ref="biblatexml:author"/>
+          <xs:element ref="biblatexml:editor"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:title"/>
+        <xs:choice>
+          <xs:choice>
+            <xs:element ref="biblatexml:day"/>
+            <xs:element ref="biblatexml:month"/>
+            <xs:element ref="biblatexml:year"/>
+          </xs:choice>
+          <xs:element ref="biblatexml:date"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:subtitle"/>
+        <xs:element ref="biblatexml:titleaddon"/>
+        <xs:element ref="biblatexml:version"/>
+        <xs:element ref="biblatexml:note"/>
+        <xs:element ref="biblatexml:organization"/>
+        <xs:element ref="biblatexml:publisher"/>
+        <xs:element ref="biblatexml:origpublisher"/>
+        <xs:element ref="biblatexml:location"/>
+        <xs:element ref="biblatexml:origlocation"/>
+        <xs:element ref="biblatexml:addendum"/>
+        <xs:element ref="biblatexml:doi"/>
+        <xs:element ref="biblatexml:eprint"/>
+        <xs:element ref="biblatexml:eprinttype"/>
+        <xs:element ref="biblatexml:url"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:urldate"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:urlday"/>
+            <xs:element ref="biblatexml:urlmonth"/>
+            <xs:element ref="biblatexml:urlyear"/>
+          </xs:choice>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="BibLaTeXML.misc.fields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="biblatexml:BibLaTeXML.misc.standard.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.common.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.additional.fields"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:group name="misc">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.misc.fields">
+              <xs:attributeGroup ref="biblatexml:attlist.misc"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.misc">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="misc"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="type"/>
+    <xs:attribute name="howpublished"/>
+  </xs:attributeGroup>
+  <xs:group name="BibLaTeXML.online.standard.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:choice>
+          <xs:element ref="biblatexml:author"/>
+          <xs:element ref="biblatexml:editor"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:title"/>
+        <xs:choice>
+          <xs:choice>
+            <xs:element ref="biblatexml:day"/>
+            <xs:element ref="biblatexml:month"/>
+            <xs:element ref="biblatexml:year"/>
+          </xs:choice>
+          <xs:element ref="biblatexml:date"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:url"/>
+        <xs:element ref="biblatexml:subtitle"/>
+        <xs:element ref="biblatexml:titleaddon"/>
+        <xs:element ref="biblatexml:version"/>
+        <xs:element ref="biblatexml:note"/>
+        <xs:element ref="biblatexml:organization"/>
+        <xs:element ref="biblatexml:addendum"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:urldate"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:urlday"/>
+            <xs:element ref="biblatexml:urlmonth"/>
+            <xs:element ref="biblatexml:urlyear"/>
+          </xs:choice>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="BibLaTeXML.online.fields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="biblatexml:BibLaTeXML.online.standard.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.common.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.additional.fields"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:group name="online">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.online.fields">
+              <xs:attributeGroup ref="biblatexml:attlist.online"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.online">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="online"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:group name="BibLaTeXML.patent.standard.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:author"/>
+        <xs:element ref="biblatexml:title"/>
+        <xs:element ref="biblatexml:number"/>
+        <xs:choice>
+          <xs:choice>
+            <xs:element ref="biblatexml:day"/>
+            <xs:element ref="biblatexml:month"/>
+            <xs:element ref="biblatexml:year"/>
+          </xs:choice>
+          <xs:element ref="biblatexml:date"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:holder"/>
+        <xs:element ref="biblatexml:subtitle"/>
+        <xs:element ref="biblatexml:titleaddon"/>
+        <xs:element ref="biblatexml:version"/>
+        <xs:element ref="biblatexml:location"/>
+        <xs:element ref="biblatexml:origlocation"/>
+        <xs:element ref="biblatexml:note"/>
+        <xs:element ref="biblatexml:addendum"/>
+        <xs:element ref="biblatexml:url"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:urldate"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:urlday"/>
+            <xs:element ref="biblatexml:urlmonth"/>
+            <xs:element ref="biblatexml:urlyear"/>
+          </xs:choice>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="BibLaTeXML.patent.fields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="biblatexml:BibLaTeXML.patent.standard.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.common.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.additional.fields"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:group name="patent">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.patent.fields">
+              <xs:attributeGroup ref="biblatexml:attlist.patent"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.patent">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="patent"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="type"/>
+  </xs:attributeGroup>
+  <xs:group name="BibLaTeXML.periodical.standard.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:editor"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:journal"/>
+          <xs:element ref="biblatexml:journaltitle"/>
+        </xs:choice>
+        <xs:choice>
+          <xs:choice>
+            <xs:choice>
+              <xs:choice>
+                <xs:element ref="biblatexml:day"/>
+                <xs:element ref="biblatexml:month"/>
+              </xs:choice>
+              <xs:element ref="biblatexml:issue"/>
+            </xs:choice>
+            <xs:element ref="biblatexml:year"/>
+          </xs:choice>
+          <xs:element ref="biblatexml:date"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:shorteditor"/>
+        <xs:element ref="biblatexml:introduction"/>
+        <xs:element ref="biblatexml:subtitle"/>
+        <xs:element ref="biblatexml:issuetitle"/>
+        <xs:element ref="biblatexml:issuesubtitle"/>
+        <xs:element ref="biblatexml:issuetitleaddon"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:pagetotal"/>
+          <xs:element ref="biblatexml:pages"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:series"/>
+        <xs:element ref="biblatexml:volume"/>
+        <xs:element ref="biblatexml:number"/>
+        <xs:element ref="biblatexml:note"/>
+        <xs:element ref="biblatexml:issn"/>
+        <xs:element ref="biblatexml:addendum"/>
+        <xs:element ref="biblatexml:doi"/>
+        <xs:element ref="biblatexml:eprint"/>
+        <xs:element ref="biblatexml:eprinttype"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:urldate"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:urlday"/>
+            <xs:element ref="biblatexml:urlmonth"/>
+            <xs:element ref="biblatexml:urlyear"/>
+          </xs:choice>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="BibLaTeXML.periodical.fields">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="biblatexml:BibLaTeXML.periodical.standard.fields"/>
+        <xs:group ref="biblatexml:BibLaTeXML.common.fields"/>
+        <xs:group ref="biblatexml:BibLaTeXML.additional.fields"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="periodical">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="biblatexml:url"/>
+            <xs:group ref="biblatexml:BibLaTeXML.periodical.fields"/>
+          </xs:choice>
+          <xs:attributeGroup ref="biblatexml:attlist.periodical"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.periodical">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="periodical"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="type">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="printed"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <!-- url mandatory if type is electronic -->
+  <xs:group name="periodical.electronic">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="biblatexml:url"/>
+            <xs:group ref="biblatexml:BibLaTeXML.periodical.fields"/>
+          </xs:choice>
+          <xs:attributeGroup ref="biblatexml:attlist.periodical.electronic"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.periodical.electronic">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="periodical"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="type" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="electronic"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:group name="BibLaTeXML.proceedings.standard.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:editor"/>
+        <xs:element ref="biblatexml:title"/>
+        <xs:element ref="biblatexml:year"/>
+        <xs:element ref="biblatexml:shorteditor"/>
+        <xs:element ref="biblatexml:subtitle"/>
+        <xs:element ref="biblatexml:titleaddon"/>
+        <xs:element ref="biblatexml:maintitle"/>
+        <xs:element ref="biblatexml:mainsubtitle"/>
+        <xs:element ref="biblatexml:maintitleaddon"/>
+        <xs:element ref="biblatexml:venue"/>
+        <xs:element ref="biblatexml:volume"/>
+        <xs:element ref="biblatexml:part"/>
+        <xs:element ref="biblatexml:volumes"/>
+        <xs:element ref="biblatexml:series"/>
+        <xs:element ref="biblatexml:number"/>
+        <xs:element ref="biblatexml:note"/>
+        <xs:element ref="biblatexml:organization"/>
+        <xs:element ref="biblatexml:publisher"/>
+        <xs:element ref="biblatexml:origpublisher"/>
+        <xs:element ref="biblatexml:location"/>
+        <xs:element ref="biblatexml:origlocation"/>
+        <xs:element ref="biblatexml:isbn"/>
+        <xs:element ref="biblatexml:issn"/>
+        <xs:element ref="biblatexml:oclc"/>
+        <xs:element ref="biblatexml:lccn"/>
+        <xs:element ref="biblatexml:chapter"/>
+        <xs:element ref="biblatexml:pages"/>
+        <xs:element ref="biblatexml:pagetotal"/>
+        <xs:element ref="biblatexml:addendum"/>
+        <xs:element ref="biblatexml:doi"/>
+        <xs:element ref="biblatexml:eprint"/>
+        <xs:element ref="biblatexml:eprinttype"/>
+        <xs:element ref="biblatexml:url"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:urldate"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:urlday"/>
+            <xs:element ref="biblatexml:urlmonth"/>
+            <xs:element ref="biblatexml:urlyear"/>
+          </xs:choice>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="BibLaTeXML.proceedings.fields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="biblatexml:BibLaTeXML.proceedings.standard.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.common.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.additional.fields"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:group name="proceedings">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.proceedings.fields">
+              <xs:attributeGroup ref="biblatexml:attlist.proceedings"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.proceedings">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="proceedings"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:group name="BibLaTeXML.report.standard.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:author"/>
+        <xs:element ref="biblatexml:title"/>
+        <xs:element ref="biblatexml:institution"/>
+        <xs:element ref="biblatexml:year"/>
+        <xs:element ref="biblatexml:subtitle"/>
+        <xs:element ref="biblatexml:titleaddon"/>
+        <xs:element ref="biblatexml:series"/>
+        <xs:element ref="biblatexml:number"/>
+        <xs:element ref="biblatexml:version"/>
+        <xs:element ref="biblatexml:note"/>
+        <xs:element ref="biblatexml:location"/>
+        <xs:element ref="biblatexml:origlocation"/>
+        <xs:element ref="biblatexml:isrn"/>
+        <xs:element ref="biblatexml:chapter"/>
+        <xs:element ref="biblatexml:pages"/>
+        <xs:element ref="biblatexml:pagetotal"/>
+        <xs:element ref="biblatexml:addendum"/>
+        <xs:element ref="biblatexml:doi"/>
+        <xs:element ref="biblatexml:eprint"/>
+        <xs:element ref="biblatexml:eprinttype"/>
+        <xs:element ref="biblatexml:url"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:urldate"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:urlday"/>
+            <xs:element ref="biblatexml:urlmonth"/>
+            <xs:element ref="biblatexml:urlyear"/>
+          </xs:choice>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="BibLaTeXML.report.fields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="biblatexml:BibLaTeXML.report.standard.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.common.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.additional.fields"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:group name="report">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.report.fields">
+              <xs:attributeGroup ref="biblatexml:attlist.report"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.report">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="report"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="type" use="required"/>
+  </xs:attributeGroup>
+  <xs:group name="BibLaTeXML.thesis.standard.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:author"/>
+        <xs:element ref="biblatexml:title"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:institution"/>
+          <xs:element ref="biblatexml:school"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:year"/>
+        <xs:element ref="biblatexml:subtitle"/>
+        <xs:element ref="biblatexml:titleaddon"/>
+        <xs:element ref="biblatexml:note"/>
+        <xs:element ref="biblatexml:location"/>
+        <xs:element ref="biblatexml:origlocation"/>
+        <xs:element ref="biblatexml:chapter"/>
+        <xs:element ref="biblatexml:pages"/>
+        <xs:element ref="biblatexml:pagetotal"/>
+        <xs:element ref="biblatexml:volumes"/>
+        <xs:element ref="biblatexml:isbn"/>
+        <xs:element ref="biblatexml:oclc"/>
+        <xs:element ref="biblatexml:lccn"/>
+        <xs:element ref="biblatexml:addendum"/>
+        <xs:element ref="biblatexml:doi"/>
+        <xs:element ref="biblatexml:eprint"/>
+        <xs:element ref="biblatexml:eprinttype"/>
+        <xs:element ref="biblatexml:url"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:urldate"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:urlday"/>
+            <xs:element ref="biblatexml:urlmonth"/>
+            <xs:element ref="biblatexml:urlyear"/>
+          </xs:choice>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="BibLaTeXML.thesis.fields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="biblatexml:BibLaTeXML.thesis.standard.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.common.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.additional.fields"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:group name="thesis">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.thesis.fields">
+              <xs:attributeGroup ref="biblatexml:attlist.thesis"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.thesis">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="thesis"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="type" use="required"/>
+  </xs:attributeGroup>
+  <xs:group name="BibLaTeXML.unpublished.standard.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:author"/>
+        <xs:element ref="biblatexml:title"/>
+        <xs:choice>
+          <xs:choice>
+            <xs:element ref="biblatexml:day"/>
+            <xs:element ref="biblatexml:month"/>
+            <xs:element ref="biblatexml:year"/>
+          </xs:choice>
+          <xs:element ref="biblatexml:date"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:subtitle"/>
+        <xs:element ref="biblatexml:titleaddon"/>
+        <xs:element ref="biblatexml:institution"/>
+        <xs:element ref="biblatexml:pagetotal"/>
+        <xs:element ref="biblatexml:note"/>
+        <xs:element ref="biblatexml:addendum"/>
+        <xs:element ref="biblatexml:url"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:urldate"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:urlday"/>
+            <xs:element ref="biblatexml:urlmonth"/>
+            <xs:element ref="biblatexml:urlyear"/>
+          </xs:choice>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="BibLaTeXML.unpublished.fields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="biblatexml:BibLaTeXML.unpublished.standard.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.common.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.additional.fields"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:group name="unpublished">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.unpublished.fields">
+              <xs:attributeGroup ref="biblatexml:attlist.unpublished"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.unpublished">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="unpublished"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:group name="BibLaTeXML.preprint.standard.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:author"/>
+        <xs:element ref="biblatexml:title"/>
+        <xs:choice>
+          <xs:choice>
+            <xs:element ref="biblatexml:day"/>
+            <xs:element ref="biblatexml:month"/>
+            <xs:element ref="biblatexml:year"/>
+          </xs:choice>
+          <xs:element ref="biblatexml:date"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:institution"/>
+        <xs:element ref="biblatexml:location"/>
+        <xs:element ref="biblatexml:subtitle"/>
+        <xs:element ref="biblatexml:titleaddon"/>
+        <xs:element ref="biblatexml:series"/>
+        <xs:element ref="biblatexml:pagetotal"/>
+        <xs:element ref="biblatexml:note"/>
+        <xs:element ref="biblatexml:addendum"/>
+        <xs:element ref="biblatexml:url"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:urldate"/>
+          <xs:choice>
+            <xs:element ref="biblatexml:urlday"/>
+            <xs:element ref="biblatexml:urlmonth"/>
+            <xs:element ref="biblatexml:urlyear"/>
+          </xs:choice>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="BibLaTeXML.preprint.fields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="biblatexml:BibLaTeXML.preprint.standard.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.common.fields"/>
+      <xs:group ref="biblatexml:BibLaTeXML.additional.fields"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:group name="preprint">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.preprint.fields">
+              <xs:attributeGroup ref="biblatexml:attlist.preprint"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:attributeGroup name="attlist.preprint">
+    <xs:attribute name="id" use="required"/>
+    <xs:attribute name="entrytype" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="preprint"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:group name="software">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.misc.fields">
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="entrytype" use="required">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="software"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="movie">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.misc.fields">
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="entrytype" use="required">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="movie"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+</xs:schema>
