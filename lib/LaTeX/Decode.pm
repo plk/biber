@@ -39,7 +39,7 @@ Decodes the given text from LaTeX to Unicode.
 
 =cut
 
-### DATA ### FIXME : should be in LaTeX::Decode::Data !?
+### DATA ### 
 my @macrosonearg = qw/
 textsuperscript textmiddledot horn textrighthorn textcommabelow textdblgravecmb
 textsubbreve b c d h k m r u v B H M/;
@@ -299,6 +299,8 @@ my %wordmacrosextra = (
 
 my %diacritics = (
 	r   =>  "\x{030A}",
+	H   =>  "\x{030B}",
+	v   =>  "\x{030C}",
 	G	=>	"\x{030F}",
 	M	=>	"\x{0322}",
 	d	=>	"\x{0323}",
@@ -309,6 +311,18 @@ my %diacritics = (
 );
 
 my %diacriticsextra = (
+	capitalring   =>  "\x{030A}",
+	capitalhungarumlaut  =>  "\x{030B}",
+#	capitalcaron  =>  "\x{030C}",
+	textvbaraccent => "\x{030D}",
+	textdoublevbaraccent => "\x{030E}",
+	textdoublegrave	=> "\x{030F}",
+	textdotbreve	=> "\x{0310}",
+	textroundcap	=> "\x{0311}",
+	newtie			=> "\x{0311}",
+	capitalnewtie	=> "\x{0311}",
+	textturncommaabove => "\x{0312}",
+	textcommaabove	=>	"\x{0313}",
 	textrevcommaabove	=>	"\x{0314}",
 	textcommaabover	=>	"\x{0315}",
 	textsubgrave	=>	"\x{0316}",
@@ -329,7 +343,9 @@ my %diacriticsextra = (
 	textsubumlaut	=>	"\x{0324}",
 	textsubring	=>	"\x{0325}",
 	textcommabelow	=>	"\x{0326}",
+	capitalcedilla	=>	"\x{0327}",
 	textpolhook	=>	"\x{0328}",
+	capitalogonek	=>	"\x{0328}",
 	textsyllabic	=>	"\x{0329}",
 	textsubbridge	=>	"\x{032A}",
 	textsubw	=>	"\x{032B}",
@@ -352,10 +368,11 @@ my %diacriticsextra = (
 	textseagull	=>	"\x{033C}",
 	textovercross	=>	"\x{033D}",
 	overbridge	=>	"\x{0346}",
-	subdoublebar	=>	"\x{0347}",
+#	subdoublebar	=>	"\x{0347}",
 	subdoublevert	=>	"\x{0348}",
 	subcorner	=>	"\x{0349}",
 	crtilde	=>	"\x{034A}",
+	textoverw => "\x{034A}",
 	dottedtilde	=>	"\x{034B}",
 	doubletilde	=>	"\x{034C}",
 	spreadlips	=>	"\x{034D}",
