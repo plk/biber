@@ -494,6 +494,7 @@ BibLaTeXML.booklet.standard.fields =
   note? &
   location? &
   origlocation? &
+  publisher? & #added
   chapter? &
   pages? &
   pagetotal? &
@@ -905,7 +906,8 @@ BibLaTeXML.report.standard.fields =
   version? &
   note? &
   location? &
-  origlocation? &
+  origlocation? &  
+  publisher? & #added
   isrn? &
   chapter? &
   pages? &

@@ -952,7 +952,8 @@ sub latex_decode {
 	$text =~ s/\\"(\p{L})/$1\x{0308}/g;
 	for my $m (keys %diac) {
 		my $dm = $diac{$m};
-		$text =~ s/\\$m\{(\p{L})\}/$1$dm/g
+		$text =~ s/{\\$m\{(\p{L})\}}/$1$dm/g;
+		$text =~ s/\\$m\{(\p{L})\}/$1$dm/g;
 	};
 	$text =~ s/\\`{(\X)}/$1\x{0300}/g;
 	$text =~ s/\\\'{(\X)}/$1\x{0301}/g;

@@ -2236,6 +2236,10 @@ works
         <ref name="origlocation"/>
       </optional>
       <optional>
+        <ref name="publisher"/>
+      </optional>
+      <optional>
+        <!-- added -->
         <ref name="chapter"/>
       </optional>
       <optional>
@@ -3611,6 +3615,10 @@ works
         <ref name="origlocation"/>
       </optional>
       <optional>
+        <ref name="publisher"/>
+      </optional>
+      <optional>
+        <!-- added -->
         <ref name="isrn"/>
       </optional>
       <optional>
