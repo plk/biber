@@ -2,6 +2,7 @@ package LaTeX::Decode;
 use Carp;
 use warnings;
 use strict;
+use Readonly;
 #
 #die "AA" unless defined $macrosonearg[0];
 #die "XY" unless defined $wordmacrosextra{hamza};
@@ -39,12 +40,12 @@ Decodes the given text from LaTeX to Unicode.
 
 =cut
 
-### DATA ### 
-my @macrosonearg = qw/
+### DATA ### FIXME : should be in LaTeX::Decode::Data !?
+Readonly::Array our @MACROSONEARG => qw/
 textsuperscript textmiddledot horn textrighthorn textcommabelow textdblgravecmb
 textsubbreve b c d h k m r u v B H M/;
 
-my %wordmacros = (
+Readonly::Hash our %WORDMACROS => (
 	textquotedbl	=>	"\x{0022}",
 	texthash	=>	"\x{0023}",
 	textdollar	=>	"\x{0024}",
@@ -144,7 +145,7 @@ my %wordmacros = (
 	oe	=>	"\x{0153}"
 );
 
-my %wordmacrosextra = (
+Readonly::Hash our %WORDMACROSEXTRA => (
 	textTbar	=>	"\x{0166}",
 	textTstroke	=>	"\x{0166}",
 	texttbar	=>	"\x{0167}",
@@ -297,7 +298,7 @@ my %wordmacrosextra = (
 	textlengthmark	=>	"\x{02D0}"
 );
 
-my %diacritics = (
+Readonly::Hash our %DIACRITICS => (
 	r   =>  "\x{030A}",
 	H   =>  "\x{030B}",
 	v   =>  "\x{030C}",
@@ -310,7 +311,7 @@ my %diacritics = (
 	B	=>	"\x{0335}"
 );
 
-my %diacriticsextra = (
+Readonly::Hash our %DIACRITICSEXTRA => (
 	capitalring   =>  "\x{030A}",
 	capitalhungarumlaut  =>  "\x{030B}",
 #	capitalcaron  =>  "\x{030C}",
@@ -395,7 +396,7 @@ my %diacriticsextra = (
 #	"\\prime\\prime"	=>	"\x{2033}",
 #	"\\prime\\prime\\prime"	=>	"\x{2034}",
 
-my %punctuation = (
+Readonly::Hash our %PUNCTUATION => (
 	textendash	=>	"\x{2013}",
 	textemdash	=>	"\x{2014}",
 	textquoteleft	=>	"\x{2018}",
@@ -419,7 +420,7 @@ my %punctuation = (
 	rangle	=>	"\x{27E9}" 
 );
 
-my %negatedsymbols = ( # \not\\<symbol>
+Readonly::Hash our %NEGATEDSYMBOLS => ( # \not\\<symbol>
 	asymp	=>	"\x{226D}",
 	lesssim	=>	"\x{2274}",
 	gtrsim	=>	"\x{2275}",
@@ -435,7 +436,7 @@ my %negatedsymbols = ( # \not\\<symbol>
 	sqsupseteq	=>	"\x{22E3}",
 );
 
-my %superscripts = (
+Readonly::Hash our %SUPERSCRIPTS => (
 	0	=>	"\x{2070}",
 	i	=>	"\x{2071}",
 	4	=>	"\x{2074}",
@@ -458,14 +459,14 @@ my %superscripts = (
 	y	=>	"\x{02b8}"
 );
 
-my %cmdsuperscripts = (
+Readonly::Hash our %CMDSUPERSCRIPTS => (
 	texthth		=>	"\x{02b1}",
 	textturnr	=>	"\x{02b4}",
 	textturnrrtail	=>	"\x{02b5}",
 	textinvscr	=>	"\x{02b6}"
 );
 
-my %symbols = (
+Readonly::Hash our %SYMBOLS => (
 	textcolonmonetary	=>	"\x{20A1}",
 	textlira	=>	"\x{20A4}",
 	textnaira	=>	"\x{20A6}",
@@ -672,7 +673,7 @@ my %symbols = (
 	tone1	=>	"\x{02E9}"
 );
 
-my %dings = (
+Readonly::Hash our %DINGS => (
 	'21'	=>	"\x{2701}",
 	'22'	=>	"\x{2702}",
 	'23'	=>	"\x{2703}",
@@ -858,7 +859,7 @@ my %dings = (
 	'FD'	=>	"\x{27BD}",
 	'FE'	=>	"\x{27BE}"
 );
-my %greek = (
+Readonly::Hash our %GREEK => (
 	alpha	=>	"\x{3b1}",
 	beta	=>	"\x{3b2}",
 	gamma	=>	"\x{3b3}",
@@ -913,11 +914,8 @@ my %greek = (
 
 # TODO add sub set_latex_decode_options ??
 
-my %wordmac = ( %wordmacros, %wordmacrosextra ) ; # if defined %wordmacrosextra;
-my %diac = ( %diacritics, %diacriticsextra ) ; # if defined %diacriticsextra;
-#DEBUG use Data::Dumper;
-#
-#DEBUG print Dumper \%diac || die "SKLjaSDKALJ";
+Readonly::Hash our %WORDMAC => ( %WORDMACROS, %WORDMACROSEXTRA ) ; # if defined %WORDMACROSEXTRA;
+Readonly::Hash our %DIAC => ( %DIACRITICS, %DIACRITICSEXTRA ) ; # if defined %DIACRITICSEXTRA;
 
 sub latex_decode {
     my $text = shift;
@@ -929,12 +927,12 @@ sub latex_decode {
 
 	$text =~ s/(\\[a-zA-Z]+)\\(\s+)/$1\{\}$2/g; # \foo\ bar -> \foo{} bar
 	$text =~ s/([^{]\\\w)([;,.:%])/$1\{\}$2/g; # Fars\I, -> Fars\I{},
-	for my $m (@macrosonearg) {
+	for my $m (@MACROSONEARG) {
 	    $text =~ s/\\$m\s+(\p{Letter})/\\$m\{$1\}/g
 	};
 	$text =~ s/(\\.){\\i}/$1i/g; # special cases such as \={ı} -> i′
-	for my $m (keys %wordmac) {
-	    $text =~ s/({\\$m}|\\$m\{\}|\\$m\s+|\\$m$)/$wordmac{$m}/ge
+	for my $m (keys %WORDMAC) {
+	    $text =~ s/({\\$m}|\\$m\{\}|\\$m\s+|\\$m$)/$WORDMAC{$m}/ge
 	};
 	$text =~ s/{\\`(\p{L})}/$1\x{0300}/g;
 	$text =~ s/{\\\'(\p{L})}/$1\x{0301}/g;
@@ -950,8 +948,8 @@ sub latex_decode {
 	$text =~ s/\\=(\p{L})/$1\x{0304}/g;
 	$text =~ s/\\\.(\p{L})/$1\x{0307}/g;
 	$text =~ s/\\"(\p{L})/$1\x{0308}/g;
-	for my $m (keys %diac) {
-		my $dm = $diac{$m};
+	for my $m (keys %DIAC) {
+		my $dm = $DIAC{$m};
 		$text =~ s/{\\$m\{(\p{L})\}}/$1$dm/g;
 		$text =~ s/\\$m\{(\p{L})\}/$1$dm/g;
 	};
