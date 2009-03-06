@@ -46,7 +46,7 @@
 #                  LaTeX::Decode (included)
 #         BUGS:  No doubt many... 
 #       AUTHOR:  François Charette <firmicus ατ gmx δοτ net>
-#      VERSION:  0.3
+#      VERSION:  0.4
 #      CREATED:  29/02/08 12:43:03 CET
 #===============================================================================
 
@@ -859,7 +859,23 @@ sub parsename {
 
     if ( $namestr =~ /,.+,/ ) {    # pre? Lastname, suffix, Firstname
         ( $prefix, $lastname, $suffix, $firstname ) = $namestr =~
-            m/^(\p{Ll}(?:\p{Ll}|\s)+)?\s*(\p{Lu}[^,]+|{[^\\][^,]+}),\s+([^,]+),\s+([^,]+)$/x;
+            m/^(
+                \p{Ll}
+                (?:\p{Ll}|\s)+
+               )?
+               \s*
+               (
+                [^,]+
+               |
+                {[^,]+}
+               )
+               ,
+               \s+
+               ([^,]+)
+               ,
+               \s+
+               ([^,]+)
+             $/x;
 
         #$lastname =~ s/^{(.+)}$/$1/g ;
         #$firstname =~ s/^{(.+)}$/$1/g ;
@@ -867,7 +883,24 @@ sub parsename {
     }
     elsif ( $namestr =~ /,/ ) {    # <pre> Lastname, Firstname
         ( $prefix, $lastname, $firstname ) = $namestr =~
-            m/^(\p{Ll}(?:\p{Ll}|\s)+\s+)?($articleprefix?$diacritics?\p{L}[^,]+|{[^,]+}),\s+([^,]+|{.+})$/x;
+            m/^(
+                \p{Ll} # prefix starts with lowercase
+                (?:\p{Ll}|\s)+ # e.g. van der
+                \s+
+               )?
+               (
+                $articleprefix?$diacritics?
+                [^,]+
+                |
+                {[^,]+}
+               ),
+               \s+
+               (
+                [^,]+
+                |
+                {.+}
+               )
+               $/x;
 
         #$lastname =~ s/^{(.+)}$/$1/g ;
         #$firstname =~ s/^{(.+)}$/$1/g ;
@@ -875,7 +908,17 @@ sub parsename {
     }
     elsif ( $namestr =~ /\s/ and $namestr !~ /^{.+}$/ ) {  # Firstname pre? Lastname
         ( $firstname, $prefix, $lastname ) =
-          $namestr =~ /^({.+}|(?:\p{Lu}\p{Ll}+\s*)+)\s+((?:\p{Ll}|\s)+)?(.+)$/x;
+          $namestr =~ /^(
+                         {.+}
+                        |
+                         (?:\p{Lu}\p{Ll}+\s*)+
+                        )
+                        \s+
+                        (
+                         (?:\p{Ll}|\s)+
+                        )?
+                        (.+)
+                        $/x;
 
         #$lastname =~ s/^{(.+)}$/$1/;
         $firstname =~ s/\s+$// if $firstname;
@@ -914,13 +957,15 @@ sub parsename {
 }
 
 sub terseinitials {
-    my $str = shift;    #FIXME decode_latex first ?
-    carp "String not defined" unless ($str) ;
-    $str =~ s/^{(\p{L}).+}$/$1/g;    # Aaaaa{ de }Bbbb -> A
-    $str =~ s/{\s+(\S+)\s+}/~$1~/g;  # {Aaaa Bbbbb Ccccc} -> A
+    my $str = shift;
+    confess "String not defined" unless ($str) ;
+	$str =~ s/\\[\p{L}]+\s*//g;  # remove tex macros
+    $str =~ s/^{(\p{L}).+}$/$1/g;    # {Aaaa Bbbbb Ccccc} -> A
+    $str =~ s/{\s+(\S+)\s+}//g;  # Aaaaa{ de }Bbbb -> AaaaaBbbbb
     # get rid of Punctuation (except DashPunctuation), Symbol and Other characters
-    $str =~ s/[\x{2bf}\x{2018}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g; 
-    $str =~ s/[\b~]a.-\p{L}//; # remove arabic prefix: al-Khwarizmi -> K as-Saleh -> S ʿAbd~al-Raḥmān -> A etc
+    $str =~ s/[\x{2bf}\x{2018}\p{Lm}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g; 
+	# remove arabic prefix: al-Khwarizmi -> K / aṣ-Ṣāliḥ -> Ṣ ʿAbd~al-Raḥmān -> A etc
+    $str =~ s/\ba\p{Ll}-//; 
     $str =~ s/\B\p{L}//g;
     $str =~ s/\s+//g;
     return $str;
@@ -1499,8 +1544,9 @@ sub print_name {
 
 sub latexescape { 
     my $str = shift;
-    my @latexspecials = ( '&', '\^', '_', '\$', '%' ); 
+    my @latexspecials = ( '{', '}', '&', '\^', '_', '\$', '%' ); 
     foreach my $char (@latexspecials) {
+		$str =~ s/^$char/\\$char/g;
         $str =~ s/[^\\]$char/\\$char/g;
     };
     return $str
