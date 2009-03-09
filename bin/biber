@@ -36,6 +36,7 @@
 #               or remote resources via network protocols (such as SRU).
 #
 #               TODO
+#               * use Log::Log4Perl 
 #               * plugin facility
 #               * add option --inputencoding <latin1> (only utf8 supported as of now)
 #               * make available as par archive for maximal portability ?
@@ -56,7 +57,7 @@ use Carp;
 use Data::Dumper;    # for debug only
 
 # This is of course temporary...
-use lib '/home/francois/dev/biblatex-biber/branches/exp/lib'; 
+use lib '/home/francois/dev/biblatex-biber/trunk/lib'; 
 
 use Biber;
 
@@ -135,13 +136,14 @@ else {
 #=====================================================
 
 foreach my $bib (@{ $biber->config('bibdata') }) {
-    if ($bib =~ /\.xml$/) {
+    if ($bib =~ /\.(db)?xml$/) {
         $biber->parse_biblatexml( $bib )
     }
     # TODO
-    #elsif ($bib =~ /\.dbxml$/ ) {
-    #    query_dbxml ( $bib )
-    #}
+#    elsif ($bib =~ /\.dbxml$/ ) {
+#        my $xmlstring = $biber->dbxml_to_xml($bib);
+#        $biber->parse_biblatexml( $xmlstring );
+#    }
     elsif ($bib =~ /\.bib$/) {
         croak "File $bib does not exist!" unless -f $bib;
         $biber->parse_bibtex($bib)

@@ -34,6 +34,9 @@ use Regexp::Common qw{ balanced };
 	#endfi
 #else we have xml:
 	#use XML::LibXML
+#else we have dbxml:
+use Sleepycat::DbXml 'simple';
+use File::Basename;
 #endfi
 
 use Biber::Constants ;
@@ -41,7 +44,7 @@ use Biber::Internals ;
 use Biber::Utils ;
 use base 'Biber::Internals';
 
-our $VERSION = '1.0pre-alpha';
+our $VERSION = '1.0-alpha';
 
 #TODO read config file (e.g. $HOME/.biber.conf to change default options)
 
@@ -77,6 +80,7 @@ sub _initopts {
     for (keys %CONFIG_DEFAULT) {
         $self->{config}->{$_} = $CONFIG_DEFAULT{$_}
     };
+    return
 }
 
 sub citekeys {
@@ -196,7 +200,9 @@ sub parse_auxfile {
 
     print "The citekeys are:\n", "@auxcitekeys", "\n\n" if $self->config('biberdebug');
     
-    $self->{citekeys} = [ @auxcitekeys ]
+    $self->{citekeys} = [ @auxcitekeys ] ;
+
+    return
 }
 
 #=====================================================
@@ -504,12 +510,21 @@ sub parse_bibtex {
 }
 
 sub parse_biblatexml {
-    my ($self, $xmlfile) = @_ ;
+    my ($self, $xml) = @_ ;
     require XML::LibXML;
     my $parser = XML::LibXML->new();
-    my $db = $parser->parse_file($xmlfile) 
-        or croak "Can't parse file $xmlfile";
+    my $db;
 
+    print "Parsing the xml data ...\n" unless $self->config('quiet') ;
+
+    if ( $xml =~ /\.dbxml$/ ) {
+        my $xmlstring = $self->dbxml_to_xml($xml);
+        $db = $parser->parse_string( $xmlstring ) 
+            or croak "Cannot parse xml string";
+    } else {
+        $db = $parser->parse_file($xml) 
+            or croak "Can't parse file $xml";
+    }
     # TODO : add option "validate xml" 
     # if ($validatexml) {
     #         my $rngschema = XML::LibXML::RelaxNG->new( location => "biblatexml.rng");
@@ -531,7 +546,8 @@ sub parse_biblatexml {
             push @auxcitekeys, $r->findnodes('@id')->string_value
         };
     };
-    print "Processing $xmlfile ...\n" unless $self->config('quiet') ;
+    
+    print "Processing the xml data ...\n" unless $self->config('quiet') ;
 
     # Contrary to the bibtex approach, we are not extracting all data to
     # the bibentries hash, but only the ones corresponding to @auxcitekeys
@@ -1080,6 +1096,125 @@ EOF
     return
 }
 
+### TEST ###
+sub dbxml_to_xml {
+    my ($self, $dbxmlfile) = @_;
+    my @auxcitekeys = $self->citekeys;
+    my $mgr = new XmlManager() or croak ;
+    my $collname = basename($dbxmlfile);
+    #my $xmldoc = XML::LibXML::Document->new("1.0", "UTF-8");
+    #$xmldoc->createElementNS("http://ankabut.net/biblatexml", "bib:entries");
+    my $xmlstring = <<ENDXML
+<?xml version="1.0" encoding="UTF-8"?>
+<bib:entries xmlns:bib="http://ankabut.net/biblatexml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ENDXML
+    ;
+    eval {
+        chdir( dirname($dbxmlfile)) or croak "Cannot chdir: $!";
+        my $cont = $mgr->openContainer("$collname");
+        my $context = $mgr->createQueryContext() ;
+        $context->setNamespace("bib", "http://ankabut.net/biblatexml");
+        foreach my $key (@auxcitekeys) {
+            print "Querying dbxml for key $key\n" if $self->config('biberdebug');
+            my $query = 'collection("' . $collname . '")//bib:entry[@id="' . $key . '"]';
+            my $results = $mgr->query($query, $context) ;
+            my $ressize = $results->size;
+            if ($ressize > 1) {
+                carp "Found $ressize entries for key $key!";
+            };
+            my $xmlvalue = new XmlValue;
+            while ($results->next($xmlvalue)) {
+                $xmlstring .= $xmlvalue->asString() . "\n    \n";
+                last;
+            };
+            ## now we add the crossref key to the citekeys, if present:
+            my $queryx = 'collection("' . $collname . '")//bib:entry[@id="' . $key . 
+                '"]/bib:crossref/string()';
+            my $resultsx = $mgr->query($queryx, $context) ;
+            if ($resultsx->size > 0) {
+                my $xmlvaluex = new XmlValue;
+                while ($resultsx->next($xmlvaluex)) {
+                    my $xkey = $xmlvaluex->asString() ;
+                    print "Adding crossref key $xkey to the stack\n" if $self->config('biberdebug');
+                    push @auxcitekeys, "$xkey";
+                    last
+                }
+            }
+        }
+    };
+    if (my $e = catch std::exception) {
+        carp "Query failed\n";
+        carp $e->what() . "\n";
+        exit( -1 );
+    }
+    elsif ($@) {
+        carp "Query failed\n" ;
+        carp $@ ;
+        exit( -1 ) ;
+    };
+
+    $xmlstring .= "\n</bib:entries>\n";
+
+    return $xmlstring;
+}
+
 1;
 
 # vim: set tabstop=4 shiftwidth=4: 
+
+__END__
+
+
+#METHODS TO ADD FOR DBXML support
+#
+sub get_entry_xml {
+    my $citekey = shift;
+    my $xpath = '/*/bib:entry[@id="' . $citekey . '"]';
+    return $db->findnodes($xpath)
+}
+
+
+
+sub get_entry_dbxml {
+    my $citekey = shift;
+    my $query = 'collection("biblatex.dbxml")//bib:entry[@id="' . $citekey . '"]';
+    my $results = $mgr->query($query, $context);
+    my $xmlvalue = new XmlValue;
+    while ($results->next($xmlvalue)) {
+        return $xmlvalue->asString();
+        last;
+    }
+
+    return
+}
+
+sub process_entry {
+    my $bibrecord = shift;
+
+}
+
+
+
+#===============================================================================
+package Biber::Bib;
+use strict;
+use warnings;
+
+sub new {
+    my $class = shift ;
+    my $self = bless {}, $class ;
+    return $self
+}
+
+sub getentry {
+    my ($self, $key) = @_ ;
+    return $self->{$key}
+}
+
+sub addentry {
+    my ($self, $key, $hashref) = @_ ;
+    $self->{$key} = { $hashref } ;
+}
+
+1;
