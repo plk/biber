@@ -7,47 +7,54 @@
 #                Type biber -h or --help for details
 #
 #  DESCRIPTION:  A BibTeX replacement for users of biblatex
-#
-#               The biblatex package by Philipp Lehman is likely to become
-#               the definitive citation management tool for LaTeX users.
-#               Biblatex relies on the venerable bibtex program only for
-#               sorting and generating a very generic bbl file without any
-#               formatting instruction.  Everything else is taken care of by
-#               biblatex. With Biber it is (will be) no longer necessary to
-#               rely on BibTeX. For maximal portability, the current version
-#               includes a BibTeX parser with a Parse::RecDescent grammar, but
-#               if available it will use the faster Text::BibTeX module. The
-#               objective of the first development phase is to have a robust
-#               and reliable emulation of BibTeX with the biblatex.bst style
-#               file. In other words, given the same aux file as input, to
-#               output an identical bbl file as BibTeX would.
-#               
-#               This version also introduces support for a new XML format
-#               tailored specifically for biblatex data: BibLaTeXML. It owes
-#               its inspiration partly to the BibTeXML format, but it is far
-#               more complex. A complete RelaXNG schema is provided, as well 
-#               as a tool for converting bib files to biblatexml. To parse 
-#               BibLaTeXML databases the perl module XML::LibXML is required.
-#               
-#               The advantages of no longer being dependent upon BibTeX are
-#               obvious: full Unicode support, no memory limitations,
-#               extensibility, etc. In the future, support for communication 
-#               with databases (like Berkeley DB, SQLite, MySQL, PostgreSQL, eXisT) 
-#               or remote resources via network protocols (such as SRU).
-#
-#               TODO
-#               * use Log::Log4Perl 
-#               * plugin facility
-#               * add option --inputencoding <latin1> (only utf8 supported as of now)
-#               * make available as par archive for maximal portability ?
-#               * SEE also TODO's inserted below
-#
-# REQUIREMENTS:  Text::BibTeX or Parse::RecDescent; Regexp::Common; 
-#                  LaTeX::Decode (included)
-#         BUGS:  No doubt many... 
 #       AUTHOR:  François Charette <firmicus ατ gmx δοτ net>
-#      VERSION:  0.3
-#      CREATED:  29/02/08 12:43:03 CET
+#      VERSION:  0.4
+#          URL:  http://biblatex-biber.sourceforge.net
+#
+# REQUIREMENTS: biber requires the following CPAN modules:
+#                1. either
+#                   - Text::BibTeX
+#                or
+#                   - Parse::RecDescent 
+#                   - Regexp::Common
+#                2. For parsing the biblatexml format: 
+#                   - XML::LibXML 
+#                3. and optionally (for DBXML databases):
+#                   - Sleepycat::Dbxml
+#
+# ROADMAP / TODO : (in decreasing order of priority)
+#               * Prepare Makefile.PL etc for distribution
+#               * Write comprehensive test suite
+#               * refactor postprocess method
+#               * fix handling of labelalpha
+#               * check and complete the generation of special fields: see manual §4.2.4
+#               * improve documentation of source code!
+#               ----- version 0.5 ----- FIRST OFFICIAL RELEASE?
+#               * separate data parsing in individual modules
+#               * read config file (e.g. $HOME/.biber.conf) to change default settings
+#               * allow to ignore certain fields through conf settings
+#               * user-setting of diacritics to ignore in sorting (‘ and ʿ are currently built-in)
+#               * add validation mechanism for options and config (untaint data!)
+#               ----- version 0.6 -----
+#               * use Log::Log4Perl 
+#               * add option --inputencoding <latin1> etc (only utf8 supported as of now)
+#               * validate bibtex data with Text::Bibtex::Structure (optional)
+#               * validate XML data against RelaxNG schema (optional)
+#               ----- version 0.7 -----
+#               * plugin facility
+#               * implement "debug output" when sorting=99
+#               ----- version 0.8 -----
+#               * refactor OO structure: add Biber::Conf and Biber::Entry classes
+#               * make biber and dependencies available as a par archive for maximal portability ?
+#               ----- version 0.9 -----
+#               * add keys for selecting script, language, translation, transliteration
+#               * prototype of bbx style for handling multiscript bibliographies (requires xelatex)
+#               * fix crossref handling of reviews
+#               * <nonSort>The</nonSort> Title => automatically generates sorttitle = Title, The
+#               * "D[onald] E. Knuth" -> prints as D. E. Knuth but is sorted with Donald E. Knuth
+#               * ... 
+#               ----- version 1.0 -----
+#
 #===============================================================================
 
 use strict;
@@ -85,8 +92,6 @@ GetOptions(
 #--------------------------------------------------
 
 use open IO => ':utf8';
-#use open OUT => ':utf8';
-#binmode( STDOUT, ':utf8' );
 
 our $VERSION = $Biber::VERSION; 
 
@@ -139,11 +144,6 @@ foreach my $bib (@{ $biber->config('bibdata') }) {
     if ($bib =~ /\.(db)?xml$/) {
         $biber->parse_biblatexml( $bib )
     }
-    # TODO
-#    elsif ($bib =~ /\.dbxml$/ ) {
-#        my $xmlstring = $biber->dbxml_to_xml($bib);
-#        $biber->parse_biblatexml( $xmlstring );
-#    }
     elsif ($bib =~ /\.bib$/) {
         croak "File $bib does not exist!" unless -f $bib;
         $biber->parse_bibtex($bib)
