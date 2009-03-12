@@ -1,27 +1,9 @@
-#
-#===============================================================================
-#
-#         FILE:  Utils.pm
-#
-#  DESCRIPTION:  
-#
-#        FILES:  ---
-#         BUGS:  ---
-#        NOTES:  ---
-#       AUTHOR:   (), <>
-#      COMPANY:  
-#      VERSION:  1.0
-#      CREATED:  26/02/2009 19:25:22 CET
-#     REVISION:  ---
-#===============================================================================
 package Biber::Utils;
-use LaTeX::Decode;
 use strict;
 use warnings;
 use Carp;
-use base 'Exporter';
-
-our $VERSION = '0.1';
+use LaTeX::Decode ;
+use base 'Exporter' ;
 
 our @EXPORT = qw{ terseinitials makenameid makenameinitid cleanstring
 				  normalize_string latexescape print_name array_minus } ;
@@ -50,9 +32,8 @@ sub makenameinitid {
 sub cleanstring {
     my $str = shift;
     confess "String not defined" unless ($str) ;
-    $str =~ s/\\[A-Za-z]+//g;  ### (hyphen|q?quad|e[nm]space|-)//g; #FIXME more?
-    $str =~ s/[\p{P}\p{S}\p{C}]+//g
-      ;    # remove punctuation, symbols, separator and control
+    $str =~ s/\\[A-Za-z]+//g;
+    $str =~ s/[\p{P}\p{S}\p{C}]+//g ; ### remove punctuation, symbols, separator and control
     $str =~ s/\s+/_/g;
     return $str;
 }
@@ -69,18 +50,14 @@ sub latexescape {
 
 sub normalize_string {
     my $str = shift;
-    my $no_decode = shift;
     confess "String not defined" unless ($str) ;
-    $str = latex_decode($str) unless $no_decode;
-    $str =~ s/\\[A-Za-z]+//g;  ### (hyphen|q?quad|e[nm]space|-)//g; #FIXME more?
-    $str =~ s/[\p{P}\p{S}\p{C}]+//g
-      ;    # remove punctuation, symbols, separator and control
+    $str =~ s/\\[A-Za-z]+//g;
+    $str =~ s/[\p{P}\p{S}\p{C}]+//g ; ### remove punctuation, symbols, separator and control
     return $str;
 }
 
 sub terseinitials {
     my $str = shift;
-    #my $no_decode = shift;
     confess "String not defined" unless ($str) ;
 	$str =~ s/\\[\p{L}]+\s*//g;  # remove tex macros
     $str =~ s/^{(\p{L}).+}$/$1/g;    # {Aaaa Bbbbb Ccccc} -> A
