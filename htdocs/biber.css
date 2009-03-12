@@ -11,7 +11,7 @@ body {
   margin-top: 0px; padding-top: 310px;
   padding-bottom: 3em;
 }
-a { text-decoration:none; border-bottom: 1px dotted lightgrey; }
+a { text-decoration:none; border-bottom: 1px dotted #E5E5E5; }
 a:link, a:visited { color: #A52A2A; }
 a:hover { text-decoration: none; border-bottom: 1px dotted transparent; }
 p, address {
