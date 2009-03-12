@@ -1,27 +1,9 @@
-#
-#===============================================================================
-#
-#         FILE:  Utils.pm
-#
-#  DESCRIPTION:  
-#
-#        FILES:  ---
-#         BUGS:  ---
-#        NOTES:  ---
-#       AUTHOR:   (), <>
-#      COMPANY:  
-#      VERSION:  1.0
-#      CREATED:  26/02/2009 19:25:22 CET
-#     REVISION:  ---
-#===============================================================================
 package Biber::Internals;
-use Biber::Constants;
-use Biber::Utils;
 use strict;
 use warnings;
 use Carp;
-
-our $VERSION = '0.1';
+use Biber::Constants;
+use Biber::Utils;
 
 #=====================================================
 # ADDITIONAL METHODS FOR PROCESSING THE PARSED ENTRIES
@@ -169,7 +151,6 @@ sub getnameinitials {
     }
     else
     { # more than 3 authors: only take initials of first getoption($citekey,"minnames")
-            #TODO
         foreach my $i ( 0 .. $self->getoption( $citekey, "minnames" ) - 1 ) {
             if ( $aut[$i]->{prefix} and $self->getoption( $citekey, "useprefix" ) ) {
                 $initstr .= terseinitials( $aut[$i]->{prefix} ) ; 
@@ -458,11 +439,11 @@ sub _print_name {
 sub _print_for_biblatex {
     my ($self, $citekey) = @_ ;
     my $be      = $self->{bib}->{$citekey} or croak "Cannot find $citekey hash";
-    my $kw      = "";
-    if ( $be->{keywords} ) {
-        $kw = $be->{keywords};
+    my $opts      = "";
+    if ( $be->{options} ) {
+        $opts = $be->{options};
     }
-    my $str = "\\entry{$citekey}{" . $be->{entrytype} . "}{$kw}\n";
+    my $str = "\\entry{$citekey}{" . $be->{entrytype} . "}{$opts}\n";
     delete $be->{entrytype};
     foreach my $namefield (@NAMEFIELDS) {
         if ( defined $be->{$namefield} ) {
@@ -576,7 +557,7 @@ sub _print_for_biblatex {
     foreach my $rfield (@RANGEFIELDS) {
         if ( defined $be->{$rfield} ) {
             my $rf = $be->{$rfield};
-            $rf =~ s/-+/\\bibrangedash /g;
+            $rf =~ s/[-–]+/\\bibrangedash /g;
             $str .= "  \\field{$rfield}{$rf}\n";
         }
     }
@@ -587,8 +568,8 @@ sub _print_for_biblatex {
             $str .= "  \\verb $rf\n  \\endverb\n";
         }
     }
-    if ( defined $be->{options} ) {
-        $str .= "  \\options{" . $be->{options} . "}\n";
+    if ( defined $be->{keywords} ) {
+        $str .= "  \\keyw{" . $be->{keywords} . "}\n";
     }
 
     #TODO generate special fields : see manual §4.2.4
