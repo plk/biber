@@ -1,27 +1,9 @@
-#
-#===============================================================================
-#
-#         FILE:  Constants.pm
-#
-#  DESCRIPTION:  
-#
-#        FILES:  ---
-#         BUGS:  ---
-#        NOTES:  ---
-#       AUTHOR:   (), <>
-#      COMPANY:  
-#      VERSION:  1.0
-#      CREATED:  26/02/2009 12:19:05 CET
-#     REVISION:  ---
-#===============================================================================
 package Biber::Constants;
 use strict;
 use warnings;
 use Readonly;
 
 use base 'Exporter';
-
-our $VERSION = '0.1';
 
 our @EXPORT = qw{
 	@NAMEFIELDS
@@ -51,11 +33,11 @@ Readonly::Hash our %CONFIG_DEFAULT => (
     uniquename  => 0,
     useprefix   => 0,
     terseinits  => 0,
-    sorting     => 1,
+    sorting     => 1, # corresponds to 'nty'
     sortlos     => 1,
     maxnames    => 3,
     minnames    => 1,
-    maxline     => 79,    #TODO ?
+    maxline     => 79,    # this is currently ignored. TODO ?
 	alphaothers => "+",
 	# biber options:
 	fastsort => 0,
