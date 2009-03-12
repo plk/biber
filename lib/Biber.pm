@@ -1,16 +1,11 @@
-#
 #===============================================================================
 #
 #         FILE:  Biber.pm
 #
-#  DESCRIPTION:  
+#  DESCRIPTION:  Base module for biber
 #
-#        FILES:  ---
-#         BUGS:  ---
-#        NOTES:  ---
-#       AUTHOR:   (), <>
-#      COMPANY:  
-#      VERSION:  1.0
+#       AUTHOR:  François Charette <firmicus ατ gmx δοτ net>
+#      VERSION:  0.4
 #      CREATED:  24/02/2009 11:00:33 CET
 #     REVISION:  ---
 #===============================================================================
@@ -20,8 +15,6 @@ use warnings;
 use Carp;
 use IO::File;
 use Encode;
-# Temporary:
-use lib '..'; 
 
 # TODO 
 # if have bib data:
@@ -44,7 +37,7 @@ use Biber::Internals ;
 use Biber::Utils ;
 use base 'Biber::Internals';
 
-our $VERSION = '1.0-alpha';
+our $VERSION = '0.4';
 
 #TODO read config file (e.g. $HOME/.biber.conf to change default options)
 
@@ -53,7 +46,7 @@ our %seenkeys    = () ;
 our %crossrefkeys = ();
 our %entrieswithcrossref = ();
 our %localoptions = ();
-our %seenname       = ();
+our %namehashcount  = ();
 our %seenuniquename = ();
 our %seenauthoryear = ();
 our %seenlabelyear = ();
@@ -810,8 +803,8 @@ sub postprocess {
             $nameinitid = makenameinitid(@aut)
               if ( $self->config('uniquename') == 2 );
         }
-        elsif ( ($be->{entrytype} =~ /^(collection|proceedings)/ 
-                   or $self->getoption( $citekey, "useeditor" ) )
+        elsif ( ($be->{entrytype} =~ /^(collection|proceedings)/ #<<-- keep this? FIXME
+                    and $self->getoption( $citekey, "useeditor" ) )
                  and $be->{editor} ) 
         {
             my @edt = @{ $be->{editor} };
@@ -845,9 +838,25 @@ sub postprocess {
             }
         }
 
-        $seenname{$nameid}++;
-        $namehash .= $seenname{$nameid};
-        $fullhash .= $seenname{$nameid};
+        my $hashsuffix = 1;
+
+        # FIXME FIXME
+
+        if ( $namehashcount{$namehash}{$nameid} ) {
+            $hashsuffix = $namehashcount{$namehash}{$nameid}
+        }
+        elsif ($namehashcount{$namehash}) {
+            my $count = scalar keys %{ $namehashcount{$namehash} };
+            $hashsuffix = $count + 1 ;
+            $namehashcount{$namehash}{$nameid} = $hashsuffix ;
+        }
+        else {
+            $namehashcount{$namehash} = { $nameid => 1 }
+        } ;
+             
+        $namehash .= $hashsuffix;
+        $fullhash .= $hashsuffix;
+
         $be->{namehash} = $namehash;
         $be->{fullhash} = $fullhash;
 
