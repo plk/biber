@@ -415,7 +415,7 @@ sub process_crossrefs {
 	$self->{bib} = { %bibentries }
 }
 
-# TODO "D[onald] E. Knuth" -> prints as D. E. Knuth but is sorted with Donald E. Knuth
+# TODO "D[onald] E. Knuth" prints as D. E. Knuth but is sorted with Donald E. Knuth
 sub _print_name {
 	my ($self, $au) = @_;
     my %nh  = %{$au};
