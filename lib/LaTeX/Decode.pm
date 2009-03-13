@@ -3,9 +3,7 @@ use Carp;
 use warnings;
 use strict;
 use Readonly;
-#
-#die "AA" unless defined $macrosonearg[0];
-#die "XY" unless defined $wordmacrosextra{hamza};
+
 
 =head1 NAME
 
