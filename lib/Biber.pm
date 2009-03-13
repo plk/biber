@@ -15,27 +15,11 @@ use warnings;
 use Carp;
 use IO::File;
 use Encode;
-
-# TODO 
-# if have bib data:
-use LaTeX::Decode; # bundled with Biber
-	# if bibtex is installed:
-use Text::BibTeX ;
-	# else:
-# use Parse::RecDescent;
-use Regexp::Common qw{ balanced };
-	#endfi
-#else we have xml:
-	#use XML::LibXML
-#else we have dbxml:
-use Sleepycat::DbXml 'simple';
-use File::Basename;
-#endfi
-
 use Biber::Constants ;
 use Biber::Internals ;
 use Biber::Utils ;
 use base 'Biber::Internals';
+our @ISA;
 
 our $VERSION = '0.4';
 
@@ -270,206 +254,47 @@ sub parse_ctrlfile {
 sub parse_bibtex {
     my ($self, $filename) = @_ ;
     # citekeys that are in this database
-    my @localkeys;
     
     print "Processing bibtex file $filename\n" unless $self->config('quiet');
 
     my %citekeysnotfound = ();
-    my @auxcitekeys = $self->citekeys;
-    my %bibentries = $self->bib;
+    my @localkeys = ();
 
     if ( !$self->config('unicodebib') && $self->config('unicodebbl') ) {
-        require File::Slurp;    #
+        require LaTeX::Decode;
+        require File::Slurp; 
         my $ufilename = "$filename.utf8";
         my $ubib      = new IO::File ">$ufilename";
         $ubib->binmode(':utf8');
         my $buf       = File::Slurp::read_file($filename) or croak "Can't read $filename";
 
         #TODO decode $buf if encoding is not UTF-8 : cmd-line option --inputencoding
-        print $ubib latex_decode($buf) or croak "Can't write to $ufilename : $!";
+        print $ubib LaTeX::Decode::latex_decode($buf) or croak "Can't write to $ufilename : $!";
         $ubib->close or croak "Can't close filehandle to $ufilename: $!";
         $filename    = $ufilename;
         $self->{config}->{unicodebib} = 1;
     }
 
-    if ( !$self->config('useprd') && eval { require Text::BibTeX; 1 } ) {
+    if ( !$self->config('useprd') ) {
+        
+        require Biber::BibTeX;
+        push @ISA, 'Biber::BibTeX';
 
-        require Text::BibTeX ;
-        my $bib = new Text::BibTeX::File $filename
-          or croak "Cannot create Text::BibTeX::File object from $filename: $!";
-
-        #TODO validate with Text::BibTeX::Structure ?
-        my $preamble;
-
-        while ( my $entry = new Text::BibTeX::Entry $bib ) {
-
-            next if ( $entry->metatype == BTE_MACRODEF ) ;                    
-
-            my $key = $entry->key ;
-
-            print "Processing $key\n" if $self->config('biberdebug');
-
-            if ( $bibentries{ $key } ) {
-                print "We already have key $key! Ignoring in $filename...\n"
-                    unless $self->config('quiet');
-                next;
-            }
-            push @localkeys, $key;
-            unless ($entry->parse_ok) {
-                carp "Entry $key does not parse correctly: skipping" 
-                    unless $self->config('quiet') ;
-                next ;
-            }
-            if ( $entry->metatype == BTE_PREAMBLE ) {
-                $preamble .= $entry->value;
-				next;
-            }
-
-            my @flist = $entry->fieldlist ;
-			my @flistnosplit = array_minus(\@flist, \@ENTRIESTOSPLIT);
-
-			if ( $entry->metatype == BTE_REGULAR ) {
-                foreach my $f ( @flistnosplit ) {
-                    $bibentries{ $key }->{$f} =
-                      decode_utf8( $entry->get($f) );
-                };
-				foreach my $f ( @ENTRIESTOSPLIT ) {
-					next unless $entry->exists($f);
-					my @tmp = map { decode_utf8($_) } $entry->split($f);
-					$bibentries{ $key }->{$f} = [ @tmp ] 
-				};
-
-                $bibentries{ $key }->{entrytype} = $entry->type;
-                $bibentries{ $key }->{datatype} = 'bibtex';
-            }
-        }
+        @localkeys = $self->_text_bibtex_parse($filename);
+        
     }
     else {
-        require Parse::RecDescent;
-        my $grammar = q{
-             BibFile : <skip: qr{\s* (\%+[^\n]*\s*)*}x> Component(s) 
-             #Comment(s) {1;} # { $return = { 'comments' => \@{$item[1]} } }
-            Component : Preamble { 
-                            $return = { 'preamble' => $item[1] } 
-                               } 
-                   | String(s) { 
-                             my @str = @{$item[1]};
-                             $return = { 'strings' => \@str } ;
-                             # we perform the substitutions now
-                             foreach (@str) {
-                             my ($a, $b) = split(/\s*=\s*/, $_, 2);
-                             $b =~ s/^\s*"|"\s*$//g;
-                             $text =~ s/$a\s*#?\s*(\{?)/$1$b/g
-                             }
-                         } 
-                   | BibEntry(s) { 
-                            my @entries = @{$item[1]}; 
-                            $return = { 'entries' => \@entries } 
-                       } 
-                   #     Comment : /\%+/ /[^\n]*\n+/  
-             Preamble : '@PREAMBLE' PreambleString
-             PreambleString : { 
-                            my $value = extract_bracketed($text, '{}') ;
-                            $value =~ s/^{(.*)}$/$1/s if $value;
-                            $value =~ s/"\s*\n+\s*#/\n/mg;
-                            #     $value =~ s/\n\s*/\n/g;
-                            #   $value =~ s/^\s*{\s*(.+)\s*}\s*$/$1/s;
-                            $value =~ s/^\s*"\s*//mg;
-                            $value =~ s/\s*"\s*$//mg;
-                            ($return) = $value if $value;
-                       }
-             String : '@STRING' StringArg 
-             StringArg : { 
-                            my $value = extract_bracketed($text, '{}') ;
-                            $value =~ s/\s*\n\s*/ /g;
-                            ($return) = $value =~ /^{(.*)}$/s if $value;
-                       }
-             BibEntry : '@' Typename '{' Key ',' Field(s) '}' /\n*/ { 
-                           my %data = map { %$_ } @{$item[6]} ;
-                            $return = { $item[4] => {entrytype => lc($item[2]), %data } } 
-                       }
-             Typename : /[A-Za-z]+/ 
-             Key : /[^,\s\n]+/
-             Field : Fieldname /\s*=\s*/ Fielddata /,?/ {
-                            $return = { $item[1] => $item[3] } 
-                       }
-             Fieldname : /[A-Za-z]+/
-             Fielddata : { 
-                            my $value = extract_bracketed($text, '{}') ;
-                            $value =~ s/\s*\n\s*/ /g;
-                            ($return) = $value =~ /^{(.*)}$/s if $value;
-                     } 
-                     | { my $value = extract_delimited($text, '"') ;#"'
-                            $value =~ s/\s*\n\s*/ /g;
-                            ($return) = $value =~ /^"(.*)"$/s if $value;
-                       } 
-                       | /[^,]+/ { 
-                            $return = $item[1] 
-                       } # {} or "" are not compulsory if on single line 
-        };
-        undef $/;
 
-       #my $bib = new IO::File "<$filename" or croak "Failed to open $filename: $!";
-       #TODO specify another encoding if not UTF-8 : cmd-line option --inputencoding
-        open my $bib, "<:encoding(utf8)",
-          $filename or croak "Failed to open $filename: $!";
+        require Biber::BibTeX::PRD;
+        push @ISA, 'Biber::BibTeX::PRD';
 
-        #$bib =~ s/\%+.*$//mg; # this gets rid of all comments
-
-        my $btparser = Parse::RecDescent->new($grammar) or croak "Bad grammar: $!";
-        my $bf       = $btparser->BibFile(<$bib>)       or croak "bad bib: $!";
-        close $bib;
-
-        my @tmp = @$bf;
-
-        for my $n ( 0 .. $#tmp ) {
-            my @tmpk   = keys %{ $tmp[$n] };
-            my $tmpkey = $tmpk[0];
-            if ( $tmpkey eq 'preamble' ) {
-                my $preamble = $tmp[$n]->{preamble};
-            }
-            elsif ( $tmpkey eq 'entries' ) {
-                my @entries = @{ $tmp[$n]->{entries} };
-                foreach my $i ( 0 .. $#entries ) {
-                    my @tmpa   = keys %{ $entries[$i] };
-                    my $tmpkey = $tmpa[0];
-                    if ( $bibentries{ $tmpkey } ) {
-                        carp "We already have key $tmpkey! Ignoring in $filename...";
-                        next;
-                    }
-                    push @localkeys, $tmpkey;
-                    $bibentries{$tmpkey} = $entries[$i]->{$tmpkey};
-                    $bibentries{$tmpkey}->{datatype} = 'bibtex';
-                }
-            }
-        }
-
-		foreach my $key ( @localkeys ) {
-			foreach my $ets (@ENTRIESTOSPLIT) {
-				if ( exists $bibentries{$key}->{$ets} ) {
-					my $tmp = $bibentries{$key}->{$ets};
-					# next if ref($tmp) neq 'SCALAR'; # we skip those that have been split
-
-					# "and" within { } must be preserved: see biblatex manual §2.3.3
-					#      (this can probably be optimized)
-					foreach my $x ( $tmp =~ m/($RE{balanced}{-parens => '{}'})/gx ) {
-						( my $xr = $x ) =~ s/\s+and\s+/_\x{ff08}_/g;
-						$tmp =~ s/\Q$x/$xr/g;
-					}
-					my @y = split /\s+and\s+/, $tmp;
-					my @z;
-					foreach (@y) {
-						s/_\x{ff08}_/ and /g;
-						push @z, $_;
-					}
-					$bibentries{$key}->{$ets} = [@z];
-				}
-			}
-		}
+        @localkeys = $self->_bibtex_prd_parse($filename);
     }
 
-    unlink "$filename.utf8" if -f "$filename.utf8";
-
+    #FIXME optional?
+    #unlink "$ufilename" if (defined $ufilename and -f "$ufilename");
+    
+    my %bibentries = $self->bib;
 
     # Handling of crossrefs
     foreach my $citekey (@localkeys) {
@@ -508,9 +333,14 @@ sub parse_biblatexml {
     my $parser = XML::LibXML->new();
     my $db;
 
+    # FIXME : a user _could_ want to encode the bbl in LaTeX!
+    $self->{config}->{unicodebbl} = 1;
+
     print "Parsing the xml data ...\n" unless $self->config('quiet') ;
 
     if ( $xml =~ /\.dbxml$/ ) {
+        require Biber::DBXML;
+        push @ISA, 'Biber::DBXML';
         my $xmlstring = $self->dbxml_to_xml($xml);
         $db = $parser->parse_string( $xmlstring ) 
             or croak "Cannot parse xml string";
@@ -1106,124 +936,7 @@ EOF
 }
 
 ### TEST ###
-sub dbxml_to_xml {
-    my ($self, $dbxmlfile) = @_;
-    my @auxcitekeys = $self->citekeys;
-    my $mgr = new XmlManager() or croak ;
-    my $collname = basename($dbxmlfile);
-    #my $xmldoc = XML::LibXML::Document->new("1.0", "UTF-8");
-    #$xmldoc->createElementNS("http://ankabut.net/biblatexml", "bib:entries");
-    my $xmlstring = <<ENDXML
-<?xml version="1.0" encoding="UTF-8"?>
-<bib:entries xmlns:bib="http://ankabut.net/biblatexml"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-ENDXML
-    ;
-    eval {
-        chdir( dirname($dbxmlfile)) or croak "Cannot chdir: $!";
-        my $cont = $mgr->openContainer("$collname");
-        my $context = $mgr->createQueryContext() ;
-        $context->setNamespace("bib", "http://ankabut.net/biblatexml");
-        foreach my $key (@auxcitekeys) {
-            print "Querying dbxml for key $key\n" if $self->config('biberdebug');
-            my $query = 'collection("' . $collname . '")//bib:entry[@id="' . $key . '"]';
-            my $results = $mgr->query($query, $context) ;
-            my $ressize = $results->size;
-            if ($ressize > 1) {
-                carp "Found $ressize entries for key $key!";
-            };
-            my $xmlvalue = new XmlValue;
-            while ($results->next($xmlvalue)) {
-                $xmlstring .= $xmlvalue->asString() . "\n    \n";
-                last;
-            };
-            ## now we add the crossref key to the citekeys, if present:
-            my $queryx = 'collection("' . $collname . '")//bib:entry[@id="' . $key . 
-                '"]/bib:crossref/string()';
-            my $resultsx = $mgr->query($queryx, $context) ;
-            if ($resultsx->size > 0) {
-                my $xmlvaluex = new XmlValue;
-                while ($resultsx->next($xmlvaluex)) {
-                    my $xkey = $xmlvaluex->asString() ;
-                    print "Adding crossref key $xkey to the stack\n" if $self->config('biberdebug');
-                    push @auxcitekeys, "$xkey";
-                    last
-                }
-            }
-        }
-    };
-    if (my $e = catch std::exception) {
-        carp "Query failed\n";
-        carp $e->what() . "\n";
-        exit( -1 );
-    }
-    elsif ($@) {
-        carp "Query failed\n" ;
-        carp $@ ;
-        exit( -1 ) ;
-    };
-
-    $xmlstring .= "\n</bib:entries>\n";
-
-    return $xmlstring;
-}
 
 1;
 
 # vim: set tabstop=4 shiftwidth=4: 
-
-__END__
-
-
-#METHODS TO ADD FOR DBXML support
-#
-sub get_entry_xml {
-    my $citekey = shift;
-    my $xpath = '/*/bib:entry[@id="' . $citekey . '"]';
-    return $db->findnodes($xpath)
-}
-
-
-
-sub get_entry_dbxml {
-    my $citekey = shift;
-    my $query = 'collection("biblatex.dbxml")//bib:entry[@id="' . $citekey . '"]';
-    my $results = $mgr->query($query, $context);
-    my $xmlvalue = new XmlValue;
-    while ($results->next($xmlvalue)) {
-        return $xmlvalue->asString();
-        last;
-    }
-
-    return
-}
-
-sub process_entry {
-    my $bibrecord = shift;
-
-}
-
-
-
-#===============================================================================
-package Biber::Bib;
-use strict;
-use warnings;
-
-sub new {
-    my $class = shift ;
-    my $self = bless {}, $class ;
-    return $self
-}
-
-sub getentry {
-    my ($self, $key) = @_ ;
-    return $self->{$key}
-}
-
-sub addentry {
-    my ($self, $key, $hashref) = @_ ;
-    $self->{$key} = { $hashref } ;
-}
-
-1;
