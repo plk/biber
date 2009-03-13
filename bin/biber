@@ -1,4 +1,4 @@
-#!/usr/bin/perl 
+#!/usr/bin/perl
 #===============================================================================
 #
 #         FILE:  biber
@@ -14,13 +14,14 @@
 # REQUIREMENTS: biber requires the following CPAN modules:
 #                1. either
 #                   - Text::BibTeX
-#                or
+#                   or
 #                   - Parse::RecDescent 
 #                   - Regexp::Common
+#                2. - File::Slurp (only if converting bib files to UTF-8)
 #                2. For parsing the biblatexml format: 
 #                   - XML::LibXML 
-#                3. and optionally (for DBXML databases):
-#                   - Sleepycat::Dbxml
+#                3. and optionally (for querying a DBXML database):
+#                   - Sleepycat::DbXml
 #
 # ROADMAP / TODO : (in decreasing order of priority)
 #               * Prepare Makefile.PL etc for distribution
@@ -51,7 +52,7 @@
 #               * prototype of bbx style for handling multiscript bibliographies (requires xelatex)
 #               * fix crossref handling of reviews
 #               * <nonSort>The</nonSort> Title => automatically generates sorttitle = Title, The
-#               * "D[onald] E. Knuth" -> prints as D. E. Knuth but is sorted with Donald E. Knuth
+#               * "D[onald] E. Knuth" prints as D. E. Knuth but is sorted with Donald E. Knuth
 #               * ... 
 #               ----- version 1.0 -----
 #
@@ -60,12 +61,12 @@
 use strict;
 use warnings;
 no warnings 'utf8';
+
+#This will be removed in the official distribution:
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
 use Carp;
-use Data::Dumper;    # for debug only
-
-# This is of course temporary...
-use lib '/home/francois/dev/biblatex-biber/trunk/lib'; 
-
 use Biber;
 
 #---------------------------------------------------
