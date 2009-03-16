@@ -100,8 +100,25 @@ __END__
 
 =pod
 
-=head1
+=head1 NAME
 
-Biber::Constants - global readonly arrays for biber
+Biber::Constants - global constants for biber
 
-=head2
+=head1 AUTHOR
+
+François Charette, C<< <firmicus at gmx.net> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests on our sourceforge tracker at
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2009 François Charette, all rights reserved.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=cut
+

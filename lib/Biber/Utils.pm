@@ -5,9 +5,32 @@ use Carp;
 use LaTeX::Decode ;
 use base 'Exporter' ;
 
+=head1 NAME
+
+Biber::Utils - Various utility subs used in Biber
+
+=cut
+
+=head1 VERSION
+
+Version 0.4
+
+=head1 SYNOPSIS
+
+=head1 EXPORT
+
+All functions are exported by default.
+
+=cut
+
 our @EXPORT = qw{ terseinitials makenameid makenameinitid cleanstring
 				  normalize_string latexescape print_name array_minus } ;
 
+=head1 FUNCTIONS
+
+=head2 makenameid
+
+=cut
 
 sub makenameid {
     my @names = @_;
@@ -19,6 +42,10 @@ sub makenameid {
     return cleanstring($tmp);
 }
 
+=head2 makenameinitid
+
+=cut
+
 sub makenameinitid {
     my @names = @_;
     my @namestrings;
@@ -29,6 +56,10 @@ sub makenameinitid {
     return cleanstring($tmp);
 }
 
+=head2 cleanstring
+
+=cut
+
 sub cleanstring {
     my $str = shift;
     confess "String not defined" unless ($str) ;
@@ -37,6 +68,10 @@ sub cleanstring {
     $str =~ s/\s+/_/g;
     return $str;
 }
+
+=head2 latexescape
+
+=cut
 
 sub latexescape { 
 	my $str = shift;
@@ -48,6 +83,10 @@ sub latexescape {
 	return $str
 }
 
+=head2 normalize_string
+
+=cut
+
 sub normalize_string {
     my $str = shift;
     confess "String not defined" unless ($str) ;
@@ -55,6 +94,10 @@ sub normalize_string {
     $str =~ s/[\p{P}\p{S}\p{C}]+//g ; ### remove punctuation, symbols, separator and control
     return $str;
 }
+
+=head2 terseinitials
+
+=cut
 
 sub terseinitials {
     my $str = shift;
@@ -71,6 +114,10 @@ sub terseinitials {
     return $str;
 }
 
+=head2 array_minus
+
+=cut
+
 sub array_minus {
     # return @a less all elements that are in @b
 	my ($a, $b) = @_;
@@ -84,6 +131,24 @@ sub array_minus {
     };
     return @result
 }
+
+=head1 AUTHOR
+
+François Charette, C<< <firmicus at gmx.net> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests on our sourceforge tracker at
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2009 François Charette, all rights reserved.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=cut
 
 1;
 # vim: set tabstop=4 shiftwidth=4: 

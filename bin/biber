@@ -1,72 +1,13 @@
 #!/usr/bin/perl
-#===============================================================================
-#
-#         FILE:  biber
-#
-#        USAGE:  biber [options] auxfile
-#                Type biber -h or --help for details
-#
-#  DESCRIPTION:  A BibTeX replacement for users of biblatex
-#       AUTHOR:  François Charette <firmicus ατ gmx δοτ net>
-#      VERSION:  0.4
-#          URL:  http://biblatex-biber.sourceforge.net
-#
-# REQUIREMENTS: biber requires the following CPAN modules:
-#                1. either
-#                   - Text::BibTeX
-#                   or
-#                   - Parse::RecDescent 
-#                   - Regexp::Common
-#                2. - File::Slurp (only if converting bib files to UTF-8)
-#                2. For parsing the biblatexml format: 
-#                   - XML::LibXML 
-#                3. and optionally (for querying a DBXML database):
-#                   - Sleepycat::DbXml
-#
-# ROADMAP / TODO : (in decreasing order of priority)
-#               * Prepare Makefile.PL etc for distribution
-#               * Write comprehensive test suite
-#               * refactor postprocess method
-#               * fix handling of labelalpha
-#               * check and complete the generation of special fields: see manual §4.2.4
-#               * improve documentation of source code!
-#               ----- version 0.5 ----- FIRST OFFICIAL RELEASE?
-#               * separate data parsing in individual modules
-#               * read config file (e.g. $HOME/.biber.conf) to change default settings
-#               * allow to ignore certain fields through conf settings
-#               * user-setting of diacritics to ignore in sorting (‘ and ʿ are currently built-in)
-#               * add validation mechanism for options and config (untaint data!)
-#               ----- version 0.6 -----
-#               * use Log::Log4Perl 
-#               * add option --inputencoding <latin1> etc (only utf8 supported as of now)
-#               * validate bibtex data with Text::Bibtex::Structure (optional)
-#               * validate XML data against RelaxNG schema (optional)
-#               ----- version 0.7 -----
-#               * plugin facility
-#               * implement "debug output" when sorting=99
-#               ----- version 0.8 -----
-#               * refactor OO structure: add Biber::Conf and Biber::Entry classes
-#               * make biber and dependencies available as a par archive for maximal portability ?
-#               ----- version 0.9 -----
-#               * add keys for selecting script, language, translation, transliteration
-#               * prototype of bbx style for handling multiscript bibliographies (requires xelatex)
-#               * fix crossref handling of reviews
-#               * <nonSort>The</nonSort> Title => automatically generates sorttitle = Title, The
-#               * "D[onald] E. Knuth" prints as D. E. Knuth but is sorted with Donald E. Knuth
-#               * ... 
-#               ----- version 1.0 -----
-#
-#===============================================================================
-
 use strict;
 use warnings;
 no warnings 'utf8';
+use Carp;
 
-#This will be removed in the official distribution:
+#This should be removed in the official distribution:
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 
-use Carp;
 use Biber;
 
 #---------------------------------------------------
@@ -195,5 +136,48 @@ Options:
     \n]
 }
 
-# vim: set tabstop=4 shiftwidth=4:               
+__END__
 
+=pod
+
+=head1 NAME
+
+C<biber> - A bibtex replacement for users of biblatex
+
+=head1 SYNOPSIS
+
+biber [ { --bibdata | -d } database.{bib|xml|dbxml} ] [ --useprd | -p ] 
+      [ --mincrossrefs | -m ] [ --fastsort | -f ] [ --unicodebib | -u ] 
+      [ --unicodebbl | -U ] [ --biberdebug | -D ] [ { --outfile | -O } filename ] 
+      file.aux
+
+biber --bibdata database --allentries [ --outfile filename ] [ ... ]
+
+biber { --help | --version }
+
+=head1 DESCRIPTION
+
+C<biber> provides a replacement of the bibtex processor for users of biblatex.
+Besides emulating the functionality of bibtex + biblatex.bst, it also supports ...
+
+(REST TO BE WRITTEN)
+
+=head1 AUTHOR
+
+François Charette, C<< <firmicus at gmx.net> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests on our sourceforge tracker at
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2009 François Charette, all rights reserved.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=cut
+
+# vim: set tabstop=4 shiftwidth=4:

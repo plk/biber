@@ -5,9 +5,27 @@ use Carp;
 use Biber::Constants;
 use Biber::Utils;
 
-#=====================================================
-# ADDITIONAL METHODS FOR PROCESSING THE PARSED ENTRIES
-#=====================================================
+=head1 NAME
+
+Biber::Internals - Internal methods for processing the bibliographic data
+
+=cut
+
+=head1 VERSION
+
+Version 0.4
+
+=cut
+
+=head1 SYNOPSIS
+
+=cut
+
+=head1 FUNCTIONS
+
+=head2 parsename
+
+=cut
 
 sub parsename {
     my ($self, $namestr, $citekey) = @_;
@@ -131,6 +149,10 @@ sub parsename {
 #    return $no_decode
 #}
 
+=head2 getnameinitials
+
+=cut
+
 sub getnameinitials {
     my ($self, $citekey, @aut) = @_;
     my $initstr = "";
@@ -169,6 +191,10 @@ sub getnameinitials {
     return $initstr;
 }
 
+=head2 getallnameinitials
+
+=cut
+
 sub getallnameinitials {
     my ($self, $citekey, @aut) = @_;
     my $initstr = "";
@@ -195,6 +221,10 @@ sub getallnameinitials {
 #     return $title
 #}
 
+=head2 getoption
+
+=cut
+
 sub getoption {
     my ($self, $citekey, $opt) = @_;
     if ( defined $Biber::localoptions{$citekey} and defined $Biber::localoptions{$citekey}->{$opt} ) {
@@ -209,6 +239,10 @@ sub getoption {
 #=====================================================
 # SUBS for SORT STRINGS
 #=====================================================
+
+=head2 getinitstring
+
+=cut
 
 sub getinitstring {
     my ($self, $citekey) = @_;
@@ -225,6 +259,10 @@ sub getinitstring {
     }
     return $str;
 }
+
+=head2 getnamestring
+
+=cut
 
 sub getnamestring {
     my ($self, $citekey) = @_;
@@ -277,6 +315,10 @@ sub _namestring {
     return normalize_string($str, $no_decode)
 }
 
+=head2 getyearstring
+
+=cut
+
 sub getyearstring {
     my ($self, $citekey) = @_;
     my $be = $self->{bib}->{$citekey};
@@ -294,6 +336,10 @@ sub getyearstring {
     }
 }
 
+=head2 getdecyearstring
+
+=cut
+
 sub getdecyearstring {
     my ($self, $citekey) = @_;
     my $be = $self->{bib}->{$citekey};
@@ -310,6 +356,10 @@ sub getdecyearstring {
         return "9999";
     }
 }
+
+=head2 gettitlestring
+
+=cut
 
 sub gettitlestring {
     my ($self, $citekey) = @_;
@@ -334,6 +384,10 @@ sub gettitlestring {
     }
 }
 
+=head2 getvolumestring
+
+=cut
+
 sub getvolumestring {
     my ($self, $citekey) = @_;
     my $be = $self->{bib}->{$citekey};
@@ -353,6 +407,10 @@ sub getvolumestring {
     }
 }
 
+=head2 getpartinitials
+
+=cut
+
 sub getpartinitials {
     my ($self, $part) = @_;
     $part = terseinitials($part); 
@@ -362,57 +420,6 @@ sub getpartinitials {
         $part =~ s/~$//;
     }
     return $part;
-}
-
-sub process_crossrefs {
-	my $self = shift;
-	my %bibentries = $self->bib;
-    foreach my $citekeyx (keys %Biber::entrieswithcrossref) {
-        my $xref = $Biber::entrieswithcrossref{$citekeyx}; 
-        my $type = $bibentries{$citekeyx}->{entrytype};
-        if ($type eq 'review') {
-                #TODO
-        }
-    	if ($type =~ /^in(proceedings|collection|book)$/) {
-            # inherit all that is undefined, except title etc
-            foreach my $field (keys %{$bibentries{$xref}}) {
-                next if $field =~ /title/;
-                if (! $bibentries{$citekeyx}->{$field}) {
-                    $bibentries{$citekeyx}->{$field} = $bibentries{$xref}->{$field};
-                }
-            }
-            # inherit title etc as booktitle etc
-            $bibentries{$citekeyx}->{booktitle} = $bibentries{$xref}->{title}; 
-            if ($bibentries{$xref}->{titleaddon}) {
-                $bibentries{$citekeyx}->{booktitleaddon} = $bibentries{$xref}->{titleaddon}
-            }
-            if ($bibentries{$xref}->{subtitle}) {
-                $bibentries{$citekeyx}->{booksubtitle} = $bibentries{$xref}->{subtitle}
-            }
-		}
-		else { # inherits all
-            foreach my $field (keys %{$bibentries{$xref}}) {
-                if (! $bibentries{$citekeyx}->{$field}) {
-                    $bibentries{$citekeyx}->{$field} = $bibentries{$xref}->{$field};
-                }
-            }
-	   }
-       if ($type eq 'inbook') {
-            $bibentries{$citekeyx}->{bookauthor} = $bibentries{$xref}->{author} 
-        }
-        # MORE?
-        #$bibentries{$citekeyx}->{} = $bibentries{$xref}->{} 
-    }
-
-    # we make sure that keys that are cross-referenced 
-    # less than $mincrossrefs are not included the bibliography
-    foreach my $k ( keys %Biber::crossrefkeys ) {
-        if ( $Biber::crossrefkeys{$k} >= $self->config('mincrossrefs') ) {
-            delete $Biber::crossrefkeys{$k};
-        }
-    }
-
-	$self->{bib} = { %bibentries }
 }
 
 # TODO "D[onald] E. Knuth" prints as D. E. Knuth but is sorted with Donald E. Knuth
@@ -578,6 +585,24 @@ sub _print_for_biblatex {
     #     $str = encode_utf8($str) if $self->config('unicodebbl');
     return $str;
 }
+
+=head1 AUTHOR
+
+François Charette, C<< <firmicus at gmx.net> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests on our sourceforge tracker at
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2009 François Charette, all rights reserved.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=cut
 
 1;
 # vim: set tabstop=4 shiftwidth=4: 

@@ -70,6 +70,38 @@ sub _text_bibtex_parse {
    $self->{bib} = { %bibentries } ;
 
    return @localkeys
+
 }
 
 1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+Biber::BibTeX - parse a bib database with Text::BibTeX
+
+=head1 DESCRIPTION
+
+Internal method ...
+
+=head1 AUTHOR
+
+François Charette, C<< <firmicus at gmx.net> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests on our sourceforge tracker at
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2009 François Charette, all rights reserved.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=cut
+

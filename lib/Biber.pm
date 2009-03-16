@@ -1,14 +1,3 @@
-#===============================================================================
-#
-#         FILE:  Biber.pm
-#
-#  DESCRIPTION:  Base module for biber
-#
-#       AUTHOR:  François Charette <firmicus ατ gmx δοτ net>
-#      VERSION:  0.4
-#      CREATED:  24/02/2009 11:00:33 CET
-#     REVISION:  ---
-#===============================================================================
 package Biber;
 use strict;
 use warnings;
@@ -21,7 +10,31 @@ use Biber::Utils ;
 use base 'Biber::Internals';
 our @ISA;
 
+=head1 NAME
+
+Biber - main module for biber, a bibtex replacement for users of biblatex
+
+=head1 VERSION
+
+Version 0.4
+
+=cut
+
 our $VERSION = '0.4';
+
+=head1 SYNOPSIS
+
+Quick summary of what the module does.
+
+Perhaps a little code snippet.
+
+    use Biber;
+
+    my $foo = Biber->new();
+    ...
+
+
+=cut
 
 #TODO read config file (e.g. $HOME/.biber.conf to change default options)
 
@@ -35,6 +48,12 @@ our %seenuniquename = ();
 our %seenauthoryear = ();
 our %seenlabelyear = ();
 
+=head1 FUNCTIONS
+
+=head2 new
+
+=cut
+
 sub new {
     my ($class, $opts) = @_ ;
     my %params = %$opts;
@@ -46,6 +65,10 @@ sub new {
 
     return $self
 }
+
+=head2 config
+
+=cut
 
 sub config {
     my ($self, $opt) = @_ ;
@@ -60,6 +83,10 @@ sub _initopts {
     return
 }
 
+=head2 citekeys
+
+=cut
+
 sub citekeys {
     my $self = shift;
     if ( $self->{citekeys} ) {
@@ -69,10 +96,18 @@ sub citekeys {
     }
 }
 
+=head2 bibentry
+
+=cut
+
 sub bibentry {
     my ($self, $key) = @_;
     return %{ $self->{bib}->{$key} }
 }
+
+=head2 bib
+
+=cut
 
 sub bib {
     my $self = shift;
@@ -83,6 +118,10 @@ sub bib {
         return 
     }
 }
+
+=head2 shorthands
+
+=cut
 
 sub shorthands {
     my $self = shift;
@@ -105,6 +144,10 @@ sub _addshorthand {
     $self->{shorthands} = [ @los ];    
     return
 }
+
+=head2 parse_auxfile
+
+=cut
 
 sub parse_auxfile {
     my $self = shift;
@@ -182,6 +225,10 @@ sub parse_auxfile {
     return
 }
 
+=head2 parse_ctrlfile
+
+=cut
+
 #=====================================================
 # PARSE CONTROL FILE with simple regex matching...
 #=====================================================
@@ -250,6 +297,9 @@ sub parse_ctrlfile {
 # Parse BIB file
 #=====================================================
 
+=head2 parse_bibtex
+
+=cut
 
 sub parse_bibtex {
     my ($self, $filename) = @_ ;
@@ -326,6 +376,10 @@ sub parse_bibtex {
     return
 
 }
+
+=head2 parse_biblatexml
+
+=cut
 
 sub parse_biblatexml {
     my ($self, $xml) = @_ ;
@@ -557,15 +611,18 @@ sub parse_biblatexml {
     return
 }
 
+=head2 postprocess
+
+=cut
 
 ###############################################
 # internal post-processing to prepare output
 
-#------------------------------------------------
-# parse names, generate namehash and strings for "uniquename", "labelyear",
-# "labelalpha", "sortstrings", etc
+# Here we parse names, generate the "namehash" and the strings for
+# "uniquename", "labelyear", "labelalpha", "sortstrings", etc.
 
-#TODO flesh out this monster into several internal subs
+#TODO flesh out this monster into several internal subs :)
+
 sub postprocess {
     my $self = shift;
 
@@ -833,14 +890,64 @@ sub postprocess {
     return
 }
 
-sub prepare {
-    my $self = shift ;
-    $self->process_crossrefs;
-    $self->postprocess;
-    $self->sortentries;
-    return
+=head2 process_crossrefs
+
+=cut
+
+sub process_crossrefs {
+	my $self = shift;
+	my %bibentries = $self->bib;
+    foreach my $citekeyx (keys %Biber::entrieswithcrossref) {
+        my $xref = $Biber::entrieswithcrossref{$citekeyx}; 
+        my $type = $bibentries{$citekeyx}->{entrytype};
+        if ($type eq 'review') {
+                #TODO
+        }
+    	if ($type =~ /^in(proceedings|collection|book)$/) {
+            # inherit all that is undefined, except title etc
+            foreach my $field (keys %{$bibentries{$xref}}) {
+                next if $field =~ /title/;
+                if (! $bibentries{$citekeyx}->{$field}) {
+                    $bibentries{$citekeyx}->{$field} = $bibentries{$xref}->{$field};
+                }
+            }
+            # inherit title etc as booktitle etc
+            $bibentries{$citekeyx}->{booktitle} = $bibentries{$xref}->{title}; 
+            if ($bibentries{$xref}->{titleaddon}) {
+                $bibentries{$citekeyx}->{booktitleaddon} = $bibentries{$xref}->{titleaddon}
+            }
+            if ($bibentries{$xref}->{subtitle}) {
+                $bibentries{$citekeyx}->{booksubtitle} = $bibentries{$xref}->{subtitle}
+            }
+		}
+		else { # inherits all
+            foreach my $field (keys %{$bibentries{$xref}}) {
+                if (! $bibentries{$citekeyx}->{$field}) {
+                    $bibentries{$citekeyx}->{$field} = $bibentries{$xref}->{$field};
+                }
+            }
+	   }
+       if ($type eq 'inbook') {
+            $bibentries{$citekeyx}->{bookauthor} = $bibentries{$xref}->{author} 
+        }
+        # MORE?
+        #$bibentries{$citekeyx}->{} = $bibentries{$xref}->{} 
+    }
+
+    # we make sure that keys that are cross-referenced 
+    # less than $mincrossrefs are not included the bibliography
+    foreach my $k ( keys %Biber::crossrefkeys ) {
+        if ( $Biber::crossrefkeys{$k} >= $self->config('mincrossrefs') ) {
+            delete $Biber::crossrefkeys{$k};
+        }
+    }
+
+	$self->{bib} = { %bibentries }
 }
 
+=head2 sortentries
+
+=cut
 
 #===========================
 # SORTING
@@ -874,6 +981,21 @@ sub sortentries {
     return
 }
 
+=head2 prepare
+
+=cut
+
+sub prepare {
+    my $self = shift ;
+    $self->process_crossrefs;
+    $self->postprocess;
+    $self->sortentries;
+    return
+}
+
+=head2 output_to_bbl
+
+=cut
 
 #=====================================================
 # OUTPUT .BBL FILE FOR BIBLATEX
@@ -935,8 +1057,24 @@ EOF
     return
 }
 
-### TEST ###
+=head1 AUTHOR
+
+François Charette, C<< <firmicus at gmx.net> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests on our sourceforge tracker at
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2009 François Charette, all rights reserved.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=cut
 
 1;
 
-# vim: set tabstop=4 shiftwidth=4: 
+# vim: set tabstop=4 shiftwidth=4:

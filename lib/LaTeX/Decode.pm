@@ -11,11 +11,11 @@ LaTeX::Decode - Decode from LaTeX to Unicode
 
 =head1 VERSION
 
-Version 0.01
+Version 0.1
 
 =cut
 use base qw(Exporter);
-our $VERSION = 0.01;
+our $VERSION = 0.1;
 our @EXPORT  = qw(latex_decode);
 use Unicode::Normalize; # this is in core perl since version 5.7
 
@@ -27,6 +27,9 @@ use Unicode::Normalize; # this is in core perl since version 5.7
 	print latex_decode($latex_string);
 	# prints 'Muḥammad Fārisī'
 
+=head1 DESCRIPTION
+
+=head1 EXPORT
 
 =head1 FUNCTIONS
 
@@ -38,7 +41,7 @@ Decodes the given text from LaTeX to Unicode.
 
 =cut
 
-### DATA ### FIXME : should be in LaTeX::Decode::Data !?
+### DATA ###
 Readonly::Array our @MACROSONEARG => qw/
 textsuperscript textmiddledot horn textrighthorn textcommabelow textdblgravecmb
 textsubbreve b c d h k m r u v B H M/;
@@ -968,45 +971,17 @@ François Charette, C<< <firmicus at gmx.net> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to
-C<bug-latex-decode at rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=LaTeX-Decode>.
-I will be notified, and then you'll automatically be notified of progress on
-your bug as I make changes.
+Please report any bugs or feature requests on our sourceforge tracker at
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
 
-=head1 SUPPORT
+=head1 NOTICE
 
-You can find documentation for this module with the perldoc command.
-
-    perldoc LaTeX::Decode
-
-You can also look for information at:
-
-=over 4
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/LaTeX-Decode>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/LaTeX-Decode>
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=LaTeX-Decode>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/LaTeX-Decode>
-
-=back
-
-=head1 ACKNOWLEDGEMENTS
+This module is currently distributed with biber, but it is not unlikely that it
+will eventually make its way to CPAN.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2008 François Charette, all rights reserved.
+Copyright 2009 François Charette, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
