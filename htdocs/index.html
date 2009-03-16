@@ -55,21 +55,25 @@ biblatex, which provides a powerful and flexible macro interface for authors of 
 rely on BibTeX. For maximal portability, the current version
 includes a Pure Perl BibTeX parser with a Parse::RecDescent grammar, but
 if available it will use the much faster 
-<a href="http://search.cpan.org/~ambs/Text-BibTeX-0.38/">Text::BibTeX</a> module which relies on the 
-<a href="http://search.cpan.org/~ambs/btparse-0.35/">btparse C library</a>. The
-objective of the first development phase is to have a robust
-and reliable emulation of BibTeX with the biblatex.bst style
-file. In other words, given the same .aux file as input, to
-output a functionally identical .bbl file as BibTeX would.</p>
+<a href="http://search.cpan.org/~ambs/Text-BibTeX-0.38/">Text::BibTeX</a>
+module which relies on the 
+<a href="http://search.cpan.org/~ambs/btparse-0.35/">btparse C library</a>. 
+The objective of the first development phase is to have a robust
+and reliable emulation of the BibTeX processor with the biblatex.bst style
+file. In other words, given the same .aux file as input, biber should
+output a functionally identical .bbl file as BibTeX.</p>
 
 <p>Biber also introduces support for a new XML format
-tailored specifically for biblatex data, unimaginatively called <i>BibLaTeXML</i>. It owes
-its inspiration partly to the <a href="http://bibtexml.sourceforge.net/">BibTeXML</a> format, but it is far
+tailored specifically for biblatex data, unimaginatively called
+<i>BibLaTeXML</i>. It owes its inspiration partly to the <a
+href="http://bibtexml.sourceforge.net/">BibTeXML</a> format, but it is far
 more complex. RelaXNG and W3C schemas are provided, as
 well as a tool for converting .bib files to biblatexml. To parse
-BibLaTeXML databases the Perl module <a href="http://search.cpan.org/~pajas/XML-LibXML-1.69/">XML::LibXML</a> is required. 
-There is also experimental support for <a href="http://www.oracle.com/technology/products/berkeley-db/xml/index.html">Berkeley DBXML</a> databases 
-(with the included Perl module Sleepycat::Dbxml).</p>
+BibLaTeXML databases the Perl module <a
+href="http://search.cpan.org/~pajas/XML-LibXML-1.69/">XML::LibXML</a> is
+required.  There is also experimental support for <a
+href="http://www.oracle.com/technology/products/berkeley-db/xml/index.html">Berkeley
+DBXML</a> databases (with the included Perl module Sleepycat::DbXml).</p>
 
 <p>The advantages of no longer being dependent upon BibTeX are
 obvious: full Unicode support, no memory limitations,
