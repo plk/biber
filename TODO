@@ -1,0 +1,36 @@
+ROADMAP / TODO 
+
+in decreasing order of priority:
+
+   * Prepare Build.PL/Makefile.PL etc for distribution / DONE
+   * Write comprehensive test suite
+   * refactor postprocess method
+   * fix handling of labelalpha
+   * check and complete the generation of special fields: see manual §4.2.4
+   * improve documentation of source code :)
+   ----- version 0.5 ----- FIRST OFFICIAL RELEASE?
+   * separate data parsing in individual modules / ALMOST DONE
+   * read config file (e.g. $HOME/.biber.conf) to change default settings
+   * allow to ignore certain fields through conf settings
+   * user-setting of diacritics to ignore in sorting (‘ and ʿ are currently built-in)
+   * add validation mechanism for options and config (untaint data!)
+   ----- version 0.6 -----
+   * use Log::Log4Perl 
+   * add option --inputencoding <latin1> etc (only utf8 supported as of now)
+   * validate bibtex data with Text::Bibtex::Structure (optional)
+   * validate XML data against RelaxNG schema (optional)
+   ----- version 0.7 -----
+   * plugin facility
+   * implement "debug output" when sorting=99
+   ----- version 0.8 -----
+   * refactor OO structure: add Biber::Conf and Biber::Entry classes
+   * make biber and dependencies available as a par archive for maximal portability ?
+   ----- version 0.9 -----
+   * add keys for selecting script, language, translation, transliteration
+   * prototype of bbx style for handling multiscript bibliographies (requires xelatex)
+   * fix crossref handling of reviews
+   * "<nosort>The</nosort> Title …" automatically generates "sorttitle = Title …, The"
+   * "D[onald] E. Knuth" prints as D. E. Knuth but is sorted with Donald E. Knuth ??
+   * ... 
+   ----- version 1.0 -----
+
