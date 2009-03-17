@@ -485,3 +485,37 @@ $writer->endTag(); #entries
 
 print "Processed $count entries\n";
 
+=pod
+
+=head1 NAME
+
+C<bib2biblatexml> - converts BibTeX files to BibLaTeXML
+
+=head1 SYNOPSIS
+
+biblatexml file.bib 
+    (outputs file.bib.xml)
+
+=head1 DESCRIPTION
+
+TBW
+
+=head1 AUTHOR
+
+François Charette, C<< <firmicus at gmx.net> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests on our sourceforge tracker at
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2009 François Charette, all rights reserved.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=cut
+
+# vim: set tabstop=4 shiftwidth=4:
