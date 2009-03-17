@@ -24,11 +24,14 @@ All functions are exported by default.
 =cut
 
 our @EXPORT = qw{ terseinitials makenameid makenameinitid cleanstring
-				  normalize_string latexescape print_name array_minus } ;
+				  normalize_string latexescape array_minus } ;
 
 =head1 FUNCTIONS
 
 =head2 makenameid
+
+Given an array of name hashes, this internal sub returns a long string with the
+concatenation of all names.
 
 =cut
 
@@ -44,6 +47,8 @@ sub makenameid {
 
 =head2 makenameinitid
 
+Similar to makenameid, with the first names converted to initials.
+
 =cut
 
 sub makenameinitid {
@@ -56,70 +61,82 @@ sub makenameinitid {
     return cleanstring($tmp);
 }
 
+=head2 normalize_string
+
+Removes LaTeX macros, and all punctuation, symbols, separators and control characters.
+
+=cut
+
+sub normalize_string {
+    my $str = shift;
+    $str =~ s/\\[A-Za-z]+//g; # remove latex macros (assuming they have only ASCII letters)
+    $str =~ s/[\p{P}\p{S}\p{C}]+//g ; ### remove punctuation, symbols, separator and control
+    return $str;
+}
+
 =head2 cleanstring
+
+Like normalize_string, but also removes leading and trailing whitespace, and
+substitutes whitespace with underscore.
 
 =cut
 
 sub cleanstring {
     my $str = shift;
-    confess "String not defined" unless ($str) ;
-    $str =~ s/\\[A-Za-z]+//g;
-    $str =~ s/[\p{P}\p{S}\p{C}]+//g ; ### remove punctuation, symbols, separator and control
+    $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
+    $str = normalize_string($str);
+    $str =~ s/^\s+//;
+    $str =~ s/\s+$//;
     $str =~ s/\s+/_/g;
     return $str;
 }
 
 =head2 latexescape
 
+Escapes the LaTeX special characters { } & ^ _ $ and %
+
 =cut
 
 sub latexescape { 
 	my $str = shift;
-	my @latexspecials = ( '{', '}', '&', '\^', '_', '\$', '%' ); 
+	my @latexspecials = qw| { } & _ % |; 
 	foreach my $char (@latexspecials) {
-		$str =~ s/^$char/\\$char/g;
+		$str =~ s/^$char/\\$char/g; 
 		$str =~ s/([^\\])$char/$1\\$char/g;
 	};
+    $str =~ s/\$/\\\$/g;
+    $str =~ s/\^/\\\^/g;
 	return $str
 }
 
-=head2 normalize_string
-
-=cut
-
-sub normalize_string {
-    my $str = shift;
-    confess "String not defined" unless ($str) ;
-    $str =~ s/\\[A-Za-z]+//g;
-    $str =~ s/[\p{P}\p{S}\p{C}]+//g ; ### remove punctuation, symbols, separator and control
-    return $str;
-}
-
 =head2 terseinitials
+
+terseinitials($str) returns the contatenated initials of all the words in $str.
+    terseinitials('John von Neumann') => 'JvN'
 
 =cut
 
 sub terseinitials {
     my $str = shift;
-    confess "String not defined" unless ($str) ;
 	$str =~ s/\\[\p{L}]+\s*//g;  # remove tex macros
     $str =~ s/^{(\p{L}).+}$/$1/g;    # {Aaaa Bbbbb Ccccc} -> A
     $str =~ s/{\s+(\S+)\s+}//g;  # Aaaaa{ de }Bbbb -> AaaaaBbbbb
-    # get rid of Punctuation (except DashPunctuation), Symbol and Other characters
-    $str =~ s/[\x{2bf}\x{2018}\p{Lm}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g; 
 	# remove arabic prefix: al-Khwarizmi -> K / aṣ-Ṣāliḥ -> Ṣ ʿAbd~al-Raḥmān -> A etc
     $str =~ s/\ba\p{Ll}-//; 
+    # get rid of Punctuation (except DashPunctuation), Symbol and Other characters
+    $str =~ s/[\x{2bf}\x{2018}\p{Lm}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g; 
     $str =~ s/\B\p{L}//g;
-    $str =~ s/\s+//g;
+    $str =~ s/[\s\p{Pd}]+//g;
     return $str;
 }
 
 =head2 array_minus
 
+array_minus(\@a, \@b) returns all elements in @a that are not in @b
+
 =cut
 
 sub array_minus {
-    # return @a less all elements that are in @b
 	my ($a, $b) = @_;
 	my %countb = ();
     foreach my $elem (@$b) { 
