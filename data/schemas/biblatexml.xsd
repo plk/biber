@@ -2579,7 +2579,7 @@
   </xs:group>
   <!--
     KEY LISTS
-    TODO add attribute type = babel, xml:lang, ISO-XXX etc 
+    TODO add attribute type = babel, xml, ISO-XXX etc 
   -->
   <xs:element name="language">
     <xs:complexType mixed="true">
@@ -17083,6 +17083,7 @@
       </xs:element>
     </xs:sequence>
   </xs:group>
+  <!-- TODO specify all possible patent types -->
   <xs:attributeGroup name="attlist.patent">
     <xs:attribute name="id" use="required"/>
     <xs:attribute name="entrytype" use="required">
@@ -17093,6 +17094,9 @@
       </xs:simpleType>
     </xs:attribute>
     <xs:attribute name="type"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="att.patenttype">
+    <xs:attribute name="type" use="required"/>
   </xs:attributeGroup>
   <xs:group name="BibLaTeXML.periodical.standard.fields">
     <xs:annotation>

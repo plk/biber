@@ -2379,7 +2379,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <!--
     KEY LISTS
-    TODO add attribute type = babel, xml:lang, ISO-XXX etc 
+    TODO add attribute type = babel, xml, ISO-XXX etc 
   -->
   <define name="language">
     <element name="language">
@@ -5559,14 +5559,46 @@ works
       <ref name="BibLaTeXML.patent.fields"/>
     </element>
   </define>
+  <!-- TODO specify all possible patent types -->
   <define name="attlist.patent">
     <attribute name="id"/>
     <attribute name="entrytype">
       <value>patent</value>
     </attribute>
     <optional>
-      <attribute name="type"/>
+      <ref name="att.patenttype"/>
     </optional>
+  </define>
+  <define name="att.patenttype">
+    <attribute name="type">
+      <choice>
+        <value>patent</value>
+        <value>patentca</value>
+        <value>patentde</value>
+        <value>patentdk</value>
+        <value>patentes</value>
+        <value>patenteu</value>
+        <value>patentfr</value>
+        <value>patentit</value>
+        <value>patentno</value>
+        <value>patentse</value>
+        <value>patentuk</value>
+        <value>patentus</value>
+        <value>patreq</value>
+        <value>patreqca</value>
+        <value>patreqde</value>
+        <value>patreqdk</value>
+        <value>patreqes</value>
+        <value>patreqeu</value>
+        <value>patreqfr</value>
+        <value>patreqit</value>
+        <value>patreqno</value>
+        <value>patreqse</value>
+        <value>patrequk</value>
+        <value>patrequs</value>
+        <text/>
+      </choice>
+    </attribute>
   </define>
   <define name="BibLaTeXML.periodical.standard.fields">
     <a:documentation/>
@@ -5934,7 +5966,13 @@ works
     <attribute name="entrytype">
       <value>report</value>
     </attribute>
-    <attribute name="type"/>
+    <attribute name="type">
+      <choice>
+        <value>techreport</value>
+        <value>resreport</value>
+        <text/>
+      </choice>
+    </attribute>
   </define>
   <define name="BibLaTeXML.thesis.standard.fields">
     <a:documentation/>
@@ -6029,7 +6067,13 @@ works
     <attribute name="entrytype">
       <value>thesis</value>
     </attribute>
-    <attribute name="type"/>
+    <attribute name="type">
+      <choice>
+        <value>phdthesis</value>
+        <value>mathesis</value>
+        <text/>
+      </choice>
+    </attribute>
   </define>
   <define name="BibLaTeXML.unpublished.standard.fields">
     <a:documentation/>
