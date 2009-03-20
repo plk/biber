@@ -18,5 +18,6 @@ data/schemas/biblatexml.rnc
 data/schemas/biblatexml.rng
 data/schemas/biblatexml.xsd
 t/00-load.t
+t/01-utils.t
 t/pod-coverage.t
 t/pod.t
