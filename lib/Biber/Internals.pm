@@ -1,9 +1,9 @@
-package Biber::Internals;
-use strict;
-use warnings;
-use Carp;
-use Biber::Constants;
-use Biber::Utils;
+package Biber::Internals ;
+use strict ;
+use warnings ;
+use Carp ;
+use Biber::Constants ;
+use Biber::Utils ;
 
 =head1 NAME
 
@@ -27,8 +27,10 @@ Version 0.4
 
 =cut
 
+#FIXME this could easily be rewritten as a plain sub anon hash as second argument
+#which passes $opts as { useprefix => x, uniquename => n }
 sub parsename {
-    my ($self, $namestr, $citekey) = @_;
+    my ($self, $namestr, $citekey) = @_ ;
     my $usepre = $self->getoption($citekey, "useprefix") ;
     my $lastname ;
     my $firstname ;
@@ -59,11 +61,11 @@ sub parsename {
                ,
                \s+
                ([^,]+)
-             $/x;
+             $/x ;
 
         #$lastname =~ s/^{(.+)}$/$1/g ;
         #$firstname =~ s/^{(.+)}$/$1/g ;
-        $prefix =~ s/\s+$// if $prefix;
+        $prefix =~ s/\s+$// if $prefix ;
     }
     elsif ( $namestr =~ /[^\\],/ ) {    # <pre> Lastname, Firstname
         ( $prefix, $lastname, $firstname ) = $namestr =~
@@ -84,11 +86,11 @@ sub parsename {
                 |
                 {.+}
                )
-               $/x;
+               $/x ;
 
         #$lastname =~ s/^{(.+)}$/$1/g ;
         #$firstname =~ s/^{(.+)}$/$1/g ;
-        $prefix =~ s/\s+$// if $prefix;
+        $prefix =~ s/\s+$// if $prefix ;
     }
     elsif ( $namestr =~ /\s/ and $namestr !~ /^{.+}$/ ) {  # Firstname pre? Lastname
         ( $firstname, $prefix, $lastname ) =
@@ -102,34 +104,34 @@ sub parsename {
                          (?:\p{Ll}|\s)+
                         )?
                         (.+)
-                        $/x;
+                        $/x ;
 
-        #$lastname =~ s/^{(.+)}$/$1/;
-        $firstname =~ s/\s+$// if $firstname;
+        #$lastname =~ s/^{(.+)}$/$1/ ;
+        $firstname =~ s/\s+$// if $firstname ;
 
-        #$firstname =~ s/^{(.+)}$/$1/ if $firstname;
-        $prefix =~ s/\s+$// if $prefix;
-        $namestr = "";
-        $namestr = $prefix if $prefix;
-        $namestr .= $lastname;
-        $namestr .= ", " . $firstname if $firstname;
+        #$firstname =~ s/^{(.+)}$/$1/ if $firstname ;
+        $prefix =~ s/\s+$// if $prefix ;
+        $namestr = "" ;
+        $namestr = $prefix if $prefix ;
+        $namestr .= $lastname ;
+        $namestr .= ", " . $firstname if $firstname ;
     }
     else {    # Name alone
-        $lastname = $namestr;
+        $lastname = $namestr ;
 
-        #$lastname =~ s/^{(.+)}$/$1/;
+        #$lastname =~ s/^{(.+)}$/$1/ ;
     }
 
-    #TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g;
+    #TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g ;
     ## remove punctuation, symbols, separator and control ???
 
     if ( $self->config('uniquename') == 2 ) {
-        $nameinitstr = "";
-        $nameinitstr .= substr( $prefix, 0, 1 ) . " " if ( $usepre and $prefix );
-        $nameinitstr .= $lastname;
+        $nameinitstr = "" ;
+        $nameinitstr .= substr( $prefix, 0, 1 ) . " " if ( $usepre and $prefix ) ;
+        $nameinitstr .= $lastname ;
         $nameinitstr .= ", " . terseinitials($firstname) ##, $self->_decode_or_not($citekey) ) 
-            if $firstname;
-    };
+            if $firstname ;
+    } ;
 
     return {
             namestring     => $namestr,
@@ -142,10 +144,10 @@ sub parsename {
 }
 
 #sub _decode_or_not {
-#    my ($self, $citekey) = @_;
+#    my ($self, $citekey) = @_ ;
 #    my $no_decode = ( $self->{config}->{unicodebib} 
 #                        or $self->{config}->{fastsort} 
-#                        or $self->{bib}->{$citekey}->{datatype} eq 'xml' );
+#                        or $self->{bib}->{$citekey}->{datatype} eq 'xml' ) ;
 #    return $no_decode
 #}
 
@@ -154,8 +156,8 @@ sub parsename {
 =cut
 
 sub getnameinitials {
-    my ($self, $citekey, @aut) = @_;
-    my $initstr = "";
+    my ($self, $citekey, @aut) = @_ ;
+    my $initstr = "" ;
     ## my $nodecodeflag = $self->_decode_or_not($citekey) ;
 
     if ( $#aut < $self->getoption( $citekey, "maxnames" ) ) {    # 1 to 3 authors
@@ -177,18 +179,18 @@ sub getnameinitials {
             if ( $aut[$i]->{prefix} and $self->getoption( $citekey, "useprefix" ) ) {
                 $initstr .= terseinitials( $aut[$i]->{prefix} ) ; 
             }
-            my $tmp = $aut[$i]->{lastname};
+            my $tmp = $aut[$i]->{lastname} ;
 
             #FIXME suffix ?
             $initstr .= terseinitials($tmp) ; 
             if ( $aut[$i]->{firstname} ) {
-                $tmp = $aut[$i]->{firstname};
+                $tmp = $aut[$i]->{firstname} ;
                 $initstr .= terseinitials($tmp) ; 
             }
-            $initstr .= "+";
+            $initstr .= "+" ;
         }
     }
-    return $initstr;
+    return $initstr ;
 }
 
 =head2 getallnameinitials
@@ -196,28 +198,28 @@ sub getnameinitials {
 =cut
 
 sub getallnameinitials {
-    my ($self, $citekey, @aut) = @_;
-    my $initstr = "";
+    my ($self, $citekey, @aut) = @_ ;
+    my $initstr = "" ;
     ## my $nodecodeflag = $self->_decode_or_not($citekey) ;
     
     foreach my $a (@aut) {
         if ( $a->{prefix} and $self->getoption( $citekey, "useprefix" ) ) {
             $initstr .= terseinitials( $a->{prefix} ) 
         }
-        $initstr .= terseinitials( $a->{lastname} ); 
+        $initstr .= terseinitials( $a->{lastname} ) ;
 
         #FIXME suffix ?
         if ( $a->{firstname} ) {
-            $initstr .= terseinitials( $a->{firstname} ); 
+            $initstr .= terseinitials( $a->{firstname} ) ;
         }
     }
-    return $initstr;
+    return $initstr ;
 }
 
 #sub gettitleinitials {
-#     my $title = shift;
-#     $title =~ s/\b(\p{L})\S*\b\s*/$1/g;
-#     $title =~ s/\P{L}//g;
+#     my $title = shift ;
+#     $title =~ s/\b(\p{L})\S*\b\s*/$1/g ;
+#     $title =~ s/\P{L}//g ;
 #     return $title
 #}
 
@@ -226,12 +228,12 @@ sub getallnameinitials {
 =cut
 
 sub getoption {
-    my ($self, $citekey, $opt) = @_;
+    my ($self, $citekey, $opt) = @_ ;
     if ( defined $Biber::localoptions{$citekey} and defined $Biber::localoptions{$citekey}->{$opt} ) {
-        return $Biber::localoptions{$citekey}->{$opt};
+        return $Biber::localoptions{$citekey}->{$opt} ;
     }
     else {
-        return $self->config($opt);
+        return $self->config($opt) ;
     }
 }
 
@@ -245,19 +247,19 @@ sub getoption {
 =cut
 
 sub getinitstring {
-    my ($self, $citekey) = @_;
-    my $be = $self->{bib}->{$citekey};
-    my $str;
+    my ($self, $citekey) = @_ ;
+    my $be = $self->{bib}->{$citekey} ;
+    my $str ;
     if ( $be->{presort} ) {
-        $str = $be->{presort};
+        $str = $be->{presort} ;
     }
     else {
-        $str = "mm";
+        $str = "mm" ;
     }
     if ( $be->{labelalpha} ) {
-        $str .= $be->{labelalpha};
+        $str .= $be->{labelalpha} ;
     }
-    return $str;
+    return $str ;
 }
 
 =head2 getnamestring
@@ -265,8 +267,8 @@ sub getinitstring {
 =cut
 
 sub getnamestring {
-    my ($self, $citekey) = @_;
-    my $be = $self->{bib}->{$citekey};
+    my ($self, $citekey) = @_ ;
+    my $be = $self->{bib}->{$citekey} ;
 
     # see biblatex manual §3.4 "if both are disabled, the sortname field is ignored as well"
     if (
@@ -276,7 +278,7 @@ sub getnamestring {
             )
       )
     {
-        return $be->{sortname};
+        return $be->{sortname} ;
     }
     elsif ( $self->getoption( $citekey, "useauthor" ) 
 			and $be->{author} ) {
@@ -291,27 +293,27 @@ sub getnamestring {
         return $self->_namestring($citekey, 'translator')
     }
     else {
-        return $self->gettitlestring($citekey);
+        return $self->gettitlestring($citekey) ;
     }
 }
 
 sub _namestring {
-	my ( $self, $citekey, $field ) = @_;
-    my $be = $self->{bib}->{$citekey};
+	my ( $self, $citekey, $field ) = @_ ;
+    my $be = $self->{bib}->{$citekey} ;
     my $no_decode = ( $self->{config}->{unicodebib} 
                         or $self->{config}->{fastsort} 
-                        or $be->{datatype} eq 'xml' );
+                        or $be->{datatype} eq 'xml' ) ;
 	
-	my $str = "";
+	my $str = "" ;
     foreach ( @{ $be->{$field} } ) {
         $str .= $_->{prefix} . " "
-          if ( $_->{prefix} and $self->getoption( $citekey, "useprefix" ) );
-        $str .= $_->{lastname} . " ";
-        $str .= $_->{firstname} . " " if $_->{firstname};
-        $str .= $_->{suffix} if $_->{suffix};
-        $str .= " ";
-    };
-    $str =~ s/\s+$//;
+          if ( $_->{prefix} and $self->getoption( $citekey, "useprefix" ) ) ;
+        $str .= $_->{lastname} . " " ;
+        $str .= $_->{firstname} . " " if $_->{firstname} ;
+        $str .= $_->{suffix} if $_->{suffix} ;
+        $str .= " " ;
+    } ;
+    $str =~ s/\s+$// ;
     return normalize_string($str, $no_decode)
 }
 
@@ -320,10 +322,10 @@ sub _namestring {
 =cut
 
 sub getyearstring {
-    my ($self, $citekey) = @_;
-    my $be = $self->{bib}->{$citekey};
+    my ($self, $citekey) = @_ ;
+    my $be = $self->{bib}->{$citekey} ;
     if ( $be->{sortyear} ) {
-        return substr( $be->{sortyear}, 0, 4 );
+        return substr( $be->{sortyear}, 0, 4 ) ;
     }
     elsif ( $be->{year} ) {
         return substr( $be->{year}, 0, 4 )
@@ -332,7 +334,7 @@ sub getyearstring {
           #          return substr($be->{date}, 0, 4)
     }
     else {
-        return "9999";
+        return "9999" ;
     }
 }
 
@@ -341,10 +343,10 @@ sub getyearstring {
 =cut
 
 sub getdecyearstring {
-    my ($self, $citekey) = @_;
-    my $be = $self->{bib}->{$citekey};
+    my ($self, $citekey) = @_ ;
+    my $be = $self->{bib}->{$citekey} ;
     if ( $be->{sortyear} ) {
-        return 9999 - substr( $be->{sortyear}, 0, 4 );
+        return 9999 - substr( $be->{sortyear}, 0, 4 ) ;
     }
     elsif ( $be->{year} ) {
         return 9999 - substr( $be->{year}, 0, 4 )
@@ -353,7 +355,7 @@ sub getdecyearstring {
           #          return 9999 - substr($be->{date}, 0, 4)
     }
     else {
-        return "9999";
+        return "9999" ;
     }
 }
 
@@ -362,22 +364,22 @@ sub getdecyearstring {
 =cut
 
 sub gettitlestring {
-    my ($self, $citekey) = @_;
-    my $be = $self->{bib}->{$citekey};
+    my ($self, $citekey) = @_ ;
+    my $be = $self->{bib}->{$citekey} ;
     my $no_decode = ( $self->{config}->{unicodebib} 
                         or $self->{config}->{fastsort} 
-                        or $be->{datatype} eq 'xml' );
+                        or $be->{datatype} eq 'xml' ) ;
     if ( $be->{sorttitle} ) {
-        return normalize_string( $be->{sorttitle}, $no_decode );
+        return normalize_string( $be->{sorttitle}, $no_decode ) ;
     }
     elsif ( $be->{title} ) {
-        return normalize_string( $be->{title}, $no_decode );
+        return normalize_string( $be->{title}, $no_decode ) ;
     }
     elsif ($be->{issuetitle}) {
-        return normalize_string( $be->{issuetitle}, $no_decode );
+        return normalize_string( $be->{issuetitle}, $no_decode ) ;
     }
     elsif ($be->{journal}) {
-        return normalize_string( $be->{journal}, $no_decode );
+        return normalize_string( $be->{journal}, $no_decode ) ;
     }
     else {
         croak "No title available for gettitlestring()"
@@ -389,13 +391,13 @@ sub gettitlestring {
 =cut
 
 sub getvolumestring {
-    my ($self, $citekey) = @_;
-    my $be = $self->{bib}->{$citekey};
+    my ($self, $citekey) = @_ ;
+    my $be = $self->{bib}->{$citekey} ;
     if ( $be->{volume} ) {
-        my $vol = $be->{volume};
+        my $vol = $be->{volume} ;
 
         #          if ($vol =~ /^[0-9]+/) {
-        #               $vol =~ s/^([0-9]+).*$/$1/;
+        #               $vol =~ s/^([0-9]+).*$/$1/ ;
         #               return sprintf("%04d", $vol)
         #          } else {
         return sprintf( "%04s", $vol )
@@ -403,7 +405,7 @@ sub getvolumestring {
           #          }
     }
     else {
-        return "0000";
+        return "0000" ;
     }
 }
 
@@ -412,178 +414,194 @@ sub getvolumestring {
 =cut
 
 sub getpartinitials {
-    my ($self, $part) = @_;
-    $part = terseinitials($part); 
+    my ($self, $part) = @_ ;
+    $part = terseinitials($part) ;
     unless ( $self->config('terseinits') ) {
         $part =~ s/(\p{L})/$1\.~/g ;
         $part =~ s/~-/-/g ; 
-        $part =~ s/~$//;
+        $part =~ s/~$// ;
     }
-    return $part;
+    return $part ;
 }
 
 # TODO "D[onald] E. Knuth" prints as D. E. Knuth but is sorted with Donald E. Knuth
 sub _print_name {
-	my ($self, $au) = @_;
-    my %nh  = %{$au};
-    my $ln  = $nh{lastname};
-    my $lni = $self->getpartinitials($ln);
-    my $fn  = "";
-    $fn = $nh{firstname} if $nh{firstname};
-    my $fni = "";
-    $fni = $self->getpartinitials($fn) if $nh{firstname};
-    my $pre = "";
-    $pre = $nh{prefix} if $nh{prefix};
-    my $prei = "";
-    $prei = $self->getpartinitials($pre) if $nh{prefix};
-    my $suf = "";
-    $suf = $nh{suffix} if $nh{suffix};
-    my $sufi = "";
-    $sufi = $self->getpartinitials($suf) if $nh{suffix};
-    return "    {{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
+	my ($self, $au) = @_ ;
+    my %nh  = %{$au} ;
+    my $ln  = $nh{lastname} ;
+    my $lni = $self->getpartinitials($ln) ;
+    my $fn  = "" ;
+    $fn = $nh{firstname} if $nh{firstname} ;
+    my $fni = "" ;
+    $fni = $self->getpartinitials($fn) if $nh{firstname} ;
+    my $pre = "" ;
+    $pre = $nh{prefix} if $nh{prefix} ;
+    my $prei = "" ;
+    $prei = $self->getpartinitials($pre) if $nh{prefix} ;
+    my $suf = "" ;
+    $suf = $nh{suffix} if $nh{suffix} ;
+    my $sufi = "" ;
+    $sufi = $self->getpartinitials($suf) if $nh{suffix} ;
+    return "    {{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n" ;
 }
 
-sub _print_for_biblatex {
+sub _print_biblatex_entry {
+    
     my ($self, $citekey) = @_ ;
-    my $be      = $self->{bib}->{$citekey} or croak "Cannot find $citekey hash";
-    my $opts      = "";
+    my $be      = $self->{bib}->{$citekey} or croak "Cannot find $citekey" ;
+    my $opts      = "" ;
+
     if ( $be->{options} ) {
-        $opts = $be->{options};
+        $opts = $be->{options} ;
     }
-    my $str = "\\entry{$citekey}{" . $be->{entrytype} . "}{$opts}\n";
-    delete $be->{entrytype};
+
+    my $str = "\\entry{$citekey}{" . $be->{entrytype} . "}{$opts}\n" ;
+
+    if ( $be->{entrytype} eq 'set' ) {
+        $str .= "  \\entryset{" . $be->{entryset} . "}\n" ;
+    }
+    
+    if ($Biber::inset_entries{$citekey}) {
+        ## NB should be equal to $be->{entryset} but we prefer to make it optional
+        # TODO check against $be->entryset and warn if different!
+        $str .= "  \\inset{" . $Biber::inset_entries{$citekey} . "}\n" ;
+    }
+    
+    delete $be->{entrytype}; #forgot why this is needed!
+    
     foreach my $namefield (@NAMEFIELDS) {
         if ( defined $be->{$namefield} ) {
-            my @nf    = @{ $be->{$namefield} };
+            my @nf    = @{ $be->{$namefield} } ;
             if ( $be->{$namefield}->[-1]->{namestring} eq 'others' ) {
-                $str .= "  \\true{more$namefield}\n";
+                $str .= "  \\true{more$namefield}\n" ;
                 pop @nf; # remove the last element in the array
-            };
-            my $total = $#nf + 1;
-            $str .= "  \\name{$namefield}{$total}{%\n";
+            } ;
+            my $total = $#nf + 1 ;
+            $str .= "  \\name{$namefield}{$total}{%\n" ;
             foreach my $n (@nf) {
-                $str .= $self->_print_name($n);
+                $str .= $self->_print_name($n) ;
             }
-            $str .= "  }\n";
+            $str .= "  }\n" ;
         }
     }
+    
     foreach my $listfield (@LISTFIELDS) {
         if ( defined $be->{$listfield} ) {
-            my @nf    = @{ $be->{$listfield} };
+            my @nf    = @{ $be->{$listfield} } ;
             if ( $be->{$listfield}->[-1] eq 'others' ) {
-                $str .= "  \\true{more$listfield}\n";
+                $str .= "  \\true{more$listfield}\n" ;
                 pop @nf; # remove the last element in the array
-            };
-            my $total = $#nf + 1;
-            $str .= "  \\list{$listfield}{$total}{%\n";
+            } ;
+            my $total = $#nf + 1 ;
+            $str .= "  \\list{$listfield}{$total}{%\n" ;
             foreach my $n (@nf) {
-                my $tmpstr;
+                my $tmpstr ;
                 if ( $be->{datatype} eq 'bibtex') { 
                     $tmpstr = $n
                 }
                 else {
-                    $tmpstr = latexescape($n);
-                };
-                $str .= "    {$tmpstr}%\n";
+                    $tmpstr = latexescape($n) ;
+                } ;
+                $str .= "    {$tmpstr}%\n" ;
             }
-            $str .= "  }\n";
+            $str .= "  }\n" ;
         }
     }
 
-    my $namehash = $be->{namehash};
-    my $sortinit = substr $namehash, 0, 1;
-    $str .= "  \\strng{namehash}{$namehash}\n";
-    my $fullhash = $be->{fullhash};
-    $str .= "  \\strng{fullhash}{$fullhash}\n";
+    my $namehash = $be->{namehash} ;
+    my $sortinit = substr $namehash, 0, 1 ;
+    $str .= "  \\strng{namehash}{$namehash}\n" ;
+    my $fullhash = $be->{fullhash} ;
+    $str .= "  \\strng{fullhash}{$fullhash}\n" ;
     if ( $self->config('labelalpha') ) {
-        my $label = $be->{labelalpha};
-        $str .= "  \\field{labelalpha}{$label}\n";
+        my $label = $be->{labelalpha} ;
+        $str .= "  \\field{labelalpha}{$label}\n" ;
     }
-    $str .= "  \\field{sortinit}{$sortinit}\n";
+    $str .= "  \\field{sortinit}{$sortinit}\n" ;
     
     if ( $self->config('labelyear') ) {
-        my $authoryear = $be->{authoryear};
+        my $authoryear = $be->{authoryear} ;
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
-            $Biber::seenlabelyear{$authoryear}++;
+            $Biber::seenlabelyear{$authoryear}++ ;
             $str .= "  \\field{labelyear}{" 
-              . $Biber::seenlabelyear{$authoryear} . "}\n";
+              . $Biber::seenlabelyear{$authoryear} . "}\n" ;
         }
     }
 
     if ( $self->config('extraalpha') ) {
-        my $authoryear = $be->{authoryear};
+        my $authoryear = $be->{authoryear} ;
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
-            $Biber::seenlabelyear{$authoryear}++;
+            $Biber::seenlabelyear{$authoryear}++ ;
             $str .= "  \\field{extraalpha}{" 
-              . $Biber::seenlabelyear{$authoryear} . "}\n";
+              . $Biber::seenlabelyear{$authoryear} . "}\n" ;
         }
     }
 
     if ( $self->config('labelnumber') ) {
         if ($be->{shorthand}) {
             $str .= "  \\field{labelnumber}{"
-              . $be->{shorthand} . "}\n";
+              . $be->{shorthand} . "}\n" ;
         } 
         elsif ($be->{labelnumber}) {
             $str .= "  \\field{labelnumber}{"
-              . $be->{labelnumber} . "}\n";
+              . $be->{labelnumber} . "}\n" ;
         } 
     }
 
     # FIXME : currently bibtex only outputs \count{uniquename}{0} !
     if ( $self->config('uniquename') > 0 ) {
         $str .= "  \\count{uniquename}{"
-          . $Biber::seenuniquename{ $be->{uniquename} } . "}\n";
+          . $Biber::seenuniquename{ $be->{uniquename} } . "}\n" ;
     }
 
     if ( $self->config('singletitle')
         and $Biber::seenuniquename{ $be->{uniquename} } < 2 )
     {
-        $str .= "  \\true{singletitle}\n";
+        $str .= "  \\true{singletitle}\n" ;
     }
 
     foreach my $lfield (@LITERALFIELDS) {
         if ( defined $be->{$lfield} ) {
-            next
-              if $lfield eq "crossref"
-                  and $Biber::seenkeys{ $be->{crossref} };  # belongs to @auxcitekeys ;
+            next if ( $lfield eq 'crossref' and 
+                       $Biber::seenkeys{ $be->{crossref} } ) ; # belongs to @auxcitekeys 
+                       
             my $lfieldprint = $lfield ;
             if ($lfield eq 'journal') {
                 $lfieldprint = 'journaltitle' 
-            };
-            my $tmpstr;
+            } ;
+            my $tmpstr ;
             if ( $be->{datatype} eq 'bibtex') { 
-                $tmpstr = $be->{$lfield};
+                $tmpstr = $be->{$lfield} ;
             }
             else {
-                $tmpstr = latexescape($be->{$lfield});
+                $tmpstr = latexescape($be->{$lfield}) ;
             }
-            $str .= "  \\field{$lfieldprint}{$tmpstr}\n";
+            $str .= "  \\field{$lfieldprint}{$tmpstr}\n" ;
         }
     }
     foreach my $rfield (@RANGEFIELDS) {
         if ( defined $be->{$rfield} ) {
-            my $rf = $be->{$rfield};
-            $rf =~ s/[-–]+/\\bibrangedash /g;
-            $str .= "  \\field{$rfield}{$rf}\n";
+            my $rf = $be->{$rfield} ;
+            $rf =~ s/[-–]+/\\bibrangedash /g ;
+            $str .= "  \\field{$rfield}{$rf}\n" ;
         }
     }
     foreach my $vfield (@VERBATIMFIELDS) {
         if ( defined $be->{$vfield} ) {
-            my $rf = $be->{$vfield};
-            $str .= "  \\verb{$vfield}\n";
-            $str .= "  \\verb $rf\n  \\endverb\n";
+            my $rf = $be->{$vfield} ;
+            $str .= "  \\verb{$vfield}\n" ;
+            $str .= "  \\verb $rf\n  \\endverb\n" ;
         }
     }
     if ( defined $be->{keywords} ) {
-        $str .= "  \\keyw{" . $be->{keywords} . "}\n";
+        $str .= "  \\keyw{" . $be->{keywords} . "}\n" ;
     }
 
     #TODO generate special fields : see manual §4.2.4
-    $str .= "\\endentry\n\n";
+    $str .= "\\endentry\n\n" ;
 
-    #     $str = encode_utf8($str) if $self->config('unicodebbl');
-    return $str;
+    #     $str = encode_utf8($str) if $self->config('unicodebbl') ;
+    return $str ;
 }
 
 =head1 AUTHOR
@@ -604,5 +622,6 @@ under the same terms as Perl itself.
 
 =cut
 
-1;
+1 ;
+
 # vim: set tabstop=4 shiftwidth=4: 
