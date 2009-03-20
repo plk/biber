@@ -392,7 +392,7 @@ listf = element listf { attlist.lists?, (text | item+) }
 item = element item { formattext }
 
 # KEY LISTS
-# TODO add attribute type = babel, xml:lang, ISO-XXX etc 
+# TODO add attribute type = babel, xml, ISO-XXX etc 
 language = element language { text | item+ }   #xml:lang ?
 origlanguage = element origlanguage { text | item+ } # xml:lang ?
 script = element script { text }
@@ -991,7 +991,35 @@ BibLaTeXML.patent.fields =
   BibLaTeXML.common.fields &
   BibLaTeXML.additional.fields
 patent = element entry { attlist.patent, BibLaTeXML.patent.fields }
-attlist.patent = attribute id {text}, attribute entrytype {"patent"}, attribute type { text }?
+#TODO specify all possible patent types
+attlist.patent = attribute id {text}, attribute entrytype {"patent"}, att.patenttype?
+att.patenttype = attribute type {
+    "patent"   |
+    "patentca" |
+    "patentde" |
+    "patentdk" |
+    "patentes" |
+    "patenteu" |
+    "patentfr" |
+    "patentit" |
+    "patentno" |
+    "patentse" |
+    "patentuk" |
+    "patentus" |
+    "patreq"   |
+    "patreqca" |
+    "patreqde" |
+    "patreqdk" |
+    "patreqes" |
+    "patreqeu" |
+    "patreqfr" |
+    "patreqit" |
+    "patreqno" |
+    "patreqse" |
+    "patrequk" |
+    "patrequs" |
+    text }
+
 #########################################################
 BibLaTeXML.periodical.standard.fields =
   editor? &  # made it optional
@@ -1093,11 +1121,11 @@ BibLaTeXML.report.standard.fields =
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.report.fields =
-    BibLaTeXML.report.standard.fields &
+  BibLaTeXML.report.standard.fields &
   BibLaTeXML.common.fields &
   BibLaTeXML.additional.fields
 report = element entry { attlist.report, BibLaTeXML.report.fields }
-attlist.report = attribute id {text}, attribute entrytype {"report"}, attribute type { text }
+attlist.report = attribute id {text}, attribute entrytype {"report"}, attribute type { "techreport" | "resreport" | text }
 #########################################################
 BibLaTeXML.thesis.standard.fields =
   author &
@@ -1127,7 +1155,7 @@ BibLaTeXML.thesis.fields =
   BibLaTeXML.common.fields &
   BibLaTeXML.additional.fields
 thesis = element entry { attlist.thesis, BibLaTeXML.thesis.fields }
-attlist.thesis = attribute id {text}, attribute entrytype {"thesis"}, attribute type { text }
+attlist.thesis = attribute id {text}, attribute entrytype {"thesis"}, attribute type { "phdthesis" | "mathesis" | text }
 #########################################################
 BibLaTeXML.unpublished.standard.fields =
   author &
