@@ -12,6 +12,7 @@ our @EXPORT = qw{
 	@RANGEFIELDS
 	@VERBATIMFIELDS
 	@KEYFIELDS
+    @COMMASEP_FIELDS
 	@ENTRIESTOSPLIT
 	@LITERALFIELDS
 	%CONFIG_DEFAULT
@@ -84,6 +85,7 @@ Readonly::Array our @VERBATIMFIELDS  =>  qw{ doi eprint file pdf url verba verbb
 Readonly::Array our @KEYFIELDS  =>   qw{ 
   authortype bookpagination editortype origlanguage pagination 
   type nameatype namebtype namectype };
+Readonly::Array our @COMMASEP_FIELDS => qw{ options keywords entryset };
 
 Readonly::Array our @ENTRIESTOSPLIT  =>  ( @NAMEFIELDS, @LISTFIELDS );
 
@@ -122,3 +124,4 @@ under the same terms as Perl itself.
 
 =cut
 
+# vim: set tabstop=4 shiftwidth=4: 
