@@ -1,7 +1,7 @@
-package Biber::Utils;
-use strict;
-use warnings;
-use Carp;
+package Biber::Utils ;
+use strict ;
+use warnings ;
+use Carp ;
 use LaTeX::Decode ;
 use base 'Exporter' ;
 
@@ -36,13 +36,13 @@ concatenation of all names.
 =cut
 
 sub makenameid {
-    my @names = @_;
-    my @namestrings;
+    my @names = @_ ;
+    my @namestrings ;
     foreach my $n (@names) {
-        push @namestrings, $n->{namestring};
+        push @namestrings, $n->{namestring} ;
     }
-    my $tmp = join " ", @namestrings;
-    return cleanstring($tmp);
+    my $tmp = join " ", @namestrings ;
+    return cleanstring($tmp) ;
 }
 
 =head2 makenameinitid
@@ -52,13 +52,13 @@ Similar to makenameid, with the first names converted to initials.
 =cut
 
 sub makenameinitid {
-    my @names = @_;
-    my @namestrings;
+    my @names = @_ ;
+    my @namestrings ;
     foreach my $n (@names) {
-        push @namestrings, $n->{nameinitstring};
+        push @namestrings, $n->{nameinitstring} ;
     }
-    my $tmp = join " ", @namestrings;
-    return cleanstring($tmp);
+    my $tmp = join " ", @namestrings ;
+    return cleanstring($tmp) ;
 }
 
 =head2 normalize_string
@@ -68,10 +68,10 @@ Removes LaTeX macros, and all punctuation, symbols, separators and control chara
 =cut
 
 sub normalize_string {
-    my $str = shift;
-    $str =~ s/\\[A-Za-z]+//g; # remove latex macros (assuming they have only ASCII letters)
+    my $str = shift ;
+    $str =~ s/\\[A-Za-z]+//g ; # remove latex macros (assuming they have only ASCII letters)
     $str =~ s/[\p{P}\p{S}\p{C}]+//g ; ### remove punctuation, symbols, separator and control
-    return $str;
+    return $str ;
 }
 
 =head2 cleanstring
@@ -82,13 +82,13 @@ substitutes whitespace with underscore.
 =cut
 
 sub cleanstring {
-    my $str = shift;
-    $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
-    $str = normalize_string($str);
-    $str =~ s/^\s+//;
-    $str =~ s/\s+$//;
-    $str =~ s/\s+/_/g;
-    return $str;
+    my $str = shift ;
+    $str =~ s/([^\\])~/$1 /g ; # Foo~Bar -> Foo Bar
+    $str = normalize_string($str) ;
+    $str =~ s/^\s+// ;
+    $str =~ s/\s+$// ;
+    $str =~ s/\s+/_/g ;
+    return $str ;
 }
 
 =head2 latexescape
@@ -98,14 +98,14 @@ Escapes the LaTeX special characters { } & ^ _ $ and %
 =cut
 
 sub latexescape { 
-	my $str = shift;
-	my @latexspecials = qw| { } & _ % |; 
+	my $str = shift ;
+	my @latexspecials = qw| { } & _ % | ; 
 	foreach my $char (@latexspecials) {
-		$str =~ s/^$char/\\$char/g; 
-		$str =~ s/([^\\])$char/$1\\$char/g;
-	};
-    $str =~ s/\$/\\\$/g;
-    $str =~ s/\^/\\\^/g;
+		$str =~ s/^$char/\\$char/g ; 
+		$str =~ s/([^\\])$char/$1\\$char/g ;
+	} ;
+    $str =~ s/\$/\\\$/g ;
+    $str =~ s/\^/\\\^/g ;
 	return $str
 }
 
@@ -117,17 +117,17 @@ terseinitials($str) returns the contatenated initials of all the words in $str.
 =cut
 
 sub terseinitials {
-    my $str = shift;
-	$str =~ s/\\[\p{L}]+\s*//g;  # remove tex macros
-    $str =~ s/^{(\p{L}).+}$/$1/g;    # {Aaaa Bbbbb Ccccc} -> A
-    $str =~ s/{\s+(\S+)\s+}//g;  # Aaaaa{ de }Bbbb -> AaaaaBbbbb
+    my $str = shift ;
+	$str =~ s/\\[\p{L}]+\s*//g ;  # remove tex macros
+    $str =~ s/^{(\p{L}).+}$/$1/g ;    # {Aaaa Bbbbb Ccccc} -> A
+    $str =~ s/{\s+(\S+)\s+}//g ;  # Aaaaa{ de }Bbbb -> AaaaaBbbbb
 	# remove arabic prefix: al-Khwarizmi -> K / aṣ-Ṣāliḥ -> Ṣ ʿAbd~al-Raḥmān -> A etc
-    $str =~ s/\ba\p{Ll}-//; 
+    $str =~ s/\ba\p{Ll}-// ; 
     # get rid of Punctuation (except DashPunctuation), Symbol and Other characters
-    $str =~ s/[\x{2bf}\x{2018}\p{Lm}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g; 
-    $str =~ s/\B\p{L}//g;
-    $str =~ s/[\s\p{Pd}]+//g;
-    return $str;
+    $str =~ s/[\x{2bf}\x{2018}\p{Lm}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g ; 
+    $str =~ s/\B\p{L}//g ;
+    $str =~ s/[\s\p{Pd}]+//g ;
+    return $str ;
 }
 
 =head2 array_minus
@@ -137,15 +137,15 @@ array_minus(\@a, \@b) returns all elements in @a that are not in @b
 =cut
 
 sub array_minus {
-	my ($a, $b) = @_;
-	my %countb = ();
+	my ($a, $b) = @_ ;
+	my %countb = () ;
     foreach my $elem (@$b) { 
 		$countb{$elem}++ 
-	};
-    my @result;
+	} ;
+    my @result ;
     foreach my $elem (@$a) {
         push @result, $elem unless $countb{$elem}
-    };
+    } ;
     return @result
 }
 
@@ -167,5 +167,6 @@ under the same terms as Perl itself.
 
 =cut
 
-1;
+1 ;
+
 # vim: set tabstop=4 shiftwidth=4: 
