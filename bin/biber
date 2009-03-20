@@ -1,19 +1,19 @@
 #!/usr/bin/perl
-use strict;
-use warnings;
-no warnings 'utf8';
-use Carp;
+use strict ;
+use warnings ;
+no warnings 'utf8' ;
+use Carp ;
 
 #This should be removed in the official distribution:
-use FindBin;
-use lib "$FindBin::Bin/../lib";
+use FindBin ;
+use lib "$FindBin::Bin/../lib" ;
 
-use Biber;
-
+use Biber ;
+use Data::Dumper ;
 #---------------------------------------------------
 
-use Getopt::Long qw/:config no_ignore_case/;
-my $opts = {};
+use Getopt::Long qw/:config no_ignore_case/ ;
+my $opts = {} ;
 GetOptions(
     $opts,
     'fastsort|f!',
@@ -24,57 +24,56 @@ GetOptions(
     'bibdata|d=s',
     'outfile|O=s',
     'allentries|a!',
-    # 'convert|c=s',
-    # 'type|t=s',
+    'validate|V!', 
     'biberdebug|D!',
     'help|h|?',
     'version|v'
-);
+) ;
 
 #--------------------------------------------------
 
-use open IO => ':utf8';
+use open IO => ':utf8' ;
 
-our $VERSION = $Biber::VERSION; 
+our $VERSION = $Biber::VERSION ; 
 
-die usage() if exists $opts->{'help'};
+die usage() if exists $opts->{'help'} ;
 
-die version() if exists $opts->{'version'};
+die version() if exists $opts->{'version'} ;
 
 #--------------------------------------------------
 
 # we can give a list of datafiles as argument, so
 # this option is passed as an anon array
 if ($opts->{bibdata}) {
-    $opts->{bibdata} = [ split/,/, $opts->{bibdata} ] 
+    $opts->{bibdata} = [ split /\s*,\s*/, $opts->{bibdata} ] 
 } ;
 
-my $biber = Biber->new($opts);
+my $biber = Biber->new($opts) ;
 
 #=====================================================
 # Parse aux file
 #=====================================================
 
-my $auxfile;
-my $bblfile; 
+my $auxfile ;
+my $bblfile ; 
 
 if ($opts->{allentries}) {
     if ($opts->{bibdata}) {
-        $bblfile = $opts->{bibdata}->[0];
-        $bblfile =~ s/\.[^.]+$/\.bbl/;
+        $bblfile = $opts->{bibdata}->[0] ;
+        $bblfile =~ s/\.[^.]+$/\.bbl/ ;
     }
     else {
-        $auxfile = $ARGV[0] or croak usage();
-        $auxfile .= '.aux' unless $auxfile =~ m/\.aux$/;
-        $bblfile = $auxfile;
-        $bblfile =~ s/aux$/bbl/;
-        $biber->parse_auxfile($auxfile);
+        $auxfile = $ARGV[0] or croak usage() ;
+        $auxfile .= '.aux' unless $auxfile =~ m/\.aux$/ ;
+        $bblfile = $auxfile ;
+        $bblfile =~ s/aux$/bbl/ ;
+        $biber->parse_auxfile($auxfile) ;
     }
 }
 else {
-    $auxfile = $ARGV[0] or croak usage();
-    $bblfile = $auxfile;
-    $bblfile =~ s/aux$/bbl/;
+    $auxfile = $ARGV[0] or croak usage() ;
+    $bblfile = $auxfile ;
+    $bblfile =~ s/aux$/bbl/ ;
     $biber->parse_auxfile($auxfile)
 }
 
@@ -87,27 +86,27 @@ foreach my $bib (@{ $biber->config('bibdata') }) {
         $biber->parse_biblatexml( $bib )
     }
     elsif ($bib =~ /\.bib$/) {
-        croak "File $bib does not exist!" unless -f $bib;
+        croak "File $bib does not exist!" unless -f $bib ;
         $biber->parse_bibtex($bib)
     }
     else {
-        croak "File $bib.bib does not exist!" unless -f "$bib.bib";
+        croak "File $bib.bib does not exist!" unless -f "$bib.bib" ;
         $biber->parse_bibtex("$bib.bib")
     }
 }
 
-$biber->prepare; 
+$biber->prepare ; 
 
 if ($biber->config('outfile')) {
     $bblfile = $biber->config('outfile')
-};
+} ;
 
-$biber->output_to_bbl($bblfile);
+$biber->output_to_bbl($bblfile) ;
 
 #======================================================
 
 sub version {
-    my $me = "biber";    #basename($0);
+    my $me = "biber" ;    #basename($0);
 
     qq[
 $me Version: $VERSION
@@ -115,7 +114,7 @@ $me Version: $VERSION
 }
 
 sub usage {
-    my $me = "biber";    #basename($0);
+    my $me = "biber" ;    #basename($0);
 
     qq[
 Usage:  $me <file>.aux
