@@ -44,8 +44,8 @@ our %crossrefkeys = () ;
 our %entrieswithcrossref = () ;
 our %inset_entries = () ;
 our %localoptions = () ;
-our %namehashcount  = () ;
-our %seenuniquename = () ;
+our %seennamehash = () ;
+our %uniquenamecount = () ;
 our %seenauthoryear = () ;
 our %seenlabelyear = () ;
 our %is_name_entry = map { $_ => 1 } @NAMEFIELDS ;
@@ -687,12 +687,14 @@ sub process_crossrefs {
 # internal post-processing to prepare output
 
 # Here we parse names, generate the "namehash" and the strings for
-# "uniquename", "labelyear", "labelalpha", "sortstrings", etc.
+# "labelname", "labelyear", "labelalpha", "sortstrings", etc.
 
 #TODO flesh out this monster into several internal subs :)
 
 sub postprocess {
     my $self = shift ;
+    
+    my %namehashcount = () ;
 
     foreach my $citekey ( $self->citekeys ) {
 
@@ -707,7 +709,10 @@ sub postprocess {
 
         my $dt = $be->{datatype} ;
         
-        # get day month year from date field if no year is supplied
+
+        ##############################################################
+        # 1. get day month year from date field if no year is supplied
+        ##############################################################
 
         if ( $be->{date} && !$be->{year} ) {
             my $date = $be->{date} ;
@@ -716,7 +721,10 @@ sub postprocess {
             $be->{day}   = substr $date, 8, 2 if length $date > 9 ;
         }
         
-        ## set local options to override global options for individual entries
+        ##############################################################
+        # 2. set local options to override global options for individual entries
+        ##############################################################
+
         if ( $be->{options} ) {
             my @entryoptions = split /\s*,\s*/, $be->{options} ;
             foreach (@entryoptions) {
@@ -736,7 +744,9 @@ sub postprocess {
             }
         }
 
-        # post process "set" entries:
+        ##############################################################
+        # 3. post process "set" entries:
+        ##############################################################
 
         if ( $be->{entrytype} eq 'set' ) {
 
@@ -757,9 +767,29 @@ sub postprocess {
                 $be->{crossref} = $entrysetkeys[0] ;
             }
         }
-            
 
-        ### determine "namehash" field for biblatex
+        ##############################################################
+        # 4. generate labelname 
+        ##############################################################
+        
+        if ( $be->{shortauthor} and $self->getoption($citekey, 'useauthor') ) {
+            $be->{labelname} = 'shortauthor'
+        } elsif ( $be->{author} and $self->getoption($citekey, 'useauthor') ) {
+            $be->{labelname} = 'author'
+        } elsif ( $be->{shorteditor} and $self->getoption($citekey, 'useeditor') ) {
+            $be->{labelname} = 'shorteditor'
+        } elsif ( $be->{editor} and $self->getoption($citekey, 'useeditor') ) {
+            $be->{labelname} = 'editor'
+        } elsif ( $be->{shorttranslator} and $self->getoption($citekey, 'usetranslator') ) {
+            $be->{labelname} = 'shorttranslator'
+        } elsif ( $be->{translator} and $self->getoption($citekey, 'usetranslator') ) {
+            $be->{labelname} = 'translator'
+        } 
+
+        ##############################################################
+        # 5a. determine namehash and fullhash
+        ##############################################################
+
         my $namehash ;
         my $fullhash ;
         my $nameid ;
@@ -821,6 +851,8 @@ sub postprocess {
             }
         }
 
+        ## hash suffix
+
         my $hashsuffix = 1 ;
 
         if ( $namehashcount{$namehash}{$nameid} ) {
@@ -841,16 +873,45 @@ sub postprocess {
         $be->{namehash} = $namehash ;
         $be->{fullhash} = $fullhash ;
 
-        if ( $self->config('uniquename') == 2 ) {
-            $seenuniquename{$nameinitid}++ ;
-            $be->{uniquename} = $nameinitid ;
-        }
-        else {
-            $seenuniquename{$nameid}++ ;
-            $be->{uniquename} = $nameid ;
+        $seennamehash{$namehash}++ ;
+        $seennamehash{$fullhash}++ ;
+
+        
+        ##############################################################
+        # 5b. Populate the uniquenamecount hash to later determine 
+        #     the uniquename counter
+        ##############################################################
+
+        my $lname = $be->{labelname} ;
+        
+        if ( $lname and $self->config('uniquename') and scalar @{ $be->{$lname} } == 1 ) {
+
+            my $lastname   = $be->{$lname}->[0]->{lastname} ;
+            my $namestring = $be->{$lname}->[0]->{nameinitstring} ;
+            
+            if ( ! $uniquenamecount{$lastname}{$namehash} ) {
+                if ($uniquenamecount{$lastname}) {
+                    $uniquenamecount{$lastname}{$namehash} = 1 ;
+                } else {
+                $uniquenamecount{$lastname} = { $namehash => 1 } ;
+                }
+            }
+
+            if ( ! $uniquenamecount{$namestring}{$namehash} ) {
+                if ($uniquenamecount{$namestring}) {
+                    $uniquenamecount{$namestring}{$namehash} = 1 ;
+                } else {
+                    $uniquenamecount{$namestring} = { $namehash => 1 } ;
+                }
+            }
+        } else {
+            $be->{ignoreuniquename} = 1
         }
 
-        ### Generate the labelalpha --- TODO : check for labelname ??
+        ##############################################################
+        # 6. Generate the labelalpha
+        ##############################################################
+
         if ( $self->config('labelalpha') ) {
             my $label ;
 
@@ -866,49 +927,22 @@ sub postprocess {
                 } 
                 elsif ( $be->{author} and $self->getoption( $citekey, "useauthor" ) ) 
                 { 
-                # TODO option $useprefix needs to be taken into account!
-                # TODO CHECK FOR  $useauthor and $useeditor also in $bibentry{$citekey}->{options}
-                    my @names     = @{ $be->{author} } ;
-                    my @lastnames = map { normalize_string( $_->{lastname}, $dt ) } @names ;
-                    my $noofauth  = scalar @names ;
-                    if ( $noofauth > 3 ) {
-                        $label =
-                          substr( $lastnames[0], 0, 3 ) . $self->config('alphaothers') ;
-                    }
-                    elsif ( $noofauth == 1 ) {
-                        $label = substr( $lastnames[0], 0, 3 ) ;
-                    }
-                    else {
-                        foreach my $n (@lastnames) {
-                            $n =~ s/\P{Lu}//g ;
-                            $label .= $n ;
-                        }
-                    }
+                # TODO option $useprefix needs to be taken into account
+                # TODO CHECK FOR $useauthor and $useeditor also in $bibentry{$citekey}->{options}
+
+                    $label = getlabel($be->{author}, $dt, $self->config('alphaothers') );
                 }
                 elsif ( $be->{editor} and $self->getoption( $citekey, "useeditor" ) )
                 {
-                    my @names     = @{ $be->{editor} } ;
-                    my @lastnames = map { normalize_string( $_->{lastname}, $dt ) } @names ;
-                    my $noofauth  = scalar @names ;
-                    if ( $noofauth > 3 ) {
-                        $label =
-                          substr( $lastnames[0], 0, 3 ) . $self->config('alphaothers') ;
-                    }
-                    elsif ( $noofauth == 1 ) {
-                        $label = substr( $lastnames[0], 0, 3 ) ;
-                    }
-                    else {
-                        foreach my $n (@lastnames) {
-                            $n =~ s/\P{Lu}//g ;
-                            $label .= $n ;
-                        }
-                    }
+                    $label = getlabel($be->{editor}, $dt, $self->config('alphaothers') );
                 }
                 else 
                 {
                     $label = "Zzz"    # ??? FIXME
                 } ;
+
                 my $yr ;
+                
                 if ( $be->{year} ) {
                     $yr = substr $be->{year}, 2, 2 ;
                 }
@@ -917,19 +951,32 @@ sub postprocess {
                 }
 
                 $label .= $yr ;
+
             } ;
 
             $be->{labelalpha} = $label ;
         }
 
+        ##############################################################
+        # 7. track author/year
+        ##############################################################
+
         my $tmp = $self->getnamestring($citekey) . " " . $self->getyearstring($citekey) ;
         $seenauthoryear{$tmp}++ ;
         $be->{authoryear} = $tmp ;
 
+        ##############################################################
+        # 8. track shorthands
+        ##############################################################
+
         if ( $be->{shorthand} ) {
             $self->_addshorthand($citekey) ;
         }
-        ### MAKE SORT STRINGS ###
+
+        ##############################################################
+        # 9. generate sort strings 
+        ##############################################################
+
         if ( $self->config('sorting') == 1 ) {    # name title year
             $be->{sortstring} =
               lc(   $self->getinitstring($citekey) . " "
@@ -968,18 +1015,27 @@ sub postprocess {
                   . $self->getnamestring($citekey) . " "
                   . $self->gettitlestring($citekey) ) ;
 
-        #} TODO elsif ($self->config('sorting') == 99) { #DEBUG ???
+        } elsif ($self->config('sorting') == 99) { 
+             # ignoring 
         }
         else {
             # do nothing!
             carp "Warning: the sorting code " . $self->config('sorting') . 
                  " is not defined, ignoring!\n" ;
+                 $self->{config}->{sorting} = 99
         } ;
 
-        # when type of patent is not stated, simply assume 'patent'
+        ##############################################################
+        # 9. when type of patent is not stated, simply assume 'patent'
+        ##############################################################
+          
         if ( ( $be->{entrytype} eq 'patent' )  &&  ( ! $be->{type} ) ) {
             $be->{type} = 'patent'
         } ;
+
+        ##############################################################
+        # 10. update the entry in the biber object
+        ##############################################################
 
         $self->{bib}->{$citekey} = $be
     } ;
@@ -1003,7 +1059,7 @@ sub sortentries {
     my %bibentries = $self->bib ;
     my @auxcitekeys = $self->citekeys ;
     
-    if ( $self->config('sorting') ) {
+    if ( $self->config('sorting') != 99) {
 
         print "Sorting entries...\n" if $self->config('biberdebug') ;
     

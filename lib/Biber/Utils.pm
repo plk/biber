@@ -24,7 +24,7 @@ All functions are exported by default.
 =cut
 
 our @EXPORT = qw{ terseinitials makenameid makenameinitid cleanstring
-				  normalize_string latexescape array_minus } ;
+				  normalize_string latexescape array_minus getlabel } ;
 
 =head1 FUNCTIONS
 
@@ -147,6 +147,35 @@ sub array_minus {
         push @result, $elem unless $countb{$elem}
     } ;
     return @result
+}
+
+=head2 _getlabel
+    
+    Utility function to generate the labelalpha from the names of the author or editor
+
+=cut
+
+sub getlabel {
+    my ($namesref, $dt, $alphaothers) = @_ ;
+    my @names = @$namesref ;
+    my $label = "";
+    my @lastnames = map { normalize_string( $_->{lastname}, $dt ) } @names ;
+    my $noofauth  = scalar @names ;
+    if ( $noofauth > 3 ) {
+        $label =
+          substr( $lastnames[0], 0, 3 ) . $alphaothers ;
+    }
+    elsif ( $noofauth == 1 ) {
+        $label = substr( $lastnames[0], 0, 3 ) ;
+    }
+    else {
+        foreach my $n (@lastnames) {
+            $n =~ s/\P{Lu}//g ;
+            $label .= $n ;
+        }
+    }
+
+    return $label
 }
 
 =head1 AUTHOR

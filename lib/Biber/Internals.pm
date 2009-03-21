@@ -39,7 +39,7 @@ sub parsename {
     my $nameinitstr ;
     
     #  Arabic last names could begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
-    my $diacritics = qr/[\x{2bf}\x{2018}]/; # more? FIXME
+    my $diacritics = qr/[\x{2bf}\x{2018}]/; # more? 
     #  Arabic names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
     my $articleprefix = qr/\p{Ll}{2}-/; # etc
 
@@ -125,13 +125,11 @@ sub parsename {
     #TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g ;
     ## remove punctuation, symbols, separator and control ???
 
-    if ( $self->config('uniquename') == 2 ) {
-        $nameinitstr = "" ;
-        $nameinitstr .= substr( $prefix, 0, 1 ) . " " if ( $usepre and $prefix ) ;
-        $nameinitstr .= $lastname ;
-        $nameinitstr .= ", " . terseinitials($firstname) ##, $self->_decode_or_not($citekey) ) 
-            if $firstname ;
-    } ;
+    $nameinitstr = "" ;
+    $nameinitstr .= substr( $prefix, 0, 1 ) . "_" if ( $usepre and $prefix ) ;
+    $nameinitstr .= $lastname ;
+    $nameinitstr .= "_" . terseinitials($firstname) 
+        if $firstname ;
 
     return {
             namestring     => $namestr,
@@ -421,10 +419,10 @@ sub getpartinitials {
         $part =~ s/~-/-/g ; 
         $part =~ s/~$// ;
     }
-    return $part ;
+    return $part ; 
 }
 
-# TODO "D[onald] E. Knuth" prints as D. E. Knuth but is sorted with Donald E. Knuth
+#TODO this could be done earlier as a method and stored in the object
 sub _print_name {
 	my ($self, $au) = @_ ;
     my %nh  = %{$au} ;
@@ -547,15 +545,28 @@ sub _print_biblatex_entry {
               . $be->{labelnumber} . "}\n" ;
         } 
     }
+    
+    if ( $be->{ignoreuniquename} ) {
 
-    # FIXME : currently bibtex only outputs \count{uniquename}{0} !
-    if ( $self->config('uniquename') > 0 ) {
-        $str .= "  \\count{uniquename}{"
-          . $Biber::seenuniquename{ $be->{uniquename} } . "}\n" ;
+        $str .= "  \\count{uniquename}{0}\n" ;
+
+    } else {
+        my $lname = $be->{labelname} ;
+        my $name = $be->{$lname}->[0] ;
+        my $lastname = $name->{lastname} ;
+        my $nameinitstr = $name->{nameinitstring} ;
+
+        if (scalar keys %{ $Biber::uniquenamecount{$lastname} } == 1 ) { 
+            $str .= "  \\count{uniquename}{0}\n" ;
+        } elsif (scalar keys %{ $Biber::uniquenamecount{$nameinitstr} } == 1 ) {
+            $str .= "  \\count{uniquename}{1}\n" ;
+        } else { 
+            $str .= "  \\count{uniquename}{2}\n" ;
+        }
     }
 
     if ( $self->config('singletitle')
-        and $Biber::seenuniquename{ $be->{uniquename} } < 2 )
+        and $Biber::seennamehash{ $be->{namehash} } < 2 )
     {
         $str .= "  \\true{singletitle}\n" ;
     }
@@ -597,7 +608,6 @@ sub _print_biblatex_entry {
         $str .= "  \\keyw{" . $be->{keywords} . "}\n" ;
     }
 
-    #TODO generate special fields : see manual §4.2.4
     $str .= "\\endentry\n\n" ;
 
     #     $str = encode_utf8($str) if $self->config('unicodebbl') ;
