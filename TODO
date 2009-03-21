@@ -4,10 +4,10 @@ in decreasing order of priority:
 
    * Prepare Build.PL/Makefile.PL etc for distribution / DONE
    * Write comprehensive test suite / STARTED
-   * refactor postprocess method
-   * fix handling of labelalpha
-   * fix the mess with uniquename
-   * check and complete the generation of special fields: see manual §4.2.4
+   * refactor postprocess method / PARTLY
+   * fix handling of labelalpha / DONE
+   * fix the mess with uniquename / DONE
+   * make sure special fields are correctly generated / DONE ?
    * improve documentation of source code :)
    ----- version 0.5 ----- FIRST OFFICIAL RELEASE?
    * separate data parsing in individual modules / ALMOST DONE
