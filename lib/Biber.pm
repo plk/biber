@@ -575,7 +575,6 @@ sub parse_biblatexml {
                             $nameinitstr .= $lastname ;
                             $nameinitstr .= "_" . terseinitials($firstname) 
                                 if $firstname ;
-                            } ;
 
                             push @z, 
                                 { lastname => $lastname, firstname => $firstname, 
