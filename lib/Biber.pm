@@ -372,6 +372,8 @@ sub parse_bibtex {
 
 =cut
 
+## TODO put this in a separate module
+
 sub parse_biblatexml {
     my ($self, $xml) = @_ ;
     require XML::LibXML ;
@@ -561,16 +563,18 @@ sub parse_biblatexml {
                                 if $person->findnodes('bib:prefix') ;
                             $suffix = $person->findnodes('bib:suffix')->string_value
                                 if $person->findnodes('bib:suffix') ;
+                            
+                            #FIXME the following code is a repetition of part of parsename() 
                             $namestr .= $prefix if $prefix ;
                             $namestr .= $lastname ;
                             $namestr .= ", " . $firstname if $firstname ;
-                            if ( $self->config('uniquename') == 2 ) {
-                                $nameinitstr = "" ;
-                                $nameinitstr .= substr( $prefix, 0, 1 ) . " "
-                                  if ( $self->getoption($citekey, 'useprefix') and $prefix ) ;
-                                $nameinitstr .= $lastname ;
-                                $nameinitstr .= ", " . terseinitials($firstname) 
-                                    if $firstname ;
+
+                            $nameinitstr = "" ;
+                            $nameinitstr .= substr( $prefix, 0, 1 ) . "_"
+                              if ( $self->getoption($citekey, 'useprefix') and $prefix ) ;
+                            $nameinitstr .= $lastname ;
+                            $nameinitstr .= "_" . terseinitials($firstname) 
+                                if $firstname ;
                             } ;
 
                             push @z, 
@@ -1016,13 +1020,13 @@ sub postprocess {
                   . $self->gettitlestring($citekey) ) ;
 
         } elsif ($self->config('sorting') == 99) { 
-             # ignoring 
+            $be->{sortstring} = $citekey
         }
         else {
             # do nothing!
             carp "Warning: the sorting code " . $self->config('sorting') . 
-                 " is not defined, ignoring!\n" ;
-                 $self->{config}->{sorting} = 99
+                 " is not defined, assuming 'debug'\n" ;
+            $be->{sortstring} = $citekey
         } ;
 
         ##############################################################
@@ -1059,7 +1063,7 @@ sub sortentries {
     my %bibentries = $self->bib ;
     my @auxcitekeys = $self->citekeys ;
     
-    if ( $self->config('sorting') != 99) {
+    if ( $self->config('sorting') ) {
 
         print "Sorting entries...\n" if $self->config('biberdebug') ;
     
