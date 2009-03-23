@@ -45,8 +45,10 @@ sub _text_bibtex_parse {
         next ;
         }
 
+        # all fields used for this entry
         my @flist = $entry->fieldlist ;
 
+        #here we only keep those that do not require splitting
         my @flistnosplit = array_minus(\@flist, \@ENTRIESTOSPLIT) ;
 
         if ( $entry->metatype == BTE_REGULAR ) {
@@ -79,8 +81,9 @@ sub _text_bibtex_parse {
 
                 if ($Biber::is_name_entry{$f}) {
 
-                    # this returns an array of hashes
-                    @tmp = map { $self->parsename( $_ , $key) } @tmp ;
+                    my $useprefix = $self->getoption($key, 'useprefix') ;
+
+                    @tmp = map { parsename( $_ , {useprefix => $useprefix}) } @tmp ;
 
                 } else {
                     @tmp = map { remove_outer($_) } @tmp ;
