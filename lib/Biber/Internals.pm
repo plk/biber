@@ -9,152 +9,14 @@ use Biber::Utils ;
 
 Biber::Internals - Internal methods for processing the bibliographic data
 
-=cut
+=head1 METHODS
 
-=head1 VERSION
-
-Version 0.4
-
-=cut
-
-=head1 SYNOPSIS
-
-=cut
-
-=head1 FUNCTIONS
-
-=head2 parsename
-
-=cut
-
-#TODO? this could easily be rewritten as a plain sub anon hash as second argument
-#which passes $opts as { useprefix => x, uniquename => n }
-sub parsename {
-    my ($self, $namestr, $citekey) = @_ ;
-    my $usepre = $self->getoption($citekey, "useprefix") ;
-    my $lastname ;
-    my $firstname ;
-    my $prefix ;
-    my $suffix ;
-    my $nameinitstr ;
-    
-    #  Arabic last names could begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
-    my $diacritics = qr/[\x{2bf}\x{2018}]/; # more? 
-    #  Arabic names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
-    my $articleprefix = qr/\p{Ll}{2}-/; # etc
-
-    if ( $namestr =~ /^".+"$/ or $namestr =~ /^{.+}$/ ) {
-        $namestr = remove_outer($namestr) ;
-        $lastname = $namestr ;
-    } 
-    elsif ( $namestr =~ /[^\\],.+[^\\],/ ) {    # pre? Lastname, suffix, Firstname
-        ( $prefix, $lastname, $suffix, $firstname ) = $namestr =~
-            m/^(
-                \p{Ll}
-                (?:\p{Ll}|\s)+
-               )?
-               \s*
-               (
-                [^,]+
-               |
-                {[^,]+}
-               )
-               ,
-               \s+
-               ([^,]+)
-               ,
-               \s+
-               ([^,]+)
-             $/x ;
-
-        #$lastname =~ s/^{(.+)}$/$1/g ;
-        #$firstname =~ s/^{(.+)}$/$1/g ;
-        $prefix =~ s/\s+$// if $prefix ;
-    }
-    elsif ( $namestr =~ /[^\\],/ ) {    # <pre> Lastname, Firstname
-        ( $prefix, $lastname, $firstname ) = $namestr =~
-            m/^(
-                \p{Ll} # prefix starts with lowercase
-                (?:\p{Ll}|\s)+ # e.g. van der
-                \s+
-               )?
-               (
-                $articleprefix?$diacritics?
-                [^,]+
-                |
-                {[^,]+}
-               ),
-               \s+
-               (
-                [^,]+
-                |
-                {.+}
-               )
-               $/x ;
-
-        #$lastname =~ s/^{(.+)}$/$1/g ;
-        #$firstname =~ s/^{(.+)}$/$1/g ;
-        $prefix =~ s/\s+$// if $prefix ;
-    }
-    elsif ( $namestr =~ /\s/ and $namestr !~ /^{.+}$/ ) {  # Firstname pre? Lastname
-        ( $firstname, $prefix, $lastname ) =
-          $namestr =~ /^(
-                         {.+}
-                        |
-                         (?:\p{Lu}\p{Ll}+\s*)+
-                        )
-                        \s+
-                        (
-                         (?:\p{Ll}|\s)+
-                        )?
-                        (.+)
-                        $/x ;
-
-        #$lastname =~ s/^{(.+)}$/$1/ ;
-        $firstname =~ s/\s+$// if $firstname ;
-
-        #$firstname =~ s/^{(.+)}$/$1/ if $firstname ;
-        $prefix =~ s/\s+$// if $prefix ;
-        $namestr = "" ;
-        $namestr = $prefix if $prefix ;
-        $namestr .= $lastname ;
-        $namestr .= ", " . $firstname if $firstname ;
-    }
-    else {    # Name alone
-        $lastname = $namestr ;
-    }
-
-    #TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g ;
-    ## remove punctuation, symbols, separator and control ???
-
-    $nameinitstr = "" ;
-    $nameinitstr .= substr( $prefix, 0, 1 ) . "_" if ( $usepre and $prefix ) ;
-    $nameinitstr .= $lastname ;
-    $nameinitstr .= "_" . terseinitials($firstname) 
-        if $firstname ;
-
-    return {
-            namestring     => $namestr,
-            nameinitstring => $nameinitstr,
-            lastname       => $lastname,
-            firstname      => $firstname,
-            prefix         => $prefix,
-            suffix         => $suffix
-           }
-}
-
-#sub _decode_or_not {
-#    my ($self, $citekey) = @_ ;
-#    my $no_decode = ( $self->{config}->{unicodebib} 
-#                        or $self->{config}->{fastsort} 
-#                        or $self->{bib}->{$citekey}->{datatype} eq 'xml' ) ;
-#    return $no_decode
-#}
 
 =head2 getnameinitials
 
 =cut
 
+#TODO $namefield instead of @aut as 2nd argument!
 sub getnameinitials {
     my ($self, $citekey, @aut) = @_ ;
     my $initstr = "" ;
@@ -197,6 +59,7 @@ sub getnameinitials {
 
 =cut
 
+#TODO $namefield instead of @aut as 2nd argument!
 sub getallnameinitials {
     my ($self, $citekey, @aut) = @_ ;
     my $initstr = "" ;
@@ -415,7 +278,7 @@ sub getvolumestring {
 
 sub getpartinitials {
     my ($self, $part) = @_ ;
-    $part = terseinitials($part) ;
+    $part = terseinitials_withdash($part) ; 
     unless ( $self->config('terseinits') ) {
         $part =~ s/(\p{L})/$1\.~/g ;
         $part =~ s/~-/-/g ; 
@@ -432,6 +295,7 @@ sub _print_name {
     my $lni = $self->getpartinitials($ln) ;
     my $fn  = "" ;
     $fn = $nh{firstname} if $nh{firstname} ;
+    $fn =~ s/\s\+(\p{Lu}\.)/~$1/g; # First M. -> First~M.
     my $fni = "" ;
     $fni = $self->getpartinitials($fn) if $nh{firstname} ;
     my $pre = "" ;
