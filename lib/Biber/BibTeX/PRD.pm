@@ -132,6 +132,8 @@ sub _bibtex_prd_parse {
 
     foreach my $key ( @localkeys ) {
 
+        print "Processing $key\n" if $self->config('biberdebug') ;
+
         foreach my $ets (@ENTRIESTOSPLIT) {
 
             if ( exists $bibentries{$key}->{$ets} ) {
@@ -153,17 +155,19 @@ sub _bibtex_prd_parse {
                 
                 my @tmp = split /\s+and\s+/, $stringtosplit ;
 
-                sub restore_and {
+                sub _restore_and {
                     s/_\x{ff08}_/ and /g;
                     return $_
                 };
 
-                @tmp = map { restore_and($_) } @tmp ;
+                @tmp = map { _restore_and($_) } @tmp ;
                 
                 if ($Biber::is_name_entry{$ets}) {
                     
-                    # this returns an array of hashes
-                    @tmp = map { $self->parsename( $_ , $key) } @tmp ;
+                    my $useprefix = $self->getoption($key, 'useprefix') ;
+
+                    @tmp = map { parsename( $_ , {useprefix => $useprefix}) } @tmp ;
+
 
                 } else {
                     @tmp = map { remove_outer($_) } @tmp ;
@@ -182,7 +186,8 @@ sub _bibtex_prd_parse {
                 $Biber::inset_entries{$setkey} = $key ;
             }
         }
-        elsif ( $bibentries{$key}->{'crossref'} ) {
+
+        if ( $bibentries{$key}->{'crossref'} ) {
 
             my $crkey = $bibentries{$key}->{'crossref'} ;
         
@@ -208,9 +213,12 @@ __END__
 
 Biber::BibTeX::PRD - Pure Perl BibTeX parser with Parse::RecDescent
 
-=head1 DESCRIPTION
+=head1 METHODS
 
-Internal method ...
+=head2 _bibtex_prd_parse
+
+Internal method for parsing BibTeX data in Pure Perl instead of using 
+the btparse C library with Text::BibTeX
 
 =head1 AUTHOR
 
