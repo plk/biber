@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 14;
 use utf8;
 
 use Biber::Utils;
@@ -36,5 +36,57 @@ my @AminusB = array_minus(\@arrayA, \@arrayB);
 my @AminusBexpected = qw/ a b d f /;
 
 is_deeply(\@AminusB, \@AminusBexpected, 'array_minus') ;
+
+is(remove_outer('{Some string}'), 'Some string', 'remove_outer') ;
+
+my $nameA =  
+    { firstname => 'John',  
+      lastname => 'Doe', 
+      prefix => undef, 
+      suffix => undef, 
+      namestring => 'Doe, John',
+      nameinitstring => 'Doe_J' } ;
+my $nameAb =  
+    { firstname => 'John',  
+      lastname => 'Doe', 
+      prefix => undef, 
+      suffix => 'Jr', 
+      namestring => 'Doe, Jr, John',
+      nameinitstring => 'Doe_J_J' } ;
+
+is_deeply(parsename('John Doe'), $nameA, 'parsename 1a');
+
+is_deeply(parsename('Doe, Jr, John'), $nameAb, 'parsename 1b');
+
+my $nameB = 
+    { firstname => 'Johann Gottfried',  
+      lastname => 'Berlichingen zu Hornberg', 
+      prefix => 'von', 
+      suffix => undef, 
+      namestring => 'von Berlichingen zu Hornberg, Johann Gottfried',
+      nameinitstring => 'v_Berlichingen_zu_Hornberg_JG' } ;
+my $nameBb = 
+    { firstname => 'Johann Gottfried',  
+      lastname => 'Berlichingen zu Hornberg', 
+      prefix => 'von', 
+      suffix => undef, 
+      namestring => 'Berlichingen zu Hornberg, Johann Gottfried',
+      nameinitstring => 'Berlichingen_zu_Hornberg_JG' } ;
+
+is_deeply(parsename('von Berlichingen zu Hornberg, Johann Gottfried', {useprefix => 1}), 
+                    $nameB, 'parsename 2a') ;
+
+is_deeply(parsename('von Berlichingen zu Hornberg, Johann Gottfried', {useprefix => 0}), 
+                    $nameBb, 'parsename 2b') ;
+
+my $nameC = 
+   {  firstname => undef , 
+      lastname => 'Robert and Sons, Inc.', 
+      prefix => undef, 
+      suffix => undef, 
+      namestring => 'Robert and Sons, Inc.',
+      nameinitstring => 'Robert_and_Sons,_Inc.' } ;
+
+is_deeply(parsename('{Robert and Sons, Inc.}'), $nameC, 'parsename 3') ;
 
 
