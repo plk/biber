@@ -94,7 +94,17 @@ foreach my $bib (@{ $biber->config('bibdata') }) {
     }
 }
 
+if ($biber->config('biberdebug')) {
+    $biber->dump('biber.dump1') ;
+    print "Dumped initial biber object for debugging in file biber.dump1\n"
+}
+
 $biber->prepare ; 
+
+if ($biber->config('biberdebug')) {
+    $biber->dump('biber.dump2') ;
+    print "Dumped final biber object for debugging in file biber.dump2\n"
+}
 
 if ($biber->config('outfile')) {
     $bblfile = $biber->config('outfile')
