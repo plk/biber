@@ -63,7 +63,7 @@ sub new {
     my %params = %$opts ;
     my $self = bless {}, $class ;
     $self->_initopts() ;
-    for (keys %params) {
+    foreach (keys %params) {
         $self->{config}->{$_} = $params{$_} ;
     } ;
 
@@ -85,7 +85,7 @@ sub config {
 
 sub _initopts {
     my $self = shift ;
-    for (keys %CONFIG_DEFAULT) {
+    foreach (keys %CONFIG_DEFAULT) {
         $self->{config}->{$_} = $CONFIG_DEFAULT{$_}
     } ;
     return
@@ -244,7 +244,7 @@ sub parse_auxfile {
         }
     }
 
-    $self->parse_ctrlfile($ctrl_file) ;
+    $self->parse_ctrlfile($ctrl_file) if $ctrl_file;
     
     unless (@bibdatafiles) {
         croak "No database is provided in the file '$auxfile'!\nExiting\n"
@@ -336,8 +336,6 @@ sub parse_bibtex {
     
     print "Processing bibtex file $filename\n" unless $self->config('quiet') ;
 
-    # FIXME : this is not used!
-    # my %citekeysnotfound = () ;
     my @localkeys = () ;
 
     if ( !$self->config('unicodebib') && $self->config('unicodebbl') ) {
@@ -386,271 +384,18 @@ sub parse_bibtex {
 
     $biber->parse_biblatexml('data.xml') ;
 
-    Parses a database in the BibLaTeXML format (via XML::LibXML). If the suffix
-    is dbxml, then the database is assumed to be stored in a Berkeley DBXML
-    container and will be queried with the Sleepycat::DbXml interface.
+    Parse a database in the BibLaTeXML format with Biber::BibLaTeXML (via
+    XML::LibXML). If the suffix is dbxml, then the database is assumed to
+    be stored in a Berkeley DBXML container and will be queried through the
+    Sleepycat::DbXml interface.
 
 =cut
 
-## TODO put this in a separate module
-
 sub parse_biblatexml {
     my ($self, $xml) = @_ ;
-    # TODO
-    # require Biber::BibLaTeXML;
-    # push @ISA, 'Biber::BibLaTeXML';
-    # $self->_parse_biblatexml($xml);
-    
-    # move the rest out!
-    require XML::LibXML ;
-    my $parser = XML::LibXML->new() ;
-    my $db ;
-
-    # FIXME : a user _could_ want to encode the bbl in LaTeX!
-    $self->{config}->{unicodebbl} = 1 ;
-
-    print "Parsing the xml data ...\n" unless $self->config('quiet') ;
-
-    if ( $xml =~ /\.dbxml$/ ) {
-        require Biber::DBXML ;
-        push @ISA, 'Biber::DBXML' ;
-        my $xmlstring = $self->dbxml_to_xml($xml) ;
-        $db = $parser->parse_string( $xmlstring ) 
-            or croak "Cannot parse xml string" ;
-    } else {
-        $db = $parser->parse_file($xml) 
-            or croak "Can't parse file $xml" ;
-    }
-    # TODO : add option "validate xml" 
-    # if ($self->config('validate')) {
-    #         my $rngschema = XML::LibXML::RelaxNG->new( location => "biblatexml.rng") ;
-    #         my $validation = eval { $rngschema->validate($db) ; } ; 
-    #         unless ($validation) {
-    #             carp "The file $xmlfile does not validate against the biblatexml RelaxNG schema!\n$@"
-    #         } ;
-    # } ;
-    
-    # keep track of citekeys that were not found in this database
-    my %citekeysnotfound = () ;
-    my @auxcitekeys = $self->citekeys ;
-    my %bibentries = $self->bib ; 
-    
-    if ($self->config('allentries')) {
-        @auxcitekeys = () ;
-        my $res = $db->findnodes('/*/bib:entry') ;
-        foreach my $r ($res->get_nodelist) {
-            push @auxcitekeys, $r->findnodes('@id')->string_value
-        } ;
-    } ;
-    
-    print "Processing the xml data ...\n" unless $self->config('quiet') ;
-
-    # Contrary to the bibtex approach, we are not extracting all data to
-    # the bibentries hash, but only the ones corresponding to @auxcitekeys
-    foreach my $citekey (@auxcitekeys) {
-        next if $bibentries{$citekey} ; # skip if this is already found in another database
-        print "Looking for $citekey\n" if $self->config('biberdebug') ;
-        my $xpath = '/*/bib:entry[@id="' . $citekey . '"]' ;
-        my $results = $db->findnodes($xpath) ;
-
-        unless ( $results ) {
-
-            carp "Can't find entry with citekey $citekey... skipping"
-                 unless $self->config('quiet') ;
-            
-            $citekeysnotfound{$citekey} = 1 ;
-            next
-        } ;
-
-        if ( $results->size() > 1 ) { 
-            carp "The database contains more than one bib:entry with id=\"$citekey\" !" 
-        } ;
-
-        my $bibrecord = $results->get_node(1) ; 
-
-        # if we have an entryset we add the keys to the stack
-        if ($bibrecord->findnodes('@entrytype')->string_value eq 'set') {
-            
-            my @entrysetkeys = split /,/, $bibrecord->findnodes('bib:entryset')->string_value ;
-
-            push @auxcitekeys, @entrysetkeys ;
-
-            foreach my $setkey (@entrysetkeys) {
-                $inset_entries{$setkey} = $citekey ;
-            }
-        }
-        # if there is a crossref, we increment its citekey in %crossrefkeys
-        elsif ( $bibrecord->findnodes('bib:crossref') ) {
-
-            my $crefkey = $bibrecord->findnodes('bib:crossref')->string_value ;
-
-            $crossrefkeys{$crefkey}++ ;
-            $entrieswithcrossref{$citekey} = $crefkey ;
-        }
-
-    } ;
-
-    # now we add all crossrefs to the stack
-    unless ( $self->config('allentries') ) {
-        push @auxcitekeys, ( keys %crossrefkeys ) ;
-    } ;
-    #--------------------------------------------------
-
-    foreach my $citekey (@auxcitekeys) {
-        next if $citekeysnotfound{$citekey} ;
-        next if $bibentries{$citekey} ; # skip if this is already found in another database
-        print "Processing key $citekey\n" if $self->config('biberdebug') ;
-        my $xpath = '/*/bib:entry[@id="' . $citekey . '"]' ;
-        my $results = $db->findnodes($xpath) ;
-        my $bibrecord = $results->get_node(1) ; 
-
-        $bibentries{ $citekey }->{entrytype} = $bibrecord->findnodes('@entrytype')->string_value ;
-        if ($bibrecord->findnodes('@type')) {
-            $bibentries{ $citekey }->{type} = $bibrecord->findnodes('@type')->string_value ;
-        } ;
-        $bibentries{ $citekey }->{datatype} = 'xml' ;
-
-        #TODO get the options field first 
-        #options/text or option: key+value
-        if ($bibrecord->findnodes("bib:options")) {
-            if ($bibrecord->findnodes("bib:options/bib:option")) {
-                my @opts ; 
-                foreach my $o ($bibrecord->findnodes("bib:options/bib:option")->get_nodelist) {
-                    my $k = $o->findnodes("bib:key")->string_value ; 
-                    my $v = $o->findnodes("bib:value")->string_value ;
-                    push @opts, "$k=$v" ;
-                } ;
-                $bibentries{$citekey}->{options} = join(",", @opts) ;
-            }
-            else {
-                $bibentries{$citekey}->{options} = $bibrecord->findnodes("bib:options")->string_value ;
-            }
-        } ;
-        
-        # then we extract in turn the data from each type of fields
-
-        foreach my $f (@LITERALFIELDS, @VERBATIMFIELDS) {
-            $bibentries{$citekey}->{$f} = $bibrecord->findnodes("bib:$f")->string_value 
-                if $bibrecord->findnodes("bib:$f") ;
-        } ;
-        
-        foreach my $lf (@LISTFIELDS) {
-            my @z ;
-            if ($bibrecord->findnodes("bib:$lf")) {
-                if ($bibrecord->findnodes("bib:$lf/bib:item")) {
-                    foreach my $item ($bibrecord->findnodes("bib:$lf/bib:item")->get_nodelist) {
-                        push @z, $item->string_value ;
-                    }
-                }
-                else {
-                     push @z, $bibrecord->findnodes("bib:$lf")->string_value
-                } ;
-                if ($bibrecord->findnodes("bib:$lf\[\@andothers='true'\]")) {
-                    push @z, "others"
-                } ;
-                $bibentries{$citekey}->{$lf} = [ @z ]
-            }
-        } ;
-
-        foreach my $rf (@RANGEFIELDS) {
-            if ($bibrecord->findnodes("bib:$rf")) {
-                if ($bibrecord->findnodes("bib:$rf/bib:start")) {
-                     my $fieldstart = $bibrecord->findnodes("bib:$rf/bib:start")->string_value ;
-                     my $fieldend   = $bibrecord->findnodes("bib:$rf/bib:end")->string_value ;
-                    $bibentries{$citekey}->{$rf} = "$fieldstart--$fieldend" ;
-                }
-                elsif ($bibrecord->findnodes("bib:$rf/bib:list")) {
-                    $bibentries{$citekey}->{$rf} = 
-                        $bibrecord->findnodes("bib:$rf/bib:list")->string_value
-                }
-                else {
-                    $bibentries{$citekey}->{$rf} = 
-                        $bibrecord->findnodes("bib:$rf")->string_value
-                }
-            } ;
-        } ;
-
-        #the name fields are somewhat more complex
-        foreach my $nf (@NAMEFIELDS) {
-            if ($bibrecord->findnodes("bib:$nf")) {
-                my @z ;
-                if ($bibrecord->findnodes("bib:$nf/bib:person")) {
-                    foreach my $person ($bibrecord->findnodes("bib:$nf/bib:person")->get_nodelist) {
-                        my $lastname ; 
-                        my $firstname ; 
-                        my $prefix ; 
-                        my $suffix ;
-                        my $namestr = "" ;
-                        my $nameinitstr = undef ;
-                        if ($person->findnodes('bib:last')) {
-                            $lastname = $person->findnodes('bib:last')->string_value ;
-                            $firstname = $person->findnodes('bib:first')->string_value ; 
-                            $prefix = $person->findnodes('bib:prefix')->string_value 
-                                if $person->findnodes('bib:prefix') ;
-                            $suffix = $person->findnodes('bib:suffix')->string_value
-                                if $person->findnodes('bib:suffix') ;
-                            
-                            #FIXME the following code is a repetition of part of parsename() 
-                            $namestr .= $prefix if $prefix ;
-                            $namestr .= $lastname ;
-                            $namestr .= ", " . $firstname if $firstname ;
-
-                            $nameinitstr = "" ;
-                            $nameinitstr .= substr( $prefix, 0, 1 ) . "_"
-                              if ( $self->getoption($citekey, 'useprefix') and $prefix ) ;
-                            $nameinitstr .= $lastname ;
-                            $nameinitstr .= "_" . terseinitials($firstname) 
-                                if $firstname ;
-
-                            push @z, 
-                                { lastname => $lastname, firstname => $firstname, 
-                                  prefix => $prefix, suffix => $suffix,
-                                  namestring => $namestr, 
-                                  nameinitstring => $nameinitstr }
-                        }
-                        # Schema allows <person>text<person>
-                        else {
-                            push @z, $self->parsename( $person->string_value, $citekey )
-                        }
-                    } 
-                } 
-                # only one name as string, without <person>
-                else {
-                    push @z, $self->parsename( $bibrecord->findnodes("bib:$nf")->string_value, $citekey )
-                } ;
-
-                if ($bibrecord->findnodes("bib:$nf\[\@andothers='true'\]")) {
-                    push @z, { lastname => "others", namestring => "others" }
-                } ;
-                
-                $bibentries{$citekey}->{$nf} = [ @z ]
-            }
-        } ;
-
-        # now we extract the attributes
-        my %xmlattributes = ( 
-            'bib:pages/@pagination' => 'pagination',
-            'bib:pages/@bookpagination' => 'bookpagination',
-            'bib:author/@type' => 'authortype',
-            'bib:editor/@type' => 'editortype',
-            'bib:author/@gender' => 'gender',
-            # 'bib:editor/@gender' => 'gender', (ignored for now)
-            '@howpublished' => 'howpublished'
-            ) ; 
-        foreach my $attr (keys %xmlattributes) {
-            if ($bibrecord->findnodes($attr)) {
-                $bibentries{ $citekey }->{ $xmlattributes{$attr} } 
-                    = $bibrecord->findnodes($attr)->string_value ;
-            }
-        }
-    } ;
-
-    $self->{bib} = { %bibentries } ;
-
-    # now we keep only citekeys that actually exist in the database
-    $self->{citekeys} = [ grep { defined $self->{bib}->{$_} } @auxcitekeys ] ;
-
-    return
+    require Biber::BibLaTeXML;
+    push @ISA, 'Biber::BibLaTeXML';
+    $self->_parse_biblatexml($xml);
 }
 
 =head2 process_crossrefs
@@ -742,7 +487,7 @@ sub postprocess {
 
         my $be = $self->{bib}->{$citekey} ;
 
-        print "postprocessing $citekey\n" if $self->config('biberdebug') ;
+        print "Postprocessing $citekey\n" if $self->config('biberdebug') ;
 
         my $dt = $be->{datatype} ;
         
@@ -1203,6 +948,21 @@ EOF
     print $BBLFILE $BBL or croak "Failure to write to $bblfile: $!" ;
     print "Output to $bblfile\n" unless $self->config('quiet') ;
     close $BBLFILE or croak "Failure to close $bblfile: $!" ;
+    return
+}
+
+=head2 dump
+
+    Dump the biber object with Data::Dumper for debugging
+
+=cut
+
+sub dump {
+    my ($self, $file) = @_ ;
+    require Data::Dumper or carp ;
+    my $fh = IO::File->new($file, '>') or croak "Can't open file $file for writing" ;
+    print $fh Data::Dumper::Dumper($self) ;
+    close $fh ;
     return
 }
 
