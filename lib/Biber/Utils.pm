@@ -70,12 +70,12 @@ sub parsename {
     my $articleprefix = qr/\p{Ll}{2}-/; # etc
 
     if ( $namestr =~ /^{.+}$/ ) 
-    {   print "$namestr : A\n";
+    { 
         $namestr = remove_outer($namestr) ;
         $lastname = $namestr ;
     } 
     elsif ( $namestr =~ /[^\\],.+[^\\],/ )    # pre? Lastname, suffix, Firstname
-    { print "$namestr : B\n";
+    {
         ( $prefix, $lastname, $suffix, $firstname ) = $namestr =~
             m/^(
                 \p{Ll}
@@ -101,7 +101,7 @@ sub parsename {
         $suffix =~ s/\s+$// ;
     }
     elsif ( $namestr =~ /[^\\],/ )   # <pre> Lastname, Firstname
-    {print "$namestr : C\n";
+    {
         ( $prefix, $lastname, $firstname ) = $namestr =~
             m/^(
                 \p{Ll} # prefix starts with lowercase
@@ -128,7 +128,7 @@ sub parsename {
         $prefix =~ s/\s+$// if $prefix ;
     }
     elsif ( $namestr =~ /\s/ ) # Firstname pre? Lastname
-    {print "$namestr : D\n";
+    {
         ( $firstname, $prefix, $lastname ) =
           $namestr =~ /^(
                          {.+}
