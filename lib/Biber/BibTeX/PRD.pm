@@ -6,6 +6,7 @@ use Biber::Constants ;
 use Biber::Utils ;
 use Parse::RecDescent ;
 use Regexp::Common qw{ balanced } ;
+use Data::Dumper;
 
 sub _bibtex_prd_parse {
     
@@ -149,17 +150,24 @@ sub _bibtex_prd_parse {
                     $stringtosplit =~ s/\Q$x/$xr/g ;
 
                 } ;
-
+                
                 my @tmp = split /\s+and\s+/, $stringtosplit ;
 
-                @tmp = map { s/_\x{ff08}_/ and /g } @tmp ;
+                sub restore_and {
+                    s/_\x{ff08}_/ and /g;
+                    return $_
+                };
 
+                @tmp = map { restore_and($_) } @tmp ;
+                
                 if ($Biber::is_name_entry{$ets}) {
                     
                     # this returns an array of hashes
                     @tmp = map { $self->parsename( $_ , $key) } @tmp ;
 
-                }
+                } else {
+                    @tmp = map { remove_outer($_) } @tmp ;
+                } 
 
                 $bibentries{ $key }->{$ets} = [ @tmp ] 
 
@@ -171,7 +179,7 @@ sub _bibtex_prd_parse {
             my @entrysetkeys = split /\s*,\s*/, $bibentries{$key}->{'entryset'} ; 
 
             foreach my $setkey (@entrysetkeys) {
-                $Biber::inset_entries{$setkey} = $citekey ;
+                $Biber::inset_entries{$setkey} = $key ;
             }
         }
         elsif ( $bibentries{$key}->{'crossref'} ) {
