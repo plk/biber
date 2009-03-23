@@ -154,7 +154,6 @@ sub parsename {
     }
     else 
     {    # Name alone
-        print "$namestr : E\n";
         $lastname = $namestr ;
     }
 
