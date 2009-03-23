@@ -3,6 +3,7 @@ use strict ;
 use warnings ;
 use Carp ;
 use LaTeX::Decode ;
+use Biber::Constants ;
 use base 'Exporter' ;
 
 =head1 NAME
@@ -23,16 +24,166 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ terseinitials makenameid makenameinitid cleanstring
-                  normalize_string latexescape array_minus getlabel
-                  remove_outer } ;
+our @EXPORT = qw{ parsename terseinitials terseinitials_withdash makenameid
+    makenameinitid cleanstring normalize_string latexescape array_minus
+    getlabel remove_outer } ;
 
 =head1 FUNCTIONS
 
+=head2 parsename
+
+    Given a name string, this function returns a hash with all parts of the name
+    resolved according to the BibTeX conventions.
+
+    parsename('John Doe') 
+    returns: 
+    { firstname => 'John',  
+      lastname => 'Doe', 
+      prefix => undef, 
+      suffix => undef, 
+      namestring => 'Doe, John',
+      nameinitstring => 'Doe_J' }
+
+    parsename('von Berlichingen zu Hornberg, Johann G{\"o}tz') 
+    returns: 
+    { firstname => 'Johann G{\"o}tz',  
+      lastname => 'Berlichingen zu Hornberg', 
+      prefix => 'von', 
+      suffix => undef, 
+      namestring => 'Berlichingen zu Hornberg, Johann Gotz',
+      nameinitstring => 'Berlichingen_zu_Hornberg_JG' }
+=cut
+
+sub parsename {
+    my ($namestr, $opts) = @_ ;
+    my $usepre = $opts->{useprefix} || $CONFIG_DEFAULT{useprefix} ;
+
+    my $lastname ;
+    my $firstname ;
+    my $prefix ;
+    my $suffix ;
+    my $nameinitstr ;
+    
+    #  Arabic last names could begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
+    my $diacritics = qr/[\x{2bf}\x{2018}]/; # more? 
+    #  Arabic names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
+    my $articleprefix = qr/\p{Ll}{2}-/; # etc
+
+    if ( $namestr =~ /^{.+}$/ ) 
+    {   print "$namestr : A\n";
+        $namestr = remove_outer($namestr) ;
+        $lastname = $namestr ;
+    } 
+    elsif ( $namestr =~ /[^\\],.+[^\\],/ )    # pre? Lastname, suffix, Firstname
+    { print "$namestr : B\n";
+        ( $prefix, $lastname, $suffix, $firstname ) = $namestr =~
+            m/^(
+                \p{Ll}
+                (?:\p{Ll}|\s)+
+               )?
+               \s*
+               (
+                [^,]+
+               |
+                {[^,]+}
+               )
+               ,
+               \s+
+               ([^,]+)
+               ,
+               \s+
+               ([^,]+)
+             $/x ;
+
+        #$lastname =~ s/^{(.+)}$/$1/g ;
+        #$firstname =~ s/^{(.+)}$/$1/g ;
+        $prefix =~ s/\s+$// if $prefix ;
+        $suffix =~ s/\s+$// ;
+    }
+    elsif ( $namestr =~ /[^\\],/ )   # <pre> Lastname, Firstname
+    {print "$namestr : C\n";
+        ( $prefix, $lastname, $firstname ) = $namestr =~
+            m/^(
+                \p{Ll} # prefix starts with lowercase
+                (?:\p{Ll}|\s)+ # e.g. van der
+                \s+
+               )?
+               (
+                $articleprefix?$diacritics?
+                [^,]+
+                |
+                {[^,]+}
+               ),
+               \s+
+               (
+                [^,]+
+                |
+                {.+}
+               )
+               $/x ;
+
+        #$lastname =~ s/^{(.+)}$/$1/g ;
+        #$firstname =~ s/^{(.+)}$/$1/g ;
+        $namestr =~ s/^$prefix// if ( $prefix && ! $usepre) ;
+        $prefix =~ s/\s+$// if $prefix ;
+    }
+    elsif ( $namestr =~ /\s/ ) # Firstname pre? Lastname
+    {print "$namestr : D\n";
+        ( $firstname, $prefix, $lastname ) =
+          $namestr =~ /^(
+                         {.+}
+                        |
+                         (?:\p{Lu}\p{Ll}+\s*)+
+                        )
+                        \s+
+                        (
+                         (?:\p{Ll}|\s)+
+                        )?
+                        (.+)
+                        $/x ;
+
+        #$lastname =~ s/^{(.+)}$/$1/ ;
+        $firstname =~ s/\s+$// if $firstname ;
+
+        #$firstname =~ s/^{(.+)}$/$1/ if $firstname ;
+        $prefix =~ s/\s+$// if $prefix ;
+        $namestr = "" ;
+        $namestr = $prefix if $prefix ;
+        $namestr .= $lastname ;
+        $namestr .= ", " . $firstname if $firstname ;
+    }
+    else 
+    {    # Name alone
+        print "$namestr : E\n";
+        $lastname = $namestr ;
+    }
+
+    #TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g ;
+    ## remove punctuation, symbols, separator and control ???
+
+    $nameinitstr = "" ;
+    $nameinitstr .= substr( $prefix, 0, 1 ) . " " if ( $usepre and $prefix ) ;
+    $nameinitstr .= $lastname ;
+    $nameinitstr .= " " . terseinitials($suffix) 
+        if $suffix ;
+    $nameinitstr .= " " . terseinitials($firstname) 
+        if $firstname ;
+    $nameinitstr =~ s/\s+/_/g ;
+
+    return {
+            namestring     => $namestr,
+            nameinitstring => $nameinitstr,
+            lastname       => $lastname,
+            firstname      => $firstname,
+            prefix         => $prefix,
+            suffix         => $suffix
+           }
+}
+
 =head2 makenameid
 
-Given an array of name hashes, this internal sub returns a long string with the
-concatenation of all names.
+Given an array of names (as hashes), this internal sub returns a long string
+with the concatenation of all names.
 
 =cut
 
@@ -113,11 +264,25 @@ sub latexescape {
 =head2 terseinitials
 
 terseinitials($str) returns the contatenated initials of all the words in $str.
-    terseinitials('John von Neumann') => 'JvN'
+    terseinitials('Louis Pierre de la Ramée') => 'LPdlR'
 
 =cut
 
 sub terseinitials {
+    my $str = shift ;
+    $str = terseinitials_withdash($str) ;
+    $str =~ s/[\s\p{Pd}]+//g ;
+    return $str ;
+}
+
+=head2 terseinitials_withdash
+
+Same as terseinitials but does not remove dashes:
+    terseinitials('Louis-Pierre de la Ramée') => 'L-PdlR'
+
+=cut
+
+sub terseinitials_withdash {
     my $str = shift ;
 	$str =~ s/\\[\p{L}]+\s*//g ;  # remove tex macros
     $str =~ s/^{(\p{L}).+}$/$1/g ;    # {Aaaa Bbbbb Ccccc} -> A
@@ -127,7 +292,6 @@ sub terseinitials {
     # get rid of Punctuation (except DashPunctuation), Symbol and Other characters
     $str =~ s/[\x{2bf}\x{2018}\p{Lm}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g ; 
     $str =~ s/\B\p{L}//g ;
-    $str =~ s/[\s\p{Pd}]+//g ;
     return $str ;
 }
 
@@ -187,8 +351,9 @@ sub getlabel {
 =cut
 
 sub remove_outer {
-    s/^{(.+)}$/$1/ ;
-    return $_
+    my $str = shift ;
+    $str =~ s/^{(.+)}$/$1/ ;
+    return $str
 }
 
 =head1 AUTHOR
