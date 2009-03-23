@@ -24,7 +24,8 @@ All functions are exported by default.
 =cut
 
 our @EXPORT = qw{ terseinitials makenameid makenameinitid cleanstring
-				  normalize_string latexescape array_minus getlabel } ;
+                  normalize_string latexescape array_minus getlabel
+                  remove_outer } ;
 
 =head1 FUNCTIONS
 
@@ -149,7 +150,7 @@ sub array_minus {
     return @result
 }
 
-=head2 _getlabel
+=head2 getlabel
     
     Utility function to generate the labelalpha from the names of the author or editor
 
@@ -176,6 +177,18 @@ sub getlabel {
     }
 
     return $label
+}
+
+=head2 remove_outer
+    
+    Remove surrounding curly brackets:  
+        '{string}' -> 'string'
+
+=cut
+
+sub remove_outer {
+    s/^{(.+)}$/$1/ ;
+    return $_
 }
 
 =head1 AUTHOR
