@@ -27,7 +27,7 @@ Version 0.4
 
 =cut
 
-#FIXME this could easily be rewritten as a plain sub anon hash as second argument
+#TODO? this could easily be rewritten as a plain sub anon hash as second argument
 #which passes $opts as { useprefix => x, uniquename => n }
 sub parsename {
     my ($self, $namestr, $citekey) = @_ ;
@@ -43,7 +43,11 @@ sub parsename {
     #  Arabic names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
     my $articleprefix = qr/\p{Ll}{2}-/; # etc
 
-    if ( $namestr =~ /[^\\],.+[^\\],/ ) {    # pre? Lastname, suffix, Firstname
+    if ( $namestr =~ /^".+"$/ or $namestr =~ /^{.+}$/ ) {
+        $namestr = remove_outer($namestr) ;
+        $lastname = $namestr ;
+    } 
+    elsif ( $namestr =~ /[^\\],.+[^\\],/ ) {    # pre? Lastname, suffix, Firstname
         ( $prefix, $lastname, $suffix, $firstname ) = $namestr =~
             m/^(
                 \p{Ll}
@@ -118,8 +122,6 @@ sub parsename {
     }
     else {    # Name alone
         $lastname = $namestr ;
-
-        #$lastname =~ s/^{(.+)}$/$1/ ;
     }
 
     #TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g ;
