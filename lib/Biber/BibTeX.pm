@@ -82,7 +82,9 @@ sub _text_bibtex_parse {
                     # this returns an array of hashes
                     @tmp = map { $self->parsename( $_ , $key) } @tmp ;
 
-                } ;
+                } else {
+                    @tmp = map { remove_outer($_) } @tmp ;
+                } 
                     
                 $bibentries{ $key }->{$f} = [ @tmp ]                 
 
