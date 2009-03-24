@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar ns="http://ankabut.net/biblatexml" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+<grammar ns="http://biblatex-biber.sourceforge.net/biblatexml" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <start>
     <ref name="entries"/>
   </start>
@@ -22,9 +22,9 @@
       <ref name="report"/>
       <ref name="thesis"/>
       <ref name="unpublished"/>
+      <ref name="set"/>
     </choice>
   </define>
-  <!-- TODO | set -->
   <define name="BibLaTeXML.additional.entries">
     <choice>
       <ref name="review"/>
@@ -145,6 +145,9 @@
       </optional>
       <optional>
         <ref name="sortyear"/>
+      </optional>
+      <optional>
+        <ref name="inset"/>
       </optional>
     </interleave>
   </define>
@@ -1330,8 +1333,24 @@ We now define the biblatexml elements</a:documentation>
       <text/>
     </element>
   </define>
-  <define name="crossref">
+  <define name="entryset">
     <a:documentation>special fields</a:documentation>
+    <element name="entryset">
+      <choice>
+        <oneOrMore>
+          <ref name="item"/>
+        </oneOrMore>
+        <text/>
+      </choice>
+    </element>
+  </define>
+  <define name="inset">
+    <element name="entryset">
+      <text/>
+    </element>
+  </define>
+  <define name="crossref">
+    <a:documentation>Can it refer to more than one set???</a:documentation>
     <element name="crossref">
       <text/>
     </element>
@@ -1613,7 +1632,10 @@ We now define the biblatexml elements</a:documentation>
   <!-- DATE FIELDS -->
   <define name="date">
     <element name="date">
-      <data type="date"/>
+      <choice>
+        <data type="date"/>
+        <data type="integer"/>
+      </choice>
     </element>
   </define>
   <define name="urldate">
@@ -4168,6 +4190,9 @@ works
         <ref name="eprinttype"/>
       </optional>
       <optional>
+        <ref name="version"/>
+      </optional>
+      <optional>
         <ref name="pages"/>
       </optional>
       <optional>
@@ -4325,7 +4350,11 @@ works
         </interleave>
       </choice>
       <optional>
-        <!-- NEW: a book can inherit its elements from another book (e.g. individual volumes with diff titles) -->
+        <!-- a book can inherit its elements from another book (e.g. individual volumes with diff titles) -->
+        <ref name="bookauthor"/>
+      </optional>
+      <optional>
+        <!-- added -->
         <ref name="shorteditor"/>
       </optional>
       <optional>
@@ -4365,6 +4394,18 @@ works
         <ref name="maintitleaddon"/>
       </optional>
       <optional>
+        <ref name="booktitle"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="booktitleaddon"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="booksubtitle"/>
+      </optional>
+      <optional>
+        <!-- added -->
         <ref name="volume"/>
       </optional>
       <optional>
@@ -4573,6 +4614,10 @@ works
       <ref name="title"/>
       <ref name="year"/>
       <optional>
+        <ref name="bookauthor"/>
+      </optional>
+      <optional>
+        <!-- added -->
         <ref name="shorteditor"/>
       </optional>
       <optional>
@@ -4612,6 +4657,18 @@ works
         <ref name="maintitleaddon"/>
       </optional>
       <optional>
+        <ref name="booktitle"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="booktitleaddon"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="booksubtitle"/>
+      </optional>
+      <optional>
+        <!-- added -->
         <ref name="volume"/>
       </optional>
       <optional>
@@ -5208,10 +5265,12 @@ works
   <define name="BibLaTeXML.manual.standard.fields">
     <a:documentation/>
     <interleave>
-      <choice>
-        <ref name="author"/>
-        <ref name="editor"/>
-      </choice>
+      <optional>
+        <choice>
+          <ref name="author"/>
+          <ref name="editor"/>
+        </choice>
+      </optional>
       <ref name="title"/>
       <ref name="year"/>
       <optional>
@@ -5422,10 +5481,12 @@ works
   <define name="BibLaTeXML.online.standard.fields">
     <a:documentation/>
     <interleave>
-      <choice>
-        <ref name="author"/>
-        <ref name="editor"/>
-      </choice>
+      <optional>
+        <choice>
+          <ref name="author"/>
+          <ref name="editor"/>
+        </choice>
+      </optional>
       <ref name="title"/>
       <choice>
         <interleave>
@@ -5439,7 +5500,13 @@ works
         </interleave>
         <ref name="date"/>
       </choice>
-      <ref name="url"/>
+      <choice>
+        <ref name="url"/>
+        <ref name="eprint"/>
+      </choice>
+      <optional>
+        <ref name="eprinttype"/>
+      </optional>
       <optional>
         <ref name="subtitle"/>
       </optional>
@@ -6241,6 +6308,39 @@ works
         <value>movie</value>
       </attribute>
       <ref name="BibLaTeXML.misc.fields"/>
+    </element>
+  </define>
+  <define name="BibLaTeXML.set.fields">
+    <interleave>
+      <ref name="entryset"/>
+      <optional>
+        <ref name="crossref"/>
+      </optional>
+      <optional>
+        <!-- actually this is not needed as it is the first element of the entryset -->
+        <ref name="annotation"/>
+      </optional>
+      <optional>
+        <ref name="keywords"/>
+      </optional>
+      <optional>
+        <ref name="remarks"/>
+      </optional>
+      <zeroOrMore>
+        <ref name="user"/>
+      </zeroOrMore>
+      <optional>
+        <ref name="options"/>
+      </optional>
+    </interleave>
+  </define>
+  <define name="set">
+    <element name="entry">
+      <attribute name="id"/>
+      <attribute name="entrytype">
+        <value>set</value>
+      </attribute>
+      <ref name="BibLaTeXML.set.fields"/>
     </element>
   </define>
 </grammar>

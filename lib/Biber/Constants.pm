@@ -57,8 +57,7 @@ Readonly::Array our @NAMEFIELDS  =>   qw{
   author editor commentator 
   translator redactor bookauthor 
   afterword introduction holder 
-  sortname namea nameb namec 
-} ;
+  sortname namea nameb namec } ;
 
 Readonly::Array our @LISTFIELDS  =>   qw{
   publisher location address institution school language origlocation

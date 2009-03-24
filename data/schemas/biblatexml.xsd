@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://ankabut.net/biblatexml" xmlns:biblatexml="http://ankabut.net/biblatexml">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://biblatex-biber.sourceforge.net/biblatexml" xmlns:biblatexml="http://biblatex-biber.sourceforge.net/biblatexml">
   <xs:group name="BibLaTeXML.standard.entries">
     <xs:choice>
       <xs:group ref="biblatexml:article"/>
@@ -19,9 +19,9 @@
       <xs:group ref="biblatexml:report"/>
       <xs:group ref="biblatexml:thesis"/>
       <xs:group ref="biblatexml:unpublished"/>
+      <xs:group ref="biblatexml:set"/>
     </xs:choice>
   </xs:group>
-  <!-- TODO | set -->
   <xs:group name="BibLaTeXML.additional.entries">
     <xs:choice>
       <xs:group ref="biblatexml:review"/>
@@ -449,6 +449,7 @@
           </xs:element>
         </xs:choice>
         <xs:element ref="biblatexml:sortyear"/>
+        <xs:group ref="biblatexml:inset"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -1578,6 +1579,23 @@
   <xs:element name="userd" type="xs:string"/>
   <xs:element name="usere" type="xs:string"/>
   <xs:element name="userf" type="xs:string"/>
+  <xs:group name="entryset">
+    <xs:annotation>
+      <xs:documentation>special fields</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="entryset">
+        <xs:complexType mixed="true">
+          <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="inset">
+    <xs:sequence>
+      <xs:element name="entryset" type="xs:string"/>
+    </xs:sequence>
+  </xs:group>
   <xs:element name="crossref" type="xs:string"/>
   <xs:element name="entrysubtype" type="xs:string"/>
   <xs:element name="execute" type="xs:string"/>
@@ -1780,7 +1798,11 @@
   <xs:element name="urlmonth" type="xs:integer"/>
   <xs:element name="urlyear" type="xs:integer"/>
   <!-- DATE FIELDS -->
-  <xs:element name="date" type="xs:date"/>
+  <xs:element name="date">
+    <xs:simpleType>
+      <xs:union memberTypes="xs:date xs:integer"/>
+    </xs:simpleType>
+  </xs:element>
   <xs:element name="urldate" type="xs:date"/>
   <!-- LITERAL LISTS -->
   <xs:attributeGroup name="attlist.lists">
@@ -5663,6 +5685,7 @@
         <xs:element ref="biblatexml:eid"/>
         <xs:element ref="biblatexml:eprint"/>
         <xs:element ref="biblatexml:eprinttype"/>
+        <xs:element ref="biblatexml:version"/>
         <xs:element ref="biblatexml:pages"/>
         <xs:element ref="biblatexml:note"/>
         <xs:element ref="biblatexml:issn"/>
@@ -6187,6 +6210,101 @@
             <xs:element ref="biblatexml:year"/>
             <xs:element ref="biblatexml:crossref"/>
           </xs:choice>
+        </xs:choice>
+        <xs:choice>
+          <xs:choice>
+            <xs:element name="bookauthor">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attribute name="andothers">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                      <xs:enumeration value="true"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="bookauthor">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attribute name="andothers">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                      <xs:enumeration value="true"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="bookauthor">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attribute name="andothers">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                      <xs:enumeration value="true"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attributeGroup ref="biblatexml:uniform"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:choice>
+            <xs:element name="bookauthor">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attribute name="andothers">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                      <xs:enumeration value="true"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="bookauthor">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attribute name="andothers">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                      <xs:enumeration value="true"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attributeGroup ref="biblatexml:uniform"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:element name="bookauthor">
+            <xs:complexType mixed="true">
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+              </xs:sequence>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+              <xs:attributeGroup ref="biblatexml:uniform"/>
+            </xs:complexType>
+          </xs:element>
         </xs:choice>
         <xs:choice>
           <xs:choice>
@@ -7147,6 +7265,129 @@
             </xs:element>
           </xs:choice>
           <xs:element name="maintitleaddon">
+            <xs:complexType mixed="true">
+              <xs:group ref="biblatexml:formattext"/>
+              <xs:attributeGroup ref="biblatexml:translated"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+        <xs:choice>
+          <xs:choice>
+            <xs:element name="booktitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booktitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booktitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:choice>
+            <xs:element name="booktitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booktitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:element name="booktitle">
+            <xs:complexType mixed="true">
+              <xs:group ref="biblatexml:formattext"/>
+              <xs:attributeGroup ref="biblatexml:translated"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+        <xs:choice>
+          <xs:choice>
+            <xs:element name="booktitleaddon">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booktitleaddon">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booktitleaddon">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:choice>
+            <xs:element name="booktitleaddon">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booktitleaddon">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:element name="booktitleaddon">
+            <xs:complexType mixed="true">
+              <xs:group ref="biblatexml:formattext"/>
+              <xs:attributeGroup ref="biblatexml:translated"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+        <xs:choice>
+          <xs:choice>
+            <xs:element name="booksubtitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booksubtitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booksubtitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:choice>
+            <xs:element name="booksubtitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booksubtitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:element name="booksubtitle">
             <xs:complexType mixed="true">
               <xs:group ref="biblatexml:formattext"/>
               <xs:attributeGroup ref="biblatexml:translated"/>
@@ -8374,6 +8615,101 @@
         <xs:element ref="biblatexml:year"/>
         <xs:choice>
           <xs:choice>
+            <xs:element name="bookauthor">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attribute name="andothers">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                      <xs:enumeration value="true"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="bookauthor">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attribute name="andothers">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                      <xs:enumeration value="true"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="bookauthor">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attribute name="andothers">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                      <xs:enumeration value="true"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attributeGroup ref="biblatexml:uniform"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:choice>
+            <xs:element name="bookauthor">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attribute name="andothers">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                      <xs:enumeration value="true"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="bookauthor">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attribute name="andothers">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                      <xs:enumeration value="true"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attributeGroup ref="biblatexml:uniform"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:element name="bookauthor">
+            <xs:complexType mixed="true">
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+              </xs:sequence>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+              <xs:attributeGroup ref="biblatexml:uniform"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+        <xs:choice>
+          <xs:choice>
             <xs:element name="shorteditor">
               <xs:complexType mixed="true">
                 <xs:sequence>
@@ -9331,6 +9667,129 @@
             </xs:element>
           </xs:choice>
           <xs:element name="maintitleaddon">
+            <xs:complexType mixed="true">
+              <xs:group ref="biblatexml:formattext"/>
+              <xs:attributeGroup ref="biblatexml:translated"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+        <xs:choice>
+          <xs:choice>
+            <xs:element name="booktitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booktitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booktitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:choice>
+            <xs:element name="booktitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booktitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:element name="booktitle">
+            <xs:complexType mixed="true">
+              <xs:group ref="biblatexml:formattext"/>
+              <xs:attributeGroup ref="biblatexml:translated"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+        <xs:choice>
+          <xs:choice>
+            <xs:element name="booktitleaddon">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booktitleaddon">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booktitleaddon">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:choice>
+            <xs:element name="booktitleaddon">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booktitleaddon">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:element name="booktitleaddon">
+            <xs:complexType mixed="true">
+              <xs:group ref="biblatexml:formattext"/>
+              <xs:attributeGroup ref="biblatexml:translated"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+        <xs:choice>
+          <xs:choice>
+            <xs:element name="booksubtitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booksubtitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booksubtitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:choice>
+            <xs:element name="booksubtitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="booksubtitle">
+              <xs:complexType mixed="true">
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:element name="booksubtitle">
             <xs:complexType mixed="true">
               <xs:group ref="biblatexml:formattext"/>
               <xs:attributeGroup ref="biblatexml:translated"/>
@@ -16380,7 +16839,11 @@
           </xs:choice>
           <xs:element ref="biblatexml:date"/>
         </xs:choice>
-        <xs:element ref="biblatexml:url"/>
+        <xs:choice>
+          <xs:element ref="biblatexml:url"/>
+          <xs:element ref="biblatexml:eprint"/>
+        </xs:choice>
+        <xs:element ref="biblatexml:eprinttype"/>
         <xs:choice>
           <xs:choice>
             <xs:element name="subtitle">
@@ -20882,6 +21345,37 @@
                 <xs:simpleType>
                   <xs:restriction base="xs:token">
                     <xs:enumeration value="movie"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="BibLaTeXML.set.fields">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="biblatexml:entryset"/>
+      <xs:element ref="biblatexml:crossref"/>
+      <xs:element ref="biblatexml:annotation"/>
+      <xs:element ref="biblatexml:keywords"/>
+      <xs:element ref="biblatexml:remarks"/>
+      <xs:element ref="biblatexml:user"/>
+      <xs:element ref="biblatexml:options"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:group name="set">
+    <xs:sequence>
+      <xs:element name="entry">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:BibLaTeXML.set.fields">
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="entrytype" use="required">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="set"/>
                   </xs:restriction>
                 </xs:simpleType>
               </xs:attribute>

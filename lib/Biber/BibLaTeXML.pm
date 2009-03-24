@@ -28,14 +28,16 @@ sub _parse_biblatexml {
         $db = $parser->parse_file($xml) 
             or croak "Can't parse file $xml" ;
     }
-    # TODO : add option "validate xml" 
-    # if ($self->config('validate')) {
-    #         my $rngschema = XML::LibXML::RelaxNG->new( location => "biblatexml.rng") ;
-    #         my $validation = eval { $rngschema->validate($db) ; } ; 
-    #         unless ($validation) {
-    #             carp "The file $xmlfile does not validate against the biblatexml RelaxNG schema!\n$@"
-    #         } ;
-    # } ;
+
+#    if ($self->config('validate')) {
+#        my $rngschema = XML::LibXML::RelaxNG->new( location => "biblatexml.rng") ;
+#        
+#        my $validation = eval { $rngschema->validate($db) ; } ; 
+#
+#        unless ($validation) {
+#            carp "!!!\nThe file $outfile does not validate against the BibLaTeXML RelaxNG schema\n!!!\n$@"
+#        } 
+#    }
     
     # keep track of citekeys that were not found in this database
     my %citekeysnotfound = () ;

@@ -1,240 +1,46 @@
 #!/usr/bin/perl 
-use strict;
-use warnings;
-no warnings 'utf8';
-use Regexp::Common qw /balanced/;
-use Text::BibTeX;
-use XML::Writer;
-use IO::File;
-use Encode;
-use File::Copy;
-use open IO => ':encoding(utf8)';
-binmode( STDOUT, ':utf8' );
+use strict ;
+use warnings ;
+no warnings 'utf8' ;
+use Carp ;
+use open IO => ':encoding(utf8)' ;
+binmode( STDOUT, ':utf8' ) ;
+use Encode ;
+use IO::File ;
+use File::Copy ;
+use XML::Writer ;
 
-### biblatex fields
+#This should be removed in the official distribution:
+use FindBin ;
+use lib "$FindBin::Bin/../lib" ;
 
-my @namefields = qw/
-	author
-	editor
-	commentator
-	translator
-	redactor
-	bookauthor
-	afterword
-	introduction
-	holder
-	sortname
-	namea
-	nameb
-	namec
-	/;
+use Biber ;
+use Biber::Constants ;
+use Biber::Utils ;
 
-my @listfields =
-  qw/location
-	address
-	publisher
-	institution
-	organization
-	school
-	origlocation
-	language
-	lista
-	listb
-	listc
-	listd
-	liste
-	listf 
-	/;
+use Getopt::Long qw/:config no_ignore_case/ ;
 
-my @titlefields = 
-  qw/title 
-    subtitle
-	titleaddon
-	shorttitle
-	sorttitle
-	indextitle
-	indexsorttitle
-	origtitle
-	issuetitle
-	issuesubtitle
-	maintitle
-	mainsubtitle
-	maintitleaddon
-	booktitle
-	booksubtitle
-	booktitleaddon
-	journal
-	journaltitle
-	journalsubtitle
-	reprinttitle /;
+my $opts = {} ;
+GetOptions(
+    $opts,
+    'help|h|?',
+    'version|v',
+#    'validate|V!', 
+#    'schema|s=s', 
+) ;
 
-my @otherfields = qw/
-	crossref
-	xref
-	date
-	day
-	month
-	year
-	origyear
-	edition
-	chapter
-	volume
-	volumes
-	number
-	pagetotal
-	part
-	shortauthor
-	shorteditor
-	note
-	addendum
-	annotation
-	doi
-	id
-	isan
-	isbn
-	ismn
-	isrn
-	issn
-	iswc
-	lccn
-	url
-	urldate
-	urlday
-	urlmonth
-	urlyear
-	file
-	pdf
-	library
-	abstract
-	keywords
-	hyphenation
-	label
-	options
-	presort
-	shorthand
-	sortkey
-	key
-	sortyear
-	useprefix
-	reprintinfo
-	/;
-# 	pages -> done manually
-# THESE ARE ATTRIBUTES:
-#	howpublished
-#	type
+our $VERSION = '0.0.1' ;
 
-my @cb_topicfields = qw/
-	culture
-	language
-	country
-	person
-	century
-	author
-	works
-	/;
+die usage() if exists $opts->{'help'} ;
+
+die version() if exists $opts->{'version'} ;
 
 my %aliases = ( 
 	'address' => 'location',
 	'school'  => 'institution',
 	'annote'  => 'annotation',
 	'key'     => 'sortkey'
-);
-
-my @entriestosplit = ( @namefields, @listfields); 
-
-my $filename = $ARGV[0];
-
-my $preamble   = "";
-my %bibentries = ();
-
-my $bib = new Text::BibTeX::File $filename
-  || die "Cannot create Text::BibTeX::File object from $filename: $!";
-
-#TODO validate with Text::BibTeX::Structure ?
-
-sub parsename {
-    my $key     = shift;
-    my $namestr = shift;
-    my $last;
-    my $first = undef;
-    my $pre   = undef;
-    my $suf   = undef;
-	
-	my $diacritics = qr/[\x{2bf}\x{2018}]/; # ʿ‘ what else? FIXME
-	my $semiticprefix = qr/\p{Ll}{2}-/; # etc
-
-    if ( $namestr =~ /,.+,/ ) {    # <pre> Lastname, suffix, Firstname
-        ( $pre, $last, $suf, $first ) = $namestr =~
-m/^(\p{Ll}(?:\p{Ll}|\s)+)?\s*(\p{Lu}[^,]+|{[^\\][^,]+}),\s+([^,]+),\s+([^,]+)$/;
-
-        #$last =~ s/^{(.+)}$/$1/g ;
-        #$first =~ s/^{(.+)}$/$1/g ;
-        $pre =~ s/\s+$// if $pre;
-    }
-    elsif ( $namestr =~ /,/ ) {    # pre? Lastname, Firstname
-        ( $pre, $last, $first ) = $namestr =~
-		m/^(\p{Ll}(?:\p{Ll}|\s)+\s+)?($semiticprefix?$diacritics?\p{L}[^,]+|{[^,]+}),\s+([^,]+|{.+})$/;
-		#m/^(\p{Ll}(?:\p{Ll}|\s)+)\s+([^,]+|{[^,]+}),\s+([^,]+|{.+})$/;
-        $pre =~ s/\s+$// if $pre;
-    }
-    elsif ( $namestr =~ /\s/ and $namestr !~ /^{.+}$/ )
-    {                              # Firstname <pre> Lastname
-        ( $first, $pre, $last ) =
-          $namestr =~ /^({.+}|(?:\p{Lu}\p{Ll}+\s*)+)\s+((?:\p{Ll}|\s)+)?(.+)$/;
-
-        #$last =~ s/^{(.+)}$/$1/;
-        $first =~ s/\s+$// if $first;
-
-        #$first =~ s/^{(.+)}$/$1/ if $first;
-        $pre =~ s/\s+$// if $pre;
-    }
-    else {    # Name alone
-        $last = $namestr;
-
-        $last =~ s/^{(.+)}$/$1/;
-    }
-
-        return {
-            lastname   => $last,
-            firstname  => $first,
-            prefix     => $pre,
-            suffix     => $suf
-        }
-} 
-
-my $nr = 0;
-my $previouskey;
-
-while ( my $entry = new Text::BibTeX::Entry $bib) {
-	$nr++;
-	print "Problem with entry no $nr (following entry $previouskey) \n" 
-		unless $entry->fieldlist;
-    next unless $entry->parse_ok;
-    if ( $entry->type eq "preamble" ) {
-        $preamble .= $entry->value;
-    }
-    elsif ( $entry->type ne "string" ) {
-        foreach my $f ( $entry->fieldlist ) {
-			my $fname = $f;
-			if ( $aliases{$f} ) {
-				$fname = $aliases{$f};
-			};
-            $bibentries{ $entry->key }->{$fname} =
-              decode_utf8( $entry->get($f) );
-        }
-        $bibentries{ $entry->key }->{entrytype} = $entry->type;
-		$previouskey = $entry->key;
-    }
-}
-
-my %seenname       = ();
-my %seenuniquename = ();
-my %seenauthoryear = ();
-my @listofshorthands;
-my %crossrefkeys = ();
-my %localoptions = ();
-
-# split list entries
+) ;
 
 my %numericalmonth = (
 	'January' => 1,
@@ -273,217 +79,266 @@ my %numericalmonth = (
 	'oct' => 10,
 	'nov' => 11,
 	'dec' => 12
-	);
+	) ;
 
-foreach ( keys %bibentries ) {
-    foreach my $ets (@entriestosplit) {
-        if ( defined $bibentries{$_}->{$ets} ) {
-            my $tmp = $bibentries{$_}->{$ets};
+my @TITLEFIELDS = 
+    qw/ title 
+    subtitle
+	titleaddon
+	shorttitle
+	sorttitle
+	indextitle
+	indexsorttitle
+	origtitle
+	issuetitle
+	issuesubtitle
+	maintitle
+	mainsubtitle
+	maintitleaddon
+	booktitle
+	booksubtitle
+	booktitleaddon
+	journal
+	journaltitle
+	journalsubtitle
+	reprinttitle /;
 
-            # "and" within { } must be preserved: see biblatex manual §2.3.3
-            #      (this can probably be optimized)
-            foreach my $x ( $tmp =~ m/($RE{balanced}{-parens => '{}'})/g ) {
-                ( my $xr = $x ) =~ s/\s+and\s+/_\x{ff08}_/g;
-                $tmp =~ s/\Q$x/$xr/g;
-            }
-            my @y = split /\s+and\s+/, $tmp;
-            my @z;
-            foreach (@y) {
-                s/_\x{ff08}_/ and /g;
-                push @z, $_;
-            }
-            $bibentries{$_}->{$ets} = [@z];
-        }
-    } ;
-	
-	#Change month names to numbers
-	if ($bibentries{$_}->{month}) {
-		my $monthname = $bibentries{$_}->{month};
-		if (exists $numericalmonth{$monthname}) {
-			$bibentries{$_}->{month} = $numericalmonth{$monthname};
-		}
-	}
+my $biber = Biber->new( {allentries => 1, unicodebbl => 1} ) ;
 
-	# remove publisher for journal articles
-	if ( $bibentries{$_}->{entrytype} eq 'article' and $bibentries{$_}->{publisher} ) {
-		delete $bibentries{$_}->{publisher}
-	}
+my $filename = $ARGV[0] ;
 
-	# remove url if identical to doi
-	if ($bibentries{$_}->{doi} and $bibentries{$_}->{url} 
-			and ($bibentries{$_}->{doi} eq $bibentries{$_}->{url})) {
-		delete $bibentries{$_}->{url}
-	}
+unless ( -f $filename) { 
+    croak "There is no file $filename !\n" ;
+}
 
-	#Fix doi
-	if ($bibentries{$_}->{doi}) {
-		my $doi = $bibentries{$_}->{doi};
-		if ( $doi =~ /^http/ ) {
-			$doi =~ s|http://dx\.doi\.org/||;
-		}
-		$doi =~ s|\\_|_|g;
-		$bibentries{$_}->{doi} = $doi
-	}
+print version() ;
 
-    foreach my $field (@namefields) {
-        next unless $bibentries{$_}->{$field};
-        my @names = @{ $bibentries{$_}->{$field} };
-        my @nameAoH;    # array of hashes
-        foreach my $name (@names) {
-            push @nameAoH, parsename( $_, $name );
-        }
-        $bibentries{$_}->{$field} = [@nameAoH];
-    }
+$biber->parse_bibtex($filename) ;
+
+unlink "$filename.utf8" ;
+
+my %bibentries = $biber->bib ;
+
+my $outfile = $filename ; 
+$outfile =~ s/\.bib$/.xml/ ;
+
+if ( -f $outfile ) {
+	move($outfile, "$outfile.bak") or croak "Can't move existing $outfile to $outfile.bak!: $!" ;
+	warn "Existing file $outfile backuped as $outfile.bak\n" ;
 } ;
 
-# Instantiate an XML::Writer object.  
-my $outfile = $filename; 
-$outfile =~ s/\.bib$//;
-$outfile .= ".xml";
-if ( -f $outfile ) {
-	move($outfile, "$outfile.bak") or die "Can't move existing $outfile to $outfile.bak!: $!";
-	print "Backuped existing $outfile as $outfile.bak\n";
-};
-my $output = new IO::File("> $outfile");
-binmode($output, ':utf8');
-my $writer = XML::Writer->new(OUTPUT => $output, DATA_MODE => 1, DATA_INDENT => 2, UNSAFE=>1);  
+my $output = new IO::File("> $outfile") ;
 
-$writer->xmlDecl("UTF-8");  
-$writer->raw('<?oxygen RNGSchema="file:/home/francois/dev/biber/biblatexml.rnc" type="compact"?>');
+binmode($output, ':utf8') ;
 
-$writer->startTag("bib:entries", 'xmlns:bib'=>'http://ankabut.net/biblatexml');
+my $writer = XML::Writer->new(OUTPUT => $output, DATA_MODE => 1, DATA_INDENT => 2, UNSAFE=>1) ;  
 
-my $count = 0;
+$writer->xmlDecl("UTF-8") ;  
 
-for my $id ( sort keys %bibentries ) {
-	$count++;
-	my $entry = $bibentries{$id};
+$writer->startTag("bib:entries", 'xmlns:bib'=>'http://biblatex-biber.sourceforge.net/biblatexml') ;
+
+my $count = 0 ;
+
+for my $citekey ( sort keys %bibentries ) {
+	$count++ ;
+	my $entry = $bibentries{$citekey} ;
+    my @entryfields = keys %$entry ;
+    my $specialfields = [ @NAMEFIELDS, @LISTFIELDS, @TITLEFIELDS, 'entrytype', 'howpublished', 'type', 'datatype' ] ;
+    my @OTHERFIELDS = array_minus( \@entryfields, $specialfields ) ;
+
 	if ($entry->{howpublished} and $entry->{type}) {
 		$writer->startTag("bib:entry", 
-			'id' => $id, 
+			'id' => $citekey, 
 			'entrytype' => $entry->{entrytype}, 
 			'type' => $entry->{type},
-			'howpublished' => $entry->{howpublished}); 
+			'howpublished' => $entry->{howpublished}) ; 
 	}
 	elsif ( $entry->{type} ) { 
 		$writer->startTag('bib:entry',
-			'id' => $id, 
+			'id' => $citekey, 
 			'entrytype' => $entry->{entrytype}, 
-			'type' => $entry->{type}); 
+			'type' => $entry->{type}) ; 
 	}
 	elsif ( $entry->{howpublished} ) { 
 		$writer->startTag('bib:entry',
-			'id' => $id, 
+			'id' => $citekey, 
 			'entrytype' => $entry->{entrytype}, 
-			'howpublished' => $entry->{howpublished}); 
+			'howpublished' => $entry->{howpublished}) ; 
 	} else {
 		$writer->startTag('bib:entry',
-			'id' => $id, 
-			'entrytype' => $entry->{entrytype}); 
-	 };
+			'id' => $citekey, 
+			'entrytype' => $entry->{entrytype}) ; 
+    } ;
 	
 
-	foreach my $field (@namefields) {
+	foreach my $field (@NAMEFIELDS) {
 		if ($entry->{$field}) {
-			my @nf = @{$entry->{$field}};
+			my @nf = @{$entry->{$field}} ;
 			if ( @nf and $nf[-1]->{"lastname"} and $nf[-1]->{"lastname"} eq "others" ) {
-				$writer->startTag("bib:$field", "andothers" => "true");
-				pop @nf;
+				$writer->startTag("bib:$field", "andothers" => "true") ;
+				pop @nf ;
 			}
 			else {
-			$writer->startTag("bib:$field");
-			};
+			$writer->startTag("bib:$field") ;
+			} ;
 			for my $i (0..$#nf) {
-				$writer->startTag("bib:person"); # TODO add attribute gender if exists
+				$writer->startTag("bib:person") ; # TODO add attribute gender if exists
 				# if there is no firstname, we take the lastname as name string
 				if (! $nf[$i]->{"firstname"}) {
-					$writer->characters($nf[$i]->{"lastname"});
+					$writer->characters($nf[$i]->{"lastname"}) ;
 				} else {
-					$writer->dataElement("bib:first", $nf[$i]->{"firstname"});
-					$writer->dataElement("bib:prefix", $nf[$i]->{"prefix"}) if $nf[$i]->{"prefix"};
-					$writer->dataElement("bib:last", $nf[$i]->{"lastname"});
-					$writer->dataElement("bib:suffix", $nf[$i]->{"suffix"}) if $nf[$i]->{"suffix"};
-				};
-				$writer->endTag(); # person
-			};
-			$writer->endTag(); # $field
+					$writer->dataElement("bib:first", $nf[$i]->{"firstname"}) ;
+					$writer->dataElement("bib:prefix", $nf[$i]->{"prefix"}) if $nf[$i]->{"prefix"} ;
+					$writer->dataElement("bib:last", $nf[$i]->{"lastname"}) ;
+					$writer->dataElement("bib:suffix", $nf[$i]->{"suffix"}) if $nf[$i]->{"suffix"} ;
+				} ;
+				$writer->endTag() ; # person
+			} ;
+			$writer->endTag() ; # $field
 		}
-	}; 
-	foreach my $field (@titlefields) {
+	} ; 
+	foreach my $field (@TITLEFIELDS) {
 		if ($entry->{$field}) {
-				$writer->startTag("bib:$field");
-			$writer->characters($entry->{$field});
-			$writer->endTag(); # $field
+				$writer->startTag("bib:$field") ;
+			$writer->characters($entry->{$field}) ;
+			$writer->endTag() ; # $field
 		}
-	};
+	} ;
 	
-	foreach my $field (@listfields) {
+	foreach my $field (@LISTFIELDS) {
 		if ($entry->{$field}) {
-			my @lf = @{$entry->{$field}};
-			if ( $#lf > 0 ) {
+			my @lf = @{$entry->{$field}} ;
+            
+            $field = $aliases{$field} if $aliases{$field} ;
+			
+            if ( $#lf > 0 ) {
 				if ($lf[-1] eq "others" ) {
-					$writer->startTag("bib:$field", "andothers"=>"true");
-					pop @lf;
+					$writer->startTag("bib:$field", "andothers"=>"true") ;
+					pop @lf ;
 				} 
 				else {
-					$writer->startTag("bib:$field");
-				};
+					$writer->startTag("bib:$field") ;
+				} ;
 				for my $i (0..$#lf) {
-					$writer->startTag("bib:item");
-					$writer->characters($lf[$i]);
-					$writer->endTag(); #item
-				};
-				$writer->endTag(); #field
+					$writer->startTag("bib:item") ;
+					$writer->characters($lf[$i]) ;
+					$writer->endTag() ; #item
+				} ;
+				$writer->endTag() ; #field
 			}
 			else {
-				$writer->startTag("bib:$field");
-				$writer->characters($entry->{$field}->[0]);
-				$writer->endTag(); #field
+				$writer->startTag("bib:$field") ;
+				$writer->characters($entry->{$field}->[0]) ;
+				$writer->endTag() ; #field
 			}
 		}
-	};
+	} ;
 
-	foreach my $field (@otherfields) {
-		if ($entry->{$field} and ($field ne 'pages')) {
-			$writer->dataElement("bib:$field", $entry->{$field});
-		}
-		# we do it separately to get range and to fix pages -> pagetotal
-		elsif ($field eq 'pages' and $entry->{pages}) {
+	foreach my $field (@OTHERFIELDS) {
+        if ( $field eq 'month' ) {
+            
+            my $monthnumber = $numericalmonth{$entry->{month}} || $entry->{month};
+
+			$writer->dataElement("bib:month", $monthnumber) ;
+        }
+		elsif ($field eq 'pages') {
 			if ($entry->{entrytype} =~ /^(book|collection|proceedings|report|conference|unpublished|thesis|misc)/) {
 				$writer->dataElement('bib:pagetotal', $entry->{pages})
 			} 
 			# 1-3, 7 => <pages>1-3, 7</pages>
-			elsif ( $entry->{pages} =~ /[,;]/ ) { 
-				$writer->startTag('bib:pages');
-				$writer->dataElement('bib:list', $entry->{pages});
-				$writer->endTag(); #pages
+			elsif ( $entry->{pages} =~ /[, ;]/ ) { 
+				$writer->startTag('bib:pages') ;
+				$writer->dataElement('bib:list', $entry->{pages}) ;
+				$writer->endTag() ; #pages
 			}
 			elsif ( $entry->{pages} =~ /(-|\x{2013})/ ) {
-				my ($startpage, $endpage) = $entry->{pages} =~ /([^\s\-]+)[\s\-\x{2013}]+([^\s\-]+)/;
-				$writer->startTag('bib:pages');
-				$writer->dataElement('bib:start', $startpage);
-				$writer->dataElement('bib:end', $endpage);
-				$writer->endTag(); #pages
+				my ($startpage, $endpage) = $entry->{pages} =~ /([^\s\-]+)[\s\-\x{2013}]+([^\s\-]+)/ ;
+				$writer->startTag('bib:pages') ;
+				$writer->dataElement('bib:start', $startpage) ;
+				$writer->dataElement('bib:end', $endpage) ;
+				$writer->endTag() ; #pages
 			}
 			else {
-				$writer->dataElement('bib:pages', $entry->{pages});
+				$writer->dataElement('bib:pages', $entry->{pages}) ;
 			}
 		}
+        else {
+
+            my $afield = $field;
+            
+            if ( $aliases{$field} ) {
+                $afield = $aliases{$field}
+            }
+			
+			$writer->dataElement("bib:$afield", $entry->{$field}) ;
+		}
+		# we do it separately to get range and to fix pages -> pagetotal
 	}
 
+    # TODO add more like this, e.g. Zotero, BibSonomy, etc.
 	if ($entry->{'citeulike-article-id'}) {
-		my $id = $entry->{'citeulike-article-id'};
-		$writer->startTag('bib:library', "user"=>'FC');
-		$writer->dataElement('bib:item', '', 'location'=>"citeulike", 'ref'=>$id);
-		$writer->endTag(); #library
+		my $id = $entry->{'citeulike-article-id'} ;
+		$writer->startTag('bib:user', "id"=>$ENV{USER}) ;
+        $writer->startTag('bib:library') ;
+		$writer->dataElement('bib:item', '', 'location'=>"citeulike", 'ref'=>$id) ;
+		$writer->endTag() ; #library
+		$writer->endTag() ; #user
 	}
 	
-	$writer->endTag(); #entry
-};
+	$writer->endTag() ; #entry
+} ;
 
-$writer->endTag(); #entries
+$writer->endTag() ; #entries
 
-print "Processed $count entries\n";
+print "Converted $count entries\n" ;
+print "Output written to $outfile\n\n" ;
+
+close $output ;
+
+#if ( $opts->{validate} ) {
+#
+#    require XML::LibXML ;
+#    
+#    my $xmldoc = XML::LibXML->new->parse_file($outfile) ;
+#    
+#    my $schema = "biblatexml.rng" ;
+#
+#    if ( $opts->{schema} ) { 
+#        $schema = $opts->{schema}
+#    } ;
+#
+#    my $rngschema = XML::LibXML::RelaxNG->new( location => $schema ) ;
+#    
+#    my $validation = eval { $rngschema->validate($xmldoc) ; } ; 
+#    
+#    unless ($validation) {
+#        carp "!!!\nThe file $outfile does not validate against the BibLaTeXML RelaxNG schema\n!!!\n$@"
+#    } 
+#} 
+
+sub version {
+    my $me = "bib2biblatexml" ;    #basename($0);
+
+    qq[
+$me Version: $VERSION
+    Warning: This is still alpha quality. 
+    You are advised to wait for a stable release before definitively 
+    switching to the BibLaTeXML format!
+      \n]
+}
+
+sub usage {
+    my $me = "bib2biblatexml" ;    #basename($0);
+
+    qq[
+Usage:  $me <file>.bib
+     Creates <file>.xml
+
+Options:
+  --help|-h              Show this help message.
+  --version|-v           Display version number.
+     \n]
+}
 
 =pod
 
@@ -491,10 +346,16 @@ print "Processed $count entries\n";
 
 C<bib2biblatexml> - converts BibTeX files to BibLaTeXML
 
+=head1 VERSION
+
+Version 0.0.1
+
+NOTE: This is still alpha quality. Use at your own risk ;)
+
 =head1 SYNOPSIS
 
 biblatexml file.bib 
-    (outputs file.bib.xml)
+    (outputs file.xml)
 
 =head1 DESCRIPTION
 
@@ -513,7 +374,7 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 Copyright 2009 François Charette, all rights reserved.
 
-This program is free software; you can redistribute it and/or modify it
+This program is free software ; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
 =cut

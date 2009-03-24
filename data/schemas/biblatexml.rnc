@@ -1,4 +1,4 @@
-default namespace = "http://ankabut.net/biblatexml"
+default namespace = "http://biblatex-biber.sourceforge.net/biblatexml"
 namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
 datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
 
@@ -22,7 +22,7 @@ BibLaTeXML.standard.entries =
   | report
   | thesis
   | unpublished
-#TODO | set
+  | set
     
 BibLaTeXML.additional.entries = 
 review | 
@@ -69,7 +69,8 @@ BibLaTeXML.common.fields =
   (sortkey | key)? &
   sortname? &
   sorttitle? &
-  sortyear? 
+  sortyear? &
+  inset?
 
 
 BibLaTeXML.additional.fields =
@@ -278,6 +279,8 @@ usere = element usere { text }
 userf = element userf { text }
 
 ## special fields
+entryset = element entryset { item+ | text }
+inset = element entryset { text } ## Can it refer to more than one set???
 crossref = element crossref { text }
 entrysubtype = element entrysubtype { text }
 execute = element execute { text }
@@ -332,7 +335,7 @@ urlday = element urlday { xsd:integer }
 urlmonth = element urlmonth { xsd:integer }
 urlyear = element urlyear { xsd:integer }
 # DATE FIELDS
-date = element date { xsd:date }
+date = element date { xsd:date | xsd:integer }
 urldate = element urldate { xsd:date }
 # LITERAL LISTS
 attlist.lists = attribute andothers { "true" }
@@ -578,6 +581,7 @@ BibLaTeXML.article.standard.fields =
   eid? &
   eprint? &
   eprinttype? &
+  version? &
   pages? &
   note? &
   issn? &
@@ -611,7 +615,8 @@ BibLaTeXML.book.standard.fields =
   author? & #changed
   editor? & #changed
   ((title & year) | 
-   (title? & year? & crossref)) & #NEW: a book can inherit its elements from another book (e.g. individual volumes with diff titles)
+   (title? & year? & crossref)) & #a book can inherit its elements from another book (e.g. individual volumes with diff titles)
+  bookauthor? & #added
   shorteditor? &
   translator? &
   redactor? &
@@ -625,6 +630,9 @@ BibLaTeXML.book.standard.fields =
   maintitle? &
   mainsubtitle? &
   maintitleaddon? &
+  booktitle? & #added
+  booktitleaddon? & #added
+  booksubtitle? & #added
   volume? &
   part? &
   edition? &
@@ -690,6 +698,7 @@ BibLaTeXML.collection.standard.fields =
   author? & #changed
   title &
   year &
+  bookauthor? & #added
   shorteditor? &
   translator? &
   redactor? &
@@ -703,6 +712,9 @@ BibLaTeXML.collection.standard.fields =
   maintitle? &
   mainsubtitle? &
   maintitleaddon? &
+  booktitle? & #added
+  booktitleaddon? & #added
+  booksubtitle? & #added
   volume? &
   part? &
   edition? &
@@ -891,7 +903,7 @@ inproceedings = element entry { attlist.inproceedings, BibLaTeXML.inproceedings.
 attlist.inproceedings = attribute id {text}, attribute entrytype {"inproceedings"}
 #########################################################
 BibLaTeXML.manual.standard.fields =
-  (author|editor) &
+  (author|editor)? &
   title &
   year &
   subtitle? &
@@ -953,10 +965,11 @@ misc = element entry { attlist.misc, BibLaTeXML.misc.fields }
 attlist.misc = attribute id {text}, attribute entrytype {"misc"}, attribute type { text }?, attribute howpublished {text}?
 #########################################################
 BibLaTeXML.online.standard.fields =
-  (author|editor) &
+  (author|editor)? &
   title &
   ((day? & month? & year)|date) &
-  url & 
+  (url|eprint) & 
+  eprinttype? &
   subtitle? &
   titleaddon? &
   version? &
@@ -1202,3 +1215,14 @@ attlist.preprint = attribute id {text}, attribute entrytype {"preprint"}
 software = element entry { attribute id {text}, attribute entrytype {"software"}, BibLaTeXML.misc.fields }
 #########################################################
 movie = element entry { attribute id {text}, attribute entrytype {"movie"}, BibLaTeXML.misc.fields }
+
+BibLaTeXML.set.fields = 
+  entryset &
+  crossref? & #actually this is not needed as it is the first element of the entryset
+  annotation? &
+  keywords? & 
+  remarks? &
+  user* &
+  options? 
+
+set = element entry { attribute id {text}, attribute entrytype {"set"}, BibLaTeXML.set.fields }

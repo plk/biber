@@ -23,7 +23,7 @@ GetOptions(
     'bibdata|d=s',
     'outfile|O=s',
     'allentries|a!',
-    'validate|V!', 
+#    'validate|V!', 
     'biberdebug|D!',
     'help|h|?',
     'version|v'
