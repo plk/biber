@@ -1,10 +1,12 @@
 use strict;
 use warnings;
-
-use Test::More tests => 14;
 use utf8;
+no warnings 'utf8' ;
+
+use Test::More tests => 19;
 
 use Biber::Utils;
+
 is( normalize_string('"a, b–c: d" '),  'a bc d ', 'normalize_string' );
 
 is( cleanstring('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
@@ -28,7 +30,7 @@ is( latexescape('{5}: Joe & Sons: $3.01 + 5% of some_function()'),
                '\{5\}: Joe \& Sons: \$3.01 + 5\% of some\_function()',
                'latexescape'); 
 
-is( terseinitials('Goldman-Sachs, Antonio Ludwig '),  'GSAL', 'terseinitials');
+is( terseinitials(' Goldman-Sachs,  Antonio Ludwig '),  'GSAL', 'terseinitials');
 
 my @arrayA = qw/ a b c d e f c /;
 my @arrayB = qw/ c e /;
@@ -40,7 +42,7 @@ is_deeply(\@AminusB, \@AminusBexpected, 'array_minus') ;
 is(remove_outer('{Some string}'), 'Some string', 'remove_outer') ;
 
 my $nameA =  
-    { firstname => 'John',  
+    { firstname => 'John',
       lastname => 'Doe', 
       prefix => undef, 
       suffix => undef, 
@@ -89,4 +91,20 @@ my $nameC =
 
 is_deeply(parsename('{Robert and Sons, Inc.}'), $nameC, 'parsename 3') ;
 
+my $nameD = 
+   {  firstname => 'ʿAbdallāh', 
+       lastname => 'al-Ṣāliḥ', 
+         prefix => undef, 
+         suffix => undef, 
+     namestring => 'Ṣāliḥ, Abdallāh',
+ nameinitstring => 'Ṣāliḥ_A' } ;
 
+is_deeply(parsename('al-Ṣāliḥ, ʿAbdallāh'), $nameD, 'parsename 4') ;
+
+is( getinitials('{\"O}zt{\"u}rk'), '{\"O}.', 'getinitials 1' ) ;
+is( getinitials('{\c{C}}ok {\OE}illet'), '{\c{C}}.~{\OE}.', 'getinitials 2' ) ;
+is( getinitials('Ḥusayn ʿĪsā'), 'Ḥ.~Ī.', 'getinitials 3' ) ;
+
+is( tersify('Ä.~{\c{C}}.~{\c S}.'), 'Ä{\c{C}}{\c S}', 'tersify' ) ;
+
+# vim: set tabstop=4 shiftwidth=4: 
