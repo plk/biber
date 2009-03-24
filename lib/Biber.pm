@@ -35,7 +35,7 @@ our $VERSION = '0.4' ;
 
 #TODO read config file (e.g. $HOME/.biber.conf to change default options)
 
-#FIXME better put the followings in the Biber object ?
+#FIXME better put the following hashes in the Biber object ?
 our %seenkeys    = () ;
 our %crossrefkeys = () ;
 our %entrieswithcrossref = () ;

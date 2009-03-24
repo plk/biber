@@ -272,40 +272,33 @@ sub getvolumestring {
     }
 }
 
-=head2 getpartinitials
-
-=cut
-
-sub getpartinitials {
-    my ($self, $part) = @_ ;
-    $part = terseinitials_withdash($part) ; 
-    unless ( $self->config('terseinits') ) {
-        $part =~ s/(\p{L})/$1\.~/g ;
-        $part =~ s/~-/-/g ; 
-        $part =~ s/~$// ;
-    }
-    return $part ; 
-}
-
 #TODO this could be done earlier as a method and stored in the object
 sub _print_name {
 	my ($self, $au) = @_ ;
     my %nh  = %{$au} ;
     my $ln  = $nh{lastname} ;
-    my $lni = $self->getpartinitials($ln) ;
+    my $lni = getinitials($ln) ;
     my $fn  = "" ;
     $fn = $nh{firstname} if $nh{firstname} ;
-    $fn =~ s/\s\+(\p{Lu}\.)/~$1/g; # First M. -> First~M.
     my $fni = "" ;
-    $fni = $self->getpartinitials($fn) if $nh{firstname} ;
+    $fni = getinitials($fn) if $nh{firstname} ;
     my $pre = "" ;
     $pre = $nh{prefix} if $nh{prefix} ;
     my $prei = "" ;
-    $prei = $self->getpartinitials($pre) if $nh{prefix} ;
+    $prei = getinitials($pre) if $nh{prefix} ;
     my $suf = "" ;
     $suf = $nh{suffix} if $nh{suffix} ;
     my $sufi = "" ;
-    $sufi = $self->getpartinitials($suf) if $nh{suffix} ;
+    $sufi = getinitials($suf) if $nh{suffix} ;
+    #FIXME The following is done by biblatex.bst, but shouldn't it be optional? 
+    $fn =~ s/(\p{Lu}\.)\s+/$1~/g; # J. Frank -> J.~Frank
+    $fn =~ s/\s+(\p{Lu}\.)/~$1/g; # Bernard H. -> Bernard~H.
+    if ( $self->config('terseinits') ) {
+        $lni = tersify($lni) ;
+        $fni = tersify($fni) ;
+        $prei = tersify($prei) ;
+        $sufi = tersify($sufi) ;
+    } ;
     return "    {{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n" ;
 }
 

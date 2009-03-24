@@ -24,9 +24,23 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ parsename terseinitials terseinitials_withdash makenameid
-    makenameinitid cleanstring normalize_string latexescape array_minus
-    getlabel remove_outer } ;
+our @EXPORT = qw{ parsename terseinitials makenameid makenameinitid cleanstring
+    normalize_string latexescape array_minus getlabel remove_outer getinitials
+    tersify } ;
+
+
+######
+# These are used in the functions parsename and getinitials :
+# 
+# TODO move to Biber::Constants ?
+#
+#  Arabic last names could begin with NONSORTDIACRITICS like ʿ or ‘ (e.g. ʿAlī)
+my $NONSORTDIACRITICS = qr/[\x{2bf}\x{2018}]/; # more? 
+
+#  Arabic names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
+my $NONSORTPREFIX = qr/\p{Ll}{2}-/; # etc
+#
+######
 
 =head1 FUNCTIONS
 
@@ -64,11 +78,6 @@ sub parsename {
     my $suffix ;
     my $nameinitstr ;
     
-    #  Arabic last names could begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
-    my $diacritics = qr/[\x{2bf}\x{2018}]/; # more? 
-    #  Arabic names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
-    my $articleprefix = qr/\p{Ll}{2}-/; # etc
-
     if ( $namestr =~ /^{.+}$/ ) 
     { 
         $namestr = remove_outer($namestr) ;
@@ -109,13 +118,14 @@ sub parsename {
                 \s+
                )?
                (
-                $articleprefix?$diacritics?
+                $NONSORTPREFIX?$NONSORTDIACRITICS?
                 [^,]+
                 |
                 {[^,]+}
                ),
                \s+
                (
+                $NONSORTPREFIX?$NONSORTDIACRITICS?
                 [^,]+
                 |
                 {.+}
@@ -158,11 +168,16 @@ sub parsename {
     }
 
     #TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g ;
-    ## remove punctuation, symbols, separator and control ???
+    ## remove punctuation, symbols, separator and control 
+
+    $namestr =~ s/\b$NONSORTPREFIX//;
+    $namestr =~ s/\b$NONSORTDIACRITICS//;
 
     $nameinitstr = "" ;
     $nameinitstr .= substr( $prefix, 0, 1 ) . " " if ( $usepre and $prefix ) ;
     $nameinitstr .= $lastname ;
+    $nameinitstr =~ s/\b$NONSORTPREFIX//;
+    $nameinitstr =~ s/\b$NONSORTDIACRITICS//;
     $nameinitstr .= " " . terseinitials($suffix) 
         if $suffix ;
     $nameinitstr .= " " . terseinitials($firstname) 
@@ -269,20 +284,6 @@ terseinitials($str) returns the contatenated initials of all the words in $str.
 
 sub terseinitials {
     my $str = shift ;
-    $str = terseinitials_withdash($str) ;
-    $str =~ s/[\s\p{Pd}]+//g ;
-    return $str ;
-}
-
-=head2 terseinitials_withdash
-
-Same as terseinitials but does not remove dashes:
-    terseinitials('Louis-Pierre de la Ramée') => 'L-PdlR'
-
-=cut
-
-sub terseinitials_withdash {
-    my $str = shift ;
 	$str =~ s/\\[\p{L}]+\s*//g ;  # remove tex macros
     $str =~ s/^{(\p{L}).+}$/$1/g ;    # {Aaaa Bbbbb Ccccc} -> A
     $str =~ s/{\s+(\S+)\s+}//g ;  # Aaaaa{ de }Bbbb -> AaaaaBbbbb
@@ -291,6 +292,7 @@ sub terseinitials_withdash {
     # get rid of Punctuation (except DashPunctuation), Symbol and Other characters
     $str =~ s/[\x{2bf}\x{2018}\p{Lm}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g ; 
     $str =~ s/\B\p{L}//g ;
+    $str =~ s/[\s\p{Pd}]+//g ;
     return $str ;
 }
 
@@ -352,6 +354,55 @@ sub getlabel {
 sub remove_outer {
     my $str = shift ;
     $str =~ s/^{(.+)}$/$1/ ;
+    return $str
+}
+
+=head2 getinitials
+    
+    Returns the initials of a name, preserving LaTeX code.
+
+=cut
+
+#FIXME FIXME
+
+sub getinitials {
+    my $str = shift;
+    my @words = split /\s+/, $str ;
+    $str = join ".~", ( map { _firstatom($_) } @words ) ;
+    return $str . "."
+}
+
+sub _firstatom {
+    my $str = shift;
+    $str =~ s/^$NONSORTPREFIX// ;
+    $str =~ s/^$NONSORTDIACRITICS// ;
+    if ($str =~ /^({
+                   \\[^\p{Ps}\p{L}] [\p{L}]+
+                   }
+                   | {?
+                    \\[^\p{Ps}\{\}]+
+                     { [\p{L}] }
+                     }?
+                   | { \\\p{L}+ }
+                   )/x ) {
+        return $1
+    } else {
+        return substr($str, 0, 1)
+    }
+}
+
+=head2 tersify
+
+    Removes '.' and '~' from initials.
+
+    tersify('A.~B.~C.') -> 'ABC'
+
+=cut
+
+sub tersify {
+    my $str = shift ;
+    $str =~ s/~//g ;
+    $str =~ s/\.//g ;
     return $str
 }
 

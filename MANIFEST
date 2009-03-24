@@ -19,5 +19,7 @@ data/schemas/biblatexml.rng
 data/schemas/biblatexml.xsd
 t/00-load.t
 t/01-utils.t
+t/02-biber.t
+t/03-biber2.t
 t/pod-coverage.t
 t/pod.t
