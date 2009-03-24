@@ -5,8 +5,8 @@ no warnings 'utf8' ;
 use Carp ;
 
 #This should be removed in the official distribution:
-use FindBin ;
-use lib "$FindBin::Bin/../lib" ;
+#use FindBin ;
+#use lib "$FindBin::Bin/../lib" ;
 
 use Biber ;
 #---------------------------------------------------
