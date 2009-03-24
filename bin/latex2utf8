@@ -1,13 +1,19 @@
 #!/usr/bin/perl 
-use lib '/home/francois/dev/biblatex-biber/trunk/lib/';
 use strict;
 use warnings;
-#no warnings 'utf8';
+no warnings 'utf8';
+use Carp;
 use LaTeX::Decode;
 use File::Slurp;
 use Encode;
 binmode(STDOUT, ':utf8');
-my $text = read_file($ARGV[0]);
+my $infile = $ARGV[0] or die usage();
+my $text = read_file($ARGV[0]) or croak "Cannot read input file";
 $text = decode_utf8($text);
 print latex_decode($text);
 
+sub usage {
+    qq[
+Usage: latex2utf8 infile > outfile
+     \n] 
+ }
