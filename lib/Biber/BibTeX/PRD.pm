@@ -92,7 +92,7 @@ sub _bibtex_prd_parse {
 
     my $btparser = Parse::RecDescent->new($grammar) or croak "Bad grammar: $!" ;
     
-    my $bf       = $btparser->BibFile(<$bib>)       or croak "bad bib: $!" ;
+    my $bf       = $btparser->BibFile(<$bib>)       or croak "Can't parse file $filename : Are you certain it is a BibTeX file?\n\t$!" ;
     
     close $bib ;
 

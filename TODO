@@ -9,29 +9,35 @@ in decreasing order of priority:
    * fix the mess with uniquename / DONE
    * make sure special fields are correctly generated / DONE ?
    * improve documentation of source code :)
+   * FIX the handling of @comments constructs in bib files
    ----- version 0.5 ----- FIRST OFFICIAL RELEASE?
    * separate data parsing in individual modules / ALMOST DONE
+   * make biber and dependencies available as a par archive for maximal portability ?
    * read config file (e.g. $HOME/.biber.conf) to change default settings
    * allow to ignore certain fields through conf settings
    * user-setting of diacritics to ignore in sorting (‘ and ʿ are currently built-in)
-   * add validation mechanism for options and config (untaint data!)
+   * same thing with prefixes (e.g. al- el- etc.)
    ----- version 0.6 -----
    * use Log::Log4Perl 
+   * add validation mechanism for options and config (untaint data!)
    * add option --inputencoding <latin1> etc (only utf8 supported as of now)
    * validate bibtex data with Text::Bibtex::Structure (optional)
-   * validate XML data against RelaxNG schema (optional)
+   * validate XML data against RelaxNG schema (optional) 
+        // DROPPED: libxml does not validate it correctly
    ----- version 0.7 -----
    * plugin facility
-   * implement "debug output" when sorting=99
+   * implement "debug output" when sorting=99 ?
+   * provide good documentation of the BibLaTeXML schema 
    ----- version 0.8 -----
-   * refactor OO structure: add Biber::Conf and Biber::Entry classes
-   * make biber and dependencies available as a par archive for maximal portability ?
+   * refactor OO structure: add Biber::Conf and Biber::Entry classes ?
    ----- version 0.9 -----
    * add keys for selecting script, language, translation, transliteration
-   * prototype of bbx style for handling multiscript bibliographies (requires xelatex)
+   * prototype of bbx style for handling multiscript bibliographies (will probably 
+        require xelatex+polyglossia)
    * fix crossref handling of reviews
    * "<nosort>The</nosort> Title …" automatically generates "sorttitle = Title …, The"
    * "D[onald] E. Knuth" prints as D. E. Knuth but is sorted with Donald E. Knuth ??
+   * PerlTeX integration ?
    * ... 
    ----- version 1.0 -----
 

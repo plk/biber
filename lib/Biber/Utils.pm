@@ -363,8 +363,6 @@ sub remove_outer {
 
 =cut
 
-#FIXME FIXME
-
 sub getinitials {
     my $str = shift;
     my @words = split /\s+/, $str ;

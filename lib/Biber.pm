@@ -60,12 +60,14 @@ our %is_name_entry = map { $_ => 1 } @NAMEFIELDS ;
 
 sub new {
     my ($class, $opts) = @_ ;
-    my %params = %$opts ;
     my $self = bless {}, $class ;
     $self->_initopts() ;
-    foreach (keys %params) {
-        $self->{config}->{$_} = $params{$_} ;
-    } ;
+    if ($opts) {
+        my %params = %$opts;
+        foreach (keys %params) {
+            $self->{config}->{$_} = $params{$_} ;
+        }
+    };
 
     return $self
 }
@@ -353,7 +355,11 @@ sub parse_bibtex {
         $self->{config}->{unicodebib} = 1 ;
     }
 
-    if ( !$self->config('useprd') ) {
+    unless ( eval "require Text::BibTeX; 1" ) {
+        $self->{config}->{useprd} = 1
+    }
+
+    unless ( $self->config('useprd') ) {
         
         require Biber::BibTeX ;
         push @ISA, 'Biber::BibTeX' ;
