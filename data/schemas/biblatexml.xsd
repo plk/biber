@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://biblatex-biber.sourceforge.net/biblatexml" xmlns:biblatexml="http://biblatex-biber.sourceforge.net/biblatexml">
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+  <xs:element name="entries">
+    <xs:complexType>
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:BibLaTeXML.entries"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="BibLaTeXML.entries">
+    <xs:choice>
+      <xs:group ref="biblatexml:BibLaTeXML.standard.entries"/>
+      <xs:group ref="biblatexml:BibLaTeXML.additional.entries"/>
+    </xs:choice>
+  </xs:group>
   <xs:group name="BibLaTeXML.standard.entries">
     <xs:choice>
       <xs:group ref="biblatexml:article"/>
@@ -37,17 +49,6 @@
     TODO Unsupported types: artwork, audio, image, jurisdiction, legislation, legal, movie, music, performance, reference, inreference, review, software, standard, video
     TODO add manuscript and archivalrecord ?
   -->
-  <xs:group name="BibLaTeXML.entries">
-    <xs:choice>
-      <xs:group ref="biblatexml:BibLaTeXML.standard.entries"/>
-      <xs:group ref="biblatexml:BibLaTeXML.additional.entries"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="entries">
-    <xs:complexType>
-      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:BibLaTeXML.entries"/>
-    </xs:complexType>
-  </xs:element>
   <xs:group name="BibLaTeXML.common.fields">
     <xs:annotation>
       <xs:documentation/>
@@ -490,6 +491,7 @@
     </xs:attribute>
   </xs:attributeGroup>
   <xs:attributeGroup name="translated">
+    <xs:attribute ref="xml:lang"/>
     <xs:attribute name="mode" use="required">
       <xs:simpleType>
         <xs:restriction base="xs:token">
@@ -536,7 +538,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="booksubtitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="booksubtitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -550,14 +552,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="booksubtitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="booksubtitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="booksubtitle">
+      <xs:element maxOccurs="unbounded" name="booksubtitle">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -579,7 +581,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="booktitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="booktitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -593,14 +595,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="booktitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="booktitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="booktitle">
+      <xs:element maxOccurs="unbounded" name="booktitle">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -622,7 +624,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="booktitleaddon">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="booktitleaddon">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -636,14 +638,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="booktitleaddon">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="booktitleaddon">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="booktitleaddon">
+      <xs:element maxOccurs="unbounded" name="booktitleaddon">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -683,7 +685,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="issue">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="issue">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -697,14 +699,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="issue">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="issue">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="issue">
+      <xs:element maxOccurs="unbounded" name="issue">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -726,7 +728,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="issuetitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="issuetitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -740,14 +742,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="issuetitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="issuetitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="issuetitle">
+      <xs:element maxOccurs="unbounded" name="issuetitle">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -769,7 +771,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="issuetitleaddon">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="issuetitleaddon">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -783,14 +785,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="issuetitleaddon">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="issuetitleaddon">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="issuetitleaddon">
+      <xs:element maxOccurs="unbounded" name="issuetitleaddon">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -812,7 +814,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="issuesubtitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="issuesubtitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -826,14 +828,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="issuesubtitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="issuesubtitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="issuesubtitle">
+      <xs:element maxOccurs="unbounded" name="issuesubtitle">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -844,40 +846,45 @@
   <xs:element name="iswc" type="xs:string"/>
   <xs:group name="journal">
     <xs:choice>
-      <xs:sequence>
-        <xs:element name="journal">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-          </xs:complexType>
-        </xs:element>
-        <xs:element minOccurs="0" name="journal">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
-          </xs:complexType>
-        </xs:element>
-        <xs:element minOccurs="0" name="journal">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:translated"/>
-          </xs:complexType>
-        </xs:element>
-      </xs:sequence>
-      <xs:sequence>
-        <xs:element name="journal">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
-          </xs:complexType>
-        </xs:element>
-        <xs:element minOccurs="0" name="journal">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:translated"/>
-          </xs:complexType>
-        </xs:element>
-      </xs:sequence>
       <xs:element name="journal">
+        <xs:complexType>
+          <xs:attribute name="id" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:sequence>
+        <xs:element name="journal">
+          <xs:complexType mixed="true">
+            <xs:group ref="biblatexml:formattext"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" name="journal">
+          <xs:complexType mixed="true">
+            <xs:group ref="biblatexml:formattext"/>
+            <xs:attributeGroup ref="biblatexml:romanized"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="journal">
+          <xs:complexType mixed="true">
+            <xs:group ref="biblatexml:formattext"/>
+            <xs:attributeGroup ref="biblatexml:translated"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:sequence>
+        <xs:element name="journal">
+          <xs:complexType mixed="true">
+            <xs:group ref="biblatexml:formattext"/>
+            <xs:attributeGroup ref="biblatexml:romanized"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="journal">
+          <xs:complexType mixed="true">
+            <xs:group ref="biblatexml:formattext"/>
+            <xs:attributeGroup ref="biblatexml:translated"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:element maxOccurs="unbounded" name="journal">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -899,7 +906,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="journaltitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="journaltitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -913,14 +920,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="journaltitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="journaltitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="journaltitle">
+      <xs:element maxOccurs="unbounded" name="journaltitle">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -942,7 +949,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="journalsubtitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="journalsubtitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -956,14 +963,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="journalsubtitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="journalsubtitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="journalsubtitle">
+      <xs:element maxOccurs="unbounded" name="journalsubtitle">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1013,7 +1020,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="mainsubtitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="mainsubtitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1027,14 +1034,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="mainsubtitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="mainsubtitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="mainsubtitle">
+      <xs:element maxOccurs="unbounded" name="mainsubtitle">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1056,7 +1063,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="maintitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="maintitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1070,14 +1077,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="maintitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="maintitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="maintitle">
+      <xs:element maxOccurs="unbounded" name="maintitle">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1099,7 +1106,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="maintitleaddon">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="maintitleaddon">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1113,14 +1120,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="maintitleaddon">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="maintitleaddon">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="maintitleaddon">
+      <xs:element maxOccurs="unbounded" name="maintitleaddon">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1193,7 +1200,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="reprinttitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="reprinttitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1207,14 +1214,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="reprinttitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="reprinttitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="reprinttitle">
+      <xs:element maxOccurs="unbounded" name="reprinttitle">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1224,6 +1231,11 @@
   </xs:group>
   <xs:group name="series">
     <xs:choice>
+      <xs:element name="series">
+        <xs:complexType>
+          <xs:attribute name="id" use="required"/>
+        </xs:complexType>
+      </xs:element>
       <xs:sequence>
         <xs:element name="series">
           <xs:complexType mixed="true">
@@ -1367,7 +1379,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="shorttitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="shorttitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1381,14 +1393,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="shorttitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="shorttitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="shorttitle">
+      <xs:element maxOccurs="unbounded" name="shorttitle">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1410,7 +1422,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="subtitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="subtitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1424,14 +1436,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="subtitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="subtitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="subtitle">
+      <xs:element maxOccurs="unbounded" name="subtitle">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1453,7 +1465,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="title">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="title">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1467,14 +1479,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="title">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="title">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="title">
+      <xs:element maxOccurs="unbounded" name="title">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1496,7 +1508,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="titleaddon">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="titleaddon">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1510,14 +1522,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="titleaddon">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="titleaddon">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="titleaddon">
+      <xs:element maxOccurs="unbounded" name="titleaddon">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1541,7 +1553,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="venue">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="venue">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1555,14 +1567,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="venue">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="venue">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="venue">
+      <xs:element maxOccurs="unbounded" name="venue">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1636,7 +1648,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="sorttitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="sorttitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1650,14 +1662,14 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" name="sorttitle">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="sorttitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element name="sorttitle">
+      <xs:element maxOccurs="unbounded" name="sorttitle">
         <xs:complexType mixed="true">
           <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
@@ -1816,6 +1828,18 @@
   </xs:attributeGroup>
   <xs:group name="institution">
     <xs:choice>
+      <xs:element name="institution">
+        <xs:complexType>
+          <xs:attribute name="id" use="required"/>
+          <xs:attribute name="andothers">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="true"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
       <xs:sequence>
         <xs:element name="institution">
           <xs:complexType mixed="true">
@@ -1901,6 +1925,18 @@
   </xs:group>
   <xs:group name="school">
     <xs:choice>
+      <xs:element name="school">
+        <xs:complexType>
+          <xs:attribute name="id" use="required"/>
+          <xs:attribute name="andothers">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="true"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
       <xs:sequence>
         <xs:element name="school">
           <xs:complexType mixed="true">
@@ -1986,6 +2022,18 @@
   </xs:group>
   <xs:group name="location">
     <xs:choice>
+      <xs:element name="location">
+        <xs:complexType>
+          <xs:attribute name="id" use="required"/>
+          <xs:attribute name="andothers">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="true"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
       <xs:sequence>
         <xs:element name="location">
           <xs:complexType mixed="true">
@@ -2069,79 +2117,11 @@
       </xs:element>
     </xs:choice>
   </xs:group>
-  <xs:group name="address">
+  <xs:group name="organization">
     <xs:choice>
-      <xs:sequence>
-        <xs:element name="address">
-          <xs:complexType mixed="true">
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
-            <xs:attribute name="andothers">
-              <xs:simpleType>
-                <xs:restriction base="xs:token">
-                  <xs:enumeration value="true"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:attribute>
-          </xs:complexType>
-        </xs:element>
-        <xs:element minOccurs="0" name="address">
-          <xs:complexType mixed="true">
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
-            <xs:attribute name="andothers">
-              <xs:simpleType>
-                <xs:restriction base="xs:token">
-                  <xs:enumeration value="true"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:attribute>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
-          </xs:complexType>
-        </xs:element>
-        <xs:element minOccurs="0" name="address">
-          <xs:complexType mixed="true">
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
-            <xs:attribute name="andothers">
-              <xs:simpleType>
-                <xs:restriction base="xs:token">
-                  <xs:enumeration value="true"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:attribute>
-            <xs:attributeGroup ref="biblatexml:uniform"/>
-          </xs:complexType>
-        </xs:element>
-      </xs:sequence>
-      <xs:sequence>
-        <xs:element name="address">
-          <xs:complexType mixed="true">
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
-            <xs:attribute name="andothers">
-              <xs:simpleType>
-                <xs:restriction base="xs:token">
-                  <xs:enumeration value="true"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:attribute>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
-          </xs:complexType>
-        </xs:element>
-        <xs:element minOccurs="0" name="address">
-          <xs:complexType mixed="true">
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
-            <xs:attribute name="andothers">
-              <xs:simpleType>
-                <xs:restriction base="xs:token">
-                  <xs:enumeration value="true"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:attribute>
-            <xs:attributeGroup ref="biblatexml:uniform"/>
-          </xs:complexType>
-        </xs:element>
-      </xs:sequence>
-      <xs:element name="address">
-        <xs:complexType mixed="true">
-          <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
+      <xs:element name="organization">
+        <xs:complexType>
+          <xs:attribute name="id" use="required"/>
           <xs:attribute name="andothers">
             <xs:simpleType>
               <xs:restriction base="xs:token">
@@ -2149,13 +2129,8 @@
               </xs:restriction>
             </xs:simpleType>
           </xs:attribute>
-          <xs:attributeGroup ref="biblatexml:uniform"/>
         </xs:complexType>
       </xs:element>
-    </xs:choice>
-  </xs:group>
-  <xs:group name="organization">
-    <xs:choice>
       <xs:sequence>
         <xs:element name="organization">
           <xs:complexType mixed="true">
@@ -2241,6 +2216,18 @@
   </xs:group>
   <xs:group name="origlocation">
     <xs:choice>
+      <xs:element name="origlocation">
+        <xs:complexType>
+          <xs:attribute name="id" use="required"/>
+          <xs:attribute name="andothers">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="true"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
       <xs:sequence>
         <xs:element name="origlocation">
           <xs:complexType mixed="true">
@@ -2326,6 +2313,18 @@
   </xs:group>
   <xs:group name="publisher">
     <xs:choice>
+      <xs:element name="publisher">
+        <xs:complexType>
+          <xs:attribute name="id" use="required"/>
+          <xs:attribute name="andothers">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="true"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
       <xs:sequence>
         <xs:element name="publisher">
           <xs:complexType mixed="true">
@@ -2429,6 +2428,18 @@
   </xs:group>
   <xs:group name="origpublisher">
     <xs:choice>
+      <xs:element name="origpublisher">
+        <xs:complexType>
+          <xs:attribute name="id" use="required"/>
+          <xs:attribute name="andothers">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="true"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
       <xs:sequence>
         <xs:element name="origpublisher">
           <xs:complexType mixed="true">
@@ -2603,20 +2614,148 @@
     KEY LISTS
     TODO add attribute type = babel, xml, ISO-XXX etc 
   -->
-  <xs:element name="language">
-    <xs:complexType mixed="true">
-      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
-    </xs:complexType>
-  </xs:element>
-  <!-- xml:lang ? -->
-  <xs:element name="origlanguage">
-    <xs:complexType mixed="true">
-      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
-    </xs:complexType>
-  </xs:element>
-  <!-- xml:lang ? -->
-  <xs:element name="script" type="xs:string"/>
-  <xs:element name="origscript" type="xs:string"/>
+  <xs:element name="language" type="xs:language"/>
+  <xs:element name="origlanguage" type="xs:language"/>
+  <xs:simpleType name="script.list">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="Arab"/>
+      <xs:enumeration value="Armi"/>
+      <xs:enumeration value="Armn"/>
+      <xs:enumeration value="Avst"/>
+      <xs:enumeration value="Bali"/>
+      <xs:enumeration value="Batk"/>
+      <xs:enumeration value="Beng"/>
+      <xs:enumeration value="Blis"/>
+      <xs:enumeration value="Bopo"/>
+      <xs:enumeration value="Brah"/>
+      <xs:enumeration value="Brai"/>
+      <xs:enumeration value="Bugi"/>
+      <xs:enumeration value="Buhd"/>
+      <xs:enumeration value="Cakm"/>
+      <xs:enumeration value="Cans"/>
+      <xs:enumeration value="Cari"/>
+      <xs:enumeration value="Cham"/>
+      <xs:enumeration value="Cher"/>
+      <xs:enumeration value="Cirt"/>
+      <xs:enumeration value="Copt"/>
+      <xs:enumeration value="Cprt"/>
+      <xs:enumeration value="Cyrl"/>
+      <xs:enumeration value="Cyrs"/>
+      <xs:enumeration value="Deva"/>
+      <xs:enumeration value="Dsrt"/>
+      <xs:enumeration value="Egyd"/>
+      <xs:enumeration value="Egyh"/>
+      <xs:enumeration value="Egyp"/>
+      <xs:enumeration value="Ethi"/>
+      <xs:enumeration value="Geok"/>
+      <xs:enumeration value="Geor"/>
+      <xs:enumeration value="Glag"/>
+      <xs:enumeration value="Goth"/>
+      <xs:enumeration value="Grek"/>
+      <xs:enumeration value="Gujr"/>
+      <xs:enumeration value="Guru"/>
+      <xs:enumeration value="Hang"/>
+      <xs:enumeration value="Hani"/>
+      <xs:enumeration value="Hano"/>
+      <xs:enumeration value="Hans"/>
+      <xs:enumeration value="Hant"/>
+      <xs:enumeration value="Hebr"/>
+      <xs:enumeration value="Hira"/>
+      <xs:enumeration value="Hmng"/>
+      <xs:enumeration value="Hrkt"/>
+      <xs:enumeration value="Hung"/>
+      <xs:enumeration value="Inds"/>
+      <xs:enumeration value="Ital"/>
+      <xs:enumeration value="Java"/>
+      <xs:enumeration value="Jpan"/>
+      <xs:enumeration value="Kali"/>
+      <xs:enumeration value="Kana"/>
+      <xs:enumeration value="Khar"/>
+      <xs:enumeration value="Khmr"/>
+      <xs:enumeration value="Knda"/>
+      <xs:enumeration value="Kore"/>
+      <xs:enumeration value="Kthi"/>
+      <xs:enumeration value="Lana"/>
+      <xs:enumeration value="Laoo"/>
+      <xs:enumeration value="Latf"/>
+      <xs:enumeration value="Latg"/>
+      <xs:enumeration value="Latn"/>
+      <xs:enumeration value="Lepc"/>
+      <xs:enumeration value="Limb"/>
+      <xs:enumeration value="Lina"/>
+      <xs:enumeration value="Linb"/>
+      <xs:enumeration value="Lisu"/>
+      <xs:enumeration value="Lyci"/>
+      <xs:enumeration value="Lydi"/>
+      <xs:enumeration value="Mand"/>
+      <xs:enumeration value="Mani"/>
+      <xs:enumeration value="Maya"/>
+      <xs:enumeration value="Mero"/>
+      <xs:enumeration value="Mlym"/>
+      <xs:enumeration value="Mong"/>
+      <xs:enumeration value="Moon"/>
+      <xs:enumeration value="Mtei"/>
+      <xs:enumeration value="Mymr"/>
+      <xs:enumeration value="Nkgb"/>
+      <xs:enumeration value="Nkoo"/>
+      <xs:enumeration value="Ogam"/>
+      <xs:enumeration value="Olck"/>
+      <xs:enumeration value="Orkh"/>
+      <xs:enumeration value="Orya"/>
+      <xs:enumeration value="Osma"/>
+      <xs:enumeration value="Perm"/>
+      <xs:enumeration value="Phag"/>
+      <xs:enumeration value="Phli"/>
+      <xs:enumeration value="Phlp"/>
+      <xs:enumeration value="Phlv"/>
+      <xs:enumeration value="Phnx"/>
+      <xs:enumeration value="Plrd"/>
+      <xs:enumeration value="Prti"/>
+      <xs:enumeration value="Qaaa"/>
+      <xs:enumeration value="Qabx"/>
+      <xs:enumeration value="Rjng"/>
+      <xs:enumeration value="Roro"/>
+      <xs:enumeration value="Runr"/>
+      <xs:enumeration value="Samr"/>
+      <xs:enumeration value="Sara"/>
+      <xs:enumeration value="Saur"/>
+      <xs:enumeration value="Sgnw"/>
+      <xs:enumeration value="Shaw"/>
+      <xs:enumeration value="Sinh"/>
+      <xs:enumeration value="Sund"/>
+      <xs:enumeration value="Sylo"/>
+      <xs:enumeration value="Syrc"/>
+      <xs:enumeration value="Syre"/>
+      <xs:enumeration value="Syrj"/>
+      <xs:enumeration value="Syrn"/>
+      <xs:enumeration value="Tagb"/>
+      <xs:enumeration value="Tale"/>
+      <xs:enumeration value="Talu"/>
+      <xs:enumeration value="Taml"/>
+      <xs:enumeration value="Tavt"/>
+      <xs:enumeration value="Telu"/>
+      <xs:enumeration value="Teng"/>
+      <xs:enumeration value="Tfng"/>
+      <xs:enumeration value="Tglg"/>
+      <xs:enumeration value="Thaa"/>
+      <xs:enumeration value="Thai"/>
+      <xs:enumeration value="Tibt"/>
+      <xs:enumeration value="Ugar"/>
+      <xs:enumeration value="Vaii"/>
+      <xs:enumeration value="Visp"/>
+      <xs:enumeration value="Xpeo"/>
+      <xs:enumeration value="Xsux"/>
+      <xs:enumeration value="Yiii"/>
+      <xs:enumeration value="Zinh"/>
+      <xs:enumeration value="Zmth"/>
+      <xs:enumeration value="Zsym"/>
+      <xs:enumeration value="Zxxx"/>
+      <xs:enumeration value="Zyyy"/>
+      <xs:enumeration value="Zzzz"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="script" type="biblatexml:script.list"/>
+  <xs:element name="origscript" type="biblatexml:script.list"/>
   <!-- NAME LISTS -->
   <xs:attributeGroup name="attlist.author">
     <xs:attribute name="type">
@@ -4358,6 +4497,9 @@
     </xs:complexType>
   </xs:element>
   <xs:group name="BibLaTeXML.article.standard.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
     <xs:sequence>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:choice>
@@ -4462,6 +4604,11 @@
             </xs:element>
           </xs:choice>
           <xs:choice>
+            <xs:element name="journal">
+              <xs:complexType>
+                <xs:attribute name="id" use="required"/>
+              </xs:complexType>
+            </xs:element>
             <xs:choice>
               <xs:element name="journal">
                 <xs:complexType mixed="true">
@@ -5337,6 +5484,11 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="series">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="series">
               <xs:complexType mixed="true">
@@ -5398,6 +5550,18 @@
         <xs:element ref="biblatexml:volume"/>
         <xs:element ref="biblatexml:number"/>
         <xs:choice>
+          <xs:element name="location">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="location">
               <xs:complexType mixed="true">
@@ -5481,6 +5645,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="publisher">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="publisher">
               <xs:complexType mixed="true">
@@ -5582,6 +5758,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="origpublisher">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="origpublisher">
               <xs:complexType mixed="true">
@@ -7399,6 +7587,11 @@
         <xs:element ref="biblatexml:edition"/>
         <xs:element ref="biblatexml:volumes"/>
         <xs:choice>
+          <xs:element name="series">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="series">
               <xs:complexType mixed="true">
@@ -7460,6 +7653,18 @@
         <xs:element ref="biblatexml:number"/>
         <xs:element ref="biblatexml:note"/>
         <xs:choice>
+          <xs:element name="publisher">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="publisher">
               <xs:complexType mixed="true">
@@ -7561,6 +7766,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="origpublisher">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="origpublisher">
               <xs:complexType mixed="true">
@@ -7662,6 +7879,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="location">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="location">
               <xs:complexType mixed="true">
@@ -7745,6 +7974,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="origlocation">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="origlocation">
               <xs:complexType mixed="true">
@@ -8130,6 +8371,18 @@
         </xs:choice>
         <xs:element ref="biblatexml:note"/>
         <xs:choice>
+          <xs:element name="location">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="location">
               <xs:complexType mixed="true">
@@ -8213,6 +8466,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="origlocation">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="origlocation">
               <xs:complexType mixed="true">
@@ -8296,6 +8561,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="publisher">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="publisher">
               <xs:complexType mixed="true">
@@ -9801,6 +10078,11 @@
         <xs:element ref="biblatexml:edition"/>
         <xs:element ref="biblatexml:volumes"/>
         <xs:choice>
+          <xs:element name="series">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="series">
               <xs:complexType mixed="true">
@@ -9862,6 +10144,18 @@
         <xs:element ref="biblatexml:number"/>
         <xs:element ref="biblatexml:note"/>
         <xs:choice>
+          <xs:element name="publisher">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="publisher">
               <xs:complexType mixed="true">
@@ -9963,6 +10257,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="origpublisher">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="origpublisher">
               <xs:complexType mixed="true">
@@ -10064,6 +10370,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="location">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="location">
               <xs:complexType mixed="true">
@@ -10147,6 +10465,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="origlocation">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="origlocation">
               <xs:complexType mixed="true">
@@ -11561,6 +11891,11 @@
             <xs:element ref="biblatexml:edition"/>
             <xs:element ref="biblatexml:volumes"/>
             <xs:choice>
+              <xs:element name="series">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                </xs:complexType>
+              </xs:element>
               <xs:choice>
                 <xs:element name="series">
                   <xs:complexType mixed="true">
@@ -11621,6 +11956,18 @@
             </xs:choice>
             <xs:element ref="biblatexml:number"/>
             <xs:choice>
+              <xs:element name="publisher">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                  <xs:attribute name="andothers">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:token">
+                        <xs:enumeration value="true"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
               <xs:choice>
                 <xs:element name="publisher">
                   <xs:complexType mixed="true">
@@ -11722,6 +12069,18 @@
               </xs:element>
             </xs:choice>
             <xs:choice>
+              <xs:element name="origpublisher">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                  <xs:attribute name="andothers">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:token">
+                        <xs:enumeration value="true"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
               <xs:choice>
                 <xs:element name="origpublisher">
                   <xs:complexType mixed="true">
@@ -11823,6 +12182,18 @@
               </xs:element>
             </xs:choice>
             <xs:choice>
+              <xs:element name="location">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                  <xs:attribute name="andothers">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:token">
+                        <xs:enumeration value="true"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
               <xs:choice>
                 <xs:element name="location">
                   <xs:complexType mixed="true">
@@ -11906,6 +12277,18 @@
               </xs:element>
             </xs:choice>
             <xs:choice>
+              <xs:element name="origlocation">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                  <xs:attribute name="andothers">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:token">
+                        <xs:enumeration value="true"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
               <xs:choice>
                 <xs:element name="origlocation">
                   <xs:complexType mixed="true">
@@ -13394,6 +13777,18 @@
               </xs:element>
             </xs:choice>
             <xs:choice>
+              <xs:element name="publisher">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                  <xs:attribute name="andothers">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:token">
+                        <xs:enumeration value="true"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
               <xs:choice>
                 <xs:element name="publisher">
                   <xs:complexType mixed="true">
@@ -13495,6 +13890,18 @@
               </xs:element>
             </xs:choice>
             <xs:choice>
+              <xs:element name="origpublisher">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                  <xs:attribute name="andothers">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:token">
+                        <xs:enumeration value="true"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
               <xs:choice>
                 <xs:element name="origpublisher">
                   <xs:complexType mixed="true">
@@ -13598,6 +14005,18 @@
             <xs:element ref="biblatexml:volumes"/>
             <xs:element ref="biblatexml:number"/>
             <xs:choice>
+              <xs:element name="location">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                  <xs:attribute name="andothers">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:token">
+                        <xs:enumeration value="true"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
               <xs:choice>
                 <xs:element name="location">
                   <xs:complexType mixed="true">
@@ -13681,6 +14100,18 @@
               </xs:element>
             </xs:choice>
             <xs:choice>
+              <xs:element name="origlocation">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                  <xs:attribute name="andothers">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:token">
+                        <xs:enumeration value="true"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
               <xs:choice>
                 <xs:element name="origlocation">
                   <xs:complexType mixed="true">
@@ -13765,6 +14196,11 @@
             </xs:choice>
             <xs:element ref="biblatexml:edition"/>
             <xs:choice>
+              <xs:element name="series">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                </xs:complexType>
+              </xs:element>
               <xs:choice>
                 <xs:element name="series">
                   <xs:complexType mixed="true">
@@ -14519,6 +14955,11 @@
             </xs:choice>
             <xs:element ref="biblatexml:volumes"/>
             <xs:choice>
+              <xs:element name="series">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                </xs:complexType>
+              </xs:element>
               <xs:choice>
                 <xs:element name="series">
                   <xs:complexType mixed="true">
@@ -14579,6 +15020,18 @@
             </xs:choice>
             <xs:element ref="biblatexml:number"/>
             <xs:choice>
+              <xs:element name="organization">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                  <xs:attribute name="andothers">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:token">
+                        <xs:enumeration value="true"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
               <xs:choice>
                 <xs:element name="organization">
                   <xs:complexType mixed="true">
@@ -14662,6 +15115,18 @@
               </xs:element>
             </xs:choice>
             <xs:choice>
+              <xs:element name="publisher">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                  <xs:attribute name="andothers">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:token">
+                        <xs:enumeration value="true"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
               <xs:choice>
                 <xs:element name="publisher">
                   <xs:complexType mixed="true">
@@ -14763,6 +15228,18 @@
               </xs:element>
             </xs:choice>
             <xs:choice>
+              <xs:element name="origpublisher">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                  <xs:attribute name="andothers">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:token">
+                        <xs:enumeration value="true"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
               <xs:choice>
                 <xs:element name="origpublisher">
                   <xs:complexType mixed="true">
@@ -14864,6 +15341,18 @@
               </xs:element>
             </xs:choice>
             <xs:choice>
+              <xs:element name="location">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                  <xs:attribute name="andothers">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:token">
+                        <xs:enumeration value="true"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
               <xs:choice>
                 <xs:element name="location">
                   <xs:complexType mixed="true">
@@ -14947,6 +15436,18 @@
               </xs:element>
             </xs:choice>
             <xs:choice>
+              <xs:element name="origlocation">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                  <xs:attribute name="andothers">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:token">
+                        <xs:enumeration value="true"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
               <xs:choice>
                 <xs:element name="origlocation">
                   <xs:complexType mixed="true">
@@ -15342,6 +15843,11 @@
         <xs:element ref="biblatexml:edition"/>
         <xs:element ref="biblatexml:version"/>
         <xs:choice>
+          <xs:element name="series">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="series">
               <xs:complexType mixed="true">
@@ -15403,6 +15909,18 @@
         <xs:element ref="biblatexml:number"/>
         <xs:element ref="biblatexml:note"/>
         <xs:choice>
+          <xs:element name="organization">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="organization">
               <xs:complexType mixed="true">
@@ -15486,6 +16004,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="publisher">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="publisher">
               <xs:complexType mixed="true">
@@ -15587,6 +16117,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="origpublisher">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="origpublisher">
               <xs:complexType mixed="true">
@@ -15688,6 +16230,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="location">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="location">
               <xs:complexType mixed="true">
@@ -15771,6 +16325,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="origlocation">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="origlocation">
               <xs:complexType mixed="true">
@@ -16166,6 +16732,18 @@
         <xs:element ref="biblatexml:version"/>
         <xs:element ref="biblatexml:note"/>
         <xs:choice>
+          <xs:element name="organization">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="organization">
               <xs:complexType mixed="true">
@@ -16249,6 +16827,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="publisher">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="publisher">
               <xs:complexType mixed="true">
@@ -16350,6 +16940,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="origpublisher">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="origpublisher">
               <xs:complexType mixed="true">
@@ -16451,6 +17053,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="location">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="location">
               <xs:complexType mixed="true">
@@ -16534,6 +17148,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="origlocation">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="origlocation">
               <xs:complexType mixed="true">
@@ -16929,6 +17555,18 @@
         <xs:element ref="biblatexml:version"/>
         <xs:element ref="biblatexml:note"/>
         <xs:choice>
+          <xs:element name="organization">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="organization">
               <xs:complexType mixed="true">
@@ -17347,6 +17985,18 @@
         </xs:choice>
         <xs:element ref="biblatexml:version"/>
         <xs:choice>
+          <xs:element name="location">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="location">
               <xs:complexType mixed="true">
@@ -17430,6 +18080,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="origlocation">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="origlocation">
               <xs:complexType mixed="true">
@@ -17628,6 +18290,11 @@
         </xs:choice>
         <xs:choice>
           <xs:choice>
+            <xs:element name="journal">
+              <xs:complexType>
+                <xs:attribute name="id" use="required"/>
+              </xs:complexType>
+            </xs:element>
             <xs:choice>
               <xs:element name="journal">
                 <xs:complexType mixed="true">
@@ -18122,6 +18789,11 @@
           <xs:element ref="biblatexml:pages"/>
         </xs:choice>
         <xs:choice>
+          <xs:element name="series">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="series">
               <xs:complexType mixed="true">
@@ -18724,6 +19396,11 @@
         <xs:element ref="biblatexml:part"/>
         <xs:element ref="biblatexml:volumes"/>
         <xs:choice>
+          <xs:element name="series">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="series">
               <xs:complexType mixed="true">
@@ -18785,6 +19462,18 @@
         <xs:element ref="biblatexml:number"/>
         <xs:element ref="biblatexml:note"/>
         <xs:choice>
+          <xs:element name="organization">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="organization">
               <xs:complexType mixed="true">
@@ -18868,6 +19557,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="publisher">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="publisher">
               <xs:complexType mixed="true">
@@ -18969,6 +19670,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="origpublisher">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="origpublisher">
               <xs:complexType mixed="true">
@@ -19070,6 +19783,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="location">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="location">
               <xs:complexType mixed="true">
@@ -19153,6 +19878,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="origlocation">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="origlocation">
               <xs:complexType mixed="true">
@@ -19395,6 +20132,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="institution">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="institution">
               <xs:complexType mixed="true">
@@ -19561,6 +20310,11 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="series">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="series">
               <xs:complexType mixed="true">
@@ -19623,6 +20377,18 @@
         <xs:element ref="biblatexml:version"/>
         <xs:element ref="biblatexml:note"/>
         <xs:choice>
+          <xs:element name="location">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="location">
               <xs:complexType mixed="true">
@@ -19706,6 +20472,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="origlocation">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="origlocation">
               <xs:complexType mixed="true">
@@ -19789,6 +20567,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="publisher">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="publisher">
               <xs:complexType mixed="true">
@@ -20048,6 +20838,18 @@
         </xs:choice>
         <xs:choice>
           <xs:choice>
+            <xs:element name="institution">
+              <xs:complexType>
+                <xs:attribute name="id" use="required"/>
+                <xs:attribute name="andothers">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                      <xs:enumeration value="true"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
             <xs:choice>
               <xs:element name="institution">
                 <xs:complexType mixed="true">
@@ -20131,6 +20933,18 @@
             </xs:element>
           </xs:choice>
           <xs:choice>
+            <xs:element name="school">
+              <xs:complexType>
+                <xs:attribute name="id" use="required"/>
+                <xs:attribute name="andothers">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                      <xs:enumeration value="true"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
             <xs:choice>
               <xs:element name="school">
                 <xs:complexType mixed="true">
@@ -20299,6 +21113,18 @@
         </xs:choice>
         <xs:element ref="biblatexml:note"/>
         <xs:choice>
+          <xs:element name="location">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="location">
               <xs:complexType mixed="true">
@@ -20382,6 +21208,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="origlocation">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="origlocation">
               <xs:complexType mixed="true">
@@ -20715,6 +21553,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="institution">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="institution">
               <xs:complexType mixed="true">
@@ -20957,6 +21807,18 @@
           <xs:element ref="biblatexml:date"/>
         </xs:choice>
         <xs:choice>
+          <xs:element name="institution">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="institution">
               <xs:complexType mixed="true">
@@ -21040,6 +21902,18 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="location">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+              <xs:attribute name="andothers">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="location">
               <xs:complexType mixed="true">
@@ -21205,6 +22079,11 @@
           </xs:element>
         </xs:choice>
         <xs:choice>
+          <xs:element name="series">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+            </xs:complexType>
+          </xs:element>
           <xs:choice>
             <xs:element name="series">
               <xs:complexType mixed="true">
@@ -21355,6 +22234,9 @@
     </xs:sequence>
   </xs:group>
   <xs:complexType name="BibLaTeXML.set.fields">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
     <xs:choice minOccurs="0" maxOccurs="unbounded">
       <xs:group ref="biblatexml:entryset"/>
       <xs:element ref="biblatexml:crossref"/>

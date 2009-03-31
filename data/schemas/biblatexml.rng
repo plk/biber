@@ -3,6 +3,19 @@
   <start>
     <ref name="entries"/>
   </start>
+  <define name="entries">
+    <element name="entries">
+      <zeroOrMore>
+        <ref name="BibLaTeXML.entries"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="BibLaTeXML.entries">
+    <choice>
+      <ref name="BibLaTeXML.standard.entries"/>
+      <ref name="BibLaTeXML.additional.entries"/>
+    </choice>
+  </define>
   <define name="BibLaTeXML.standard.entries">
     <choice>
       <ref name="article"/>
@@ -40,19 +53,6 @@
     TODO Unsupported types: artwork, audio, image, jurisdiction, legislation, legal, movie, music, performance, reference, inreference, review, software, standard, video
     TODO add manuscript and archivalrecord ?
   -->
-  <define name="BibLaTeXML.entries">
-    <choice>
-      <ref name="BibLaTeXML.standard.entries"/>
-      <ref name="BibLaTeXML.additional.entries"/>
-    </choice>
-  </define>
-  <define name="entries">
-    <element name="entries">
-      <zeroOrMore>
-        <ref name="BibLaTeXML.entries"/>
-      </zeroOrMore>
-    </element>
-  </define>
   <define name="BibLaTeXML.common.fields">
     <a:documentation/>
     <interleave>
@@ -215,6 +215,11 @@ We now define the biblatexml elements</a:documentation>
     </attribute>
   </define>
   <define name="translated">
+    <optional>
+      <attribute name="xml:lang">
+        <data type="language"/>
+      </attribute>
+    </optional>
     <attribute name="mode">
       <value>translated</value>
     </attribute>
@@ -251,29 +256,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="booksubtitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="booksubtitle">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="booksubtitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="booksubtitle">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="booksubtitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="booktitle">
@@ -288,29 +295,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="booktitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="booktitle">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="booktitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="booktitle">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="booktitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="booktitleaddon">
@@ -325,29 +334,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="booktitleaddon">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="booktitleaddon">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="booktitleaddon">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="booktitleaddon">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="booktitleaddon">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="chapter">
@@ -440,29 +451,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="issue">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="issue">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="issue">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="issue">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="issue">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="issuetitle">
@@ -477,29 +490,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="issuetitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="issuetitle">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="issuetitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="issuetitle">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="issuetitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="issuetitleaddon">
@@ -514,29 +529,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="issuetitleaddon">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="issuetitleaddon">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="issuetitleaddon">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="issuetitleaddon">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="issuetitleaddon">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="issuesubtitle">
@@ -551,29 +568,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="issuesubtitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="issuesubtitle">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="issuesubtitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="issuesubtitle">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="issuesubtitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="iswc">
@@ -583,6 +602,9 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="journal">
     <choice>
+      <element name="journal">
+        <attribute name="id"/>
+      </element>
       <group>
         <element name="journal">
           <ref name="formattext"/>
@@ -593,29 +615,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="journal">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="journal">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="journal">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="journal">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="journal">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="journaltitle">
@@ -630,29 +654,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="journaltitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="journaltitle">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="journaltitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="journaltitle">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="journaltitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="journalsubtitle">
@@ -667,29 +693,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="journalsubtitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="journalsubtitle">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="journalsubtitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="journalsubtitle">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="journalsubtitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="label">
@@ -751,29 +779,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="mainsubtitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="mainsubtitle">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="mainsubtitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="mainsubtitle">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="mainsubtitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="maintitle">
@@ -788,29 +818,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="maintitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="maintitle">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="maintitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="maintitle">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="maintitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="maintitleaddon">
@@ -825,29 +857,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="maintitleaddon">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="maintitleaddon">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="maintitleaddon">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="maintitleaddon">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="maintitleaddon">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="nameaddon">
@@ -929,33 +963,38 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="reprinttitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="reprinttitle">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="reprinttitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="reprinttitle">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="reprinttitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="series">
     <choice>
+      <element name="series">
+        <attribute name="id"/>
+      </element>
       <group>
         <element name="series">
           <choice>
@@ -1109,29 +1148,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="shorttitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="shorttitle">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="shorttitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="shorttitle">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="shorttitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="subtitle">
@@ -1146,29 +1187,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="subtitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="subtitle">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="subtitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="subtitle">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="subtitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="title">
@@ -1183,29 +1226,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="title">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="title">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="title">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="title">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="title">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="titleaddon">
@@ -1220,29 +1265,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="titleaddon">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="titleaddon">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="titleaddon">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="titleaddon">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="titleaddon">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="url">
@@ -1263,29 +1310,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="venue">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="venue">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="venue">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="venue">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="venue">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="version">
@@ -1434,29 +1483,31 @@ We now define the biblatexml elements</a:documentation>
             <ref name="formattext"/>
           </element>
         </optional>
-        <optional>
+        <zeroOrMore>
           <element name="sorttitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
         <element name="sorttitle">
           <ref name="romanized"/>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="sorttitle">
             <ref name="translated"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="sorttitle">
-        <ref name="translated"/>
-        <ref name="formattext"/>
-      </element>
+      <oneOrMore>
+        <element name="sorttitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="sortyear">
@@ -1651,6 +1702,12 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="institution">
     <choice>
+      <element name="institution">
+        <attribute name="id"/>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
       <group>
         <element name="institution">
           <optional>
@@ -1736,6 +1793,12 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="school">
     <choice>
+      <element name="school">
+        <attribute name="id"/>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
       <group>
         <element name="school">
           <optional>
@@ -1821,6 +1884,12 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="location">
     <choice>
+      <element name="location">
+        <attribute name="id"/>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
       <group>
         <element name="location">
           <optional>
@@ -1904,93 +1973,14 @@ We now define the biblatexml elements</a:documentation>
       </element>
     </choice>
   </define>
-  <define name="address">
+  <define name="organization">
     <choice>
-      <group>
-        <element name="address">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="address">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="address">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="address">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="address">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="address">
+      <element name="organization">
+        <attribute name="id"/>
         <optional>
           <ref name="attlist.lists"/>
         </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="item"/>
-          </oneOrMore>
-        </choice>
       </element>
-    </choice>
-  </define>
-  <define name="organization">
-    <choice>
       <group>
         <element name="organization">
           <optional>
@@ -2076,6 +2066,12 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="origlocation">
     <choice>
+      <element name="origlocation">
+        <attribute name="id"/>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
       <group>
         <element name="origlocation">
           <optional>
@@ -2161,6 +2157,12 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="publisher">
     <choice>
+      <element name="publisher">
+        <attribute name="id"/>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
       <group>
         <element name="publisher">
           <optional>
@@ -2246,6 +2248,12 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="origpublisher">
     <choice>
+      <element name="origpublisher">
+        <attribute name="id"/>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
       <group>
         <element name="origpublisher">
           <optional>
@@ -2406,33 +2414,189 @@ We now define the biblatexml elements</a:documentation>
   <define name="language">
     <element name="language">
       <choice>
-        <text/>
+        <data type="language"/>
         <oneOrMore>
-          <ref name="item"/>
+          <ref name="itemlang"/>
         </oneOrMore>
       </choice>
     </element>
   </define>
-  <!-- xml:lang ? -->
   <define name="origlanguage">
     <element name="origlanguage">
       <choice>
-        <text/>
+        <data type="language"/>
         <oneOrMore>
-          <ref name="item"/>
+          <ref name="itemlang"/>
         </oneOrMore>
       </choice>
     </element>
   </define>
-  <!-- xml:lang ? -->
+  <define name="itemlang">
+    <element name="item">
+      <data type="language"/>
+    </element>
+  </define>
+  <define name="script.list">
+    <choice>
+      <value>Arab</value>
+      <value>Armi</value>
+      <value>Armn</value>
+      <value>Avst</value>
+      <value>Bali</value>
+      <value>Batk</value>
+      <value>Beng</value>
+      <value>Blis</value>
+      <value>Bopo</value>
+      <value>Brah</value>
+      <value>Brai</value>
+      <value>Bugi</value>
+      <value>Buhd</value>
+      <value>Cakm</value>
+      <value>Cans</value>
+      <value>Cari</value>
+      <value>Cham</value>
+      <value>Cher</value>
+      <value>Cirt</value>
+      <value>Copt</value>
+      <value>Cprt</value>
+      <value>Cyrl</value>
+      <value>Cyrs</value>
+      <value>Deva</value>
+      <value>Dsrt</value>
+      <value>Egyd</value>
+      <value>Egyh</value>
+      <value>Egyp</value>
+      <value>Ethi</value>
+      <value>Geok</value>
+      <value>Geor</value>
+      <value>Glag</value>
+      <value>Goth</value>
+      <value>Grek</value>
+      <value>Gujr</value>
+      <value>Guru</value>
+      <value>Hang</value>
+      <value>Hani</value>
+      <value>Hano</value>
+      <value>Hans</value>
+      <value>Hant</value>
+      <value>Hebr</value>
+      <value>Hira</value>
+      <value>Hmng</value>
+      <value>Hrkt</value>
+      <value>Hung</value>
+      <value>Inds</value>
+      <value>Ital</value>
+      <value>Java</value>
+      <value>Jpan</value>
+      <value>Kali</value>
+      <value>Kana</value>
+      <value>Khar</value>
+      <value>Khmr</value>
+      <value>Knda</value>
+      <value>Kore</value>
+      <value>Kthi</value>
+      <value>Lana</value>
+      <value>Laoo</value>
+      <value>Latf</value>
+      <value>Latg</value>
+      <value>Latn</value>
+      <value>Lepc</value>
+      <value>Limb</value>
+      <value>Lina</value>
+      <value>Linb</value>
+      <value>Lisu</value>
+      <value>Lyci</value>
+      <value>Lydi</value>
+      <value>Mand</value>
+      <value>Mani</value>
+      <value>Maya</value>
+      <value>Mero</value>
+      <value>Mlym</value>
+      <value>Mong</value>
+      <value>Moon</value>
+      <value>Mtei</value>
+      <value>Mymr</value>
+      <value>Nkgb</value>
+      <value>Nkoo</value>
+      <value>Ogam</value>
+      <value>Olck</value>
+      <value>Orkh</value>
+      <value>Orya</value>
+      <value>Osma</value>
+      <value>Perm</value>
+      <value>Phag</value>
+      <value>Phli</value>
+      <value>Phlp</value>
+      <value>Phlv</value>
+      <value>Phnx</value>
+      <value>Plrd</value>
+      <value>Prti</value>
+      <value>Qaaa</value>
+      <value>Qabx</value>
+      <value>Rjng</value>
+      <value>Roro</value>
+      <value>Runr</value>
+      <value>Samr</value>
+      <value>Sara</value>
+      <value>Saur</value>
+      <value>Sgnw</value>
+      <value>Shaw</value>
+      <value>Sinh</value>
+      <value>Sund</value>
+      <value>Sylo</value>
+      <value>Syrc</value>
+      <value>Syre</value>
+      <value>Syrj</value>
+      <value>Syrn</value>
+      <value>Tagb</value>
+      <value>Tale</value>
+      <value>Talu</value>
+      <value>Taml</value>
+      <value>Tavt</value>
+      <value>Telu</value>
+      <value>Teng</value>
+      <value>Tfng</value>
+      <value>Tglg</value>
+      <value>Thaa</value>
+      <value>Thai</value>
+      <value>Tibt</value>
+      <value>Ugar</value>
+      <value>Vaii</value>
+      <value>Visp</value>
+      <value>Xpeo</value>
+      <value>Xsux</value>
+      <value>Yiii</value>
+      <value>Zinh</value>
+      <value>Zmth</value>
+      <value>Zsym</value>
+      <value>Zxxx</value>
+      <value>Zyyy</value>
+      <value>Zzzz</value>
+    </choice>
+  </define>
   <define name="script">
     <element name="script">
-      <text/>
+      <choice>
+        <ref name="script.list"/>
+        <oneOrMore>
+          <ref name="itemscript"/>
+        </oneOrMore>
+      </choice>
     </element>
   </define>
   <define name="origscript">
     <element name="origscript">
-      <text/>
+      <choice>
+        <ref name="script.list"/>
+        <oneOrMore>
+          <ref name="itemscript"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="itemscript">
+    <element name="item">
+      <ref name="script.list"/>
     </element>
   </define>
   <!-- NAME LISTS -->
@@ -4097,8 +4261,8 @@ country
 person
 century
 author
-works
-</a:documentation>
+works</a:documentation>
+    <a:documentation/>
     <interleave>
       <ref name="author"/>
       <!-- NB: this should be optional -->
@@ -6311,6 +6475,7 @@ works
     </element>
   </define>
   <define name="BibLaTeXML.set.fields">
+    <a:documentation/>
     <interleave>
       <ref name="entryset"/>
       <optional>

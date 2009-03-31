@@ -4,6 +4,11 @@ datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
 
 start = entries
 
+entries = element entries { BibLaTeXML.entries* }
+
+BibLaTeXML.entries =
+  BibLaTeXML.standard.entries | BibLaTeXML.additional.entries
+
 BibLaTeXML.standard.entries =
   article
   | book
@@ -34,11 +39,6 @@ software |
 movie
 # TODO Unsupported types: artwork, audio, image, jurisdiction, legislation, legal, movie, music, performance, reference, inreference, review, software, standard, video
 # TODO add manuscript and archivalrecord ?
-
-BibLaTeXML.entries =
-  BibLaTeXML.standard.entries | BibLaTeXML.additional.entries
-
-entries = element entries { BibLaTeXML.entries* }
 
 #########################################################
 BibLaTeXML.common.fields =
@@ -72,7 +72,6 @@ BibLaTeXML.common.fields =
   sortyear? &
   inset?
 
-
 BibLaTeXML.additional.fields =
    reprintinfo* &
    reviews? &
@@ -91,7 +90,7 @@ subscript = element subscript { text }
 nosort = element nosort { text }
 
 romanized = attribute mode { "romanized" }    
-translated = attribute mode { "translated" }
+translated = attribute xml:lang {xsd:language}?, attribute mode { "translated" }
 uniform = attribute mode { "uniform" }
 
 abstract = element abstract { formattext }
@@ -99,22 +98,22 @@ addendum = element addendum { formattext }
 annotation = element annotation { formattext }
 booksubtitle = ( element booksubtitle { formattext },
                 element booksubtitle { romanized, formattext }?,
-                element booksubtitle { translated, formattext }? ) |
+                element booksubtitle { translated, formattext }* ) |
                 ( element booksubtitle { romanized, formattext },
-                  element booksubtitle { translated, formattext }? ) |
-                ( element booksubtitle { translated, formattext } )
+                  element booksubtitle { translated, formattext }* ) |
+                ( element booksubtitle { translated, formattext }+ )
 booktitle = ( element booktitle { formattext },
              element booktitle { romanized, formattext }?,
-             element booktitle { translated, formattext }? ) |
+             element booktitle { translated, formattext }* ) |
              ( element booktitle { romanized, formattext },
-               element booktitle { translated, formattext }? ) |
-             ( element booktitle { translated, formattext } )
+               element booktitle { translated, formattext }* ) |
+             ( element booktitle { translated, formattext }+ )
 booktitleaddon = ( element booktitleaddon { formattext },
                   element booktitleaddon { romanized, formattext }?,
-                  element booktitleaddon { translated, formattext }? ) |
+                  element booktitleaddon { translated, formattext }* ) |
                   ( element booktitleaddon { romanized, formattext },
-                    element booktitleaddon { translated, formattext }? ) |
-                  ( element booktitleaddon { translated, formattext } )
+                    element booktitleaddon { translated, formattext }* ) |
+                  ( element booktitleaddon { translated, formattext }+ )
 chapter = element chapter { text }
 doi = element doi { text }
 eid = element eid { text }
@@ -132,47 +131,48 @@ isrn = element isrn { text }
 issn = element issn { text }
 issue = ( element issue { formattext },
          element issue { romanized, formattext }?,
-         element issue { translated, formattext }? ) |
+         element issue { translated, formattext }* ) |
          ( element issue { romanized, formattext },
-           element issue { translated, formattext }? ) |
-         ( element issue { translated, formattext } )
+           element issue { translated, formattext }* ) |
+         ( element issue { translated, formattext }+ )
 issuetitle = ( element issuetitle { formattext },
               element issuetitle { romanized, formattext }?,
-              element issuetitle { translated, formattext }? ) |
+              element issuetitle { translated, formattext }* ) |
               ( element issuetitle { romanized, formattext },
-                element issuetitle { translated, formattext }? ) |
-              ( element issuetitle { translated, formattext } )
+                element issuetitle { translated, formattext }* ) |
+              ( element issuetitle { translated, formattext }+ )
 issuetitleaddon = ( element issuetitleaddon { formattext },
                    element issuetitleaddon { romanized, formattext }?,
-                   element issuetitleaddon { translated, formattext }? ) |
+                   element issuetitleaddon { translated, formattext }* ) |
                    ( element issuetitleaddon { romanized, formattext },
-                     element issuetitleaddon { translated, formattext }? ) |
-                   ( element issuetitleaddon { translated, formattext } )
+                     element issuetitleaddon { translated, formattext }* ) |
+                   ( element issuetitleaddon { translated, formattext }+ )
 issuesubtitle = ( element issuesubtitle { formattext },
                  element issuesubtitle { romanized, formattext }?,
-                 element issuesubtitle { translated, formattext }? ) |
+                 element issuesubtitle { translated, formattext }* ) |
                  ( element issuesubtitle { romanized, formattext },
-                   element issuesubtitle { translated, formattext }? ) |
-                 ( element issuesubtitle { translated, formattext } )
+                   element issuesubtitle { translated, formattext }* ) |
+                 ( element issuesubtitle { translated, formattext }+ )
 iswc = element iswc { text }
-journal = ( element journal { formattext },
-           element journal { romanized, formattext }?,
-           element journal { translated, formattext }? ) |
-           ( element journal { romanized, formattext },
-             element journal { translated, formattext }? ) |
-           ( element journal { translated, formattext } )
+journal = (element journal {attribute id {text}}) | 
+          ( element journal { formattext },
+            element journal { romanized, formattext }?,
+            element journal { translated, formattext }* ) |
+          ( element journal { romanized, formattext },
+             element journal { translated, formattext }* ) |
+          ( element journal { translated, formattext }+ )
 journaltitle = ( element journaltitle { formattext },
                 element journaltitle { romanized, formattext }?,
-                element journaltitle { translated, formattext }? ) |
+                element journaltitle { translated, formattext }* ) |
                 ( element journaltitle { romanized, formattext },
-                  element journaltitle { translated, formattext }? ) |
-                ( element journaltitle { translated, formattext } )
+                  element journaltitle { translated, formattext }* ) |
+                ( element journaltitle { translated, formattext }+ )
 journalsubtitle = ( element journalsubtitle { formattext },
                    element journalsubtitle { romanized, formattext }?,
-                   element journalsubtitle { translated, formattext }? ) |
+                   element journalsubtitle { translated, formattext }* ) |
                    ( element journalsubtitle { romanized, formattext },
-                     element journalsubtitle { translated, formattext }? ) |
-                   ( element journalsubtitle { translated, formattext } )
+                     element journalsubtitle { translated, formattext }* ) |
+                   ( element journalsubtitle { translated, formattext }+ )
 label = element label { text }
 ## this element contains data relative to individual users of the database
 user = element user { attribute id {text} & library? & remarks? & topics? } 
@@ -183,22 +183,22 @@ libraryitem = element item { attribute location {text}?,
                              attribute note {text}? }
 mainsubtitle = ( element mainsubtitle { formattext },
                 element mainsubtitle { romanized, formattext }?,
-                element mainsubtitle { translated, formattext }? ) |
+                element mainsubtitle { translated, formattext }* ) |
                 ( element mainsubtitle { romanized, formattext },
-                  element mainsubtitle { translated, formattext }? ) |
-                ( element mainsubtitle { translated, formattext } )
+                  element mainsubtitle { translated, formattext }* ) |
+                ( element mainsubtitle { translated, formattext }+ )
 maintitle = ( element maintitle { formattext },
              element maintitle { romanized, formattext }?,
-             element maintitle { translated, formattext }? ) |
+             element maintitle { translated, formattext }* ) |
              ( element maintitle { romanized, formattext },
-               element maintitle { translated, formattext }? ) |
-             ( element maintitle { translated, formattext } )
+               element maintitle { translated, formattext }* ) |
+             ( element maintitle { translated, formattext }+ )
 maintitleaddon = ( element maintitleaddon { formattext },
                   element maintitleaddon { romanized, formattext }?,
-                  element maintitleaddon { translated, formattext }? ) |
+                  element maintitleaddon { translated, formattext }* ) |
                   ( element maintitleaddon { romanized, formattext },
-                    element maintitleaddon { translated, formattext }? ) |
-                  ( element maintitleaddon { translated, formattext } )
+                    element maintitleaddon { translated, formattext }* ) |
+                  ( element maintitleaddon { translated, formattext }+ )
 nameaddon = ( element nameaddon { text },
              element nameaddon { romanized, text }?,
              element nameaddon { translated, text }? ) |
@@ -212,11 +212,12 @@ pagetotal = element pagetotal { text }
 part = element part { text }
 reprinttitle = ( element reprinttitle { formattext },
                 element reprinttitle { romanized, formattext }?,
-                element reprinttitle { translated, formattext }? ) |
+                element reprinttitle { translated, formattext }* ) |
                 ( element reprinttitle { romanized, formattext },
-                  element reprinttitle { translated, formattext }? ) |
-                ( element reprinttitle { translated, formattext } )
-series = ( element series { (formattext | item+) },
+                  element reprinttitle { translated, formattext }* ) |
+                ( element reprinttitle { translated, formattext }+ )
+series = ( element series { attribute id {text}}) | 
+         ( element series { (formattext | item+) },
           element series { romanized, (formattext | item+) }?,
           element series { translated, (formattext | item+) }? ) |
           ( element series { romanized, (formattext | item+) },
@@ -238,36 +239,36 @@ shorthandintro = ( element shorthandintro { text },
              ( element shorthandintro { translated, text } )
 shorttitle = ( element shorttitle { formattext },
              element shorttitle { romanized, formattext }?,
-             element shorttitle { translated, formattext }? ) | 
+             element shorttitle { translated, formattext }* ) | 
              ( element shorttitle { romanized, formattext },
-             element shorttitle { translated, formattext }? ) |
-             ( element shorttitle { translated, formattext } )
+             element shorttitle { translated, formattext }* ) |
+             ( element shorttitle { translated, formattext }+ )
 subtitle = ( element subtitle { formattext },
             element subtitle { romanized, formattext }?,
-            element subtitle { translated, formattext }? ) |
+            element subtitle { translated, formattext }* ) |
             ( element subtitle { romanized, formattext },
-              element subtitle { translated, formattext }? ) |
-            ( element subtitle { translated, formattext } )
+              element subtitle { translated, formattext }* ) |
+            ( element subtitle { translated, formattext }+ )
 title = ( element title { formattext },
          element title { romanized, formattext }?,
-         element title { translated, formattext }? ) |
+         element title { translated, formattext }* ) |
          ( element title { romanized, formattext },
-           element title { translated, formattext }? ) |
-         ( element title { translated, formattext } )
+           element title { translated, formattext }* ) |
+         ( element title { translated, formattext }+ )
 titleaddon = ( element titleaddon { formattext },
               element titleaddon { romanized, formattext }?,
-              element titleaddon { translated, formattext }? ) |
+              element titleaddon { translated, formattext }* ) |
               ( element titleaddon { romanized, formattext },
-                element titleaddon { translated, formattext }? ) |
-              ( element titleaddon { translated, formattext } )
+                element titleaddon { translated, formattext }* ) |
+              ( element titleaddon { translated, formattext }+ )
 url = element url { xsd:anyURI }
 #venue = element venue { formattext }
 venue = ( element venue { formattext },
          element venue { romanized, formattext }?,
-         element venue { translated, formattext }? ) |
+         element venue { translated, formattext }* ) |
          ( element venue { romanized, formattext },
-           element venue { translated, formattext }? ) |
-         ( element venue { translated, formattext } )
+           element venue { translated, formattext }* ) |
+         ( element venue { translated, formattext }+ )
 version = element version { text }
 volume = element volume { text }
 volumes = element volumes { text }
@@ -297,10 +298,10 @@ key = element key { text }
 #sorttitle = element sorttitle { text }
 sorttitle = ( element sorttitle { formattext },
          element sorttitle { romanized, formattext }?,
-         element sorttitle { translated, formattext }? ) |
+         element sorttitle { translated, formattext }* ) |
          ( element sorttitle { romanized, formattext },
-           element sorttitle { translated, formattext }? ) |
-         ( element sorttitle { translated, formattext } )
+           element sorttitle { translated, formattext }* ) |
+         ( element sorttitle { translated, formattext }+ )
 sortyear = element sortyear { text }
 useprefix = element useprefix { text }
 xref = element xref { text }
@@ -339,51 +340,52 @@ date = element date { xsd:date | xsd:integer }
 urldate = element urldate { xsd:date }
 # LITERAL LISTS
 attlist.lists = attribute andothers { "true" }
-institution = ( element institution { attlist.lists?, (text | item+) },
+institution = ( element institution { attribute id {text}, attlist.lists? }) |
+              ( element institution { attlist.lists?, (text | item+) },
                element institution { attlist.lists?, romanized, (text | item+) }?,
                element institution { attlist.lists?, translated, (text | item+) }? ) |
                ( element institution { attlist.lists?, romanized, (text | item+) },
                  element institution { attlist.lists?, translated, (text | item+) }? ) |
                ( element institution { attlist.lists?, translated, (text | item+) } )
-school = ( element school { attlist.lists?, (text | item+) },
+school = ( element school { attribute id {text}, attlist.lists? }) |
+         ( element school { attlist.lists?, (text | item+) },
           element school { attlist.lists?, romanized, (text | item+) }?,
           element school { attlist.lists?, translated, (text | item+) }? ) |
           ( element school { attlist.lists?, romanized, (text | item+) },
             element school { attlist.lists?, translated, (text | item+) }? ) |
           ( element school { attlist.lists?, translated, (text | item+) } )
-location = ( element location { attlist.lists?, (text | item+) },
+location = ( element location { attribute id {text}, attlist.lists? }) |
+           ( element location { attlist.lists?, (text | item+) },
             element location { attlist.lists?, romanized, (text | item+) }?,
             element location { attlist.lists?, uniform, (text | item+) }? ) |
             ( element location { attlist.lists?, romanized, (text | item+) },
               element location { attlist.lists?, uniform, (text | item+) }? ) |
             ( element location { attlist.lists?, uniform, (text | item+) } )
-address = ( element address { attlist.lists?, (text | item+) },
-           element address { attlist.lists?, romanized, (text | item+) }?,
-           element address { attlist.lists?, uniform, (text | item+) }? ) |
-           ( element address { attlist.lists?, romanized, (text | item+) },
-             element address { attlist.lists?, uniform, (text | item+) }? ) |
-           ( element address { attlist.lists?, uniform, (text | item+) } )
-organization = ( element organization { attlist.lists?, (text | item+) },
+organization = ( element organization { attribute id {text}, attlist.lists? }) |
+               ( element organization { attlist.lists?, (text | item+) },
                 element organization { attlist.lists?, romanized, (text | item+) }?,
                 element organization { attlist.lists?, translated, (text | item+) }? ) |
                 ( element organization { attlist.lists?, romanized, (text | item+) },
                   element organization { attlist.lists?, translated, (text | item+) }? ) |
                 ( element organization { attlist.lists?, translated, (text | item+) } )
-origlocation = ( element origlocation { attlist.lists?, (text | item+) },
+origlocation = ( element origlocation { attribute id {text}, attlist.lists? }) |
+               ( element origlocation { attlist.lists?, (text | item+) },
                 element origlocation { attlist.lists?, romanized, (text | item+) }?,
                 element origlocation { attlist.lists?, uniform, (text | item+) }? ) |
                 ( element origlocation { attlist.lists?, romanized, (text | item+) },
                   element origlocation { attlist.lists?, uniform, (text | item+) }? ) |
                 ( element origlocation { attlist.lists?, uniform, (text | item+) } )
-publisher = ( element publisher { attlist.lists?, (formattext | item+) },
+publisher = ( element publisher { attribute id {text}, attlist.lists? }) |
+            ( element publisher { attlist.lists?, (formattext | item+) },
              element publisher { attlist.lists?, romanized, (formattext | item+) }?,
              element publisher { attlist.lists?, translated, (formattext | item+) }? ) |
              ( element publisher { attlist.lists?, romanized, (formattext | item+) },
                element publisher { attlist.lists?, translated, (formattext | item+) }? ) |
              ( element publisher { attlist.lists?, translated, (formattext | item+) } )
-origpublisher = ( element origpublisher { attlist.lists?, (formattext | item+) },
-                 element origpublisher { attlist.lists?, romanized, (formattext | item+) }?,
-                 element origpublisher { attlist.lists?, translated, (formattext | item+) }? ) |
+origpublisher = ( element origpublisher { attribute id {text}, attlist.lists? }) |
+                ( element origpublisher { attlist.lists?, (formattext | item+) },
+                  element origpublisher { attlist.lists?, romanized, (formattext | item+) }?,
+                  element origpublisher { attlist.lists?, translated, (formattext | item+) }? ) |
                  ( element origpublisher { attlist.lists?, romanized, (formattext | item+) },
                    element origpublisher { attlist.lists?, translated, (formattext | item+) }? ) |
                  ( element origpublisher { attlist.lists?, translated, (formattext | item+) } )
@@ -396,10 +398,13 @@ item = element item { formattext }
 
 # KEY LISTS
 # TODO add attribute type = babel, xml, ISO-XXX etc 
-language = element language { text | item+ }   #xml:lang ?
-origlanguage = element origlanguage { text | item+ } # xml:lang ?
-script = element script { text }
-origscript = element origscript { text }
+language = element language { xsd:language | itemlang+ }
+origlanguage = element origlanguage { xsd:language | itemlang+ }
+itemlang = element item { xsd:language }
+script.list = "Arab" | "Armi" | "Armn" | "Avst" | "Bali" | "Batk" | "Beng" | "Blis" | "Bopo" | "Brah" | "Brai" | "Bugi" | "Buhd" | "Cakm" | "Cans" | "Cari" | "Cham" | "Cher" | "Cirt" | "Copt" | "Cprt" | "Cyrl" | "Cyrs" | "Deva" | "Dsrt" | "Egyd" | "Egyh" | "Egyp" | "Ethi" | "Geok" | "Geor" | "Glag" | "Goth" | "Grek" | "Gujr" | "Guru" | "Hang" | "Hani" | "Hano" | "Hans" | "Hant" | "Hebr" | "Hira" | "Hmng" | "Hrkt" | "Hung" | "Inds" | "Ital" | "Java" | "Jpan" | "Kali" | "Kana" | "Khar" | "Khmr" | "Knda" | "Kore" | "Kthi" | "Lana" | "Laoo" | "Latf" | "Latg" | "Latn" | "Lepc" | "Limb" | "Lina" | "Linb" | "Lisu" | "Lyci" | "Lydi" | "Mand" | "Mani" | "Maya" | "Mero" | "Mlym" | "Mong" | "Moon" | "Mtei" | "Mymr" | "Nkgb" | "Nkoo" | "Ogam" | "Olck" | "Orkh" | "Orya" | "Osma" | "Perm" | "Phag" | "Phli" | "Phlp" | "Phlv" | "Phnx" | "Plrd" | "Prti" | "Qaaa" | "Qabx" | "Rjng" | "Roro" | "Runr" | "Samr" | "Sara" | "Saur" | "Sgnw" | "Shaw" | "Sinh" | "Sund" | "Sylo" | "Syrc" | "Syre" | "Syrj" | "Syrn" | "Tagb" | "Tale" | "Talu" | "Taml" | "Tavt" | "Telu" | "Teng" | "Tfng" | "Tglg" | "Thaa" | "Thai" | "Tibt" | "Ugar" | "Vaii" | "Visp" | "Xpeo" | "Xsux" | "Yiii" | "Zinh" | "Zmth" | "Zsym" | "Zxxx" | "Zyyy" | "Zzzz" 
+script = element script { script.list | itemscript+ } 
+origscript = element origscript { script.list | itemscript+ }
+itemscript = element item { script.list }
 # NAME LISTS
 attlist.author |= attribute type { "author" }?
 attlist.author |= attribute gender { "sf" | "sm" | "sn" | "pf" | "pm" | "pn" | "pp" }?
@@ -555,6 +560,7 @@ remarks = element remarks {formattext|item+}
 ## century
 ## author
 ## works
+
 #########################################################
 BibLaTeXML.article.standard.fields =
   author & # NB: this should be optional
@@ -596,20 +602,24 @@ BibLaTeXML.article.fields =
 
 article = element entry { attlist.article, (title & url? & BibLaTeXML.article.fields) }
 attlist.article = attribute id {text}, attribute entrytype { "article" }, attribute type {"printed"}?
+
 #########################################################
 # url mandatory if type is electronic
 article.electronic = element entry {attlist.article.electronic, (url & title & BibLaTeXML.article.fields) }
 attlist.article.electronic = attribute id {text}, attribute entrytype { "article" }, attribute type {"electronic"}
+
 #########################################################
 # for reviews we need attribute ref or title or both
 review = element entry { attlist.review & (crossref | title) & 
               url? & BibLaTeXML.article.fields }
 attlist.review = attribute id {text}, attribute entrytype { "review" }, attribute type {"printed"}?
+
 #########################################################
 # url mandatory if type is electronic
 review.electronic = element entry { attlist.review.electronic & (crossref | title) &  
               url & BibLaTeXML.article.fields }
 attlist.review.electronic = attribute id {text}, attribute entrytype { "review" }, attribute type {"electronic"}
+
 #########################################################
 BibLaTeXML.book.standard.fields =
   author? & #changed
@@ -656,14 +666,16 @@ BibLaTeXML.book.standard.fields =
   url? &
   eprint? &
   eprinttype? &
-
   (urldate | (urlday & urlmonth & urlyear))?
+  
 BibLaTeXML.book.fields =
   BibLaTeXML.book.standard.fields &
   BibLaTeXML.common.fields &
   BibLaTeXML.additional.fields
+  
 book = element entry { attlist.book, BibLaTeXML.book.fields }
 attlist.book = attribute id {text}, attribute entrytype {"book"}
+
 #########################################################
 BibLaTeXML.booklet.standard.fields =
   author? & #changed
@@ -692,6 +704,7 @@ BibLaTeXML.booklet.fields =
   BibLaTeXML.additional.fields
 booklet = element entry { attlist.booklet, BibLaTeXML.booklet.fields }
 attlist.booklet = attribute id {text}, attribute entrytype {"booklet"}, attribute type { text }?, attribute howpublished {text}?
+
 #########################################################
 BibLaTeXML.collection.standard.fields =
   editor? & # changed
@@ -745,6 +758,7 @@ BibLaTeXML.collection.fields =
   BibLaTeXML.additional.fields
 collection = element entry { attlist.collection, BibLaTeXML.collection.fields }
 attlist.collection = attribute id {text}, attribute entrytype {"collection"} 
+
 #########################################################   
 BibLaTeXML.inbook.standard.fields =
   author &
@@ -800,6 +814,7 @@ BibLaTeXML.inbook.fields =
   BibLaTeXML.additional.fields
 inbook = element entry { attlist.inbook, BibLaTeXML.inbook.fields }
 attlist.inbook = attribute id {text}, attribute entrytype {"inbook"} 
+
 #########################################################
 BibLaTeXML.incollection.standard.fields =
   author &
@@ -854,6 +869,7 @@ BibLaTeXML.incollection.fields =
   BibLaTeXML.additional.fields
 incollection = element entry { attlist.incollection, BibLaTeXML.incollection.fields }
 attlist.incollection = attribute id {text}, attribute entrytype {"incollection"} 
+
 #########################################################
 BibLaTeXML.inproceedings.standard.fields =
   author &
@@ -901,6 +917,7 @@ BibLaTeXML.inproceedings.fields =
   BibLaTeXML.additional.fields
 inproceedings = element entry { attlist.inproceedings, BibLaTeXML.inproceedings.fields }
 attlist.inproceedings = attribute id {text}, attribute entrytype {"inproceedings"}
+
 #########################################################
 BibLaTeXML.manual.standard.fields =
   (author|editor)? &
@@ -936,6 +953,7 @@ BibLaTeXML.manual.fields =
   BibLaTeXML.additional.fields
 manual = element entry { attlist.manual, BibLaTeXML.manual.fields }
 attlist.manual = attribute id {text}, attribute entrytype {"manual"}, attribute type { text }?
+
 #########################################################
 BibLaTeXML.misc.standard.fields =
   (author|editor)? &
@@ -963,6 +981,7 @@ BibLaTeXML.misc.fields =
   BibLaTeXML.additional.fields
 misc = element entry { attlist.misc, BibLaTeXML.misc.fields }
 attlist.misc = attribute id {text}, attribute entrytype {"misc"}, attribute type { text }?, attribute howpublished {text}?
+
 #########################################################
 BibLaTeXML.online.standard.fields =
   (author|editor)? &
@@ -983,6 +1002,7 @@ BibLaTeXML.online.fields =
   BibLaTeXML.additional.fields
 online = element entry { attlist.online , BibLaTeXML.online.fields }
 attlist.online = attribute id {text}, attribute entrytype {"online"}
+
 #########################################################
 BibLaTeXML.patent.standard.fields =
   author &
@@ -1066,6 +1086,7 @@ attlist.periodical = attribute id {text}, attribute entrytype {"periodical"}, at
 # url mandatory if type is electronic
 periodical.electronic = element entry { attlist.periodical.electronic, (url & BibLaTeXML.periodical.fields) }
 attlist.periodical.electronic = attribute id {text}, attribute entrytype {"periodical"}, attribute type {"electronic"}
+
 #########################################################
 BibLaTeXML.proceedings.standard.fields =
   editor? & # made it optional
@@ -1108,6 +1129,7 @@ BibLaTeXML.proceedings.fields =
   BibLaTeXML.additional.fields
 proceedings = element entry { attlist.proceedings, BibLaTeXML.proceedings.fields }
 attlist.proceedings = attribute id {text}, attribute entrytype {"proceedings"}
+
 #########################################################
 BibLaTeXML.report.standard.fields =
   author &
@@ -1139,6 +1161,7 @@ BibLaTeXML.report.fields =
   BibLaTeXML.additional.fields
 report = element entry { attlist.report, BibLaTeXML.report.fields }
 attlist.report = attribute id {text}, attribute entrytype {"report"}, attribute type { "techreport" | "resreport" | text }
+
 #########################################################
 BibLaTeXML.thesis.standard.fields =
   author &
@@ -1169,6 +1192,7 @@ BibLaTeXML.thesis.fields =
   BibLaTeXML.additional.fields
 thesis = element entry { attlist.thesis, BibLaTeXML.thesis.fields }
 attlist.thesis = attribute id {text}, attribute entrytype {"thesis"}, attribute type { "phdthesis" | "mathesis" | text }
+
 #########################################################
 BibLaTeXML.unpublished.standard.fields =
   author &
@@ -1189,6 +1213,7 @@ BibLaTeXML.unpublished.fields =
   BibLaTeXML.additional.fields
 unpublished = element entry { attlist.unpublished, BibLaTeXML.unpublished.fields }
 attlist.unpublished = attribute id {text}, attribute entrytype {"unpublished"} 
+
 #########################################################
 BibLaTeXML.preprint.standard.fields =
   author &
@@ -1211,11 +1236,14 @@ BibLaTeXML.preprint.fields =
   BibLaTeXML.additional.fields
 preprint = element entry { attlist.preprint, BibLaTeXML.preprint.fields }
 attlist.preprint = attribute id {text}, attribute entrytype {"preprint"}
+
 #########################################################
 software = element entry { attribute id {text}, attribute entrytype {"software"}, BibLaTeXML.misc.fields }
+
 #########################################################
 movie = element entry { attribute id {text}, attribute entrytype {"movie"}, BibLaTeXML.misc.fields }
 
+#########################################################
 BibLaTeXML.set.fields = 
   entryset &
   crossref? & #actually this is not needed as it is the first element of the entryset
