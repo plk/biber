@@ -2,6 +2,7 @@ Build.PL
 Changes
 MANIFEST
 README
+TODO
 bin/biber
 bin/bib2biblatexml
 bin/latex2utf8
