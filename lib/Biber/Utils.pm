@@ -70,6 +70,8 @@ my $NONSORTPREFIX = qr/\p{Ll}{2}-/; # etc
 
 sub parsename {
     my ($namestr, $opts) = @_ ;
+    $namestr =~ s/\\,\s*|{\\,\s*}/~/g; # necessary to get rid of LaTeX small spaces \,
+    # DEBUG carp "Parsing namestring $namestr\n" if $opts->{biberdebug} ;
     my $usepre = $opts->{useprefix} || $CONFIG_DEFAULT{useprefix} ;
 
     my $lastname ;
@@ -98,10 +100,18 @@ sub parsename {
                )
                ,
                \s+
-               ([^,]+)
+               (
+                [^,]+
+               | 
+                {[^,]+}
+               )
                ,
                \s+
-               ([^,]+)
+               (
+                [^,]+
+               | 
+                {[^,]+}
+               )
              $/x ;
 
         #$lastname =~ s/^{(.+)}$/$1/g ;
@@ -143,11 +153,11 @@ sub parsename {
           $namestr =~ /^(
                          {.+}
                         |
-                         (?:\p{Lu}\p{Ll}+\s*)+
+                         (?:\S+[\s~]*)+
                         )
                         \s+
                         (
-                         (?:\p{Ll}|\s)+
+                         (?:\p{Ll}+\.?[\s~]*)+
                         )?
                         (.+)
                         $/x ;
@@ -159,7 +169,7 @@ sub parsename {
         $prefix =~ s/\s+$// if $prefix ;
         $namestr = "" ;
         $namestr = $prefix if $prefix ;
-        $namestr .= $lastname ;
+        $namestr .= $lastname if $lastname;
         $namestr .= ", " . $firstname if $firstname ;
     }
     else 
