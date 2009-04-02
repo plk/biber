@@ -19,7 +19,8 @@ biber requires the following CPAN modules:
     * Readonly (but Readonly::XS is highly recommended)
     
     For parsing bibtex files, you need either 
-    * Text::BibTeX
+    * Text::BibTeX (strongly recommended, although I don't think it can be
+                    installed under Windows outside of a Cygwin environment)
     or
     * Parse::RecDescent 
       and
@@ -29,6 +30,9 @@ biber requires the following CPAN modules:
     
     For parsing data in the BibLaTeXML format, you'll need 
     * XML::LibXML 
+
+    bib2biblatexml also requires
+    * XML::Writer
     
     Optionally, if you want to place your xml files in a Berkeley DBXML container:
     * Sleepycat::DbXml 
