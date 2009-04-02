@@ -6,10 +6,10 @@ use Biber::Constants ;
 use Biber::Utils ;
 use Parse::RecDescent ;
 use Regexp::Common qw{ balanced } ;
-use Data::Dumper;
+use Biber::BibTeX::Parser ;
 
 sub _bibtex_prd_parse {
-    
+
     my ($self, $filename) = @_ ;
 
     my @auxcitekeys = $self->citekeys ;
@@ -18,67 +18,72 @@ sub _bibtex_prd_parse {
 
     my @localkeys ;
 
-    my $grammar = q{
-         BibFile : <skip: qr{\s* (\%+[^\n]*\s*)*}x> Component(s) 
-         #Comment(s) {1 ;} # { $return = { 'comments' => \@{$item[1]} } }
-        Component : Preamble { 
-                   $return = { 'preamble' => $item[1] } 
-               } 
-               | String(s) { 
-                   my @str = @{$item[1]} ;
-                   $return = { 'strings' => \@str } ;
-                   # we perform the substitutions now
-                   foreach (@str) {
-                      my ($a, $b) = split(/\s*=\s*/, $_, 2) ;
-                      $b =~ s/^\s*"|"\s*$//g ;
-                      $text =~ s/$a\s*#?\s*(\{?)/$1$b/g
-                   }
-               } 
-               | BibEntry(s) { 
-                   my @entries = @{$item[1]} ; 
-                   $return = { 'entries' => \@entries } 
-               } 
-               #     Comment : /\%+/ /[^\n]*\n+/  
-         Preamble : '@PREAMBLE' PreambleString
-         PreambleString : { 
-                   my $value = extract_bracketed($text, '{}') ;
-                   $value =~ s/^{(.*)}$/$1/s if $value ;
-                   $value =~ s/"\s*\n+\s*#/\n/mg ;
-                   #     $value =~ s/\n\s*/\n/g ;
-                   #   $value =~ s/^\s*{\s*(.+)\s*}\s*$/$1/s ;
-                   $value =~ s/^\s*"\s*//mg ;
-                   $value =~ s/\s*"\s*$//mg ;
-                   ($return) = $value if $value ;
-         }
-         String : '@STRING' StringArg 
-         StringArg : { 
-                   my $value = extract_bracketed($text, '{}') ;
-                   $value =~ s/\s*\n\s*/ /g ;
-                   ($return) = $value =~ /^{(.*)}$/s if $value ;
-         }
-         BibEntry : '@' Typename '{' Key ',' Field(s) '}' /\n*/ { 
-                   my %data = map { %$_ } @{$item[6]} ;
-                   $return = { $item[4] => {entrytype => lc($item[2]), %data } } 
-         }
-         Typename : /[A-Za-z]+/ 
-         Key : /[^,\s\n]+/
-         Field : Fieldname /\s*=\s*/ Fielddata /,?/ {
-                   $return = { $item[1] => $item[3] } 
-         }
-         Fieldname : /[A-Za-z]+/
-         Fielddata : { 
-                   my $value = extract_bracketed($text, '{}') ;
-                   $value =~ s/\s*\n\s*/ /g ;
-                   ($return) = $value =~ /^{(.*)}$/s if $value ;
-         } 
-         | { my $value = extract_delimited($text, '"') ;#"'
-                   $value =~ s/\s*\n\s*/ /g ;
-                   ($return) = $value =~ /^"(.*)"$/s if $value ;
-         } 
-         | /[^,]+/ { 
-                   $return = $item[1] 
-         } # {} or "" are not compulsory if on single line 
-    } ;
+    ## TODO 
+    # $::RD_TRACE = 1 if $self->config('parserdebug') ;
+
+#    my $grammar = q{
+#         BibFile : <skip: qr{ \s* (\%+[^\n]*\s*)* }x> Component(s) 
+#         #Comment(s) {1 ;} # { $return = { 'comments' => \@{$item[1]} } }
+#        Component : Preamble { 
+#                   $return = { 'preamble' => $item[1] } 
+#               } 
+#               | String(s) { 
+#                   my @str = @{$item[1]} ;
+#                   $return = { 'strings' => \@str } ;
+#                   # we perform the substitutions now
+#                   foreach (@str) {
+#                      my ($a, $b) = split(/\s*=\s*/, $_, 2) ;
+#                      $b =~ s/^\s*"|"\s*$//g ;
+#                      $text =~ s/$a\s*#?\s*(\{?)/$1$b/g
+#                   }
+#               } 
+#               | Comment(s) { 1 ; }
+#               | BibEntry(s) { 
+#                   my @entries = @{$item[1]} ; 
+#                   $return = { 'entries' => \@entries } 
+#               } 
+#               #     Comment : /\%+/ /[^\n]*\n+/  
+#         Preamble : /\@PREAMBLE/i PreambleString
+#         PreambleString : { 
+#                   my $value = extract_bracketed($text, '{}') ;
+#                   $value =~ s/^{(.*)}$/$1/s if $value ;
+#                   $value =~ s/"\s*\n+\s*#/\n/mg ;
+#                   #     $value =~ s/\n\s*/\n/g ;
+#                   #   $value =~ s/^\s*{\s*(.+)\s*}\s*$/$1/s ;
+#                   $value =~ s/^\s*"\s*//mg ;
+#                   $value =~ s/\s*"\s*$//mg ;
+#                   ($return) = $value if $value ;
+#         }
+#         String : /\@STRING/i StringArg 
+#         StringArg : { 
+#                   my $value = extract_bracketed($text, '{}') ;
+#                   $value =~ s/\s*\n\s*/ /g ;
+#                   ($return) = $value =~ /^{(.*)}$/s if $value ;
+#         }
+#         Comment : /\@COMMENT/i StringArg 
+#         BibEntry : '@' Typename '{' Key ',' Field(s) '}' /\n*/ { 
+#                   my %data = map { %$_ } @{$item[6]} ;
+#                   $return = { $item[4] => {entrytype => lc($item[2]), %data } } 
+#         }
+#         Typename : /[A-Za-z\.\-]+/ 
+#         Key : /[^,\s\n]+/
+#         Field : Fieldname /\s*=\s*/ Fielddata /,?/ {
+#                   $return = { $item[1] => $item[3] } 
+#         }
+#         Fieldname : /\S+/
+#         Fielddata : { 
+#                   my $value = extract_bracketed($text, '{}') ;
+#                   $value =~ s/\s*\n\s*/ /g ;
+#                   ($return) = $value =~ /^{(.*)}$/s if $value ;
+#         } 
+#         | { my $value = extract_delimited($text, '"') ;#"'
+#                   $value =~ s/\s*\n\s*/ /g ;
+#                   ($return) = $value =~ /^"(.*)"$/s if $value ;
+#         } 
+#         | /[^,]+/ { 
+#                   $return = $item[1] 
+#         } # {} or "" are not compulsory if on single line 
+#    } ;
     undef $/ ;
 
     #my $bib = new IO::File "<$filename" or croak "Failed to open $filename: $!" ;
@@ -90,9 +95,10 @@ sub _bibtex_prd_parse {
 
     #$bib =~ s/\%+.*$//mg ; # this gets rid of all comments
 
-    my $btparser = Parse::RecDescent->new($grammar) or croak "Bad grammar: $!" ;
+    #my $btparser = Parse::RecDescent->new($grammar) or croak "Bad grammar: $!" ;
+    my $btparser = Biber::BibTeX::Parser->new or croak "Cannot create Biber::BibTeX::Parser object: $!" ;
     
-    my $bf       = $btparser->BibFile(<$bib>)       or croak "Can't parse file $filename : Are you certain it is a BibTeX file?\n\t$!" ;
+    my $bf       = $btparser->BibFile(<$bib>) or croak "Can't parse file $filename : Are you certain it is a BibTeX file?\n\t$!" ;
     
     close $bib ;
 
