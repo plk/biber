@@ -179,7 +179,11 @@ sub parse_auxfile {
 
     my $self = shift ;
     my $auxfile = shift ; 
-    my @bibdatafiles = $self->{config}->{bibdata} ;
+    my @bibdatafiles = ();
+    if ($self->config('bibdata')) { 
+        @bibdatafiles = @{ $self->{config}->{bibdata} }
+    } ;
+
     my @auxcitekeys = $self->citekeys ;
 
     croak "Cannot find file '$auxfile'!\n" unless -f $auxfile ;
@@ -372,6 +376,11 @@ sub parse_bibtex {
         require Biber::BibTeX::PRD ;
         push @ISA, 'Biber::BibTeX::PRD' ;
 
+        print "Using a Parse::RecDescent parser... this can be very slow with large bib files!\n" ;
+        unless ( $^O eq 'MSWin32' ) {
+            print "You are strongly advised to install Text::BibTeX for faster processing!\n\n" ;
+        }
+        
         @localkeys = $self->_bibtex_prd_parse($filename) ;
     }
 
