@@ -3,10 +3,8 @@ use strict ;
 use warnings ;
 no warnings 'utf8' ;
 use Carp ;
-
-#This should be removed in the official distribution:
-#use FindBin ;
-#use lib "$FindBin::Bin/../lib" ;
+use Cwd ;
+use File::Spec ;
 
 use Biber ;
 #---------------------------------------------------
@@ -56,6 +54,8 @@ my $biber = Biber->new($opts) ;
 my $auxfile ;
 my $bblfile ; 
 
+my $currentdir = getcwd() ;
+
 if ($opts->{allentries}) {
     if ($opts->{bibdata}) {
         $bblfile = $opts->{bibdata}->[0] ;
@@ -76,11 +76,23 @@ else {
     $biber->parse_auxfile($auxfile)
 }
 
+if ($biber->config('biberdebug')) {
+    $biber->dump('biber.dump0') ;
+    print "Dumped initial biber object for debugging in file biber.dump0\n"
+}
+
 #=====================================================
 # Parse/query database
 #=====================================================
 
 foreach my $bib (@{ $biber->config('bibdata') }) {
+
+    unless (File::Spec->file_name_is_absolute($bib)) {
+
+        $bib = File::Spec->catfile( $currentdir, $bib ) ;
+    
+    }
+
     if ($bib =~ /\.(db)?xml$/) {
         $biber->parse_biblatexml( $bib )
     }
@@ -96,7 +108,7 @@ foreach my $bib (@{ $biber->config('bibdata') }) {
 
 if ($biber->config('biberdebug')) {
     $biber->dump('biber.dump1') ;
-    print "Dumped initial biber object for debugging in file biber.dump1\n"
+    print "Dumped postparse biber object for debugging in file biber.dump1\n"
 }
 
 $biber->prepare ; 
@@ -132,7 +144,7 @@ Usage:  $me <file>.aux
 Options:
   --help|-h              Show this help message.
   --version|-v           Display version number.
-  --mincrossrefs|-m <n>  Set treshold for crossrefs.
+  --mincrossrefs|-m <n>  Set threshold for crossrefs.
   --fastsort|-f          Do not use LaTeX_Decode and Unicode::Collate for sorting
   --useprd|-p            Force parsing with Parse::RecDescent
   --bibdata|-d <file>    Use <file> as the bibliography database
