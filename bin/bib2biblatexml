@@ -25,6 +25,8 @@ GetOptions(
     $opts,
     'help|h|?',
     'version|v',
+    'useprd|p!',
+    'debug|D!',
 #    'validate|V!', 
 #    'schema|s=s', 
 ) ;
@@ -103,7 +105,8 @@ my @TITLEFIELDS =
 	journalsubtitle
 	reprinttitle /;
 
-my $biber = Biber->new( {allentries => 1, unicodebbl => 1} ) ;
+my $biber = Biber->new( {allentries => 1, unicodebbl => 1, 
+        biberdebug => $opts->{debug}, useprd => $opts->{useprd} } ) ;
 
 my $filename = $ARGV[0] ;
 
@@ -115,7 +118,7 @@ print version() ;
 
 $biber->parse_bibtex($filename) ;
 
-unlink "$filename.utf8" ;
+unlink "$filename.utf8" or carp "Cannot delete $filename.utf8" ;
 
 my %bibentries = $biber->bib ;
 
@@ -207,17 +210,22 @@ for my $citekey ( sort keys %bibentries ) {
 	
 	foreach my $field (@LISTFIELDS) {
 		if ($entry->{$field}) {
-			my @lf = @{$entry->{$field}} ;
+			
+            my @lf = @{$entry->{$field}} ;
             
-            $field = $aliases{$field} if $aliases{$field} ;
+            my $afield = $field ;
+
+            if ( $aliases{$field} ) {
+                $afield = $aliases{$field} 
+            } ;
 			
             if ( $#lf > 0 ) {
 				if ($lf[-1] eq "others" ) {
-					$writer->startTag("bib:$field", "andothers"=>"true") ;
+					$writer->startTag("bib:$afield", "andothers"=>"true") ;
 					pop @lf ;
 				} 
 				else {
-					$writer->startTag("bib:$field") ;
+					$writer->startTag("bib:$afield") ;
 				} ;
 				for my $i (0..$#lf) {
 					$writer->startTag("bib:item") ;
@@ -227,8 +235,8 @@ for my $citekey ( sort keys %bibentries ) {
 				$writer->endTag() ; #field
 			}
 			else {
-				$writer->startTag("bib:$field") ;
-				$writer->characters($entry->{$field}->[0]) ;
+				$writer->startTag("bib:$afield") ;
+				$writer->characters($entry->{$afield}->[0]) ;
 				$writer->endTag() ; #field
 			}
 		}
