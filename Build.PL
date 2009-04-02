@@ -16,10 +16,11 @@ my $builder = Module::Build->new(
         'Readonly' => 0,
         'File::Slurp'  => 0,
         'XML::LibXML'  => 0,
+        'XML::Writer'  => 0,
     },
     recommends => {
         'Readonly::XS' => 0,
-        'Text::BibTeX' => 0
+        'Text::BibTeX' => 0,
     },
     script_files => [ glob( "bin/*" ) ],
     schema_files => { 'data/schemas/biblatexml.rnc' => 'lib/Biber/biblatexml.rnc', 
