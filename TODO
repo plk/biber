@@ -11,9 +11,9 @@ in decreasing order of priority:
    * FIX the handling of @comments constructs in bib files / DONE
    * FIX things like {\,} in name strings / DONE
    * improve documentation of source code :)
-   * automatically add .aux when argument is basename
-   * Look for datafiles in $ENV{BIBINPUTS}
-   * add option --inputencoding <latin1> etc (only utf8 supported as of now)
+   * automatically add .aux when argument is basename / DONE
+   * Look for datafiles in $ENV{BIBINPUTS} / DONE
+   * add option --inputencoding <latin1> etc (only utf8 supported as of now) / DONE
    ----- version 0.5 ----- FIRST OFFICIAL RELEASE?
    * separate data parsing in individual modules / DONE
    * make biber and dependencies available as a par archive for maximal portability / DONE
@@ -21,6 +21,7 @@ in decreasing order of priority:
    * allow to ignore certain fields through conf settings
    * user-setting of diacritics to ignore in sorting (‘ and ʿ are currently built-in)
    * same thing with prefixes (e.g. al- el- etc.)
+   * Implement options in LaTeX::Decode 
    ----- version 0.6 -----
    * use Log::Log4Perl
    * add validation mechanism for options and config (untaint data!)
