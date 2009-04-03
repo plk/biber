@@ -1,12 +1,13 @@
 #!/usr/bin/perl
 use strict ;
 use warnings ;
-no warnings 'utf8' ;
+# no warnings 'utf8' ;
 use Carp ;
-use Cwd ;
-use File::Spec ;
+use IPC::Cmd qw( can_run run ) ;
 
 use Biber ;
+use Biber::Utils ;
+
 #---------------------------------------------------
 
 use Getopt::Long qw/:config no_ignore_case/ ;
@@ -17,6 +18,7 @@ GetOptions(
     'mincrossrefs|m=s',
     'unicodebbl|U!',
     'unicodebib|u!',
+    'inputencoding|i=s',
     'useprd|p!',
     'bibdata|d=s',
     'outfile|O=s',
@@ -54,30 +56,20 @@ my $biber = Biber->new($opts) ;
 my $auxfile ;
 my $bblfile ; 
 
-my $currentdir = getcwd() ;
-
-if ($opts->{allentries}) {
-    if ($opts->{bibdata}) {
-        $bblfile = $opts->{bibdata}->[0] ;
-        $bblfile =~ s/\.[^.]+$/\.bbl/ ;
-    }
-    else {
-        $auxfile = $ARGV[0] or croak usage() ;
-        $auxfile .= '.aux' unless $auxfile =~ m/\.aux$/ ;
-        $bblfile = $auxfile ;
-        $bblfile =~ s/aux$/bbl/ ;
-        $biber->parse_auxfile($auxfile) ;
-    }
+if ( $opts->{allentries} && $opts->{bibdata} ) {
+    $bblfile = $opts->{bibdata}->[0] ;
+    $bblfile =~ s/(?:\.(bib|xml|dbxml))?$/\.bbl/ ;
 }
 else {
     $auxfile = $ARGV[0] or croak usage() ;
+    $auxfile .= '.aux' unless $auxfile =~ m/\.aux$/ ;
     $bblfile = $auxfile ;
     $bblfile =~ s/aux$/bbl/ ;
     $biber->parse_auxfile($auxfile)
 }
 
 if ($biber->config('biberdebug')) {
-    $biber->dump('biber.dump0') ;
+    $biber->_dump('biber.dump0') ;
     print "Dumped initial biber object for debugging in file biber.dump0\n"
 }
 
@@ -87,13 +79,12 @@ if ($biber->config('biberdebug')) {
 
 foreach my $bib (@{ $biber->config('bibdata') }) {
 
-    unless (File::Spec->file_name_is_absolute($bib)) {
-
-        $bib = File::Spec->catfile( $currentdir, $bib ) ;
-    
-    }
+    # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
+    $bib = bibfind($bib) ;
+    print "DBG: Bib is $bib\n" ;
 
     if ($bib =~ /\.(db)?xml$/) {
+        croak "File $bib does not exist!" unless -f $bib ;
         $biber->parse_biblatexml( $bib )
     }
     elsif ($bib =~ /\.bib$/) {
@@ -102,19 +93,19 @@ foreach my $bib (@{ $biber->config('bibdata') }) {
     }
     else {
         croak "File $bib.bib does not exist!" unless -f "$bib.bib" ;
-        $biber->parse_bibtex("$bib.bib")
+        $biber->parse_bibtex("$bib.bib") ;
     }
 }
 
 if ($biber->config('biberdebug')) {
-    $biber->dump('biber.dump1') ;
+    $biber->_dump('biber.dump1') ;
     print "Dumped postparse biber object for debugging in file biber.dump1\n"
 }
 
 $biber->prepare ; 
 
 if ($biber->config('biberdebug')) {
-    $biber->dump('biber.dump2') ;
+    $biber->_dump('biber.dump2') ;
     print "Dumped final biber object for debugging in file biber.dump2\n"
 }
 
@@ -138,20 +129,31 @@ sub usage {
     my $me = "biber" ;    #basename($0);
 
     qq[
-Usage:  $me <file>.aux
-     Creates <file>.bbl
+Usage:  $me file.aux
+        Creates file.bbl
+
+        $me -d foo.bib file.aux
+        Creates file.bbl from entries in foo.bib and the datafiles 
+        listed in file.aux
+
+        $me -d foo.bib,bar.xml -a
+        Creates foo.bbl from all entries in foo.bib and bar.xml
 
 Options:
   --help|-h              Show this help message.
   --version|-v           Display version number.
   --mincrossrefs|-m <n>  Set threshold for crossrefs.
   --fastsort|-f          Do not use LaTeX_Decode and Unicode::Collate for sorting
-  --useprd|-p            Force parsing with Parse::RecDescent
-  --bibdata|-d <file>    Use <file> as the bibliography database
+  --useprd|-p            Parse with Parse::RecDescent instead of Text::BibTeX
+  --bibdata|-d <files>   Use <files> as bibliography databases (comma separated list)
   --outfile|-O <file>    Output to <file> instead of <basename>.bbl
-  --allentries|-a        Output all entries in the database
+  --allentries|-a        Output all entries in the database 
+                         (NB: this ignores the .aux file)
   --unicodebib|-u        Assume bib file is UTF-8 and skip latex_decode
   --unicodebbl|-U        Encode the bbl output in UTF-8
+  --inputencoding|-i [encoding] 
+                         Specify the encoding of the bib file(s). The bbl file 
+                         will also have this encoding when --unicodebbl is false.
   --biberdebug|-D        Turn on debugging for biber
     \n]
 }
