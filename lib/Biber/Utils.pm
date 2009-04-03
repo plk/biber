@@ -2,6 +2,8 @@ package Biber::Utils ;
 use strict ;
 use warnings ;
 use Carp ;
+use File::Find; 
+use IPC::Cmd qw( can_run run ) ;
 use LaTeX::Decode ;
 use Biber::Constants ;
 use base 'Exporter' ;
@@ -24,7 +26,7 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ parsename terseinitials makenameid makenameinitid cleanstring
+our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid cleanstring
     normalize_string latexescape array_minus getlabel remove_outer getinitials
     tersify } ;
 
@@ -43,6 +45,48 @@ my $NONSORTPREFIX = qr/\p{Ll}{2}-/; # etc
 ######
 
 =head1 FUNCTIONS
+
+=head2 bibfind
+
+    Searches a bib file in the BIBINPUTS paths using kpsepath (which should be
+    available on most modern TeX installations). Otherwise it just returns 
+    the argument.
+=cut
+
+sub bibfind {
+    our $filename = shift ;
+    our @found ;
+
+    $filename .= '.bib' unless $filename =~ /\.(bib|xml|dbxml)$/ ;
+
+    if ( can_run("kpsepath") ) {
+        my $kpsepath ;
+        scalar run( command => [ 'kpsepath', 'bib' ], 
+                    verbose => 0, 
+                    buffer => \$kpsepath ) ;
+        my @paths = split ( /:!*/, $kpsepath ) ;
+        sub _removetrailingslashes {
+            my $str = shift;
+            $str =~ s|/+\s*$|| ;
+            return $str
+        } ;
+
+        @paths = map { _removetrailingslashes( $_ ) } @paths ;
+
+        no warnings 'File::Find' ;
+        find (\&_wanted, @paths) ;
+
+        sub _wanted {
+            $_ =~ /^$filename($|\.bib$)/ && push @found, $File::Find::name ;
+        } 
+
+        return $found[0]
+
+    } else {
+        return $filename
+    }
+}
+
 
 =head2 parsename
 
