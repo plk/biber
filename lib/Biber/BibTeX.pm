@@ -15,8 +15,16 @@ sub _text_bibtex_parse {
     
     my @localkeys ;
 
-    my $bib = new Text::BibTeX::File $filename
-     or croak "Cannot create Text::BibTeX::File object from $filename: $!" ;
+    my $encoding ;    
+
+    if ( $self->config('inputencoding') && ! $self->config('unicodebbl') ) {
+        $encoding = $self->config('inputencoding') ;
+    } else {
+        $encoding = "utf8" ;
+    } ;
+
+    my $bib = Text::BibTeX::File->new( $filename, "<" )
+        or croak "Cannot create Text::BibTeX::File object from $filename: $!" ;
 
     #TODO validate with Text::BibTeX::Structure ?
     my $preamble ;
@@ -68,7 +76,8 @@ sub _text_bibtex_parse {
 
             foreach my $f ( @flistnosplit ) {
 
-                my $value = decode_utf8( $entry->get($f) ) ;
+                #my $value = decode_utf8( $entry->get($f) ) ;
+                my $value = decode( $encoding, $entry->get($f) ) ;
 
                 $bibentries{ $key }->{$f} = $value ;
 
@@ -90,7 +99,8 @@ sub _text_bibtex_parse {
 
                 next unless $entry->exists($f) ;
 
-                my @tmp = map { decode_utf8($_) } $entry->split($f) ;
+                #my @tmp = map { decode_utf8($_) } $entry->split($f) ;
+                my @tmp = map { decode($encoding, $_) } $entry->split($f) ;
 
                 if ($Biber::is_name_entry{$f}) {
 
