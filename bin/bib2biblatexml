@@ -1,7 +1,7 @@
 #!/usr/bin/perl 
 use strict ;
 use warnings ;
-no warnings 'utf8' ;
+# no warnings 'utf8' ;
 use Carp ;
 use open IO => ':encoding(utf8)' ;
 binmode( STDOUT, ':utf8' ) ;
@@ -25,6 +25,7 @@ GetOptions(
     $opts,
     'help|h|?',
     'version|v',
+    'inputencoding|i=s',
     'useprd|p!',
     'debug|D!',
 #    'validate|V!', 
@@ -105,13 +106,19 @@ my @TITLEFIELDS =
 	journalsubtitle
 	reprinttitle /;
 
-my $biber = Biber->new( {allentries => 1, unicodebbl => 1, 
-        biberdebug => $opts->{debug}, useprd => $opts->{useprd} } ) ;
+my $biber = Biber->new( { allentries => 1, unicodebbl => 1, 
+        biberdebug => $opts->{debug}, useprd => $opts->{useprd},
+        inputencoding => $opts->{inputencoding} } ) ;
 
 my $filename = $ARGV[0] ;
 
 unless ( -f $filename) { 
-    croak "There is no file $filename !\n" ;
+
+    unless ( -f "$filename.bib" ) {
+        croak "There is no file $filename !\n" ;
+    }
+
+    $filename .= ".bib";
 }
 
 print version() ;
@@ -345,6 +352,8 @@ Usage:  $me <file>.bib
 Options:
   --help|-h              Show this help message.
   --version|-v           Display version number.
+  --inputencoding|-i [encoding] 
+                         Input file uses legacy encoding 
      \n]
 }
 
