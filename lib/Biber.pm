@@ -16,11 +16,11 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =head1 VERSION
 
-Version 0.4
+Version 0.4.2
 
 =cut
 
-our $VERSION = '0.4.1' ;
+our $VERSION = '0.4.2' ;
 
 =head1 SYNOPSIS
 
@@ -344,18 +344,35 @@ sub parse_bibtex {
 
     my @localkeys = () ;
 
+    my $ufilename = "$filename.utf8" ;
+
     if ( !$self->config('unicodebib') && $self->config('unicodebbl') ) {
         require LaTeX::Decode ;
         require File::Slurp ; 
-        my $ufilename = "$filename.utf8" ;
-        my $ubib      = new IO::File ">$ufilename" ;
-        $ubib->binmode(':utf8') ;
-        my $buf       = File::Slurp::read_file($filename) or croak "Can't read $filename" ;
+        my $ubib      = IO::File->new( $ufilename, ">:utf8" ) ;
+        # $ubib->binmode(':utf8') ;
 
-        #TODO decode $buf if encoding is not UTF-8 : cmd-line option --inputencoding
+        my $mode = "";
+
+#        if ( $self->config('inputencoding') ) {
+#            $mode = ':encoding(' . $self->config('inputencoding') . ')' ;
+#        } else {
+#            $mode = "" ;
+#        } ;
+        
+        my $infile = IO::File->new( $filename, "<$mode" ) ;
+
+        my $buf    = File::Slurp::read_file($infile) or croak "Can't read $filename" ;
+
+        if ( $self->config('inputencoding') ) {
+            $buf = decode($self->config('inputencoding'), $buf)
+        } ;
+
         print $ubib LaTeX::Decode::latex_decode($buf) or croak "Can't write to $ufilename : $!" ;
         $ubib->close or croak "Can't close filehandle to $ufilename: $!" ;
-        $filename    = $ufilename ;
+
+        $filename  = $ufilename ;
+        
         $self->{config}->{unicodebib} = 1 ;
     }
 
@@ -385,7 +402,7 @@ sub parse_bibtex {
     }
 
     #FIXME optional?
-    #unlink "$ufilename" if (defined $ufilename and -f "$ufilename") ;
+    unlink $ufilename if -f $ufilename ;
     
     my %bibentries = $self->bib ;
 
@@ -917,8 +934,17 @@ sub output_to_bbl {
 
     print "Preparing final output...\n" if $self->config('biberdebug') ;
 
-    my $BBLFILE = IO::File->new($bblfile, '>') or croak "Failed to open $bblfile : $!" ;
-    $BBLFILE->binmode(':utf8') if $self->config('unicodebbl') ;
+    my $mode ;
+
+    if ( $self->config('inputencoding') and ! $self->config('unicodebbl') ) {
+        $mode = ':encoding(' . $self->config('inputencoding') . ')' ;
+    } else {
+        $mode = ":utf8" ;
+    } ;
+
+    my $BBLFILE = IO::File->new($bblfile, ">$mode") or croak "Failed to open $bblfile : $!" ;
+
+    # $BBLFILE->binmode(':utf8') if $self->config('unicodebbl') ;
 
     my $BBL = <<"EOF"
 % \$ biblatex auxiliary file \$
@@ -957,22 +983,25 @@ EOF
         $BBL .= "\\endlossort\n" ;
     }
     $BBL .= "\\endinput\n" ;
-    ## carp "The output does not appear to be valid UTF-8!" unless Encode::is_utf8($BBL) ;
 
-    #$BBL = decode('utf8', $BBL) ; #if $self->config('unicodebbl') ;
+#    if ( $self->config('inputencoding') and ! $self->config('unicodebbl') ) {
+#        $BBL = encode($self->config('inputencoding'), $BBL) 
+#    } ;
+
+
     print $BBLFILE $BBL or croak "Failure to write to $bblfile: $!" ;
     print "Output to $bblfile\n" unless $self->config('quiet') ;
     close $BBLFILE or croak "Failure to close $bblfile: $!" ;
     return
 }
 
-=head2 dump
+=head2 _dump
 
     Dump the biber object with Data::Dumper for debugging
 
 =cut
 
-sub dump {
+sub _dump {
     my ($self, $file) = @_ ;
     require Data::Dumper or carp ;
     my $fh = IO::File->new($file, '>') or croak "Can't open file $file for writing" ;
