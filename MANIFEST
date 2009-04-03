@@ -9,6 +9,7 @@ bin/latex2utf8
 lib/Biber.pm
 lib/Biber/BibTeX.pm
 lib/Biber/BibTeX/PRD.pm
+lib/Biber/BibTeX/Parser.pm
 lib/Biber/Constants.pm
 lib/Biber/DBXML.pm
 lib/Biber/BibLaTeXML.pm
