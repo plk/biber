@@ -509,6 +509,7 @@ sub postprocess {
     my $self = shift ;
     
     my %namehashcount = () ;
+    my @foundkeys = () ;
 
     foreach my $citekey ( $self->citekeys ) {
 
@@ -518,6 +519,8 @@ sub postprocess {
         } ;
 
         my $be = $self->{bib}->{$citekey} ;
+
+        push @foundkeys, $citekey ;
 
         print "Postprocessing $citekey\n" if $self->config('biberdebug') ;
 
@@ -598,7 +601,9 @@ sub postprocess {
             $be->{labelname} = 'shorttranslator'
         } elsif ( $be->{translator} and $self->getoption($citekey, 'usetranslator') ) {
             $be->{labelname} = 'translator'
-        } 
+        } else { 
+            carp "Could not determine the labelname of entry $citekey" if $self->config('biberdebug')
+        }
 
         ##############################################################
         # 5a. determine namehash and fullhash
@@ -853,6 +858,8 @@ sub postprocess {
 
         $self->{bib}->{$citekey} = $be
     } ;
+
+    $self->{citekeys} = [ @foundkeys ] ;
 
     print "Finished postprocessing entries\n" if $self->config('biberdebug') ;
 
