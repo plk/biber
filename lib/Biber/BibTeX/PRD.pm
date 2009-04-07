@@ -60,7 +60,7 @@ sub _bibtex_prd_parse {
             foreach my $i ( 0 .. $#entries ) {
                
                 my @tmpa   = keys %{ $entries[$i] } ;
-                my $tmpkey = $tmpa[0] ;
+                my $tmpkey = lc( $tmpa[0] ) ;
             
                 if ( $bibentries{ $tmpkey } ) {
                     carp "We already have key $tmpkey! Ignoring in $filename..." ;
