@@ -41,7 +41,7 @@ sub _text_bibtex_parse {
             next 
         }
 
-        my $key = lc( $entry->key ) ;
+        my $key = $entry->key ;
 
         if (!defined $key or $key =~ /\s/ or $key eq '') {
             carp "Invalid Key! Skipping...\n" ;
