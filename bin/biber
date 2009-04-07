@@ -25,6 +25,7 @@ GetOptions(
     'allentries|a!',
 #    'validate|V!', 
     'biberdebug|D!',
+    'quiet|q',
     'help|h|?',
     'version|v'
 ) ;
@@ -155,6 +156,7 @@ Options:
                          Specify the encoding of the bib file(s). The bbl file 
                          will also have this encoding when --unicodebbl is false.
   --biberdebug|-D        Turn on debugging for biber
+  --quiet|-q             Turn warnings off
     \n]
 }
 
