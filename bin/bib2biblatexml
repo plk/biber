@@ -125,8 +125,6 @@ print version() ;
 
 $biber->parse_bibtex($filename) ;
 
-unlink "$filename.utf8" or carp "Cannot delete $filename.utf8" ;
-
 my %bibentries = $biber->bib ;
 
 my $outfile = $filename ; 
