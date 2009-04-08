@@ -49,6 +49,8 @@ Readonly::Hash our %CONFIG_DEFAULT => (
 	allentries =>  0,
 	useprd =>  0,
 	biberdebug =>  0,
+    quiet => 0,
+    collate_options => 'level => 2'
 ) ;
 
 ### biblatex fields
