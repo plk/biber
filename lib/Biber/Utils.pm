@@ -28,7 +28,7 @@ All functions are exported by default.
 
 our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid cleanstring
     normalize_string latexescape array_minus getlabel remove_outer getinitials
-    tersify } ;
+    tersify ucinit } ;
 
 
 ######
@@ -456,6 +456,18 @@ sub tersify {
     $str =~ s/~//g ;
     $str =~ s/\.//g ;
     return $str
+}
+
+=head2 ucinit
+
+    upper case of initial letters in a string
+
+=cut
+
+sub ucinit {
+        my	$str = shift ;
+        $str =~ s/\b(\p{Ll})/\u$1/g ;
+        return $str;
 }
 
 =head1 AUTHOR
