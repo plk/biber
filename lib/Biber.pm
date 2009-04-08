@@ -4,6 +4,7 @@ use warnings ;
 use Carp ;
 use IO::File ;
 use Encode ;
+use POSIX qw/locale_h/ ; # for sorting with built-in "sort"
 use Biber::Constants ;
 use Biber::Internals ;
 use Biber::Utils ;
@@ -194,6 +195,8 @@ sub parse_auxfile {
     my $ctrl_file = "" ;
 
     local $/ = "\n" ;
+
+    print "Reading $auxfile\n" unless $self->config('quiet') ;
     
     while (<$aux>) {
     
@@ -283,12 +286,12 @@ sub parse_auxfile {
 sub parse_ctrlfile {
     my ($self, $ctrl_file) = @_ ;
 
-    croak "Cannot find control file '$ctrl_file.bib'!\n" unless -f "$ctrl_file.bib" ;
+    carp "Cannot find control file '$ctrl_file.bib'!\n" unless -f "$ctrl_file.bib" ;
 
     my $ctrl = new IO::File "<$ctrl_file.bib"
           or croak "Cannot open $ctrl_file.bib: $!" ;
 
-    print "Parsing $ctrl_file.bib\n" unless $self->config('quiet');
+    print "Reading $ctrl_file.bib\n" unless $self->config('quiet');
 
     while (<$ctrl>) {
         
@@ -316,7 +319,7 @@ sub parse_ctrlfile {
         
         
         carp "Warning: You are using biblatex version $controlversion : 
-            biber is more likely to work with version $BIBLATEX_VERSION!\n" 
+            biber is more likely to work with version $BIBLATEX_VERSION.\n" 
             unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION ;
     }
     
@@ -513,18 +516,34 @@ sub postprocess {
 
     foreach my $citekey ( $self->citekeys ) {
 
-        unless ( $self->{bib}->{$citekey} ) {
-            carp  "Could not find key $citekey in the database(s)! Skipping...\n" ;
-            next ;
-        } ;
+        # try lc($citekey), uc($citekey) and ucinit($citekey) before giving up
+        if ( ! $self->{bib}->{$citekey} ) {
+
+            if ($self->{bib}->{ lc($citekey)}) {
+                
+                $citekey = lc($citekey) ;
+
+            } elsif ($self->{bib}->{ uc($citekey)}) {
+                
+                $citekey = uc($citekey) ;
+
+            } elsif ($self->{bib}->{ ucinit($citekey)}) {
+                
+                $citekey = ucinit($citekey) ;
+
+            } else {
+                carp  "Could not find key $citekey in the database(s)! Skipping...\n" ;
+                next ;
+            } 
+        };
 
         my $be = $self->{bib}->{$citekey} ;
+
+        my $dt = $be->{datatype} ;
 
         push @foundkeys, $citekey ;
 
         print "Postprocessing $citekey\n" if $self->config('biberdebug') ;
-
-        my $dt = $be->{datatype} ;
         
 
         ##############################################################
@@ -888,13 +907,22 @@ sub sortentries {
         print "Sorting entries...\n" if $self->config('biberdebug') ;
     
         if ( $self->config('fastsort') ) {
+            if ($self->config('locale')) {
+                my $thislocale = $self->config('locale') ;
+                setlocale( $thislocale ) or carp "Unavailable locale $thislocale"
+            }
             @auxcitekeys = sort {
                 $bibentries{$a}->{sortstring} cmp $bibentries{$b}->{sortstring}
             } @auxcitekeys ;
         }
         else {
             require Unicode::Collate ;
-            my $Collator = Unicode::Collate->new( level => 2 ) ;
+            my $opts = $self->config('collate_options') ;
+            my %collopts = eval "( $opts )" or carp "Incorrect collate_options: $@" ;
+            my $Collator = Unicode::Collate->new( %collopts ) ;
+            my $UCAversion = $Collator->version() ;
+            print "Sorting with Unicode::Collate ($opts, UCA version: $UCAversion)\n" 
+                unless $self->config('quiet');
             @auxcitekeys = sort {
                 $Collator->cmp( $bibentries{$a}->{sortstring},
                     $bibentries{$b}->{sortstring} )

@@ -15,6 +15,7 @@ my $opts = {} ;
 GetOptions(
     $opts,
     'fastsort|f!',
+    'collate_options|c=s',
     'mincrossrefs|m=s',
     'unicodebbl|U!',
     'unicodebib|u!',
@@ -71,7 +72,7 @@ else {
 
 if ($biber->config('biberdebug')) {
     $biber->_dump('biber.dump0') ;
-    print "Dumped initial biber object for debugging in file biber.dump0\n"
+    print ">> Dumped initial biber object for debugging in file biber.dump0\n"
 }
 
 #=====================================================
@@ -82,7 +83,6 @@ foreach my $bib (@{ $biber->config('bibdata') }) {
 
     # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
     $bib = bibfind($bib) ;
-    print "DBG: Bib is $bib\n" ;
 
     if ($bib =~ /\.(db)?xml$/) {
         croak "File $bib does not exist!" unless -f $bib ;
@@ -100,14 +100,14 @@ foreach my $bib (@{ $biber->config('bibdata') }) {
 
 if ($biber->config('biberdebug')) {
     $biber->_dump('biber.dump1') ;
-    print "Dumped postparse biber object for debugging in file biber.dump1\n"
+    print ">> Dumped postparse biber object for debugging in file biber.dump1\n"
 }
 
 $biber->prepare ; 
 
 if ($biber->config('biberdebug')) {
     $biber->_dump('biber.dump2') ;
-    print "Dumped final biber object for debugging in file biber.dump2\n"
+    print ">> Dumped final biber object for debugging in file biber.dump2\n"
 }
 
 if ($biber->config('outfile')) {
@@ -145,6 +145,10 @@ Options:
   --version|-v           Display version number.
   --mincrossrefs|-m <n>  Set threshold for crossrefs.
   --fastsort|-f          Do not use LaTeX_Decode and Unicode::Collate for sorting
+  --locale|-l [locale]   Set the locale to be used for sorting with option --fastsort
+  --collate_options|-c [options] 
+                         Options to pass to the Unicode::Collate object used for sorting
+                         (default is "level => 2"). See "perldoc Unicode::Collate" for details.
   --useprd|-p            Parse with Parse::RecDescent instead of Text::BibTeX
   --bibdata|-d <files>   Use <files> as bibliography databases (comma separated list)
   --outfile|-O <file>    Output to <file> instead of <basename>.bbl
@@ -155,6 +159,7 @@ Options:
   --inputencoding|-i [encoding] 
                          Specify the encoding of the bib file(s). The bbl file 
                          will also have this encoding when --unicodebbl is false.
+                         See "perldoc Encode::Supported" for a list of supported encodings.
   --biberdebug|-D        Turn on debugging for biber
   --quiet|-q             Turn warnings off
     \n]
