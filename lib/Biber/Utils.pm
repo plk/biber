@@ -77,7 +77,7 @@ sub bibfind {
         find (\&_wanted, @paths) ;
 
         sub _wanted {
-            $_ =~ /^$filename($|\.bib$)/ && push @found, $File::Find::name ;
+            $_ =~ /^$filename($|\.bib$)/ && unshift @found, $File::Find::name ;
         } 
 
         return $found[0]
