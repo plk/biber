@@ -53,7 +53,7 @@ Readonly::Hash our %CONFIG_DEFAULT => (
 	useprd =>  0,
 	biberdebug =>  0,
     quiet => 0,
-    collate_options => 'level => 2'
+    collate_options => 'level => 2, table => latinkeys.txt'
 ) ;
 
 ### biblatex fields
