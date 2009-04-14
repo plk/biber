@@ -67,7 +67,7 @@ else {
     $auxfile .= '.aux' unless $auxfile =~ m/\.aux$/ ;
     $bblfile = $auxfile ;
     $bblfile =~ s/aux$/bbl/ ;
-    $biber->parse_auxfile($auxfile)
+    $biber->parse_auxfile($auxfile);
 }
 
 if ($biber->config('biberdebug')) {
@@ -115,6 +115,24 @@ if ($biber->config('outfile')) {
 } ;
 
 $biber->output_to_bbl($bblfile) ;
+
+# display warnings/errors summary, like BibTeX
+if (defined($biber->{errors})) { # if errors, ignore warnings
+	if ($biber->{errors} == 1) {
+		print "(There was 1 error message)\n";
+	}
+	elsif ($biber->{errors} > 1) {
+		print "(There were ", $biber->{errors}, " error messages)\n";
+	}
+}
+elsif (defined($biber->{warnings})) {
+	if ($biber->{warnings} == 1) {
+		print "(There was 1 warning)\n";
+	}
+	elsif ($biber->{warnings} > 1) {
+		print "(There were ", $biber->{warnings}, " warnings)\n";
+	}
+}
 
 #======================================================
 
