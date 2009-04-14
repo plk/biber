@@ -110,7 +110,7 @@ my $biber = Biber->new( { allentries => 1, unicodebbl => 1,
         biberdebug => $opts->{debug}, useprd => $opts->{useprd},
         inputencoding => $opts->{inputencoding} } ) ;
 
-my $filename = $ARGV[0] ;
+my $filename = $ARGV[0] or croak "No filename specified!";
 
 unless ( -f $filename) { 
 
