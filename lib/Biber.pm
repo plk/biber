@@ -298,7 +298,7 @@ sub parse_ctrlfile {
         next unless /^\s*ctrl-options/ ;
         
         (my $opts) = /{(.+)}/ ;  ## ex: {0.8b:0:0:0:0:1:1:0:0:1:0:1:2:1:3:1:79:+}
-        (my $controlversion,
+        ($self->{config}->{controlversion},
         $self->{config}->{debug},
         my $ignore,
         $self->{config}->{terseinits},
@@ -317,7 +317,7 @@ sub parse_ctrlfile {
         $self->{config}->{maxline},
         $self->{config}->{alphaothers}) = split /:/, $opts ; 
         
-        
+        my $controlversion = $self->config('controlversion') ;
         carp "Warning: You are using biblatex version $controlversion : 
             biber is more likely to work with version $BIBLATEX_VERSION.\n" 
             unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION ;
@@ -1002,9 +1002,10 @@ sub output_to_bbl {
 
     # $BBLFILE->binmode(':utf8') if $self->config('unicodebbl') ;
 
+    my $ctrlver = $self->config('controlversion') ;
     my $BBL = <<"EOF"
 % \$ biblatex auxiliary file \$
-% \$ biblatex version 0.8 \$
+% \$ biblatex version $ctrlver \$
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.

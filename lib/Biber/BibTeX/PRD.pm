@@ -80,6 +80,15 @@ sub _bibtex_prd_parse {
 
         print "Processing $key\n" if $self->config('biberdebug') ;
 
+        foreach my $alias (keys %ALIASES) {
+
+                if ( $bibentries{$key}->{$alias} ) {
+                    my $field = $ALIASES{$alias} ;
+                    $bibentries{$key}->{$field} = $bibentries{$key}->{$alias} ;
+                    delete $bibentries{$key}->{$alias}
+                }
+        }
+
         foreach my $ets (@ENTRIESTOSPLIT) {
 
             if ( exists $bibentries{$key}->{$ets} ) {

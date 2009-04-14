@@ -11,12 +11,15 @@ our @EXPORT = qw{
 	@LITERALFIELDS_BASE
 	@RANGEFIELDS
 	@VERBATIMFIELDS
+    @TITLEFIELDS
 	@KEYFIELDS
     @COMMASEP_FIELDS
 	@ENTRIESTOSPLIT
 	@LITERALFIELDS
 	%CONFIG_DEFAULT
     $BIBLATEX_VERSION
+    %ALIASES
+    %NUMERICALMONTH
 } ;
 
 Readonly::Scalar our $BIBLATEX_VERSION => '0.8' ;
@@ -75,6 +78,13 @@ Readonly::Array our @LITERALFIELDS_BASE  =>   qw{
   usere userf hyphenation crossref entrysubtype execute gender indexsorttitle
   sortkey sorttitle sortyear xref } ;
 
+Readonly::Array our @TITLEFIELDS => qw{ title 
+    subtitle titleaddon shorttitle sorttitle indextitle indexsorttitle
+    origtitle issuetitle issuesubtitle maintitle mainsubtitle maintitleaddon
+    booktitle booksubtitle booktitleaddon journal journaltitle journalsubtitle
+    reprinttitle };
+
+
 # ignored by default: library remarks (more?)
 # TODO : Add option to insert them if needed ?? 
 # But then it is no longer Readonly…
@@ -95,6 +105,52 @@ Readonly::Array our @ENTRIESTOSPLIT  =>  ( @NAMEFIELDS, @LISTFIELDS ) ;
 # TODO validate the keys in the @keyfields ?
 
 Readonly::Array our @LITERALFIELDS => ( @LITERALFIELDS_BASE, @KEYFIELDS ) ;
+
+Readonly::Hash our %ALIASES => ( 
+	'address' => 'location',
+	'school'  => 'institution',
+	'annote'  => 'annotation',
+	'key'     => 'sortkey'
+) ;
+
+Readonly::Hash our %NUMERICALMONTH => (
+	'January' => 1,
+	'February' => 2,
+	'March' => 3,
+	'April' => 4,
+	'May' => 5,
+	'June' => 6,
+	'July' => 7,
+	'August' => 8,
+	'September' => 9,
+	'October' => 10,
+	'November' => 11,
+	'December' => 12,
+	'january' => 1,
+	'february' => 2,
+	'march' => 3,
+	'april' => 4,
+	'may' => 5,
+	'june' => 6,
+	'july' => 7,
+	'august' => 8,
+	'september' => 9,
+	'october' => 10,
+	'november' => 11,
+	'december' => 12,
+	'jan' => 1,
+	'feb' => 2,
+	'mar' => 3,
+	'apr' => 4,
+	'may' => 5,
+	'jun' => 6,
+	'jul' => 7,
+	'aug' => 8,
+	'sep' => 9,
+	'oct' => 10,
+	'nov' => 11,
+	'dec' => 12
+	) ;
 
 1 ;
 

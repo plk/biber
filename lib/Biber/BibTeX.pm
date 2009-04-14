@@ -82,7 +82,13 @@ sub _text_bibtex_parse {
                 #my $value = decode_utf8( $entry->get($f) ) ;
                 my $value = decode( $encoding, $entry->get($f) ) ;
 
-                $bibentries{ $key }->{$f} = $value ;
+                my $af = $f ;
+
+                if ( $ALIASES{$f} ) {
+                    $af = $ALIASES{$f}
+                }
+
+                $bibentries{ $key }->{$af} = $value ;
 
                 if ($entry->type eq 'set' and $f eq 'entryset') {
 
@@ -114,8 +120,14 @@ sub _text_bibtex_parse {
                 } else {
                     @tmp = map { remove_outer($_) } @tmp ;
                 } 
-                    
-                $bibentries{ $key }->{$f} = [ @tmp ]                 
+
+                my $af = $f ;
+
+                if ( $ALIASES{$f} ) {
+                    $af = $ALIASES{$f}
+                }
+                
+                $bibentries{ $key }->{$af} = [ @tmp ]                 
 
             } ;
 

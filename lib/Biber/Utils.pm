@@ -466,6 +466,7 @@ sub tersify {
 
 sub ucinit {
         my	$str = shift ;
+        $str = lc($str) ;
         $str =~ s/\b(\p{Ll})/\u$1/g ;
         return $str;
 }
