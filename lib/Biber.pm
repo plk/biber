@@ -6,6 +6,7 @@ use IO::File ;
 use Encode ;
 use POSIX qw/locale_h/ ; # for sorting with built-in "sort"
 use Biber::Constants ;
+use List::Util qw( first );
 use Biber::Internals ;
 use Biber::Utils ;
 use base 'Biber::Internals' ;
@@ -69,7 +70,6 @@ sub new {
             $self->{config}->{$_} = $params{$_} ;
         }
     };
-
     return $self
 }
 
@@ -409,7 +409,14 @@ sub parse_bibtex {
     
     my %bibentries = $self->bib ;
 
-    $self->{citekeys} = [ keys %{ $self->{bib} } ] if $self->config('allentries') ;
+		# if allentries, push all bibdata keys into citekeys (if they are not already there)
+		# Can't just make citekeys = bibdata keys as this loses information about citekeys
+		# that are missing data entries.
+		if ($self->config('allentries')) {
+			foreach my $bibkey (keys %{$self->{bib}}) {
+				push @{$self->{citekeys}}, $bibkey unless (first {$bibkey eq $_} @{$self->{citekeys}});
+			}
+		}
 
     return
 
@@ -532,8 +539,9 @@ sub postprocess {
                 $citekey = ucinit($citekey) ;
 
             } else {
-                carp  "Could not find key $citekey in the database(s)! Skipping...\n" ;
-                next ;
+							print "Warning--I didn't find a database entry for \"$citekey\"\n";
+							$self->{warnings}++;
+							next ;
             } 
         };
 
@@ -721,31 +729,44 @@ sub postprocess {
         ##############################################################
 
         my $lname = $be->{labelname} ;
-        
-        if ( $lname and $self->config('uniquename') and scalar @{ $be->{$lname} } == 1 ) {
+				{ # Keep these variables scoped over the new few blocks
+					my $lastname;
+					my $namestring;
+					my $singlename;
 
-            my $lastname   = $be->{$lname}->[0]->{lastname} ;
-            my $namestring = $be->{$lname}->[0]->{nameinitstring} ;
-            
+					if ($lname) {
+						if ($lname =~ m/\Ashort/xms) { # short* fields are just strings, not complex data
+							$lastname   = $be->{$lname};
+							$namestring = $be->{$lname};
+							$singlename = 1;
+						} else {
+							$lastname   = $be->{$lname}->[0]->{lastname} ;
+							$namestring = $be->{$lname}->[0]->{nameinitstring} ;
+							$singlename = scalar @{ $be->{$lname} };
+						}
+					}
+
+					if ( $lname and $self->config('uniquename') and $singlename == 1 ) {
+
             if ( ! $uniquenamecount{$lastname}{$namehash} ) {
-                if ($uniquenamecount{$lastname}) {
-                    $uniquenamecount{$lastname}{$namehash} = 1 ;
-                } else {
+							if ($uniquenamecount{$lastname}) {
+								$uniquenamecount{$lastname}{$namehash} = 1 ;
+							} else {
                 $uniquenamecount{$lastname} = { $namehash => 1 } ;
-                }
+							}
             }
 
             if ( ! $uniquenamecount{$namestring}{$namehash} ) {
-                if ($uniquenamecount{$namestring}) {
-                    $uniquenamecount{$namestring}{$namehash} = 1 ;
-                } else {
-                    $uniquenamecount{$namestring} = { $namehash => 1 } ;
-                }
+							if ($uniquenamecount{$namestring}) {
+								$uniquenamecount{$namestring}{$namehash} = 1 ;
+							} else {
+								$uniquenamecount{$namestring} = { $namehash => 1 } ;
+							}
             }
-        } else {
+					} else {
             $be->{ignoreuniquename} = 1
-        }
-
+					}
+				}
         ##############################################################
         # 6. Generate the labelalpha
         ##############################################################
