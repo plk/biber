@@ -423,7 +423,7 @@ sub remove_outer {
 
 sub getinitials {
     my $str = shift;
-    my @words = split /\s+/, $str ;
+    my @words = split /\s+/, remove_outer($str) ;
     $str = join ".~", ( map { _firstatom($_) } @words ) ;
     return $str . "."
 }
