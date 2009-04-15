@@ -307,12 +307,16 @@ sub _print_biblatex_entry {
     my ($self, $citekey) = @_ ;
     my $be      = $self->{bib}->{$citekey} or croak "Cannot find $citekey" ;
     my $opts      = "" ;
+    my $origkey = $citekey ;
+    if ( $be->{origkey} ) {
+        $origkey = $be->{origkey}
+    }
 
     if ( $be->{options} ) {
         $opts = $be->{options} ;
     }
 
-    my $str = "\\entry{$citekey}{" . $be->{entrytype} . "}{$opts}\n" ;
+    my $str = "\\entry{$origkey}{" . $be->{entrytype} . "}{$opts}\n" ;
 
     if ( $be->{entrytype} eq 'set' ) {
         $str .= "  \\entryset{" . $be->{entryset} . "}\n" ;

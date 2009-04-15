@@ -7,6 +7,7 @@ use Biber::Utils ;
 use Parse::RecDescent ;
 use Regexp::Common qw{ balanced } ;
 use Biber::BibTeX::Parser ;
+use File::Spec ;
 
 sub _bibtex_prd_parse {
 
@@ -60,18 +61,24 @@ sub _bibtex_prd_parse {
             foreach my $i ( 0 .. $#entries ) {
                
                 my @tmpa   = keys %{ $entries[$i] } ;
-                my $tmpkey = $tmpa[0] ;
+                my $origkey = $tmpa[0] ;
+                my $key = lc($origkey)
             
-                if ( $bibentries{ $tmpkey } ) {
-                    carp "We already have key $tmpkey! Ignoring in $filename..." ;
+                if ( $bibentries{$origkey} or $bibentries{$key}) {
+                    $self->{errors}++;
+                    my (undef,undef,$f) = File::Spec->splitpath( $filename ) ;
+                    print "Repeated entry---key $origkey in file $f\nI'm skipping whatever remains of this entry\n"
+                        unless $self->config('quiet') ;
                     next ;
                 }
 
-                push @localkeys, $tmpkey ;
+                push @localkeys, $key ;
                 
-                $bibentries{$tmpkey} = $entries[$i]->{$tmpkey} ;
+                $bibentries{ $key } = $entries[$i]->{$tmpkey} ;
                 
-                $bibentries{$tmpkey}->{datatype} = 'bibtex' ;
+                $bibentries{ $key }->{datatype} = 'bibtex' ;
+
+                $bibentries{ $key }->{origkey} = $origkey ;
             }
         }
     }
@@ -82,11 +89,11 @@ sub _bibtex_prd_parse {
 
         foreach my $alias (keys %ALIASES) {
 
-                if ( $bibentries{$key}->{$alias} ) {
-                    my $field = $ALIASES{$alias} ;
-                    $bibentries{$key}->{$field} = $bibentries{$key}->{$alias} ;
-                    delete $bibentries{$key}->{$alias}
-                }
+            if ( $bibentries{$key}->{$alias} ) {
+                my $field = $ALIASES{$alias} ;
+                $bibentries{$key}->{$field} = $bibentries{$key}->{$alias} ;
+                delete $bibentries{$key}->{$alias}
+            }
         }
 
         foreach my $ets (@ENTRIESTOSPLIT) {
