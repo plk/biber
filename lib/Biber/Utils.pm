@@ -423,6 +423,9 @@ sub remove_outer {
 
 sub getinitials {
     my $str = shift;
+    # remove pseudo-space after macros
+    $str =~ s/{? ( \\ [^\p{Ps}\{\}]+ ) \s+ (\p{L}) }?/\{$1\{$2\}\}/gx ;  # {\\x y} -> {\x{y}}
+    $str =~ s/( \\ [^\p{Ps}\{\}]+ ) \s+ { /$1\{/gx ; # \\macro { -> \macro{
     my @words = split /\s+/, remove_outer($str) ;
     $str = join ".~", ( map { _firstatom($_) } @words ) ;
     return $str . "."
@@ -432,14 +435,14 @@ sub _firstatom {
     my $str = shift;
     $str =~ s/^$NONSORTPREFIX// ;
     $str =~ s/^$NONSORTDIACRITICS// ;
-    if ($str =~ /^({
-                   \\[^\p{Ps}\p{L}] [\p{L}]+
+    if ($str =~ /^({ 
+                   \\ [^\p{Ps}\p{L}] \p{L}+ # {\\.x}
                    }
                    | {?
-                    \\[^\p{Ps}\{\}]+
-                     { [\p{L}] }
+                    \\[^\p{Ps}\{\}]+        # \\macro{x}
+                     { \p{L} }
                      }?
-                   | { \\\p{L}+ }
+                   | { \\\p{L}+ }           # {\\macro}
                    )/x ) {
         return $1
     } else {
