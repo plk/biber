@@ -414,7 +414,8 @@ sub parse_bibtex {
         # that are missing data entries.
         if ($self->config('allentries')) {
             foreach my $bibkey (keys %{$self->{bib}}) {
-                push @{$self->{citekeys}}, $bibkey unless (first {$bibkey eq $_} @{$self->{citekeys}});
+                push @{$self->{citekeys}}, $bibkey 
+                    unless (first {$bibkey eq $_} @{$self->{citekeys}});
             }
         }
 

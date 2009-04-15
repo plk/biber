@@ -54,10 +54,10 @@ my $NONSORTPREFIX = qr/\p{Ll}{2}-/; # etc
 =cut
 
 sub bibfind {
-    our $filename = shift ;
-    our @found ;
+    our $_filename = shift ;
+    our @_found ;
 
-    $filename .= '.bib' unless $filename =~ /\.(bib|xml|dbxml)$/ ;
+    $_filename .= '.bib' unless $_filename =~ /\.(bib|xml|dbxml)$/ ;
 
     if ( can_run("kpsepath") ) {
         my $kpsepath ;
@@ -77,17 +77,17 @@ sub bibfind {
         find (\&_wanted, @paths) ;
 
         sub _wanted {
-            $_ =~ /^$filename($|\.bib$)/ && push @found, $File::Find::name ;
+            $_ =~ /^$_filename($|\.bib$)/ && push @_found, $File::Find::name ;
         } 
 
-        if (@found) {
-            return $found[0] 
+        if (@_found) {
+            return shift @_found 
         } else {
-            return $filename
+            return $_filename
         }
 
     } else {
-        return $filename
+        return $_filename
     }
 }
 
