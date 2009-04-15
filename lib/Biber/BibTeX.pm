@@ -139,8 +139,6 @@ sub _text_bibtex_parse {
 
             $bibentries{ $key }->{datatype} = 'bibtex' ;
 
-            $bibentries{ $key }->{origkey} = $origkey ;
-       
         }
 
     }

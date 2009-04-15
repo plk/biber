@@ -524,6 +524,8 @@ sub postprocess {
 
     foreach my $citekey ( $self->citekeys ) {
 
+        my $origkey = $citekey ;
+
         # try lc($citekey), uc($citekey) and ucinit($citekey) before giving up
         if ( ! $self->{bib}->{$citekey} ) {
 
@@ -549,6 +551,8 @@ sub postprocess {
         my $be = $self->{bib}->{$citekey} ;
 
         push @foundkeys, $citekey ;
+
+        $be->{origkey} = $origkey ;
 
         print "Postprocessing $citekey\n" if $self->config('biberdebug') ;
         

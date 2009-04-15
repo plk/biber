@@ -77,8 +77,6 @@ sub _bibtex_prd_parse {
                 $bibentries{ $key } = $entries[$i]->{$tmpkey} ;
                 
                 $bibentries{ $key }->{datatype} = 'bibtex' ;
-
-                $bibentries{ $key }->{origkey} = $origkey ;
             }
         }
     }

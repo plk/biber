@@ -1,8 +1,22 @@
 Revision history for biber
 
 0.4.2   15.4.2009
+        * New option --inputencoding to handle 8-bit encoded bib files
         * $BIBINPUT environment is now searched
-        * 
+        * Improved parsing of personal names
+        * @comments are now silently ignored
+        * Warnings and errors behave more like BibTeX
+        * Alias fields are automatically converted (e.g. address -> location)
+        * bib2biblatexml has been improved
+        * Cite keys of bib files are now case-insensitive
+        * Default Unicode collation now uses the table "latinkeys.txt"
+          (this is much faster than "allkeys.txt" which contains rules for 
+          all Unicode glyphs)  
+        * Unicode::Collate parameters can be passed as a command-line option
+        * Even faster sorting (with option -f) is also possible for specific 
+          locales given with option --locale (this is OS-dependent however) 
+        * PRD grammar is now precompiled
+        * Many bugfixes
 
 0.4.1   31.03.2009
         * Text::BibTeX now optional dependency
