@@ -62,7 +62,7 @@ sub _bibtex_prd_parse {
                
                 my @tmpa   = keys %{ $entries[$i] } ;
                 my $origkey = $tmpa[0] ;
-                my $key = lc($origkey)
+                my $key = lc($origkey) ;
             
                 if ( $bibentries{$origkey} or $bibentries{$key}) {
                     $self->{errors}++;
