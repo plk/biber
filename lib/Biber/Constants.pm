@@ -53,6 +53,7 @@ Readonly::Hash our %CONFIG_DEFAULT => (
 	useprd =>  0,
 	biberdebug =>  0,
     quiet => 0,
+    controlversion => $BIBLATEX_VERSION,
     collate_options => 'level=>2, table=>"latinkeys.txt"',
 ) ;
 
