@@ -19,6 +19,7 @@ lib/LaTeX/Decode.pm
 data/schemas/biblatexml.rnc
 data/schemas/biblatexml.rng
 data/schemas/biblatexml.xsd
+data/latinkeys.txt
 t/00-load.t
 t/01-utils.t
 t/02-biber.t
