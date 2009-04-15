@@ -409,14 +409,14 @@ sub parse_bibtex {
     
     my %bibentries = $self->bib ;
 
-		# if allentries, push all bibdata keys into citekeys (if they are not already there)
-		# Can't just make citekeys = bibdata keys as this loses information about citekeys
-		# that are missing data entries.
-		if ($self->config('allentries')) {
-			foreach my $bibkey (keys %{$self->{bib}}) {
-				push @{$self->{citekeys}}, $bibkey unless (first {$bibkey eq $_} @{$self->{citekeys}});
-			}
-		}
+        # if allentries, push all bibdata keys into citekeys (if they are not already there)
+        # Can't just make citekeys = bibdata keys as this loses information about citekeys
+        # that are missing data entries.
+        if ($self->config('allentries')) {
+            foreach my $bibkey (keys %{$self->{bib}}) {
+                push @{$self->{citekeys}}, $bibkey unless (first {$bibkey eq $_} @{$self->{citekeys}});
+            }
+        }
 
     return
 
@@ -450,15 +450,15 @@ sub parse_biblatexml {
 =cut
 
 sub process_crossrefs {
-	my $self = shift ;
-	my %bibentries = $self->bib ;
+    my $self = shift ;
+    my %bibentries = $self->bib ;
     foreach my $citekeyx (keys %entrieswithcrossref) {
         my $xref = $entrieswithcrossref{$citekeyx} ; 
         my $type = $bibentries{$citekeyx}->{entrytype} ;
         if ($type eq 'review') {
                 #TODO
         }
-    	if ($type =~ /^in(proceedings|collection|book)$/) {
+        if ($type =~ /^in(proceedings|collection|book)$/) {
             # inherit all that is undefined, except title etc
             foreach my $field (keys %{$bibentries{$xref}}) {
                 next if $field =~ /title/ ;
@@ -474,14 +474,14 @@ sub process_crossrefs {
             if ($bibentries{$xref}->{subtitle}) {
                 $bibentries{$citekeyx}->{booksubtitle} = $bibentries{$xref}->{subtitle}
             }
-		}
-		else { # inherits all
+        }
+        else { # inherits all
             foreach my $field (keys %{$bibentries{$xref}}) {
                 if (! $bibentries{$citekeyx}->{$field}) {
                     $bibentries{$citekeyx}->{$field} = $bibentries{$xref}->{$field} ;
                 }
             }
-	   }
+       }
        if ($type eq 'inbook') {
             $bibentries{$citekeyx}->{bookauthor} = $bibentries{$xref}->{author} 
         }
@@ -497,7 +497,7 @@ sub process_crossrefs {
         }
     }
 
-	$self->{bib} = { %bibentries }
+    $self->{bib} = { %bibentries }
 }
 
 =head2 postprocess
@@ -539,15 +539,13 @@ sub postprocess {
                 $citekey = ucinit($citekey) ;
 
             } else {
-							print "Warning--I didn't find a database entry for \"$citekey\"\n";
-							$self->{warnings}++;
-							next ;
+                print "Warning--I didn't find a database entry for \"$citekey\"\n";
+                $self->{warnings}++;
+                next ;
             } 
         };
 
         my $be = $self->{bib}->{$citekey} ;
-
-        my $dt = $be->{datatype} ;
 
         push @foundkeys, $citekey ;
 
@@ -729,44 +727,44 @@ sub postprocess {
         ##############################################################
 
         my $lname = $be->{labelname} ;
-				{ # Keep these variables scoped over the new few blocks
-					my $lastname;
-					my $namestring;
-					my $singlename;
+            { # Keep these variables scoped over the new few blocks
+                my $lastname;
+                my $namestring;
+                my $singlename;
 
-					if ($lname) {
-						if ($lname =~ m/\Ashort/xms) { # short* fields are just strings, not complex data
-							$lastname   = $be->{$lname};
-							$namestring = $be->{$lname};
-							$singlename = 1;
-						} else {
-							$lastname   = $be->{$lname}->[0]->{lastname} ;
-							$namestring = $be->{$lname}->[0]->{nameinitstring} ;
-							$singlename = scalar @{ $be->{$lname} };
-						}
-					}
+                if ($lname) {
+                    if ($lname =~ m/\Ashort/xms) { # short* fields are just strings, not complex data
+                        $lastname   = $be->{$lname};
+                        $namestring = $be->{$lname};
+                        $singlename = 1;
+                    } else {
+                        $lastname   = $be->{$lname}->[0]->{lastname} ;
+                        $namestring = $be->{$lname}->[0]->{nameinitstring} ;
+                        $singlename = scalar @{ $be->{$lname} };
+                    }
+                }
 
-					if ( $lname and $self->config('uniquename') and $singlename == 1 ) {
+                if ( $lname and $self->config('uniquename') and $singlename == 1 ) {
 
-            if ( ! $uniquenamecount{$lastname}{$namehash} ) {
-							if ($uniquenamecount{$lastname}) {
-								$uniquenamecount{$lastname}{$namehash} = 1 ;
-							} else {
-                $uniquenamecount{$lastname} = { $namehash => 1 } ;
-							}
-            }
+                    if ( ! $uniquenamecount{$lastname}{$namehash} ) {
+                        if ($uniquenamecount{$lastname}) {
+                            $uniquenamecount{$lastname}{$namehash} = 1 ;
+                        } else {
+                            $uniquenamecount{$lastname} = { $namehash => 1 } ;
+                        }
+                    }
 
-            if ( ! $uniquenamecount{$namestring}{$namehash} ) {
-							if ($uniquenamecount{$namestring}) {
-								$uniquenamecount{$namestring}{$namehash} = 1 ;
-							} else {
-								$uniquenamecount{$namestring} = { $namehash => 1 } ;
-							}
-            }
-					} else {
-            $be->{ignoreuniquename} = 1
-					}
-				}
+                    if ( ! $uniquenamecount{$namestring}{$namehash} ) {
+                        if ($uniquenamecount{$namestring}) {
+                            $uniquenamecount{$namestring}{$namehash} = 1 ;
+                        } else {
+                            $uniquenamecount{$namestring} = { $namehash => 1 } ;
+                        }
+                    }
+                } else {
+                        $be->{ignoreuniquename} = 1
+                }
+           }
         ##############################################################
         # 6. Generate the labelalpha
         ##############################################################
@@ -789,11 +787,11 @@ sub postprocess {
                 # TODO option $useprefix needs to be taken into account
                 # TODO CHECK FOR $useauthor and $useeditor also in $bibentry{$citekey}->{options}
 
-                    $label = getlabel($be->{author}, $dt, $self->config('alphaothers') );
+                    $label = getlabel($be->{author}, $be->{datatype}, $self->config('alphaothers') );
                 }
                 elsif ( $be->{editor} and $self->getoption( $citekey, "useeditor" ) )
                 {
-                    $label = getlabel($be->{editor}, $dt, $self->config('alphaothers') );
+                    $label = getlabel($be->{editor}, $be->{datatype}, $self->config('alphaothers') );
                 }
                 else 
                 {
