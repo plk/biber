@@ -1,8 +1,11 @@
 Revision history for biber
 
+0.4.2   15.4.2009
+        * $BIBINPUT environment is now searched
+        * 
 
 0.4.1   31.03.2009
-        Text::BibTeX now optional dependency
+        * Text::BibTeX now optional dependency
 0.4     27.03.2009
-        Initial beta release
+        * Initial beta release
 

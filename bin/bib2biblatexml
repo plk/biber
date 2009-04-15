@@ -27,7 +27,7 @@ GetOptions(
 #    'schema|s=s', 
 ) ;
 
-our $VERSION = '0.0.1' ;
+our $VERSION = '0.0.2' ;
 
 die usage() if exists $opts->{'help'} ;
 
