@@ -54,8 +54,10 @@ my $NONSORTPREFIX = qr/\p{Ll}{2}-/; # etc
 =cut
 
 sub bibfind {
+    ## since these variables are used in the _wanted sub, they need to be made global
+    ## FIXME there must be a way to avoid this
     our $_filename = shift ;
-    our @_found ;
+    our @_found = ();
 
     $_filename .= '.bib' unless $_filename =~ /\.(bib|xml|dbxml)$/ ;
 
