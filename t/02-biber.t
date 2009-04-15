@@ -74,7 +74,8 @@ my $stdmodel = {
                 'datatype' => 'bibtex',
                 'annotation' => 'A \\texttt{set} entry with three members discussing the standard model of particle physics. Note the \\texttt{entryset} and \\texttt{crossref} fields. The cross-reference must point to the first member of the set',
                 'year' => '1961',
-                'pages' => '579\\psqq'
+                'pages' => '579\\psqq',
+                'origkey' => 'stdmodel'
                 } ;
 
 is_deeply($biber->{bib}->{stdmodel}, $stdmodel, 'entry stdmodel') ;
@@ -226,7 +227,8 @@ my $laufenberg = {
                  'title' => 'Elektrische Einrichtung und Betriebsverfahren',
                  'annotation' => 'This is a \\texttt{patent} entry with a \\texttt{holder} field. Note the format of the \\texttt{type} and \\texttt{location} fields in the database file. Compare \\texttt{almendro}, \\texttt{sorace}, and \\texttt{kowalik}',
                  'datatype' => 'bibtex',
-                 'year' => '2006'
+                 'year' => '2006',
+                'origkey' => 'laufenberg'
                 } ;
 
 is_deeply($biber->{bib}->{laufenberg}, $laufenberg, 'entry laufenberg') ;
