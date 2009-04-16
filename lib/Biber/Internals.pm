@@ -60,7 +60,6 @@ sub _getnameinitials {
 sub _getallnameinitials {
     my ($self, $citekey, @aut) = @_ ;
     my $initstr = "" ;
-    ## my $nodecodeflag = $self->_decode_or_not($citekey) ;
     
     foreach my $a (@aut) {
         if ( $a->{prefix} and $self->getoption( $citekey, "useprefix" ) ) {
@@ -76,14 +75,10 @@ sub _getallnameinitials {
     return $initstr ;
 }
 
-#sub gettitleinitials {
-#     my $title = shift ;
-#     $title =~ s/\b(\p{L})\S*\b\s*/$1/g ;
-#     $title =~ s/\P{L}//g ;
-#     return $title
-#}
-
 =head2 getoption
+
+getoption($citekey, $option) returns the value of option, taking into account
+the option locally decined for $citekey, if available.
 
 =cut
 
@@ -102,6 +97,14 @@ sub getoption {
 # INTERNAL SUBS for SORT STRINGS
 #=====================================================
 
+
+sub _nodecode {
+    my ($self, $citekey) = @_ ;
+    my $no_decode = ( $self->{config}->{unicodebib} 
+                        or $self->{config}->{fastsort} 
+                        or $self->{bib}->{$citekey}->{datatype} eq 'xml' ) ;
+    return $no_decode
+}
 
 sub _getinitstring {
     my ($self, $citekey) = @_ ;
@@ -154,9 +157,6 @@ sub _getnamestring {
 sub _namestring {
 	my ( $self, $citekey, $field ) = @_ ;
     my $be = $self->{bib}->{$citekey} ;
-    my $no_decode = ( $self->{config}->{unicodebib} 
-                        or $self->{config}->{fastsort} 
-                        or $be->{datatype} eq 'xml' ) ;
 	
 	my $str = "" ;
     foreach ( @{ $be->{$field} } ) {
@@ -165,10 +165,18 @@ sub _namestring {
         $str .= $_->{lastname} . " " ;
         $str .= $_->{firstname} . " " if $_->{firstname} ;
         $str .= $_->{suffix} if $_->{suffix} ;
-        $str .= " " ;
+        ### \x{ff21} is temporary and will be replaced by "&" after normalize_string,
+        #   which would gobble the & otherwise.
+        #   The & between multiple authors in the sortstring ensures 
+        #   that "dow john some title" gets sorted before 
+        #   "dow john&dow robert another title"
+        $str .= "\x{ff21}" ;
     } ;
-    $str =~ s/\s+$// ;
-    return normalize_string($str, $no_decode)
+    $str =~ s/\s+\x{ff21}/\x{ff21}/g;
+    $str =~ s/\x{ff21}$//;
+    $str = normalize_string($str, $self->_nodecode($citekey));
+    $str =~ s/\x{ff21}/\&/g;
+    return $str
 }
 
 
@@ -211,9 +219,8 @@ sub _getdecyearstring {
 sub _gettitlestring {
     my ($self, $citekey) = @_ ;
     my $be = $self->{bib}->{$citekey} ;
-    my $no_decode = ( $self->{config}->{unicodebib} 
-                        or $self->{config}->{fastsort} 
-                        or $be->{datatype} eq 'xml' ) ;
+    my $no_decode = $self->_nodecode($citekey) ;
+
     if ( $be->{sorttitle} ) {
         return normalize_string( $be->{sorttitle}, $no_decode ) ;
     }
@@ -227,10 +234,9 @@ sub _gettitlestring {
         return normalize_string( $be->{journal}, $no_decode ) ;
     }
     else {
-        croak "No title available for gettitlestring()"
+        croak "No title available for key $citekey"
     }
 }
-
 
 sub _getvolumestring {
     my ($self, $citekey) = @_ ;
@@ -387,20 +393,20 @@ sub _print_biblatex_entry {
     foreach my $listfield (@LISTFIELDS) {
         next if $SKIPFIELDS{$listfield} ;
         if ( defined $be->{$listfield} ) {
-            my @nf    = @{ $be->{$listfield} } ;
+            my @lf    = @{ $be->{$listfield} } ;
             if ( $be->{$listfield}->[-1] eq 'others' ) {
                 $str .= "  \\true{more$listfield}\n" ;
-                pop @nf; # remove the last element in the array
+                pop @lf; # remove the last element in the array
             } ;
-            my $total = $#nf + 1 ;
+            my $total = $#lf + 1 ;
             $str .= "  \\list{$listfield}{$total}{%\n" ;
-            foreach my $n (@nf) {
+            foreach my $f (@lf) {
                 my $tmpstr ;
                 if ( $be->{datatype} eq 'bibtex') { 
-                    $tmpstr = $n
+                    $tmpstr = $f
                 }
                 else {
-                    $tmpstr = latexescape($n) ;
+                    $tmpstr = latexescape($f) ;
                 } ;
                 $str .= "    {$tmpstr}%\n" ;
             }

@@ -268,7 +268,7 @@ sub makenameid {
         push @namestrings, $n->{namestring} ;
     }
     my $tmp = join " ", @namestrings ;
-    return normalize_string_underscore($tmp) ;
+    return normalize_string_underscore($tmp, 1) ;
 }
 
 =head2 makenameinitid
@@ -284,7 +284,7 @@ sub makenameinitid {
         push @namestrings, $n->{nameinitstring} ;
     }
     my $tmp = join " ", @namestrings ;
-    return normalize_string_underscore($tmp) ;
+    return normalize_string_underscore($tmp, 1) ;
 }
 
 =head2 normalize_string
@@ -295,24 +295,26 @@ as well as leading and trailing whitespace.
 =cut
 
 sub normalize_string {
-    my $str = shift ;
+    my ($str, $no_decode) = @_ ;
+    $str = latex_decode($str) unless $no_decode ;
     $str =~ s/\\[A-Za-z]+//g ; # remove latex macros (assuming they have only ASCII letters)
     $str =~ s/[\p{P}\p{S}\p{C}]+//g ; ### remove punctuation, symbols, separator and control
     $str =~ s/^\s+// ;
     $str =~ s/\s+$// ;
+    $str =~ s/\s+/ /g ;
     return $str ;
 }
 
 =head2 normalize_string_underscore
 
-Like normalize_string, but also substitutes whitespace with underscore.
+Like normalize_string, but also substitutes ~ and whitespace with underscore.
 
 =cut
 
 sub normalize_string_underscore {
-    my $str = shift ;
+    my ($str, $no_decode) = @_ ;
     $str =~ s/([^\\])~/$1 /g ; # Foo~Bar -> Foo Bar
-    $str = normalize_string($str) ;
+    $str = normalize_string($str, $no_decode) ;
     $str =~ s/\s+/_/g ;
     return $str ;
 }

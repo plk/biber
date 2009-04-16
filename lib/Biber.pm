@@ -9,6 +9,7 @@ use Biber::Constants ;
 use List::Util qw( first );
 use Biber::Internals ;
 use Biber::Utils ;
+use LaTeX::Decode ;
 use base 'Biber::Internals' ;
 our @ISA ;
 
@@ -689,13 +690,13 @@ sub postprocess {
             if ( $be->{sorttitle} ) {
                 $namehash   = terseinitials( $be->{sorttitle} ) ; 
                 $fullhash   = $namehash ;
-                $nameid     = normalize_string_underscore( $be->{sorttitle} ) ;
+                $nameid     = normalize_string_underscore( $be->{sorttitle}, 1 ) ;
                 $nameinitid = $nameid if ( $self->config('uniquename') == 2 ) ;
             }
             else {
                 $namehash   = terseinitials( $be->{title} ) ; 
                 $fullhash   = $namehash ;
-                $nameid     = normalize_string_underscore( $be->{title} ) ;
+                $nameid     = normalize_string_underscore( $be->{title}, 1 ) ;
                 $nameinitid = $nameid if ( $self->config('uniquename') == 2 ) ;
             }
         }
@@ -841,14 +842,15 @@ sub postprocess {
         ##############################################################
 
         if ( $be->{sortkey} ) {
-            my $tmp = "";
+            my $pre ;
             if ( $be->{presort} ) {
-                $tmp .= $be->{presort}
+                $pre = $be->{presort} 
             } else {
-                $tmp .= 'mm'
+                $pre = 'mm'
             } ;
-            $tmp .= " " . lc( $be->{sortkey} ) ;
-            $be->{sortstring} = $tmp ;
+            my $sortkey = lc( $be->{sortkey} ) ;
+            $sortkey = latex_decode($sortkey) unless $self->_nodecode($citekey) ;
+            $be->{sortstring} = "$pre $sortkey" ;
         } else {
             $self->_generatesortstring($citekey) ;
         }

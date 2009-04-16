@@ -3,16 +3,19 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 19;
+use Test::More tests => 20;
 
 use Biber::Utils;
 
-is( normalize_string('"a, b–c: d" '),  'a bc d', 'normalize_string' );
+is( normalize_string('"a, b–c: d" ', 1),  'a bc d', 'normalize_string' );
 
 is( normalize_string_underscore('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
-    $§+ :-)   '), 'Secoka_Nino', 'normalize_string_underscore 1' );
+    $§+ :-)   ', 1), 'Secoka_Nino', 'normalize_string_underscore 1' );
 
-is( normalize_string_underscore('{Foo de Bar, Graf Ludwig}'), 'Foo_de_Bar_Graf_Ludwig', 'normalize_string_underscore 2');
+is( normalize_string_underscore('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
+    $§+ :-)   ', 0), 'Şecöka_Nìño', 'normalize_string_underscore 1' );
+
+is( normalize_string_underscore('{Foo de Bar, Graf Ludwig}', 1), 'Foo_de_Bar_Graf_Ludwig', 'normalize_string_underscore 2');
 
 my @names = ( 
     { namestring => '\"Askdjksdj, Bsadk Cklsjd', nameinitstring => '\"Askdjksdj, BC' },

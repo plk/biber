@@ -1,6 +1,6 @@
 Revision history for biber
 
-0.4.2   15.4.2009
+0.4.2   16.4.2009
         * New option --inputencoding to handle 8-bit encoded bib files
         * $BIBINPUT environment is now searched
         * Improved parsing of personal names
@@ -13,10 +13,10 @@ Revision history for biber
           (this is much faster than "allkeys.txt" which contains rules for 
           all Unicode glyphs)  
         * Unicode::Collate parameters can be passed as a command-line option
-        * Even faster sorting (with option -f) is also possible for specific 
+        * Faster sorting (with option -f) is also possible for specific 
           locales given with option --locale (this is OS-dependent however) 
         * PRD grammar is now precompiled
-        * Many bugfixes
+        * Many bugfixes!
 
 0.4.1   31.03.2009
         * Text::BibTeX now optional dependency
