@@ -1,6 +1,6 @@
 ==========================
 
-    BIBER Version 0.4.1
+    BIBER Version 0.4.2
 
 ==========================
 
@@ -16,15 +16,12 @@ INSTALLATION
 
 The file biber.exe is a standalone executable that contains a complete
 distribution of Perl for Windows along with all the files required by biber.
-The optional dependency Text::BibTeX is not included because I cannot compile
-the btparse library under plain Windows (this is easy under Cygwin though).
-(Contact me if you know how to do this). Note that you can simply unpack the
-.exe file with unzip to see the source code).
+Note that you can simply unpack the .exe file with unzip to see the source
+code).
 
 Alternatively, you can install the source tarball on one of the flavours of
-Perl for Windows (Strawberry Perl, ActivePerl, or Cygwin, the latter being
-currently the only way to rely upon the faster Text::BibTeX parser). See the
-README file in biblatex-biber-*.tar.gz
+Perl for Windows (Strawberry Perl, ActivePerl, or Cygwin). See the README file
+in biblatex-biber-*.tar.gz
 
 SUPPORT AND DOCUMENTATION
 
