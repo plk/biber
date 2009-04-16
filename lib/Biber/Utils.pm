@@ -26,9 +26,9 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid cleanstring
-    normalize_string latexescape array_minus getlabel remove_outer getinitials
-    tersify ucinit } ;
+our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid 
+    normalize_string normalize_string_underscore latexescape array_minus
+    getlabel remove_outer getinitials tersify ucinit } ;
 
 
 ######
@@ -268,7 +268,7 @@ sub makenameid {
         push @namestrings, $n->{namestring} ;
     }
     my $tmp = join " ", @namestrings ;
-    return cleanstring($tmp) ;
+    return normalize_string_underscore($tmp) ;
 }
 
 =head2 makenameinitid
@@ -284,12 +284,13 @@ sub makenameinitid {
         push @namestrings, $n->{nameinitstring} ;
     }
     my $tmp = join " ", @namestrings ;
-    return cleanstring($tmp) ;
+    return normalize_string_underscore($tmp) ;
 }
 
 =head2 normalize_string
 
-Removes LaTeX macros, and all punctuation, symbols, separators and control characters.
+Removes LaTeX macros, and all punctuation, symbols, separators and control characters,
+as well as leading and trailing whitespace.
 
 =cut
 
@@ -297,22 +298,21 @@ sub normalize_string {
     my $str = shift ;
     $str =~ s/\\[A-Za-z]+//g ; # remove latex macros (assuming they have only ASCII letters)
     $str =~ s/[\p{P}\p{S}\p{C}]+//g ; ### remove punctuation, symbols, separator and control
+    $str =~ s/^\s+// ;
+    $str =~ s/\s+$// ;
     return $str ;
 }
 
-=head2 cleanstring
+=head2 normalize_string_underscore
 
-Like normalize_string, but also removes leading and trailing whitespace, and
-substitutes whitespace with underscore.
+Like normalize_string, but also substitutes whitespace with underscore.
 
 =cut
 
-sub cleanstring {
+sub normalize_string_underscore {
     my $str = shift ;
     $str =~ s/([^\\])~/$1 /g ; # Foo~Bar -> Foo Bar
     $str = normalize_string($str) ;
-    $str =~ s/^\s+// ;
-    $str =~ s/\s+$// ;
     $str =~ s/\s+/_/g ;
     return $str ;
 }

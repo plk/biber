@@ -17,7 +17,7 @@ Biber::Internals - Internal methods for processing the bibliographic data
 =cut
 
 #TODO $namefield instead of @aut as 2nd argument!
-sub getnameinitials {
+sub _getnameinitials {
     my ($self, $citekey, @aut) = @_ ;
     my $initstr = "" ;
     ## my $nodecodeflag = $self->_decode_or_not($citekey) ;
@@ -55,12 +55,9 @@ sub getnameinitials {
     return $initstr ;
 }
 
-=head2 getallnameinitials
-
-=cut
 
 #TODO $namefield instead of @aut as 2nd argument!
-sub getallnameinitials {
+sub _getallnameinitials {
     my ($self, $citekey, @aut) = @_ ;
     my $initstr = "" ;
     ## my $nodecodeflag = $self->_decode_or_not($citekey) ;
@@ -102,14 +99,11 @@ sub getoption {
 
 
 #=====================================================
-# SUBS for SORT STRINGS
+# INTERNAL SUBS for SORT STRINGS
 #=====================================================
 
-=head2 getinitstring
 
-=cut
-
-sub getinitstring {
+sub _getinitstring {
     my ($self, $citekey) = @_ ;
     my $be = $self->{bib}->{$citekey} ;
     my $str ;
@@ -125,11 +119,8 @@ sub getinitstring {
     return $str ;
 }
 
-=head2 getnamestring
 
-=cut
-
-sub getnamestring {
+sub _getnamestring {
     my ($self, $citekey) = @_ ;
     my $be = $self->{bib}->{$citekey} ;
 
@@ -141,7 +132,7 @@ sub getnamestring {
             )
       )
     {
-        return $be->{sortname} ;
+		return $self->_namestring($citekey, 'sortname') ;
     }
     elsif ( $self->getoption( $citekey, "useauthor" ) 
 			and $be->{author} ) {
@@ -156,7 +147,7 @@ sub getnamestring {
         return $self->_namestring($citekey, 'translator')
     }
     else {
-        return $self->gettitlestring($citekey) ;
+        return $self->_gettitlestring($citekey) ;
     }
 }
 
@@ -180,11 +171,8 @@ sub _namestring {
     return normalize_string($str, $no_decode)
 }
 
-=head2 getyearstring
 
-=cut
-
-sub getyearstring {
+sub _getyearstring {
     my ($self, $citekey) = @_ ;
     my $be = $self->{bib}->{$citekey} ;
     if ( $be->{sortyear} ) {
@@ -201,11 +189,8 @@ sub getyearstring {
     }
 }
 
-=head2 getdecyearstring
 
-=cut
-
-sub getdecyearstring {
+sub _getdecyearstring {
     my ($self, $citekey) = @_ ;
     my $be = $self->{bib}->{$citekey} ;
     if ( $be->{sortyear} ) {
@@ -222,11 +207,8 @@ sub getdecyearstring {
     }
 }
 
-=head2 gettitlestring
 
-=cut
-
-sub gettitlestring {
+sub _gettitlestring {
     my ($self, $citekey) = @_ ;
     my $be = $self->{bib}->{$citekey} ;
     my $no_decode = ( $self->{config}->{unicodebib} 
@@ -249,11 +231,8 @@ sub gettitlestring {
     }
 }
 
-=head2 getvolumestring
 
-=cut
-
-sub getvolumestring {
+sub _getvolumestring {
     my ($self, $citekey) = @_ ;
     my $be = $self->{bib}->{$citekey} ;
     if ( $be->{volume} ) {
@@ -271,6 +250,64 @@ sub getvolumestring {
         return "0000" ;
     }
 }
+
+
+sub _generatesortstring {
+    my ($self, $citekey) = @_ ;
+    my $be = $self->{bib}->{$citekey} ;
+
+    if ( $self->config('sorting') == 1 ) {    # name title year
+        $be->{sortstring} =
+          lc(   $self->_getinitstring($citekey) . " "
+              . $self->_getnamestring($citekey) . " "
+              . $self->_gettitlestring($citekey) . " "
+              . $self->_getyearstring($citekey) . " "
+              . $self->_getvolumestring($citekey) ) ;
+    }
+    elsif ( $self->config('sorting') == 2 or $self->config('sorting') == 12 )
+    {                                        # <alpha> name year title
+        $be->{sortstring} =
+          lc(   $self->_getinitstring($citekey) . " "
+              . $self->_getnamestring($citekey) . " "
+              . $self->_getyearstring($citekey) . " "
+              . $self->_gettitlestring($citekey) . " "
+              . $self->_getvolumestring($citekey) ) ;
+    }
+    elsif ( $self->config('sorting') == 3 or $self->config('sorting') == 13 )
+    {                                        # <alpha> name year volume title
+        $be->{sortstring} =
+          lc(   $self->_getinitstring($citekey) . " "
+              . $self->_getnamestring($citekey) . " "
+              . $self->_getyearstring($citekey) . " "
+              . $self->_getvolumestring($citekey) . " "
+              . $self->_gettitlestring($citekey) ) ;
+    }
+    elsif ( $self->config('sorting') == 21 ) {    # year name title
+        $be->{sortstring} =
+          lc(   $self->_getyearstring($citekey) . " "
+              . $self->_getnamestring($citekey) . " "
+              . $self->_gettitlestring($citekey) ) ;
+    }
+    elsif ( $self->config('sorting') == 22 ) {    # year_decreasing name title
+        $be->{sortstring} =
+          lc(   $self->_getdecyearstring($citekey) . " "
+              . $self->_getnamestring($citekey) . " "
+              . $self->_gettitlestring($citekey) ) ;
+
+    } elsif ($self->config('sorting') == 99) { 
+        $be->{sortstring} = $citekey
+    }
+    else {
+        # do nothing!
+        carp "Warning: the sorting code " . $self->config('sorting') . 
+             " is not defined, assuming 'debug'\n" ;
+        $be->{sortstring} = $citekey
+    } 
+
+    return
+}
+
+
 
 #TODO this could be done earlier as a method and stored in the object
 sub _print_name {
@@ -331,6 +368,7 @@ sub _print_biblatex_entry {
     delete $be->{entrytype}; #forgot why this is needed!
     
     foreach my $namefield (@NAMEFIELDS) {
+        next if $SKIPFIELDS{$namefield} ;
         if ( defined $be->{$namefield} ) {
             my @nf    = @{ $be->{$namefield} } ;
             if ( $be->{$namefield}->[-1]->{namestring} eq 'others' ) {
@@ -347,6 +385,7 @@ sub _print_biblatex_entry {
     }
     
     foreach my $listfield (@LISTFIELDS) {
+        next if $SKIPFIELDS{$listfield} ;
         if ( defined $be->{$listfield} ) {
             my @nf    = @{ $be->{$listfield} } ;
             if ( $be->{$listfield}->[-1] eq 'others' ) {
@@ -446,6 +485,7 @@ sub _print_biblatex_entry {
     }
 
     foreach my $lfield (@LITERALFIELDS) {
+        next if $SKIPFIELDS{$lfield} ;
         if ( defined $be->{$lfield} ) {
             next if ( $lfield eq 'crossref' and 
                        $Biber::seenkeys{ $be->{crossref} } ) ; # belongs to @auxcitekeys 
@@ -465,6 +505,7 @@ sub _print_biblatex_entry {
         }
     }
     foreach my $rfield (@RANGEFIELDS) {
+        next if $SKIPFIELDS{$rfield} ;
         if ( defined $be->{$rfield} ) {
             my $rf = $be->{$rfield} ;
             $rf =~ s/[-–]+/\\bibrangedash /g ;
@@ -472,6 +513,7 @@ sub _print_biblatex_entry {
         }
     }
     foreach my $vfield (@VERBATIMFIELDS) {
+        next if $SKIPFIELDS{$vfield} ;
         if ( defined $be->{$vfield} ) {
             my $rf = $be->{$vfield} ;
             $str .= "  \\verb{$vfield}\n" ;

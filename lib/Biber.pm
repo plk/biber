@@ -650,8 +650,8 @@ sub postprocess {
            )
         {
             my @aut = @{ $be->{sortname} } ;
-            $namehash   = $self->getnameinitials( $citekey, @aut ) ;
-            $fullhash   = $self->getallnameinitials( $citekey, @aut ) ;
+            $namehash   = $self->_getnameinitials( $citekey, @aut ) ;
+            $fullhash   = $self->_getallnameinitials( $citekey, @aut ) ;
             $nameid     = makenameid(@aut) ;
             $nameinitid = makenameinitid(@aut)
               if ( $self->config('uniquename') == 2 ) ;
@@ -659,8 +659,8 @@ sub postprocess {
         elsif ( $self->getoption( $citekey, "useauthor" ) 
                 and $be->{author} ) {
             my @aut = @{ $be->{author} } ;
-            $namehash   = $self->getnameinitials( $citekey, @aut ) ;
-            $fullhash   = $self->getallnameinitials( $citekey, @aut ) ;
+            $namehash   = $self->_getnameinitials( $citekey, @aut ) ;
+            $fullhash   = $self->_getallnameinitials( $citekey, @aut ) ;
             $nameid     = makenameid(@aut) ;
             $nameinitid = makenameinitid(@aut)
               if ( $self->config('uniquename') == 2 ) ;
@@ -670,8 +670,8 @@ sub postprocess {
                  and $be->{editor} ) 
         {
             my @edt = @{ $be->{editor} } ;
-            $namehash   = $self->getnameinitials( $citekey, @edt ) ;
-            $fullhash   = $self->getallnameinitials( $citekey, @edt ) ;
+            $namehash   = $self->_getnameinitials( $citekey, @edt ) ;
+            $fullhash   = $self->_getallnameinitials( $citekey, @edt ) ;
             $nameid     = makenameid(@edt) ;
             $nameinitid = makenameinitid(@edt)
               if ( $self->config('uniquename') == 2 ) ;
@@ -679,8 +679,8 @@ sub postprocess {
         elsif ( $self->getoption( $citekey, "usetranslator" ) 
                 and $be->{translator} ) {
             my @trs = @{ $be->{translator} } ;
-            $namehash   = $self->getnameinitials( $citekey, @trs ) ;
-            $fullhash   = $self->getallnameinitials( $citekey, @trs ) ;
+            $namehash   = $self->_getnameinitials( $citekey, @trs ) ;
+            $fullhash   = $self->_getallnameinitials( $citekey, @trs ) ;
             $nameid     = makenameid(@trs) ;
             $nameinitid = makenameinitid(@trs)
               if ( $self->config('uniquename') == 2 ) ;
@@ -689,13 +689,13 @@ sub postprocess {
             if ( $be->{sorttitle} ) {
                 $namehash   = terseinitials( $be->{sorttitle} ) ; 
                 $fullhash   = $namehash ;
-                $nameid     = cleanstring( $be->{sorttitle} ) ;
+                $nameid     = normalize_string_underscore( $be->{sorttitle} ) ;
                 $nameinitid = $nameid if ( $self->config('uniquename') == 2 ) ;
             }
             else {
                 $namehash   = terseinitials( $be->{title} ) ; 
                 $fullhash   = $namehash ;
-                $nameid     = cleanstring( $be->{title} ) ;
+                $nameid     = normalize_string_underscore( $be->{title} ) ;
                 $nameinitid = $nameid if ( $self->config('uniquename') == 2 ) ;
             }
         }
@@ -823,7 +823,8 @@ sub postprocess {
         # 7. track author/year
         ##############################################################
 
-        my $tmp = $self->getnamestring($citekey) . " " . $self->getyearstring($citekey) ;
+        my $tmp = $self->_getnamestring($citekey) . 
+            " " . $self->_getyearstring($citekey) ;
         $seenauthoryear{$tmp}++ ;
         $be->{authoryear} = $tmp ;
 
@@ -839,53 +840,18 @@ sub postprocess {
         # 9. generate sort strings 
         ##############################################################
 
-        if ( $self->config('sorting') == 1 ) {    # name title year
-            $be->{sortstring} =
-              lc(   $self->getinitstring($citekey) . " "
-                  . $self->getnamestring($citekey) . " "
-                  . $self->gettitlestring($citekey) . " "
-                  . $self->getyearstring($citekey) . " "
-                  . $self->getvolumestring($citekey) ) ;
+        if ( $be->{sortkey} ) {
+            my $tmp = "";
+            if ( $be->{presort} ) {
+                $tmp .= $be->{presort}
+            } else {
+                $tmp .= 'mm'
+            } ;
+            $tmp .= " " . $be->{sortkey} ;
+            $be->{sortstring} = $tmp ;
+        } else {
+            $self->_generatesortstring($citekey) ;
         }
-        elsif ( $self->config('sorting') == 2 or $self->config('sorting') == 12 )
-        {                                        # <alpha> name year title
-            $be->{sortstring} =
-              lc(   $self->getinitstring($citekey) . " "
-                  . $self->getnamestring($citekey) . " "
-                  . $self->getyearstring($citekey) . " "
-                  . $self->gettitlestring($citekey) . " "
-                  . $self->getvolumestring($citekey) ) ;
-        }
-        elsif ( $self->config('sorting') == 3 or $self->config('sorting') == 13 )
-        {                                        # <alpha> name year volume title
-            $be->{sortstring} =
-              lc(   $self->getinitstring($citekey) . " "
-                  . $self->getnamestring($citekey) . " "
-                  . $self->getyearstring($citekey) . " "
-                  . $self->getvolumestring($citekey) . " "
-                  . $self->gettitlestring($citekey) ) ;
-        }
-        elsif ( $self->config('sorting') == 21 ) {    # year name title
-            $be->{sortstring} =
-              lc(   $self->getyearstring($citekey) . " "
-                  . $self->getnamestring($citekey) . " "
-                  . $self->gettitlestring($citekey) ) ;
-        }
-        elsif ( $self->config('sorting') == 22 ) {    # year_decreasing name title
-            $be->{sortstring} =
-              lc(   $self->getdecyearstring($citekey) . " "
-                  . $self->getnamestring($citekey) . " "
-                  . $self->gettitlestring($citekey) ) ;
-
-        } elsif ($self->config('sorting') == 99) { 
-            $be->{sortstring} = $citekey
-        }
-        else {
-            # do nothing!
-            carp "Warning: the sorting code " . $self->config('sorting') . 
-                 " is not defined, assuming 'debug'\n" ;
-            $be->{sortstring} = $citekey
-        } ;
 
         ##############################################################
         # 9. when type of patent is not stated, simply assume 'patent'

@@ -7,12 +7,12 @@ use Test::More tests => 19;
 
 use Biber::Utils;
 
-is( normalize_string('"a, b–c: d" '),  'a bc d ', 'normalize_string' );
+is( normalize_string('"a, b–c: d" '),  'a bc d', 'normalize_string' );
 
-is( cleanstring('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
-    $§+ :-)   '), 'Secoka_Nino', 'cleanstring 1' );
+is( normalize_string_underscore('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
+    $§+ :-)   '), 'Secoka_Nino', 'normalize_string_underscore 1' );
 
-is( cleanstring('{Foo de Bar, Graf Ludwig}'), 'Foo_de_Bar_Graf_Ludwig', 'cleanstring 2');
+is( normalize_string_underscore('{Foo de Bar, Graf Ludwig}'), 'Foo_de_Bar_Graf_Ludwig', 'normalize_string_underscore 2');
 
 my @names = ( 
     { namestring => '\"Askdjksdj, Bsadk Cklsjd', nameinitstring => '\"Askdjksdj, BC' },

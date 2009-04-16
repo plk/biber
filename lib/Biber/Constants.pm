@@ -16,6 +16,7 @@ our @EXPORT = qw{
     @COMMASEP_FIELDS
 	@ENTRIESTOSPLIT
 	@LITERALFIELDS
+    %SKIPFIELDS
 	%CONFIG_DEFAULT
     $BIBLATEX_VERSION
     %ALIASES
@@ -85,6 +86,9 @@ Readonly::Array our @TITLEFIELDS => qw{ title
     booktitle booksubtitle booktitleaddon journal journaltitle journalsubtitle
     reprinttitle };
 
+# Fields that are used internally by biber but are not passed to the bbl output
+Readonly::Array our @SKIPFIELDS => qw{ sortname sorttitle presort sortkey sortyear } ;
+our %SKIPFIELDS = map { $_ => 1 } @SKIPFIELDS ;
 
 # ignored by default: library remarks (more?)
 # TODO : Add option to insert them if needed ?? 

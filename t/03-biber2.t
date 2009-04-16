@@ -63,7 +63,6 @@ my $markey = q|\entry{markey}{online}{}
   \field{title}{Tame the BeaST}
   \field{version}{1.3}
   \field{hyphenation}{american}
-  \field{sorttitle}{Tame the Beast}
   \field{year}{2005}
   \verb{url}
   \verb http://tug.ctan.org/tex-archive/info/bibtex/tamethebeast/ttb_en.pdf

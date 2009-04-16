@@ -10,11 +10,9 @@ sub dbxml_to_xml {
     my @auxcitekeys = $self->citekeys ;
     my $mgr = new XmlManager() or croak ;
     my $collname = basename($dbxmlfile) ;
-    #my $xmldoc = XML::LibXML::Document->new("1.0", "UTF-8") ;
-    #$xmldoc->createElementNS("http://ankabut.net/biblatexml", "bib:entries") ;
     my $xmlstring = <<ENDXML
 <?xml version="1.0" encoding="UTF-8"?>
-<bib:entries xmlns:bib="http://ankabut.net/biblatexml"
+<bib:entries xmlns:bib="http://biblatex-biber.sourceforge.net/biblatexml"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 ENDXML
     ;
@@ -22,7 +20,7 @@ ENDXML
         chdir( dirname($dbxmlfile)) or croak "Cannot chdir: $!" ;
         my $cont = $mgr->openContainer("$collname") ;
         my $context = $mgr->createQueryContext() ;
-        $context->setNamespace("bib", "http://ankabut.net/biblatexml") ;
+        $context->setNamespace("bib", "http://biblatex-biber.sourceforge.net/biblatexml") ;
         foreach my $key (@auxcitekeys) {
             print "Querying dbxml for key $key\n" if $self->config('biberdebug') ;
             my $query = 'collection("' . $collname . '")//bib:entry[@id="' . $key . '"]' ;
