@@ -847,7 +847,7 @@ sub postprocess {
             } else {
                 $tmp .= 'mm'
             } ;
-            $tmp .= " " . $be->{sortkey} ;
+            $tmp .= " " . lc( $be->{sortkey} ) ;
             $be->{sortstring} = $tmp ;
         } else {
             $self->_generatesortstring($citekey) ;
