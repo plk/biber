@@ -20,6 +20,8 @@ data/schemas/biblatexml.rnc
 data/schemas/biblatexml.rng
 data/schemas/biblatexml.xsd
 data/latinkeys.txt
+etc/AUCTeX.txt
+etc/biber-auctex.png
 t/00-load.t
 t/01-utils.t
 t/02-biber.t
