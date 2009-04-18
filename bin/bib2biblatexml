@@ -238,6 +238,7 @@ for my $citekey ( sort keys %bibentries ) {
         }
         $writer->endTag() ; #user
     }
+	$writer->endTag() ; #entry
 } ;
 
 $writer->endTag() ; #entries
