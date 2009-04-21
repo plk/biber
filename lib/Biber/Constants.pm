@@ -70,21 +70,18 @@ Readonly::Array our @LISTFIELDS  =>   qw{
   origpublisher lista listb listc listd liste listf } ;
 
 Readonly::Array our @LITERALFIELDS_BASE  =>   qw{
-  abstract addendum annotation booksubtitle booktitle booktitleaddon chapter
-  day edition eid howpublished indextitle isan isbn ismn isrn issn issue
-  issuesubtitle issuetitle iswc journalsubtitle journaltitle journal label
-  mainsubtitle maintitle maintitleaddon month nameaddon note number
-  origtitle pagetotal part reprinttitle series shorthand shorthandintro
-  shortjournal shortseries shorttitle subtitle title titleaddon eprinttype
-  urlday urlmonth urlyear venue version volume volumes usera userb userc userd
-  usere userf hyphenation crossref entrysubtype execute gender indexsorttitle
-  sortkey sorttitle sortyear xref } ;
+  abstract addendum annotation chapter day edition eid howpublished isan isbn
+  ismn isrn issn issue iswc label month nameaddon note number pagetotal part
+  series shorthand shorthandintro shortjournal shortseries eprinttype urlday
+  urlmonth urlyear venue version volume volumes usera userb userc userd usere
+  userf hyphenation crossref entrysubtype execute gender sortkey sortyear xref
+  } ;
 
 Readonly::Array our @TITLEFIELDS => qw{ title 
-    subtitle titleaddon shorttitle sorttitle indextitle indexsorttitle
-    origtitle issuetitle issuesubtitle maintitle mainsubtitle maintitleaddon
-    booktitle booksubtitle booktitleaddon journal journaltitle journalsubtitle
-    reprinttitle };
+  subtitle titleaddon shorttitle sorttitle indextitle indexsorttitle
+  origtitle issuetitle issuesubtitle maintitle mainsubtitle maintitleaddon
+  booktitle booksubtitle booktitleaddon journal journaltitle journalsubtitle
+  reprinttitle };
 
 # Fields that are used internally by biber but are not passed to the bbl output
 Readonly::Array our @SKIPFIELDS => qw{ sortname sorttitle presort sortkey sortyear } ;
@@ -109,7 +106,7 @@ Readonly::Array our @ENTRIESTOSPLIT  =>  ( @NAMEFIELDS, @LISTFIELDS ) ;
 
 # TODO validate the keys in the @keyfields ?
 
-Readonly::Array our @LITERALFIELDS => ( @LITERALFIELDS_BASE, @KEYFIELDS ) ;
+Readonly::Array our @LITERALFIELDS => ( @LITERALFIELDS_BASE, @TITLEFIELDS, @KEYFIELDS ) ;
 
 Readonly::Hash our %ALIASES => ( 
 	'address' => 'location',

@@ -80,7 +80,7 @@ for my $citekey ( sort keys %bibentries ) {
     my @entryfields = keys %$entry ;
     my @specialfields = ( @NAMEFIELDS, @LISTFIELDS, @TITLEFIELDS ) ;
     my @standardfields = ( @RANGEFIELDS, @VERBATIMFIELDS, 
-                           @LITERALFIELDS, @COMMASEP_FIELDS ) ;
+                           @LITERALFIELDS_BASE, @KEYFIELDS, @COMMASEP_FIELDS ) ;
     my @officialfields = ( @specialfields, @standardfields, 'entrytype', 'datatype' ) ;
     my @privatefields = array_minus( \@entryfields, \@officialfields ) ;
 
