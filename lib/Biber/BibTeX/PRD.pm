@@ -74,7 +74,7 @@ sub _bibtex_prd_parse {
 
                 push @localkeys, $key ;
                 
-                $bibentries{ $key } = $entries[$i]->{$tmpkey} ;
+                $bibentries{ $key } = $entries[$i]->{$origkey} ;
                 
                 $bibentries{ $key }->{datatype} = 'bibtex' ;
             }
