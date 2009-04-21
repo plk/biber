@@ -106,7 +106,7 @@ Readonly::Array our @ENTRIESTOSPLIT  =>  ( @NAMEFIELDS, @LISTFIELDS ) ;
 
 # TODO validate the keys in the @keyfields ?
 
-Readonly::Array our @LITERALFIELDS => ( @LITERALFIELDS_BASE, @TITLEFIELDS, @KEYFIELDS ) ;
+Readonly::Array our @LITERALFIELDS => ( @TITLEFIELDS, @LITERALFIELDS_BASE, @KEYFIELDS ) ;
 
 Readonly::Hash our %ALIASES => ( 
 	'address' => 'location',
