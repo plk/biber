@@ -346,11 +346,11 @@ terseinitials($str) returns the contatenated initials of all the words in $str.
 
 sub terseinitials {
     my $str = shift ;
+    $str =~ s/^$NONSORTPREFIX// ;
+    $str =~ s/^$NONSORTDIACRITICS// ;
 	$str =~ s/\\[\p{L}]+\s*//g ;  # remove tex macros
     $str =~ s/^{(\p{L}).+}$/$1/g ;    # {Aaaa Bbbbb Ccccc} -> A
     $str =~ s/{\s+(\S+)\s+}//g ;  # Aaaaa{ de }Bbbb -> AaaaaBbbbb
-	# remove arabic prefix: al-Khwarizmi -> K / aṣ-Ṣāliḥ -> Ṣ ʿAbd~al-Raḥmān -> A etc
-    $str =~ s/\ba\p{Ll}-// ; 
     # get rid of Punctuation (except DashPunctuation), Symbol and Other characters
     $str =~ s/[\x{2bf}\x{2018}\p{Lm}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g ; 
     $str =~ s/\B\p{L}//g ;
@@ -427,6 +427,7 @@ sub remove_outer {
 
 sub getinitials {
     my $str = shift;
+    $str =~ s/{\s+(\S+)\s+}//g ;  # Aaaaa{ de }Bbbb -> AaaaaBbbbb
     # remove pseudo-space after macros
     $str =~ s/{? ( \\ [^\p{Ps}\{\}]+ ) \s+ (\p{L}) }?/\{$1\{$2\}\}/gx ;  # {\\x y} -> {\x{y}}
     $str =~ s/( \\ [^\p{Ps}\{\}]+ ) \s+ { /$1\{/gx ; # \\macro { -> \macro{
