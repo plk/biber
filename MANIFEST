@@ -25,7 +25,8 @@ etc/biber-auctex.png
 t/00-load.t
 t/01-utils.t
 t/02-biber.t
-t/03-biber2.t
+t/03-biber.t
+t/04-biber.t
 t/pod-coverage.t
 t/pod.t
 t/tdata/02-annotations-blx.bib
