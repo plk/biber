@@ -1,6 +1,6 @@
 ==========================
 
-    BIBER Version 0.4
+    BIBER Version 0.4.2
 
 ==========================
 
@@ -19,8 +19,9 @@ biber requires the following CPAN modules:
     * Readonly (but Readonly::XS is highly recommended)
     
     For parsing bibtex files, you need either 
-    * Text::BibTeX (strongly recommended, although I don't think it can be
-                    installed under Windows outside of a Cygwin environment)
+    * Text::BibTeX (strongly recommended). 
+      (NB: For Windows, ppm packages for Perl 5.8.* and 5.10.* are available on the biber 
+      download page). >>> TODO <<<
     or
     * Parse::RecDescent 
       and
