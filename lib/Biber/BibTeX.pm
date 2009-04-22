@@ -135,10 +135,17 @@ sub _text_bibtex_parse {
 
             } ;
 
-            $bibentries{ $key }->{entrytype} = $entry->type ;
+            if (lc($entry->type) eq 'phdthesis') {
+                $bibentries{ $key }->{entrytype} = 'thesis' ;
+                $bibentries{ $key }->{type} = 'phdthesis' ;
+            } elsif (lc($entry->type) eq 'mathesis') {
+                $bibentries{ $key }->{entrytype} = 'thesis' ;
+                $bibentries{ $key }->{type} = 'mathesis' ;
+            } else {
+                $bibentries{ $key }->{entrytype} = $entry->type ;
+            }
 
             $bibentries{ $key }->{datatype} = 'bibtex' ;
-
         }
 
     }
