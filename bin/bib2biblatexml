@@ -21,6 +21,7 @@ GetOptions(
     'help|h|?',
     'version|v',
     'inputencoding|i=s',
+    'unicodebib|u!',
     'useprd|p!',
     'debug|D!',
 #    'validate|V!', 
@@ -33,7 +34,10 @@ die usage() if exists $opts->{'help'} ;
 
 die version() if exists $opts->{'version'} ;
 
+my $unicodebib = 0 ;
+
 my $biber = Biber->new( { allentries => 1, unicodebbl => 1, 
+        unicodebib => $opts->{unicodebib},
         biberdebug => $opts->{debug}, useprd => $opts->{useprd},
         inputencoding => $opts->{inputencoding} } ) ;
 
@@ -70,7 +74,8 @@ my $writer = XML::Writer->new(OUTPUT => $output, DATA_MODE => 1, DATA_INDENT => 
 
 $writer->xmlDecl("UTF-8") ;  
 
-$writer->startTag("bib:entries", 'xmlns:bib'=>'http://biblatex-biber.sourceforge.net/biblatexml') ;
+$writer->startTag("bib:entries", 'xmlns:bib'=>'http://biblatex-biber.sourceforge.net/biblatexml',
+    'xmlns:user'=>'http://user.org') ;
 
 my $count = 0 ;
 
@@ -177,7 +182,7 @@ for my $citekey ( sort keys %bibentries ) {
 		}
 	} ;
 
-	foreach my $field (@standardfields) {
+	foreach my $field (array_minus( \@standardfields, ['type', 'howpublished'] )) {
         if ($entry->{$field}) {
             if ( $field eq 'month' && $entry->{month} =~ m/[a-z]/i) {
                 
@@ -233,7 +238,7 @@ for my $citekey ( sort keys %bibentries ) {
                 $writer->endTag() ; #library
             }
             else {
-                $writer->dataElement("bib:$field", $entry->{$field}) ;
+                $writer->dataElement("user:$field", $entry->{$field}) ;
             }
         }
         $writer->endTag() ; #user
@@ -291,7 +296,8 @@ Options:
   --help|-h              Show this help message.
   --version|-v           Display version number.
   --inputencoding|-i [encoding] 
-                         Input file uses legacy encoding 
+                         Input file uses legacy encoding.
+  --unicodebib|u!        Assume bib file is UTF-8 and skip latex_decode.
      \n]
 }
 
