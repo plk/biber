@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar ns="http://biblatex-biber.sourceforge.net/biblatexml" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+<grammar ns="http://biblatex-biber.sourceforge.net/biblatexml" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:user="http://localhost/biblatexml/user" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <start>
     <ref name="entries"/>
   </start>
@@ -102,7 +102,7 @@
         </choice>
       </optional>
       <zeroOrMore>
-        <ref name="user"/>
+        <ref name="private"/>
       </zeroOrMore>
       <optional>
         <ref name="entrysubtype"/>
@@ -725,11 +725,11 @@ We now define the biblatexml elements</a:documentation>
       <text/>
     </element>
   </define>
-  <define name="user">
+  <define name="private">
     <a:documentation>this element contains data relative to individual users of the database</a:documentation>
-    <element name="user">
+    <element name="private">
       <interleave>
-        <attribute name="id"/>
+        <attribute name="user"/>
         <optional>
           <ref name="library"/>
         </optional>
@@ -739,7 +739,16 @@ We now define the biblatexml elements</a:documentation>
         <optional>
           <ref name="topics"/>
         </optional>
+        <zeroOrMore>
+          <ref name="user.field"/>
+        </zeroOrMore>
       </interleave>
+    </element>
+  </define>
+  <define name="user.field">
+    <element>
+      <nsName ns="http://localhost/biblatexml/user"/>
+      <text/>
     </element>
   </define>
   <define name="library">
@@ -6492,7 +6501,7 @@ works</a:documentation>
         <ref name="remarks"/>
       </optional>
       <zeroOrMore>
-        <ref name="user"/>
+        <ref name="private"/>
       </zeroOrMore>
       <optional>
         <ref name="options"/>

@@ -1,7 +1,7 @@
 default namespace = "http://biblatex-biber.sourceforge.net/biblatexml"
 namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
 datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
-namespace user = "http://user.org"
+namespace user = "http://localhost/biblatexml/user"
 start = entries
 
 entries = element entries { BibLaTeXML.entries* }
@@ -56,7 +56,7 @@ BibLaTeXML.common.fields =
   abstract? &
   annotation? &
   (file|pdf)? &
-  user* &
+  private* &
   entrysubtype? &
   execute? &
   hyphenation? &
@@ -175,7 +175,7 @@ journalsubtitle = ( element journalsubtitle { formattext },
                    ( element journalsubtitle { translated, formattext }+ )
 label = element label { text }
 ## this element contains data relative to individual users of the database
-user = element user { attribute id {text} & library? & remarks? & topics? & user.field* }
+private = element private { attribute user {text} & library? & remarks? & topics? & user.field* }
 user.field = element user:* { text } 
 library = element library { libraryitem+ }
 libraryitem = element item { attribute location {text}?, 
@@ -1251,7 +1251,7 @@ BibLaTeXML.set.fields =
   annotation? &
   keywords? & 
   remarks? &
-  user* &
+  private* &
   options? 
 
 set = element entry { attribute id {text}, attribute entrytype {"set"}, BibLaTeXML.set.fields }

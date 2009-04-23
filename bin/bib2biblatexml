@@ -75,7 +75,7 @@ my $writer = XML::Writer->new(OUTPUT => $output, DATA_MODE => 1, DATA_INDENT => 
 $writer->xmlDecl("UTF-8") ;  
 
 $writer->startTag("bib:entries", 'xmlns:bib'=>'http://biblatex-biber.sourceforge.net/biblatexml',
-    'xmlns:user'=>'http://user.org') ;
+    'xmlns:user'=>'http://localhost/biblatexml/user') ;
 
 my $count = 0 ;
 
@@ -227,7 +227,7 @@ for my $citekey ( sort keys %bibentries ) {
 
     if ($#privatefields > 0) {
 
-        $writer->startTag('bib:user', "id"=>$ENV{USER}) ;
+        $writer->startTag('bib:private', "user"=>$ENV{USER}) ;
 
         foreach my $field (@privatefields) {
             # TODO add more like this, e.g. Zotero, BibSonomy, etc.

@@ -299,7 +299,7 @@
           <xs:element ref="biblatexml:file"/>
           <xs:element ref="biblatexml:pdf"/>
         </xs:choice>
-        <xs:element ref="biblatexml:user"/>
+        <xs:element ref="biblatexml:private"/>
         <xs:element ref="biblatexml:entrysubtype"/>
         <xs:element ref="biblatexml:execute"/>
         <xs:element ref="biblatexml:hyphenation"/>
@@ -979,16 +979,22 @@
     </xs:choice>
   </xs:group>
   <xs:element name="label" type="xs:string"/>
-  <xs:element name="user">
+  <xs:element name="private">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="biblatexml:library"/>
         <xs:element ref="biblatexml:remarks"/>
         <xs:element ref="biblatexml:topics"/>
+        <xs:group ref="biblatexml:user.field"/>
       </xs:choice>
-      <xs:attribute name="id" use="required"/>
+      <xs:attribute name="user" use="required"/>
     </xs:complexType>
   </xs:element>
+  <xs:group name="user.field">
+    <xs:sequence>
+      <xs:any namespace="http://localhost/biblatexml/user" processContents="skip"/>
+    </xs:sequence>
+  </xs:group>
   <xs:element name="library">
     <xs:complexType>
       <xs:group maxOccurs="unbounded" ref="biblatexml:libraryitem"/>
@@ -2614,8 +2620,21 @@
     KEY LISTS
     TODO add attribute type = babel, xml, ISO-XXX etc 
   -->
-  <xs:element name="language" type="xs:language"/>
-  <xs:element name="origlanguage" type="xs:language"/>
+  <xs:element name="language">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:itemlang"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="origlanguage">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:itemlang"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="itemlang">
+    <xs:sequence>
+      <xs:element name="item" type="xs:language"/>
+    </xs:sequence>
+  </xs:group>
   <xs:simpleType name="script.list">
     <xs:restriction base="xs:token">
       <xs:enumeration value="Arab"/>
@@ -2754,8 +2773,21 @@
       <xs:enumeration value="Zzzz"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:element name="script" type="biblatexml:script.list"/>
-  <xs:element name="origscript" type="biblatexml:script.list"/>
+  <xs:element name="script">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:itemscript"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="origscript">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:itemscript"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="itemscript">
+    <xs:sequence>
+      <xs:element name="item" type="biblatexml:script.list"/>
+    </xs:sequence>
+  </xs:group>
   <!-- NAME LISTS -->
   <xs:attributeGroup name="attlist.author">
     <xs:attribute name="type">
@@ -22243,7 +22275,7 @@
       <xs:element ref="biblatexml:annotation"/>
       <xs:element ref="biblatexml:keywords"/>
       <xs:element ref="biblatexml:remarks"/>
-      <xs:element ref="biblatexml:user"/>
+      <xs:element ref="biblatexml:private"/>
       <xs:element ref="biblatexml:options"/>
     </xs:choice>
   </xs:complexType>
