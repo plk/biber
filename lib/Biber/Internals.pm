@@ -4,6 +4,7 @@ use warnings ;
 use Carp ;
 use Biber::Constants ;
 use Biber::Utils ;
+use Text::Wrap ;
 
 =head1 NAME
 
@@ -345,6 +346,20 @@ sub _print_name {
     return "    {{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n" ;
 }
 
+sub _printfield {
+    my ($self, $field, $str) = @_ ;
+    my $width = $self->config('maxline') ;
+
+    ## 12 is the length of '  \field{}{}'
+    if ( 12 + length($field) + length($str) > 2*$width ) {
+        return "  \\field{$field}{%\n" . wrap('  ', '  ', $str) . "%\n  }\n" ;
+    } elsif ( 12 + length($field) + length($str) > $width ) {
+        return wrap('  ', '  ', "\\field{$field}{$str}" ) . "\n" ;
+    } else {
+        return "  \\field{$field}{$str}\n" ;
+    }
+}
+
 sub _print_biblatex_entry {
     
     my ($self, $citekey) = @_ ;
@@ -507,7 +522,8 @@ sub _print_biblatex_entry {
             else {
                 $tmpstr = latexescape($be->{$lfield}) ;
             }
-            $str .= "  \\field{$lfieldprint}{$tmpstr}\n" ;
+            ##$str .= "  \\field{$lfieldprint}{$tmpstr}\n" ;
+            $str .= $self->_printfield( $lfieldprint, $tmpstr ) ;
         }
     }
     foreach my $rfield (@RANGEFIELDS) {

@@ -33,7 +33,7 @@ Readonly::Hash our %CONFIG_DEFAULT => (
     useeditor   => 1,
     usetranslator => 0,
     labelyear   => 0,
-    labelnumber => 0,     #TODO ?
+    labelnumber => 0,
     singletitle => 0,
     uniquename  => 0,
     useprefix   => 0,
@@ -42,7 +42,7 @@ Readonly::Hash our %CONFIG_DEFAULT => (
     sortlos     => 1,
     maxnames    => 3,
     minnames    => 1,
-    maxline     => 79,    # this is currently ignored. TODO ?
+    maxline     => 79,
 	alphaothers => "+",
 	# biber options:
 	fastsort => 0,
