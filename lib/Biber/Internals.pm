@@ -160,23 +160,27 @@ sub _namestring {
     my $be = $self->{bib}->{$citekey} ;
 	
 	my $str = "" ;
-    foreach ( @{ $be->{$field} } ) {
-        $str .= $_->{prefix} . " "
-          if ( $_->{prefix} and $self->getoption( $citekey, "useprefix" ) ) ;
-        $str .= $_->{lastname} . " " ;
-        $str .= $_->{firstname} . " " if $_->{firstname} ;
-        $str .= $_->{suffix} if $_->{suffix} ;
-        ### \x{ff21} is temporary and will be replaced by "&" after normalize_string,
-        #   which would gobble the & otherwise.
-        #   The & between multiple authors in the sortstring ensures 
-        #   that "dow john some title" gets sorted before 
-        #   "dow john&dow robert another title"
-        $str .= "\x{ff21}" ;
+    my @names = @{ $be->{$field} } ;
+    my $truncated = 0 ;
+    ## perform truncation according to options minnames, maxnames
+    if ( $#names + 1 > $self->config('maxnames') ) {
+        $truncated = 1 ;
+        @names = splice(@names, 0, $self->config('minnames') )
     } ;
-    $str =~ s/\s+\x{ff21}/\x{ff21}/g;
-    $str =~ s/\x{ff21}$//;
+    foreach ( @names ) {
+        $str .= $_->{prefix} . "2"
+          if ( $_->{prefix} and $self->getoption( $citekey, "useprefix" ) ) ;
+        $str .= $_->{lastname} . "2" ;
+        $str .= $_->{firstname} . "2" if $_->{firstname} ;
+        $str .= $_->{suffix} if $_->{suffix} ;
+        $str =~ s/2$// ;
+        $str .= "1" ;
+    } ;
+    $str =~ s/\s+1/1/g;
+    $str =~ s/1$//;
     $str = normalize_string($str, $self->_nodecode($citekey));
-    $str =~ s/\x{ff21}/\&/g;
+    #TODO append "zzzz" if it has been truncated
+    $str .= "1zzzz" if $truncated ;
     return $str
 }
 
@@ -265,40 +269,40 @@ sub _generatesortstring {
 
     if ( $self->config('sorting') == 1 ) {    # name title year
         $be->{sortstring} =
-          lc(   $self->_getinitstring($citekey) . " "
-              . $self->_getnamestring($citekey) . " "
-              . $self->_gettitlestring($citekey) . " "
-              . $self->_getyearstring($citekey) . " "
+          lc(   $self->_getinitstring($citekey) . "0"
+              . $self->_getnamestring($citekey) . "0"
+              . $self->_gettitlestring($citekey) . "0"
+              . $self->_getyearstring($citekey) . "0"
               . $self->_getvolumestring($citekey) ) ;
     }
     elsif ( $self->config('sorting') == 2 or $self->config('sorting') == 12 )
     {                                        # <alpha> name year title
         $be->{sortstring} =
-          lc(   $self->_getinitstring($citekey) . " "
-              . $self->_getnamestring($citekey) . " "
-              . $self->_getyearstring($citekey) . " "
-              . $self->_gettitlestring($citekey) . " "
+          lc(   $self->_getinitstring($citekey) . "0"
+              . $self->_getnamestring($citekey) . "0"
+              . $self->_getyearstring($citekey) . "0"
+              . $self->_gettitlestring($citekey) . "0"
               . $self->_getvolumestring($citekey) ) ;
     }
     elsif ( $self->config('sorting') == 3 or $self->config('sorting') == 13 )
     {                                        # <alpha> name year volume title
         $be->{sortstring} =
-          lc(   $self->_getinitstring($citekey) . " "
-              . $self->_getnamestring($citekey) . " "
-              . $self->_getyearstring($citekey) . " "
-              . $self->_getvolumestring($citekey) . " "
+          lc(   $self->_getinitstring($citekey) . "0"
+              . $self->_getnamestring($citekey) . "0"
+              . $self->_getyearstring($citekey) . "0"
+              . $self->_getvolumestring($citekey) . "0"
               . $self->_gettitlestring($citekey) ) ;
     }
     elsif ( $self->config('sorting') == 21 ) {    # year name title
         $be->{sortstring} =
-          lc(   $self->_getyearstring($citekey) . " "
-              . $self->_getnamestring($citekey) . " "
+          lc(   $self->_getyearstring($citekey) . "0"
+              . $self->_getnamestring($citekey) . "0"
               . $self->_gettitlestring($citekey) ) ;
     }
     elsif ( $self->config('sorting') == 22 ) {    # year_decreasing name title
         $be->{sortstring} =
-          lc(   $self->_getdecyearstring($citekey) . " "
-              . $self->_getnamestring($citekey) . " "
+          lc(   $self->_getdecyearstring($citekey) . "0"
+              . $self->_getnamestring($citekey) . "0"
               . $self->_gettitlestring($citekey) ) ;
 
     } elsif ($self->config('sorting') == 99) { 
@@ -409,7 +413,11 @@ sub _print_biblatex_entry {
         $opts = $be->{options} ;
     }
 
-    my $str = "\\entry{$origkey}{" . $be->{entrytype} . "}{$opts}\n" ;
+    my $str = "" ;
+    
+    $str .= "% sortstring = " . $be->{sortstring} . "\n" if $self->config('debug') ;
+
+    $str .= "\\entry{$origkey}{" . $be->{entrytype} . "}{$opts}\n" ;
 
     if ( $be->{entrytype} eq 'set' ) {
         $str .= "  \\entryset{" . $be->{entryset} . "}\n" ;

@@ -25,6 +25,7 @@ GetOptions(
     'outfile|O=s',
     'allentries|a!',
 #    'validate|V!', 
+    'maxline|l=s',
     'biberdebug|D!',
     'quiet|q',
     'help|h|?',

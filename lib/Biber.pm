@@ -397,10 +397,13 @@ sub parse_bibtex {
         require Biber::BibTeX::PRD ;
         push @ISA, 'Biber::BibTeX::PRD' ;
 
-        print "Using a Parse::RecDescent parser... this can be very slow with large bib files!\n" ;
-        unless ( $^O eq 'MSWin32' ) {
-            print "You are strongly advised to install Text::BibTeX for faster processing!\n\n" ;
-        }
+        print "Using a Parse::RecDescent parser...\n";
+
+        # we only add this warning if the bib file is larger than 20KB
+        if (-s $filename > 20000 ) {
+            print "Note that it can be very slow with large bib files!\n" ;
+            print "You are advised to install Text::BibTeX for faster processing!\n\n" ;
+        } ;
         
         @localkeys = $self->_bibtex_prd_parse($filename) ;
     }
@@ -825,7 +828,7 @@ sub postprocess {
         ##############################################################
 
         my $tmp = $self->_getnamestring($citekey) . 
-            " " . $self->_getyearstring($citekey) ;
+            "0" . $self->_getyearstring($citekey) ;
         $seenauthoryear{$tmp}++ ;
         $be->{authoryear} = $tmp ;
 
@@ -977,6 +980,7 @@ sub output_to_bbl {
     my $BBL = <<"EOF"
 % \$ biblatex auxiliary file \$
 % \$ biblatex version $ctrlver \$
+% \$ biber version $VERSION \$
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
