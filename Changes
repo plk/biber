@@ -1,13 +1,14 @@
 Revision history for biber
 
-0.4.2   16.4.2009
+0.4.2   25.4.2009
         * New option --inputencoding to handle 8-bit encoded bib files
         * $BIBINPUT environment is now searched
         * Improved parsing of personal names
         * @comments are now silently ignored
+        * Fixed handling of @preamble; multiple preambles are allowed 
         * Warnings and errors behave more like BibTeX
         * Alias fields are automatically converted (e.g. address -> location)
-        * bib2biblatexml has been improved
+        * Take care of "phdthesis" and "mathesis" types 
         * Cite keys of bib files are now case-insensitive
         * Default Unicode collation now uses the table "latinkeys.txt"
           (this is much faster than "allkeys.txt" which contains rules for 
@@ -16,7 +17,14 @@ Revision history for biber
         * Faster sorting (with option -f) is also possible for specific 
           locales given with option --locale (this is OS-dependent however) 
         * PRD grammar is now precompiled
-        * Many bugfixes!
+        * bbl output is now wrapped acc to maxline option
+        * Empty fields are no longer printed in the bbl
+        * Sorting is much improved. 
+        * Use sortstring separators 0 1 2 like biblatex.bst
+        * Handle truncation of name lists acc to minnames/maxnames
+        * bib2biblatexml has been improved
+        * Windows version of Text::BibTeX provided as ppm.
+        * Many more bugfixes!
 
 0.4.1   31.03.2009
         * Text::BibTeX now optional dependency
