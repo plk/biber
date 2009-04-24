@@ -314,7 +314,42 @@ sub _generatesortstring {
     return
 }
 
+#=====================================================
+# OUTPUT SUBS 
+#=====================================================
 
+# This is to test whether the fields " $be->{$field} " are defined and non empty
+# (empty fields allow to suppress crossref inheritance)
+sub _defined_and_nonempty {
+    my $arg = shift ;
+    if (defined $arg) {
+        if (ref \$arg eq 'SCALAR') {
+            if ($arg ne '') {
+                return 1
+            } else {
+                return 0
+            }
+        } elsif (ref $arg eq 'ARRAY') {
+            my @arr = @$arg ;
+            if ( $#arr > -1 ) {
+                return 1
+            } else {
+                return 0
+            }
+        } elsif (ref $arg eq 'HASH') {
+            my @arr = keys %$arg ;
+            if ($#arr > -1 ) {
+                return 1
+            } else {
+                return 0
+            }
+        } else {
+            return 0
+        }
+    } else {
+        return 0
+    }
+}
 
 #TODO this could be done earlier as a method and stored in the object
 sub _print_name {
@@ -370,7 +405,7 @@ sub _print_biblatex_entry {
         $origkey = $be->{origkey}
     }
 
-    if ( $be->{options} ) {
+    if ( _defined_and_nonempty($be->{options}) ) {
         $opts = $be->{options} ;
     }
 
@@ -390,7 +425,7 @@ sub _print_biblatex_entry {
     
     foreach my $namefield (@NAMEFIELDS) {
         next if $SKIPFIELDS{$namefield} ;
-        if ( defined $be->{$namefield} ) {
+        if ( _defined_and_nonempty($be->{$namefield}) ) {
             my @nf    = @{ $be->{$namefield} } ;
             if ( $be->{$namefield}->[-1]->{namestring} eq 'others' ) {
                 $str .= "  \\true{more$namefield}\n" ;
@@ -407,7 +442,7 @@ sub _print_biblatex_entry {
     
     foreach my $listfield (@LISTFIELDS) {
         next if $SKIPFIELDS{$listfield} ;
-        if ( defined $be->{$listfield} ) {
+        if ( _defined_and_nonempty($be->{$listfield}) ) {
             my @lf    = @{ $be->{$listfield} } ;
             if ( $be->{$listfield}->[-1] eq 'others' ) {
                 $str .= "  \\true{more$listfield}\n" ;
@@ -507,7 +542,7 @@ sub _print_biblatex_entry {
 
     foreach my $lfield (@LITERALFIELDS) {
         next if $SKIPFIELDS{$lfield} ;
-        if ( defined $be->{$lfield} ) {
+        if ( _defined_and_nonempty($be->{$lfield}) ) {
             next if ( $lfield eq 'crossref' and 
                        $Biber::seenkeys{ $be->{crossref} } ) ; # belongs to @auxcitekeys 
                        
@@ -522,13 +557,13 @@ sub _print_biblatex_entry {
             else {
                 $tmpstr = latexescape($be->{$lfield}) ;
             }
-            ##$str .= "  \\field{$lfieldprint}{$tmpstr}\n" ;
+
             $str .= $self->_printfield( $lfieldprint, $tmpstr ) ;
         }
     }
     foreach my $rfield (@RANGEFIELDS) {
         next if $SKIPFIELDS{$rfield} ;
-        if ( defined $be->{$rfield} ) {
+        if ( _defined_and_nonempty($be->{$rfield}) ) {
             my $rf = $be->{$rfield} ;
             $rf =~ s/[-–]+/\\bibrangedash /g ;
             $str .= "  \\field{$rfield}{$rf}\n" ;
@@ -536,13 +571,13 @@ sub _print_biblatex_entry {
     }
     foreach my $vfield (@VERBATIMFIELDS) {
         next if $SKIPFIELDS{$vfield} ;
-        if ( defined $be->{$vfield} ) {
+        if ( _defined_and_nonempty($be->{$vfield}) ) {
             my $rf = $be->{$vfield} ;
             $str .= "  \\verb{$vfield}\n" ;
             $str .= "  \\verb $rf\n  \\endverb\n" ;
         }
     }
-    if ( defined $be->{keywords} ) {
+    if ( _defined_and_nonempty($be->{keywords}) ) {
         $str .= "  \\keyw{" . $be->{keywords} . "}\n" ;
     }
 
