@@ -45,6 +45,8 @@ sub _bibtex_prd_parse {
 
     my @tmp = @$bf ;
 
+    my $preamble = undef ;
+
     for my $n ( 0 .. $#tmp ) {
     
         my @tmpk   = keys %{ $tmp[$n] } ;
@@ -52,7 +54,7 @@ sub _bibtex_prd_parse {
         
         if ( $tmpkey eq 'preamble' ) {
 
-            my $preamble = $tmp[$n]->{preamble} ;
+            $preamble = join("%\n", @{ $tmp[$n]->{preamble} }) ;
         }
         elsif ( $tmpkey eq 'entries' ) {
 
@@ -156,6 +158,8 @@ sub _bibtex_prd_parse {
 
         } ;
     }
+
+    $self->{preamble} .= $preamble if $preamble ;
 
     $self->{bib} = { %bibentries } ;
 

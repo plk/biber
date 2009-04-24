@@ -1,6 +1,7 @@
 BibFile : <skip: qr{ \s* (\%+[^\n]*\s*)* }x> Component(s) 
-Component : Preamble { 
-          $return = { 'preamble' => $item[1] } 
+Component : Preamble(s) { 
+          my @preambles = @{$item[1]};
+          $return = { 'preamble' => \@preambles } 
       } 
       | String(s) { 
           my @str = @{$item[1]} ;
@@ -12,7 +13,7 @@ Component : Preamble {
              $text =~ s/$a\s*#?\s*(\{?)/$1$b/g
           }
       } 
-      | Comment(s) { 1 ; }
+      | Comment(s) { }
       | BibEntry(s) { 
           my @entries = @{$item[1]} ; 
           $return = { 'entries' => \@entries } 
@@ -21,7 +22,7 @@ Preamble : /\@PREAMBLE/i PreambleString
 PreambleString : { 
           my $value = extract_bracketed($text, '{}') ;
           $value =~ s/^{(.*)}$/$1/s if $value ;
-          $value =~ s/"\s*\n+\s*#/\n/mg ;
+          $value =~ s/"\s*\n*\s*#\s*\n*\s*"/%\n/mg ;
           $value =~ s/^\s*"\s*//mg ;
           $value =~ s/\s*"\s*$//mg ;
           ($return) = $value if $value ;
@@ -55,3 +56,6 @@ Fielddata : {
 | /[^,]+/ { 
           $return = $item[1] 
 }
+
+## COMPILE WITH
+## perl -MParse::RecDescent - PRDgrammar Biber::BibTeX::Parser

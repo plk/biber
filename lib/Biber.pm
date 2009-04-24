@@ -980,8 +980,8 @@ sub output_to_bbl {
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
-% This file may safely be deleted. It will be recreated as
-% required.
+% This file may safely be deleted. It will be recreated by
+% biber or bibtex as required.
 %
 \\begingroup
 \\makeatletter
@@ -996,8 +996,8 @@ sub output_to_bbl {
 EOF
     ;
 
-    $BBL .= "\\preamble{%\n" . $self->{bib}->{preamble} . "\n}\n" 
-        if $self->{bib}->{preamble} ;
+    $BBL .= "\\preamble{%\n" . $self->{preamble} . "%\n}\n" 
+        if $self->{preamble} ;
 
     foreach my $k (@auxcitekeys) {
         next if ( $crossrefkeys{$k} ) ;

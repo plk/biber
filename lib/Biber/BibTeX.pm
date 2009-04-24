@@ -28,15 +28,22 @@ sub _text_bibtex_parse {
         or croak "Cannot create Text::BibTeX::File object from $filename: $!" ;
 
     #TODO validate with Text::BibTeX::Structure ?
-    my $preamble ;
-    my $count = 0;
+
+    my @preamble = () ;
+    my $count = 0 ;
 
     while ( my $entry = new Text::BibTeX::Entry $bib ) {
 
         $count++ ;
 
+        if ( $entry->metatype == BTE_PREAMBLE ) {
+            push @preamble, $entry->value ;
+            next ;
+        }
+
         next if ( $entry->metatype == BTE_MACRODEF or $entry->metatype == BTE_UNKNOWN 
-            or $entry->type =~ m/^comment$/i) ;
+                or $entry->metatype == BTE_COMMENT ) ; #or $entry->type =~ m/^comment$/i
+
         unless ( $entry->key ) {
             warn "Warning--Cannot get the key of entry no $count : Skipping\n" ;
             next 
@@ -68,10 +75,6 @@ sub _text_bibtex_parse {
             next ;
         }
 
-        if ( $entry->metatype == BTE_PREAMBLE ) {
-            $preamble .= $entry->value ;
-        next ;
-        }
 
         # all fields used for this entry
         my @flist = $entry->fieldlist ;
@@ -151,6 +154,8 @@ sub _text_bibtex_parse {
     }
 
    $self->{bib} = { %bibentries } ;
+
+   $self->{preamble} = join( "%\n", @preamble ) if @preamble ;
 
    return @localkeys
 

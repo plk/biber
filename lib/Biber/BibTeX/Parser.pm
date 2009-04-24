@@ -873,35 +873,33 @@ sub Parse::RecDescent::Biber::BibTeX::Parser::Component
         my $repcount = 0;
 
 
-        Parse::RecDescent::_trace(q{Trying subrule: [Preamble]},
+        Parse::RecDescent::_trace(q{Trying repeated subrule: [Preamble]},
                   Parse::RecDescent::_tracefirst($text),
                   q{Component},
                   $tracelevel)
                     if defined $::RD_TRACE;
-        if (1) { no strict qw{refs};
         $expectation->is(q{})->at($text);
-        unless (defined ($_tok = Parse::RecDescent::Biber::BibTeX::Parser::Preamble($thisparser,$text,$repeating,$_noactions,sub { \@arg })))
+        
+        unless (defined ($_tok = $thisparser->_parserepeat($text, \&Parse::RecDescent::Biber::BibTeX::Parser::Preamble, 1, 100000000, $_noactions,$expectation,sub { \@arg }))) 
         {
-            
-            Parse::RecDescent::_trace(q{<<Didn't match subrule: [Preamble]>>},
+            Parse::RecDescent::_trace(q{<<Didn't match repeated subrule: [Preamble]>>},
                           Parse::RecDescent::_tracefirst($text),
                           q{Component},
                           $tracelevel)
                             if defined $::RD_TRACE;
-            $expectation->failed();
             last;
         }
-        Parse::RecDescent::_trace(q{>>Matched subrule: [Preamble]<< (return value: [}
-                    . $_tok . q{]},
+        Parse::RecDescent::_trace(q{>>Matched repeated subrule: [Preamble]<< (}
+                    . @$_tok . q{ times)},
                       
                       Parse::RecDescent::_tracefirst($text),
                       q{Component},
                       $tracelevel)
                         if defined $::RD_TRACE;
-        $item{q{Preamble}} = $_tok;
+        $item{q{Preamble(s)}} = $_tok;
         push @item, $_tok;
         
-        }
+
 
         Parse::RecDescent::_trace(q{Trying action},
                       Parse::RecDescent::_tracefirst($text),
@@ -911,7 +909,8 @@ sub Parse::RecDescent::Biber::BibTeX::Parser::Component
         
 
         $_tok = ($_noactions) ? 0 : do { 
-          $return = { 'preamble' => $item[1] } 
+          my @preambles = @{$item[1]};
+          $return = { 'preamble' => \@preambles } 
       };
         unless (defined $_tok)
         {
@@ -1075,7 +1074,7 @@ sub Parse::RecDescent::Biber::BibTeX::Parser::Component
                         if defined $::RD_TRACE;
         
 
-        $_tok = ($_noactions) ? 0 : do { 1 ; };
+        $_tok = ($_noactions) ? 0 : do { };
         unless (defined $_tok)
         {
             Parse::RecDescent::_trace(q{<<Didn't match action>> (return value: [undef])})
@@ -1574,7 +1573,7 @@ sub Parse::RecDescent::Biber::BibTeX::Parser::PreambleString
         $_tok = ($_noactions) ? 0 : do { 
           my $value = extract_bracketed($text, '{}') ;
           $value =~ s/^{(.*)}$/$1/s if $value ;
-          $value =~ s/"\s*\n+\s*#/\n/mg ;
+          $value =~ s/"\s*\n*\s*#\s*\n*\s*"/%\n/mg ;
           $value =~ s/^\s*"\s*//mg ;
           $value =~ s/\s*"\s*$//mg ;
           ($return) = $value if $value ;
@@ -2599,7 +2598,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                                  'hashname' => '__STRING1__',
                                                                                                  'description' => '\'@\'',
                                                                                                  'lookahead' => 0,
-                                                                                                 'line' => 36
+                                                                                                 'line' => 37
                                                                                                }, 'Parse::RecDescent::Literal' ),
                                                                                         bless( {
                                                                                                  'subrule' => 'Typename',
@@ -2607,14 +2606,14 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                                  'implicit' => undef,
                                                                                                  'argcode' => undef,
                                                                                                  'lookahead' => 0,
-                                                                                                 'line' => 36
+                                                                                                 'line' => 37
                                                                                                }, 'Parse::RecDescent::Subrule' ),
                                                                                         bless( {
                                                                                                  'pattern' => '{',
                                                                                                  'hashname' => '__STRING2__',
                                                                                                  'description' => '\'\\{\'',
                                                                                                  'lookahead' => 0,
-                                                                                                 'line' => 36
+                                                                                                 'line' => 37
                                                                                                }, 'Parse::RecDescent::Literal' ),
                                                                                         bless( {
                                                                                                  'subrule' => 'Key',
@@ -2622,14 +2621,14 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                                  'implicit' => undef,
                                                                                                  'argcode' => undef,
                                                                                                  'lookahead' => 0,
-                                                                                                 'line' => 36
+                                                                                                 'line' => 37
                                                                                                }, 'Parse::RecDescent::Subrule' ),
                                                                                         bless( {
                                                                                                  'pattern' => ',',
                                                                                                  'hashname' => '__STRING3__',
                                                                                                  'description' => '\',\'',
                                                                                                  'lookahead' => 0,
-                                                                                                 'line' => 36
+                                                                                                 'line' => 37
                                                                                                }, 'Parse::RecDescent::Literal' ),
                                                                                         bless( {
                                                                                                  'subrule' => 'Field',
@@ -2640,14 +2639,14 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                                  'matchrule' => 0,
                                                                                                  'repspec' => 's',
                                                                                                  'lookahead' => 0,
-                                                                                                 'line' => 36
+                                                                                                 'line' => 37
                                                                                                }, 'Parse::RecDescent::Repetition' ),
                                                                                         bless( {
                                                                                                  'pattern' => '}',
                                                                                                  'hashname' => '__STRING4__',
                                                                                                  'description' => '\'\\}\'',
                                                                                                  'lookahead' => 0,
-                                                                                                 'line' => 36
+                                                                                                 'line' => 37
                                                                                                }, 'Parse::RecDescent::Literal' ),
                                                                                         bless( {
                                                                                                  'pattern' => '\\n*',
@@ -2655,14 +2654,14 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                                  'description' => '/\\\\n*/',
                                                                                                  'lookahead' => 0,
                                                                                                  'rdelim' => '/',
-                                                                                                 'line' => 36,
+                                                                                                 'line' => 37,
                                                                                                  'mod' => '',
                                                                                                  'ldelim' => '/'
                                                                                                }, 'Parse::RecDescent::Token' ),
                                                                                         bless( {
                                                                                                  'hashname' => '__ACTION1__',
                                                                                                  'lookahead' => 0,
-                                                                                                 'line' => 36,
+                                                                                                 'line' => 37,
                                                                                                  'code' => '{ 
           my %data = map { %$_ } @{$item[6]} ;
           $return = { $item[4] => {entrytype => lc($item[2]), %data } } 
@@ -2674,7 +2673,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                 ],
                                                      'name' => 'BibEntry',
                                                      'vars' => '',
-                                                     'line' => 36
+                                                     'line' => 37
                                                    }, 'Parse::RecDescent::Rule' ),
                               'String' => bless( {
                                                    'impcount' => 0,
@@ -2699,7 +2698,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                                'description' => '/\\\\@STRING/i',
                                                                                                'lookahead' => 0,
                                                                                                'rdelim' => '/',
-                                                                                               'line' => 29,
+                                                                                               'line' => 30,
                                                                                                'mod' => 'i',
                                                                                                'ldelim' => '/'
                                                                                              }, 'Parse::RecDescent::Token' ),
@@ -2709,7 +2708,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                                'implicit' => undef,
                                                                                                'argcode' => undef,
                                                                                                'lookahead' => 0,
-                                                                                               'line' => 29
+                                                                                               'line' => 30
                                                                                              }, 'Parse::RecDescent::Subrule' )
                                                                                     ],
                                                                          'line' => undef
@@ -2717,7 +2716,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                               ],
                                                    'name' => 'String',
                                                    'vars' => '',
-                                                   'line' => 29
+                                                   'line' => 30
                                                  }, 'Parse::RecDescent::Rule' ),
                               'Comment' => bless( {
                                                     'impcount' => 0,
@@ -2742,7 +2741,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                                 'description' => '/\\\\@COMMENT/i',
                                                                                                 'lookahead' => 0,
                                                                                                 'rdelim' => '/',
-                                                                                                'line' => 35,
+                                                                                                'line' => 36,
                                                                                                 'mod' => 'i',
                                                                                                 'ldelim' => '/'
                                                                                               }, 'Parse::RecDescent::Token' ),
@@ -2752,7 +2751,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                                 'implicit' => undef,
                                                                                                 'argcode' => undef,
                                                                                                 'lookahead' => 0,
-                                                                                                'line' => 35
+                                                                                                'line' => 36
                                                                                               }, 'Parse::RecDescent::Subrule' )
                                                                                      ],
                                                                           'line' => undef
@@ -2760,7 +2759,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                ],
                                                     'name' => 'Comment',
                                                     'vars' => '',
-                                                    'line' => 35
+                                                    'line' => 36
                                                   }, 'Parse::RecDescent::Rule' ),
                               'StringArg' => bless( {
                                                       'impcount' => 0,
@@ -2780,7 +2779,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                          bless( {
                                                                                                   'hashname' => '__ACTION1__',
                                                                                                   'lookahead' => 0,
-                                                                                                  'line' => 30,
+                                                                                                  'line' => 31,
                                                                                                   'code' => '{ 
           my $value = extract_bracketed($text, \'{}\') ;
           $value =~ s/\\s*\\n\\s*/ /g ;
@@ -2793,7 +2792,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                  ],
                                                       'name' => 'StringArg',
                                                       'vars' => '',
-                                                      'line' => 30
+                                                      'line' => 31
                                                     }, 'Parse::RecDescent::Rule' ),
                               'Component' => bless( {
                                                       'impcount' => 0,
@@ -2817,18 +2816,22 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                             'items' => [
                                                                                          bless( {
                                                                                                   'subrule' => 'Preamble',
-                                                                                                  'matchrule' => 0,
-                                                                                                  'implicit' => undef,
+                                                                                                  'expected' => undef,
+                                                                                                  'min' => 1,
                                                                                                   'argcode' => undef,
+                                                                                                  'max' => 100000000,
+                                                                                                  'matchrule' => 0,
+                                                                                                  'repspec' => 's',
                                                                                                   'lookahead' => 0,
                                                                                                   'line' => 2
-                                                                                                }, 'Parse::RecDescent::Subrule' ),
+                                                                                                }, 'Parse::RecDescent::Repetition' ),
                                                                                          bless( {
                                                                                                   'hashname' => '__ACTION1__',
                                                                                                   'lookahead' => 0,
                                                                                                   'line' => 2,
                                                                                                   'code' => '{ 
-          $return = { \'preamble\' => $item[1] } 
+          my @preambles = @{$item[1]};
+          $return = { \'preamble\' => \\@preambles } 
       }'
                                                                                                 }, 'Parse::RecDescent::Action' )
                                                                                        ],
@@ -2852,12 +2855,12 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                                   'matchrule' => 0,
                                                                                                   'repspec' => 's',
                                                                                                   'lookahead' => 0,
-                                                                                                  'line' => 5
+                                                                                                  'line' => 6
                                                                                                 }, 'Parse::RecDescent::Repetition' ),
                                                                                          bless( {
                                                                                                   'hashname' => '__ACTION1__',
                                                                                                   'lookahead' => 0,
-                                                                                                  'line' => 5,
+                                                                                                  'line' => 6,
                                                                                                   'code' => '{ 
           my @str = @{$item[1]} ;
           $return = { \'strings\' => \\@str } ;
@@ -2870,7 +2873,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
       }'
                                                                                                 }, 'Parse::RecDescent::Action' )
                                                                                        ],
-                                                                            'line' => 5
+                                                                            'line' => 6
                                                                           }, 'Parse::RecDescent::Production' ),
                                                                    bless( {
                                                                             'number' => '2',
@@ -2890,16 +2893,16 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                                   'matchrule' => 0,
                                                                                                   'repspec' => 's',
                                                                                                   'lookahead' => 0,
-                                                                                                  'line' => 15
+                                                                                                  'line' => 16
                                                                                                 }, 'Parse::RecDescent::Repetition' ),
                                                                                          bless( {
                                                                                                   'hashname' => '__ACTION1__',
                                                                                                   'lookahead' => 0,
-                                                                                                  'line' => 15,
-                                                                                                  'code' => '{ 1 ; }'
+                                                                                                  'line' => 16,
+                                                                                                  'code' => '{ }'
                                                                                                 }, 'Parse::RecDescent::Action' )
                                                                                        ],
-                                                                            'line' => 15
+                                                                            'line' => 16
                                                                           }, 'Parse::RecDescent::Production' ),
                                                                    bless( {
                                                                             'number' => '3',
@@ -2919,19 +2922,19 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                                   'matchrule' => 0,
                                                                                                   'repspec' => 's',
                                                                                                   'lookahead' => 0,
-                                                                                                  'line' => 16
+                                                                                                  'line' => 17
                                                                                                 }, 'Parse::RecDescent::Repetition' ),
                                                                                          bless( {
                                                                                                   'hashname' => '__ACTION1__',
                                                                                                   'lookahead' => 0,
-                                                                                                  'line' => 16,
+                                                                                                  'line' => 17,
                                                                                                   'code' => '{ 
           my @entries = @{$item[1]} ; 
           $return = { \'entries\' => \\@entries } 
       }'
                                                                                                 }, 'Parse::RecDescent::Action' )
                                                                                        ],
-                                                                            'line' => 16
+                                                                            'line' => 17
                                                                           }, 'Parse::RecDescent::Production' )
                                                                  ],
                                                       'name' => 'Component',
@@ -3002,7 +3005,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                                  'description' => '/[A-Za-z\\\\.\\\\-]+/',
                                                                                                  'lookahead' => 0,
                                                                                                  'rdelim' => '/',
-                                                                                                 'line' => 40,
+                                                                                                 'line' => 41,
                                                                                                  'mod' => '',
                                                                                                  'ldelim' => '/'
                                                                                                }, 'Parse::RecDescent::Token' )
@@ -3012,7 +3015,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                 ],
                                                      'name' => 'Typename',
                                                      'vars' => '',
-                                                     'line' => 40
+                                                     'line' => 41
                                                    }, 'Parse::RecDescent::Rule' ),
                               'PreambleString' => bless( {
                                                            'impcount' => 0,
@@ -3032,11 +3035,11 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                               bless( {
                                                                                                        'hashname' => '__ACTION1__',
                                                                                                        'lookahead' => 0,
-                                                                                                       'line' => 21,
+                                                                                                       'line' => 22,
                                                                                                        'code' => '{ 
           my $value = extract_bracketed($text, \'{}\') ;
           $value =~ s/^{(.*)}$/$1/s if $value ;
-          $value =~ s/"\\s*\\n+\\s*#/\\n/mg ;
+          $value =~ s/"\\s*\\n*\\s*#\\s*\\n*\\s*"/%\\n/mg ;
           $value =~ s/^\\s*"\\s*//mg ;
           $value =~ s/\\s*"\\s*$//mg ;
           ($return) = $value if $value ;
@@ -3048,7 +3051,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                       ],
                                                            'name' => 'PreambleString',
                                                            'vars' => '',
-                                                           'line' => 21
+                                                           'line' => 22
                                                          }, 'Parse::RecDescent::Rule' ),
                               'Field' => bless( {
                                                   'impcount' => 0,
@@ -3074,7 +3077,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                               'implicit' => undef,
                                                                                               'argcode' => undef,
                                                                                               'lookahead' => 0,
-                                                                                              'line' => 42
+                                                                                              'line' => 43
                                                                                             }, 'Parse::RecDescent::Subrule' ),
                                                                                      bless( {
                                                                                               'pattern' => '\\s*=\\s*',
@@ -3082,7 +3085,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                               'description' => '/\\\\s*=\\\\s*/',
                                                                                               'lookahead' => 0,
                                                                                               'rdelim' => '/',
-                                                                                              'line' => 42,
+                                                                                              'line' => 43,
                                                                                               'mod' => '',
                                                                                               'ldelim' => '/'
                                                                                             }, 'Parse::RecDescent::Token' ),
@@ -3092,7 +3095,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                               'implicit' => undef,
                                                                                               'argcode' => undef,
                                                                                               'lookahead' => 0,
-                                                                                              'line' => 42
+                                                                                              'line' => 43
                                                                                             }, 'Parse::RecDescent::Subrule' ),
                                                                                      bless( {
                                                                                               'pattern' => ',?',
@@ -3100,14 +3103,14 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                               'description' => '/,?/',
                                                                                               'lookahead' => 0,
                                                                                               'rdelim' => '/',
-                                                                                              'line' => 42,
+                                                                                              'line' => 43,
                                                                                               'mod' => '',
                                                                                               'ldelim' => '/'
                                                                                             }, 'Parse::RecDescent::Token' ),
                                                                                      bless( {
                                                                                               'hashname' => '__ACTION1__',
                                                                                               'lookahead' => 0,
-                                                                                              'line' => 42,
+                                                                                              'line' => 43,
                                                                                               'code' => '{
           $return = { lc($item[1]) => $item[3] } 
 }'
@@ -3118,7 +3121,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                              ],
                                                   'name' => 'Field',
                                                   'vars' => '',
-                                                  'line' => 42
+                                                  'line' => 43
                                                 }, 'Parse::RecDescent::Rule' ),
                               'Fielddata' => bless( {
                                                       'impcount' => 0,
@@ -3138,7 +3141,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                          bless( {
                                                                                                   'hashname' => '__ACTION1__',
                                                                                                   'lookahead' => 0,
-                                                                                                  'line' => 46,
+                                                                                                  'line' => 47,
                                                                                                   'code' => '{ 
           my $value = extract_bracketed($text, \'{}\') ;
           $value =~ s/\\s*\\n\\s*/ /g ;
@@ -3160,14 +3163,14 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                          bless( {
                                                                                                   'hashname' => '__ACTION1__',
                                                                                                   'lookahead' => 0,
-                                                                                                  'line' => 51,
+                                                                                                  'line' => 52,
                                                                                                   'code' => '{ my $value = extract_delimited($text, \'"\') ;#"\'
           $value =~ s/\\s*\\n\\s*/ /g ;
           ($return) = $value =~ /^"(.*)"$/s if $value ;
 }'
                                                                                                 }, 'Parse::RecDescent::Action' )
                                                                                        ],
-                                                                            'line' => 51
+                                                                            'line' => 52
                                                                           }, 'Parse::RecDescent::Production' ),
                                                                    bless( {
                                                                             'number' => '2',
@@ -3184,25 +3187,25 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                                   'description' => '/[^,]+/',
                                                                                                   'lookahead' => 0,
                                                                                                   'rdelim' => '/',
-                                                                                                  'line' => 55,
+                                                                                                  'line' => 56,
                                                                                                   'mod' => '',
                                                                                                   'ldelim' => '/'
                                                                                                 }, 'Parse::RecDescent::Token' ),
                                                                                          bless( {
                                                                                                   'hashname' => '__ACTION1__',
                                                                                                   'lookahead' => 0,
-                                                                                                  'line' => 55,
+                                                                                                  'line' => 56,
                                                                                                   'code' => '{ 
           $return = $item[1] 
 }'
                                                                                                 }, 'Parse::RecDescent::Action' )
                                                                                        ],
-                                                                            'line' => 55
+                                                                            'line' => 56
                                                                           }, 'Parse::RecDescent::Production' )
                                                                  ],
                                                       'name' => 'Fielddata',
                                                       'vars' => '',
-                                                      'line' => 46
+                                                      'line' => 47
                                                     }, 'Parse::RecDescent::Rule' ),
                               'Fieldname' => bless( {
                                                       'impcount' => 0,
@@ -3225,7 +3228,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                                   'description' => '/\\\\S+/',
                                                                                                   'lookahead' => 0,
                                                                                                   'rdelim' => '/',
-                                                                                                  'line' => 45,
+                                                                                                  'line' => 46,
                                                                                                   'mod' => '',
                                                                                                   'ldelim' => '/'
                                                                                                 }, 'Parse::RecDescent::Token' )
@@ -3235,7 +3238,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                  ],
                                                       'name' => 'Fieldname',
                                                       'vars' => '',
-                                                      'line' => 45
+                                                      'line' => 46
                                                     }, 'Parse::RecDescent::Rule' ),
                               'Preamble' => bless( {
                                                      'impcount' => 0,
@@ -3260,7 +3263,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                                  'description' => '/\\\\@PREAMBLE/i',
                                                                                                  'lookahead' => 0,
                                                                                                  'rdelim' => '/',
-                                                                                                 'line' => 20,
+                                                                                                 'line' => 21,
                                                                                                  'mod' => 'i',
                                                                                                  'ldelim' => '/'
                                                                                                }, 'Parse::RecDescent::Token' ),
@@ -3270,7 +3273,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                                  'implicit' => undef,
                                                                                                  'argcode' => undef,
                                                                                                  'lookahead' => 0,
-                                                                                                 'line' => 20
+                                                                                                 'line' => 21
                                                                                                }, 'Parse::RecDescent::Subrule' )
                                                                                       ],
                                                                            'line' => undef
@@ -3278,7 +3281,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                 ],
                                                      'name' => 'Preamble',
                                                      'vars' => '',
-                                                     'line' => 20
+                                                     'line' => 21
                                                    }, 'Parse::RecDescent::Rule' ),
                               'Key' => bless( {
                                                 'impcount' => 0,
@@ -3301,7 +3304,7 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                                                             'description' => '/[^,\\\\s\\\\n]+/',
                                                                                             'lookahead' => 0,
                                                                                             'rdelim' => '/',
-                                                                                            'line' => 41,
+                                                                                            'line' => 42,
                                                                                             'mod' => '',
                                                                                             'ldelim' => '/'
                                                                                           }, 'Parse::RecDescent::Token' )
@@ -3311,47 +3314,8 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
                                                            ],
                                                 'name' => 'Key',
                                                 'vars' => '',
-                                                'line' => 41
+                                                'line' => 42
                                               }, 'Parse::RecDescent::Rule' )
                             }
                }, 'Parse::RecDescent' );
 }
-
-__END__
-
-=pod
-
-=head1 NAME
-
-C<Biber::BibTeX::Parser> - A Parse::RecDescent BibTeX parser
-
-=head1 DESCRIPTION
-
-This file was automatically generated by Parse::RecDescent from the file PRDgrammar
-
-=head1 METHODS
-
-=head2 new
-
-This is to please Test::Pod::Coverage :)
-
-=head1 AUTHOR
-
-François Charette, C<< <firmicus at gmx.net> >>
-
-=head1 BUGS
-
-Please report any bugs or feature requests on our sourceforge tracker at
-L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright 2009 François Charette, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
-
-=cut
-
-# vim: set tabstop=4 shiftwidth=4:
-
