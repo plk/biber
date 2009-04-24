@@ -9,11 +9,14 @@ use Biber;
 
 my $opts = { unicodebbl => 1, fastsort => 1 };
 my $biber = Biber->new($opts);
+$biber->{config}->{maxline} = 100000 ;
    
 isa_ok($biber, "Biber");
 
 chdir("t/tdata") ;
 $biber->parse_auxfile("02-annotations.aux");
+
+$biber->{config}->{maxline} = 100000 ;
 
 my $bibfile = $biber->config('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile) ;
@@ -72,11 +75,15 @@ my $markey = q|\entry{markey}{online}{}
 | ;
 
 is( $biber->_print_biblatex_entry('set:aksin'), $setaksin, 'bbl entry 1' ) ;
+
 is( $biber->_print_biblatex_entry('markey'), $markey, 'bbl entry 2' ) ;
 
 my $Worman_N = { 'WN2' => 1, 'WN1' => 1 } ;
+
 my $Gennep = { 'vGA1' => 1, 'vGJ1' => 1 } ;
+
 is_deeply( $Biber::uniquenamecount{'Worman_N'}, $Worman_N, 'uniquename count 1') ;
+
 is_deeply( $Biber::uniquenamecount{'Gennep'}, $Gennep, 'uniquename count 2') ;
 
 is_deeply( [ $biber->shorthands ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;

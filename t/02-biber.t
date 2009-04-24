@@ -3,17 +3,20 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 6 ;
+use Test::More tests => 7 ;
 
 use Biber;
 
 my $opts = { fastsort => 1 };
 my $biber = Biber->new($opts);
-   
+
 isa_ok($biber, "Biber");
 
 chdir("t/tdata") ;
 $biber->parse_auxfile("50-style-authoryear.aux") ;
+
+$biber->{config}->{maxline} = 100000 ;
+ok($biber->config('maxline') == 100000, "maxline option") ;
 
 my @keys = sort $biber->citekeys;
 my @citedkeys = sort qw{ 
