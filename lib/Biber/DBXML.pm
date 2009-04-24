@@ -2,6 +2,7 @@ package Biber::DBXML ;
 use strict ;
 use warnings ;
 use Carp ;
+use Cwd ;
 use Sleepycat::DbXml 'simple' ;
 use File::Basename ;
 
@@ -17,7 +18,8 @@ sub dbxml_to_xml {
 ENDXML
     ;
     eval {
-        chdir( dirname($dbxmlfile)) or croak "Cannot chdir: $!" ;
+        my $workingdir = getcwd ;
+        chdir( dirname($dbxmlfile) ) or croak "Cannot chdir: $!" ;
         my $cont = $mgr->openContainer("$collname") ;
         my $context = $mgr->createQueryContext() ;
         $context->setNamespace("bib", "http://biblatex-biber.sourceforge.net/biblatexml") ;
@@ -49,6 +51,9 @@ ENDXML
                 }
             }
         }
+        
+        chdir( $workingdir ) ;
+
     } ;
     if (my $e = catch std::exception) {
         carp "Query failed\n" ;

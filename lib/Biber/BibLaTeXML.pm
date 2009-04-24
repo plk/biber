@@ -16,15 +16,17 @@ sub _parse_biblatexml {
     # FIXME : a user _could_ want to encode the bbl in LaTeX!
     $self->{config}->{unicodebbl} = 1 ;
 
-    print "Parsing the xml data ...\n" unless $self->config('quiet') ;
 
     if ( $xml =~ /\.dbxml$/ ) {
         require Biber::DBXML ;
         push @ISA, 'Biber::DBXML' ;
+        print "Querying DBXML  ...\n" unless $self->config('quiet') ;
         my $xmlstring = $self->dbxml_to_xml($xml) ;
+        print "Parsing the XML data ...\n" unless $self->config('quiet') ;
         $db = $parser->parse_string( $xmlstring ) 
             or croak "Cannot parse xml string" ;
     } else {
+        print "Parsing the XML data ...\n" unless $self->config('quiet') ;
         $db = $parser->parse_file($xml) 
             or croak "Can't parse file $xml" ;
     }
