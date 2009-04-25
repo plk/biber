@@ -49,8 +49,9 @@ my $NONSORTPREFIX = qr/\p{Ll}{2}-/; # etc
 =head2 bibfind
 
     Searches a bib file in the BIBINPUTS paths using kpsepath (which should be
-    available on most modern TeX installations). Otherwise it just returns 
+    available on most modern TeX installations). Otherwise it just returns
     the argument.
+
 =cut
 
 sub bibfind {
@@ -116,6 +117,7 @@ sub bibfind {
       suffix => undef, 
       namestring => 'Berlichingen zu Hornberg, Johann Gotz',
       nameinitstring => 'Berlichingen_zu_Hornberg_JG' }
+
 =cut
 
 sub parsename {
