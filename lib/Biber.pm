@@ -726,7 +726,6 @@ sub postprocess {
         $be->{namehash} = $namehash ;
         $be->{fullhash} = $fullhash ;
 
-        $seennamehash{$namehash}++ ;
         $seennamehash{$fullhash}++ ;
 
         

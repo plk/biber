@@ -543,7 +543,7 @@ sub _print_biblatex_entry {
     }
 
     if ( $self->config('singletitle')
-        and $Biber::seennamehash{ $be->{namehash} } < 2 )
+        and $Biber::seennamehash{ $be->{fullhash} } < 2 )
     {
         $str .= "  \\true{singletitle}\n" ;
     }
