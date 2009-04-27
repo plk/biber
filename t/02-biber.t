@@ -53,7 +53,7 @@ $biber->prepare ;
 is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
 my $stdmodel = {
-                'authoryear' => 'Glashow Sheldon 1961',
+                'authoryear' => 'Glashow2Sheldon01961',
                 'journaltitle' => 'Nucl.~Phys.',
                 'entryset' => 'stdmodel:glashow,stdmodel:weinberg,stdmodel:salam',
                 'author' => [
@@ -68,7 +68,7 @@ my $stdmodel = {
                             ],
                 'fullhash' => 'GS1',
                 'namehash' => 'GS1',
-                'sortstring' => 'mm glashow sheldon 1961 partial symmetries of weak interactions 0022',
+                'sortstring' => 'mm0glashow2sheldon019610partial symmetries of weak interactions00022',
                 'crossref' => 'stdmodel:glashow',
                 'volume' => '22',
                 'labelname' => 'author',
@@ -84,7 +84,7 @@ my $stdmodel = {
 is_deeply($biber->{bib}->{stdmodel}, $stdmodel, 'entry stdmodel') ;
 
 my $laufenberg = {
-                 'authoryear' => 'Laufenberg Xaver&Eynius Dominique&Suelzle Helmut&Usbeck Stephan&Spaeth Matthias&NeuserHoffmann Miriam&Myrzik Christian&Schmid Manfred&Nietfeld Franz&Thiel Alexander&Braun Harald&Ebner Norbert 2006',
+                 'authoryear' => 'Laufenberg2Xaver1zzzz02006',
                  'number' => '1700367',
                  'month' => '09',
                  'holder' => [
@@ -218,7 +218,7 @@ my $laufenberg = {
                  'day' => '13',
                  'ignoreuniquename' => 1,
                  'namehash' => 'LX+1',
-                 'sortstring' => 'mm laufenberg xaver&eynius dominique&suelzle helmut&usbeck stephan&spaeth matthias&neuserhoffmann miriam&myrzik christian&schmid manfred&nietfeld franz&thiel alexander&braun harald&ebner norbert 2006 elektrische einrichtung und betriebsverfahren 0000',
+                 'sortstring' => 'mm0laufenberg2xaver1zzzz020060elektrische einrichtung und betriebsverfahren00000',
                  'location' => [
                                  'countryde',
                                  'countrywo'
