@@ -76,6 +76,51 @@ sub _getallnameinitials {
     return $initstr ;
 }
 
+sub _getlabel {
+    my ($self, $citekey, $namefield) = @_ ;
+    
+    my @names = @{ $self->{bib}->{$citekey}->{$namefield} } ;
+    my $dt = $self->{bib}->{$citekey}->{datatype} ;
+    my $alphaothers = $self->config('alphaothers') ;
+    my $useprefix = $self->getoption($citekey,'useprefix') ;
+    my $label = "";
+
+    my @lastnames = map { normalize_string( $_->{lastname}, $dt ) } @names ;
+    my @prefixes  = map { $_->{prefix} } @names ;
+    my $noofauth  = scalar @names ;
+    
+    if ( $noofauth > 3 ) {
+        if ($useprefix and $prefixes[0]) {
+            $label .= substr( $prefixes[0], 0, 1 ) ; 
+            $label .= substr( $lastnames[0], 0, 2 ) . $alphaothers
+        } else {
+            $label  = substr( $lastnames[0], 0, 3 ) . $alphaothers ;
+        }
+    }
+    elsif ( $noofauth == 1 ) {
+        if ($useprefix and $prefixes[0]) {
+            $label .= substr( $prefixes[0], 0, 1 ) ;  
+            $label .= substr( $lastnames[0], 0, 2 )
+        } else {
+            $label = substr( $lastnames[0], 0, 3 ) ;
+        }
+    }
+    else {
+        if ($useprefix) {
+            for (my $i=0; $i<$noofauth; $i++) {
+                $label .= substr($prefixes[$i] , 0, 1) if $prefixes[$i] ;
+                $label .= substr($lastnames[$i], 0, 1) ;
+            }
+        } else {
+            for (my $i=0; $i<$noofauth; $i++) {
+                $label .= substr($lastnames[$i], 0, 1) ;
+            }
+        }
+    }
+
+    return $label
+}
+
 =head2 getoption
 
 getoption($citekey, $option) returns the value of option, taking into account
@@ -117,8 +162,9 @@ sub _getinitstring {
     else {
         $str = "mm" ;
     }
+    #FIXME labelalpha should be at the beginning!!!
     if ( $be->{labelalpha} ) {
-        $str .= $be->{labelalpha} ;
+        $str .= "0" . $be->{labelalpha} ;
     }
     return $str ;
 }

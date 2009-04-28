@@ -38,7 +38,7 @@ our $VERSION = '0.4.2' ;
 
 #TODO read config file (e.g. $HOME/.biber.conf to change default options)
 
-#FIXME better put the following hashes in the Biber object ?
+#TODO put the following hashes in a Biber::Config object ?
 our %seenkeys    = () ;
 our %crossrefkeys = () ;
 our %entrieswithcrossref = () ;
@@ -410,18 +410,22 @@ sub parse_bibtex {
 
     #FIXME optional?
     unlink $ufilename if -f $ufilename ;
+
+    if ($self->config('allentries')) {
+        map { $seenkeys{$_}++ } @localkeys
+    }
     
     my %bibentries = $self->bib ;
 
-        # if allentries, push all bibdata keys into citekeys (if they are not already there)
-        # Can't just make citekeys = bibdata keys as this loses information about citekeys
-        # that are missing data entries.
-        if ($self->config('allentries')) {
-            foreach my $bibkey (keys %{$self->{bib}}) {
-                push @{$self->{citekeys}}, $bibkey 
-                    unless (first {$bibkey eq $_} @{$self->{citekeys}});
-            }
+    # if allentries, push all bibdata keys into citekeys (if they are not already there)
+    # Can't just make citekeys = bibdata keys as this loses information about citekeys
+    # that are missing data entries.
+    if ($self->config('allentries')) {
+        foreach my $bibkey (keys %{$self->{bib}}) {
+            push @{$self->{citekeys}}, $bibkey 
+                unless (first {$bibkey eq $_} @{$self->{citekeys}});
         }
+    }
 
     return
 
@@ -494,11 +498,11 @@ sub process_crossrefs {
         #$bibentries{$citekeyx}->{} = $bibentries{$xref}->{} 
     }
 
-    # we make sure that keys that are cross-referenced 
-    # less than $mincrossrefs are not included the bibliography
-    foreach my $k ( keys %Biber::crossrefkeys ) {
-        if ( $Biber::crossrefkeys{$k} >= $self->config('mincrossrefs') ) {
-            delete $Biber::crossrefkeys{$k} ;
+    # we make sure that crossrefs that are directly cited or cross-referenced 
+    # at least $mincrossrefs times are included in the bibliography
+    foreach my $k ( keys %crossrefkeys ) {
+        if ( $seenkeys{$k} || $crossrefkeys{$k} >= $self->config('mincrossrefs') ) {
+            delete $crossrefkeys{$k} ;
         }
     }
 
@@ -792,14 +796,11 @@ sub postprocess {
                 } 
                 elsif ( $be->{author} and $self->getoption( $citekey, "useauthor" ) ) 
                 { 
-                # TODO option $useprefix needs to be taken into account
-                # TODO CHECK FOR $useauthor and $useeditor also in $bibentry{$citekey}->{options}
-
-                    $label = getlabel($be->{author}, $be->{datatype}, $self->config('alphaothers') );
+                    $label = $self->_getlabel($citekey, "author");
                 }
                 elsif ( $be->{editor} and $self->getoption( $citekey, "useeditor" ) )
                 {
-                    $label = getlabel($be->{editor}, $be->{datatype}, $self->config('alphaothers') );
+                    $label = $self->_getlabel($citekey, "editor");
                 }
                 else 
                 {
@@ -1003,6 +1004,8 @@ EOF
         if $self->{preamble} ;
 
     foreach my $k (@auxcitekeys) {
+        ## skip crossrefkeys (those that are directly cited or 
+        #  crossref'd >= mincrossrefs were previously removed)
         next if ( $crossrefkeys{$k} ) ;
         $BBL .= $self->_print_biblatex_entry($k) ;
     }

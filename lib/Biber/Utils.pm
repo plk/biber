@@ -28,7 +28,7 @@ All functions are exported by default.
 
 our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid 
     normalize_string normalize_string_underscore latexescape array_minus
-    getlabel remove_outer getinitials tersify ucinit } ;
+    remove_outer getinitials tersify ucinit } ;
 
 
 ######
@@ -377,35 +377,6 @@ sub array_minus {
         push @result, $elem unless $countb{$elem}
     } ;
     return @result
-}
-
-=head2 getlabel
-    
-    Utility function to generate the labelalpha from the names of the author or editor
-
-=cut
-
-sub getlabel {
-    my ($namesref, $dt, $alphaothers) = @_ ;
-    my @names = @$namesref ;
-    my $label = "";
-    my @lastnames = map { normalize_string( $_->{lastname}, $dt ) } @names ;
-    my $noofauth  = scalar @names ;
-    if ( $noofauth > 3 ) {
-        $label =
-          substr( $lastnames[0], 0, 3 ) . $alphaothers ;
-    }
-    elsif ( $noofauth == 1 ) {
-        $label = substr( $lastnames[0], 0, 3 ) ;
-    }
-    else {
-        foreach my $n (@lastnames) {
-            $n =~ s/\P{Lu}//g ;
-            $label .= $n ;
-        }
-    }
-
-    return $label
 }
 
 =head2 remove_outer
