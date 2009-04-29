@@ -18,6 +18,7 @@ our @EXPORT = qw{
 	@LITERALFIELDS
     %SKIPFIELDS
 	%CONFIG_DEFAULT
+	%BLX_CONFIG_DEFAULT
     $BIBLATEX_VERSION
     %ALIASES
     %NUMERICALMONTH
@@ -25,26 +26,31 @@ our @EXPORT = qw{
 
 Readonly::Scalar our $BIBLATEX_VERSION => '0.8' ;
 
-## CONFIGURATION DEFAULTS
-Readonly::Hash our %CONFIG_DEFAULT => (
-    debug       => 0,
-    labelalpha  => 0,
-    useauthor   => 1,
-    useeditor   => 1,
-    usetranslator => 0,
-    labelyear   => 0,
-    labelnumber => 0,
-    singletitle => 0,
-    uniquename  => 0,
-    useprefix   => 0,
-    terseinits  => 0,
-    sorting     => 1, # corresponds to 'nty'
-    sortlos     => 1,
-    maxnames    => 3,
-    minnames    => 1,
-    maxline     => 79,
+## BibLaTeX CONFIGURATION DEFAULTS
+Readonly::Hash our %BLX_CONFIG_DEFAULT => (
+  controlversion => $BIBLATEX_VERSION,
+  debug       => 0,
+  labelalpha  => 0,
+  useauthor   => 1,
+  useeditor   => 1,
+  usetranslator => 0,
+  labelyear   => 0,
+  labelnumber => 0,
+  singletitle => 0,
+  uniquename  => 0,
+  useprefix   => 0,
+  terseinits  => 0,
+  sorting     => 1, # corresponds to 'nty'
+  sortlos     => 1,
+  maxnames    => 3,
+  minnames    => 1,
+  maxline     => 79,
 	alphaothers => "+",
-	# biber options:
+  labelname   => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator' ],
+);
+
+## Biber CONFIGURATION DEFAULTS
+Readonly::Hash our %CONFIG_DEFAULT => (
 	fastsort => 0,
 	mincrossrefs =>  2,
 	unicodebbl =>  0,
@@ -53,9 +59,8 @@ Readonly::Hash our %CONFIG_DEFAULT => (
 	allentries =>  0,
 	useprd =>  0,
 	biberdebug =>  0,
-    quiet => 0,
-    controlversion => $BIBLATEX_VERSION,
-    collate_options => 'level=>2, table=>"latinkeys.txt"',
+  quiet => 0,
+  collate_options => 'level=>2, table=>"latinkeys.txt"',
 ) ;
 
 ### biblatex fields
@@ -63,7 +68,7 @@ Readonly::Hash our %CONFIG_DEFAULT => (
 Readonly::Array our @NAMEFIELDS  =>   qw{
   author editor shortauthor shorteditor commentator 
   translator redactor bookauthor afterword introduction 
-  holder sortname namea nameb namec } ;
+  holder sortname namea nameb namec labelname} ;
 
 Readonly::Array our @LISTFIELDS  =>   qw{
   publisher location address institution school language origlocation

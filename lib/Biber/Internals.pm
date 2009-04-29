@@ -23,9 +23,9 @@ sub _getnameinitials {
     my $initstr = "" ;
     ## my $nodecodeflag = $self->_decode_or_not($citekey) ;
 
-    if ( $#aut < $self->getoption( $citekey, "maxnames" ) ) {    # 1 to 3 authors
+    if ( $#aut < $self->getblxoption('maxnames', $citekey ) ) {    # 1 to 3 authors
         foreach my $a (@aut) {
-            if ( $a->{prefix} and $self->getoption( $citekey, "useprefix" ) ) {
+            if ( $a->{prefix} and $self->getblxoption('useprefix', $citekey ) ) {
                 $initstr .= terseinitials( $a->{prefix} ) 
             }
             $initstr .= terseinitials( $a->{lastname} ) ; 
@@ -37,9 +37,9 @@ sub _getnameinitials {
         }
     }
     else
-    { # more than 3 authors: only take initials of first getoption($citekey,"minnames")
-        foreach my $i ( 0 .. $self->getoption( $citekey, "minnames" ) - 1 ) {
-            if ( $aut[$i]->{prefix} and $self->getoption( $citekey, "useprefix" ) ) {
+    { # more than 3 authors: only take initials of first getblxoption('minnames', $citekey)
+        foreach my $i ( 0 .. $self->getblxoption('minnames', $citekey ) - 1 ) {
+            if ( $aut[$i]->{prefix} and $self->getblxoption('useprefix', $citekey) ) {
                 $initstr .= terseinitials( $aut[$i]->{prefix} ) ; 
             }
             my $tmp = $aut[$i]->{lastname} ;
@@ -63,7 +63,7 @@ sub _getallnameinitials {
     my $initstr = "" ;
     
     foreach my $a (@aut) {
-        if ( $a->{prefix} and $self->getoption( $citekey, "useprefix" ) ) {
+        if ( $a->{prefix} and $self->getblxoption('useprefix', $citekey ) ) {
             $initstr .= terseinitials( $a->{prefix} ) 
         }
         $initstr .= terseinitials( $a->{lastname} ) ;
@@ -81,8 +81,8 @@ sub _getlabel {
     
     my @names = @{ $self->{bib}->{$citekey}->{$namefield} } ;
     my $dt = $self->{bib}->{$citekey}->{datatype} ;
-    my $alphaothers = $self->config('alphaothers') ;
-    my $useprefix = $self->getoption($citekey,'useprefix') ;
+    my $alphaothers = $self->getblxoption('alphaothers', $citekey) ;
+    my $useprefix = $self->getblxoption('useprefix', $citekey) ;
     my $label = "";
 
     my @lastnames = map { normalize_string( $_->{lastname}, $dt ) } @names ;
@@ -122,19 +122,31 @@ sub _getlabel {
 }
 
 =head2 getoption
+=head2 getblxoption
 
-getoption($citekey, $option) returns the value of option, taking into account
-the option locally decined for $citekey, if available.
+getblxoption('option', 'citekey') returns the value of option. In order of decreasing preference, returns:
+1. Biblatex option defined for entry
+2. Biblatex option defined for entry type
+3. Biblatex option defined globally
 
 =cut
 
-sub getoption {
-    my ($self, $citekey, $opt) = @_ ;
-    if ( defined $Biber::localoptions{$citekey} and defined $Biber::localoptions{$citekey}->{$opt} ) {
-        return $Biber::localoptions{$citekey}->{$opt} ;
+sub getblxoption {
+    my ($self, $opt, $citekey, $et) = @_ ;
+		# return global option value if no citekey is passed
+		return $self->{config}{biblatex}{global}{$opt} unless defined($citekey);
+		# Else get the entrytype and continue to check local, then type, then global options
+		# If entrytype is passed explicitly, use it (for cases where the object doesn't yet know
+		# its entrytype since this sub is being called as it's being constructed)
+		my $entrytype = defined($et) ? $et : $self->{bib}{$citekey}{entrytype};
+    if ( defined $Biber::localoptions{$citekey} and defined $Biber::localoptions{$citekey}{$opt}) {
+        return $Biber::localoptions{$citekey}{$opt} ;
     }
+		elsif (defined $self->{config}{biblatex}{$entrytype} and defined $self->{config}{biblatex}{$entrytype}{$opt}) {
+			return $self->{config}{biblatex}{$entrytype}{$opt};
+		}
     else {
-        return $self->config($opt) ;
+        return $self->{config}{biblatex}{global}{$opt};
     }
 }
 
@@ -177,22 +189,22 @@ sub _getnamestring {
     # see biblatex manual §3.4 "if both are disabled, the sortname field is ignored as well"
     if (
         $be->{sortname}
-        and (     $self->getoption( $citekey, "useauthor" )
-               or $self->getoption( $citekey, "useeditor" )  
+        and (     $self->getblxoption('useauthor', $citekey )
+               or $self->getblxoption('useeditor', $citekey )
             )
       )
     {
 		return $self->_namestring($citekey, 'sortname') ;
     }
-    elsif ( $self->getoption( $citekey, "useauthor" ) 
+    elsif ( $self->getblxoption('useauthor', $citekey )
 			and $be->{author} ) {
 		return $self->_namestring($citekey, 'author')
     }
-    elsif ( $self->getoption( $citekey, "useeditor" ) 
+    elsif ( $self->getblxoption('useeditor', $citekey )
 			and $be->{editor} ) {
         return $self->_namestring($citekey, 'editor')
     }
-    elsif ( $self->getoption( $citekey, "usetranslator" ) 
+    elsif ( $self->getblxoption('usetranslator', $citekey )
 			and $be->{translator} ) {
         return $self->_namestring($citekey, 'translator')
     }
@@ -209,13 +221,13 @@ sub _namestring {
     my @names = @{ $be->{$field} } ;
     my $truncated = 0 ;
     ## perform truncation according to options minnames, maxnames
-    if ( $#names + 1 > $self->config('maxnames') ) {
+    if ( $#names + 1 > $self->getblxoption('maxnames', $citekey) ) {
         $truncated = 1 ;
-        @names = splice(@names, 0, $self->config('minnames') )
+        @names = splice(@names, 0, $self->getblxoption('minnames', $citekey) )
     } ;
     foreach ( @names ) {
         $str .= $_->{prefix} . "2"
-          if ( $_->{prefix} and $self->getoption( $citekey, "useprefix" ) ) ;
+          if ( $_->{prefix} and $self->getblxoption('useprefix', $citekey ) ) ;
         $str .= $_->{lastname} . "2" ;
         $str .= $_->{firstname} . "2" if $_->{firstname} ;
         $str .= $_->{suffix} if $_->{suffix} ;
@@ -309,60 +321,96 @@ sub _getvolumestring {
 }
 
 
+# \def\blx@opt@sorting@none{0}
+# \def\blx@opt@sorting@nty{1}
+# \def\blx@opt@sorting@nyt{2}
+# \def\blx@opt@sorting@nyvt{3}
+# \def\blx@opt@sorting@anyt{12}
+# \def\blx@opt@sorting@anyvt{13}
+# \def\blx@opt@sorting@ynt{21}
+# \def\blx@opt@sorting@ydnt{22}
+# \def\blx@opt@sorting@debug{99}
+
+our $dispatch_sorting = {
+												 'presort'      => \&_sort_presort,
+												 'mm'           =>  \&_sort_mm,
+												 '0000'         =>  \&_sort_0000,
+												 '9999'         =>  \&_sort_9999,
+												 'labelalpha'   =>  \&_sort_labelalpha,
+												 'sortname'     =>  \&_sort_sortname,
+												 'author'       =>  \&_sort_author,
+												 'editor'       =>  \&_sort_editor,
+												 'translator'   =>  \&_sort_translator,
+												 'sorttitle'    =>  \&_sort_sorttitle,
+												 'title'        =>  \&_sort_title,
+												 'sortyear'     =>  \&_sort_sortyear,
+												 'sortyearD'    =>  \&_sort_sortyear_descend,
+                         'year'         =>  \&_sort_year,
+                         'yearD'        =>  \&_sort_year_descend,
+                         'volume'       =>  \&_sort_volume,
+};
+
 sub _generatesortstring {
-    my ($self, $citekey) = @_ ;
-    my $be = $self->{bib}->{$citekey} ;
+	my ($self, $citekey) = @_ ;
+	my $be = $self->{bib}{$citekey} ;
+	my $sortscheme = $self->getblxoption('sorting', $citekey);
 
-    if ( $self->config('sorting') == 1 ) {    # name title year
-        $be->{sortstring} =
-          lc(   $self->_getinitstring($citekey) . "0"
-              . $self->_getnamestring($citekey) . "0"
-              . $self->_gettitlestring($citekey) . "0"
-              . $self->_getyearstring($citekey) . "0"
-              . $self->_getvolumestring($citekey) ) ;
-    }
-    elsif ( $self->config('sorting') == 2 or $self->config('sorting') == 12 )
-    {                                        # <alpha> name year title
-        $be->{sortstring} =
-          lc(   $self->_getinitstring($citekey) . "0"
-              . $self->_getnamestring($citekey) . "0"
-              . $self->_getyearstring($citekey) . "0"
-              . $self->_gettitlestring($citekey) . "0"
-              . $self->_getvolumestring($citekey) ) ;
-    }
-    elsif ( $self->config('sorting') == 3 or $self->config('sorting') == 13 )
-    {                                        # <alpha> name year volume title
-        $be->{sortstring} =
-          lc(   $self->_getinitstring($citekey) . "0"
-              . $self->_getnamestring($citekey) . "0"
-              . $self->_getyearstring($citekey) . "0"
-              . $self->_getvolumestring($citekey) . "0"
-              . $self->_gettitlestring($citekey) ) ;
-    }
-    elsif ( $self->config('sorting') == 21 ) {    # year name title
-        $be->{sortstring} =
-          lc(   $self->_getyearstring($citekey) . "0"
-              . $self->_getnamestring($citekey) . "0"
-              . $self->_gettitlestring($citekey) ) ;
-    }
-    elsif ( $self->config('sorting') == 22 ) {    # year_decreasing name title
-        $be->{sortstring} =
-          lc(   $self->_getdecyearstring($citekey) . "0"
-              . $self->_getnamestring($citekey) . "0"
-              . $self->_gettitlestring($citekey) ) ;
 
-    } elsif ($self->config('sorting') == 99) { 
-        $be->{sortstring} = $citekey
-    }
-    else {
-        # do nothing!
-        carp "Warning: the sorting code " . $self->config('sorting') . 
-             " is not defined, assuming 'debug'\n" ;
-        $be->{sortstring} = $citekey
-    } 
-
-    return
 }
+# sub _generatesortstring {
+#     my ($self, $citekey) = @_ ;
+#     my $be = $self->{bib}->{$citekey} ;
+
+#     if ( $self->getblxoption('sorting', $citekey) == 1 ) {    # name title year
+#         $be->{sortstring} =
+#           lc(   $self->_getinitstring($citekey) . "0"
+#               . $self->_getnamestring($citekey) . "0"
+#               . $self->_gettitlestring($citekey) . "0"
+#               . $self->_getyearstring($citekey) . "0"
+#               . $self->_getvolumestring($citekey) ) ;
+#     }
+#     elsif ( $self->getblxoption('sorting', $citekey) == 2 or $self->getblxoption('sorting', $citekey) == 12 )
+#     {                                        # <alpha> name year title
+#         $be->{sortstring} =
+#           lc(   $self->_getinitstring($citekey) . "0"
+#               . $self->_getnamestring($citekey) . "0"
+#               . $self->_getyearstring($citekey) . "0"
+#               . $self->_gettitlestring($citekey) . "0"
+#               . $self->_getvolumestring($citekey) ) ;
+#     }
+#     elsif ( $self->getblxoption('sorting', $citekey) == 3 or $self->getblxoption('sorting', $citekey) == 13 )
+#     {                                        # <alpha> name year volume title
+#         $be->{sortstring} =
+#           lc(   $self->_getinitstring($citekey) . "0"
+#               . $self->_getnamestring($citekey) . "0"
+#               . $self->_getyearstring($citekey) . "0"
+#               . $self->_getvolumestring($citekey) . "0"
+#               . $self->_gettitlestring($citekey) ) ;
+#     }
+#     elsif ( $self->getblxoption('sorting', $citekey) == 21 ) {    # year name title
+#         $be->{sortstring} =
+#           lc(   $self->_getyearstring($citekey) . "0"
+#               . $self->_getnamestring($citekey) . "0"
+#               . $self->_gettitlestring($citekey) ) ;
+#     }
+#     elsif ( $self->getblxoption('sorting', $citekey) == 22 ) {    # year_decreasing name title
+#         $be->{sortstring} =
+#           lc(   $self->_getdecyearstring($citekey) . "0"
+#               . $self->_getnamestring($citekey) . "0"
+#               . $self->_gettitlestring($citekey) ) ;
+
+#     } elsif ($self->getblxoption('sorting', $citekey) == 99) { 
+#         $be->{sortstring} = $citekey
+#     }
+#     else {
+#         # do nothing!
+#         carp "Warning: the sorting code " . $self->getblxoption('sorting', $citekey) . 
+#              " is not defined, assuming 'debug'\n" ;
+#         $be->{sortstring} = $citekey
+#     } 
+
+#     return
+# }
 
 #=====================================================
 # OUTPUT SUBS 
@@ -403,7 +451,7 @@ sub _defined_and_nonempty {
 
 #TODO this could be done earlier as a method and stored in the object
 sub _print_name {
-	my ($self, $au) = @_ ;
+	my ($self, $au, $citekey) = @_ ;
     my %nh  = %{$au} ;
     my $ln  = $nh{lastname} ;
     my $lni = getinitials($ln) ;
@@ -422,7 +470,7 @@ sub _print_name {
     #FIXME The following is done by biblatex.bst, but shouldn't it be optional? 
     $fn =~ s/(\p{Lu}\.)\s+/$1~/g; # J. Frank -> J.~Frank
     $fn =~ s/\s+(\p{Lu}\.)/~$1/g; # Bernard H. -> Bernard~H.
-    if ( $self->config('terseinits') ) {
+    if ( $self->getblxoption('terseinits', $citekey) ) {
         $lni = tersify($lni) ;
         $fni = tersify($fni) ;
         $prei = tersify($prei) ;
@@ -433,7 +481,7 @@ sub _print_name {
 
 sub _printfield {
     my ($self, $field, $str) = @_ ;
-    my $width = $self->config('maxline') ;
+    my $width = $self->getblxoption('maxline') ;
 
     ## 12 is the length of '  \field{}{}'
     if ( 12 + length($field) + length($str) > 2*$width ) {
@@ -461,7 +509,7 @@ sub _print_biblatex_entry {
 
     my $str = "" ;
     
-    $str .= "% sortstring = " . $be->{sortstring} . "\n" if $self->config('debug') ;
+    $str .= "% sortstring = " . $be->{sortstring} . "\n" if $self->getblxoption('debug') ;
 
     $str .= "\\entry{$origkey}{" . $be->{entrytype} . "}{$opts}\n" ;
 
@@ -475,7 +523,12 @@ sub _print_biblatex_entry {
         $str .= "  \\inset{" . $Biber::inset_entries{$citekey} . "}\n" ;
     }
     
-    delete $be->{entrytype}; #forgot why this is needed!
+#    delete $be->{entrytype}; #forgot why this is needed!
+
+		# make labelname a copy of the right thing before output of name lists
+		if (_defined_and_nonempty($be->{'labelnamename'})) { # avoid unitialised variable warnings
+			$be->{'labelname'} = $be->{$be->{'labelnamename'}};
+		}
     
     foreach my $namefield (@NAMEFIELDS) {
         next if $SKIPFIELDS{$namefield} ;
@@ -488,7 +541,7 @@ sub _print_biblatex_entry {
             my $total = $#nf + 1 ;
             $str .= "  \\name{$namefield}{$total}{%\n" ;
             foreach my $n (@nf) {
-                $str .= $self->_print_name($n) ;
+                $str .= $self->_print_name($n, $citekey) ;
             }
             $str .= "  }\n" ;
         }
@@ -523,13 +576,13 @@ sub _print_biblatex_entry {
     $str .= "  \\strng{namehash}{$namehash}\n" ;
     my $fullhash = $be->{fullhash} ;
     $str .= "  \\strng{fullhash}{$fullhash}\n" ;
-    if ( $self->config('labelalpha') ) {
+    if ( $self->getblxoption('labelalpha', $citekey) ) {
         my $label = $be->{labelalpha} ;
         $str .= "  \\field{labelalpha}{$label}\n" ;
     }
     $str .= "  \\field{sortinit}{$sortinit}\n" ;
     
-    if ( $self->config('labelyear') ) {
+    if ( $self->getblxoption('labelyear', $citekey) ) {
         my $authoryear = $be->{authoryear} ;
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
             $Biber::seenlabelyear{$authoryear}++ ;
@@ -538,7 +591,7 @@ sub _print_biblatex_entry {
         }
     }
 
-    if ( $self->config('extraalpha') ) {
+    if ( $self->getblxoption('extraalpha', $citekey) ) {
         my $authoryear = $be->{authoryear} ;
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
             $Biber::seenlabelyear{$authoryear}++ ;
@@ -547,7 +600,7 @@ sub _print_biblatex_entry {
         }
     }
 
-    if ( $self->config('labelnumber') ) {
+    if ( $self->getblxoption('labelnumber', $citekey) ) {
         if ($be->{shorthand}) {
             $str .= "  \\field{labelnumber}{"
               . $be->{shorthand} . "}\n" ;
@@ -563,7 +616,7 @@ sub _print_biblatex_entry {
         $str .= "  \\count{uniquename}{0}\n" ;
 
     } else {
-        my $lname = $be->{labelname} ;
+        my $lname = $be->{labelnamename} ;
         my $name ;
         my $lastname ;
         my $nameinitstr ;
@@ -588,7 +641,7 @@ sub _print_biblatex_entry {
         }
     }
 
-    if ( $self->config('singletitle')
+    if ( $self->getblxoption('singletitle', $citekey)
         and $Biber::seennamehash{ $be->{fullhash} } < 2 )
     {
         $str .= "  \\true{singletitle}\n" ;
@@ -599,7 +652,7 @@ sub _print_biblatex_entry {
         if ( _defined_and_nonempty($be->{$lfield}) ) {
             next if ( $lfield eq 'crossref' and 
                        $Biber::seenkeys{ $be->{crossref} } ) ; # belongs to @auxcitekeys 
-                       
+
             my $lfieldprint = $lfield ;
             if ($lfield eq 'journal') {
                 $lfieldprint = 'journaltitle' 

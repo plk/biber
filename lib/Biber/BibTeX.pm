@@ -111,6 +111,16 @@ sub _text_bibtex_parse {
                 }
             } ;
 
+						if (lc($entry->type) eq 'phdthesis') {
+                $bibentries{ $key }->{entrytype} = 'thesis' ;
+                $bibentries{ $key }->{type} = 'phdthesis' ;
+            } elsif (lc($entry->type) eq 'mathesis') {
+                $bibentries{ $key }->{entrytype} = 'thesis' ;
+                $bibentries{ $key }->{type} = 'mathesis' ;
+            } else {
+                $bibentries{ $key }->{entrytype} = $entry->type ;
+            }
+
             foreach my $f ( @ENTRIESTOSPLIT ) {
 
                 next unless $entry->exists($f) ;
@@ -119,10 +129,12 @@ sub _text_bibtex_parse {
                 my @tmp = map { decode($encoding, $_) } $entry->split($f) ;
 
                 if ($Biber::is_name_entry{$f}) {
+									# This is a special case - we need to get the option value even though the passed
+									# $self object isn't fully built yet so getblxoption() can't ask $self for the
+									# $entrytype for $key. So, we have to pass it explicitly.
+									my $useprefix = $self->getblxoption('useprefix', $key, $bibentries{$key}{entrytype}) ;
 
-                    my $useprefix = $self->getoption($key, 'useprefix') ;
-
-                    @tmp = map { parsename( $_ , {useprefix => $useprefix}) } @tmp ;
+									@tmp = map { parsename( $_ , {useprefix => $useprefix}) } @tmp ;
 
                 } else {
                     @tmp = map { remove_outer($_) } @tmp ;
@@ -137,16 +149,6 @@ sub _text_bibtex_parse {
                 $bibentries{ $key }->{$af} = [ @tmp ]                 
 
             } ;
-
-            if (lc($entry->type) eq 'phdthesis') {
-                $bibentries{ $key }->{entrytype} = 'thesis' ;
-                $bibentries{ $key }->{type} = 'phdthesis' ;
-            } elsif (lc($entry->type) eq 'mathesis') {
-                $bibentries{ $key }->{entrytype} = 'thesis' ;
-                $bibentries{ $key }->{type} = 'mathesis' ;
-            } else {
-                $bibentries{ $key }->{entrytype} = $entry->type ;
-            }
 
             $bibentries{ $key }->{datatype} = 'bibtex' ;
         }

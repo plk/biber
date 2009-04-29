@@ -65,6 +65,7 @@ sub new {
     my ($class, $opts) = @_ ;
     my $self = bless {}, $class ;
     $self->_initopts() ;
+    $self->_initblxopts() ;
     if ($opts) {
         my %params = %$opts;
         foreach (keys %params) {
@@ -74,25 +75,33 @@ sub new {
     return $self
 }
 
+sub _initblxopts {
+    my $self = shift ;
+    foreach (keys %BLX_CONFIG_DEFAULT) {
+        $self->{config}{biblatex}{global}{$_} = $BLX_CONFIG_DEFAULT{$_}
+    }
+    return;
+}
+
 =head2 config
 
-    Returns the value of a configuration parameter.
+    Returns the value of a biber configuration parameter.
 
     $biber->config('param') ;
-    
+
 =cut
 
 sub config {
     my ($self, $opt) = @_ ;
-    return $self->{config}->{$opt} 
+    return $self->{config}->{$opt};
 }
 
 sub _initopts {
     my $self = shift ;
     foreach (keys %CONFIG_DEFAULT) {
         $self->{config}->{$_} = $CONFIG_DEFAULT{$_}
-    } ;
-    return
+    }
+    return;
 }
 
 =head2 citekeys
@@ -212,9 +221,12 @@ sub parse_auxfile {
             
             my @tmp = split/,/, $bibdatastring ; 
             
-            $ctrl_file = shift @tmp ; 
+            shift @tmp ;  #PK remove this when biblatex stops putting the control file name
+                          # in the AUX file.
+						$ctrl_file = $auxfile;
+						$ctrl_file =~ s/\.aux\z//xms;
 
-            print "control file is $ctrl_file.bib\n" if $self->config('biberdebug');
+            print "control file is $ctrl_file.bcf\n" if $self->config('biberdebug');
             
             if (defined $bibdatafiles[0]) {
 
@@ -287,45 +299,56 @@ sub parse_auxfile {
 sub parse_ctrlfile {
     my ($self, $ctrl_file) = @_ ;
 
-    carp "Cannot find control file '$ctrl_file.bib'!\n" unless -f "$ctrl_file.bib" ;
+    carp "Cannot find control file '$ctrl_file.bcf'!\n" unless -f "$ctrl_file.bcf" ;
 
-    my $ctrl = new IO::File "<$ctrl_file.bib"
-          or croak "Cannot open $ctrl_file.bib: $!" ;
+    my $ctrl = new IO::File "<$ctrl_file.bcf"
+          or croak "Cannot open $ctrl_file.bcf: $!" ;
 
-    print "Reading $ctrl_file.bib\n" unless $self->config('quiet');
+    print "Reading $ctrl_file.bcf\n" unless $self->config('quiet');
 
     while (<$ctrl>) {
-        
-        next unless /^\s*ctrl-options/ ;
-        
-        (my $opts) = /{(.+)}/ ;  ## ex: {0.8b:0:0:0:0:1:1:0:0:1:0:1:2:1:3:1:79:+}
-        ($self->{config}->{controlversion},
-        $self->{config}->{debug},
-        my $ignore,
-        $self->{config}->{terseinits},
-        $self->{config}->{useprefix},
-        $self->{config}->{useauthor},
-        $self->{config}->{useeditor},
-        $self->{config}->{usetranslator},
-        $self->{config}->{labelalpha},
-        $self->{config}->{labelyear},
-        $self->{config}->{singletitle},
-        $self->{config}->{uniquename},
-        $self->{config}->{sorting},
-        $self->{config}->{sortlos},
-        $self->{config}->{maxnames},
-        $self->{config}->{minnames},
-        $self->{config}->{maxline},
-        $self->{config}->{alphaothers}) = split /:/, $opts ; 
-        
-        my $controlversion = $self->config('controlversion') ;
-        carp "Warning: You are using biblatex version $controlversion : 
+        next if /\A\#/xms;
+				if (/\AGLOBAL\s+([^\n]+)\Z/xms) { # Global BibLaTeX options
+					my $gconfig = $1;
+					foreach my $c (split /\s+/, $gconfig) {
+						my ($k,$v) = split /=/, $c;
+						if ($k =~ /\A(?:labelname)\z/xms) { # labelname is special
+							$self->{config}{biblatex}{global}{$k} = [ split /,/, $v ];
+						}
+						elsif ($k =~ /\A(?:sorting)\z/xms) { # sorting is even more special
+							$self->{config}{biblatex}{global}{$k} = [ map {[split /:/, $_]} split /,/, $v ];
+						}
+						else { # normal binary or single-valued options
+							$self->{config}{biblatex}{global}{$k} = $v;
+						}
+					}
+					my $controlversion = $self->getblxoption('controlversion') ;
+					carp "Warning: You are using biblatex version $controlversion : 
             biber is more likely to work with version $BIBLATEX_VERSION.\n" 
             unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION ;
-    }
-    
-    return
+				}
+				elsif (/\AENTRYTYPE\s+([^\s]+)\s+([^\n]+)\Z/xms) { # Entry-type specific BibLaTeX options
+					my $entrytype = $1;
+					my $tconfig = $2;
+					foreach my $c (split /\s+/, $tconfig) {
+						my ($k,$v) = split /=/, $c;
+						if ($k =~ /\A(?:labelname)\z/xms) { # labelname is special
+							$self->{config}{biblatex}{$entrytype}{$k} = [ split /,/, $v ];
+						}
+						elsif ($k =~ /\A(?:sorting)\z/xms) { # sorting is even more special
+							$self->{config}{biblatex}{$entrytype}{$k} = [ map {[split /:/, $_]} split /,/, $v ];
+						}
+						else { # normal binary or single-valued options
+							$self->{config}{biblatex}{$entrytype}{$k} = $v;
+						}
+					}
+				}
+			}
+    return;
 }
+
+
+
 
 #=====================================================
 # Parse BIB file
@@ -624,22 +647,29 @@ sub postprocess {
         }
 
         ##############################################################
-        # 4. generate labelname 
+        # 4. generate labelname name
         ##############################################################
-        
-        if ( $be->{shortauthor} and $self->getoption($citekey, 'useauthor') ) {
-            $be->{labelname} = 'shortauthor'
-        } elsif ( $be->{author} and $self->getoption($citekey, 'useauthor') ) {
-            $be->{labelname} = 'author'
-        } elsif ( $be->{shorteditor} and $self->getoption($citekey, 'useeditor') ) {
-            $be->{labelname} = 'shorteditor'
-        } elsif ( $be->{editor} and $self->getoption($citekey, 'useeditor') ) {
-            $be->{labelname} = 'editor'
-        } elsif ( $be->{shorttranslator} and $self->getoption($citekey, 'usetranslator') ) {
-            $be->{labelname} = 'shorttranslator'
-        } elsif ( $be->{translator} and $self->getoption($citekey, 'usetranslator') ) {
-            $be->{labelname} = 'translator'
-        } else { 
+
+				# Here, "labelnamename" is the name of the labelname field
+				# and "labelname" is the actual copy of the relevant field
+
+				my $lnamescheme = $self->getblxoption('labelname', $citekey);
+
+				LNAME: foreach my $ln (@{$lnamescheme}) {
+					my $lnameopt;
+					if ($ln =~ /\Ashort(.+)\z/) {
+						$lnameopt = $1;
+					}
+					else {
+						$lnameopt = $ln;
+					}
+					if ( $be->{$ln} and $self->getblxoption("use$lnameopt", $citekey) ) {
+            $be->{labelnamename} = $ln;
+						last LNAME;
+					}
+				}
+
+				unless ($be->{labelnamename}) {
             carp "Could not determine the labelname of entry $citekey" if $self->config('biberdebug')
         }
 
@@ -652,8 +682,8 @@ sub postprocess {
         my $nameid ;
         my $nameinitid ;
         if ( $be->{sortname}
-             and (   $self->getoption( $citekey, "useauthor" ) 
-                  or $self->getoption( $citekey, "useeditor" ) 
+             and (   $self->getblxoption('useauthor', $citekey )
+                  or $self->getblxoption('useeditor', $citekey )
                  )
            )
         {
@@ -662,19 +692,19 @@ sub postprocess {
             $fullhash   = $self->_getallnameinitials( $citekey, @aut ) ;
             $nameid     = makenameid(@aut) ;
             $nameinitid = makenameinitid(@aut)
-              if ( $self->config('uniquename') == 2 ) ;
+              if ( $self->getblxoption('uniquename', $citekey) == 2 ) ;
         }
-        elsif ( $self->getoption( $citekey, "useauthor" ) 
+        elsif ( $self->getblxoption('useauthor', $citekey)
                 and $be->{author} ) {
             my @aut = @{ $be->{author} } ;
             $namehash   = $self->_getnameinitials( $citekey, @aut ) ;
             $fullhash   = $self->_getallnameinitials( $citekey, @aut ) ;
             $nameid     = makenameid(@aut) ;
             $nameinitid = makenameinitid(@aut)
-              if ( $self->config('uniquename') == 2 ) ;
+              if ( $self->getblxoption('uniquename', $citekey) == 2 ) ;
         }
         elsif ( ($be->{entrytype} =~ /^(collection|proceedings)/ #<<-- keep this? FIXME
-                    and $self->getoption( $citekey, "useeditor" ) )
+                    and $self->getblxoption('useeditor', $citekey) )
                  and $be->{editor} ) 
         {
             my @edt = @{ $be->{editor} } ;
@@ -682,29 +712,29 @@ sub postprocess {
             $fullhash   = $self->_getallnameinitials( $citekey, @edt ) ;
             $nameid     = makenameid(@edt) ;
             $nameinitid = makenameinitid(@edt)
-              if ( $self->config('uniquename') == 2 ) ;
+              if ( $self->getblxoption('uniquename', $citekey) == 2 ) ;
         }
-        elsif ( $self->getoption( $citekey, "usetranslator" ) 
+        elsif ( $self->getblxoption('usetranslator', $citekey)
                 and $be->{translator} ) {
             my @trs = @{ $be->{translator} } ;
             $namehash   = $self->_getnameinitials( $citekey, @trs ) ;
             $fullhash   = $self->_getallnameinitials( $citekey, @trs ) ;
             $nameid     = makenameid(@trs) ;
             $nameinitid = makenameinitid(@trs)
-              if ( $self->config('uniquename') == 2 ) ;
+              if ( $self->getblxoption('uniquename', $citekey) == 2 ) ;
         }
         else {    # initials of title
             if ( $be->{sorttitle} ) {
                 $namehash   = terseinitials( $be->{sorttitle} ) ; 
                 $fullhash   = $namehash ;
                 $nameid     = normalize_string_underscore( $be->{sorttitle}, 1 ) ;
-                $nameinitid = $nameid if ( $self->config('uniquename') == 2 ) ;
+                $nameinitid = $nameid if ( $self->getblxoption('uniquename', $citekey) == 2 ) ;
             }
             else {
                 $namehash   = terseinitials( $be->{title} ) ; 
                 $fullhash   = $namehash ;
                 $nameid     = normalize_string_underscore( $be->{title}, 1 ) ;
-                $nameinitid = $nameid if ( $self->config('uniquename') == 2 ) ;
+                $nameinitid = $nameid if ( $self->getblxoption('uniquename', $citekey) == 2 ) ;
             }
         }
 
@@ -738,7 +768,7 @@ sub postprocess {
         #     the uniquename counter
         ##############################################################
 
-        my $lname = $be->{labelname} ;
+        my $lname = $be->{labelnamename} ;
             { # Keep these variables scoped over the new few blocks
                 my $lastname;
                 my $namestring;
@@ -756,7 +786,7 @@ sub postprocess {
                     }
                 }
 
-                if ( $lname and $self->config('uniquename') and $singlename == 1 ) {
+                if ( $lname and $self->getblxoption('uniquename', $citekey) and $singlename == 1 ) {
 
                     if ( ! $uniquenamecount{$lastname}{$namehash} ) {
                         if ($uniquenamecount{$lastname}) {
@@ -781,7 +811,7 @@ sub postprocess {
         # 6. Generate the labelalpha
         ##############################################################
 
-        if ( $self->config('labelalpha') ) {
+        if ( $self->getblxoption('labelalpha', $citekey) ) {
             my $label ;
 
             if ($be->{shorthand}) 
@@ -794,11 +824,11 @@ sub postprocess {
                 {
                     $label = $be->{label}
                 } 
-                elsif ( $be->{author} and $self->getoption( $citekey, "useauthor" ) ) 
+                elsif ( $be->{author} and $self->getblxoption('useauthor', $citekey) )
                 { 
                     $label = $self->_getlabel($citekey, "author");
                 }
-                elsif ( $be->{editor} and $self->getoption( $citekey, "useeditor" ) )
+                elsif ( $be->{editor} and $self->getblxoption('useeditor', $citekey ) )
                 {
                     $label = $self->_getlabel($citekey, "editor");
                 }
@@ -808,7 +838,7 @@ sub postprocess {
                 } ;
 
                 my $yr ;
-                
+
                 if ( $be->{year} ) {
                     $yr = substr $be->{year}, 2, 2 ;
                 }
@@ -897,7 +927,7 @@ sub sortentries {
     my %bibentries = $self->bib ;
     my @auxcitekeys = $self->citekeys ;
     
-    if ( $self->config('sorting') ) {
+    if ( $self->getblxoption('sorting') ) {
 
         print "Sorting entries...\n" if $self->config('biberdebug') ;
     
@@ -976,7 +1006,7 @@ sub output_to_bbl {
 
     # $BBLFILE->binmode(':utf8') if $self->config('unicodebbl') ;
 
-    my $ctrlver = $self->config('controlversion') ;
+    my $ctrlver = $self->getblxoption('controlversion') ;
     my $BBL = <<"EOF"
 % \$ biblatex auxiliary file \$
 % \$ biblatex version $ctrlver \$
@@ -1009,7 +1039,7 @@ EOF
         next if ( $crossrefkeys{$k} ) ;
         $BBL .= $self->_print_biblatex_entry($k) ;
     }
-    if ( $self->config('sortlos') and $self->shorthands ) {
+    if ( $self->getblxoption('sortlos') and $self->shorthands ) {
         $BBL .= "\\lossort\n" ;
         foreach my $sh ($self->shorthands) {
             $BBL .= "  \\key{$sh}\n" ;
