@@ -1,0 +1,109 @@
+#!/usr/bin/perl 
+use strict ;
+use warnings ;
+#no warnings 'utf8' ;
+use Carp ;
+use LaTeX::Decode ;
+use IO::File ;
+use File::Slurp ;
+use Encode ;
+binmode(STDOUT, ':utf8') ;
+use Getopt::Long qw/:config no_ignore_case/ ;
+
+my $opts = {} ;
+GetOptions(
+    $opts,
+    'help|h|?',
+    'version|v',
+    'decodescheme|s=s',
+    'inputencoding|i=s'
+) ;
+
+our $VERSION = '0.2' ;
+
+die usage() if exists $opts->{'help'} ;
+
+die version() if exists $opts->{'version'} ;
+
+my $infile = $ARGV[0] or die usage();
+
+my $text = read_file($infile) or croak "Cannot read input file";
+
+my $scheme = 'base' ;
+
+if (exists $opts->{decodescheme} ) {
+    $scheme = $opts->{decodescheme}
+} ; 
+
+if (exists $opts->{inputencoding}) {
+    my $encoding = $opts->{inputencoding} ;
+    $text = decode($encoding, $text) ;
+} ;
+
+$text = decode_utf8($text);
+
+print latex_decode($text);
+
+sub version {
+    my $me = "latex2utf8" ;    #basename($0);
+
+    qq[
+$me Version: $VERSION
+    Warning: This is still alpha quality. 
+    You are advised to wait for a stable release before definitively 
+    switching to the BibLaTeXML format!
+      \n]
+}
+
+sub usage {
+    qq[
+Usage: latex2utf8 infile > outfile
+
+Options:
+  --help|-h             Show this help message.
+  --version|-v          Display version number.
+  --inputencoding|-i [encoding] 
+                        Input file uses legacy encoding 
+
+Example: latex2utf8 -i latin1 infile.tex > outfile.tex                       
+     \n] 
+}
+
+=pod
+
+=head1 NAME
+
+C<latex2utf8> - converts LaTeX encoding to UTF-8
+
+=head1 VERSION
+
+Version 0.1
+
+=head1 SYNOPSIS
+
+latex2utf8 file.tex > utf8file.tex
+
+=head1 DESCRIPTION
+
+TBW
+
+=head1 AUTHOR
+
+François Charette, C<< <firmicus at gmx.net> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests on our sourceforge tracker at
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2009 François Charette, all rights reserved.
+
+This program is free software ; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=cut
+
+# vim: set tabstop=4 shiftwidth=4:
+
