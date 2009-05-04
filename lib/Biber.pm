@@ -65,7 +65,7 @@ sub new {
     my ($class, $opts) = @_ ;
     my $self = bless {}, $class ;
     $self->_initopts() ;
-    $self->_initblxopts() ;
+#    $self->_initblxopts() ;
     if ($opts) {
         my %params = %$opts;
         foreach (keys %params) {
@@ -297,58 +297,71 @@ sub parse_auxfile {
 =cut
 
 sub parse_ctrlfile {
-    my ($self, $ctrl_file) = @_ ;
+  my ($self, $ctrl_file) = @_ ;
 
-    carp "Cannot find control file '$ctrl_file.bcf'!\n" unless -f "$ctrl_file.bcf" ;
+  carp "Cannot find control file '$ctrl_file.bcf'!\n" unless -f "$ctrl_file.bcf" ;
 
-    my $ctrl = new IO::File "<$ctrl_file.bcf"
-          or croak "Cannot open $ctrl_file.bcf: $!" ;
+  my $ctrl = new IO::File "<$ctrl_file.bcf"
+    or croak "Cannot open $ctrl_file.bcf: $!" ;
 
-    print "Reading $ctrl_file.bcf\n" unless $self->config('quiet');
+  print "Reading $ctrl_file.bcf\n" unless $self->config('quiet');
 
-    while (<$ctrl>) {
-        next if /\A\#/xms;
-				if (/\AGLOBAL\s+([^\n]+)\Z/xms) { # Global BibLaTeX options
-					my $gconfig = $1;
-					foreach my $c (split /\s+/, $gconfig) {
-						my ($k,$v) = split /=/, $c;
-						if ($k =~ /\A(?:labelname)\z/xms) { # labelname is special
-							$self->{config}{biblatex}{global}{$k} = [ split /,/, $v ];
-						}
-						elsif ($k =~ /\A(?:sorting)\z/xms) { # sorting is even more special
-							$self->{config}{biblatex}{global}{$k} = [ map {[split /:/, $_]} split /,/, $v ];
-						}
-						else { # normal binary or single-valued options
-							$self->{config}{biblatex}{global}{$k} = $v;
-						}
-					}
-					my $controlversion = $self->getblxoption('controlversion') ;
-					carp "Warning: You are using biblatex version $controlversion : 
-            biber is more likely to work with version $BIBLATEX_VERSION.\n" 
-            unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION ;
-				}
-				elsif (/\AENTRYTYPE\s+([^\s]+)\s+([^\n]+)\Z/xms) { # Entry-type specific BibLaTeX options
-					my $entrytype = $1;
-					my $tconfig = $2;
-					foreach my $c (split /\s+/, $tconfig) {
-						my ($k,$v) = split /=/, $c;
-						if ($k =~ /\A(?:labelname)\z/xms) { # labelname is special
-							$self->{config}{biblatex}{$entrytype}{$k} = [ split /,/, $v ];
-						}
-						elsif ($k =~ /\A(?:sorting)\z/xms) { # sorting is even more special
-							$self->{config}{biblatex}{$entrytype}{$k} = [ map {[split /:/, $_]} split /,/, $v ];
-						}
-						else { # normal binary or single-valued options
-							$self->{config}{biblatex}{$entrytype}{$k} = $v;
-						}
-					}
-				}
-			}
-    return;
+  # Read control file
+  use XML::LibXML::Simple;
+  my $bcfxml = XMLin($ctrl, 'ForceArray' => 1, 'NsStrip' => 1, KeyAttr => []);
+
+  # TODO - validate control file against schema?
+
+  my $controlversion = $bcfxml->{'version'};
+  carp "Warning: You are using biblatex version $controlversion :
+        biber is more likely to work with version $BIBLATEX_VERSION.\n"
+    unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION ;
+
+  # Look at control file and populate our main data structure with its information
+
+  # OPTIONS
+  foreach my $bcfopts (@{$bcfxml->{options}}) {
+    if ($bcfopts->{type} eq 'global') { # Global BibLaTeX options
+      foreach my $bcfopt (@{$bcfopts->{option}}) {
+        if ($bcfopt->{type} eq 'singevalued') {
+          $self->{config}{biblatex}{global}{$bcfopt->{key}} = $bcfopt->{value};
+        } elsif ($bcfopt->{type} eq 'multivalued') {
+          $self->{config}{biblatex}{global}{$bcfopt->{key}} =
+            [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ];
+        }
+      }
+    }
+    else { # Entrytype BibLaTeX options
+      my $entrytype = $bcfopts->{type};
+      foreach my $bcfopt (@{$bcfopts->{option}}) {
+        if ($bcfopt->{type} eq 'singevalued') {
+          $self->{config}{biblatex}{$entrytype}{$bcfopt->{key}} = $bcfopt->{value};
+        } elsif ($bcfopt->{type} eq 'multivalued') {
+          $self->{config}{biblatex}{$entrytype}{$bcfopt->{key}} =
+            [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ];
+        }
+      }
+    }
+  }
+
+  # SORTING schemes
+  foreach my $sortschemes (@{$bcfxml->{sorting}}) {
+    if ($sortschemes->{type} eq 'global') { # Global sorting schemes
+      foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$sortschemes->{sort}}) {
+        my $sortingitems = [];
+        foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
+          push @{$sortingitems}, $sortitem->{content};
+          if ($sortitem->{final}) { # Found a sorting short-circuit marker
+            push @{$sortingitems}, 'FINAL';
+          }
+        }
+        push @{$self->{config}{biblatex}{global}{sorting}}, $sortingitems;
+      }
+    }
+  }
+#  use Data::Dumper; print Dumper($self->{config}{biblatex}); exit 0;
+  return;
 }
-
-
-
 
 #=====================================================
 # Parse BIB file
@@ -874,24 +887,25 @@ sub postprocess {
         # 9. generate sort strings 
         ##############################################################
 
-        if ( $be->{sortkey} ) {
-            my $pre ;
-            if ( $be->{presort} ) {
-                $pre = $be->{presort} 
-            } else {
-                $pre = 'mm'
-            } ;
-            my $sortkey = lc( $be->{sortkey} ) ;
-            $sortkey = latex_decode($sortkey) unless $self->_nodecode($citekey) ;
-            $be->{sortstring} = "$pre $sortkey" ;
-        } else {
-            $self->_generatesortstring($citekey) ;
-        }
+        $self->_generatesortstring($citekey);
+        # if ( $be->{sortkey} ) {
+        #     my $pre ;
+        #     if ( $be->{presort} ) {
+        #         $pre = $be->{presort} 
+        #     } else {
+        #         $pre = 'mm'
+        #     } ;
+        #     my $sortkey = lc( $be->{sortkey} ) ;
+        #     $sortkey = latex_decode($sortkey) unless $self->_nodecode($citekey) ;
+        #     $be->{sortstring} = "$pre $sortkey" ;
+        # } else {
+        #     $self->_generatesortstring($citekey) ;
+        # }
 
         ##############################################################
         # 9. when type of patent is not stated, simply assume 'patent'
         ##############################################################
-          
+
         if ( ( $be->{entrytype} eq 'patent' )  &&  ( ! $be->{type} ) ) {
             $be->{type} = 'patent'
         } ;
