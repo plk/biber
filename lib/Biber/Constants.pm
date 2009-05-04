@@ -40,13 +40,40 @@ Readonly::Hash our %BLX_CONFIG_DEFAULT => (
   uniquename  => 0,
   useprefix   => 0,
   terseinits  => 0,
-  sorting     => 1, # corresponds to 'nty'
   sortlos     => 1,
   maxnames    => 3,
   minnames    => 1,
   maxline     => 79,
-	alphaothers => "+",
+	alphaothers => '+',
   labelname   => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator' ],
+  sorting => [ # corresponds to the default "nyt" scheme
+              [
+               'presort',
+               'mm',
+               'sortkey',
+               'FINAL'
+              ],
+              [
+               'sortname',
+               'author',
+               'editor',
+               'translator',
+               'sorttitle',
+               'title'
+              ],
+              [
+               'sorttitle',
+               'title'
+              ],
+              [
+               'sortyear',
+               'year'
+              ],
+              [
+               'volume',
+               '0000'
+              ]
+             ],
 );
 
 ## Biber CONFIGURATION DEFAULTS
