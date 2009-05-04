@@ -20,8 +20,8 @@ biber requires the following CPAN modules:
     
     For parsing bibtex files, you need either 
     * Text::BibTeX (strongly recommended). 
-      (NB: For Windows, ppm packages for Perl 5.8.* and 5.10.* are available on the biber 
-      download page). >>> TODO <<<
+      (NB: For Windows, ppm packages for Perl 5.8.* and 5.10.* are available on
+      the biber download page).
     or
     * Parse::RecDescent 
       and
