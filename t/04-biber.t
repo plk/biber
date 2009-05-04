@@ -59,6 +59,7 @@ my $markey = q|\entry{markey}{online}{}
   \field{labelalpha}{Mar05}
   \field{sortinit}{M}
   \count{uniquename}{0}
+  \true{singletitle}
   \field{title}{Tame the BeaST}
   \field{subtitle}{The B to X of BibTeX}
   \field{annotation}{An \texttt{online} entry for a tutorial. Note the format of the \texttt{date} field (\texttt{yyyy-mm-dd}) in the database file. It is also possible to use the fields \texttt{day}\slash \texttt{month}\slash \texttt{year} instead.}

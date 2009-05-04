@@ -16,6 +16,7 @@ in decreasing order of priority:
    * add option --inputencoding <latin1> etc (only utf8 supported as of now) / DONE
 >> * Fix problem with newlines in Windows version of Text::BibTeX (PK)
 >> * Remove newlines when querying XML textual nodes with XML::LibXML
+   * Remove {...} within XML elements (e.g. "Foo{ de } Bar")
    ----- version 0.5 ----- FIRST OFFICIAL RELEASE?
    * separate data parsing in individual modules / DONE
    * make biber and dependencies available as a par archive for maximal portability / DONE
