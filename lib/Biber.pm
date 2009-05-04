@@ -65,7 +65,7 @@ sub new {
     my ($class, $opts) = @_ ;
     my $self = bless {}, $class ;
     $self->_initopts() ;
-#    $self->_initblxopts() ;
+    $self->_initblxopts() ;
     if ($opts) {
         my %params = %$opts;
         foreach (keys %params) {
@@ -78,7 +78,7 @@ sub new {
 sub _initblxopts {
     my $self = shift ;
     foreach (keys %BLX_CONFIG_DEFAULT) {
-        $self->{config}{biblatex}{global}{$_} = $BLX_CONFIG_DEFAULT{$_}
+      $self->{config}{biblatex}{global}{$_} = $BLX_CONFIG_DEFAULT{$_}
     }
     return;
 }
@@ -372,7 +372,11 @@ sub parse_ctrlfile {
       }
     }
   }
-  use Data::Dumper; print Dumper($self->{config}{biblatex}); exit 0;
+
+  # BIB SECTIONS
+  foreach my $section (@{$bcfxml->{section}}) {
+    push @{$self->{config}{biblatex}{global}{bibsections}{$section->{number}}}, @{$section->{citekey}};
+  }
   return;
 }
 
