@@ -358,8 +358,21 @@ sub parse_ctrlfile {
         push @{$self->{config}{biblatex}{global}{sorting}}, $sortingitems;
       }
     }
+    else { # Entrytype specific sorting
+      my $entrytype = $sortschemes->{type};
+      foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$sortschemes->{sort}}) {
+        my $sortingitems = [];
+        foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
+          push @{$sortingitems}, $sortitem->{content};
+          if ($sortitem->{final}) { # Found a sorting short-circuit marker
+            push @{$sortingitems}, 'FINAL';
+          }
+        }
+        push @{$self->{config}{biblatex}{$entrytype}{sorting}}, $sortingitems;
+      }
+    }
   }
-#  use Data::Dumper; print Dumper($self->{config}{biblatex}); exit 0;
+  use Data::Dumper; print Dumper($self->{config}{biblatex}); exit 0;
   return;
 }
 
