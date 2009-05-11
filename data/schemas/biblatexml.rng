@@ -378,11 +378,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="eprint">
     <element name="eprint">
-      <text/>
-    </element>
-  </define>
-  <define name="eprinttype">
-    <element name="eprinttype">
+      <attribute name="type"/>
       <text/>
     </element>
   </define>
@@ -1891,97 +1887,6 @@ We now define the biblatexml elements</a:documentation>
       </element>
     </choice>
   </define>
-  <define name="location">
-    <choice>
-      <element name="location">
-        <attribute name="id"/>
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-      </element>
-      <group>
-        <element name="location">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="location">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="location">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="location">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="location">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="location">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="item"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
-  </define>
   <define name="organization">
     <choice>
       <element name="organization">
@@ -2064,6 +1969,97 @@ We now define the biblatexml elements</a:documentation>
           <ref name="attlist.lists"/>
         </optional>
         <ref name="translated"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="item"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="location">
+    <choice>
+      <element name="location">
+        <attribute name="id"/>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
+      <group>
+        <element name="location">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="location">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="location">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="location">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="location">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="location">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
         <choice>
           <text/>
           <oneOrMore>
@@ -2158,7 +2154,7 @@ We now define the biblatexml elements</a:documentation>
         <choice>
           <text/>
           <oneOrMore>
-            <ref name="item"/>
+            <ref name="pubitem"/>
           </oneOrMore>
         </choice>
       </element>
@@ -2167,7 +2163,9 @@ We now define the biblatexml elements</a:documentation>
   <define name="publisher">
     <choice>
       <element name="publisher">
-        <attribute name="id"/>
+        <attribute name="id">
+          <ref name="formattext"/>
+        </attribute>
         <optional>
           <ref name="attlist.lists"/>
         </optional>
@@ -2203,7 +2201,7 @@ We now define the biblatexml elements</a:documentation>
             <optional>
               <ref name="attlist.lists"/>
             </optional>
-            <ref name="translated"/>
+            <ref name="uniform"/>
             <choice>
               <ref name="formattext"/>
               <oneOrMore>
@@ -2231,7 +2229,7 @@ We now define the biblatexml elements</a:documentation>
             <optional>
               <ref name="attlist.lists"/>
             </optional>
-            <ref name="translated"/>
+            <ref name="uniform"/>
             <choice>
               <ref name="formattext"/>
               <oneOrMore>
@@ -2245,7 +2243,7 @@ We now define the biblatexml elements</a:documentation>
         <optional>
           <ref name="attlist.lists"/>
         </optional>
-        <ref name="translated"/>
+        <ref name="uniform"/>
         <choice>
           <ref name="formattext"/>
           <oneOrMore>
@@ -2258,7 +2256,9 @@ We now define the biblatexml elements</a:documentation>
   <define name="origpublisher">
     <choice>
       <element name="origpublisher">
-        <attribute name="id"/>
+        <attribute name="id">
+          <ref name="formattext"/>
+        </attribute>
         <optional>
           <ref name="attlist.lists"/>
         </optional>
@@ -2294,7 +2294,7 @@ We now define the biblatexml elements</a:documentation>
             <optional>
               <ref name="attlist.lists"/>
             </optional>
-            <ref name="translated"/>
+            <ref name="uniform"/>
             <choice>
               <ref name="formattext"/>
               <oneOrMore>
@@ -2322,7 +2322,7 @@ We now define the biblatexml elements</a:documentation>
             <optional>
               <ref name="attlist.lists"/>
             </optional>
-            <ref name="translated"/>
+            <ref name="uniform"/>
             <choice>
               <ref name="formattext"/>
               <oneOrMore>
@@ -2336,11 +2336,231 @@ We now define the biblatexml elements</a:documentation>
         <optional>
           <ref name="attlist.lists"/>
         </optional>
-        <ref name="translated"/>
+        <ref name="uniform"/>
         <choice>
           <ref name="formattext"/>
           <oneOrMore>
             <ref name="item"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="publisherinfo">
+    <choice>
+      <element name="publisher">
+        <attribute name="id">
+          <ref name="formattext"/>
+        </attribute>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
+      <group>
+        <element name="publisher">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <group>
+              <ref name="publishername"/>
+              <ref name="publocation"/>
+            </group>
+            <oneOrMore>
+              <ref name="pubitem"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="publisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <group>
+                <ref name="publishername"/>
+                <ref name="publocation"/>
+              </group>
+              <oneOrMore>
+                <ref name="pubitem"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="publisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <group>
+                <ref name="publishername"/>
+                <ref name="publocation"/>
+              </group>
+              <oneOrMore>
+                <ref name="pubitem"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="publisher">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <group>
+              <ref name="publishername"/>
+              <ref name="publocation"/>
+            </group>
+            <oneOrMore>
+              <ref name="pubitem"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="publisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <group>
+                <ref name="publishername"/>
+                <ref name="publocation"/>
+              </group>
+              <oneOrMore>
+                <ref name="pubitem"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="publisher">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="translated"/>
+        <choice>
+          <group>
+            <ref name="publishername"/>
+            <ref name="publocation"/>
+          </group>
+          <oneOrMore>
+            <ref name="pubitem"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="origpublisherinfo">
+    <choice>
+      <element name="origpublisher">
+        <attribute name="id"/>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
+      <group>
+        <element name="origpublisher">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <group>
+              <ref name="publishername"/>
+              <ref name="publocation"/>
+            </group>
+            <oneOrMore>
+              <ref name="pubitem"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="origpublisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <group>
+                <ref name="publishername"/>
+                <ref name="publocation"/>
+              </group>
+              <oneOrMore>
+                <ref name="pubitem"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="origpublisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <group>
+                <ref name="publishername"/>
+                <ref name="publocation"/>
+              </group>
+              <oneOrMore>
+                <ref name="pubitem"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="origpublisher">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <group>
+              <ref name="publishername"/>
+              <ref name="publocation"/>
+            </group>
+            <oneOrMore>
+              <ref name="pubitem"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="origpublisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <group>
+                <ref name="publishername"/>
+                <ref name="publocation"/>
+              </group>
+              <oneOrMore>
+                <ref name="pubitem"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="origpublisher">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="translated"/>
+        <choice>
+          <group>
+            <ref name="publishername"/>
+            <ref name="publocation"/>
+          </group>
+          <oneOrMore>
+            <ref name="pubitem"/>
           </oneOrMore>
         </choice>
       </element>
@@ -2415,6 +2635,58 @@ We now define the biblatexml elements</a:documentation>
     <element name="item">
       <ref name="formattext"/>
     </element>
+  </define>
+  <define name="pubitem">
+    <element name="item">
+      <ref name="publishername"/>
+      <ref name="location"/>
+    </element>
+  </define>
+  <define name="publishername">
+    <element name="name">
+      <optional>
+        <attribute name="id"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="publocation">
+    <element name="location">
+      <optional>
+        <attribute name="id"/>
+      </optional>
+      <text/>
+    </element>
+  </define>
+  <define name="publisherinfos">
+    <interleave>
+      <optional>
+        <choice>
+          <ref name="publisherinfo"/>
+          <interleave>
+            <optional>
+              <ref name="location"/>
+            </optional>
+            <optional>
+              <ref name="publisher"/>
+            </optional>
+          </interleave>
+        </choice>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="origpublisherinfo"/>
+          <interleave>
+            <optional>
+              <ref name="origlocation"/>
+            </optional>
+            <optional>
+              <ref name="origpublisher"/>
+            </optional>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
   </define>
   <!--
     KEY LISTS
@@ -4341,26 +4613,12 @@ works</a:documentation>
       <optional>
         <ref name="number"/>
       </optional>
+      <ref name="publisherinfos"/>
       <optional>
-        <ref name="location"/>
-      </optional>
-      <optional>
-        <!-- added -->
-        <ref name="publisher"/>
-      </optional>
-      <optional>
-        <!-- added -->
-        <ref name="origpublisher"/>
-      </optional>
-      <optional>
-        <!-- added -->
         <ref name="eid"/>
       </optional>
       <optional>
         <ref name="eprint"/>
-      </optional>
-      <optional>
-        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="version"/>
@@ -4599,18 +4857,7 @@ works</a:documentation>
       <optional>
         <ref name="note"/>
       </optional>
-      <optional>
-        <ref name="publisher"/>
-      </optional>
-      <optional>
-        <ref name="origpublisher"/>
-      </optional>
-      <optional>
-        <ref name="location"/>
-      </optional>
-      <optional>
-        <ref name="origlocation"/>
-      </optional>
+      <ref name="publisherinfos"/>
       <optional>
         <ref name="isbn"/>
       </optional>
@@ -4644,9 +4891,6 @@ works</a:documentation>
       </optional>
       <optional>
         <ref name="eprint"/>
-      </optional>
-      <optional>
-        <ref name="eprinttype"/>
       </optional>
       <optional>
         <choice>
@@ -4702,17 +4946,8 @@ works</a:documentation>
         <!-- howpublished? & -> attribute -->
         <ref name="note"/>
       </optional>
+      <ref name="publisherinfos"/>
       <optional>
-        <ref name="location"/>
-      </optional>
-      <optional>
-        <ref name="origlocation"/>
-      </optional>
-      <optional>
-        <ref name="publisher"/>
-      </optional>
-      <optional>
-        <!-- added -->
         <ref name="chapter"/>
       </optional>
       <optional>
@@ -4729,9 +4964,6 @@ works</a:documentation>
       </optional>
       <optional>
         <ref name="eprint"/>
-      </optional>
-      <optional>
-        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -4862,18 +5094,7 @@ works</a:documentation>
       <optional>
         <ref name="note"/>
       </optional>
-      <optional>
-        <ref name="publisher"/>
-      </optional>
-      <optional>
-        <ref name="origpublisher"/>
-      </optional>
-      <optional>
-        <ref name="location"/>
-      </optional>
-      <optional>
-        <ref name="origlocation"/>
-      </optional>
+      <ref name="publisherinfos"/>
       <optional>
         <ref name="isbn"/>
       </optional>
@@ -4904,9 +5125,6 @@ works</a:documentation>
       </optional>
       <optional>
         <ref name="eprint"/>
-      </optional>
-      <optional>
-        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -5019,18 +5237,7 @@ works</a:documentation>
           <optional>
             <ref name="number"/>
           </optional>
-          <optional>
-            <ref name="publisher"/>
-          </optional>
-          <optional>
-            <ref name="origpublisher"/>
-          </optional>
-          <optional>
-            <ref name="location"/>
-          </optional>
-          <optional>
-            <ref name="origlocation"/>
-          </optional>
+          <ref name="publisherinfos"/>
           <optional>
             <ref name="issn"/>
           </optional>
@@ -5078,9 +5285,6 @@ works</a:documentation>
       </optional>
       <optional>
         <ref name="eprint"/>
-      </optional>
-      <optional>
-        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -5187,23 +5391,12 @@ works</a:documentation>
           <optional>
             <ref name="booktitleaddon"/>
           </optional>
-          <optional>
-            <ref name="publisher"/>
-          </optional>
-          <optional>
-            <ref name="origpublisher"/>
-          </optional>
+          <ref name="publisherinfos"/>
           <optional>
             <ref name="volumes"/>
           </optional>
           <optional>
             <ref name="number"/>
-          </optional>
-          <optional>
-            <ref name="location"/>
-          </optional>
-          <optional>
-            <ref name="origlocation"/>
           </optional>
           <optional>
             <ref name="edition"/>
@@ -5252,9 +5445,6 @@ works</a:documentation>
       </optional>
       <optional>
         <ref name="eprint"/>
-      </optional>
-      <optional>
-        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -5344,18 +5534,7 @@ works</a:documentation>
           <optional>
             <ref name="organization"/>
           </optional>
-          <optional>
-            <ref name="publisher"/>
-          </optional>
-          <optional>
-            <ref name="origpublisher"/>
-          </optional>
-          <optional>
-            <ref name="location"/>
-          </optional>
-          <optional>
-            <ref name="origlocation"/>
-          </optional>
+          <ref name="publisherinfos"/>
           <optional>
             <ref name="issn"/>
           </optional>
@@ -5397,9 +5576,6 @@ works</a:documentation>
       </optional>
       <optional>
         <ref name="eprint"/>
-      </optional>
-      <optional>
-        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -5470,18 +5646,7 @@ works</a:documentation>
       <optional>
         <ref name="organization"/>
       </optional>
-      <optional>
-        <ref name="publisher"/>
-      </optional>
-      <optional>
-        <ref name="origpublisher"/>
-      </optional>
-      <optional>
-        <ref name="location"/>
-      </optional>
-      <optional>
-        <ref name="origlocation"/>
-      </optional>
+      <ref name="publisherinfos"/>
       <optional>
         <ref name="isbn"/>
       </optional>
@@ -5508,9 +5673,6 @@ works</a:documentation>
       </optional>
       <optional>
         <ref name="eprint"/>
-      </optional>
-      <optional>
-        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -5587,18 +5749,7 @@ works</a:documentation>
       <optional>
         <ref name="organization"/>
       </optional>
-      <optional>
-        <ref name="publisher"/>
-      </optional>
-      <optional>
-        <ref name="origpublisher"/>
-      </optional>
-      <optional>
-        <ref name="location"/>
-      </optional>
-      <optional>
-        <ref name="origlocation"/>
-      </optional>
+      <ref name="publisherinfos"/>
       <optional>
         <ref name="addendum"/>
       </optional>
@@ -5607,9 +5758,6 @@ works</a:documentation>
       </optional>
       <optional>
         <ref name="eprint"/>
-      </optional>
-      <optional>
-        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -5677,9 +5825,6 @@ works</a:documentation>
         <ref name="url"/>
         <ref name="eprint"/>
       </choice>
-      <optional>
-        <ref name="eprinttype"/>
-      </optional>
       <optional>
         <ref name="subtitle"/>
       </optional>
@@ -5919,9 +6064,6 @@ works</a:documentation>
         <ref name="eprint"/>
       </optional>
       <optional>
-        <ref name="eprinttype"/>
-      </optional>
-      <optional>
         <!--  url? & -->
         <choice>
           <ref name="urldate"/>
@@ -6034,18 +6176,7 @@ works</a:documentation>
       <optional>
         <ref name="organization"/>
       </optional>
-      <optional>
-        <ref name="publisher"/>
-      </optional>
-      <optional>
-        <ref name="origpublisher"/>
-      </optional>
-      <optional>
-        <ref name="location"/>
-      </optional>
-      <optional>
-        <ref name="origlocation"/>
-      </optional>
+      <ref name="publisherinfos"/>
       <optional>
         <ref name="isbn"/>
       </optional>
@@ -6076,9 +6207,6 @@ works</a:documentation>
       </optional>
       <optional>
         <ref name="eprint"/>
-      </optional>
-      <optional>
-        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -6139,17 +6267,8 @@ works</a:documentation>
       <optional>
         <ref name="note"/>
       </optional>
+      <ref name="publisherinfos"/>
       <optional>
-        <ref name="location"/>
-      </optional>
-      <optional>
-        <ref name="origlocation"/>
-      </optional>
-      <optional>
-        <ref name="publisher"/>
-      </optional>
-      <optional>
-        <!-- added -->
         <ref name="isrn"/>
       </optional>
       <optional>
@@ -6169,9 +6288,6 @@ works</a:documentation>
       </optional>
       <optional>
         <ref name="eprint"/>
-      </optional>
-      <optional>
-        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>
@@ -6270,9 +6386,6 @@ works</a:documentation>
       </optional>
       <optional>
         <ref name="eprint"/>
-      </optional>
-      <optional>
-        <ref name="eprinttype"/>
       </optional>
       <optional>
         <ref name="url"/>

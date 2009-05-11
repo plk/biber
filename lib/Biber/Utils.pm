@@ -124,7 +124,7 @@ sub parsename {
     my ($namestr, $opts) = @_ ;
     $namestr =~ s/\\,\s*|{\\,\s*}/~/g; # necessary to get rid of LaTeX small spaces \,
     # DEBUG carp "Parsing namestring $namestr\n" if $opts->{biberdebug} ;
-    my $usepre = $opts->{useprefix} || $CONFIG_DEFAULT{useprefix} ;
+    my $usepre = $opts->{useprefix} ;
 
     my $lastname ;
     my $firstname ;
