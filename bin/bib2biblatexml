@@ -24,6 +24,7 @@ GetOptions(
     'unicodebib|u!',
     'useprd|p!',
     'debug|D!',
+    'stdout|c!',
 #    'validate|V!', 
 #    'schema|s=s', 
 ) ;
@@ -57,16 +58,23 @@ print version() ;
 $biber->parse_bibtex($filename) ;
 
 my %bibentries = $biber->bib ;
+my $outfile;
+my $output;
 
-my $outfile = $filename ; 
-$outfile =~ s/\.bib$/.xml/ ;
+if ( $opts->{stdout} ) {
+    $output = IO::Handle->new_from_fd('STDOUT', '>') ;
+} else {
+    $outfile = $filename ; 
+    $outfile =~ s/\.bib$/.xml/ ;
 
-if ( -f $outfile ) {
-	move($outfile, "$outfile.bak") or croak "Can't move existing $outfile to $outfile.bak!: $!" ;
-	warn "Existing file $outfile backuped as $outfile.bak\n" ;
-} ;
+    if ( -f $outfile ) {
+        move($outfile, "$outfile.bak") or croak "Can't move existing $outfile to $outfile.bak!: $!" ;
+        warn "Existing file $outfile backuped as $outfile.bak\n" ;
+    } ;
 
-my $output = IO::File->new($outfile, '>:utf8') ;
+    $output = IO::File->new($outfile, '>:utf8') ;
+
+};
 
 binmode($output, ':utf8') ;
 
@@ -248,10 +256,12 @@ for my $citekey ( sort keys %bibentries ) {
 
 $writer->endTag() ; #entries
 
-print "Converted $count entries\n" ;
-print "Output written to $outfile\n\n" ;
+unless ($opts->{stdout}) {
+    print "Converted $count entries\n" ;
+    print "Output written to $outfile\n\n" ;
+    close $output ;
+}
 
-close $output ;
 
 #if ( $opts->{validate} ) {
 #
