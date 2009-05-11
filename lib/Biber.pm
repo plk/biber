@@ -84,15 +84,15 @@ sub new {
 
 sub config {
     my ($self, $opt) = @_ ;
-    return $self->{config}->{$opt} ;
+    return $self->{config}->{$opt} 
 }
 
 sub _initopts {
     my $self = shift ;
     foreach (keys %CONFIG_DEFAULT) {
         $self->{config}->{$_} = $CONFIG_DEFAULT{$_}
-    }
-    return ;
+    } ;
+    return
 }
 
 =head2 citekeys
