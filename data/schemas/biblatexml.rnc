@@ -82,12 +82,12 @@ BibLaTeXML.additional.fields =
 #########################################################
 ## We now define the biblatexml elements
 
-## many textual element can contain emphasis or superscript elements 
-formattext = (nosort?, emphasis?, superscript?, subscript?, text?)*
+formattext = (emphasis?, superscript?, subscript?, text?)*
+formattextB = (nosort?, emphasis?, superscript?, subscript?, text?)*
 emphasis = element emphasis { text }
 superscript = element superscript { text }
 subscript = element subscript { text }
-nosort = element nosort { text }
+nosort = element nosort { text } ##FIXME could it be formattextB ? ie. <bib:nosort><bib:superscript>foo</bib:superscript><bib:nosort> ??
 
 romanized = attribute mode { "romanized" }    
 translated = attribute xml:lang {xsd:language}?, attribute mode { "translated" }
@@ -102,12 +102,12 @@ booksubtitle = ( element booksubtitle { formattext },
                 ( element booksubtitle { romanized, formattext },
                   element booksubtitle { translated, formattext }* ) |
                 ( element booksubtitle { translated, formattext }+ )
-booktitle = ( element booktitle { formattext },
-             element booktitle { romanized, formattext }?,
-             element booktitle { translated, formattext }* ) |
-             ( element booktitle { romanized, formattext },
-               element booktitle { translated, formattext }* ) |
-             ( element booktitle { translated, formattext }+ )
+booktitle = ( element booktitle { formattextB },
+             element booktitle { romanized, formattextB }?,
+             element booktitle { translated, formattextB }* ) |
+             ( element booktitle { romanized, formattextB },
+               element booktitle { translated, formattextB }* ) |
+             ( element booktitle { translated, formattextB }+ )
 booktitleaddon = ( element booktitleaddon { formattext },
                   element booktitleaddon { romanized, formattext }?,
                   element booktitleaddon { translated, formattext }* ) |
@@ -117,8 +117,7 @@ booktitleaddon = ( element booktitleaddon { formattext },
 chapter = element chapter { text }
 doi = element doi { text }
 eid = element eid { text }
-eprint = element eprint { text }
-eprinttype = element eprinttype { text }
+eprint = element eprint { attribute type {text}, text }
 file = element file { text }
 pdf = element pdf { text }
 id = element id { text }
@@ -135,12 +134,12 @@ issue = ( element issue { formattext },
          ( element issue { romanized, formattext },
            element issue { translated, formattext }* ) |
          ( element issue { translated, formattext }+ )
-issuetitle = ( element issuetitle { formattext },
-              element issuetitle { romanized, formattext }?,
-              element issuetitle { translated, formattext }* ) |
-              ( element issuetitle { romanized, formattext },
-                element issuetitle { translated, formattext }* ) |
-              ( element issuetitle { translated, formattext }+ )
+issuetitle = ( element issuetitle { formattextB },
+              element issuetitle { romanized, formattextB }?,
+              element issuetitle { translated, formattextB }* ) |
+              ( element issuetitle { romanized, formattextB },
+                element issuetitle { translated, formattextB }* ) |
+              ( element issuetitle { translated, formattextB }+ )
 issuetitleaddon = ( element issuetitleaddon { formattext },
                    element issuetitleaddon { romanized, formattext }?,
                    element issuetitleaddon { translated, formattext }* ) |
@@ -155,18 +154,18 @@ issuesubtitle = ( element issuesubtitle { formattext },
                  ( element issuesubtitle { translated, formattext }+ )
 iswc = element iswc { text }
 journal = (element journal {attribute id {text}}) | 
-          ( element journal { formattext },
-            element journal { romanized, formattext }?,
-            element journal { translated, formattext }* ) |
-          ( element journal { romanized, formattext },
-             element journal { translated, formattext }* ) |
-          ( element journal { translated, formattext }+ )
-journaltitle = ( element journaltitle { formattext },
-                element journaltitle { romanized, formattext }?,
-                element journaltitle { translated, formattext }* ) |
-                ( element journaltitle { romanized, formattext },
-                  element journaltitle { translated, formattext }* ) |
-                ( element journaltitle { translated, formattext }+ )
+          ( element journal { formattextB },
+            element journal { romanized, formattextB }?,
+            element journal { translated, formattextB }* ) |
+          ( element journal { romanized, formattextB },
+             element journal { translated, formattextB }* ) |
+          ( element journal { translated, formattextB }+ )
+journaltitle = ( element journaltitle { formattextB },
+                element journaltitle { romanized, formattextB }?,
+                element journaltitle { translated, formattextB }* ) |
+                ( element journaltitle { romanized, formattextB },
+                  element journaltitle { translated, formattextB }* ) |
+                ( element journaltitle { translated, formattextB }+ )
 journalsubtitle = ( element journalsubtitle { formattext },
                    element journalsubtitle { romanized, formattext }?,
                    element journalsubtitle { translated, formattext }* ) |
@@ -188,12 +187,12 @@ mainsubtitle = ( element mainsubtitle { formattext },
                 ( element mainsubtitle { romanized, formattext },
                   element mainsubtitle { translated, formattext }* ) |
                 ( element mainsubtitle { translated, formattext }+ )
-maintitle = ( element maintitle { formattext },
-             element maintitle { romanized, formattext }?,
-             element maintitle { translated, formattext }* ) |
-             ( element maintitle { romanized, formattext },
-               element maintitle { translated, formattext }* ) |
-             ( element maintitle { translated, formattext }+ )
+maintitle = ( element maintitle { formattextB },
+             element maintitle { romanized, formattextB }?,
+             element maintitle { translated, formattextB }* ) |
+             ( element maintitle { romanized, formattextB },
+               element maintitle { translated, formattextB }* ) |
+             ( element maintitle { translated, formattextB }+ )
 maintitleaddon = ( element maintitleaddon { formattext },
                   element maintitleaddon { romanized, formattext }?,
                   element maintitleaddon { translated, formattext }* ) |
@@ -238,24 +237,24 @@ shorthandintro = ( element shorthandintro { text },
              ( element shorthandintro { romanized, text },
              element shorthandintro { translated, text }? ) |
              ( element shorthandintro { translated, text } )
-shorttitle = ( element shorttitle { formattext },
-             element shorttitle { romanized, formattext }?,
-             element shorttitle { translated, formattext }* ) | 
-             ( element shorttitle { romanized, formattext },
-             element shorttitle { translated, formattext }* ) |
-             ( element shorttitle { translated, formattext }+ )
+shorttitle = ( element shorttitle { formattextB },
+             element shorttitle { romanized, formattextB }?,
+             element shorttitle { translated, formattextB }* ) | 
+             ( element shorttitle { romanized, formattextB },
+             element shorttitle { translated, formattextB }* ) |
+             ( element shorttitle { translated, formattextB }+ )
 subtitle = ( element subtitle { formattext },
             element subtitle { romanized, formattext }?,
             element subtitle { translated, formattext }* ) |
             ( element subtitle { romanized, formattext },
               element subtitle { translated, formattext }* ) |
             ( element subtitle { translated, formattext }+ )
-title = ( element title { formattext },
-         element title { romanized, formattext }?,
-         element title { translated, formattext }* ) |
-         ( element title { romanized, formattext },
-           element title { translated, formattext }* ) |
-         ( element title { translated, formattext }+ )
+title = ( element title { formattextB },
+         element title { romanized, formattextB }?,
+         element title { translated, formattextB }* ) |
+         ( element title { romanized, formattextB },
+           element title { translated, formattextB }* ) |
+         ( element title { translated, formattextB }+ )
 titleaddon = ( element titleaddon { formattext },
               element titleaddon { romanized, formattext }?,
               element titleaddon { translated, formattext }* ) |
@@ -297,12 +296,12 @@ presort = element presort { text }
 sortkey = element sortkey { text }
 key = element key { text }
 #sorttitle = element sorttitle { text }
-sorttitle = ( element sorttitle { formattext },
-         element sorttitle { romanized, formattext }?,
-         element sorttitle { translated, formattext }* ) |
-         ( element sorttitle { romanized, formattext },
-           element sorttitle { translated, formattext }* ) |
-         ( element sorttitle { translated, formattext }+ )
+sorttitle = ( element sorttitle { text },
+         element sorttitle { romanized, text }?,
+         element sorttitle { translated, text }* ) |
+         ( element sorttitle { romanized, text },
+           element sorttitle { translated, text }* ) |
+         ( element sorttitle { translated, text }+ )
 sortyear = element sortyear { text }
 useprefix = element useprefix { text }
 xref = element xref { text }
@@ -355,13 +354,6 @@ school = ( element school { attribute id {text}, attlist.lists? }) |
           ( element school { attlist.lists?, romanized, (text | item+) },
             element school { attlist.lists?, translated, (text | item+) }? ) |
           ( element school { attlist.lists?, translated, (text | item+) } )
-location = ( element location { attribute id {text}, attlist.lists? }) |
-           ( element location { attlist.lists?, (text | item+) },
-            element location { attlist.lists?, romanized, (text | item+) }?,
-            element location { attlist.lists?, uniform, (text | item+) }? ) |
-            ( element location { attlist.lists?, romanized, (text | item+) },
-              element location { attlist.lists?, uniform, (text | item+) }? ) |
-            ( element location { attlist.lists?, uniform, (text | item+) } )
 organization = ( element organization { attribute id {text}, attlist.lists? }) |
                ( element organization { attlist.lists?, (text | item+) },
                 element organization { attlist.lists?, romanized, (text | item+) }?,
@@ -369,33 +361,64 @@ organization = ( element organization { attribute id {text}, attlist.lists? }) |
                 ( element organization { attlist.lists?, romanized, (text | item+) },
                   element organization { attlist.lists?, translated, (text | item+) }? ) |
                 ( element organization { attlist.lists?, translated, (text | item+) } )
+location = ( element location { attribute id {text}, attlist.lists? }) |
+           ( element location { attlist.lists?, (text | item+) },
+            element location { attlist.lists?, romanized, (text | item+) }?,
+            element location { attlist.lists?, uniform, (text | item+) }? ) |
+            ( element location { attlist.lists?, romanized, (text | item+) },
+              element location { attlist.lists?, uniform, (text | item+) }? ) |
+            ( element location { attlist.lists?, uniform, (text | item+) } )
 origlocation = ( element origlocation { attribute id {text}, attlist.lists? }) |
                ( element origlocation { attlist.lists?, (text | item+) },
                 element origlocation { attlist.lists?, romanized, (text | item+) }?,
                 element origlocation { attlist.lists?, uniform, (text | item+) }? ) |
                 ( element origlocation { attlist.lists?, romanized, (text | item+) },
                   element origlocation { attlist.lists?, uniform, (text | item+) }? ) |
-                ( element origlocation { attlist.lists?, uniform, (text | item+) } )
-publisher = ( element publisher { attribute id {text}, attlist.lists? }) |
-            ( element publisher { attlist.lists?, (formattext | item+) },
-             element publisher { attlist.lists?, romanized, (formattext | item+) }?,
-             element publisher { attlist.lists?, translated, (formattext | item+) }? ) |
-             ( element publisher { attlist.lists?, romanized, (formattext | item+) },
-               element publisher { attlist.lists?, translated, (formattext | item+) }? ) |
-             ( element publisher { attlist.lists?, translated, (formattext | item+) } )
-origpublisher = ( element origpublisher { attribute id {text}, attlist.lists? }) |
-                ( element origpublisher { attlist.lists?, (formattext | item+) },
-                  element origpublisher { attlist.lists?, romanized, (formattext | item+) }?,
-                  element origpublisher { attlist.lists?, translated, (formattext | item+) }? ) |
-                 ( element origpublisher { attlist.lists?, romanized, (formattext | item+) },
-                   element origpublisher { attlist.lists?, translated, (formattext | item+) }? ) |
-                 ( element origpublisher { attlist.lists?, translated, (formattext | item+) } )
+                ( element origlocation { attlist.lists?, uniform, (text | pubitem+) } )
+publisher = ( element publisher { attribute id {formattext}, attlist.lists? }) |
+           ( element publisher { attlist.lists?, (formattext | item+) },
+            element publisher { attlist.lists?, romanized, (formattext | item+) }?,
+            element publisher { attlist.lists?, uniform, (formattext | item+) }? ) |
+            ( element publisher { attlist.lists?, romanized, (formattext | item+) },
+              element publisher { attlist.lists?, uniform, (formattext | item+) }? ) |
+            ( element publisher { attlist.lists?, uniform, (formattext | item+) } )
+origpublisher = ( element origpublisher { attribute id {formattext}, attlist.lists? }) |
+           ( element origpublisher { attlist.lists?, (formattext | item+) },
+            element origpublisher { attlist.lists?, romanized, (formattext | item+) }?,
+            element origpublisher { attlist.lists?, uniform, (formattext | item+) }? ) |
+            ( element origpublisher { attlist.lists?, romanized, (formattext | item+) },
+              element origpublisher { attlist.lists?, uniform, (formattext | item+) }? ) |
+            ( element origpublisher { attlist.lists?, uniform, (formattext | item+) } )
+publisherinfo = ( element publisher { attribute id {formattext}, attlist.lists? }) |
+            ( element publisher { attlist.lists?, ((publishername, publocation) | pubitem+) },
+             element publisher { attlist.lists?, romanized, ((publishername, publocation) | pubitem+) }?,
+             element publisher { attlist.lists?, translated, ((publishername, publocation)| pubitem+) }? ) |
+             ( element publisher { attlist.lists?, romanized, ((publishername, publocation) | pubitem+) },
+               element publisher { attlist.lists?, translated, ((publishername, publocation) | pubitem+) }? ) |
+             ( element publisher { attlist.lists?, translated, ((publishername, publocation) | pubitem+) } )
+origpublisherinfo = ( element origpublisher { attribute id {text}, attlist.lists? }) |
+                ( element origpublisher { attlist.lists?, ((publishername, publocation) | pubitem+) },
+                  element origpublisher { attlist.lists?, romanized, ((publishername, publocation) | pubitem+) }?,
+                  element origpublisher { attlist.lists?, translated, ((publishername, publocation) | pubitem+) }? ) |
+                 ( element origpublisher { attlist.lists?, romanized, ((publishername, publocation) | pubitem+) },
+                   element origpublisher { attlist.lists?, translated, ((publishername, publocation) | pubitem+) }? ) |
+                 ( element origpublisher { attlist.lists?, translated, ((publishername, publocation) | pubitem+) } )
 lista = element lista { attlist.lists?, (text | item+) }
 listb = element listb { attlist.lists?, (text | item+) }
 listc = element listc { attlist.lists?, (text | item+) }
 liste = element liste { attlist.lists?, (text | item+) }
 listf = element listf { attlist.lists?, (text | item+) }
 item = element item { formattext }
+pubitem = element item { publishername, location }
+publishername = element name { attribute id {text}?, formattext }
+publocation = element location { attribute id {text}?, text } 
+
+publisherinfos = (( publisherinfo | 
+    (location? & publisher?) 
+  )? & 
+  ( origpublisherinfo | 
+    (origlocation? & origpublisher?) 
+  )?)
 
 # KEY LISTS
 # TODO add attribute type = babel, xml, ISO-XXX etc 
@@ -582,12 +605,9 @@ BibLaTeXML.article.standard.fields =
   series? &
   volume? &
   number? &
-  location? & # added
-  publisher? & #added
-  origpublisher? & #added
+  publisherinfos & 
   eid? &
   eprint? &
-  eprinttype? &
   version? &
   pages? &
   note? &
@@ -651,10 +671,7 @@ BibLaTeXML.book.standard.fields =
   series? &
   number? &
   note? &
-  publisher? &
-  origpublisher? &
-  location? &
-  origlocation? &
+  publisherinfos &
   isbn? &
   oclc ? &
   lccn ? &
@@ -666,7 +683,6 @@ BibLaTeXML.book.standard.fields =
   doi? &
   url? &
   eprint? &
-  eprinttype? &
   (urldate | (urlday & urlmonth & urlyear))?
   
 BibLaTeXML.book.fields =
@@ -687,16 +703,13 @@ BibLaTeXML.booklet.standard.fields =
   titleaddon? &
   #howpublished? & -> attribute
   note? &
-  location? &
-  origlocation? &
-  publisher? & #added
+  publisherinfos &
   chapter? &
   pages? &
   pagetotal? &
   addendum? &
   doi? &
   eprint? &
-  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.booklet.fields =
@@ -736,10 +749,7 @@ BibLaTeXML.collection.standard.fields =
   series? &
   number? &
   note? &
-  publisher? &
-  origpublisher? &
-  location? &
-  origlocation? &
+  publisherinfos &
   isbn? &
   oclc ? &
   lccn ? &
@@ -750,7 +760,6 @@ BibLaTeXML.collection.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.collection.fields =
@@ -788,10 +797,7 @@ BibLaTeXML.inbook.standard.fields =
   volumes? &
   series? &
   number? &
-  publisher? &
-  origpublisher? &
-  location? &
-  origlocation? &
+  publisherinfos &
   issn? &  #added
   isbn? &
   oclc ? &
@@ -806,7 +812,6 @@ BibLaTeXML.inbook.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.inbook.fields =
@@ -841,12 +846,9 @@ BibLaTeXML.incollection.standard.fields =
   maintitleaddon? &
   booksubtitle? &
   booktitleaddon? &
-  publisher? &
-  origpublisher? &
+  publisherinfos &
   volumes? &
   number? &
-  location? &
-  origlocation? &
   edition? &
   series? &
   issn? &  #added  
@@ -861,7 +863,6 @@ BibLaTeXML.incollection.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.incollection.fields =
@@ -892,10 +893,7 @@ BibLaTeXML.inproceedings.standard.fields =
   series? &
   number? &
   organization? &
-  publisher? &
-  origpublisher? &
-  location? &
-  origlocation? &
+  publisherinfos &
   issn? &  #added  
   isbn? &
   oclc ? &
@@ -908,7 +906,6 @@ BibLaTeXML.inproceedings.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 
@@ -932,10 +929,7 @@ BibLaTeXML.manual.standard.fields =
   number? &
   note? &
   organization? &
-  publisher? &
-  origpublisher? &
-  location? &
-  origlocation? &
+  publisherinfos &
   isbn? &
   oclc ? &
   lccn ? &
@@ -945,7 +939,6 @@ BibLaTeXML.manual.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.manual.fields =
@@ -966,14 +959,10 @@ BibLaTeXML.misc.standard.fields =
   version? &
   note? &
   organization? &
-  publisher? &
-  origpublisher? &
-  location? &
-  origlocation? &
+  publisherinfos &
   addendum? &
   doi? &
   eprint? &
-  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.misc.fields =
@@ -989,7 +978,6 @@ BibLaTeXML.online.standard.fields =
   title &
   ((day? & month? & year)|date) &
   (url|eprint) & 
-  eprinttype? &
   subtitle? &
   titleaddon? &
   version? &
@@ -1074,7 +1062,6 @@ BibLaTeXML.periodical.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  eprinttype? &
 #  url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.periodical.fields =
@@ -1107,10 +1094,7 @@ BibLaTeXML.proceedings.standard.fields =
   number? &
   note? &
   organization? &
-  publisher? &
-  origpublisher? &
-  location? &
-  origlocation? &
+  publisherinfos &
   isbn? &
   issn? &  #added
   oclc ? &
@@ -1121,7 +1105,6 @@ BibLaTeXML.proceedings.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.proceedings.fields =
@@ -1143,9 +1126,7 @@ BibLaTeXML.report.standard.fields =
   number? &
   version? &
   note? &
-  location? &
-  origlocation? &  
-  publisher? & #added
+  publisherinfos &
   isrn? &
   chapter? &
   pages? &
@@ -1153,7 +1134,6 @@ BibLaTeXML.report.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.report.fields =
@@ -1184,7 +1164,6 @@ BibLaTeXML.thesis.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  eprinttype? &
   url? &
   (urldate | (urlday & urlmonth & urlyear))?
 BibLaTeXML.thesis.fields =
