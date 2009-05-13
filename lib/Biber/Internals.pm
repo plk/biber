@@ -344,10 +344,13 @@ sub _nodecode {
 	return $no_decode;
 }
 
-
+sub _sort_FINAL {
+  # do something to end sorting
+}
 
 # The keys are defined by BibLaTeX and passed in the control file
 our $dispatch_sorting = {
+												 'FINAL'        =>  \&_sort_FINAL,
 												 'presort'      =>  \&_sort_presort,
 												 'mm'           =>  \&_sort_mm,
 												 '0000'         =>  \&_sort_0000,
