@@ -512,11 +512,12 @@ sub _generatesortstring {
   $BIBER_SORT_FINAL = 0; # reset sorting short-circuit
   foreach my $sortset (@{$sortscheme}) {
     $sortstring .= $self->_sortset($sortset, $citekey);
-    if ($BIBER_SORT_FINAL) {
+    if ($BIBER_SORT_FINAL) { # Last sortfield was specified in attributes as the last
       last;
     }
   }
-  $be->{sortstring} = $sortstring;
+  $sortstring =~ s/0\z//xms; # strip off the last '0' added by _sortset()
+  $be->{sortstring} = lc($sortstring);
   return;
 }
 
