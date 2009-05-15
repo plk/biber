@@ -323,7 +323,7 @@ sub parse_ctrlfile {
   foreach my $bcfopts (@{$bcfxml->{options}}) {
     if ($bcfopts->{type} eq 'global') { # Global BibLaTeX options
       foreach my $bcfopt (@{$bcfopts->{option}}) {
-        if ($bcfopt->{type} eq 'singevalued') {
+        if ($bcfopt->{type} eq 'singlevalued') {
           $self->{config}{biblatex}{global}{$bcfopt->{key}} = $bcfopt->{value};
         } elsif ($bcfopt->{type} eq 'multivalued') {
           $self->{config}{biblatex}{global}{$bcfopt->{key}} =
@@ -334,7 +334,7 @@ sub parse_ctrlfile {
     else { # Entrytype BibLaTeX options
       my $entrytype = $bcfopts->{type};
       foreach my $bcfopt (@{$bcfopts->{option}}) {
-        if ($bcfopt->{type} eq 'singevalued') {
+        if ($bcfopt->{type} eq 'singlevalued') {
           $self->{config}{biblatex}{$entrytype}{$bcfopt->{key}} = $bcfopt->{value};
         } elsif ($bcfopt->{type} eq 'multivalued') {
           $self->{config}{biblatex}{$entrytype}{$bcfopt->{key}} =
@@ -347,29 +347,35 @@ sub parse_ctrlfile {
   # SORTING schemes
   foreach my $sortschemes (@{$bcfxml->{sorting}}) {
     if ($sortschemes->{type} eq 'global') { # Global sorting schemes
+      my $sorting = [];
       foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$sortschemes->{sort}}) {
-        my $sortingitems = [];
+      my $sortingitems = [];
         foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
-          push @{$sortingitems}, $sortitem->{content};
+          my $sortitemattributes = [];
           if ($sortitem->{final}) { # Found a sorting short-circuit marker
-            push @{$sortingitems}, 'FINAL';
+            push @{$sortitemattributes}, 'final';
           }
+          push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
         }
-        push @{$self->{config}{biblatex}{global}{sorting}}, $sortingitems;
+      push @{$sorting}, $sortingitems;
       }
+      $self->{config}{biblatex}{global}{sorting} = $sorting;
     }
     else { # Entrytype specific sorting
       my $entrytype = $sortschemes->{type};
+      my $sorting = [];
       foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$sortschemes->{sort}}) {
-        my $sortingitems = [];
+      my $sortingitems = [];
         foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
-          push @{$sortingitems}, $sortitem->{content};
+          my $sortitemattributes = [];
           if ($sortitem->{final}) { # Found a sorting short-circuit marker
-            push @{$sortingitems}, 'FINAL';
+            push @{$sortitemattributes}, 'final';
           }
+          push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
         }
-        push @{$self->{config}{biblatex}{$entrytype}{sorting}}, $sortingitems;
+      push @{$sorting}, $sortingitems;
       }
+      $self->{config}{biblatex}{$entrytype}{sorting} = $sorting;
     }
   }
 

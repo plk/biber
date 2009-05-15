@@ -6,28 +6,30 @@ use Readonly ;
 use base 'Exporter' ;
 
 our @EXPORT = qw{
-	@NAMEFIELDS
-	@LISTFIELDS
-	@LITERALFIELDS_BASE
-	@RANGEFIELDS
-	@VERBATIMFIELDS
-    @TITLEFIELDS
-	@KEYFIELDS
-    @COMMASEP_FIELDS
-	@ENTRIESTOSPLIT
-	@LITERALFIELDS
-    %SKIPFIELDS
-	%CONFIG_DEFAULT
-	%BLX_CONFIG_DEFAULT
-    $BIBLATEX_VERSION
-    %ALIASES
-    %NUMERICALMONTH
-} ;
+                  @NAMEFIELDS
+                  @LISTFIELDS
+                  @LITERALFIELDS_BASE
+                  @RANGEFIELDS
+                  @VERBATIMFIELDS
+                  @TITLEFIELDS
+                  @KEYFIELDS
+                  @COMMASEP_FIELDS
+                  @ENTRIESTOSPLIT
+                  @LITERALFIELDS
+                  %SKIPFIELDS
+                  %CONFIG_DEFAULT
+                  %BLX_CONFIG_DEFAULT
+                  $BIBLATEX_VERSION
+                  $BIBER_SORT_FINAL
+                  %ALIASES
+                  %NUMERICALMONTH
+              } ;
 
 Readonly::Scalar our $BIBLATEX_VERSION => '0.8' ;
+our $BIBER_SORT_FINAL = 0;
 
 ## BibLaTeX CONFIGURATION DEFAULTS
-Readonly::Hash our %BLX_CONFIG_DEFAULT => (
+our %BLX_CONFIG_DEFAULT = (
   controlversion => $BIBLATEX_VERSION,
   debug       => 0,
   labelalpha  => 0,
@@ -48,36 +50,37 @@ Readonly::Hash our %BLX_CONFIG_DEFAULT => (
   labelname   => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator' ],
   sorting => [ # corresponds to the default "nyt" scheme
               [
-               'presort',
-               'mm',
-               'sortkey',
-               'FINAL'
+               {'presort'    => []},
+               {'mm'         => []},
               ],
               [
-               'sortname',
-               'author',
-               'editor',
-               'translator',
-               'sorttitle',
-               'title'
+               {'sortkey'    => ['final']}
               ],
               [
-               'sorttitle',
-               'title'
+               {'sortname'   => []},
+               {'author'     => []},
+               {'editor'     => []},
+               {'translator' => []},
+               {'sorttitle'  => []},
+               {'title'      => []}
               ],
               [
-               'sortyear',
-               'year'
+               {'sorttitle'  => []},
+               {'title'      => []}
               ],
               [
-               'volume',
-               '0000'
+               {'sortyear'   => []},
+               {'year'       => []}
+              ],
+              [
+               {'volume'     => []},
+               {'0000'       => []}
               ]
              ],
 );
 
 ## Biber CONFIGURATION DEFAULTS
-Readonly::Hash our %CONFIG_DEFAULT => (
+our %CONFIG_DEFAULT = (
 	fastsort => 0,
 	mincrossrefs =>  2,
 	unicodebbl =>  0,
