@@ -47,7 +47,7 @@ our %BLX_CONFIG_DEFAULT = (
   minnames    => 1,
   maxline     => 79,
 	alphaothers => '+',
-  labelname   => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator' ],
+  labelname   => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
   sorting => [ # corresponds to the default "nty" scheme
               [
                {'presort'    => []},
@@ -98,7 +98,7 @@ our %CONFIG_DEFAULT = (
 Readonly::Array our @NAMEFIELDS  =>   qw{
   author editor shortauthor shorteditor commentator 
   translator redactor bookauthor afterword introduction 
-  holder sortname namea nameb namec labelname} ;
+  holder sortname namea nameb namec } ;
 
 Readonly::Array our @LISTFIELDS  =>   qw{
   publisher location address institution school language origlocation
