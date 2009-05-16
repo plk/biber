@@ -178,7 +178,8 @@ sub _getnamestring {
     if (
         $be->{sortname}
         and (     $self->getoption( $citekey, "useauthor" )
-               or $self->getoption( $citekey, "useeditor" )  
+               or $self->getoption( $citekey, "useeditor" )
+               or $self->getoption( $citekey, "usetranslator" )
             )
       )
     {
