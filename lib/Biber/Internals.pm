@@ -550,7 +550,7 @@ sub _print_name {
 
 sub _printfield {
     my ($self, $field, $str) = @_ ;
-    my $width = $self->getblxoption('maxline') ;
+    my $width = $self->config('maxline') ;
 
     ## 12 is the length of '  \field{}{}'
     if ( 12 + length($field) + length($str) > 2*$width ) {
@@ -577,7 +577,7 @@ sub _print_biblatex_entry {
     }
 
     my $str = "" ;
-    
+
     $str .= "% sortstring = " . $be->{sortstring} . "\n" if $self->getblxoption('debug') ;
 
     $str .= "\\entry{$origkey}{" . $be->{entrytype} . "}{$opts}\n" ;
@@ -585,20 +585,20 @@ sub _print_biblatex_entry {
     if ( $be->{entrytype} eq 'set' ) {
         $str .= "  \\entryset{" . $be->{entryset} . "}\n" ;
     }
-    
+
     if ($Biber::inset_entries{$citekey}) {
         ## NB should be equal to $be->{entryset} but we prefer to make it optional
         # TODO check against $be->entryset and warn if different!
         $str .= "  \\inset{" . $Biber::inset_entries{$citekey} . "}\n" ;
     }
-    
+
 #    delete $be->{entrytype}; #forgot why this is needed!
 
 		# make labelname a copy of the right thing before output of name lists
-		if (_defined_and_nonempty($be->{'labelnamename'})) { # avoid unitialised variable warnings
-			$be->{'labelname'} = $be->{$be->{'labelnamename'}};
+		if (_defined_and_nonempty($be->{labelnamename})) { # avoid unitialised variable warnings
+			$be->{labelname} = $be->{$be->{labelnamename}};
 		}
-    
+
     foreach my $namefield (@NAMEFIELDS) {
         next if $SKIPFIELDS{$namefield} ;
         if ( _defined_and_nonempty($be->{$namefield}) ) {
@@ -615,7 +615,7 @@ sub _print_biblatex_entry {
             $str .= "  }\n" ;
         }
     }
-    
+
     foreach my $listfield (@LISTFIELDS) {
         next if $SKIPFIELDS{$listfield} ;
         if ( _defined_and_nonempty($be->{$listfield}) ) {
