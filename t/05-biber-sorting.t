@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 5;
+use Test::More tests => 7;
 
 use Biber;
 chdir("t/tdata");
@@ -20,6 +20,8 @@ my $nyt   = 'mm0glashow2sheldon019610partial symmetries of weak interactions0002
 my $nyvt  = 'mm0glashow2sheldon01961000220partial symmetries of weak interactions';
 my $anyt  = 'mm0gla610glashow2sheldon019610partial symmetries of weak interactions00000';
 my $anyvt = 'mm0gla610glashow2sheldon01961000220partial symmetries of weak interactions';
+my $ynt   = 'mm019610glashow2sheldon0partial symmetries of weak interactions';
+my $ydnt  = 'mm080380glashow2sheldon0partial symmetries of weak interactions';
 
 # nty
 $biber->{config}{biblatex}{global}{sorting} =  [
@@ -198,3 +200,67 @@ $biber->{config}{biblatex}{global}{sorting} =  [
 
 $biber->prepare;
 is($biber->{bib}->{stdmodel}{sortstring}, $anyvt, 'basic anyvt sort' );
+
+# ynt
+$biber->{config}{biblatex}{global}{labelalpha} = 0;
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => []},
+                                                 {'mm'         => []},
+                                                ],
+                                                [
+                                                 {'sortkey'    => ['final']}
+                                                ],
+                                                [
+                                                 {'sortyear'   => []},
+                                                 {'year'       => []},
+                                                 {'9999'       => []}
+                                                ],
+                                                [
+                                                 {'sortname'   => []},
+                                                 {'author'     => []},
+                                                 {'editor'     => []},
+                                                 {'translator' => []},
+                                                 {'sorttitle'  => []},
+                                                 {'title'      => []}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => []},
+                                                 {'title'      => []}
+                                                ],
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}->{stdmodel}{sortstring}, $ynt, 'basic ynt sort' );
+
+# ydnt
+$biber->{config}{biblatex}{global}{labelalpha} = 0;
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => []},
+                                                 {'mm'         => []},
+                                                ],
+                                                [
+                                                 {'sortkey'    => ['final']}
+                                                ],
+                                                [
+                                                 {'sortyearD'  => []},
+                                                 {'yearD'      => []},
+                                                 {'9999'       => []}
+                                                ],
+                                                [
+                                                 {'sortname'   => []},
+                                                 {'author'     => []},
+                                                 {'editor'     => []},
+                                                 {'translator' => []},
+                                                 {'sorttitle'  => []},
+                                                 {'title'      => []}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => []},
+                                                 {'title'      => []}
+                                                ],
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}->{stdmodel}{sortstring}, $ydnt, 'basic ydnt sort' );
