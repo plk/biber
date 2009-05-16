@@ -853,7 +853,7 @@ sub postprocess {
             } ;
             my $sortkey = lc( $be->{sortkey} ) ;
             $sortkey = latex_decode($sortkey) unless $self->_nodecode($citekey) ;
-            $be->{sortstring} = "$pre $sortkey" ;
+            $be->{sortstring} = "${pre}0 ${sortkey}" ;
         } else {
             $self->_generatesortstring($citekey) ;
         }
