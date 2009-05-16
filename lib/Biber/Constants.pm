@@ -48,7 +48,7 @@ our %BLX_CONFIG_DEFAULT = (
   maxline     => 79,
 	alphaothers => '+',
   labelname   => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator' ],
-  sorting => [ # corresponds to the default "nyt" scheme
+  sorting => [ # corresponds to the default "nty" scheme
               [
                {'presort'    => []},
                {'mm'         => []},
@@ -65,12 +65,12 @@ our %BLX_CONFIG_DEFAULT = (
                {'title'      => []}
               ],
               [
-               {'sortyear'   => []},
-               {'year'       => []}
-              ],
-              [
                {'sorttitle'  => []},
                {'title'      => []}
+              ],
+              [
+               {'sortyear'   => []},
+               {'year'       => []}
               ],
               [
                {'volume'     => []},

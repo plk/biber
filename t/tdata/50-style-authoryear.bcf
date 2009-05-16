@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bcf:controlfile version="0.8" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+  <!-- BIBFILES -->
+  <bcf:bibfiles>
+    <bcf:file>biblatex-test-citations.bib</bcf:file>
+    <bcf:file>biblatex-test-references.bib</bcf:file>
+  </bcf:bibfiles>
+  <!-- OPTIONS -->
+  <bcf:options type="global">
+    <bcf:option type="singlevalued">
+      <bcf:key>labelyear</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>labelalpha</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+  </bcf:options>
+  <bcf:options type="collection"> 
+    <bcf:option type="multivalued">
+      <bcf:key>labelname</bcf:key>
+      <bcf:value order="1">shorteditor</bcf:value>
+      <bcf:value order="2">editor</bcf:value>
+      <bcf:value order="3">translator</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useeditor</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+  </bcf:options>
+<!--  <bcf:sorting type="global"> 
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">presort</bcf:sortitem>
+      <bcf:sortitem order="2">mm</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="2">
+      <bcf:sortitem order="1" final="1">sortkey</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="3">
+      <bcf:sortitem order="1">sortname</bcf:sortitem>
+      <bcf:sortitem order="2">author</bcf:sortitem>
+      <bcf:sortitem order="3">editor</bcf:sortitem>
+      <bcf:sortitem order="4">translator</bcf:sortitem>
+      <bcf:sortitem order="4">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="4">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="4">
+      <bcf:sortitem order="4">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="4">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="5">
+      <bcf:sortitem order="4">sortyear</bcf:sortitem>
+      <bcf:sortitem order="4">year</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="6">
+      <bcf:sortitem order="4">volume</bcf:sortitem>
+      <bcf:sortitem order="4">0000</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  <bcf:sorting type="collection"> 
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">presort</bcf:sortitem>
+      <bcf:sortitem order="2">mm</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="2">
+      <bcf:sortitem order="1" final="1">sortkey</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="3">
+      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="2">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="4">
+      <bcf:sortitem order="1">sortyear</bcf:sortitem>
+      <bcf:sortitem order="2">year</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting> -->
+  <!-- BIB SECTIONS -->
+  <bcf:section number="0">  
+    <bcf:citekey>key29</bcf:citekey>
+    <bcf:citekey>key13</bcf:citekey>
+    <bcf:citekey>key5</bcf:citekey>
+  </bcf:section>
+  <bcf:section number="1">  
+    <bcf:citekey>key41</bcf:citekey>
+    <bcf:citekey>key9</bcf:citekey>
+    <bcf:citekey>key5</bcf:citekey>
+  </bcf:section>
+  <bcf:section number="2">  
+    <bcf:citekey>key21</bcf:citekey>
+    <bcf:citekey>key92</bcf:citekey>
+  </bcf:section>
+  <bcf:section number="0">  
+    <bcf:citekey>key29</bcf:citekey>
+    <bcf:citekey>key42</bcf:citekey>
+    <bcf:citekey>key5</bcf:citekey>
+  </bcf:section>
+</bcf:controlfile>
