@@ -244,8 +244,12 @@ sub _getyearstring {
           #     } elsif ($be->{date}) {
           #          return substr($be->{date}, 0, 4)
     }
+    elsif (($self->config('sorting') == 21) or
+           ($self->config('sorting') == 22)) {
+      return "9999" ;
+    }
     else {
-        return "9999" ;
+      return '';
     }
 }
 
@@ -262,8 +266,12 @@ sub _getdecyearstring {
           #     } elsif ($be->{date}) {
           #          return 9999 - substr($be->{date}, 0, 4)
     }
+    elsif (($self->config('sorting') == 21) or
+           ($self->config('sorting') == 22)) {
+      return "9999" ;
+    }
     else {
-        return "9999" ;
+      return '';
     }
 }
 
