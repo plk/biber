@@ -65,12 +65,12 @@ our %BLX_CONFIG_DEFAULT = (
                {'title'      => []}
               ],
               [
-               {'sorttitle'  => []},
-               {'title'      => []}
-              ],
-              [
                {'sortyear'   => []},
                {'year'       => []}
+              ],
+              [
+               {'sorttitle'  => []},
+               {'title'      => []}
               ],
               [
                {'volume'     => []},
