@@ -550,7 +550,7 @@ sub _print_name {
 
 sub _printfield {
     my ($self, $field, $str) = @_ ;
-    my $width = $self->config('maxline') ;
+    my $width = $self->getblxoption('maxline') ;
 
     ## 12 is the length of '  \field{}{}'
     if ( 12 + length($field) + length($str) > 2*$width ) {

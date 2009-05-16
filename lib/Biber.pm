@@ -191,7 +191,7 @@ sub parse_auxfile {
     my $self = shift ;
     my $auxfile = shift ; 
     my @bibdatafiles = ();
-    if ($self->config('bibdata')) { 
+    if ($self->config('bibdata')) {
         @bibdatafiles = @{ $self->{config}->{bibdata} }
     } ;
 
@@ -207,27 +207,25 @@ sub parse_auxfile {
     local $/ = "\n" ;
 
     print "Reading $auxfile\n" unless $self->config('quiet') ;
-    
+
     while (<$aux>) {
-    
+
         if ( $_ =~ /^\\bibdata/ ) { 
-        
+
             # There can be more than one bibdata file! 
             # We can parse many bib and/or xml files
             # Datafile given as option -d should be parsed first, then the other ones
             (my $bibdatastring) = $_ =~ m/^\\bibdata{ #{ <- for balancing brackets in vim
                                                ([^}]+)
                                                       }/x ;
-            
+
             my @tmp = split/,/, $bibdatastring ; 
-            
-            shift @tmp ;  #PK remove this when biblatex stops putting the control file name
-                          # in the AUX file.
+
 						$ctrl_file = $auxfile;
 						$ctrl_file =~ s/\.aux\z//xms;
 
             print "control file is $ctrl_file.bcf\n" if $self->config('biberdebug');
-            
+
             if (defined $bibdatafiles[0]) {
 
                 push (@bibdatafiles, @tmp) ;
@@ -267,7 +265,7 @@ sub parse_auxfile {
     }
 
     $self->parse_ctrlfile($ctrl_file) if $ctrl_file;
-    
+
     unless (@bibdatafiles) {
         croak "No database is provided in the file '$auxfile'!\nExiting\n"
     }

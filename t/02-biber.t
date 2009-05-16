@@ -15,8 +15,8 @@ isa_ok($biber, "Biber");
 chdir("t/tdata") ;
 $biber->parse_auxfile("50-style-authoryear.aux") ;
 
-$biber->{config}->{maxline} = 100000 ;
-ok($biber->config('maxline') == 100000, "maxline option") ;
+$biber->{config}{biblatex}{global}{maxline} = 100000 ;
+ok($biber->{config}{biblatex}{global}{maxline} == 100000, "maxline option") ;
 
 my @keys = sort $biber->citekeys;
 my @citedkeys = sort qw{ 
@@ -71,7 +71,7 @@ my $stdmodel = {
                 'sortstring' => 'mm0glashow2sheldon019610partial symmetries of weak interactions00022',
                 'crossref' => 'stdmodel:glashow',
                 'volume' => '22',
-                'labelname' => 'author',
+                'labelnamename' => 'author',
                 'entrytype' => 'set',
                 'title' => 'Partial Symmetries of Weak Interactions',
                 'datatype' => 'bibtex',
@@ -223,7 +223,7 @@ my $laufenberg = {
                                  'countryde',
                                  'countrywo'
                                ],
-                 'labelname' => 'author',
+                 'labelnamename' => 'author',
                  'entrytype' => 'patent',
                  'abstract' => 'The invention relates to an electric device comprising a generator, in particular for use in the vehicle electric system of a motor vehicle and a controller for controlling the generator voltage. The device is equipped with a control zone, in which the voltage is controlled and zones, in which the torque is controlled. The invention also relates to methods for operating a device of this type.',
                  'type' => 'patenteu',
