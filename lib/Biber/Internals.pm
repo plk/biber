@@ -198,7 +198,7 @@ sub _generatesortstring {
     # always append $sorting_sep, even if sortfield returns the empty string.
     # This makes it easier to read sortstring for debugging etc.
     $sortstring .= $self->_sortset($sortset, $citekey) . $sorting_sep;
-    if ($BIBER_SORT_FINAL) { # Last sortfield was specified in attributes as the last
+    if ($BIBER_SORT_FINAL) { # Sortfield was specified in attributes as the final one
       last;
     }
   }
