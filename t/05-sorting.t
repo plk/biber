@@ -59,8 +59,8 @@ $biber->{config}{biblatex}{global}{sorting} =  [
                                                ];
 
 $biber->prepare;
-is($biber->{bib}->{stdmodel}{sortstring}, $nty, 'basic nty sort' );
-is($biber->{bib}->{angenendtsk}{sortstring}, $sk1, 'basic sortkey sort' );
+is($biber->{bib}{stdmodel}{sortstring}, $nty, 'basic nty sort' );
+is($biber->{bib}{angenendtsk}{sortstring}, $sk1, 'basic sortkey sort' );
 
 # nyt
 $biber->{config}{biblatex}{global}{sorting} =  [
@@ -170,42 +170,12 @@ is($biber->{bib}{stdmodel}{sortstring}, $anyt_la, 'basic anyt sort (with labelal
 
 # anyt without labelalpha
 $biber->{config}{biblatex}{global}{labelalpha} = 0;
-$biber->{config}{biblatex}{global}{sorting} =  [
-                                                [
-                                                 {'presort'    => []},
-                                                 {'mm'         => []},
-                                                ],
-                                                [
-                                                 {'labelalpha' => []}
-                                                ],
-                                                [
-                                                 {'sortkey'    => ['final']}
-                                                ],
-                                                [
-                                                 {'sortname'   => []},
-                                                 {'author'     => []},
-                                                 {'editor'     => []},
-                                                 {'translator' => []},
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
-                                                ],
-                                                [
-                                                 {'sortyear'   => []},
-                                                 {'year'       => []}
-                                                ],
-                                                [
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
-                                                ],
-                                                [
-                                                 {'sorttitle'  => []},
-                                                 {'0000'       => []}
-                                                ]
-                                               ];
+# this is already now set so clear it
+delete $biber->{bib}{stdmodel}{labelalpha};
+delete $biber->{bib}{'stdmodel:glashow'}{labelalpha}; # it's a crossref so have to clear it here too
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $anyt, 'basic anyt sort (without labelalpha)' );
-
 
 # anyvt with labelalpha
 $biber->{config}{biblatex}{global}{labelalpha} = 1;
@@ -247,44 +217,14 @@ is($biber->{bib}{stdmodel}{sortstring}, $anyvt_la, 'basic anyvt sort (with label
 
 # anyvt without labelalpha
 $biber->{config}{biblatex}{global}{labelalpha} = 0;
-$biber->{config}{biblatex}{global}{sorting} =  [
-                                                [
-                                                 {'presort'    => []},
-                                                 {'mm'         => []},
-                                                ],
-                                                [
-                                                 {'labelalpha' => []}
-                                                ],
-                                                [
-                                                 {'sortkey'    => ['final']}
-                                                ],
-                                                [
-                                                 {'sortname'   => []},
-                                                 {'author'     => []},
-                                                 {'editor'     => []},
-                                                 {'translator' => []},
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
-                                                ],
-                                                [
-                                                 {'sortyear'   => []},
-                                                 {'year'       => []}
-                                                ],
-                                                [
-                                                 {'volume'     => []},
-                                                 {'0000'       => []}
-                                                ],
-                                                [
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
-                                                ]
-                                               ];
+# this is already now set so clear it
+delete $biber->{bib}{stdmodel}{labelalpha};
+delete $biber->{bib}{'stdmodel:glashow'}{labelalpha}; # it's a crossref so have to clear it here too
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $anyvt, 'basic anyvt sort (without labelalpha)' );
 
 # ynt
-$biber->{config}{biblatex}{global}{labelalpha} = 0;
 $biber->{config}{biblatex}{global}{sorting} =  [
                                                 [
                                                  {'presort'    => []},
@@ -316,7 +256,6 @@ $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $ynt, 'basic ynt sort' );
 
 # ydnt
-$biber->{config}{biblatex}{global}{labelalpha} = 0;
 $biber->{config}{biblatex}{global}{sorting} =  [
                                                 [
                                                  {'presort'    => []},
