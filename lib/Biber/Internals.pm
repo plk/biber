@@ -430,8 +430,6 @@ sub _getyearstring {
   return $string if $string;
   $string = $self->_dispatch_sorting('year',$citekey);
   return $string if $string;
-  $string = $self->_dispatch_sorting('9999',$citekey);
-  return $string if $string;
   return '';
 }
 
