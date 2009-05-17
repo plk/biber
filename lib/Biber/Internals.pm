@@ -163,6 +163,7 @@ our $dispatch_sorting = {
                          '0000'         =>  \&_sort_0000,
 												 '9999'         =>  \&_sort_9999,
 												 'author'       =>  \&_sort_author,
+                         'debug'        =>  \&_sort_debug,
 												 'editor'       =>  \&_sort_editor,
 												 'issuetitle'   =>  \&_sort_issuetitle,
 												 'journal'      =>  \&_sort_journal,
@@ -224,7 +225,7 @@ sub _sortset {
 
 ##############################################
 # Sort dispatch routines
-#############################################
+##############################################
 
 sub _sort_0000 {
 	return '0000';
@@ -243,6 +244,11 @@ sub _sort_author {
 	else {
 		return '';
 	}
+}
+
+sub _sort_debug {
+  my ($self, $citekey) = @_ ;
+  return $citekey;
 }
 
 sub _sort_editor {
@@ -287,7 +293,12 @@ sub _sort_mm {
 sub _sort_labelalpha {
   my ($self, $citekey) = @_ ;
   my $be = $self->{bib}{$citekey} ;
-	return $be->{labelalpha} ? $be->{labelalpha} : '';
+  if ($be->{labelalpha}) {
+    return $be->{labelalpha};
+  }
+  else {
+    return '';
+  }
 }
 
 sub _sort_presort {
@@ -301,7 +312,7 @@ sub _sort_sortkey {
   my $be = $self->{bib}{$citekey};
   if ($be->{sortkey}) {
     my $sortkey = lc($be->{sortkey});
-    $sortkey = latex_decode($sortkey) unless $self->_nodecode($citekey);
+    $sortkey = LaTeX::Decode::latex_decode($sortkey) unless $self->_nodecode($citekey);
     return $sortkey;
   }
   else {
