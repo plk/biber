@@ -156,6 +156,8 @@ sub getblxoption {
 # Sorting
 #########
 
+our $sorting_sep = '0';
+
 # The keys are defined by BibLaTeX and passed in the control file
 our $dispatch_sorting = {
                          '0000'         =>  \&_sort_0000,
@@ -193,7 +195,9 @@ sub _generatesortstring {
   my $sortstring;
   $BIBER_SORT_FINAL = 0; # reset sorting short-circuit
   foreach my $sortset (@{$sortscheme}) {
-    $sortstring .= $self->_sortset($sortset, $citekey);
+    # always append $sorting_sep, even if sortfield returns the empty string.
+    # This makes it easier to read sortstring for debugging etc.
+    $sortstring .= $self->_sortset($sortset, $citekey) . $sorting_sep;
     if ($BIBER_SORT_FINAL) { # Last sortfield was specified in attributes as the last
       last;
     }
@@ -213,7 +217,7 @@ sub _sortset {
       if (first {$_ eq 'final'} @{$sortelementattributes} ) { # set short-circuit flag if specified
         $BIBER_SORT_FINAL = 1;
       }
-      return $string . '0';
+      return $string;
     }
   }
 }

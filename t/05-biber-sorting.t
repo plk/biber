@@ -15,13 +15,13 @@ $biber->{config}{biblatex}{global}{maxline} = 100000;
 $bibfile = $biber->config('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
 
-my $nty   = 'mm0glashow2sheldon0partial symmetries of weak interactions0196100022';
-my $nyt   = 'mm0glashow2sheldon019610partial symmetries of weak interactions00022';
-my $nyvt  = 'mm0glashow2sheldon01961000220partial symmetries of weak interactions';
-my $anyt  = 'mm0gla610glashow2sheldon019610partial symmetries of weak interactions00000';
-my $anyvt = 'mm0gla610glashow2sheldon01961000220partial symmetries of weak interactions';
-my $ynt   = 'mm019610glashow2sheldon0partial symmetries of weak interactions';
-my $ydnt  = 'mm080380glashow2sheldon0partial symmetries of weak interactions';
+my $nty   = 'mm00glashow2sheldon0partial symmetries of weak interactions0196100022';
+my $nyt   = 'mm00glashow2sheldon019610partial symmetries of weak interactions00022';
+my $nyvt  = 'mm00glashow2sheldon01961000220partial symmetries of weak interactions';
+my $anyt  = 'mm0gla6100glashow2sheldon019610partial symmetries of weak interactions00000';
+my $anyvt = 'mm0gla6100glashow2sheldon01961000220partial symmetries of weak interactions';
+my $ynt   = 'mm0019610glashow2sheldon0partial symmetries of weak interactions';
+my $ydnt  = 'mm0080380glashow2sheldon0partial symmetries of weak interactions';
 
 # nty
 $biber->{config}{biblatex}{global}{sorting} =  [
