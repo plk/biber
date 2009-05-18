@@ -4,4 +4,7 @@ Current sorting tests:
 * anyt without labelname
 * sortkey
 * debug
-per-type
+* per-type
+* modified presort string
+* short-circuit on something other than sortkey
+* use* all off, ignore sortname

@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 11;
+use Test::More tests => 14;
 
 use Biber;
 chdir("t/tdata");
@@ -26,6 +26,9 @@ my $ynt         = 'mm0019610glashow2sheldon0partial symmetries of weak interacti
 my $ydnt        = 'mm0080380glashow2sheldon0partial symmetries of weak interactions';
 my $debug       = 'stdmodel';
 my $sk1         = 'mm0aatestkey';
+my $pt1         = 'mm0081220aristotle0rhetoric of aristotle';
+my $ps_sc       = 'zs00glashow2sheldon0partial symmetries of weak interactions';
+my $noname      = 'mm00partial symmetries of weak interactions0partial symmetries of weak interactions0196100022';
 
 # nty
 $biber->{config}{biblatex}{global}{sorting} =  [
@@ -167,13 +170,11 @@ $biber->{config}{biblatex}{global}{sorting} =  [
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $anyt_la, 'basic anyt sort (with labelalpha)' );
-
-# anyt without labelalpha
 $biber->{config}{biblatex}{global}{labelalpha} = 0;
-# this is already now set so clear it
 delete $biber->{bib}{stdmodel}{labelalpha};
 delete $biber->{bib}{'stdmodel:glashow'}{labelalpha}; # it's a crossref so have to clear it here too
 
+# anyt without labelalpha
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $anyt, 'basic anyt sort (without labelalpha)' );
 
@@ -214,13 +215,11 @@ $biber->{config}{biblatex}{global}{sorting} =  [
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $anyvt_la, 'basic anyvt sort (with labelalpha)' );
-
-# anyvt without labelalpha
 $biber->{config}{biblatex}{global}{labelalpha} = 0;
-# this is already now set so clear it
 delete $biber->{bib}{stdmodel}{labelalpha};
 delete $biber->{bib}{'stdmodel:glashow'}{labelalpha}; # it's a crossref so have to clear it here too
 
+# anyvt without labelalpha
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $anyvt, 'basic anyvt sort (without labelalpha)' );
 
@@ -285,9 +284,9 @@ $biber->{config}{biblatex}{global}{sorting} =  [
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $ydnt, 'basic ydnt sort' );
+$biber->{config}{biblatex}{global}{labelalpha} = 0;
 
 # debug
-$biber->{config}{biblatex}{global}{labelalpha} = 0;
 $biber->{config}{biblatex}{global}{sorting} =  [
                                                 [
                                                  {'debug'    => []},
@@ -296,3 +295,106 @@ $biber->{config}{biblatex}{global}{sorting} =  [
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $debug, 'basic debug sort' );
+
+# per-type (book, ydnt)
+$biber->{config}{biblatex}{book}{sorting} =  [
+                                                [
+                                                 {'presort'    => []},
+                                                 {'mm'         => []},
+                                                ],
+                                                [
+                                                 {'sortkey'    => ['final']}
+                                                ],
+                                                [
+                                                 {'sortyearD'  => []},
+                                                 {'yearD'      => []},
+                                                 {'9999'       => []}
+                                                ],
+                                                [
+                                                 {'sortname'   => []},
+                                                 {'author'     => []},
+                                                 {'editor'     => []},
+                                                 {'translator' => []},
+                                                 {'sorttitle'  => []},
+                                                 {'title'      => []}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => []},
+                                                 {'title'      => []}
+                                                ],
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{'aristotle:rhetoric'}{sortstring}, $pt1, 'book type ydnt sort' );
+
+# nty with modified presort and short_circuit at title
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => []},
+                                                 {'mm'         => []},
+                                                ],
+                                                [
+                                                 {'sortkey'    => ['final']}
+                                                ],
+                                                [
+                                                 {'sortname'   => []},
+                                                 {'author'     => []},
+                                                 {'editor'     => []},
+                                                 {'translator' => []},
+                                                 {'sorttitle'  => []},
+                                                 {'title'      => []}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => ['final']},
+                                                 {'title'      => ['final']}
+                                                ],
+                                                [
+                                                 {'sortyear'   => []},
+                                                 {'year'       => []}
+                                                ],
+                                                [
+                                                 {'volume'     => []},
+                                                 {'0000'       => []}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{'stdmodel:ps_sc'}{sortstring}, $ps_sc, 'nty with modified presort and short-circuit title' );
+
+# nty with use* all off
+$biber->{config}{biblatex}{global}{useauthor} = 0;
+$biber->{config}{biblatex}{global}{useeditor} = 0;
+$biber->{config}{biblatex}{global}{usetranslator} = 0;
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => []},
+                                                 {'mm'         => []},
+                                                ],
+                                                [
+                                                 {'sortkey'    => ['final']}
+                                                ],
+                                                [
+                                                 {'sortname'   => []},
+                                                 {'author'     => []},
+                                                 {'editor'     => []},
+                                                 {'translator' => []},
+                                                 {'sorttitle'  => []},
+                                                 {'title'      => []}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => []},
+                                                 {'title'      => []}
+                                                ],
+                                                [
+                                                 {'sortyear'   => []},
+                                                 {'year'       => []}
+                                                ],
+                                                [
+                                                 {'volume'     => []},
+                                                 {'0000'       => []}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{stdmodel}{sortstring}, $noname, 'nty with use* all off' );
+
