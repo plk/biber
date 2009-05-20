@@ -14,6 +14,7 @@ use Getopt::Long qw/:config no_ignore_case/ ;
 my $opts = {} ;
 GetOptions(
     $opts,
+    'v2',
     'fastsort|f!',
     'collate_options|c=s',
     'mincrossrefs|m=s',
@@ -67,7 +68,14 @@ else {
     $auxfile .= '.aux' unless $auxfile =~ m/\.aux$/ ;
     $bblfile = $auxfile ;
     $bblfile =~ s/aux$/bbl/ ;
-    $biber->parse_auxfile($auxfile);
+    #V2
+    if ($opts->{v2}) {
+      print "** USING EXPERIMENTAL V2 OPTIONS CODE!! **\n";
+      $biber->parse_auxfile_v2($auxfile);
+    }
+    else {
+      $biber->parse_auxfile($auxfile);
+    }
 }
 
 if ($biber->config('biberdebug')) {
@@ -160,6 +168,9 @@ Usage:  $me file.aux
 
 Options:
   --help|-h              Show this help message.
+  --v2                   Enable experimental Biblatex/Biber version 2 options processing.
+                         Don't use this unless you understand what it means to do so. Nothing
+                         will work properly, in all likelyhood.
   --version|-v           Display version number.
   --mincrossrefs|-m <n>  Set threshold for crossrefs.
   --fastsort|-f          Use Perl’s sort instead of Unicode::Collate for sorting.

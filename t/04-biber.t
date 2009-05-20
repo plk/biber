@@ -9,13 +9,13 @@ use Biber;
 
 my $opts = { unicodebbl => 0, useprd => 1 };
 my $biber = Biber->new($opts);
-$biber->{config}{biblatex}{global}{maxline} = 100000 ;
+
    
 isa_ok($biber, "Biber");
 
 chdir("t/tdata") ;
 $biber->parse_auxfile("02-annotations.aux");
-
+$biber->{config}{biblatex}{global}{maxline} = 100000 ;
 
 my $bibfile = $biber->config('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile) ;

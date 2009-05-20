@@ -10,7 +10,7 @@ chdir("t/tdata");
 
 my $bibfile;
 my $biber = Biber->new;
-$biber->parse_auxfile("50-style-authoryear.aux");
+$biber->parse_auxfile_v2("50-style-authoryear_v2.aux");
 $biber->{config}{biblatex}{global}{maxline} = 100000;
 $bibfile = $biber->config('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
