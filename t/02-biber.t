@@ -39,7 +39,7 @@ aristotle:physics massa aristotle:anima gillies set kowalik gaonkar springer
 geer hammond wormanx westfahl:space worman set:herrmann augustine gerhardt
 piccato hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro sigfridsson ctan
 baez/online aristotle:rhetoric pines knuth:ct:c moraux cms angenendt angenendtsk loh markey
-cotton vangennepx kant:ku nussbaum nietzsche:ksa1 vangennep knuth:ct
+cotton vangennepx kant:ku nussbaum nietzsche:ksa1 vangennep knuth:ct angenendtsa
 spiegelberg bertram brandt set:aksin chiu nietzsche:ksa set:yoon maron
 coleridge } ;
 
