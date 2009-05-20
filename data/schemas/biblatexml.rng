@@ -1,0 +1,6633 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar ns="http://biblatex-biber.sourceforge.net/biblatexml" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:user="http://localhost/biblatexml/user" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <ref name="entries"/>
+  </start>
+  <define name="entries">
+    <element name="entries">
+      <zeroOrMore>
+        <ref name="BibLaTeXML.entries"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="BibLaTeXML.entries">
+    <choice>
+      <ref name="BibLaTeXML.standard.entries"/>
+      <ref name="BibLaTeXML.additional.entries"/>
+    </choice>
+  </define>
+  <define name="BibLaTeXML.standard.entries">
+    <choice>
+      <ref name="article"/>
+      <ref name="book"/>
+      <ref name="booklet"/>
+      <ref name="collection"/>
+      <ref name="inbook"/>
+      <ref name="incollection"/>
+      <ref name="proceedings"/>
+      <ref name="inproceedings"/>
+      <ref name="manual"/>
+      <ref name="misc"/>
+      <ref name="online"/>
+      <ref name="patent"/>
+      <ref name="periodical"/>
+      <ref name="proceedings"/>
+      <ref name="report"/>
+      <ref name="thesis"/>
+      <ref name="unpublished"/>
+      <ref name="set"/>
+    </choice>
+  </define>
+  <define name="BibLaTeXML.additional.entries">
+    <choice>
+      <ref name="review"/>
+      <ref name="review.electronic"/>
+      <ref name="article.electronic"/>
+      <ref name="periodical.electronic"/>
+      <ref name="preprint"/>
+      <ref name="software"/>
+      <ref name="movie"/>
+    </choice>
+  </define>
+  <!--
+    TODO Unsupported types: artwork, audio, image, jurisdiction, legislation, legal, movie, music, performance, reference, inreference, review, software, standard, video
+    TODO add manuscript and archivalrecord ?
+  -->
+  <define name="BibLaTeXML.common.fields">
+    <a:documentation/>
+    <interleave>
+      <optional>
+        <ref name="nameaddon"/>
+      </optional>
+      <optional>
+        <ref name="shortauthor"/>
+      </optional>
+      <optional>
+        <ref name="shorthand"/>
+      </optional>
+      <optional>
+        <ref name="shorthandintro"/>
+      </optional>
+      <optional>
+        <ref name="shorttitle"/>
+      </optional>
+      <optional>
+        <ref name="origtitle"/>
+      </optional>
+      <optional>
+        <ref name="origyear"/>
+      </optional>
+      <optional>
+        <ref name="language"/>
+      </optional>
+      <optional>
+        <ref name="origlanguage"/>
+      </optional>
+      <optional>
+        <ref name="script"/>
+      </optional>
+      <optional>
+        <ref name="origscript"/>
+      </optional>
+      <optional>
+        <ref name="abstract"/>
+      </optional>
+      <optional>
+        <ref name="annotation"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="file"/>
+          <ref name="pdf"/>
+        </choice>
+      </optional>
+      <zeroOrMore>
+        <ref name="private"/>
+      </zeroOrMore>
+      <optional>
+        <ref name="entrysubtype"/>
+      </optional>
+      <optional>
+        <ref name="execute"/>
+      </optional>
+      <optional>
+        <ref name="hyphenation"/>
+      </optional>
+      <optional>
+        <ref name="indexsorttitle"/>
+      </optional>
+      <optional>
+        <ref name="indextitle"/>
+      </optional>
+      <optional>
+        <ref name="keywords"/>
+      </optional>
+      <optional>
+        <ref name="label"/>
+      </optional>
+      <optional>
+        <ref name="options"/>
+      </optional>
+      <optional>
+        <ref name="presort"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="sortkey"/>
+          <ref name="key"/>
+        </choice>
+      </optional>
+      <optional>
+        <ref name="sortname"/>
+      </optional>
+      <optional>
+        <ref name="sorttitle"/>
+      </optional>
+      <optional>
+        <ref name="sortyear"/>
+      </optional>
+      <optional>
+        <ref name="inset"/>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.additional.fields">
+    <interleave>
+      <zeroOrMore>
+        <ref name="reprintinfo"/>
+      </zeroOrMore>
+      <optional>
+        <ref name="reviews"/>
+      </optional>
+      <optional>
+        <ref name="topics"/>
+      </optional>
+      <optional>
+        <ref name="remarks"/>
+      </optional>
+    </interleave>
+  </define>
+  <define name="formattext">
+    <a:documentation>
+We now define the biblatexml elements</a:documentation>
+    <a:documentation>many textual element can contain emphasis or superscript elements </a:documentation>
+    <zeroOrMore>
+      <optional>
+        <ref name="nosort"/>
+      </optional>
+      <optional>
+        <ref name="emphasis"/>
+      </optional>
+      <optional>
+        <ref name="superscript"/>
+      </optional>
+      <optional>
+        <ref name="subscript"/>
+      </optional>
+      <optional>
+        <text/>
+      </optional>
+    </zeroOrMore>
+  </define>
+  <define name="emphasis">
+    <element name="emphasis">
+      <text/>
+    </element>
+  </define>
+  <define name="superscript">
+    <element name="superscript">
+      <text/>
+    </element>
+  </define>
+  <define name="subscript">
+    <element name="subscript">
+      <text/>
+    </element>
+  </define>
+  <define name="nosort">
+    <element name="nosort">
+      <text/>
+    </element>
+  </define>
+  <define name="romanized">
+    <attribute name="mode">
+      <value>romanized</value>
+    </attribute>
+  </define>
+  <define name="translated">
+    <optional>
+      <attribute name="xml:lang">
+        <data type="language"/>
+      </attribute>
+    </optional>
+    <attribute name="mode">
+      <value>translated</value>
+    </attribute>
+  </define>
+  <define name="uniform">
+    <attribute name="mode">
+      <value>uniform</value>
+    </attribute>
+  </define>
+  <define name="abstract">
+    <element name="abstract">
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="addendum">
+    <element name="addendum">
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="annotation">
+    <element name="annotation">
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="booksubtitle">
+    <choice>
+      <group>
+        <element name="booksubtitle">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="booksubtitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="booksubtitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="booksubtitle">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="booksubtitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="booksubtitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="booktitle">
+    <choice>
+      <group>
+        <element name="booktitle">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="booktitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="booktitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="booktitle">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="booktitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="booktitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="booktitleaddon">
+    <choice>
+      <group>
+        <element name="booktitleaddon">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="booktitleaddon">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="booktitleaddon">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="booktitleaddon">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="booktitleaddon">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="booktitleaddon">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="chapter">
+    <element name="chapter">
+      <text/>
+    </element>
+  </define>
+  <define name="doi">
+    <element name="doi">
+      <text/>
+    </element>
+  </define>
+  <define name="eid">
+    <element name="eid">
+      <text/>
+    </element>
+  </define>
+  <define name="eprint">
+    <element name="eprint">
+      <attribute name="type"/>
+      <text/>
+    </element>
+  </define>
+  <define name="file">
+    <element name="file">
+      <text/>
+    </element>
+  </define>
+  <define name="pdf">
+    <element name="pdf">
+      <text/>
+    </element>
+  </define>
+  <define name="id">
+    <element name="id">
+      <text/>
+    </element>
+  </define>
+  <define name="isan">
+    <element name="isan">
+      <text/>
+    </element>
+  </define>
+  <define name="isbn">
+    <element name="isbn">
+      <text/>
+    </element>
+  </define>
+  <!-- validate with pattern ? -->
+  <define name="oclc">
+    <element name="oclc">
+      <text/>
+    </element>
+  </define>
+  <!-- validate with pattern ? -->
+  <define name="lccn">
+    <element name="lccn">
+      <text/>
+    </element>
+  </define>
+  <!-- validate with pattern ? -->
+  <define name="ismn">
+    <element name="ismn">
+      <text/>
+    </element>
+  </define>
+  <define name="isrn">
+    <element name="isrn">
+      <text/>
+    </element>
+  </define>
+  <define name="issn">
+    <element name="issn">
+      <text/>
+    </element>
+  </define>
+  <define name="issue">
+    <choice>
+      <group>
+        <element name="issue">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="issue">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="issue">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="issue">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="issue">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="issue">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="issuetitle">
+    <choice>
+      <group>
+        <element name="issuetitle">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="issuetitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="issuetitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="issuetitle">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="issuetitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="issuetitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="issuetitleaddon">
+    <choice>
+      <group>
+        <element name="issuetitleaddon">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="issuetitleaddon">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="issuetitleaddon">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="issuetitleaddon">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="issuetitleaddon">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="issuetitleaddon">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="issuesubtitle">
+    <choice>
+      <group>
+        <element name="issuesubtitle">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="issuesubtitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="issuesubtitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="issuesubtitle">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="issuesubtitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="issuesubtitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="iswc">
+    <element name="iswc">
+      <text/>
+    </element>
+  </define>
+  <define name="journal">
+    <choice>
+      <element name="journal">
+        <attribute name="id"/>
+      </element>
+      <group>
+        <element name="journal">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="journal">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="journal">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="journal">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="journal">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="journal">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="journaltitle">
+    <choice>
+      <group>
+        <element name="journaltitle">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="journaltitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="journaltitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="journaltitle">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="journaltitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="journaltitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="journalsubtitle">
+    <choice>
+      <group>
+        <element name="journalsubtitle">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="journalsubtitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="journalsubtitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="journalsubtitle">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="journalsubtitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="journalsubtitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="label">
+    <element name="label">
+      <text/>
+    </element>
+  </define>
+  <define name="private">
+    <a:documentation>this element contains data relative to individual users of the database</a:documentation>
+    <element name="private">
+      <interleave>
+        <attribute name="user"/>
+        <optional>
+          <ref name="library"/>
+        </optional>
+        <optional>
+          <ref name="remarks"/>
+        </optional>
+        <optional>
+          <ref name="topics"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="user.field"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="user.field">
+    <element>
+      <nsName ns="http://localhost/biblatexml/user"/>
+      <text/>
+    </element>
+  </define>
+  <define name="library">
+    <element name="library">
+      <oneOrMore>
+        <ref name="libraryitem"/>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="libraryitem">
+    <element name="item">
+      <optional>
+        <attribute name="location"/>
+      </optional>
+      <optional>
+        <attribute name="ref"/>
+      </optional>
+      <optional>
+        <attribute name="url">
+          <data type="anyURI"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="note"/>
+      </optional>
+    </element>
+  </define>
+  <define name="mainsubtitle">
+    <choice>
+      <group>
+        <element name="mainsubtitle">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="mainsubtitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="mainsubtitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="mainsubtitle">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="mainsubtitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="mainsubtitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="maintitle">
+    <choice>
+      <group>
+        <element name="maintitle">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="maintitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="maintitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="maintitle">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="maintitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="maintitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="maintitleaddon">
+    <choice>
+      <group>
+        <element name="maintitleaddon">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="maintitleaddon">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="maintitleaddon">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="maintitleaddon">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="maintitleaddon">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="maintitleaddon">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="nameaddon">
+    <choice>
+      <group>
+        <element name="nameaddon">
+          <text/>
+        </element>
+        <optional>
+          <element name="nameaddon">
+            <ref name="romanized"/>
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="nameaddon">
+            <ref name="translated"/>
+            <text/>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="nameaddon">
+          <ref name="romanized"/>
+          <text/>
+        </element>
+        <optional>
+          <element name="nameaddon">
+            <ref name="translated"/>
+            <text/>
+          </element>
+        </optional>
+      </group>
+      <element name="nameaddon">
+        <ref name="translated"/>
+        <text/>
+      </element>
+    </choice>
+  </define>
+  <define name="note">
+    <element name="note">
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="number">
+    <element name="number">
+      <text/>
+    </element>
+  </define>
+  <define name="origtitle">
+    <element name="origtitle">
+      <ref name="formattext"/>
+      <optional>
+        <element name="romanized">
+          <text/>
+        </element>
+      </optional>
+    </element>
+  </define>
+  <define name="pagetotal">
+    <element name="pagetotal">
+      <text/>
+    </element>
+  </define>
+  <define name="part">
+    <element name="part">
+      <text/>
+    </element>
+  </define>
+  <define name="reprinttitle">
+    <choice>
+      <group>
+        <element name="reprinttitle">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="reprinttitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="reprinttitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="reprinttitle">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="reprinttitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="reprinttitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="series">
+    <choice>
+      <element name="series">
+        <attribute name="id"/>
+      </element>
+      <group>
+        <element name="series">
+          <choice>
+            <ref name="formattext"/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="series">
+            <ref name="romanized"/>
+            <choice>
+              <ref name="formattext"/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="series">
+            <ref name="translated"/>
+            <choice>
+              <ref name="formattext"/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="series">
+          <ref name="romanized"/>
+          <choice>
+            <ref name="formattext"/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="series">
+            <ref name="translated"/>
+            <choice>
+              <ref name="formattext"/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="series">
+        <ref name="translated"/>
+        <choice>
+          <ref name="formattext"/>
+          <oneOrMore>
+            <ref name="item"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <!-- shorthand = element shorthand { text } -->
+  <define name="shorthand">
+    <choice>
+      <group>
+        <element name="shorthand">
+          <text/>
+        </element>
+        <optional>
+          <element name="shorthand">
+            <ref name="romanized"/>
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="shorthand">
+            <ref name="translated"/>
+            <text/>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="shorthand">
+          <ref name="romanized"/>
+          <text/>
+        </element>
+        <optional>
+          <element name="shorthand">
+            <ref name="translated"/>
+            <text/>
+          </element>
+        </optional>
+      </group>
+      <element name="shorthand">
+        <ref name="translated"/>
+        <text/>
+      </element>
+    </choice>
+  </define>
+  <!-- shorthandintro = element shorthandintro { text } -->
+  <define name="shorthandintro">
+    <choice>
+      <group>
+        <element name="shorthandintro">
+          <text/>
+        </element>
+        <optional>
+          <element name="shorthandintro">
+            <ref name="romanized"/>
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="shorthandintro">
+            <ref name="translated"/>
+            <text/>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="shorthandintro">
+          <ref name="romanized"/>
+          <text/>
+        </element>
+        <optional>
+          <element name="shorthandintro">
+            <ref name="translated"/>
+            <text/>
+          </element>
+        </optional>
+      </group>
+      <element name="shorthandintro">
+        <ref name="translated"/>
+        <text/>
+      </element>
+    </choice>
+  </define>
+  <define name="shorttitle">
+    <choice>
+      <group>
+        <element name="shorttitle">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="shorttitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="shorttitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="shorttitle">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="shorttitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="shorttitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="subtitle">
+    <choice>
+      <group>
+        <element name="subtitle">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="subtitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="subtitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="subtitle">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="subtitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="subtitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="title">
+    <choice>
+      <group>
+        <element name="title">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="title">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="title">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="title">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="title">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="title">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="titleaddon">
+    <choice>
+      <group>
+        <element name="titleaddon">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="titleaddon">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="titleaddon">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="titleaddon">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="titleaddon">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="titleaddon">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="url">
+    <element name="url">
+      <data type="anyURI"/>
+    </element>
+  </define>
+  <!-- venue = element venue { formattext } -->
+  <define name="venue">
+    <choice>
+      <group>
+        <element name="venue">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="venue">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="venue">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="venue">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="venue">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="venue">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="version">
+    <element name="version">
+      <text/>
+    </element>
+  </define>
+  <define name="volume">
+    <element name="volume">
+      <text/>
+    </element>
+  </define>
+  <define name="volumes">
+    <element name="volumes">
+      <text/>
+    </element>
+  </define>
+  <define name="usera">
+    <element name="usera">
+      <text/>
+    </element>
+  </define>
+  <define name="userb">
+    <element name="userb">
+      <text/>
+    </element>
+  </define>
+  <define name="userc">
+    <element name="userc">
+      <text/>
+    </element>
+  </define>
+  <define name="userd">
+    <element name="userd">
+      <text/>
+    </element>
+  </define>
+  <define name="usere">
+    <element name="usere">
+      <text/>
+    </element>
+  </define>
+  <define name="userf">
+    <element name="userf">
+      <text/>
+    </element>
+  </define>
+  <define name="entryset">
+    <a:documentation>special fields</a:documentation>
+    <element name="entryset">
+      <choice>
+        <oneOrMore>
+          <ref name="item"/>
+        </oneOrMore>
+        <text/>
+      </choice>
+    </element>
+  </define>
+  <define name="inset">
+    <element name="entryset">
+      <text/>
+    </element>
+  </define>
+  <define name="crossref">
+    <a:documentation>Can it refer to more than one set???</a:documentation>
+    <element name="crossref">
+      <text/>
+    </element>
+  </define>
+  <define name="entrysubtype">
+    <element name="entrysubtype">
+      <text/>
+    </element>
+  </define>
+  <define name="execute">
+    <element name="execute">
+      <text/>
+    </element>
+  </define>
+  <define name="hyphenation">
+    <element name="hyphenation">
+      <text/>
+    </element>
+  </define>
+  <define name="indexsorttitle">
+    <element name="indexsorttitle">
+      <text/>
+    </element>
+  </define>
+  <define name="indextitle">
+    <element name="indextitle">
+      <text/>
+    </element>
+  </define>
+  <define name="options">
+    <element name="options">
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="option"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="option">
+    <element name="option">
+      <ref name="option.key"/>
+      <ref name="option.value"/>
+    </element>
+  </define>
+  <define name="option.key">
+    <element name="key">
+      <text/>
+    </element>
+  </define>
+  <define name="option.value">
+    <element name="value">
+      <text/>
+    </element>
+  </define>
+  <define name="presort">
+    <element name="presort">
+      <text/>
+    </element>
+  </define>
+  <define name="sortkey">
+    <element name="sortkey">
+      <text/>
+    </element>
+  </define>
+  <define name="key">
+    <element name="key">
+      <text/>
+    </element>
+  </define>
+  <!-- sorttitle = element sorttitle { text } -->
+  <define name="sorttitle">
+    <choice>
+      <group>
+        <element name="sorttitle">
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="sorttitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="sorttitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="sorttitle">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="sorttitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="sorttitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="sortyear">
+    <element name="sortyear">
+      <text/>
+    </element>
+  </define>
+  <define name="useprefix">
+    <element name="useprefix">
+      <text/>
+    </element>
+  </define>
+  <define name="xref">
+    <element name="xref">
+      <text/>
+    </element>
+  </define>
+  <!-- RANGE FIELDS -->
+  <define name="origyear">
+    <element name="origyear">
+      <choice>
+        <text/>
+        <ref name="range"/>
+      </choice>
+    </element>
+  </define>
+  <define name="year">
+    <element name="year">
+      <optional>
+        <ref name="attlist.year"/>
+      </optional>
+      <choice>
+        <text/>
+        <ref name="range"/>
+      </choice>
+      <optional>
+        <ref name="localyear"/>
+      </optional>
+    </element>
+  </define>
+  <!--
+    approximate when exact date is uncertain, 
+    assumed when it is known but not stated on the document
+    and converted when it is stated in a different calendar
+  -->
+  <define name="attlist.year">
+    <attribute name="type">
+      <choice>
+        <value>approximate</value>
+        <value>assumed</value>
+        <value>converted</value>
+      </choice>
+    </attribute>
+  </define>
+  <define name="localyear">
+    <element name="localyear">
+      <ref name="attlist.localyear"/>
+      <choice>
+        <text/>
+        <ref name="range"/>
+      </choice>
+    </element>
+  </define>
+  <define name="attlist.localyear">
+    <attribute name="calendar">
+      <choice>
+        <value>julian</value>
+        <value>hebrew</value>
+        <value>islamic</value>
+        <value>hijrishamsi</value>
+        <value>revolutionary</value>
+      </choice>
+    </attribute>
+    <optional>
+      <attribute name="note"/>
+    </optional>
+  </define>
+  <define name="range">
+    <ref name="range.start"/>
+    <ref name="range.end"/>
+  </define>
+  <define name="range.start">
+    <element name="start">
+      <text/>
+    </element>
+  </define>
+  <define name="range.end">
+    <element name="end">
+      <text/>
+    </element>
+  </define>
+  <define name="pages">
+    <element name="pages">
+      <optional>
+        <ref name="attlist.pages"/>
+      </optional>
+      <choice>
+        <text/>
+        <ref name="range"/>
+        <ref name="pagelist"/>
+      </choice>
+    </element>
+  </define>
+  <define name="pagelist">
+    <element name="list">
+      <text/>
+    </element>
+  </define>
+  <define name="attlist.pages">
+    <optional>
+      <attribute name="pagination">
+        <choice>
+          <value>page</value>
+          <value>column</value>
+          <value>line</value>
+          <value>verse</value>
+          <value>paragraph</value>
+          <value>none</value>
+        </choice>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="bookpagination">
+        <choice>
+          <value>page</value>
+          <value>column</value>
+          <value>line</value>
+          <value>verse</value>
+          <value>paragraph</value>
+          <value>none</value>
+        </choice>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="part"/>
+    </optional>
+  </define>
+  <!-- e.g. when a book has parts in different scripts, with respective paginations -->
+  <!-- INTEGER FIELDS -->
+  <define name="day">
+    <element name="day">
+      <data type="integer"/>
+    </element>
+  </define>
+  <define name="edition">
+    <element name="edition">
+      <choice>
+        <data type="integer"/>
+        <attribute name="string"/>
+      </choice>
+    </element>
+  </define>
+  <define name="month">
+    <element name="month">
+      <data type="integer"/>
+    </element>
+  </define>
+  <define name="urlday">
+    <element name="urlday">
+      <data type="integer"/>
+    </element>
+  </define>
+  <define name="urlmonth">
+    <element name="urlmonth">
+      <data type="integer"/>
+    </element>
+  </define>
+  <define name="urlyear">
+    <element name="urlyear">
+      <data type="integer"/>
+    </element>
+  </define>
+  <!-- DATE FIELDS -->
+  <define name="date">
+    <element name="date">
+      <choice>
+        <data type="date"/>
+        <data type="integer"/>
+      </choice>
+    </element>
+  </define>
+  <define name="urldate">
+    <element name="urldate">
+      <data type="date"/>
+    </element>
+  </define>
+  <!-- LITERAL LISTS -->
+  <define name="attlist.lists">
+    <attribute name="andothers">
+      <value>true</value>
+    </attribute>
+  </define>
+  <define name="institution">
+    <choice>
+      <element name="institution">
+        <attribute name="id"/>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
+      <group>
+        <element name="institution">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="institution">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="institution">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="institution">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="institution">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="institution">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="translated"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="item"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="school">
+    <choice>
+      <element name="school">
+        <attribute name="id"/>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
+      <group>
+        <element name="school">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="school">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="school">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="school">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="school">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="school">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="translated"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="item"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="organization">
+    <choice>
+      <element name="organization">
+        <attribute name="id"/>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
+      <group>
+        <element name="organization">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="organization">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="organization">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="organization">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="organization">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="organization">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="translated"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="item"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="location">
+    <choice>
+      <element name="location">
+        <attribute name="id"/>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
+      <group>
+        <element name="location">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="location">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="location">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="location">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="location">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="location">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="item"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="origlocation">
+    <choice>
+      <element name="origlocation">
+        <attribute name="id"/>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
+      <group>
+        <element name="origlocation">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="origlocation">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="origlocation">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="origlocation">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="origlocation">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="origlocation">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="pubitem"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="publisher">
+    <choice>
+      <element name="publisher">
+        <attribute name="id">
+          <ref name="formattext"/>
+        </attribute>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
+      <group>
+        <element name="publisher">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <ref name="formattext"/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="publisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <ref name="formattext"/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="publisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <ref name="formattext"/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="publisher">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <ref name="formattext"/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="publisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <ref name="formattext"/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="publisher">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <ref name="formattext"/>
+          <oneOrMore>
+            <ref name="item"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="origpublisher">
+    <choice>
+      <element name="origpublisher">
+        <attribute name="id">
+          <ref name="formattext"/>
+        </attribute>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
+      <group>
+        <element name="origpublisher">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <ref name="formattext"/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="origpublisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <ref name="formattext"/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="origpublisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <ref name="formattext"/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="origpublisher">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <ref name="formattext"/>
+            <oneOrMore>
+              <ref name="item"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="origpublisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <ref name="formattext"/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="origpublisher">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <ref name="formattext"/>
+          <oneOrMore>
+            <ref name="item"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="publisherinfo">
+    <choice>
+      <element name="publisher">
+        <attribute name="id">
+          <ref name="formattext"/>
+        </attribute>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
+      <group>
+        <element name="publisher">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <group>
+              <ref name="publishername"/>
+              <ref name="publocation"/>
+            </group>
+            <oneOrMore>
+              <ref name="pubitem"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="publisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <group>
+                <ref name="publishername"/>
+                <ref name="publocation"/>
+              </group>
+              <oneOrMore>
+                <ref name="pubitem"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="publisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <group>
+                <ref name="publishername"/>
+                <ref name="publocation"/>
+              </group>
+              <oneOrMore>
+                <ref name="pubitem"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="publisher">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <group>
+              <ref name="publishername"/>
+              <ref name="publocation"/>
+            </group>
+            <oneOrMore>
+              <ref name="pubitem"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="publisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <group>
+                <ref name="publishername"/>
+                <ref name="publocation"/>
+              </group>
+              <oneOrMore>
+                <ref name="pubitem"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="publisher">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="translated"/>
+        <choice>
+          <group>
+            <ref name="publishername"/>
+            <ref name="publocation"/>
+          </group>
+          <oneOrMore>
+            <ref name="pubitem"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="origpublisherinfo">
+    <choice>
+      <element name="origpublisher">
+        <attribute name="id"/>
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+      </element>
+      <group>
+        <element name="origpublisher">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <group>
+              <ref name="publishername"/>
+              <ref name="publocation"/>
+            </group>
+            <oneOrMore>
+              <ref name="pubitem"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="origpublisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <group>
+                <ref name="publishername"/>
+                <ref name="publocation"/>
+              </group>
+              <oneOrMore>
+                <ref name="pubitem"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="origpublisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <group>
+                <ref name="publishername"/>
+                <ref name="publocation"/>
+              </group>
+              <oneOrMore>
+                <ref name="pubitem"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="origpublisher">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <group>
+              <ref name="publishername"/>
+              <ref name="publocation"/>
+            </group>
+            <oneOrMore>
+              <ref name="pubitem"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="origpublisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <group>
+                <ref name="publishername"/>
+                <ref name="publocation"/>
+              </group>
+              <oneOrMore>
+                <ref name="pubitem"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="origpublisher">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="translated"/>
+        <choice>
+          <group>
+            <ref name="publishername"/>
+            <ref name="publocation"/>
+          </group>
+          <oneOrMore>
+            <ref name="pubitem"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="lista">
+    <element name="lista">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="item"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="listb">
+    <element name="listb">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="item"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="listc">
+    <element name="listc">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="item"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="liste">
+    <element name="liste">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="item"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="listf">
+    <element name="listf">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="item"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="item">
+    <element name="item">
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="pubitem">
+    <element name="item">
+      <ref name="publishername"/>
+      <ref name="location"/>
+    </element>
+  </define>
+  <define name="publishername">
+    <element name="name">
+      <optional>
+        <attribute name="id"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="publocation">
+    <element name="location">
+      <optional>
+        <attribute name="id"/>
+      </optional>
+      <text/>
+    </element>
+  </define>
+  <define name="publisherinfos">
+    <interleave>
+      <optional>
+        <choice>
+          <ref name="publisherinfo"/>
+          <interleave>
+            <optional>
+              <ref name="location"/>
+            </optional>
+            <optional>
+              <ref name="publisher"/>
+            </optional>
+          </interleave>
+        </choice>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="origpublisherinfo"/>
+          <interleave>
+            <optional>
+              <ref name="origlocation"/>
+            </optional>
+            <optional>
+              <ref name="origpublisher"/>
+            </optional>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <!--
+    KEY LISTS
+    TODO add attribute type = babel, xml, ISO-XXX etc 
+  -->
+  <define name="language">
+    <element name="language">
+      <choice>
+        <data type="language"/>
+        <oneOrMore>
+          <ref name="itemlang"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="origlanguage">
+    <element name="origlanguage">
+      <choice>
+        <data type="language"/>
+        <oneOrMore>
+          <ref name="itemlang"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="itemlang">
+    <element name="item">
+      <data type="language"/>
+    </element>
+  </define>
+  <define name="script.list">
+    <choice>
+      <value>Arab</value>
+      <value>Armi</value>
+      <value>Armn</value>
+      <value>Avst</value>
+      <value>Bali</value>
+      <value>Batk</value>
+      <value>Beng</value>
+      <value>Blis</value>
+      <value>Bopo</value>
+      <value>Brah</value>
+      <value>Brai</value>
+      <value>Bugi</value>
+      <value>Buhd</value>
+      <value>Cakm</value>
+      <value>Cans</value>
+      <value>Cari</value>
+      <value>Cham</value>
+      <value>Cher</value>
+      <value>Cirt</value>
+      <value>Copt</value>
+      <value>Cprt</value>
+      <value>Cyrl</value>
+      <value>Cyrs</value>
+      <value>Deva</value>
+      <value>Dsrt</value>
+      <value>Egyd</value>
+      <value>Egyh</value>
+      <value>Egyp</value>
+      <value>Ethi</value>
+      <value>Geok</value>
+      <value>Geor</value>
+      <value>Glag</value>
+      <value>Goth</value>
+      <value>Grek</value>
+      <value>Gujr</value>
+      <value>Guru</value>
+      <value>Hang</value>
+      <value>Hani</value>
+      <value>Hano</value>
+      <value>Hans</value>
+      <value>Hant</value>
+      <value>Hebr</value>
+      <value>Hira</value>
+      <value>Hmng</value>
+      <value>Hrkt</value>
+      <value>Hung</value>
+      <value>Inds</value>
+      <value>Ital</value>
+      <value>Java</value>
+      <value>Jpan</value>
+      <value>Kali</value>
+      <value>Kana</value>
+      <value>Khar</value>
+      <value>Khmr</value>
+      <value>Knda</value>
+      <value>Kore</value>
+      <value>Kthi</value>
+      <value>Lana</value>
+      <value>Laoo</value>
+      <value>Latf</value>
+      <value>Latg</value>
+      <value>Latn</value>
+      <value>Lepc</value>
+      <value>Limb</value>
+      <value>Lina</value>
+      <value>Linb</value>
+      <value>Lisu</value>
+      <value>Lyci</value>
+      <value>Lydi</value>
+      <value>Mand</value>
+      <value>Mani</value>
+      <value>Maya</value>
+      <value>Mero</value>
+      <value>Mlym</value>
+      <value>Mong</value>
+      <value>Moon</value>
+      <value>Mtei</value>
+      <value>Mymr</value>
+      <value>Nkgb</value>
+      <value>Nkoo</value>
+      <value>Ogam</value>
+      <value>Olck</value>
+      <value>Orkh</value>
+      <value>Orya</value>
+      <value>Osma</value>
+      <value>Perm</value>
+      <value>Phag</value>
+      <value>Phli</value>
+      <value>Phlp</value>
+      <value>Phlv</value>
+      <value>Phnx</value>
+      <value>Plrd</value>
+      <value>Prti</value>
+      <value>Qaaa</value>
+      <value>Qabx</value>
+      <value>Rjng</value>
+      <value>Roro</value>
+      <value>Runr</value>
+      <value>Samr</value>
+      <value>Sara</value>
+      <value>Saur</value>
+      <value>Sgnw</value>
+      <value>Shaw</value>
+      <value>Sinh</value>
+      <value>Sund</value>
+      <value>Sylo</value>
+      <value>Syrc</value>
+      <value>Syre</value>
+      <value>Syrj</value>
+      <value>Syrn</value>
+      <value>Tagb</value>
+      <value>Tale</value>
+      <value>Talu</value>
+      <value>Taml</value>
+      <value>Tavt</value>
+      <value>Telu</value>
+      <value>Teng</value>
+      <value>Tfng</value>
+      <value>Tglg</value>
+      <value>Thaa</value>
+      <value>Thai</value>
+      <value>Tibt</value>
+      <value>Ugar</value>
+      <value>Vaii</value>
+      <value>Visp</value>
+      <value>Xpeo</value>
+      <value>Xsux</value>
+      <value>Yiii</value>
+      <value>Zinh</value>
+      <value>Zmth</value>
+      <value>Zsym</value>
+      <value>Zxxx</value>
+      <value>Zyyy</value>
+      <value>Zzzz</value>
+    </choice>
+  </define>
+  <define name="script">
+    <element name="script">
+      <choice>
+        <ref name="script.list"/>
+        <oneOrMore>
+          <ref name="itemscript"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="origscript">
+    <element name="origscript">
+      <choice>
+        <ref name="script.list"/>
+        <oneOrMore>
+          <ref name="itemscript"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="itemscript">
+    <element name="item">
+      <ref name="script.list"/>
+    </element>
+  </define>
+  <!-- NAME LISTS -->
+  <define name="attlist.author" combine="choice">
+    <optional>
+      <attribute name="type">
+        <value>author</value>
+      </attribute>
+    </optional>
+  </define>
+  <define name="attlist.author" combine="choice">
+    <optional>
+      <attribute name="gender">
+        <choice>
+          <value>sf</value>
+          <value>sm</value>
+          <value>sn</value>
+          <value>pf</value>
+          <value>pm</value>
+          <value>pn</value>
+          <value>pp</value>
+        </choice>
+      </attribute>
+    </optional>
+  </define>
+  <define name="attlist.author" combine="choice">
+    <optional>
+      <ref name="attlist.lists"/>
+    </optional>
+  </define>
+  <define name="attlist.editor" combine="choice">
+    <optional>
+      <attribute name="type">
+        <choice>
+          <value>editor</value>
+          <value>compiler</value>
+        </choice>
+      </attribute>
+    </optional>
+  </define>
+  <define name="attlist.editor" combine="choice">
+    <optional>
+      <attribute name="gender">
+        <choice>
+          <value>sf</value>
+          <value>sm</value>
+          <value>sn</value>
+          <value>pf</value>
+          <value>pm</value>
+          <value>pn</value>
+          <value>pp</value>
+        </choice>
+      </attribute>
+    </optional>
+  </define>
+  <define name="attlist.editor" combine="choice">
+    <optional>
+      <ref name="attlist.lists"/>
+    </optional>
+  </define>
+  <define name="author">
+    <choice>
+      <group>
+        <element name="author">
+          <ref name="attlist.author"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="author">
+            <ref name="attlist.author"/>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="author">
+            <ref name="attlist.author"/>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="author">
+          <ref name="attlist.author"/>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="author">
+            <ref name="attlist.author"/>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="author">
+        <ref name="attlist.author"/>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="person"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="editor">
+    <choice>
+      <group>
+        <element name="editor">
+          <ref name="attlist.editor"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="editor">
+            <ref name="attlist.editor"/>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="editor">
+            <ref name="attlist.editor"/>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="editor">
+          <ref name="attlist.editor"/>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="editor">
+            <ref name="attlist.editor"/>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="editor">
+        <ref name="attlist.editor"/>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="person"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="afterword">
+    <choice>
+      <group>
+        <element name="afterword">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="afterword">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="afterword">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="afterword">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="afterword">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="afterword">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="person"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="annotator">
+    <choice>
+      <group>
+        <element name="annotator">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="annotator">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="annotator">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="annotator">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="annotator">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="annotator">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="person"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="bookauthor">
+    <choice>
+      <group>
+        <element name="bookauthor">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="bookauthor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="bookauthor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="bookauthor">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="bookauthor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="bookauthor">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="person"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="commentator">
+    <choice>
+      <group>
+        <element name="commentator">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="commentator">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="commentator">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="commentator">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="commentator">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="commentator">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="person"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="foreword">
+    <choice>
+      <group>
+        <element name="foreword">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="foreword">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="foreword">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="foreword">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="foreword">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="foreword">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="person"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="holder">
+    <choice>
+      <group>
+        <element name="holder">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="holder">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="holder">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="holder">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="holder">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="holder">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="person"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="introduction">
+    <choice>
+      <group>
+        <element name="introduction">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="introduction">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="introduction">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="introduction">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="introduction">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="introduction">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="person"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="redactor">
+    <choice>
+      <group>
+        <element name="redactor">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="redactor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="redactor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="redactor">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="redactor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="redactor">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="person"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="translator">
+    <choice>
+      <group>
+        <element name="translator">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="translator">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="translator">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="translator">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="translator">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="translator">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="person"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="shortauthor">
+    <choice>
+      <group>
+        <element name="shortauthor">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="shortauthor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="shortauthor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="shortauthor">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="shortauthor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="shortauthor">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="person"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="shorteditor">
+    <choice>
+      <group>
+        <element name="shorteditor">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="shorteditor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="shorteditor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="shorteditor">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="shorteditor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="shorteditor">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="person"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="sortname">
+    <choice>
+      <group>
+        <element name="sortname">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="sortname">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="sortname">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="sortname">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="sortname">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="sortname">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="person"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="namea">
+    <choice>
+      <group>
+        <element name="namea">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="namea">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="namea">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="namea">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="namea">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="namea">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="person"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="nameb">
+    <choice>
+      <group>
+        <element name="nameb">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="nameb">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="nameb">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="nameb">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="nameb">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="nameb">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="person"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="namec">
+    <choice>
+      <group>
+        <element name="namec">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="namec">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="namec">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <group>
+        <element name="namec">
+          <optional>
+            <ref name="attlist.lists"/>
+          </optional>
+          <ref name="romanized"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <optional>
+          <element name="namec">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </optional>
+      </group>
+      <element name="namec">
+        <optional>
+          <ref name="attlist.lists"/>
+        </optional>
+        <ref name="uniform"/>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="person"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="person">
+    <element name="person">
+      <ref name="attlist.person"/>
+      <choice>
+        <text/>
+        <group>
+          <ref name="first"/>
+          <optional>
+            <ref name="prefix"/>
+          </optional>
+          <ref name="last"/>
+          <optional>
+            <ref name="suffix"/>
+          </optional>
+        </group>
+      </choice>
+    </element>
+  </define>
+  <define name="attlist.person" combine="choice">
+    <optional>
+      <attribute name="id"/>
+    </optional>
+    <optional>
+      <!-- ? -->
+      <attribute name="email"/>
+    </optional>
+    <optional>
+      <attribute name="url"/>
+    </optional>
+    <optional>
+      <!-- FIXME -->
+      <attribute name="yearofbirth">
+        <data type="integer"/>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="yearofdeath">
+        <data type="integer"/>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="gender">
+        <choice>
+          <value>male</value>
+          <value>female</value>
+        </choice>
+      </attribute>
+    </optional>
+  </define>
+  <define name="first">
+    <element name="first">
+      <text/>
+    </element>
+  </define>
+  <!-- initials = element initials { text } -->
+  <define name="last">
+    <element name="last">
+      <text/>
+    </element>
+  </define>
+  <!-- middle = element middle { text } -->
+  <define name="prefix">
+    <element name="prefix">
+      <text/>
+    </element>
+  </define>
+  <define name="suffix">
+    <element name="suffix">
+      <text/>
+    </element>
+  </define>
+  <define name="keywords" combine="choice">
+    <element name="keywords">
+      <choice>
+        <list>
+          <oneOrMore>
+            <data type="string"/>
+          </oneOrMore>
+        </list>
+        <oneOrMore>
+          <ref name="item"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <!-- NB in biblatex this list is comma-separated, here it is separated by whitespace or itemized -->
+  <define name="reprintinfo">
+    <element name="reprintinfo">
+      <choice>
+        <ref name="attlist.reprintinfo"/>
+        <group>
+          <optional>
+            <attribute name="note"/>
+          </optional>
+          <text/>
+        </group>
+      </choice>
+    </element>
+  </define>
+  <define name="attlist.reprintinfo" combine="choice">
+    <attribute name="crossref"/>
+    <optional>
+      <attribute name="volume"/>
+    </optional>
+    <optional>
+      <attribute name="pages"/>
+    </optional>
+    <optional>
+      <attribute name="item"/>
+    </optional>
+    <optional>
+      <attribute name="year"/>
+    </optional>
+    <optional>
+      <attribute name="note"/>
+    </optional>
+  </define>
+  <define name="reviews">
+    <element name="reviews">
+      <zeroOrMore>
+        <ref name="reviewitem"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="reviewitem">
+    <element name="item">
+      <optional>
+        <ref name="attlist.review"/>
+      </optional>
+      <optional>
+        <text/>
+      </optional>
+    </element>
+  </define>
+  <define name="attlist.review" combine="choice">
+    <optional>
+      <attribute name="type"/>
+    </optional>
+    <optional>
+      <attribute name="url">
+        <data type="anyURI"/>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="author"/>
+    </optional>
+    <optional>
+      <attribute name="note"/>
+    </optional>
+    <optional>
+      <attribute name="crossref"/>
+    </optional>
+  </define>
+  <define name="topics">
+    <element name="topics">
+      <zeroOrMore>
+        <ref name="topic"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="topic">
+    <element>
+      <anyName/>
+      <text/>
+    </element>
+  </define>
+  <define name="remarks">
+    <element name="remarks">
+      <choice>
+        <ref name="formattext"/>
+        <oneOrMore>
+          <ref name="item"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="BibLaTeXML.article.standard.fields">
+    <a:documentation>culture
+language
+country
+person
+century
+author
+works</a:documentation>
+    <a:documentation/>
+    <interleave>
+      <ref name="author"/>
+      <!-- NB: this should be optional -->
+      <choice>
+        <ref name="journaltitle"/>
+        <ref name="journal"/>
+      </choice>
+      <choice>
+        <interleave>
+          <optional>
+            <choice>
+              <interleave>
+                <optional>
+                  <ref name="day"/>
+                </optional>
+                <ref name="month"/>
+              </interleave>
+              <ref name="issue"/>
+            </choice>
+          </optional>
+          <ref name="year"/>
+        </interleave>
+        <ref name="date"/>
+      </choice>
+      <optional>
+        <ref name="editor"/>
+      </optional>
+      <optional>
+        <ref name="shorteditor"/>
+      </optional>
+      <optional>
+        <ref name="translator"/>
+      </optional>
+      <optional>
+        <ref name="redactor"/>
+      </optional>
+      <optional>
+        <ref name="annotator"/>
+      </optional>
+      <optional>
+        <ref name="commentator"/>
+      </optional>
+      <optional>
+        <ref name="subtitle"/>
+      </optional>
+      <optional>
+        <ref name="titleaddon"/>
+      </optional>
+      <optional>
+        <ref name="journalsubtitle"/>
+      </optional>
+      <optional>
+        <ref name="issuetitle"/>
+      </optional>
+      <optional>
+        <ref name="issuesubtitle"/>
+      </optional>
+      <optional>
+        <ref name="issuetitleaddon"/>
+      </optional>
+      <optional>
+        <ref name="series"/>
+      </optional>
+      <optional>
+        <ref name="volume"/>
+      </optional>
+      <optional>
+        <ref name="number"/>
+      </optional>
+      <ref name="publisherinfos"/>
+      <optional>
+        <ref name="eid"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="version"/>
+      </optional>
+      <optional>
+        <ref name="pages"/>
+      </optional>
+      <optional>
+        <ref name="note"/>
+      </optional>
+      <optional>
+        <ref name="issn"/>
+      </optional>
+      <optional>
+        <ref name="addendum"/>
+      </optional>
+      <optional>
+        <ref name="doi"/>
+      </optional>
+      <optional>
+        <!-- url? &  -->
+        <choice>
+          <ref name="urldate"/>
+          <group>
+            <ref name="urlday"/>
+            <ref name="urlmonth"/>
+            <ref name="urlyear"/>
+          </group>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.article.fields">
+    <interleave>
+      <ref name="BibLaTeXML.article.standard.fields"/>
+      <ref name="BibLaTeXML.common.fields"/>
+      <ref name="BibLaTeXML.additional.fields"/>
+    </interleave>
+  </define>
+  <define name="article">
+    <element name="entry">
+      <ref name="attlist.article"/>
+      <interleave>
+        <ref name="title"/>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <ref name="BibLaTeXML.article.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="attlist.article">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>article</value>
+    </attribute>
+    <optional>
+      <attribute name="type">
+        <value>printed</value>
+      </attribute>
+    </optional>
+  </define>
+  <!-- url mandatory if type is electronic -->
+  <define name="article.electronic">
+    <a:documentation/>
+    <element name="entry">
+      <ref name="attlist.article.electronic"/>
+      <interleave>
+        <ref name="url"/>
+        <ref name="title"/>
+        <ref name="BibLaTeXML.article.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="attlist.article.electronic">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>article</value>
+    </attribute>
+    <attribute name="type">
+      <value>electronic</value>
+    </attribute>
+  </define>
+  <!-- for reviews we need attribute ref or title or both -->
+  <define name="review">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <ref name="attlist.review"/>
+        <choice>
+          <ref name="crossref"/>
+          <ref name="title"/>
+        </choice>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <ref name="BibLaTeXML.article.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="attlist.review">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>review</value>
+    </attribute>
+    <optional>
+      <attribute name="type">
+        <value>printed</value>
+      </attribute>
+    </optional>
+  </define>
+  <!-- url mandatory if type is electronic -->
+  <define name="review.electronic">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <ref name="attlist.review.electronic"/>
+        <choice>
+          <ref name="crossref"/>
+          <ref name="title"/>
+        </choice>
+        <ref name="url"/>
+        <ref name="BibLaTeXML.article.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="attlist.review.electronic">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>review</value>
+    </attribute>
+    <attribute name="type">
+      <value>electronic</value>
+    </attribute>
+  </define>
+  <define name="BibLaTeXML.book.standard.fields">
+    <a:documentation/>
+    <interleave>
+      <optional>
+        <ref name="author"/>
+      </optional>
+      <optional>
+        <!-- changed -->
+        <ref name="editor"/>
+      </optional>
+      <!-- changed -->
+      <choice>
+        <interleave>
+          <ref name="title"/>
+          <ref name="year"/>
+        </interleave>
+        <interleave>
+          <optional>
+            <ref name="title"/>
+          </optional>
+          <optional>
+            <ref name="year"/>
+          </optional>
+          <ref name="crossref"/>
+        </interleave>
+      </choice>
+      <optional>
+        <!-- a book can inherit its elements from another book (e.g. individual volumes with diff titles) -->
+        <ref name="bookauthor"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="shorteditor"/>
+      </optional>
+      <optional>
+        <ref name="translator"/>
+      </optional>
+      <optional>
+        <ref name="redactor"/>
+      </optional>
+      <optional>
+        <ref name="annotator"/>
+      </optional>
+      <optional>
+        <ref name="commentator"/>
+      </optional>
+      <optional>
+        <ref name="introduction"/>
+      </optional>
+      <optional>
+        <ref name="foreword"/>
+      </optional>
+      <optional>
+        <ref name="afterword"/>
+      </optional>
+      <optional>
+        <ref name="subtitle"/>
+      </optional>
+      <optional>
+        <ref name="titleaddon"/>
+      </optional>
+      <optional>
+        <ref name="maintitle"/>
+      </optional>
+      <optional>
+        <ref name="mainsubtitle"/>
+      </optional>
+      <optional>
+        <ref name="maintitleaddon"/>
+      </optional>
+      <optional>
+        <ref name="booktitle"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="booktitleaddon"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="booksubtitle"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="volume"/>
+      </optional>
+      <optional>
+        <ref name="part"/>
+      </optional>
+      <optional>
+        <ref name="edition"/>
+      </optional>
+      <optional>
+        <ref name="volumes"/>
+      </optional>
+      <optional>
+        <ref name="series"/>
+      </optional>
+      <optional>
+        <ref name="number"/>
+      </optional>
+      <optional>
+        <ref name="note"/>
+      </optional>
+      <ref name="publisherinfos"/>
+      <optional>
+        <ref name="isbn"/>
+      </optional>
+      <optional>
+        <ref name="oclc"/>
+      </optional>
+      <optional>
+        <ref name="lccn"/>
+      </optional>
+      <optional>
+        <ref name="issn"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="chapter"/>
+      </optional>
+      <optional>
+        <ref name="pages"/>
+      </optional>
+      <optional>
+        <ref name="pagetotal"/>
+      </optional>
+      <optional>
+        <ref name="addendum"/>
+      </optional>
+      <optional>
+        <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="url"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="urldate"/>
+          <interleave>
+            <ref name="urlday"/>
+            <ref name="urlmonth"/>
+            <ref name="urlyear"/>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.book.fields">
+    <interleave>
+      <ref name="BibLaTeXML.book.standard.fields"/>
+      <ref name="BibLaTeXML.common.fields"/>
+      <ref name="BibLaTeXML.additional.fields"/>
+    </interleave>
+  </define>
+  <define name="book">
+    <element name="entry">
+      <ref name="attlist.book"/>
+      <ref name="BibLaTeXML.book.fields"/>
+    </element>
+  </define>
+  <define name="attlist.book">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>book</value>
+    </attribute>
+  </define>
+  <define name="BibLaTeXML.booklet.standard.fields">
+    <a:documentation/>
+    <interleave>
+      <optional>
+        <ref name="author"/>
+      </optional>
+      <optional>
+        <!-- changed -->
+        <ref name="editor"/>
+      </optional>
+      <!-- changed -->
+      <ref name="title"/>
+      <ref name="year"/>
+      <optional>
+        <ref name="subtitle"/>
+      </optional>
+      <optional>
+        <ref name="titleaddon"/>
+      </optional>
+      <optional>
+        <!-- howpublished? & -> attribute -->
+        <ref name="note"/>
+      </optional>
+      <ref name="publisherinfos"/>
+      <optional>
+        <ref name="chapter"/>
+      </optional>
+      <optional>
+        <ref name="pages"/>
+      </optional>
+      <optional>
+        <ref name="pagetotal"/>
+      </optional>
+      <optional>
+        <ref name="addendum"/>
+      </optional>
+      <optional>
+        <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="url"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="urldate"/>
+          <interleave>
+            <ref name="urlday"/>
+            <ref name="urlmonth"/>
+            <ref name="urlyear"/>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.booklet.fields">
+    <interleave>
+      <ref name="BibLaTeXML.booklet.standard.fields"/>
+      <ref name="BibLaTeXML.common.fields"/>
+      <ref name="BibLaTeXML.additional.fields"/>
+    </interleave>
+  </define>
+  <define name="booklet">
+    <element name="entry">
+      <ref name="attlist.booklet"/>
+      <ref name="BibLaTeXML.booklet.fields"/>
+    </element>
+  </define>
+  <define name="attlist.booklet">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>booklet</value>
+    </attribute>
+    <optional>
+      <attribute name="type"/>
+    </optional>
+    <optional>
+      <attribute name="howpublished"/>
+    </optional>
+  </define>
+  <define name="BibLaTeXML.collection.standard.fields">
+    <a:documentation/>
+    <interleave>
+      <optional>
+        <ref name="editor"/>
+      </optional>
+      <optional>
+        <!-- changed -->
+        <ref name="author"/>
+      </optional>
+      <!-- changed -->
+      <ref name="title"/>
+      <ref name="year"/>
+      <optional>
+        <ref name="bookauthor"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="shorteditor"/>
+      </optional>
+      <optional>
+        <ref name="translator"/>
+      </optional>
+      <optional>
+        <ref name="redactor"/>
+      </optional>
+      <optional>
+        <ref name="annotator"/>
+      </optional>
+      <optional>
+        <ref name="commentator"/>
+      </optional>
+      <optional>
+        <ref name="introduction"/>
+      </optional>
+      <optional>
+        <ref name="foreword"/>
+      </optional>
+      <optional>
+        <ref name="afterword"/>
+      </optional>
+      <optional>
+        <ref name="subtitle"/>
+      </optional>
+      <optional>
+        <ref name="titleaddon"/>
+      </optional>
+      <optional>
+        <ref name="maintitle"/>
+      </optional>
+      <optional>
+        <ref name="mainsubtitle"/>
+      </optional>
+      <optional>
+        <ref name="maintitleaddon"/>
+      </optional>
+      <optional>
+        <ref name="booktitle"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="booktitleaddon"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="booksubtitle"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="volume"/>
+      </optional>
+      <optional>
+        <ref name="part"/>
+      </optional>
+      <optional>
+        <ref name="edition"/>
+      </optional>
+      <optional>
+        <ref name="volumes"/>
+      </optional>
+      <optional>
+        <ref name="series"/>
+      </optional>
+      <optional>
+        <ref name="number"/>
+      </optional>
+      <optional>
+        <ref name="note"/>
+      </optional>
+      <ref name="publisherinfos"/>
+      <optional>
+        <ref name="isbn"/>
+      </optional>
+      <optional>
+        <ref name="oclc"/>
+      </optional>
+      <optional>
+        <ref name="lccn"/>
+      </optional>
+      <optional>
+        <ref name="issn"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="chapter"/>
+      </optional>
+      <optional>
+        <ref name="pages"/>
+      </optional>
+      <optional>
+        <ref name="pagetotal"/>
+      </optional>
+      <optional>
+        <ref name="addendum"/>
+      </optional>
+      <optional>
+        <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="url"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="urldate"/>
+          <interleave>
+            <ref name="urlday"/>
+            <ref name="urlmonth"/>
+            <ref name="urlyear"/>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.collection.fields">
+    <interleave>
+      <ref name="BibLaTeXML.collection.standard.fields"/>
+      <ref name="BibLaTeXML.common.fields"/>
+      <ref name="BibLaTeXML.additional.fields"/>
+    </interleave>
+  </define>
+  <define name="collection">
+    <element name="entry">
+      <ref name="attlist.collection"/>
+      <ref name="BibLaTeXML.collection.fields"/>
+    </element>
+  </define>
+  <define name="attlist.collection">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>collection</value>
+    </attribute>
+  </define>
+  <define name="BibLaTeXML.inbook.standard.fields">
+    <a:documentation>  </a:documentation>
+    <interleave>
+      <ref name="author"/>
+      <ref name="title"/>
+      <!-- year can be provided with crossref if it refers to multivolume work -->
+      <choice>
+        <interleave>
+          <choice>
+            <ref name="crossref"/>
+            <ref name="xref"/>
+          </choice>
+          <optional>
+            <ref name="year"/>
+          </optional>
+        </interleave>
+        <interleave>
+          <optional>
+            <ref name="bookauthor"/>
+          </optional>
+          <!-- FIXME: this is probably too strict -->
+          <ref name="booktitle"/>
+          <optional>
+            <ref name="maintitle"/>
+          </optional>
+          <optional>
+            <ref name="mainsubtitle"/>
+          </optional>
+          <optional>
+            <ref name="maintitleaddon"/>
+          </optional>
+          <optional>
+            <ref name="booksubtitle"/>
+          </optional>
+          <optional>
+            <ref name="booktitleaddon"/>
+          </optional>
+          <ref name="year"/>
+          <optional>
+            <ref name="editor"/>
+          </optional>
+          <optional>
+            <ref name="shorteditor"/>
+          </optional>
+          <optional>
+            <ref name="translator"/>
+          </optional>
+          <optional>
+            <ref name="redactor"/>
+          </optional>
+          <optional>
+            <ref name="annotator"/>
+          </optional>
+          <optional>
+            <ref name="commentator"/>
+          </optional>
+          <optional>
+            <ref name="introduction"/>
+          </optional>
+          <optional>
+            <ref name="foreword"/>
+          </optional>
+          <optional>
+            <ref name="afterword"/>
+          </optional>
+          <optional>
+            <ref name="edition"/>
+          </optional>
+          <optional>
+            <ref name="volumes"/>
+          </optional>
+          <optional>
+            <ref name="series"/>
+          </optional>
+          <optional>
+            <ref name="number"/>
+          </optional>
+          <ref name="publisherinfos"/>
+          <optional>
+            <ref name="issn"/>
+          </optional>
+          <optional>
+            <!-- added -->
+            <ref name="isbn"/>
+          </optional>
+          <optional>
+            <ref name="oclc"/>
+          </optional>
+          <optional>
+            <ref name="lccn"/>
+          </optional>
+        </interleave>
+      </choice>
+      <optional>
+        <ref name="subtitle"/>
+      </optional>
+      <optional>
+        <ref name="titleaddon"/>
+      </optional>
+      <optional>
+        <ref name="volume"/>
+      </optional>
+      <optional>
+        <ref name="part"/>
+      </optional>
+      <optional>
+        <ref name="note"/>
+      </optional>
+      <optional>
+        <ref name="chapter"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="pages"/>
+          <ref name="pagetotal"/>
+        </choice>
+      </optional>
+      <optional>
+        <ref name="addendum"/>
+      </optional>
+      <optional>
+        <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="url"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="urldate"/>
+          <interleave>
+            <ref name="urlday"/>
+            <ref name="urlmonth"/>
+            <ref name="urlyear"/>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.inbook.fields">
+    <interleave>
+      <ref name="BibLaTeXML.inbook.standard.fields"/>
+      <ref name="BibLaTeXML.common.fields"/>
+      <ref name="BibLaTeXML.additional.fields"/>
+    </interleave>
+  </define>
+  <define name="inbook">
+    <element name="entry">
+      <ref name="attlist.inbook"/>
+      <ref name="BibLaTeXML.inbook.fields"/>
+    </element>
+  </define>
+  <define name="attlist.inbook">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>inbook</value>
+    </attribute>
+  </define>
+  <define name="BibLaTeXML.incollection.standard.fields">
+    <a:documentation/>
+    <interleave>
+      <ref name="author"/>
+      <ref name="title"/>
+      <optional>
+        <ref name="subtitle"/>
+      </optional>
+      <optional>
+        <ref name="titleaddon"/>
+      </optional>
+      <!-- year can be provided with crossref if it refers to multivolume work -->
+      <choice>
+        <interleave>
+          <choice>
+            <ref name="crossref"/>
+            <ref name="xref"/>
+          </choice>
+          <optional>
+            <ref name="year"/>
+          </optional>
+        </interleave>
+        <interleave>
+          <optional>
+            <ref name="editor"/>
+          </optional>
+          <!--
+            made it optional
+            FIXME: this is probably too strict
+          -->
+          <ref name="booktitle"/>
+          <ref name="year"/>
+          <optional>
+            <ref name="shorteditor"/>
+          </optional>
+          <optional>
+            <ref name="translator"/>
+          </optional>
+          <optional>
+            <ref name="redactor"/>
+          </optional>
+          <optional>
+            <ref name="annotator"/>
+          </optional>
+          <optional>
+            <ref name="commentator"/>
+          </optional>
+          <optional>
+            <ref name="introduction"/>
+          </optional>
+          <optional>
+            <ref name="foreword"/>
+          </optional>
+          <optional>
+            <ref name="afterword"/>
+          </optional>
+          <optional>
+            <ref name="maintitle"/>
+          </optional>
+          <optional>
+            <ref name="mainsubtitle"/>
+          </optional>
+          <optional>
+            <ref name="maintitleaddon"/>
+          </optional>
+          <optional>
+            <ref name="booksubtitle"/>
+          </optional>
+          <optional>
+            <ref name="booktitleaddon"/>
+          </optional>
+          <ref name="publisherinfos"/>
+          <optional>
+            <ref name="volumes"/>
+          </optional>
+          <optional>
+            <ref name="number"/>
+          </optional>
+          <optional>
+            <ref name="edition"/>
+          </optional>
+          <optional>
+            <ref name="series"/>
+          </optional>
+          <optional>
+            <ref name="issn"/>
+          </optional>
+          <optional>
+            <!-- added  -->
+            <ref name="isbn"/>
+          </optional>
+          <optional>
+            <ref name="oclc"/>
+          </optional>
+          <optional>
+            <ref name="lccn"/>
+          </optional>
+        </interleave>
+      </choice>
+      <optional>
+        <ref name="volume"/>
+      </optional>
+      <optional>
+        <ref name="part"/>
+      </optional>
+      <optional>
+        <ref name="note"/>
+      </optional>
+      <optional>
+        <ref name="chapter"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="pages"/>
+          <ref name="pagetotal"/>
+        </choice>
+      </optional>
+      <optional>
+        <ref name="addendum"/>
+      </optional>
+      <optional>
+        <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="url"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="urldate"/>
+          <interleave>
+            <ref name="urlday"/>
+            <ref name="urlmonth"/>
+            <ref name="urlyear"/>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.incollection.fields">
+    <interleave>
+      <ref name="BibLaTeXML.incollection.standard.fields"/>
+      <ref name="BibLaTeXML.common.fields"/>
+      <ref name="BibLaTeXML.additional.fields"/>
+    </interleave>
+  </define>
+  <define name="incollection">
+    <element name="entry">
+      <ref name="attlist.incollection"/>
+      <ref name="BibLaTeXML.incollection.fields"/>
+    </element>
+  </define>
+  <define name="attlist.incollection">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>incollection</value>
+    </attribute>
+  </define>
+  <define name="BibLaTeXML.inproceedings.standard.fields">
+    <a:documentation/>
+    <interleave>
+      <ref name="author"/>
+      <ref name="title"/>
+      <optional>
+        <ref name="subtitle"/>
+      </optional>
+      <optional>
+        <ref name="titleaddon"/>
+      </optional>
+      <choice>
+        <ref name="crossref"/>
+        <ref name="xref"/>
+        <interleave>
+          <optional>
+            <ref name="editor"/>
+          </optional>
+          <!-- made it optional -->
+          <ref name="booktitle"/>
+          <ref name="year"/>
+          <optional>
+            <ref name="shorteditor"/>
+          </optional>
+          <optional>
+            <ref name="maintitle"/>
+          </optional>
+          <optional>
+            <ref name="mainsubtitle"/>
+          </optional>
+          <optional>
+            <ref name="maintitleaddon"/>
+          </optional>
+          <optional>
+            <ref name="booksubtitle"/>
+          </optional>
+          <optional>
+            <ref name="booktitleaddon"/>
+          </optional>
+          <optional>
+            <ref name="venue"/>
+          </optional>
+          <optional>
+            <ref name="volumes"/>
+          </optional>
+          <optional>
+            <ref name="series"/>
+          </optional>
+          <optional>
+            <ref name="number"/>
+          </optional>
+          <optional>
+            <ref name="organization"/>
+          </optional>
+          <ref name="publisherinfos"/>
+          <optional>
+            <ref name="issn"/>
+          </optional>
+          <optional>
+            <!-- added  -->
+            <ref name="isbn"/>
+          </optional>
+          <optional>
+            <ref name="oclc"/>
+          </optional>
+          <optional>
+            <ref name="lccn"/>
+          </optional>
+        </interleave>
+      </choice>
+      <optional>
+        <ref name="volume"/>
+      </optional>
+      <optional>
+        <ref name="part"/>
+      </optional>
+      <optional>
+        <ref name="note"/>
+      </optional>
+      <optional>
+        <ref name="chapter"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="pages"/>
+          <ref name="pagetotal"/>
+        </choice>
+      </optional>
+      <optional>
+        <ref name="addendum"/>
+      </optional>
+      <optional>
+        <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="url"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="urldate"/>
+          <interleave>
+            <ref name="urlday"/>
+            <ref name="urlmonth"/>
+            <ref name="urlyear"/>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.inproceedings.fields">
+    <interleave>
+      <ref name="BibLaTeXML.inproceedings.standard.fields"/>
+      <ref name="BibLaTeXML.common.fields"/>
+      <ref name="BibLaTeXML.additional.fields"/>
+    </interleave>
+  </define>
+  <define name="inproceedings">
+    <element name="entry">
+      <ref name="attlist.inproceedings"/>
+      <ref name="BibLaTeXML.inproceedings.fields"/>
+    </element>
+  </define>
+  <define name="attlist.inproceedings">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>inproceedings</value>
+    </attribute>
+  </define>
+  <define name="BibLaTeXML.manual.standard.fields">
+    <a:documentation/>
+    <interleave>
+      <optional>
+        <choice>
+          <ref name="author"/>
+          <ref name="editor"/>
+        </choice>
+      </optional>
+      <ref name="title"/>
+      <ref name="year"/>
+      <optional>
+        <ref name="subtitle"/>
+      </optional>
+      <optional>
+        <ref name="titleaddon"/>
+      </optional>
+      <optional>
+        <ref name="edition"/>
+      </optional>
+      <optional>
+        <ref name="version"/>
+      </optional>
+      <optional>
+        <ref name="series"/>
+      </optional>
+      <optional>
+        <ref name="number"/>
+      </optional>
+      <optional>
+        <ref name="note"/>
+      </optional>
+      <optional>
+        <ref name="organization"/>
+      </optional>
+      <ref name="publisherinfos"/>
+      <optional>
+        <ref name="isbn"/>
+      </optional>
+      <optional>
+        <ref name="oclc"/>
+      </optional>
+      <optional>
+        <ref name="lccn"/>
+      </optional>
+      <optional>
+        <ref name="chapter"/>
+      </optional>
+      <optional>
+        <ref name="pages"/>
+      </optional>
+      <optional>
+        <ref name="pagetotal"/>
+      </optional>
+      <optional>
+        <ref name="addendum"/>
+      </optional>
+      <optional>
+        <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="url"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="urldate"/>
+          <interleave>
+            <ref name="urlday"/>
+            <ref name="urlmonth"/>
+            <ref name="urlyear"/>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.manual.fields">
+    <interleave>
+      <ref name="BibLaTeXML.manual.standard.fields"/>
+      <ref name="BibLaTeXML.common.fields"/>
+      <ref name="BibLaTeXML.additional.fields"/>
+    </interleave>
+  </define>
+  <define name="manual">
+    <element name="entry">
+      <ref name="attlist.manual"/>
+      <ref name="BibLaTeXML.manual.fields"/>
+    </element>
+  </define>
+  <define name="attlist.manual">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>manual</value>
+    </attribute>
+    <optional>
+      <attribute name="type"/>
+    </optional>
+  </define>
+  <define name="BibLaTeXML.misc.standard.fields">
+    <a:documentation/>
+    <interleave>
+      <optional>
+        <choice>
+          <ref name="author"/>
+          <ref name="editor"/>
+        </choice>
+      </optional>
+      <ref name="title"/>
+      <choice>
+        <interleave>
+          <optional>
+            <ref name="day"/>
+          </optional>
+          <optional>
+            <ref name="month"/>
+          </optional>
+          <ref name="year"/>
+        </interleave>
+        <ref name="date"/>
+      </choice>
+      <optional>
+        <ref name="subtitle"/>
+      </optional>
+      <optional>
+        <ref name="titleaddon"/>
+      </optional>
+      <optional>
+        <!--  howpublished? & -> attribute -->
+        <ref name="version"/>
+      </optional>
+      <optional>
+        <ref name="note"/>
+      </optional>
+      <optional>
+        <ref name="organization"/>
+      </optional>
+      <ref name="publisherinfos"/>
+      <optional>
+        <ref name="addendum"/>
+      </optional>
+      <optional>
+        <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="url"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="urldate"/>
+          <interleave>
+            <ref name="urlday"/>
+            <ref name="urlmonth"/>
+            <ref name="urlyear"/>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.misc.fields">
+    <interleave>
+      <ref name="BibLaTeXML.misc.standard.fields"/>
+      <ref name="BibLaTeXML.common.fields"/>
+      <ref name="BibLaTeXML.additional.fields"/>
+    </interleave>
+  </define>
+  <define name="misc">
+    <element name="entry">
+      <ref name="attlist.misc"/>
+      <ref name="BibLaTeXML.misc.fields"/>
+    </element>
+  </define>
+  <define name="attlist.misc">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>misc</value>
+    </attribute>
+    <optional>
+      <attribute name="type"/>
+    </optional>
+    <optional>
+      <attribute name="howpublished"/>
+    </optional>
+  </define>
+  <define name="BibLaTeXML.online.standard.fields">
+    <a:documentation/>
+    <interleave>
+      <optional>
+        <choice>
+          <ref name="author"/>
+          <ref name="editor"/>
+        </choice>
+      </optional>
+      <ref name="title"/>
+      <choice>
+        <interleave>
+          <optional>
+            <ref name="day"/>
+          </optional>
+          <optional>
+            <ref name="month"/>
+          </optional>
+          <ref name="year"/>
+        </interleave>
+        <ref name="date"/>
+      </choice>
+      <choice>
+        <ref name="url"/>
+        <ref name="eprint"/>
+      </choice>
+      <optional>
+        <ref name="subtitle"/>
+      </optional>
+      <optional>
+        <ref name="titleaddon"/>
+      </optional>
+      <optional>
+        <ref name="version"/>
+      </optional>
+      <optional>
+        <ref name="note"/>
+      </optional>
+      <optional>
+        <ref name="organization"/>
+      </optional>
+      <optional>
+        <ref name="addendum"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="urldate"/>
+          <interleave>
+            <ref name="urlday"/>
+            <ref name="urlmonth"/>
+            <ref name="urlyear"/>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.online.fields">
+    <interleave>
+      <ref name="BibLaTeXML.online.standard.fields"/>
+      <ref name="BibLaTeXML.common.fields"/>
+      <ref name="BibLaTeXML.additional.fields"/>
+    </interleave>
+  </define>
+  <define name="online">
+    <element name="entry">
+      <ref name="attlist.online"/>
+      <ref name="BibLaTeXML.online.fields"/>
+    </element>
+  </define>
+  <define name="attlist.online">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>online</value>
+    </attribute>
+  </define>
+  <define name="BibLaTeXML.patent.standard.fields">
+    <a:documentation/>
+    <interleave>
+      <ref name="author"/>
+      <ref name="title"/>
+      <ref name="number"/>
+      <choice>
+        <interleave>
+          <optional>
+            <ref name="day"/>
+          </optional>
+          <optional>
+            <ref name="month"/>
+          </optional>
+          <ref name="year"/>
+        </interleave>
+        <ref name="date"/>
+      </choice>
+      <optional>
+        <ref name="holder"/>
+      </optional>
+      <optional>
+        <ref name="subtitle"/>
+      </optional>
+      <optional>
+        <ref name="titleaddon"/>
+      </optional>
+      <optional>
+        <ref name="version"/>
+      </optional>
+      <optional>
+        <ref name="location"/>
+      </optional>
+      <optional>
+        <ref name="origlocation"/>
+      </optional>
+      <optional>
+        <ref name="note"/>
+      </optional>
+      <optional>
+        <ref name="addendum"/>
+      </optional>
+      <optional>
+        <ref name="url"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="urldate"/>
+          <interleave>
+            <ref name="urlday"/>
+            <ref name="urlmonth"/>
+            <ref name="urlyear"/>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.patent.fields">
+    <interleave>
+      <ref name="BibLaTeXML.patent.standard.fields"/>
+      <ref name="BibLaTeXML.common.fields"/>
+      <ref name="BibLaTeXML.additional.fields"/>
+    </interleave>
+  </define>
+  <define name="patent">
+    <element name="entry">
+      <ref name="attlist.patent"/>
+      <ref name="BibLaTeXML.patent.fields"/>
+    </element>
+  </define>
+  <!-- TODO specify all possible patent types -->
+  <define name="attlist.patent">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>patent</value>
+    </attribute>
+    <optional>
+      <ref name="att.patenttype"/>
+    </optional>
+  </define>
+  <define name="att.patenttype">
+    <attribute name="type">
+      <choice>
+        <value>patent</value>
+        <value>patentca</value>
+        <value>patentde</value>
+        <value>patentdk</value>
+        <value>patentes</value>
+        <value>patenteu</value>
+        <value>patentfr</value>
+        <value>patentit</value>
+        <value>patentno</value>
+        <value>patentse</value>
+        <value>patentuk</value>
+        <value>patentus</value>
+        <value>patreq</value>
+        <value>patreqca</value>
+        <value>patreqde</value>
+        <value>patreqdk</value>
+        <value>patreqes</value>
+        <value>patreqeu</value>
+        <value>patreqfr</value>
+        <value>patreqit</value>
+        <value>patreqno</value>
+        <value>patreqse</value>
+        <value>patrequk</value>
+        <value>patrequs</value>
+        <text/>
+      </choice>
+    </attribute>
+  </define>
+  <define name="BibLaTeXML.periodical.standard.fields">
+    <a:documentation/>
+    <interleave>
+      <optional>
+        <ref name="editor"/>
+      </optional>
+      <!-- made it optional -->
+      <choice>
+        <ref name="journal"/>
+        <ref name="journaltitle"/>
+      </choice>
+      <!-- CHANGED from title -->
+      <choice>
+        <interleave>
+          <optional>
+            <choice>
+              <interleave>
+                <optional>
+                  <ref name="day"/>
+                </optional>
+                <ref name="month"/>
+              </interleave>
+              <ref name="issue"/>
+            </choice>
+          </optional>
+          <ref name="year"/>
+        </interleave>
+        <ref name="date"/>
+      </choice>
+      <optional>
+        <ref name="shorteditor"/>
+      </optional>
+      <optional>
+        <ref name="introduction"/>
+      </optional>
+      <optional>
+        <ref name="subtitle"/>
+      </optional>
+      <optional>
+        <ref name="issuetitle"/>
+      </optional>
+      <optional>
+        <ref name="issuesubtitle"/>
+      </optional>
+      <optional>
+        <ref name="issuetitleaddon"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="pagetotal"/>
+          <ref name="pages"/>
+        </choice>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="series"/>
+      </optional>
+      <optional>
+        <ref name="volume"/>
+      </optional>
+      <optional>
+        <ref name="number"/>
+      </optional>
+      <optional>
+        <ref name="note"/>
+      </optional>
+      <optional>
+        <ref name="issn"/>
+      </optional>
+      <optional>
+        <ref name="addendum"/>
+      </optional>
+      <optional>
+        <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <!--  url? & -->
+        <choice>
+          <ref name="urldate"/>
+          <interleave>
+            <ref name="urlday"/>
+            <ref name="urlmonth"/>
+            <ref name="urlyear"/>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.periodical.fields">
+    <interleave>
+      <ref name="BibLaTeXML.periodical.standard.fields"/>
+      <ref name="BibLaTeXML.common.fields"/>
+      <ref name="BibLaTeXML.additional.fields"/>
+    </interleave>
+  </define>
+  <define name="periodical">
+    <element name="entry">
+      <ref name="attlist.periodical"/>
+      <interleave>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <ref name="BibLaTeXML.periodical.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="attlist.periodical">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>periodical</value>
+    </attribute>
+    <optional>
+      <attribute name="type">
+        <value>printed</value>
+      </attribute>
+    </optional>
+  </define>
+  <!-- url mandatory if type is electronic -->
+  <define name="periodical.electronic">
+    <a:documentation/>
+    <element name="entry">
+      <ref name="attlist.periodical.electronic"/>
+      <interleave>
+        <ref name="url"/>
+        <ref name="BibLaTeXML.periodical.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="attlist.periodical.electronic">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>periodical</value>
+    </attribute>
+    <attribute name="type">
+      <value>electronic</value>
+    </attribute>
+  </define>
+  <define name="BibLaTeXML.proceedings.standard.fields">
+    <a:documentation/>
+    <interleave>
+      <optional>
+        <ref name="editor"/>
+      </optional>
+      <!-- made it optional -->
+      <ref name="title"/>
+      <ref name="year"/>
+      <optional>
+        <ref name="shorteditor"/>
+      </optional>
+      <optional>
+        <ref name="subtitle"/>
+      </optional>
+      <optional>
+        <ref name="titleaddon"/>
+      </optional>
+      <optional>
+        <ref name="maintitle"/>
+      </optional>
+      <optional>
+        <ref name="mainsubtitle"/>
+      </optional>
+      <optional>
+        <ref name="maintitleaddon"/>
+      </optional>
+      <optional>
+        <ref name="venue"/>
+      </optional>
+      <optional>
+        <ref name="volume"/>
+      </optional>
+      <optional>
+        <ref name="part"/>
+      </optional>
+      <optional>
+        <ref name="volumes"/>
+      </optional>
+      <optional>
+        <ref name="series"/>
+      </optional>
+      <optional>
+        <ref name="number"/>
+      </optional>
+      <optional>
+        <ref name="note"/>
+      </optional>
+      <optional>
+        <ref name="organization"/>
+      </optional>
+      <ref name="publisherinfos"/>
+      <optional>
+        <ref name="isbn"/>
+      </optional>
+      <optional>
+        <ref name="issn"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="oclc"/>
+      </optional>
+      <optional>
+        <ref name="lccn"/>
+      </optional>
+      <optional>
+        <ref name="chapter"/>
+      </optional>
+      <optional>
+        <ref name="pages"/>
+      </optional>
+      <optional>
+        <ref name="pagetotal"/>
+      </optional>
+      <optional>
+        <ref name="addendum"/>
+      </optional>
+      <optional>
+        <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="url"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="urldate"/>
+          <interleave>
+            <ref name="urlday"/>
+            <ref name="urlmonth"/>
+            <ref name="urlyear"/>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.proceedings.fields">
+    <interleave>
+      <ref name="BibLaTeXML.proceedings.standard.fields"/>
+      <ref name="BibLaTeXML.common.fields"/>
+      <ref name="BibLaTeXML.additional.fields"/>
+    </interleave>
+  </define>
+  <define name="proceedings">
+    <element name="entry">
+      <ref name="attlist.proceedings"/>
+      <ref name="BibLaTeXML.proceedings.fields"/>
+    </element>
+  </define>
+  <define name="attlist.proceedings">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>proceedings</value>
+    </attribute>
+  </define>
+  <define name="BibLaTeXML.report.standard.fields">
+    <a:documentation/>
+    <interleave>
+      <ref name="author"/>
+      <ref name="title"/>
+      <ref name="institution"/>
+      <ref name="year"/>
+      <optional>
+        <ref name="subtitle"/>
+      </optional>
+      <optional>
+        <ref name="titleaddon"/>
+      </optional>
+      <optional>
+        <ref name="series"/>
+      </optional>
+      <optional>
+        <ref name="number"/>
+      </optional>
+      <optional>
+        <ref name="version"/>
+      </optional>
+      <optional>
+        <ref name="note"/>
+      </optional>
+      <ref name="publisherinfos"/>
+      <optional>
+        <ref name="isrn"/>
+      </optional>
+      <optional>
+        <ref name="chapter"/>
+      </optional>
+      <optional>
+        <ref name="pages"/>
+      </optional>
+      <optional>
+        <ref name="pagetotal"/>
+      </optional>
+      <optional>
+        <ref name="addendum"/>
+      </optional>
+      <optional>
+        <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="url"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="urldate"/>
+          <interleave>
+            <ref name="urlday"/>
+            <ref name="urlmonth"/>
+            <ref name="urlyear"/>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.report.fields">
+    <interleave>
+      <ref name="BibLaTeXML.report.standard.fields"/>
+      <ref name="BibLaTeXML.common.fields"/>
+      <ref name="BibLaTeXML.additional.fields"/>
+    </interleave>
+  </define>
+  <define name="report">
+    <element name="entry">
+      <ref name="attlist.report"/>
+      <ref name="BibLaTeXML.report.fields"/>
+    </element>
+  </define>
+  <define name="attlist.report">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>report</value>
+    </attribute>
+    <attribute name="type">
+      <choice>
+        <value>techreport</value>
+        <value>resreport</value>
+        <text/>
+      </choice>
+    </attribute>
+  </define>
+  <define name="BibLaTeXML.thesis.standard.fields">
+    <a:documentation/>
+    <interleave>
+      <ref name="author"/>
+      <ref name="title"/>
+      <choice>
+        <ref name="institution"/>
+        <ref name="school"/>
+      </choice>
+      <ref name="year"/>
+      <optional>
+        <ref name="subtitle"/>
+      </optional>
+      <optional>
+        <ref name="titleaddon"/>
+      </optional>
+      <optional>
+        <ref name="note"/>
+      </optional>
+      <optional>
+        <ref name="location"/>
+      </optional>
+      <optional>
+        <ref name="origlocation"/>
+      </optional>
+      <optional>
+        <ref name="chapter"/>
+      </optional>
+      <optional>
+        <ref name="pages"/>
+      </optional>
+      <optional>
+        <ref name="pagetotal"/>
+      </optional>
+      <optional>
+        <ref name="volumes"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="isbn"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="oclc"/>
+      </optional>
+      <optional>
+        <ref name="lccn"/>
+      </optional>
+      <optional>
+        <ref name="addendum"/>
+      </optional>
+      <optional>
+        <ref name="doi"/>
+      </optional>
+      <optional>
+        <ref name="eprint"/>
+      </optional>
+      <optional>
+        <ref name="url"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="urldate"/>
+          <interleave>
+            <ref name="urlday"/>
+            <ref name="urlmonth"/>
+            <ref name="urlyear"/>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.thesis.fields">
+    <interleave>
+      <ref name="BibLaTeXML.thesis.standard.fields"/>
+      <ref name="BibLaTeXML.common.fields"/>
+      <ref name="BibLaTeXML.additional.fields"/>
+    </interleave>
+  </define>
+  <define name="thesis">
+    <element name="entry">
+      <ref name="attlist.thesis"/>
+      <ref name="BibLaTeXML.thesis.fields"/>
+    </element>
+  </define>
+  <define name="attlist.thesis">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>thesis</value>
+    </attribute>
+    <attribute name="type">
+      <choice>
+        <value>phdthesis</value>
+        <value>mathesis</value>
+        <text/>
+      </choice>
+    </attribute>
+  </define>
+  <define name="BibLaTeXML.unpublished.standard.fields">
+    <a:documentation/>
+    <interleave>
+      <ref name="author"/>
+      <ref name="title"/>
+      <optional>
+        <choice>
+          <interleave>
+            <optional>
+              <ref name="day"/>
+            </optional>
+            <optional>
+              <ref name="month"/>
+            </optional>
+            <ref name="year"/>
+          </interleave>
+          <ref name="date"/>
+        </choice>
+      </optional>
+      <optional>
+        <ref name="subtitle"/>
+      </optional>
+      <optional>
+        <ref name="titleaddon"/>
+      </optional>
+      <optional>
+        <ref name="institution"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="pagetotal"/>
+      </optional>
+      <optional>
+        <!-- added -->
+        <ref name="note"/>
+      </optional>
+      <optional>
+        <ref name="addendum"/>
+      </optional>
+      <optional>
+        <ref name="url"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="urldate"/>
+          <interleave>
+            <ref name="urlday"/>
+            <ref name="urlmonth"/>
+            <ref name="urlyear"/>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.unpublished.fields">
+    <interleave>
+      <ref name="BibLaTeXML.unpublished.standard.fields"/>
+      <ref name="BibLaTeXML.common.fields"/>
+      <ref name="BibLaTeXML.additional.fields"/>
+    </interleave>
+  </define>
+  <define name="unpublished">
+    <element name="entry">
+      <ref name="attlist.unpublished"/>
+      <ref name="BibLaTeXML.unpublished.fields"/>
+    </element>
+  </define>
+  <define name="attlist.unpublished">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>unpublished</value>
+    </attribute>
+  </define>
+  <define name="BibLaTeXML.preprint.standard.fields">
+    <a:documentation/>
+    <interleave>
+      <ref name="author"/>
+      <ref name="title"/>
+      <choice>
+        <interleave>
+          <optional>
+            <ref name="day"/>
+          </optional>
+          <optional>
+            <ref name="month"/>
+          </optional>
+          <ref name="year"/>
+        </interleave>
+        <ref name="date"/>
+      </choice>
+      <optional>
+        <ref name="institution"/>
+      </optional>
+      <optional>
+        <ref name="location"/>
+      </optional>
+      <optional>
+        <ref name="subtitle"/>
+      </optional>
+      <optional>
+        <ref name="titleaddon"/>
+      </optional>
+      <optional>
+        <ref name="series"/>
+      </optional>
+      <optional>
+        <ref name="pagetotal"/>
+      </optional>
+      <optional>
+        <ref name="note"/>
+      </optional>
+      <optional>
+        <ref name="addendum"/>
+      </optional>
+      <optional>
+        <ref name="url"/>
+      </optional>
+      <optional>
+        <choice>
+          <ref name="urldate"/>
+          <interleave>
+            <ref name="urlday"/>
+            <ref name="urlmonth"/>
+            <ref name="urlyear"/>
+          </interleave>
+        </choice>
+      </optional>
+    </interleave>
+  </define>
+  <define name="BibLaTeXML.preprint.fields">
+    <interleave>
+      <ref name="BibLaTeXML.preprint.standard.fields"/>
+      <ref name="BibLaTeXML.common.fields"/>
+      <ref name="BibLaTeXML.additional.fields"/>
+    </interleave>
+  </define>
+  <define name="preprint">
+    <element name="entry">
+      <ref name="attlist.preprint"/>
+      <ref name="BibLaTeXML.preprint.fields"/>
+    </element>
+  </define>
+  <define name="attlist.preprint">
+    <attribute name="id"/>
+    <attribute name="entrytype">
+      <value>preprint</value>
+    </attribute>
+  </define>
+  <define name="software">
+    <a:documentation/>
+    <element name="entry">
+      <attribute name="id"/>
+      <attribute name="entrytype">
+        <value>software</value>
+      </attribute>
+      <ref name="BibLaTeXML.misc.fields"/>
+    </element>
+  </define>
+  <define name="movie">
+    <a:documentation/>
+    <element name="entry">
+      <attribute name="id"/>
+      <attribute name="entrytype">
+        <value>movie</value>
+      </attribute>
+      <ref name="BibLaTeXML.misc.fields"/>
+    </element>
+  </define>
+  <define name="BibLaTeXML.set.fields">
+    <a:documentation/>
+    <interleave>
+      <ref name="entryset"/>
+      <optional>
+        <ref name="crossref"/>
+      </optional>
+      <optional>
+        <!-- actually this is not needed as it is the first element of the entryset -->
+        <ref name="annotation"/>
+      </optional>
+      <optional>
+        <ref name="keywords"/>
+      </optional>
+      <optional>
+        <ref name="remarks"/>
+      </optional>
+      <zeroOrMore>
+        <ref name="private"/>
+      </zeroOrMore>
+      <optional>
+        <ref name="options"/>
+      </optional>
+    </interleave>
+  </define>
+  <define name="set">
+    <element name="entry">
+      <attribute name="id"/>
+      <attribute name="entrytype">
+        <value>set</value>
+      </attribute>
+      <ref name="BibLaTeXML.set.fields"/>
+    </element>
+  </define>
+</grammar>

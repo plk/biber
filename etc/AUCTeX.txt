@@ -1,0 +1,47 @@
+Here is how to integrate Biber into AUCTeX so that it works just like
+BibTeX:
+
+Use the Emacs Customise interface to modify the TeX-command-list variable
+to add a Biber command. See the screenshot in "biber-auctex.png" in this directory for 
+how mine looks. Or you can add it directly with lisp in your .emacs like
+this:
+
+(add-to-list 'TeX-command-list (quote ("Biber" "biber -u -U %s" TeX-run-Biber nil t :help "Run Biber")))
+
+However you add the command to TeX-command-list, Customise the actual Biber
+command parameters as you want them, using "%s" as the LaTeX file name
+place holder.
+
+Then define the following two functions in your .emacs. You'll see a "Biber" option
+in your AUCTeX command menu or you can just C-cC-c and type "Biber". 
+
+
+
+; Biber under AUCTeX
+(defun TeX-run-Biber (name command file)
+  "Create a process for NAME using COMMAND to format FILE with Biber." 
+ (let ((process (TeX-run-command name command file)))
+    (setq TeX-sentinel-function 'TeX-Biber-sentinel)
+    (if TeX-process-asynchronous
+	process
+      (TeX-synchronous-sentinel name file process))))
+
+(defun TeX-Biber-sentinel (process name)
+  "Cleanup TeX output buffer after running Biber."
+  (goto-char (point-max))
+  (cond
+   ;; Check whether Biber reports any warnings or errors.
+   ((re-search-backward (concat
+			 "^(There \\(?:was\\|were\\) \\([0-9]+\\) "
+			 "\\(warnings?\\|error messages?\\))") nil t)
+    ;; Tell the user their number so that she sees whether the
+    ;; situation is getting better or worse.
+    (message (concat "Biber finished with %s %s. "
+		     "Type `%s' to display output.")
+	     (match-string 1) (match-string 2)
+	     (substitute-command-keys
+	      "\\<TeX-mode-map>\\[TeX-recenter-output-buffer]")))
+   (t
+    (message (concat "Biber finished successfully. "
+		     "Run LaTeX again to get citations right."))))
+  (setq TeX-command-next TeX-command-default))

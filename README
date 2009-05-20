@@ -1,0 +1,80 @@
+==========================
+
+    BIBER Version 0.4.2
+
+==========================
+
+Biber is a bibtex replacement for users of biblatex, with full Unicode-support.
+It also introduces a new XML format (BibLaTeXML) for storing bibliographic
+data, partly inspired by BibTeXML, but extended to account for the much richer
+data model of biblatex, and much more. One major aim of the project is to make
+multilingual and multiscript bibliographic management possible under a biblatex
+environment.
+
+
+REQUIREMENTS 
+
+biber requires the following CPAN modules:
+    
+    * Readonly (but Readonly::XS is highly recommended)
+    
+    For parsing bibtex files, you need either 
+    * Text::BibTeX (strongly recommended). 
+      (NB: For Windows, ppm packages for Perl 5.8.* and 5.10.* are available on
+      the biber download page).
+    or
+    * Parse::RecDescent 
+      and
+    * Regexp::Common
+    
+    * File::Slurp (for latex2utf8 or if converting bib files to UTF-8 with biber)
+    
+    For parsing data in the BibLaTeXML format, you'll need 
+    * XML::LibXML 
+
+    bib2biblatexml also requires
+    * XML::Writer
+    
+    Optionally, if you want to place your xml files in a Berkeley DBXML container:
+    * Sleepycat::DbXml 
+     (see http://www.oracle.com/technology/products/berkeley-db/xml/index.html)
+
+
+INSTALLATION
+
+To install this module, run the following commands:
+
+	perl Build.PL
+	./Build
+	./Build test         [optional]
+	./Build install
+
+SUPPORT AND DOCUMENTATION
+
+After installing, biber --help will give you the basic documentation.
+
+Biber also comes with two utility scripts:
+
+    - bib2biblatexml : converts bib files to the BibLaTeXML format
+    - latex2utf8     : converts LaTeX encoding to UTF-8
+
+You can also find documentation for the included modules with the perldoc command:
+
+    perldoc Biber
+    perldoc LaTeX::Decode
+    etc.
+
+More information is available at:
+
+    http://biblatex-biber.sourceforge.net
+
+==========================
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2009 François Charette
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+==========================

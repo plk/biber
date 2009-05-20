@@ -1,0 +1,72 @@
+body {
+  margin: auto;
+  width: 720px;
+  background-color:#DBB692;
+  background-image: url(castor.png);
+  background-position: top center;
+  background-repeat: no-repeat;
+  font-family: verdana, helvetica, arial, sans-serif;
+  font-size: 12pt;
+  color: black;
+  margin-top: 0px; padding-top: 310px;
+  padding-bottom: 3em;
+}
+a { text-decoration:none; border-bottom: 1px dotted #E5E5E5; }
+a:link, a:visited { color: #A52A2A; }
+a:hover { text-decoration: none; border-bottom: 1px dotted transparent; }
+p, address {
+  margin-bottom: 0em;
+  margin-top: .5em;
+}
+address {
+  margin-top: 2em;
+  font-size: 8pt;
+}
+p#sflogo { margin-top: 2em; }
+td#contact { width: 430px; }
+
+
+
+div { width: 600px; }
+div.menu {
+  width: 600px;
+  background-color: #7B2900;
+  font-size: 10pt;
+  line-height: 2em;
+  margin: 0px;
+  padding: 0px;
+}
+div.menu p {
+  margin: 0px;
+  padding: 0px;
+  margin-left: 20px;
+  padding-top: 2px;
+  padding-bottom: 1px;
+}
+div.menu a, div.menu a:link, div.menu a:visited {
+  padding-right: 2em;
+  text-decoration: none;
+  font-weight: normal;
+  color: #BFBFBF;
+  border: 1px solid transparent;
+}
+div.menu a#current { border: 1px solid transparent; }
+div.menu a:hover { border: 1px solid #BFBFBF; }
+div.menu a:hover#current { border: 1px solid transparent; }
+
+pre { 
+	margin: 0px; 
+	padding: 0px; 
+	margin-top: 2em;
+   font-size: 10pt;
+	padding: .5em;
+	border: 1px dashed #DBB692;
+	background-color: #ffffff;
+	line-height: 1em;
+	width: 700px;
+}
+pre.small { font-size: 8pt }
+
+div.biber-output p a { color: black; text-decoration: none; }
+div.biber-output p a:hover { text-decoration: underline; }
+p#biber-reference { font-size: 8pt; text-align: right; }
