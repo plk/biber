@@ -1,5 +1,7 @@
 Build
 blib
 _build
-.PerlySenseProject
-
+dist
+_playground
+t/_moredata
+t/3rdparty
