@@ -689,8 +689,8 @@ sub parse_ctrlfile_v2 {
   print "Reading $ctrl_file.bcf\n" unless $self->config('quiet');
 
   # Read control file
-  use XML::LibXML::Simple;
-  my $bcfxml = XMLin($ctrl, 'ForceArray' => 1, 'NsStrip' => 1, KeyAttr => []);
+  require XML::LibXML::Simple;
+  my $bcfxml = XML::LibXML::Simple::XMLin($ctrl, 'ForceArray' => 1, 'NsStrip' => 1, KeyAttr => []);
 
   # TODO - validate control file against schema?
 
