@@ -268,6 +268,68 @@ sub _parse_biblatexml {
     return
 }
 
+sub _process_field_with_children {
+    my $node = shift;
+    my $nodeiter = 1;
+    foreach my $node ($res->get_nodelist) {
+        say "*** Node $nodeiter: ***";
+        say $node->toString ;
+        say "---";
+        my @children = $node->childNodes;
+        say "The children nodes are:";
+        my $jiter = 0;
+        my @titlestring;
+        my @sortstring;
+        my $nosortprefix;
+        foreach my $child (@children) {
+            $jiter++;
+            my $value;
+            my $type = $child->nodeType;
+            if ($type == 3) {
+                $value = $child->findvalue("normalize-space()") ;
+                say "$jiter : '$value'" ;
+                if ($value ne '') {
+                    push @titlestring, $value ;
+                    push  @sortstring, $value ;
+                }
+            }  
+            elsif ( $type == 1 ) {
+                my $nodename = $child->nodeName;
+                $value = $child->findvalue("normalize-space()") ;
+                say "$jiter (" . $nodename . ") : " . "'". $value ."'" ;
+                if ($value ne '') {
+                    if ($nodename eq 'bib:emphasis') {
+                        push @titlestring, "\\emph{$value}" ;
+                        push @sortstring, $value ;
+                    } 
+                    elsif ($nodename eq 'bib:superscript') {
+                        push @titlestring, "\\textsuperscript{$value}" ;
+                        push @sortstring, $value ;
+                    } 
+                    elsif ($nodename eq 'bib:subscript') {
+                        push @titlestring, "\\textsubscript{$value}" ;
+                        push @sortstring, $value ;
+                    } 
+                    elsif ($nodename eq 'bib:nosort') {
+                        push @titlestring, $value ;
+                        $nosortprefix = $value if ( $#titlestring == 0 );
+                    } 
+                };
+            }
+        } ;
+
+        say "------------------------" ;
+        say "Title = " . join(" ", @titlestring) ;
+        my $sorttitle = join(" ", @sortstring) ;
+        $sorttitle =~ s/^(.)/\U$1/ ;
+        say "Sorttitle = $sorttitle" ;
+        if ($nosortprefix) { 
+            say "Indextitle = $sorttitle, $nosortprefix"
+        } ;
+        $nodeiter++;
+    }
+}
+
 1 ;
 
 __END__
