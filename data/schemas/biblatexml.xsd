@@ -45,10 +45,6 @@
       <xs:group ref="biblatexml:movie"/>
     </xs:choice>
   </xs:group>
-  <!--
-    TODO Unsupported types: artwork, audio, image, jurisdiction, legislation, legal, movie, music, performance, reference, inreference, review, software, standard, video
-    TODO add manuscript and archivalrecord ?
-  -->
   <xs:group name="BibLaTeXML.common.fields">
     <xs:annotation>
       <xs:documentation/>
@@ -249,41 +245,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="shorttitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="shorttitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="shorttitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="shorttitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="shorttitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="shorttitle">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -410,20 +425,14 @@
         </xs:choice>
         <xs:choice>
           <xs:choice>
+            <xs:element name="sorttitle" type="xs:string"/>
             <xs:element name="sorttitle">
               <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="sorttitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
                 <xs:attributeGroup ref="biblatexml:romanized"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="sorttitle">
               <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
                 <xs:attributeGroup ref="biblatexml:translated"/>
               </xs:complexType>
             </xs:element>
@@ -431,20 +440,17 @@
           <xs:choice>
             <xs:element name="sorttitle">
               <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
                 <xs:attributeGroup ref="biblatexml:romanized"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="sorttitle">
               <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
                 <xs:attributeGroup ref="biblatexml:translated"/>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="sorttitle">
             <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
               <xs:attributeGroup ref="biblatexml:translated"/>
             </xs:complexType>
           </xs:element>
@@ -465,23 +471,30 @@
     </xs:sequence>
   </xs:group>
   <xs:group name="formattext">
-    <xs:annotation>
-      <xs:documentation>many textual element can contain emphasis or superscript elements </xs:documentation>
-    </xs:annotation>
     <xs:sequence>
       <xs:sequence minOccurs="0" maxOccurs="unbounded">
-        <xs:element minOccurs="0" ref="biblatexml:nosort"/>
         <xs:element minOccurs="0" ref="biblatexml:emphasis"/>
         <xs:element minOccurs="0" ref="biblatexml:superscript"/>
         <xs:element minOccurs="0" ref="biblatexml:subscript"/>
       </xs:sequence>
     </xs:sequence>
   </xs:group>
+  <xs:complexType name="formattextB" mixed="true">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element minOccurs="0" ref="biblatexml:nosort"/>
+      <xs:element minOccurs="0" ref="biblatexml:emphasis"/>
+      <xs:element minOccurs="0" ref="biblatexml:superscript"/>
+      <xs:element minOccurs="0" ref="biblatexml:subscript"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:element name="emphasis" type="xs:string"/>
   <xs:element name="superscript" type="xs:string"/>
   <xs:element name="subscript" type="xs:string"/>
   <xs:element name="nosort" type="xs:string"/>
   <xs:attributeGroup name="romanized">
+    <xs:annotation>
+      <xs:documentation>FIXME could it be formattextB ? ie. &lt;bib:nosort&gt;&lt;bib:superscript&gt;foo&lt;/bib:superscript&gt;&lt;bib:nosort&gt; ??</xs:documentation>
+    </xs:annotation>
     <xs:attribute name="mode" use="required">
       <xs:simpleType>
         <xs:restriction base="xs:token">
@@ -509,19 +522,25 @@
       </xs:simpleType>
     </xs:attribute>
   </xs:attributeGroup>
+  <xs:attributeGroup name="att.lang">
+    <xs:attribute ref="xml:lang" use="required"/>
+  </xs:attributeGroup>
   <xs:element name="abstract">
     <xs:complexType mixed="true">
       <xs:group ref="biblatexml:formattext"/>
+      <xs:attribute ref="xml:lang"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="addendum">
     <xs:complexType mixed="true">
       <xs:group ref="biblatexml:formattext"/>
+      <xs:attribute ref="xml:lang"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="annotation">
     <xs:complexType mixed="true">
       <xs:group ref="biblatexml:formattext"/>
+      <xs:attribute ref="xml:lang"/>
     </xs:complexType>
   </xs:element>
   <xs:group name="booksubtitle">
@@ -530,6 +549,7 @@
         <xs:element name="booksubtitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
+            <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="booksubtitle">
@@ -571,41 +591,60 @@
     <xs:choice>
       <xs:sequence>
         <xs:element name="booktitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attribute ref="xml:lang"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="booktitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="booktitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:translated"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
       <xs:sequence>
         <xs:element name="booktitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="booktitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:translated"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
       <xs:element maxOccurs="unbounded" name="booktitle">
-        <xs:complexType mixed="true">
-          <xs:group ref="biblatexml:formattext"/>
-          <xs:attributeGroup ref="biblatexml:translated"/>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:formattextB">
+              <xs:attributeGroup ref="biblatexml:translated"/>
+            </xs:extension>
+          </xs:complexContent>
         </xs:complexType>
       </xs:element>
     </xs:choice>
@@ -616,6 +655,7 @@
         <xs:element name="booktitleaddon">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
+            <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="booktitleaddon">
@@ -680,6 +720,7 @@
         <xs:element name="issue">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
+            <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="issue">
@@ -721,41 +762,60 @@
     <xs:choice>
       <xs:sequence>
         <xs:element name="issuetitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attribute ref="xml:lang"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="issuetitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="issuetitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:translated"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
       <xs:sequence>
         <xs:element name="issuetitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="issuetitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:translated"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
       <xs:element maxOccurs="unbounded" name="issuetitle">
-        <xs:complexType mixed="true">
-          <xs:group ref="biblatexml:formattext"/>
-          <xs:attributeGroup ref="biblatexml:translated"/>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:formattextB">
+              <xs:attributeGroup ref="biblatexml:translated"/>
+            </xs:extension>
+          </xs:complexContent>
         </xs:complexType>
       </xs:element>
     </xs:choice>
@@ -766,6 +826,7 @@
         <xs:element name="issuetitleaddon">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
+            <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="issuetitleaddon">
@@ -809,6 +870,7 @@
         <xs:element name="issuesubtitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
+            <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="issuesubtitle">
@@ -856,41 +918,60 @@
       </xs:element>
       <xs:sequence>
         <xs:element name="journal">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attribute ref="xml:lang"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="journal">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="journal">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:translated"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
       <xs:sequence>
         <xs:element name="journal">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="journal">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:translated"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
       <xs:element maxOccurs="unbounded" name="journal">
-        <xs:complexType mixed="true">
-          <xs:group ref="biblatexml:formattext"/>
-          <xs:attributeGroup ref="biblatexml:translated"/>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:formattextB">
+              <xs:attributeGroup ref="biblatexml:translated"/>
+            </xs:extension>
+          </xs:complexContent>
         </xs:complexType>
       </xs:element>
     </xs:choice>
@@ -899,41 +980,60 @@
     <xs:choice>
       <xs:sequence>
         <xs:element name="journaltitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attribute ref="xml:lang"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="journaltitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="journaltitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:translated"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
       <xs:sequence>
         <xs:element name="journaltitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="journaltitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:translated"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
       <xs:element maxOccurs="unbounded" name="journaltitle">
-        <xs:complexType mixed="true">
-          <xs:group ref="biblatexml:formattext"/>
-          <xs:attributeGroup ref="biblatexml:translated"/>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:formattextB">
+              <xs:attributeGroup ref="biblatexml:translated"/>
+            </xs:extension>
+          </xs:complexContent>
         </xs:complexType>
       </xs:element>
     </xs:choice>
@@ -944,6 +1044,7 @@
         <xs:element name="journalsubtitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
+            <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="journalsubtitle">
@@ -1021,6 +1122,7 @@
         <xs:element name="mainsubtitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
+            <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="mainsubtitle">
@@ -1062,41 +1164,60 @@
     <xs:choice>
       <xs:sequence>
         <xs:element name="maintitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attribute ref="xml:lang"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="maintitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="maintitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:translated"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
       <xs:sequence>
         <xs:element name="maintitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="maintitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:translated"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
       <xs:element maxOccurs="unbounded" name="maintitle">
-        <xs:complexType mixed="true">
-          <xs:group ref="biblatexml:formattext"/>
-          <xs:attributeGroup ref="biblatexml:translated"/>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:formattextB">
+              <xs:attributeGroup ref="biblatexml:translated"/>
+            </xs:extension>
+          </xs:complexContent>
         </xs:complexType>
       </xs:element>
     </xs:choice>
@@ -1107,6 +1228,7 @@
         <xs:element name="maintitleaddon">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
+            <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="maintitleaddon">
@@ -1181,6 +1303,7 @@
   <xs:element name="note">
     <xs:complexType mixed="true">
       <xs:group ref="biblatexml:formattext"/>
+      <xs:attribute ref="xml:lang"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="number" type="xs:string"/>
@@ -1201,6 +1324,7 @@
         <xs:element name="reprinttitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
+            <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="reprinttitle">
@@ -1378,41 +1502,60 @@
     <xs:choice>
       <xs:sequence>
         <xs:element name="shorttitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attribute ref="xml:lang"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="shorttitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="shorttitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:translated"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
       <xs:sequence>
         <xs:element name="shorttitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="shorttitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:translated"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
       <xs:element maxOccurs="unbounded" name="shorttitle">
-        <xs:complexType mixed="true">
-          <xs:group ref="biblatexml:formattext"/>
-          <xs:attributeGroup ref="biblatexml:translated"/>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:formattextB">
+              <xs:attributeGroup ref="biblatexml:translated"/>
+            </xs:extension>
+          </xs:complexContent>
         </xs:complexType>
       </xs:element>
     </xs:choice>
@@ -1423,6 +1566,7 @@
         <xs:element name="subtitle">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
+            <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="subtitle">
@@ -1464,41 +1608,60 @@
     <xs:choice>
       <xs:sequence>
         <xs:element name="title">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attribute ref="xml:lang"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="title">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="title">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:translated"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
       <xs:sequence>
         <xs:element name="title">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="title">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-            <xs:attributeGroup ref="biblatexml:translated"/>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="biblatexml:formattextB">
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:extension>
+            </xs:complexContent>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
       <xs:element maxOccurs="unbounded" name="title">
-        <xs:complexType mixed="true">
-          <xs:group ref="biblatexml:formattext"/>
-          <xs:attributeGroup ref="biblatexml:translated"/>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:formattextB">
+              <xs:attributeGroup ref="biblatexml:translated"/>
+            </xs:extension>
+          </xs:complexContent>
         </xs:complexType>
       </xs:element>
     </xs:choice>
@@ -1509,6 +1672,7 @@
         <xs:element name="titleaddon">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
+            <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="titleaddon">
@@ -1554,6 +1718,7 @@
         <xs:element name="venue">
           <xs:complexType mixed="true">
             <xs:group ref="biblatexml:formattext"/>
+            <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="venue">
@@ -1646,20 +1811,14 @@
   <xs:group name="sorttitle">
     <xs:choice>
       <xs:sequence>
-        <xs:element name="sorttitle">
-          <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
-          </xs:complexType>
-        </xs:element>
+        <xs:element name="sorttitle" type="xs:string"/>
         <xs:element minOccurs="0" name="sorttitle">
           <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="sorttitle">
           <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
@@ -1667,20 +1826,17 @@
       <xs:sequence>
         <xs:element name="sorttitle">
           <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="sorttitle">
           <xs:complexType mixed="true">
-            <xs:group ref="biblatexml:formattext"/>
             <xs:attributeGroup ref="biblatexml:translated"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
       <xs:element maxOccurs="unbounded" name="sorttitle">
         <xs:complexType mixed="true">
-          <xs:group ref="biblatexml:formattext"/>
           <xs:attributeGroup ref="biblatexml:translated"/>
         </xs:complexType>
       </xs:element>
@@ -3778,13 +3934,7 @@
   </xs:group>
   <!-- NAME LISTS -->
   <xs:attributeGroup name="attlist.author">
-    <xs:attribute name="type">
-      <xs:simpleType>
-        <xs:restriction base="xs:token">
-          <xs:enumeration value="author"/>
-        </xs:restriction>
-      </xs:simpleType>
-    </xs:attribute>
+    <xs:attribute name="type"/>
     <xs:attribute name="gender">
       <xs:simpleType>
         <xs:restriction base="xs:token">
@@ -5585,41 +5735,60 @@
           <xs:choice>
             <xs:choice>
               <xs:element name="journaltitle">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attribute ref="xml:lang"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
               <xs:element name="journaltitle">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:romanized"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:romanized"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
               <xs:element name="journaltitle">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
             <xs:choice>
               <xs:element name="journaltitle">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:romanized"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:romanized"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
               <xs:element name="journaltitle">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
             <xs:element name="journaltitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
@@ -5631,41 +5800,60 @@
             </xs:element>
             <xs:choice>
               <xs:element name="journal">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attribute ref="xml:lang"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
               <xs:element name="journal">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:romanized"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:romanized"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
               <xs:element name="journal">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
             <xs:choice>
               <xs:element name="journal">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:romanized"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:romanized"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
               <xs:element name="journal">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
             <xs:element name="journal">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
@@ -5682,6 +5870,7 @@
                   <xs:element name="issue">
                     <xs:complexType mixed="true">
                       <xs:group ref="biblatexml:formattext"/>
+                      <xs:attribute ref="xml:lang"/>
                     </xs:complexType>
                   </xs:element>
                   <xs:element name="issue">
@@ -6262,6 +6451,7 @@
             <xs:element name="subtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="subtitle">
@@ -6303,6 +6493,7 @@
             <xs:element name="titleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="titleaddon">
@@ -6344,6 +6535,7 @@
             <xs:element name="journalsubtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="journalsubtitle">
@@ -6383,41 +6575,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="issuetitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="issuetitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="issuetitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="issuetitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="issuetitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="issuetitle">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -6426,6 +6637,7 @@
             <xs:element name="issuesubtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="issuesubtitle">
@@ -6467,6 +6679,7 @@
             <xs:element name="issuetitleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="issuetitleaddon">
@@ -6606,41 +6819,60 @@
             <xs:choice>
               <xs:choice>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attribute ref="xml:lang"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:choice>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:element name="title">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
@@ -6682,41 +6914,60 @@
             <xs:choice>
               <xs:choice>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attribute ref="xml:lang"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:choice>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:element name="title">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
@@ -6758,41 +7009,60 @@
               <xs:choice>
                 <xs:choice>
                   <xs:element name="title">
-                    <xs:complexType mixed="true">
-                      <xs:group ref="biblatexml:formattext"/>
+                    <xs:complexType>
+                      <xs:complexContent>
+                        <xs:extension base="biblatexml:formattextB">
+                          <xs:attribute ref="xml:lang"/>
+                        </xs:extension>
+                      </xs:complexContent>
                     </xs:complexType>
                   </xs:element>
                   <xs:element name="title">
-                    <xs:complexType mixed="true">
-                      <xs:group ref="biblatexml:formattext"/>
-                      <xs:attributeGroup ref="biblatexml:romanized"/>
+                    <xs:complexType>
+                      <xs:complexContent>
+                        <xs:extension base="biblatexml:formattextB">
+                          <xs:attributeGroup ref="biblatexml:romanized"/>
+                        </xs:extension>
+                      </xs:complexContent>
                     </xs:complexType>
                   </xs:element>
                   <xs:element name="title">
-                    <xs:complexType mixed="true">
-                      <xs:group ref="biblatexml:formattext"/>
-                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    <xs:complexType>
+                      <xs:complexContent>
+                        <xs:extension base="biblatexml:formattextB">
+                          <xs:attributeGroup ref="biblatexml:translated"/>
+                        </xs:extension>
+                      </xs:complexContent>
                     </xs:complexType>
                   </xs:element>
                 </xs:choice>
                 <xs:choice>
                   <xs:element name="title">
-                    <xs:complexType mixed="true">
-                      <xs:group ref="biblatexml:formattext"/>
-                      <xs:attributeGroup ref="biblatexml:romanized"/>
+                    <xs:complexType>
+                      <xs:complexContent>
+                        <xs:extension base="biblatexml:formattextB">
+                          <xs:attributeGroup ref="biblatexml:romanized"/>
+                        </xs:extension>
+                      </xs:complexContent>
                     </xs:complexType>
                   </xs:element>
                   <xs:element name="title">
-                    <xs:complexType mixed="true">
-                      <xs:group ref="biblatexml:formattext"/>
-                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    <xs:complexType>
+                      <xs:complexContent>
+                        <xs:extension base="biblatexml:formattextB">
+                          <xs:attributeGroup ref="biblatexml:translated"/>
+                        </xs:extension>
+                      </xs:complexContent>
                     </xs:complexType>
                   </xs:element>
                 </xs:choice>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
@@ -6819,41 +7089,60 @@
               <xs:choice>
                 <xs:choice>
                   <xs:element name="title">
-                    <xs:complexType mixed="true">
-                      <xs:group ref="biblatexml:formattext"/>
+                    <xs:complexType>
+                      <xs:complexContent>
+                        <xs:extension base="biblatexml:formattextB">
+                          <xs:attribute ref="xml:lang"/>
+                        </xs:extension>
+                      </xs:complexContent>
                     </xs:complexType>
                   </xs:element>
                   <xs:element name="title">
-                    <xs:complexType mixed="true">
-                      <xs:group ref="biblatexml:formattext"/>
-                      <xs:attributeGroup ref="biblatexml:romanized"/>
+                    <xs:complexType>
+                      <xs:complexContent>
+                        <xs:extension base="biblatexml:formattextB">
+                          <xs:attributeGroup ref="biblatexml:romanized"/>
+                        </xs:extension>
+                      </xs:complexContent>
                     </xs:complexType>
                   </xs:element>
                   <xs:element name="title">
-                    <xs:complexType mixed="true">
-                      <xs:group ref="biblatexml:formattext"/>
-                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    <xs:complexType>
+                      <xs:complexContent>
+                        <xs:extension base="biblatexml:formattextB">
+                          <xs:attributeGroup ref="biblatexml:translated"/>
+                        </xs:extension>
+                      </xs:complexContent>
                     </xs:complexType>
                   </xs:element>
                 </xs:choice>
                 <xs:choice>
                   <xs:element name="title">
-                    <xs:complexType mixed="true">
-                      <xs:group ref="biblatexml:formattext"/>
-                      <xs:attributeGroup ref="biblatexml:romanized"/>
+                    <xs:complexType>
+                      <xs:complexContent>
+                        <xs:extension base="biblatexml:formattextB">
+                          <xs:attributeGroup ref="biblatexml:romanized"/>
+                        </xs:extension>
+                      </xs:complexContent>
                     </xs:complexType>
                   </xs:element>
                   <xs:element name="title">
-                    <xs:complexType mixed="true">
-                      <xs:group ref="biblatexml:formattext"/>
-                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    <xs:complexType>
+                      <xs:complexContent>
+                        <xs:extension base="biblatexml:formattextB">
+                          <xs:attributeGroup ref="biblatexml:translated"/>
+                        </xs:extension>
+                      </xs:complexContent>
                     </xs:complexType>
                   </xs:element>
                 </xs:choice>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
@@ -7012,41 +7301,60 @@
             <xs:choice>
               <xs:choice>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attribute ref="xml:lang"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:choice>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:element name="title">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
@@ -7056,41 +7364,60 @@
             <xs:choice>
               <xs:choice>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attribute ref="xml:lang"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:choice>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="title">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:element name="title">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
@@ -7958,6 +8285,7 @@
             <xs:element name="subtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="subtitle">
@@ -7999,6 +8327,7 @@
             <xs:element name="titleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="titleaddon">
@@ -8038,41 +8367,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="maintitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="maintitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="maintitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="maintitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="maintitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="maintitle">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -8081,6 +8429,7 @@
             <xs:element name="mainsubtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="mainsubtitle">
@@ -8122,6 +8471,7 @@
             <xs:element name="maintitleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="maintitleaddon">
@@ -8161,41 +8511,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="booktitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="booktitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="booktitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="booktitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="booktitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="booktitle">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -8204,6 +8573,7 @@
             <xs:element name="booktitleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="booktitleaddon">
@@ -8245,6 +8615,7 @@
             <xs:element name="booksubtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="booksubtitle">
@@ -8531,41 +8902,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="title">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -8575,6 +8965,7 @@
             <xs:element name="subtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="subtitle">
@@ -8616,6 +9007,7 @@
             <xs:element name="titleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="titleaddon">
@@ -8831,41 +9223,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="title">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -9730,6 +10141,7 @@
             <xs:element name="subtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="subtitle">
@@ -9771,6 +10183,7 @@
             <xs:element name="titleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="titleaddon">
@@ -9810,41 +10223,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="maintitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="maintitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="maintitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="maintitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="maintitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="maintitle">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -9853,6 +10285,7 @@
             <xs:element name="mainsubtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="mainsubtitle">
@@ -9894,6 +10327,7 @@
             <xs:element name="maintitleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="maintitleaddon">
@@ -9933,41 +10367,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="booktitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="booktitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="booktitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="booktitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="booktitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="booktitle">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -9976,6 +10429,7 @@
             <xs:element name="booktitleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="booktitleaddon">
@@ -10017,6 +10471,7 @@
             <xs:element name="booksubtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="booksubtitle">
@@ -10244,41 +10699,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="title">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -10389,82 +10863,120 @@
             <xs:choice>
               <xs:choice>
                 <xs:element name="booktitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attribute ref="xml:lang"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="booktitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="booktitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:choice>
                 <xs:element name="booktitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="booktitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:element name="booktitle">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
             <xs:choice>
               <xs:choice>
                 <xs:element name="maintitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attribute ref="xml:lang"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="maintitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="maintitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:choice>
                 <xs:element name="maintitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="maintitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:element name="maintitle">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
@@ -10473,6 +10985,7 @@
                 <xs:element name="mainsubtitle">
                   <xs:complexType mixed="true">
                     <xs:group ref="biblatexml:formattext"/>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="mainsubtitle">
@@ -10514,6 +11027,7 @@
                 <xs:element name="maintitleaddon">
                   <xs:complexType mixed="true">
                     <xs:group ref="biblatexml:formattext"/>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="maintitleaddon">
@@ -10555,6 +11069,7 @@
                 <xs:element name="booksubtitle">
                   <xs:complexType mixed="true">
                     <xs:group ref="biblatexml:formattext"/>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="booksubtitle">
@@ -10596,6 +11111,7 @@
                 <xs:element name="booktitleaddon">
                   <xs:complexType mixed="true">
                     <xs:group ref="biblatexml:formattext"/>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="booktitleaddon">
@@ -11531,6 +12047,7 @@
             <xs:element name="subtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="subtitle">
@@ -11572,6 +12089,7 @@
             <xs:element name="titleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="titleaddon">
@@ -11729,41 +12247,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="title">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -11772,6 +12309,7 @@
             <xs:element name="subtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="subtitle">
@@ -11813,6 +12351,7 @@
             <xs:element name="titleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="titleaddon">
@@ -11920,41 +12459,60 @@
             <xs:choice>
               <xs:choice>
                 <xs:element name="booktitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attribute ref="xml:lang"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="booktitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="booktitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:choice>
                 <xs:element name="booktitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="booktitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:element name="booktitle">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
@@ -12722,41 +13280,60 @@
             <xs:choice>
               <xs:choice>
                 <xs:element name="maintitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attribute ref="xml:lang"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="maintitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="maintitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:choice>
                 <xs:element name="maintitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="maintitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:element name="maintitle">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
@@ -12765,6 +13342,7 @@
                 <xs:element name="mainsubtitle">
                   <xs:complexType mixed="true">
                     <xs:group ref="biblatexml:formattext"/>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="mainsubtitle">
@@ -12806,6 +13384,7 @@
                 <xs:element name="maintitleaddon">
                   <xs:complexType mixed="true">
                     <xs:group ref="biblatexml:formattext"/>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="maintitleaddon">
@@ -12847,6 +13426,7 @@
                 <xs:element name="booksubtitle">
                   <xs:complexType mixed="true">
                     <xs:group ref="biblatexml:formattext"/>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="booksubtitle">
@@ -12888,6 +13468,7 @@
                 <xs:element name="booktitleaddon">
                   <xs:complexType mixed="true">
                     <xs:group ref="biblatexml:formattext"/>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="booktitleaddon">
@@ -13119,41 +13700,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="title">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -13162,6 +13762,7 @@
             <xs:element name="subtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="subtitle">
@@ -13203,6 +13804,7 @@
             <xs:element name="titleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="titleaddon">
@@ -13305,41 +13907,60 @@
             <xs:choice>
               <xs:choice>
                 <xs:element name="booktitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attribute ref="xml:lang"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="booktitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="booktitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:choice>
                 <xs:element name="booktitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="booktitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:element name="booktitle">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
@@ -13442,41 +14063,60 @@
             <xs:choice>
               <xs:choice>
                 <xs:element name="maintitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attribute ref="xml:lang"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="maintitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="maintitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:choice>
                 <xs:element name="maintitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:romanized"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="maintitle">
-                  <xs:complexType mixed="true">
-                    <xs:group ref="biblatexml:formattext"/>
-                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension base="biblatexml:formattextB">
+                        <xs:attributeGroup ref="biblatexml:translated"/>
+                      </xs:extension>
+                    </xs:complexContent>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
               <xs:element name="maintitle">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
@@ -13485,6 +14125,7 @@
                 <xs:element name="mainsubtitle">
                   <xs:complexType mixed="true">
                     <xs:group ref="biblatexml:formattext"/>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="mainsubtitle">
@@ -13526,6 +14167,7 @@
                 <xs:element name="maintitleaddon">
                   <xs:complexType mixed="true">
                     <xs:group ref="biblatexml:formattext"/>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="maintitleaddon">
@@ -13567,6 +14209,7 @@
                 <xs:element name="booksubtitle">
                   <xs:complexType mixed="true">
                     <xs:group ref="biblatexml:formattext"/>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="booksubtitle">
@@ -13608,6 +14251,7 @@
                 <xs:element name="booktitleaddon">
                   <xs:complexType mixed="true">
                     <xs:group ref="biblatexml:formattext"/>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="booktitleaddon">
@@ -13649,6 +14293,7 @@
                 <xs:element name="venue">
                   <xs:complexType mixed="true">
                     <xs:group ref="biblatexml:formattext"/>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="venue">
@@ -14035,41 +14680,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="title">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -14079,6 +14743,7 @@
             <xs:element name="subtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="subtitle">
@@ -14120,6 +14785,7 @@
             <xs:element name="titleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="titleaddon">
@@ -14501,41 +15167,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="title">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -14552,6 +15237,7 @@
             <xs:element name="subtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="subtitle">
@@ -14593,6 +15279,7 @@
             <xs:element name="titleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="titleaddon">
@@ -14903,41 +15590,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="title">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -14958,6 +15664,7 @@
             <xs:element name="subtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="subtitle">
@@ -14999,6 +15706,7 @@
             <xs:element name="titleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="titleaddon">
@@ -15242,41 +15950,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="title">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -15389,6 +16116,7 @@
             <xs:element name="subtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="subtitle">
@@ -15430,6 +16158,7 @@
             <xs:element name="titleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="titleaddon">
@@ -15780,82 +16509,120 @@
             </xs:element>
             <xs:choice>
               <xs:element name="journal">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attribute ref="xml:lang"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
               <xs:element name="journal">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:romanized"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:romanized"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
               <xs:element name="journal">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
             <xs:choice>
               <xs:element name="journal">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:romanized"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:romanized"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
               <xs:element name="journal">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
             <xs:element name="journal">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:choice>
               <xs:element name="journaltitle">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attribute ref="xml:lang"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
               <xs:element name="journaltitle">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:romanized"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:romanized"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
               <xs:element name="journaltitle">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
             <xs:choice>
               <xs:element name="journaltitle">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:romanized"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:romanized"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
               <xs:element name="journaltitle">
-                <xs:complexType mixed="true">
-                  <xs:group ref="biblatexml:formattext"/>
-                  <xs:attributeGroup ref="biblatexml:translated"/>
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="biblatexml:formattextB">
+                      <xs:attributeGroup ref="biblatexml:translated"/>
+                    </xs:extension>
+                  </xs:complexContent>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
             <xs:element name="journaltitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
@@ -15872,6 +16639,7 @@
                   <xs:element name="issue">
                     <xs:complexType mixed="true">
                       <xs:group ref="biblatexml:formattext"/>
+                      <xs:attribute ref="xml:lang"/>
                     </xs:complexType>
                   </xs:element>
                   <xs:element name="issue">
@@ -16108,6 +16876,7 @@
             <xs:element name="subtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="subtitle">
@@ -16147,41 +16916,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="issuetitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="issuetitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="issuetitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="issuetitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="issuetitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="issuetitle">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -16190,6 +16978,7 @@
             <xs:element name="issuesubtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="issuesubtitle">
@@ -16231,6 +17020,7 @@
             <xs:element name="issuetitleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="issuetitleaddon">
@@ -16494,41 +17284,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="title">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -16633,6 +17442,7 @@
             <xs:element name="subtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="subtitle">
@@ -16674,6 +17484,7 @@
             <xs:element name="titleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="titleaddon">
@@ -16713,41 +17524,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="maintitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="maintitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="maintitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="maintitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="maintitle">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="maintitle">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -16756,6 +17586,7 @@
             <xs:element name="mainsubtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="mainsubtitle">
@@ -16797,6 +17628,7 @@
             <xs:element name="maintitleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="maintitleaddon">
@@ -16838,6 +17670,7 @@
             <xs:element name="venue">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="venue">
@@ -17159,41 +17992,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="title">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -17298,6 +18150,7 @@
             <xs:element name="subtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="subtitle">
@@ -17339,6 +18192,7 @@
             <xs:element name="titleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="titleaddon">
@@ -17561,41 +18415,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="title">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -17797,6 +18670,7 @@
             <xs:element name="subtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="subtitle">
@@ -17838,6 +18712,7 @@
             <xs:element name="titleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="titleaddon">
@@ -18186,41 +19061,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="title">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -18237,6 +19131,7 @@
             <xs:element name="subtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="subtitle">
@@ -18278,6 +19173,7 @@
             <xs:element name="titleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="titleaddon">
@@ -18522,41 +19418,60 @@
         <xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attribute ref="xml:lang"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:choice>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:romanized"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
             <xs:element name="title">
-              <xs:complexType mixed="true">
-                <xs:group ref="biblatexml:formattext"/>
-                <xs:attributeGroup ref="biblatexml:translated"/>
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="biblatexml:formattextB">
+                    <xs:attributeGroup ref="biblatexml:translated"/>
+                  </xs:extension>
+                </xs:complexContent>
               </xs:complexType>
             </xs:element>
           </xs:choice>
           <xs:element name="title">
-            <xs:complexType mixed="true">
-              <xs:group ref="biblatexml:formattext"/>
-              <xs:attributeGroup ref="biblatexml:translated"/>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="biblatexml:formattextB">
+                  <xs:attributeGroup ref="biblatexml:translated"/>
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
           </xs:element>
         </xs:choice>
@@ -18763,6 +19678,7 @@
             <xs:element name="subtitle">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="subtitle">
@@ -18804,6 +19720,7 @@
             <xs:element name="titleaddon">
               <xs:complexType mixed="true">
                 <xs:group ref="biblatexml:formattext"/>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="titleaddon">
