@@ -55,8 +55,6 @@ BibLaTeXML.common.fields =
   origyear? &
   language? &
   origlanguage? &
-  script? & 
-  origscript? & 
   abstract? &
   annotation? &
   (file|pdf)? &
@@ -93,33 +91,12 @@ superscript = element superscript { text }
 subscript = element subscript { text }
 nosort = element nosort { text } ##FIXME could it be formattextB ? ie. <bib:nosort><bib:superscript>foo</bib:superscript><bib:nosort> ??
 
-romanized = attribute mode { "romanized" }
-translated = att.lang?, attribute mode { "translated" }
-uniform = attribute mode { "uniform" }
-
-att.lang = attribute xml:lang {xsd:language}
-
-abstract = element abstract { att.lang?, formattext }
-addendum = element addendum { att.lang?, formattext }
-annotation = element annotation { att.lang?, formattext }
-booksubtitle = ( element booksubtitle { att.lang?, formattext },
-                element booksubtitle { romanized, formattext }?,
-                element booksubtitle { translated, formattext }* ) |
-                ( element booksubtitle { romanized, formattext },
-                  element booksubtitle { translated, formattext }* ) |
-                ( element booksubtitle { translated, formattext }+ )
-booktitle = ( element booktitle { att.lang?, formattextB },
-             element booktitle { romanized, formattextB }?,
-             element booktitle { translated, formattextB }* ) |
-             ( element booktitle { romanized, formattextB },
-               element booktitle { translated, formattextB }* ) |
-             ( element booktitle { translated, formattextB }+ )
-booktitleaddon = ( element booktitleaddon { att.lang?, formattext },
-                  element booktitleaddon { romanized, formattext }?,
-                  element booktitleaddon { translated, formattext }* ) |
-                  ( element booktitleaddon { romanized, formattext },
-                    element booktitleaddon { translated, formattext }* ) |
-                  ( element booktitleaddon { translated, formattext }+ )
+abstract = element abstract { formattext }
+addendum = element addendum { formattext }
+annotation = element annotation { formattext }
+booksubtitle = element booksubtitle { formattext }
+booktitle = element booktitle { formattextB }
+booktitleaddon = element booktitleaddon { formattext }
 chapter = element chapter { text }
 doi = element doi { text }
 eid = element eid { text }
@@ -134,50 +111,15 @@ lccn = element lccn { text } # validate with pattern ?
 ismn = element ismn { text }
 isrn = element isrn { text }
 issn = element issn { text }
-issue = ( element issue { att.lang?, formattext },
-         element issue { romanized, formattext }?,
-         element issue { translated, formattext }* ) |
-         ( element issue { romanized, formattext },
-           element issue { translated, formattext }* ) |
-         ( element issue { translated, formattext }+ )
-issuetitle = ( element issuetitle { att.lang?, formattextB },
-              element issuetitle { romanized, formattextB }?,
-              element issuetitle { translated, formattextB }* ) |
-              ( element issuetitle { romanized, formattextB },
-                element issuetitle { translated, formattextB }* ) |
-              ( element issuetitle { translated, formattextB }+ )
-issuetitleaddon = ( element issuetitleaddon { att.lang?, formattext },
-                   element issuetitleaddon { romanized, formattext }?,
-                   element issuetitleaddon { translated, formattext }* ) |
-                   ( element issuetitleaddon { romanized, formattext },
-                     element issuetitleaddon { translated, formattext }* ) |
-                   ( element issuetitleaddon { translated, formattext }+ )
-issuesubtitle = ( element issuesubtitle { att.lang?, formattext },
-                 element issuesubtitle { romanized, formattext }?,
-                 element issuesubtitle { translated, formattext }* ) |
-                 ( element issuesubtitle { romanized, formattext },
-                   element issuesubtitle { translated, formattext }* ) |
-                 ( element issuesubtitle { translated, formattext }+ )
+issue = element issue { formattext }
+issuetitle = element issuetitle { formattextB }
+issuetitleaddon = element issuetitleaddon { formattext }
+issuesubtitle = element issuesubtitle { formattext }
 iswc = element iswc { text }
-journal = ( element journal {attribute id {text}}) | 
-          ( element journal { att.lang?, formattextB },
-            element journal { romanized, formattextB }?,
-            element journal { translated, formattextB }* ) |
-          ( element journal { romanized, formattextB },
-             element journal { translated, formattextB }* ) |
-          ( element journal { translated, formattextB }+ )
-journaltitle = ( element journaltitle { att.lang?, formattextB },
-                element journaltitle { romanized, formattextB }?,
-                element journaltitle { translated, formattextB }* ) |
-                ( element journaltitle { romanized, formattextB },
-                  element journaltitle { translated, formattextB }* ) |
-                ( element journaltitle { translated, formattextB }+ )
-journalsubtitle = ( element journalsubtitle { att.lang?, formattext },
-                   element journalsubtitle { romanized, formattext }?,
-                   element journalsubtitle { translated, formattext }* ) |
-                   ( element journalsubtitle { romanized, formattext },
-                     element journalsubtitle { translated, formattext }* ) |
-                   ( element journalsubtitle { translated, formattext }+ )
+journal = ( element journal {attribute id {text}} ) | 
+          ( element journal { formattextB } )
+journaltitle = element journaltitle { formattextB }
+journalsubtitle = element journalsubtitle { formattext }
 label = element label { text }
 ## this element contains data relative to individual users of the database
 private = element private { attribute user {text} & library? & remarks? & topics? & user.field* }
@@ -187,94 +129,29 @@ libraryitem = element item { attribute location {text}?,
                              attribute ref {text}?, 
                              attribute url {xsd:anyURI}?, 
                              attribute note {text}? }
-mainsubtitle = ( element mainsubtitle { att.lang?, formattext },
-                 element mainsubtitle { romanized, formattext }?,
-                 element mainsubtitle { translated, formattext }* ) |
-               ( element mainsubtitle { romanized, formattext },
-                 element mainsubtitle { translated, formattext }* ) |
-               ( element mainsubtitle { translated, formattext }+ )
-maintitle = ( element maintitle { att.lang?, formattextB },
-              element maintitle { romanized, formattextB }?,
-              element maintitle { translated, formattextB }* ) |
-             ( element maintitle { romanized, formattextB },
-               element maintitle { translated, formattextB }* ) |
-             ( element maintitle { translated, formattextB }+ )
-maintitleaddon = ( element maintitleaddon { att.lang?, formattext },
-                   element maintitleaddon { romanized, formattext }?,
-                   element maintitleaddon { translated, formattext }* ) |
-                  ( element maintitleaddon { romanized, formattext },
-                    element maintitleaddon { translated, formattext }* ) |
-                  ( element maintitleaddon { translated, formattext }+ )
-nameaddon = ( element nameaddon { text },
-             element nameaddon { romanized, text }?,
-             element nameaddon { translated, text }? ) |
-             ( element nameaddon { romanized, text },
-               element nameaddon { translated, text }? ) |
-             ( element nameaddon { translated, text } )
-note = element note { att.lang?, formattext }
+mainsubtitle = element mainsubtitle { formattext }
+maintitle = element maintitle { formattextB }
+maintitleaddon = element maintitleaddon { formattext }
+nameaddon = element nameaddon { text }
+note = element note { formattext }
 number = element number { text }
 origtitle = element origtitle { formattext, element romanized {text}? }
 pagetotal = element pagetotal { text }
 part = element part { text }
-reprinttitle = ( element reprinttitle { att.lang?, formattext },
-                element reprinttitle { romanized, formattext }?,
-                element reprinttitle { translated, formattext }* ) |
-                ( element reprinttitle { romanized, formattext },
-                  element reprinttitle { translated, formattext }* ) |
-                ( element reprinttitle { translated, formattext }+ )
+reprinttitle = element reprinttitle { formattext }
 series = ( element series { attribute id {text}}) | 
-         ( element series { (formattext | item+) },
-          element series { romanized, (formattext | item+) }?,
-          element series { translated, (formattext | item+) }? ) |
-          ( element series { romanized, (formattext | item+) },
-            element series { translated, (formattext | item+) }? ) |
-          ( element series { translated, (formattext | item+) } )
+         ( element series { (formattext | item+) } )
 #shorthand = element shorthand { text }
-shorthand = ( element shorthand { text },
-             element shorthand { romanized, text }?,
-             element shorthand { translated, text }? ) | 
-             ( element shorthand { romanized, text },
-             element shorthand { translated, text }? ) |
-             ( element shorthand { translated, text } )
+shorthand = element shorthand { text }
 #shorthandintro = element shorthandintro { text }
-shorthandintro = ( element shorthandintro { text },
-             element shorthandintro { romanized, text }?,
-             element shorthandintro { translated, text }? ) | 
-             ( element shorthandintro { romanized, text },
-             element shorthandintro { translated, text }? ) |
-             ( element shorthandintro { translated, text } )
-shorttitle = ( element shorttitle { att.lang?, formattextB },
-             element shorttitle { romanized, formattextB }?,
-             element shorttitle { translated, formattextB }* ) | 
-             ( element shorttitle { romanized, formattextB },
-             element shorttitle { translated, formattextB }* ) |
-             ( element shorttitle { translated, formattextB }+ )
-subtitle = ( element subtitle { att.lang?, formattext },
-            element subtitle { romanized, formattext }?,
-            element subtitle { translated, formattext }* ) |
-            ( element subtitle { romanized, formattext },
-              element subtitle { translated, formattext }* ) |
-            ( element subtitle { translated, formattext }+ )
-title = ( element title { att.lang?, formattextB },
-         element title { romanized, formattextB }?,
-         element title { translated, formattextB }* ) |
-         ( element title { romanized, formattextB },
-           element title { translated, formattextB }* ) |
-         ( element title { translated, formattextB }+ )
-titleaddon = ( element titleaddon { att.lang?, formattext },
-              element titleaddon { romanized, formattext }?,
-              element titleaddon { translated, formattext }* ) |
-              ( element titleaddon { romanized, formattext },
-                element titleaddon { translated, formattext }* ) |
-              ( element titleaddon { translated, formattext }+ )
+shorthandintro = element shorthandintro { text }
+shorttitle = element shorttitle { formattextB }
+subtitle = element subtitle { formattext }
+title = element title { formattextB }
+titleaddon = element titleaddon { formattext }
 url = element url { xsd:anyURI }
 #venue = element venue { formattext }
-venue = ( element venue { att.lang?, formattext },
-         element venue { romanized, formattext }?,
-         element venue { translated, formattext }* ) |
-         ( element venue { romanized, formattext },
-           element venue { translated, formattext }* ) |
-         ( element venue { translated, formattext }+ )
+venue = element venue { formattext }
 version = element version { text }
 volume = element volume { text }
 volumes = element volumes { text }
@@ -302,12 +179,7 @@ presort = element presort { text }
 sortkey = element sortkey { text }
 key = element key { text }
 #sorttitle = element sorttitle { text }
-sorttitle = ( element sorttitle { text },
-         element sorttitle { romanized, text }?,
-         element sorttitle { translated, text }* ) |
-         ( element sorttitle { romanized, text },
-           element sorttitle { translated, text }* ) |
-         ( element sorttitle { translated, text }+ )
+sorttitle = element sorttitle { text }
 sortyear = element sortyear { text }
 useprefix = element useprefix { text }
 xref = element xref { text }
@@ -346,69 +218,24 @@ date = element date { xsd:date | xsd:integer }
 urldate = element urldate { xsd:date }
 # LITERAL LISTS
 attlist.lists = attribute andothers { "true" }
-institution = ( element institution { attribute id {text}, attlist.lists? }) |
-              ( element institution { attlist.lists?, (text | item+) },
-               element institution { attlist.lists?, romanized, (text | item+) }?,
-               element institution { attlist.lists?, translated, (text | item+) }? ) |
-               ( element institution { attlist.lists?, romanized, (text | item+) },
-                 element institution { attlist.lists?, translated, (text | item+) }? ) |
-               ( element institution { attlist.lists?, translated, (text | item+) } )
-school = ( element school { attribute id {text}, attlist.lists? }) |
-         ( element school { attlist.lists?, (text | item+) },
-          element school { attlist.lists?, romanized, (text | item+) }?,
-          element school { attlist.lists?, translated, (text | item+) }? ) |
-          ( element school { attlist.lists?, romanized, (text | item+) },
-            element school { attlist.lists?, translated, (text | item+) }? ) |
-          ( element school { attlist.lists?, translated, (text | item+) } )
-organization = ( element organization { attribute id {text}, attlist.lists? }) |
-               ( element organization { attlist.lists?, (text | item+) },
-                element organization { attlist.lists?, romanized, (text | item+) }?,
-                element organization { attlist.lists?, translated, (text | item+) }? ) |
-                ( element organization { attlist.lists?, romanized, (text | item+) },
-                  element organization { attlist.lists?, translated, (text | item+) }? ) |
-                ( element organization { attlist.lists?, translated, (text | item+) } )
+institution = ( element institution { attribute id {text}, attlist.lists? } ) |
+              ( element institution { attlist.lists?, (text | item+) } )
+school = ( element school { attribute id {text}, attlist.lists? } ) |
+         ( element school { attlist.lists?, (text | item+) } )
+organization = ( element organization { attribute id {text}, attlist.lists? } ) |
+               ( element organization { attlist.lists?, (text | item+) } )
 location = ( element location { attribute id {text}, attlist.lists? }) |
-           ( element location { attlist.lists?, (text | item+) },
-            element location { attlist.lists?, romanized, (text | item+) }?,
-            element location { attlist.lists?, uniform, (text | item+) }? ) |
-            ( element location { attlist.lists?, romanized, (text | item+) },
-              element location { attlist.lists?, uniform, (text | item+) }? ) |
-            ( element location { attlist.lists?, uniform, (text | item+) } )
-origlocation = ( element origlocation { attribute id {text}, attlist.lists? }) |
-               ( element origlocation { attlist.lists?, (text | item+) },
-                element origlocation { attlist.lists?, romanized, (text | item+) }?,
-                element origlocation { attlist.lists?, uniform, (text | item+) }? ) |
-                ( element origlocation { attlist.lists?, romanized, (text | item+) },
-                  element origlocation { attlist.lists?, uniform, (text | item+) }? ) |
-                ( element origlocation { attlist.lists?, uniform, (text | pubitem+) } )
-publisher = ( element publisher { attribute id {formattext}, attlist.lists? }) |
-           ( element publisher { attlist.lists?, (formattext | item+) },
-            element publisher { attlist.lists?, romanized, (formattext | item+) }?,
-            element publisher { attlist.lists?, uniform, (formattext | item+) }? ) |
-            ( element publisher { attlist.lists?, romanized, (formattext | item+) },
-              element publisher { attlist.lists?, uniform, (formattext | item+) }? ) |
-            ( element publisher { attlist.lists?, uniform, (formattext | item+) } )
-origpublisher = ( element origpublisher { attribute id {formattext}, attlist.lists? }) |
-           ( element origpublisher { attlist.lists?, (formattext | item+) },
-            element origpublisher { attlist.lists?, romanized, (formattext | item+) }?,
-            element origpublisher { attlist.lists?, uniform, (formattext | item+) }? ) |
-            ( element origpublisher { attlist.lists?, romanized, (formattext | item+) },
-              element origpublisher { attlist.lists?, uniform, (formattext | item+) }? ) |
-            ( element origpublisher { attlist.lists?, uniform, (formattext | item+) } )
-publisherinfo = ( element publisher { attribute id {formattext}, attlist.lists? }) |
-            ( element publisher { attlist.lists?, ((publishername, publocation) | pubitem+) },
-             element publisher { attlist.lists?, romanized, ((publishername, publocation) | pubitem+) }?,
-             element publisher { attlist.lists?, translated, ((publishername, publocation)| pubitem+) }? ) |
-             ( element publisher { attlist.lists?, romanized, ((publishername, publocation) | pubitem+) },
-               element publisher { attlist.lists?, translated, ((publishername, publocation) | pubitem+) }? ) |
-             ( element publisher { attlist.lists?, translated, ((publishername, publocation) | pubitem+) } )
-origpublisherinfo = ( element origpublisher { attribute id {text}, attlist.lists? }) |
-                ( element origpublisher { attlist.lists?, ((publishername, publocation) | pubitem+) },
-                  element origpublisher { attlist.lists?, romanized, ((publishername, publocation) | pubitem+) }?,
-                  element origpublisher { attlist.lists?, translated, ((publishername, publocation) | pubitem+) }? ) |
-                 ( element origpublisher { attlist.lists?, romanized, ((publishername, publocation) | pubitem+) },
-                   element origpublisher { attlist.lists?, translated, ((publishername, publocation) | pubitem+) }? ) |
-                 ( element origpublisher { attlist.lists?, translated, ((publishername, publocation) | pubitem+) } )
+           ( element location { attlist.lists?, (text | item+) } )
+origlocation = ( element origlocation { attribute id {text}, attlist.lists? } ) |
+               ( element origlocation { attlist.lists?, (text | item+) } )
+publisher = ( element publisher { attribute id {formattext}, attlist.lists? } ) |
+           ( element publisher { attlist.lists?, (formattext | item+) } )
+origpublisher = ( element origpublisher { attribute id {formattext}, attlist.lists? } ) |
+           ( element origpublisher { attlist.lists?, (formattext | item+) } )
+publisherinfo = ( element publisher { attribute id {formattext}, attlist.lists? } ) |
+            ( element publisher { attlist.lists?, ((publishername, publocation) | pubitem+) } )
+origpublisherinfo = ( element origpublisher { attribute id {text}, attlist.lists? } ) |
+                ( element origpublisher { attlist.lists?, ((publishername, publocation) | pubitem+) } )
 lista = element lista { attlist.lists?, (text | item+) }
 listb = element listb { attlist.lists?, (text | item+) }
 listc = element listc { attlist.lists?, (text | item+) }
@@ -431,10 +258,6 @@ publisherinfos = (( publisherinfo |
 language = element language { xsd:language | itemlang+ }
 origlanguage = element origlanguage { xsd:language | itemlang+ }
 itemlang = element item { xsd:language }
-script.list = "Arab" | "Armi" | "Armn" | "Avst" | "Bali" | "Batk" | "Beng" | "Blis" | "Bopo" | "Brah" | "Brai" | "Bugi" | "Buhd" | "Cakm" | "Cans" | "Cari" | "Cham" | "Cher" | "Cirt" | "Copt" | "Cprt" | "Cyrl" | "Cyrs" | "Deva" | "Dsrt" | "Egyd" | "Egyh" | "Egyp" | "Ethi" | "Geok" | "Geor" | "Glag" | "Goth" | "Grek" | "Gujr" | "Guru" | "Hang" | "Hani" | "Hano" | "Hans" | "Hant" | "Hebr" | "Hira" | "Hmng" | "Hrkt" | "Hung" | "Inds" | "Ital" | "Java" | "Jpan" | "Kali" | "Kana" | "Khar" | "Khmr" | "Knda" | "Kore" | "Kthi" | "Lana" | "Laoo" | "Latf" | "Latg" | "Latn" | "Lepc" | "Limb" | "Lina" | "Linb" | "Lisu" | "Lyci" | "Lydi" | "Mand" | "Mani" | "Maya" | "Mero" | "Mlym" | "Mong" | "Moon" | "Mtei" | "Mymr" | "Nkgb" | "Nkoo" | "Ogam" | "Olck" | "Orkh" | "Orya" | "Osma" | "Perm" | "Phag" | "Phli" | "Phlp" | "Phlv" | "Phnx" | "Plrd" | "Prti" | "Qaaa" | "Qabx" | "Rjng" | "Roro" | "Runr" | "Samr" | "Sara" | "Saur" | "Sgnw" | "Shaw" | "Sinh" | "Sund" | "Sylo" | "Syrc" | "Syre" | "Syrj" | "Syrn" | "Tagb" | "Tale" | "Talu" | "Taml" | "Tavt" | "Telu" | "Teng" | "Tfng" | "Tglg" | "Thaa" | "Thai" | "Tibt" | "Ugar" | "Vaii" | "Visp" | "Xpeo" | "Xsux" | "Yiii" | "Zinh" | "Zmth" | "Zsym" | "Zxxx" | "Zyyy" | "Zzzz" 
-script = element script { script.list | itemscript+ } 
-origscript = element origscript { script.list | itemscript+ }
-itemscript = element item { script.list }
 # NAME LISTS
 attlist.author |= attribute type { "author" | "editor" | "compiler" | text }?
 attlist.author |= attribute gender { "sf" | "sm" | "sn" | "pf" | "pm" | "pn" | "pp" }?
@@ -442,108 +265,23 @@ attlist.author |= attlist.lists?
 attlist.editor |= attribute type { "editor" | "compiler" }?
 attlist.editor |= attribute gender { "sf" | "sm" | "sn" | "pf" | "pm" | "pn" | "pp" }?
 attlist.editor |= attlist.lists?
-author = ( element author { attlist.author, (text | person+) },
-          element author { attlist.author, romanized, (text | person+) }?,
-          element author { attlist.author, uniform, (text | person+) }? ) |
-          ( element author { attlist.author, romanized, (text | person+) },
-            element author { attlist.author, uniform, (text | person+) }? ) |
-          ( element author { attlist.author, uniform, (text | person+) } )
-editor = ( element editor { attlist.editor, (text | person+) },
-          element editor { attlist.editor, romanized, (text | person+) }?,
-          element editor { attlist.editor, uniform, (text | person+) }? ) |
-          ( element editor { attlist.editor, romanized, (text | person+) },
-            element editor { attlist.editor, uniform, (text | person+) }? ) |
-          ( element editor { attlist.editor, uniform, (text | person+) } )
-afterword = ( element afterword { attlist.lists?, (text | person+) },
-             element afterword { attlist.lists?, romanized, (text | person+) }?,
-             element afterword { attlist.lists?, uniform, (text | person+) }? ) |
-             ( element afterword { attlist.lists?, romanized, (text | person+) },
-               element afterword { attlist.lists?, uniform, (text | person+) }? ) |
-             ( element afterword { attlist.lists?, uniform, (text | person+) } )
-annotator = ( element annotator { attlist.lists?, (text | person+) },
-             element annotator { attlist.lists?, romanized, (text | person+) }?,
-             element annotator { attlist.lists?, uniform, (text | person+) }? ) |
-             ( element annotator { attlist.lists?, romanized, (text | person+) },
-               element annotator { attlist.lists?, uniform, (text | person+) }? ) |
-             ( element annotator { attlist.lists?, uniform, (text | person+) } )
-bookauthor = ( element bookauthor { attlist.lists?, (text | person+) },
-              element bookauthor { attlist.lists?, romanized, (text | person+) }?,
-              element bookauthor { attlist.lists?, uniform, (text | person+) }? ) |
-              ( element bookauthor { attlist.lists?, romanized, (text | person+) },
-                element bookauthor { attlist.lists?, uniform, (text | person+) }? ) |
-              ( element bookauthor { attlist.lists?, uniform, (text | person+) } )
-commentator = ( element commentator { attlist.lists?, (text | person+) },
-               element commentator { attlist.lists?, romanized, (text | person+) }?,
-               element commentator { attlist.lists?, uniform, (text | person+) }? ) |
-               ( element commentator { attlist.lists?, romanized, (text | person+) },
-                 element commentator { attlist.lists?, uniform, (text | person+) }? ) |
-               ( element commentator { attlist.lists?, uniform, (text | person+) } )
-foreword = ( element foreword { attlist.lists?, (text | person+) },
-            element foreword { attlist.lists?, romanized, (text | person+) }?,
-            element foreword { attlist.lists?, uniform, (text | person+) }? ) |
-            ( element foreword { attlist.lists?, romanized, (text | person+) },
-              element foreword { attlist.lists?, uniform, (text | person+) }? ) |
-            ( element foreword { attlist.lists?, uniform, (text | person+) } )
-holder = ( element holder { attlist.lists?, (text | person+) },
-          element holder { attlist.lists?, romanized, (text | person+) }?,
-          element holder { attlist.lists?, uniform, (text | person+) }? ) |
-          ( element holder { attlist.lists?, romanized, (text | person+) },
-            element holder { attlist.lists?, uniform, (text | person+) }? ) |
-          ( element holder { attlist.lists?, uniform, (text | person+) } )
-introduction = ( element introduction { attlist.lists?, (text | person+) },
-                element introduction { attlist.lists?, romanized, (text | person+) }?,
-                element introduction { attlist.lists?, uniform, (text | person+) }? ) |
-                ( element introduction { attlist.lists?, romanized, (text | person+) },
-                  element introduction { attlist.lists?, uniform, (text | person+) }? ) |
-                ( element introduction { attlist.lists?, uniform, (text | person+) } )
-redactor = ( element redactor { attlist.lists?, (text | person+) },
-            element redactor { attlist.lists?, romanized, (text | person+) }?,
-            element redactor { attlist.lists?, uniform, (text | person+) }? ) |
-            ( element redactor { attlist.lists?, romanized, (text | person+) },
-              element redactor { attlist.lists?, uniform, (text | person+) }? ) |
-            ( element redactor { attlist.lists?, uniform, (text | person+) } )
-translator = ( element translator { attlist.lists?, (text | person+) },
-              element translator { attlist.lists?, romanized, (text | person+) }?,
-              element translator { attlist.lists?, uniform, (text | person+) }? ) |
-              ( element translator { attlist.lists?, romanized, (text | person+) },
-                element translator { attlist.lists?, uniform, (text | person+) }? ) |
-              ( element translator { attlist.lists?, uniform, (text | person+) } )
-shortauthor = ( element shortauthor { attlist.lists?, (text | person+) },
-               element shortauthor { attlist.lists?, romanized, (text | person+) }?,
-               element shortauthor { attlist.lists?, uniform, (text | person+) }? ) |
-               ( element shortauthor { attlist.lists?, romanized, (text | person+) },
-                 element shortauthor { attlist.lists?, uniform, (text | person+) }? ) |
-               ( element shortauthor { attlist.lists?, uniform, (text | person+) } )
-shorteditor = ( element shorteditor { attlist.lists?, (text | person+) },
-               element shorteditor { attlist.lists?, romanized, (text | person+) }?,
-               element shorteditor { attlist.lists?, uniform, (text | person+) }? ) |
-               ( element shorteditor { attlist.lists?, romanized, (text | person+) },
-                 element shorteditor { attlist.lists?, uniform, (text | person+) }? ) |
-               ( element shorteditor { attlist.lists?, uniform, (text | person+) } )
-sortname = ( element sortname { attlist.lists?, (text | person+) },
-            element sortname { attlist.lists?, romanized, (text | person+) }?,
-            element sortname { attlist.lists?, uniform, (text | person+) }? ) |
-            ( element sortname { attlist.lists?, romanized, (text | person+) },
-              element sortname { attlist.lists?, uniform, (text | person+) }? ) |
-            ( element sortname { attlist.lists?, uniform, (text | person+) } )
-namea = ( element namea { attlist.lists?, (text | person+) },
-         element namea { attlist.lists?, romanized, (text | person+) }?,
-         element namea { attlist.lists?, uniform, (text | person+) }? ) |
-         ( element namea { attlist.lists?, romanized, (text | person+) },
-           element namea { attlist.lists?, uniform, (text | person+) }? ) |
-         ( element namea { attlist.lists?, uniform, (text | person+) } )
-nameb = ( element nameb { attlist.lists?, (text | person+) },
-         element nameb { attlist.lists?, romanized, (text | person+) }?,
-         element nameb { attlist.lists?, uniform, (text | person+) }? ) |
-         ( element nameb { attlist.lists?, romanized, (text | person+) },
-           element nameb { attlist.lists?, uniform, (text | person+) }? ) |
-         ( element nameb { attlist.lists?, uniform, (text | person+) } )
-namec = ( element namec { attlist.lists?, (text | person+) },
-         element namec { attlist.lists?, romanized, (text | person+) }?,
-         element namec { attlist.lists?, uniform, (text | person+) }? ) |
-         ( element namec { attlist.lists?, romanized, (text | person+) },
-           element namec { attlist.lists?, uniform, (text | person+) }? ) |
-         ( element namec { attlist.lists?, uniform, (text | person+) } )
+author = element author { attlist.author, (text | person+) }
+editor = element editor { attlist.editor, (text | person+) }
+afterword = element afterword { attlist.lists?, (text | person+) }
+annotator = element annotator { attlist.lists?, (text | person+) }
+bookauthor = element bookauthor { attlist.lists?, (text | person+) }
+commentator = element commentator { attlist.lists?, (text | person+) }
+foreword = element foreword { attlist.lists?, (text | person+) }
+holder = element holder { attlist.lists?, (text | person+) }
+introduction = element introduction { attlist.lists?, (text | person+) }
+redactor = element redactor { attlist.lists?, (text | person+) }
+translator = element translator { attlist.lists?, (text | person+) }
+shortauthor = element shortauthor { attlist.lists?, (text | person+) }
+shorteditor = element shorteditor { attlist.lists?, (text | person+) }
+sortname = element sortname { attlist.lists?, (text | person+) }
+namea = element namea { attlist.lists?, (text | person+) }
+nameb = element nameb { attlist.lists?, (text | person+) }
+namec = element namec { attlist.lists?, (text | person+) }
 person = element person {
     attlist.person, 
     ( text | (first, prefix?, last, suffix?) )
