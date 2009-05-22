@@ -1295,19 +1295,6 @@ sub postprocess {
         ##############################################################
 
         $self->_generatesortstring($citekey);
-        # if ( $be->{sortkey} ) {
-        #     my $pre ;
-        #     if ( $be->{presort} ) {
-        #         $pre = $be->{presort} 
-        #     } else {
-        #         $pre = 'mm'
-        #     } ;
-        #     my $sortkey = lc( $be->{sortkey} ) ;
-        #     $sortkey = latex_decode($sortkey) unless $self->_nodecode($citekey) ;
-        #     $be->{sortstring} = "$pre $sortkey" ;
-        # } else {
-        #     $self->_generatesortstring($citekey) ;
-        # }
 
         ##############################################################
         # 9. when type of patent is not stated, simply assume 'patent'
