@@ -2,6 +2,8 @@ default namespace = "http://biblatex-biber.sourceforge.net/biblatexml"
 namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
 datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
 namespace user = "http://localhost/biblatexml/user"
+## TODO?  change namespace of bib:emphasis, bib:superscript, bib:subscript 
+##        to db = "http://docbook.org/ns/docbook"
 start = entries
 
 entries = element entries { BibLaTeXML.entries* }
@@ -37,8 +39,10 @@ periodical.electronic |
 preprint | 
 software | 
 movie
-# TODO Unsupported types: artwork, audio, image, jurisdiction, legislation, legal, movie, music, performance, reference, inreference, review, software, standard, video
-# TODO add manuscript and archivalrecord ?
+## TODO Unsupported types: 
+##   artwork, audio, image, jurisdiction, legislation, legal, movie, music,  
+##   performance, reference, inreference, review, software, standard, video
+##   TODO: add manuscript and archivalrecord ??
 
 #########################################################
 BibLaTeXML.common.fields =
@@ -89,26 +93,28 @@ superscript = element superscript { text }
 subscript = element subscript { text }
 nosort = element nosort { text } ##FIXME could it be formattextB ? ie. <bib:nosort><bib:superscript>foo</bib:superscript><bib:nosort> ??
 
-romanized = attribute mode { "romanized" }    
-translated = attribute xml:lang {xsd:language}?, attribute mode { "translated" }
+romanized = attribute mode { "romanized" }
+translated = att.lang?, attribute mode { "translated" }
 uniform = attribute mode { "uniform" }
 
-abstract = element abstract { formattext }
-addendum = element addendum { formattext }
-annotation = element annotation { formattext }
-booksubtitle = ( element booksubtitle { formattext },
+att.lang = attribute xml:lang {xsd:language}
+
+abstract = element abstract { att.lang?, formattext }
+addendum = element addendum { att.lang?, formattext }
+annotation = element annotation { att.lang?, formattext }
+booksubtitle = ( element booksubtitle { att.lang?, formattext },
                 element booksubtitle { romanized, formattext }?,
                 element booksubtitle { translated, formattext }* ) |
                 ( element booksubtitle { romanized, formattext },
                   element booksubtitle { translated, formattext }* ) |
                 ( element booksubtitle { translated, formattext }+ )
-booktitle = ( element booktitle { formattextB },
+booktitle = ( element booktitle { att.lang?, formattextB },
              element booktitle { romanized, formattextB }?,
              element booktitle { translated, formattextB }* ) |
              ( element booktitle { romanized, formattextB },
                element booktitle { translated, formattextB }* ) |
              ( element booktitle { translated, formattextB }+ )
-booktitleaddon = ( element booktitleaddon { formattext },
+booktitleaddon = ( element booktitleaddon { att.lang?, formattext },
                   element booktitleaddon { romanized, formattext }?,
                   element booktitleaddon { translated, formattext }* ) |
                   ( element booktitleaddon { romanized, formattext },
@@ -128,25 +134,25 @@ lccn = element lccn { text } # validate with pattern ?
 ismn = element ismn { text }
 isrn = element isrn { text }
 issn = element issn { text }
-issue = ( element issue { formattext },
+issue = ( element issue { att.lang?, formattext },
          element issue { romanized, formattext }?,
          element issue { translated, formattext }* ) |
          ( element issue { romanized, formattext },
            element issue { translated, formattext }* ) |
          ( element issue { translated, formattext }+ )
-issuetitle = ( element issuetitle { formattextB },
+issuetitle = ( element issuetitle { att.lang?, formattextB },
               element issuetitle { romanized, formattextB }?,
               element issuetitle { translated, formattextB }* ) |
               ( element issuetitle { romanized, formattextB },
                 element issuetitle { translated, formattextB }* ) |
               ( element issuetitle { translated, formattextB }+ )
-issuetitleaddon = ( element issuetitleaddon { formattext },
+issuetitleaddon = ( element issuetitleaddon { att.lang?, formattext },
                    element issuetitleaddon { romanized, formattext }?,
                    element issuetitleaddon { translated, formattext }* ) |
                    ( element issuetitleaddon { romanized, formattext },
                      element issuetitleaddon { translated, formattext }* ) |
                    ( element issuetitleaddon { translated, formattext }+ )
-issuesubtitle = ( element issuesubtitle { formattext },
+issuesubtitle = ( element issuesubtitle { att.lang?, formattext },
                  element issuesubtitle { romanized, formattext }?,
                  element issuesubtitle { translated, formattext }* ) |
                  ( element issuesubtitle { romanized, formattext },
@@ -154,19 +160,19 @@ issuesubtitle = ( element issuesubtitle { formattext },
                  ( element issuesubtitle { translated, formattext }+ )
 iswc = element iswc { text }
 journal = (element journal {attribute id {text}}) | 
-          ( element journal { formattextB },
+          ( element journal { att.lang?, formattextB },
             element journal { romanized, formattextB }?,
             element journal { translated, formattextB }* ) |
           ( element journal { romanized, formattextB },
              element journal { translated, formattextB }* ) |
           ( element journal { translated, formattextB }+ )
-journaltitle = ( element journaltitle { formattextB },
+journaltitle = ( element journaltitle { att.lang?, formattextB },
                 element journaltitle { romanized, formattextB }?,
                 element journaltitle { translated, formattextB }* ) |
                 ( element journaltitle { romanized, formattextB },
                   element journaltitle { translated, formattextB }* ) |
                 ( element journaltitle { translated, formattextB }+ )
-journalsubtitle = ( element journalsubtitle { formattext },
+journalsubtitle = ( element journalsubtitle { att.lang?, formattext },
                    element journalsubtitle { romanized, formattext }?,
                    element journalsubtitle { translated, formattext }* ) |
                    ( element journalsubtitle { romanized, formattext },
@@ -181,19 +187,19 @@ libraryitem = element item { attribute location {text}?,
                              attribute ref {text}?, 
                              attribute url {xsd:anyURI}?, 
                              attribute note {text}? }
-mainsubtitle = ( element mainsubtitle { formattext },
+mainsubtitle = ( element mainsubtitle { att.lang?, formattext },
                 element mainsubtitle { romanized, formattext }?,
                 element mainsubtitle { translated, formattext }* ) |
                 ( element mainsubtitle { romanized, formattext },
                   element mainsubtitle { translated, formattext }* ) |
                 ( element mainsubtitle { translated, formattext }+ )
-maintitle = ( element maintitle { formattextB },
+maintitle = ( element maintitle { att.lang?, formattextB },
              element maintitle { romanized, formattextB }?,
              element maintitle { translated, formattextB }* ) |
              ( element maintitle { romanized, formattextB },
                element maintitle { translated, formattextB }* ) |
              ( element maintitle { translated, formattextB }+ )
-maintitleaddon = ( element maintitleaddon { formattext },
+maintitleaddon = ( element maintitleaddon { att.lang?, formattext },
                   element maintitleaddon { romanized, formattext }?,
                   element maintitleaddon { translated, formattext }* ) |
                   ( element maintitleaddon { romanized, formattext },
@@ -205,12 +211,12 @@ nameaddon = ( element nameaddon { text },
              ( element nameaddon { romanized, text },
                element nameaddon { translated, text }? ) |
              ( element nameaddon { translated, text } )
-note = element note { formattext }
+note = element note { att.lang?, formattext }
 number = element number { text }
 origtitle = element origtitle { formattext, element romanized {text}? }
 pagetotal = element pagetotal { text }
 part = element part { text }
-reprinttitle = ( element reprinttitle { formattext },
+reprinttitle = ( element reprinttitle { att.lang?, formattext },
                 element reprinttitle { romanized, formattext }?,
                 element reprinttitle { translated, formattext }* ) |
                 ( element reprinttitle { romanized, formattext },
@@ -237,25 +243,25 @@ shorthandintro = ( element shorthandintro { text },
              ( element shorthandintro { romanized, text },
              element shorthandintro { translated, text }? ) |
              ( element shorthandintro { translated, text } )
-shorttitle = ( element shorttitle { formattextB },
+shorttitle = ( element shorttitle { att.lang?, formattextB },
              element shorttitle { romanized, formattextB }?,
              element shorttitle { translated, formattextB }* ) | 
              ( element shorttitle { romanized, formattextB },
              element shorttitle { translated, formattextB }* ) |
              ( element shorttitle { translated, formattextB }+ )
-subtitle = ( element subtitle { formattext },
+subtitle = ( element subtitle { att.lang?, formattext },
             element subtitle { romanized, formattext }?,
             element subtitle { translated, formattext }* ) |
             ( element subtitle { romanized, formattext },
               element subtitle { translated, formattext }* ) |
             ( element subtitle { translated, formattext }+ )
-title = ( element title { formattextB },
+title = ( element title { att.lang?, formattextB },
          element title { romanized, formattextB }?,
          element title { translated, formattextB }* ) |
          ( element title { romanized, formattextB },
            element title { translated, formattextB }* ) |
          ( element title { translated, formattextB }+ )
-titleaddon = ( element titleaddon { formattext },
+titleaddon = ( element titleaddon { att.lang?, formattext },
               element titleaddon { romanized, formattext }?,
               element titleaddon { translated, formattext }* ) |
               ( element titleaddon { romanized, formattext },
@@ -263,7 +269,7 @@ titleaddon = ( element titleaddon { formattext },
               ( element titleaddon { translated, formattext }+ )
 url = element url { xsd:anyURI }
 #venue = element venue { formattext }
-venue = ( element venue { formattext },
+venue = ( element venue { att.lang?, formattext },
          element venue { romanized, formattext }?,
          element venue { translated, formattext }* ) |
          ( element venue { romanized, formattext },
@@ -430,7 +436,7 @@ script = element script { script.list | itemscript+ }
 origscript = element origscript { script.list | itemscript+ }
 itemscript = element item { script.list }
 # NAME LISTS
-attlist.author |= attribute type { "author" }?
+attlist.author |= attribute type { "author" | "editor" | "compiler" | text }?
 attlist.author |= attribute gender { "sf" | "sm" | "sn" | "pf" | "pm" | "pn" | "pp" }?
 attlist.author |= attlist.lists?
 attlist.editor |= attribute type { "editor" | "compiler" }?
