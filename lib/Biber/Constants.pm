@@ -6,45 +6,81 @@ use Readonly ;
 use base 'Exporter' ;
 
 our @EXPORT = qw{
-	@NAMEFIELDS
-	@LISTFIELDS
-	@LITERALFIELDS_BASE
-	@RANGEFIELDS
-	@VERBATIMFIELDS
-    @TITLEFIELDS
-	@KEYFIELDS
-    @COMMASEP_FIELDS
-	@ENTRIESTOSPLIT
-	@LITERALFIELDS
-    %SKIPFIELDS
-	%CONFIG_DEFAULT
-    $BIBLATEX_VERSION
-    %ALIASES
-    %NUMERICALMONTH
-} ;
+                  @NAMEFIELDS
+                  @LISTFIELDS
+                  @LITERALFIELDS_BASE
+                  @RANGEFIELDS
+                  @VERBATIMFIELDS
+                  @TITLEFIELDS
+                  @KEYFIELDS
+                  @COMMASEP_FIELDS
+                  @ENTRIESTOSPLIT
+                  @LITERALFIELDS
+                  %SKIPFIELDS
+                  %CONFIG_DEFAULT
+                  %BLX_CONFIG_DEFAULT
+                  $BIBLATEX_VERSION
+                  $BIBER_SORT_FINAL
+                  %ALIASES
+                  %NUMERICALMONTH
+              } ;
 
 Readonly::Scalar our $BIBLATEX_VERSION => '0.8' ;
+our $BIBER_SORT_FINAL = 0;
 
-## CONFIGURATION DEFAULTS
-Readonly::Hash our %CONFIG_DEFAULT => (
-    debug       => 0,
-    labelalpha  => 0,
-    useauthor   => 1,
-    useeditor   => 1,
-    usetranslator => 0,
-    labelyear   => 0,
-    labelnumber => 0,
-    singletitle => 0,
-    uniquename  => 0,
-    useprefix   => 0,
-    terseinits  => 0,
-    sorting     => 1, # corresponds to 'nty'
-    sortlos     => 1,
-    maxnames    => 3,
-    minnames    => 1,
-    maxline     => 79,
-	alphaothers => "+",
-	# biber options:
+## BibLaTeX CONFIGURATION DEFAULTS
+our %BLX_CONFIG_DEFAULT = (
+  controlversion => $BIBLATEX_VERSION,
+  debug       => 0,
+  labelalpha  => 0,
+  useauthor   => 1,
+  useeditor   => 1,
+  usetranslator => 0,
+  labelyear   => 0,
+  labelnumber => 0,
+  singletitle => 0,
+  uniquename  => 0,
+  useprefix   => 0,
+  terseinits  => 0,
+  sortlos     => 1,
+  maxnames    => 3,
+  minnames    => 1,
+  maxline     => 79,
+	alphaothers => '+',
+  labelname   => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
+  sorting => [ # corresponds to the default "nty" scheme
+              [
+               {'presort'    => []},
+               {'mm'         => []},
+              ],
+              [
+               {'sortkey'    => ['final']}
+              ],
+              [
+               {'sortname'   => []},
+               {'author'     => []},
+               {'editor'     => []},
+               {'translator' => []},
+               {'sorttitle'  => []},
+               {'title'      => []}
+              ],
+              [
+               {'sorttitle'  => []},
+               {'title'      => []}
+              ],
+              [
+               {'sortyear'   => []},
+               {'year'       => []}
+              ],
+              [
+               {'volume'     => []},
+               {'0000'       => []}
+              ]
+             ],
+);
+
+## Biber CONFIGURATION DEFAULTS
+our %CONFIG_DEFAULT = (
 	fastsort => 0,
 	mincrossrefs =>  2,
 	unicodebbl =>  0,
@@ -53,9 +89,8 @@ Readonly::Hash our %CONFIG_DEFAULT => (
 	allentries =>  0,
 	useprd =>  0,
 	biberdebug =>  0,
-    quiet => 0,
-    controlversion => $BIBLATEX_VERSION,
-    collate_options => 'level=>2, table=>"latinkeys.txt"',
+  quiet => 0,
+  collate_options => 'level=>2, table=>"latinkeys.txt"',
 ) ;
 
 ### biblatex fields

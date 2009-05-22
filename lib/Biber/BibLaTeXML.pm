@@ -208,7 +208,7 @@ sub _parse_biblatexml {
 
                             $nameinitstr = "" ;
                             $nameinitstr .= substr( $prefix, 0, 1 ) . "_"
-                              if ( $self->getoption($citekey, 'useprefix') and $prefix ) ;
+                              if ( $self->getblxoption('useprefix', $citekey) and $prefix ) ;
                             $nameinitstr .= $lastname ;
                             $nameinitstr .= "_" . terseinitials($firstname) 
                                 if $firstname ;
@@ -221,7 +221,7 @@ sub _parse_biblatexml {
                         }
                         # Schema allows <person>text<person>
                         else {
-                            my $useprefix = $self->getoption($citekey, 'useprefix') ;
+                            my $useprefix = $self->getblxoption('useprefix', $citekey) ;
 
                             push @z, parsename( $person->string_value, {useprefix => $useprefix} )
                         }
@@ -229,7 +229,7 @@ sub _parse_biblatexml {
                 } 
                 # only one name as string, without <person>
                 else {
-                    my $useprefix = $self->getoption($citekey, 'useprefix') ;
+                    my $useprefix = $self->getblxoption('useprefix', $citekey) ;
 
                     push @z, parsename( $bibrecord->findnodes("bib:$nf")->string_value, {useprefix => $useprefix} )
                 } ;

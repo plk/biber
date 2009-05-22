@@ -13,7 +13,7 @@ my $biber = Biber->new($opts);
 isa_ok($biber, "Biber");
 
 chdir("t/tdata") ;
-$biber->parse_auxfile("50-style-authoryear.aux") ;
+$biber->parse_auxfile_v2("50-style-authoryear_v2.aux") ;
 
 $biber->{config}{biblatex}{global}{maxline} = 100000 ;
 ok($biber->{config}{biblatex}{global}{maxline} == 100000, "maxline option") ;

@@ -3,19 +3,19 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 6 ;
+use Test::More tests => 3 ;
 
 use Biber;
 
-my $opts = { unicodebbl => 1, fastsort => 1 };
+my $opts = { unicodebbl => 0, useprd => 1 };
 my $biber = Biber->new($opts);
-
+$biber->{config}{biblatex}{global}{maxline} = 100000 ;
    
 isa_ok($biber, "Biber");
 
 chdir("t/tdata") ;
-$biber->parse_auxfile("02-annotations.aux");
-$biber->{config}{biblatex}{global}{maxline} = 100000 ;
+$biber->parse_auxfile_v2("02-annotations_v2.aux");
+
 
 my $bibfile = $biber->config('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile) ;
@@ -24,16 +24,16 @@ $biber->prepare ;
 my $setaksin = q|\entry{set:aksin}{article}{}
   \inset{set}
   \name{author}{7}{%
-    {{Aksın}{A}{Özge}{Ö}{}{}{}{}}%
-    {{Türkmen}{T}{Hayati}{H}{}{}{}{}}%
+    {{Aks{\i}n}{A}{{\"O}zge}{{\"O}}{}{}{}{}}%
+    {{T{\"u}rkmen}{T}{Hayati}{H}{}{}{}{}}%
     {{Artok}{A}{Levent}{L}{}{}{}{}}%
-    {{C̨etinkaya}{C}{Bekir}{B}{}{}{}{}}%
+    {{{\k{C}}etinkaya}{{\k{C}}}{Bekir}{B}{}{}{}{}}%
     {{Ni}{N}{Chaoying}{C}{}{}{}{}}%
-    {{Büyükgüngör}{B}{Orhan}{O}{}{}{}{}}%
-    {{Özkal}{Ö}{Erhan}{E}{}{}{}{}}%
+    {{B{\"u}y{\"u}kg{\"u}ng{\"o}r}{B}{Orhan}{O}{}{}{}{}}%
+    {{{\"O}zkal}{{\"O}}{Erhan}{E}{}{}{}{}}%
   }
-  \strng{namehash}{AÖ+1}
-  \strng{fullhash}{AÖTHALC̨BNCBOÖE1}
+  \strng{namehash}{AO+1}
+  \strng{fullhash}{AOTHALCBNCBOOE1}
   \field{labelalpha}{Aks+06}
   \field{sortinit}{A}
   \count{uniquename}{0}
@@ -75,18 +75,5 @@ my $markey = q|\entry{markey}{online}{}
 | ;
 
 is( $biber->_print_biblatex_entry('set:aksin'), $setaksin, 'bbl entry 1' ) ;
-
 is( $biber->_print_biblatex_entry('markey'), $markey, 'bbl entry 2' ) ;
-
-my $Worman_N = { 'WN2' => 1, 'WN1' => 1 } ;
-
-my $Gennep = { 'vGA1' => 1, 'vGJ1' => 1 } ;
-
-is_deeply( $Biber::uniquenamecount{'Worman_N'}, $Worman_N, 'uniquename count 1') ;
-
-is_deeply( $Biber::uniquenamecount{'Gennep'}, $Gennep, 'uniquename count 2') ;
-
-is_deeply( [ $biber->shorthands ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
-
-unlink "$bibfile.utf8" ;
 

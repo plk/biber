@@ -1,0 +1,10 @@
+Current sorting tests:
+
+* standard nty, nyt, nyvt, anyt, anyvt, ynt, ydnt
+* anyt without labelname
+* sortkey
+* debug
+* per-type
+* modified presort string
+* short-circuit on something other than sortkey
+* use* all off, ignore sortname
