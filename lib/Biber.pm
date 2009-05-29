@@ -331,8 +331,8 @@ sub parse_auxfile_v2 {
 
             my @tmp = split/,/, $bibdatastring ; 
 
-						$ctrl_file = $auxfile;
-						$ctrl_file =~ s/\.aux\z//xms;
+                        $ctrl_file = $auxfile;
+                        $ctrl_file =~ s/\.aux\z//xms;
 
             print "control file is $ctrl_file.bcf\n" if $self->config('biberdebug');
 
@@ -796,7 +796,7 @@ sub parse_bibtex {
     if ( !$self->config('unicodebib') && $self->config('unicodebbl') ) {
         require LaTeX::Decode ;
         require File::Slurp ; 
-        my $ubib      = IO::File->new( $ufilename, ">:utf8" ) ;
+        my $ubib = IO::File->new( $ufilename, ">:utf8" ) ;
         # $ubib->binmode(':utf8') ;
 
         my $mode = "";
@@ -1070,27 +1070,27 @@ sub postprocess {
         # 4. generate labelname name
         ##############################################################
 
-				# Here, "labelnamename" is the name of the labelname field
-				# and "labelname" is the actual copy of the relevant field
+        # Here, "labelnamename" is the name of the labelname field
+        # and "labelname" is the actual copy of the relevant field
 
-				my $lnamescheme = $self->getblxoption('labelname', $citekey);
+        my $lnamescheme = $self->getblxoption('labelname', $citekey);
 
         foreach my $ln (@{$lnamescheme}) {
-					my $lnameopt;
-					if ($ln =~ /\Ashort(.+)\z/) {
-						$lnameopt = $1;
-					}
-					else {
-						$lnameopt = $ln;
-					}
-					if ( $be->{$ln} and $self->getblxoption("use$lnameopt", $citekey) ) {
-            $be->{labelnamename} = $ln;
-						last;
-					}
-				}
+            my $lnameopt;
+            if ($ln =~ /\Ashort(.+)\z/) {
+                $lnameopt = $1;
+            }
+            else {
+                $lnameopt = $ln;
+            }
+            if ( $be->{$ln} and $self->getblxoption("use$lnameopt", $citekey) ) {
+                $be->{labelnamename} = $ln;
+                last;
+           }
+       }
 
-				unless ($be->{labelnamename}) {
-            carp "Could not determine the labelname of entry $citekey" if $self->config('biberdebug')
+       unless ($be->{labelnamename}) {
+           carp "Could not determine the labelname of entry $citekey" if $self->config('biberdebug')
         }
 
         ##############################################################
@@ -1482,9 +1482,10 @@ sub _dump {
     return
 }
 
-=head1 AUTHOR
+=head1 AUTHORS
 
 François Charette, C<< <firmicus at gmx.net> >>
+Philip Kime C<< <philip at kime.org.uk> >>
 
 =head1 BUGS
 
@@ -1493,7 +1494,7 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009 François Charette, all rights reserved.
+Copyright 2009 François Charette and Philip Kime, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
