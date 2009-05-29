@@ -1,0 +1,131 @@
+namespace bcf = "https://sourceforge.net/projects/biblatex"
+
+start =
+  element bcf:controlfile {
+    attribute version { xsd:decimal },
+    element bcf:bibdata {
+      element bcf:datasource { 
+        attribute type { xsd:NCName }?, xsd:NCName }+
+    },
+    element bcf:options {
+      attribute type { "global" },
+      terseinits,
+      useprefix,
+      useauthor,
+      useeditor,
+      usetranslator,
+      labelalpha,
+      labelyear,
+      singletitle,
+      uniquename,
+      maxnames,
+      minnames,
+      sorting,
+      sortlos,
+      mincrossrefs?,
+      debug?,
+      inputenc?,
+      bibencoding?,
+      alphaothers?,
+      nonsortprefixes?,
+      nonsortdiacritics?
+      ## this is for a future version
+      #displaymode?
+    },
+    element bcf:options {
+      attribute type { biblatex.entrytypes },
+      terseinits? &
+      useprefix? &
+      useauthor? &
+      useeditor? &
+      usetranslator? &
+      labelalpha? &
+      labelyear? &
+      singletitle? &
+      uniquename? &
+      maxnames? &
+      minnames? &
+      sorting? &
+      sortlos? &
+      mincrossrefs? &
+      debug? &
+      inputenc? &
+      bibencoding? &
+      alphaothers? &
+      nonsortprefixes? &
+      nonsortdiacritics? 
+      #displaymode?
+    }*,
+    element bcf:sorting {
+      attribute type { xsd:NCName },
+      element bcf:sort {
+        attribute order { xsd:integer },
+        element bcf:sortitem {
+          attribute final { xsd:integer }?,
+          attribute order { xsd:integer },
+          text
+        }+
+      }+
+    }+,
+    element bcf:section {
+      attribute number { xsd:integer },
+      element bcf:citekey { xsd:NCName }+
+    }+
+  }
+
+biblatex.entrytypes = { "book" | "article" | "booklet" | "collection" | "inbook" | "incollection" | "proceedings" | "inproceedings" | "manual" | "misc" | "online" | "patent" | "periodical" | "proceedings" | "report" | "thesis" | "unpublished" }
+
+terseinits = element bcf:terseinits { xsd:boolean }
+useprefix = element bcf:useprefix { xsd:boolean }
+useauthor = element bcf:useauthor { xsd:boolean }
+useeditor = element bcf:useeditor { xsd:boolean }
+usetranslator = element bcf:usetranslator { xsd:boolean }
+labelalpha = element bcf:labelalpha { xsd:boolean }
+labelyear = element bcf:labelyear { xsd:boolean }
+singletitle = element bcf:singletitle { xsd:boolean }
+uniquename = element bcf:uniquename { xsd:boolean }
+maxnames = element bcf:maxnames { xsd:integer }
+minnames = element bcf:minnames { xsd:integer }
+sorting = element bcf:sorting { "0" | "1" | "2" | "3" | "12" | "13" | "21" | "22" | "99" }
+sortlos = element bcf:sortlos { "0" | "1" }
+mincrossrefs = element bcf:mincrossrefs { xsd:integer }
+debug = element bcf:debug { xsd:boolean }
+inputenc = element bcf:inputenc { xsd:NCName }
+bibencoding = element bcf:bibencoding { xsd:NCName }
+alphaothers = element bcf:alphaothers { xsd:normalizedString { pattern = "\S+"} }
+## these are perl regexes
+nonsortprefixes = element bcf:nonsortprefixes { 
+  bcf:item { text }+
+}
+nonsortdiacritics = element bcf:nonsortdiacritics { 
+  bcf:item { text }+
+}
+
+#### This is for when biber/biblatex become truly multilingual:
+##displaymode = ( displaymode.textual, displaymode.persons, displaymode.locations )
+##
+##displaymode.textual = element bcf:displaymode {
+#### type = global | titles | persons | locations
+##  attribute type { "textual" }, 
+##  element bcf:mode { 
+##    attribute precedence { xsd:integer }, display.mode.textual
+##  }+,
+##}
+##displaymode.persons = element displaymode {
+#### type = global | titles | persons | locations
+##  attribute type { "persons" }, 
+##  element bcf:mode { 
+##    attribute precedence { xsd:integer }, display.mode.proper
+##  }+,
+##}
+##displaymode.locations = element displaymode {
+#### type = global | titles | persons | locations
+##  attribute type { "location" }, 
+##  element bcf:mode { 
+##    attribute precedence { xsd:integer }, display.mode.proper
+##  }+,
+##}
+##
+##display.mode.textual = { "original" | "romanized" | "translated" }
+##display.mode.proper  = { "original" | "romanized" | "uniform" }
+
