@@ -801,8 +801,8 @@ sub parse_bibtex {
 
         my $mode = "";
 
-#        if ( $self->config('inputencoding') ) {
-#            $mode = ':encoding(' . $self->config('inputencoding') . ')' ;
+#        if ( $self->config('bibencoding') ) {
+#            $mode = ':encoding(' . $self->config('bibencoding') . ')' ;
 #        } else {
 #            $mode = "" ;
 #        } ;
@@ -811,8 +811,8 @@ sub parse_bibtex {
 
         my $buf    = File::Slurp::read_file($infile) or croak "Can't read $filename" ;
 
-        if ( $self->config('inputencoding') ) {
-            $buf = decode($self->config('inputencoding'), $buf)
+        if ( $self->config('bibencoding') ) {
+            $buf = decode($self->config('bibencoding'), $buf)
         } ;
 
         print $ubib LaTeX::Decode::latex_decode($buf) or croak "Can't write to $ufilename : $!" ;
@@ -1404,8 +1404,8 @@ sub output_to_bbl {
 
     my $mode ;
 
-    if ( $self->config('inputencoding') and ! $self->config('unicodebbl') ) {
-        $mode = ':encoding(' . $self->config('inputencoding') . ')' ;
+    if ( $self->config('bibencoding') and ! $self->config('unicodebbl') ) {
+        $mode = ':encoding(' . $self->config('bibencoding') . ')' ;
     } else {
         $mode = ":utf8" ;
     } ;
@@ -1456,8 +1456,8 @@ EOF
     }
     $BBL .= "\\endinput\n" ;
 
-#    if ( $self->config('inputencoding') and ! $self->config('unicodebbl') ) {
-#        $BBL = encode($self->config('inputencoding'), $BBL) 
+#    if ( $self->config('bibencoding') and ! $self->config('unicodebbl') ) {
+#        $BBL = encode($self->config('bibencoding'), $BBL) 
 #    } ;
 
 

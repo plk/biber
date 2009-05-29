@@ -18,8 +18,8 @@ sub _text_bibtex_parse {
 
     my $encoding ;    
 
-    if ( $self->config('inputencoding') && ! $self->config('unicodebbl') ) {
-        $encoding = $self->config('inputencoding') ;
+    if ( $self->config('bibencoding') && ! $self->config('unicodebbl') ) {
+        $encoding = $self->config('bibencoding') ;
     } else {
         $encoding = "utf8" ;
     } ;

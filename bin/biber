@@ -20,7 +20,7 @@ GetOptions(
     'mincrossrefs|m=s',
     'unicodebbl|U!',
     'unicodebib|u!',
-    'inputencoding|i=s',
+    'bibencoding|e=s',
     'useprd|p!',
     'bibdata|d=s',
     'outfile|O=s',
@@ -185,7 +185,7 @@ Options:
                          (NB: this ignores the .aux file.)
   --unicodebib|-u        Assume bib file is UTF-8 and skip latex_decode.
   --unicodebbl|-U        Encode the bbl output in UTF-8.
-  --inputencoding|-i [encoding] 
+  --bibencoding|-e [encoding] 
                          Specify the encoding of the bib file(s). The bbl file 
                          will also have this encoding when --unicodebbl is false.
                          See "perldoc Encode::Supported" for a list of supported encodings.
