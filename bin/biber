@@ -169,8 +169,7 @@ Usage:  $me file.aux
 Options:
   --help|-h              Show this help message.
   --v2                   Enable experimental Biblatex/Biber version 2 options processing.
-                         Don't use this unless you understand what it means to do so. Nothing
-                         will work properly, in all likelyhood.
+                         Don't use this unless you truly understand what it means.
   --version|-v           Display version number.
   --mincrossrefs|-m <n>  Set threshold for crossrefs.
   --fastsort|-f          Use Perl’s sort instead of Unicode::Collate for sorting.
