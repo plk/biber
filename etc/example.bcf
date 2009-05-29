@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bcf:controlfile xmlns:bcf="https://sourceforge.net/projects/biblatex">
-  <!-- BIBFILES -->
-  <bcf:bibfiles>
-    <bcf:file>file1</bcf:file>
-    <bcf:file>file2</bcf:file>
-    <bcf:file>file3</bcf:file>
-  </bcf:bibfiles>
+  <!-- BIB DATA -->
+  <bcf:bibdata>
+    <bcf:datasource type="file">file1</bcf:datasource>
+    <bcf:datasource type="file">file2</bcf:datasource>
+    <bcf:datasource type="file">file3</bcf:datasource>
+  </bcf:bibdata>
   <!-- OPTIONS -->
   <bcf:options type="global">
-    <bcf:option type="singevalued">
+    <bcf:option type="singlevalued">
       <bcf:key>labelyear</bcf:key>
       <bcf:value>1</bcf:value>
     </bcf:option>
-    <bcf:option type="singevalued">
+    <bcf:option type="singlevalued">
       <bcf:key>labelalpha</bcf:key>
       <bcf:value>0</bcf:value>
     </bcf:option>
-    <bcf:option type="singevalued">
+    <bcf:option type="singlevalued">
       <bcf:key>useauthor</bcf:key>
       <bcf:value>1</bcf:value>
     </bcf:option>

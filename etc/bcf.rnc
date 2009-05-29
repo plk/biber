@@ -3,13 +3,13 @@ namespace bcf = "https://sourceforge.net/projects/biblatex"
 start =
   element bcf:controlfile {
     attribute version { xsd:decimal },
-    element bcf:bibfiles {
-      element bcf:file { xsd:NCName }+
+    element bcf:bibdata {
+      element bcf:datasource { attribute type { xsd:NCName }, xsd:NCName }+
     },
     element bcf:options {
       attribute type { xsd:NCName },
       element bcf:option {
-        attribute type { xsd:NCName }?,
+        attribute type { "singlevalued" | "multivalued" }?,
         element bcf:key { xsd:NCName },
         element bcf:value {
           attribute order { xsd:integer }?,
@@ -33,3 +33,4 @@ start =
       element bcf:citekey { xsd:NCName }+
     }+
   }
+
