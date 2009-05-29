@@ -36,11 +36,12 @@ our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid
 # 
 # TODO move to Biber::Constants ?
 #
-#  Arabic last names could begin with NONSORTDIACRITICS like ʿ or ‘ (e.g. ʿAlī)
-my $NONSORTDIACRITICS = qr/[\x{2bf}\x{2018}]/; # more? 
+# Semitic (or eventually other) last names could begin with NONSORTDIACRITICS like ʿ or ‘ (e.g. ʿAlī)
+my $NONSORTDIACRITICS = qr/[\x{2bf}\x{2018}]/; # more?
 
-#  Arabic names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
+# Semitic (or eventually other) names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
 my $NONSORTPREFIX = qr/\p{Ll}{2}-/; # etc
+
 #
 ######
 
