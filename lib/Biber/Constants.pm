@@ -46,7 +46,7 @@ our %BLX_CONFIG_DEFAULT = (
   maxnames    => 3,
   minnames    => 1,
   maxline     => 79,
-	alphaothers => '+',
+  alphaothers => '+',
   labelname   => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
   sorting => [ # corresponds to the default "nty" scheme
               [
@@ -81,14 +81,14 @@ our %BLX_CONFIG_DEFAULT = (
 
 ## Biber CONFIGURATION DEFAULTS
 our %CONFIG_DEFAULT = (
-	fastsort => 0,
-	mincrossrefs =>  2,
-	unicodebbl =>  0,
-	unicodebib =>  0,
-	bibdata =>  undef ,
-	allentries =>  0,
-	useprd =>  0,
-	biberdebug =>  0,
+  fastsort => 0,
+  mincrossrefs =>  2,
+  unicodebbl =>  0,
+  unicodebib =>  0,
+  bibdata =>  undef ,
+  allentries =>  0,
+  useprd =>  0,
+  biberdebug =>  0,
   quiet => 0,
   collate_options => 'level=>2, table=>"latinkeys.txt"',
 ) ;
@@ -144,50 +144,50 @@ Readonly::Array our @ENTRIESTOSPLIT  =>  ( @NAMEFIELDS, @LISTFIELDS ) ;
 Readonly::Array our @LITERALFIELDS => ( @TITLEFIELDS, @LITERALFIELDS_BASE, @KEYFIELDS ) ;
 
 Readonly::Hash our %ALIASES => ( 
-	'address' => 'location',
-	'school'  => 'institution',
-	'annote'  => 'annotation',
-	'key'     => 'sortkey'
+  'address' => 'location',
+  'school'  => 'institution',
+  'annote'  => 'annotation',
+  'key'     => 'sortkey'
 ) ;
 
 Readonly::Hash our %NUMERICALMONTH => (
-	'January' => 1,
-	'February' => 2,
-	'March' => 3,
-	'April' => 4,
-	'May' => 5,
-	'June' => 6,
-	'July' => 7,
-	'August' => 8,
-	'September' => 9,
-	'October' => 10,
-	'November' => 11,
-	'December' => 12,
-	'january' => 1,
-	'february' => 2,
-	'march' => 3,
-	'april' => 4,
-	'may' => 5,
-	'june' => 6,
-	'july' => 7,
-	'august' => 8,
-	'september' => 9,
-	'october' => 10,
-	'november' => 11,
-	'december' => 12,
-	'jan' => 1,
-	'feb' => 2,
-	'mar' => 3,
-	'apr' => 4,
-	'may' => 5,
-	'jun' => 6,
-	'jul' => 7,
-	'aug' => 8,
-	'sep' => 9,
-	'oct' => 10,
-	'nov' => 11,
-	'dec' => 12
-	) ;
+  'January' => 1,
+  'February' => 2,
+  'March' => 3,
+  'April' => 4,
+  'May' => 5,
+  'June' => 6,
+  'July' => 7,
+  'August' => 8,
+  'September' => 9,
+  'October' => 10,
+  'November' => 11,
+  'December' => 12,
+  'january' => 1,
+  'february' => 2,
+  'march' => 3,
+  'april' => 4,
+  'may' => 5,
+  'june' => 6,
+  'july' => 7,
+  'august' => 8,
+  'september' => 9,
+  'october' => 10,
+  'november' => 11,
+  'december' => 12,
+  'jan' => 1,
+  'feb' => 2,
+  'mar' => 3,
+  'apr' => 4,
+  'may' => 5,
+  'jun' => 6,
+  'jul' => 7,
+  'aug' => 8,
+  'sep' => 9,
+  'oct' => 10,
+  'nov' => 11,
+  'dec' => 12
+  ) ;
 
 1 ;
 
