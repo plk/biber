@@ -20,6 +20,7 @@ GetOptions(
     'mincrossrefs|m=s',
     'unicodebbl|U!',
     'unicodebib|u!',
+    'inputenc|i=s',  ## TODO
     'bibencoding|e=s',
     'useprd|p!',
     'bibdata|d=s',
