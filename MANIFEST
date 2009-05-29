@@ -17,6 +17,7 @@ lib/Biber/Internals.pm
 lib/Biber/Utils.pm
 lib/LaTeX/Decode.pm
 data/schemas/biblatexml.rnc
+data/schemas/biblatexml-simple.rnc
 data/schemas/biblatexml.rng
 data/schemas/biblatexml.xsd
 data/latinkeys.txt
@@ -36,8 +37,9 @@ t/pod-coverage.t
 t/pod.t
 t/tdata/02-annotations-blx.bib
 t/tdata/02-annotations.aux
+t/tdata/02-annotations_v2.bcf
 t/tdata/50-style-authoryear-blx.bib
 t/tdata/50-style-authoryear.aux
+t/tdata/50-style-authoryear_v2.bcf
+t/tdata/README.sorting
 t/tdata/examples.bib
-Makefile.PL
-META.yml
