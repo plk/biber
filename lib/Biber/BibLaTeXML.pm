@@ -60,7 +60,7 @@ sub _parse_biblatexml {
     # the bibentries hash, but only the ones corresponding to @auxcitekeys
     foreach my $citekey (@auxcitekeys) {
         next if $bibentries{$citekey} ; # skip if this is already found in another database
-        print "Looking for $citekey\n" if $self->config('biberdebug') ;
+        print "Looking for $citekey\n" if $self->config('debug') ;
         my $xpath = '/*/bib:entry[@id="' . $citekey . '"]' ;
         my $results = $db->findnodes($xpath) ;
 
@@ -110,7 +110,7 @@ sub _parse_biblatexml {
     foreach my $citekey (@auxcitekeys) {
         next if $citekeysnotfound{$citekey} ;
         next if $bibentries{$citekey} ; # skip if this is already found in another database
-        print "Processing key $citekey\n" if $self->config('biberdebug') ;
+        print "Processing key $citekey\n" if $self->config('debug') ;
         my $xpath = '/*/bib:entry[@id="' . $citekey . '"]' ;
         my $results = $db->findnodes($xpath) ;
         my $bibrecord = $results->get_node(1) ; 

@@ -69,7 +69,7 @@ sub new {
     if ($opts) {
         my %params = %$opts;
         foreach (keys %params) {
-            $self->{config}->{$_} = $params{$_} ;
+          $self->{config}{setoncmdline}{$_} = $self->{config}{$_} = $params{$_} ;
         }
     };
     return $self
@@ -223,7 +223,7 @@ sub parse_auxfile {
             
             $ctrl_file = shift @tmp ; 
 
-            print "control file is $ctrl_file.bib\n" if $self->config('biberdebug');
+            print "control file is $ctrl_file.bib\n" if $self->config('debug');
             
             if (defined $bibdatafiles[0]) {
 
@@ -276,10 +276,10 @@ sub parse_auxfile {
     print "Found ", $#auxcitekeys+1 , " citekeys in aux file\n" 
         unless ( $self->config('quiet') or $self->config('allentries') ) ;
 
-    @auxcitekeys = sort @auxcitekeys if $self->config('biberdebug') ;
+    @auxcitekeys = sort @auxcitekeys if $self->config('debug') ;
 
     print "The citekeys are:\n", "@auxcitekeys", "\n\n" 
-        if ( $self->config('biberdebug') && ! $self->config('allentries') ) ;
+        if ( $self->config('debug') && ! $self->config('allentries') ) ;
     
     $self->{citekeys} = [ @auxcitekeys ] ;
 
@@ -334,7 +334,7 @@ sub parse_auxfile_v2 {
                         $ctrl_file = $auxfile;
                         $ctrl_file =~ s/\.aux\z//xms;
 
-            print "control file is $ctrl_file.bcf\n" if $self->config('biberdebug');
+            print "control file is $ctrl_file.bcf\n" if $self->config('debug');
 
             if (defined $bibdatafiles[0]) {
 
@@ -347,7 +347,7 @@ sub parse_auxfile_v2 {
 
             }
 
-            $self->{config}->{bibdata} = [ @bibdatafiles ] ;
+            $self->{config}{bibdata} = [ @bibdatafiles ] ;
         }
 
         if ( $_ =~ /^\\citation/ ) { 
@@ -356,7 +356,7 @@ sub parse_auxfile_v2 {
                                  }/x ;  
             if ( $1 eq '*' ) {
 
-                $self->{config}->{allentries} = 1 ;
+                $self->{config}{allentries} = 1 ;
 
                 print "Processing all citekeys\n" 
                     unless ( $self->config('quiet') ) ;
@@ -387,10 +387,10 @@ sub parse_auxfile_v2 {
     print "Found ", $#auxcitekeys+1 , " citekeys in aux file\n" 
         unless ( $self->config('quiet') or $self->config('allentries') ) ;
 
-    @auxcitekeys = sort @auxcitekeys if $self->config('biberdebug') ;
+    @auxcitekeys = sort @auxcitekeys if $self->config('debug') ;
 
     print "The citekeys are:\n", "@auxcitekeys", "\n\n" 
-        if ( $self->config('biberdebug') && ! $self->config('allentries') ) ;
+        if ( $self->config('debug') && ! $self->config('allentries') ) ;
     
     $self->{citekeys} = [ @auxcitekeys ] ;
 
@@ -703,12 +703,27 @@ sub parse_ctrlfile_v2 {
 
   # OPTIONS
   foreach my $bcfopts (@{$bcfxml->{options}}) {
+    # Biber options
+    if ($bcfopts->{type} eq 'biber') {
+      foreach my $bcfopt (@{$bcfopts->{option}}) {
+        unless ($self->{config}{setoncmdline}{$bcfopt->{key}}) { # already set on cmd line
+          if ($bcfopt->{type} eq 'singlevalued') {
+            $self->{config}{$bcfopt->{key}} = $bcfopt->{value};
+          }
+          elsif ($bcfopt->{type} eq 'multivalued') {
+            $self->{config}{$bcfopt->{key}} =
+              [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ];
+          }
+        }
+      }
+    }
     # Global BibLaTeX options
-    if ($bcfopts->{type} eq 'global') {
+    elsif ($bcfopts->{type} eq 'global') {
       foreach my $bcfopt (@{$bcfopts->{option}}) {
         if ($bcfopt->{type} eq 'singlevalued') {
           $self->{config}{biblatex}{global}{$bcfopt->{key}} = $bcfopt->{value};
-        } elsif ($bcfopt->{type} eq 'multivalued') {
+        }
+        elsif ($bcfopt->{type} eq 'multivalued') {
           $self->{config}{biblatex}{global}{$bcfopt->{key}} =
             [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ];
         }
@@ -720,7 +735,8 @@ sub parse_ctrlfile_v2 {
       foreach my $bcfopt (@{$bcfopts->{option}}) {
         if ($bcfopt->{type} eq 'singlevalued') {
           $self->{config}{biblatex}{$entrytype}{$bcfopt->{key}} = $bcfopt->{value};
-        } elsif ($bcfopt->{type} eq 'multivalued') {
+        }
+        elsif ($bcfopt->{type} eq 'multivalued') {
           $self->{config}{biblatex}{$entrytype}{$bcfopt->{key}} =
             [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ];
         }
@@ -1005,7 +1021,7 @@ sub postprocess {
 
         $be->{origkey} = $origkey ;
 
-        print "Postprocessing $citekey\n" if $self->config('biberdebug') ;
+        print "Postprocessing $citekey\n" if $self->config('debug') ;
         
 
         ##############################################################
@@ -1090,7 +1106,7 @@ sub postprocess {
        }
 
        unless ($be->{labelnamename}) {
-           carp "Could not determine the labelname of entry $citekey" if $self->config('biberdebug')
+           carp "Could not determine the labelname of entry $citekey" if $self->config('debug')
         }
 
         ##############################################################
@@ -1313,7 +1329,7 @@ sub postprocess {
 
     $self->{citekeys} = [ @foundkeys ] ;
 
-    print "Finished postprocessing entries\n" if $self->config('biberdebug') ;
+    print "Finished postprocessing entries\n" if $self->config('debug') ;
 
     return
 }
@@ -1337,7 +1353,7 @@ sub sortentries {
     
     if ( $self->getblxoption('sorting') ) {
 
-        print "Sorting entries...\n" if $self->config('biberdebug') ;
+        print "Sorting entries...\n" if $self->config('debug') ;
     
         if ( $self->config('fastsort') ) {
             if ($self->config('locale')) {
@@ -1400,7 +1416,7 @@ sub output_to_bbl {
     my $bblfile = shift ;
     my @auxcitekeys = $self->citekeys ;
 
-    print "Preparing final output...\n" if $self->config('biberdebug') ;
+    print "Preparing final output...\n" if $self->config('debug') ;
 
     my $mode ;
 

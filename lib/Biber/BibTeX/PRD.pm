@@ -85,7 +85,7 @@ sub _bibtex_prd_parse {
 
     foreach my $key ( @localkeys ) {
 
-        print "Processing $key\n" if $self->config('biberdebug') ;
+        print "Processing $key\n" if $self->config('debug') ;
 
         foreach my $alias (keys %ALIASES) {
 

@@ -24,7 +24,7 @@ ENDXML
         my $context = $mgr->createQueryContext() ;
         $context->setNamespace("bib", "http://biblatex-biber.sourceforge.net/biblatexml") ;
         foreach my $key (@auxcitekeys) {
-            print "Querying dbxml for key $key\n" if $self->config('biberdebug') ;
+            print "Querying dbxml for key $key\n" if $self->config('debug') ;
             my $query = 'collection("' . $collname . '")//bib:entry[@id="' . $key . '"]' ;
             my $results = $mgr->query($query, $context) ;
             my $ressize = $results->size ;
@@ -44,7 +44,7 @@ ENDXML
                 my $xmlvaluex = new XmlValue ;
                 while ($resultsx->next($xmlvaluex)) {
                     my $xkey = $xmlvaluex->asString() ;
-                    print "Adding crossref key $xkey to the stack\n" if $self->config('biberdebug') ;
+                    print "Adding crossref key $xkey to the stack\n" if $self->config('debug') ;
                     #FIXME take also care of entryset keys!
                     push @auxcitekeys, $xkey ;
                     last

@@ -88,7 +88,7 @@ our %CONFIG_DEFAULT = (
   bibdata =>  undef ,
   allentries =>  0,
   useprd =>  0,
-  biberdebug =>  0,
+  debug =>  0,
   quiet => 0,
   collate_options => 'level=>2, table=>"latinkeys.txt"',
 ) ;

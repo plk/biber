@@ -27,7 +27,7 @@ GetOptions(
     'outfile|O=s',
     'allentries|a!',
 #    'validate|V!', 
-    'biberdebug|D!',
+    'debug|D!',
     'quiet|q',
     'help|h|?',
     'version|v'
@@ -79,7 +79,7 @@ else {
     }
 }
 
-if ($biber->config('biberdebug')) {
+if ($biber->config('debug')) {
     $biber->_dump('biber.dump0') ;
     print ">> Dumped initial biber object for debugging in file biber.dump0\n"
 }
@@ -107,14 +107,14 @@ foreach my $bib (@{ $biber->config('bibdata') }) {
     }
 }
 
-if ($biber->config('biberdebug')) {
+if ($biber->config('debug')) {
     $biber->_dump('biber.dump1') ;
     print ">> Dumped postparse biber object for debugging in file biber.dump1\n"
 }
 
 $biber->prepare ; 
 
-if ($biber->config('biberdebug')) {
+if ($biber->config('debug')) {
     $biber->_dump('biber.dump2') ;
     print ">> Dumped final biber object for debugging in file biber.dump2\n"
 }
@@ -190,7 +190,7 @@ Options:
                          Specify the encoding of the bib file(s). The bbl file 
                          will also have this encoding when --unicodebbl is false.
                          See "perldoc Encode::Supported" for a list of supported encodings.
-  --biberdebug|-D        Turn on debugging for biber.
+  --debug|-D             Turn on debugging for biber.
   --quiet|-q             Turn warnings off.
     \n]
 }
@@ -207,7 +207,7 @@ C<biber> - A bibtex replacement for users of biblatex
 
 biber [ { --bibdata | -d } database.{bib|xml|dbxml} ] [ --useprd | -p ] 
       [ --mincrossrefs | -m ] [ --fastsort | -f ] [ --unicodebib | -u ] 
-      [ --unicodebbl | -U ] [ --biberdebug | -D ] [ { --outfile | -O } filename ] 
+      [ --unicodebbl | -U ] [ --debug | -D ] [ { --outfile | -O } filename ] 
       file.aux
 
 biber --bibdata database --allentries [ --outfile filename ] [ ... ]

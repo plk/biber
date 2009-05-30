@@ -57,7 +57,7 @@ sub _text_bibtex_parse {
             next
         }
 
-        print "Processing $key\n" if $self->config('biberdebug') ;
+        print "Processing $key\n" if $self->config('debug') ;
 
         if ( $bibentries{ $origkey } or $bibentries{ $key } ) {
             $self->{errors}++;

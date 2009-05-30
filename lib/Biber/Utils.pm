@@ -124,7 +124,7 @@ sub bibfind {
 sub parsename {
     my ($namestr, $opts) = @_ ;
     $namestr =~ s/\\,\s*|{\\,\s*}/~/g; # necessary to get rid of LaTeX small spaces \,
-    # DEBUG carp "Parsing namestring $namestr\n" if $opts->{biberdebug} ;
+    # DEBUG carp "Parsing namestring $namestr\n" if $opts->{debug} ;
     my $usepre = $opts->{useprefix};
 
     my $lastname ;
