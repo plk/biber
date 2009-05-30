@@ -7,7 +7,13 @@
     <bcf:datasource type="file">file3</bcf:datasource>
   </bcf:bibdata>
   <!-- OPTIONS -->
-  <bcf:options type="global">
+  <bcf:options component="biber" type="global">
+    <bcf:option type="singlevalued">
+      <bcf:key>mincrossrefs</bcf:key>
+      <bcf:value>3</bcf:value>
+    </bcf:option>
+  </bcf:options>
+  <bcf:options component="biblatex" type="global">
     <bcf:option type="singlevalued">
       <bcf:key>labelyear</bcf:key>
       <bcf:value>1</bcf:value>
@@ -21,7 +27,7 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
   </bcf:options>
-  <bcf:options type="collection"> 
+  <bcf:options component="biblatex" type="collection"> 
     <bcf:option type="multivalued">
       <bcf:key>labelname</bcf:key>
       <bcf:value order="1">shorteditor</bcf:value>
