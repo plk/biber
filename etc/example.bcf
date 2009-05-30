@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bcf:controlfile xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<?oxygen RNGSchema="bcf.rnc" type="compact"?>
+<bcf:controlfile version="0.8" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- BIB DATA -->
   <bcf:bibdata>
     <bcf:datasource type="file">file1</bcf:datasource>
