@@ -693,7 +693,7 @@ sub parse_ctrlfile_v2 {
     $CFxmlparser->line_numbers(1); # line numbers for more informative errors
 
     # Set up schema
-    my $CFxmlschema = XML::LibXML::Schema->new(location => $Config::Config{sitelibexp} . '/Biber/biblatexcf.xsd');
+    my $CFxmlschema = XML::LibXML::Schema->new(location => $Config::Config{sitelibexp} . '/Biber/bcf.xsd');
 
     # basic parse and XInclude processing
     my $CFxp = $CFxmlparser->parse_file("$ctrl_file.bcf");

@@ -26,6 +26,10 @@ my $builder = Module::Build->new(
     data_files => { 'data/schemas/biblatexml.rnc' => 'lib/Biber/biblatexml.rnc', 
                       'data/schemas/biblatexml.rng' => 'lib/Biber/biblatexml.rng',  
                       'data/schemas/biblatexml.xsd' => 'lib/Biber/biblatexml.xsd',
+                      'data/schemas/bcf.xsd' => 'lib/Biber/bcf.xsd',
+                      'data/schemas/bcf.rnc' => 'lib/Biber/bcf.rnc',
+                      'data/schemas/bcf2.xsd' => 'lib/Biber/bcf2.xsd',
+                      'data/schemas/bcf2.rnc' => 'lib/Biber/bcf2.rnc',
                       'data/latinkeys.txt' => 'lib/Unicode/Collate/latinkeys.txt' }
 );
 
