@@ -23,7 +23,6 @@ start =
       debug?,
       inputenc?,
       bibencoding?,
-      alphaothers?,
       nonsortprefixes?,
       nonsortdiacritics?
       # this is for a future version
@@ -45,6 +44,7 @@ start =
       minnames,
       sorting,
       sortlos,
+      alphaothers,
       labelname
     },
     element bcf:options {
@@ -63,6 +63,7 @@ start =
       minnames?,
       sorting?,
       sortlos?,
+      alphaothers?,
       labelname?
     }*,
     element bcf:sorting {
@@ -84,28 +85,85 @@ start =
 
 biblatex.entrytypes = ( "book" | "article" | "booklet" | "collection" | "inbook" | "incollection" | "proceedings" | "inproceedings" | "manual" | "misc" | "online" | "patent" | "periodical" | "proceedings" | "report" | "thesis" | "unpublished" )
 
-terseinits = element bcf:terseinits { "0" | "1" }
-useprefix = element bcf:useprefix { "0" | "1" }
-useauthor = element bcf:useauthor { "0" | "1" }
-useeditor = element bcf:useeditor { "0" | "1" }
-usetranslator = element bcf:usetranslator { "0" | "1" }
-labelalpha = element bcf:labelalpha { "0" | "1" }
-labelyear = element bcf:labelyear { "0" | "1" }
-singletitle = element bcf:singletitle { "0" | "1" }
-uniquename = element bcf:uniquename { "0" | "1" }
-maxnames = element bcf:maxnames { xsd:integer }
-minnames = element bcf:minnames { xsd:integer }
-sorting = element bcf:sorting { "0" | "1" | "2" | "3" | "12" | "13" | "21" | "22" | "99" }
-sortlos = element bcf:sortlos { "0" | "1" }
-labelname = element bcf:labelname { labelname.item+ }
-labelname.item = element bcf:item { attribute order { xsd:integer }, name.list }
+terseinits = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "terseinits" },
+            element bcf:value { "0" | "1" }
+         }
+useprefix = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "useprefix" },
+            element bcf:value { "0" | "1" }
+         }
+useauthor = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "useauthor" },
+            element bcf:value { "0" | "1" }
+         }
+useeditor = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "useeditor" },
+            element bcf:value { "0" | "1" }
+         }
+usetranslator = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "usetranslator" },
+            element bcf:value { "0" | "1" }
+         }
+labelalpha = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "labelalpha" },
+            element bcf:value { "0" | "1" }
+         }
+labelyear = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "labelyear" },
+            element bcf:value { "0" | "1" }
+         }
+singletitle = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "singletitle" },
+            element bcf:value { "0" | "1" }
+         }
+uniquename = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "uniquename" },
+            element bcf:value { "0" | "1" }
+         }
+maxnames = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "maxnames" },
+            element bcf:value { xsd:integer }
+         }
+minnames = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "minnames" },
+            element bcf:value { xsd:integer }
+         }
+sorting = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "sorting" },
+            element bcf:value { "0" | "1" | "2" | "3" | "12" | "13" | "21" | "22" | "99" }
+         }
+sortlos = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "sortlos" },
+            element bcf:value { "0" | "1" }
+         }
+labelname = element bcf:option { attribute type { "multivalued" }, 
+            element bcf:key { "labelname" },
+            element bcf:value { attribute order { xsd:integer }, 
+              name.list }+
+            }
 name.list = ( "shortauthor" | "shorteditor" | "author" | "editor" | "translator" )
 
-mincrossrefs = element bcf:mincrossrefs { xsd:integer }
-debug = element bcf:debug { "0" | "1" }
-inputenc = element bcf:inputenc { xsd:NCName }
-bibencoding = element bcf:bibencoding { xsd:NCName }
-alphaothers = element bcf:alphaothers { xsd:normalizedString { pattern = "\S+"} }
+mincrossrefs = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "mincrossrefs" },
+            element bcf:value { xsd:integer }
+         }
+debug = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "debug" },
+            element bcf:value { "0" | "1" }
+         }
+inputenc = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "inputenc" },
+            element bcf:value { xsd:NCName }
+         }
+bibencoding = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "bibencoding" },
+            element bcf:value { xsd:NCName }
+         }
+alphaothers = element bcf:option { attribute type { "singlevalued" }, 
+            element bcf:key { "alphaothers" },
+            element bcf:value { xsd:normalizedString { pattern = "\S+" } }
+         }
 ## these are perl regexes
 nonsortprefixes = element bcf:nonsortprefixes { 
   element bcf:item { text }+

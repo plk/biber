@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?oxygen RNGSchema="bcf2.rnc" type="compact"?>
+<?oxygen RNGSchema="../data/schemas/bcf2.rnc" type="compact"?>
 <bcf:controlfile version="0.8" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- BIB DATA -->
   <bcf:bibdata>
@@ -9,40 +9,97 @@
   </bcf:bibdata>
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
-    <bcf:mincrossrefs>2</bcf:mincrossrefs>
-    <bcf:debug>1</bcf:debug>
-    <bcf:bibencoding>utf8</bcf:bibencoding>
+    <bcf:option type="singlevalued">
+      <bcf:key>mincrossrefs</bcf:key>
+      <bcf:value>2</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>debug</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>bibencoding</bcf:key>
+      <bcf:value>utf8</bcf:value>
+    </bcf:option>
   </bcf:options>
   <bcf:options component="biblatex" type="global">
-    <bcf:terseinits>0</bcf:terseinits>
-    <bcf:useprefix>0</bcf:useprefix>
-    <bcf:useauthor>0</bcf:useauthor>
-    <bcf:useeditor>0</bcf:useeditor>
-    <bcf:usetranslator>0</bcf:usetranslator>
-    <bcf:labelalpha>0</bcf:labelalpha>
-    <bcf:labelyear>1</bcf:labelyear>
-    <bcf:singletitle>0</bcf:singletitle>
-    <bcf:uniquename>0</bcf:uniquename>
-    <bcf:maxnames>3</bcf:maxnames>
-    <bcf:minnames>1</bcf:minnames>
-    <bcf:sorting>21</bcf:sorting>
-    <bcf:sortlos>0</bcf:sortlos>
-    <bcf:labelname>
-      <bcf:item order="1">shortauthor</bcf:item>
-      <bcf:item order="2">author</bcf:item>
-      <bcf:item order="3">shorteditor</bcf:item>
-      <bcf:item order="4">editor</bcf:item>
-      <bcf:item order="5">shorteditor</bcf:item>
-      <bcf:item order="6">translator</bcf:item>
-    </bcf:labelname>
+    <bcf:option type="singlevalued">
+      <bcf:key>terseinits</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useprefix</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useauthor</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useeditor</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>usetranslator</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>labelalpha</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>labelyear</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>singletitle</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>uniquename</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>maxnames</bcf:key>
+      <bcf:value>3</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>minnames</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sorting</bcf:key>
+      <bcf:value>21</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortlos</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>alphaothers</bcf:key>
+      <bcf:value>+</bcf:value>
+    </bcf:option>
+    <bcf:option type="multivalued">
+      <bcf:key>labelname</bcf:key>
+      <bcf:value order="1">shortauthor</bcf:value>
+      <bcf:value order="2">author</bcf:value>
+      <bcf:value order="3">shorteditor</bcf:value>
+      <bcf:value order="4">editor</bcf:value>
+      <bcf:value order="5">shorteditor</bcf:value>
+      <bcf:value order="6">translator</bcf:value>
+    </bcf:option>
   </bcf:options>
   <bcf:options component="biblatex" type="collection">
-    <bcf:useeditor>0</bcf:useeditor>
-    <bcf:labelname>
-      <bcf:item order="1">shorteditor</bcf:item>
-      <bcf:item order="2">editor</bcf:item>
-      <bcf:item order="3">translator</bcf:item>
-    </bcf:labelname>
+    <bcf:option type="singlevalued">
+      <bcf:key>useeditor</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="multivalued">
+      <bcf:key>labelname</bcf:key>
+      <bcf:value order="1">shorteditor</bcf:value>
+      <bcf:value order="2">editor</bcf:value>
+      <bcf:value order="3">translator</bcf:value>
+    </bcf:option>
   </bcf:options>
   <!-- SORTING -->
   <bcf:sorting type="global">
