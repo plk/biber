@@ -4,7 +4,7 @@
   <bcf:bibfiles>
     <bcf:file>examples.bib</bcf:file>
   </bcf:bibfiles>
-  <bcf:options type="global">
+  <bcf:options component="biblatex" type="global">
     <bcf:option type="singlevalued">
       <bcf:key>singletitle</bcf:key>
       <bcf:value>1</bcf:value>

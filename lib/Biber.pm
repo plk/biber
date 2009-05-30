@@ -704,46 +704,48 @@ sub parse_ctrlfile_v2 {
   # OPTIONS
   foreach my $bcfopts (@{$bcfxml->{options}}) {
     # Biber options
-    if ($bcfopts->{type} eq 'biber') {
-      foreach my $bcfopt (@{$bcfopts->{option}}) {
-        unless ($self->{config}{setoncmdline}{$bcfopt->{key}}) { # already set on cmd line
-          if ($bcfopt->{type} eq 'singlevalued') {
-            $self->{config}{$bcfopt->{key}} = $bcfopt->{value};
+    if ($bcfopts->{component} eq 'biber') {
+      # Global options
+      if ($bcfopts->{type} eq 'global') {
+        foreach my $bcfopt (@{$bcfopts->{option}}) {
+          unless ($self->{config}{setoncmdline}{$bcfopt->{key}}) { # already set on cmd line
+            if ($bcfopt->{type} eq 'singlevalued') {
+              $self->{config}{$bcfopt->{key}} = $bcfopt->{value};
+            } elsif ($bcfopt->{type} eq 'multivalued') {
+              $self->{config}{$bcfopt->{key}} =
+                [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ];
+            }
           }
-          elsif ($bcfopt->{type} eq 'multivalued') {
-            $self->{config}{$bcfopt->{key}} =
+        }
+      }
+    }
+    # BibLaTeX options
+    if ($bcfopts->{component} eq 'biblatex') {
+      # Global options
+      if ($bcfopts->{type} eq 'global') {
+        foreach my $bcfopt (@{$bcfopts->{option}}) {
+          if ($bcfopt->{type} eq 'singlevalued') {
+            $self->{config}{biblatex}{global}{$bcfopt->{key}} = $bcfopt->{value};
+          } elsif ($bcfopt->{type} eq 'multivalued') {
+            $self->{config}{biblatex}{global}{$bcfopt->{key}} =
+              [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ];
+          }
+        }
+      }
+      # Entrytype options
+      else {
+        my $entrytype = $bcfopts->{type};
+        foreach my $bcfopt (@{$bcfopts->{option}}) {
+          if ($bcfopt->{type} eq 'singlevalued') {
+            $self->{config}{biblatex}{$entrytype}{$bcfopt->{key}} = $bcfopt->{value};
+          } elsif ($bcfopt->{type} eq 'multivalued') {
+            $self->{config}{biblatex}{$entrytype}{$bcfopt->{key}} =
               [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ];
           }
         }
       }
     }
-    # Global BibLaTeX options
-    elsif ($bcfopts->{type} eq 'global') {
-      foreach my $bcfopt (@{$bcfopts->{option}}) {
-        if ($bcfopt->{type} eq 'singlevalued') {
-          $self->{config}{biblatex}{global}{$bcfopt->{key}} = $bcfopt->{value};
-        }
-        elsif ($bcfopt->{type} eq 'multivalued') {
-          $self->{config}{biblatex}{global}{$bcfopt->{key}} =
-            [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ];
-        }
-      }
-    }
-    # Entrytype BibLaTeX options
-    else {
-      my $entrytype = $bcfopts->{type};
-      foreach my $bcfopt (@{$bcfopts->{option}}) {
-        if ($bcfopt->{type} eq 'singlevalued') {
-          $self->{config}{biblatex}{$entrytype}{$bcfopt->{key}} = $bcfopt->{value};
-        }
-        elsif ($bcfopt->{type} eq 'multivalued') {
-          $self->{config}{biblatex}{$entrytype}{$bcfopt->{key}} =
-            [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ];
-        }
-      }
-    }
   }
-
   # SORTING schemes
   foreach my $sortschemes (@{$bcfxml->{sorting}}) {
     if ($sortschemes->{type} eq 'global') { # Global sorting schemes
