@@ -26,7 +26,7 @@ GetOptions(
     'bibdata|d=s',
     'outfile|O=s',
     'allentries|a!',
-#    'validate|V!', 
+    'validate|V!',
     'debug|D!',
     'quiet|q',
     'help|h|?',
@@ -190,6 +190,8 @@ Options:
                          Specify the encoding of the bib file(s). The bbl file 
                          will also have this encoding when --unicodebbl is false.
                          See "perldoc Encode::Supported" for a list of supported encodings.
+  --validate|-V          Schema Validate both the <basename>.bcf biblatex control file
+                         and biblatexml bib files (if used). Dies on validation error.
   --debug|-D             Turn on debugging for biber.
   --quiet|-q             Turn warnings off.
     \n]

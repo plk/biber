@@ -81,6 +81,7 @@ our %BLX_CONFIG_DEFAULT = (
 
 ## Biber CONFIGURATION DEFAULTS
 our %CONFIG_DEFAULT = (
+  validate => 0,
   fastsort => 0,
   mincrossrefs =>  2,
   unicodebbl =>  0,

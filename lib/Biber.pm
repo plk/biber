@@ -683,6 +683,32 @@ sub parse_ctrlfile_v2 {
 
   carp "Cannot find control file '$ctrl_file.bcf'!\n" unless -f "$ctrl_file.bcf" ;
 
+  # Validate if asked to
+  if ($self->config('validate')) {
+    require Config;
+    require XML::LibXML;
+
+    # Set up XML parser
+    my $CFxmlparser = XML::LibXML->new();
+    $CFxmlparser->line_numbers(1); # line numbers for more informative errors
+
+    # Set up schema
+    my $CFxmlschema = XML::LibXML::Schema->new(location => $Config::Config{sitelibexp} . '/Biber/biblatexcf.xsd');
+
+    # basic parse and XInclude processing
+    my $CFxp = $CFxmlparser->parse_file("$ctrl_file.bcf");
+
+    # XPath context
+    my $CFxpc = XML::LibXML::XPathContext->new($CFxp);
+    $CFxpc->registerNs('bcf', 'https://sourceforge.net/projects/biblatex');
+
+    # Validate against schema. Dies if it fails.
+    eval { $CFxmlschema->validate($CFxp) };
+    if ($@) { croak "BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@\n"; }
+    else { print "BibLaTeX control file \"$ctrl_file.bcf\" validates\n" unless $self->config('quiet');
+         }
+  }
+
   my $ctrl = new IO::File "<$ctrl_file.bcf"
     or croak "Cannot open $ctrl_file.bcf: $!" ;
 
@@ -691,8 +717,6 @@ sub parse_ctrlfile_v2 {
   # Read control file
   require XML::LibXML::Simple;
   my $bcfxml = XML::LibXML::Simple::XMLin($ctrl, 'ForceArray' => 1, 'NsStrip' => 1, KeyAttr => []);
-
-  # TODO - validate control file against schema?
 
   my $controlversion = $bcfxml->{'version'};
   carp "Warning: You are using biblatex version $controlversion :
