@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="bcf2.rnc" type="compact"?>
+<bcf:controlfile version="0.8" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+  <!-- BIB DATA -->
+  <bcf:bibdata>
+    <bcf:datasource type="file">file1.bib</bcf:datasource>
+    <bcf:datasource type="file">file2.bib</bcf:datasource>
+    <bcf:datasource type="file">file3.xml</bcf:datasource>    
+  </bcf:bibdata>
+  <!-- OPTIONS -->
+  <bcf:options component="biber" type="global">
+    <bcf:mincrossrefs>2</bcf:mincrossrefs>
+    <bcf:debug>1</bcf:debug>
+    <bcf:bibencoding>utf8</bcf:bibencoding>
+  </bcf:options>
+  <bcf:options component="biblatex" type="global">
+    <bcf:terseinits>0</bcf:terseinits>
+    <bcf:useprefix>0</bcf:useprefix>
+    <bcf:useauthor>0</bcf:useauthor>
+    <bcf:useeditor>0</bcf:useeditor>
+    <bcf:usetranslator>0</bcf:usetranslator>
+    <bcf:labelalpha>0</bcf:labelalpha>
+    <bcf:labelyear>1</bcf:labelyear>
+    <bcf:singletitle>0</bcf:singletitle>
+    <bcf:uniquename>0</bcf:uniquename>
+    <bcf:maxnames>3</bcf:maxnames>
+    <bcf:minnames>1</bcf:minnames>
+    <bcf:sorting>21</bcf:sorting>
+    <bcf:sortlos>0</bcf:sortlos>
+    <bcf:labelname>
+      <bcf:item order="1">shortauthor</bcf:item>
+      <bcf:item order="2">author</bcf:item>
+      <bcf:item order="3">shorteditor</bcf:item>
+      <bcf:item order="4">editor</bcf:item>
+      <bcf:item order="5">shorteditor</bcf:item>
+      <bcf:item order="6">translator</bcf:item>
+    </bcf:labelname>
+  </bcf:options>
+  <bcf:options component="biblatex" type="collection">
+    <bcf:useeditor>0</bcf:useeditor>
+    <bcf:labelname>
+      <bcf:item order="1">shorteditor</bcf:item>
+      <bcf:item order="2">editor</bcf:item>
+      <bcf:item order="3">translator</bcf:item>
+    </bcf:labelname>
+  </bcf:options>
+  <!-- SORTING -->
+  <bcf:sorting type="global">
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">presort</bcf:sortitem>
+      <bcf:sortitem order="2">mm</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="2">
+      <bcf:sortitem order="1" final="1">sortkey</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="3">
+      <bcf:sortitem order="1">sortname</bcf:sortitem>
+      <bcf:sortitem order="2">author</bcf:sortitem>
+      <bcf:sortitem order="3">editor</bcf:sortitem>
+      <bcf:sortitem order="4">translator</bcf:sortitem>
+      <bcf:sortitem order="5">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="6">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="4">
+      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="2">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="5">
+      <bcf:sortitem order="1">sortyear</bcf:sortitem>
+      <bcf:sortitem order="2">year</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="6">
+      <bcf:sortitem order="1">volume</bcf:sortitem>
+      <bcf:sortitem order="2">0000</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  <bcf:sorting type="collection">
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">presort</bcf:sortitem>
+      <bcf:sortitem order="2">mm</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="1">
+      <bcf:sortitem order="1" final="1">sortkey</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="2">
+      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="2">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="3">
+      <bcf:sortitem order="1">sortyear</bcf:sortitem>
+      <bcf:sortitem order="2">year</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  <!-- BIB SECTIONS -->
+  <bcf:section number="0">
+    <bcf:citekey>key29</bcf:citekey>
+    <bcf:citekey>key13</bcf:citekey>
+    <bcf:citekey>key5</bcf:citekey>
+  </bcf:section>
+  <bcf:section number="1">
+    <bcf:citekey>key41</bcf:citekey>
+    <bcf:citekey>key9</bcf:citekey>
+    <bcf:citekey>key5</bcf:citekey>
+  </bcf:section>
+  <bcf:section number="2">
+    <bcf:citekey>key21</bcf:citekey>
+    <bcf:citekey>key92</bcf:citekey>
+  </bcf:section>
+  <bcf:section number="0">
+    <bcf:citekey>key29</bcf:citekey>
+    <bcf:citekey>key42</bcf:citekey>
+    <bcf:citekey>key5</bcf:citekey>
+  </bcf:section>
+</bcf:controlfile>
+
