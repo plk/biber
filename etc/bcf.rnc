@@ -7,6 +7,7 @@ start =
       element bcf:datasource { attribute type { xsd:NCName }, xsd:NCName }+
     },
     element bcf:options {
+      attribute component { "biber" | "biblatex" }, 
       attribute type { xsd:NCName },
       element bcf:option {
         attribute type { "singlevalued" | "multivalued" }?,
