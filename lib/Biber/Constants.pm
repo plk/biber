@@ -109,8 +109,9 @@ Readonly::Array our @LITERALFIELDS_BASE  =>   qw{
   abstract addendum annotation chapter day edition eid howpublished isan isbn
   ismn isrn issn issue iswc label month nameaddon note number pagetotal part
   series shorthand shorthandintro shortjournal shortseries eprinttype urlday
-  urlmonth urlyear venue version volume volumes usera userb userc userd usere
-  userf hyphenation crossref entrysubtype execute gender sortkey sortyear xref
+  urlmonth urlyear urldate venue version volume volumes usera userb userc userd
+  usere userf hyphenation crossref entrysubtype execute gender sortkey sortyear
+  xref
   } ;
 
 Readonly::Array our @TITLEFIELDS => qw{ title 
