@@ -17,9 +17,8 @@ lib/Biber/Internals.pm
 lib/Biber/Utils.pm
 lib/LaTeX/Decode.pm
 data/schemas/bcf.rnc
+data/schemas/bcf.rng
 data/schemas/bcf.xsd
-data/schemas/bcf2.rnc
-data/schemas/bcf2.xsd
 data/schemas/biblatexml.rnc
 data/schemas/biblatexml-simple.rnc
 data/schemas/biblatexml.rng
@@ -27,6 +26,7 @@ data/schemas/biblatexml.xsd
 data/latinkeys.txt
 etc/AUCTeX.txt
 etc/biber-auctex.png
+etc/example.bcf
 t/00-load.t
 t/01-utils.t
 t/02-biber.t

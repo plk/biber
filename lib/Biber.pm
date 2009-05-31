@@ -693,7 +693,7 @@ sub parse_ctrlfile_v2 {
     $CFxmlparser->line_numbers(1); # line numbers for more informative errors
 
     # Set up schema
-    my $CFxmlschema = XML::LibXML::Schema->new(location => $Config::Config{sitelibexp} . '/Biber/bcf.xsd');
+    my $CFxmlschema = XML::LibXML::RelaxNG->new(location => $Config::Config{sitelibexp} . '/Biber/bcf.rng');
 
     # basic parse and XInclude processing
     my $CFxp = $CFxmlparser->parse_file("$ctrl_file.bcf");
@@ -704,9 +704,17 @@ sub parse_ctrlfile_v2 {
 
     # Validate against schema. Dies if it fails.
     eval { $CFxmlschema->validate($CFxp) };
-    if ($@) { croak "BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@\n"; }
-    else { print "BibLaTeX control file \"$ctrl_file.bcf\" validates\n" unless $self->config('quiet');
-         }
+    if (ref($@)) {
+      print $@->dump();
+      croak "BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@\n";
+    }
+    elsif ($@) {
+      croak "BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@\n";
+    }
+    else {
+      print "BibLaTeX control file \"$ctrl_file.bcf\" validates\n" unless $self->config('quiet');
+    }
+
   }
 
   my $ctrl = new IO::File "<$ctrl_file.bcf"

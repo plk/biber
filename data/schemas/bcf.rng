@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns:bcf="https://sourceforge.net/projects/biblatex" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <element name="bcf:controlfile">
+      <attribute name="version">
+        <data type="decimal"/>
+      </attribute>
+      <element name="bcf:bibdata">
+        <oneOrMore>
+          <element name="bcf:datasource">
+            <optional>
+              <attribute name="type">
+                <a:documentation>only type="file" is supported at this stage</a:documentation>
+                <data type="NCName"/>
+              </attribute>
+            </optional>
+            <data type="NCName"/>
+          </element>
+        </oneOrMore>
+      </element>
+      <optional>
+        <element name="bcf:options">
+          <attribute name="component">
+            <value>biber</value>
+          </attribute>
+          <attribute name="type">
+            <value>global</value>
+          </attribute>
+          <optional>
+            <ref name="bibencoding"/>
+          </optional>
+          <optional>
+            <ref name="debug"/>
+          </optional>
+          <optional>
+            <!--
+              this is for a future version
+              displaymode?,
+            -->
+            <ref name="inputenc"/>
+          </optional>
+          <optional>
+            <ref name="mincrossrefs"/>
+          </optional>
+          <optional>
+            <ref name="nonsortdiacritics"/>
+          </optional>
+          <optional>
+            <ref name="nonsortprefixes"/>
+          </optional>
+        </element>
+      </optional>
+      <element name="bcf:options">
+        <attribute name="component">
+          <value>biblatex</value>
+        </attribute>
+        <attribute name="type">
+          <value>global</value>
+        </attribute>
+        <optional>
+          <ref name="alphaothers"/>
+        </optional>
+        <optional>
+          <ref name="labelalpha"/>
+        </optional>
+        <optional>
+          <ref name="labelname"/>
+        </optional>
+        <optional>
+          <ref name="labelyear"/>
+        </optional>
+        <optional>
+          <ref name="maxnames"/>
+        </optional>
+        <optional>
+          <ref name="minnames"/>
+        </optional>
+        <optional>
+          <ref name="singletitle"/>
+        </optional>
+        <optional>
+          <ref name="sortlos"/>
+        </optional>
+        <optional>
+          <ref name="terseinits"/>
+        </optional>
+        <optional>
+          <ref name="uniquename"/>
+        </optional>
+        <optional>
+          <ref name="useauthor"/>
+        </optional>
+        <optional>
+          <ref name="useeditor"/>
+        </optional>
+        <optional>
+          <ref name="useprefix"/>
+        </optional>
+        <optional>
+          <ref name="usetranslator"/>
+        </optional>
+      </element>
+      <zeroOrMore>
+        <element name="bcf:options">
+          <attribute name="component">
+            <value>biblatex</value>
+          </attribute>
+          <attribute name="type">
+            <ref name="biblatex.entrytypes"/>
+          </attribute>
+          <optional>
+            <ref name="alphaothers"/>
+          </optional>
+          <optional>
+            <ref name="labelalpha"/>
+          </optional>
+          <optional>
+            <ref name="labelname"/>
+          </optional>
+          <optional>
+            <ref name="labelyear"/>
+          </optional>
+          <optional>
+            <ref name="maxnames"/>
+          </optional>
+          <optional>
+            <ref name="minnames"/>
+          </optional>
+          <optional>
+            <ref name="singletitle"/>
+          </optional>
+          <optional>
+            <ref name="sortlos"/>
+          </optional>
+          <optional>
+            <ref name="terseinits"/>
+          </optional>
+          <optional>
+            <ref name="uniquename"/>
+          </optional>
+          <optional>
+            <ref name="useauthor"/>
+          </optional>
+          <optional>
+            <ref name="useeditor"/>
+          </optional>
+          <optional>
+            <ref name="useprefix"/>
+          </optional>
+          <optional>
+            <ref name="usetranslator"/>
+          </optional>
+        </element>
+      </zeroOrMore>
+      <zeroOrMore>
+        <element name="bcf:sorting">
+          <attribute name="type">
+            <choice>
+              <value>global</value>
+              <ref name="biblatex.entrytypes"/>
+            </choice>
+          </attribute>
+          <oneOrMore>
+            <element name="bcf:sort">
+              <attribute name="order">
+                <data type="integer"/>
+              </attribute>
+              <oneOrMore>
+                <element name="bcf:sortitem">
+                  <optional>
+                    <attribute name="final">
+                      <data type="integer"/>
+                    </attribute>
+                  </optional>
+                  <attribute name="order">
+                    <data type="integer"/>
+                  </attribute>
+                  <text/>
+                </element>
+              </oneOrMore>
+            </element>
+          </oneOrMore>
+        </element>
+      </zeroOrMore>
+      <zeroOrMore>
+        <element name="bcf:section">
+          <attribute name="number">
+            <data type="integer"/>
+          </attribute>
+          <oneOrMore>
+            <element name="bcf:citekey">
+              <data type="NCName"/>
+            </element>
+          </oneOrMore>
+        </element>
+      </zeroOrMore>
+    </element>
+  </start>
+  <define name="biblatex.entrytypes">
+    <choice>
+      <value>book</value>
+      <value>article</value>
+      <value>booklet</value>
+      <value>collection</value>
+      <value>inbook</value>
+      <value>incollection</value>
+      <value>proceedings</value>
+      <value>inproceedings</value>
+      <value>manual</value>
+      <value>misc</value>
+      <value>online</value>
+      <value>patent</value>
+      <value>periodical</value>
+      <value>proceedings</value>
+      <value>report</value>
+      <value>thesis</value>
+      <value>unpublished</value>
+    </choice>
+  </define>
+  <define name="terseinits">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>terseinits</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="useprefix">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>useprefix</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="useauthor">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>useauthor</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="useeditor">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>useeditor</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="usetranslator">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>usetranslator</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="labelalpha">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>labelalpha</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="labelyear">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>labelyear</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="singletitle">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>singletitle</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="uniquename">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>uniquename</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="maxnames">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>maxnames</value>
+      </element>
+      <element name="bcf:value">
+        <data type="integer"/>
+      </element>
+    </element>
+  </define>
+  <define name="minnames">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>minnames</value>
+      </element>
+      <element name="bcf:value">
+        <data type="integer"/>
+      </element>
+    </element>
+  </define>
+  <define name="sortlos">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>sortlos</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="labelname">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>multivalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>labelname</value>
+      </element>
+      <oneOrMore>
+        <element name="bcf:value">
+          <attribute name="order">
+            <data type="integer"/>
+          </attribute>
+          <ref name="name.list"/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="name.list">
+    <choice>
+      <value>shortauthor</value>
+      <value>shorteditor</value>
+      <value>author</value>
+      <value>editor</value>
+      <value>translator</value>
+    </choice>
+  </define>
+  <define name="mincrossrefs">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>mincrossrefs</value>
+      </element>
+      <element name="bcf:value">
+        <data type="integer"/>
+      </element>
+    </element>
+  </define>
+  <define name="debug">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>debug</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="inputenc">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>inputenc</value>
+      </element>
+      <element name="bcf:value">
+        <data type="NCName"/>
+      </element>
+    </element>
+  </define>
+  <define name="bibencoding">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>bibencoding</value>
+      </element>
+      <element name="bcf:value">
+        <data type="NCName"/>
+      </element>
+    </element>
+  </define>
+  <define name="alphaothers">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>alphaothers</value>
+      </element>
+      <element name="bcf:value">
+        <data type="normalizedString">
+          <param name="pattern">\S+</param>
+        </data>
+      </element>
+    </element>
+  </define>
+  <define name="nonsortprefixes">
+    <a:documentation>these are perl regexes</a:documentation>
+    <element name="bcf:nonsortprefixes">
+      <oneOrMore>
+        <element name="bcf:item">
+          <text/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="nonsortdiacritics">
+    <element name="bcf:nonsortdiacritics">
+      <oneOrMore>
+        <element name="bcf:item">
+          <text/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+</grammar>
+<!--
+  This is for when biber/biblatex become truly multilingual:
+  displaymode = ( displaymode.textual, displaymode.persons, displaymode.locations )
+  
+  displaymode.textual = element bcf:displaymode {
+  type = global | titles | persons | locations
+   attribute type { "textual" }, 
+   element bcf:mode { 
+     attribute precedence { xsd:integer }, display.mode.textual
+   }+,
+  }
+  displaymode.persons = element displaymode {
+  type = global | titles | persons | locations
+   attribute type { "persons" }, 
+   element bcf:mode { 
+     attribute precedence { xsd:integer }, display.mode.proper
+   }+,
+  }
+  displaymode.locations = element displaymode {
+  type = global | titles | persons | locations
+   attribute type { "location" }, 
+   element bcf:mode { 
+     attribute precedence { xsd:integer }, display.mode.proper
+   }+,
+  }
+  
+  display.mode.textual = { "original" | "romanized" | "translated" }
+  display.mode.proper  = { "original" | "romanized" | "uniform" }
+-->
