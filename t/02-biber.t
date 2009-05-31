@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 7 ;
+use Test::More tests => 6 ;
 
 use Biber;
 
@@ -16,7 +16,6 @@ chdir("t/tdata") ;
 $biber->parse_auxfile("50-style-authoryear.aux") ;
 
 $biber->{config}{biblatex}{global}{maxline} = 100000 ;
-ok($biber->{config}{biblatex}{global}{maxline} == 100000, "maxline option") ;
 
 my @keys = sort $biber->citekeys;
 my @citedkeys = sort qw{ 
