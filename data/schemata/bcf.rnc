@@ -30,6 +30,7 @@ start =
       labelalpha,
       labelname,
       labelyear,
+      maxline,
       maxnames,
       minnames,
       singletitle,
@@ -48,6 +49,7 @@ start =
       labelalpha?,
       labelname?,
       labelyear?,
+      maxline?,
       maxnames?,
       minnames?,
       singletitle?,
@@ -184,6 +186,12 @@ labelname =
       attribute order { xsd:integer },
       name.list
     }+
+  }
+maxline =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "maxline" },
+    element bcf:value { xsd:integer }
   }
 name.list = "shortauthor" | "shorteditor" | "author" | "editor" | "translator"
 mincrossrefs =

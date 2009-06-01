@@ -28,6 +28,10 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
+      <bcf:key>maxline</bcf:key>
+      <bcf:value>79</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
       <bcf:key>maxnames</bcf:key>
       <bcf:value>3</bcf:value>
     </bcf:option>

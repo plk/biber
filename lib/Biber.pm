@@ -723,9 +723,6 @@ sub parse_ctrlfile_v2 {
         biber is more likely to work with version $BIBLATEX_VERSION.\n"
     unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION ;
 
-  # What is the status of this setting?
-  $self->{config}{biblatex}{global}{maxline} = 79;
-
   # Look at control file and populate our main data structure with its information
 
   # OPTIONS

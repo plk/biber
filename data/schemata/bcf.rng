@@ -61,6 +61,7 @@
         <ref name="labelalpha"/>
         <ref name="labelname"/>
         <ref name="labelyear"/>
+        <ref name="maxline"/>
         <ref name="maxnames"/>
         <ref name="minnames"/>
         <ref name="singletitle"/>
@@ -91,6 +92,9 @@
           </optional>
           <optional>
             <ref name="labelyear"/>
+          </optional>
+          <optional>
+            <ref name="maxline"/>
           </optional>
           <optional>
             <ref name="maxnames"/>
@@ -413,6 +417,19 @@
           <ref name="name.list"/>
         </element>
       </oneOrMore>
+    </element>
+  </define>
+  <define name="maxline">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>maxline</value>
+      </element>
+      <element name="bcf:value">
+        <data type="integer"/>
+      </element>
     </element>
   </define>
   <define name="name.list">
