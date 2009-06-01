@@ -11,7 +11,7 @@ chdir('t');
 my $CFxmlparser = XML::LibXML->new();
 
 # Set up schema
-my $CFxmlschema = XML::LibXML::RelaxNG->new(location => '../data/schemas/bcf.rng');
+my $CFxmlschema = XML::LibXML::RelaxNG->new(location => '../data/schemata/bcf.rng');
 
 # basic parse and XInclude processing
 my $CFxp = $CFxmlparser->parse_file('tdata/50-style-authoryear_v2.bcf');

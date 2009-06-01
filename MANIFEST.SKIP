@@ -14,5 +14,4 @@
 ^README\.win
 PRDgrammar
 ^etc
-^data/schemas/xml\.xsd
 \.swp$

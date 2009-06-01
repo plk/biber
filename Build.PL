@@ -23,12 +23,12 @@ my $builder = Module::Build->new(
         'Text::BibTeX' => 0,
     },
     script_files => [ glob( "bin/*" ) ],
-    data_files => { 'data/schemas/biblatexml.rnc' => 'lib/Biber/biblatexml.rnc',
-                    'data/schemas/biblatexml.rng' => 'lib/Biber/biblatexml.rng',
-                    'data/schemas/biblatexml.xsd' => 'lib/Biber/biblatexml.xsd',
-                    'data/schemas/bcf.xsd' => 'lib/Biber/bcf.xsd',
-                    'data/schemas/bcf.rnc' => 'lib/Biber/bcf.rnc',
-                    'data/schemas/bcf.rng' => 'lib/Biber/bcf.rng',
+    data_files => { 'data/schemata/biblatexml.rnc' => 'lib/Biber/biblatexml.rnc',
+                    'data/schemata/biblatexml.rng' => 'lib/Biber/biblatexml.rng',
+                    'data/schemata/biblatexml.xsd' => 'lib/Biber/biblatexml.xsd',
+                    'data/schemata/bcf.xsd' => 'lib/Biber/bcf.xsd',
+                    'data/schemata/bcf.rnc' => 'lib/Biber/bcf.rnc',
+                    'data/schemata/bcf.rng' => 'lib/Biber/bcf.rng',
                     'data/latinkeys.txt' => 'lib/Unicode/Collate/latinkeys.txt' }
 );
 
