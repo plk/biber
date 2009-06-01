@@ -1,7 +1,0 @@
-Build
-blib
-_build
-.PerlySenseProject
-!*.aux
-!*.bcf
-
