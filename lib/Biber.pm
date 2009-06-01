@@ -19,11 +19,11 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =head1 VERSION
 
-Version 0.4.2
+Version 0.4.3
 
 =cut
 
-our $VERSION = '0.4.2' ;
+our $VERSION = '0.4.3' ;
 
 =head1 SYNOPSIS
 
@@ -1051,7 +1051,7 @@ sub postprocess {
         
 
         ##############################################################
-        # 1. get day month year from date field if no year is supplied
+        # 1a. get day month year from date field if no year is supplied
         ##############################################################
 
         if ( $be->{date} && !$be->{year} ) {
@@ -1061,6 +1061,17 @@ sub postprocess {
             $be->{day}   = substr $date, 8, 2 if length $date > 9 ;
         }
         
+        ##############################################################
+        # 1b. get day month year from date field if no year is supplied
+        ##############################################################
+
+        if ( $be->{urldate} && !$be->{urlyear} ) {
+            my $urldate = $be->{urldate} ;
+            $be->{urlyear}  = substr $urldate, 0, 4 ;
+            $be->{urlmonth} = substr $urldate, 5, 2 if length $urldate > 6 ;
+            $be->{urlday}   = substr $urldate, 8, 2 if length $urldate > 9 ;
+        }
+
         ##############################################################
         # 2. set local options to override global options for individual entries
         ##############################################################
