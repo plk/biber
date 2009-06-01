@@ -4,16 +4,22 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 1;
-
+use XML::LibXML;
 use Biber;
-chdir("t/tdata");
+chdir('t');
+# Set up XML parser
+my $CFxmlparser = XML::LibXML->new();
 
-my $bibfile;
-my $biber = Biber->new;
-$biber->{config}{validate} = 1;
-$biber->parse_auxfile_v2("50-style-authoryear_v2.aux");
+# Set up schema
+my $CFxmlschema = XML::LibXML::RelaxNG->new(location => '../data/schemas/bcf.rng');
 
-ok($biber->{config}{mincrossrefs} == 88, "Validation ok as we set this");
+# basic parse and XInclude processing
+my $CFxp = $CFxmlparser->parse_file('tdata/50-style-authoryear_v2.bcf');
 
+# XPath context
+my $CFxpc = XML::LibXML::XPathContext->new($CFxp);
+$CFxpc->registerNs('bcf', 'https://sourceforge.net/projects/biblatex');
 
-
+# Validate against schema. Dies if it fails.
+$CFxmlschema->validate($CFxp);
+is($@, '', 'Validation of bcf');

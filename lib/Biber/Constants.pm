@@ -18,7 +18,6 @@ our @EXPORT = qw{
                   @LITERALFIELDS
                   %SKIPFIELDS
                   %CONFIG_DEFAULT
-                  %BLX_CONFIG_DEFAULT
                   $BIBLATEX_VERSION
                   $BIBER_SORT_FINAL
                   %ALIASES
@@ -27,57 +26,6 @@ our @EXPORT = qw{
 
 Readonly::Scalar our $BIBLATEX_VERSION => '0.8' ;
 our $BIBER_SORT_FINAL = 0;
-
-## BibLaTeX CONFIGURATION DEFAULTS
-our %BLX_CONFIG_DEFAULT = (
-  controlversion => $BIBLATEX_VERSION,
-  debug       => 0,
-  labelalpha  => 0,
-  useauthor   => 1,
-  useeditor   => 1,
-  usetranslator => 0,
-  labelyear   => 0,
-  labelnumber => 0,
-  singletitle => 0,
-  uniquename  => 0,
-  useprefix   => 0,
-  terseinits  => 0,
-  sortlos     => 1,
-  maxnames    => 3,
-  minnames    => 1,
-  maxline     => 79,
-  alphaothers => '+',
-  labelname   => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
-  sorting => [ # corresponds to the default "nty" scheme
-              [
-               {'presort'    => []},
-               {'mm'         => []},
-              ],
-              [
-               {'sortkey'    => ['final']}
-              ],
-              [
-               {'sortname'   => []},
-               {'author'     => []},
-               {'editor'     => []},
-               {'translator' => []},
-               {'sorttitle'  => []},
-               {'title'      => []}
-              ],
-              [
-               {'sorttitle'  => []},
-               {'title'      => []}
-              ],
-              [
-               {'sortyear'   => []},
-               {'year'       => []}
-              ],
-              [
-               {'volume'     => []},
-               {'0000'       => []}
-              ]
-             ],
-);
 
 ## Biber CONFIGURATION DEFAULTS
 our %CONFIG_DEFAULT = (

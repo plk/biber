@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 7 ;
+use Test::More tests => 5 ;
 
 use Biber;
 
@@ -46,8 +46,6 @@ my $bln = [ 'author', 'editor' ];
 ok($biber->{config}{biblatex}{global}{uniquename} == 1, "Single-valued option") ;
 is_deeply($biber->{config}{biblatex}{global}{labelname}, [ 'author' ], "Multi-valued options");
 ok($biber->{config}{mincrossrefs} == 88, "Setting Biber options via control file");
-ok($biber->{config}{biblatex}{global}{maxnames} == 3 , "Default single-valued options");
-is_deeply($biber->{config}{biblatex}{global}{sorting}, $dmv, "Default multi-valued options");
 ok($biber->{config}{biblatex}{book}{useprefix} == 1 , "Per-type single-valued options");
 is_deeply($biber->{config}{biblatex}{book}{labelname}, $bln, "Per-type multi-valued options");
 

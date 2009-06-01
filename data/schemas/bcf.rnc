@@ -25,20 +25,20 @@ start =
     element bcf:options {
       attribute component { "biblatex" },
       attribute type { "global" },
-      alphaothers?,
-      labelalpha?,
-      labelname?,
-      labelyear?,
-      maxnames?,
-      minnames?,
-      singletitle?,
-      sortlos?,
-      terseinits?,
-      uniquename?,
-      useauthor?,
-      useeditor?,
-      useprefix?,
-      usetranslator?
+      alphaothers,
+      labelalpha,
+      labelname,
+      labelyear,
+      maxnames,
+      minnames,
+      singletitle,
+      sortlos,
+      terseinits,
+      uniquename,
+      useauthor,
+      useeditor,
+      useprefix,
+      usetranslator
     },
     element bcf:options {
       attribute component { "biblatex" },
@@ -59,7 +59,18 @@ start =
       usetranslator?
     }*,
     element bcf:sorting {
-      attribute type { "global" | biblatex.entrytypes },
+      attribute type { "global" },
+      element bcf:sort {
+        attribute order { xsd:integer },
+        element bcf:sortitem {
+          attribute final { xsd:integer }?,
+          attribute order { xsd:integer },
+          text
+        }+
+      }+
+    },
+    element bcf:sorting {
+      attribute type { biblatex.entrytypes },
       element bcf:sort {
         attribute order { xsd:integer },
         element bcf:sortitem {

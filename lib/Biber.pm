@@ -65,7 +65,6 @@ sub new {
     my ($class, $opts) = @_ ;
     my $self = bless {}, $class ;
     $self->_initopts() ;
-    $self->_initblxopts() ;
     if ($opts) {
         my %params = %$opts;
         foreach (keys %params) {
@@ -73,14 +72,6 @@ sub new {
         }
     };
     return $self
-}
-
-sub _initblxopts {
-    my $self = shift ;
-    foreach (keys %BLX_CONFIG_DEFAULT) {
-      $self->{config}{biblatex}{global}{$_} = $BLX_CONFIG_DEFAULT{$_}
-    }
-    return;
 }
 
 =head2 config
@@ -444,7 +435,8 @@ sub parse_ctrlfile {
             unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION ;
     }
 
-    my $sorting = $self->{config}{biblatex}{global}{sorting};
+    $self->{config}{biblatex}{global}{labelname} = ['shortauthor', 'author', 'shorteditor', 'editor', 'translator']; # set default 
+    my $sorting = ($self->{config}{biblatex}{global}{sorting} or '1');
     if ($sorting == 1) { # nty
       $self->{config}{biblatex}{global}{sorting} = [
                                                     [
@@ -726,10 +718,13 @@ sub parse_ctrlfile_v2 {
   require XML::LibXML::Simple;
   my $bcfxml = XML::LibXML::Simple::XMLin($ctrl, 'ForceArray' => 1, 'NsStrip' => 1, KeyAttr => []);
 
-  my $controlversion = $bcfxml->{'version'};
+  my $controlversion = $self->{config}{biblatex}{global}{controlversion} = $bcfxml->{'version'};
   carp "Warning: You are using biblatex version $controlversion :
         biber is more likely to work with version $BIBLATEX_VERSION.\n"
     unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION ;
+
+  # What is the status of this setting?
+  $self->{config}{biblatex}{global}{maxline} = 79;
 
   # Look at control file and populate our main data structure with its information
 

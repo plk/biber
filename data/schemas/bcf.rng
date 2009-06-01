@@ -57,48 +57,20 @@
         <attribute name="type">
           <value>global</value>
         </attribute>
-        <optional>
-          <ref name="alphaothers"/>
-        </optional>
-        <optional>
-          <ref name="labelalpha"/>
-        </optional>
-        <optional>
-          <ref name="labelname"/>
-        </optional>
-        <optional>
-          <ref name="labelyear"/>
-        </optional>
-        <optional>
-          <ref name="maxnames"/>
-        </optional>
-        <optional>
-          <ref name="minnames"/>
-        </optional>
-        <optional>
-          <ref name="singletitle"/>
-        </optional>
-        <optional>
-          <ref name="sortlos"/>
-        </optional>
-        <optional>
-          <ref name="terseinits"/>
-        </optional>
-        <optional>
-          <ref name="uniquename"/>
-        </optional>
-        <optional>
-          <ref name="useauthor"/>
-        </optional>
-        <optional>
-          <ref name="useeditor"/>
-        </optional>
-        <optional>
-          <ref name="useprefix"/>
-        </optional>
-        <optional>
-          <ref name="usetranslator"/>
-        </optional>
+        <ref name="alphaothers"/>
+        <ref name="labelalpha"/>
+        <ref name="labelname"/>
+        <ref name="labelyear"/>
+        <ref name="maxnames"/>
+        <ref name="minnames"/>
+        <ref name="singletitle"/>
+        <ref name="sortlos"/>
+        <ref name="terseinits"/>
+        <ref name="uniquename"/>
+        <ref name="useauthor"/>
+        <ref name="useeditor"/>
+        <ref name="useprefix"/>
+        <ref name="usetranslator"/>
       </element>
       <zeroOrMore>
         <element name="bcf:options">
@@ -152,13 +124,35 @@
           </optional>
         </element>
       </zeroOrMore>
+      <element name="bcf:sorting">
+        <attribute name="type">
+          <value>global</value>
+        </attribute>
+        <oneOrMore>
+          <element name="bcf:sort">
+            <attribute name="order">
+              <data type="integer"/>
+            </attribute>
+            <oneOrMore>
+              <element name="bcf:sortitem">
+                <optional>
+                  <attribute name="final">
+                    <data type="integer"/>
+                  </attribute>
+                </optional>
+                <attribute name="order">
+                  <data type="integer"/>
+                </attribute>
+                <text/>
+              </element>
+            </oneOrMore>
+          </element>
+        </oneOrMore>
+      </element>
       <zeroOrMore>
         <element name="bcf:sorting">
           <attribute name="type">
-            <choice>
-              <value>global</value>
-              <ref name="biblatex.entrytypes"/>
-            </choice>
+            <ref name="biblatex.entrytypes"/>
           </attribute>
           <oneOrMore>
             <element name="bcf:sort">

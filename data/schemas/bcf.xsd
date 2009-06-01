@@ -33,20 +33,20 @@
         <xs:element name="options">
           <xs:complexType>
             <xs:sequence>
-              <xs:group minOccurs="0" ref="bcf:alphaothers"/>
-              <xs:group minOccurs="0" ref="bcf:labelalpha"/>
-              <xs:group minOccurs="0" ref="bcf:labelname"/>
-              <xs:group minOccurs="0" ref="bcf:labelyear"/>
-              <xs:group minOccurs="0" ref="bcf:maxnames"/>
-              <xs:group minOccurs="0" ref="bcf:minnames"/>
-              <xs:group minOccurs="0" ref="bcf:singletitle"/>
-              <xs:group minOccurs="0" ref="bcf:sortlos"/>
-              <xs:group minOccurs="0" ref="bcf:terseinits"/>
-              <xs:group minOccurs="0" ref="bcf:uniquename"/>
-              <xs:group minOccurs="0" ref="bcf:useauthor"/>
-              <xs:group minOccurs="0" ref="bcf:useeditor"/>
-              <xs:group minOccurs="0" ref="bcf:useprefix"/>
-              <xs:group minOccurs="0" ref="bcf:usetranslator"/>
+              <xs:group ref="bcf:alphaothers"/>
+              <xs:group ref="bcf:labelalpha"/>
+              <xs:group ref="bcf:labelname"/>
+              <xs:group ref="bcf:labelyear"/>
+              <xs:group ref="bcf:maxnames"/>
+              <xs:group ref="bcf:minnames"/>
+              <xs:group ref="bcf:singletitle"/>
+              <xs:group ref="bcf:sortlos"/>
+              <xs:group ref="bcf:terseinits"/>
+              <xs:group ref="bcf:uniquename"/>
+              <xs:group ref="bcf:useauthor"/>
+              <xs:group ref="bcf:useeditor"/>
+              <xs:group ref="bcf:useprefix"/>
+              <xs:group ref="bcf:usetranslator"/>
             </xs:sequence>
             <xs:attribute name="component" use="required">
               <xs:simpleType>
@@ -92,7 +92,28 @@
             <xs:attribute name="type" use="required" type="bcf:biblatex.entrytypes"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="bcf:sorting"/>
+        <xs:element name="sorting">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" ref="bcf:sort"/>
+            </xs:sequence>
+            <xs:attribute name="type" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="global"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="sorting">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" ref="bcf:sort"/>
+            </xs:sequence>
+            <xs:attribute name="type" use="required" type="bcf:biblatex.entrytypes"/>
+          </xs:complexType>
+        </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="bcf:section"/>
       </xs:sequence>
       <xs:attribute name="version" use="required" type="xs:decimal"/>
@@ -116,24 +137,6 @@
           </xs:attribute>
         </xs:extension>
       </xs:simpleContent>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="sorting">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="bcf:sort"/>
-      </xs:sequence>
-      <xs:attribute name="type" use="required">
-        <xs:simpleType>
-          <xs:union memberTypes="bcf:biblatex.entrytypes">
-            <xs:simpleType>
-              <xs:restriction base="xs:token">
-                <xs:enumeration value="global"/>
-              </xs:restriction>
-            </xs:simpleType>
-          </xs:union>
-        </xs:simpleType>
-      </xs:attribute>
     </xs:complexType>
   </xs:element>
   <xs:element name="sort">
