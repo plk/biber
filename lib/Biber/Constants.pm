@@ -45,9 +45,9 @@ our %CONFIG_DEFAULT = (
 ### biblatex fields
 
 Readonly::Array our @NAMEFIELDS  =>   qw{
-  author editor shortauthor shorteditor commentator 
-  translator redactor bookauthor afterword introduction 
-  holder sortname namea nameb namec } ;
+  author editor shortauthor shorteditor commentator translator redactor 
+  bookauthor introduction foreword afterword holder sortname 
+  namea nameb namec } ;
 
 Readonly::Array our @LISTFIELDS  =>   qw{
   publisher location address institution school language origlocation
