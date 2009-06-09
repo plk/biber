@@ -46,15 +46,15 @@ our %CONFIG_DEFAULT = (
 
 Readonly::Array our @NAMEFIELDS  =>   qw{
   author editor shortauthor shorteditor commentator translator redactor 
-  bookauthor introduction foreword afterword holder sortname 
+  annotator bookauthor introduction foreword afterword holder sortname 
   namea nameb namec } ;
 
 Readonly::Array our @LISTFIELDS  =>   qw{
-  publisher location address institution school language origlocation
+  publisher location institution organization language origlocation
   origpublisher lista listb listc listd liste listf } ;
 
 Readonly::Array our @LITERALFIELDS_BASE  =>   qw{
-  abstract addendum annotation chapter day edition eid howpublished isan isbn
+  abstract addendum annotation chapter date day edition eid howpublished isan isbn
   ismn isrn issn issue iswc label month nameaddon note number pagetotal part
   series shorthand shorthandintro shortjournal shortseries eprinttype urlday
   urlmonth urlyear urldate venue version volume volumes usera userb userc userd
@@ -66,16 +66,12 @@ Readonly::Array our @TITLEFIELDS => qw{ title
   subtitle titleaddon shorttitle sorttitle indextitle indexsorttitle
   origtitle issuetitle issuesubtitle maintitle mainsubtitle maintitleaddon
   booktitle booksubtitle booktitleaddon journal journaltitle journalsubtitle
-  reprinttitle };
+  reprinttitle eventtitle };
 
 # Fields that are used internally by biber but are not passed to the bbl output
-Readonly::Array our @SKIPFIELDS => qw{ sortname sorttitle presort sortkey sortyear } ;
+Readonly::Array our @SKIPFIELDS => qw{ sortname sorttitle presort sortkey
+  sortyear library remarks } ;
 our %SKIPFIELDS = map { $_ => 1 } @SKIPFIELDS ;
-
-# ignored by default: library remarks (more?)
-# TODO : Add option to insert them if needed ?? 
-# But then it is no longer Readonly…
-# => Perhaps take them from config file that is loaded before Biber::Constants?
 
 Readonly::Array our @RANGEFIELDS     =>  qw{ origyear pages year } ;
 Readonly::Array our @VERBATIMFIELDS  =>  qw{ doi eprint file pdf url verba verbb verbc } ;
