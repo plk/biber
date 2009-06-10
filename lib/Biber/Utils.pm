@@ -460,6 +460,7 @@ sub ucinit {
 =head1 AUTHOR
 
 François Charette, C<< <firmicus at gmx.net> >>
+Philip Kime C<< <philip at kime.org.uk> >>
 
 =head1 BUGS
 
@@ -468,7 +469,7 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009 François Charette, all rights reserved.
+Copyright 2009 François Charette and Philip Kime, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
