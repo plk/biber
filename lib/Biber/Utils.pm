@@ -28,7 +28,7 @@ All functions are exported by default.
 
 our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid 
     normalize_string normalize_string_underscore latexescape array_minus
-    getlabel remove_outer getinitials tersify ucinit } ;
+    remove_outer getinitials tersify ucinit } ;
 
 
 ######
@@ -36,11 +36,12 @@ our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid
 # 
 # TODO move to Biber::Constants ?
 #
-#  Arabic last names could begin with NONSORTDIACRITICS like ʿ or ‘ (e.g. ʿAlī)
-my $NONSORTDIACRITICS = qr/[\x{2bf}\x{2018}]/; # more? 
+# Semitic (or eventually other) last names could begin with NONSORTDIACRITICS like ʿ or ‘ (e.g. ʿAlī)
+my $NONSORTDIACRITICS = qr/[\x{2bf}\x{2018}]/; # more?
 
-#  Arabic names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
+# Semitic (or eventually other) names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
 my $NONSORTPREFIX = qr/\p{Ll}{2}-/; # etc
+
 #
 ######
 
@@ -123,8 +124,8 @@ sub bibfind {
 sub parsename {
     my ($namestr, $opts) = @_ ;
     $namestr =~ s/\\,\s*|{\\,\s*}/~/g; # necessary to get rid of LaTeX small spaces \,
-    # DEBUG carp "Parsing namestring $namestr\n" if $opts->{biberdebug} ;
-    my $usepre = $opts->{useprefix} || $CONFIG_DEFAULT{useprefix} ;
+    # DEBUG carp "Parsing namestring $namestr\n" if $opts->{debug} ;
+    my $usepre = $opts->{useprefix};
 
     my $lastname ;
     my $firstname ;
@@ -379,35 +380,6 @@ sub array_minus {
     return @result
 }
 
-=head2 getlabel
-    
-    Utility function to generate the labelalpha from the names of the author or editor
-
-=cut
-
-sub getlabel {
-    my ($namesref, $dt, $alphaothers) = @_ ;
-    my @names = @$namesref ;
-    my $label = "";
-    my @lastnames = map { normalize_string( $_->{lastname}, $dt ) } @names ;
-    my $noofauth  = scalar @names ;
-    if ( $noofauth > 3 ) {
-        $label =
-          substr( $lastnames[0], 0, 3 ) . $alphaothers ;
-    }
-    elsif ( $noofauth == 1 ) {
-        $label = substr( $lastnames[0], 0, 3 ) ;
-    }
-    else {
-        foreach my $n (@lastnames) {
-            $n =~ s/\P{Lu}//g ;
-            $label .= $n ;
-        }
-    }
-
-    return $label
-}
-
 =head2 remove_outer
     
     Remove surrounding curly brackets:  
@@ -488,6 +460,7 @@ sub ucinit {
 =head1 AUTHOR
 
 François Charette, C<< <firmicus at gmx.net> >>
+Philip Kime C<< <philip at kime.org.uk> >>
 
 =head1 BUGS
 
@@ -496,7 +469,7 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009 François Charette, all rights reserved.
+Copyright 2009 François Charette and Philip Kime, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

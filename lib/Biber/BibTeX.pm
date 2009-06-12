@@ -18,8 +18,8 @@ sub _text_bibtex_parse {
 
     my $encoding ;    
 
-    if ( $self->config('inputencoding') && ! $self->config('unicodebbl') ) {
-        $encoding = $self->config('inputencoding') ;
+    if ( $self->config('bibencoding') && ! $self->config('unicodebbl') ) {
+        $encoding = $self->config('bibencoding') ;
     } else {
         $encoding = "utf8" ;
     } ;
@@ -57,7 +57,7 @@ sub _text_bibtex_parse {
             next
         }
 
-        print "Processing $key\n" if $self->config('biberdebug') ;
+        print "Processing $key\n" if $self->config('debug') ;
 
         if ( $bibentries{ $origkey } or $bibentries{ $key } ) {
             $self->{errors}++;
@@ -111,6 +111,16 @@ sub _text_bibtex_parse {
                 }
             } ;
 
+						if (lc($entry->type) eq 'phdthesis') {
+                $bibentries{ $key }->{entrytype} = 'thesis' ;
+                $bibentries{ $key }->{type} = 'phdthesis' ;
+            } elsif (lc($entry->type) eq 'mathesis') {
+                $bibentries{ $key }->{entrytype} = 'thesis' ;
+                $bibentries{ $key }->{type} = 'mathesis' ;
+            } else {
+                $bibentries{ $key }->{entrytype} = $entry->type ;
+            }
+
             foreach my $f ( @ENTRIESTOSPLIT ) {
 
                 next unless $entry->exists($f) ;
@@ -119,10 +129,12 @@ sub _text_bibtex_parse {
                 my @tmp = map { decode($encoding, $_) } $entry->split($f) ;
 
                 if ($Biber::is_name_entry{$f}) {
+									# This is a special case - we need to get the option value even though the passed
+									# $self object isn't fully built yet so getblxoption() can't ask $self for the
+									# $entrytype for $key. So, we have to pass it explicitly.
+									my $useprefix = $self->getblxoption('useprefix', $key, $bibentries{$key}{entrytype}) ;
 
-                    my $useprefix = $self->getoption($key, 'useprefix') ;
-
-                    @tmp = map { parsename( $_ , {useprefix => $useprefix}) } @tmp ;
+									@tmp = map { parsename( $_ , {useprefix => $useprefix}) } @tmp ;
 
                 } else {
                     @tmp = map { remove_outer($_) } @tmp ;
@@ -137,16 +149,6 @@ sub _text_bibtex_parse {
                 $bibentries{ $key }->{$af} = [ @tmp ]                 
 
             } ;
-
-            if (lc($entry->type) eq 'phdthesis') {
-                $bibentries{ $key }->{entrytype} = 'thesis' ;
-                $bibentries{ $key }->{type} = 'phdthesis' ;
-            } elsif (lc($entry->type) eq 'mathesis') {
-                $bibentries{ $key }->{entrytype} = 'thesis' ;
-                $bibentries{ $key }->{type} = 'mathesis' ;
-            } else {
-                $bibentries{ $key }->{entrytype} = $entry->type ;
-            }
 
             $bibentries{ $key }->{datatype} = 'bibtex' ;
         }
@@ -178,6 +180,7 @@ Internal method ...
 =head1 AUTHOR
 
 François Charette, C<< <firmicus at gmx.net> >>
+Philip Kime C<< <philip at kime.org.uk> >>
 
 =head1 BUGS
 
@@ -186,7 +189,7 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009 François Charette, all rights reserved.
+Copyright 2009 François Charette and Philip Kime, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

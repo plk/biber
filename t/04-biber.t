@@ -9,13 +9,13 @@ use Biber;
 
 my $opts = { unicodebbl => 0, useprd => 1 };
 my $biber = Biber->new($opts);
-$biber->{config}{biblatex}{global}{maxline} = 100000 ;
+
    
 isa_ok($biber, "Biber");
 
 chdir("t/tdata") ;
 $biber->parse_auxfile("02-annotations.aux");
-
+$biber->{config}{biblatex}{global}{maxline} = 100000 ;
 
 my $bibfile = $biber->config('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile) ;
@@ -64,6 +64,7 @@ my $markey = q|\entry{markey}{online}{}
   \field{annotation}{An \texttt{online} entry for a tutorial. Note the format of the \texttt{date} field (\texttt{yyyy-mm-dd}) in the database file. It is also possible to use the fields \texttt{day}\slash \texttt{month}\slash \texttt{year} instead.}
   \field{day}{16}
   \field{month}{10}
+  \field{urldate}{2006-10-01}
   \field{version}{1.3}
   \field{hyphenation}{american}
   \field{year}{2005}

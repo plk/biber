@@ -85,7 +85,7 @@ sub _bibtex_prd_parse {
 
     foreach my $key ( @localkeys ) {
 
-        print "Processing $key\n" if $self->config('biberdebug') ;
+        print "Processing $key\n" if $self->config('debug') ;
 
         foreach my $alias (keys %ALIASES) {
 
@@ -125,8 +125,10 @@ sub _bibtex_prd_parse {
                 @tmp = map { _restore_and($_) } @tmp ;
                 
                 if ($Biber::is_name_entry{$ets}) {
-                    
-                    my $useprefix = $self->getoption($key, 'useprefix') ;
+									# This is a special case - we need to get the option value even though the passed
+									# $self object isn't fully built yet so getblxoption() can't ask $self for the
+									# $entrytype for $key. So, we have to pass it explicitly.
+									my $useprefix = $self->getblxoption('useprefix', $key, $bibentries{$key}{entrytype}) ;
 
                     @tmp = map { parsename( $_ , {useprefix => $useprefix}) } @tmp ;
 

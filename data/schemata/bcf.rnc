@@ -1,0 +1,265 @@
+namespace bcf = "https://sourceforge.net/projects/biblatex"
+
+start =
+  element bcf:controlfile {
+    attribute version { xsd:decimal },
+    element bcf:bibdata {
+      element bcf:datasource {
+        
+        ## only type="file" is supported at this stage
+        attribute type { xsd:NCName }?,
+        xsd:NCName
+      }+
+    },
+    element bcf:options {
+      attribute component { "biber" },
+      attribute type { "global" },
+      bibencoding?,
+      debug?,
+      # this is for a future version
+      # displaymode?,
+      inputenc?,
+      mincrossrefs?,
+      nonsortdiacritics?,
+      nonsortprefixes?
+    }?,
+    element bcf:options {
+      attribute component { "biblatex" },
+      attribute type { "global" },
+      alphaothers,
+      labelalpha,
+      labelname,
+      labelyear,
+      maxline,
+      maxnames,
+      minnames,
+      singletitle,
+      sortlos,
+      terseinits,
+      uniquename,
+      useauthor,
+      useeditor,
+      useprefix,
+      usetranslator
+    },
+    element bcf:options {
+      attribute component { "biblatex" },
+      attribute type { biblatex.entrytypes },
+      alphaothers?,
+      labelalpha?,
+      labelname?,
+      labelyear?,
+      maxline?,
+      maxnames?,
+      minnames?,
+      singletitle?,
+      sortlos?,
+      terseinits?,
+      uniquename?,
+      useauthor?,
+      useeditor?,
+      useprefix?,
+      usetranslator?
+    }*,
+    element bcf:sorting {
+      attribute type { "global" },
+      element bcf:sort {
+        attribute order { xsd:integer },
+        element bcf:sortitem {
+          attribute final { xsd:integer }?,
+          attribute order { xsd:integer },
+          text
+        }+
+      }+
+    },
+    element bcf:sorting {
+      attribute type { biblatex.entrytypes },
+      element bcf:sort {
+        attribute order { xsd:integer },
+        element bcf:sortitem {
+          attribute final { xsd:integer }?,
+          attribute order { xsd:integer },
+          text
+        }+
+      }+
+    }*,
+    element bcf:section {
+      attribute number { xsd:integer },
+      element bcf:citekey { xsd:NCName }+
+    }*
+  }
+biblatex.entrytypes =
+  "book"
+  | "article"
+  | "booklet"
+  | "collection"
+  | "inbook"
+  | "incollection"
+  | "proceedings"
+  | "inproceedings"
+  | "manual"
+  | "misc"
+  | "online"
+  | "patent"
+  | "periodical"
+  | "proceedings"
+  | "report"
+  | "thesis"
+  | "unpublished"
+terseinits =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "terseinits" },
+    element bcf:value { "0" | "1" }
+  }
+useprefix =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "useprefix" },
+    element bcf:value { "0" | "1" }
+  }
+useauthor =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "useauthor" },
+    element bcf:value { "0" | "1" }
+  }
+useeditor =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "useeditor" },
+    element bcf:value { "0" | "1" }
+  }
+usetranslator =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "usetranslator" },
+    element bcf:value { "0" | "1" }
+  }
+labelalpha =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "labelalpha" },
+    element bcf:value { "0" | "1" }
+  }
+labelyear =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "labelyear" },
+    element bcf:value { "0" | "1" }
+  }
+singletitle =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "singletitle" },
+    element bcf:value { "0" | "1" }
+  }
+uniquename =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "uniquename" },
+    element bcf:value { "0" | "1" }
+  }
+maxnames =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "maxnames" },
+    element bcf:value { xsd:integer }
+  }
+minnames =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "minnames" },
+    element bcf:value { xsd:integer }
+  }
+sortlos =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "sortlos" },
+    element bcf:value { "0" | "1" }
+  }
+labelname =
+  element bcf:option {
+    attribute type { "multivalued" },
+    element bcf:key { "labelname" },
+    element bcf:value {
+      attribute order { xsd:integer },
+      name.list
+    }+
+  }
+maxline =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "maxline" },
+    element bcf:value { xsd:integer }
+  }
+name.list = "shortauthor" | "shorteditor" | "author" | "editor" | "translator"
+mincrossrefs =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "mincrossrefs" },
+    element bcf:value { xsd:integer }
+  }
+debug =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "debug" },
+    element bcf:value { "0" | "1" }
+  }
+inputenc =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "inputenc" },
+    element bcf:value { xsd:NCName }
+  }
+bibencoding =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "bibencoding" },
+    element bcf:value { xsd:NCName }
+  }
+alphaothers =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "alphaothers" },
+    element bcf:value {
+      xsd:normalizedString { pattern = "\S+" }
+    }
+  }
+
+## these are perl regexes
+nonsortprefixes =
+  element bcf:nonsortprefixes {
+    element bcf:item { text }+
+  }
+nonsortdiacritics =
+  element bcf:nonsortdiacritics {
+    element bcf:item { text }+
+  }
+# This is for when biber/biblatex become truly multilingual:
+# displaymode = ( displaymode.textual, displaymode.persons, displaymode.locations )
+# 
+# displaymode.textual = element bcf:displaymode {
+# type = global | titles | persons | locations
+#  attribute type { "textual" }, 
+#  element bcf:mode { 
+#    attribute precedence { xsd:integer }, display.mode.textual
+#  }+,
+# }
+# displaymode.persons = element displaymode {
+# type = global | titles | persons | locations
+#  attribute type { "persons" }, 
+#  element bcf:mode { 
+#    attribute precedence { xsd:integer }, display.mode.proper
+#  }+,
+# }
+# displaymode.locations = element displaymode {
+# type = global | titles | persons | locations
+#  attribute type { "location" }, 
+#  element bcf:mode { 
+#    attribute precedence { xsd:integer }, display.mode.proper
+#  }+,
+# }
+# 
+# display.mode.textual = { "original" | "romanized" | "translated" }
+# display.mode.proper  = { "original" | "romanized" | "uniform" }

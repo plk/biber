@@ -1,0 +1,807 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="https://sourceforge.net/projects/biblatex" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+  <xs:element name="controlfile">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="bcf:bibdata"/>
+        <xs:element minOccurs="0" name="options">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:group minOccurs="0" ref="bcf:bibencoding"/>
+              <xs:group minOccurs="0" ref="bcf:debug"/>
+              <xs:group minOccurs="0" ref="bcf:inputenc"/>
+              <xs:group minOccurs="0" ref="bcf:mincrossrefs"/>
+              <xs:element minOccurs="0" ref="bcf:nonsortdiacritics"/>
+              <xs:element minOccurs="0" ref="bcf:nonsortprefixes"/>
+            </xs:sequence>
+            <xs:attribute name="component" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="biber"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="type" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="global"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="options">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:group ref="bcf:alphaothers"/>
+              <xs:group ref="bcf:labelalpha"/>
+              <xs:group ref="bcf:labelname"/>
+              <xs:group ref="bcf:labelyear"/>
+              <xs:group ref="bcf:maxline"/>
+              <xs:group ref="bcf:maxnames"/>
+              <xs:group ref="bcf:minnames"/>
+              <xs:group ref="bcf:singletitle"/>
+              <xs:group ref="bcf:sortlos"/>
+              <xs:group ref="bcf:terseinits"/>
+              <xs:group ref="bcf:uniquename"/>
+              <xs:group ref="bcf:useauthor"/>
+              <xs:group ref="bcf:useeditor"/>
+              <xs:group ref="bcf:useprefix"/>
+              <xs:group ref="bcf:usetranslator"/>
+            </xs:sequence>
+            <xs:attribute name="component" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="biblatex"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="type" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="global"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="options">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:group minOccurs="0" ref="bcf:alphaothers"/>
+              <xs:group minOccurs="0" ref="bcf:labelalpha"/>
+              <xs:group minOccurs="0" ref="bcf:labelname"/>
+              <xs:group minOccurs="0" ref="bcf:labelyear"/>
+              <xs:group minOccurs="0" ref="bcf:maxline"/>
+              <xs:group minOccurs="0" ref="bcf:maxnames"/>
+              <xs:group minOccurs="0" ref="bcf:minnames"/>
+              <xs:group minOccurs="0" ref="bcf:singletitle"/>
+              <xs:group minOccurs="0" ref="bcf:sortlos"/>
+              <xs:group minOccurs="0" ref="bcf:terseinits"/>
+              <xs:group minOccurs="0" ref="bcf:uniquename"/>
+              <xs:group minOccurs="0" ref="bcf:useauthor"/>
+              <xs:group minOccurs="0" ref="bcf:useeditor"/>
+              <xs:group minOccurs="0" ref="bcf:useprefix"/>
+              <xs:group minOccurs="0" ref="bcf:usetranslator"/>
+            </xs:sequence>
+            <xs:attribute name="component" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="biblatex"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="type" use="required" type="bcf:biblatex.entrytypes"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="sorting">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" ref="bcf:sort"/>
+            </xs:sequence>
+            <xs:attribute name="type" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="global"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="sorting">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" ref="bcf:sort"/>
+            </xs:sequence>
+            <xs:attribute name="type" use="required" type="bcf:biblatex.entrytypes"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="bcf:section"/>
+      </xs:sequence>
+      <xs:attribute name="version" use="required" type="xs:decimal"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="bibdata">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="bcf:datasource"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="datasource">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:NCName">
+          <xs:attribute name="type" type="xs:NCName">
+            <xs:annotation>
+              <xs:documentation>only type="file" is supported at this stage</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sort">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="bcf:sortitem"/>
+      </xs:sequence>
+      <xs:attribute name="order" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sortitem">
+    <xs:complexType mixed="true">
+      <xs:attribute name="final" type="xs:integer"/>
+      <xs:attribute name="order" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="section">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="bcf:citekey"/>
+      </xs:sequence>
+      <xs:attribute name="number" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="citekey" type="xs:NCName"/>
+  <xs:simpleType name="biblatex.entrytypes">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="book"/>
+      <xs:enumeration value="article"/>
+      <xs:enumeration value="booklet"/>
+      <xs:enumeration value="collection"/>
+      <xs:enumeration value="inbook"/>
+      <xs:enumeration value="incollection"/>
+      <xs:enumeration value="proceedings"/>
+      <xs:enumeration value="inproceedings"/>
+      <xs:enumeration value="manual"/>
+      <xs:enumeration value="misc"/>
+      <xs:enumeration value="online"/>
+      <xs:enumeration value="patent"/>
+      <xs:enumeration value="periodical"/>
+      <xs:enumeration value="proceedings"/>
+      <xs:enumeration value="report"/>
+      <xs:enumeration value="thesis"/>
+      <xs:enumeration value="unpublished"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:group name="terseinits">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="terseinits"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="useprefix">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="useprefix"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="useauthor">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="useauthor"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="useeditor">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="useeditor"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="usetranslator">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="usetranslator"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="labelalpha">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="labelalpha"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="labelyear">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="labelyear"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="singletitle">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="singletitle"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="uniquename">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="uniquename"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="maxnames">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="maxnames"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value" type="xs:integer"/>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="minnames">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="minnames"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value" type="xs:integer"/>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="sortlos">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="sortlos"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="labelname">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="labelname"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element maxOccurs="unbounded" name="value">
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:extension base="bcf:name.list">
+                    <xs:attribute name="order" use="required" type="xs:integer"/>
+                  </xs:extension>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="multivalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="maxline">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="maxline"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value" type="xs:integer"/>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:simpleType name="name.list">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="shortauthor"/>
+      <xs:enumeration value="shorteditor"/>
+      <xs:enumeration value="author"/>
+      <xs:enumeration value="editor"/>
+      <xs:enumeration value="translator"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:group name="mincrossrefs">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="mincrossrefs"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value" type="xs:integer"/>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="debug">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="debug"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="inputenc">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="inputenc"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value" type="xs:NCName"/>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="bibencoding">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="bibencoding"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value" type="xs:NCName"/>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="alphaothers">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="alphaothers"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value">
+              <xs:simpleType>
+                <xs:restriction base="xs:normalizedString">
+                  <xs:pattern value="\S+"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="nonsortprefixes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="bcf:item"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="item" type="xs:string"/>
+  <xs:element name="nonsortdiacritics">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="bcf:item"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+<!--
+  This is for when biber/biblatex become truly multilingual:
+  displaymode = ( displaymode.textual, displaymode.persons, displaymode.locations )
+  
+  displaymode.textual = element bcf:displaymode {
+  type = global | titles | persons | locations
+   attribute type { "textual" }, 
+   element bcf:mode { 
+     attribute precedence { xsd:integer }, display.mode.textual
+   }+,
+  }
+  displaymode.persons = element displaymode {
+  type = global | titles | persons | locations
+   attribute type { "persons" }, 
+   element bcf:mode { 
+     attribute precedence { xsd:integer }, display.mode.proper
+   }+,
+  }
+  displaymode.locations = element displaymode {
+  type = global | titles | persons | locations
+   attribute type { "location" }, 
+   element bcf:mode { 
+     attribute precedence { xsd:integer }, display.mode.proper
+   }+,
+  }
+  
+  display.mode.textual = { "original" | "romanized" | "translated" }
+  display.mode.proper  = { "original" | "romanized" | "uniform" }
+-->

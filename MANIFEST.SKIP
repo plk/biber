@@ -1,0 +1,17 @@
+^bin/wrapper_snippet
+^MANIFEST\.SKIP
+^t/_moredata
+^t/3rdparty
+^_build
+^_playground
+^Build
+^Makefile\.PL
+^META\.yml
+^blib
+^\.git
+^htdocs
+^dist
+^README\.win
+PRDgrammar
+^etc
+\.swp$

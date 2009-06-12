@@ -8,25 +8,27 @@ use IPC::Cmd qw( can_run run ) ;
 use Biber ;
 use Biber::Utils ;
 
-#---------------------------------------------------
+#Don't remove the next line!
+#<wrapper_snippet>---------------------------------
 
 use Getopt::Long qw/:config no_ignore_case/ ;
 my $opts = {} ;
 GetOptions(
     $opts,
+    'v2',
     'fastsort|f!',
     'collate_options|c=s',
     'mincrossrefs|m=s',
     'unicodebbl|U!',
     'unicodebib|u!',
-    'inputencoding|i=s',
+    'inputenc|i=s',  ## TODO
+    'bibencoding|e=s',
     'useprd|p!',
     'bibdata|d=s',
     'outfile|O=s',
     'allentries|a!',
-#    'validate|V!', 
-    'maxline|l=s',
-    'biberdebug|D!',
+    'validate|V!',
+    'debug|D!',
     'quiet|q',
     'help|h|?',
     'version|v'
@@ -56,23 +58,29 @@ my $biber = Biber->new($opts) ;
 # Parse aux file
 #=====================================================
 
-my $basefile ;
-my $bblfile ;
+my $auxfile ;
+my $bblfile ; 
 
 if ( $opts->{allentries} && $opts->{bibdata} ) {
     $bblfile = $opts->{bibdata}->[0] ;
     $bblfile =~ s/(?:\.(bib|xml|dbxml))?$/\.bbl/ ;
 }
 else {
-    my $auxfile = $ARGV[0] or croak usage() ;
-    $basefile = $auxfile ;
-    $basefile =~ s/\.aux$// ;
-    $bblfile = "$basefile.bbl" ;
-
-    $biber->parse_auxfiles($basefile);
+    $auxfile = $ARGV[0] or croak usage() ;
+    $auxfile .= '.aux' unless $auxfile =~ m/\.aux$/ ;
+    $bblfile = $auxfile ;
+    $bblfile =~ s/aux$/bbl/ ;
+    #V2
+    if ($opts->{v2}) {
+      print "** USING EXPERIMENTAL V2 OPTIONS CODE!! **\n";
+      $biber->parse_auxfile_v2($auxfile);
+    }
+    else {
+      $biber->parse_auxfile($auxfile);
+    }
 }
 
-if ($biber->config('biberdebug')) {
+if ($biber->config('debug')) {
     $biber->_dump('biber.dump0') ;
     print ">> Dumped initial biber object for debugging in file biber.dump0\n"
 }
@@ -100,14 +108,14 @@ foreach my $bib (@{ $biber->config('bibdata') }) {
     }
 }
 
-if ($biber->config('biberdebug')) {
+if ($biber->config('debug')) {
     $biber->_dump('biber.dump1') ;
     print ">> Dumped postparse biber object for debugging in file biber.dump1\n"
 }
 
 $biber->prepare ; 
 
-if ($biber->config('biberdebug')) {
+if ($biber->config('debug')) {
     $biber->_dump('biber.dump2') ;
     print ">> Dumped final biber object for debugging in file biber.dump2\n"
 }
@@ -162,6 +170,8 @@ Usage:  $me file.aux
 
 Options:
   --help|-h              Show this help message.
+  --v2                   Enable experimental Biblatex/Biber version 2 options processing.
+                         Don't use this unless you truly understand what it means.
   --version|-v           Display version number.
   --mincrossrefs|-m <n>  Set threshold for crossrefs.
   --fastsort|-f          Use Perl’s sort instead of Unicode::Collate for sorting.
@@ -177,11 +187,13 @@ Options:
                          (NB: this ignores the .aux file.)
   --unicodebib|-u        Assume bib file is UTF-8 and skip latex_decode.
   --unicodebbl|-U        Encode the bbl output in UTF-8.
-  --inputencoding|-i [encoding] 
+  --bibencoding|-e [encoding] 
                          Specify the encoding of the bib file(s). The bbl file 
                          will also have this encoding when --unicodebbl is false.
                          See "perldoc Encode::Supported" for a list of supported encodings.
-  --biberdebug|-D        Turn on debugging for biber.
+  --validate|-V          Schema Validate both the <basename>.bcf biblatex control file
+                         and biblatexml bib files (if used). Dies on validation error.
+  --debug|-D             Turn on debugging for biber.
   --quiet|-q             Turn warnings off.
     \n]
 }
@@ -198,7 +210,7 @@ C<biber> - A bibtex replacement for users of biblatex
 
 biber [ { --bibdata | -d } database.{bib|xml|dbxml} ] [ --useprd | -p ] 
       [ --mincrossrefs | -m ] [ --fastsort | -f ] [ --unicodebib | -u ] 
-      [ --unicodebbl | -U ] [ --biberdebug | -D ] [ { --outfile | -O } filename ] 
+      [ --unicodebbl | -U ] [ --debug | -D ] [ { --outfile | -O } filename ] 
       file.aux
 
 biber --bibdata database --allentries [ --outfile filename ] [ ... ]

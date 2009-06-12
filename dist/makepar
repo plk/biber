@@ -1,0 +1,1 @@
+pp -M Readonly::XS -p -o biber.par bin/*
