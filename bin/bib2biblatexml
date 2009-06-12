@@ -88,8 +88,8 @@ $writer->startTag("bib:entries", 'xmlns:bib'=>'http://biblatex-biber.sourceforge
 my $count = 0 ;
 
 for my $citekey ( sort keys %bibentries ) {
-	$count++ ;
-	my $entry = $bibentries{$citekey} ;
+  $count++ ;
+  my $entry = $bibentries{$citekey} ;
     my @entryfields = keys %$entry ;
     my @specialfields = ( @NAMEFIELDS, @LISTFIELDS, @TITLEFIELDS ) ;
     my @standardfields = ( @RANGEFIELDS, @VERBATIMFIELDS, 
@@ -97,68 +97,68 @@ for my $citekey ( sort keys %bibentries ) {
     my @officialfields = ( @specialfields, @standardfields, 'entrytype', 'datatype' ) ;
     my @privatefields = array_minus( \@entryfields, \@officialfields ) ;
 
-	if ($entry->{howpublished} and $entry->{type}) {
-		$writer->startTag("bib:entry", 
-			'id' => $citekey, 
-			'entrytype' => $entry->{entrytype}, 
-			'type' => $entry->{type},
-			'howpublished' => $entry->{howpublished}) ; 
-	}
-	elsif ( $entry->{type} ) { 
-		$writer->startTag('bib:entry',
-			'id' => $citekey, 
-			'entrytype' => $entry->{entrytype}, 
-			'type' => $entry->{type}) ; 
-	}
-	elsif ( $entry->{howpublished} ) { 
-		$writer->startTag('bib:entry',
-			'id' => $citekey, 
-			'entrytype' => $entry->{entrytype}, 
-			'howpublished' => $entry->{howpublished}) ; 
-	} else {
-		$writer->startTag('bib:entry',
-			'id' => $citekey, 
-			'entrytype' => $entry->{entrytype}) ; 
+  if ($entry->{howpublished} and $entry->{type}) {
+    $writer->startTag("bib:entry", 
+      'id' => $citekey, 
+      'entrytype' => $entry->{entrytype}, 
+      'type' => $entry->{type},
+      'howpublished' => $entry->{howpublished}) ; 
+  }
+  elsif ( $entry->{type} ) { 
+    $writer->startTag('bib:entry',
+      'id' => $citekey, 
+      'entrytype' => $entry->{entrytype}, 
+      'type' => $entry->{type}) ; 
+  }
+  elsif ( $entry->{howpublished} ) { 
+    $writer->startTag('bib:entry',
+      'id' => $citekey, 
+      'entrytype' => $entry->{entrytype}, 
+      'howpublished' => $entry->{howpublished}) ; 
+  } else {
+    $writer->startTag('bib:entry',
+      'id' => $citekey, 
+      'entrytype' => $entry->{entrytype}) ; 
     } ;
-	
+  
 
-	foreach my $field (@NAMEFIELDS) {
-		if ($entry->{$field}) {
-			my @nf = @{$entry->{$field}} ;
-			if ( @nf and $nf[-1]->{"lastname"} and $nf[-1]->{"lastname"} eq "others" ) {
-				$writer->startTag("bib:$field", "andothers" => "true") ;
-				pop @nf ;
-			}
-			else {
-			$writer->startTag("bib:$field") ;
-			} ;
-			for my $i (0..$#nf) {
-				$writer->startTag("bib:person") ; # TODO add attribute gender if exists
-				# if there is no firstname, we take the lastname as name string
-				if (! $nf[$i]->{"firstname"}) {
-					$writer->characters($nf[$i]->{"lastname"}) ;
-				} else {
-					$writer->dataElement("bib:first", $nf[$i]->{"firstname"}) ;
-					$writer->dataElement("bib:prefix", $nf[$i]->{"prefix"}) if $nf[$i]->{"prefix"} ;
-					$writer->dataElement("bib:last", $nf[$i]->{"lastname"}) ;
-					$writer->dataElement("bib:suffix", $nf[$i]->{"suffix"}) if $nf[$i]->{"suffix"} ;
-				} ;
-				$writer->endTag() ; # person
-			} ;
-			$writer->endTag() ; # $field
-		}
-	} ; 
-	foreach my $field (@TITLEFIELDS) {
-		if ($entry->{$field}) {
-				$writer->startTag("bib:$field") ;
-			$writer->characters($entry->{$field}) ;
-			$writer->endTag() ; # $field
-		}
-	} ;
-	
-	foreach my $field (@LISTFIELDS) {
-		if ($entry->{$field}) {
-			
+  foreach my $field (@NAMEFIELDS) {
+    if ($entry->{$field}) {
+      my @nf = @{$entry->{$field}} ;
+      if ( @nf and $nf[-1]->{"lastname"} and $nf[-1]->{"lastname"} eq "others" ) {
+        $writer->startTag("bib:$field", "andothers" => "true") ;
+        pop @nf ;
+      }
+      else {
+      $writer->startTag("bib:$field") ;
+      } ;
+      for my $i (0..$#nf) {
+        $writer->startTag("bib:person") ; # TODO add attribute gender if exists
+        # if there is no firstname, we take the lastname as name string
+        if (! $nf[$i]->{"firstname"}) {
+          $writer->characters($nf[$i]->{"lastname"}) ;
+        } else {
+          $writer->dataElement("bib:first", $nf[$i]->{"firstname"}) ;
+          $writer->dataElement("bib:prefix", $nf[$i]->{"prefix"}) if $nf[$i]->{"prefix"} ;
+          $writer->dataElement("bib:last", $nf[$i]->{"lastname"}) ;
+          $writer->dataElement("bib:suffix", $nf[$i]->{"suffix"}) if $nf[$i]->{"suffix"} ;
+        } ;
+        $writer->endTag() ; # person
+      } ;
+      $writer->endTag() ; # $field
+    }
+  } ; 
+  foreach my $field (@TITLEFIELDS) {
+    if ($entry->{$field}) {
+        $writer->startTag("bib:$field") ;
+      $writer->characters($entry->{$field}) ;
+      $writer->endTag() ; # $field
+    }
+  } ;
+  
+  foreach my $field (@LISTFIELDS) {
+    if ($entry->{$field}) {
+      
             my @lf = @{$entry->{$field}} ;
             
             my $afield = $field ;
@@ -166,31 +166,31 @@ for my $citekey ( sort keys %bibentries ) {
             if ( $ALIASES{$field} ) {
                 $afield = $ALIASES{$field} 
             } ;
-			
+      
             if ( $#lf > 0 ) {
-				if ($lf[-1] eq "others" ) {
-					$writer->startTag("bib:$afield", "andothers"=>"true") ;
-					pop @lf ;
-				} 
-				else {
-					$writer->startTag("bib:$afield") ;
-				} ;
-				for my $i (0..$#lf) {
-					$writer->startTag("bib:item") ;
-					$writer->characters($lf[$i]) ;
-					$writer->endTag() ; #item
-				} ;
-				$writer->endTag() ; #field
-			}
-			else {
-				$writer->startTag("bib:$afield") ;
-				$writer->characters($entry->{$afield}->[0]) ;
-				$writer->endTag() ; #field
-			}
-		}
-	} ;
+        if ($lf[-1] eq "others" ) {
+          $writer->startTag("bib:$afield", "andothers"=>"true") ;
+          pop @lf ;
+        } 
+        else {
+          $writer->startTag("bib:$afield") ;
+        } ;
+        for my $i (0..$#lf) {
+          $writer->startTag("bib:item") ;
+          $writer->characters($lf[$i]) ;
+          $writer->endTag() ; #item
+        } ;
+        $writer->endTag() ; #field
+      }
+      else {
+        $writer->startTag("bib:$afield") ;
+        $writer->characters($entry->{$afield}->[0]) ;
+        $writer->endTag() ; #field
+      }
+    }
+  } ;
 
-	foreach my $field (array_minus( \@standardfields, ['type', 'howpublished'] )) {
+  foreach my $field (array_minus( \@standardfields, ['type', 'howpublished'] )) {
         if ($entry->{$field}) {
             if ( $field eq 'month' && $entry->{month} =~ m/[a-z]/i) {
                 
@@ -219,19 +219,19 @@ for my $citekey ( sort keys %bibentries ) {
                     $writer->dataElement('bib:pages', $entry->{pages}) ;
                 }
             }
-	    	else {
+        else {
 
                 my $afield = $field;
             
                 if ( $ALIASES{$field} ) {
                     $afield = $ALIASES{$field}
                 }
-			
-    		    $writer->dataElement("bib:$afield", $entry->{$field}) ;
-	        }
+      
+            $writer->dataElement("bib:$afield", $entry->{$field}) ;
+          }
         # we do it separately to get range and to fix pages -> pagetotal
         }
-	}
+  }
 
     if ($#privatefields > 0) {
 
@@ -251,7 +251,7 @@ for my $citekey ( sort keys %bibentries ) {
         }
         $writer->endTag() ; #user
     }
-	$writer->endTag() ; #entry
+  $writer->endTag() ; #entry
 } ;
 
 $writer->endTag() ; #entries

@@ -111,7 +111,7 @@ sub _text_bibtex_parse {
                 }
             } ;
 
-						if (lc($entry->type) eq 'phdthesis') {
+            if (lc($entry->type) eq 'phdthesis') {
                 $bibentries{ $key }->{entrytype} = 'thesis' ;
                 $bibentries{ $key }->{type} = 'phdthesis' ;
             } elsif (lc($entry->type) eq 'mathesis') {
@@ -129,12 +129,12 @@ sub _text_bibtex_parse {
                 my @tmp = map { decode($encoding, $_) } $entry->split($f) ;
 
                 if ($Biber::is_name_entry{$f}) {
-									# This is a special case - we need to get the option value even though the passed
-									# $self object isn't fully built yet so getblxoption() can't ask $self for the
-									# $entrytype for $key. So, we have to pass it explicitly.
-									my $useprefix = $self->getblxoption('useprefix', $key, $bibentries{$key}{entrytype}) ;
+                  # This is a special case - we need to get the option value even though the passed
+                  # $self object isn't fully built yet so getblxoption() can't ask $self for the
+                  # $entrytype for $key. So, we have to pass it explicitly.
+                  my $useprefix = $self->getblxoption('useprefix', $key, $bibentries{$key}{entrytype}) ;
 
-									@tmp = map { parsename( $_ , {useprefix => $useprefix}) } @tmp ;
+                  @tmp = map { parsename( $_ , {useprefix => $useprefix}) } @tmp ;
 
                 } else {
                     @tmp = map { remove_outer($_) } @tmp ;

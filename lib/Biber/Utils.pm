@@ -329,15 +329,15 @@ Escapes the LaTeX special characters { } & ^ _ $ and %
 =cut
 
 sub latexescape { 
-	my $str = shift ;
-	my @latexspecials = qw| { } & _ % | ; 
-	foreach my $char (@latexspecials) {
-		$str =~ s/^$char/\\$char/g ; 
-		$str =~ s/([^\\])$char/$1\\$char/g ;
-	} ;
+  my $str = shift ;
+  my @latexspecials = qw| { } & _ % | ; 
+  foreach my $char (@latexspecials) {
+    $str =~ s/^$char/\\$char/g ; 
+    $str =~ s/([^\\])$char/$1\\$char/g ;
+  } ;
     $str =~ s/\$/\\\$/g ;
     $str =~ s/\^/\\\^/g ;
-	return $str
+  return $str
 }
 
 =head2 terseinitials
@@ -351,7 +351,7 @@ sub terseinitials {
     my $str = shift ;
     $str =~ s/^$NONSORTPREFIX// ;
     $str =~ s/^$NONSORTDIACRITICS// ;
-	$str =~ s/\\[\p{L}]+\s*//g ;  # remove tex macros
+    $str =~ s/\\[\p{L}]+\s*//g ;  # remove tex macros
     $str =~ s/^{(\p{L}).+}$/$1/g ;    # {Aaaa Bbbbb Ccccc} -> A
     $str =~ s/{\s+(\S+)\s+}//g ;  # Aaaaa{ de }Bbbb -> AaaaaBbbbb
     # get rid of Punctuation (except DashPunctuation), Symbol and Other characters
@@ -368,11 +368,11 @@ array_minus(\@a, \@b) returns all elements in @a that are not in @b
 =cut
 
 sub array_minus {
-	my ($a, $b) = @_ ;
-	my %countb = () ;
+  my ($a, $b) = @_ ;
+  my %countb = () ;
     foreach my $elem (@$b) { 
-		$countb{$elem}++ 
-	} ;
+    $countb{$elem}++ 
+  } ;
     my @result ;
     foreach my $elem (@$a) {
         push @result, $elem unless $countb{$elem}
@@ -451,7 +451,7 @@ sub tersify {
 =cut
 
 sub ucinit {
-        my	$str = shift ;
+        my $str = shift ;
         $str = lc($str) ;
         $str =~ s/\b(\p{Ll})/\u$1/g ;
         return $str;
