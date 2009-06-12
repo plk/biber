@@ -134,18 +134,18 @@ getblxoption('option', 'citekey') returns the value of option. In order of decre
 
 sub getblxoption {
     my ($self, $opt, $citekey, $et) = @_ ;
-		# return global option value if no citekey is passed
-		return $self->{config}{biblatex}{global}{$opt} unless defined($citekey);
-		# Else get the entrytype and continue to check local, then type, then global options
-		# If entrytype is passed explicitly, use it (for cases where the object doesn't yet know
-		# its entrytype since this sub is being called as it's being constructed)
-		my $entrytype = defined($et) ? $et : $self->{bib}{$citekey}{entrytype};
+    # return global option value if no citekey is passed
+    return $self->{config}{biblatex}{global}{$opt} unless defined($citekey);
+    # Else get the entrytype and continue to check local, then type, then global options
+    # If entrytype is passed explicitly, use it (for cases where the object doesn't yet know
+    # its entrytype since this sub is being called as it's being constructed)
+    my $entrytype = defined($et) ? $et : $self->{bib}{$citekey}{entrytype};
     if ( defined $Biber::localoptions{$citekey} and defined $Biber::localoptions{$citekey}{$opt}) {
         return $Biber::localoptions{$citekey}{$opt} ;
     }
-		elsif (defined $self->{config}{biblatex}{$entrytype} and defined $self->{config}{biblatex}{$entrytype}{$opt}) {
-			return $self->{config}{biblatex}{$entrytype}{$opt};
-		}
+    elsif (defined $self->{config}{biblatex}{$entrytype} and defined $self->{config}{biblatex}{$entrytype}{$opt}) {
+      return $self->{config}{biblatex}{$entrytype}{$opt};
+    }
     else {
         return $self->{config}{biblatex}{global}{$opt};
     }
@@ -160,26 +160,26 @@ our $sorting_sep = '0';
 
 # The keys are defined by BibLaTeX and passed in the control file
 our $dispatch_sorting = {
-                         '0000'         =>  \&_sort_0000,
-						 '9999'         =>  \&_sort_9999,
-						 'author'       =>  \&_sort_author,
-                         'debug'        =>  \&_sort_debug,
-						 'editor'       =>  \&_sort_editor,
-						 'issuetitle'   =>  \&_sort_issuetitle,
-						 'journal'      =>  \&_sort_journal,
-						 'labelalpha'   =>  \&_sort_labelalpha,
-                         'mm'           =>  \&_sort_mm,
-                         'presort'      =>  \&_sort_presort,
-						 'sortkey'      =>  \&_sort_sortkey,
-						 'sortname'     =>  \&_sort_sortname,
-						 'sorttitle'    =>  \&_sort_sorttitle,
-						 'sortyear'     =>  \&_sort_sortyear,
-						 'sortyearD'    =>  \&_sort_sortyear_descend,
-						 'title'        =>  \&_sort_title,
-						 'translator'   =>  \&_sort_translator,
-                         'volume'       =>  \&_sort_volume,
-                         'year'         =>  \&_sort_year,
-                         'yearD'        =>  \&_sort_year_descend,
+             '0000'         =>  \&_sort_0000,
+             '9999'         =>  \&_sort_9999,
+             'author'       =>  \&_sort_author,
+             'debug'        =>  \&_sort_debug,
+             'editor'       =>  \&_sort_editor,
+             'issuetitle'   =>  \&_sort_issuetitle,
+             'journal'      =>  \&_sort_journal,
+             'labelalpha'   =>  \&_sort_labelalpha,
+             'mm'           =>  \&_sort_mm,
+             'presort'      =>  \&_sort_presort,
+             'sortkey'      =>  \&_sort_sortkey,
+             'sortname'     =>  \&_sort_sortname,
+             'sorttitle'    =>  \&_sort_sorttitle,
+             'sortyear'     =>  \&_sort_sortyear,
+             'sortyearD'    =>  \&_sort_sortyear_descend,
+             'title'        =>  \&_sort_title,
+             'translator'   =>  \&_sort_translator,
+             'volume'       =>  \&_sort_volume,
+             'year'         =>  \&_sort_year,
+             'yearD'        =>  \&_sort_year_descend,
 };
 
 # Main sorting dispath method
@@ -190,9 +190,9 @@ sub _dispatch_sorting {
 
 # Conjunctive set of sorting sets
 sub _generatesortstring {
-	my ($self, $citekey) = @_ ;
-	my $be = $self->{bib}{$citekey} ;
-	my $sortscheme = $self->getblxoption('sorting', $citekey);
+  my ($self, $citekey) = @_ ;
+  my $be = $self->{bib}{$citekey} ;
+  my $sortscheme = $self->getblxoption('sorting', $citekey);
   my $sortstring;
   $BIBER_SORT_FINAL = 0; # reset sorting short-circuit
   foreach my $sortset (@{$sortscheme}) {
@@ -210,7 +210,7 @@ sub _generatesortstring {
 
 # Disjunctive sorting set
 sub _sortset {
-	my ($self, $sortset, $citekey) = @_ ;
+  my ($self, $sortset, $citekey) = @_ ;
   foreach my $sortelement (@{$sortset}) {
     my ($sortelementname, $sortelementattributes) = %{$sortelement};
     my $string = $self->_dispatch_sorting($sortelementname,$citekey);
@@ -228,22 +228,22 @@ sub _sortset {
 ##############################################
 
 sub _sort_0000 {
-	return '0000';
+  return '0000';
 }
 
 sub _sort_9999 {
-	return '9999';
+  return '9999';
 }
 
 sub _sort_author {
   my ($self, $citekey) = @_ ;
   my $be = $self->{bib}{$citekey} ;
-	if ($self->getblxoption('useauthor', $citekey) and $be->{author}) {
-		return $self->_namestring($citekey, 'author');
-	}
-	else {
-		return '';
-	}
+  if ($self->getblxoption('useauthor', $citekey) and $be->{author}) {
+    return $self->_namestring($citekey, 'author');
+  }
+  else {
+    return '';
+  }
 }
 
 sub _sort_debug {
@@ -254,40 +254,40 @@ sub _sort_debug {
 sub _sort_editor {
   my ($self, $citekey) = @_ ;
   my $be = $self->{bib}{$citekey} ;
-	if ($self->getblxoption('useeditor', $citekey) and $be->{editor}) {
-		return $self->_namestring($citekey, 'editor');
-	}
-	else {
-		return '';
-	}
+  if ($self->getblxoption('useeditor', $citekey) and $be->{editor}) {
+    return $self->_namestring($citekey, 'editor');
+  }
+  else {
+    return '';
+  }
 }
 
 sub _sort_issuetitle {
   my ($self, $citekey) = @_ ;
   my $be = $self->{bib}{$citekey} ;
-	my $no_decode = $self->_nodecode($citekey);
+  my $no_decode = $self->_nodecode($citekey);
   if ($be->{issuetitle}) {
-		return normalize_string( $be->{issuetitle}, $no_decode );
-	}
-	else {
-		return '';
-	}
+    return normalize_string( $be->{issuetitle}, $no_decode );
+  }
+  else {
+    return '';
+  }
 }
 
 sub _sort_journal {
   my ($self, $citekey) = @_ ;
   my $be = $self->{bib}{$citekey} ;
-	my $no_decode = $self->_nodecode($citekey);
+  my $no_decode = $self->_nodecode($citekey);
   if ($be->{journal}) {
-		return normalize_string( $be->{journal}, $no_decode );
-	}
-	else {
-		return '';
-	}
+    return normalize_string( $be->{journal}, $no_decode );
+  }
+  else {
+    return '';
+  }
 }
 
 sub _sort_mm {
-	return 'mm';
+  return 'mm';
 }
 
 sub _sort_labelalpha {
@@ -304,7 +304,7 @@ sub _sort_labelalpha {
 sub _sort_presort {
   my ($self, $citekey) = @_ ;
   my $be = $self->{bib}{$citekey} ;
-	return $be->{presort} ? $be->{presort} : '';
+  return $be->{presort} ? $be->{presort} : '';
 }
 
 sub _sort_sortkey {
@@ -324,72 +324,72 @@ sub _sort_sortname {
   my ($self, $citekey) = @_ ;
   my $be = $self->{bib}{$citekey} ;
   # see biblatex manual §3.4 - sortname is ignored if no use<name> option is defined
-	if ($be->{sortname} and
-			($self->getblxoption('useauthor', $citekey) or
-			 $self->getblxoption('useeditor', $citekey) or
-			 $self->getblxoption('useetranslator', $citekey))) {
-		return $self->_namestring($citekey, 'sortname');
-	}
-	else {
-		return '';
-	}
+  if ($be->{sortname} and
+      ($self->getblxoption('useauthor', $citekey) or
+       $self->getblxoption('useeditor', $citekey) or
+       $self->getblxoption('useetranslator', $citekey))) {
+    return $self->_namestring($citekey, 'sortname');
+  }
+  else {
+    return '';
+  }
 }
 
 sub _sort_sorttitle {
   my ($self, $citekey) = @_ ;
   my $be = $self->{bib}{$citekey} ;
-	my $no_decode = $self->_nodecode($citekey);
-	if ($be->{sorttitle}) {
-		return normalize_string( $be->{sorttitle}, $no_decode );
-	}
-	else {
-		return '';
-	}
+  my $no_decode = $self->_nodecode($citekey);
+  if ($be->{sorttitle}) {
+    return normalize_string( $be->{sorttitle}, $no_decode );
+  }
+  else {
+    return '';
+  }
 }
 
 sub _sort_sortyear {
   my ($self, $citekey) = @_ ;
   my $be = $self->{bib}{$citekey} ;
-	if ($be->{sortyear}) {
-		return substr( $be->{sortyear}, 0, 4 ) ;
-	}
-	else {
-		return '';
-	}
+  if ($be->{sortyear}) {
+    return substr( $be->{sortyear}, 0, 4 ) ;
+  }
+  else {
+    return '';
+  }
 }
 
 sub _sort_sortyear_descend {
   my ($self, $citekey) = @_ ;
   my $be = $self->{bib}{$citekey} ;
-	if ($be->{sortyear}) {
-		return 9999 - substr($be->{sortyear}, 0, 4);
+  if ($be->{sortyear}) {
+    return 9999 - substr($be->{sortyear}, 0, 4);
     }
-	else {
-		return '';
-	}
+  else {
+    return '';
+  }
 }
 
 sub _sort_title {
   my ($self, $citekey) = @_ ;
   my $be = $self->{bib}{$citekey} ;
-	my $no_decode = $self->_nodecode($citekey);
+  my $no_decode = $self->_nodecode($citekey);
   if ($be->{title}) {
-		return normalize_string( $be->{title}, $no_decode );
-	}
-	else {
-		return '';
-	}
+    return normalize_string( $be->{title}, $no_decode );
+  }
+  else {
+    return '';
+  }
 }
 
 sub _sort_translator {
   my ($self, $citekey) = @_ ;
   my $be = $self->{bib}{$citekey} ;
-	if ($self->getblxoption('usetranslator', $citekey) and $be->{translator}) {
-		return $self->_namestring($citekey, 'translator');
-	}
-	else {
-		return '';
-	}
+  if ($self->getblxoption('usetranslator', $citekey) and $be->{translator}) {
+    return $self->_namestring($citekey, 'translator');
+  }
+  else {
+    return '';
+  }
 }
 
 sub _sort_volume {
@@ -406,23 +406,23 @@ sub _sort_volume {
 sub _sort_year {
   my ($self, $citekey) = @_ ;
   my $be = $self->{bib}{$citekey} ;
-	if ($be->{year}) {
-		return substr( $be->{year}, 0, 4 ) ;
-	}
-	else {
-		return '';
-	}
+  if ($be->{year}) {
+    return substr( $be->{year}, 0, 4 ) ;
+  }
+  else {
+    return '';
+  }
 }
 
 sub _sort_year_descend {
   my ($self, $citekey) = @_ ;
   my $be = $self->{bib}{$citekey} ;
-	if ($be->{year}) {
-		return 9999 - substr($be->{year}, 0, 4);
+  if ($be->{year}) {
+    return 9999 - substr($be->{year}, 0, 4);
     }
-	else {
-		return '';
-	}
+  else {
+    return '';
+  }
 }
 
 #========================================================
@@ -430,11 +430,11 @@ sub _sort_year_descend {
 #========================================================
 
 sub _nodecode {
-	my ($self, $citekey) = @_ ;
-	my $no_decode = ($self->{config}->{unicodebib} or
-								   $self->{config}->{fastsort} or
-									 $self->{bib}->{$citekey}->{datatype} eq 'xml');
-	return $no_decode;
+  my ($self, $citekey) = @_ ;
+  my $no_decode = ($self->{config}->{unicodebib} or
+                   $self->{config}->{fastsort} or
+                   $self->{bib}->{$citekey}->{datatype} eq 'xml');
+  return $no_decode;
 }
 
 sub _getyearstring {
@@ -464,10 +464,10 @@ sub _getnamestring {
 }
 
 sub _namestring {
-	my ( $self, $citekey, $field ) = @_ ;
+  my ( $self, $citekey, $field ) = @_ ;
   my $be = $self->{bib}->{$citekey} ;
-	
-	my $str = "" ;
+  
+  my $str = "" ;
   my @names = @{ $be->{$field} } ;
   my $truncated = 0 ;
   ## perform truncation according to options minnames, maxnames
@@ -533,7 +533,7 @@ sub _defined_and_nonempty {
 
 #TODO this could be done earlier as a method and stored in the object
 sub _print_name {
-	my ($self, $au, $citekey) = @_ ;
+  my ($self, $au, $citekey) = @_ ;
     my %nh  = %{$au} ;
     my $ln  = $nh{lastname} ;
     my $lni = getinitials($ln) ;
@@ -606,10 +606,10 @@ sub _print_biblatex_entry {
 
 #    delete $be->{entrytype}; #forgot why this is needed!
 
-		# make labelname a copy of the right thing before output of name lists
-		if (_defined_and_nonempty($be->{labelnamename})) { # avoid unitialised variable warnings
-			$be->{labelname} = $be->{$be->{labelnamename}};
-		}
+    # make labelname a copy of the right thing before output of name lists
+    if (_defined_and_nonempty($be->{labelnamename})) { # avoid unitialised variable warnings
+      $be->{labelname} = $be->{$be->{labelnamename}};
+    }
 
     foreach my $namefield (@NAMEFIELDS) {
         next if $SKIPFIELDS{$namefield} ;
@@ -702,16 +702,16 @@ sub _print_biblatex_entry {
         my $lastname ;
         my $nameinitstr ;
 
-				if ($lname) {
-					if ($lname =~ m/\Ashort/xms) { # short* fields are just strings, not complex data
-						$lastname    = $be->{$lname} ;
-						$nameinitstr = $be->{$lname} ;
-					} else {
-						$name = $be->{$lname}->[0] ;
-						$lastname = $name->{lastname} ;
-						$nameinitstr = $name->{nameinitstring} ;
-					}
-				}
+        if ($lname) {
+          if ($lname =~ m/\Ashort/xms) { # short* fields are just strings, not complex data
+            $lastname    = $be->{$lname} ;
+            $nameinitstr = $be->{$lname} ;
+          } else {
+            $name = $be->{$lname}->[0] ;
+            $lastname = $name->{lastname} ;
+            $nameinitstr = $name->{nameinitstring} ;
+          }
+        }
 
         if (scalar keys %{ $Biber::uniquenamecount{$lastname} } == 1 ) { 
             $str .= "  \\count{uniquename}{0}\n" ;
