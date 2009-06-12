@@ -3355,6 +3355,6 @@ under the same terms as Perl itself.
 
 =cut
 
-# vim: set tabstop=4 shiftwidth=4:
+# vim: set tabstop=2 shiftwidth=2 expandtab:
 
 
