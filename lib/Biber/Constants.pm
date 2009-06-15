@@ -74,7 +74,7 @@ Readonly::Array our @TITLEFIELDS => qw{ title
 
 # Fields that are used internally by biber but are not passed to the bbl output
 Readonly::Array our @SKIPFIELDS => qw{ sortname sorttitle presort sortkey
-  sortyear library remarks } ;
+  sortyear library remarks date urldate } ;
 our %SKIPFIELDS = map { $_ => 1 } @SKIPFIELDS ;
 
 Readonly::Array our @RANGEFIELDS     =>  qw{ origyear pages year } ;
