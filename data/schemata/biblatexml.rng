@@ -421,6 +421,48 @@ We now define the biblatexml elements</a:documentation>
       <text/>
     </element>
   </define>
+  <define name="eventtitle">
+    <choice>
+      <group>
+        <element name="eventtitle">
+          <optional>
+            <ref name="att.lang"/>
+          </optional>
+          <ref name="formattext"/>
+        </element>
+        <optional>
+          <element name="eventtitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="eventtitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <element name="eventtitle">
+          <ref name="romanized"/>
+          <ref name="formattext"/>
+        </element>
+        <zeroOrMore>
+          <element name="eventtitle">
+            <ref name="translated"/>
+            <ref name="formattext"/>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="eventtitle">
+          <ref name="translated"/>
+          <ref name="formattext"/>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
   <define name="file">
     <element name="file">
       <text/>
@@ -1140,7 +1182,6 @@ We now define the biblatexml elements</a:documentation>
       </element>
     </choice>
   </define>
-  <!-- shorthand = element shorthand { text } -->
   <define name="shorthand">
     <choice>
       <group>
@@ -1178,7 +1219,6 @@ We now define the biblatexml elements</a:documentation>
       </element>
     </choice>
   </define>
-  <!-- shorthandintro = element shorthandintro { text } -->
   <define name="shorthandintro">
     <choice>
       <group>
@@ -1389,7 +1429,6 @@ We now define the biblatexml elements</a:documentation>
       <data type="anyURI"/>
     </element>
   </define>
-  <!-- venue = element venue { formattext } -->
   <define name="venue">
     <choice>
       <group>
@@ -1565,7 +1604,6 @@ We now define the biblatexml elements</a:documentation>
       <text/>
     </element>
   </define>
-  <!-- sorttitle = element sorttitle { text } -->
   <define name="sorttitle">
     <choice>
       <group>
@@ -2780,7 +2818,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <!--
     KEY LISTS
-    TODO add attribute type = babel, xml, ISO-XXX etc 
+    TODO ? add attribute type = babel, xml, ISO-XXX etc 
   -->
   <define name="language">
     <element name="language">
@@ -2985,17 +3023,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="attlist.author" combine="choice">
     <optional>
-      <attribute name="gender">
-        <choice>
-          <value>sf</value>
-          <value>sm</value>
-          <value>sn</value>
-          <value>pf</value>
-          <value>pm</value>
-          <value>pn</value>
-          <value>pp</value>
-        </choice>
-      </attribute>
+      <ref name="att.gender"/>
     </optional>
   </define>
   <define name="attlist.author" combine="choice">
@@ -3015,23 +3043,26 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <define name="attlist.editor" combine="choice">
     <optional>
-      <attribute name="gender">
-        <choice>
-          <value>sf</value>
-          <value>sm</value>
-          <value>sn</value>
-          <value>pf</value>
-          <value>pm</value>
-          <value>pn</value>
-          <value>pp</value>
-        </choice>
-      </attribute>
+      <ref name="att.gender"/>
     </optional>
   </define>
   <define name="attlist.editor" combine="choice">
     <optional>
       <ref name="attlist.lists"/>
     </optional>
+  </define>
+  <define name="att.gender">
+    <attribute name="gender">
+      <choice>
+        <value>sf</value>
+        <value>sm</value>
+        <value>sn</value>
+        <value>pf</value>
+        <value>pm</value>
+        <value>pn</value>
+        <value>pp</value>
+      </choice>
+    </attribute>
   </define>
   <define name="author">
     <choice>
