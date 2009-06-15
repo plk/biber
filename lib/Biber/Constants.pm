@@ -22,6 +22,10 @@ our @EXPORT = qw{
                   $BIBER_SORT_FINAL
                   %ALIASES
                   %NUMERICALMONTH
+                  %BIBLATEXML_FORMAT_ELEMENTS
+                  @BIBLATEXML_FORMATTEXT
+                  @BIBLATEXML_FORMATTEXT_B
+                  %FIELDS_WITH_CHILDREN
               } ;
 
 Readonly::Scalar our $BIBLATEX_VERSION => '0.8' ;
@@ -133,7 +137,51 @@ Readonly::Hash our %NUMERICALMONTH => (
   'oct' => 10,
   'nov' => 11,
   'dec' => 12
+) ;
+
+Readonly::Hash our %BIBLATEXML_FORMAT_ELEMENTS => (
+  'bib:subscript' => 'textsubscript',
+  'bib:superscript' => 'textsuperscript',
+  'bib:emphasis' => 'textemph'
+) ;  
+
+Readonly::Array our @BIBLATEXML_FORMATTEXT => qw(
+  abstract
+  addendum
+  annotation
+  booksubtitle
+  booktitleaddon
+  issue
+  issuetitleaddon
+  issuesubtitle
+  journalsubtitle
+  mainsubtitle
+  maintitleaddon
+  note
+  origtitle
+  reprinttitle
+  subtitle
+  titleaddon
+  venue
+  publisher
+  origpublisher
+  publisherinfo
+  item
+  publishername
+  remarks 
   ) ;
+
+Readonly::Array our @BIBLATEXML_FORMATTEXT_B => qw(
+  booktitle
+  eventtitle
+  issuetitle
+  journaltitle
+  maintitle
+  shorttitle
+  title 
+  ) ;
+
+our %FIELDS_WITH_CHILDREN = map { $_ => 1 } ( @BIBLATEXML_FORMATTEXT, @BIBLATEXML_FORMATTEXT_B ) ;
 
 1 ;
 

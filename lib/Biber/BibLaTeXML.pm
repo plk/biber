@@ -3,6 +3,7 @@ use strict ;
 use warnings ;
 use Carp ;
 use XML::LibXML ;
+use Biber::BibLaTeXML::Node ;
 use Biber::Utils ;
 use Biber::Constants ;
 our @ISA ;
@@ -31,20 +32,19 @@ sub _parse_biblatexml {
             or croak "Can't parse file $xml" ;
     }
 
-#    if ($self->config('validate')) {
-#        my $rngschema = XML::LibXML::RelaxNG->new( location => "biblatexml.rng") ;
-#        
-#        my $validation = eval { $rngschema->validate($db) ; } ; 
-#
-#        unless ($validation) {
-#            carp "!!!\nThe file $outfile does not validate against the BibLaTeXML RelaxNG schema\n!!!\n$@"
-#        } 
-#    }
+    if ($self->config('validate')) {
+        my $xmlschema = XML::LibXML::Schema->new( location => "biblatexml.xsd" ) ;
+        
+        my $validation = eval { $xmlschema->validate($db) ; } ; 
+
+        unless ($validation) {
+            croak "The file $outfile does not validate against the BibLaTeXML schema!\n$@"
+        } 
+    }
     
     # keep track of citekeys that were not found in this database
     my %citekeysnotfound = () ;
     my @auxcitekeys = $self->citekeys ;
-    my %bibentries = $self->bib ; 
     
     if ($self->config('allentries')) {
         @auxcitekeys = () ;
@@ -59,7 +59,7 @@ sub _parse_biblatexml {
     # Contrary to the bibtex approach, we are not extracting all data to
     # the bibentries hash, but only the ones corresponding to @auxcitekeys
     foreach my $citekey (@auxcitekeys) {
-        next if $bibentries{$citekey} ; # skip if this is already found in another database
+        next if $self->bib->{$citekey} ; # skip if this is already found in another database
         print "Looking for $citekey\n" if $self->config('debug') ;
         my $xpath = '/*/bib:entry[@id="' . $citekey . '"]' ;
         my $results = $db->findnodes($xpath) ;
@@ -109,17 +109,17 @@ sub _parse_biblatexml {
 
     foreach my $citekey (@auxcitekeys) {
         next if $citekeysnotfound{$citekey} ;
-        next if $bibentries{$citekey} ; # skip if this is already found in another database
+        next if $self->bib->{$citekey} ; # skip if this is already found in another database
         print "Processing key $citekey\n" if $self->config('debug') ;
         my $xpath = '/*/bib:entry[@id="' . $citekey . '"]' ;
         my $results = $db->findnodes($xpath) ;
         my $bibrecord = $results->get_node(1) ; 
 
-        $bibentries{ $citekey }->{entrytype} = $bibrecord->findnodes('@entrytype')->string_value ;
+        $self->bib->{$citekey}->{entrytype} = $bibrecord->findnodes('@entrytype')->string_value ;
         if ($bibrecord->findnodes('@type')) {
-            $bibentries{ $citekey }->{type} = $bibrecord->findnodes('@type')->string_value ;
+            $self->bib->{$citekey}->{type} = $bibrecord->findnodes('@type')->string_value ;
         } ;
-        $bibentries{ $citekey }->{datatype} = 'xml' ;
+        $self->bib->{$citekey}->{datatype} = 'xml' ;
 
         #TODO get the options field first 
         #options/text or option: key+value
@@ -131,55 +131,61 @@ sub _parse_biblatexml {
                     my $v = $o->findnodes("bib:value")->string_value ;
                     push @opts, "$k=$v" ;
                 } ;
-                $bibentries{$citekey}->{options} = join(",", @opts) ;
+                $self->bib->{$citekey}->{options} = join(",", @opts) ;
             }
             else {
-                $bibentries{$citekey}->{options} = $bibrecord->findnodes("bib:options")->string_value ;
+                $self->bib->{$citekey}->{options} = $bibrecord->findnodes("bib:options")->string_value ;
             }
         } ;
         
         # then we extract in turn the data from each type of fields
 
         foreach my $f (@LITERALFIELDS, @VERBATIMFIELDS) {
-            $bibentries{$citekey}->{$f} = $bibrecord->findnodes("bib:$f")->string_value 
+            $self->bib->{$citekey}->{$f} = $bibrecord->findnodes("bib:$f")->_biblatex_value 
                 if $bibrecord->findnodes("bib:$f") ;
-        } ;
+        } 
         
+        if ($bibrecord->findnodes("bib:title/bib:nosort") ) {
+          if (! $bibrecord->findnodes("bib:sorttitle") ) {
+            $self->bib->{$citekey}->{'sorttitle'} = $bibrecord->findnodes("bib:title")->_biblatex_sort_value 
+        }
+
+
         foreach my $lf (@LISTFIELDS) {
             my @z ;
             if ($bibrecord->findnodes("bib:$lf")) {
                 if ($bibrecord->findnodes("bib:$lf/bib:item")) {
                     foreach my $item ($bibrecord->findnodes("bib:$lf/bib:item")->get_nodelist) {
-                        push @z, $item->string_value ;
+                        push @z, $item->_biblatex_value ;
                     }
                 }
                 else {
-                     push @z, $bibrecord->findnodes("bib:$lf")->string_value
+                     push @z, $bibrecord->findnodes("bib:$lf")->_biblatex_value
                 } ;
                 if ($bibrecord->findnodes("bib:$lf\[\@andothers='true'\]")) {
                     push @z, "others"
                 } ;
-                $bibentries{$citekey}->{$lf} = [ @z ]
+                $self->bib->{$citekey}->{$lf} = [ @z ]
             }
-        } ;
+        } 
 
         foreach my $rf (@RANGEFIELDS) {
             if ($bibrecord->findnodes("bib:$rf")) {
                 if ($bibrecord->findnodes("bib:$rf/bib:start")) {
                      my $fieldstart = $bibrecord->findnodes("bib:$rf/bib:start")->string_value ;
                      my $fieldend   = $bibrecord->findnodes("bib:$rf/bib:end")->string_value ;
-                    $bibentries{$citekey}->{$rf} = "$fieldstart--$fieldend" ;
+                    $self->bib->{$citekey}->{$rf} = "$fieldstart--$fieldend" ;
                 }
                 elsif ($bibrecord->findnodes("bib:$rf/bib:list")) {
-                    $bibentries{$citekey}->{$rf} = 
+                    $self->bib->{$citekey}->{$rf} = 
                         $bibrecord->findnodes("bib:$rf/bib:list")->string_value
                 }
                 else {
-                    $bibentries{$citekey}->{$rf} = 
+                    $self->bib->{$citekey}->{$rf} = 
                         $bibrecord->findnodes("bib:$rf")->string_value
                 }
-            } ;
-        } ;
+            } 
+        } 
 
         #the name fields are somewhat more complex
         foreach my $nf (@NAMEFIELDS) {
@@ -238,7 +244,7 @@ sub _parse_biblatexml {
                     push @z, { lastname => "others", namestring => "others" }
                 } ;
                 
-                $bibentries{$citekey}->{$nf} = [ @z ]
+                $self->bib->{$citekey}->{$nf} = [ @z ]
             }
         } ;
 
@@ -254,80 +260,16 @@ sub _parse_biblatexml {
             ) ; 
         foreach my $attr (keys %xmlattributes) {
             if ($bibrecord->findnodes($attr)) {
-                $bibentries{ $citekey }->{ $xmlattributes{$attr} } 
+                $self->bib->{$citekey}->{ $xmlattributes{$attr} } 
                     = $bibrecord->findnodes($attr)->string_value ;
             }
         }
     } ;
 
-    $self->{bib} = { %bibentries } ;
-
     # now we keep only citekeys that actually exist in the database
     $self->{citekeys} = [ grep { defined $self->{bib}->{$_} } @auxcitekeys ] ;
 
     return
-}
-
-sub _process_field_with_children {
-    my $node = shift;
-    my $nodeiter = 1;
-    foreach my $node ($res->get_nodelist) {
-        say "*** Node $nodeiter: ***";
-        say $node->toString ;
-        say "---";
-        my @children = $node->childNodes;
-        say "The children nodes are:";
-        my $jiter = 0;
-        my @titlestring;
-        my @sortstring;
-        my $nosortprefix;
-        foreach my $child (@children) {
-            $jiter++;
-            my $value;
-            my $type = $child->nodeType;
-            if ($type == 3) {
-                $value = $child->findvalue("normalize-space()") ;
-                say "$jiter : '$value'" ;
-                if ($value ne '') {
-                    push @titlestring, $value ;
-                    push  @sortstring, $value ;
-                }
-            }  
-            elsif ( $type == 1 ) {
-                my $nodename = $child->nodeName;
-                $value = $child->findvalue("normalize-space()") ;
-                say "$jiter (" . $nodename . ") : " . "'". $value ."'" ;
-                if ($value ne '') {
-                    if ($nodename eq 'bib:emphasis') {
-                        push @titlestring, "\\emph{$value}" ;
-                        push @sortstring, $value ;
-                    } 
-                    elsif ($nodename eq 'bib:superscript') {
-                        push @titlestring, "\\textsuperscript{$value}" ;
-                        push @sortstring, $value ;
-                    } 
-                    elsif ($nodename eq 'bib:subscript') {
-                        push @titlestring, "\\textsubscript{$value}" ;
-                        push @sortstring, $value ;
-                    } 
-                    elsif ($nodename eq 'bib:nosort') {
-                        push @titlestring, $value ;
-                        $nosortprefix = $value if ( $#titlestring == 0 );
-                    } 
-                };
-            }
-        } ;
-
-        say "------------------------" ;
-        say "Title = " . join(" ", @titlestring) ;
-        my $sorttitle = join(" ", @sortstring) ;
-        $sorttitle =~ s/^(.)/\U$1/ ;
-        say "Sorttitle = $sorttitle" ;
-        if ($nosortprefix) { 
-            say "Indextitle = $sorttitle, $nosortprefix"
-        } ;
-        $nodeiter++;
-    }
 }
 
 1 ;
