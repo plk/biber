@@ -124,6 +124,12 @@ chapter = element chapter { text }
 doi = element doi { text }
 eid = element eid { text }
 eprint = element eprint { attribute type {text}, text }
+eventtitle = ( element eventtitle { att.lang?, formattext },
+                element eventtitle { romanized, formattext }?,
+                element eventtitle { translated, formattext }* ) |
+                ( element eventtitle { romanized, formattext },
+                  element eventtitle { translated, formattext }* ) |
+                ( element eventtitle { translated, formattext }+ )
 file = element file { text }
 pdf = element pdf { text }
 id = element id { text }
@@ -229,14 +235,12 @@ series = ( element series { attribute id {text}}) |
           ( element series { romanized, (formattext | item+) },
             element series { translated, (formattext | item+) }? ) |
           ( element series { translated, (formattext | item+) } )
-#shorthand = element shorthand { text }
 shorthand = ( element shorthand { text },
              element shorthand { romanized, text }?,
              element shorthand { translated, text }? ) | 
              ( element shorthand { romanized, text },
              element shorthand { translated, text }? ) |
              ( element shorthand { translated, text } )
-#shorthandintro = element shorthandintro { text }
 shorthandintro = ( element shorthandintro { text },
              element shorthandintro { romanized, text }?,
              element shorthandintro { translated, text }? ) | 
@@ -268,7 +272,6 @@ titleaddon = ( element titleaddon { att.lang?, formattext },
                 element titleaddon { translated, formattext }* ) |
               ( element titleaddon { translated, formattext }+ )
 url = element url { xsd:anyURI }
-#venue = element venue { formattext }
 venue = ( element venue { att.lang?, formattext },
          element venue { romanized, formattext }?,
          element venue { translated, formattext }* ) |
@@ -301,7 +304,6 @@ option.value = element value { text }
 presort = element presort { text }
 sortkey = element sortkey { text }
 key = element key { text }
-#sorttitle = element sorttitle { text }
 sorttitle = ( element sorttitle { text },
          element sorttitle { romanized, text }?,
          element sorttitle { translated, text }* ) |
@@ -427,7 +429,7 @@ publisherinfos = (( publisherinfo |
   )?)
 
 # KEY LISTS
-# TODO add attribute type = babel, xml, ISO-XXX etc 
+# TODO ? add attribute type = babel, xml, ISO-XXX etc 
 language = element language { xsd:language | itemlang+ }
 origlanguage = element origlanguage { xsd:language | itemlang+ }
 itemlang = element item { xsd:language }
@@ -437,11 +439,12 @@ origscript = element origscript { script.list | itemscript+ }
 itemscript = element item { script.list }
 # NAME LISTS
 attlist.author |= attribute type { "author" | "editor" | "compiler" | text }?
-attlist.author |= attribute gender { "sf" | "sm" | "sn" | "pf" | "pm" | "pn" | "pp" }?
+attlist.author |= att.gender?
 attlist.author |= attlist.lists?
 attlist.editor |= attribute type { "editor" | "compiler" }?
-attlist.editor |= attribute gender { "sf" | "sm" | "sn" | "pf" | "pm" | "pn" | "pp" }?
+attlist.editor |= att.gender?
 attlist.editor |= attlist.lists?
+att.gender = attribute gender { "sf" | "sm" | "sn" | "pf" | "pm" | "pn" | "pp" }
 author = ( element author { attlist.author, (text | person+) },
           element author { attlist.author, romanized, (text | person+) }?,
           element author { attlist.author, uniform, (text | person+) }? ) |
