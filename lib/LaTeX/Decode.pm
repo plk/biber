@@ -41,6 +41,14 @@ Decodes the given text from LaTeX to Unicode.
 
 =cut
 
+my %SCHEMES = (
+    default => 'base',
+#    base    => { DIAC => %DIACRITICS, WORDMAC => %WORDMACROS } ,
+#    extra   => { DIAC => %DIACRITICSEXTRA, WORDMAC => ( %WORDMACROSEXTRA, %PUNCTUATION ) } ,
+#    full    => { WORDMAC => ( %NEGATEDSYMBOLS , %SYMBOLS, %SUPERSCRIPTS, 
+#                              %CMDSUPERSCRIPTS , %DINGS, %GREEK ) } 
+) ;
+
 ### DATA ###
 Readonly::Array our @MACROSONEARG => qw/
 textsuperscript textmiddledot horn textrighthorn textcommabelow textdblgravecmb
@@ -921,6 +929,16 @@ Readonly::Hash our %DIAC => ( %DIACRITICS, %DIACRITICSEXTRA ) ; # if defined %DI
 
 sub latex_decode {
     my $text = shift ;
+#    my $scheme ; 
+#    if ( exists $opts->{scheme} ) {
+#        $scheme = $opts->{scheme}
+#    } else {
+#        $scheme = $SCHEMES{default}
+#    };
+#
+#    my $schemeno = $SCHEMES{$scheme} ;
+#
+    
     # TODO 
     # my $options = ref $_[0] ? shift : { @_ } ;
     # my $latinextra # IPA etc
