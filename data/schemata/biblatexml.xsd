@@ -701,6 +701,50 @@
       <xs:attribute name="type" use="required"/>
     </xs:complexType>
   </xs:element>
+  <xs:group name="eventtitle">
+    <xs:choice>
+      <xs:sequence>
+        <xs:element name="eventtitle">
+          <xs:complexType mixed="true">
+            <xs:group ref="biblatexml:formattext"/>
+            <xs:attribute ref="xml:lang"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" name="eventtitle">
+          <xs:complexType mixed="true">
+            <xs:group ref="biblatexml:formattext"/>
+            <xs:attributeGroup ref="biblatexml:romanized"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="eventtitle">
+          <xs:complexType mixed="true">
+            <xs:group ref="biblatexml:formattext"/>
+            <xs:attributeGroup ref="biblatexml:translated"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:sequence>
+        <xs:element name="eventtitle">
+          <xs:complexType mixed="true">
+            <xs:group ref="biblatexml:formattext"/>
+            <xs:attributeGroup ref="biblatexml:romanized"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="eventtitle">
+          <xs:complexType mixed="true">
+            <xs:group ref="biblatexml:formattext"/>
+            <xs:attributeGroup ref="biblatexml:translated"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:element maxOccurs="unbounded" name="eventtitle">
+        <xs:complexType mixed="true">
+          <xs:group ref="biblatexml:formattext"/>
+          <xs:attributeGroup ref="biblatexml:translated"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:group>
   <xs:element name="file" type="xs:string"/>
   <xs:element name="pdf" type="xs:string"/>
   <xs:element name="id" type="xs:string"/>
@@ -1428,7 +1472,6 @@
       </xs:element>
     </xs:choice>
   </xs:group>
-  <!-- shorthand = element shorthand { text } -->
   <xs:group name="shorthand">
     <xs:choice>
       <xs:sequence>
@@ -1463,7 +1506,6 @@
       </xs:element>
     </xs:choice>
   </xs:group>
-  <!-- shorthandintro = element shorthandintro { text } -->
   <xs:group name="shorthandintro">
     <xs:choice>
       <xs:sequence>
@@ -1711,7 +1753,6 @@
     </xs:choice>
   </xs:group>
   <xs:element name="url" type="xs:anyURI"/>
-  <!-- venue = element venue { formattext } -->
   <xs:group name="venue">
     <xs:choice>
       <xs:sequence>
@@ -1807,7 +1848,6 @@
   <xs:element name="value" type="xs:string"/>
   <xs:element name="presort" type="xs:string"/>
   <xs:element name="sortkey" type="xs:string"/>
-  <!-- sorttitle = element sorttitle { text } -->
   <xs:group name="sorttitle">
     <xs:choice>
       <xs:sequence>
@@ -3762,7 +3802,7 @@
   </xs:group>
   <!--
     KEY LISTS
-    TODO add attribute type = babel, xml, ISO-XXX etc 
+    TODO ? add attribute type = babel, xml, ISO-XXX etc 
   -->
   <xs:element name="language">
     <xs:complexType mixed="true">
@@ -3982,6 +4022,21 @@
       <xs:simpleType>
         <xs:restriction base="xs:token">
           <xs:enumeration value="true"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="att.gender">
+    <xs:attribute name="gender" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="sf"/>
+          <xs:enumeration value="sm"/>
+          <xs:enumeration value="sn"/>
+          <xs:enumeration value="pf"/>
+          <xs:enumeration value="pm"/>
+          <xs:enumeration value="pn"/>
+          <xs:enumeration value="pp"/>
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
