@@ -101,6 +101,7 @@ chapter = element chapter { text }
 doi = element doi { text }
 eid = element eid { text }
 eprint = element eprint { attribute type {text}, text }
+eventtitle = element eventtitle { formattextB }
 file = element file { text }
 pdf = element pdf { text }
 id = element id { text }
@@ -141,16 +142,13 @@ part = element part { text }
 reprinttitle = element reprinttitle { formattext }
 series = ( element series { attribute id {text}}) | 
          ( element series { (formattext | item+) } )
-#shorthand = element shorthand { text }
 shorthand = element shorthand { text }
-#shorthandintro = element shorthandintro { text }
 shorthandintro = element shorthandintro { text }
 shorttitle = element shorttitle { formattextB }
 subtitle = element subtitle { formattext }
 title = element title { formattextB }
 titleaddon = element titleaddon { formattext }
 url = element url { xsd:anyURI }
-#venue = element venue { formattext }
 venue = element venue { formattext }
 version = element version { text }
 volume = element volume { text }
@@ -178,7 +176,6 @@ option.value = element value { text }
 presort = element presort { text }
 sortkey = element sortkey { text }
 key = element key { text }
-#sorttitle = element sorttitle { text }
 sorttitle = element sorttitle { text }
 sortyear = element sortyear { text }
 useprefix = element useprefix { text }
@@ -254,17 +251,18 @@ publisherinfos = (( publisherinfo |
   )?)
 
 # KEY LISTS
-# TODO add attribute type = babel, xml, ISO-XXX etc 
+# TODO ? add attribute type = babel, xml, ISO-XXX etc 
 language = element language { xsd:language | itemlang+ }
 origlanguage = element origlanguage { xsd:language | itemlang+ }
 itemlang = element item { xsd:language }
 # NAME LISTS
 attlist.author |= attribute type { "author" | "editor" | "compiler" | text }?
-attlist.author |= attribute gender { "sf" | "sm" | "sn" | "pf" | "pm" | "pn" | "pp" }?
+attlist.author |= att.gender?
 attlist.author |= attlist.lists?
 attlist.editor |= attribute type { "editor" | "compiler" }?
-attlist.editor |= attribute gender { "sf" | "sm" | "sn" | "pf" | "pm" | "pn" | "pp" }?
+attlist.editor |= att.gender?
 attlist.editor |= attlist.lists?
+att.gender = attribute gender { "sf" | "sm" | "sn" | "pf" | "pm" | "pn" | "pp" }
 author = element author { attlist.author, (text | person+) }
 editor = element editor { attlist.editor, (text | person+) }
 afterword = element afterword { attlist.lists?, (text | person+) }
