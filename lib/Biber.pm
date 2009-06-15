@@ -1522,15 +1522,15 @@ EOF
 
 =head2 _dump
 
-    Dump the biber object with Data::Dumper for debugging
+    Dump the biber object with Data::Dump for debugging
 
 =cut
 
 sub _dump {
     my ($self, $file) = @_ ;
-    require Data::Dumper or carp ;
+    require Data::Dump or carp ;
     my $fh = IO::File->new($file, '>') or croak "Can't open file $file for writing" ;
-    print $fh Data::Dumper::Dumper($self) ;
+    print $fh Data::Dump::pp($self) ;
     close $fh ;
     return
 }
