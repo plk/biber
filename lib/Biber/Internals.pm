@@ -639,14 +639,7 @@ sub _print_biblatex_entry {
             my $total = $#lf + 1 ;
             $str .= "  \\list{$listfield}{$total}{%\n" ;
             foreach my $f (@lf) {
-                my $tmpstr ;
-                if ( $be->{datatype} eq 'bibtex') { 
-                    $tmpstr = $f
-                }
-                else {
-                    $tmpstr = latexescape($f) ;
-                } ;
-                $str .= "    {$tmpstr}%\n" ;
+                $str .= "    {$f}%\n" ;
             }
             $str .= "  }\n" ;
         }
@@ -738,15 +731,8 @@ sub _print_biblatex_entry {
             if ($lfield eq 'journal') {
                 $lfieldprint = 'journaltitle' 
             } ;
-            my $tmpstr ;
-            if ( $be->{datatype} eq 'bibtex') { 
-                $tmpstr = $be->{$lfield} ;
-            }
-            else {
-                $tmpstr = latexescape($be->{$lfield}) ;
-            }
 
-            $str .= $self->_printfield( $lfieldprint, $tmpstr ) ;
+            $str .= $self->_printfield( $lfieldprint, $be->{$lfield} ) ;
         }
     }
     foreach my $rfield (@RANGEFIELDS) {
