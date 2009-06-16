@@ -38,7 +38,7 @@ sub _parse_biblatexml {
         my $validation = eval { $xmlschema->validate($db) ; } ; 
 
         unless ($validation) {
-            croak "The file $outfile does not validate against the BibLaTeXML schema!\n$@"
+            croak "The file $xml does not validate against the BibLaTeXML schema!\n$@"
         } 
     }
     
@@ -59,7 +59,7 @@ sub _parse_biblatexml {
     # Contrary to the bibtex approach, we are not extracting all data to
     # the bibentries hash, but only the ones corresponding to @auxcitekeys
     foreach my $citekey (@auxcitekeys) {
-        next if $self->bib->{$citekey} ; # skip if this is already found in another database
+        next if $self->{bib}->{$citekey} ; # skip if this is already found in another database
         print "Looking for $citekey\n" if $self->config('debug') ;
         my $xpath = '/*/bib:entry[@id="' . $citekey . '"]' ;
         my $results = $db->findnodes($xpath) ;
@@ -109,17 +109,17 @@ sub _parse_biblatexml {
 
     foreach my $citekey (@auxcitekeys) {
         next if $citekeysnotfound{$citekey} ;
-        next if $self->bib->{$citekey} ; # skip if this is already found in another database
+        next if $self->{bib}->{$citekey} ; # skip if this is already found in another database
         print "Processing key $citekey\n" if $self->config('debug') ;
         my $xpath = '/*/bib:entry[@id="' . $citekey . '"]' ;
         my $results = $db->findnodes($xpath) ;
         my $bibrecord = $results->get_node(1) ; 
 
-        $self->bib->{$citekey}->{entrytype} = $bibrecord->findnodes('@entrytype')->string_value ;
+        $self->{bib}->{$citekey}->{entrytype} = $bibrecord->findnodes('@entrytype')->string_value ;
         if ($bibrecord->findnodes('@type')) {
-            $self->bib->{$citekey}->{type} = $bibrecord->findnodes('@type')->string_value ;
+            $self->{bib}->{$citekey}->{type} = $bibrecord->findnodes('@type')->string_value ;
         } ;
-        $self->bib->{$citekey}->{datatype} = 'xml' ;
+        $self->{bib}->{$citekey}->{datatype} = 'xml' ;
 
         #TODO get the options field first 
         #options/text or option: key+value
@@ -131,23 +131,24 @@ sub _parse_biblatexml {
                     my $v = $o->findnodes("bib:value")->string_value ;
                     push @opts, "$k=$v" ;
                 } ;
-                $self->bib->{$citekey}->{options} = join(",", @opts) ;
+                $self->{bib}->{$citekey}->{options} = join(",", @opts) ;
             }
             else {
-                $self->bib->{$citekey}->{options} = $bibrecord->findnodes("bib:options")->string_value ;
+                $self->{bib}->{$citekey}->{options} = $bibrecord->findnodes("bib:options")->string_value ;
             }
         } ;
         
         # then we extract in turn the data from each type of fields
 
         foreach my $f (@LITERALFIELDS, @VERBATIMFIELDS) {
-            $self->bib->{$citekey}->{$f} = $bibrecord->findnodes("bib:$f")->_biblatex_value 
+            $self->{bib}->{$citekey}->{$f} = $bibrecord->findnodes("bib:$f")->_biblatex_value 
                 if $bibrecord->findnodes("bib:$f") ;
         } 
         
         if ($bibrecord->findnodes("bib:title/bib:nosort") ) {
           if (! $bibrecord->findnodes("bib:sorttitle") ) {
-            $self->bib->{$citekey}->{'sorttitle'} = $bibrecord->findnodes("bib:title")->_biblatex_sort_value 
+            $self->{bib}->{$citekey}->{'sorttitle'} = $bibrecord->findnodes("bib:title")->_biblatex_sort_value 
+           }
         }
 
 
@@ -165,7 +166,7 @@ sub _parse_biblatexml {
                 if ($bibrecord->findnodes("bib:$lf\[\@andothers='true'\]")) {
                     push @z, "others"
                 } ;
-                $self->bib->{$citekey}->{$lf} = [ @z ]
+                $self->{bib}->{$citekey}->{$lf} = [ @z ]
             }
         } 
 
@@ -174,14 +175,14 @@ sub _parse_biblatexml {
                 if ($bibrecord->findnodes("bib:$rf/bib:start")) {
                      my $fieldstart = $bibrecord->findnodes("bib:$rf/bib:start")->string_value ;
                      my $fieldend   = $bibrecord->findnodes("bib:$rf/bib:end")->string_value ;
-                    $self->bib->{$citekey}->{$rf} = "$fieldstart--$fieldend" ;
+                    $self->{bib}->{$citekey}->{$rf} = "$fieldstart--$fieldend" ;
                 }
                 elsif ($bibrecord->findnodes("bib:$rf/bib:list")) {
-                    $self->bib->{$citekey}->{$rf} = 
+                    $self->{bib}->{$citekey}->{$rf} = 
                         $bibrecord->findnodes("bib:$rf/bib:list")->string_value
                 }
                 else {
-                    $self->bib->{$citekey}->{$rf} = 
+                    $self->{bib}->{$citekey}->{$rf} = 
                         $bibrecord->findnodes("bib:$rf")->string_value
                 }
             } 
@@ -244,7 +245,7 @@ sub _parse_biblatexml {
                     push @z, { lastname => "others", namestring => "others" }
                 } ;
                 
-                $self->bib->{$citekey}->{$nf} = [ @z ]
+                $self->{bib}->{$citekey}->{$nf} = [ @z ]
             }
         } ;
 
@@ -260,7 +261,7 @@ sub _parse_biblatexml {
             ) ; 
         foreach my $attr (keys %xmlattributes) {
             if ($bibrecord->findnodes($attr)) {
-                $self->bib->{$citekey}->{ $xmlattributes{$attr} } 
+                $self->{bib}->{$citekey}->{ $xmlattributes{$attr} } 
                     = $bibrecord->findnodes($attr)->string_value ;
             }
         }
