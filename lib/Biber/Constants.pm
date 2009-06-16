@@ -140,9 +140,10 @@ Readonly::Hash our %NUMERICALMONTH => (
 ) ;
 
 Readonly::Hash our %BIBLATEXML_FORMAT_ELEMENTS => (
-  'bib:subscript' => 'textsubscript',
-  'bib:superscript' => 'textsuperscript',
-  'bib:emphasis' => 'textemph'
+  'bib:quote'       => 'mkbibquote',
+  'bib:subscript'   => 'textsubscript',
+  'bib:superscript' => 'mkbibsuperscript',
+  'bib:emphasis'    => 'mkbibemph'
 ) ;  
 
 Readonly::Array our @BIBLATEXML_FORMATTEXT => qw(
