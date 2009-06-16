@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?oxygen RNGSchema="../../data/schemas/biblatexml.rnc" type="compact"?>
+<bib:entries xmlns:bib="http://biblatex-biber.sourceforge.net/biblatexml"
+    xmlns:user="http://localhost/biblatexml/user">
+    <bib:entry id="moraux" entrytype="inproceedings">
+        <bib:author>
+            <bib:person>
+                <bib:first>Paul</bib:first>
+                <bib:last>Moraux</bib:last>
+            </bib:person>
+        </bib:author>
+        <bib:editor>
+            <bib:person>
+                <bib:first>G. E. R.</bib:first>
+                <bib:last>Lloyd</bib:last>
+            </bib:person>
+            <bib:person>
+                <bib:first>G. E. L.</bib:first>
+                <bib:last>Owen</bib:last>
+            </bib:person>
+        </bib:editor>
+        <bib:title>
+            <bib:nosort>Le </bib:nosort><bib:emphasis>De Anima</bib:emphasis> dans la tradition
+            grècque</bib:title>
+        <bib:subtitle>Quelques aspects de l'interprétation du traité, de Théophraste à
+            Thémistius</bib:subtitle>
+        <bib:booktitle>Aristotle on Mind and the Senses</bib:booktitle>
+        <bib:booktitleaddon>Proceedings of the Seventh Symposium Aristotelicum
+            (1975)</bib:booktitleaddon>
+        <bib:publisher>Cambridge University Press</bib:publisher>
+        <bib:location>Cambridge</bib:location>
+        <bib:pages>
+            <bib:start>281</bib:start>
+            <bib:end>324</bib:end>
+        </bib:pages>
+        <bib:year>1979</bib:year>
+        <bib:annotation>This is a typical \texttt{inproceedings} entry. Note the
+            \texttt{booksubtitle}, \texttt{shorttitle}, \texttt{indextitle}, and
+            \texttt{indexsorttitle} fields</bib:annotation>
+        <bib:hyphenation>french</bib:hyphenation>
+        <bib:keywords>secondary</bib:keywords>
+    </bib:entry>
+    <bib:entry id="vangennep" entrytype="book">
+        <bib:author>
+            <bib:person>
+                <bib:first>Arnold</bib:first>
+                <bib:prefix>van</bib:prefix>
+                <bib:last>Gennep</bib:last>
+            </bib:person>
+        </bib:author>
+        <bib:title><bib:nosort>Les</bib:nosort> rites de passage</bib:title>
+        <bib:publisher>Nourry</bib:publisher>
+        <bib:location>Paris</bib:location>
+        <bib:year>1909</bib:year>
+        <bib:annotation>A \texttt{book} entry. Note the format of the printed name and compare the
+            \texttt{useprefix} option in the \texttt{options} field as well as \texttt{brandt} and
+            \texttt{geer}</bib:annotation>
+        <bib:hyphenation>french</bib:hyphenation>
+        <bib:options>useprefix</bib:options>
+    </bib:entry>
+    <bib:entry id="worman" entrytype="book">
+        <bib:author>
+            <bib:person>
+                <bib:first>Nancy</bib:first>
+                <bib:last>Worman</bib:last>
+            </bib:person>
+        </bib:author>
+        <bib:title><bib:nosort>The</bib:nosort> Cast of Character</bib:title>
+        <bib:subtitle>Style in Greek Literature</bib:subtitle>
+        <bib:publisher>University of Texas Press</bib:publisher>
+        <bib:location>Austin</bib:location>
+        <bib:year>2002</bib:year>
+        <bib:hyphenation>american</bib:hyphenation>
+    </bib:entry>
+</bib:entries>
