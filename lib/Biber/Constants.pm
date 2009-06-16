@@ -139,12 +139,13 @@ Readonly::Hash our %NUMERICALMONTH => (
   'dec' => 12
 ) ;
 
+# TODO ask PL to define mkbibsubscript in biblatex ?
 Readonly::Hash our %BIBLATEXML_FORMAT_ELEMENTS => (
   'bib:quote'       => 'mkbibquote',
   'bib:subscript'   => 'textsubscript',
   'bib:superscript' => 'mkbibsuperscript',
   'bib:emphasis'    => 'mkbibemph'
-) ;  
+) ; 
 
 Readonly::Array our @BIBLATEXML_FORMATTEXT => qw(
   abstract
@@ -182,7 +183,7 @@ Readonly::Array our @BIBLATEXML_FORMATTEXT_B => qw(
   title 
   ) ;
 
-our %FIELDS_WITH_CHILDREN = map { $_ => 1 } ( @BIBLATEXML_FORMATTEXT, @BIBLATEXML_FORMATTEXT_B ) ;
+our %FIELDS_WITH_CHILDREN = map { 'bib:'. $_ => 1 } ( @BIBLATEXML_FORMATTEXT, @BIBLATEXML_FORMATTEXT_B ) ;
 
 1 ;
 

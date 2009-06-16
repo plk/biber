@@ -140,18 +140,41 @@ sub _parse_biblatexml {
         
         # then we extract in turn the data from each type of fields
 
+        #First we handle the title:
+       
+        my $titlename = "title" ;
+        
+        if ( $self->{bib}->{$citekey}->{entrytype} eq 'periodical') {
+            if ($bibrecord->findnodes("bib:journaltitle")) {
+                $titlename = 'journaltitle'
+            } else {
+                $titlename = 'journal'
+            }
+        }
+
+        if (! $bibrecord->findnodes("bib:$titlename") ) {
+           croak "Entry $citekey has no title!"
+        };
+
+        my $titlestrings = $bibrecord->findnodes("bib:$titlename")->_biblatex_title_values ;
+
+        $self->{bib}->{$citekey}->{$titlename} = $titlestrings->{'title'} ;
+
+        my @specialtitlefields = qw/sorttitle indextitle indexsorttitle/ ;
+        foreach my $tf (@specialtitlefields) {
+            if (! $bibrecord->findnodes("bib:$tf") ) {
+                $self->{bib}->{$citekey}->{$tf} = $titlestrings->{$tf}                 
+            }
+        }
+
+        # then all other literal fields
         foreach my $f (@LITERALFIELDS, @VERBATIMFIELDS) {
+            next if $f eq 'title';
             $self->{bib}->{$citekey}->{$f} = $bibrecord->findnodes("bib:$f")->_biblatex_value 
                 if $bibrecord->findnodes("bib:$f") ;
         } 
         
-        if ($bibrecord->findnodes("bib:title/bib:nosort") ) {
-          if (! $bibrecord->findnodes("bib:sorttitle") ) {
-            $self->{bib}->{$citekey}->{'sorttitle'} = $bibrecord->findnodes("bib:title")->_biblatex_sort_value 
-           }
-        }
-
-
+        # list fields
         foreach my $lf (@LISTFIELDS) {
             my @z ;
             if ($bibrecord->findnodes("bib:$lf")) {
@@ -169,7 +192,8 @@ sub _parse_biblatexml {
                 $self->{bib}->{$citekey}->{$lf} = [ @z ]
             }
         } 
-
+        
+        # range fields
         foreach my $rf (@RANGEFIELDS) {
             if ($bibrecord->findnodes("bib:$rf")) {
                 if ($bibrecord->findnodes("bib:$rf/bib:start")) {
@@ -188,7 +212,7 @@ sub _parse_biblatexml {
             } 
         } 
 
-        #the name fields are somewhat more complex
+        # the name fields are somewhat more complex ...
         foreach my $nf (@NAMEFIELDS) {
             if ($bibrecord->findnodes("bib:$nf")) {
                 my @z ;

@@ -2,121 +2,115 @@ package Biber::BibLaTeXML::Node ;
 use strict;
 use warnings;
 use Carp ;
-use XML::LibXML ;
-use base 'XML::LibXML::Node' ;
 use Biber::Constants ;
+use Biber::Utils ;
 
-sub _biblatex_value {
-    my $node = shift ;
+sub XML::LibXML::NodeList::_biblatex_title_values {
+    my $nodelist = shift ;
+    my $node = $nodelist->get_node(1) ;
     my $fieldname = $node->nodeName ;
-    if ( $FIELDS_WITH_CHILDREN{"bib:$fieldname"} ) {
+    my @title_stringbuffer ;
+    my @sorttitle_stringbuffer ;
+    my @indextitle_stringbuffer ;
+    my @indexsorttitle_stringbuffer ;
+    my $nosortprefix ;
+
+    foreach my $child ($node->childNodes) {
+        my $type  = $child->nodeType;
+        my $value = $child->findvalue("normalize-space()") ;
+        next if $value eq '' ;
+        # child node is a string
+        if ($type == 3) {
+            push @title_stringbuffer, $value ;
+            push @sorttitle_stringbuffer, $value ;
+            push @indextitle_stringbuffer, $value ;
+            push @indexsorttitle_stringbuffer, $value ;
+        } 
+        # child node is an element
+        elsif ($type == 1) {
+            my $childname = $child->nodeName;
+            if ($BIBLATEXML_FORMAT_ELEMENTS{$childname}) {
+                my $fstr =  '\\' . $BIBLATEXML_FORMAT_ELEMENTS{$childname} . '{' . $value . '}' ;
+                push @title_stringbuffer, $fstr ;
+                push @sorttitle_stringbuffer, $value ;
+                push @indextitle_stringbuffer, $fstr ;
+                push @indexsorttitle_stringbuffer, $value ;
+            } 
+            elsif ($childname eq 'bib:nosort') {
+                push @title_stringbuffer, $value ;
+				$nosortprefix = $value if ( $#title_stringbuffer == 0 ) ;
+            }
+        }
+    } ;
+    my $title = join(' ', @title_stringbuffer) ; 
+    my $sorttitle = join(' ', @sorttitle_stringbuffer) ; 
+    $sorttitle =~ s/^(.)/\U$1/ ;
+    my $indextitle = join(' ', @indextitle_stringbuffer) ; 
+    $indextitle .= ", $nosortprefix" if $nosortprefix ;
+    my $indexsorttitle = join(' ', @indexsorttitle_stringbuffer) ; 
+    $indexsorttitle .= ", $nosortprefix" if $nosortprefix ;
+    $indexsorttitle =~ s/^(.)/\U$1/ ;
+
+    return { 
+        title          => $title,
+        sorttitle      => $sorttitle,
+        indextitle     => $indextitle,
+        indexsorttitle => $indexsorttitle
+    }
+}
+
+sub XML::LibXML::NodeList::_biblatex_value {
+    my $nodelist = shift ;
+    my $node = $nodelist->get_node(1) ;
+    my $fieldname = $node->nodeName ;
+    if ( $FIELDS_WITH_CHILDREN{$fieldname} ) {
         my @stringbuffer ;
         foreach my $child ($node->childNodes) {
-            my $type = $child->nodeType;
+            my $type  = $child->nodeType;
+            my $value = $child->findvalue("normalize-space()") ;
+            next if $value eq '' ;
             # child node is a string
             if ($type == 3) {
-                push @stringbuffer, $child->findvalue("normalize-space()") ;
+                push @stringbuffer, $value ;
             } 
             # child node is an element
             elsif ($type == 1) {
                 my $childname = $child->nodeName;
-                my $value    = $child->findvalue("normalize-space()") ;
-                if ($value ne '') {
-                    if ($BIBLATEXML_FORMAT_ELEMENTS{$childname}) {
-                        push @stringbuffer, 
-                          "\\", $BIBLATEXML_FORMAT_ELEMENTS{$childname}, "{", $value, "}" ;
-                    } elsif ($childname eq 'bib:nosort') {
-                        push @stringbuffer, $value ;
-                        # TODO record $nosortprefix somewhere to autogenerate index$field if needed
-                    }
+                if ($BIBLATEXML_FORMAT_ELEMENTS{$childname}) {
+                    push @stringbuffer, 
+                      '\\' . $BIBLATEXML_FORMAT_ELEMENTS{$childname} . '{' . $value . '}' ;
+                } elsif ($childname eq 'bib:nosort') {
+                    push @stringbuffer, $value ; 
                 }
             }
         } 
-        return join '', @stringbuffer
+        return join ' ', @stringbuffer
     }
     else {
-        return $node->string_value
+        return $node->findvalue("normalize-space()")
     }
 }
 
-sub _biblatex_sort_value {
-    my $node = shift ;
+sub XML::LibXML::NodeList::_biblatex_sort_value {
+    my $nodelist = shift ;
+    my $node = $nodelist->get_node(1) ;
     my $fieldname = $node->nodeName ;
-    if ( $FIELDS_WITH_CHILDREN{"bib:$fieldname"} ) {
+    if ( $FIELDS_WITH_CHILDREN{$fieldname} ) {
         my @stringbuffer ;
         foreach my $child ($node->childNodes) {
             next if $child->nodeName eq 'bib:nosort' ;
-            push @stringbuffer, $child->findvalue("normalize-space()") ;
+            my $value = $child->findvalue("normalize-space()");
+            next if $value eq '' ;
+            push @stringbuffer, $value ;
         } 
-        return join '', @stringbuffer
+        my $str = join(' ', @stringbuffer) ;
+        $str =~ s/^(.)/\U$1/ ;
+        return $str;
     }
     else {
-        return $node->string_value
+        return $node->findvalue("normalize-space()")
     }
 }
-
-
-#sub _process_field_with_children {
-#    my $node = shift;
-#    my $nodeiter = 1;
-#    foreach my $node ($res->get_nodelist) {
-#        say "*** Node $nodeiter: ***";
-#        say $node->toString ;
-#        say "---";
-#        my @children = $node->childNodes;
-#        say "The children nodes are:";
-#        my $jiter = 0;
-#        my @titlestring;
-#        my @sortstring;
-#        my $nosortprefix;
-#        foreach my $child (@children) {
-#            $jiter++;
-#            my $value;
-#            my $type = $child->nodeType;
-#            if ($type == 3) {
-#                $value = $child->findvalue("normalize-space()") ;
-#                say "$jiter : '$value'" ;
-#                if ($value ne '') {
-#                    push @titlestring, $value ;
-#                    push  @sortstring, $value ;
-#                }
-#            }  
-#            elsif ( $type == 1 ) {
-#                my $nodename = $child->nodeName;
-#                $value = $child->findvalue("normalize-space()") ;
-#                say "$jiter (" . $nodename . ") : " . "'". $value ."'" ;
-#                if ($value ne '') {
-#                    if ($nodename eq 'bib:emphasis') {
-#                        push @titlestring, "\\emph{$value}" ;
-#                        push @sortstring, $value ;
-#                    } 
-#                    elsif ($nodename eq 'bib:superscript') {
-#                        push @titlestring, "\\textsuperscript{$value}" ;
-#                        push @sortstring, $value ;
-#                    } 
-#                    elsif ($nodename eq 'bib:subscript') {
-#                        push @titlestring, "\\textsubscript{$value}" ;
-#                        push @sortstring, $value ;
-#                    } 
-#                    elsif ($nodename eq 'bib:nosort') {
-#                        push @titlestring, $value ;
-#                        $nosortprefix = $value if ( $#titlestring == 0 );
-#                    } 
-#                };
-#            }
-#        } ;
-#
-#        say "------------------------" ;
-#        say "Title = " . join(" ", @titlestring) ;
-#        my $sorttitle = join(" ", @sortstring) ;
-#        $sorttitle =~ s/^(.)/\U$1/ ;
-#        say "Sorttitle = $sorttitle" ;
-#        if ($nosortprefix) { 
-#            say "Indextitle = $sorttitle, $nosortprefix"
-#        } ;
-#        $nodeiter++;
-#    }
-#}
 
 1 ;
 
@@ -126,13 +120,7 @@ __END__
 
 =head1 NAME
 
-Biber::BibLaTeXML - parse BibLaTeXML database
-
-=head1 METHODS
-
-=head2 _parse_biblatexml
-
-    Internal method to query and parse a BibLaTeXML database.
+Biber::BibLaTeXML::Node - internal methods to extract data from BibLaTeXML fields
 
 =head1 AUTHOR
 
