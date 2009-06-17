@@ -180,7 +180,7 @@ __END__
 
 =head1 NAME
 
-Biber::BibLaTeXML::Node - internal methods to extract data from BibLaTeXML fields
+Biber::BibLaTeXML::Node - internal methods to extract and reformat data from BibLaTeXML fields
 
 =head1 AUTHOR
 
