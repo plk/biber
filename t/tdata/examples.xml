@@ -73,4 +73,17 @@
         <bib:year>2002</bib:year>
         <bib:hyphenation>american</bib:hyphenation>
     </bib:entry>
+    <bib:entry id="pseudo-einstein" entrytype="book">
+        <bib:author>
+            <bib:person>
+                <bib:first>Alberto</bib:first>
+                <bib:last>La Rocha</bib:last>
+            </bib:person>
+        </bib:author>
+        <bib:title><bib:nosort>Die</bib:nosort> große <bib:superscript>Φ</bib:superscript>–Kovarianz: <bib:quote>Unsinn²</bib:quote> der Stringtheorie</bib:title>
+        <bib:publisher>Trou Noir</bib:publisher>
+        <bib:location>Galaxienmitte</bib:location>
+        <bib:year>2012</bib:year>
+        <bib:hyphenation>german</bib:hyphenation>
+    </bib:entry>
 </bib:entries>
