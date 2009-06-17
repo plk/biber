@@ -35,7 +35,7 @@
             <bib:end>324</bib:end>
         </bib:pages>
         <bib:year>1979</bib:year>
-        <bib:annotation>This is a typical \texttt{inproceedings} entry. Note the
+        <bib:annotation>This is a typical <bib:quote>\texttt{inproceedings}</bib:quote> entry. Note the
             \texttt{booksubtitle}, \texttt{shorttitle}, \texttt{indextitle}, and
             \texttt{indexsorttitle} fields</bib:annotation>
         <bib:hyphenation>french</bib:hyphenation>
@@ -85,5 +85,18 @@
         <bib:location>Galaxienmitte</bib:location>
         <bib:year>2012</bib:year>
         <bib:hyphenation>german</bib:hyphenation>
+    </bib:entry>
+    <bib:entry id="nested" entrytype="book">
+        <bib:author>
+            <bib:person>
+                <bib:first>Jean</bib:first>
+                <bib:last>Nestlé</bib:last>
+            </bib:person>
+        </bib:author>
+        <bib:title><bib:nosort>Le </bib:nosort>remue-ménage <bib:quote><bib:superscript><bib:nosort>X<bib:superscript>O<bib:superscript>O</bib:superscript></bib:superscript></bib:nosort></bib:superscript>philique</bib:quote></bib:title>
+        <bib:publisher>Nestmania</bib:publisher>
+        <bib:location>Neuville</bib:location>
+        <bib:year>1999</bib:year>
+        <bib:hyphenation>french</bib:hyphenation>
     </bib:entry>
 </bib:entries>
