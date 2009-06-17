@@ -15,10 +15,14 @@ sub XML::LibXML::NodeList::_biblatex_title_values {
     my @indexsorttitle_stringbuffer ;
     my $nosortprefix ;
 
+    # TODO loop for nested elements as well !
     foreach my $child ($node->childNodes) {
-        my $type  = $child->nodeType;
-        my $value = $child->findvalue("normalize-space()") ;
-        next if $value eq '' ;
+        my $type  = $child->nodeType ;
+        my $value = $child->string_value ;
+        # this is like XPath's normalize-string() but we don't want  
+        # to remove a single space at begin and end of a string:
+        $value =~ s/\s+/ /gms ;
+        next if $value eq ' ' ;
         # child node is a string
         if ($type == 3) {
             push @title_stringbuffer, $value ;
@@ -28,6 +32,9 @@ sub XML::LibXML::NodeList::_biblatex_title_values {
         } 
         # child node is an element
         elsif ($type == 1) {
+            if ( $child->childNodes->[1] ) {
+                carp "Sorry, nested formatting elements are not yet supported"
+            } ;
             my $childname = $child->nodeName;
             if ($BIBLATEXML_FORMAT_ELEMENTS{$childname}) {
                 my $fstr =  '\\' . $BIBLATEXML_FORMAT_ELEMENTS{$childname} . '{' . $value . '}' ;
@@ -39,17 +46,21 @@ sub XML::LibXML::NodeList::_biblatex_title_values {
             elsif ($childname eq 'bib:nosort') {
                 push @title_stringbuffer, $value ;
 				$nosortprefix = $value if ( $#title_stringbuffer == 0 ) ;
+                $nosortprefix =~ s/\s+$// ;
             }
         }
     } ;
-    my $title = join(' ', @title_stringbuffer) ; 
-    my $sorttitle = join(' ', @sorttitle_stringbuffer) ; 
-    $sorttitle =~ s/^(.)/\U$1/ ;
-    my $indextitle = join(' ', @indextitle_stringbuffer) ; 
+    my $title = join('', @title_stringbuffer) ; 
+    my $sorttitle = join('', @sorttitle_stringbuffer) ; 
+    $sorttitle =~ s/^\s+// ;
+    #$sorttitle =~ s/^(.)/\U$1/ ;
+    my $indextitle = join('', @indextitle_stringbuffer) ; 
+    $indextitle =~ s/^\s+// ;
     $indextitle .= ", $nosortprefix" if $nosortprefix ;
-    my $indexsorttitle = join(' ', @indexsorttitle_stringbuffer) ; 
+    my $indexsorttitle = join('', @indexsorttitle_stringbuffer) ; 
+    $indexsorttitle =~ s/^\s+// ;
     $indexsorttitle .= ", $nosortprefix" if $nosortprefix ;
-    $indexsorttitle =~ s/^(.)/\U$1/ ;
+    #$indexsorttitle =~ s/^(.)/\U$1/ ;
 
     return { 
         title          => $title,
@@ -67,8 +78,9 @@ sub XML::LibXML::NodeList::_biblatex_value {
         my @stringbuffer ;
         foreach my $child ($node->childNodes) {
             my $type  = $child->nodeType;
-            my $value = $child->findvalue("normalize-space()") ;
-            next if $value eq '' ;
+        my $value = $child->string_value ;
+        $value =~ s/\s+/ /gms ;
+        next if $value eq ' ' ;
             # child node is a string
             if ($type == 3) {
                 push @stringbuffer, $value ;
@@ -84,7 +96,7 @@ sub XML::LibXML::NodeList::_biblatex_value {
                 }
             }
         } 
-        return join ' ', @stringbuffer
+        return join '', @stringbuffer
     }
     else {
         return $node->findvalue("normalize-space()")
@@ -104,7 +116,7 @@ sub XML::LibXML::NodeList::_biblatex_sort_value {
             push @stringbuffer, $value ;
         } 
         my $str = join(' ', @stringbuffer) ;
-        $str =~ s/^(.)/\U$1/ ;
+        #$str =~ s/^(.)/\U$1/ ;
         return $str;
     }
     else {
