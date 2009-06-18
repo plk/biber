@@ -819,7 +819,7 @@ sub parse_ctrlfile_v2 {
 =head2 parse_bibtex
 
     This is a wrapper method to parse a bibtex database. If available it will
-    pass the job to Text::BibTeX via Biber::BibTeX, otherwise if relies on a
+    pass the job to Text::BibTeX via Biber::BibTeX, otherwise it relies on a
     slower pure Perl parser implemented in Biber::BibTeX::PRD.
 
     $biber->parse_bibtex("data.bib") ;
