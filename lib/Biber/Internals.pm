@@ -423,6 +423,15 @@ sub _sort_year_descend {
   }
 }
 
+sub _get_display_mode {
+  my ($self, $citekey, $field) = @_ ;
+  #my $entrytype = $self->{bib}->{$citekey}->{entrytype};
+  # TODO extend getblxoption to accept 4th parameter $field :
+  #my $dm = $self->getblxoption('displaymode', $citekey, $entrytype, $field) ;
+  # TODO TODO TODO
+  return 'not(@mode)'
+}
+
 #========================================================
 # Utility subs used elsewhere but relying on sorting code
 #========================================================

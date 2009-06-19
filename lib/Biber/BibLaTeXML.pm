@@ -156,7 +156,10 @@ sub _parse_biblatexml {
            croak "Entry $citekey has no title!"
         };
 
-        my $titlestrings = $bibrecord->findnodes("bib:$titlename")->_biblatex_title_values ;
+        # displaymode
+        my $titledm = $self->_get_display_mode($citekey, $titlename) ;
+
+        my $titlestrings = $bibrecord->findnodes("bib:$titlename\[$titledm\]")->_biblatex_title_values ;
 
         $self->{bib}->{$citekey}->{$titlename} = $titlestrings->{'title'} ;
 
@@ -170,12 +173,14 @@ sub _parse_biblatexml {
         # then all other literal fields
         foreach my $field (@LITERALFIELDS, @VERBATIMFIELDS) {
             next if $field eq 'title';
+            my $dm = $self->_get_display_mode($citekey, $field) ;
             $self->{bib}->{$citekey}->{$field} = $bibrecord->findnodes("bib:$field")->_biblatex_value 
                 if $bibrecord->exists("bib:$field") ;
         } 
         
         # list fields
         foreach my $field (@LISTFIELDS) {
+            my $dm = $self->_get_display_mode($citekey, $field) ;
             my @z ;
             if ($bibrecord->exists("bib:$field")) {
                 if ($bibrecord->exists("bib:$field/bib:item")) {
@@ -214,6 +219,7 @@ sub _parse_biblatexml {
 
         # the name fields are somewhat more complex ...
         foreach my $field (@NAMEFIELDS) {
+            my $dm = $self->_get_display_mode($citekey, $field) ;
             if ($bibrecord->exists("bib:$field")) {
                 my @z ;
                 if ($bibrecord->exists("bib:$field/bib:person")) {
