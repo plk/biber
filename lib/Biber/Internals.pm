@@ -14,8 +14,6 @@ Biber::Internals - Internal methods for processing the bibliographic data
 =head1 METHODS
 
 
-=head2 getnameinitials
-
 =cut
 
 #TODO $namefield instead of @aut as 2nd argument!
@@ -122,13 +120,13 @@ sub _getlabel {
     return $label
 }
 
-=head2 getoption
 =head2 getblxoption
 
-getblxoption('option', 'citekey') returns the value of option. In order of decreasing preference, returns:
-1. Biblatex option defined for entry
-2. Biblatex option defined for entry type
-3. Biblatex option defined globally
+getblxoption('option', 'citekey') returns the value of option. In order of
+decreasing preference, returns:
+    1. Biblatex option defined for entry
+    2. Biblatex option defined for entry type
+    3. Biblatex option defined globally
 
 =cut
 
@@ -426,7 +424,7 @@ sub _sort_year_descend {
 }
 
 #========================================================
-# Utiltly subs used elsewhere but relying on sorting code
+# Utility subs used elsewhere but relying on sorting code
 #========================================================
 
 sub _nodecode {

@@ -91,7 +91,7 @@ sub _parse_biblatexml {
             }
         }
         # if there is a crossref, we increment its citekey in %crossrefkeys
-        elsif ( $bibrecord->findnodes('bib:crossref') ) {
+        elsif ( $bibrecord->exists('bib:crossref') ) {
 
             my $crefkey = $bibrecord->findnodes('bib:crossref')->string_value ;
 
@@ -116,14 +116,14 @@ sub _parse_biblatexml {
         my $bibrecord = $results->get_node(1) ; 
 
         $self->{bib}->{$citekey}->{entrytype} = $bibrecord->findnodes('@entrytype')->string_value ;
-        if ($bibrecord->findnodes('@type')) {
+        if ($bibrecord->exists('@type')) {
             $self->{bib}->{$citekey}->{type} = $bibrecord->findnodes('@type')->string_value ;
         } ;
         $self->{bib}->{$citekey}->{datatype} = 'xml' ;
 
         #TODO get the options field first 
         #options/text or option: key+value
-        if ($bibrecord->findnodes("bib:options")) {
+        if ($bibrecord->exists("bib:options")) {
             if ($bibrecord->findnodes("bib:options/bib:option")) {
                 my @opts ; 
                 foreach my $o ($bibrecord->findnodes("bib:options/bib:option")->get_nodelist) {
@@ -145,14 +145,14 @@ sub _parse_biblatexml {
         my $titlename = "title" ;
         
         if ( $self->{bib}->{$citekey}->{entrytype} eq 'periodical') {
-            if ($bibrecord->findnodes("bib:journaltitle")) {
+            if ($bibrecord->exists("bib:journaltitle")) {
                 $titlename = 'journaltitle'
             } else {
                 $titlename = 'journal'
             }
         }
 
-        if (! $bibrecord->findnodes("bib:$titlename") ) {
+        if (! $bibrecord->exists("bib:$titlename") ) {
            croak "Entry $citekey has no title!"
         };
 
@@ -161,76 +161,76 @@ sub _parse_biblatexml {
         $self->{bib}->{$citekey}->{$titlename} = $titlestrings->{'title'} ;
 
         my @specialtitlefields = qw/sorttitle indextitle indexsorttitle/ ;
-        foreach my $tf (@specialtitlefields) {
-            if (! $bibrecord->findnodes("bib:$tf") ) {
-                $self->{bib}->{$citekey}->{$tf} = $titlestrings->{$tf}                 
+        foreach my $field (@specialtitlefields) {
+            if (! $bibrecord->exists("bib:$field") ) {
+                $self->{bib}->{$citekey}->{$field} = $titlestrings->{$field}
             }
         }
 
         # then all other literal fields
-        foreach my $f (@LITERALFIELDS, @VERBATIMFIELDS) {
-            next if $f eq 'title';
-            $self->{bib}->{$citekey}->{$f} = $bibrecord->findnodes("bib:$f")->_biblatex_value 
-                if $bibrecord->findnodes("bib:$f") ;
+        foreach my $field (@LITERALFIELDS, @VERBATIMFIELDS) {
+            next if $field eq 'title';
+            $self->{bib}->{$citekey}->{$field} = $bibrecord->findnodes("bib:$field")->_biblatex_value 
+                if $bibrecord->exists("bib:$field") ;
         } 
         
         # list fields
-        foreach my $lf (@LISTFIELDS) {
+        foreach my $field (@LISTFIELDS) {
             my @z ;
-            if ($bibrecord->findnodes("bib:$lf")) {
-                if ($bibrecord->findnodes("bib:$lf/bib:item")) {
-                    foreach my $item ($bibrecord->findnodes("bib:$lf/bib:item")->get_nodelist) {
+            if ($bibrecord->exists("bib:$field")) {
+                if ($bibrecord->exists("bib:$field/bib:item")) {
+                    foreach my $item ($bibrecord->findnodes("bib:$field/bib:item")->get_nodelist) {
                         push @z, $item->_biblatex_value ;
                     }
                 }
                 else {
-                     push @z, $bibrecord->findnodes("bib:$lf")->_biblatex_value
+                     push @z, $bibrecord->findnodes("bib:$field")->_biblatex_value
                 } ;
-                if ($bibrecord->findnodes("bib:$lf\[\@andothers='true'\]")) {
+                if ($bibrecord->exists("bib:$field\[\@andothers='true'\]")) {
                     push @z, "others"
                 } ;
-                $self->{bib}->{$citekey}->{$lf} = [ @z ]
+                $self->{bib}->{$citekey}->{$field} = [ @z ]
             }
         } 
         
         # range fields
-        foreach my $rf (@RANGEFIELDS) {
-            if ($bibrecord->findnodes("bib:$rf")) {
-                if ($bibrecord->findnodes("bib:$rf/bib:start")) {
-                     my $fieldstart = $bibrecord->findnodes("bib:$rf/bib:start")->string_value ;
-                     my $fieldend   = $bibrecord->findnodes("bib:$rf/bib:end")->string_value ;
-                    $self->{bib}->{$citekey}->{$rf} = "$fieldstart--$fieldend" ;
+        foreach my $field (@RANGEFIELDS) {
+            if ($bibrecord->exists("bib:$field")) {
+                if ($bibrecord->exists("bib:$field/bib:start")) {
+                     my $fieldstart = $bibrecord->findnodes("bib:$field/bib:start")->string_value ;
+                     my $fieldend   = $bibrecord->findnodes("bib:$field/bib:end")->string_value ;
+                    $self->{bib}->{$citekey}->{$field} = "$fieldstart\\bibrangedash $fieldend" ;
                 }
-                elsif ($bibrecord->findnodes("bib:$rf/bib:list")) {
-                    $self->{bib}->{$citekey}->{$rf} = 
-                        $bibrecord->findnodes("bib:$rf/bib:list")->string_value
+                elsif ($bibrecord->exists("bib:$field/bib:list")) {
+                    $self->{bib}->{$citekey}->{$field} = 
+                        $bibrecord->findnodes("bib:$field/bib:list")->string_value
                 }
                 else {
-                    $self->{bib}->{$citekey}->{$rf} = 
-                        $bibrecord->findnodes("bib:$rf")->string_value
+                    $self->{bib}->{$citekey}->{$field} = 
+                        $bibrecord->findnodes("bib:$field")->string_value
                 }
             } 
         } 
 
         # the name fields are somewhat more complex ...
-        foreach my $nf (@NAMEFIELDS) {
-            if ($bibrecord->findnodes("bib:$nf")) {
+        foreach my $field (@NAMEFIELDS) {
+            if ($bibrecord->exists("bib:$field")) {
                 my @z ;
-                if ($bibrecord->findnodes("bib:$nf/bib:person")) {
-                    foreach my $person ($bibrecord->findnodes("bib:$nf/bib:person")->get_nodelist) {
+                if ($bibrecord->exists("bib:$field/bib:person")) {
+                    foreach my $person ($bibrecord->findnodes("bib:$field/bib:person")->get_nodelist) {
                         my $lastname ; 
                         my $firstname ; 
                         my $prefix ; 
                         my $suffix ;
                         my $namestr = "" ;
                         my $nameinitstr = undef ;
-                        if ($person->findnodes('bib:last')) {
+                        if ($person->exists('bib:last')) {
                             $lastname = $person->findnodes('bib:last')->string_value ;
                             $firstname = $person->findnodes('bib:first')->string_value ; 
                             $prefix = $person->findnodes('bib:prefix')->string_value 
-                                if $person->findnodes('bib:prefix') ;
+                                if $person->exists('bib:prefix') ;
                             $suffix = $person->findnodes('bib:suffix')->string_value
-                                if $person->findnodes('bib:suffix') ;
+                                if $person->exists('bib:suffix') ;
                             
                             #FIXME the following code is a repetition of part of parsename() 
                             $namestr .= $prefix if $prefix ;
@@ -262,14 +262,14 @@ sub _parse_biblatexml {
                 else {
                     my $useprefix = $self->getblxoption('useprefix', $citekey) ;
 
-                    push @z, parsename( $bibrecord->findnodes("bib:$nf")->string_value, {useprefix => $useprefix} )
+                    push @z, parsename( $bibrecord->findnodes("bib:$field")->string_value, {useprefix => $useprefix} )
                 } ;
 
-                if ($bibrecord->findnodes("bib:$nf\[\@andothers='true'\]")) {
+                if ($bibrecord->exists("bib:$field\[\@andothers='true'\]")) {
                     push @z, { lastname => "others", namestring => "others" }
                 } ;
                 
-                $self->{bib}->{$citekey}->{$nf} = [ @z ]
+                $self->{bib}->{$citekey}->{$field} = [ @z ]
             }
         } ;
 
@@ -284,7 +284,7 @@ sub _parse_biblatexml {
             '@howpublished' => 'howpublished'
             ) ; 
         foreach my $attr (keys %xmlattributes) {
-            if ($bibrecord->findnodes($attr)) {
+            if ($bibrecord->exists($attr)) {
                 $self->{bib}->{$citekey}->{ $xmlattributes{$attr} } 
                     = $bibrecord->findnodes($attr)->string_value ;
             }

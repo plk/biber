@@ -6,7 +6,6 @@ use Biber::Constants ;
 use Biber::Utils ;
 use Data::Dump ;
 
-
 sub XML::LibXML::NodeList::_biblatex_title_values {
     my $nodelist = shift ;
     my $node = $nodelist->get_node(1) ;
@@ -84,8 +83,6 @@ sub XML::LibXML::Node::_biblatex_fstring_value {
     else {
         $str = $innerstr   
     }
-
-    #$str =~ s/\s+$//; 
 
     return $str
 }
