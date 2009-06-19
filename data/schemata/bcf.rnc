@@ -16,7 +16,8 @@ start =
       attribute type { "global" },
       bibencoding?,
       debug?,
-      displaymode?,
+      # this is for a future version
+      # displaymode?,
       inputenc?,
       mincrossrefs?,
       nonsortdiacritics?,
@@ -235,29 +236,30 @@ nonsortdiacritics =
   element bcf:nonsortdiacritics {
     element bcf:item { text }+
   }
-
 # This is for when biber/biblatex become truly multilingual:
-displaymode = ( displaymode.textual, displaymode.persons, displaymode.locations )
-
-displaymode.textual = element bcf:displaymode {
- attribute type { "textual" }, 
- element bcf:mode { 
-   attribute precedence { xsd:integer }, display.mode.textual
- }+
-}
-
-displaymode.persons = element displaymode {
- attribute type { "persons" }, 
- element bcf:mode { 
-   attribute precedence { xsd:integer }, display.mode.proper
- }+
-}
-displaymode.locations = element displaymode {
- attribute type { "location" }, 
- element bcf:mode { 
-   attribute precedence { xsd:integer }, display.mode.proper
- }+
-}
-
-display.mode.textual = ( "original" | "romanized" | "translated" )
-display.mode.proper  = ( "original" | "romanized" | "uniform" )
+# displaymode = ( displaymode.textual, displaymode.persons, displaymode.locations )
+# 
+# displaymode.textual = element bcf:displaymode {
+# type = global | titles | persons | locations
+#  attribute type { "textual" }, 
+#  element bcf:mode { 
+#    attribute precedence { xsd:integer }, display.mode.textual
+#  }+,
+# }
+# displaymode.persons = element displaymode {
+# type = global | titles | persons | locations
+#  attribute type { "persons" }, 
+#  element bcf:mode { 
+#    attribute precedence { xsd:integer }, display.mode.proper
+#  }+,
+# }
+# displaymode.locations = element displaymode {
+# type = global | titles | persons | locations
+#  attribute type { "location" }, 
+#  element bcf:mode { 
+#    attribute precedence { xsd:integer }, display.mode.proper
+#  }+,
+# }
+# 
+# display.mode.textual = { "original" | "romanized" | "translated" }
+# display.mode.proper  = { "original" | "romanized" | "uniform" }

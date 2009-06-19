@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:bcf="https://sourceforge.net/projects/biblatex" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+<grammar xmlns:bcf="https://sourceforge.net/projects/biblatex" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <start>
     <element name="bcf:controlfile">
       <attribute name="version">
@@ -33,9 +33,10 @@
             <ref name="debug"/>
           </optional>
           <optional>
-            <ref name="displaymode"/>
-          </optional>
-          <optional>
+            <!--
+              this is for a future version
+              displaymode?,
+            -->
             <ref name="inputenc"/>
           </optional>
           <optional>
@@ -529,69 +530,33 @@
       </oneOrMore>
     </element>
   </define>
-  <!-- This is for when biber/biblatex become truly multilingual: -->
-  <define name="displaymode">
-    <ref name="displaymode.textual"/>
-    <ref name="displaymode.persons"/>
-    <ref name="displaymode.locations"/>
-  </define>
-  <define name="displaymode.textual">
-    <element name="bcf:displaymode">
-      <attribute name="type">
-        <value>textual</value>
-      </attribute>
-      <oneOrMore>
-        <element name="bcf:mode">
-          <attribute name="precedence">
-            <data type="integer"/>
-          </attribute>
-          <ref name="display.mode.textual"/>
-        </element>
-      </oneOrMore>
-    </element>
-  </define>
-  <define name="displaymode.persons">
-    <element name="displaymode">
-      <attribute name="type">
-        <value>persons</value>
-      </attribute>
-      <oneOrMore>
-        <element name="bcf:mode">
-          <attribute name="precedence">
-            <data type="integer"/>
-          </attribute>
-          <ref name="display.mode.proper"/>
-        </element>
-      </oneOrMore>
-    </element>
-  </define>
-  <define name="displaymode.locations">
-    <element name="displaymode">
-      <attribute name="type">
-        <value>location</value>
-      </attribute>
-      <oneOrMore>
-        <element name="bcf:mode">
-          <attribute name="precedence">
-            <data type="integer"/>
-          </attribute>
-          <ref name="display.mode.proper"/>
-        </element>
-      </oneOrMore>
-    </element>
-  </define>
-  <define name="display.mode.textual">
-    <choice>
-      <value>original</value>
-      <value>romanized</value>
-      <value>translated</value>
-    </choice>
-  </define>
-  <define name="display.mode.proper">
-    <choice>
-      <value>original</value>
-      <value>romanized</value>
-      <value>uniform</value>
-    </choice>
-  </define>
 </grammar>
+<!--
+  This is for when biber/biblatex become truly multilingual:
+  displaymode = ( displaymode.textual, displaymode.persons, displaymode.locations )
+  
+  displaymode.textual = element bcf:displaymode {
+  type = global | titles | persons | locations
+   attribute type { "textual" }, 
+   element bcf:mode { 
+     attribute precedence { xsd:integer }, display.mode.textual
+   }+,
+  }
+  displaymode.persons = element displaymode {
+  type = global | titles | persons | locations
+   attribute type { "persons" }, 
+   element bcf:mode { 
+     attribute precedence { xsd:integer }, display.mode.proper
+   }+,
+  }
+  displaymode.locations = element displaymode {
+  type = global | titles | persons | locations
+   attribute type { "location" }, 
+   element bcf:mode { 
+     attribute precedence { xsd:integer }, display.mode.proper
+   }+,
+  }
+  
+  display.mode.textual = { "original" | "romanized" | "translated" }
+  display.mode.proper  = { "original" | "romanized" | "uniform" }
+-->
