@@ -86,12 +86,6 @@
         <ref name="origlanguage"/>
       </optional>
       <optional>
-        <ref name="script"/>
-      </optional>
-      <optional>
-        <ref name="origscript"/>
-      </optional>
-      <optional>
         <ref name="abstract"/>
       </optional>
       <optional>
@@ -226,179 +220,36 @@ We now define the biblatexml elements</a:documentation>
       <text/>
     </element>
   </define>
-  <define name="romanized">
-    <a:documentation>FIXME could it be formattextB ? ie. &lt;bib:nosort&gt;&lt;bib:superscript&gt;foo&lt;/bib:superscript&gt;&lt;bib:nosort&gt; ??</a:documentation>
-    <attribute name="mode">
-      <value>romanized</value>
-    </attribute>
-  </define>
-  <define name="translated">
-    <optional>
-      <ref name="att.lang"/>
-    </optional>
-    <attribute name="mode">
-      <value>translated</value>
-    </attribute>
-  </define>
-  <define name="uniform">
-    <attribute name="mode">
-      <value>uniform</value>
-    </attribute>
-  </define>
-  <define name="att.lang">
-    <attribute name="xml:lang">
-      <data type="language"/>
-    </attribute>
-  </define>
   <define name="abstract">
+    <a:documentation>FIXME could it be formattextB ? ie. &lt;bib:nosort&gt;&lt;bib:superscript&gt;foo&lt;/bib:superscript&gt;&lt;bib:nosort&gt; ??</a:documentation>
     <element name="abstract">
-      <optional>
-        <ref name="att.lang"/>
-      </optional>
       <ref name="formattext"/>
     </element>
   </define>
   <define name="addendum">
     <element name="addendum">
-      <optional>
-        <ref name="att.lang"/>
-      </optional>
       <ref name="formattext"/>
     </element>
   </define>
   <define name="annotation">
     <element name="annotation">
-      <optional>
-        <ref name="att.lang"/>
-      </optional>
       <ref name="formattext"/>
     </element>
   </define>
   <define name="booksubtitle">
-    <choice>
-      <group>
-        <element name="booksubtitle">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattext"/>
-        </element>
-        <optional>
-          <element name="booksubtitle">
-            <ref name="romanized"/>
-            <ref name="formattext"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="booksubtitle">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="booksubtitle">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
-        <zeroOrMore>
-          <element name="booksubtitle">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="booksubtitle">
-          <ref name="translated"/>
-          <ref name="formattext"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="booksubtitle">
+      <ref name="formattext"/>
+    </element>
   </define>
   <define name="booktitle">
-    <choice>
-      <group>
-        <element name="booktitle">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattextB"/>
-        </element>
-        <optional>
-          <element name="booktitle">
-            <ref name="romanized"/>
-            <ref name="formattextB"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="booktitle">
-            <ref name="translated"/>
-            <ref name="formattextB"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="booktitle">
-          <ref name="romanized"/>
-          <ref name="formattextB"/>
-        </element>
-        <zeroOrMore>
-          <element name="booktitle">
-            <ref name="translated"/>
-            <ref name="formattextB"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="booktitle">
-          <ref name="translated"/>
-          <ref name="formattextB"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="booktitle">
+      <ref name="formattextB"/>
+    </element>
   </define>
   <define name="booktitleaddon">
-    <choice>
-      <group>
-        <element name="booktitleaddon">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattext"/>
-        </element>
-        <optional>
-          <element name="booktitleaddon">
-            <ref name="romanized"/>
-            <ref name="formattext"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="booktitleaddon">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="booktitleaddon">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
-        <zeroOrMore>
-          <element name="booktitleaddon">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="booktitleaddon">
-          <ref name="translated"/>
-          <ref name="formattext"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="booktitleaddon">
+      <ref name="formattext"/>
+    </element>
   </define>
   <define name="chapter">
     <element name="chapter">
@@ -422,46 +273,9 @@ We now define the biblatexml elements</a:documentation>
     </element>
   </define>
   <define name="eventtitle">
-    <choice>
-      <group>
-        <element name="eventtitle">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattext"/>
-        </element>
-        <optional>
-          <element name="eventtitle">
-            <ref name="romanized"/>
-            <ref name="formattext"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="eventtitle">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="eventtitle">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
-        <zeroOrMore>
-          <element name="eventtitle">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="eventtitle">
-          <ref name="translated"/>
-          <ref name="formattext"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="eventtitle">
+      <ref name="formattextB"/>
+    </element>
   </define>
   <define name="file">
     <element name="file">
@@ -517,172 +331,24 @@ We now define the biblatexml elements</a:documentation>
     </element>
   </define>
   <define name="issue">
-    <choice>
-      <group>
-        <element name="issue">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattext"/>
-        </element>
-        <optional>
-          <element name="issue">
-            <ref name="romanized"/>
-            <ref name="formattext"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="issue">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="issue">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
-        <zeroOrMore>
-          <element name="issue">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="issue">
-          <ref name="translated"/>
-          <ref name="formattext"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="issue">
+      <ref name="formattext"/>
+    </element>
   </define>
   <define name="issuetitle">
-    <choice>
-      <group>
-        <element name="issuetitle">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattextB"/>
-        </element>
-        <optional>
-          <element name="issuetitle">
-            <ref name="romanized"/>
-            <ref name="formattextB"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="issuetitle">
-            <ref name="translated"/>
-            <ref name="formattextB"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="issuetitle">
-          <ref name="romanized"/>
-          <ref name="formattextB"/>
-        </element>
-        <zeroOrMore>
-          <element name="issuetitle">
-            <ref name="translated"/>
-            <ref name="formattextB"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="issuetitle">
-          <ref name="translated"/>
-          <ref name="formattextB"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="issuetitle">
+      <ref name="formattextB"/>
+    </element>
   </define>
   <define name="issuetitleaddon">
-    <choice>
-      <group>
-        <element name="issuetitleaddon">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattext"/>
-        </element>
-        <optional>
-          <element name="issuetitleaddon">
-            <ref name="romanized"/>
-            <ref name="formattext"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="issuetitleaddon">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="issuetitleaddon">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
-        <zeroOrMore>
-          <element name="issuetitleaddon">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="issuetitleaddon">
-          <ref name="translated"/>
-          <ref name="formattext"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="issuetitleaddon">
+      <ref name="formattext"/>
+    </element>
   </define>
   <define name="issuesubtitle">
-    <choice>
-      <group>
-        <element name="issuesubtitle">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattext"/>
-        </element>
-        <optional>
-          <element name="issuesubtitle">
-            <ref name="romanized"/>
-            <ref name="formattext"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="issuesubtitle">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="issuesubtitle">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
-        <zeroOrMore>
-          <element name="issuesubtitle">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="issuesubtitle">
-          <ref name="translated"/>
-          <ref name="formattext"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="issuesubtitle">
+      <ref name="formattext"/>
+    </element>
   </define>
   <define name="iswc">
     <element name="iswc">
@@ -694,129 +360,20 @@ We now define the biblatexml elements</a:documentation>
       <element name="journal">
         <attribute name="id"/>
       </element>
-      <group>
-        <element name="journal">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattextB"/>
-        </element>
-        <optional>
-          <element name="journal">
-            <ref name="romanized"/>
-            <ref name="formattextB"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="journal">
-            <ref name="translated"/>
-            <ref name="formattextB"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="journal">
-          <ref name="romanized"/>
-          <ref name="formattextB"/>
-        </element>
-        <zeroOrMore>
-          <element name="journal">
-            <ref name="translated"/>
-            <ref name="formattextB"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="journal">
-          <ref name="translated"/>
-          <ref name="formattextB"/>
-        </element>
-      </oneOrMore>
+      <element name="journal">
+        <ref name="formattextB"/>
+      </element>
     </choice>
   </define>
   <define name="journaltitle">
-    <choice>
-      <group>
-        <element name="journaltitle">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattextB"/>
-        </element>
-        <optional>
-          <element name="journaltitle">
-            <ref name="romanized"/>
-            <ref name="formattextB"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="journaltitle">
-            <ref name="translated"/>
-            <ref name="formattextB"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="journaltitle">
-          <ref name="romanized"/>
-          <ref name="formattextB"/>
-        </element>
-        <zeroOrMore>
-          <element name="journaltitle">
-            <ref name="translated"/>
-            <ref name="formattextB"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="journaltitle">
-          <ref name="translated"/>
-          <ref name="formattextB"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="journaltitle">
+      <ref name="formattextB"/>
+    </element>
   </define>
   <define name="journalsubtitle">
-    <choice>
-      <group>
-        <element name="journalsubtitle">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattext"/>
-        </element>
-        <optional>
-          <element name="journalsubtitle">
-            <ref name="romanized"/>
-            <ref name="formattext"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="journalsubtitle">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="journalsubtitle">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
-        <zeroOrMore>
-          <element name="journalsubtitle">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="journalsubtitle">
-          <ref name="translated"/>
-          <ref name="formattext"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="journalsubtitle">
+      <ref name="formattext"/>
+    </element>
   </define>
   <define name="label">
     <element name="label">
@@ -875,173 +432,27 @@ We now define the biblatexml elements</a:documentation>
     </element>
   </define>
   <define name="mainsubtitle">
-    <choice>
-      <group>
-        <element name="mainsubtitle">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattext"/>
-        </element>
-        <optional>
-          <element name="mainsubtitle">
-            <ref name="romanized"/>
-            <ref name="formattext"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="mainsubtitle">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="mainsubtitle">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
-        <zeroOrMore>
-          <element name="mainsubtitle">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="mainsubtitle">
-          <ref name="translated"/>
-          <ref name="formattext"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="mainsubtitle">
+      <ref name="formattext"/>
+    </element>
   </define>
   <define name="maintitle">
-    <choice>
-      <group>
-        <element name="maintitle">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattextB"/>
-        </element>
-        <optional>
-          <element name="maintitle">
-            <ref name="romanized"/>
-            <ref name="formattextB"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="maintitle">
-            <ref name="translated"/>
-            <ref name="formattextB"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="maintitle">
-          <ref name="romanized"/>
-          <ref name="formattextB"/>
-        </element>
-        <zeroOrMore>
-          <element name="maintitle">
-            <ref name="translated"/>
-            <ref name="formattextB"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="maintitle">
-          <ref name="translated"/>
-          <ref name="formattextB"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="maintitle">
+      <ref name="formattextB"/>
+    </element>
   </define>
   <define name="maintitleaddon">
-    <choice>
-      <group>
-        <element name="maintitleaddon">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattext"/>
-        </element>
-        <optional>
-          <element name="maintitleaddon">
-            <ref name="romanized"/>
-            <ref name="formattext"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="maintitleaddon">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="maintitleaddon">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
-        <zeroOrMore>
-          <element name="maintitleaddon">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="maintitleaddon">
-          <ref name="translated"/>
-          <ref name="formattext"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="maintitleaddon">
+      <ref name="formattext"/>
+    </element>
   </define>
   <define name="nameaddon">
-    <choice>
-      <group>
-        <element name="nameaddon">
-          <text/>
-        </element>
-        <optional>
-          <element name="nameaddon">
-            <ref name="romanized"/>
-            <text/>
-          </element>
-        </optional>
-        <optional>
-          <element name="nameaddon">
-            <ref name="translated"/>
-            <text/>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="nameaddon">
-          <ref name="romanized"/>
-          <text/>
-        </element>
-        <optional>
-          <element name="nameaddon">
-            <ref name="translated"/>
-            <text/>
-          </element>
-        </optional>
-      </group>
-      <element name="nameaddon">
-        <ref name="translated"/>
-        <text/>
-      </element>
-    </choice>
+    <element name="nameaddon">
+      <text/>
+    </element>
   </define>
   <define name="note">
     <element name="note">
-      <optional>
-        <ref name="att.lang"/>
-      </optional>
       <ref name="formattext"/>
     </element>
   </define>
@@ -1071,108 +482,16 @@ We now define the biblatexml elements</a:documentation>
     </element>
   </define>
   <define name="reprinttitle">
-    <choice>
-      <group>
-        <element name="reprinttitle">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattext"/>
-        </element>
-        <optional>
-          <element name="reprinttitle">
-            <ref name="romanized"/>
-            <ref name="formattext"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="reprinttitle">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="reprinttitle">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
-        <zeroOrMore>
-          <element name="reprinttitle">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="reprinttitle">
-          <ref name="translated"/>
-          <ref name="formattext"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="reprinttitle">
+      <ref name="formattext"/>
+    </element>
   </define>
   <define name="series">
     <choice>
       <element name="series">
         <attribute name="id"/>
       </element>
-      <group>
-        <element name="series">
-          <choice>
-            <ref name="formattext"/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="series">
-            <ref name="romanized"/>
-            <choice>
-              <ref name="formattext"/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="series">
-            <ref name="translated"/>
-            <choice>
-              <ref name="formattext"/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="series">
-          <ref name="romanized"/>
-          <choice>
-            <ref name="formattext"/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="series">
-            <ref name="translated"/>
-            <choice>
-              <ref name="formattext"/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
       <element name="series">
-        <ref name="translated"/>
         <choice>
           <ref name="formattext"/>
           <oneOrMore>
@@ -1183,246 +502,34 @@ We now define the biblatexml elements</a:documentation>
     </choice>
   </define>
   <define name="shorthand">
-    <choice>
-      <group>
-        <element name="shorthand">
-          <text/>
-        </element>
-        <optional>
-          <element name="shorthand">
-            <ref name="romanized"/>
-            <text/>
-          </element>
-        </optional>
-        <optional>
-          <element name="shorthand">
-            <ref name="translated"/>
-            <text/>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="shorthand">
-          <ref name="romanized"/>
-          <text/>
-        </element>
-        <optional>
-          <element name="shorthand">
-            <ref name="translated"/>
-            <text/>
-          </element>
-        </optional>
-      </group>
-      <element name="shorthand">
-        <ref name="translated"/>
-        <text/>
-      </element>
-    </choice>
+    <element name="shorthand">
+      <text/>
+    </element>
   </define>
   <define name="shorthandintro">
-    <choice>
-      <group>
-        <element name="shorthandintro">
-          <text/>
-        </element>
-        <optional>
-          <element name="shorthandintro">
-            <ref name="romanized"/>
-            <text/>
-          </element>
-        </optional>
-        <optional>
-          <element name="shorthandintro">
-            <ref name="translated"/>
-            <text/>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="shorthandintro">
-          <ref name="romanized"/>
-          <text/>
-        </element>
-        <optional>
-          <element name="shorthandintro">
-            <ref name="translated"/>
-            <text/>
-          </element>
-        </optional>
-      </group>
-      <element name="shorthandintro">
-        <ref name="translated"/>
-        <text/>
-      </element>
-    </choice>
+    <element name="shorthandintro">
+      <text/>
+    </element>
   </define>
   <define name="shorttitle">
-    <choice>
-      <group>
-        <element name="shorttitle">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattextB"/>
-        </element>
-        <optional>
-          <element name="shorttitle">
-            <ref name="romanized"/>
-            <ref name="formattextB"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="shorttitle">
-            <ref name="translated"/>
-            <ref name="formattextB"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="shorttitle">
-          <ref name="romanized"/>
-          <ref name="formattextB"/>
-        </element>
-        <zeroOrMore>
-          <element name="shorttitle">
-            <ref name="translated"/>
-            <ref name="formattextB"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="shorttitle">
-          <ref name="translated"/>
-          <ref name="formattextB"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="shorttitle">
+      <ref name="formattextB"/>
+    </element>
   </define>
   <define name="subtitle">
-    <choice>
-      <group>
-        <element name="subtitle">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattext"/>
-        </element>
-        <optional>
-          <element name="subtitle">
-            <ref name="romanized"/>
-            <ref name="formattext"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="subtitle">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="subtitle">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
-        <zeroOrMore>
-          <element name="subtitle">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="subtitle">
-          <ref name="translated"/>
-          <ref name="formattext"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="subtitle">
+      <ref name="formattext"/>
+    </element>
   </define>
   <define name="title">
-    <choice>
-      <group>
-        <element name="title">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattextB"/>
-        </element>
-        <optional>
-          <element name="title">
-            <ref name="romanized"/>
-            <ref name="formattextB"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="title">
-            <ref name="translated"/>
-            <ref name="formattextB"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="title">
-          <ref name="romanized"/>
-          <ref name="formattextB"/>
-        </element>
-        <zeroOrMore>
-          <element name="title">
-            <ref name="translated"/>
-            <ref name="formattextB"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="title">
-          <ref name="translated"/>
-          <ref name="formattextB"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="title">
+      <ref name="formattextB"/>
+    </element>
   </define>
   <define name="titleaddon">
-    <choice>
-      <group>
-        <element name="titleaddon">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattext"/>
-        </element>
-        <optional>
-          <element name="titleaddon">
-            <ref name="romanized"/>
-            <ref name="formattext"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="titleaddon">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="titleaddon">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
-        <zeroOrMore>
-          <element name="titleaddon">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="titleaddon">
-          <ref name="translated"/>
-          <ref name="formattext"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="titleaddon">
+      <ref name="formattext"/>
+    </element>
   </define>
   <define name="url">
     <element name="url">
@@ -1430,46 +537,9 @@ We now define the biblatexml elements</a:documentation>
     </element>
   </define>
   <define name="venue">
-    <choice>
-      <group>
-        <element name="venue">
-          <optional>
-            <ref name="att.lang"/>
-          </optional>
-          <ref name="formattext"/>
-        </element>
-        <optional>
-          <element name="venue">
-            <ref name="romanized"/>
-            <ref name="formattext"/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="venue">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="venue">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
-        <zeroOrMore>
-          <element name="venue">
-            <ref name="translated"/>
-            <ref name="formattext"/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="venue">
-          <ref name="translated"/>
-          <ref name="formattext"/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="venue">
+      <ref name="formattext"/>
+    </element>
   </define>
   <define name="version">
     <element name="version">
@@ -1605,43 +675,9 @@ We now define the biblatexml elements</a:documentation>
     </element>
   </define>
   <define name="sorttitle">
-    <choice>
-      <group>
-        <element name="sorttitle">
-          <text/>
-        </element>
-        <optional>
-          <element name="sorttitle">
-            <ref name="romanized"/>
-            <text/>
-          </element>
-        </optional>
-        <zeroOrMore>
-          <element name="sorttitle">
-            <ref name="translated"/>
-            <text/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <element name="sorttitle">
-          <ref name="romanized"/>
-          <text/>
-        </element>
-        <zeroOrMore>
-          <element name="sorttitle">
-            <ref name="translated"/>
-            <text/>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="sorttitle">
-          <ref name="translated"/>
-          <text/>
-        </element>
-      </oneOrMore>
-    </choice>
+    <element name="sorttitle">
+      <text/>
+    </element>
   </define>
   <define name="sortyear">
     <element name="sortyear">
@@ -1841,80 +877,10 @@ We now define the biblatexml elements</a:documentation>
           <ref name="attlist.lists"/>
         </optional>
       </element>
-      <group>
-        <element name="institution">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="institution">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="institution">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="translated"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="institution">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="institution">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="translated"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
       <element name="institution">
         <optional>
           <ref name="attlist.lists"/>
         </optional>
-        <ref name="translated"/>
         <choice>
           <text/>
           <oneOrMore>
@@ -1932,80 +898,10 @@ We now define the biblatexml elements</a:documentation>
           <ref name="attlist.lists"/>
         </optional>
       </element>
-      <group>
-        <element name="school">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="school">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="school">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="translated"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="school">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="school">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="translated"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
       <element name="school">
         <optional>
           <ref name="attlist.lists"/>
         </optional>
-        <ref name="translated"/>
         <choice>
           <text/>
           <oneOrMore>
@@ -2023,80 +919,10 @@ We now define the biblatexml elements</a:documentation>
           <ref name="attlist.lists"/>
         </optional>
       </element>
-      <group>
-        <element name="organization">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="organization">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="organization">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="translated"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="organization">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="organization">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="translated"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
       <element name="organization">
         <optional>
           <ref name="attlist.lists"/>
         </optional>
-        <ref name="translated"/>
         <choice>
           <text/>
           <oneOrMore>
@@ -2114,80 +940,10 @@ We now define the biblatexml elements</a:documentation>
           <ref name="attlist.lists"/>
         </optional>
       </element>
-      <group>
-        <element name="location">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="location">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="location">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="location">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="location">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
       <element name="location">
         <optional>
           <ref name="attlist.lists"/>
         </optional>
-        <ref name="uniform"/>
         <choice>
           <text/>
           <oneOrMore>
@@ -2205,84 +961,14 @@ We now define the biblatexml elements</a:documentation>
           <ref name="attlist.lists"/>
         </optional>
       </element>
-      <group>
-        <element name="origlocation">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="origlocation">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="origlocation">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="origlocation">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="origlocation">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
       <element name="origlocation">
         <optional>
           <ref name="attlist.lists"/>
         </optional>
-        <ref name="uniform"/>
         <choice>
           <text/>
           <oneOrMore>
-            <ref name="pubitem"/>
+            <ref name="item"/>
           </oneOrMore>
         </choice>
       </element>
@@ -2298,80 +984,10 @@ We now define the biblatexml elements</a:documentation>
           <ref name="attlist.lists"/>
         </optional>
       </element>
-      <group>
-        <element name="publisher">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <ref name="formattext"/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="publisher">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <ref name="formattext"/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="publisher">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <ref name="formattext"/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="publisher">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <ref name="formattext"/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="publisher">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <ref name="formattext"/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
       <element name="publisher">
         <optional>
           <ref name="attlist.lists"/>
         </optional>
-        <ref name="uniform"/>
         <choice>
           <ref name="formattext"/>
           <oneOrMore>
@@ -2391,80 +1007,10 @@ We now define the biblatexml elements</a:documentation>
           <ref name="attlist.lists"/>
         </optional>
       </element>
-      <group>
-        <element name="origpublisher">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <ref name="formattext"/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="origpublisher">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <ref name="formattext"/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="origpublisher">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <ref name="formattext"/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="origpublisher">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <ref name="formattext"/>
-            <oneOrMore>
-              <ref name="item"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="origpublisher">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <ref name="formattext"/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
       <element name="origpublisher">
         <optional>
           <ref name="attlist.lists"/>
         </optional>
-        <ref name="uniform"/>
         <choice>
           <ref name="formattext"/>
           <oneOrMore>
@@ -2484,95 +1030,10 @@ We now define the biblatexml elements</a:documentation>
           <ref name="attlist.lists"/>
         </optional>
       </element>
-      <group>
-        <element name="publisher">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <group>
-              <ref name="publishername"/>
-              <ref name="publocation"/>
-            </group>
-            <oneOrMore>
-              <ref name="pubitem"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="publisher">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <group>
-                <ref name="publishername"/>
-                <ref name="publocation"/>
-              </group>
-              <oneOrMore>
-                <ref name="pubitem"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="publisher">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="translated"/>
-            <choice>
-              <group>
-                <ref name="publishername"/>
-                <ref name="publocation"/>
-              </group>
-              <oneOrMore>
-                <ref name="pubitem"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="publisher">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <group>
-              <ref name="publishername"/>
-              <ref name="publocation"/>
-            </group>
-            <oneOrMore>
-              <ref name="pubitem"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="publisher">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="translated"/>
-            <choice>
-              <group>
-                <ref name="publishername"/>
-                <ref name="publocation"/>
-              </group>
-              <oneOrMore>
-                <ref name="pubitem"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
       <element name="publisher">
         <optional>
           <ref name="attlist.lists"/>
         </optional>
-        <ref name="translated"/>
         <choice>
           <group>
             <ref name="publishername"/>
@@ -2593,95 +1054,10 @@ We now define the biblatexml elements</a:documentation>
           <ref name="attlist.lists"/>
         </optional>
       </element>
-      <group>
-        <element name="origpublisher">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <group>
-              <ref name="publishername"/>
-              <ref name="publocation"/>
-            </group>
-            <oneOrMore>
-              <ref name="pubitem"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="origpublisher">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <group>
-                <ref name="publishername"/>
-                <ref name="publocation"/>
-              </group>
-              <oneOrMore>
-                <ref name="pubitem"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="origpublisher">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="translated"/>
-            <choice>
-              <group>
-                <ref name="publishername"/>
-                <ref name="publocation"/>
-              </group>
-              <oneOrMore>
-                <ref name="pubitem"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="origpublisher">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <group>
-              <ref name="publishername"/>
-              <ref name="publocation"/>
-            </group>
-            <oneOrMore>
-              <ref name="pubitem"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="origpublisher">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="translated"/>
-            <choice>
-              <group>
-                <ref name="publishername"/>
-                <ref name="publocation"/>
-              </group>
-              <oneOrMore>
-                <ref name="pubitem"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
       <element name="origpublisher">
         <optional>
           <ref name="attlist.lists"/>
         </optional>
-        <ref name="translated"/>
         <choice>
           <group>
             <ref name="publishername"/>
@@ -2845,169 +1221,6 @@ We now define the biblatexml elements</a:documentation>
       <data type="language"/>
     </element>
   </define>
-  <define name="script.list">
-    <choice>
-      <value>Arab</value>
-      <value>Armi</value>
-      <value>Armn</value>
-      <value>Avst</value>
-      <value>Bali</value>
-      <value>Batk</value>
-      <value>Beng</value>
-      <value>Blis</value>
-      <value>Bopo</value>
-      <value>Brah</value>
-      <value>Brai</value>
-      <value>Bugi</value>
-      <value>Buhd</value>
-      <value>Cakm</value>
-      <value>Cans</value>
-      <value>Cari</value>
-      <value>Cham</value>
-      <value>Cher</value>
-      <value>Cirt</value>
-      <value>Copt</value>
-      <value>Cprt</value>
-      <value>Cyrl</value>
-      <value>Cyrs</value>
-      <value>Deva</value>
-      <value>Dsrt</value>
-      <value>Egyd</value>
-      <value>Egyh</value>
-      <value>Egyp</value>
-      <value>Ethi</value>
-      <value>Geok</value>
-      <value>Geor</value>
-      <value>Glag</value>
-      <value>Goth</value>
-      <value>Grek</value>
-      <value>Gujr</value>
-      <value>Guru</value>
-      <value>Hang</value>
-      <value>Hani</value>
-      <value>Hano</value>
-      <value>Hans</value>
-      <value>Hant</value>
-      <value>Hebr</value>
-      <value>Hira</value>
-      <value>Hmng</value>
-      <value>Hrkt</value>
-      <value>Hung</value>
-      <value>Inds</value>
-      <value>Ital</value>
-      <value>Java</value>
-      <value>Jpan</value>
-      <value>Kali</value>
-      <value>Kana</value>
-      <value>Khar</value>
-      <value>Khmr</value>
-      <value>Knda</value>
-      <value>Kore</value>
-      <value>Kthi</value>
-      <value>Lana</value>
-      <value>Laoo</value>
-      <value>Latf</value>
-      <value>Latg</value>
-      <value>Latn</value>
-      <value>Lepc</value>
-      <value>Limb</value>
-      <value>Lina</value>
-      <value>Linb</value>
-      <value>Lisu</value>
-      <value>Lyci</value>
-      <value>Lydi</value>
-      <value>Mand</value>
-      <value>Mani</value>
-      <value>Maya</value>
-      <value>Mero</value>
-      <value>Mlym</value>
-      <value>Mong</value>
-      <value>Moon</value>
-      <value>Mtei</value>
-      <value>Mymr</value>
-      <value>Nkgb</value>
-      <value>Nkoo</value>
-      <value>Ogam</value>
-      <value>Olck</value>
-      <value>Orkh</value>
-      <value>Orya</value>
-      <value>Osma</value>
-      <value>Perm</value>
-      <value>Phag</value>
-      <value>Phli</value>
-      <value>Phlp</value>
-      <value>Phlv</value>
-      <value>Phnx</value>
-      <value>Plrd</value>
-      <value>Prti</value>
-      <value>Qaaa</value>
-      <value>Qabx</value>
-      <value>Rjng</value>
-      <value>Roro</value>
-      <value>Runr</value>
-      <value>Samr</value>
-      <value>Sara</value>
-      <value>Saur</value>
-      <value>Sgnw</value>
-      <value>Shaw</value>
-      <value>Sinh</value>
-      <value>Sund</value>
-      <value>Sylo</value>
-      <value>Syrc</value>
-      <value>Syre</value>
-      <value>Syrj</value>
-      <value>Syrn</value>
-      <value>Tagb</value>
-      <value>Tale</value>
-      <value>Talu</value>
-      <value>Taml</value>
-      <value>Tavt</value>
-      <value>Telu</value>
-      <value>Teng</value>
-      <value>Tfng</value>
-      <value>Tglg</value>
-      <value>Thaa</value>
-      <value>Thai</value>
-      <value>Tibt</value>
-      <value>Ugar</value>
-      <value>Vaii</value>
-      <value>Visp</value>
-      <value>Xpeo</value>
-      <value>Xsux</value>
-      <value>Yiii</value>
-      <value>Zinh</value>
-      <value>Zmth</value>
-      <value>Zsym</value>
-      <value>Zxxx</value>
-      <value>Zyyy</value>
-      <value>Zzzz</value>
-    </choice>
-  </define>
-  <define name="script">
-    <element name="script">
-      <choice>
-        <ref name="script.list"/>
-        <oneOrMore>
-          <ref name="itemscript"/>
-        </oneOrMore>
-      </choice>
-    </element>
-  </define>
-  <define name="origscript">
-    <element name="origscript">
-      <choice>
-        <ref name="script.list"/>
-        <oneOrMore>
-          <ref name="itemscript"/>
-        </oneOrMore>
-      </choice>
-    </element>
-  </define>
-  <define name="itemscript">
-    <element name="item">
-      <ref name="script.list"/>
-    </element>
-  </define>
   <!-- NAME LISTS -->
   <define name="attlist.author" combine="choice">
     <optional>
@@ -3065,1425 +1278,221 @@ We now define the biblatexml elements</a:documentation>
     </attribute>
   </define>
   <define name="author">
-    <choice>
-      <group>
-        <element name="author">
-          <ref name="attlist.author"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="author">
-            <ref name="attlist.author"/>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="author">
-            <ref name="attlist.author"/>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="author">
-          <ref name="attlist.author"/>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="author">
-            <ref name="attlist.author"/>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="author">
-        <ref name="attlist.author"/>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
+    <element name="author">
+      <ref name="attlist.author"/>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
   </define>
   <define name="editor">
-    <choice>
-      <group>
-        <element name="editor">
-          <ref name="attlist.editor"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="editor">
-            <ref name="attlist.editor"/>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="editor">
-            <ref name="attlist.editor"/>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="editor">
-          <ref name="attlist.editor"/>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="editor">
-            <ref name="attlist.editor"/>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="editor">
-        <ref name="attlist.editor"/>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
+    <element name="editor">
+      <ref name="attlist.editor"/>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
   </define>
   <define name="afterword">
-    <choice>
-      <group>
-        <element name="afterword">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="afterword">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="afterword">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="afterword">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="afterword">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="afterword">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
+    <element name="afterword">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
   </define>
   <define name="annotator">
-    <choice>
-      <group>
-        <element name="annotator">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="annotator">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="annotator">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="annotator">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="annotator">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="annotator">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
+    <element name="annotator">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
   </define>
   <define name="bookauthor">
-    <choice>
-      <group>
-        <element name="bookauthor">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="bookauthor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="bookauthor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="bookauthor">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="bookauthor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="bookauthor">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
+    <element name="bookauthor">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
   </define>
   <define name="commentator">
-    <choice>
-      <group>
-        <element name="commentator">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="commentator">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="commentator">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="commentator">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="commentator">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="commentator">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
+    <element name="commentator">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
   </define>
   <define name="foreword">
-    <choice>
-      <group>
-        <element name="foreword">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="foreword">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="foreword">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="foreword">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="foreword">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="foreword">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
+    <element name="foreword">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
   </define>
   <define name="holder">
-    <choice>
-      <group>
-        <element name="holder">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="holder">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="holder">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="holder">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="holder">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="holder">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
+    <element name="holder">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
   </define>
   <define name="introduction">
-    <choice>
-      <group>
-        <element name="introduction">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="introduction">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="introduction">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="introduction">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="introduction">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="introduction">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
+    <element name="introduction">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
   </define>
   <define name="redactor">
-    <choice>
-      <group>
-        <element name="redactor">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="redactor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="redactor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="redactor">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="redactor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="redactor">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
+    <element name="redactor">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
   </define>
   <define name="translator">
-    <choice>
-      <group>
-        <element name="translator">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="translator">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="translator">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="translator">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="translator">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="translator">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
+    <element name="translator">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
   </define>
   <define name="shortauthor">
-    <choice>
-      <group>
-        <element name="shortauthor">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="shortauthor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="shortauthor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="shortauthor">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="shortauthor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="shortauthor">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
+    <element name="shortauthor">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
   </define>
   <define name="shorteditor">
-    <choice>
-      <group>
-        <element name="shorteditor">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="shorteditor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="shorteditor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="shorteditor">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="shorteditor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="shorteditor">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
+    <element name="shorteditor">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
   </define>
   <define name="sortname">
-    <choice>
-      <group>
-        <element name="sortname">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="sortname">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="sortname">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="sortname">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="sortname">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="sortname">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
+    <element name="sortname">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
   </define>
   <define name="namea">
-    <choice>
-      <group>
-        <element name="namea">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="namea">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="namea">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="namea">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="namea">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="namea">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
+    <element name="namea">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
   </define>
   <define name="nameb">
-    <choice>
-      <group>
-        <element name="nameb">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="nameb">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="nameb">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="nameb">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="nameb">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="nameb">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
+    <element name="nameb">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
   </define>
   <define name="namec">
-    <choice>
-      <group>
-        <element name="namec">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="namec">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="namec">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <group>
-        <element name="namec">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="romanized"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <optional>
-          <element name="namec">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="namec">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
-    </choice>
+    <element name="namec">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
   </define>
   <define name="person">
     <element name="person">
