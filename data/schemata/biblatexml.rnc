@@ -386,17 +386,17 @@ origlocation = ( element origlocation { attribute id {text}, attlist.lists? }) |
 publisher = ( element publisher { attribute id {formattext}, attlist.lists? }) |
            ( element publisher { attlist.lists?, (formattext | item+) },
             element publisher { attlist.lists?, romanized, (formattext | item+) }?,
-            element publisher { attlist.lists?, uniform, (formattext | item+) }? ) |
+            element publisher { attlist.lists?, (uniform | translated), (formattext | item+) }? ) |
             ( element publisher { attlist.lists?, romanized, (formattext | item+) },
-              element publisher { attlist.lists?, uniform, (formattext | item+) }? ) |
-            ( element publisher { attlist.lists?, uniform, (formattext | item+) } )
+              element publisher { attlist.lists?, (uniform | translated), (formattext | item+) }? ) |
+            ( element publisher { attlist.lists?, (uniform | translated), (formattext | item+) } )
 origpublisher = ( element origpublisher { attribute id {formattext}, attlist.lists? }) |
            ( element origpublisher { attlist.lists?, (formattext | item+) },
             element origpublisher { attlist.lists?, romanized, (formattext | item+) }?,
-            element origpublisher { attlist.lists?, uniform, (formattext | item+) }? ) |
+            element origpublisher { attlist.lists?, (uniform | translated), (formattext | item+) }? ) |
             ( element origpublisher { attlist.lists?, romanized, (formattext | item+) },
-              element origpublisher { attlist.lists?, uniform, (formattext | item+) }? ) |
-            ( element origpublisher { attlist.lists?, uniform, (formattext | item+) } )
+              element origpublisher { attlist.lists?, (uniform | translated), (formattext | item+) }? ) |
+            ( element origpublisher { attlist.lists?, (uniform | translated), (formattext | item+) } )
 publisherinfo = ( element publisher { attribute id {formattext}, attlist.lists? }) |
             ( element publisher { attlist.lists?, ((publishername, publocation) | pubitem+) },
              element publisher { attlist.lists?, romanized, ((publishername, publocation) | pubitem+) }?,
