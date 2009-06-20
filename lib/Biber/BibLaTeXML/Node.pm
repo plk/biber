@@ -105,69 +105,29 @@ sub XML::LibXML::Node::_biblatex_sortstring_value {
     return $str;
 }
 
-#sub XML::LibXML::NodeList::_biblatex_title_values_flat {
-#    my $nodelist = shift ;
-#    my $node = $nodelist->get_node(1) ;
-#    my @title_stringbuffer ;
-#    my @sorttitle_stringbuffer ;
-#    my @indextitle_stringbuffer ;
-#    my @indexsorttitle_stringbuffer ;
-#    my $nosortprefix ;
-#
-#    foreach my $child ($node->childNodes) {
-#        my $type  = $child->nodeType ;
-#        my $value = $child->string_value ;
-#        # this is like XPath's normalize-string() but we don't want  
-#        # to remove a single space at begin and end of a string:
-#        $value =~ s/\s+/ /gms ;
-#        next if $value eq ' ' ;
-#        # child node is a string
-#        if ($type == 3) {
-#            push @title_stringbuffer, $value ;
-#            push @sorttitle_stringbuffer, $value ;
-#            push @indextitle_stringbuffer, $value ;
-#            push @indexsorttitle_stringbuffer, $value ;
-#        } 
-#        # child node is an element
-#        elsif ($type == 1) {
-#            my @childnodes = $child->childNodes;
-#            if ( $#childnodes > 0 ) {
-#                carp "Sorry, nested formatting elements are not yet supported"
-#            } ;
-#            my $childname = $child->nodeName;
-#            if ($BIBLATEXML_FORMAT_ELEMENTS{$childname}) {
-#                my $fstr =  '\\' . $BIBLATEXML_FORMAT_ELEMENTS{$childname} . '{' . $value . '}' ;
-#                push @title_stringbuffer, $fstr ;
-#                push @sorttitle_stringbuffer, $value ;
-#                push @indextitle_stringbuffer, $fstr ;
-#                push @indexsorttitle_stringbuffer, $value ;
-#            } 
-#            elsif ($childname eq 'bib:nosort') {
-#                push @title_stringbuffer, $value ;
-#				$nosortprefix = $value if ( $#title_stringbuffer == 0 ) ;
-#                $nosortprefix =~ s/\s+$// ;
-#            }
-#        }
-#    } ;
-#    my $title = join('', @title_stringbuffer) ; 
-#    my $sorttitle = join('', @sorttitle_stringbuffer) ; 
-#    $sorttitle =~ s/^\s+// ;
-#    #$sorttitle =~ s/^(.)/\U$1/ ;
-#    my $indextitle = join('', @indextitle_stringbuffer) ; 
-#    $indextitle =~ s/^\s+// ;
-#    $indextitle .= ", $nosortprefix" if $nosortprefix ;
-#    my $indexsorttitle = join('', @indexsorttitle_stringbuffer) ; 
-#    $indexsorttitle =~ s/^\s+// ;
-#    $indexsorttitle .= ", $nosortprefix" if $nosortprefix ;
-#    #$indexsorttitle =~ s/^(.)/\U$1/ ;
-#
-#    return { 
-#        title          => $title,
-#        sorttitle      => $sorttitle,
-#        indextitle     => $indextitle,
-#        indexsorttitle => $indexsorttitle
-#    }
-#}
+sub XML::LibXML::Element::_find_biblatex_nodes {
+    my ($self, $field, $dma, $subfield) = @_ ;
+    ## $dma is an arrayref with list of displaymodes, in order of preference
+    ## Ex: [ 'original', 'transliterated', 'uniform', 'translated' ]
+    unless ($self->exists("bib:$field\[\@mode\]")) {
+        my $xpath = "bib:$field" ;
+        $xpath .= "/bib:$subfield" if defined $subfield ;
+        return $self->findnodes($xpath)
+    } ;
+    foreach my $dm (@{$dma}) {
+        my $xpath ;
+        if ($dm eq 'original') {
+            $xpath = "bib:$field\[not(\@mode)\]"
+        } else {
+            $xpath = "bib:$field\[\@mode=\"$dm\"\]" 
+        } ;
+        $xpath .= "/bib:$subfield" if defined $subfield ;
+        if ($self->exists($xpath)) {
+            return $self->findnodes($xpath) ;
+            #last
+        }
+    }
+}
 
 1 ;
 
