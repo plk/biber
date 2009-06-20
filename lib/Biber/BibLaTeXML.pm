@@ -6,6 +6,7 @@ use XML::LibXML ;
 use Biber::BibLaTeXML::Node ;
 use Biber::Utils ;
 use Biber::Constants ;
+use Data::Dump ;
 our @ISA ;
 
 
@@ -157,9 +158,9 @@ sub _parse_biblatexml {
         };
 
         # displaymode
-        my $titledm = $self->_get_display_mode($citekey, $titlename) ;
+        my $titledm = $self->get_displaymode($citekey, $titlename) ;
 
-        my $titlestrings = $bibrecord->findnodes("bib:$titlename\[$titledm\]")->_biblatex_title_values ;
+        my $titlestrings = $bibrecord->_find_biblatex_nodes($titlename, $titledm)->_biblatex_title_values ;
 
         $self->{bib}->{$citekey}->{$titlename} = $titlestrings->{'title'} ;
 
@@ -173,23 +174,23 @@ sub _parse_biblatexml {
         # then all other literal fields
         foreach my $field (@LITERALFIELDS, @VERBATIMFIELDS) {
             next if $field eq 'title';
-            my $dm = $self->_get_display_mode($citekey, $field) ;
-            $self->{bib}->{$citekey}->{$field} = $bibrecord->findnodes("bib:$field")->_biblatex_value 
+            my $dm = $self->get_displaymode($citekey, $field) ;
+            $self->{bib}->{$citekey}->{$field} = $bibrecord->_find_biblatex_nodes($field, $dm)->_biblatex_value 
                 if $bibrecord->exists("bib:$field") ;
         } 
         
         # list fields
         foreach my $field (@LISTFIELDS) {
-            my $dm = $self->_get_display_mode($citekey, $field) ;
+            my $dm = $self->get_displaymode($citekey, $field) ;
             my @z ;
             if ($bibrecord->exists("bib:$field")) {
                 if ($bibrecord->exists("bib:$field/bib:item")) {
-                    foreach my $item ($bibrecord->findnodes("bib:$field/bib:item")->get_nodelist) {
+                    foreach my $item ($bibrecord->_find_biblatex_nodes($field, $dm, "item")->get_nodelist) {
                         push @z, $item->_biblatex_value ;
                     }
                 }
                 else {
-                     push @z, $bibrecord->findnodes("bib:$field")->_biblatex_value
+                     push @z, $bibrecord->_find_biblatex_nodes($field, $dm)->_biblatex_value
                 } ;
                 if ($bibrecord->exists("bib:$field\[\@andothers='true'\]")) {
                     push @z, "others"
@@ -202,7 +203,7 @@ sub _parse_biblatexml {
         foreach my $field (@RANGEFIELDS) {
             if ($bibrecord->exists("bib:$field")) {
                 if ($bibrecord->exists("bib:$field/bib:start")) {
-                     my $fieldstart = $bibrecord->findnodes("bib:$field/bib:start")->string_value ;
+                     my $fieldstart = $bibrecord->findnodes("$field/bib:start")->string_value ;
                      my $fieldend   = $bibrecord->findnodes("bib:$field/bib:end")->string_value ;
                     $self->{bib}->{$citekey}->{$field} = "$fieldstart\\bibrangedash $fieldend" ;
                 }
@@ -219,11 +220,11 @@ sub _parse_biblatexml {
 
         # the name fields are somewhat more complex ...
         foreach my $field (@NAMEFIELDS) {
-            my $dm = $self->_get_display_mode($citekey, $field) ;
+            my $dm = $self->get_displaymode($citekey, $field) ;
             if ($bibrecord->exists("bib:$field")) {
                 my @z ;
                 if ($bibrecord->exists("bib:$field/bib:person")) {
-                    foreach my $person ($bibrecord->findnodes("bib:$field/bib:person")->get_nodelist) {
+                    foreach my $person ($bibrecord->_find_biblatex_nodes($field, $dm, "person")->get_nodelist) {
                         my $lastname ; 
                         my $firstname ; 
                         my $prefix ; 

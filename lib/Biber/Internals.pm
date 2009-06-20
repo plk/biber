@@ -122,7 +122,7 @@ sub _getlabel {
 
 =head2 getblxoption
 
-getblxoption('option', 'citekey') returns the value of option. In order of
+getblxoption($option, $citekey, $entrytype?) returns the value of option. In order of
 decreasing preference, returns:
     1. Biblatex option defined for entry
     2. Biblatex option defined for entry type
@@ -149,6 +149,38 @@ sub getblxoption {
     }
 }
 
+=head2 get_displaymode
+
+get_displaymode($citekey) returns an arrayref that gives, in order of preference, a
+list of display modes to try
+
+=cut
+
+sub get_displaymode {
+    # TODO allow setting of display mode for individual fields
+    ## $field is IGNORED for now
+    my ($self, $citekey, $field) = @_ ;
+
+    # TODO check whether $dm is a scalar or an arrayref
+    # in the latter case, return it directly
+    my $dm = "uniform"; # default ?
+
+    if ( defined $citekey and 
+         defined $Biber::localoptions{$citekey} and 
+         defined $Biber::localoptions{$citekey}{displaymode} ) {
+        $dm = $Biber::localoptions{$citekey}{displaymode} ;
+    }
+    else {
+        $dm = $self->{config}{displaymode} # {$fieldtype}
+    } 
+
+    if ( ref $dm eq 'ARRAY') {
+        return $dm
+    } else {
+        # this returns the arrayref
+        return $DISPLAYMODES{$dm}
+    }
+}
 
 #########
 # Sorting

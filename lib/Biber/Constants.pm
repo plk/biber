@@ -26,6 +26,7 @@ our @EXPORT = qw{
                   @BIBLATEXML_FORMATTEXT
                   @BIBLATEXML_FORMATTEXT_B
                   %FIELDS_WITH_CHILDREN
+                  %DISPLAYMODES
               } ;
 
 Readonly::Scalar our $BIBLATEX_VERSION => '0.8' ;
@@ -38,12 +39,14 @@ our %CONFIG_DEFAULT = (
   mincrossrefs =>  2,
   unicodebbl =>  0,
   unicodebib =>  0,
-  bibdata =>  undef ,
+  bibdata =>  undef,
   allentries =>  0,
   useprd =>  0,
   debug =>  0,
   quiet => 0,
   collate_options => 'level=>2, table=>"latinkeys.txt"',
+  ## eventually this should be moved to biblatex options:
+  displaymode => 'uniform'
 ) ;
 
 ### biblatex fields
@@ -184,6 +187,13 @@ Readonly::Array our @BIBLATEXML_FORMATTEXT_B => qw(
   ) ;
 
 our %FIELDS_WITH_CHILDREN = map { 'bib:'. $_ => 1 } ( @BIBLATEXML_FORMATTEXT, @BIBLATEXML_FORMATTEXT_B ) ;
+
+Readonly::Hash our %DISPLAYMODES => {
+  uniform => [ qw/uniform romanized translated original/ ],
+  translated => [ qw/translated uniform romanized original/ ],
+  romanized => [ qw/romanized uniform translated original/ ],
+  original => [ qw/original romanized uniform translated/ ]
+} ;
 
 1 ;
 
