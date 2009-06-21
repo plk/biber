@@ -25,7 +25,8 @@
     <bib:publisher mode="translated" xml:lang="en">Dept. of Arabic, Faculty of Letters, University of
       Baghdad</bib:publisher>
     <bib:volume>1</bib:volume>
-    <bib:year type="converted">1972 <bib:localyear calendar="islamic">1392</bib:localyear>
+    <bib:year type="converted">1972 
+      <bib:localyear calendar="islamic">1392</bib:localyear>
     </bib:year>
     <bib:pages>139–172</bib:pages>
     <!-- كلية الامام الاعظم ش 1 ، سال 1392

@@ -201,6 +201,7 @@ sub _parse_biblatexml {
         } 
         
         # year, origyear
+        # TODO support for localyear / origlocalyear and localcalendar
         foreach my $field ( array_minus(\@RANGEFIELDS, [ 'pages' ]) ) {
             if ($bibrecord->exists("bib:$field")) {
                 if ($bibrecord->exists("bib:$field/bib:start")) {
@@ -208,16 +209,20 @@ sub _parse_biblatexml {
                      my $fieldend   = $bibrecord->findnodes("bib:$field/bib:end")->_normalize_string_value ;
                     $self->{bib}->{$citekey}->{$field} = "$fieldstart\\bibrangedash $fieldend" ;
                 }
-                elsif ($bibrecord->exists("bib:$field/bib:list")) {
-                    $self->{bib}->{$citekey}->{$field} = 
-                        $bibrecord->findnodes("bib:$field/bib:list")->_normalize_string_value
-                }
                 else {
                     $self->{bib}->{$citekey}->{$field} = 
                         $bibrecord->findnodes("bib:$field/text()")->_normalize_string_value
                 }
-            } 
-        } 
+
+                if ($bibrecord->exists("bib:$field\[\@type=\"converted\"\]")) {
+                    $self->{bib}->{$citekey}->{"local$field"} = 
+                        $bibrecord->findnodes("bib:$field/bib:localyear")->_normalize_string_value ;
+
+                    $self->{bib}->{$citekey}->{"local".$field."calendar"} = 
+                        $bibrecord->findnodes("bib:$field/bib:localyear/\@calendar")->string_value
+                }
+            }
+        }
 
         # pages
         if ($bibrecord->exists("bib:pages")) {
