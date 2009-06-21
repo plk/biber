@@ -83,7 +83,7 @@ sub _parse_biblatexml {
         # if we have an entryset we add the keys to the stack
         if ($bibrecord->findnodes('@entrytype')->string_value eq 'set') {
             
-            my @entrysetkeys = split /,/, $bibrecord->findnodes('bib:entryset')->string_value ;
+            my @entrysetkeys = split /,/, $bibrecord->findnodes('bib:entryset')->_normalize_string_value ;
 
             push @auxcitekeys, @entrysetkeys ;
 
@@ -94,7 +94,7 @@ sub _parse_biblatexml {
         # if there is a crossref, we increment its citekey in %crossrefkeys
         elsif ( $bibrecord->exists('bib:crossref') ) {
 
-            my $crefkey = $bibrecord->findnodes('bib:crossref')->string_value ;
+            my $crefkey = $bibrecord->findnodes('bib:crossref')->_normalize_string_value ;
 
             $Biber::crossrefkeys{$crefkey}++ ;
             $Biber::entrieswithcrossref{$citekey} = $crefkey ;
@@ -128,14 +128,14 @@ sub _parse_biblatexml {
             if ($bibrecord->findnodes("bib:options/bib:option")) {
                 my @opts ; 
                 foreach my $o ($bibrecord->findnodes("bib:options/bib:option")->get_nodelist) {
-                    my $k = $o->findnodes("bib:key")->string_value ; 
-                    my $v = $o->findnodes("bib:value")->string_value ;
+                    my $k = $o->findnodes("bib:key")->_normalize_string_value ; 
+                    my $v = $o->findnodes("bib:value")->_normalize_string_value ;
                     push @opts, "$k=$v" ;
                 } ;
                 $self->{bib}->{$citekey}->{options} = join(",", @opts) ;
             }
             else {
-                $self->{bib}->{$citekey}->{options} = $bibrecord->findnodes("bib:options")->string_value ;
+                $self->{bib}->{$citekey}->{options} = $bibrecord->findnodes("bib:options")->_normalize_string_value ;
             }
         } ;
         
@@ -159,8 +159,9 @@ sub _parse_biblatexml {
 
         # displaymode
         my $titledm = $self->get_displaymode($citekey, $titlename) ;
+        print "Display mode of $citekey is " . $titledm->[0] . "\n" if $self->config('debug');
 
-        my $titlestrings = $bibrecord->_find_biblatex_nodes($titlename, $titledm)->_biblatex_title_values ;
+        my $titlestrings = $bibrecord->_find_biblatex_nodes($self, $titlename, $titledm)->_biblatex_title_values ;
 
         $self->{bib}->{$citekey}->{$titlename} = $titlestrings->{'title'} ;
 
@@ -175,7 +176,7 @@ sub _parse_biblatexml {
         foreach my $field (@LITERALFIELDS, @VERBATIMFIELDS) {
             next if $field eq 'title';
             my $dm = $self->get_displaymode($citekey, $field) ;
-            $self->{bib}->{$citekey}->{$field} = $bibrecord->_find_biblatex_nodes($field, $dm)->_biblatex_value 
+            $self->{bib}->{$citekey}->{$field} = $bibrecord->_find_biblatex_nodes($self, $field, $dm)->_biblatex_value 
                 if $bibrecord->exists("bib:$field") ;
         } 
         
@@ -185,12 +186,12 @@ sub _parse_biblatexml {
             my @z ;
             if ($bibrecord->exists("bib:$field")) {
                 if ($bibrecord->exists("bib:$field/bib:item")) {
-                    foreach my $item ($bibrecord->_find_biblatex_nodes($field, $dm, "item")->get_nodelist) {
+                    foreach my $item ($bibrecord->_find_biblatex_nodes($self, $field, $dm, "item")->get_nodelist) {
                         push @z, $item->_biblatex_value ;
                     }
                 }
                 else {
-                     push @z, $bibrecord->_find_biblatex_nodes($field, $dm)->_biblatex_value
+                     push @z, $bibrecord->_find_biblatex_nodes($self, $field, $dm)->_biblatex_value
                 } ;
                 if ($bibrecord->exists("bib:$field\[\@andothers='true'\]")) {
                     push @z, "others"
@@ -199,24 +200,41 @@ sub _parse_biblatexml {
             }
         } 
         
-        # range fields
-        foreach my $field (@RANGEFIELDS) {
+        # year, origyear
+        foreach my $field ( array_minus(\@RANGEFIELDS, [ 'pages' ]) ) {
             if ($bibrecord->exists("bib:$field")) {
                 if ($bibrecord->exists("bib:$field/bib:start")) {
-                     my $fieldstart = $bibrecord->findnodes("$field/bib:start")->string_value ;
-                     my $fieldend   = $bibrecord->findnodes("bib:$field/bib:end")->string_value ;
+                     my $fieldstart = $bibrecord->findnodes("$field/bib:start")->_normalize_string_value ;
+                     my $fieldend   = $bibrecord->findnodes("bib:$field/bib:end")->_normalize_string_value ;
                     $self->{bib}->{$citekey}->{$field} = "$fieldstart\\bibrangedash $fieldend" ;
                 }
                 elsif ($bibrecord->exists("bib:$field/bib:list")) {
                     $self->{bib}->{$citekey}->{$field} = 
-                        $bibrecord->findnodes("bib:$field/bib:list")->string_value
+                        $bibrecord->findnodes("bib:$field/bib:list")->_normalize_string_value
                 }
                 else {
                     $self->{bib}->{$citekey}->{$field} = 
-                        $bibrecord->findnodes("bib:$field")->string_value
+                        $bibrecord->findnodes("bib:$field/text()")->_normalize_string_value
                 }
             } 
         } 
+
+        # pages
+        if ($bibrecord->exists("bib:pages")) {
+            if ($bibrecord->exists("bib:pages/bib:start")) {
+                 my $pagesstart = $bibrecord->findnodes("pages/bib:start")->_normalize_string_value ;
+                 my $pagesend   = $bibrecord->findnodes("bib:pages/bib:end")->_normalize_string_value ;
+                 $self->{bib}->{$citekey}->{pages} = "$pagesstart\\bibrangedash $pagesend" ;
+            }
+            elsif ($bibrecord->exists("bib:pages/bib:list")) {
+                $self->{bib}->{$citekey}->{pages} = 
+                    $bibrecord->findnodes("bib:pages/bib:list")->_normalize_string_value
+            }
+            else {
+                $self->{bib}->{$citekey}->{pages} = 
+                    $bibrecord->findnodes("bib:pages")->_normalize_string_value
+            }
+        }
 
         # the name fields are somewhat more complex ...
         foreach my $field (@NAMEFIELDS) {
@@ -224,7 +242,7 @@ sub _parse_biblatexml {
             if ($bibrecord->exists("bib:$field")) {
                 my @z ;
                 if ($bibrecord->exists("bib:$field/bib:person")) {
-                    foreach my $person ($bibrecord->_find_biblatex_nodes($field, $dm, "person")->get_nodelist) {
+                    foreach my $person ($bibrecord->_find_biblatex_nodes($self, $field, $dm, "person")->get_nodelist) {
                         my $lastname ; 
                         my $firstname ; 
                         my $prefix ; 
@@ -232,11 +250,11 @@ sub _parse_biblatexml {
                         my $namestr = "" ;
                         my $nameinitstr = undef ;
                         if ($person->exists('bib:last')) {
-                            $lastname = $person->findnodes('bib:last')->string_value ;
-                            $firstname = $person->findnodes('bib:first')->string_value ; 
-                            $prefix = $person->findnodes('bib:prefix')->string_value 
+                            $lastname = $person->findnodes('bib:last')->_normalize_string_value ;
+                            $firstname = $person->findnodes('bib:first')->_normalize_string_value ; 
+                            $prefix = $person->findnodes('bib:prefix')->_normalize_string_value 
                                 if $person->exists('bib:prefix') ;
-                            $suffix = $person->findnodes('bib:suffix')->string_value
+                            $suffix = $person->findnodes('bib:suffix')->_normalize_string_value
                                 if $person->exists('bib:suffix') ;
                             
                             #FIXME the following code is a repetition of part of parsename() 
@@ -261,7 +279,7 @@ sub _parse_biblatexml {
                         else {
                             my $useprefix = $self->getblxoption('useprefix', $citekey) ;
 
-                            push @z, parsename( $person->string_value, {useprefix => $useprefix} )
+                            push @z, parsename( $person->_normalize_string_value, {useprefix => $useprefix} )
                         }
                     } 
                 } 
@@ -269,7 +287,7 @@ sub _parse_biblatexml {
                 else {
                     my $useprefix = $self->getblxoption('useprefix', $citekey) ;
 
-                    push @z, parsename( $bibrecord->findnodes("bib:$field")->string_value, {useprefix => $useprefix} )
+                    push @z, parsename( $bibrecord->findnodes("bib:$field")->_normalize_string_value, {useprefix => $useprefix} )
                 } ;
 
                 if ($bibrecord->exists("bib:$field\[\@andothers='true'\]")) {

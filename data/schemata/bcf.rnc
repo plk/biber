@@ -29,6 +29,7 @@ start =
       labelalpha,
       labelname,
       labelyear,
+      locale,
       maxline,
       maxnames,
       minnames,
@@ -225,6 +226,12 @@ alphaothers =
       xsd:normalizedString { pattern = "\S+" }
     }
   }
+locale = 
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "locale" },
+    element bcf:value { xsd:language }
+ }
 
 ## these are perl regexes
 nonsortprefixes =

@@ -68,8 +68,9 @@
     <bib:title>حياة ومؤلّفات ابن البنّاء المرّاكشي مع نصوص غير منشورة</bib:title>
     <bib:title mode="romanized">Ḥayāt wa-mu'allafāt Ibn al-Bannāʾ al-Murrākushī maʿa nuṣūṣ ghayr
       manshūra</bib:title>
-    <bib:title mode="translated">Life and Works of Ibn al-Bannā’ al-Marrākushī with unpublished
+    <bib:title mode="translated" xml:lang="en">Life and Works of Ibn al-Bannā’ al-Marrākushī with unpublished
       sources</bib:title>
+    <bib:title mode="translated" xml:lang="fr">La vie et l’œuvre d’Ibn al-Bannā’ al-Marrākushī, accompagné de sources inédites</bib:title>
     <bib:titleaddon>Historia Mathematica</bib:titleaddon>
     <bib:location>رباط</bib:location>
     <bib:location mode="romanized">Rabāṭ</bib:location>
@@ -77,9 +78,13 @@
     <bib:publisher>كلية الآداب والعلوم الإنسانية بالرب</bib:publisher>
     <bib:publisher mode="romanized">Kullīyat al-Ādāb wa-al-ʻUlūm al-Insānīyah
       bi-al-Rabāṭ</bib:publisher>
+    <bib:publisher mode="translated" xml:lang="en">Faculty of Letters and Human Sciences in Rabat</bib:publisher>
+    <bib:publisher mode="translated" xml:lang="fr">Faculté des Lettres et des Sciences Humaines de Rabat</bib:publisher>
     <bib:language>Arabic</bib:language>
     <bib:series>سلسلة بحوث ودراسات, رقم 29 </bib:series>
     <bib:series mode="romanized">Silsilat Buḥūth wa-Dirāsāt, 29</bib:series>
+    <bib:series mode="translated" xml:lang="en">Series Research and Studies, 29</bib:series>
+    <bib:series mode="translated" xml:lang="fr">Séries Recherches et Études, 29</bib:series>
     <bib:year>2001</bib:year>
     <bib:isbn>9981590444</bib:isbn>
     <bib:issn>1113-0369</bib:issn>

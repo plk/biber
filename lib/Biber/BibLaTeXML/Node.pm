@@ -106,28 +106,56 @@ sub XML::LibXML::Node::_biblatex_sortstring_value {
 }
 
 sub XML::LibXML::Element::_find_biblatex_nodes {
-    my ($self, $field, $dma, $subfield) = @_ ;
+    my ($self, $biber, $field, $dma, $subfield) = @_ ;
+    my $xpath ;
+
     ## $dma is an arrayref with list of displaymodes, in order of preference
     ## Ex: [ 'original', 'transliterated', 'uniform', 'translated' ]
+    # only one node bib:$field
     unless ($self->exists("bib:$field\[\@mode\]")) {
-        my $xpath = "bib:$field" ;
+        $xpath = "bib:$field" ; 
         $xpath .= "/bib:$subfield" if defined $subfield ;
-        return $self->findnodes($xpath)
+        return $self->findnodes($xpath) 
+            or croak "Cannot find nodes for xpath $xpath : $@";
     } ;
     foreach my $dm (@{$dma}) {
-        my $xpath ;
+        # mode = original
         if ($dm eq 'original') {
-            $xpath = "bib:$field\[not(\@mode)\]"
-        } else {
-            $xpath = "bib:$field\[\@mode=\"$dm\"\]" 
-        } ;
+            $xpath = "bib:$field\[not(\@mode)\]" ;
+            $xpath .= "/bib:$subfield" if defined $subfield ;
+            if ($self->exists($xpath)) {
+                return $self->findnodes($xpath)
+            }
+        } 
+            # mode = translated with xml:lang 
+        if ( $dm eq 'translated' and 
+             $self->exists("bib:$field\[\@mode=\"$dm\" and \@xml:lang\]") ) {
+            my $locale = $biber->config("locale") or croak "No locale defined";
+            my $localeb = $locale ;
+            $localeb =~ s/_.+$//; 
+            foreach my $l ( "$localeb", "$locale" ) {
+                $xpath = "bib:$field\[\@mode=\"$dm\" and \@xml:lang=\"$l\"\]" ;
+                $xpath .= "/bib:$subfield" if defined $subfield ;
+                if ($self->exists($xpath)) {
+                    return $self->findnodes($xpath) 
+                }
+            }
+        }
+
+        $xpath = "bib:$field\[\@mode=\"$dm\"\]" ;
         $xpath .= "/bib:$subfield" if defined $subfield ;
         if ($self->exists($xpath)) {
-            return $self->findnodes($xpath) ;
-            #last
+            return $self->findnodes($xpath) 
         }
     }
 }
+
+sub XML::LibXML::NodeList::_normalize_string_value {
+    my $nodelist = shift ;
+    my $node = $nodelist->get_node(1) ;
+    return $node->findvalue("normalize-space()")
+}
+
 
 1 ;
 

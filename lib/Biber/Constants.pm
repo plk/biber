@@ -33,6 +33,9 @@ Readonly::Scalar our $BIBLATEX_VERSION => '0.8' ;
 our $BIBER_SORT_FINAL = 0;
 
 ## Biber CONFIGURATION DEFAULTS
+my $locale = $ENV{LANG} || $ENV{LC_ALL} || "en_US.utf8" ;
+$locale =~ s/\..+$//; # remove encoding info
+
 our %CONFIG_DEFAULT = (
   validate => 0,
   fastsort => 0,
@@ -46,7 +49,8 @@ our %CONFIG_DEFAULT = (
   quiet => 0,
   collate_options => 'level=>2, table=>"latinkeys.txt"',
   ## eventually this should be moved to biblatex options:
-  displaymode => 'uniform'
+  displaymode => 'uniform',
+  locale => $locale
 ) ;
 
 ### biblatex fields
