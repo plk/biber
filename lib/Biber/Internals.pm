@@ -152,7 +152,7 @@ sub getblxoption {
 =head2 get_displaymode
 
 get_displaymode($citekey) returns an arrayref that gives, in order of preference, a
-list of display modes to try
+list of display modes to try.
 
 =cut
 
