@@ -203,7 +203,7 @@ sub _parse_biblatexml {
         foreach my $field ( array_minus(\@RANGEFIELDS, [ 'pages' ]) ) {
             if ($bibrecord->exists("bib:$field")) {
                 if ($bibrecord->exists("bib:$field/bib:start")) {
-                     my $fieldstart = $bibrecord->findnodes("$field/bib:start")->_normalize_string_value ;
+                     my $fieldstart = $bibrecord->findnodes("bib:$field/bib:start")->_normalize_string_value ;
                      my $fieldend   = $bibrecord->findnodes("bib:$field/bib:end")->_normalize_string_value ;
                     $self->{bib}->{$citekey}->{$field} = "$fieldstart\\bibrangedash $fieldend" ;
                 }
