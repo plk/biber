@@ -48,9 +48,55 @@ our %CONFIG_DEFAULT = (
   debug =>  0,
   quiet => 0,
   collate_options => 'level=>2, table=>"latinkeys.txt"',
-  ## eventually this should be moved to biblatex options:
+  ## eventually this shall be moved to biblatex options:
   displaymode => 'uniform',
-  locale => $locale
+  locale => $locale,
+  # Semitic (or eventually other) last names may begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
+  nosortdiacritics => qr/[\x{2bf}\x{2018}]/,
+  # Semitic (or eventually other) names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
+  nosortprefix => qr/\p{Ll}{2}-/,
+  # default options for biblatex
+  # in practice these will be obtained from the control file,
+  # but we need this as a fallback, just in case,
+  # or when using the command-line options "-a -d <datafile>"
+  # without an aux file
+  biblatex => { 
+      global => {
+            controlversion => '0.8',
+            debug => '0',
+            terseinits => '0',
+            useprefix => '0',
+            useauthor => '1',
+            useeditor => '1',
+            usetranslator => '0',
+            labelalpha => '0',
+            labelyear => '0',
+            singletitle => '0',
+            uniquename => '0',
+            sorting => [  [  {'presort'    => []}, 
+                             {'mm'         => []} ],
+                          [  {'sortkey'    => ['final']}  ],
+                          [  {'sortname'   => []},
+                             {'author'     => []},
+                             {'editor'     => []},
+                             {'translator' => []},
+                             {'sorttitle'  => []},
+                             {'title'      => []}  ],
+                           [ {'sorttitle'  => []},
+                             {'title'      => []}  ],
+                           [ {'sortyear'   => []},
+                             {'year'       => []}  ],
+                           [ {'volume'     => []},
+                             {'0000'       => []}  ]
+                       ],
+            sortlos => '1',
+            maxnames => '3',
+            minnames => '1',
+            maxline => '79',
+            alphaothers  => '+',
+            labelname => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
+         }
+     }
 ) ;
 
 ### biblatex fields
