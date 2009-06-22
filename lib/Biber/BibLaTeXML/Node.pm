@@ -161,6 +161,11 @@ sub XML::LibXML::NodeList::_normalize_string_value {
     return $node->findvalue("normalize-space()")
 }
 
+sub XML::LibXML::Element::_normalize_string_value {
+    my $node = shift ;
+    return $node->findvalue("normalize-space()")
+}
+
 
 1 ;
 
