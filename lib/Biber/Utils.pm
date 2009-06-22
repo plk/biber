@@ -344,7 +344,7 @@ terseinitials($str) returns the contatenated initials of all the words in $str.
 
 sub terseinitials {
     my $str = shift ;
-    $str =~ s/^$NOSORTPREFIX[-–]?// ;
+    $str =~ s/^$NOSORTPREFIX\p{Pd}?// ;
     $str =~ s/^$NOSORTDIACRITICS// ;
     $str =~ s/\\[\p{L}]+\s*//g ;  # remove tex macros
     $str =~ s/^{(\p{L}).+}$/$1/g ;    # {Aaaa Bbbbb Ccccc} -> A
@@ -407,7 +407,7 @@ sub getinitials {
 
 sub _firstatom {
     my $str = shift;
-    $str =~ s/^$NOSORTPREFIX[-–]?// ;
+    $str =~ s/^$NOSORTPREFIX\p{Pd}?// ;
     $str =~ s/^$NOSORTDIACRITICS// ;
     if ($str =~ /^({ 
                    \\ [^\p{Ps}\p{L}] \p{L}+ # {\\.x}
