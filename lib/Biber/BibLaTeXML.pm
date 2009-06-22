@@ -54,7 +54,7 @@ sub _parse_biblatexml {
         } ;
     } ;
     
-    print "Processing the xml data ...\n" unless $self->config('quiet') ;
+    print "Processing the XML data ...\n" unless $self->config('quiet') ;
 
     # Contrary to the bibtex approach, we are not extracting all data to
     # the bibentries hash, but only the ones corresponding to @auxcitekeys
