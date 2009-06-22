@@ -55,7 +55,7 @@ sub _parse_biblatexml {
         } ;
     } ;
     
-    print "Processing the xml data ...\n" unless $self->config('quiet') ;
+    print "Processing the XML data ...\n" unless $self->config('quiet') ;
 
     # Contrary to the bibtex approach, we are not extracting all data to
     # the bibentries hash, but only the ones corresponding to @auxcitekeys
@@ -148,27 +148,25 @@ sub _parse_biblatexml {
         if ( $self->{bib}->{$citekey}->{entrytype} eq 'periodical') {
             if ($bibrecord->exists("bib:journaltitle")) {
                 $titlename = 'journaltitle'
-            } else {
+            } elsif ($bibrecord->exists("bib:journal")) {
                 $titlename = 'journal'
             }
         }
 
-        if (! $bibrecord->exists("bib:$titlename") ) {
-           croak "Entry $citekey has no title!"
-        };
+        if ($bibrecord->exists("bib:$titlename") ) {
 
-        # displaymode
-        my $titledm = $self->get_displaymode($citekey, $titlename) ;
-        print "Display mode of $citekey is " . $titledm->[0] . "\n" if $self->config('debug');
+            # displaymode
+            my $titledm = $self->get_displaymode($citekey, $titlename) ;
 
-        my $titlestrings = $bibrecord->_find_biblatex_nodes($self, $titlename, $titledm)->_biblatex_title_values ;
+            my $titlestrings = $bibrecord->_find_biblatex_nodes($self, $titlename, $titledm)->_biblatex_title_values ;
 
-        $self->{bib}->{$citekey}->{$titlename} = $titlestrings->{'title'} ;
+            $self->{bib}->{$citekey}->{$titlename} = $titlestrings->{'title'} ;
 
-        my @specialtitlefields = qw/sorttitle indextitle indexsorttitle/ ;
-        foreach my $field (@specialtitlefields) {
-            if (! $bibrecord->exists("bib:$field") ) {
-                $self->{bib}->{$citekey}->{$field} = $titlestrings->{$field}
+            my @specialtitlefields = qw/sorttitle indextitle indexsorttitle/ ;
+            foreach my $field (@specialtitlefields) {
+                if (! $bibrecord->exists("bib:$field") ) {
+                    $self->{bib}->{$citekey}->{$field} = $titlestrings->{$field}
+                }
             }
         }
 
@@ -227,7 +225,7 @@ sub _parse_biblatexml {
         # pages
         if ($bibrecord->exists("bib:pages")) {
             if ($bibrecord->exists("bib:pages/bib:start")) {
-                 my $pagesstart = $bibrecord->findnodes("pages/bib:start")->_normalize_string_value ;
+                 my $pagesstart = $bibrecord->findnodes("bib:pages/bib:start")->_normalize_string_value ;
                  my $pagesend   = $bibrecord->findnodes("bib:pages/bib:end")->_normalize_string_value ;
                  $self->{bib}->{$citekey}->{pages} = "$pagesstart\\bibrangedash $pagesend" ;
             }
