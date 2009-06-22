@@ -59,6 +59,11 @@ sub XML::LibXML::NodeList::_biblatex_value {
     return $node->_biblatex_fstring_value
 }
 
+sub XML::LibXML::Node::_biblatex_value {
+    my $node = shift ;
+    return $node->_biblatex_fstring_value
+}
+
 sub XML::LibXML::Node::_biblatex_fstring_value {
     my $node = shift ;
     my $childname = $node->nodeName ;
@@ -152,7 +157,7 @@ sub XML::LibXML::Element::_find_biblatex_nodes {
 
 sub XML::LibXML::NodeList::_normalize_string_value {
     my $nodelist = shift ;
-    my $node = $nodelist->get_node(1) ;
+    my $node = $nodelist->get_node(1) || croak "Can't get node : $@";
     return $node->findvalue("normalize-space()")
 }
 
