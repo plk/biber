@@ -430,13 +430,14 @@ sub parse_ctrlfile {
         $self->{config}{biblatex}{global}{alphaothers}) = split /:/, $opts ; 
 
         my $controlversion = $self->{config}{biblatex}{global}{controlversion};
+    
         carp "Warning: You are using biblatex version $controlversion : 
             biber is more likely to work with version $BIBLATEX_VERSION.\n" 
             unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION ;
     }
 
-    $self->{config}{biblatex}{global}{labelname} = ['shortauthor', 'author', 'shorteditor', 'editor', 'translator']; # set default 
     my $sorting = ($self->{config}{biblatex}{global}{sorting} or '1');
+    
     if ($sorting == 1) { # nty
       $self->{config}{biblatex}{global}{sorting} = [
                                                     [
@@ -1136,6 +1137,7 @@ sub postprocess {
             else {
                 $lnameopt = $ln;
             }
+            
             if ( $be->{$ln} and $self->getblxoption("use$lnameopt", $citekey) ) {
                 $be->{labelnamename} = $ln;
                 last;
@@ -1143,7 +1145,7 @@ sub postprocess {
        }
 
        unless ($be->{labelnamename}) {
-           carp "Could not determine the labelname of entry $citekey" if $self->config('debug')
+           croak "Could not determine the labelname of entry $citekey"
         }
 
         ##############################################################
