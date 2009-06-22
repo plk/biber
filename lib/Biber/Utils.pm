@@ -33,16 +33,11 @@ our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid
 
 ######
 # These are used in the functions parsename and getinitials :
-# 
-# TODO move to Biber::Constants ?
-#
-# Semitic (or eventually other) last names could begin with NONSORTDIACRITICS like ʿ or ‘ (e.g. ʿAlī)
-my $NONSORTDIACRITICS = qr/[\x{2bf}\x{2018}]/; # more?
+# TODO : get them from $biber->config instead
+ 
+my $NOSORTDIACRITICS = $CONFIG_DEFAULT{nosortdiacritics} ;
+my $NOSORTPREFIX     = $CONFIG_DEFAULT{nosortprefix} ;
 
-# Semitic (or eventually other) names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
-my $NONSORTPREFIX = qr/\p{Ll}{2}-/; # etc
-
-#
 ######
 
 =head1 FUNCTIONS
@@ -181,14 +176,14 @@ sub parsename {
                 \s+
                )?
                (
-                $NONSORTPREFIX?$NONSORTDIACRITICS?
+                $NOSORTPREFIX?$NOSORTDIACRITICS?
                 [^,]+
                 |
                 {[^,]+}
                ),
                \s+
                (
-                $NONSORTPREFIX?$NONSORTDIACRITICS?
+                $NOSORTPREFIX?$NOSORTDIACRITICS?
                 [^,]+
                 |
                 {.+}
@@ -233,14 +228,14 @@ sub parsename {
     #TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g ;
     ## remove punctuation, symbols, separator and control 
 
-    $namestr =~ s/\b$NONSORTPREFIX//;
-    $namestr =~ s/\b$NONSORTDIACRITICS//;
+    $namestr =~ s/\b$NOSORTPREFIX//;
+    $namestr =~ s/\b$NOSORTDIACRITICS//;
 
     $nameinitstr = "" ;
     $nameinitstr .= substr( $prefix, 0, 1 ) . " " if ( $usepre and $prefix ) ;
     $nameinitstr .= $lastname ;
-    $nameinitstr =~ s/\b$NONSORTPREFIX//;
-    $nameinitstr =~ s/\b$NONSORTDIACRITICS//;
+    $nameinitstr =~ s/\b$NOSORTPREFIX//;
+    $nameinitstr =~ s/\b$NOSORTDIACRITICS//;
     $nameinitstr .= " " . terseinitials($suffix) 
         if $suffix ;
     $nameinitstr .= " " . terseinitials($firstname) 
@@ -349,8 +344,8 @@ terseinitials($str) returns the contatenated initials of all the words in $str.
 
 sub terseinitials {
     my $str = shift ;
-    $str =~ s/^$NONSORTPREFIX// ;
-    $str =~ s/^$NONSORTDIACRITICS// ;
+    $str =~ s/^$NOSORTPREFIX[-–]?// ;
+    $str =~ s/^$NOSORTDIACRITICS// ;
     $str =~ s/\\[\p{L}]+\s*//g ;  # remove tex macros
     $str =~ s/^{(\p{L}).+}$/$1/g ;    # {Aaaa Bbbbb Ccccc} -> A
     $str =~ s/{\s+(\S+)\s+}//g ;  # Aaaaa{ de }Bbbb -> AaaaaBbbbb
@@ -412,8 +407,8 @@ sub getinitials {
 
 sub _firstatom {
     my $str = shift;
-    $str =~ s/^$NONSORTPREFIX// ;
-    $str =~ s/^$NONSORTDIACRITICS// ;
+    $str =~ s/^$NOSORTPREFIX[-–]?// ;
+    $str =~ s/^$NOSORTDIACRITICS// ;
     if ($str =~ /^({ 
                    \\ [^\p{Ps}\p{L}] \p{L}+ # {\\.x}
                    }
