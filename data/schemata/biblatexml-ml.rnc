@@ -983,9 +983,9 @@ attlist.misc = attribute id {text}, attribute entrytype {"misc"}, attribute type
 
 #########################################################
 BibLaTeXML.online.standard.fields =
-  (author|editor)? &
+  (author & editor?)? &
   title &
-  ((day? & month? & year)|date) &
+  ((day? & month? & year)|date)? &
   (url|eprint) & 
   subtitle? &
   titleaddon? &
