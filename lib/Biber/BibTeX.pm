@@ -125,7 +125,15 @@ sub _text_bibtex_parse {
 
                 next unless $entry->exists($f) ;
 
-                #my @tmp = map { decode_utf8($_) } $entry->split($f) ;
+                my $af = $f ;
+
+                # support for legacy BibTeX field names as aliases
+                if ( $ALIASES{$f} ) {
+                    $af = $ALIASES{$f} ;
+                    # ignore field e.g. "address" if "location" also exists
+                    next if $entry->exists($af) ;
+                }
+                
                 my @tmp = map { decode($encoding, $_) } $entry->split($f) ;
 
                 if ($Biber::is_name_entry{$f}) {
@@ -140,12 +148,6 @@ sub _text_bibtex_parse {
                     @tmp = map { remove_outer($_) } @tmp ;
                 } 
 
-                my $af = $f ;
-
-                if ( $ALIASES{$f} ) {
-                    $af = $ALIASES{$f}
-                }
-                
                 $bibentries{ $key }->{$af} = [ @tmp ]                 
 
             } ;

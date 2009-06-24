@@ -54,7 +54,7 @@ Readonly::Array our @NAMEFIELDS  =>   qw{
   namea nameb namec } ;
 
 Readonly::Array our @LISTFIELDS  =>   qw{
-  publisher location institution organization language origlocation
+  publisher address location school institution organization language origlocation
   origpublisher lista listb listc listd liste listf } ;
 
 Readonly::Array our @LITERALFIELDS_BASE  =>   qw{
