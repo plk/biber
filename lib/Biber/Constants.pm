@@ -54,7 +54,7 @@ our %CONFIG_DEFAULT = (
   # Semitic (or eventually other) last names may begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
   nosortdiacritics => qr/[\x{2bf}\x{2018}]/,
   # Semitic (or eventually other) names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
-  nosortprefix => qr/\p{Ll}{2}-/,
+  nosortprefix => qr/\p{Ll}{2}\p{Pd}/,
   # default options for biblatex
   # in practice these will be obtained from the control file,
   # but we need this as a fallback, just in case,

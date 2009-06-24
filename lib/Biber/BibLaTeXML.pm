@@ -113,7 +113,7 @@ sub _parse_biblatexml {
         next if $self->{bib}->{$citekey} ; # skip if this is already found in another database
         print "Processing key $citekey\n" if $self->config('debug') ;
         my $xpath = '/*/bib:entry[@id="' . $citekey . '"]' ;
-        my $results = $db->findnodes($xpath) ;
+        my $results = $db->findnodes($xpath) or croak "Cannot find node $xpath";
         my $bibrecord = $results->get_node(1) ; 
 
         $self->{bib}->{$citekey}->{entrytype} = $bibrecord->findnodes('@entrytype')->string_value ;
