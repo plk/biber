@@ -1395,7 +1395,7 @@ sub sortentries {
         if ( $self->config('fastsort') ) {
             if ($self->config('locale')) {
                 my $thislocale = $self->config('locale') ;
-                setlocale( $thislocale ) or carp "Unavailable locale $thislocale"
+                setlocale( LC_ALL, $thislocale ) or carp "Unavailable locale $thislocale"
             }
             @auxcitekeys = sort {
                 $bibentries{$a}->{sortstring} cmp $bibentries{$b}->{sortstring}
