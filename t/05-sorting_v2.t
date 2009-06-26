@@ -10,6 +10,8 @@ chdir("t/tdata");
 
 my $bibfile;
 my $biber = Biber->new;
+$biber->{config}{fastsort} = 1;
+$biber->{config}{locale} = "C";
 $biber->parse_auxfile_v2("50-style-authoryear_v2.aux");
 $biber->{config}{biblatex}{global}{maxline} = 100000;
 $bibfile = $biber->config('bibdata')->[0] . ".bib";
