@@ -208,12 +208,12 @@ sub _generatesortstring {
 
 # Disjunctive sorting set
 sub _sortset {
-  my ($self, $sortset, $citekey) = @_ ;
+  my ($self, $sortset, $citekey) = @_;
   foreach my $sortelement (@{$sortset}) {
     my ($sortelementname, $sortelementattributes) = %{$sortelement};
-    my $string = $self->_dispatch_sorting($sortelementname,$citekey);
+    my $string = $self->_dispatch_sorting($sortelementname, $citekey);
     if ($string) { # sort returns something for this key
-      if (first {$_ eq 'final'} @{$sortelementattributes} ) { # set short-circuit flag if specified
+      if ($sortelementattributes->{final}) { # set short-circuit flag if specified
         $BIBER_SORT_FINAL = 1;
       }
       return $string;
