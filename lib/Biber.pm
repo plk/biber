@@ -1145,7 +1145,7 @@ sub postprocess {
        }
 
        unless ($be->{labelnamename}) {
-           croak "Could not determine the labelname of entry $citekey"
+           carp "Could not determine the labelname of entry $citekey" if $self->config('debug')
         }
 
         ##############################################################
