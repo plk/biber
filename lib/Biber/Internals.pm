@@ -353,10 +353,9 @@ sub _sort_sortyear {
   my $subs_offset = 0;
   if ($be->{sortyear}) {
     my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
-    if ($sortelementattributes->{substring_side}) { # avoid spurious errors when this doesn't exist
-      if ($sortelementattributes->{substring_side} eq 'right') {
-        $subs_offset = 0 - $subs_width;
-      }
+    my $subs_side = ($sortelementattributes->{substring_side} or $default_substring_side);
+    if ($subs_side eq 'right') {
+      $subs_offset = 0 - $subs_width;
     }
     return substr( $be->{sortyear}, $subs_offset, $subs_width ) ;
   }
@@ -373,13 +372,12 @@ sub _sort_sortyear_descend {
   my $subs_offset = 0;
   if ($be->{sortyear}) {
     my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
-    if ($sortelementattributes->{substring_side}) { # avoid spurious errors when this doesn't exist
-      if ($sortelementattributes->{substring_side} eq 'right') {
-        $subs_offset = 0 - $subs_width;
-      }
+    my $subs_side = ($sortelementattributes->{substring_side} or $default_substring_side);
+    if ($subs_side eq 'right') {
+      $subs_offset = 0 - $subs_width;
     }
     return 9999 - substr($be->{sortyear}, $subs_offset, $subs_width );
-    }
+  }
   else {
     return '';
   }
@@ -411,8 +409,20 @@ sub _sort_translator {
 sub _sort_volume {
   my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey} ;
+  my $default_pad_width = 4;
+  my $default_pad_side = 'left';
+  my $default_pad_char = '0';
   if ($be->{volume}) {
-    return sprintf( "%04s", $be->{volume});
+    my $pad_width = ($sortelementattributes->{pad_width} or $default_pad_width);
+    my $pad_side = ($sortelementattributes->{pad_side} or $default_pad_side);
+    my $pad_char = ($sortelementattributes->{pad_char} or $default_pad_char);
+    my $pad_length = $pad_width - length($be->{volume});
+    if ($pad_side eq 'left') {
+      return ($pad_char x $pad_length) . $be->{volume};
+    }
+    elsif ($pad_side eq 'right') {
+      return $be->{volume} . ($pad_char x $pad_length);
+    }
   }
   else {
     return '' ;
@@ -427,10 +437,9 @@ sub _sort_year {
   my $subs_offset = 0;
   if ($be->{year}) {
     my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
-    if ($sortelementattributes->{substring_side}) { # avoid spurious errors when this doesn't exist
-      if ($sortelementattributes->{substring_side} eq 'right') {
-        $subs_offset = 0 - $subs_width;
-      }
+    my $subs_side = ($sortelementattributes->{substring_side} or $default_substring_side);
+    if ($subs_side eq 'right') {
+      $subs_offset = 0 - $subs_width;
     }
     return substr( $be->{year}, $subs_offset, $subs_width ) ;
   }
@@ -447,13 +456,12 @@ sub _sort_year_descend {
   my $subs_offset = 0;
   if ($be->{year}) {
     my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
-    if ($sortelementattributes->{substring_side}) { # avoid spurious errors when this doesn't exist
-      if ($sortelementattributes->{substring_side} eq 'right') {
-        $subs_offset = 0 - $subs_width;
-      }
+    my $subs_side = ($sortelementattributes->{substring_side} or $default_substring_side);
+    if ($subs_side eq 'right') {
+      $subs_offset = 0 - $subs_width;
     }
     return 9999 - substr($be->{year}, $subs_offset, $subs_width);
-    }
+  }
   else {
     return '';
   }

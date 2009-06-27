@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 23;
+use Test::More tests => 26;
 
 use Biber;
 chdir("t/tdata");
@@ -26,6 +26,9 @@ my $yearoff6    = 'mm00knuth2donald e0computers typesetting0801500000';
 my $yearoff7    = 'mm00knuth2donald e0computers typesetting0980100000';
 my $yearoff8    = 'mm00knuth2donald e0computers typesetting0801300000';
 my $yearoff9    = 'mm00knuth2donald e0computers typesetting0901300000';
+my $vol1        = 'mm00glashow2sheldon0partial symmetries of weak interactions0196102200';
+my $vol2        = 'mm00glashow2sheldon0partial symmetries of weak interactions0196102200000';
+my $vol3        = 'mm00glashow2sheldon0partial symmetries of weak interactions019610aaa22';
 my $nty         = 'mm00glashow2sheldon0partial symmetries of weak interactions0196100022';
 my $nyt         = 'mm00glashow2sheldon019610partial symmetries of weak interactions00022';
 my $nyvt        = 'mm00glashow2sheldon01961000220partial symmetries of weak interactions';
@@ -346,6 +349,111 @@ $biber->{config}{biblatex}{global}{sorting} =  [
 
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff9, 'ntyd with right offset, 3 digit year' );
+
+# nty with right-padded vol
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
+                                                ],
+                                                [
+                                                 {'sortkey'    => {'final' => 1}}
+                                                ],
+                                                [
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sortyear'   => {}},
+                                                 {'year'       => {}}
+                                                ],
+                                                [
+                                                 {'volume'     => {pad_side => 'right'}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{stdmodel}{sortstring}, $vol1, 'nty with right-padded vol' );
+
+# nty with right-padded 7-char vol
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
+                                                ],
+                                                [
+                                                 {'sortkey'    => {'final' => 1}}
+                                                ],
+                                                [
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sortyear'   => {}},
+                                                 {'year'       => {}}
+                                                ],
+                                                [
+                                                 {'volume'     => {pad_side => 'right',
+                                                                  pad_width => 7}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{stdmodel}{sortstring}, $vol2, 'nty with right-padded 7-char vol' );
+
+# nty with left-padded 5-char using "a" as pad_char vol
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
+                                                ],
+                                                [
+                                                 {'sortkey'    => {'final' => 1}}
+                                                ],
+                                                [
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sortyear'   => {}},
+                                                 {'year'       => {}}
+                                                ],
+                                                [
+                                                 {'volume'     => {pad_side => 'left',
+                                                                  pad_width => 5,
+                                                                  pad_char => 'a'}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{stdmodel}{sortstring}, $vol3, 'nty with left-padded 5-char "a" pad char vol' );
 
 
 # nty

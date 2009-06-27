@@ -786,6 +786,15 @@ sub parse_ctrlfile_v2 {
         if ($sortitem->{substring_width}) { # Found sorting substring length attribute
           $sortitemattributes->{substring_width} = $sortitem->{substring_width};
         }
+        if ($sortitem->{pad_width}) { # Found sorting pad length attribute
+          $sortitemattributes->{pad_width} = $sortitem->{pad_width};
+        }
+        if ($sortitem->{pad_char}) { # Found sorting pad char attribute
+          $sortitemattributes->{pad_char} = $sortitem->{pad_char};
+        }
+        if ($sortitem->{pad_side}) { # Found sorting pad side attribute
+          $sortitemattributes->{pad_side} = $sortitem->{pad_side};
+        }
         push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
       }
       push @{$sorting}, $sortingitems;

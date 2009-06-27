@@ -157,6 +157,27 @@
                     <data type="integer"/>
                   </attribute>
                 </optional>
+                <optional>
+                  <attribute name="pad_side">
+                    <choice>
+                      <value>left</value>
+                      <value>right</value>
+                    </choice>
+                  </attribute>
+                </optional>
+                <optional>
+                  <attribute name="pad_width">
+                    <data type="integer"/>
+                  </attribute>
+                </optional>
+                <optional>
+                  <attribute name="pad_char">
+                    <data type="string">
+                      <param name="minLength">1</param>
+                      <param name="maxLength">1</param>
+                    </data>
+                  </attribute>
+                </optional>
                 <attribute name="order">
                   <data type="integer"/>
                 </attribute>
