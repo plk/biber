@@ -440,220 +440,220 @@ sub parse_ctrlfile {
     if ($sorting == 1) { # nty
       $self->{config}{biblatex}{global}{sorting} = [
                                                     [
-                                                     {'presort'    => []},
-                                                     {'mm'         => []},
+                                                     {'presort'    => {}},
+                                                     {'mm'         => {}},
                                                     ],
                                                     [
-                                                     {'sortkey'    => ['final']}
+                                                     {'sortkey'    => {'final' => 1}}
                                                     ],
                                                     [
-                                                     {'sortname'   => []},
-                                                     {'author'     => []},
-                                                     {'editor'     => []},
-                                                     {'translator' => []},
-                                                     {'sorttitle'  => []},
-                                                     {'title'      => []}
+                                                     {'sortname'   => {}},
+                                                     {'author'     => {}},
+                                                     {'editor'     => {}},
+                                                     {'translator' => {}},
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
                                                     ],
                                                     [
-                                                     {'sorttitle'  => []},
-                                                     {'title'      => []}
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
                                                     ],
                                                     [
-                                                     {'sortyear'   => []},
-                                                     {'year'       => []}
+                                                     {'sortyear'   => {}},
+                                                     {'year'       => {}}
                                                     ],
                                                     [
-                                                     {'volume'     => []},
-                                                     {'0000'       => []}
+                                                     {'volume'     => {}},
+                                                     {'0000'       => {}}
                                                     ]
                                                    ];
     } elsif ($sorting == 2) { # nyt
       $self->{config}{biblatex}{global}{sorting} = [
                                                     [
-                                                     {'presort'    => []},
-                                                     {'mm'         => []},
+                                                     {'presort'    => {}},
+                                                     {'mm'         => {}},
                                                     ],
                                                     [
-                                                     {'sortkey'    => ['final']}
+                                                     {'sortkey'    => {'final' => 1}}
                                                     ],
                                                     [
-                                                     {'sortname'   => []},
-                                                     {'author'     => []},
-                                                     {'editor'     => []},
-                                                     {'translator' => []},
-                                                     {'sorttitle'  => []},
-                                                     {'title'      => []}
+                                                     {'sortname'   => {}},
+                                                     {'author'     => {}},
+                                                     {'editor'     => {}},
+                                                     {'translator' => {}},
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
                                                     ],
                                                     [
-                                                     {'sortyear'   => []},
-                                                     {'year'       => []}
+                                                     {'sortyear'   => {}},
+                                                     {'year'       => {}}
                                                     ],
                                                     [
-                                                     {'sorttitle'  => []},
-                                                     {'title'      => []}
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
                                                     ],
                                                     [
-                                                     {'volume'     => []},
-                                                     {'0000'       => []}
+                                                     {'volume'     => {}},
+                                                     {'0000'       => {}}
                                                     ]
                                                    ];
     } elsif ($sorting == 3) { # nyvt
       $self->{config}{biblatex}{global}{sorting} = [
                                                     [
-                                                     {'presort'    => []},
-                                                     {'mm'         => []},
+                                                     {'presort'    => {}},
+                                                     {'mm'         => {}},
                                                     ],
                                                     [
-                                                     {'sortkey'    => ['final']}
+                                                     {'sortkey'    => {'final' => 1}}
                                                     ],
                                                     [
-                                                     {'sortname'   => []},
-                                                     {'author'     => []},
-                                                     {'editor'     => []},
-                                                     {'translator' => []},
-                                                     {'sorttitle'  => []},
-                                                     {'title'      => []}
+                                                     {'sortname'   => {}},
+                                                     {'author'     => {}},
+                                                     {'editor'     => {}},
+                                                     {'translator' => {}},
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
                                                     ],
                                                     [
-                                                     {'sortyear'   => []},
-                                                     {'year'       => []}
+                                                     {'sortyear'   => {}},
+                                                     {'year'       => {}}
                                                     ],
                                                     [
-                                                     {'volume'     => []},
-                                                     {'0000'       => []}
+                                                     {'volume'     => {}},
+                                                     {'0000'       => {}}
                                                     ],
                                                     [
-                                                     {'sorttitle'  => []},
-                                                     {'title'      => []}
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
                                                     ]
                                                    ];
     } elsif ($sorting == 12) { # anyt
       $self->{config}{biblatex}{global}{sorting} = [
                                                     [
-                                                     {'presort'    => []},
-                                                     {'mm'         => []},
+                                                     {'presort'    => {}},
+                                                     {'mm'         => {}},
                                                     ],
                                                     [
-                                                     {'labelalpha' => []}
+                                                     {'labelalpha' => {}}
                                                     ],
                                                     [
-                                                     {'sortkey'    => ['final']}
+                                                     {'sortkey'    => {'final' => 1}}
                                                     ],
                                                     [
-                                                     {'sortname'   => []},
-                                                     {'author'     => []},
-                                                     {'editor'     => []},
-                                                     {'translator' => []},
-                                                     {'sorttitle'  => []},
-                                                     {'title'      => []}
+                                                     {'sortname'   => {}},
+                                                     {'author'     => {}},
+                                                     {'editor'     => {}},
+                                                     {'translator' => {}},
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
                                                     ],
                                                     [
-                                                     {'sortyear'   => []},
-                                                     {'year'       => []}
+                                                     {'sortyear'   => {}},
+                                                     {'year'       => {}}
                                                     ],
                                                     [
-                                                     {'sorttitle'  => []},
-                                                     {'title'      => []}
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
                                                     ],
                                                     [
-                                                     {'sorttitle'  => []},
-                                                     {'0000'       => []}
+                                                     {'sorttitle'  => {}},
+                                                     {'0000'       => {}}
                                                     ]
                                                    ];
 
     } elsif ($sorting == 13) { # anyvt
       $self->{config}{biblatex}{global}{sorting} = [
                                                     [
-                                                     {'presort'    => []},
-                                                     {'mm'         => []},
+                                                     {'presort'    => {}},
+                                                     {'mm'         => {}},
                                                     ],
                                                     [
-                                                     {'labelalpha' => []}
+                                                     {'labelalpha' => {}}
                                                     ],
                                                     [
-                                                     {'sortkey'    => ['final']}
+                                                     {'sortkey'    => {'final' => 1}}
                                                     ],
                                                     [
-                                                     {'sortname'   => []},
-                                                     {'author'     => []},
-                                                     {'editor'     => []},
-                                                     {'translator' => []},
-                                                     {'sorttitle'  => []},
-                                                     {'title'      => []}
+                                                     {'sortname'   => {}},
+                                                     {'author'     => {}},
+                                                     {'editor'     => {}},
+                                                     {'translator' => {}},
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
                                                     ],
                                                     [
-                                                     {'sortyear'   => []},
-                                                     {'year'       => []}
+                                                     {'sortyear'   => {}},
+                                                     {'year'       => {}}
                                                     ],
                                                     [
-                                                     {'volume'     => []},
-                                                     {'0000'       => []}
+                                                     {'volume'     => {}},
+                                                     {'0000'       => {}}
                                                     ],
                                                     [
-                                                     {'sorttitle'  => []},
-                                                     {'title'      => []}
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
                                                     ]
                                                    ];
 
     } elsif ($sorting == 21) { # ynt
       $self->{config}{biblatex}{global}{sorting} = [
                                                     [
-                                                     {'presort'    => []},
-                                                     {'mm'         => []},
+                                                     {'presort'    => {}},
+                                                     {'mm'         => {}},
                                                     ],
                                                     [
-                                                     {'sortkey'    => ['final']}
+                                                     {'sortkey'    => {'final' => 1}}
                                                     ],
                                                     [
-                                                     {'sortyear'   => []},
-                                                     {'year'       => []},
-                                                     {'9999'       => []}
+                                                     {'sortyear'   => {}},
+                                                     {'year'       => {}},
+                                                     {'9999'       => {}}
                                                     ],
                                                     [
-                                                     {'sortname'   => []},
-                                                     {'author'     => []},
-                                                     {'editor'     => []},
-                                                     {'translator' => []},
-                                                     {'sorttitle'  => []},
-                                                     {'title'      => []}
+                                                     {'sortname'   => {}},
+                                                     {'author'     => {}},
+                                                     {'editor'     => {}},
+                                                     {'translator' => {}},
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
                                                     ],
                                                     [
-                                                     {'sorttitle'  => []},
-                                                     {'title'      => []}
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
                                                     ],
                                                    ];
 
     } elsif ($sorting == 22) { # ydnt
       $self->{config}{biblatex}{global}{sorting} = [
                                                     [
-                                                     {'presort'    => []},
-                                                     {'mm'         => []},
+                                                     {'presort'    => {}},
+                                                     {'mm'         => {}},
                                                     ],
                                                     [
-                                                     {'sortkey'    => ['final']}
+                                                     {'sortkey'    => {'final' => 1}}
                                                     ],
                                                     [
-                                                     {'sortyearD'  => []},
-                                                     {'yearD'      => []},
-                                                     {'9999'       => []}
+                                                     {'sortyearD'  => {}},
+                                                     {'yearD'      => {}},
+                                                     {'9999'       => {}}
                                                     ],
                                                     [
-                                                     {'sortname'   => []},
-                                                     {'author'     => []},
-                                                     {'editor'     => []},
-                                                     {'translator' => []},
-                                                     {'sorttitle'  => []},
-                                                     {'title'      => []}
+                                                     {'sortname'   => {}},
+                                                     {'author'     => {}},
+                                                     {'editor'     => {}},
+                                                     {'translator' => {}},
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
                                                     ],
                                                     [
-                                                     {'sorttitle'  => []},
-                                                     {'title'      => []}
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
                                                     ],
                                                    ];
     } elsif ($sorting == 99) { # debug
       $self->{config}{biblatex}{global}{sorting} = [
                                                     [
-                                                     {'debug'    => []},
+                                                     {'debug'    => {}},
                                                     ],
                                                    ];
     }
@@ -777,9 +777,9 @@ sub parse_ctrlfile_v2 {
       foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$sortschemes->{sort}}) {
       my $sortingitems = [];
         foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
-          my $sortitemattributes = [];
+          my $sortitemattributes = {};
           if ($sortitem->{final}) { # Found a sorting short-circuit marker
-            push @{$sortitemattributes}, 'final';
+            $sortitemattributes->{final} = 1;
           }
           push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
         }
@@ -793,9 +793,9 @@ sub parse_ctrlfile_v2 {
       foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$sortschemes->{sort}}) {
       my $sortingitems = [];
         foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
-          my $sortitemattributes = [];
+          my $sortitemattributes = {};
           if ($sortitem->{final}) { # Found a sorting short-circuit marker
-            push @{$sortitemattributes}, 'final';
+            $sortitemattributes->{final} = 1;
           }
           push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
         }
