@@ -772,49 +772,25 @@ sub parse_ctrlfile_v2 {
   }
   # SORTING schemes
   foreach my $sortschemes (@{$bcfxml->{sorting}}) {
-    if ($sortschemes->{type} eq 'global') { # Global sorting schemes
-      my $sorting = [];
-      foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$sortschemes->{sort}}) {
+    my $sorting = [];
+    foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$sortschemes->{sort}}) {
       my $sortingitems = [];
-        foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
-          my $sortitemattributes = {};
-          if ($sortitem->{final}) { # Found a sorting short-circuit marker
-            $sortitemattributes->{final} = 1;
-          }
-          if ($sortitem->{substring_side}) { # Found sorting substring side attribute
-            $sortitemattributes->{substring_side} = $sortitem->{substring_side};
-          }
-          if ($sortitem->{substring_width}) { # Found sorting substring length attribute
-            $sortitemattributes->{substring_width} = $sortitem->{substring_width};
-          }
-          push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
+      foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
+        my $sortitemattributes = {};
+        if ($sortitem->{final}) { # Found a sorting short-circuit marker
+          $sortitemattributes->{final} = 1;
         }
-      push @{$sorting}, $sortingitems;
-      }
-      $self->{config}{biblatex}{global}{sorting} = $sorting;
-    }
-    else { # Entrytype specific sorting
-      my $entrytype = $sortschemes->{type};
-      my $sorting = [];
-      foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$sortschemes->{sort}}) {
-      my $sortingitems = [];
-        foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
-          my $sortitemattributes = {};
-          if ($sortitem->{final}) { # Found a sorting short-circuit marker
-            $sortitemattributes->{final} = 1;
-          }
-          if ($sortitem->{substring_side}) { # Found sorting substring side attribute
-            $sortitemattributes->{substring_side} = $sortitem->{substring_side};
-          }
-          if ($sortitem->{substring_width}) { # Found sorting substring length attribute
-            $sortitemattributes->{substring_width} = $sortitem->{substring_width};
-          }
-          push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
+        if ($sortitem->{substring_side}) { # Found sorting substring side attribute
+          $sortitemattributes->{substring_side} = $sortitem->{substring_side};
         }
-      push @{$sorting}, $sortingitems;
+        if ($sortitem->{substring_width}) { # Found sorting substring length attribute
+          $sortitemattributes->{substring_width} = $sortitem->{substring_width};
+        }
+        push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
       }
-      $self->{config}{biblatex}{$entrytype}{sorting} = $sorting;
+      push @{$sorting}, $sortingitems;
     }
+    $self->{config}{biblatex}{$sortschemes->{type}}{sorting} = $sorting;
   }
 
   # BIB SECTIONS
