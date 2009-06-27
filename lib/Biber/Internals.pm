@@ -368,8 +368,17 @@ sub _sort_sortyear {
 sub _sort_sortyear_descend {
   my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey} ;
+  my $default_substring_width = 4;
+  my $default_substring_side = 'left';
+  my $subs_offset = 0;
   if ($be->{sortyear}) {
-    return 9999 - substr($be->{sortyear}, 0, 4);
+    my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
+    if ($sortelementattributes->{substring_side}) { # avoid spurious errors when this doesn't exist
+      if ($sortelementattributes->{substring_side} eq 'right') {
+        $subs_offset = 0 - $subs_width;
+      }
+    }
+    return 9999 - substr($be->{sortyear}, $subs_offset, $subs_width );
     }
   else {
     return '';
@@ -433,8 +442,17 @@ sub _sort_year {
 sub _sort_year_descend {
   my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey} ;
+  my $default_substring_width = 4;
+  my $default_substring_side = 'left';
+  my $subs_offset = 0;
   if ($be->{year}) {
-    return 9999 - substr($be->{year}, 0, 4);
+    my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
+    if ($sortelementattributes->{substring_side}) { # avoid spurious errors when this doesn't exist
+      if ($sortelementattributes->{substring_side} eq 'right') {
+        $subs_offset = 0 - $subs_width;
+      }
+    }
+    return 9999 - substr($be->{year}, $subs_offset, $subs_width);
     }
   else {
     return '';

@@ -144,6 +144,19 @@
                     <data type="integer"/>
                   </attribute>
                 </optional>
+                <optional>
+                  <attribute name="substring_side">
+                    <choice>
+                      <value>left</value>
+                      <value>right</value>
+                    </choice>
+                  </attribute>
+                </optional>
+                <optional>
+                  <attribute name="substring_width">
+                    <data type="integer"/>
+                  </attribute>
+                </optional>
                 <attribute name="order">
                   <data type="integer"/>
                 </attribute>

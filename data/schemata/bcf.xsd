@@ -97,7 +97,28 @@
         <xs:element name="sorting">
           <xs:complexType>
             <xs:sequence>
-              <xs:element maxOccurs="unbounded" ref="bcf:sort"/>
+              <xs:element maxOccurs="unbounded" name="sort">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element maxOccurs="unbounded" name="sortitem">
+                      <xs:complexType mixed="true">
+                        <xs:attribute name="final" type="xs:integer"/>
+                        <xs:attribute name="substring_side">
+                          <xs:simpleType>
+                            <xs:restriction base="xs:token">
+                              <xs:enumeration value="left"/>
+                              <xs:enumeration value="right"/>
+                            </xs:restriction>
+                          </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="substring_width" type="xs:integer"/>
+                        <xs:attribute name="order" use="required" type="xs:integer"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="order" use="required" type="xs:integer"/>
+                </xs:complexType>
+              </xs:element>
             </xs:sequence>
             <xs:attribute name="type" use="required">
               <xs:simpleType>
@@ -111,7 +132,19 @@
         <xs:element minOccurs="0" maxOccurs="unbounded" name="sorting">
           <xs:complexType>
             <xs:sequence>
-              <xs:element maxOccurs="unbounded" ref="bcf:sort"/>
+              <xs:element maxOccurs="unbounded" name="sort">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element maxOccurs="unbounded" name="sortitem">
+                      <xs:complexType mixed="true">
+                        <xs:attribute name="final" type="xs:integer"/>
+                        <xs:attribute name="order" use="required" type="xs:integer"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="order" use="required" type="xs:integer"/>
+                </xs:complexType>
+              </xs:element>
             </xs:sequence>
             <xs:attribute name="type" use="required" type="bcf:biblatex.entrytypes"/>
           </xs:complexType>
@@ -139,20 +172,6 @@
           </xs:attribute>
         </xs:extension>
       </xs:simpleContent>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="sort">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="bcf:sortitem"/>
-      </xs:sequence>
-      <xs:attribute name="order" use="required" type="xs:integer"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="sortitem">
-    <xs:complexType mixed="true">
-      <xs:attribute name="final" type="xs:integer"/>
-      <xs:attribute name="order" use="required" type="xs:integer"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="section">
