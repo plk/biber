@@ -781,6 +781,12 @@ sub parse_ctrlfile_v2 {
           if ($sortitem->{final}) { # Found a sorting short-circuit marker
             $sortitemattributes->{final} = 1;
           }
+          if ($sortitem->{substring_side}) { # Found sorting substring side attribute
+            $sortitemattributes->{substring_side} = $sortitem->{substring_side};
+          }
+          if ($sortitem->{substring_width}) { # Found sorting substring length attribute
+            $sortitemattributes->{substring_width} = $sortitem->{substring_width};
+          }
           push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
         }
       push @{$sorting}, $sortingitems;
@@ -796,6 +802,12 @@ sub parse_ctrlfile_v2 {
           my $sortitemattributes = {};
           if ($sortitem->{final}) { # Found a sorting short-circuit marker
             $sortitemattributes->{final} = 1;
+          }
+          if ($sortitem->{substring_side}) { # Found sorting substring side attribute
+            $sortitemattributes->{substring_side} = $sortitem->{substring_side};
+          }
+          if ($sortitem->{substring_width}) { # Found sorting substring length attribute
+            $sortitemattributes->{substring_width} = $sortitem->{substring_width};
           }
           push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
         }

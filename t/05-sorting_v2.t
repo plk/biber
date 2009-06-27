@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 
 use Biber;
 chdir("t/tdata");
@@ -29,6 +29,7 @@ my $sk1         = 'mm0aatestkey';
 my $pt1         = 'mm0081220aristotle0rhetoric of aristotle';
 my $ps_sc       = 'zs00glashow2sheldon0partial symmetries of weak interactions';
 my $noname      = 'mm00partial symmetries of weak interactions0partial symmetries of weak interactions0196100022';
+my $yearoff     = 'mm00knuth0computers&typsetting09860';
 
 # nty
 $biber->{config}{biblatex}{global}{sorting} =  [
@@ -360,6 +361,40 @@ $biber->{config}{biblatex}{global}{sorting} =  [
 
 $biber->prepare;
 is($biber->{bib}{'stdmodel:ps_sc'}{sortstring}, $ps_sc, 'nty with modified presort and short-circuit title' );
+
+# nty with right, 3-digit year sort
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
+                                                ],
+                                                [
+                                                 {'sortkey'    => {'final' => 1}}
+                                                ],
+                                                [
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'year'       => {substring_side => 'right',
+                                                                   substring_width => 3}}
+                                                ],
+                                                [
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff, 'nty with right offset, 3 digit year' );
 
 # nty with use* all off
 $biber->{config}{biblatex}{global}{useauthor} = 0;
