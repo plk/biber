@@ -236,8 +236,9 @@ $biber->{config}{biblatex}{global}{sorting} =  [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'yearD'       => {'substring_side' => 'left',
-                                                                   'substring_width' => 4}}
+                                                 {'year'       => {'substring_side'  => 'left',
+                                                                   'substring_width' => 4,
+                                                                   'sort_direction'  => 'descending'}}
                                                 ],
                                                 [
                                                  {'volume'     => {}},
@@ -270,8 +271,9 @@ $biber->{config}{biblatex}{global}{sorting} =  [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'yearD'       => {'substring_side' => 'left',
-                                                                   'substring_width' => 3}}
+                                                 {'year'       => {'substring_side'  => 'left',
+                                                                   'substring_width' => 3,
+                                                                   'sort_direction'  => 'descending'}}
                                                 ],
                                                 [
                                                  {'volume'     => {}},
@@ -304,8 +306,9 @@ $biber->{config}{biblatex}{global}{sorting} =  [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'yearD'       => {'substring_side' => 'right',
-                                                                   'substring_width' => 4}}
+                                                 {'year'       => {'substring_side'  => 'right',
+                                                                   'substring_width' => 4,
+                                                                   'sort_direction'  => 'descending'}}
                                                 ],
                                                 [
                                                  {'volume'     => {}},
@@ -338,8 +341,9 @@ $biber->{config}{biblatex}{global}{sorting} =  [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'yearD'       => {'substring_side' => 'right',
-                                                                   'substring_width' => 3}}
+                                                 {'year'       => {'substring_side' => 'right',
+                                                                   'substring_width' => 3,
+                                                                   'sort_direction'  => 'descending'}}
                                                 ],
                                                 [
                                                  {'volume'     => {}},
@@ -690,8 +694,8 @@ $biber->{config}{biblatex}{global}{sorting} =  [
                                                  {'sortkey'    => {'final' => 1}}
                                                 ],
                                                 [
-                                                 {'sortyearD'  => {}},
-                                                 {'yearD'      => {}},
+                                                 {'sortyear'   => {'sort_direction'  => 'descending'}},
+                                                 {'year'      => {'sort_direction'  => 'descending'}},
                                                  {'9999'       => {}}
                                                 ],
                                                 [
@@ -732,8 +736,8 @@ $biber->{config}{biblatex}{book}{sorting} =  [
                                                  {'sortkey'    => {'final' => 1}}
                                                 ],
                                                 [
-                                                 {'sortyearD'  => {}},
-                                                 {'yearD'      => {}},
+                                                 {'sortyear'  => {'sort_direction'  => 'descending'}},
+                                                 {'year'      => {'sort_direction'  => 'descending'}},
                                                  {'9999'       => {}}
                                                 ],
                                                 [

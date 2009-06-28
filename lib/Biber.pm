@@ -795,6 +795,9 @@ sub parse_ctrlfile_v2 {
         if ($sortitem->{pad_side}) { # Found sorting pad side attribute
           $sortitemattributes->{pad_side} = $sortitem->{pad_side};
         }
+        if ($sortitem->{sort_direction}) { # Found sorting direction attribute
+          $sortitemattributes->{sort_direction} = $sortitem->{sort_direction};
+        }
         push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
       }
       push @{$sorting}, $sortingitems;

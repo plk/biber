@@ -13,31 +13,31 @@ $biber->parse_ctrlfile_v2("00-options") ;
 
 my $dmv =  [
               [
-               {'presort'    => []},
-               {'mm'         => []},
+               {'presort'    => {}},
+               {'mm'         => {}},
               ],
               [
-               {'sortkey'    => ['final']}
+               {'sortkey'    => {'final' => 1}}
               ],
               [
-               {'sortname'   => []},
-               {'author'     => []},
-               {'editor'     => []},
-               {'translator' => []},
-               {'sorttitle'  => []},
-               {'title'      => []}
+               {'sortname'   => {}},
+               {'author'     => {}},
+               {'editor'     => {}},
+               {'translator' => {}},
+               {'sorttitle'  => {}},
+               {'title'      => {}}
               ],
               [
-               {'sorttitle'  => []},
-               {'title'      => []}
+               {'sorttitle'  => {}},
+               {'title'      => {}}
               ],
               [
-               {'sortyear'   => []},
-               {'year'       => []}
+               {'sortyear'   => {}},
+               {'year'       => {}}
               ],
               [
-               {'volume'     => []},
-               {'0000'       => []}
+               {'volume'     => {}},
+               {'0000'       => {}}
               ]
              ];
 

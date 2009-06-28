@@ -122,7 +122,7 @@
       <bcf:sortitem order="2">title</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="5">
-      <bcf:sortitem order="1">sortyear</bcf:sortitem>
+      <bcf:sortitem order="1" sort_direction="descending">sortyear</bcf:sortitem>
       <bcf:sortitem substring_side="right" substring_width="4" order="2">year</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="6">

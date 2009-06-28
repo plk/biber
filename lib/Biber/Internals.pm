@@ -172,12 +172,10 @@ our $dispatch_sorting = {
              'sortname'     =>  \&_sort_sortname,
              'sorttitle'    =>  \&_sort_sorttitle,
              'sortyear'     =>  \&_sort_sortyear,
-             'sortyearD'    =>  \&_sort_sortyear_descend,
              'title'        =>  \&_sort_title,
              'translator'   =>  \&_sort_translator,
              'volume'       =>  \&_sort_volume,
              'year'         =>  \&_sort_year,
-             'yearD'        =>  \&_sort_year_descend,
 };
 
 # Main sorting dispath method
@@ -350,33 +348,21 @@ sub _sort_sortyear {
   my $be = $self->{bib}{$citekey} ;
   my $default_substring_width = 4;
   my $default_substring_side = 'left';
+  my $default_direction = 'ascending';
   my $subs_offset = 0;
   if ($be->{sortyear}) {
     my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
     my $subs_side = ($sortelementattributes->{substring_side} or $default_substring_side);
+    my $sort_dir = ($sortelementattributes->{sort_direction} or $default_direction);
     if ($subs_side eq 'right') {
       $subs_offset = 0 - $subs_width;
     }
-    return substr( $be->{sortyear}, $subs_offset, $subs_width ) ;
-  }
-  else {
-    return '';
-  }
-}
-
-sub _sort_sortyear_descend {
-  my ($self, $citekey, $sortelementattributes) = @_ ;
-  my $be = $self->{bib}{$citekey} ;
-  my $default_substring_width = 4;
-  my $default_substring_side = 'left';
-  my $subs_offset = 0;
-  if ($be->{sortyear}) {
-    my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
-    my $subs_side = ($sortelementattributes->{substring_side} or $default_substring_side);
-    if ($subs_side eq 'right') {
-      $subs_offset = 0 - $subs_width;
+    if ($sort_dir eq 'ascending') { # default, ascending sort
+      return substr( $be->{sortyear}, $subs_offset, $subs_width ) ;
     }
-    return 9999 - substr($be->{sortyear}, $subs_offset, $subs_width );
+    elsif ($sort_dir eq 'descending') { # descending sort
+      return 9999 - substr($be->{sortyear}, $subs_offset, $subs_width );
+    }
   }
   else {
     return '';
@@ -434,33 +420,21 @@ sub _sort_year {
   my $be = $self->{bib}{$citekey} ;
   my $default_substring_width = 4;
   my $default_substring_side = 'left';
+  my $default_direction = 'ascending';
   my $subs_offset = 0;
   if ($be->{year}) {
     my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
     my $subs_side = ($sortelementattributes->{substring_side} or $default_substring_side);
+    my $sort_dir = ($sortelementattributes->{sort_direction} or $default_direction);
     if ($subs_side eq 'right') {
       $subs_offset = 0 - $subs_width;
     }
-    return substr( $be->{year}, $subs_offset, $subs_width ) ;
-  }
-  else {
-    return '';
-  }
-}
-
-sub _sort_year_descend {
-  my ($self, $citekey, $sortelementattributes) = @_ ;
-  my $be = $self->{bib}{$citekey} ;
-  my $default_substring_width = 4;
-  my $default_substring_side = 'left';
-  my $subs_offset = 0;
-  if ($be->{year}) {
-    my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
-    my $subs_side = ($sortelementattributes->{substring_side} or $default_substring_side);
-    if ($subs_side eq 'right') {
-      $subs_offset = 0 - $subs_width;
+    if ($sort_dir eq 'ascending') { # default, ascending sort
+      return substr( $be->{year}, $subs_offset, $subs_width ) ;
     }
-    return 9999 - substr($be->{year}, $subs_offset, $subs_width);
+    elsif ($sort_dir eq 'descending') { # descending sort
+      return 9999 - substr($be->{year}, $subs_offset, $subs_width );
+    }
   }
   else {
     return '';
