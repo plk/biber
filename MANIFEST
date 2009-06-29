@@ -21,7 +21,6 @@ data/schemata/bcf.rnc
 data/schemata/bcf.rng
 data/schemata/bcf.xsd
 data/schemata/biblatexml.rnc
-data/schemata/biblatexml-simple.rnc
 data/schemata/biblatexml.rng
 data/schemata/biblatexml.xsd
 data/latinkeys.txt
