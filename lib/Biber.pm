@@ -1144,7 +1144,7 @@ sub postprocess {
 
        unless ($be->{labelnamename}) {
            carp "Could not determine the labelname of entry $citekey" if $self->config('debug')
-        }
+         }
 
         ##############################################################
         # 5a. determine namehash and fullhash
@@ -1287,43 +1287,29 @@ sub postprocess {
         if ( $self->getblxoption('labelalpha', $citekey) ) {
             my $label ;
 
-            if ($be->{shorthand}) 
-            {
-                $label = $be->{shorthand} 
+            if ($be->{shorthand}) {
+              $label = $be->{shorthand};
             }
-            else 
-            {
-                if ($be->{label}) 
-                {
-                    $label = $be->{label}
-                } 
-                elsif ( $be->{author} and $self->getblxoption('useauthor', $citekey) )
-                { 
-                    $label = $self->_getlabel($citekey, "author");
-                }
-                elsif ( $be->{editor} and $self->getblxoption('useeditor', $citekey ) )
-                {
-                    $label = $self->_getlabel($citekey, "editor");
-                }
-                else 
-                {
-                    $label = "Zzz"    # ??? FIXME
-                } ;
-
-                my $yr ;
-
-                if ( $be->{year} ) {
-                    $yr = substr $be->{year}, 2, 2 ;
-                }
-                else {
-                    $yr = "00" ;
-                }
-
-                $label .= $yr ;
-
-            } ;
-
-            $be->{labelalpha} = $label ;
+            else {
+              if ($be->{label}) {
+                $label = $be->{label};
+              }
+              elsif ($be->{labelnamename} and $be->{$be->{labelnamename}}) {
+                $label = $self->_getlabel($citekey, $be->{labelnamename});
+              }
+              else {
+                $label = '';
+              }
+              my $yr ;
+              if ( $be->{year} ) {
+                $yr = substr $be->{year}, 2, 2 ;
+              }
+              else {
+                $yr = '00' ;
+              }
+              $label .= $yr ;
+            }
+            $be->{labelalpha} = $label;
         }
 
         ##############################################################

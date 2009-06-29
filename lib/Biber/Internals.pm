@@ -88,7 +88,7 @@ sub _getlabel {
     my @prefixes  = map { $_->{prefix} } @names ;
     my $noofauth  = scalar @names ;
     
-    if ( $noofauth > 3 ) {
+    if ( $noofauth > 3 ) { # FIXME - this should be conditionalised on maxnames and "and others" (see p75/76 biblatex manual)
         if ($useprefix and $prefixes[0]) {
             $label .= substr( $prefixes[0], 0, 1 ) ; 
             $label .= substr( $lastnames[0], 0, 2 ) . $alphaothers
@@ -619,8 +619,6 @@ sub _print_biblatex_entry {
         # TODO check against $be->entryset and warn if different!
         $str .= "  \\inset{" . $Biber::inset_entries{$citekey} . "}\n" ;
     }
-
-#    delete $be->{entrytype}; #forgot why this is needed!
 
     # make labelname a copy of the right thing before output of name lists
     if (_defined_and_nonempty($be->{labelnamename})) { # avoid unitialised variable warnings
