@@ -39,7 +39,7 @@ my $murray1 = q|\entry{murray}{article}{}
   }
   \strng{namehash}{HMJ+1}
   \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
-  \field{labelalpha}{Hos+98}
+  \field{labelalpha}{Hos\textbf{+}98}
   \field{sortinit}{H}
   \count{uniquename}{0}
   \true{singletitle}
@@ -111,7 +111,7 @@ my $setaksin = q|\entry{set:aksin}{article}{}
   }
   \strng{namehash}{AÖ+1}
   \strng{fullhash}{AÖTHALC̨BNCBOÖE1}
-  \field{labelalpha}{Aks+06}
+  \field{labelalpha}{Aks\textbf{+}06}
   \field{sortinit}{A}
   \count{uniquename}{0}
   \true{singletitle}

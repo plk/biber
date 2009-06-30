@@ -9,7 +9,7 @@
   <bcf:options component="biblatex" type="global">
     <bcf:option type="singlevalued">
       <bcf:key>alphaothers</bcf:key>
-      <bcf:value>+</bcf:value>
+      <bcf:value>\textbf{+}</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labelalpha</bcf:key>
