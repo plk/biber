@@ -88,7 +88,7 @@ sub _getlabel {
     my @prefixes  = map { $_->{prefix} } @names ;
     my $noofauth  = scalar @names ;
     
-    if ( $noofauth > 3 ) {
+    if ( $noofauth > 3 ) { # FIXME - this should be conditionalised on maxnames and "and others" (see p75/76 biblatex manual)
         if ($useprefix and $prefixes[0]) {
             $label .= substr( $prefixes[0], 0, 1 ) ; 
             $label .= substr( $lastnames[0], 0, 2 ) . $alphaothers
@@ -204,18 +204,16 @@ our $dispatch_sorting = {
              'sortname'     =>  \&_sort_sortname,
              'sorttitle'    =>  \&_sort_sorttitle,
              'sortyear'     =>  \&_sort_sortyear,
-             'sortyearD'    =>  \&_sort_sortyear_descend,
              'title'        =>  \&_sort_title,
              'translator'   =>  \&_sort_translator,
              'volume'       =>  \&_sort_volume,
              'year'         =>  \&_sort_year,
-             'yearD'        =>  \&_sort_year_descend,
 };
 
 # Main sorting dispath method
 sub _dispatch_sorting {
-  my ($self, $sortfield, $citekey) = @_;
-  return &{$dispatch_sorting->{$sortfield}}($self,$citekey);
+  my ($self, $sortfield, $citekey, $sortelementattributes) = @_;
+  return &{$dispatch_sorting->{$sortfield}}($self, $citekey, $sortelementattributes);
 };
 
 # Conjunctive set of sorting sets
@@ -240,12 +238,12 @@ sub _generatesortstring {
 
 # Disjunctive sorting set
 sub _sortset {
-  my ($self, $sortset, $citekey) = @_ ;
+  my ($self, $sortset, $citekey) = @_;
   foreach my $sortelement (@{$sortset}) {
     my ($sortelementname, $sortelementattributes) = %{$sortelement};
-    my $string = $self->_dispatch_sorting($sortelementname,$citekey);
+    my $string = $self->_dispatch_sorting($sortelementname, $citekey, $sortelementattributes);
     if ($string) { # sort returns something for this key
-      if (first {$_ eq 'final'} @{$sortelementattributes} ) { # set short-circuit flag if specified
+      if ($sortelementattributes->{final}) { # set short-circuit flag if specified
         $BIBER_SORT_FINAL = 1;
       }
       return $string;
@@ -266,7 +264,7 @@ sub _sort_9999 {
 }
 
 sub _sort_author {
-  my ($self, $citekey) = @_ ;
+  my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey} ;
   if ($self->getblxoption('useauthor', $citekey) and $be->{author}) {
     return $self->_namestring($citekey, 'author');
@@ -277,12 +275,12 @@ sub _sort_author {
 }
 
 sub _sort_debug {
-  my ($self, $citekey) = @_ ;
+  my ($self, $citekey, $sortelementattributes) = @_ ;
   return $citekey;
 }
 
 sub _sort_editor {
-  my ($self, $citekey) = @_ ;
+  my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey} ;
   if ($self->getblxoption('useeditor', $citekey) and $be->{editor}) {
     return $self->_namestring($citekey, 'editor');
@@ -293,7 +291,7 @@ sub _sort_editor {
 }
 
 sub _sort_issuetitle {
-  my ($self, $citekey) = @_ ;
+  my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey} ;
   my $no_decode = $self->_nodecode($citekey);
   if ($be->{issuetitle}) {
@@ -305,7 +303,7 @@ sub _sort_issuetitle {
 }
 
 sub _sort_journal {
-  my ($self, $citekey) = @_ ;
+  my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey} ;
   my $no_decode = $self->_nodecode($citekey);
   if ($be->{journal}) {
@@ -321,7 +319,7 @@ sub _sort_mm {
 }
 
 sub _sort_labelalpha {
-  my ($self, $citekey) = @_ ;
+  my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey} ;
   if ($be->{labelalpha}) {
     return $be->{labelalpha};
@@ -332,13 +330,13 @@ sub _sort_labelalpha {
 }
 
 sub _sort_presort {
-  my ($self, $citekey) = @_ ;
+  my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey} ;
   return $be->{presort} ? $be->{presort} : '';
 }
 
 sub _sort_sortkey {
-  my ($self, $citekey) = @_ ;
+  my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey};
   if ($be->{sortkey}) {
     my $sortkey = lc($be->{sortkey});
@@ -351,7 +349,7 @@ sub _sort_sortkey {
 }
 
 sub _sort_sortname {
-  my ($self, $citekey) = @_ ;
+  my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey} ;
   # see biblatex manual §3.4 - sortname is ignored if no use<name> option is defined
   if ($be->{sortname} and
@@ -366,7 +364,7 @@ sub _sort_sortname {
 }
 
 sub _sort_sorttitle {
-  my ($self, $citekey) = @_ ;
+  my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey} ;
   my $no_decode = $self->_nodecode($citekey);
   if ($be->{sorttitle}) {
@@ -378,29 +376,33 @@ sub _sort_sorttitle {
 }
 
 sub _sort_sortyear {
-  my ($self, $citekey) = @_ ;
+  my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey} ;
+  my $default_substring_width = 4;
+  my $default_substring_side = 'left';
+  my $default_direction = 'ascending';
+  my $subs_offset = 0;
   if ($be->{sortyear}) {
-    return substr( $be->{sortyear}, 0, 4 ) ;
-  }
-  else {
-    return '';
-  }
-}
-
-sub _sort_sortyear_descend {
-  my ($self, $citekey) = @_ ;
-  my $be = $self->{bib}{$citekey} ;
-  if ($be->{sortyear}) {
-    return 9999 - substr($be->{sortyear}, 0, 4);
+    my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
+    my $subs_side = ($sortelementattributes->{substring_side} or $default_substring_side);
+    my $sort_dir = ($sortelementattributes->{sort_direction} or $default_direction);
+    if ($subs_side eq 'right') {
+      $subs_offset = 0 - $subs_width;
     }
+    if ($sort_dir eq 'ascending') { # default, ascending sort
+      return substr( $be->{sortyear}, $subs_offset, $subs_width ) ;
+    }
+    elsif ($sort_dir eq 'descending') { # descending sort
+      return 9999 - substr($be->{sortyear}, $subs_offset, $subs_width );
+    }
+  }
   else {
     return '';
   }
 }
 
 sub _sort_title {
-  my ($self, $citekey) = @_ ;
+  my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey} ;
   my $no_decode = $self->_nodecode($citekey);
   if ($be->{title}) {
@@ -412,7 +414,7 @@ sub _sort_title {
 }
 
 sub _sort_translator {
-  my ($self, $citekey) = @_ ;
+  my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey} ;
   if ($self->getblxoption('usetranslator', $citekey) and $be->{translator}) {
     return $self->_namestring($citekey, 'translator');
@@ -423,10 +425,22 @@ sub _sort_translator {
 }
 
 sub _sort_volume {
-  my ($self, $citekey) = @_ ;
+  my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey} ;
+  my $default_pad_width = 4;
+  my $default_pad_side = 'left';
+  my $default_pad_char = '0';
   if ($be->{volume}) {
-    return sprintf( "%04s", $be->{volume});
+    my $pad_width = ($sortelementattributes->{pad_width} or $default_pad_width);
+    my $pad_side = ($sortelementattributes->{pad_side} or $default_pad_side);
+    my $pad_char = ($sortelementattributes->{pad_char} or $default_pad_char);
+    my $pad_length = $pad_width - length($be->{volume});
+    if ($pad_side eq 'left') {
+      return ($pad_char x $pad_length) . $be->{volume};
+    }
+    elsif ($pad_side eq 'right') {
+      return $be->{volume} . ($pad_char x $pad_length);
+    }
   }
   else {
     return '' ;
@@ -434,22 +448,26 @@ sub _sort_volume {
 }
 
 sub _sort_year {
-  my ($self, $citekey) = @_ ;
+  my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey} ;
+  my $default_substring_width = 4;
+  my $default_substring_side = 'left';
+  my $default_direction = 'ascending';
+  my $subs_offset = 0;
   if ($be->{year}) {
-    return substr( $be->{year}, 0, 4 ) ;
-  }
-  else {
-    return '';
-  }
-}
-
-sub _sort_year_descend {
-  my ($self, $citekey) = @_ ;
-  my $be = $self->{bib}{$citekey} ;
-  if ($be->{year}) {
-    return 9999 - substr($be->{year}, 0, 4);
+    my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
+    my $subs_side = ($sortelementattributes->{substring_side} or $default_substring_side);
+    my $sort_dir = ($sortelementattributes->{sort_direction} or $default_direction);
+    if ($subs_side eq 'right') {
+      $subs_offset = 0 - $subs_width;
     }
+    if ($sort_dir eq 'ascending') { # default, ascending sort
+      return substr( $be->{year}, $subs_offset, $subs_width ) ;
+    }
+    elsif ($sort_dir eq 'descending') { # descending sort
+      return 9999 - substr($be->{year}, $subs_offset, $subs_width );
+    }
+  }
   else {
     return '';
   }
@@ -480,9 +498,9 @@ sub _getyearstring {
   my ($self, $citekey) = @_ ;
   my $be = $self->{bib}{$citekey} ;
   my $string;
-  $string = $self->_dispatch_sorting('sortyear',$citekey);
+  $string = $self->_dispatch_sorting('sortyear', $citekey);
   return $string if $string;
-  $string = $self->_dispatch_sorting('year',$citekey);
+  $string = $self->_dispatch_sorting('year', $citekey);
   return $string if $string;
   return '';
 }
@@ -491,13 +509,13 @@ sub _getnamestring {
   my ($self, $citekey) = @_ ;
   my $be = $self->{bib}{$citekey} ;
   my $string;
-  $string = $self->_dispatch_sorting('sortname',$citekey);
+  $string = $self->_dispatch_sorting('sortname', $citekey);
   return $string if $string;
-  $string = $self->_dispatch_sorting('author',$citekey);
+  $string = $self->_dispatch_sorting('author', $citekey);
   return $string if $string;
-  $string = $self->_dispatch_sorting('editor',$citekey);
+  $string = $self->_dispatch_sorting('editor', $citekey);
   return $string if $string;
-  $string = $self->_dispatch_sorting('translator',$citekey);
+  $string = $self->_dispatch_sorting('translator', $citekey);
   return $string if $string;
   return '';
 }
@@ -642,8 +660,6 @@ sub _print_biblatex_entry {
         # TODO check against $be->entryset and warn if different!
         $str .= "  \\inset{" . $Biber::inset_entries{$citekey} . "}\n" ;
     }
-
-#    delete $be->{entrytype}; #forgot why this is needed!
 
     # make labelname a copy of the right thing before output of name lists
     if (_defined_and_nonempty($be->{labelnamename})) { # avoid unitialised variable warnings

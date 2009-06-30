@@ -139,14 +139,56 @@
             </attribute>
             <oneOrMore>
               <element name="bcf:sortitem">
+                <attribute name="order">
+                  <data type="integer"/>
+                </attribute>
                 <optional>
                   <attribute name="final">
                     <data type="integer"/>
                   </attribute>
                 </optional>
-                <attribute name="order">
-                  <data type="integer"/>
-                </attribute>
+                <optional>
+                  <attribute name="substring_side">
+                    <choice>
+                      <value>left</value>
+                      <value>right</value>
+                    </choice>
+                  </attribute>
+                </optional>
+                <optional>
+                  <attribute name="substring_width">
+                    <data type="integer"/>
+                  </attribute>
+                </optional>
+                <optional>
+                  <attribute name="pad_side">
+                    <choice>
+                      <value>left</value>
+                      <value>right</value>
+                    </choice>
+                  </attribute>
+                </optional>
+                <optional>
+                  <attribute name="pad_width">
+                    <data type="integer"/>
+                  </attribute>
+                </optional>
+                <optional>
+                  <attribute name="pad_char">
+                    <data type="string">
+                      <param name="minLength">1</param>
+                      <param name="maxLength">1</param>
+                    </data>
+                  </attribute>
+                </optional>
+                <optional>
+                  <attribute name="sort_direction">
+                    <choice>
+                      <value>ascending</value>
+                      <value>descending</value>
+                    </choice>
+                  </attribute>
+                </optional>
                 <text/>
               </element>
             </oneOrMore>
@@ -165,14 +207,56 @@
               </attribute>
               <oneOrMore>
                 <element name="bcf:sortitem">
+                  <attribute name="order">
+                    <data type="integer"/>
+                  </attribute>
                   <optional>
                     <attribute name="final">
                       <data type="integer"/>
                     </attribute>
                   </optional>
-                  <attribute name="order">
-                    <data type="integer"/>
-                  </attribute>
+                  <optional>
+                    <attribute name="substring_side">
+                      <choice>
+                        <value>left</value>
+                        <value>right</value>
+                      </choice>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="substring_width">
+                      <data type="integer"/>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="pad_side">
+                      <choice>
+                        <value>left</value>
+                        <value>right</value>
+                      </choice>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="pad_width">
+                      <data type="integer"/>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="pad_char">
+                      <data type="string">
+                        <param name="minLength">1</param>
+                        <param name="maxLength">1</param>
+                      </data>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="sort_direction">
+                      <choice>
+                        <value>ascending</value>
+                        <value>descending</value>
+                      </choice>
+                    </attribute>
+                  </optional>
                   <text/>
                 </element>
               </oneOrMore>

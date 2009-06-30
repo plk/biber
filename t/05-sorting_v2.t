@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 14;
+use Test::More tests => 26;
 
 use Biber;
 chdir("t/tdata");
@@ -17,6 +17,18 @@ $biber->{config}{biblatex}{global}{maxline} = 100000;
 $bibfile = $biber->config('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
 
+my $yearoff1    = 'mm00knuth2donald e0computers typesetting0198400000';
+my $yearoff2    = 'mm00knuth2donald e0computers typesetting019800000';
+my $yearoff3    = 'mm00knuth2donald e0computers typesetting0198400000';
+my $yearoff4    = 'mm00knuth2donald e0computers typesetting098600000';
+my $yearoff5    = 'mm00knuth2donald e0computers typesetting0198600000';
+my $yearoff6    = 'mm00knuth2donald e0computers typesetting0801500000';
+my $yearoff7    = 'mm00knuth2donald e0computers typesetting0980100000';
+my $yearoff8    = 'mm00knuth2donald e0computers typesetting0801300000';
+my $yearoff9    = 'mm00knuth2donald e0computers typesetting0901300000';
+my $vol1        = 'mm00glashow2sheldon0partial symmetries of weak interactions0196102200';
+my $vol2        = 'mm00glashow2sheldon0partial symmetries of weak interactions0196102200000';
+my $vol3        = 'mm00glashow2sheldon0partial symmetries of weak interactions019610aaa22';
 my $nty         = 'mm00glashow2sheldon0partial symmetries of weak interactions0196100022';
 my $nyt         = 'mm00glashow2sheldon019610partial symmetries of weak interactions00022';
 my $nyvt        = 'mm00glashow2sheldon01961000220partial symmetries of weak interactions';
@@ -32,34 +44,450 @@ my $pt1         = 'mm0081220aristotle0rhetoric of aristotle';
 my $ps_sc       = 'zs00glashow2sheldon0partial symmetries of weak interactions';
 my $noname      = 'mm00partial symmetries of weak interactions0partial symmetries of weak interactions0196100022';
 
+# nty with implicit default left, 4-digit year sort
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
+                                                ],
+                                                [
+                                                 {'sortkey'    => {'final' => 1}}
+                                                ],
+                                                [
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'year'       => {}}
+                                                ],
+                                                [
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff1, 'nty with default left offset, 4 digit year' );
+
+# nty with left, 3-digit year sort
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
+                                                ],
+                                                [
+                                                 {'sortkey'    => {'final' => 1}}
+                                                ],
+                                                [
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'year'       => {'substring_side' => 'left',
+                                                                   'substring_width' => 3}}
+                                                ],
+                                                [
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff2, 'nty with left offset, 3 digit year' );
+
+
+# nty with left, 4-digit year sort
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
+                                                ],
+                                                [
+                                                 {'sortkey'    => {'final' => 1}}
+                                                ],
+                                                [
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'year'       => {'substring_side' => 'left',
+                                                                   'substring_width' => 4}}
+                                                ],
+                                                [
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff3, 'nty with left offset, 4 digit year' );
+
+# nty with right, 3-digit year sort
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
+                                                ],
+                                                [
+                                                 {'sortkey'    => {'final' => 1}}
+                                                ],
+                                                [
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'year'       => {'substring_side' => 'right',
+                                                                   'substring_width' => 3}}
+                                                ],
+                                                [
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff4, 'nty with right offset, 3 digit year' );
+
+# nty with right, 4-digit year sort
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
+                                                ],
+                                                [
+                                                 {'sortkey'    => {'final' => 1}}
+                                                ],
+                                                [
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'year'       => {'substring_side' => 'right',
+                                                                   'substring_width' => 4}}
+                                                ],
+                                                [
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff5, 'nty with right offset, 4 digit year' );
+
+# ntyd with left, 4-digit year sort
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
+                                                ],
+                                                [
+                                                 {'sortkey'    => {'final' => 1}}
+                                                ],
+                                                [
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'year'       => {'substring_side'  => 'left',
+                                                                   'substring_width' => 4,
+                                                                   'sort_direction'  => 'descending'}}
+                                                ],
+                                                [
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff6, 'ntyd with left offset, 4 digit year' );
+
+# ntyd with left, 3-digit year sort
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
+                                                ],
+                                                [
+                                                 {'sortkey'    => {'final' => 1}}
+                                                ],
+                                                [
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'year'       => {'substring_side'  => 'left',
+                                                                   'substring_width' => 3,
+                                                                   'sort_direction'  => 'descending'}}
+                                                ],
+                                                [
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff7, 'ntyd with left offset, 3 digit year' );
+
+# ntyd with right, 4-digit year sort
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
+                                                ],
+                                                [
+                                                 {'sortkey'    => {'final' => 1}}
+                                                ],
+                                                [
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'year'       => {'substring_side'  => 'right',
+                                                                   'substring_width' => 4,
+                                                                   'sort_direction'  => 'descending'}}
+                                                ],
+                                                [
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff8, 'ntyd with right offset, 4 digit year' );
+
+# ntyd with right, 3-digit year sort
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
+                                                ],
+                                                [
+                                                 {'sortkey'    => {'final' => 1}}
+                                                ],
+                                                [
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'year'       => {'substring_side' => 'right',
+                                                                   'substring_width' => 3,
+                                                                   'sort_direction'  => 'descending'}}
+                                                ],
+                                                [
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff9, 'ntyd with right offset, 3 digit year' );
+
+# nty with right-padded vol
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
+                                                ],
+                                                [
+                                                 {'sortkey'    => {'final' => 1}}
+                                                ],
+                                                [
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sortyear'   => {}},
+                                                 {'year'       => {}}
+                                                ],
+                                                [
+                                                 {'volume'     => {pad_side => 'right'}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{stdmodel}{sortstring}, $vol1, 'nty with right-padded vol' );
+
+# nty with right-padded 7-char vol
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
+                                                ],
+                                                [
+                                                 {'sortkey'    => {'final' => 1}}
+                                                ],
+                                                [
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sortyear'   => {}},
+                                                 {'year'       => {}}
+                                                ],
+                                                [
+                                                 {'volume'     => {pad_side => 'right',
+                                                                  pad_width => 7}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{stdmodel}{sortstring}, $vol2, 'nty with right-padded 7-char vol' );
+
+# nty with left-padded 5-char using "a" as pad_char vol
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
+                                                ],
+                                                [
+                                                 {'sortkey'    => {'final' => 1}}
+                                                ],
+                                                [
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sortyear'   => {}},
+                                                 {'year'       => {}}
+                                                ],
+                                                [
+                                                 {'volume'     => {pad_side => 'left',
+                                                                  pad_width => 5,
+                                                                  pad_char => 'a'}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{stdmodel}{sortstring}, $vol3, 'nty with left-padded 5-char "a" pad char vol' );
+
+
 # nty
 $biber->{config}{biblatex}{global}{sorting} =  [
                                                 [
-                                                 {'presort'    => []},
-                                                 {'mm'         => []},
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
                                                 ],
                                                 [
-                                                 {'sortkey'    => ['final']}
+                                                 {'sortkey'    => {'final' => 1}}
                                                 ],
                                                 [
-                                                 {'sortname'   => []},
-                                                 {'author'     => []},
-                                                 {'editor'     => []},
-                                                 {'translator' => []},
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'sortyear'   => []},
-                                                 {'year'       => []}
+                                                 {'sortyear'   => {}},
+                                                 {'year'       => {}}
                                                 ],
                                                 [
-                                                 {'volume'     => []},
-                                                 {'0000'       => []}
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
                                                 ]
                                                ];
 
@@ -70,31 +498,31 @@ is($biber->{bib}{angenendtsk}{sortstring}, $sk1, 'basic sortkey sort' );
 # nyt
 $biber->{config}{biblatex}{global}{sorting} =  [
                                                 [
-                                                 {'presort'    => []},
-                                                 {'mm'         => []},
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
                                                 ],
                                                 [
-                                                 {'sortkey'    => ['final']}
+                                                 {'sortkey'    => {'final' => 1}}
                                                 ],
                                                 [
-                                                 {'sortname'   => []},
-                                                 {'author'     => []},
-                                                 {'editor'     => []},
-                                                 {'translator' => []},
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'sortyear'   => []},
-                                                 {'year'       => []}
+                                                 {'sortyear'   => {}},
+                                                 {'year'       => {}}
                                                 ],
                                                 [
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'volume'     => []},
-                                                 {'0000'       => []}
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
                                                 ]
                                                ];
 
@@ -104,31 +532,31 @@ is($biber->{bib}{stdmodel}{sortstring}, $nyt, 'basic nyt sort' );
 # nyvt
 $biber->{config}{biblatex}{global}{sorting} =  [
                                                 [
-                                                 {'presort'    => []},
-                                                 {'mm'         => []},
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
                                                 ],
                                                 [
-                                                 {'sortkey'    => ['final']}
+                                                 {'sortkey'    => {'final' => 1}}
                                                 ],
                                                 [
-                                                 {'sortname'   => []},
-                                                 {'author'     => []},
-                                                 {'editor'     => []},
-                                                 {'translator' => []},
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'sortyear'   => []},
-                                                 {'year'       => []}
+                                                 {'sortyear'   => {}},
+                                                 {'year'       => {}}
                                                 ],
                                                 [
-                                                 {'volume'     => []},
-                                                 {'0000'       => []}
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
                                                 ],
                                                 [
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ]
                                                ];
 
@@ -139,34 +567,34 @@ is($biber->{bib}{stdmodel}{sortstring}, $nyvt, 'basic nyvt sort' );
 $biber->{config}{biblatex}{global}{labelalpha} = 1;
 $biber->{config}{biblatex}{global}{sorting} =  [
                                                 [
-                                                 {'presort'    => []},
-                                                 {'mm'         => []},
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
                                                 ],
                                                 [
-                                                 {'labelalpha' => []}
+                                                 {'labelalpha' => {}}
                                                 ],
                                                 [
-                                                 {'sortkey'    => ['final']}
+                                                 {'sortkey'    => {'final' => 1}}
                                                 ],
                                                 [
-                                                 {'sortname'   => []},
-                                                 {'author'     => []},
-                                                 {'editor'     => []},
-                                                 {'translator' => []},
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'sortyear'   => []},
-                                                 {'year'       => []}
+                                                 {'sortyear'   => {}},
+                                                 {'year'       => {}}
                                                 ],
                                                 [
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'sorttitle'  => []},
-                                                 {'0000'       => []}
+                                                 {'sorttitle'  => {}},
+                                                 {'0000'       => {}}
                                                 ]
                                                ];
 
@@ -184,34 +612,34 @@ is($biber->{bib}{stdmodel}{sortstring}, $anyt, 'basic anyt sort (without labelal
 $biber->{config}{biblatex}{global}{labelalpha} = 1;
 $biber->{config}{biblatex}{global}{sorting} =  [
                                                 [
-                                                 {'presort'    => []},
-                                                 {'mm'         => []},
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
                                                 ],
                                                 [
-                                                 {'labelalpha' => []}
+                                                 {'labelalpha' => {}}
                                                 ],
                                                 [
-                                                 {'sortkey'    => ['final']}
+                                                 {'sortkey'    => {'final' => 1}}
                                                 ],
                                                 [
-                                                 {'sortname'   => []},
-                                                 {'author'     => []},
-                                                 {'editor'     => []},
-                                                 {'translator' => []},
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'sortyear'   => []},
-                                                 {'year'       => []}
+                                                 {'sortyear'   => {}},
+                                                 {'year'       => {}}
                                                 ],
                                                 [
-                                                 {'volume'     => []},
-                                                 {'0000'       => []}
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
                                                 ],
                                                 [
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ]
                                                ];
 
@@ -228,28 +656,28 @@ is($biber->{bib}{stdmodel}{sortstring}, $anyvt, 'basic anyvt sort (without label
 # ynt
 $biber->{config}{biblatex}{global}{sorting} =  [
                                                 [
-                                                 {'presort'    => []},
-                                                 {'mm'         => []},
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
                                                 ],
                                                 [
-                                                 {'sortkey'    => ['final']}
+                                                 {'sortkey'    => {'final' => 1}}
                                                 ],
                                                 [
-                                                 {'sortyear'   => []},
-                                                 {'year'       => []},
-                                                 {'9999'       => []}
+                                                 {'sortyear'   => {}},
+                                                 {'year'       => {}},
+                                                 {'9999'       => {}}
                                                 ],
                                                 [
-                                                 {'sortname'   => []},
-                                                 {'author'     => []},
-                                                 {'editor'     => []},
-                                                 {'translator' => []},
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ],
                                                ];
 
@@ -259,28 +687,28 @@ is($biber->{bib}{stdmodel}{sortstring}, $ynt, 'basic ynt sort' );
 # ydnt
 $biber->{config}{biblatex}{global}{sorting} =  [
                                                 [
-                                                 {'presort'    => []},
-                                                 {'mm'         => []},
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
                                                 ],
                                                 [
-                                                 {'sortkey'    => ['final']}
+                                                 {'sortkey'    => {'final' => 1}}
                                                 ],
                                                 [
-                                                 {'sortyearD'  => []},
-                                                 {'yearD'      => []},
-                                                 {'9999'       => []}
+                                                 {'sortyear'   => {'sort_direction'  => 'descending'}},
+                                                 {'year'      => {'sort_direction'  => 'descending'}},
+                                                 {'9999'       => {}}
                                                 ],
                                                 [
-                                                 {'sortname'   => []},
-                                                 {'author'     => []},
-                                                 {'editor'     => []},
-                                                 {'translator' => []},
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ],
                                                ];
 
@@ -291,7 +719,7 @@ $biber->{config}{biblatex}{global}{labelalpha} = 0;
 # debug
 $biber->{config}{biblatex}{global}{sorting} =  [
                                                 [
-                                                 {'debug'    => []},
+                                                 {'debug'    => {}},
                                                 ],
                                                ];
 
@@ -301,28 +729,28 @@ is($biber->{bib}{stdmodel}{sortstring}, $debug, 'basic debug sort' );
 # per-type (book, ydnt)
 $biber->{config}{biblatex}{book}{sorting} =  [
                                                 [
-                                                 {'presort'    => []},
-                                                 {'mm'         => []},
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
                                                 ],
                                                 [
-                                                 {'sortkey'    => ['final']}
+                                                 {'sortkey'    => {'final' => 1}}
                                                 ],
                                                 [
-                                                 {'sortyearD'  => []},
-                                                 {'yearD'      => []},
-                                                 {'9999'       => []}
+                                                 {'sortyear'  => {'sort_direction'  => 'descending'}},
+                                                 {'year'      => {'sort_direction'  => 'descending'}},
+                                                 {'9999'       => {}}
                                                 ],
                                                 [
-                                                 {'sortname'   => []},
-                                                 {'author'     => []},
-                                                 {'editor'     => []},
-                                                 {'translator' => []},
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ],
                                                ];
 
@@ -332,31 +760,31 @@ is($biber->{bib}{'aristotle:rhetoric'}{sortstring}, $pt1, 'book type ydnt sort' 
 # nty with modified presort and short_circuit at title
 $biber->{config}{biblatex}{global}{sorting} =  [
                                                 [
-                                                 {'presort'    => []},
-                                                 {'mm'         => []},
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
                                                 ],
                                                 [
-                                                 {'sortkey'    => ['final']}
+                                                 {'sortkey'    => {'final' => 1}}
                                                 ],
                                                 [
-                                                 {'sortname'   => []},
-                                                 {'author'     => []},
-                                                 {'editor'     => []},
-                                                 {'translator' => []},
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'sorttitle'  => ['final']},
-                                                 {'title'      => ['final']}
+                                                 {'sorttitle'  => {'final' => 1}},
+                                                 {'title'      => {'final' => 1}}
                                                 ],
                                                 [
-                                                 {'sortyear'   => []},
-                                                 {'year'       => []}
+                                                 {'sortyear'   => {}},
+                                                 {'year'       => {}}
                                                 ],
                                                 [
-                                                 {'volume'     => []},
-                                                 {'0000'       => []}
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
                                                 ]
                                                ];
 
@@ -369,31 +797,31 @@ $biber->{config}{biblatex}{global}{useeditor} = 0;
 $biber->{config}{biblatex}{global}{usetranslator} = 0;
 $biber->{config}{biblatex}{global}{sorting} =  [
                                                 [
-                                                 {'presort'    => []},
-                                                 {'mm'         => []},
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
                                                 ],
                                                 [
-                                                 {'sortkey'    => ['final']}
+                                                 {'sortkey'    => {'final' => 1}}
                                                 ],
                                                 [
-                                                 {'sortname'   => []},
-                                                 {'author'     => []},
-                                                 {'editor'     => []},
-                                                 {'translator' => []},
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'sorttitle'  => []},
-                                                 {'title'      => []}
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'sortyear'   => []},
-                                                 {'year'       => []}
+                                                 {'sortyear'   => {}},
+                                                 {'year'       => {}}
                                                 ],
                                                 [
-                                                 {'volume'     => []},
-                                                 {'0000'       => []}
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
                                                 ]
                                                ];
 

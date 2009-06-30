@@ -151,8 +151,42 @@
   </xs:element>
   <xs:element name="sortitem">
     <xs:complexType mixed="true">
-      <xs:attribute name="final" type="xs:integer"/>
       <xs:attribute name="order" use="required" type="xs:integer"/>
+      <xs:attribute name="final" type="xs:integer"/>
+      <xs:attribute name="substring_side">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="left"/>
+            <xs:enumeration value="right"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="substring_width" type="xs:integer"/>
+      <xs:attribute name="pad_side">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="left"/>
+            <xs:enumeration value="right"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="pad_width" type="xs:integer"/>
+      <xs:attribute name="pad_char">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="sort_direction">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="ascending"/>
+            <xs:enumeration value="descending"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
   <xs:element name="section">
