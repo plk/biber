@@ -136,8 +136,9 @@ sub XML::LibXML::Element::_find_biblatex_nodes {
         if ( $dm eq 'translated' and 
              $self->exists("bib:$field\[\@mode=\"$dm\" and \@xml:lang\]") ) {
             my $locale = $biber->config("locale") or croak "No locale defined";
-            my $localeb = $locale ;
-            $localeb =~ s/_.+$//; 
+            $locale =~ s/\..+$//; # remove encoding suffix
+            my $localeb = $locale ; 
+            $localeb =~ s/_.+$//; # base locale
             foreach my $l ( "$localeb", "$locale" ) {
                 $xpath = "bib:$field\[\@mode=\"$dm\" and \@xml:lang=\"$l\"\]" ;
                 $xpath .= "/bib:$subfield" if defined $subfield ;

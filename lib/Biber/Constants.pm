@@ -34,7 +34,6 @@ our $BIBER_SORT_FINAL = 0;
 
 ## Biber CONFIGURATION DEFAULTS
 my $locale = $ENV{LANG} || $ENV{LC_ALL} || "en_US.utf8" ;
-$locale =~ s/\..+$//; # remove encoding info
 
 our %CONFIG_DEFAULT = (
   validate => 0,
