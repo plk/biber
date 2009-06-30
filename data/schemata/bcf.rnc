@@ -34,6 +34,7 @@ start =
       maxnames,
       minnames,
       singletitle,
+      sortalphaothers,
       sortlos,
       terseinits,
       uniquename,
@@ -53,6 +54,7 @@ start =
       maxnames?,
       minnames?,
       singletitle?,
+      sortalphaothers?,
       sortlos?,
       terseinits?,
       uniquename?,
@@ -234,6 +236,14 @@ alphaothers =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "alphaothers" },
+    element bcf:value {
+      xsd:normalizedString { pattern = "\S+" }
+    }
+  }
+sortalphaothers =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "sortalphaothers" },
     element bcf:value {
       xsd:normalizedString { pattern = "\S+" }
     }

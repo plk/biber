@@ -41,6 +41,7 @@
               <xs:group ref="bcf:maxnames"/>
               <xs:group ref="bcf:minnames"/>
               <xs:group ref="bcf:singletitle"/>
+              <xs:group ref="bcf:sortalphaothers"/>
               <xs:group ref="bcf:sortlos"/>
               <xs:group ref="bcf:terseinits"/>
               <xs:group ref="bcf:uniquename"/>
@@ -76,6 +77,7 @@
               <xs:group minOccurs="0" ref="bcf:maxnames"/>
               <xs:group minOccurs="0" ref="bcf:minnames"/>
               <xs:group minOccurs="0" ref="bcf:singletitle"/>
+              <xs:group minOccurs="0" ref="bcf:sortalphaothers"/>
               <xs:group minOccurs="0" ref="bcf:sortlos"/>
               <xs:group minOccurs="0" ref="bcf:terseinits"/>
               <xs:group minOccurs="0" ref="bcf:uniquename"/>
@@ -772,6 +774,37 @@
               <xs:simpleType>
                 <xs:restriction base="xs:token">
                   <xs:enumeration value="alphaothers"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value">
+              <xs:simpleType>
+                <xs:restriction base="xs:normalizedString">
+                  <xs:pattern value="\S+"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="sortalphaothers">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="sortalphaothers"/>
                 </xs:restriction>
               </xs:simpleType>
             </xs:element>

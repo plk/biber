@@ -15,7 +15,7 @@
   <bcf:options component="biblatex" type="global">
     <bcf:option type="singlevalued">
       <bcf:key>alphaothers</bcf:key>
-      <bcf:value>+</bcf:value>
+      <bcf:value>\textbf{+}</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labelalpha</bcf:key>
@@ -44,6 +44,10 @@
     <bcf:option type="singlevalued">
       <bcf:key>singletitle</bcf:key>
       <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortalphaothers</bcf:key>
+      <bcf:value>+</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortlos</bcf:key>
