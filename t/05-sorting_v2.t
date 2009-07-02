@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 28;
+use Test::More tests => 30;
 
 use Biber;
 chdir("t/tdata");
@@ -36,7 +36,8 @@ my $anyt_la     = 'mm0gla6100glashow2sheldon019610partial symmetries of weak int
 my $anyt        = 'mm000glashow2sheldon019610partial symmetries of weak interactions00000';
 my $anyvt_la    = 'mm0gla6100glashow2sheldon01961000220partial symmetries of weak interactions';
 my $anyvt_la2   = 'mm0hos+9800hostetler2michael j1zzzz01998000140alkanethiolate gold cluster molecules with core diameters from 15 to 52nm';
-my $anyvt_la3   = 'mm0hos9800hostetler2michael j1zzzz01998000140alkanethiolate gold cluster molecules with core diameters from 15 to 52nm';
+my $anyvt_la3   = 'mm0hos9800hostetler2michael j1wingate2julia e1zzzz01998000140alkanethiolate gold cluster molecules with core diameters from 15 to 52nm';
+my $anyvt_la4   = 'mm0hos+9800hostetler2michael j1wingate2julia e1zzzz01998000140alkanethiolate gold cluster molecules with core diameters from 15 to 52nm';
 my $anyvt       = 'mm000glashow2sheldon01961000220partial symmetries of weak interactions';
 my $ynt         = 'mm0019610glashow2sheldon0partial symmetries of weak interactions';
 my $ydnt        = 'mm0080380glashow2sheldon0partial symmetries of weak interactions';
@@ -45,6 +46,7 @@ my $sk1         = 'mm0aatestkey';
 my $pt1         = 'mm0081220aristotle0rhetoric of aristotle';
 my $ps_sc       = 'zs00glashow2sheldon0partial symmetries of weak interactions';
 my $noname      = 'mm00partial symmetries of weak interactions0partial symmetries of weak interactions0196100022';
+my $citeorder   = '68';
 
 # nty with implicit default left, 4-digit year sort
 $biber->{config}{biblatex}{global}{sorting} =  [
@@ -649,12 +651,17 @@ $biber->{config}{biblatex}{global}{sorting} =  [
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $anyvt_la, 'anyvt sort (with labelalpha)' );
-is($biber->{bib}{murray}{sortstring}, $anyvt_la2, 'anyvt sort (> maxnames, with labelalpha and alphaothers)' );
+is($biber->{bib}{murray}{sortstring}, $anyvt_la2, 'anyvt sort (> maxnames=3 minnames=1, with labelalpha and alphaothers)' );
+
+$biber->{config}{biblatex}{global}{maxnames} = 2;
+$biber->{config}{biblatex}{global}{minnames} = 2;
+$biber->prepare;
+is($biber->{bib}{murray}{sortstring}, $anyvt_la4, 'anyvt sort (> maxnames=2 minnames=2, with labelalpha and alphaothers)' );
 
 $biber->{config}{biblatex}{global}{alphaothers} = '';
 $biber->{config}{biblatex}{global}{sortalphaothers} = '';
 $biber->prepare;
-is($biber->{bib}{murray}{sortstring}, $anyvt_la3, 'anyvt sort (> maxnames with labelalpha and without alphaothers)' );
+is($biber->{bib}{murray}{sortstring}, $anyvt_la3, 'anyvt sort (> maxnames=2 minnames=2,with labelalpha and without alphaothers)' );
 
 $biber->{config}{biblatex}{global}{labelalpha} = 0;
 delete $biber->{bib}{stdmodel}{labelalpha};
@@ -843,3 +850,12 @@ $biber->{config}{biblatex}{global}{sorting} =  [
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $noname, 'nty with use* all off' );
 
+# citeorder sort
+$biber->{config}{biblatex}{global}{sorting} =  [
+                                                [
+                                                 {'citeorder'    => {}}
+                                                ]
+                                               ];
+
+$biber->prepare;
+is($biber->{bib}{stdmodel}{sortstring}, $citeorder, 'citeorder' );
