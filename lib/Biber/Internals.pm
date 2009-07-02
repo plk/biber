@@ -5,7 +5,7 @@ use Carp ;
 use Biber::Constants ;
 use Biber::Utils ;
 use Text::Wrap ;
-use List::Util qw( first );
+use List::AllUtils qw( :all );
 
 =head1 NAME
 
@@ -172,6 +172,7 @@ our $dispatch_sorting = {
              '0000'         =>  \&_sort_0000,
              '9999'         =>  \&_sort_9999,
              'author'       =>  \&_sort_author,
+             'citeorder'    =>  \&_sort_citeorder,
              'debug'        =>  \&_sort_debug,
              'editor'       =>  \&_sort_editor,
              'issuetitle'   =>  \&_sort_issuetitle,
@@ -251,6 +252,11 @@ sub _sort_author {
   else {
     return '';
   }
+}
+
+sub _sort_citeorder {
+  my ($self, $citekey, $sortelementattributes) = @_ ;
+  return first_index {$_ eq $citekey} @{$self->{citekeys}};
 }
 
 sub _sort_debug {
@@ -679,7 +685,7 @@ sub _print_biblatex_entry {
         $str .= "  \\field{labelalpha}{$label}\n" ;
     }
     $str .= "  \\field{sortinit}{$sortinit}\n" ;
-    
+
     if ( $self->getblxoption('labelyear', $citekey) ) {
         my $authoryear = $be->{authoryear} ;
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
