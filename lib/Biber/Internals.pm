@@ -81,43 +81,54 @@ sub _getlabel {
     my @names = @{ $self->{bib}->{$citekey}->{$namefield} } ;
     my $dt = $self->{bib}->{$citekey}->{datatype} ;
     my $alphaothers = $self->getblxoption('alphaothers', $citekey) ;
+    my $sortalphaothers = $self->getblxoption('sortalphaothers', $citekey) ;
     my $useprefix = $self->getblxoption('useprefix', $citekey) ;
-    my $label = "";
+    my $label = '';
+    my $sortlabel = ''; # This contains sortalphaothers instead of alphaothers, if defined
+                        # This is needed in cases where alphaothers is something like
+                        # '\textasteriskcentered' which would mess up sorting.
 
     my @lastnames = map { normalize_string( $_->{lastname}, $dt ) } @names ;
     my @prefixes  = map { $_->{prefix} } @names ;
     my $noofauth  = scalar @names ;
     
-    if ( $noofauth > 3 ) { # FIXME - this should be conditionalised on maxnames and "and others" (see p75/76 biblatex manual)
+    if ($noofauth > $self->getblxoption('maxnames', $citekey)) { # FIXME - this should be conditionalised on maxnames and "and others" (see p75/76 biblatex manual)
         if ($useprefix and $prefixes[0]) {
-            $label .= substr( $prefixes[0], 0, 1 ) ; 
-            $label .= substr( $lastnames[0], 0, 2 ) . $alphaothers
+            $label .= substr( $prefixes[0], 0, 1 );
+            $label .= substr( $lastnames[0], 0, 2 ) . $alphaothers;
+
+            $sortlabel .= substr( $prefixes[0], 0, 1 );
+            $sortlabel .= substr( $lastnames[0], 0, 2 ) . $sortalphaothers;
         } else {
-            $label  = substr( $lastnames[0], 0, 3 ) . $alphaothers ;
+            $label  = substr( $lastnames[0], 0, 3 ) . $alphaothers;
+
+            $sortlabel  = substr( $lastnames[0], 0, 3 ) . $sortalphaothers;
         }
     }
     elsif ( $noofauth == 1 ) {
         if ($useprefix and $prefixes[0]) {
-            $label .= substr( $prefixes[0], 0, 1 ) ;  
+            $label .= substr( $prefixes[0], 0, 1 );
             $label .= substr( $lastnames[0], 0, 2 )
         } else {
-            $label = substr( $lastnames[0], 0, 3 ) ;
+            $label = substr( $lastnames[0], 0, 3 );
         }
     }
     else {
         if ($useprefix) {
             for (my $i=0; $i<$noofauth; $i++) {
-                $label .= substr($prefixes[$i] , 0, 1) if $prefixes[$i] ;
-                $label .= substr($lastnames[$i], 0, 1) ;
+                $label .= substr($prefixes[$i] , 0, 1) if $prefixes[$i];
+                $label .= substr($lastnames[$i], 0, 1);
             }
         } else {
             for (my $i=0; $i<$noofauth; $i++) {
-                $label .= substr($lastnames[$i], 0, 1) ;
+                $label .= substr($lastnames[$i], 0, 1);
             }
         }
     }
 
-    return $label
+    $sortlabel = $label unless $sortlabel; # set them equal unless sortlabel has been set
+                                           # explicitly above
+    return [$label, $sortlabel];
 }
 
 =head2 getblxoption
@@ -321,8 +332,8 @@ sub _sort_mm {
 sub _sort_labelalpha {
   my ($self, $citekey, $sortelementattributes) = @_ ;
   my $be = $self->{bib}{$citekey} ;
-  if ($be->{labelalpha}) {
-    return $be->{labelalpha};
+  if ($be->{sortlabelalpha}) {
+    return $be->{sortlabelalpha};
   }
   else {
     return '';
@@ -523,14 +534,14 @@ sub _getnamestring {
 sub _namestring {
   my ( $self, $citekey, $field ) = @_ ;
   my $be = $self->{bib}->{$citekey} ;
-  
-  my $str = "" ;
+
+  my $str = '' ;
   my @names = @{ $be->{$field} } ;
   my $truncated = 0 ;
   ## perform truncation according to options minnames, maxnames
   if ( $#names + 1 > $self->getblxoption('maxnames', $citekey) ) {
     $truncated = 1 ;
-    @names = splice(@names, 0, $self->getblxoption('minnames', $citekey) )
+    @names = splice(@names, 0, $self->getblxoption('minnames', $citekey) );
   }
   ;
   foreach ( @names ) {
@@ -539,14 +550,13 @@ sub _namestring {
     $str .= $_->{lastname} . "2" ;
     $str .= $_->{firstname} . "2" if $_->{firstname} ;
     $str .= $_->{suffix} if $_->{suffix} ;
-    $str =~ s/2$// ;
+    $str =~ s/2\z//xms ;
     $str .= "1" ;
   }
   ;
-  $str =~ s/\s+1/1/g;
-  $str =~ s/1$//;
+  $str =~ s/\s+1/1/gxms;
+  $str =~ s/1\z//xms;
   $str = normalize_string($str, $self->_nodecode($citekey));
-  #TODO append "zzzz" if it has been truncated
   $str .= "1zzzz" if $truncated ;
   return $str
 }
@@ -720,7 +730,7 @@ sub _print_biblatex_entry {
         }
     }
 
-    if ( $self->getblxoption('extraalpha', $citekey) ) {
+    if ( $self->getblxoption('labelalpha', $citekey) ) {
         my $authoryear = $be->{authoryear} ;
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
             $Biber::seenlabelyear{$authoryear}++ ;

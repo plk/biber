@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 6 ;
+use Test::More tests => 8 ;
 
 use Biber;
 
@@ -20,6 +20,84 @@ my $bibfile = $biber->config('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile) ;
 $biber->prepare ;
 
+my $murray1 = q|\entry{murray}{article}{}
+  \name{author}{14}{%
+    {{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
+    {{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
+    {{Zhong}{Z}{Chuan-Jian}{C}{}{}{}{}}%
+    {{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
+    {{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
+    {{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
+    {{Londono}{L}{J.~David}{JD}{}{}{}{}}%
+    {{Green}{G}{Stephen~J.}{SJ}{}{}{}{}}%
+    {{Stokes}{S}{Jennifer~J.}{JJ}{}{}{}{}}%
+    {{Wignall}{W}{George~D.}{GD}{}{}{}{}}%
+    {{Glish}{G}{Gary~L.}{GL}{}{}{}{}}%
+    {{Porter}{P}{Marc~D.}{MD}{}{}{}{}}%
+    {{Evans}{E}{Neal~D.}{ND}{}{}{}{}}%
+    {{Murray}{M}{Royce~W.}{RW}{}{}{}{}}%
+  }
+  \strng{namehash}{HMJ+1}
+  \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
+  \field{labelalpha}{Hos\textbf{+}98}
+  \field{sortinit}{H}
+  \count{uniquename}{0}
+  \true{singletitle}
+  \field{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
+  \field{subtitle}{Core and monolayer properties as a function of core size}
+  \field{shorttitle}{Alkanethiolate gold cluster molecules}
+  \field{indextitle}{Alkanethiolate gold cluster molecules}
+  \field{journaltitle}{Langmuir}
+  \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
+  \field{number}{1}
+  \field{volume}{14}
+  \field{hyphenation}{american}
+  \field{pages}{17\bibrangedash 30}
+  \field{year}{1998}
+\endentry
+
+|;
+
+my $murray2 = q|\entry{murray}{article}{}
+  \name{author}{14}{%
+    {{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
+    {{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
+    {{Zhong}{Z}{Chuan-Jian}{C}{}{}{}{}}%
+    {{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
+    {{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
+    {{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
+    {{Londono}{L}{J.~David}{JD}{}{}{}{}}%
+    {{Green}{G}{Stephen~J.}{SJ}{}{}{}{}}%
+    {{Stokes}{S}{Jennifer~J.}{JJ}{}{}{}{}}%
+    {{Wignall}{W}{George~D.}{GD}{}{}{}{}}%
+    {{Glish}{G}{Gary~L.}{GL}{}{}{}{}}%
+    {{Porter}{P}{Marc~D.}{MD}{}{}{}{}}%
+    {{Evans}{E}{Neal~D.}{ND}{}{}{}{}}%
+    {{Murray}{M}{Royce~W.}{RW}{}{}{}{}}%
+  }
+  \strng{namehash}{HMJ+1}
+  \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
+  \field{labelalpha}{Hos98}
+  \field{sortinit}{H}
+  \field{labelyear}{1}
+  \field{extraalpha}{2}
+  \count{uniquename}{0}
+  \field{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
+  \field{subtitle}{Core and monolayer properties as a function of core size}
+  \field{shorttitle}{Alkanethiolate gold cluster molecules}
+  \field{indextitle}{Alkanethiolate gold cluster molecules}
+  \field{journaltitle}{Langmuir}
+  \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
+  \field{number}{1}
+  \field{volume}{14}
+  \field{hyphenation}{american}
+  \field{pages}{17\bibrangedash 30}
+  \field{year}{1998}
+\endentry
+
+|;
+
+
 my $setaksin = q|\entry{set:aksin}{article}{}
   \inset{set}
   \name{author}{7}{%
@@ -33,7 +111,7 @@ my $setaksin = q|\entry{set:aksin}{article}{}
   }
   \strng{namehash}{AÖ+1}
   \strng{fullhash}{AÖTHALC̨BNCBOÖE1}
-  \field{labelalpha}{Aks+06}
+  \field{labelalpha}{Aks\textbf{+}06}
   \field{sortinit}{A}
   \count{uniquename}{0}
   \true{singletitle}
@@ -89,6 +167,13 @@ is_deeply( $Biber::uniquenamecount{'Worman_N'}, $Worman_N, 'uniquename count 1')
 is_deeply( $Biber::uniquenamecount{'Gennep'}, $Gennep, 'uniquename count 2') ;
 
 is_deeply( [ $biber->shorthands ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
+
+is( $biber->_print_biblatex_entry('murray'), $murray1, 'bbl with > maxnames' ) ;
+
+$biber->{config}{biblatex}{global}{alphaothers} = '';
+$biber->{config}{biblatex}{global}{sortalphaothers} = '';
+$biber->prepare ;
+is( $biber->_print_biblatex_entry('murray'), $murray2, 'bbl with > maxnames, empty alphaothers' ) ;
 
 unlink "$bibfile.utf8" ;
 

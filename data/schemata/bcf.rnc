@@ -34,6 +34,7 @@ start =
       maxnames,
       minnames,
       singletitle,
+      sortalphaothers,
       sortlos,
       terseinits,
       uniquename,
@@ -53,6 +54,7 @@ start =
       maxnames?,
       minnames?,
       singletitle?,
+      sortalphaothers?,
       sortlos?,
       terseinits?,
       uniquename?,
@@ -244,6 +246,14 @@ locale =
     element bcf:key { "locale" },
     element bcf:value { xsd:language }
  }
+sortalphaothers =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "sortalphaothers" },
+    element bcf:value {
+      xsd:normalizedString { pattern = "\S+" }
+    }
+  }
 
 ## these are perl regexes
 nonsortprefixes =
@@ -257,31 +267,4 @@ nonsortdiacritics =
 
 # This is for setting the display mode of non-roman scripts
 displaymode = element displaymode { "original" | "romanized" | "translated" | "uniform" }
-#
-#  
-## REMOVED
-##displaymode = ( displaymode.textual, displaymode.persons, displaymode.locations )
-##
-##displaymode.textual = element bcf:displaymode {
-## attribute type { "textual" }, 
-## element bcf:mode { 
-##   attribute precedence { xsd:integer }, display.mode.textual
-## }+
-##}
-##
-##displaymode.persons = element displaymode {
-## attribute type { "persons" }, 
-## element bcf:mode { 
-##   attribute precedence { xsd:integer }, display.mode.proper
-## }+
-##}
-##displaymode.locations = element displaymode {
-## attribute type { "location" }, 
-## element bcf:mode { 
-##   attribute priority { xsd:integer }, display.mode.proper
-## }+
-##}
-##
-##display.mode.textual = ( "original" | "romanized" | "translated" )
-##display.mode.proper  = ( "original" | "romanized" | "uniform" )
-##
+

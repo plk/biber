@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 26;
+use Test::More tests => 28;
 
 use Biber;
 chdir("t/tdata");
@@ -35,6 +35,8 @@ my $nyvt        = 'mm00glashow2sheldon01961000220partial symmetries of weak inte
 my $anyt_la     = 'mm0gla6100glashow2sheldon019610partial symmetries of weak interactions00000';
 my $anyt        = 'mm000glashow2sheldon019610partial symmetries of weak interactions00000';
 my $anyvt_la    = 'mm0gla6100glashow2sheldon01961000220partial symmetries of weak interactions';
+my $anyvt_la2   = 'mm0hos+9800hostetler2michael j1zzzz01998000140alkanethiolate gold cluster molecules with core diameters from 15 to 52nm';
+my $anyvt_la3   = 'mm0hos9800hostetler2michael j1zzzz01998000140alkanethiolate gold cluster molecules with core diameters from 15 to 52nm';
 my $anyvt       = 'mm000glashow2sheldon01961000220partial symmetries of weak interactions';
 my $ynt         = 'mm0019610glashow2sheldon0partial symmetries of weak interactions';
 my $ydnt        = 'mm0080380glashow2sheldon0partial symmetries of weak interactions';
@@ -599,14 +601,16 @@ $biber->{config}{biblatex}{global}{sorting} =  [
                                                ];
 
 $biber->prepare;
-is($biber->{bib}{stdmodel}{sortstring}, $anyt_la, 'basic anyt sort (with labelalpha)' );
+is($biber->{bib}{stdmodel}{sortstring}, $anyt_la, 'anyt sort (with labelalpha)' );
 $biber->{config}{biblatex}{global}{labelalpha} = 0;
 delete $biber->{bib}{stdmodel}{labelalpha};
+delete $biber->{bib}{stdmodel}{sortlabelalpha};
 delete $biber->{bib}{'stdmodel:glashow'}{labelalpha}; # it's a crossref so have to clear it here too
+delete $biber->{bib}{'stdmodel:glashow'}{sortlabelalpha};
 
 # anyt without labelalpha
 $biber->prepare;
-is($biber->{bib}{stdmodel}{sortstring}, $anyt, 'basic anyt sort (without labelalpha)' );
+is($biber->{bib}{stdmodel}{sortstring}, $anyt, 'anyt sort (without labelalpha)' );
 
 # anyvt with labelalpha
 $biber->{config}{biblatex}{global}{labelalpha} = 1;
@@ -644,14 +648,25 @@ $biber->{config}{biblatex}{global}{sorting} =  [
                                                ];
 
 $biber->prepare;
-is($biber->{bib}{stdmodel}{sortstring}, $anyvt_la, 'basic anyvt sort (with labelalpha)' );
+is($biber->{bib}{stdmodel}{sortstring}, $anyvt_la, 'anyvt sort (with labelalpha)' );
+is($biber->{bib}{murray}{sortstring}, $anyvt_la2, 'anyvt sort (> maxnames, with labelalpha and alphaothers)' );
+
+$biber->{config}{biblatex}{global}{alphaothers} = '';
+$biber->{config}{biblatex}{global}{sortalphaothers} = '';
+$biber->prepare;
+is($biber->{bib}{murray}{sortstring}, $anyvt_la3, 'anyvt sort (> maxnames with labelalpha and without alphaothers)' );
+
 $biber->{config}{biblatex}{global}{labelalpha} = 0;
 delete $biber->{bib}{stdmodel}{labelalpha};
+delete $biber->{bib}{stdmodel}{sortlabelalpha};
 delete $biber->{bib}{'stdmodel:glashow'}{labelalpha}; # it's a crossref so have to clear it here too
+delete $biber->{bib}{'stdmodel:glashow'}{sortlabelalpha};
+delete $biber->{bib}{murray}{labelalpha};
+delete $biber->{bib}{murray}{sortlabelalpha};
 
 # anyvt without labelalpha
 $biber->prepare;
-is($biber->{bib}{stdmodel}{sortstring}, $anyvt, 'basic anyvt sort (without labelalpha)' );
+is($biber->{bib}{stdmodel}{sortstring}, $anyvt, 'anyvt sort (without labelalpha)' );
 
 # ynt
 $biber->{config}{biblatex}{global}{sorting} =  [

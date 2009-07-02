@@ -47,6 +47,7 @@ our %localoptions = () ;
 our %seennamehash = () ;
 our %uniquenamecount = () ;
 our %seenauthoryear = () ;
+our %authoryeartrack = () ;
 our %seenlabelyear = () ;
 our %is_name_entry = map { $_ => 1 } @NAMEFIELDS ;
 
@@ -1282,46 +1283,50 @@ sub postprocess {
                         $be->{ignoreuniquename} = 1
                 }
            }
-        ##############################################################
-        # 6. Generate the labelalpha
-        ##############################################################
-
-        if ( $self->getblxoption('labelalpha', $citekey) ) {
-            my $label ;
-
-            if ($be->{shorthand}) {
-              $label = $be->{shorthand};
-            }
-            else {
-              if ($be->{label}) {
-                $label = $be->{label};
-              }
-              elsif ($be->{labelnamename} and $be->{$be->{labelnamename}}) {
-                $label = $self->_getlabel($citekey, $be->{labelnamename});
-              }
-              else {
-                $label = '';
-              }
-              my $yr ;
-              if ( $be->{year} ) {
-                $yr = substr $be->{year}, 2, 2 ;
-              }
-              else {
-                $yr = '00' ;
-              }
-              $label .= $yr ;
-            }
-            $be->{labelalpha} = $label;
-        }
 
         ##############################################################
-        # 7. track author/year
+        # 6. track author/year
         ##############################################################
 
         my $tmp = $self->_getnamestring($citekey) . 
             "0" . $self->_getyearstring($citekey) ;
         $seenauthoryear{$tmp}++ ;
         $be->{authoryear} = $tmp ;
+
+        ##############################################################
+        # 7. Generate the labelalpha and also the variant for sorting
+        ##############################################################
+
+        if ( $self->getblxoption('labelalpha', $citekey) ) {
+            my $label;
+            my $sortlabel;
+
+            if ($be->{shorthand}) {
+              $sortlabel = $label = $be->{shorthand};
+            }
+            else {
+              if ($be->{label}) {
+                $sortlabel = $label = $be->{label};
+              }
+              elsif ($be->{labelnamename} and $be->{$be->{labelnamename}}) {
+                ($label, $sortlabel) = @{$self->_getlabel($citekey, $be->{labelnamename})};
+              }
+              else {
+                $sortlabel = $label = '';
+              }
+              my $yr ;
+              if ( $be->{year} ) {
+                $yr = substr $be->{year}, 2, 2;
+              }
+              else {
+                $yr = '00';
+              }
+              $label .= $yr;
+              $sortlabel .= $yr;
+            }
+            $be->{labelalpha} = $label;
+            $be->{sortlabelalpha} = $sortlabel;
+        }
 
         ##############################################################
         # 8. track shorthands
