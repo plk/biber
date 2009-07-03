@@ -175,6 +175,7 @@ our $dispatch_sorting = {
              'citeorder'    =>  \&_sort_citeorder,
              'debug'        =>  \&_sort_debug,
              'editor'       =>  \&_sort_editor,
+             'extraalpha'   =>  \&_sort_extraalpha,
              'issuetitle'   =>  \&_sort_issuetitle,
              'journal'      =>  \&_sort_journal,
              'labelalpha'   =>  \&_sort_labelalpha,
@@ -198,9 +199,8 @@ sub _dispatch_sorting {
 
 # Conjunctive set of sorting sets
 sub _generatesortstring {
-  my ($self, $citekey) = @_ ;
+  my ($self, $citekey, $sortscheme) = @_ ;
   my $be = $self->{bib}{$citekey} ;
-  my $sortscheme = $self->getblxoption('sorting', $citekey);
   my $sortstring;
   $BIBER_SORT_FINAL = 0; # reset sorting short-circuit
   foreach my $sortset (@{$sortscheme}) {
@@ -269,6 +269,18 @@ sub _sort_editor {
   my $be = $self->{bib}{$citekey} ;
   if ($self->getblxoption('useeditor', $citekey) and $be->{editor}) {
     return $self->_namestring($citekey, 'editor');
+  }
+  else {
+    return '';
+  }
+}
+
+sub _sort_extraalpha {
+  my ($self, $citekey, $sortelementattributes) = @_ ;
+  my $be = $self->{bib}{$citekey} ;
+  if ($self->getblxoption('labelalpha', $citekey)) {
+    my $authoryear = $be->{authoryear} ;
+    return $Biber::seenlabelyear{$authoryear};
   }
   else {
     return '';

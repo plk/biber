@@ -147,6 +147,14 @@
                   <data type="integer"/>
                 </attribute>
                 <optional>
+                  <attribute name="pass">
+                    <choice>
+                      <value>label</value>
+                      <value>final</value>
+                    </choice>
+                  </attribute>
+                </optional>
+                <optional>
                   <attribute name="final">
                     <data type="integer"/>
                   </attribute>
@@ -214,6 +222,14 @@
                   <attribute name="order">
                     <data type="integer"/>
                   </attribute>
+                  <optional>
+                    <attribute name="pass">
+                      <choice>
+                        <value>label</value>
+                        <value>final</value>
+                      </choice>
+                    </attribute>
+                  </optional>
                   <optional>
                     <attribute name="final">
                       <data type="integer"/>
