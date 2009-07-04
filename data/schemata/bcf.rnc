@@ -69,6 +69,7 @@ start =
         attribute order { xsd:integer },
         element bcf:sortitem {
           attribute order { xsd:integer },
+          attribute pass { "label" | "final" }?,
           attribute final { xsd:integer }?,
           attribute substring_side { "left" | "right" }?,
           attribute substring_width { xsd:integer }?,
@@ -86,6 +87,7 @@ start =
         attribute order { xsd:integer },
         element bcf:sortitem {
           attribute order { xsd:integer },
+          attribute pass { "label" | "final" }?,
           attribute final { xsd:integer }?,
           attribute substring_side { "left" | "right" }?,
           attribute substring_width { xsd:integer }?,

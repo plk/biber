@@ -46,10 +46,10 @@ my $sk1         = 'mm0aatestkey';
 my $pt1         = 'mm0081220aristotle0rhetoric of aristotle';
 my $ps_sc       = 'zs00glashow2sheldon0partial symmetries of weak interactions';
 my $noname      = 'mm00partial symmetries of weak interactions0partial symmetries of weak interactions0196100022';
-my $citeorder   = '68';
+my $citeorder   = '9';
 
 # nty with implicit default left, 4-digit year sort
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -82,7 +82,7 @@ $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff1, 'nty with default left offset, 4 digit year' );
 
 # nty with left, 3-digit year sort
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -117,7 +117,7 @@ is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff2, 'nty with left offset, 3 di
 
 
 # nty with left, 4-digit year sort
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -151,7 +151,7 @@ $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff3, 'nty with left offset, 4 digit year' );
 
 # nty with right, 3-digit year sort
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -185,7 +185,7 @@ $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff4, 'nty with right offset, 3 digit year' );
 
 # nty with right, 4-digit year sort
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -219,7 +219,7 @@ $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff5, 'nty with right offset, 4 digit year' );
 
 # ntyd with left, 4-digit year sort
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -254,7 +254,7 @@ $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff6, 'ntyd with left offset, 4 digit year' );
 
 # ntyd with left, 3-digit year sort
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -289,7 +289,7 @@ $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff7, 'ntyd with left offset, 3 digit year' );
 
 # ntyd with right, 4-digit year sort
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -324,7 +324,7 @@ $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff8, 'ntyd with right offset, 4 digit year' );
 
 # ntyd with right, 3-digit year sort
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -359,7 +359,7 @@ $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff9, 'ntyd with right offset, 3 digit year' );
 
 # nty with right-padded vol
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -393,7 +393,7 @@ $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $vol1, 'nty with right-padded vol' );
 
 # nty with right-padded 7-char vol
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -428,7 +428,7 @@ $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $vol2, 'nty with right-padded 7-char vol' );
 
 # nty with left-padded 5-char using "a" as pad_char vol
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -465,7 +465,7 @@ is($biber->{bib}{stdmodel}{sortstring}, $vol3, 'nty with left-padded 5-char "a" 
 
 
 # nty
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -500,7 +500,7 @@ is($biber->{bib}{stdmodel}{sortstring}, $nty, 'basic nty sort' );
 is($biber->{bib}{angenendtsk}{sortstring}, $sk1, 'basic sortkey sort' );
 
 # nyt
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -534,7 +534,7 @@ $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $nyt, 'basic nyt sort' );
 
 # nyvt
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -569,7 +569,7 @@ is($biber->{bib}{stdmodel}{sortstring}, $nyvt, 'basic nyvt sort' );
 
 # anyt with labelalpha
 $biber->{config}{biblatex}{global}{labelalpha} = 1;
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -616,7 +616,7 @@ is($biber->{bib}{stdmodel}{sortstring}, $anyt, 'anyt sort (without labelalpha)' 
 
 # anyvt with labelalpha
 $biber->{config}{biblatex}{global}{labelalpha} = 1;
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -676,7 +676,7 @@ $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $anyvt, 'anyvt sort (without labelalpha)' );
 
 # ynt
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -707,7 +707,7 @@ $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $ynt, 'basic ynt sort' );
 
 # ydnt
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -739,7 +739,7 @@ is($biber->{bib}{stdmodel}{sortstring}, $ydnt, 'basic ydnt sort' );
 $biber->{config}{biblatex}{global}{labelalpha} = 0;
 
 # debug
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'debug'    => {}},
                                                 ],
@@ -749,7 +749,7 @@ $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $debug, 'basic debug sort' );
 
 # per-type (book, ydnt)
-$biber->{config}{biblatex}{book}{sorting} =  [
+$biber->{config}{biblatex}{book}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -780,7 +780,7 @@ $biber->prepare;
 is($biber->{bib}{'aristotle:rhetoric'}{sortstring}, $pt1, 'book type ydnt sort' );
 
 # nty with modified presort and short_circuit at title
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -817,7 +817,7 @@ is($biber->{bib}{'stdmodel:ps_sc'}{sortstring}, $ps_sc, 'nty with modified preso
 $biber->{config}{biblatex}{global}{useauthor} = 0;
 $biber->{config}{biblatex}{global}{useeditor} = 0;
 $biber->{config}{biblatex}{global}{usetranslator} = 0;
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -851,7 +851,7 @@ $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $noname, 'nty with use* all off' );
 
 # citeorder sort
-$biber->{config}{biblatex}{global}{sorting} =  [
+$biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'citeorder'    => {}}
                                                 ]

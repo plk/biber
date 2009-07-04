@@ -10,6 +10,7 @@ use List::Util qw( first );
 use Biber::Internals ;
 use Biber::Utils ;
 use LaTeX::Decode ;
+use Storable qw(dclone);
 use base 'Biber::Internals' ;
 our @ISA ;
 
@@ -423,7 +424,7 @@ sub parse_ctrlfile {
         $self->{config}{biblatex}{global}{labelyear},
         $self->{config}{biblatex}{global}{singletitle},
         $self->{config}{biblatex}{global}{uniquename},
-        $self->{config}{biblatex}{global}{sorting},
+        $self->{config}{biblatex}{global}{sorting_label},
         $self->{config}{biblatex}{global}{sortlos},
         $self->{config}{biblatex}{global}{maxnames},
         $self->{config}{biblatex}{global}{minnames},
@@ -431,16 +432,15 @@ sub parse_ctrlfile {
         $self->{config}{biblatex}{global}{alphaothers}) = split /:/, $opts ; 
 
         my $controlversion = $self->{config}{biblatex}{global}{controlversion};
-    
         carp "Warning: You are using biblatex version $controlversion : 
             biber is more likely to work with version $BIBLATEX_VERSION.\n" 
             unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION ;
     }
 
-    my $sorting = ($self->{config}{biblatex}{global}{sorting} or '1');
-    
+    $self->{config}{biblatex}{global}{labelname} = ['shortauthor', 'author', 'shorteditor', 'editor', 'translator']; # set default 
+    my $sorting = ($self->{config}{biblatex}{global}{sorting_label} or '1');
     if ($sorting == 1) { # nty
-      $self->{config}{biblatex}{global}{sorting} = [
+      $self->{config}{biblatex}{global}{sorting_label} = [
                                                     [
                                                      {'presort'    => {}},
                                                      {'mm'         => {}},
@@ -470,7 +470,7 @@ sub parse_ctrlfile {
                                                     ]
                                                    ];
     } elsif ($sorting == 2) { # nyt
-      $self->{config}{biblatex}{global}{sorting} = [
+      $self->{config}{biblatex}{global}{sorting_label} = [
                                                     [
                                                      {'presort'    => {}},
                                                      {'mm'         => {}},
@@ -500,7 +500,7 @@ sub parse_ctrlfile {
                                                     ]
                                                    ];
     } elsif ($sorting == 3) { # nyvt
-      $self->{config}{biblatex}{global}{sorting} = [
+      $self->{config}{biblatex}{global}{sorting_label} = [
                                                     [
                                                      {'presort'    => {}},
                                                      {'mm'         => {}},
@@ -530,7 +530,7 @@ sub parse_ctrlfile {
                                                     ]
                                                    ];
     } elsif ($sorting == 12) { # anyt
-      $self->{config}{biblatex}{global}{sorting} = [
+      $self->{config}{biblatex}{global}{sorting_label} = [
                                                     [
                                                      {'presort'    => {}},
                                                      {'mm'         => {}},
@@ -564,7 +564,7 @@ sub parse_ctrlfile {
                                                    ];
 
     } elsif ($sorting == 13) { # anyvt
-      $self->{config}{biblatex}{global}{sorting} = [
+      $self->{config}{biblatex}{global}{sorting_label} = [
                                                     [
                                                      {'presort'    => {}},
                                                      {'mm'         => {}},
@@ -598,7 +598,7 @@ sub parse_ctrlfile {
                                                    ];
 
     } elsif ($sorting == 21) { # ynt
-      $self->{config}{biblatex}{global}{sorting} = [
+      $self->{config}{biblatex}{global}{sorting_label} = [
                                                     [
                                                      {'presort'    => {}},
                                                      {'mm'         => {}},
@@ -626,7 +626,7 @@ sub parse_ctrlfile {
                                                    ];
 
     } elsif ($sorting == 22) { # ydnt
-      $self->{config}{biblatex}{global}{sorting} = [
+      $self->{config}{biblatex}{global}{sorting_label} = [
                                                     [
                                                      {'presort'    => {}},
                                                      {'mm'         => {}},
@@ -653,7 +653,7 @@ sub parse_ctrlfile {
                                                     ],
                                                    ];
     } elsif ($sorting == 99) { # debug
-      $self->{config}{biblatex}{global}{sorting} = [
+      $self->{config}{biblatex}{global}{sorting_label} = [
                                                     [
                                                      {'debug'    => {}},
                                                     ],
@@ -774,37 +774,65 @@ sub parse_ctrlfile_v2 {
   }
   # SORTING schemes
   foreach my $sortschemes (@{$bcfxml->{sorting}}) {
-    my $sorting = [];
+    my $sorting_label = [];
+    my $sorting_final = [];
     foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$sortschemes->{sort}}) {
-      my $sortingitems = [];
+      my $sortingitems_label;
+      my $sortingitems_final;
+
+      # Determine which sorting pass(es) to include the item in
+      my $whichpass = ($sort->{pass} or 'both');
+
+      # Generate sorting pass structures
       foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
         my $sortitemattributes = {};
-        if ($sortitem->{final}) { # Found a sorting short-circuit marker
+        if (defined($sortitem->{final})) { # Found a sorting short-circuit marker
           $sortitemattributes->{final} = 1;
         }
-        if ($sortitem->{substring_side}) { # Found sorting substring side attribute
+        if (defined($sortitem->{substring_side})) { # Found sorting substring side attribute
           $sortitemattributes->{substring_side} = $sortitem->{substring_side};
         }
-        if ($sortitem->{substring_width}) { # Found sorting substring length attribute
+        if (defined($sortitem->{substring_width})) { # Found sorting substring length attribute
           $sortitemattributes->{substring_width} = $sortitem->{substring_width};
         }
-        if ($sortitem->{pad_width}) { # Found sorting pad length attribute
+        if (defined($sortitem->{pad_width})) { # Found sorting pad length attribute
           $sortitemattributes->{pad_width} = $sortitem->{pad_width};
         }
-        if ($sortitem->{pad_char}) { # Found sorting pad char attribute
+        if (defined($sortitem->{pad_char})) { # Found sorting pad char attribute
           $sortitemattributes->{pad_char} = $sortitem->{pad_char};
         }
-        if ($sortitem->{pad_side}) { # Found sorting pad side attribute
+        if (defined($sortitem->{pad_side})) { # Found sorting pad side attribute
           $sortitemattributes->{pad_side} = $sortitem->{pad_side};
         }
-        if ($sortitem->{sort_direction}) { # Found sorting direction attribute
+        if (defined($sortitem->{sort_direction})) { # Found sorting direction attribute
           $sortitemattributes->{sort_direction} = $sortitem->{sort_direction};
         }
-        push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
+        # No pass specified, sortitem is included in both sort passes
+        # Note that we're cloning the sortitemattributes object so as not to have pointers
+        # from one structure to the other
+        if ($whichpass eq 'both') {
+          push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
+          push @{$sortingitems_final}, {$sortitem->{content} => dclone($sortitemattributes)};
+        }
+        # "label" specified, sortitem is included only on "label" sort pass
+        elsif ($whichpass eq 'label') {
+          push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
+        }
+        # "final" specified, sortitem is included only on "final" sort pass
+        elsif ($whichpass eq 'final') {
+          push @{$sortingitems_final}, {$sortitem->{content} => $sortitemattributes};
+        }
       }
-      push @{$sorting}, $sortingitems;
+
+      # Only push a sortitem if defined. If the item has a conditional "pass"
+      # attribute, it may be ommitted in which case we don't want an empty array ref
+      # pushing
+      push @{$sorting_label}, $sortingitems_label if defined($sortingitems_label);
+      push @{$sorting_final}, $sortingitems_final if defined($sortingitems_final);
     }
-    $self->{config}{biblatex}{$sortschemes->{type}}{sorting} = $sorting;
+    $self->{config}{biblatex}{$sortschemes->{type}}{sorting_label} = $sorting_label;
+    $self->{config}{biblatex}{$sortschemes->{type}}{sorting_final} = $sorting_final;
+
   }
 
   # BIB SECTIONS
@@ -914,7 +942,7 @@ sub parse_bibtex {
         }
     }
 
-    return
+    return;
 
 }
 
@@ -1337,10 +1365,11 @@ sub postprocess {
         }
 
         ##############################################################
-        # 9. generate sort strings 
+        # 9. generate sort strings
         ##############################################################
 
-        $self->_generatesortstring($citekey);
+        # First-pass sorting to generate basic labels
+        $self->_generatesortstring($citekey, $self->getblxoption('sorting_label', $citekey));
 
         ##############################################################
         # 9. when type of patent is not stated, simply assume 'patent'

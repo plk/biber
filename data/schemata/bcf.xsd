@@ -154,6 +154,14 @@
   <xs:element name="sortitem">
     <xs:complexType mixed="true">
       <xs:attribute name="order" use="required" type="xs:integer"/>
+      <xs:attribute name="pass">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="label"/>
+            <xs:enumeration value="final"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
       <xs:attribute name="final" type="xs:integer"/>
       <xs:attribute name="substring_side">
         <xs:simpleType>
