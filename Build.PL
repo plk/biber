@@ -17,6 +17,8 @@ my $builder = Module::Build->new(
         'File::Slurp'  => 0,
         'XML::LibXML'  => 0,
         'XML::Writer'  => 0,
+        'List::AllUtils' => 0,
+        'Data::Dump' => 0,
     },
     recommends => {
         'Readonly::XS' => 0,
