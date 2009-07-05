@@ -125,7 +125,6 @@ sub citekeys {
 sub bibentry {
     my ($self, $key) = @_ ;
     return %{ $self->{bib}->{$key} }
-    # TODO return bless $self->{bib}->{$key}, Biber::Entry
 }
 
 =head2 bib
