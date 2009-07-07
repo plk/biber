@@ -77,7 +77,7 @@ sub _getallnameinitials {
 
 sub _getlabel {
     my ($self, $citekey, $namefield) = @_ ;
-    
+
     my @names = @{ $self->{bib}->{$citekey}->{$namefield} } ;
     my $dt = $self->{bib}->{$citekey}->{datatype} ;
     my $alphaothers = $self->getblxoption('alphaothers', $citekey) ;
@@ -91,8 +91,11 @@ sub _getlabel {
     my @lastnames = map { normalize_string( $_->{lastname}, $dt ) } @names ;
     my @prefixes  = map { $_->{prefix} } @names ;
     my $noofauth  = scalar @names ;
-    
-    if ($noofauth > $self->getblxoption('maxnames', $citekey)) { # FIXME - this should be conditionalised on maxnames and "and others" (see p75/76 biblatex manual)
+
+    # If name list was truncated in bib with "and others", this overrides maxnames
+    my $morenames = ($self->{bib}->{$citekey}->{$namefield}->[-1]->{namestring} eq 'others') ? 1 :0;
+
+    if ($morenames or ($noofauth > $self->getblxoption('maxnames', $citekey))) {
         if ($useprefix and $prefixes[0]) {
             $label .= substr( $prefixes[0], 0, 1 );
             $label .= substr( $lastnames[0], 0, 2 ) . $alphaothers;
@@ -660,7 +663,6 @@ sub _printfield {
 }
 
 sub _print_biblatex_entry {
-    
     my ($self, $citekey) = @_ ;
     my $be      = $self->{bib}->{$citekey} or croak "Cannot find $citekey" ;
     my $opts      = "" ;
