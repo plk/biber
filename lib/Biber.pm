@@ -40,6 +40,7 @@ our $VERSION = '0.4.3' ;
 #TODO read config file (e.g. $HOME/.biber.conf to change default options)
 
 #TODO put the following hashes in a Biber::Config object ?
+
 our %seenkeys    = () ;
 our %crossrefkeys = () ;
 our %entrieswithcrossref = () ;
@@ -48,9 +49,9 @@ our %localoptions = () ;
 our %seennamehash = () ;
 our %uniquenamecount = () ;
 our %seenauthoryear = () ;
-our %authoryeartrack = () ;
 our %seenlabelyear = () ;
 our %is_name_entry = map { $_ => 1 } @NAMEFIELDS ;
+
 
 =head1 FUNCTIONS
 
@@ -88,6 +89,27 @@ sub config {
     my ($self, $opt) = @_ ;
     return $self->{config}->{$opt};
 }
+
+=head2 _init
+
+    Reset internal hashes to defaults. This is needed for tests when ->prepare is used more than once
+
+=cut
+
+sub _init {
+  %localoptions = () ;
+  %seennamehash = () ;
+  %uniquenamecount = () ;
+  %seenauthoryear = () ;
+  %seenlabelyear = () ;
+}
+
+=head2 _initopts
+
+    Initialise default options
+
+=cut
+
 
 sub _initopts {
     my $self = shift ;
@@ -658,6 +680,8 @@ sub parse_ctrlfile {
                                                     ],
                                                    ];
     }
+    $self->{config}{biblatex}{global}{sorting_final} = dclone($self->{config}{biblatex}{global}{sorting_label});
+
     return;
 }
 
@@ -1363,34 +1387,62 @@ sub postprocess {
         }
 
         ##############################################################
-        # 9. generate sort strings
-        ##############################################################
-
-        # First-pass sorting to generate basic labels
-        $self->_generatesortstring($citekey, $self->getblxoption('sorting_label', $citekey));
-
-        ##############################################################
         # 9. when type of patent is not stated, simply assume 'patent'
         ##############################################################
 
         if ( ( $be->{entrytype} eq 'patent' )  &&  ( ! $be->{type} ) ) {
             $be->{type} = 'patent'
-        } ;
+        }
 
         ##############################################################
-        # 10. update the entry in the biber object
+        # 10. First-pass sorting to generate basic labels
         ##############################################################
 
-        $self->{bib}->{$citekey} = $be
-    } ;
+        $self->_generatesortstring($citekey, $self->getblxoption('sorting_label', $citekey));
+
+        ##############################################################
+        # 11. update the entry in the biber object
+        ##############################################################
+
+        $self->{bib}->{$citekey} = $be;
+    }
 
     $self->{citekeys} = [ @foundkeys ] ;
 
     print "Finished postprocessing entries\n" if $self->config('debug') ;
 
-    return
+    return;
 }
 
+=head2 generate_final_sortinfo
+
+    Generate:
+
+      * extraalpha
+      * labelyear
+
+    For use in final sorting
+
+=cut
+
+sub generate_final_sortinfo {
+  my $self = shift;
+  foreach my $citekey ($self->citekeys) {
+    my $be = $self->{bib}{$citekey};
+    my $authoryear = $be->{authoryear};
+    if ($Biber::seenauthoryear{$authoryear} > 1) {
+      $Biber::seenlabelyear{$authoryear}++;
+      if ( $self->getblxoption('labelyear', $citekey) ) {
+        $be->{labelyear} = $Biber::seenlabelyear{$authoryear};
+      }
+      if ( $self->getblxoption('labelalpha', $citekey) ) {
+        $be->{extraalpha} = $Biber::seenlabelyear{$authoryear};
+      }
+    }
+    $self->_generatesortstring($citekey, $self->getblxoption('sorting_final', $citekey));
+  }
+  return;
+}
 
 =head2 sortentries
 
@@ -1404,40 +1456,36 @@ sub postprocess {
 #===========================
 
 sub sortentries {
-    my $self = shift ;
-    my %bibentries = $self->bib ;
-    my @auxcitekeys = $self->citekeys ;
-    
-    if ( $self->getblxoption('sorting') ) {
+  my $self = shift ;
+  my %bibentries = $self->bib ;
+  my @auxcitekeys = $self->citekeys ;
 
-        print "Sorting entries...\n" if $self->config('debug') ;
-    
-        if ( $self->config('fastsort') ) {
-            if ($self->config('locale')) {
-                my $thislocale = $self->config('locale') ;
-                setlocale( LC_ALL, $thislocale ) or carp "Unavailable locale $thislocale"
-            }
-            @auxcitekeys = sort {
-                $bibentries{$a}->{sortstring} cmp $bibentries{$b}->{sortstring}
-            } @auxcitekeys ;
-        }
-        else {
-            require Unicode::Collate ;
-            my $opts = $self->config('collate_options') ;
-            my %collopts = eval "( $opts )" or carp "Incorrect collate_options: $@" ;
-            my $Collator = Unicode::Collate->new( %collopts ) ;
-            my $UCAversion = $Collator->version() ;
-            print "Sorting with Unicode::Collate ($opts, UCA version: $UCAversion)\n" 
-                unless $self->config('quiet');
-            @auxcitekeys = sort {
-                $Collator->cmp( $bibentries{$a}->{sortstring},
-                    $bibentries{$b}->{sortstring} )
-            } @auxcitekeys ;
-        }
-    $self->{citekeys} = [ @auxcitekeys ] ;
+  print "Sorting entries...\n" if $self->config('debug') ;
+
+  if ( $self->config('fastsort') ) {
+    if ($self->config('locale')) {
+      my $thislocale = $self->config('locale') ;
+      setlocale( LC_ALL, $thislocale ) or carp "Unavailable locale $thislocale"
     }
-    
-    return
+    @auxcitekeys = sort {
+      $bibentries{$a}->{sortstring} cmp $bibentries{$b}->{sortstring}
+    } @auxcitekeys ;
+  } else {
+    require Unicode::Collate ;
+    my $opts = $self->config('collate_options') ;
+    my %collopts = eval "( $opts )" or carp "Incorrect collate_options: $@" ;
+    my $Collator = Unicode::Collate->new( %collopts ) ;
+    my $UCAversion = $Collator->version() ;
+    print "Sorting with Unicode::Collate ($opts, UCA version: $UCAversion)\n" 
+      unless $self->config('quiet');
+    @auxcitekeys = sort {
+      $Collator->cmp( $bibentries{$a}->{sortstring},
+                      $bibentries{$b}->{sortstring} )
+    } @auxcitekeys ;
+  }
+  $self->{citekeys} = [ @auxcitekeys ] ;
+
+  return;
 }
 
 =head2 prepare
@@ -1449,15 +1497,19 @@ sub sortentries {
 =cut
 
 sub prepare {
-    my $self = shift ;
-    $self->process_crossrefs ;
-    $self->postprocess ;
-    $self->sortentries ;
-    return
+    my $self = shift;
+
+    $self->_init;
+    $self->process_crossrefs;
+    $self->postprocess; # in here we generate the label sort string
+    $self->sortentries; # then we do a label sort pass
+    $self->generate_final_sortinfo; # in here we generate the final sort string
+    $self->sortentries; # and then we do a final sort pass
+    return;
 }
 
 =head2 output_to_bbl
-    
+
     $biber->output_to_bbl("output.bbl") ;
 
     Write the bbl file for biblatex.

@@ -79,9 +79,8 @@ my $murray2 = q|\entry{murray}{article}{}
   \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
   \field{labelalpha}{Hos98}
   \field{sortinit}{H}
-  \field{labelyear}{1}
-  \field{extraalpha}{2}
   \count{uniquename}{0}
+  \true{singletitle}
   \field{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
   \field{subtitle}{Core and monolayer properties as a function of core size}
   \field{shorttitle}{Alkanethiolate gold cluster molecules}

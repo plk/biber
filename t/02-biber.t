@@ -71,6 +71,7 @@ my $stdmodel = {
                 'crossref' => 'stdmodel:glashow',
                 'volume' => '22',
                 'labelnamename' => 'author',
+                'labelyear'   => 1,
                 'entrytype' => 'set',
                 'title' => 'Partial Symmetries of Weak Interactions',
                 'datatype' => 'bibtex',

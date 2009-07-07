@@ -259,7 +259,8 @@ sub _sort_author {
 
 sub _sort_citeorder {
   my ($self, $citekey, $sortelementattributes) = @_ ;
-  return first_index {$_ eq $citekey} @{$self->{citekeys}};
+  use Data::Dump;dd($self->{citekeys});
+  return (first_index {$_ eq $citekey} @{$self->{citekeys}}) + 1; # +1 just to make it easier to debug
 }
 
 sub _sort_debug {
@@ -279,16 +280,27 @@ sub _sort_editor {
 }
 
 sub _sort_extraalpha {
-  my ($self, $citekey, $sortelementattributes) = @_ ;
+  my ($self, $citekey, $sortelementattributes) = @_;
   my $be = $self->{bib}{$citekey} ;
-  if ($self->getblxoption('labelalpha', $citekey)) {
-    my $authoryear = $be->{authoryear} ;
-    return $Biber::seenlabelyear{$authoryear};
+  my $default_pad_width = 4;
+  my $default_pad_side = 'left';
+  my $default_pad_char = '0';
+  if ($self->getblxoption('labelalpha', $citekey) and $be->{extraalpha}) {
+    my $pad_width = ($sortelementattributes->{pad_width} or $default_pad_width);
+    my $pad_side = ($sortelementattributes->{pad_side} or $default_pad_side);
+    my $pad_char = ($sortelementattributes->{pad_char} or $default_pad_char);
+    my $pad_length = $pad_width - length($be->{extraalpha});
+    if ($pad_side eq 'left') {
+      return ($pad_char x $pad_length) . $be->{extraalpha};
+    } elsif ($pad_side eq 'right') {
+      return $be->{extraalpha} . ($pad_char x $pad_length);
+    }
   }
   else {
     return '';
   }
 }
+
 
 sub _sort_issuetitle {
   my ($self, $citekey, $sortelementattributes) = @_ ;
@@ -694,6 +706,7 @@ sub _print_biblatex_entry {
     $str .= "  \\strng{namehash}{$namehash}\n" ;
     my $fullhash = $be->{fullhash} ;
     $str .= "  \\strng{fullhash}{$fullhash}\n" ;
+
     if ( $self->getblxoption('labelalpha', $citekey) ) {
         my $label = $be->{labelalpha} ;
         $str .= "  \\field{labelalpha}{$label}\n" ;
@@ -703,18 +716,16 @@ sub _print_biblatex_entry {
     if ( $self->getblxoption('labelyear', $citekey) ) {
         my $authoryear = $be->{authoryear} ;
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
-            $Biber::seenlabelyear{$authoryear}++ ;
             $str .= "  \\field{labelyear}{" 
-              . $Biber::seenlabelyear{$authoryear} . "}\n" ;
+              . $be->{labelyear} . "}\n" ;
         }
     }
 
     if ( $self->getblxoption('labelalpha', $citekey) ) {
         my $authoryear = $be->{authoryear} ;
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
-            $Biber::seenlabelyear{$authoryear}++ ;
             $str .= "  \\field{extraalpha}{" 
-              . $Biber::seenlabelyear{$authoryear} . "}\n" ;
+              . $be->{extraalpha} . "}\n" ;
         }
     }
 

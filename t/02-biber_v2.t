@@ -18,17 +18,18 @@ $biber->parse_auxfile_v2("50-style-authoryear_v2.aux") ;
 $biber->{config}{biblatex}{global}{maxline} = 100000 ;
 
 my @keys = sort $biber->citekeys;
-my @citedkeys = sort qw{ 
-    companion
-    knuth:ct:c
-    aristotle:physics
-    knuth:ct:b
-    aristotle:poetics
-    aristotle:rhetoric
-    knuth:ct:d
-    kant:kpv
-    kant:ku
-    } ;
+my @citedkeys = sort qw{
+stdmodel
+knuth:ct
+angenendtsk
+angenendtsa
+stdmodel:glashow
+stdmodel:ps_sc
+murray
+aristotle:rhetoric
+aristotle:anima
+};
+
 my @allkeys = sort qw{ stdmodel aristotle:poetics vazques-de-parga shore
 gonzalez averroes/bland laufenberg westfahl:frontier knuth:ct:a kastenholz
 averroes/hannes iliad malinowski sorace knuth:ct:d britannica
@@ -45,6 +46,7 @@ coleridge } ;
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 
 my $bibfile = $biber->config('bibdata')->[0] . ".bib";
+$biber->{config}{allentries} = 1;
 $biber->parse_bibtex($bibfile) ;
 $biber->prepare ;
 @keys = sort $biber->citekeys;
@@ -67,6 +69,7 @@ my $stdmodel = {
                             ],
                 'fullhash' => 'GS1',
                 'namehash' => 'GS1',
+                'labelyear' => 1,
                 'sortstring' => 'mm00glashow2sheldon019610partial symmetries of weak interactions00022',
                 'crossref' => 'stdmodel:glashow',
                 'volume' => '22',

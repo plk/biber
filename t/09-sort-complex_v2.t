@@ -19,6 +19,7 @@ $biber->{config}{biblatex}{global}{maxline} = 100000 ;
 my $bibfile = $biber->config('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
 $biber->{config}{biblatex}{global}{labelalpha} = 1;
+$biber->{config}{biblatex}{global}{labelyear} = 0;
 $biber->prepare;
 
 my $sc1 = [
@@ -94,7 +95,7 @@ my $sc2 = [
            ],
           ];
 
-my $sc3 = q|\entry{l4}{book}{}
+my $sc3 = q|\entry{L4}{book}{}
   \true{moreauthor}
   \name{author}{1}{%
     {{Doe}{D.}{John}{J.}{}{}{}{}}%
@@ -109,7 +110,6 @@ my $sc3 = q|\entry{l4}{book}{}
   \strng{fullhash}{DJo1}
   \field{labelalpha}{Doe\textbf{+}95}
   \field{sortinit}{D}
-  \field{labelyear}{1}
   \field{extraalpha}{2}
   \count{uniquename}{0}
   \field{title}{Some title about sorting}
