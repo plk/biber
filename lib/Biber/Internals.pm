@@ -198,7 +198,7 @@ our $dispatch_sorting = {
 sub _dispatch_sorting {
   my ($self, $sortfield, $citekey, $sortelementattributes) = @_;
   return &{$dispatch_sorting->{$sortfield}}($self, $citekey, $sortelementattributes);
-};
+}
 
 # Conjunctive set of sorting sets
 sub _generatesortstring {
@@ -259,8 +259,7 @@ sub _sort_author {
 
 sub _sort_citeorder {
   my ($self, $citekey, $sortelementattributes) = @_ ;
-  use Data::Dump;dd($self->{citekeys});
-  return (first_index {$_ eq $citekey} @{$self->{citekeys}}) + 1; # +1 just to make it easier to debug
+  return (first_index {$_ eq $citekey} @{$self->{orig_order_citekeys}}) + 1; # +1 just to make it easier to debug
 }
 
 sub _sort_debug {
@@ -300,7 +299,6 @@ sub _sort_extraalpha {
     return '';
   }
 }
-
 
 sub _sort_issuetitle {
   my ($self, $citekey, $sortelementattributes) = @_ ;
@@ -455,7 +453,7 @@ sub _sort_volume {
     }
   }
   else {
-    return '' ;
+    return '';
   }
 }
 

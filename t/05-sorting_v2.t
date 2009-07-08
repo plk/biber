@@ -47,7 +47,7 @@ my $sk1         = 'mm0aatestkey';
 my $pt1         = 'mm0081220aristotle0rhetoric of aristotle';
 my $ps_sc       = 'zs00glashow2sheldon0partial symmetries of weak interactions';
 my $noname      = 'mm00partial symmetries of weak interactions0partial symmetries of weak interactions0196100022';
-my $citeorder   = '6';
+my $citeorder   = '1';
 
 # nty with implicit default left, 4-digit year sort
 $biber->{config}{biblatex}{global}{sorting_label} =  [
@@ -881,6 +881,5 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 ]
                                                ];
 $biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
-use Data::Dump;dd($biber);
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $citeorder, 'citeorder' );

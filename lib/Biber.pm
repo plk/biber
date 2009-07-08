@@ -401,14 +401,18 @@ sub parse_auxfile_v2 {
     print "Found ", $#auxcitekeys+1 , " citekeys in aux file\n" 
         unless ( $self->config('quiet') or $self->config('allentries') ) ;
 
-    @auxcitekeys = sort @auxcitekeys if $self->config('debug') ;
+    if ($self->config('debug')) {
+      my @debug_auxcitekeys = sort @auxcitekeys;
+      unless ($self->config('allentries')) {
+        print "The citekeys are:\n", "@debug_auxcitekeys", "\n\n";
+      }
+    }
 
-    print "The citekeys are:\n", "@auxcitekeys", "\n\n" 
-        if ( $self->config('debug') && ! $self->config('allentries') ) ;
-    
-    $self->{citekeys} = [ @auxcitekeys ] ;
+    $self->{citekeys} = [ @auxcitekeys ];
+    # Preserve the original cite order for citekeys sort
+    $self->{orig_order_citekeys} = [ @auxcitekeys ] ;
 
-    return
+    return;
 }
 
 =head2 parse_ctrlfile
