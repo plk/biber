@@ -1,18 +1,18 @@
 #!/usr/bin/perl
-use strict ;
-use warnings ;
-# no warnings 'utf8' ;
-use Carp ;
-use IPC::Cmd qw( can_run run ) ;
+use strict;
+use warnings;
+# no warnings 'utf8';
+use Carp;
+use IPC::Cmd qw( can_run run );
 
-use Biber ;
-use Biber::Utils ;
+use Biber;
+use Biber::Utils;
 
 #Don't remove the next line!
 #<wrapper_snippet>---------------------------------
 
-use Getopt::Long qw/:config no_ignore_case/ ;
-my $opts = {} ;
+use Getopt::Long qw/:config no_ignore_case/;
+my $opts = {};
 GetOptions(
     $opts,
     'v2',
@@ -32,17 +32,17 @@ GetOptions(
     'quiet|q',
     'help|h|?',
     'version|v'
-) ;
+);
 
 #--------------------------------------------------
 
-use open IO => ':utf8' ;
+use open IO => ':utf8';
 
 our $VERSION = $Biber::VERSION ; 
 
-die usage() if exists $opts->{'help'} ;
+die usage() if exists $opts->{'help'};
 
-die version() if exists $opts->{'version'} ;
+die version() if exists $opts->{'version'};
 
 #--------------------------------------------------
 
@@ -50,26 +50,26 @@ die version() if exists $opts->{'version'} ;
 # this option is passed as an anon array
 if ($opts->{bibdata}) {
     $opts->{bibdata} = [ split /\s*,\s*/, $opts->{bibdata} ] 
-} ;
+};
 
-my $biber = Biber->new($opts) ;
+my $biber = Biber->new($opts);
 
 #=====================================================
 # Parse aux file
 #=====================================================
 
-my $auxfile ;
+my $auxfile;
 my $bblfile ; 
 
 if ( $opts->{allentries} && $opts->{bibdata} ) {
-    $bblfile = $opts->{bibdata}->[0] ;
-    $bblfile =~ s/(?:\.(bib|xml|dbxml))?$/\.bbl/ ;
+    $bblfile = $opts->{bibdata}->[0];
+    $bblfile =~ s/(?:\.(bib|xml|dbxml))?$/\.bbl/;
 }
 else {
-    $auxfile = $ARGV[0] or croak usage() ;
-    $auxfile .= '.aux' unless $auxfile =~ m/\.aux$/ ;
-    $bblfile = $auxfile ;
-    $bblfile =~ s/aux$/bbl/ ;
+    $auxfile = $ARGV[0] or croak usage();
+    $auxfile .= '.aux' unless $auxfile =~ m/\.aux$/;
+    $bblfile = $auxfile;
+    $bblfile =~ s/aux$/bbl/;
     #V2
     if ($opts->{v2}) {
       print "** USING EXPERIMENTAL V2 OPTIONS CODE!! **\n";
@@ -81,7 +81,7 @@ else {
 }
 
 if ($biber->config('debug')) {
-    $biber->_dump('biber.dump0') ;
+    $biber->_dump('biber.dump0');
     print ">> Dumped initial biber object for debugging in file biber.dump0\n"
 }
 
@@ -92,39 +92,39 @@ if ($biber->config('debug')) {
 foreach my $bib (@{ $biber->config('bibdata') }) {
 
     # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
-    $bib = bibfind($bib) ;
+    $bib = bibfind($bib);
 
     if ($bib =~ /\.(db)?xml$/) {
-        croak "File $bib does not exist!" unless -f $bib ;
+        croak "File $bib does not exist!" unless -f $bib;
         $biber->parse_biblatexml( $bib )
     }
     elsif ($bib =~ /\.bib$/) {
-        croak "File $bib does not exist!" unless -f $bib ;
+        croak "File $bib does not exist!" unless -f $bib;
         $biber->parse_bibtex($bib)
     }
     else {
-        croak "File $bib.bib does not exist!" unless -f "$bib.bib" ;
-        $biber->parse_bibtex("$bib.bib") ;
+        croak "File $bib.bib does not exist!" unless -f "$bib.bib";
+        $biber->parse_bibtex("$bib.bib");
     }
 }
 
 if ($biber->config('debug')) {
-    $biber->_dump('biber.dump1') ;
+    $biber->_dump('biber.dump1');
     print ">> Dumped postparse biber object for debugging in file biber.dump1\n"
 }
 
 $biber->prepare ; 
 
 if ($biber->config('debug')) {
-    $biber->_dump('biber.dump2') ;
+    $biber->_dump('biber.dump2');
     print ">> Dumped final biber object for debugging in file biber.dump2\n"
 }
 
 if ($biber->config('outfile')) {
     $bblfile = $biber->config('outfile')
-} ;
+};
 
-$biber->output_to_bbl($bblfile) ;
+$biber->output_to_bbl($bblfile);
 
 # display warnings/errors summary, like BibTeX
 if (defined($biber->{errors})) { # if errors, ignore warnings
@@ -147,7 +147,7 @@ elsif (defined($biber->{warnings})) {
 #======================================================
 
 sub version {
-    my $me = "biber" ;    #basename($0);
+    my $me = "biber"; #basename($0);
 
     qq[
 $me Version: $VERSION
@@ -155,7 +155,7 @@ $me Version: $VERSION
 }
 
 sub usage {
-    my $me = "biber" ;    #basename($0);
+    my $me = "biber"; #basename($0);
 
     qq[
 Usage:  $me file.aux

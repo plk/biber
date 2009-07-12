@@ -1,8 +1,8 @@
-package LaTeX::Decode ;
-use Carp ;
-use warnings ;
-use strict ;
-use Readonly ;
+package LaTeX::Decode;
+use Carp;
+use warnings;
+use strict;
+use Readonly;
 
 
 =head1 NAME
@@ -14,17 +14,17 @@ LaTeX::Decode - Decode from LaTeX to Unicode
 Version 0.1
 
 =cut
-use base qw(Exporter) ;
-our $VERSION = 0.1 ;
-our @EXPORT  = qw(latex_decode) ;
+use base qw(Exporter);
+our $VERSION = 0.1;
+our @EXPORT  = qw(latex_decode);
 use Unicode::Normalize; # this is in core perl since version 5.7
 
 =head1 SYNOPSIS
 
-    use LaTeX::Decode ;
+    use LaTeX::Decode;
 
-    my $latex_string = 'Mu\\d{h}ammad F\\=aris\\={\\i}' ;
-    print latex_decode($latex_string) ;
+    my $latex_string = 'Mu\\d{h}ammad F\\=aris\\={\\i}';
+    print latex_decode($latex_string);
     # prints 'Muḥammad Fārisī'
 
 =head1 DESCRIPTION
@@ -47,12 +47,12 @@ my %SCHEMES = (
 #    extra   => { DIAC => %DIACRITICSEXTRA, WORDMAC => ( %WORDMACROSEXTRA, %PUNCTUATION ) } ,
 #    full    => { WORDMAC => ( %NEGATEDSYMBOLS , %SYMBOLS, %SUPERSCRIPTS, 
 #                              %CMDSUPERSCRIPTS , %DINGS, %GREEK ) } 
-) ;
+);
 
 ### DATA ###
 Readonly::Array our @MACROSONEARG => qw/
 textsuperscript textmiddledot horn textrighthorn textcommabelow textdblgravecmb
-textsubbreve b c d h k m r u v B H M/ ;
+textsubbreve b c d h k m r u v B H M/;
 
 Readonly::Hash our %WORDMACROS => (
     textquotedbl  =>  "\x{0022}",
@@ -152,7 +152,7 @@ Readonly::Hash our %WORDMACROS => (
     ng  =>  "\x{014B}",
     OE  =>  "\x{0152}",
     oe  =>  "\x{0153}"
-) ;
+);
 
 Readonly::Hash our %WORDMACROSEXTRA => (
     textTbar  =>  "\x{0166}",
@@ -306,7 +306,7 @@ Readonly::Hash our %WORDMACROSEXTRA => (
     ayn    =>   "\x{02BF}",
     textprimstress  =>  "\x{02C8}",
     textlengthmark  =>  "\x{02D0}"
-) ;
+);
 
 Readonly::Hash our %DIACRITICS => (
     r   =>  "\x{030A}",
@@ -319,7 +319,7 @@ Readonly::Hash our %DIACRITICS => (
     k  =>  "\x{0328}",
     b  =>  "\x{0331}",
     B  =>  "\x{0335}"
-) ;
+);
 
 Readonly::Hash our %DIACRITICSEXTRA => (
     capitalring   =>  "\x{030A}",
@@ -400,7 +400,7 @@ Readonly::Hash our %DIACRITICSEXTRA => (
     textdoubletilde  =>  "\x{0360}",
     texttoptiebar  =>  "\x{0361}",
     sliding  =>  "\x{0362}"
-) ;
+);
 
 #   "\\prime"  =>  "\x{2032}",
 #   "\\prime\\prime"  =>  "\x{2033}",
@@ -428,7 +428,7 @@ Readonly::Hash our %PUNCTUATION => (
     textoverline  =>  "\x{203E}",
     langle  =>  "\x{27E8}",
     rangle  =>  "\x{27E9}" 
-) ;
+);
 
 Readonly::Hash our %NEGATEDSYMBOLS => ( # \not\\<symbol>
     asymp  =>  "\x{226D}",
@@ -444,7 +444,7 @@ Readonly::Hash our %NEGATEDSYMBOLS => ( # \not\\<symbol>
     succcurlyeq  =>  "\x{22E1}",
     sqsubseteq  =>  "\x{22E2}",
     sqsupseteq  =>  "\x{22E3}",
-) ;
+);
 
 Readonly::Hash our %SUPERSCRIPTS => (
     0  =>  "\x{2070}",
@@ -467,14 +467,14 @@ Readonly::Hash our %SUPERSCRIPTS => (
     r  =>  "\x{02b3}",
     w  =>  "\x{02b7}",
     y  =>  "\x{02b8}"
-) ;
+);
 
 Readonly::Hash our %CMDSUPERSCRIPTS => (
     texthth    =>  "\x{02b1}",
     textturnr  =>  "\x{02b4}",
     textturnrrtail  =>  "\x{02b5}",
     textinvscr  =>  "\x{02b6}"
-) ;
+);
 
 Readonly::Hash our %SYMBOLS => (
     textcolonmonetary  =>  "\x{20A1}",
@@ -681,7 +681,7 @@ Readonly::Hash our %SYMBOLS => (
     tone3  =>  "\x{02E7}",
     tone2  =>  "\x{02E8}",
     tone1  =>  "\x{02E9}"
-) ;
+);
 
 Readonly::Hash our %DINGS => (
     '21'  =>  "\x{2701}",
@@ -868,7 +868,7 @@ Readonly::Hash our %DINGS => (
     'FC'  =>  "\x{27BC}",
     'FD'  =>  "\x{27BD}",
     'FE'  =>  "\x{27BE}"
-) ;
+);
 Readonly::Hash our %GREEK => (
     alpha  =>  "\x{3b1}",
     beta  =>  "\x{3b2}",
@@ -920,15 +920,15 @@ Readonly::Hash our %GREEK => (
     Chi  =>  "\x{3a7}",
     Psi  =>  "\x{3a8}",
     Omega  =>  "\x{3a9}"
-) ;
+);
 
 # TODO add sub set_latex_decode_options ??
 
-Readonly::Hash our %WORDMAC => ( %WORDMACROS, %WORDMACROSEXTRA ) ; # if defined %WORDMACROSEXTRA ;
-Readonly::Hash our %DIAC => ( %DIACRITICS, %DIACRITICSEXTRA ) ; # if defined %DIACRITICSEXTRA ;
+Readonly::Hash our %WORDMAC => ( %WORDMACROS, %WORDMACROSEXTRA ); # if defined %WORDMACROSEXTRA;
+Readonly::Hash our %DIAC => ( %DIACRITICS, %DIACRITICSEXTRA ); # if defined %DIACRITICSEXTRA;
 
 sub latex_decode {
-    my $text = shift ;
+    my $text = shift;
 #    my $scheme ; 
 #    if ( exists $opts->{scheme} ) {
 #        $scheme = $opts->{scheme}
@@ -936,50 +936,50 @@ sub latex_decode {
 #        $scheme = $SCHEMES{default}
 #    };
 #
-#    my $schemeno = $SCHEMES{$scheme} ;
+#    my $schemeno = $SCHEMES{$scheme};
 #
     
     # TODO 
-    # my $options = ref $_[0] ? shift : { @_ } ;
+    # my $options = ref $_[0] ? shift : { @_ };
     # my $latinextra # IPA etc
     # my $symbols 
-    # my $greek = exists $options{greek} ? 1 : 0 ;
+    # my $greek = exists $options{greek} ? 1 : 0;
 
     $text =~ s/(\\[a-zA-Z]+)\\(\s+)/$1\{\}$2/g; # \foo\ bar -> \foo{} bar
     $text =~ s/([^{]\\\w)([;,.:%])/$1\{\}$2/g; # Fars\I, -> Fars\I{},
     for my $m (@MACROSONEARG) {
         $text =~ s/\\$m\s+(\p{Letter})/\\$m\{$1\}/g
-    } ;
+    };
     $text =~ s/(\\.){\\i}/$1i/g; # special cases such as \={ı} -> i′
     for my $m (keys %WORDMAC) {
         $text =~ s/({\\$m}|\\$m\{\}|\\$m\s+|\\$m$)/$WORDMAC{$m}/ge
-    } ;
-    $text =~ s/{\\`(\p{L})}/$1\x{0300}/g ;
-    $text =~ s/{\\\'(\p{L})}/$1\x{0301}/g ;
-    $text =~ s/{\\\^(\p{L})}/$1\x{0302}/g ;
-    $text =~ s/{\\~(\p{L})}/$1\x{0303}/g ;
-    $text =~ s/{\\=(\p{L})}/$1\x{0304}/g ;
-    $text =~ s/{\\\.(\p{L})}/$1\x{0307}/g ;
-    $text =~ s/{\\"(\p{L})}/$1\x{0308}/g ;
-    $text =~ s/\\`(\p{L})/$1\x{0300}/g ;
-    $text =~ s/\\'(\p{L})/$1\x{0301}/g ;
-    $text =~ s/\\^(\p{L})/$1\x{0302}/g ;
-    $text =~ s/\\~(\p{L})/$1\x{0303}/g ;
-    $text =~ s/\\=(\p{L})/$1\x{0304}/g ;
-    $text =~ s/\\\.(\p{L})/$1\x{0307}/g ;
-    $text =~ s/\\"(\p{L})/$1\x{0308}/g ;
+    };
+    $text =~ s/{\\`(\p{L})}/$1\x{0300}/g;
+    $text =~ s/{\\\'(\p{L})}/$1\x{0301}/g;
+    $text =~ s/{\\\^(\p{L})}/$1\x{0302}/g;
+    $text =~ s/{\\~(\p{L})}/$1\x{0303}/g;
+    $text =~ s/{\\=(\p{L})}/$1\x{0304}/g;
+    $text =~ s/{\\\.(\p{L})}/$1\x{0307}/g;
+    $text =~ s/{\\"(\p{L})}/$1\x{0308}/g;
+    $text =~ s/\\`(\p{L})/$1\x{0300}/g;
+    $text =~ s/\\'(\p{L})/$1\x{0301}/g;
+    $text =~ s/\\^(\p{L})/$1\x{0302}/g;
+    $text =~ s/\\~(\p{L})/$1\x{0303}/g;
+    $text =~ s/\\=(\p{L})/$1\x{0304}/g;
+    $text =~ s/\\\.(\p{L})/$1\x{0307}/g;
+    $text =~ s/\\"(\p{L})/$1\x{0308}/g;
     for my $m (keys %DIAC) {
-        my $dm = $DIAC{$m} ;
-        $text =~ s/{\\$m\{(\p{L})\}}/$1$dm/g ;
-        $text =~ s/\\$m\{(\p{L})\}/$1$dm/g ;
-    } ;
-    $text =~ s/\\`{(\X)}/$1\x{0300}/g ;
-    $text =~ s/\\\'{(\X)}/$1\x{0301}/g ;
-    $text =~ s/\\\^{(\X)}/$1\x{0302}/g ;
-    $text =~ s/\\~{(\X)}/$1\x{0303}/g ;
-    $text =~ s/\\={(\X)}/$1\x{0304}/g ;
-    $text =~ s/\\\.{(\X)}/$1\x{0307}/g ;
-    $text =~ s/\\"{(\X)}/$1\x{0308}/g ;
+        my $dm = $DIAC{$m};
+        $text =~ s/{\\$m\{(\p{L})\}}/$1$dm/g;
+        $text =~ s/\\$m\{(\p{L})\}/$1$dm/g;
+    };
+    $text =~ s/\\`{(\X)}/$1\x{0300}/g;
+    $text =~ s/\\\'{(\X)}/$1\x{0301}/g;
+    $text =~ s/\\\^{(\X)}/$1\x{0302}/g;
+    $text =~ s/\\~{(\X)}/$1\x{0303}/g;
+    $text =~ s/\\={(\X)}/$1\x{0304}/g;
+    $text =~ s/\\\.{(\X)}/$1\x{0307}/g;
+    $text =~ s/\\"{(\X)}/$1\x{0308}/g;
     return NFC($text)
 }
 

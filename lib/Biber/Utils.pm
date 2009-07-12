@@ -1,12 +1,12 @@
-package Biber::Utils ;
-use strict ;
-use warnings ;
-use Carp ;
+package Biber::Utils;
+use strict;
+use warnings;
+use Carp;
 use File::Find; 
-use IPC::Cmd qw( can_run run ) ;
-use LaTeX::Decode ;
-use Biber::Constants ;
-use base 'Exporter' ;
+use IPC::Cmd qw( can_run run );
+use LaTeX::Decode;
+use Biber::Constants;
+use base 'Exporter';
 
 =head1 NAME
 
@@ -28,7 +28,7 @@ All functions are exported by default.
 
 our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid 
     normalize_string normalize_string_underscore latexescape array_minus
-    remove_outer getinitials tersify ucinit } ;
+    remove_outer getinitials tersify ucinit };
 
 
 ######
@@ -58,30 +58,30 @@ my $NONSORTPREFIX = qr/\p{Ll}{2}-/; # etc
 sub bibfind {
     ## since these variables are used in the _wanted sub, they need to be made global
     ## FIXME there must be a way to avoid this
-    our $_filename = shift ;
+    our $_filename = shift;
     our @_found = ();
 
-    $_filename .= '.bib' unless $_filename =~ /\.(bib|xml|dbxml)$/ ;
+    $_filename .= '.bib' unless $_filename =~ /\.(bib|xml|dbxml)$/;
 
     if ( can_run("kpsepath") ) {
-        my $kpsepath ;
+        my $kpsepath;
         scalar run( command => [ 'kpsepath', 'bib' ], 
                     verbose => 0, 
-                    buffer => \$kpsepath ) ;
-        my @paths = split ( /:!*/, $kpsepath ) ;
+                    buffer => \$kpsepath );
+        my @paths = split ( /:!*/, $kpsepath );
         sub _removetrailingslashes {
             my $str = shift;
-            $str =~ s|/+\s*$|| ;
+            $str =~ s|/+\s*$||;
             return $str
-        } ;
+        };
 
-        @paths = map { _removetrailingslashes( $_ ) } @paths ;
+        @paths = map { _removetrailingslashes( $_ ) } @paths;
 
-        no warnings 'File::Find' ;
-        find (\&_wanted, @paths) ;
+        no warnings 'File::Find';
+        find (\&_wanted, @paths);
 
         sub _wanted {
-            $_ =~ /^$_filename($|\.bib$)/ && push @_found, $File::Find::name ;
+            $_ =~ /^$_filename($|\.bib$)/ && push @_found, $File::Find::name;
         } 
 
         if (@_found) {
@@ -122,21 +122,21 @@ sub bibfind {
 =cut
 
 sub parsename {
-    my ($namestr, $opts) = @_ ;
+    my ($namestr, $opts) = @_;
     $namestr =~ s/\\,\s*|{\\,\s*}/~/g; # necessary to get rid of LaTeX small spaces \,
-    # DEBUG carp "Parsing namestring $namestr\n" if $opts->{debug} ;
+    # DEBUG carp "Parsing namestring $namestr\n" if $opts->{debug};
     my $usepre = $opts->{useprefix};
 
-    my $lastname ;
-    my $firstname ;
-    my $prefix ;
-    my $suffix ;
-    my $nameinitstr ;
+    my $lastname;
+    my $firstname;
+    my $prefix;
+    my $suffix;
+    my $nameinitstr;
     
     if ( $namestr =~ /^{.+}$/ ) 
     { 
-        $namestr = remove_outer($namestr) ;
-        $lastname = $namestr ;
+        $namestr = remove_outer($namestr);
+        $lastname = $namestr;
     } 
     elsif ( $namestr =~ /[^\\],.+[^\\],/ )    # pre? Lastname, suffix, Firstname
     {
@@ -165,12 +165,12 @@ sub parsename {
                | 
                 {[^,]+}
                )
-             $/x ;
+             $/x;
 
-        #$lastname =~ s/^{(.+)}$/$1/g ;
-        #$firstname =~ s/^{(.+)}$/$1/g ;
-        $prefix =~ s/\s+$// if $prefix ;
-        $suffix =~ s/\s+$// ;
+        #$lastname =~ s/^{(.+)}$/$1/g;
+        #$firstname =~ s/^{(.+)}$/$1/g;
+        $prefix =~ s/\s+$// if $prefix;
+        $suffix =~ s/\s+$//;
     }
     elsif ( $namestr =~ /[^\\],/ )   # <pre> Lastname, Firstname
     {
@@ -193,12 +193,12 @@ sub parsename {
                 |
                 {.+}
                )
-               $/x ;
+               $/x;
 
-        #$lastname =~ s/^{(.+)}$/$1/g ;
-        #$firstname =~ s/^{(.+)}$/$1/g ;
-        $namestr =~ s/^$prefix// if ( $prefix && ! $usepre) ;
-        $prefix =~ s/\s+$// if $prefix ;
+        #$lastname =~ s/^{(.+)}$/$1/g;
+        #$firstname =~ s/^{(.+)}$/$1/g;
+        $namestr =~ s/^$prefix// if ( $prefix && ! $usepre);
+        $prefix =~ s/\s+$// if $prefix;
     }
     elsif ( $namestr =~ /\s/ ) # Firstname pre? Lastname
     {
@@ -213,39 +213,39 @@ sub parsename {
                          (?:\p{Ll}+\.?[\s~]*)+
                         )?
                         (\S+)
-                        $/x ;
+                        $/x;
 
-        #$lastname =~ s/^{(.+)}$/$1/ ;
-        $firstname =~ s/\s+$// if $firstname ;
+        #$lastname =~ s/^{(.+)}$/$1/;
+        $firstname =~ s/\s+$// if $firstname;
 
-        #$firstname =~ s/^{(.+)}$/$1/ if $firstname ;
-        $prefix =~ s/\s+$// if $prefix ;
-        $namestr = "" ;
-        $namestr = $prefix if $prefix ;
+        #$firstname =~ s/^{(.+)}$/$1/ if $firstname;
+        $prefix =~ s/\s+$// if $prefix;
+        $namestr = "";
+        $namestr = $prefix if $prefix;
         $namestr .= $lastname if $lastname;
-        $namestr .= ", " . $firstname if $firstname ;
+        $namestr .= ", " . $firstname if $firstname;
     }
     else 
     {    # Name alone
-        $lastname = $namestr ;
+        $lastname = $namestr;
     }
 
-    #TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g ;
+    #TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g;
     ## remove punctuation, symbols, separator and control 
 
     $namestr =~ s/\b$NONSORTPREFIX//;
     $namestr =~ s/\b$NONSORTDIACRITICS//;
 
-    $nameinitstr = "" ;
-    $nameinitstr .= substr( $prefix, 0, 1 ) . " " if ( $usepre and $prefix ) ;
-    $nameinitstr .= $lastname ;
+    $nameinitstr = "";
+    $nameinitstr .= substr( $prefix, 0, 1 ) . " " if ( $usepre and $prefix );
+    $nameinitstr .= $lastname;
     $nameinitstr =~ s/\b$NONSORTPREFIX//;
     $nameinitstr =~ s/\b$NONSORTDIACRITICS//;
     $nameinitstr .= " " . terseinitials($suffix) 
-        if $suffix ;
+        if $suffix;
     $nameinitstr .= " " . terseinitials($firstname) 
-        if $firstname ;
-    $nameinitstr =~ s/\s+/_/g ;
+        if $firstname;
+    $nameinitstr =~ s/\s+/_/g;
 
     return {
             namestring     => $namestr,
@@ -265,13 +265,13 @@ with the concatenation of all names.
 =cut
 
 sub makenameid {
-    my @names = @_ ;
-    my @namestrings ;
+    my @names = @_;
+    my @namestrings;
     foreach my $n (@names) {
-        push @namestrings, $n->{namestring} ;
+        push @namestrings, $n->{namestring};
     }
-    my $tmp = join " ", @namestrings ;
-    return normalize_string_underscore($tmp, 1) ;
+    my $tmp = join " ", @namestrings;
+    return normalize_string_underscore($tmp, 1);
 }
 
 =head2 makenameinitid
@@ -281,13 +281,13 @@ Similar to makenameid, with the first names converted to initials.
 =cut
 
 sub makenameinitid {
-    my @names = @_ ;
-    my @namestrings ;
+    my @names = @_;
+    my @namestrings;
     foreach my $n (@names) {
-        push @namestrings, $n->{nameinitstring} ;
+        push @namestrings, $n->{nameinitstring};
     }
-    my $tmp = join " ", @namestrings ;
-    return normalize_string_underscore($tmp, 1) ;
+    my $tmp = join " ", @namestrings;
+    return normalize_string_underscore($tmp, 1);
 }
 
 =head2 normalize_string
@@ -298,14 +298,14 @@ as well as leading and trailing whitespace.
 =cut
 
 sub normalize_string {
-    my ($str, $no_decode) = @_ ;
-    $str = latex_decode($str) unless $no_decode ;
-    $str =~ s/\\[A-Za-z]+//g ; # remove latex macros (assuming they have only ASCII letters)
-    $str =~ s/[\p{P}\p{S}\p{C}]+//g ; ### remove punctuation, symbols, separator and control
-    $str =~ s/^\s+// ;
-    $str =~ s/\s+$// ;
-    $str =~ s/\s+/ /g ;
-    return $str ;
+    my ($str, $no_decode) = @_;
+    $str = latex_decode($str) unless $no_decode;
+    $str =~ s/\\[A-Za-z]+//g; # remove latex macros (assuming they have only ASCII letters)
+    $str =~ s/[\p{P}\p{S}\p{C}]+//g; ### remove punctuation, symbols, separator and control
+    $str =~ s/^\s+//;
+    $str =~ s/\s+$//;
+    $str =~ s/\s+/ /g;
+    return $str;
 }
 
 =head2 normalize_string_underscore
@@ -315,11 +315,11 @@ Like normalize_string, but also substitutes ~ and whitespace with underscore.
 =cut
 
 sub normalize_string_underscore {
-    my ($str, $no_decode) = @_ ;
-    $str =~ s/([^\\])~/$1 /g ; # Foo~Bar -> Foo Bar
-    $str = normalize_string($str, $no_decode) ;
-    $str =~ s/\s+/_/g ;
-    return $str ;
+    my ($str, $no_decode) = @_;
+    $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
+    $str = normalize_string($str, $no_decode);
+    $str =~ s/\s+/_/g;
+    return $str;
 }
 
 =head2 latexescape
@@ -329,14 +329,14 @@ Escapes the LaTeX special characters { } & ^ _ $ and %
 =cut
 
 sub latexescape { 
-  my $str = shift ;
+  my $str = shift;
   my @latexspecials = qw| { } & _ % | ; 
   foreach my $char (@latexspecials) {
     $str =~ s/^$char/\\$char/g ; 
-    $str =~ s/([^\\])$char/$1\\$char/g ;
-  } ;
-    $str =~ s/\$/\\\$/g ;
-    $str =~ s/\^/\\\^/g ;
+    $str =~ s/([^\\])$char/$1\\$char/g;
+  };
+    $str =~ s/\$/\\\$/g;
+    $str =~ s/\^/\\\^/g;
   return $str
 }
 
@@ -348,17 +348,17 @@ terseinitials($str) returns the contatenated initials of all the words in $str.
 =cut
 
 sub terseinitials {
-    my $str = shift ;
-    $str =~ s/^$NONSORTPREFIX// ;
-    $str =~ s/^$NONSORTDIACRITICS// ;
-    $str =~ s/\\[\p{L}]+\s*//g ;  # remove tex macros
-    $str =~ s/^{(\p{L}).+}$/$1/g ;    # {Aaaa Bbbbb Ccccc} -> A
-    $str =~ s/{\s+(\S+)\s+}//g ;  # Aaaaa{ de }Bbbb -> AaaaaBbbbb
+    my $str = shift;
+    $str =~ s/^$NONSORTPREFIX//;
+    $str =~ s/^$NONSORTDIACRITICS//;
+    $str =~ s/\\[\p{L}]+\s*//g; # remove tex macros
+    $str =~ s/^{(\p{L}).+}$/$1/g; # {Aaaa Bbbbb Ccccc} -> A
+    $str =~ s/{\s+(\S+)\s+}//g; # Aaaaa{ de }Bbbb -> AaaaaBbbbb
     # get rid of Punctuation (except DashPunctuation), Symbol and Other characters
     $str =~ s/[\x{2bf}\x{2018}\p{Lm}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g ; 
-    $str =~ s/\B\p{L}//g ;
-    $str =~ s/[\s\p{Pd}]+//g ;
-    return $str ;
+    $str =~ s/\B\p{L}//g;
+    $str =~ s/[\s\p{Pd}]+//g;
+    return $str;
 }
 
 =head2 array_minus
@@ -368,15 +368,15 @@ array_minus(\@a, \@b) returns all elements in @a that are not in @b
 =cut
 
 sub array_minus {
-  my ($a, $b) = @_ ;
-  my %countb = () ;
+  my ($a, $b) = @_;
+  my %countb = ();
     foreach my $elem (@$b) { 
     $countb{$elem}++ 
-  } ;
-    my @result ;
+  };
+    my @result;
     foreach my $elem (@$a) {
         push @result, $elem unless $countb{$elem}
-    } ;
+    };
     return @result
 }
 
@@ -388,8 +388,8 @@ sub array_minus {
 =cut
 
 sub remove_outer {
-    my $str = shift ;
-    $str =~ s/^{(.+)}$/$1/ ;
+    my $str = shift;
+    $str =~ s/^{(.+)}$/$1/;
     return $str
 }
 
@@ -401,19 +401,19 @@ sub remove_outer {
 
 sub getinitials {
     my $str = shift;
-    $str =~ s/{\s+(\S+)\s+}//g ;  # Aaaaa{ de }Bbbb -> AaaaaBbbbb
+    $str =~ s/{\s+(\S+)\s+}//g; # Aaaaa{ de }Bbbb -> AaaaaBbbbb
     # remove pseudo-space after macros
-    $str =~ s/{? ( \\ [^\p{Ps}\{\}]+ ) \s+ (\p{L}) }?/\{$1\{$2\}\}/gx ;  # {\\x y} -> {\x{y}}
-    $str =~ s/( \\ [^\p{Ps}\{\}]+ ) \s+ { /$1\{/gx ; # \\macro { -> \macro{
-    my @words = split /\s+/, remove_outer($str) ;
-    $str = join ".~", ( map { _firstatom($_) } @words ) ;
+    $str =~ s/{? ( \\ [^\p{Ps}\{\}]+ ) \s+ (\p{L}) }?/\{$1\{$2\}\}/gx; # {\\x y} -> {\x{y}}
+    $str =~ s/( \\ [^\p{Ps}\{\}]+ ) \s+ { /$1\{/gx; # \\macro { -> \macro{
+    my @words = split /\s+/, remove_outer($str);
+    $str = join ".~", ( map { _firstatom($_) } @words );
     return $str . "."
 }
 
 sub _firstatom {
     my $str = shift;
-    $str =~ s/^$NONSORTPREFIX// ;
-    $str =~ s/^$NONSORTDIACRITICS// ;
+    $str =~ s/^$NONSORTPREFIX//;
+    $str =~ s/^$NONSORTDIACRITICS//;
     if ($str =~ /^({ 
                    \\ [^\p{Ps}\p{L}] \p{L}+ # {\\.x}
                    }
@@ -438,9 +438,9 @@ sub _firstatom {
 =cut
 
 sub tersify {
-    my $str = shift ;
-    $str =~ s/~//g ;
-    $str =~ s/\.//g ;
+    my $str = shift;
+    $str =~ s/~//g;
+    $str =~ s/\.//g;
     return $str
 }
 
@@ -451,9 +451,9 @@ sub tersify {
 =cut
 
 sub ucinit {
-        my $str = shift ;
-        $str = lc($str) ;
-        $str =~ s/\b(\p{Ll})/\u$1/g ;
+        my $str = shift;
+        $str = lc($str);
+        $str =~ s/\b(\p{Ll})/\u$1/g;
         return $str;
 }
 
@@ -476,6 +476,6 @@ under the same terms as Perl itself.
 
 =cut
 
-1 ;
+1;
 
 # vim: set tabstop=4 shiftwidth=4 expandtab: 
