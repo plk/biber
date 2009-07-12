@@ -27,7 +27,7 @@ sub _getnameinitials {
             if ( $a->{prefix} and $self->getblxoption('useprefix', $citekey ) ) {
                 $initstr .= terseinitials( $a->{prefix} ) 
             }
-            $initstr .= terseinitials( $a->{lastname} ) ; 
+            $initstr .= terseinitials( $a->{lastname} );
 
             #FIXME suffix ?
             if ( $a->{firstname} ) {
@@ -39,15 +39,15 @@ sub _getnameinitials {
     { # more than 3 authors: only take initials of first getblxoption('minnames', $citekey)
         foreach my $i ( 0 .. $self->getblxoption('minnames', $citekey ) - 1 ) {
             if ( $aut[$i]->{prefix} and $self->getblxoption('useprefix', $citekey) ) {
-                $initstr .= terseinitials( $aut[$i]->{prefix} ) ; 
+                $initstr .= terseinitials( $aut[$i]->{prefix} );
             }
             my $tmp = $aut[$i]->{lastname};
 
             #FIXME suffix ?
-            $initstr .= terseinitials($tmp) ; 
+            $initstr .= terseinitials($tmp);
             if ( $aut[$i]->{firstname} ) {
                 $tmp = $aut[$i]->{firstname};
-                $initstr .= terseinitials($tmp) ; 
+                $initstr .= terseinitials($tmp);
             }
             $initstr .= "+";
         }

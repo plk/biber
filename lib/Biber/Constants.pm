@@ -145,7 +145,7 @@ Readonly::Hash our %BIBLATEXML_FORMAT_ELEMENTS => (
   'bib:subscript'   => 'textsubscript',
   'bib:superscript' => 'mkbibsuperscript',
   'bib:emphasis'    => 'mkbibemph'
-) ; 
+);
 
 Readonly::Array our @BIBLATEXML_FORMATTEXT => qw(
   abstract

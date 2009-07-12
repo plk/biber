@@ -16,7 +16,7 @@ sub _text_bibtex_parse {
     
     my @localkeys;
 
-    my $encoding ;    
+    my $encoding;
 
     if ( $self->config('bibencoding') && ! $self->config('unicodebbl') ) {
         $encoding = $self->config('bibencoding');
@@ -99,7 +99,7 @@ sub _text_bibtex_parse {
 
                 if ($entry->type eq 'set' and $f eq 'entryset') {
 
-                    my @entrysetkeys = split /\s*,\s*/, $value ; 
+                    my @entrysetkeys = split /\s*,\s*/, $value;
 
                     foreach my $setkey (@entrysetkeys) {
                         $Biber::inset_entries{$setkey} = $key;
@@ -107,7 +107,7 @@ sub _text_bibtex_parse {
                 }
                 elsif ($f eq 'crossref') { ### $entry->type ne 'set' and 
                     $Biber::crossrefkeys{$value}++;
-                    $Biber::entrieswithcrossref{$key} = $value ;                   
+                    $Biber::entrieswithcrossref{$key} = $value;
                 }
             };
 

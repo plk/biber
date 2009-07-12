@@ -38,7 +38,7 @@ GetOptions(
 
 use open IO => ':utf8';
 
-our $VERSION = $Biber::VERSION ; 
+our $VERSION = $Biber::VERSION; 
 
 die usage() if exists $opts->{'help'};
 
@@ -59,7 +59,7 @@ my $biber = Biber->new($opts);
 #=====================================================
 
 my $auxfile;
-my $bblfile ; 
+my $bblfile;
 
 if ( $opts->{allentries} && $opts->{bibdata} ) {
     $bblfile = $opts->{bibdata}->[0];
@@ -113,7 +113,7 @@ if ($biber->config('debug')) {
     print ">> Dumped postparse biber object for debugging in file biber.dump1\n"
 }
 
-$biber->prepare ; 
+$biber->prepare;
 
 if ($biber->config('debug')) {
     $biber->_dump('biber.dump2');

@@ -35,7 +35,7 @@ sub _parse_biblatexml {
     if ($self->config('validate')) {
         my $xmlschema = XML::LibXML::Schema->new( location => "biblatexml.xsd" );
         
-        my $validation = eval { $xmlschema->validate($db) ; } ; 
+        my $validation = eval { $xmlschema->validate($db) ; };
 
         unless ($validation) {
             croak "The file $xml does not validate against the BibLaTeXML schema!\n$@"
@@ -77,7 +77,7 @@ sub _parse_biblatexml {
             carp "The database contains more than one bib:entry with id=\"$citekey\" !" 
         };
 
-        my $bibrecord = $results->get_node(1) ; 
+        my $bibrecord = $results->get_node(1);
 
         # if we have an entryset we add the keys to the stack
         if ($bibrecord->findnodes('@entrytype')->string_value eq 'set') {
@@ -113,7 +113,7 @@ sub _parse_biblatexml {
         print "Processing key $citekey\n" if $self->config('debug');
         my $xpath = '/*/bib:entry[@id="' . $citekey . '"]';
         my $results = $db->findnodes($xpath);
-        my $bibrecord = $results->get_node(1) ; 
+        my $bibrecord = $results->get_node(1);
 
         $self->{bib}->{$citekey}->{entrytype} = $bibrecord->findnodes('@entrytype')->string_value;
         if ($bibrecord->exists('@type')) {
@@ -125,9 +125,9 @@ sub _parse_biblatexml {
         #options/text or option: key+value
         if ($bibrecord->exists("bib:options")) {
             if ($bibrecord->findnodes("bib:options/bib:option")) {
-                my @opts ; 
+                my @opts;
                 foreach my $o ($bibrecord->findnodes("bib:options/bib:option")->get_nodelist) {
-                    my $k = $o->findnodes("bib:key")->string_value ; 
+                    my $k = $o->findnodes("bib:key")->string_value;
                     my $v = $o->findnodes("bib:value")->string_value;
                     push @opts, "$k=$v";
                 };
@@ -218,15 +218,15 @@ sub _parse_biblatexml {
                 my @z;
                 if ($bibrecord->exists("bib:$field/bib:person")) {
                     foreach my $person ($bibrecord->findnodes("bib:$field/bib:person")->get_nodelist) {
-                        my $lastname ; 
-                        my $firstname ; 
-                        my $prefix ; 
+                        my $lastname;
+                        my $firstname;
+                        my $prefix;
                         my $suffix;
                         my $namestr = "";
                         my $nameinitstr = undef;
                         if ($person->exists('bib:last')) {
                             $lastname = $person->findnodes('bib:last')->string_value;
-                            $firstname = $person->findnodes('bib:first')->string_value ; 
+                            $firstname = $person->findnodes('bib:first')->string_value;
                             $prefix = $person->findnodes('bib:prefix')->string_value 
                                 if $person->exists('bib:prefix');
                             $suffix = $person->findnodes('bib:suffix')->string_value
@@ -282,7 +282,7 @@ sub _parse_biblatexml {
             'bib:author/@gender' => 'gender',
             # 'bib:editor/@gender' => 'gender', (ignored for now)
             '@howpublished' => 'howpublished'
-            ) ; 
+            );
         foreach my $attr (keys %xmlattributes) {
             if ($bibrecord->exists($attr)) {
                 $self->{bib}->{$citekey}->{ $xmlattributes{$attr} } 

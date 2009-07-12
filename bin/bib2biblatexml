@@ -64,7 +64,7 @@ my $output;
 if ( $opts->{stdout} ) {
     $output = IO::Handle->new_from_fd('STDOUT', '>');
 } else {
-    $outfile = $filename ; 
+    $outfile = $filename;
     $outfile =~ s/\.bib$/.xml/;
 
     if ( -f $outfile ) {
@@ -78,9 +78,9 @@ if ( $opts->{stdout} ) {
 
 binmode($output, ':utf8');
 
-my $writer = XML::Writer->new(OUTPUT => $output, DATA_MODE => 1, DATA_INDENT => 2, UNSAFE=>1) ;  
+my $writer = XML::Writer->new(OUTPUT => $output, DATA_MODE => 1, DATA_INDENT => 2, UNSAFE=>1);
 
-$writer->xmlDecl("UTF-8") ;  
+$writer->xmlDecl("UTF-8");
 
 $writer->startTag("bib:entries", 'xmlns:bib'=>'http://biblatex-biber.sourceforge.net/biblatexml',
     'xmlns:user'=>'http://localhost/biblatexml/user');
@@ -102,23 +102,23 @@ for my $citekey ( sort keys %bibentries ) {
       'id' => $citekey, 
       'entrytype' => $entry->{entrytype}, 
       'type' => $entry->{type},
-      'howpublished' => $entry->{howpublished}) ; 
+      'howpublished' => $entry->{howpublished});
   }
   elsif ( $entry->{type} ) { 
     $writer->startTag('bib:entry',
       'id' => $citekey, 
       'entrytype' => $entry->{entrytype}, 
-      'type' => $entry->{type}) ; 
+      'type' => $entry->{type});
   }
   elsif ( $entry->{howpublished} ) { 
     $writer->startTag('bib:entry',
       'id' => $citekey, 
       'entrytype' => $entry->{entrytype}, 
-      'howpublished' => $entry->{howpublished}) ; 
+      'howpublished' => $entry->{howpublished});
   } else {
     $writer->startTag('bib:entry',
       'id' => $citekey, 
-      'entrytype' => $entry->{entrytype}) ; 
+      'entrytype' => $entry->{entrytype});
     };
   
 
@@ -147,7 +147,7 @@ for my $citekey ( sort keys %bibentries ) {
       };
       $writer->endTag(); # $field
     }
-  } ; 
+  };
   foreach my $field (@TITLEFIELDS) {
     if ($entry->{$field}) {
         $writer->startTag("bib:$field");
@@ -277,7 +277,7 @@ unless ($opts->{stdout}) {
 #
 #    my $rngschema = XML::LibXML::RelaxNG->new( location => $schema );
 #    
-#    my $validation = eval { $rngschema->validate($xmldoc) ; } ; 
+#    my $validation = eval { $rngschema->validate($xmldoc) ; };
 #    
 #    unless ($validation) {
 #        carp "!!!\nThe file $outfile does not validate against the BibLaTeXML RelaxNG schema\n!!!\n$@"

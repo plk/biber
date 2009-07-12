@@ -330,9 +330,9 @@ Escapes the LaTeX special characters { } & ^ _ $ and %
 
 sub latexescape { 
   my $str = shift;
-  my @latexspecials = qw| { } & _ % | ; 
+  my @latexspecials = qw| { } & _ % |;
   foreach my $char (@latexspecials) {
-    $str =~ s/^$char/\\$char/g ; 
+    $str =~ s/^$char/\\$char/g;
     $str =~ s/([^\\])$char/$1\\$char/g;
   };
     $str =~ s/\$/\\\$/g;
@@ -355,7 +355,7 @@ sub terseinitials {
     $str =~ s/^{(\p{L}).+}$/$1/g; # {Aaaa Bbbbb Ccccc} -> A
     $str =~ s/{\s+(\S+)\s+}//g; # Aaaaa{ de }Bbbb -> AaaaaBbbbb
     # get rid of Punctuation (except DashPunctuation), Symbol and Other characters
-    $str =~ s/[\x{2bf}\x{2018}\p{Lm}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g ; 
+    $str =~ s/[\x{2bf}\x{2018}\p{Lm}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g;
     $str =~ s/\B\p{L}//g;
     $str =~ s/[\s\p{Pd}]+//g;
     return $str;

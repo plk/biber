@@ -189,7 +189,7 @@ sub _addshorthand {
         @los = ();
     };
     push @los, $key;
-    $self->{shorthands} = [ @los ] ;    
+    $self->{shorthands} = [ @los ];
     return
 }
 
@@ -203,7 +203,7 @@ sub _addshorthand {
 sub parse_auxfile {
 
     my $self = shift;
-    my $auxfile = shift ; 
+    my $auxfile = shift;
     my @bibdatafiles = ();
     if ($self->config('bibdata')) { 
         @bibdatafiles = @{ $self->{config}->{bibdata} }
@@ -233,9 +233,9 @@ sub parse_auxfile {
                                                ([^}]+)
                                                       }/x;
             
-            my @tmp = split/,/, $bibdatastring ; 
+            my @tmp = split/,/, $bibdatastring;
             
-            $ctrl_file = shift @tmp ; 
+            $ctrl_file = shift @tmp;
 
             print "control file is $ctrl_file.bib\n" if $self->config('debug');
             
@@ -256,7 +256,7 @@ sub parse_auxfile {
         if ( $_ =~ /^\\citation/ ) { 
             m/^\\citation{ #{ for readability in vim
                           ([^}]+)
-                                 }/x ;  
+                                 }/x;
             if ( $1 eq '*' ) {
 
                 $self->{config}->{allentries} = 1;
@@ -313,7 +313,7 @@ sub parse_auxfile {
 sub parse_auxfile_v2 {
 
     my $self = shift;
-    my $auxfile = shift ; 
+    my $auxfile = shift;
     my @bibdatafiles = ();
     if ($self->config('bibdata')) {
         @bibdatafiles = @{ $self->{config}->{bibdata} }
@@ -343,7 +343,7 @@ sub parse_auxfile_v2 {
                                                ([^}]+)
                                                       }/x;
 
-            my @tmp = split/,/, $bibdatastring ; 
+            my @tmp = split/,/, $bibdatastring;
 
                         $ctrl_file = $auxfile;
                         $ctrl_file =~ s/\.aux\z//xms;
@@ -367,7 +367,7 @@ sub parse_auxfile_v2 {
         if ( $_ =~ /^\\citation/ ) { 
             m/^\\citation{ #{ for readability in vim
                           ([^}]+)
-                                 }/x ;  
+                                 }/x;
             if ( $1 eq '*' ) {
 
                 $self->{config}{allentries} = 1;
@@ -454,7 +454,7 @@ sub parse_ctrlfile {
         $self->{config}{biblatex}{global}{maxnames},
         $self->{config}{biblatex}{global}{minnames},
         $self->{config}{biblatex}{global}{maxline},
-        $self->{config}{biblatex}{global}{alphaothers}) = split /:/, $opts ; 
+        $self->{config}{biblatex}{global}{alphaothers}) = split /:/, $opts;
 
         my $controlversion = $self->{config}{biblatex}{global}{controlversion};
         carp "Warning: You are using biblatex version $controlversion : 
@@ -894,7 +894,7 @@ sub parse_bibtex {
 
     if ( !$self->config('unicodebib') && $self->config('unicodebbl') ) {
         require LaTeX::Decode;
-        require File::Slurp ; 
+        require File::Slurp;
         my $ubib = IO::File->new( $ufilename, ">:utf8" );
         # $ubib->binmode(':utf8');
 
@@ -1004,7 +1004,7 @@ sub process_crossrefs {
     my $self = shift;
     my %bibentries = $self->bib;
     foreach my $citekeyx (keys %entrieswithcrossref) {
-        my $xref = $entrieswithcrossref{$citekeyx} ; 
+        my $xref = $entrieswithcrossref{$citekeyx};
         my $type = $bibentries{$citekeyx}->{entrytype};
         if ($type eq 'review') {
                 #TODO
@@ -1018,7 +1018,7 @@ sub process_crossrefs {
                 }
             }
             # inherit title etc as booktitle etc
-            $bibentries{$citekeyx}->{booktitle} = $bibentries{$xref}->{title} ; 
+            $bibentries{$citekeyx}->{booktitle} = $bibentries{$xref}->{title};
             if ($bibentries{$xref}->{titleaddon}) {
                 $bibentries{$citekeyx}->{booktitleaddon} = $bibentries{$xref}->{titleaddon}
             }
@@ -1255,13 +1255,13 @@ sub postprocess {
         }
         else {    # initials of title
             if ( $be->{sorttitle} ) {
-                $namehash   = terseinitials( $be->{sorttitle} ) ; 
+                $namehash   = terseinitials( $be->{sorttitle} );
                 $fullhash   = $namehash;
                 $nameid     = normalize_string_underscore( $be->{sorttitle}, 1 );
                 $nameinitid = $nameid if ( $self->getblxoption('uniquename', $citekey) == 2 );
             }
             else {
-                $namehash   = terseinitials( $be->{title} ) ; 
+                $namehash   = terseinitials( $be->{title} );
                 $fullhash   = $namehash;
                 $nameid     = normalize_string_underscore( $be->{title}, 1 );
                 $nameinitid = $nameid if ( $self->getblxoption('uniquename', $citekey) == 2 );

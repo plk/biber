@@ -144,7 +144,7 @@ sub _bibtex_prd_parse {
 
         if ($bibentries{ $key }->{'entrytype'} eq 'set') {
             
-            my @entrysetkeys = split /\s*,\s*/, $bibentries{$key}->{'entryset'} ; 
+            my @entrysetkeys = split /\s*,\s*/, $bibentries{$key}->{'entryset'};
 
             foreach my $setkey (@entrysetkeys) {
                 $Biber::inset_entries{$setkey} = $key;

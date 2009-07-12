@@ -149,14 +149,14 @@ sub XML::LibXML::Node::_biblatex_sortstring_value {
 #            }
 #        }
 #    };
-#    my $title = join('', @title_stringbuffer) ; 
-#    my $sorttitle = join('', @sorttitle_stringbuffer) ; 
+#    my $title = join('', @title_stringbuffer);
+#    my $sorttitle = join('', @sorttitle_stringbuffer);
 #    $sorttitle =~ s/^\s+//;
 #    #$sorttitle =~ s/^(.)/\U$1/;
-#    my $indextitle = join('', @indextitle_stringbuffer) ; 
+#    my $indextitle = join('', @indextitle_stringbuffer);
 #    $indextitle =~ s/^\s+//;
 #    $indextitle .= ", $nosortprefix" if $nosortprefix;
-#    my $indexsorttitle = join('', @indexsorttitle_stringbuffer) ; 
+#    my $indexsorttitle = join('', @indexsorttitle_stringbuffer);
 #    $indexsorttitle =~ s/^\s+//;
 #    $indexsorttitle .= ", $nosortprefix" if $nosortprefix;
 #    #$indexsorttitle =~ s/^(.)/\U$1/;
