@@ -6,6 +6,8 @@ no warnings 'utf8' ;
 use Test::More tests => 6 ;
 
 use Biber;
+use Log::Log4perl qw(:easy);
+Log::Log4perl->easy_init($ERROR);
 
 my $opts = { fastsort => 1 };
 my $biber = Biber->new($opts);
