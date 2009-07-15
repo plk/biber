@@ -4,6 +4,7 @@ use warnings;
 # no warnings 'utf8';
 use Carp;
 use IPC::Cmd qw( can_run run );
+use Log::Log4perl;
 
 use Biber;
 use Biber::Utils;
@@ -54,12 +55,41 @@ if ($opts->{bibdata}) {
 
 my $biber = Biber->new($opts);
 
+my $LOGLEVEL ;
+
+if ($biber->config('debug')) {
+    $LOGLEVEL = 'DEBUG'
+} elsif ($biber->config('quiet')) {
+    $LOGLEVEL = 'ERROR'
+} else {
+    $LOGLEVEL = 'INFO'
+}
+
+my $l4pconf = qq(
+    log4perl.category                                  = $LOGLEVEL, Logfile, Screen
+
+    log4perl.appender.Logfile                          = Log::Log4perl::Appender::File
+    log4perl.appender.Logfile.filename                 = biber.log
+    log4perl.appender.Logfile.mode                     = write
+    log4perl.appender.Logfile.layout                   = Log::Log4perl::Layout::PatternLayout
+    log4perl.appender.Logfile.layout.ConversionPattern = [%r] %F %L %m%n
+
+    log4perl.appender.Screen                           = Log::Log4perl::Appender::Screen
+    log4perl.appender.Screen.stderr                    = 0
+    log4perl.appender.Screen.layout                    = Log::Log4perl::Layout::SimpleLayout
+);
+
+Log::Log4perl::init(\$l4pconf) ;
+my $logger = Log::Log4perl::get_logger;
+
 #=====================================================
 # Parse aux file
 #=====================================================
 
 my $auxfile;
 my $bblfile;
+
+$logger->info("Testing info");
 
 if ( $opts->{allentries} && $opts->{bibdata} ) {
     $bblfile = $opts->{bibdata}->[0];
@@ -72,13 +102,15 @@ else {
     $bblfile =~ s/aux$/bbl/;
     #V2
     if ($opts->{v2}) {
-      print "** USING EXPERIMENTAL V2 OPTIONS CODE!! **\n";
+      $logger->warn("** USING EXPERIMENTAL V2 OPTIONS CODE!! **");
       $biber->parse_auxfile_v2($auxfile);
     }
     else {
       $biber->parse_auxfile($auxfile);
     }
 }
+
+$logger->error("Testing error");
 
 if ($biber->config('debug')) {
     $biber->_dump('biber.dump0');
@@ -147,25 +179,21 @@ elsif (defined($biber->{warnings})) {
 #======================================================
 
 sub version {
-    my $me = "biber"; #basename($0);
-
-    qq[
-$me Version: $VERSION
-      \n]
+    qq{
+biber Version: $VERSION
+      \n}
 }
 
 sub usage {
-    my $me = "biber"; #basename($0);
-
-    qq[
-Usage:  $me file.aux
+    qq{
+Usage:  biber file.aux
         Creates file.bbl
 
-        $me -d foo.bib file.aux
+        biber -d foo.bib file.aux
         Creates file.bbl from entries in foo.bib and the datafiles 
         listed in file.aux
 
-        $me -d foo.bib,bar.xml -a
+        biber -d foo.bib,bar.xml -a
         Creates foo.bbl from all entries in foo.bib and bar.xml
 
 Options:
@@ -195,7 +223,7 @@ Options:
                          and biblatexml bib files (if used). Dies on validation error.
   --debug|-D             Turn on debugging for biber.
   --quiet|-q             Turn warnings off.
-    \n]
+    \n}
 }
 
 __END__

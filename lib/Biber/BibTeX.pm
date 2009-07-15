@@ -7,6 +7,9 @@ use Biber::Constants;
 use Biber::Utils;
 use Encode;
 use File::Spec;
+use Log::Log4perl;
+
+my $logger = Log::Log4perl::get_logger;
 
 sub _text_bibtex_parse {
         
@@ -25,7 +28,7 @@ sub _text_bibtex_parse {
     };
 
     my $bib = Text::BibTeX::File->new( $filename, "<" )
-        or croak "Cannot create Text::BibTeX::File object from $filename: $!";
+        or $logger->logcroak("Cannot create Text::BibTeX::File object from $filename: $!");
 
     #TODO validate with Text::BibTeX::Structure ?
 
@@ -45,7 +48,7 @@ sub _text_bibtex_parse {
                 or $entry->metatype == BTE_COMMENT ); #or $entry->type =~ m/^comment$/i
 
         unless ( $entry->key ) {
-            warn "Warning--Cannot get the key of entry no $count : Skipping\n";
+            $logger->warn("Cannot get the key of entry no $count : Skipping");
             next 
         }
 
@@ -53,25 +56,24 @@ sub _text_bibtex_parse {
         my $key = lc($origkey);
 
         if (!defined $origkey or $origkey =~ /\s/ or $origkey eq '') {
-            carp "Invalid Key! Skipping...\n";
+            $logger->warn("Invalid BibTeX key! Skipping...");
             next
         }
 
-        print "Processing $key\n" if $self->config('debug');
+        $logger->debug("Processing $key");
 
         if ( $bibentries{ $origkey } or $bibentries{ $key } ) {
             $self->{errors}++;
             my (undef,undef,$f) = File::Spec->splitpath( $filename );
-            print "Repeated entry---key $origkey in file $f\nI'm skipping whatever remains of this entry\n"
-                unless $self->config('quiet');
+            $logger->warn("Repeated entry---key $origkey in file $f\nI'm skipping whatever remains of this entry");
             next;
         }
 
         push @localkeys, $key;
 
         unless ($entry->parse_ok) {
-            carp "Entry $origkey does not parse correctly: skipping" 
-                unless $self->config('quiet');
+            $self->{errors}++;
+            $logger->warn("Entry $origkey does not parse correctly: skipping");
             next;
         }
 

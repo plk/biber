@@ -7,6 +7,9 @@ use IPC::Cmd qw( can_run run );
 use LaTeX::Decode;
 use Biber::Constants;
 use base 'Exporter';
+use Log::Log4perl;
+
+my $logger = Log::Log4perl::get_logger;
 
 =head1 NAME
 
@@ -82,6 +85,7 @@ sub bibfind {
 
         sub _wanted {
             $_ =~ /^$_filename($|\.bib$)/ && push @_found, $File::Find::name;
+            $logger->debug("Found bib file $File::Find::name");
         } 
 
         if (@_found) {
@@ -124,7 +128,7 @@ sub bibfind {
 sub parsename {
     my ($namestr, $opts) = @_;
     $namestr =~ s/\\,\s*|{\\,\s*}/~/g; # necessary to get rid of LaTeX small spaces \,
-    # DEBUG carp "Parsing namestring $namestr\n" if $opts->{debug};
+    $logger->debug("Parsing namestring $namestr");
     my $usepre = $opts->{useprefix};
 
     my $lastname;

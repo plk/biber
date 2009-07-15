@@ -6,7 +6,11 @@ use XML::LibXML;
 use Biber::BibLaTeXML::Node;
 use Biber::Utils;
 use Biber::Constants;
+use File::Spec;
+use Log::Log4perl;
 our @ISA;
+
+my $logger = Log::Log4perl::get_logger;
 
 
 sub _parse_biblatexml {
@@ -15,31 +19,39 @@ sub _parse_biblatexml {
     my $db;
 
     # FIXME : a user _could_ want to encode the bbl in LaTeX!
+    # ... in which case we would need LaTeX::Encode
     $self->{config}->{unicodebbl} = 1;
 
 
     if ( $xml =~ /\.dbxml$/ ) {
         require Biber::DBXML;
         push @ISA, 'Biber::DBXML';
-        print "Querying DBXML  ...\n" unless $self->config('quiet');
+        $logger->info("Querying DBXML  ...");
         my $xmlstring = $self->dbxml_to_xml($xml);
-        print "Parsing the XML data ...\n" unless $self->config('quiet');
+        $logger->info("Parsing the XML data ...");
         $db = $parser->parse_string( $xmlstring ) 
-            or croak "Cannot parse xml string";
+            or $logger->logcroak("Cannot parse xml string");
     } else {
-        print "Parsing the XML data ...\n" unless $self->config('quiet');
+        $logger->info("Parsing the XML data ...");
         $db = $parser->parse_file($xml) 
-            or croak "Can't parse file $xml";
+            or $logger->logcroak("Can't parse file $xml");
     }
 
     if ($self->config('validate')) {
-        my $xmlschema = XML::LibXML::Schema->new( location => "biblatexml.xsd" );
-        
-        my $validation = eval { $xmlschema->validate($db) ; };
+        require Config;
+        # FIXME How can we be sure that Biber is installed in sitelib and not vendorlib ?
+        my $xmlschema = XML::LibXML::Schema->new( 
+              location => File::Spec->catfile($Config::Config{sitelibexp}, 'Biber', 'biblatexml.xsd')
+            ) 
+            or $logger->warn("Cannot find XML::LibXML::Schema schema for BibLaTeXML. Skipping validation : $!");
 
-        unless ($validation) {
-            croak "The file $xml does not validate against the BibLaTeXML schema!\n$@"
-        } 
+        if ($xmlschema) {
+            my $validation = eval { $xmlschema->validate($db) ; };
+    
+            unless ($validation) {
+                $logger->logcroak("The file $xml does not validate against the BibLaTeXML schema!\n$@")
+            } 
+        }
     }
     
     # keep track of citekeys that were not found in this database
@@ -54,27 +66,25 @@ sub _parse_biblatexml {
         };
     };
     
-    print "Processing the XML data ...\n" unless $self->config('quiet');
+   $logger->info("Processing the XML data ...");
 
     # Contrary to the bibtex approach, we are not extracting all data to
     # the bibentries hash, but only the ones corresponding to @auxcitekeys
     foreach my $citekey (@auxcitekeys) {
         next if $self->{bib}->{$citekey}; # skip if this is already found in another database
-        print "Looking for $citekey\n" if $self->config('debug');
+        $logger->debug("Looking for $citekey");
         my $xpath = '/*/bib:entry[@id="' . $citekey . '"]';
         my $results = $db->findnodes($xpath);
 
         unless ( $results ) {
-
-            carp "Can't find entry with citekey $citekey... skipping"
-                 unless $self->config('quiet');
+            $logger->info("Can't find entry with citekey $citekey... skipping");
             
             $citekeysnotfound{$citekey} = 1;
             next
         };
 
         if ( $results->size() > 1 ) { 
-            carp "The database contains more than one bib:entry with id=\"$citekey\" !" 
+            $logger->warn("The database contains more than one bib:entry with id=\"$citekey\" !)" 
         };
 
         my $bibrecord = $results->get_node(1);
@@ -110,7 +120,7 @@ sub _parse_biblatexml {
     foreach my $citekey (@auxcitekeys) {
         next if $citekeysnotfound{$citekey};
         next if $self->{bib}->{$citekey}; # skip if this is already found in another database
-        print "Processing key $citekey\n" if $self->config('debug');
+        $logger->debug("Processing key $citekey");
         my $xpath = '/*/bib:entry[@id="' . $citekey . '"]';
         my $results = $db->findnodes($xpath);
         my $bibrecord = $results->get_node(1);
@@ -153,7 +163,7 @@ sub _parse_biblatexml {
         }
 
         if (! $bibrecord->exists("bib:$titlename") ) {
-           croak "Entry $citekey has no title!"
+           $logger->error("Entry $citekey has no title!")
         };
 
         my $titlestrings = $bibrecord->findnodes("bib:$titlename")->_biblatex_title_values;

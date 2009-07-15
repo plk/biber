@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use Carp;
 use IO::File;
+use File::Spec;
 use Encode;
 use POSIX qw/locale_h/; # for sorting with built-in "sort"
 use Biber::Constants;
@@ -11,6 +12,7 @@ use Biber::Internals;
 use Biber::Utils;
 use LaTeX::Decode;
 use Storable qw(dclone);
+use Log::Log4perl;
 use base 'Biber::Internals';
 our @ISA;
 
@@ -52,6 +54,7 @@ our %seenauthoryear = ();
 our %seenlabelyear = ();
 our %is_name_entry = map { $_ => 1 } @NAMEFIELDS;
 
+my $logger = Log::Log4perl::get_logger;
 
 =head1 FUNCTIONS
 
@@ -211,16 +214,16 @@ sub parse_auxfile {
 
     my @auxcitekeys = $self->citekeys;
 
-    croak "Cannot find file '$auxfile'!\n" unless -f $auxfile;
-    croak "File '$auxfile' is not an .aux file!\n" unless $auxfile =~ m/\.aux$/;
+    $logger->logcroak("Cannot find file '$auxfile'!") unless -f $auxfile;
+    $logger->logcroak("File '$auxfile' is not an .aux file!") unless $auxfile =~ m/\.aux$/;
 
-    my $aux = new IO::File "<$auxfile" or croak "Failed to open $auxfile : $!";
+    my $aux = new IO::File "<$auxfile" or $logger->logcroak("Failed to open $auxfile : $!");
 
     my $ctrl_file = "";
 
     local $/ = "\n";
 
-    print "Reading $auxfile\n" unless $self->config('quiet');
+    $logger->info("Reading $auxfile");
     
     while (<$aux>) {
     
@@ -237,7 +240,7 @@ sub parse_auxfile {
             
             $ctrl_file = shift @tmp;
 
-            print "control file is $ctrl_file.bib\n" if $self->config('debug');
+            $logger->debug("control file is $ctrl_file.bib");
             
             if (defined $bibdatafiles[0]) {
 
@@ -261,8 +264,7 @@ sub parse_auxfile {
 
                 $self->{config}->{allentries} = 1;
 
-                print "Processing all citekeys\n" 
-                    unless ( $self->config('quiet') );
+                $logger->info("Processing all citekeys"); 
 
                 # we stop reading the aux file as soon as we encounter \citation{*}
                 last
@@ -280,20 +282,20 @@ sub parse_auxfile {
     $self->parse_ctrlfile($ctrl_file) if $ctrl_file;
     
     unless (@bibdatafiles) {
-        croak "No database is provided in the file '$auxfile'!\nExiting\n"
+        $logger->logcroak("No database is provided in the file '$auxfile'! Exiting");
     }
 
     unless ($self->config('allentries') or @auxcitekeys) {
-        croak "The file '$auxfile' does not contain any citations!\n"
+        $logger->logcroak("The file '$auxfile' does not contain any citations!")
     }
 
-    print "Found ", $#auxcitekeys+1 , " citekeys in aux file\n" 
-        unless ( $self->config('quiet') or $self->config('allentries') );
+    $logger->info("Found ", $#auxcitekeys+1 , " citekeys in aux file") 
+        unless $self->config('allentries') ;
 
     @auxcitekeys = sort @auxcitekeys if $self->config('debug');
 
-    print "The citekeys are:\n", "@auxcitekeys", "\n\n" 
-        if ( $self->config('debug') && ! $self->config('allentries') );
+    $logger->debug("The citekeys are:\n", "@auxcitekeys", "\n\n") 
+        unless $self->config('allentries') ;
     
     $self->{citekeys} = [ @auxcitekeys ];
 
@@ -321,16 +323,16 @@ sub parse_auxfile_v2 {
 
     my @auxcitekeys = $self->citekeys;
 
-    croak "Cannot find file '$auxfile'!\n" unless -f $auxfile;
-    croak "File '$auxfile' is not an .aux file!\n" unless $auxfile =~ m/\.aux$/;
+    $logger->logcroak("Cannot find file '$auxfile'!") unless -f $auxfile;
+    $logger->logcroak("File '$auxfile' is not an .aux file!") unless $auxfile =~ m/\.aux$/;
 
-    my $aux = new IO::File "<$auxfile" or croak "Failed to open $auxfile : $!";
+    my $aux = new IO::File "<$auxfile" or $logger->logcroak("Failed to open $auxfile : $!");
 
     my $ctrl_file = "";
 
     local $/ = "\n";
 
-    print "Reading $auxfile\n" unless $self->config('quiet');
+    $logger->info("Reading $auxfile"); 
 
     while (<$aux>) {
 
@@ -348,7 +350,7 @@ sub parse_auxfile_v2 {
                         $ctrl_file = $auxfile;
                         $ctrl_file =~ s/\.aux\z//xms;
 
-            print "control file is $ctrl_file.bcf\n" if $self->config('debug');
+            $logger->debug("control file is $ctrl_file.bcf");
 
             if (defined $bibdatafiles[0]) {
 
@@ -372,8 +374,7 @@ sub parse_auxfile_v2 {
 
                 $self->{config}{allentries} = 1;
 
-                print "Processing all citekeys\n" 
-                    unless ( $self->config('quiet') );
+                $logger->info("Processing all citekeys"); 
 
                 # we stop reading the aux file as soon as we encounter \citation{*}
                 last
@@ -391,20 +392,20 @@ sub parse_auxfile_v2 {
     $self->parse_ctrlfile_v2($ctrl_file) if $ctrl_file;
 
     unless (@bibdatafiles) {
-        croak "No database is provided in the file '$auxfile'!\nExiting\n"
+        $logger->logcroak("No database is provided in the file '$auxfile'! Exiting")
     }
 
     unless ($self->config('allentries') or @auxcitekeys) {
-        croak "The file '$auxfile' does not contain any citations!\n"
+        $logger->logcroak("The file '$auxfile' does not contain any citations!")
     }
 
-    print "Found ", $#auxcitekeys+1 , " citekeys in aux file\n" 
-        unless ( $self->config('quiet') or $self->config('allentries') );
+    $logger->info("Found ", $#auxcitekeys+1 , " citekeys in aux file") 
+        unless $self->config('allentries') ;
 
     if ($self->config('debug')) {
       my @debug_auxcitekeys = sort @auxcitekeys;
       unless ($self->config('allentries')) {
-        print "The citekeys are:\n", "@debug_auxcitekeys", "\n\n";
+        $logger->debug("The citekeys are:\n", "@debug_auxcitekeys", "\n");
       }
     }
 
@@ -425,12 +426,12 @@ sub parse_auxfile_v2 {
 sub parse_ctrlfile {
     my ($self, $ctrl_file) = @_;
 
-    carp "Cannot find control file '$ctrl_file.bib'!\n" unless -f "$ctrl_file.bib";
+    $logger->warn("Cannot find control file '$ctrl_file.bib'!") unless -f "$ctrl_file.bib";
 
     my $ctrl = new IO::File "<$ctrl_file.bib"
-          or croak "Cannot open $ctrl_file.bib: $!";
+          or $logger->logcroak("Cannot open $ctrl_file.bib: $!");
 
-    print "Reading $ctrl_file.bib\n" unless $self->config('quiet');
+    $logger->info("Reading $ctrl_file.bib") ;
 
     while (<$ctrl>) {
 
@@ -457,8 +458,8 @@ sub parse_ctrlfile {
         $self->{config}{biblatex}{global}{alphaothers}) = split /:/, $opts;
 
         my $controlversion = $self->{config}{biblatex}{global}{controlversion};
-        carp "Warning: You are using biblatex version $controlversion : 
-            biber is more likely to work with version $BIBLATEX_VERSION.\n" 
+        $logger->warn("Warning: You are using biblatex version $controlversion : 
+            biber is more likely to work with version $BIBLATEX_VERSION.") 
             unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION;
     }
 
@@ -702,7 +703,7 @@ sub parse_ctrlfile {
 sub parse_ctrlfile_v2 {
   my ($self, $ctrl_file) = @_;
 
-  carp "Cannot find control file '$ctrl_file.bcf'!\n" unless -f "$ctrl_file.bcf";
+  $logger->warn("Cannot find control file '$ctrl_file.bcf'!") unless -f "$ctrl_file.bcf";
 
   # Validate if asked to
   if ($self->config('validate')) {
@@ -714,7 +715,11 @@ sub parse_ctrlfile_v2 {
     $CFxmlparser->line_numbers(1); # line numbers for more informative errors
 
     # Set up schema
-    my $CFxmlschema = XML::LibXML::RelaxNG->new(location => $Config::Config{sitelibexp} . '/Biber/bcf.rng');
+    # FIXME How can we be sure that Biber is installed in sitelib and not vendorlib ?
+    my $CFxmlschema = XML::LibXML::RelaxNG->new( 
+          location => File::Spec->catfile($Config::Config{sitelibexp}, 'Biber', 'bcf.rng') 
+        )
+        or $logger->warn("Cannot find XML::LibXML::RelaxNG schema. Skipping validation : $!");
 
     # basic parse and XInclude processing
     my $CFxp = $CFxmlparser->parse_file("$ctrl_file.bcf");
@@ -726,30 +731,30 @@ sub parse_ctrlfile_v2 {
     # Validate against schema. Dies if it fails.
     eval { $CFxmlschema->validate($CFxp) };
     if (ref($@)) {
-      print $@->dump();
-      croak "BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@\n";
+      $logger->debug( $@->dump() );
+      $logger->logcroak("BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@");
     }
     elsif ($@) {
-      croak "BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@\n";
+      $logger->logcroak("BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@");
     }
     else {
-      print "BibLaTeX control file \"$ctrl_file.bcf\" validates\n" unless $self->config('quiet');
+      $logger->info("BibLaTeX control file \"$ctrl_file.bcf\" validates");
     }
 
   }
 
   my $ctrl = new IO::File "<$ctrl_file.bcf"
-    or croak "Cannot open $ctrl_file.bcf: $!";
+    or $logger->logcroak("Cannot open $ctrl_file.bcf: $!");
 
-  print "Reading $ctrl_file.bcf\n" unless $self->config('quiet');
+  $logger->info("Reading $ctrl_file.bcf");
 
   # Read control file
   require XML::LibXML::Simple;
   my $bcfxml = XML::LibXML::Simple::XMLin($ctrl, 'ForceArray' => 1, 'NsStrip' => 1, KeyAttr => []);
 
   my $controlversion = $self->{config}{biblatex}{global}{controlversion} = $bcfxml->{'version'};
-  carp "Warning: You are using biblatex version $controlversion :
-        biber is more likely to work with version $BIBLATEX_VERSION.\n"
+  $logger->warn("Warning: You are using biblatex version $controlversion :
+        biber is more likely to work with version $BIBLATEX_VERSION.")
     unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION;
 
   # Look at control file and populate our main data structure with its information
@@ -908,14 +913,16 @@ sub parse_bibtex {
         
         my $infile = IO::File->new( $filename, "<$mode" );
 
-        my $buf    = File::Slurp::read_file($infile) or croak "Can't read $filename";
+        my $buf    = File::Slurp::read_file($infile) 
+           or $logger->logcroak("Can't read $filename");
 
         if ( $self->config('bibencoding') ) {
             $buf = decode($self->config('bibencoding'), $buf)
         };
 
-        print $ubib LaTeX::Decode::latex_decode($buf) or croak "Can't write to $ufilename : $!";
-        $ubib->close or croak "Can't close filehandle to $ufilename: $!";
+        print $ubib LaTeX::Decode::latex_decode($buf) 
+          or $logger->logcroak("Can't write to $ufilename : $!");
+        $ubib->close or $logger->logcroak("Can't close filehandle to $ufilename: $!");
 
         $filename  = $ufilename;
         
@@ -939,12 +946,12 @@ sub parse_bibtex {
         require Biber::BibTeX::PRD;
         push @ISA, 'Biber::BibTeX::PRD';
 
-        print "Using a Parse::RecDescent parser...\n";
+        $logger->info("Using a Parse::RecDescent parser...");
 
         # we only add this warning if the bib file is larger than 20KB
         if (-s $filename > 20000 ) {
-            print "Note that it can be very slow with large bib files!\n";
-            print "You are advised to install Text::BibTeX for faster processing!\n\n";
+            $logger->warn("Note that it can be very slow with large bib files!\n",
+                          "You are advised to install Text::BibTeX for faster processing!");
         };
         
         @localkeys = $self->_bibtex_prd_parse($filename);
@@ -1003,7 +1010,9 @@ sub parse_biblatexml {
 sub process_crossrefs {
     my $self = shift;
     my %bibentries = $self->bib;
+    $logger->debug("Processing crossrefs for ...");
     foreach my $citekeyx (keys %entrieswithcrossref) {
+        $logger->debug("   $citekeyx");
         my $xref = $entrieswithcrossref{$citekeyx};
         my $type = $bibentries{$citekeyx}->{entrytype};
         if ($type eq 'review') {
@@ -1044,6 +1053,7 @@ sub process_crossrefs {
     # at least $mincrossrefs times are included in the bibliography
     foreach my $k ( keys %crossrefkeys ) {
         if ( $seenkeys{$k} || $crossrefkeys{$k} >= $self->config('mincrossrefs') ) {
+            $logger->debug("Removing unneeded crossrefkey $k");
             delete $crossrefkeys{$k};
         }
     }
@@ -1092,7 +1102,7 @@ sub postprocess {
                 $citekey = ucinit($citekey);
 
             } else {
-                print "Warning--I didn't find a database entry for \"$citekey\"\n";
+                $logger->warn("I didn't find a database entry for '$citekey'");
                 $self->{warnings}++;
                 next;
             } 
@@ -1104,7 +1114,7 @@ sub postprocess {
 
         $be->{origkey} = $origkey;
 
-        print "Postprocessing $citekey\n" if $self->config('debug');
+        $logger->debug("Postprocessing $citekey");
         
 
         ##############################################################
@@ -1159,14 +1169,14 @@ sub postprocess {
         if ( $be->{entrytype} eq 'set' ) {
 
             my @entrysetkeys = split /\s*,\s*/, $be->{entryset} or 
-                carp "No entryset found for entry $citekey of type 'set'";
+                $logger->warn("No entryset found for entry $citekey of type 'set'");
 
             if ( $be->{crossref} && 
                 $be->{crossref} ne $entrysetkeys[0] ) {
 
-                carp "Problem with entry $citekey :\n" . 
+                $logger->warn("Problem with entry $citekey :\n" . 
                      "\tcrossref (" . $be->{crossref} . 
-                     ") should be identical to the first element of the entryset";
+                     ") should be identical to the first element of the entryset");
 
                 $be->{crossref} = $entrysetkeys[0];
 
@@ -1197,11 +1207,11 @@ sub postprocess {
                 $be->{labelnamename} = $ln;
                 last;
            }
-       }
+        }
 
-       unless ($be->{labelnamename}) {
-           carp "Could not determine the labelname of entry $citekey" if $self->config('debug')
-         }
+        unless ($be->{labelnamename}) {
+           $logger->debug("Could not determine the labelname of entry $citekey");
+        }
 
         ##############################################################
         # 5a. determine namehash and fullhash
@@ -1413,7 +1423,7 @@ sub postprocess {
 
     $self->{citekeys} = [ @foundkeys ];
 
-    print "Finished postprocessing entries\n" if $self->config('debug');
+    $logger->debug("Finished postprocessing entries");
 
     return;
 }
@@ -1469,7 +1479,8 @@ sub sortentries {
   if ( $self->config('fastsort') ) {
     if ($self->config('locale')) {
       my $thislocale = $self->config('locale');
-      setlocale( LC_ALL, $thislocale ) or carp "Unavailable locale $thislocale"
+      setlocale( LC_ALL, $thislocale ) 
+        or $logger->warn("Unavailable locale $thislocale")
     }
     @auxcitekeys = sort {
       $bibentries{$a}->{sortstring} cmp $bibentries{$b}->{sortstring}
@@ -1480,8 +1491,7 @@ sub sortentries {
     my %collopts = eval "( $opts )" or carp "Incorrect collate_options: $@";
     my $Collator = Unicode::Collate->new( %collopts );
     my $UCAversion = $Collator->version();
-    print "Sorting with Unicode::Collate ($opts, UCA version: $UCAversion)\n" 
-      unless $self->config('quiet');
+    $logger->info("Sorting with Unicode::Collate ($opts, UCA version: $UCAversion)"); 
     @auxcitekeys = sort {
       $Collator->cmp( $bibentries{$a}->{sortstring},
                       $bibentries{$b}->{sortstring} )
@@ -1529,7 +1539,7 @@ sub output_to_bbl {
     my $bblfile = shift;
     my @auxcitekeys = $self->citekeys;
 
-    print "Preparing final output...\n" if $self->config('debug');
+    $logger->debug("Preparing final output...");
 
     my $mode;
 
@@ -1539,7 +1549,8 @@ sub output_to_bbl {
         $mode = ":utf8";
     };
 
-    my $BBLFILE = IO::File->new($bblfile, ">$mode") or croak "Failed to open $bblfile : $!";
+    my $BBLFILE = IO::File->new($bblfile, ">$mode") 
+      or $logger->logcroak("Failed to open $bblfile : $!");
 
     # $BBLFILE->binmode(':utf8') if $self->config('unicodebbl');
 
@@ -1590,9 +1601,9 @@ EOF
 #    };
 
 
-    print $BBLFILE $BBL or croak "Failure to write to $bblfile: $!";
-    print "Output to $bblfile\n" unless $self->config('quiet');
-    close $BBLFILE or croak "Failure to close $bblfile: $!";
+    print $BBLFILE $BBL or $logger->logcroak("Failure to write to $bblfile: $!");
+    $logger->info("Output to $bblfile");
+    close $BBLFILE or $logger->logcroak("Failure to close $bblfile: $!");
     return
 }
 

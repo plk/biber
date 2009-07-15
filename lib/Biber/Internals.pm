@@ -6,6 +6,7 @@ use Biber::Constants;
 use Biber::Utils;
 use Text::Wrap;
 use List::AllUtils qw( :all );
+use Log::Log4perl;
 
 =head1 NAME
 
@@ -15,6 +16,8 @@ Biber::Internals - Internal methods for processing the bibliographic data
 
 
 =cut
+
+my $logger = Log::Log4perl::get_logger;
 
 #TODO $namefield instead of @aut as 2nd argument!
 sub _getnameinitials {
@@ -633,8 +636,9 @@ sub _printfield {
 
 sub _print_biblatex_entry {
     my ($self, $citekey) = @_;
-    my $be      = $self->{bib}->{$citekey} or croak "Cannot find $citekey";
-    my $opts      = "";
+    my $be      = $self->{bib}->{$citekey} 
+        or $logger->logcroak("Cannot find $citekey");
+    my $opts    = "";
     my $origkey = $citekey;
     if ( $be->{origkey} ) {
         $origkey = $be->{origkey}
