@@ -84,7 +84,7 @@ sub _parse_biblatexml {
         };
 
         if ( $results->size() > 1 ) { 
-            $logger->warn("The database contains more than one bib:entry with id=\"$citekey\" !)" 
+            $logger->warn("The database contains more than one bib:entry with id=\"$citekey\" !") 
         };
 
         my $bibrecord = $results->get_node(1);

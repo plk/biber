@@ -891,7 +891,7 @@ sub parse_ctrlfile_v2 {
 sub parse_bibtex {
     my ($self, $filename) = @_;
     
-    print "Processing bibtex file $filename\n" unless $self->config('quiet');
+    $logger->info("Processing bibtex file $filename");
 
     my @localkeys = ();
 
@@ -1474,7 +1474,7 @@ sub sortentries {
   my %bibentries = $self->bib;
   my @auxcitekeys = $self->citekeys;
 
-  print "Sorting entries...\n" if $self->config('debug');
+  $logger->debug("Sorting entries...");
 
   if ( $self->config('fastsort') ) {
     if ($self->config('locale')) {

@@ -89,8 +89,6 @@ my $logger = Log::Log4perl::get_logger;
 my $auxfile;
 my $bblfile;
 
-$logger->info("Testing info");
-
 if ( $opts->{allentries} && $opts->{bibdata} ) {
     $bblfile = $opts->{bibdata}->[0];
     $bblfile =~ s/(?:\.(bib|xml|dbxml))?$/\.bbl/;
@@ -110,11 +108,9 @@ else {
     }
 }
 
-$logger->error("Testing error");
-
 if ($biber->config('debug')) {
     $biber->_dump('biber.dump0');
-    print ">> Dumped initial biber object for debugging in file biber.dump0\n"
+    $logger->debug(">> Dumped initial biber object for debugging in file biber.dump0")
 }
 
 #=====================================================
@@ -142,14 +138,14 @@ foreach my $bib (@{ $biber->config('bibdata') }) {
 
 if ($biber->config('debug')) {
     $biber->_dump('biber.dump1');
-    print ">> Dumped postparse biber object for debugging in file biber.dump1\n"
+    $logger->debug(">> Dumped postparse biber object for debugging in file biber.dump1")
 }
 
 $biber->prepare;
 
 if ($biber->config('debug')) {
     $biber->_dump('biber.dump2');
-    print ">> Dumped final biber object for debugging in file biber.dump2\n"
+    $logger->debug(">> Dumped final biber object for debugging in file biber.dump2")
 }
 
 if ($biber->config('outfile')) {
@@ -161,18 +157,18 @@ $biber->output_to_bbl($bblfile);
 # display warnings/errors summary, like BibTeX
 if (defined($biber->{errors})) { # if errors, ignore warnings
   if ($biber->{errors} == 1) {
-    print "(There was 1 error message)\n";
+    $logger->warn("(There was 1 error message)");
   }
   elsif ($biber->{errors} > 1) {
-    print "(There were ", $biber->{errors}, " error messages)\n";
+    $logger->warn("(There were ", $biber->{errors}, " error messages)");
   }
 }
 elsif (defined($biber->{warnings})) {
   if ($biber->{warnings} == 1) {
-    print "(There was 1 warning)\n";
+    $logger->warn("(There was 1 warning)");
   }
   elsif ($biber->{warnings} > 1) {
-    print "(There were ", $biber->{warnings}, " warnings)\n";
+    $logger->warn("(There were ", $biber->{warnings}, " warnings)");
   }
 }
 
