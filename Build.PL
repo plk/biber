@@ -18,6 +18,7 @@ my $builder = Module::Build->new(
         'XML::LibXML'  => 0,
         'XML::Writer'  => 0,
         'List::AllUtils' => 0,
+        'Log::Log4perl' => 0,
         'Data::Dump' => 0,
     },
     recommends => {
