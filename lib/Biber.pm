@@ -1437,7 +1437,7 @@ sub postprocess {
       * extraalpha
       * labelyear
 
-    For use in final sorting
+    For use in final sorting and generate final pass sort string
 
 =cut
 
