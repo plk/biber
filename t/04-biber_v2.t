@@ -1,23 +1,32 @@
 use strict;
 use warnings;
 use utf8;
-no warnings 'utf8' ;
+no warnings 'utf8';
 
-use Test::More tests => 3 ;
-
+use Test::More;
 use Biber;
+
+if ($ENV{TEST_BIBTEX_PRD} or ! eval "require Text::BibTeX; 1") {
+    plan( tests => 4);
+}
+else {
+    plan( skip_all => "Skipping parsing with Biber::BibTeX::PRD" );
+}
 
 my $opts = { unicodebbl => 0, useprd => 1 };
 my $biber = Biber->new($opts);
+   
+use_ok( 'Biber::BibTeX::PRD' );
+
 isa_ok($biber, "Biber");
 
-chdir("t/tdata") ;
+chdir("t/tdata");
 $biber->parse_auxfile_v2("02-annotations_v2.aux");
-$biber->{config}{biblatex}{global}{maxline} = 100000 ;
+$biber->{config}{biblatex}{global}{maxline} = 100000;
 
 my $bibfile = $biber->config('bibdata')->[0] . ".bib";
-$biber->parse_bibtex($bibfile) ;
-$biber->prepare ;
+$biber->parse_bibtex($bibfile);
+$biber->prepare;
 
 my $setaksin = q|\entry{set:aksin}{article}{}
   \inset{set}
