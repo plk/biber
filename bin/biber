@@ -152,7 +152,7 @@ foreach my $bib (@{ $biber->config('bibdata') }) {
         $biber->parse_bibtex($bib)
     }
     else {
-        $logger->logcroak("File $bib.bib does not exist!" unless -f "$bib.bib");
+        $logger->logcroak("File $bib.bib does not exist!") unless -f "$bib.bib";
         $biber->parse_bibtex("$bib.bib");
     }
 }
