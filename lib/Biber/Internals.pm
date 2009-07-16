@@ -81,7 +81,7 @@ sub _getlabel {
   my @names = @{ $self->{bib}{$citekey}{$namefield} };
   my $dt = $self->{bib}{$citekey}{datatype};
   my $alphaothers = $self->getblxoption('alphaothers', $citekey);
-  my $sortalphaothers = $self->getblxoption('sortalphaothers', $citekey);
+  my $sortalphaothers = $self->getblxoption('sortalphaothers', $citekey) || $alphaothers; 
   my $useprefix = $self->getblxoption('useprefix', $citekey);
   my $maxnames = $self->getblxoption('maxnames', $citekey);
   my $minnames = $self->getblxoption('minnames', $citekey);
