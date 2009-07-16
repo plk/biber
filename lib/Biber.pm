@@ -12,7 +12,7 @@ use Biber::Internals;
 use Biber::Utils;
 use LaTeX::Decode;
 use Storable qw(dclone);
-use Log::Log4perl;
+use Log::Log4perl qw(:no_extra_logdie_message);
 use base 'Biber::Internals';
 our @ISA;
 
@@ -54,7 +54,7 @@ our %seenauthoryear = ();
 our %seenlabelyear = ();
 our %is_name_entry = map { $_ => 1 } @NAMEFIELDS;
 
-my $logger = Log::Log4perl::get_logger;
+my $logger = Log::Log4perl::get_logger('main');
 
 =head1 FUNCTIONS
 
@@ -214,7 +214,7 @@ sub parse_auxfile {
 
     my @auxcitekeys = $self->citekeys;
 
-    $logger->logcroak("Cannot find file '$auxfile'!") unless -f $auxfile;
+    $logger->logdie("Cannot find file '$auxfile'!") unless -f $auxfile;
     $logger->logcroak("File '$auxfile' is not an .aux file!") unless $auxfile =~ m/\.aux$/;
 
     my $aux = new IO::File "<$auxfile" or $logger->logcroak("Failed to open $auxfile : $!");
@@ -729,16 +729,18 @@ sub parse_ctrlfile_v2 {
     $CFxpc->registerNs('bcf', 'https://sourceforge.net/projects/biblatex');
 
     # Validate against schema. Dies if it fails.
-    eval { $CFxmlschema->validate($CFxp) };
-    if (ref($@)) {
-      $logger->debug( $@->dump() );
-      $logger->logcroak("BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@");
-    }
-    elsif ($@) {
-      $logger->logcroak("BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@");
-    }
-    else {
-      $logger->info("BibLaTeX control file \"$ctrl_file.bcf\" validates");
+    if ($CFxmlschema) {
+        eval { $CFxmlschema->validate($CFxp) };
+        if (ref($@)) {
+        $logger->debug( $@->dump() );
+        $logger->logcroak("BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@");
+        }
+        elsif ($@) {
+        $logger->logcroak("BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@");
+        }
+        else {
+        $logger->info("BibLaTeX control file \"$ctrl_file.bcf\" validates");
+        }
     }
 
   }
@@ -1010,9 +1012,9 @@ sub parse_biblatexml {
 sub process_crossrefs {
     my $self = shift;
     my %bibentries = $self->bib;
-    $logger->debug("Processing crossrefs for ...");
+    $logger->debug("Processing crossrefs for keys:");
     foreach my $citekeyx (keys %entrieswithcrossref) {
-        $logger->debug("   $citekeyx");
+        $logger->debug("   * '$citekeyx'");
         my $xref = $entrieswithcrossref{$citekeyx};
         my $type = $bibentries{$citekeyx}->{entrytype};
         if ($type eq 'review') {
@@ -1114,7 +1116,7 @@ sub postprocess {
 
         $be->{origkey} = $origkey;
 
-        $logger->debug("Postprocessing $citekey");
+        $logger->debug("Postprocessing entry '$citekey'");
         
 
         ##############################################################

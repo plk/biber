@@ -7,9 +7,9 @@ use Biber::Constants;
 use Biber::Utils;
 use Encode;
 use File::Spec;
-use Log::Log4perl;
+use Log::Log4perl qw(:no_extra_logdie_message);
 
-my $logger = Log::Log4perl::get_logger;
+my $logger = Log::Log4perl::get_logger('main');
 
 sub _text_bibtex_parse {
         
@@ -60,7 +60,7 @@ sub _text_bibtex_parse {
             next
         }
 
-        $logger->debug("Processing $key");
+        $logger->debug("Processing entry '$key'");
 
         if ( $bibentries{ $origkey } or $bibentries{ $key } ) {
             $self->{errors}++;

@@ -4,8 +4,8 @@ use warnings;
 # no warnings 'utf8';
 use Carp;
 use IPC::Cmd qw( can_run run );
-use Log::Log4perl;
-
+use Log::Log4perl qw(:no_extra_logdie_message);
+use POSIX qw(strftime);
 use Biber;
 use Biber::Utils;
 
@@ -31,6 +31,7 @@ GetOptions(
     'validate|V!',
     'debug|D!',
     'quiet|q',
+    'nolog!', ## TODO
     'help|h|?',
     'version|v'
 );
@@ -55,8 +56,8 @@ if ($opts->{bibdata}) {
 
 my $biber = Biber->new($opts);
 
-my $LOGLEVEL ;
-
+# Setting the logging level of Log::Log4perl
+my $LOGLEVEL;
 if ($biber->config('debug')) {
     $LOGLEVEL = 'DEBUG'
 } elsif ($biber->config('quiet')) {
@@ -65,22 +66,34 @@ if ($biber->config('debug')) {
     $LOGLEVEL = 'INFO'
 }
 
+# configuration "file" for Log::Log4perl
 my $l4pconf = qq(
-    log4perl.category                                  = $LOGLEVEL, Logfile, Screen
+    log4perl.category.main                             = $LOGLEVEL, Logfile, Screen
+    log4perl.category.screen                           = $LOGLEVEL, Screen
+    log4perl.category.logfile                          = $LOGLEVEL, Logfile
 
     log4perl.appender.Logfile                          = Log::Log4perl::Appender::File
     log4perl.appender.Logfile.filename                 = biber.log
     log4perl.appender.Logfile.mode                     = write
     log4perl.appender.Logfile.layout                   = Log::Log4perl::Layout::PatternLayout
-    log4perl.appender.Logfile.layout.ConversionPattern = [%r] %F %L %m%n
+    log4perl.appender.Logfile.layout.ConversionPattern = [%r] %F{1}:%L> %p - %m%n
 
     log4perl.appender.Screen                           = Log::Log4perl::Appender::Screen
+    ## the following option sets a max level of INFO for the console: 
+    ## i.e. debug messages can only go to the log file
+    log4perl.appender.Screen.Threshold                 = INFO
     log4perl.appender.Screen.stderr                    = 0
     log4perl.appender.Screen.layout                    = Log::Log4perl::Layout::SimpleLayout
 );
 
 Log::Log4perl::init(\$l4pconf) ;
-my $logger = Log::Log4perl::get_logger;
+
+# get the logger object
+# TODO : if biber is called with option --nolog then we use the 'screen' logger instead
+# For that we need to turn that appender to OFF
+my $logger  = Log::Log4perl::get_logger('main') ;
+my $screen  = Log::Log4perl::get_logger('screen');
+my $logfile = Log::Log4perl::get_logger('logfile');
 
 #=====================================================
 # Parse aux file
@@ -88,6 +101,14 @@ my $logger = Log::Log4perl::get_logger;
 
 my $auxfile;
 my $bblfile;
+
+my $time_string = strftime "%a %b %e, %Y, %H:%M:%S", localtime;
+$logfile->info("=== Biber version $VERSION");
+$logfile->info("=== $time_string");
+
+if ($biber->config('debug')) {
+    $screen->info('DEBUG mode: all messages are logged to "biber.log"')
+}
 
 if ( $opts->{allentries} && $opts->{bibdata} ) {
     $bblfile = $opts->{bibdata}->[0];
@@ -110,7 +131,7 @@ else {
 
 if ($biber->config('debug')) {
     $biber->_dump('biber.dump0');
-    $logger->debug(">> Dumped initial biber object for debugging in file biber.dump0")
+    $logger->debug("Dumped initial biber object for debugging in file biber.dump0")
 }
 
 #=====================================================
@@ -123,29 +144,29 @@ foreach my $bib (@{ $biber->config('bibdata') }) {
     $bib = bibfind($bib);
 
     if ($bib =~ /\.(db)?xml$/) {
-        croak "File $bib does not exist!" unless -f $bib;
+        $logger->logcroak("File $bib does not exist!") unless -f $bib;
         $biber->parse_biblatexml( $bib )
     }
     elsif ($bib =~ /\.bib$/) {
-        croak "File $bib does not exist!" unless -f $bib;
+        $logger->logcroak("File $bib does not exist!") unless -f $bib;
         $biber->parse_bibtex($bib)
     }
     else {
-        croak "File $bib.bib does not exist!" unless -f "$bib.bib";
+        $logger->logcroak("File $bib.bib does not exist!" unless -f "$bib.bib");
         $biber->parse_bibtex("$bib.bib");
     }
 }
 
 if ($biber->config('debug')) {
     $biber->_dump('biber.dump1');
-    $logger->debug(">> Dumped postparse biber object for debugging in file biber.dump1")
+    $logger->debug("Dumped postparse biber object for debugging in file biber.dump1")
 }
 
 $biber->prepare;
 
 if ($biber->config('debug')) {
     $biber->_dump('biber.dump2');
-    $logger->debug(">> Dumped final biber object for debugging in file biber.dump2")
+    $logger->debug("Dumped final biber object for debugging in file biber.dump2")
 }
 
 if ($biber->config('outfile')) {

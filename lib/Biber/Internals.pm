@@ -6,7 +6,7 @@ use Biber::Constants;
 use Biber::Utils;
 use Text::Wrap;
 use List::AllUtils qw( :all );
-use Log::Log4perl;
+use Log::Log4perl qw(:no_extra_logdie_message);
 
 =head1 NAME
 
@@ -17,7 +17,7 @@ Biber::Internals - Internal methods for processing the bibliographic data
 
 =cut
 
-my $logger = Log::Log4perl::get_logger;
+my $logger = Log::Log4perl::get_logger('main');
 
 #TODO $namefield instead of @aut as 2nd argument!
 sub _getnameinitials {

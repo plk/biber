@@ -7,10 +7,10 @@ use Biber::BibLaTeXML::Node;
 use Biber::Utils;
 use Biber::Constants;
 use File::Spec;
-use Log::Log4perl;
+use Log::Log4perl qw(:no_extra_logdie_message);
 our @ISA;
 
-my $logger = Log::Log4perl::get_logger;
+my $logger = Log::Log4perl::get_logger('main');
 
 
 sub _parse_biblatexml {
@@ -120,7 +120,7 @@ sub _parse_biblatexml {
     foreach my $citekey (@auxcitekeys) {
         next if $citekeysnotfound{$citekey};
         next if $self->{bib}->{$citekey}; # skip if this is already found in another database
-        $logger->debug("Processing key $citekey");
+        $logger->debug("Processing entry '$citekey'");
         my $xpath = '/*/bib:entry[@id="' . $citekey . '"]';
         my $results = $db->findnodes($xpath);
         my $bibrecord = $results->get_node(1);
