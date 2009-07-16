@@ -66,6 +66,9 @@ if ($biber->config('debug')) {
     $LOGLEVEL = 'INFO'
 }
 
+## TODO make Screen.Threshold optional: in some situations we'd like 
+#  to have debug msgs on the screen too!
+
 # configuration "file" for Log::Log4perl
 my $l4pconf = qq(
     log4perl.category.main                             = $LOGLEVEL, Logfile, Screen
