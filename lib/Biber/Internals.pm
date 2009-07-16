@@ -22,7 +22,7 @@ sub _getnameinitials {
     my $initstr = "";
     ## my $nodecodeflag = $self->_decode_or_not($citekey);
 
-    if ( $#aut < $self->getblxoption('maxnames', $citekey ) ) {    # 1 to 3 authors
+    if ( $#aut < $self->getblxoption('maxnames', $citekey ) ) {    # 1 to maxname authors
         foreach my $a (@aut) {
             if ( $a->{prefix} and $self->getblxoption('useprefix', $citekey ) ) {
                 $initstr .= terseinitials( $a->{prefix} ) 
@@ -36,7 +36,7 @@ sub _getnameinitials {
         }
     }
     else
-    { # more than 3 authors: only take initials of first getblxoption('minnames', $citekey)
+    { # more than maxname authors: only take initials of first getblxoption('minnames', $citekey)
         foreach my $i ( 0 .. $self->getblxoption('minnames', $citekey ) - 1 ) {
             if ( $aut[$i]->{prefix} and $self->getblxoption('useprefix', $citekey) ) {
                 $initstr .= terseinitials( $aut[$i]->{prefix} );
