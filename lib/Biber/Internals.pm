@@ -76,62 +76,61 @@ sub _getallnameinitials {
 }
 
 sub _getlabel {
-    my ($self, $citekey, $namefield) = @_;
+  my ($self, $citekey, $namefield) = @_;
 
-    my @names = @{ $self->{bib}->{$citekey}->{$namefield} };
-    my $dt = $self->{bib}->{$citekey}->{datatype};
-    my $alphaothers = $self->getblxoption('alphaothers', $citekey);
-    my $sortalphaothers = $self->getblxoption('sortalphaothers', $citekey);
-    my $useprefix = $self->getblxoption('useprefix', $citekey);
-    my $label = '';
-    my $sortlabel = ''; # This contains sortalphaothers instead of alphaothers, if defined
-                        # This is needed in cases where alphaothers is something like
-                        # '\textasteriskcentered' which would mess up sorting.
+  my @names = @{ $self->{bib}{$citekey}{$namefield} };
+  my $dt = $self->{bib}{$citekey}{datatype};
+  my $alphaothers = $self->getblxoption('alphaothers', $citekey);
+  my $sortalphaothers = $self->getblxoption('sortalphaothers', $citekey);
+  my $useprefix = $self->getblxoption('useprefix', $citekey);
+  my $maxnames = $self->getblxoption('maxnames', $citekey);
+  my $minnames = $self->getblxoption('minnames', $citekey);
+  my $label = '';
+  my $sortlabel = ''; # This contains sortalphaothers instead of alphaothers, if defined
+  # This is needed in cases where alphaothers is something like
+  # '\textasteriskcentered' which would mess up sorting.
 
-    my @lastnames = map { normalize_string( $_->{lastname}, $dt ) } @names;
-    my @prefixes  = map { $_->{prefix} } @names;
-    my $noofauth  = scalar @names;
+  my @lastnames = map { normalize_string( $_->{lastname}, $dt ) } @names;
+  my @prefixes  = map { $_->{prefix} } @names;
+  my $noofauth  = scalar @names;
 
-    # If name list was truncated in bib with "and others", this overrides maxnames
-    my $morenames = ($self->{bib}->{$citekey}->{$namefield}->[-1]->{namestring} eq 'others') ? 1 :0;
+  # If name list was truncated in bib with "and others", this overrides maxnames
+  my $morenames = ($self->{bib}{$citekey}{$namefield}[-1]{namestring} eq 'others') ? 1 :0;
+  my $nametrunc;
+  my $loopnames;
 
-    if ($morenames or ($noofauth > $self->getblxoption('maxnames', $citekey))) {
-        if ($useprefix and $prefixes[0]) {
-            $label .= substr( $prefixes[0], 0, 1 );
-            $label .= substr( $lastnames[0], 0, 2 ) . $alphaothers;
+  # loopnames is the number of names to loop over in the name list when constructing the label
+  if ($morenames or ($noofauth > $maxnames)) {
+    $nametrunc = 1;
+    $loopnames = $minnames; # Only look at $minnames names if we are truncating ...
+  } else {
+    $loopnames = $noofauth; # ... otherwise look at all names
+  }
 
-            $sortlabel .= substr( $prefixes[0], 0, 1 );
-            $sortlabel .= substr( $lastnames[0], 0, 2 ) . $sortalphaothers;
-        } else {
-            $label  = substr( $lastnames[0], 0, 3 ) . $alphaothers;
+  # Now loop over the name list, grabbing a substring of each surname
+  # The substring length depends on whether we are using prefixes and also whether
+  # we have truncated to one name:
+  #   1. If there is only one name
+  #      1. label string is first 3 chars of surname if there is no prefix
+  #      2. label string is first char of prefix plus first 2 chars of surname if there is a prefix
+  #   2. If there is more than one name
+  #      1.  label string is first char of each surname (up to minnames) if there is no prefix
+  #      2.  label string is first char of prefix plus first char of each surname (up to minnames)
+  #          if there is a prefix
+  for (my $i=0; $i<$loopnames; $i++) {
+    $label .= substr($prefixes[$i] , 0, 1) if ($useprefix and $prefixes[$i]);
+    $label .= substr($lastnames[$i], 0, $loopnames == 1 ? (($useprefix and $prefixes[$i]) ? 2 : 3) : 1);
+  }
 
-            $sortlabel  = substr( $lastnames[0], 0, 3 ) . $sortalphaothers;
-        }
-    }
-    elsif ( $noofauth == 1 ) {
-        if ($useprefix and $prefixes[0]) {
-            $label .= substr( $prefixes[0], 0, 1 );
-            $label .= substr( $lastnames[0], 0, 2 )
-        } else {
-            $label = substr( $lastnames[0], 0, 3 );
-        }
-    }
-    else {
-        if ($useprefix) {
-            for (my $i=0; $i<$noofauth; $i++) {
-                $label .= substr($prefixes[$i] , 0, 1) if $prefixes[$i];
-                $label .= substr($lastnames[$i], 0, 1);
-            }
-        } else {
-            for (my $i=0; $i<$noofauth; $i++) {
-                $label .= substr($lastnames[$i], 0, 1);
-            }
-        }
-    }
+  $sortlabel = $label;
 
-    $sortlabel = $label unless $sortlabel; # set them equal unless sortlabel has been set
-                                           # explicitly above
-    return [$label, $sortlabel];
+  # Add alphaothers if name list is truncated
+  if ($nametrunc) {
+    $label .= $alphaothers;
+    $sortlabel .= $sortalphaothers;
+  }
+
+  return [$label, $sortlabel];
 }
 
 =head2 getblxoption
