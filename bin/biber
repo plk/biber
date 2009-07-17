@@ -17,7 +17,8 @@ my $opts = {};
 GetOptions(
     $opts,
     'v2',
-    'fastsort|f!',
+    'fastsort|f!', ## now the default
+    'collate|C!', ## to sort with Unicode::Collate
     'collate_options|c=s',
     'mincrossrefs|m=s',
     'unicodebbl|U!',
@@ -52,7 +53,11 @@ die version() if exists $opts->{'version'};
 # this option is passed as an anon array
 if ($opts->{bibdata}) {
     $opts->{bibdata} = [ split /\s*,\s*/, $opts->{bibdata} ] 
-};
+}
+
+if ($opts->{collate}) {
+    $opts->{fastsort} = 0
+}
 
 my $biber = Biber->new($opts);
 
@@ -224,6 +229,7 @@ Options:
   --mincrossrefs|-m <n>  Set threshold for crossrefs.
   --fastsort|-f          Use Perl’s sort instead of Unicode::Collate for sorting.
   --locale|-l [locale]   Set the locale to be used for sorting with option --fastsort
+  --collate|-C           Sort with Unicode::Collate
   --collate_options|-c [options] 
                          Options to pass to the Unicode::Collate object used for sorting
                          (default is 'level => 2, table => latinkeys.txt'). 
@@ -257,9 +263,9 @@ C<biber> - A bibtex replacement for users of biblatex
 =head1 SYNOPSIS
 
 biber [ { --bibdata | -d } database.{bib|xml|dbxml} ] [ --useprd | -p ] 
-      [ --mincrossrefs | -m ] [ --fastsort | -f ] [ --unicodebib | -u ] 
-      [ --unicodebbl | -U ] [ --debug | -D ] [ { --outfile | -O } filename ] 
-      file.aux
+      [ --mincrossrefs | -m ] [ [--collate|-C] | [ --fastsort | -f ] ]
+      [ --unicodebib | -u ] [ --unicodebbl | -U ] [ --debug | -D ] 
+      [ { --outfile | -O } filename ] file.aux
 
 biber --bibdata database --allentries [ --outfile filename ] [ ... ]
 
