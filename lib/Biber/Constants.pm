@@ -34,7 +34,7 @@ our $BIBER_SORT_FINAL = 0;
 ## Biber CONFIGURATION DEFAULTS
 our %CONFIG_DEFAULT = (
   validate => 0,
-  fastsort => 0,
+  fastsort => 1,
   mincrossrefs =>  2,
   unicodebbl =>  0,
   unicodebib =>  0,
