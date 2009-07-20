@@ -33,6 +33,7 @@ GetOptions(
     'debug|D!',
     'quiet|q',
     'nolog!', ## TODO
+    'wraplines|w!',
     'help|h|?',
     'version|v'
 );
@@ -249,6 +250,7 @@ Options:
                          and biblatexml bib files (if used). Dies on validation error.
   --debug|-D             Turn on debugging for biber.
   --quiet|-q             Turn warnings off.
+  --wraplines|-w         Wrap lines in the bbl file.
     \n}
 }
 

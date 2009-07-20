@@ -24,7 +24,6 @@ isa_ok($biber, "Biber");
 
 chdir("t/tdata");
 $biber->parse_auxfile("02-annotations.aux");
-$biber->{config}{biblatex}{global}{maxline} = 100000;
 $biber->{config}{biblatex}{global}{sortalphaothers} = '+';
 
 my $bibfile = $biber->config('bibdata')->[0] . ".bib";

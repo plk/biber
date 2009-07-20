@@ -5,6 +5,7 @@ use Carp;
 use Biber::Constants;
 use Biber::Utils;
 use Text::Wrap;
+$Text::Wrap::columns = 80;
 use List::AllUtils qw( :all );
 use Log::Log4perl qw(:no_extra_logdie_message);
 
@@ -622,14 +623,21 @@ sub _print_name {
 
 sub _printfield {
     my ($self, $field, $str) = @_;
-    my $width = $self->getblxoption('maxline');
-    ## 12 is the length of '  \field{}{}'
-    if ( 12 + length($field) + length($str) > 2*$width ) {
-        return "  \\field{$field}{%\n" . wrap('  ', '  ', $str) . "%\n  }\n";
-    } elsif ( 12 + length($field) + length($str) > $width ) {
-        return wrap('  ', '  ', "\\field{$field}{$str}" ) . "\n";
-    } else {
-        return "  \\field{$field}{$str}\n";
+
+    if ($self->config('wraplines')) {
+        ## 12 is the length of '  \field{}{}'
+        if ( 12 + length($field) + length($str) > 2*$Text::Wrap::columns ) {
+            return "  \\field{$field}{%\n" . wrap('  ', '  ', $str) . "%\n  }\n";
+        } 
+        elsif ( 12 + length($field) + length($str) > $Text::Wrap::columns ) {
+            return wrap('  ', '  ', "\\field{$field}{$str}" ) . "\n";
+        }
+        else {
+            return "  \\field{$field}{$str}\n";
+        }
+    }
+     else {
+       return "  \\field{$field}{$str}\n";
     }
 }
 

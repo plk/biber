@@ -19,6 +19,7 @@ our @EXPORT = qw{
                   %SKIPFIELDS
                   %CONFIG_DEFAULT
                   $BIBLATEX_VERSION
+                  $BCF_VERSION
                   $BIBER_SORT_FINAL
                   %ALIASES
                   %NUMERICALMONTH
@@ -28,7 +29,11 @@ our @EXPORT = qw{
                   %FIELDS_WITH_CHILDREN
               };
 
+# this is the latest <major.minor> version of biblatex.sty
 Readonly::Scalar our $BIBLATEX_VERSION => '0.8';
+# this is the latest version of the BCF xml format
+Readonly::Scalar our $BCF_VERSION => '0.8f';
+
 our $BIBER_SORT_FINAL = 0;
 
 ## Biber CONFIGURATION DEFAULTS
@@ -44,6 +49,7 @@ our %CONFIG_DEFAULT = (
   debug =>  0,
   quiet => 0,
   nolog => 0,
+  wraplines => 0,
   collate_options => 'level=>2, table=>"latinkeys.txt"',
 );
 

@@ -454,7 +454,7 @@ sub parse_ctrlfile {
         $self->{config}{biblatex}{global}{sortlos},
         $self->{config}{biblatex}{global}{maxnames},
         $self->{config}{biblatex}{global}{minnames},
-        $self->{config}{biblatex}{global}{maxline},
+        my $ignore_again,
         $self->{config}{biblatex}{global}{alphaothers}) = split /:/, $opts;
 
         my $controlversion = $self->{config}{biblatex}{global}{controlversion};
