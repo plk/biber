@@ -27,7 +27,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labelyear</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxline</bcf:key>

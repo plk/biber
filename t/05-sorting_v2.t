@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use utf8;
+use Storable qw (dclone);
 no warnings 'utf8';
 
 use Test::More tests => 30;
@@ -11,10 +12,9 @@ chdir("t/tdata");
 my $bibfile;
 my $biber = Biber->new;
 $biber->{config}{fastsort} = 1;
-$biber->{config}{locale} = "C";
+$biber->{config}{locale} = 'C';
 $biber->parse_auxfile_v2("50-style-authoryear_v2.aux");
-$biber->{config}{biblatex}{global}{maxline} = 100000;
-$bibfile = $biber->config('bibdata')->[0] . ".bib";
+$bibfile = $biber->config('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 
 my $yearoff1    = 'mm00knuth2donald e0computers typesetting0198400000';
@@ -36,8 +36,8 @@ my $anyt_la     = 'mm0gla6100glashow2sheldon019610partial symmetries of weak int
 my $anyt        = 'mm000glashow2sheldon019610partial symmetries of weak interactions00000';
 my $anyvt_la    = 'mm0gla6100glashow2sheldon01961000220partial symmetries of weak interactions';
 my $anyvt_la2   = 'mm0hos+9800hostetler2michael j1zzzz01998000140alkanethiolate gold cluster molecules with core diameters from 15 to 52nm';
-my $anyvt_la3   = 'mm0hos9800hostetler2michael j1wingate2julia e1zzzz01998000140alkanethiolate gold cluster molecules with core diameters from 15 to 52nm';
-my $anyvt_la4   = 'mm0hos+9800hostetler2michael j1wingate2julia e1zzzz01998000140alkanethiolate gold cluster molecules with core diameters from 15 to 52nm';
+my $anyvt_la3   = 'mm0hw9800hostetler2michael j1wingate2julia e1zzzz01998000140alkanethiolate gold cluster molecules with core diameters from 15 to 52nm';
+my $anyvt_la4   = 'mm0hw+9800hostetler2michael j1wingate2julia e1zzzz01998000140alkanethiolate gold cluster molecules with core diameters from 15 to 52nm';
 my $anyvt       = 'mm000glashow2sheldon01961000220partial symmetries of weak interactions';
 my $ynt         = 'mm0019610glashow2sheldon0partial symmetries of weak interactions';
 my $ydnt        = 'mm0080380glashow2sheldon0partial symmetries of weak interactions';
@@ -46,7 +46,7 @@ my $sk1         = 'mm0aatestkey';
 my $pt1         = 'mm0081220aristotle0rhetoric of aristotle';
 my $ps_sc       = 'zs00glashow2sheldon0partial symmetries of weak interactions';
 my $noname      = 'mm00partial symmetries of weak interactions0partial symmetries of weak interactions0196100022';
-my $citeorder   = '9';
+my $citeorder   = '1';
 
 # nty with implicit default left, 4-digit year sort
 $biber->{config}{biblatex}{global}{sorting_label} =  [
@@ -77,7 +77,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff1, 'nty with default left offset, 4 digit year' );
 
@@ -111,6 +111,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff2, 'nty with left offset, 3 digit year' );
@@ -146,6 +147,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff3, 'nty with left offset, 4 digit year' );
@@ -180,6 +182,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff4, 'nty with right offset, 3 digit year' );
@@ -214,6 +217,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff5, 'nty with right offset, 4 digit year' );
@@ -249,6 +253,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff6, 'ntyd with left offset, 4 digit year' );
@@ -284,6 +289,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff7, 'ntyd with left offset, 3 digit year' );
@@ -319,6 +325,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff8, 'ntyd with right offset, 4 digit year' );
@@ -354,6 +361,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff9, 'ntyd with right offset, 3 digit year' );
@@ -388,6 +396,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $vol1, 'nty with right-padded vol' );
@@ -423,6 +432,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $vol2, 'nty with right-padded 7-char vol' );
@@ -459,6 +469,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $vol3, 'nty with left-padded 5-char "a" pad char vol' );
@@ -494,6 +505,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $nty, 'basic nty sort' );
@@ -529,6 +541,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $nyt, 'basic nyt sort' );
@@ -563,6 +576,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'title'      => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $nyvt, 'basic nyvt sort' );
@@ -601,6 +615,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $anyt_la, 'anyt sort (with labelalpha)' );
@@ -648,6 +663,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'title'      => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $anyvt_la, 'anyvt sort (with labelalpha)' );
@@ -702,6 +718,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'title'      => {}}
                                                 ],
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $ynt, 'basic ynt sort' );
@@ -733,6 +750,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'title'      => {}}
                                                 ],
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $ydnt, 'basic ydnt sort' );
@@ -744,6 +762,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'debug'    => {}},
                                                 ],
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $debug, 'basic debug sort' );
@@ -775,6 +794,7 @@ $biber->{config}{biblatex}{book}{sorting_label} =  [
                                                  {'title'      => {}}
                                                 ],
                                                ];
+$biber->{config}{biblatex}{book}{sorting_final} = dclone($biber->{config}{biblatex}{book}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{'aristotle:rhetoric'}{sortstring}, $pt1, 'book type ydnt sort' );
@@ -809,6 +829,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{'stdmodel:ps_sc'}{sortstring}, $ps_sc, 'nty with modified presort and short-circuit title' );
@@ -846,16 +867,18 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $noname, 'nty with use* all off' );
 
 # citeorder sort
+
 $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'citeorder'    => {}}
                                                 ]
                                                ];
-
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $citeorder, 'citeorder' );

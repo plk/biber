@@ -8,22 +8,18 @@ in decreasing order of priority:
    * user-setting of diacritics to ignore in sorting (‘ and ʿ are currently built-in)
    * same thing with prefixes (e.g. al- el- etc.)
    * Implement options in LaTeX::Decode 
-   ----- version 0.6 -----
-   * use Log::Log4Perl
-   * add validation mechanism for options and config (untaint data!)
+   * use Log::Log4Perl / DONE
+   ----------
+   * add validation mechanism for options and config (untaint data)
    * validate bibtex data with Text::Bibtex::Structure (optional)
-   ----- version 0.7 -----
    * plugin facility
    * provide good documentation of the BibLaTeXML schema 
-   ----- version 0.8 -----
    * refactor OO structure: add Biber::Conf and Biber::Entry classes ?
    * fix crossref handling of reviews
    * "<nosort>The</nosort> Title …" automatically generates "sorttitle = Title …, The"
    * "D[onald] E. Knuth" prints as D. E. Knuth but is sorted with Donald E. Knuth ??
-   ----- version 0.9 -----
    * prototype of bbx style for handling multiscript bibliographies (will probably 
         require xelatex+polyglossia)
    * PerlTeX integration ?
    * ... 
-   ----- version 1.0 -----
 

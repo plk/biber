@@ -1,9 +1,9 @@
-package Biber::Constants ;
-use strict ;
-use warnings ;
-use Readonly ;
+package Biber::Constants;
+use strict;
+use warnings;
+use Readonly;
 
-use base 'Exporter' ;
+use base 'Exporter';
 
 our @EXPORT = qw{
                   @NAMEFIELDS
@@ -19,6 +19,7 @@ our @EXPORT = qw{
                   %SKIPFIELDS
                   %CONFIG_DEFAULT
                   $BIBLATEX_VERSION
+                  $BCF_VERSION
                   $BIBER_SORT_FINAL
                   %ALIASES
                   %NUMERICALMONTH
@@ -29,7 +30,11 @@ our @EXPORT = qw{
                   %DISPLAYMODES
               } ;
 
-Readonly::Scalar our $BIBLATEX_VERSION => '0.8' ;
+# this is the latest <major.minor> version of biblatex.sty
+Readonly::Scalar our $BIBLATEX_VERSION => '0.8';
+# this is the latest version of the BCF xml format
+Readonly::Scalar our $BCF_VERSION => '0.8f';
+
 our $BIBER_SORT_FINAL = 0;
 
 ## Biber CONFIGURATION DEFAULTS
@@ -37,7 +42,7 @@ my $locale = $ENV{LANG} || $ENV{LC_ALL} || "en_US.utf8" ;
 
 our %CONFIG_DEFAULT = (
   validate => 0,
-  fastsort => 0,
+  fastsort => 1,
   mincrossrefs =>  2,
   unicodebbl =>  0,
   unicodebib =>  0,
@@ -46,6 +51,7 @@ our %CONFIG_DEFAULT = (
   useprd =>  0,
   debug =>  0,
   quiet => 0,
+  wraplines => 0,
   collate_options => 'level=>2, table=>"latinkeys.txt"',
   ## eventually this shall be moved to biblatex options:
   displaymode => 'uniform',
@@ -103,11 +109,11 @@ our %CONFIG_DEFAULT = (
 Readonly::Array our @NAMEFIELDS  =>   qw{
   author editor shortauthor shorteditor commentator translator redactor 
   annotator bookauthor introduction foreword afterword holder sortname 
-  namea nameb namec } ;
+  namea nameb namec };
 
 Readonly::Array our @LISTFIELDS  =>   qw{
   publisher address location school institution organization language origlocation
-  origpublisher lista listb listc listd liste listf } ;
+  origpublisher lista listb listc listd liste listf };
 
 Readonly::Array our @LITERALFIELDS_BASE  =>   qw{
   abstract addendum annotation chapter date day edition eid howpublished isan isbn
@@ -116,7 +122,7 @@ Readonly::Array our @LITERALFIELDS_BASE  =>   qw{
   urlmonth urlyear urldate venue version volume volumes usera userb userc userd
   usere userf hyphenation crossref entrysubtype execute gender sortkey sortyear
   xref
-  } ;
+  };
 
 Readonly::Array our @TITLEFIELDS => qw{ title 
   subtitle titleaddon shorttitle sorttitle indextitle indexsorttitle
@@ -126,31 +132,31 @@ Readonly::Array our @TITLEFIELDS => qw{ title
 
 # Fields that are used internally by biber but are not passed to the bbl output
 Readonly::Array our @SKIPFIELDS => qw{ sortname sorttitle presort sortkey
-  sortyear library remarks date urldate } ;
-our %SKIPFIELDS = map { $_ => 1 } @SKIPFIELDS ;
+  sortyear library remarks date urldate };
+our %SKIPFIELDS = map { $_ => 1 } @SKIPFIELDS;
 
-Readonly::Array our @RANGEFIELDS     =>  qw{ origyear pages year } ;
-Readonly::Array our @VERBATIMFIELDS  =>  qw{ doi eprint file pdf url verba verbb verbc } ;
+Readonly::Array our @RANGEFIELDS     =>  qw{ origyear pages year };
+Readonly::Array our @VERBATIMFIELDS  =>  qw{ doi eprint file pdf url verba verbb verbc };
 Readonly::Array our @KEYFIELDS  =>   qw{ 
   authortype bookpagination editortype origlanguage pagination 
-  type nameatype namebtype namectype } ;
-Readonly::Array our @COMMASEP_FIELDS => qw{ options keywords entryset } ;
+  type nameatype namebtype namectype };
+Readonly::Array our @COMMASEP_FIELDS => qw{ options keywords entryset };
 
-Readonly::Array our @ENTRIESTOSPLIT  =>  ( @NAMEFIELDS, @LISTFIELDS ) ;
+Readonly::Array our @ENTRIESTOSPLIT  =>  ( @NAMEFIELDS, @LISTFIELDS );
 
 # literal and integer fields
 # TODO add keys for selecting script, language, translation, transliteration.
 
 # TODO validate the keys in the @keyfields ?
 
-Readonly::Array our @LITERALFIELDS => ( @TITLEFIELDS, @LITERALFIELDS_BASE, @KEYFIELDS ) ;
+Readonly::Array our @LITERALFIELDS => ( @TITLEFIELDS, @LITERALFIELDS_BASE, @KEYFIELDS );
 
 Readonly::Hash our %ALIASES => ( 
   'address' => 'location',
   'school'  => 'institution',
   'annote'  => 'annotation',
   'key'     => 'sortkey'
-) ;
+);
 
 Readonly::Hash our %NUMERICALMONTH => (
   'January' => 1,
@@ -189,7 +195,7 @@ Readonly::Hash our %NUMERICALMONTH => (
   'oct' => 10,
   'nov' => 11,
   'dec' => 12
-) ;
+);
 
 # TODO ask PL to define mkbibsubscript in biblatex ?
 Readonly::Hash our %BIBLATEXML_FORMAT_ELEMENTS => (
@@ -197,7 +203,7 @@ Readonly::Hash our %BIBLATEXML_FORMAT_ELEMENTS => (
   'bib:subscript'   => 'textsubscript',
   'bib:superscript' => 'mkbibsuperscript',
   'bib:emphasis'    => 'mkbibemph'
-) ; 
+);
 
 Readonly::Array our @BIBLATEXML_FORMATTEXT => qw(
   abstract
@@ -223,7 +229,7 @@ Readonly::Array our @BIBLATEXML_FORMATTEXT => qw(
   item
   publishername
   remarks 
-  ) ;
+  );
 
 Readonly::Array our @BIBLATEXML_FORMATTEXT_B => qw(
   booktitle
@@ -233,9 +239,9 @@ Readonly::Array our @BIBLATEXML_FORMATTEXT_B => qw(
   maintitle
   shorttitle
   title 
-  ) ;
+  );
 
-our %FIELDS_WITH_CHILDREN = map { 'bib:'. $_ => 1 } ( @BIBLATEXML_FORMATTEXT, @BIBLATEXML_FORMATTEXT_B ) ;
+our %FIELDS_WITH_CHILDREN = map { 'bib:'. $_ => 1 } ( @BIBLATEXML_FORMATTEXT, @BIBLATEXML_FORMATTEXT_B );
 
 Readonly::Hash our %DISPLAYMODES => {
   uniform => [ qw/uniform romanized translated original/ ],
@@ -244,7 +250,7 @@ Readonly::Hash our %DISPLAYMODES => {
   original => [ qw/original romanized uniform translated/ ]
 } ;
 
-1 ;
+1;
 
 __END__
 

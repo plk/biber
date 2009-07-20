@@ -1,28 +1,28 @@
-package Biber::BibLaTeXML::Node ;
+package Biber::BibLaTeXML::Node;
 use strict;
 use warnings;
-use Carp ;
-use Biber::Constants ;
-use Biber::Utils ;
-use Data::Dump ;
+use Carp;
+use Biber::Constants;
+use Biber::Utils;
+use Data::Dump;
 
 sub XML::LibXML::NodeList::_biblatex_title_values {
-    my $nodelist = shift ;
-    my $node = $nodelist->get_node(1) ;
+    my $nodelist = shift;
+    my $node = $nodelist->get_node(1);
     my $fstring = '';
     my $sortstring = '';
-    my $nosortprefix ;
+    my $nosortprefix;
     my $count = 0;
 
     foreach my $child ($node->childNodes) {
-        my $type  = $child->nodeType ;
+        my $type  = $child->nodeType;
 
         if ( $type == 3 ) {
-            my $value = $child->string_value ;
-            $value =~ s/\s+/ /gms ;
-            next if $value eq ' ' ;
-            $fstring .= $value ;
-            $sortstring .= $value ;
+            my $value = $child->string_value;
+            $value =~ s/\s+/ /gms;
+            next if $value eq ' ';
+            $fstring .= $value;
+            $sortstring .= $value;
         } elsif ( $type == 1 ) {
 
             $fstring .= $child->_biblatex_fstring_value;
@@ -31,19 +31,19 @@ sub XML::LibXML::NodeList::_biblatex_title_values {
                 unless $child->nodeName eq 'bib:nosort';
 
             if (! $count && $child->nodeName eq 'bib:nosort') {
-                $nosortprefix = $child->string_value ;
+                $nosortprefix = $child->string_value;
             }
         }
         $count++
-    } ;
+    };
     my $sorttitle = $sortstring;
-    $sorttitle =~ s/^\s+// ;
+    $sorttitle =~ s/^\s+//;
     my $indextitle = $fstring;
-    $indextitle =~ s/^$nosortprefix\s*(.+)$/$1, $nosortprefix/ if $nosortprefix ;
-    $indextitle =~ s/\s+$// ;
-    my $indexsorttitle = $sorttitle ;
-    $indexsorttitle .= ", $nosortprefix" if $nosortprefix ;
-    $indexsorttitle =~ s/\s+$// ;
+    $indextitle =~ s/^$nosortprefix\s*(.+)$/$1, $nosortprefix/ if $nosortprefix;
+    $indextitle =~ s/\s+$//;
+    my $indexsorttitle = $sorttitle;
+    $indexsorttitle .= ", $nosortprefix" if $nosortprefix;
+    $indexsorttitle =~ s/\s+$//;
 
     return { 
         title          => $fstring,
@@ -54,8 +54,8 @@ sub XML::LibXML::NodeList::_biblatex_title_values {
 }
 
 sub XML::LibXML::NodeList::_biblatex_value {
-    my $nodelist = shift ;
-    my $node = $nodelist->get_node(1) ;
+    my $nodelist = shift;
+    my $node = $nodelist->get_node(1);
     return $node->_biblatex_fstring_value
 }
 
@@ -65,25 +65,25 @@ sub XML::LibXML::Node::_biblatex_value {
 }
 
 sub XML::LibXML::Node::_biblatex_fstring_value {
-    my $node = shift ;
-    my $childname = $node->nodeName ;
-    my $str = '' ;
-    my $innerstr = '' ;
+    my $node = shift;
+    my $childname = $node->nodeName;
+    my $str = '';
+    my $innerstr = '';
 
     foreach my $child ($node->childNodes) {
-       my $type  = $child->nodeType ;
+       my $type  = $child->nodeType;
        if ( $type == 1 ) {
-           $innerstr .= $child->_biblatex_fstring_value ;
+           $innerstr .= $child->_biblatex_fstring_value;
        } elsif ( $type == 3 ) {
-           my $value = $child->string_value ;
-           $value =~ s/\s+/ /gms ;
-           next if $value eq ' ' ;
-           $innerstr .= $value ;
+           my $value = $child->string_value;
+           $value =~ s/\s+/ /gms;
+           next if $value eq ' ';
+           $innerstr .= $value;
        } 
     }
 
     if ($BIBLATEXML_FORMAT_ELEMENTS{$childname}) {
-        $str =  '\\' . $BIBLATEXML_FORMAT_ELEMENTS{$childname} . '{' . $innerstr . '}' ;
+        $str =  '\\' . $BIBLATEXML_FORMAT_ELEMENTS{$childname} . '{' . $innerstr . '}';
     } 
     else {
         $str = $innerstr   
@@ -93,16 +93,16 @@ sub XML::LibXML::Node::_biblatex_fstring_value {
 }
 
 sub XML::LibXML::Node::_biblatex_sortstring_value {
-    my $node = shift ;
-    my $str = '' ;
+    my $node = shift;
+    my $str = '';
     foreach my $child ($node->childNodes) {
-        next if ( $child->nodeName eq 'bib:nosort' ) ;
-        my $value ;
+        next if ( $child->nodeName eq 'bib:nosort' );
+        my $value;
         if ( $child->hasChildNodes ) {
             $value = $child->_biblatex_sortstring_value 
         } else {
-            $value = $child->string_value ;
-            $value =~ s/\s+/ /gms ;
+            $value = $child->string_value;
+            $value =~ s/\s+/ /gms;
         }
         $str .= $value
     } 
@@ -167,8 +167,7 @@ sub XML::LibXML::Element::_normalize_string_value {
     return $node->findvalue("normalize-space()")
 }
 
-
-1 ;
+1;
 
 __END__
 

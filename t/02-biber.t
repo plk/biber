@@ -15,7 +15,6 @@ isa_ok($biber, "Biber");
 chdir("t/tdata") ;
 $biber->parse_auxfile("50-style-authoryear.aux") ;
 
-$biber->{config}{biblatex}{global}{maxline} = 100000 ;
 
 my @keys = sort $biber->citekeys;
 my @citedkeys = sort qw{ 
@@ -71,6 +70,7 @@ my $stdmodel = {
                 'crossref' => 'stdmodel:glashow',
                 'volume' => '22',
                 'labelnamename' => 'author',
+                'labelyear'   => 1,
                 'entrytype' => 'set',
                 'title' => 'Partial Symmetries of Weak Interactions',
                 'datatype' => 'bibtex',

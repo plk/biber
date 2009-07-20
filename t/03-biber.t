@@ -1,26 +1,32 @@
 use strict;
 use warnings;
 use utf8;
-no warnings 'utf8' ;
+no warnings 'utf8';
 
-use Test::More tests => 6 ;
-
+use Test::More;
 use Biber;
+
+if ( eval "require Text::BibTeX; 1") {
+    plan( tests => 7 );
+} 
+else {
+    plan( skip_all => "Text::BibTeX unavailable! Skipping parsing with Biber::BibTeX" );
+}
 
 my $opts = { unicodebbl => 1, fastsort => 1 };
 my $biber = Biber->new($opts);
 
-   
+use_ok( 'Biber::BibTeX' );
+
 isa_ok($biber, "Biber");
 
-chdir("t/tdata") ;
+chdir("t/tdata");
 $biber->parse_auxfile("02-annotations.aux");
-$biber->{config}{biblatex}{global}{maxline} = 100000 ;
-$biber->{config}{biblatex}{global}{sortalphaothers} = '+' ;
+$biber->{config}{biblatex}{global}{sortalphaothers} = '+';
 
 my $bibfile = $biber->config('bibdata')->[0] . ".bib";
-$biber->parse_bibtex($bibfile) ;
-$biber->prepare ;
+$biber->parse_bibtex($bibfile);
+$biber->prepare;
 
 my $setaksin = q|\entry{set:aksin}{article}{}
   \inset{set}
