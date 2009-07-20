@@ -162,18 +162,22 @@ sub _parse_biblatexml {
             }
         }
 
-        if (! $bibrecord->exists("bib:$titlename") ) {
-           $logger->error("Entry $citekey has no title!")
-        };
+        if (! $bibrecord->exists("bib:$titlename")) {
+            if ( ! $bibrecord->exists("bib:crossref") ) {
+                $logger->error("Entry $citekey has no title!")
+            }
+        }
+        else {
 
-        my $titlestrings = $bibrecord->findnodes("bib:$titlename")->_biblatex_title_values;
+            my $titlestrings = $bibrecord->findnodes("bib:$titlename")->_biblatex_title_values;
 
-        $self->{bib}->{$citekey}->{$titlename} = $titlestrings->{'title'};
+            $self->{bib}->{$citekey}->{$titlename} = $titlestrings->{'title'};
 
-        my @specialtitlefields = qw/sorttitle indextitle indexsorttitle/;
-        foreach my $field (@specialtitlefields) {
-            if (! $bibrecord->exists("bib:$field") ) {
-                $self->{bib}->{$citekey}->{$field} = $titlestrings->{$field}
+            my @specialtitlefields = qw/sorttitle indextitle indexsorttitle/;
+            foreach my $field (@specialtitlefields) {
+                if (! $bibrecord->exists("bib:$field") ) {
+                    $self->{bib}->{$citekey}->{$field} = $titlestrings->{$field}
+                }
             }
         }
 
