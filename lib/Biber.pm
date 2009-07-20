@@ -458,7 +458,7 @@ sub parse_ctrlfile {
         $self->{config}{biblatex}{global}{alphaothers}) = split /:/, $opts;
 
         my $controlversion = $self->{config}{biblatex}{global}{controlversion};
-        $logger->warn("Warning: You are using biblatex version $controlversion : 
+        $logger->warn("You are using biblatex version $controlversion : 
             biber is more likely to work with version $BIBLATEX_VERSION.") 
             unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION;
     }

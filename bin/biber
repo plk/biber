@@ -32,7 +32,8 @@ GetOptions(
     'validate|V!',
     'debug|D!',
     'quiet|q',
-    'nolog!', ## TODO
+    'nolog!', 
+    'onlylog!',
     'wraplines|w!',
     'help|h|?',
     'version|v'
@@ -72,14 +73,28 @@ if ($biber->config('debug')) {
     $LOGLEVEL = 'INFO'
 }
 
+my $LOGLEVEL_F;
+if ($biber->config('nolog')) {
+    $LOGLEVEL_F = 'OFF'
+} else {
+    $LOGLEVEL_F = $LOGLEVEL
+}
+
+my $LOGLEVEL_S;
+if ($biber->config('onlylog')) {
+    $LOGLEVEL_S = 'OFF'
+} else {
+    $LOGLEVEL_S = $LOGLEVEL
+}
+
 ## TODO make Screen.Threshold optional: in some situations we'd like 
 #  to have debug msgs on the screen too!
 
 # configuration "file" for Log::Log4perl
 my $l4pconf = qq(
     log4perl.category.main                             = $LOGLEVEL, Logfile, Screen
-    log4perl.category.screen                           = $LOGLEVEL, Screen
-    log4perl.category.logfile                          = $LOGLEVEL, Logfile
+    log4perl.category.screen                           = $LOGLEVEL_S, Screen
+    log4perl.category.logfile                          = $LOGLEVEL_F, Logfile
 
     log4perl.appender.Logfile                          = Log::Log4perl::Appender::File
     log4perl.appender.Logfile.filename                 = biber.log
@@ -228,9 +243,9 @@ Options:
                          Don't use this unless you truly understand what it means.
   --version|-v           Display version number.
   --mincrossrefs|-m <n>  Set threshold for crossrefs.
-  --fastsort|-f          Use Perl’s sort instead of Unicode::Collate for sorting.
-  --locale|-l [locale]   Set the locale to be used for sorting with option --fastsort
-  --collate|-C           Sort with Unicode::Collate
+  --fastsort|-f          Use Perl’s sort instead of Unicode::Collate for sorting (TRUE).
+  --locale|-l [locale]   Set the locale to be used for sorting with built-in sort function.
+  --collate|-C           Sort with Unicode::Collate instead of the built-in sort function.
   --collate_options|-c [options] 
                          Options to pass to the Unicode::Collate object used for sorting
                          (default is 'level => 2, table => latinkeys.txt'). 
@@ -246,10 +261,12 @@ Options:
                          Specify the encoding of the bib file(s). The bbl file 
                          will also have this encoding when --unicodebbl is false.
                          See "perldoc Encode::Supported" for a list of supported encodings.
-  --validate|-V          Schema Validate both the <basename>.bcf biblatex control file
-                         and biblatexml bib files (if used). Dies on validation error.
+  --validate|-V          Schema validate both the <basename>.bcf biblatex control file
+                         and the BibLateXML files (if used). Dies on validation error.
   --debug|-D             Turn on debugging for biber.
-  --quiet|-q             Turn warnings off.
+  --quiet|-q             Turn infos and warnings off.
+  --nolog                Do not write any logfile.
+  --onlylog              Do not write any message to screen.
   --wraplines|-w         Wrap lines in the bbl file.
     \n}
 }
