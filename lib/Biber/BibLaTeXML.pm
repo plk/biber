@@ -154,7 +154,7 @@ sub _parse_biblatexml {
 
         if (! $bibrecord->exists("bib:$titlename")) {
            if ( ! $bibrecord->exists("bib:crossref") ) {
-               $logger->error("Entry $citekey has no title!")
+               croak "Entry $citekey has no title!"
            }
         }
         else {
