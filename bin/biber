@@ -31,6 +31,7 @@ GetOptions(
     'validate|V!',
     'debug|D!',
     'quiet|q',
+    'wraplines|w!',
     'help|h|?',
     'version|v'
 );
@@ -162,7 +163,7 @@ $me Version: $VERSION
 sub usage {
     my $me = "biber"; #basename($0);
 
-    qq[
+    qq{
 Usage:  $me file.aux
         Creates file.bbl
 
@@ -201,7 +202,8 @@ Options:
                          and biblatexml bib files (if used). Dies on validation error.
   --debug|-D             Turn on debugging for biber.
   --quiet|-q             Turn warnings off.
-    \n]
+  --wraplines|-w         Wrap lines in the bbl file.
+    \n}
 }
 
 __END__

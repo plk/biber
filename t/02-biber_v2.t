@@ -15,7 +15,6 @@ isa_ok($biber, "Biber");
 chdir("t/tdata") ;
 $biber->parse_auxfile_v2("50-style-authoryear_v2.aux") ;
 
-$biber->{config}{biblatex}{global}{maxline} = 100000 ;
 
 my @keys = sort $biber->citekeys;
 my @citedkeys = sort qw{
