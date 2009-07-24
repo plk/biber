@@ -91,7 +91,7 @@ sub _getlabel {
 
   my @lastnames = map { normalize_string( $_->{lastname}, $dt ) } @names;
   my @prefixes  = map { $_->{prefix} } @names;
-  my $noofauth  = scalar @names;
+  my $numnames  = scalar @names;
 
   # If name list was truncated in bib with "and others", this overrides maxnames
   my $morenames = ($self->{bib}{$citekey}{$namefield}[-1]{namestring} eq 'others') ? 1 :0;
@@ -99,11 +99,11 @@ sub _getlabel {
   my $loopnames;
 
   # loopnames is the number of names to loop over in the name list when constructing the label
-  if ($morenames or ($noofauth > $maxnames)) {
+  if ($morenames or ($numnames > $maxnames)) {
     $nametrunc = 1;
     $loopnames = $minnames; # Only look at $minnames names if we are truncating ...
   } else {
-    $loopnames = $noofauth; # ... otherwise look at all names
+    $loopnames = $numnames; # ... otherwise look at all names
   }
 
   # Now loop over the name list, grabbing a substring of each surname
@@ -521,10 +521,9 @@ sub _getnamestring {
 
 sub _namestring {
   my ( $self, $citekey, $field ) = @_;
-  my $be = $self->{bib}->{$citekey};
-
+  my $be = $self->{bib}{$citekey};
+  my @names = @{$be->{$field}};
   my $str = '';
-  my @names = @{ $be->{$field} };
   my $truncated = 0;
   ## perform truncation according to options minnames, maxnames
   if ( $#names + 1 > $self->getblxoption('maxnames', $citekey) ) {

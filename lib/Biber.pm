@@ -1528,7 +1528,7 @@ sub output_to_bbl {
     # $BBLFILE->binmode(':utf8') if $self->config('unicodebbl');
 
     my $ctrlver = $self->getblxoption('controlversion');
-    my $BBL = <<"EOF"
+    my $BBL = <<"EOF";
 % \$ biblatex auxiliary file \$
 % \$ biblatex version $ctrlver \$
 % \$ biber version $VERSION \$
@@ -1549,7 +1549,6 @@ sub output_to_bbl {
 \\endgroup
 
 EOF
-   ;
 
     $BBL .= "\\preamble{%\n" . $self->{preamble} . "%\n}\n" 
         if $self->{preamble};
