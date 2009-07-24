@@ -1068,7 +1068,7 @@ sub process_crossrefs {
 
 sub postprocess {
     my $self = shift;
-    
+
     my %namehashcount = ();
     my @foundkeys = ();
 
@@ -1077,35 +1077,35 @@ sub postprocess {
         my $origkey = $citekey;
 
         # try lc($citekey), uc($citekey) and ucinit($citekey) before giving up
-        if ( ! $self->{bib}->{$citekey} ) {
+        if ( ! $self->{bib}{$citekey} ) {
 
-            if ($self->{bib}->{ lc($citekey)}) {
-                
+            if ($self->{bib}{lc($citekey)}) {
+
                 $citekey = lc($citekey);
 
-            } elsif ($self->{bib}->{ uc($citekey)}) {
-                
+            } elsif ($self->{bib}{uc($citekey)}) {
+
                 $citekey = uc($citekey);
 
-            } elsif ($self->{bib}->{ ucinit($citekey)}) {
-                
+            } elsif ($self->{bib}{ucinit($citekey)}) {
+
                 $citekey = ucinit($citekey);
 
             } else {
                 print "Warning--I didn't find a database entry for \"$citekey\"\n";
                 $self->{warnings}++;
                 next;
-            } 
-        };
+            }
+        }
 
-        my $be = $self->{bib}->{$citekey};
+        my $be = $self->{bib}{$citekey};
 
         push @foundkeys, $citekey;
 
         $be->{origkey} = $origkey;
 
         print "Postprocessing $citekey\n" if $self->config('debug');
-        
+
 
         ##############################################################
         # 1a. get day month year from date field if no year is supplied
@@ -1211,61 +1211,46 @@ sub postprocess {
         my $fullhash;
         my $nameid;
         my $nameinitid;
-        if ( $be->{sortname}
-             and (   $self->getblxoption('useauthor', $citekey )
-                  or $self->getblxoption('useeditor', $citekey )
-                 )
-           )
-        {
-            my @aut = @{ $be->{sortname} };
-            $namehash   = $self->_getnameinitials( $citekey, @aut );
-            $fullhash   = $self->_getallnameinitials( $citekey, @aut );
-            $nameid     = makenameid(@aut);
-            $nameinitid = makenameinitid(@aut)
-              if ( $self->getblxoption('uniquename', $citekey) == 2 );
+        if ($be->{sortname} and ($self->getblxoption('useauthor', $citekey)
+                                  or $self->getblxoption('useeditor', $citekey))) {
+          $namehash   = $self->_getnameinitials( $citekey, $be->{sortname});
+          $fullhash   = $self->_getallnameinitials( $citekey, $be->{sortname});
+          $nameid     = makenameid($be->{sortname});
+          $nameinitid = makenameinitid($be->{sortname}) if ( $self->getblxoption('uniquename', $citekey) == 2 );
         }
-        elsif ( $self->getblxoption('useauthor', $citekey)
-                and $be->{author} ) {
-            my @aut = @{ $be->{author} };
-            $namehash   = $self->_getnameinitials( $citekey, @aut );
-            $fullhash   = $self->_getallnameinitials( $citekey, @aut );
-            $nameid     = makenameid(@aut);
-            $nameinitid = makenameinitid(@aut)
-              if ( $self->getblxoption('uniquename', $citekey) == 2 );
+        elsif ($self->getblxoption('useauthor', $citekey) and $be->{author}) {
+          $namehash   = $self->_getnameinitials( $citekey, $be->{author});
+          $fullhash   = $self->_getallnameinitials( $citekey, $be->{author});
+          $nameid     = makenameid($be->{author});
+          $nameinitid = makenameinitid($be->{author}) if ( $self->getblxoption('uniquename', $citekey) == 2 );
         }
-        elsif ( ($be->{entrytype} =~ /^(collection|proceedings)/ #<<-- keep this? FIXME
-                    and $self->getblxoption('useeditor', $citekey) )
-                 and $be->{editor} ) 
-        {
-            my @edt = @{ $be->{editor} };
-            $namehash   = $self->_getnameinitials( $citekey, @edt );
-            $fullhash   = $self->_getallnameinitials( $citekey, @edt );
-            $nameid     = makenameid(@edt);
-            $nameinitid = makenameinitid(@edt)
-              if ( $self->getblxoption('uniquename', $citekey) == 2 );
+        elsif (($be->{entrytype} =~ /^(collection|proceedings)/ #<<-- keep this? FIXME
+                and $self->getblxoption('useeditor', $citekey))
+               and $be->{editor}) {
+          $namehash   = $self->_getnameinitials( $citekey, $be->{editor});
+          $fullhash   = $self->_getallnameinitials( $citekey, $be->{editor});
+          $nameid     = makenameid($be->{editor});
+          $nameinitid = makenameinitid($be->{editor}) if ( $self->getblxoption('uniquename', $citekey) == 2 );
         }
-        elsif ( $self->getblxoption('usetranslator', $citekey)
-                and $be->{translator} ) {
-            my @trs = @{ $be->{translator} };
-            $namehash   = $self->_getnameinitials( $citekey, @trs );
-            $fullhash   = $self->_getallnameinitials( $citekey, @trs );
-            $nameid     = makenameid(@trs);
-            $nameinitid = makenameinitid(@trs)
-              if ( $self->getblxoption('uniquename', $citekey) == 2 );
+        elsif ($self->getblxoption('usetranslator', $citekey) and $be->{translator}) {
+          $namehash   = $self->_getnameinitials( $citekey, $be->{translator});
+          $fullhash   = $self->_getallnameinitials( $citekey, $be->{translator});
+          $nameid     = makenameid($be->{translator});
+          $nameinitid = makenameinitid($be->{translator}) if ( $self->getblxoption('uniquename', $citekey) == 2 );
         }
         else {    # initials of title
-            if ( $be->{sorttitle} ) {
-                $namehash   = terseinitials( $be->{sorttitle} );
-                $fullhash   = $namehash;
-                $nameid     = normalize_string_underscore( $be->{sorttitle}, 1 );
-                $nameinitid = $nameid if ( $self->getblxoption('uniquename', $citekey) == 2 );
-            }
-            else {
-                $namehash   = terseinitials( $be->{title} );
-                $fullhash   = $namehash;
-                $nameid     = normalize_string_underscore( $be->{title}, 1 );
-                $nameinitid = $nameid if ( $self->getblxoption('uniquename', $citekey) == 2 );
-            }
+          if ( $be->{sorttitle} ) {
+            $namehash   = terseinitials( $be->{sorttitle} );
+            $fullhash   = $namehash;
+            $nameid     = normalize_string_underscore( $be->{sorttitle}, 1 );
+            $nameinitid = $nameid if ( $self->getblxoption('uniquename', $citekey) == 2 );
+          }
+          else {
+            $namehash   = terseinitials( $be->{title} );
+            $fullhash   = $namehash;
+            $nameid     = normalize_string_underscore( $be->{title}, 1 );
+            $nameinitid = $nameid if ( $self->getblxoption('uniquename', $citekey) == 2 );
+          }
         }
 
         ## hash suffix
@@ -1283,7 +1268,7 @@ sub postprocess {
         else {
             $namehashcount{$namehash} = { $nameid => 1 }
         };
-             
+
         $namehash .= $hashsuffix;
         $fullhash .= $hashsuffix;
 
@@ -1292,7 +1277,6 @@ sub postprocess {
 
         $seennamehash{$fullhash}++;
 
-        
         ##############################################################
         # 5b. Populate the uniquenamecount hash to later determine 
         #     the uniquename counter

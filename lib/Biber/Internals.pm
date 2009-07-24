@@ -17,14 +17,14 @@ Biber::Internals - Internal methods for processing the bibliographic data
 
 =cut
 
-#TODO $namefield instead of @aut as 2nd argument!
 sub _getnameinitials {
-    my ($self, $citekey, @aut) = @_;
+    my ($self, $citekey, $names) = @_;
+    my @names = @{$names};
     my $initstr = "";
     ## my $nodecodeflag = $self->_decode_or_not($citekey);
 
-    if ( $#aut < $self->getblxoption('maxnames', $citekey ) ) {    # 1 to maxname authors
-        foreach my $a (@aut) {
+    if ( $#names < $self->getblxoption('maxnames', $citekey ) ) {    # 1 to maxname names
+        foreach my $a (@names) {
             if ( $a->{prefix} and $self->getblxoption('useprefix', $citekey ) ) {
                 $initstr .= terseinitials( $a->{prefix} ) 
             }
@@ -37,17 +37,17 @@ sub _getnameinitials {
         }
     }
     else
-    { # more than maxname authors: only take initials of first getblxoption('minnames', $citekey)
+    { # more than maxname names: only take initials of first getblxoption('minnames', $citekey)
         foreach my $i ( 0 .. $self->getblxoption('minnames', $citekey ) - 1 ) {
-            if ( $aut[$i]->{prefix} and $self->getblxoption('useprefix', $citekey) ) {
-                $initstr .= terseinitials( $aut[$i]->{prefix} );
+            if ( $names[$i]->{prefix} and $self->getblxoption('useprefix', $citekey) ) {
+                $initstr .= terseinitials( $names[$i]->{prefix} );
             }
-            my $tmp = $aut[$i]->{lastname};
+            my $tmp = $names[$i]->{lastname};
 
             #FIXME suffix ?
             $initstr .= terseinitials($tmp);
-            if ( $aut[$i]->{firstname} ) {
-                $tmp = $aut[$i]->{firstname};
+            if ( $names[$i]->{firstname} ) {
+                $tmp = $names[$i]->{firstname};
                 $initstr .= terseinitials($tmp);
             }
             $initstr .= "+";
@@ -57,12 +57,10 @@ sub _getnameinitials {
 }
 
 
-#TODO $namefield instead of @aut as 2nd argument!
 sub _getallnameinitials {
-    my ($self, $citekey, @aut) = @_;
+    my ($self, $citekey, $names) = @_;
     my $initstr = "";
-    
-    foreach my $a (@aut) {
+    foreach my $a (@{$names}) {
         if ( $a->{prefix} and $self->getblxoption('useprefix', $citekey ) ) {
             $initstr .= terseinitials( $a->{prefix} ) 
         }

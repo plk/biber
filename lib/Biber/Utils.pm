@@ -265,9 +265,9 @@ with the concatenation of all names.
 =cut
 
 sub makenameid {
-    my @names = @_;
+    my ($names) = @_;
     my @namestrings;
-    foreach my $n (@names) {
+    foreach my $n (@{$names}) {
         push @namestrings, $n->{namestring};
     }
     my $tmp = join " ", @namestrings;
@@ -281,9 +281,9 @@ Similar to makenameid, with the first names converted to initials.
 =cut
 
 sub makenameinitid {
-    my @names = @_;
+    my ($names) = @_;
     my @namestrings;
-    foreach my $n (@names) {
+    foreach my $n (@{$names}) {
         push @namestrings, $n->{nameinitstring};
     }
     my $tmp = join " ", @namestrings;
