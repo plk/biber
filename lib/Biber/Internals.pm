@@ -22,12 +22,13 @@ my $logger = Log::Log4perl::get_logger('main');
 
 #TODO $namefield instead of @aut as 2nd argument!
 sub _getnameinitials {
-    my ($self, $citekey, @aut) = @_;
+    my ($self, $citekey, $names) = @_;
+    my @names = @{$names};
     my $initstr = "";
     ## my $nodecodeflag = $self->_decode_or_not($citekey);
 
-    if ( $#aut < $self->getblxoption('maxnames', $citekey ) ) {    # 1 to maxname authors
-        foreach my $a (@aut) {
+    if ( $#names < $self->getblxoption('maxnames', $citekey ) ) {    # 1 to maxname names
+        foreach my $a (@names) {
             if ( $a->{prefix} and $self->getblxoption('useprefix', $citekey ) ) {
                 $initstr .= terseinitials( $a->{prefix} ) 
             }
@@ -40,17 +41,17 @@ sub _getnameinitials {
         }
     }
     else
-    { # more than maxname authors: only take initials of first getblxoption('minnames', $citekey)
+    { # more than maxname names: only take initials of first getblxoption('minnames', $citekey)
         foreach my $i ( 0 .. $self->getblxoption('minnames', $citekey ) - 1 ) {
-            if ( $aut[$i]->{prefix} and $self->getblxoption('useprefix', $citekey) ) {
-                $initstr .= terseinitials( $aut[$i]->{prefix} );
+            if ( $names[$i]->{prefix} and $self->getblxoption('useprefix', $citekey) ) {
+                $initstr .= terseinitials( $names[$i]->{prefix} );
             }
-            my $tmp = $aut[$i]->{lastname};
+            my $tmp = $names[$i]->{lastname};
 
             #FIXME suffix ?
             $initstr .= terseinitials($tmp);
-            if ( $aut[$i]->{firstname} ) {
-                $tmp = $aut[$i]->{firstname};
+            if ( $names[$i]->{firstname} ) {
+                $tmp = $names[$i]->{firstname};
                 $initstr .= terseinitials($tmp);
             }
             $initstr .= "+";
@@ -60,12 +61,10 @@ sub _getnameinitials {
 }
 
 
-#TODO $namefield instead of @aut as 2nd argument!
 sub _getallnameinitials {
-    my ($self, $citekey, @aut) = @_;
+    my ($self, $citekey, $names) = @_;
     my $initstr = "";
-    
-    foreach my $a (@aut) {
+    foreach my $a (@{$names}) {
         if ( $a->{prefix} and $self->getblxoption('useprefix', $citekey ) ) {
             $initstr .= terseinitials( $a->{prefix} ) 
         }
@@ -96,7 +95,7 @@ sub _getlabel {
 
   my @lastnames = map { normalize_string( $_->{lastname}, $dt ) } @names;
   my @prefixes  = map { $_->{prefix} } @names;
-  my $noofauth  = scalar @names;
+  my $numnames  = scalar @names;
 
   # If name list was truncated in bib with "and others", this overrides maxnames
   my $morenames = ($self->{bib}{$citekey}{$namefield}[-1]{namestring} eq 'others') ? 1 :0;
@@ -104,11 +103,11 @@ sub _getlabel {
   my $loopnames;
 
   # loopnames is the number of names to loop over in the name list when constructing the label
-  if ($morenames or ($noofauth > $maxnames)) {
+  if ($morenames or ($numnames > $maxnames)) {
     $nametrunc = 1;
     $loopnames = $minnames; # Only look at $minnames names if we are truncating ...
   } else {
-    $loopnames = $noofauth; # ... otherwise look at all names
+    $loopnames = $numnames; # ... otherwise look at all names
   }
 
   # Now loop over the name list, grabbing a substring of each surname
@@ -526,10 +525,9 @@ sub _getnamestring {
 
 sub _namestring {
   my ( $self, $citekey, $field ) = @_;
-  my $be = $self->{bib}->{$citekey};
-
+  my $be = $self->{bib}{$citekey};
+  my @names = @{$be->{$field}};
   my $str = '';
-  my @names = @{ $be->{$field} };
   my $truncated = 0;
   ## perform truncation according to options minnames, maxnames
   if ( $#names + 1 > $self->getblxoption('maxnames', $citekey) ) {

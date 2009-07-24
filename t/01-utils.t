@@ -19,16 +19,16 @@ is( normalize_string_underscore('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
 
 is( normalize_string_underscore('{Foo de Bar, Graf Ludwig}', 1), 'Foo_de_Bar_Graf_Ludwig', 'normalize_string_underscore 2');
 
-my @names = ( 
+my $names = [
     { namestring => '\"Askdjksdj, Bsadk Cklsjd', nameinitstring => '\"Askdjksdj, BC' },
     { namestring => 'von Üsakdjskd, Vsajd W\`asdjh', nameinitstring => 'v Üsakdjskd, VW'  },
     { namestring => 'Xaskldjdd, Yajs\x{d}ajks~Z.', nameinitstring => 'Xaskldjdd, YZ'  },
     { namestring => 'Maksjdakj, Nsjahdajsdhj', nameinitstring => 'Maksjdakj, N'  },
-);
+];
 
-is( makenameid(@names), 'Askdjksdj_Bsadk_Cklsjd_von_Üsakdjskd_Vsajd_Wasdjh_Xaskldjdd_Yajsdajks_Z_Maksjdakj_Nsjahdajsdhj', 'makenameid' );
+is( makenameid($names), 'Askdjksdj_Bsadk_Cklsjd_von_Üsakdjskd_Vsajd_Wasdjh_Xaskldjdd_Yajsdajks_Z_Maksjdakj_Nsjahdajsdhj', 'makenameid' );
 
-is( makenameinitid(@names), 'Askdjksdj_BC_v_Üsakdjskd_VW_Xaskldjdd_YZ_Maksjdakj_N', 
+is( makenameinitid($names), 'Askdjksdj_BC_v_Üsakdjskd_VW_Xaskldjdd_YZ_Maksjdakj_N', 
     'makenameinitid' );
 
 is( latexescape('{5}: Joe & Sons: $3.01 + 5% of some_function()'), 
