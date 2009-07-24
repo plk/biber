@@ -657,7 +657,8 @@ sub _print_biblatex_entry {
 
     my $str = "";
 
-    $str .= "% sortstring = " . $be->{sortstring} . "\n" if $self->getblxoption('debug');
+    $str .= "% sortstring = " . $be->{sortstring} . "\n" 
+        if ($self->config('debug') || $self->getblxoption('debug'));
 
     $str .= "\\entry{$origkey}{" . $be->{entrytype} . "}{$opts}\n";
 
