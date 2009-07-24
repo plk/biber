@@ -1476,13 +1476,15 @@ sub sortentries {
   my %bibentries = $self->bib;
   my @auxcitekeys = $self->citekeys;
 
-  $logger->debug("Sorting entries...");
 
   if ( $self->config('fastsort') ) {
     if ($self->config('locale')) {
       my $thislocale = $self->config('locale');
+      $logger->debug("Sorting entries with built-in sort (with locale $thislocale) ...");
       setlocale( LC_ALL, $thislocale ) 
         or $logger->warn("Unavailable locale $thislocale")
+    } else {
+      $logger->debug("Sorting entries with built-in sort (with locale ", $ENV{LC_COLLATE}, ") ...");
     }
     @auxcitekeys = sort {
       $bibentries{$a}->{sortstring} cmp $bibentries{$b}->{sortstring}
