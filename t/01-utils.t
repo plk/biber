@@ -6,6 +6,8 @@ no warnings 'utf8' ;
 use Test::More tests => 20;
 
 use Biber::Utils;
+use Log::Log4perl qw(:easy);
+Log::Log4perl->easy_init($ERROR);
 
 is( normalize_string('"a, b–c: d" ', 1),  'a bc d', 'normalize_string' );
 

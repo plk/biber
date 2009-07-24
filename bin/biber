@@ -4,7 +4,8 @@ use warnings;
 # no warnings 'utf8';
 use Carp;
 use IPC::Cmd qw( can_run run );
-
+use Log::Log4perl qw(:no_extra_logdie_message);
+use POSIX qw(strftime);
 use Biber;
 use Biber::Utils;
 
@@ -31,6 +32,8 @@ GetOptions(
     'validate|V!',
     'debug|D!',
     'quiet|q',
+    'nolog!', 
+    'onlylog!',
     'wraplines|w!',
     'help|h|?',
     'version|v'
@@ -60,12 +63,76 @@ if ($opts->{collate}) {
 
 my $biber = Biber->new($opts);
 
+# Setting the logging level of Log::Log4perl
+my $LOGLEVEL;
+if ($biber->config('debug')) {
+    $LOGLEVEL = 'DEBUG'
+} elsif ($biber->config('quiet')) {
+    $LOGLEVEL = 'ERROR'
+} else {
+    $LOGLEVEL = 'INFO'
+}
+
+my $LOGLEVEL_F;
+if ($biber->config('nolog')) {
+    $LOGLEVEL_F = 'OFF'
+} else {
+    $LOGLEVEL_F = $LOGLEVEL
+}
+
+my $LOGLEVEL_S;
+if ($biber->config('onlylog')) {
+    $LOGLEVEL_S = 'OFF'
+} else {
+    $LOGLEVEL_S = $LOGLEVEL
+}
+
+## TODO make Screen.Threshold optional: in some situations we'd like 
+#  to have debug msgs on the screen too!
+
+# configuration "file" for Log::Log4perl
+my $l4pconf = qq(
+    log4perl.category.main                             = $LOGLEVEL, Logfile, Screen
+    log4perl.category.screen                           = $LOGLEVEL_S, Screen
+    log4perl.category.logfile                          = $LOGLEVEL_F, Logfile
+
+    log4perl.appender.Logfile                          = Log::Log4perl::Appender::File
+    log4perl.appender.Logfile.filename                 = biber.log
+    log4perl.appender.Logfile.mode                     = write
+    log4perl.appender.Logfile.layout                   = Log::Log4perl::Layout::PatternLayout
+    log4perl.appender.Logfile.layout.ConversionPattern = [%r] %F{1}:%L> %p - %m%n
+
+    log4perl.appender.Screen                           = Log::Log4perl::Appender::Screen
+    ## the following option sets a max level of INFO for the console: 
+    ## i.e. debug messages can only go to the log file
+    log4perl.appender.Screen.Threshold                 = INFO
+    log4perl.appender.Screen.stderr                    = 0
+    log4perl.appender.Screen.layout                    = Log::Log4perl::Layout::SimpleLayout
+);
+
+Log::Log4perl::init(\$l4pconf) ;
+
+# get the logger object
+# TODO : if biber is called with option --nolog then we use the 'screen' logger instead
+# For that we need to turn that appender to OFF
+my $logger  = Log::Log4perl::get_logger('main') ;
+my $screen  = Log::Log4perl::get_logger('screen');
+my $logfile = Log::Log4perl::get_logger('logfile');
+
 #=====================================================
 # Parse aux file
 #=====================================================
 
 my $auxfile;
 my $bblfile;
+
+my $time_string = strftime "%a %b %e, %Y, %H:%M:%S", localtime;
+$logfile->info("=== Biber version $VERSION");
+$logfile->info("=== $time_string");
+
+if ($biber->config('debug')) {
+    $screen->info('DEBUG mode: all messages are logged to "biber.log"')
+}
 
 if ( $opts->{allentries} && $opts->{bibdata} ) {
     $bblfile = $opts->{bibdata}->[0];
@@ -78,7 +145,7 @@ else {
     $bblfile =~ s/aux$/bbl/;
     #V2
     if ($opts->{v2}) {
-      print "** USING EXPERIMENTAL V2 OPTIONS CODE!! **\n";
+      $logger->warn("** USING EXPERIMENTAL V2 OPTIONS CODE!! **");
       $biber->parse_auxfile_v2($auxfile);
     }
     else {
@@ -88,7 +155,7 @@ else {
 
 if ($biber->config('debug')) {
     $biber->_dump('biber.dump0');
-    print ">> Dumped initial biber object for debugging in file biber.dump0\n"
+    $logger->debug("Dumped initial biber object for debugging in file biber.dump0")
 }
 
 #=====================================================
@@ -101,29 +168,29 @@ foreach my $bib (@{ $biber->config('bibdata') }) {
     $bib = bibfind($bib);
 
     if ($bib =~ /\.(db)?xml$/) {
-        croak "File $bib does not exist!" unless -f $bib;
+        $logger->logcroak("File $bib does not exist!") unless -f $bib;
         $biber->parse_biblatexml( $bib )
     }
     elsif ($bib =~ /\.bib$/) {
-        croak "File $bib does not exist!" unless -f $bib;
+        $logger->logcroak("File $bib does not exist!") unless -f $bib;
         $biber->parse_bibtex($bib)
     }
     else {
-        croak "File $bib.bib does not exist!" unless -f "$bib.bib";
+        $logger->logcroak("File $bib.bib does not exist!") unless -f "$bib.bib";
         $biber->parse_bibtex("$bib.bib");
     }
 }
 
 if ($biber->config('debug')) {
     $biber->_dump('biber.dump1');
-    print ">> Dumped postparse biber object for debugging in file biber.dump1\n"
+    $logger->debug("Dumped postparse biber object for debugging in file biber.dump1")
 }
 
 $biber->prepare;
 
 if ($biber->config('debug')) {
     $biber->_dump('biber.dump2');
-    print ">> Dumped final biber object for debugging in file biber.dump2\n"
+    $logger->debug("Dumped final biber object for debugging in file biber.dump2")
 }
 
 if ($biber->config('outfile')) {
@@ -135,43 +202,39 @@ $biber->output_to_bbl($bblfile);
 # display warnings/errors summary, like BibTeX
 if (defined($biber->{errors})) { # if errors, ignore warnings
   if ($biber->{errors} == 1) {
-    print "(There was 1 error message)\n";
+    $logger->warn("(There was 1 error message)");
   }
   elsif ($biber->{errors} > 1) {
-    print "(There were ", $biber->{errors}, " error messages)\n";
+    $logger->warn("(There were ", $biber->{errors}, " error messages)");
   }
 }
 elsif (defined($biber->{warnings})) {
   if ($biber->{warnings} == 1) {
-    print "(There was 1 warning)\n";
+    $logger->warn("(There was 1 warning)");
   }
   elsif ($biber->{warnings} > 1) {
-    print "(There were ", $biber->{warnings}, " warnings)\n";
+    $logger->warn("(There were ", $biber->{warnings}, " warnings)");
   }
 }
 
 #======================================================
 
 sub version {
-    my $me = "biber"; #basename($0);
-
-    qq[
-$me Version: $VERSION
-      \n]
+    qq{
+biber Version: $VERSION
+      \n}
 }
 
 sub usage {
-    my $me = "biber"; #basename($0);
-
     qq{
-Usage:  $me file.aux
+Usage:  biber file.aux
         Creates file.bbl
 
-        $me -d foo.bib file.aux
+        biber -d foo.bib file.aux
         Creates file.bbl from entries in foo.bib and the datafiles 
         listed in file.aux
 
-        $me -d foo.bib,bar.xml -a
+        biber -d foo.bib,bar.xml -a
         Creates foo.bbl from all entries in foo.bib and bar.xml
 
 Options:
@@ -180,9 +243,9 @@ Options:
                          Don't use this unless you truly understand what it means.
   --version|-v           Display version number.
   --mincrossrefs|-m <n>  Set threshold for crossrefs.
-  --fastsort|-f          Use Perl’s sort instead of Unicode::Collate for sorting.
-  --locale|-l [locale]   Set the locale to be used for sorting with option --fastsort
-  --collate|-C           Sort with Unicode::Collate
+  --fastsort|-f          Use Perl’s sort instead of Unicode::Collate for sorting (TRUE).
+  --locale|-l [locale]   Set the locale to be used for sorting with built-in sort function.
+  --collate|-C           Sort with Unicode::Collate instead of the built-in sort function.
   --collate_options|-c [options] 
                          Options to pass to the Unicode::Collate object used for sorting
                          (default is 'level => 2, table => latinkeys.txt'). 
@@ -198,10 +261,12 @@ Options:
                          Specify the encoding of the bib file(s). The bbl file 
                          will also have this encoding when --unicodebbl is false.
                          See "perldoc Encode::Supported" for a list of supported encodings.
-  --validate|-V          Schema Validate both the <basename>.bcf biblatex control file
-                         and biblatexml bib files (if used). Dies on validation error.
+  --validate|-V          Schema validate both the <basename>.bcf biblatex control file
+                         and the BibLateXML files (if used). Dies on validation error.
   --debug|-D             Turn on debugging for biber.
-  --quiet|-q             Turn warnings off.
+  --quiet|-q             Turn infos and warnings off.
+  --nolog                Do not write any logfile.
+  --onlylog              Do not write any message to screen.
   --wraplines|-w         Wrap lines in the bbl file.
     \n}
 }

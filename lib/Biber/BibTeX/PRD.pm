@@ -8,6 +8,8 @@ use Parse::RecDescent;
 use Regexp::Common qw{ balanced };
 use Biber::BibTeX::Parser;
 use File::Spec;
+use Log::Log4perl qw(:no_extra_logdie_message);
+my $logger = Log::Log4perl::get_logger('main');
 
 sub _bibtex_prd_parse {
 
@@ -33,13 +35,13 @@ sub _bibtex_prd_parse {
     };
 
     my $bib = IO::File->new( $filename, "<$mode" )
-        or croak "Failed to open $filename : $!";
+        or $logger->logcroak("Failed to open $filename : $!");
 
     my $btparser = Biber::BibTeX::Parser->new 
-        or croak "Cannot create Biber::BibTeX::Parser object: $!";
+        or $logger->logcroak("Cannot create Biber::BibTeX::Parser object: $!");
     
     my $bf       = $btparser->BibFile(<$bib>) 
-        or croak "Can't parse file $filename : Are you certain it is a BibTeX file?\n\t$!";
+        or $logger->logcroak("Can't parse file $filename : Are you certain it is a BibTeX file?\n\t$!");
     
     close $bib;
 
@@ -69,8 +71,7 @@ sub _bibtex_prd_parse {
                 if ( $bibentries{$origkey} or $bibentries{$key}) {
                     $self->{errors}++;
                     my (undef,undef,$f) = File::Spec->splitpath( $filename );
-                    print "Repeated entry---key $origkey in file $f\nI'm skipping whatever remains of this entry\n"
-                        unless $self->config('quiet');
+                    $logger->warn("Repeated entry---key $origkey in file $f\nI'm skipping whatever remains of this entry");
                     next;
                 }
 
@@ -85,7 +86,7 @@ sub _bibtex_prd_parse {
 
     foreach my $key ( @localkeys ) {
 
-        print "Processing $key\n" if $self->config('debug');
+        $logger->debug("Processing entry '$key'");
 
         foreach my $alias (keys %ALIASES) {
 

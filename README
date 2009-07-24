@@ -1,6 +1,6 @@
 ==========================
 
-    BIBER Version 0.4.2
+    BIBER Version 0.4.3
 
 ==========================
 
@@ -17,6 +17,8 @@ REQUIREMENTS
 biber requires the following CPAN modules:
     
     * Readonly (but Readonly::XS is highly recommended)
+    * List::AllUtils
+    * Log::Log4perl
     
     For parsing bibtex files, you need either 
     * Text::BibTeX (strongly recommended). 
