@@ -31,6 +31,7 @@ GetOptions(
     'allentries|a!',
     'validate|V!',
     'debug|D!',
+    'trace|T!',
     'quiet|q',
     'nolog!', 
     'onlylog!',
@@ -65,7 +66,9 @@ my $biber = Biber->new($opts);
 
 # Setting the logging level of Log::Log4perl
 my $LOGLEVEL;
-if ($biber->config('debug')) {
+if ($biber->config('trace')) {
+    $LOGLEVEL = 'TRACE'
+} elsif ($biber->config('debug')) {
     $LOGLEVEL = 'DEBUG'
 } elsif ($biber->config('quiet')) {
     $LOGLEVEL = 'ERROR'
@@ -153,9 +156,11 @@ else {
     }
 }
 
-if ($biber->config('debug')) {
-    $biber->_dump('biber.dump0');
-    $logger->debug("Dumped initial biber object for debugging in file biber.dump0")
+if ($biber->config('trace')) {
+    $logger->trace("\n###########################################################\n",
+                     "############# Dump of initial biber object: ###############\n",
+                   $biber->_stringdump, 
+                   "\n###########################################################")
 }
 
 #=====================================================
@@ -181,16 +186,20 @@ foreach my $bib (@{ $biber->config('bibdata') }) {
     }
 }
 
-if ($biber->config('debug')) {
-    $biber->_dump('biber.dump1');
-    $logger->debug("Dumped postparse biber object for debugging in file biber.dump1")
+if ($biber->config('trace')) {
+    $logger->trace("\n###########################################################\n",
+                     "############# Dump of post-parse biber object: ############\n",
+                   $biber->_stringdump, 
+                   "\n###########################################################")
 }
 
 $biber->prepare;
 
-if ($biber->config('debug')) {
-    $biber->_dump('biber.dump2');
-    $logger->debug("Dumped final biber object for debugging in file biber.dump2")
+if ($biber->config('trace')) {
+    $logger->trace("\n###########################################################\n",
+                     "############# Dump of final biber object: #################\n",
+                   $biber->_stringdump, 
+                   "\n###########################################################")
 }
 
 if ($biber->config('outfile')) {

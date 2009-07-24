@@ -1611,19 +1611,25 @@ EOF
     return
 }
 
-=head2 _dump
+=head2 _filedump and _stringdump
 
     Dump the biber object with Data::Dump for debugging
 
 =cut
 
-sub _dump {
+sub _filedump {
     my ($self, $file) = @_;
-    require Data::Dump or carp;
+    require Data::Dump or carp "Module Data::Dump required for debugging";
     my $fh = IO::File->new($file, '>') or croak "Can't open file $file for writing";
     print $fh Data::Dump::pp($self);
     close $fh;
     return
+}
+
+sub _stringdump {
+    my $self = shift ;
+    require Data::Dump or carp "Module Data::Dump required for debugging";
+    return Data::Dump::pp($self);
 }
 
 =head1 AUTHORS

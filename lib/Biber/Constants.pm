@@ -47,6 +47,7 @@ our %CONFIG_DEFAULT = (
   allentries =>  0,
   useprd =>  0,
   debug =>  0,
+  trace =>  0,
   quiet => 0,
   nolog => 0,
   wraplines => 0,
