@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 20;
+use Test::More tests => 28;
 
 use Biber::Utils;
 use Log::Log4perl qw(:easy);
@@ -105,6 +105,37 @@ my $nameD =
  nameinitstring => 'Ṣāliḥ_A' } ;
 
 is_deeply(parsename('al-Ṣāliḥ, ʿAbdallāh'), $nameD, 'parsename 4') ;
+
+my $nameE =
+   {  firstname => 'Jean Charles Gabriel', 
+       lastname => 'Vallée Poussin', 
+         prefix => 'de la', 
+         suffix => undef, 
+     namestring => 'de la Vallée Poussin, Jean Charles Gabriel',
+ nameinitstring => 'Vallée_Poussin_JCG' } ;
+my $nameEb =
+   {  firstname => 'Jean Charles Gabriel', 
+       lastname => 'Poussin', 
+         prefix => undef, 
+         suffix => undef, 
+     namestring => 'Poussin, Jean Charles Gabriel',
+ nameinitstring => 'Poussin_JCG' } ;
+my $nameEc =
+   {  firstname => 'Jean Charles', 
+       lastname => 'Poussin Lecoq', 
+         prefix => undef, 
+         suffix => undef, 
+     namestring => 'Poussin Lecoq, Jean Charles',
+ nameinitstring => 'Poussin_Lecoq_JC' } ;
+ 
+is_deeply(parsename('Jean Charles Gabriel de la Vallée Poussin'), $nameE, 'parsename E1');
+is_deeply(parsename('{Jean Charles Gabriel} de la Vallée Poussin'), $nameE, 'parsename E2');
+is_deeply(parsename('Jean Charles Gabriel {de la} Vallée Poussin'), $nameE, 'parsename E3');
+is_deeply(parsename('Jean Charles Gabriel de la {Vallée Poussin}'), $nameE, 'parsename E4');
+is_deeply(parsename('{Jean Charles Gabriel} de la {Vallée Poussin}'), $nameE, 'parsename E5');
+is_deeply(parsename('Jean Charles Gabriel Poussin'), $nameEb, 'parsename E6');
+is_deeply(parsename('{Jean Charles Gabriel} Poussin'), $nameEb, 'parsename E7');
+is_deeply(parsename('Jean Charles {Poussin Lecoq}'), $nameEc, 'parsename E8');
 
 is( getinitials('{\"O}zt{\"u}rk'), '{\"O}.', 'getinitials 1' ) ;
 is( getinitials('{\c{C}}ok {\OE}illet'), '{\c{C}}.~{\OE}.', 'getinitials 2' ) ;
