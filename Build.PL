@@ -16,6 +16,7 @@ my $builder = Module::Build->new(
         'Data::Dump' => 0,
         'File::Slurp'  => 0,
         'List::AllUtils' => 0,
+        'Regexp::Common' => 0,
         'Log::Log4perl' => 0,
         'Readonly' => 0,
         'Text::BibTeX' => 0,
