@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <title>Biber: BibTeX replacement for biblatex</title>
-<meta name="date" content="2009-03-11T17:48:55+0100"/>
+<meta name="date" content="2009-07-23T15:54:05+0200"/>
 <meta name="keywords" content="biber bibtex biblatex bibliography processing unicode xml dbxml"/>
 <meta name="description" content="Biber is a BibTeX replacement for users of biblatex, written in Perl"/>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
@@ -58,9 +58,9 @@ biblatex, which provides a powerful and flexible macro interface for authors of 
 rely on BibTeX. For maximal portability, the current version
 includes a Pure Perl BibTeX parser with a Parse::RecDescent grammar, but
 if available it will use the much faster 
-<a href="http://search.cpan.org/~ambs/Text-BibTeX-0.38/">Text::BibTeX</a>
+<a href="http://search.cpan.org/dist/Text-BibTeX/">Text::BibTeX</a>
 module which relies on the 
-<a href="http://search.cpan.org/~ambs/btparse-0.35/">btparse C library</a>. 
+<a href="http://search.cpan.org/dist/btparse/">btparse C library</a>. 
 The objective of the first development phase is to have a robust
 and reliable emulation of the BibTeX processor with the biblatex.bst style
 file. In other words, given the same .aux file as input, biber should
@@ -73,7 +73,7 @@ href="http://bibtexml.sourceforge.net/">BibTeXML</a> format, but it is far
 more complex. RelaXNG and W3C schemata are provided, as
 well as a tool for converting .bib files to biblatexml. To parse
 BibLaTeXML databases the Perl module <a
-href="http://search.cpan.org/~pajas/XML-LibXML-1.69/">XML::LibXML</a> is
+href="http://search.cpan.org/dist/XML-LibXML/">XML::LibXML</a> is
 required.  There is also experimental support for <a
 href="http://www.oracle.com/technology/products/berkeley-db/xml/index.html">Berkeley
 DBXML</a> databases (with the included Perl module Sleepycat::DbXml).</p>
@@ -86,8 +86,9 @@ PostgreSQL) <!--, perhaps even <a href="http://www.iinteractive.com/kiokudb/">Ki
 or remote resources via network protocols (such as SRU) might also be
 implemented.</p>
 
-<p>The second beta version of Biber is now 
-<a href="http://sourceforge.net/project/platformdownload.php?group_id=228270">released</a>.</p> 
+<br/>
+<p><strong>Biber v0.4.3 is now 
+<a href="http://sourceforge.net/project/platformdownload.php?group_id=228270">released</a></strong>.</p> 
 
 <p>You are also welcome to fetch the current development version:</p>
 <pre class="small">git clone git://biblatex-biber.git.sourceforge.net/gitroot/biblatex-biber</pre>

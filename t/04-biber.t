@@ -5,6 +5,8 @@ no warnings 'utf8';
 
 use Test::More;
 use Biber;
+use Log::Log4perl qw(:easy);
+Log::Log4perl->easy_init($ERROR);
 
 if ($ENV{TEST_BIBTEX_PRD} or ! eval "require Text::BibTeX; 1") {
     plan( tests => 4);

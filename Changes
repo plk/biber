@@ -1,6 +1,33 @@
-Revision history for biber
+Revision history for Biber
 
-0.4.2   25.4.2009
+0.4.3   23.07.2009
+        * With biblatex option "backend=biber" and biber option --v2
+          the new experimental control file \jobname.bcf is used,
+          which brings in many new features, such as per-entrytype 
+          settings.
+        * More sophisticated/customizable sorting mechanism
+        * More extensive test suite
+        * Improved BibLaTeXML schema
+        * improved handling of BibLaTeXML (enable nested children,
+          formatting elements, nosort elements)
+        * Do not apply latexescape() by default on xml strings
+        * Skip title handling in BibLaTeXML when not existing
+        * Ignore maxline, add option wraplines
+        * Built-in sort is now default (option --fastsort)
+        * Sorting with Unicode::Collate is possible with option --collate
+        * Make tests succeed w/o Parse::RD and Regexp::Common
+        * Don't output date and urldate in the bbl
+        * Add missing fields "date" "urldate" "organization" "annotator"
+          "foreword" and "eventtitle"
+        * Use Data::Dump instead of Data::Dumper for debugging
+        * Fields "library" and "remarks" are now skipped
+        * Bugfix for aliases (e.g. address, school)
+        * Bugfix: process urldate to get urlyear,urlmonth,urlday
+        * Remove illegal value shorttranslator from labelname option
+        * Changed biberdebug option to debug
+        * Changed option inputencoding to bibencoding
+
+0.4.2   25.04.2009
         * New option --inputencoding to handle 8-bit encoded bib files
         * $BIBINPUT environment is now searched
         * Improved parsing of personal names

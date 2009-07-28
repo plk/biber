@@ -3,9 +3,11 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 20;
+use Test::More tests => 28;
 
 use Biber::Utils;
+use Log::Log4perl qw(:easy);
+Log::Log4perl->easy_init($ERROR);
 
 is( normalize_string('"a, b–c: d" ', 1),  'a bc d', 'normalize_string' );
 
@@ -17,16 +19,16 @@ is( normalize_string_underscore('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
 
 is( normalize_string_underscore('{Foo de Bar, Graf Ludwig}', 1), 'Foo_de_Bar_Graf_Ludwig', 'normalize_string_underscore 2');
 
-my @names = ( 
+my $names = [
     { namestring => '\"Askdjksdj, Bsadk Cklsjd', nameinitstring => '\"Askdjksdj, BC' },
     { namestring => 'von Üsakdjskd, Vsajd W\`asdjh', nameinitstring => 'v Üsakdjskd, VW'  },
     { namestring => 'Xaskldjdd, Yajs\x{d}ajks~Z.', nameinitstring => 'Xaskldjdd, YZ'  },
     { namestring => 'Maksjdakj, Nsjahdajsdhj', nameinitstring => 'Maksjdakj, N'  },
-);
+];
 
-is( makenameid(@names), 'Askdjksdj_Bsadk_Cklsjd_von_Üsakdjskd_Vsajd_Wasdjh_Xaskldjdd_Yajsdajks_Z_Maksjdakj_Nsjahdajsdhj', 'makenameid' );
+is( makenameid($names), 'Askdjksdj_Bsadk_Cklsjd_von_Üsakdjskd_Vsajd_Wasdjh_Xaskldjdd_Yajsdajks_Z_Maksjdakj_Nsjahdajsdhj', 'makenameid' );
 
-is( makenameinitid(@names), 'Askdjksdj_BC_v_Üsakdjskd_VW_Xaskldjdd_YZ_Maksjdakj_N', 
+is( makenameinitid($names), 'Askdjksdj_BC_v_Üsakdjskd_VW_Xaskldjdd_YZ_Maksjdakj_N', 
     'makenameinitid' );
 
 is( latexescape('{5}: Joe & Sons: $3.01 + 5% of some_function()'), 
@@ -103,6 +105,37 @@ my $nameD =
  nameinitstring => 'Ṣāliḥ_A' } ;
 
 is_deeply(parsename('al-Ṣāliḥ, ʿAbdallāh'), $nameD, 'parsename 4') ;
+
+my $nameE =
+   {  firstname => 'Jean Charles Gabriel', 
+       lastname => 'Vallée Poussin', 
+         prefix => 'de la', 
+         suffix => undef, 
+     namestring => 'de la Vallée Poussin, Jean Charles Gabriel',
+ nameinitstring => 'Vallée_Poussin_JCG' } ;
+my $nameEb =
+   {  firstname => 'Jean Charles Gabriel', 
+       lastname => 'Poussin', 
+         prefix => undef, 
+         suffix => undef, 
+     namestring => 'Poussin, Jean Charles Gabriel',
+ nameinitstring => 'Poussin_JCG' } ;
+my $nameEc =
+   {  firstname => 'Jean Charles', 
+       lastname => 'Poussin Lecoq', 
+         prefix => undef, 
+         suffix => undef, 
+     namestring => 'Poussin Lecoq, Jean Charles',
+ nameinitstring => 'Poussin_Lecoq_JC' } ;
+ 
+is_deeply(parsename('Jean Charles Gabriel de la Vallée Poussin'), $nameE, 'parsename E1');
+is_deeply(parsename('{Jean Charles Gabriel} de la Vallée Poussin'), $nameE, 'parsename E2');
+is_deeply(parsename('Jean Charles Gabriel {de la} Vallée Poussin'), $nameE, 'parsename E3');
+is_deeply(parsename('Jean Charles Gabriel de la {Vallée Poussin}'), $nameE, 'parsename E4');
+is_deeply(parsename('{Jean Charles Gabriel} de la {Vallée Poussin}'), $nameE, 'parsename E5');
+is_deeply(parsename('Jean Charles Gabriel Poussin'), $nameEb, 'parsename E6');
+is_deeply(parsename('{Jean Charles Gabriel} Poussin'), $nameEb, 'parsename E7');
+is_deeply(parsename('Jean Charles {Poussin Lecoq}'), $nameEc, 'parsename E8');
 
 is( getinitials('{\"O}zt{\"u}rk'), '{\"O}.', 'getinitials 1' ) ;
 is( getinitials('{\c{C}}ok {\OE}illet'), '{\c{C}}.~{\OE}.', 'getinitials 2' ) ;

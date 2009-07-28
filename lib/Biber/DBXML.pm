@@ -5,6 +5,8 @@ use Carp;
 use Cwd;
 use Sleepycat::DbXml 'simple';
 use File::Basename;
+use Log::Log4perl qw(:no_extra_logdie_message);
+my $logger = Log::Log4perl::get_logger('main');
 
 sub dbxml_to_xml {
     my ($self, $dbxmlfile) = @_;
@@ -19,17 +21,17 @@ ENDXML
    ;
     eval {
         my $workingdir = getcwd;
-        chdir( dirname($dbxmlfile) ) or croak "Cannot chdir: $!";
+        chdir( dirname($dbxmlfile) ) or $logger->logcroak("Cannot chdir: $!");
         my $cont = $mgr->openContainer("$collname");
         my $context = $mgr->createQueryContext();
         $context->setNamespace("bib", "http://biblatex-biber.sourceforge.net/biblatexml");
         foreach my $key (@auxcitekeys) {
-            print "Querying dbxml for key $key\n" if $self->config('debug');
+            $logger->debug("Querying dbxml for key $key");
             my $query = 'collection("' . $collname . '")//bib:entry[@id="' . $key . '"]';
             my $results = $mgr->query($query, $context);
             my $ressize = $results->size;
             if ($ressize > 1) {
-                carp "Found $ressize entries for key $key!";
+                $logger->warn("Found $ressize entries for key $key!");
             };
             my $xmlvalue = new XmlValue;
             while ($results->next($xmlvalue)) {
@@ -44,7 +46,7 @@ ENDXML
                 my $xmlvaluex = new XmlValue;
                 while ($resultsx->next($xmlvaluex)) {
                     my $xkey = $xmlvaluex->asString();
-                    print "Adding crossref key $xkey to the stack\n" if $self->config('debug');
+                    $logger->debug("Adding crossref key $xkey to the stack");
                     #FIXME take also care of entryset keys!
                     push @auxcitekeys, $xkey;
                     last
@@ -56,13 +58,11 @@ ENDXML
 
     };
     if (my $e = catch std::exception) {
-        carp "Query failed\n";
-        carp $e->what() . "\n";
-        exit( -1 );
+        $logger->logwarn("Query failed\n", $e->what() );
+        exit ( -1 )
     }
     elsif ($@) {
-        carp "Query failed\n";
-        carp $@;
+        $logger->logwarn("Query failed\n", $@ );
         exit( -1 );
     };
 
