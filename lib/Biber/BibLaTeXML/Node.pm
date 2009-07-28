@@ -6,6 +6,8 @@ use Biber::Constants;
 use Biber::Utils;
 use Data::Dump;
 
+## this returns the title, sorttitle, indextitle and indexsorttitle
+## as a hash ref 
 sub XML::LibXML::NodeList::_biblatex_title_values {
     my $nodelist = shift;
     my $node = $nodelist->get_node(1);

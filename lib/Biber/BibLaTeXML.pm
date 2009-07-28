@@ -172,7 +172,7 @@ sub _parse_biblatexml {
             # displaymode
             my $titledm = $self->get_displaymode($citekey, $titlename);
 
-            my $titlestrings = $bibrecord->findnodes("bib:$titlename")->_biblatex_title_values;
+            my $titlestrings = $bibrecord->_find_biblatex_nodes($self, $titlename, $titledm)->_biblatex_title_values;
 
             $self->{bib}->{$citekey}->{$titlename} = $titlestrings->{'title'};
 
