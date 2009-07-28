@@ -265,18 +265,38 @@ sub _parse_biblatexml {
                                   nameinitstring => $nameinitstr }
                         }
                         # Schema allows <person>text<person>
+                        # If there is no comma in the string,
+                        # we assume it to be like a protected string 
+                        # in BibTeX (i.e. between curly braces),
+                        # otherwise we parse it
                         else {
-                            my $useprefix = $self->getblxoption('useprefix', $citekey);
+                            my $namestr = $person->string_value;
 
-                            push @z, parsename( $person->string_value, {useprefix => $useprefix} )
+                            if ($namestr =~ /,\s+/) {
+                                my $useprefix = $self->getblxoption('useprefix', $citekey);
+                                push @z, parsename( 
+                                     $person->string_value, {useprefix => $useprefix} )
+                            } else {
+                                push @z, 
+                                    { lastname => $namestr, firstname => undef, 
+                                    prefix => undef, suffix => undef,
+                                    namestring => $namestr, 
+                                    nameinitstring => normalize_string_underscore( $namestr ) }
+                            }
                         }
                     } 
                 } 
-                # only one name as string, without <person>
+                # only one name as string, without <person>:
+                # in this case we assume it is not a personal name 
+                # and we take it "as is".
                 else {
-                    my $useprefix = $self->getblxoption('useprefix', $citekey);
+                    my $namestr = $bibrecord->findnodes("bib:$field")->string_value;
 
-                    push @z, parsename( $bibrecord->findnodes("bib:$field")->string_value, {useprefix => $useprefix} )
+                    push @z, 
+                        {   lastname => $namestr, firstname => undef, 
+                            prefix => undef, suffix => undef,
+                            namestring => $namestr, 
+                            nameinitstring => normalize_string_underscore( $namestr ) }
                 };
 
                 if ($bibrecord->exists("bib:$field\[\@andothers='true'\]")) {

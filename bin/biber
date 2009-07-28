@@ -116,8 +116,6 @@ my $l4pconf = qq(
 Log::Log4perl::init(\$l4pconf) ;
 
 # get the logger object
-# TODO : if biber is called with option --nolog then we use the 'screen' logger instead
-# For that we need to turn that appender to OFF
 my $logger  = Log::Log4perl::get_logger('main') ;
 my $screen  = Log::Log4perl::get_logger('screen');
 my $logfile = Log::Log4perl::get_logger('logfile');
