@@ -1,9 +1,12 @@
 use strict;
 use warnings;
 use utf8;
-use Test::More tests => 8;
+use Test::More tests => 9;
 
 use Biber;
+use Log::Log4perl qw(:easy);
+Log::Log4perl->easy_init($ERROR);
+
 my $opts = { displaymode => 'romanized' } ;
 my $biber = Biber->new($opts);
 
@@ -13,7 +16,8 @@ my $bibfile = $biber->config('bibdata')->[0] ;
 $Biber::localoptions{"BulgakovRozenfeld:1983"}{displaymode} = 'original' ;
 $Biber::localoptions{"KiyosiFestschrift"}{displaymode} = 'translated' ;
 
-is($biber->get_displaymode('KiyosiFestschrift')->[0], 'translated', 'getdisplaymode') ;
+is($biber->get_displaymode('Ani:1972')->[0], 'romanized', 'getdisplaymode 1') ;
+is($biber->get_displaymode('KiyosiFestschrift')->[0], 'translated', 'getdisplaymode 2') ;
 
 $biber->parse_biblatexml($bibfile) ;
 
