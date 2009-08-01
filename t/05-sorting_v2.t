@@ -4,7 +4,7 @@ use utf8;
 use Storable qw (dclone);
 no warnings 'utf8';
 
-use Test::More tests => 30;
+use Test::More tests => 35;
 
 use Biber;
 use Log::Log4perl qw(:easy);
@@ -50,6 +50,68 @@ my $pt1         = 'mm0081220aristotle0rhetoric of aristotle';
 my $ps_sc       = 'zs00glashow2sheldon0partial symmetries of weak interactions';
 my $noname      = 'mm00partial symmetries of weak interactions0partial symmetries of weak interactions0196100022';
 my $citeorder   = '1';
+my $lists1      = 'marcel dekker';
+my $lists2      = 'chichester';
+my $lists3      = 'ibm1zzzz';
+my $lists4      = 'ibm2hp1zzzz';
+my $lists5      = 'ibm2hp2sun2sony';
+
+# Testing max/minITEMS with sorting using list fields
+# publisher
+$biber->{config}{biblatex}{global}{sorting_label} =  [
+                                                [
+                                                 {'publisher'    => {}}
+                                                ]
+                                               ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+$biber->prepare;
+is($biber->{bib}{augustine}{sortstring}, $lists1, 'max/minitems test 1 (publisher)' );
+
+# location
+$biber->{config}{biblatex}{global}{sorting_label} =  [
+                                                [
+                                                 {'location'    => {}}
+                                                ]
+                                               ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+$biber->prepare;
+is($biber->{bib}{cotton}{sortstring}, $lists2, 'max/minitems test 2 (location)' );
+
+
+# institution
+$biber->{config}{biblatex}{global}{sorting_label} =  [
+                                                [
+                                                 {'institution'    => {}}
+                                                ]
+                                               ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+$biber->prepare;
+is($biber->{bib}{chiu}{sortstring}, $lists3, 'max/minitems test 3 (institution)' );
+
+# institution with minitems=2
+$biber->{config}{biblatex}{global}{minitems} = 2;
+$biber->{config}{biblatex}{global}{sorting_label} =  [
+                                                [
+                                                 {'institution'    => {}}
+                                                ]
+                                               ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+$biber->prepare;
+is($biber->{bib}{chiu}{sortstring}, $lists4, 'max/minitems test 4 (institution - minitems=2)' );
+
+# institution with maxitems=4, minitems=3
+$biber->{config}{biblatex}{global}{maxitems} = 4;
+$biber->{config}{biblatex}{global}{minitems} = 3;
+$biber->{config}{biblatex}{global}{sorting_label} =  [
+                                                [
+                                                 {'institution'    => {}}
+                                                ]
+                                               ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+$biber->prepare;
+is($biber->{bib}{chiu}{sortstring}, $lists5, 'max/minitems test 5 (institution - maxitems=4/minitems=3)' );
+
+
 
 # nty with implicit default left, 4-digit year sort
 $biber->{config}{biblatex}{global}{sorting_label} =  [
@@ -885,3 +947,5 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
 $biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $citeorder, 'citeorder' );
+
+

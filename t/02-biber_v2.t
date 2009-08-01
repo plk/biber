@@ -29,6 +29,9 @@ stdmodel:ps_sc
 murray
 aristotle:rhetoric
 aristotle:anima
+augustine
+cotton
+chiu
 };
 
 my @allkeys = sort qw{ stdmodel aristotle:poetics vazques-de-parga shore

@@ -62,7 +62,9 @@
         <ref name="labelname"/>
         <ref name="labelyear"/>
         <ref name="maxline"/>
+        <ref name="maxitems"/>
         <ref name="maxnames"/>
+        <ref name="minitems"/>
         <ref name="minnames"/>
         <ref name="singletitle"/>
         <ref name="sortalphaothers"/>
@@ -97,9 +99,11 @@
           <optional>
             <ref name="maxline"/>
           </optional>
+          <ref name="maxitems"/>
           <optional>
             <ref name="maxnames"/>
           </optional>
+          <ref name="minitems"/>
           <optional>
             <ref name="minnames"/>
           </optional>
@@ -463,6 +467,19 @@
       </element>
     </element>
   </define>
+  <define name="maxitems">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>maxitems</value>
+      </element>
+      <element name="bcf:value">
+        <data type="integer"/>
+      </element>
+    </element>
+  </define>
   <define name="maxnames">
     <element name="bcf:option">
       <attribute name="type">
@@ -470,6 +487,19 @@
       </attribute>
       <element name="bcf:key">
         <value>maxnames</value>
+      </element>
+      <element name="bcf:value">
+        <data type="integer"/>
+      </element>
+    </element>
+  </define>
+  <define name="minitems">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>minitems</value>
       </element>
       <element name="bcf:value">
         <data type="integer"/>
