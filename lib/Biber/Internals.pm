@@ -20,7 +20,6 @@ Biber::Internals - Internal methods for processing the bibliographic data
 
 my $logger = Log::Log4perl::get_logger('main');
 
-#TODO $namefield instead of @aut as 2nd argument!
 sub _getnameinitials {
     my ($self, $citekey, $names) = @_;
     my @names = @{$names};
@@ -208,16 +207,22 @@ our $sorting_sep = '0';
 our $dispatch_sorting = {
              '0000'         =>  \&_sort_0000,
              '9999'         =>  \&_sort_9999,
+             'address'      =>  \&_sort_address,
              'author'       =>  \&_sort_author,
              'citeorder'    =>  \&_sort_citeorder,
              'debug'        =>  \&_sort_debug,
              'editor'       =>  \&_sort_editor,
              'extraalpha'   =>  \&_sort_extraalpha,
              'issuetitle'   =>  \&_sort_issuetitle,
+             'institution'  =>  \&_sort_institution,
              'journal'      =>  \&_sort_journal,
              'labelalpha'   =>  \&_sort_labelalpha,
+             'location'     =>  \&_sort_location,
              'mm'           =>  \&_sort_mm,
+             'organization' =>  \&_sort_organization,
              'presort'      =>  \&_sort_presort,
+             'publisher'    =>  \&_sort_publisher,
+             'school'       =>  \&_sort_school,
              'sortkey'      =>  \&_sort_sortkey,
              'sortname'     =>  \&_sort_sortname,
              'sorttitle'    =>  \&_sort_sorttitle,
@@ -228,7 +233,8 @@ our $dispatch_sorting = {
              'year'         =>  \&_sort_year,
 };
 
-# Main sorting dispath method
+
+# Main sorting dispatch method
 sub _dispatch_sorting {
   my ($self, $sortfield, $citekey, $sortelementattributes) = @_;
   return &{$dispatch_sorting->{$sortfield}}($self, $citekey, $sortelementattributes);
@@ -278,6 +284,17 @@ sub _sort_0000 {
 
 sub _sort_9999 {
   return '9999';
+}
+
+sub _sort_address {
+  my ($self, $citekey, $sortelementattributes) = @_;
+  my $be = $self->{bib}{$citekey};
+  if ($be->{address}) {
+    return $self->_liststring($citekey, 'address');
+  }
+  else {
+    return '';
+  }
 }
 
 sub _sort_author {
@@ -334,6 +351,17 @@ sub _sort_extraalpha {
   }
 }
 
+sub _sort_institution {
+  my ($self, $citekey, $sortelementattributes) = @_;
+  my $be = $self->{bib}{$citekey};
+  if ($be->{institution}) {
+    return $self->_liststring($citekey, 'institution');
+  }
+  else {
+    return '';
+  }
+}
+
 sub _sort_issuetitle {
   my ($self, $citekey, $sortelementattributes) = @_;
   my $be = $self->{bib}{$citekey};
@@ -373,10 +401,54 @@ sub _sort_labelalpha {
   }
 }
 
+sub _sort_location {
+  my ($self, $citekey, $sortelementattributes) = @_;
+  my $be = $self->{bib}{$citekey};
+  if ($be->{location}) {
+    return $self->_liststring($citekey, 'location');
+  }
+  else {
+    return '';
+  }
+}
+
+sub _sort_organization {
+  my ($self, $citekey, $sortelementattributes) = @_;
+  my $be = $self->{bib}{$citekey};
+  if ($be->{organization}) {
+    return $self->_liststring($citekey, 'organization');
+  }
+  else {
+    return '';
+  }
+}
+
 sub _sort_presort {
   my ($self, $citekey, $sortelementattributes) = @_;
   my $be = $self->{bib}{$citekey};
   return $be->{presort} ? $be->{presort} : '';
+}
+
+sub _sort_publisher {
+  my ($self, $citekey, $sortelementattributes) = @_;
+  my $be = $self->{bib}{$citekey};
+  if ($be->{publisher}) {
+    return $self->_liststring($citekey, 'publisher');
+  }
+  else {
+    return '';
+  }
+}
+
+sub _sort_school {
+  my ($self, $citekey, $sortelementattributes) = @_;
+  my $be = $self->{bib}{$citekey};
+  if ($be->{school}) {
+    return $self->_liststring($citekey, 'school');
+  }
+  else {
+    return '';
+  }
 }
 
 sub _sort_sortkey {
@@ -575,23 +647,47 @@ sub _namestring {
     $truncated = 1;
     @names = splice(@names, 0, $self->getblxoption('minnames', $citekey) );
   }
- ;
+
   foreach ( @names ) {
-    $str .= $_->{prefix} . "2"
+    $str .= $_->{prefix} . '2'
       if ( $_->{prefix} and $self->getblxoption('useprefix', $citekey ) );
-    $str .= $_->{lastname} . "2";
-    $str .= $_->{firstname} . "2" if $_->{firstname};
+    $str .= $_->{lastname} . '2';
+    $str .= $_->{firstname} . '2' if $_->{firstname};
     $str .= $_->{suffix} if $_->{suffix};
     $str =~ s/2\z//xms;
-    $str .= "1";
+    $str .= '1';
   }
- ;
+
   $str =~ s/\s+1/1/gxms;
   $str =~ s/1\z//xms;
   $str = normalize_string($str, $self->_nodecode($citekey));
-  $str .= "1zzzz" if $truncated;
-  return $str
+  $str .= '1zzzz' if $truncated;
+  return $str;
 }
+
+sub _liststring {
+  my ( $self, $citekey, $field ) = @_;
+  my $be = $self->{bib}{$citekey};
+  my @items = @{$be->{$field}};
+  my $str = '';
+  my $truncated = 0;
+  ## perform truncation according to options minitems, maxitems
+  if ( $#items + 1 > $self->getblxoption('maxitems', $citekey) ) {
+    $truncated = 1;
+    @items = splice(@items, 0, $self->getblxoption('minitems', $citekey) );
+  }
+
+  # separate the items by a string to give some structure
+  $str = join('2', @items);
+  $str .= '1';
+
+  $str =~ s/\s+1/1/gxms;
+  $str =~ s/1\z//xms;
+  $str = normalize_string($str, $self->_nodecode($citekey));
+  $str .= '1zzzz' if $truncated;
+  return $str;
+}
+
 
 #=====================================================
 # OUTPUT SUBS

@@ -31,7 +31,9 @@ start =
       labelyear,
       locale,
       maxline,
+      maxitems,
       maxnames,
+      minitems,
       minnames,
       singletitle,
       sortalphaothers,
@@ -51,7 +53,9 @@ start =
       labelname?,
       labelyear?,
       maxline?,
+      maxitems,
       maxnames?,
+      minitems,
       minnames?,
       singletitle?,
       sortalphaothers?,
@@ -176,10 +180,22 @@ uniquename =
     element bcf:key { "uniquename" },
     element bcf:value { "0" | "1" }
   }
+maxitems =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "maxitems" },
+    element bcf:value { xsd:integer }
+  }
 maxnames =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "maxnames" },
+    element bcf:value { xsd:integer }
+  }
+minitems =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "minitems" },
     element bcf:value { xsd:integer }
   }
 minnames =

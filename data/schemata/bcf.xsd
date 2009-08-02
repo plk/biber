@@ -38,7 +38,9 @@
               <xs:group ref="bcf:labelname"/>
               <xs:group ref="bcf:labelyear"/>
               <xs:group ref="bcf:maxline"/>
+              <xs:group ref="bcf:maxitems"/>
               <xs:group ref="bcf:maxnames"/>
+              <xs:group ref="bcf:minitems"/>
               <xs:group ref="bcf:minnames"/>
               <xs:group ref="bcf:singletitle"/>
               <xs:group ref="bcf:sortalphaothers"/>
@@ -74,7 +76,9 @@
               <xs:group minOccurs="0" ref="bcf:labelname"/>
               <xs:group minOccurs="0" ref="bcf:labelyear"/>
               <xs:group minOccurs="0" ref="bcf:maxline"/>
+              <xs:group ref="bcf:maxitems"/>
               <xs:group minOccurs="0" ref="bcf:maxnames"/>
+              <xs:group ref="bcf:minitems"/>
               <xs:group minOccurs="0" ref="bcf:minnames"/>
               <xs:group minOccurs="0" ref="bcf:singletitle"/>
               <xs:group minOccurs="0" ref="bcf:sortalphaothers"/>
@@ -517,6 +521,31 @@
       </xs:element>
     </xs:sequence>
   </xs:group>
+  <xs:group name="maxitems">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="maxitems"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value" type="xs:integer"/>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
   <xs:group name="maxnames">
     <xs:sequence>
       <xs:element name="option">
@@ -526,6 +555,31 @@
               <xs:simpleType>
                 <xs:restriction base="xs:token">
                   <xs:enumeration value="maxnames"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value" type="xs:integer"/>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="minitems">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="minitems"/>
                 </xs:restriction>
               </xs:simpleType>
             </xs:element>
