@@ -74,9 +74,15 @@ More information is available at:
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2009 François Charette
+Copyright (C) 2009 François Charette and Philip Kime
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+This program is free software; you can redistribute it and/or
+modify it under the terms of either:
+
+  * the GNU General Public License as published by the Free
+  Software Foundation; either version 1, or (at your option) any
+  later version, or
+
+  * the Artistic License version 2.0.
 
 ==========================
