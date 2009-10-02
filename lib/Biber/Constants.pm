@@ -199,6 +199,8 @@ __END__
 
 =pod
 
+=encoding utf-8
+
 =head1 NAME
 
 Biber::Constants - global constants for biber

@@ -175,6 +175,8 @@ __END__
 
 =pod
 
+=encoding utf-8
+
 =head1 NAME
 
 Biber::BibLaTeXML::Node - internal methods to extract and reformat data from BibLaTeXML fields

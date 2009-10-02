@@ -173,6 +173,8 @@ __END__
 
 =pod
 
+=encoding utf-8
+
 =head1 NAME
 
 Biber::BibTeX - parse a bib database with Text::BibTeX

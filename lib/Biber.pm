@@ -16,6 +16,8 @@ use Log::Log4perl qw(:no_extra_logdie_message);
 use base 'Biber::Internals';
 our @ISA;
 
+=encoding utf-8
+
 =head1 NAME
 
 Biber - main module for biber, a bibtex replacement for users of biblatex

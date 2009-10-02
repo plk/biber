@@ -1,6 +1,7 @@
 package Biber::BibLaTeXML;
 use strict;
 use warnings;
+no warnings 'once';
 use Carp;
 use XML::LibXML;
 use Biber::BibLaTeXML::Node;
@@ -336,6 +337,8 @@ sub _parse_biblatexml {
 __END__
 
 =pod
+
+=encoding utf-8
 
 =head1 NAME
 

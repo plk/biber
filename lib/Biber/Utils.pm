@@ -13,6 +13,8 @@ use Log::Log4perl qw(:no_extra_logdie_message);
 
 my $logger = Log::Log4perl::get_logger('main');
 
+=encoding utf-8
+
 =head1 NAME
 
 Biber::Utils - Various utility subs used in Biber

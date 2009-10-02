@@ -104,6 +104,8 @@ sub process_entry {
 
 =pod
 
+=encoding utf-8
+
 =head1 NAME
 
 Biber::DBXML - query entries in a Berkeley DBXML database for further processing by biber

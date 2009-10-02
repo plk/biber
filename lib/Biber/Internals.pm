@@ -9,6 +9,8 @@ $Text::Wrap::columns = 80;
 use List::AllUtils qw( :all );
 use Log::Log4perl qw(:no_extra_logdie_message);
 
+=encoding utf-8
+
 =head1 NAME
 
 Biber::Internals - Internal methods for processing the bibliographic data
