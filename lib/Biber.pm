@@ -1421,7 +1421,7 @@ sub postprocess {
     Generate:
 
       * extraalpha
-      * labelyear
+      * extrayear
 
     For use in final sorting and generate final pass sort string
 
@@ -1435,7 +1435,7 @@ sub generate_final_sortinfo {
     if ($Biber::seenauthoryear{$authoryear} > 1) {
       $Biber::seenlabelyear{$authoryear}++;
       if ( $self->getblxoption('labelyear', $citekey) ) {
-        $be->{labelyear} = $Biber::seenlabelyear{$authoryear};
+        $be->{extrayear} = $Biber::seenlabelyear{$authoryear};
       }
       if ( $self->getblxoption('labelalpha', $citekey) ) {
         $be->{extraalpha} = $Biber::seenlabelyear{$authoryear};

@@ -773,6 +773,24 @@ sub _print_biblatex_entry {
       $be->{labelname} = $be->{$be->{labelnamename}};
     }
 
+    # Construct labelyear
+    if (_defined_and_nonempty($be->{date})) {
+      if ($be->{date} =~ m|\A([-\d]+)/([-\d]+)\z|xms) { # A date range
+	my $rfrom = $1; # beginning of range
+	my $rto   = $2; #end of range
+	# get years from dates, if the same, just apply, if not construct with \bibdatedash
+      }
+      else {
+	# construct labelyear
+      }
+      # Either a full ISO-8601 parse or just a pattern match
+    }
+    elsif (_defined_and_nonempty($be->{year})) {
+      $be->{labelyear} = $be->{year};
+    }
+
+
+
     foreach my $namefield (@NAMEFIELDS) {
         next if $SKIPFIELDS{$namefield};
         if ( _defined_and_nonempty($be->{$namefield}) ) {
@@ -822,8 +840,8 @@ sub _print_biblatex_entry {
     if ( $self->getblxoption('labelyear', $citekey) ) {
         my $authoryear = $be->{authoryear};
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
-            $str .= "  \\field{labelyear}{" 
-              . $be->{labelyear} . "}\n";
+            $str .= "  \\field{extrayear}{" 
+              . $be->{extrayear} . "}\n";
         }
     }
 
@@ -902,6 +920,13 @@ sub _print_biblatex_entry {
             my $rf = $be->{$rfield};
             $rf =~ s/[-–]+/\\bibrangedash /g;
             $str .= "  \\field{$rfield}{$rf}\n";
+        }
+    }
+    foreach my $daterfield (@DATERANGEFIELDS) {
+        next if $SKIPFIELDS{$daterfield};
+        if ( _defined_and_nonempty($be->{$daterfield}) ) {
+            my $rf = $be->{$daterfield};
+            $str .= "  \\field{$daterfield}{$rf}\n";
         }
     }
     foreach my $vfield (@VERBATIMFIELDS) {

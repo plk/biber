@@ -73,7 +73,7 @@ my $stdmodel = {
                             ],
                 'fullhash' => 'GS1',
                 'namehash' => 'GS1',
-                'labelyear' => 1,
+                'extrayear' => 1,
                 'sortstring' => 'mm00glashow2sheldon019610partial symmetries of weak interactions00022',
                 'crossref' => 'stdmodel:glashow',
                 'volume' => '22',

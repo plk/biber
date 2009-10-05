@@ -10,6 +10,7 @@ our @EXPORT = qw{
                   @LISTFIELDS
                   @LITERALFIELDS_BASE
                   @RANGEFIELDS
+                  @DATERANGEFIELDS
                   @VERBATIMFIELDS
                   @TITLEFIELDS
                   @KEYFIELDS
@@ -85,7 +86,8 @@ Readonly::Array our @SKIPFIELDS => qw{ sortname sorttitle presort sortkey
   sortyear library remarks date urldate };
 our %SKIPFIELDS = map { $_ => 1 } @SKIPFIELDS;
 
-Readonly::Array our @RANGEFIELDS     =>  qw{ date origdate eventdate urldate pages };
+Readonly::Array our @RANGEFIELDS     =>  qw{ pages };
+Readonly::Array our @DATERANGEFIELDS =>  qw{ date origdate eventdate urldate };
 Readonly::Array our @VERBATIMFIELDS  =>  qw{ doi eprint file pdf url verba verbb verbc };
 Readonly::Array our @KEYFIELDS  =>   qw{ 
   authortype bookpagination editortype origlanguage pagination
