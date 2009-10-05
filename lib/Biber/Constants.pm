@@ -57,24 +57,24 @@ our %CONFIG_DEFAULT = (
 ### biblatex fields
 
 Readonly::Array our @NAMEFIELDS  =>   qw{
-  author editor shortauthor shorteditor commentator translator redactor 
-  annotator bookauthor introduction foreword afterword holder sortname 
-  namea nameb namec };
+  author editor editora editorb editorc shortauthor shorteditor commentator
+  translator annotator bookauthor introduction foreword afterword
+  holder sortname namea nameb namec };
 
 Readonly::Array our @LISTFIELDS  =>   qw{
   publisher address location school institution organization language origlocation
   origpublisher lista listb listc listd liste listf };
 
 Readonly::Array our @LITERALFIELDS_BASE  =>   qw{
-  abstract addendum annotation chapter date day edition eid howpublished isan isbn
+  abstract addendum annotation chapter edition eid howpublished isan isbn
   ismn isrn issn issue iswc label month nameaddon note number pagetotal part
-  series shorthand shorthandintro shortjournal shortseries eprinttype urlday
-  urlmonth urlyear urldate venue version volume volumes usera userb userc userd
+  series shorthand shorthandintro shortjournal shortseries eprinttype
+  venue version volume volumes usera userb userc userd
   usere userf hyphenation crossref entrysubtype execute gender sortkey sortyear
-  xref
+  xref year
   };
 
-Readonly::Array our @TITLEFIELDS => qw{ title 
+Readonly::Array our @TITLEFIELDS => qw{ title
   subtitle titleaddon shorttitle sorttitle indextitle indexsorttitle
   origtitle issuetitle issuesubtitle maintitle mainsubtitle maintitleaddon
   booktitle booksubtitle booktitleaddon journal journaltitle journalsubtitle
@@ -85,11 +85,12 @@ Readonly::Array our @SKIPFIELDS => qw{ sortname sorttitle presort sortkey
   sortyear library remarks date urldate };
 our %SKIPFIELDS = map { $_ => 1 } @SKIPFIELDS;
 
-Readonly::Array our @RANGEFIELDS     =>  qw{ origyear pages year };
+Readonly::Array our @RANGEFIELDS     =>  qw{ date origdate eventdate urldate pages };
 Readonly::Array our @VERBATIMFIELDS  =>  qw{ doi eprint file pdf url verba verbb verbc };
 Readonly::Array our @KEYFIELDS  =>   qw{ 
-  authortype bookpagination editortype origlanguage pagination 
-  type nameatype namebtype namectype };
+  authortype bookpagination editortype origlanguage pagination
+  type nameatype namebtype namectype editoratype editorbtype editorctype editorclass
+  editoraclass editorbclass editorcclass};
 Readonly::Array our @COMMASEP_FIELDS => qw{ options keywords entryset };
 
 Readonly::Array our @ENTRIESTOSPLIT  =>  ( @NAMEFIELDS, @LISTFIELDS );
