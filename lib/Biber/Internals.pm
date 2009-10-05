@@ -775,15 +775,19 @@ sub _print_biblatex_entry {
 
     # Construct labelyear
     if (_defined_and_nonempty($be->{date})) {
-      if ($be->{date} =~ m|\A([-\d]+)/([-\d]+)\z|xms) { # A date range
-	my $rfrom = $1; # beginning of range
-	my $rto   = $2; #end of range
-	# get years from dates, if the same, just apply, if not construct with \bibdatedash
+      if ($be->{date} =~ m|\A(\d{4})[-\d]*/(\d{4})[-\d]*\z|xms) { # A date range
+        my $rfromyear = $1; # beginning year of range
+        my $rtoyear   = $2; # end year of range
+        if ($rfromyear == $rtoyear) {
+          $be->{labelyear} = $rfromyear;
+        }
+        else {
+          $be->{labelyear} = "$rfromyear\bibdatedash $rtoyear";
+        }
       }
-      else {
-	# construct labelyear
+      elsif ($be->{date} =~ m|\A(\d{4})[-\d]*\z|xms) { # A single date
+        $be->{labelyear} = $1;
       }
-      # Either a full ISO-8601 parse or just a pattern match
     }
     elsif (_defined_and_nonempty($be->{year})) {
       $be->{labelyear} = $be->{year};
