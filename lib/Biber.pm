@@ -1122,26 +1122,23 @@ sub postprocess {
         
 
         ##############################################################
-        # 1a. get day month year from date field if no year is supplied
+        # 1. DATES
         ##############################################################
 
-        if ( $be->{date} && !$be->{year} ) {
-            my $date = $be->{date};
-            $be->{year}  = substr $date, 0, 4;
-            $be->{month} = substr $date, 5, 2 if length $date > 6;
-            $be->{day}   = substr $date, 8, 2 if length $date > 9;
-        }
-        
-        ##############################################################
-        # 1b. get day month year from date field if no year is supplied
-        ##############################################################
+        foreach my $datetype ('', 'orig', 'event', 'url') {
+          if ( $be->{$datetype . 'date'} and not $be->{$datetype . 'year'} ) {
+            my $date_re = qr|(\d{4})-?(\d{2})?-?(\d{2})?|xms;
+            if ($be->{$datetype . 'date'} =~ m|\A$date_re/?(?:$date_re)?|xms) {
+              $be->{$datetype . 'year'}      = $1 if $1;
+              $be->{$datetype . 'month'}     = $2 if $2;
+              $be->{$datetype . 'day'}       = $3 if $3;
+              $be->{$datetype . 'endyear'}   = $4 if $4;
+              $be->{$datetype . 'endmonth'}  = $5 if $5;
+              $be->{$datetype . 'endday'}    = $6 if $6;
+            }
+          }
+        }        
 
-        if ( $be->{urldate} && !$be->{urlyear} ) {
-            my $urldate = $be->{urldate};
-            $be->{urlyear}  = substr $urldate, 0, 4;
-            $be->{urlmonth} = substr $urldate, 5, 2 if length $urldate > 6;
-            $be->{urlday}   = substr $urldate, 8, 2 if length $urldate > 9;
-        }
 
         ##############################################################
         # 2. set local options to override global options for individual entries
