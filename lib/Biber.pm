@@ -1139,7 +1139,6 @@ sub postprocess {
           }
         }        
 
-
         ##############################################################
         # 2. set local options to override global options for individual entries
         ##############################################################

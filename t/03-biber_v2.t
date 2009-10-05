@@ -61,8 +61,8 @@ my $murray1 = q|\entry{murray}{article}{}
   \field{number}{1}
   \field{volume}{14}
   \field{hyphenation}{american}
-  \field{pages}{17\bibrangedash 30}
   \field{year}{1998}
+  \field{pages}{17\bibrangedash 30}
 \endentry
 
 |;
@@ -99,8 +99,8 @@ my $murray2 = q|\entry{murray}{article}{}
   \field{number}{1}
   \field{volume}{14}
   \field{hyphenation}{american}
-  \field{pages}{17\bibrangedash 30}
   \field{year}{1998}
+  \field{pages}{17\bibrangedash 30}
 \endentry
 
 |;
@@ -128,8 +128,8 @@ my $setaksin = q|\entry{set:aksin}{article}{}
   \field{journaltitle}{J.~Organomet. Chem.}
   \field{number}{13}
   \field{volume}{691}
-  \field{pages}{3027\bibrangedash 3036}
   \field{year}{2006}
+  \field{pages}{3027\bibrangedash 3036}
 \endentry
 
 | ;
@@ -147,14 +147,14 @@ my $markey = q|\entry{markey}{online}{}
   \field{title}{Tame the BeaST}
   \field{subtitle}{The B to X of BibTeX}
   \field{annotation}{An \texttt{online} entry for a tutorial. Note the format of the \texttt{date} field (\texttt{yyyy-mm-dd}) in the database file. It is also possible to use the fields \texttt{day}\slash \texttt{month}\slash \texttt{year} instead.}
-  \field{day}{16}
-  \field{month}{10}
-  \field{urlday}{01}
-  \field{urlmonth}{10}
-  \field{urlyear}{2006}
   \field{version}{1.3}
   \field{hyphenation}{american}
   \field{year}{2005}
+  \field{urlyear}{2006}
+  \field{day}{16}
+  \field{urlday}{01}
+  \field{month}{10}
+  \field{urlmonth}{10}
   \verb{url}
   \verb http://tug.ctan.org/tex-archive/info/bibtex/tamethebeast/ttb_en.pdf
   \endverb

@@ -209,7 +209,7 @@ sub _parse_biblatexml {
         } 
         
         # range fields
-        foreach my $field (@RANGEFIELDS @DATERANGEFIELDS) {
+        foreach my $field (@RANGEFIELDS, @DATERANGEFIELDS) {
             if ($bibrecord->exists("bib:$field")) {
                 if ($bibrecord->exists("bib:$field/bib:start")) {
                      my $fieldstart = $bibrecord->findnodes("bib:$field/bib:start")->string_value;

@@ -68,11 +68,13 @@ Readonly::Array our @LISTFIELDS  =>   qw{
 
 Readonly::Array our @LITERALFIELDS_BASE  =>   qw{
   abstract addendum annotation chapter edition eid howpublished isan isbn
-  ismn isrn issn issue iswc label month nameaddon note number pagetotal part
+  ismn isrn issn issue iswc labelnameaddon note number pagetotal part
   series shorthand shorthandintro shortjournal shortseries eprinttype
   venue version volume volumes usera userb userc userd
   usere userf hyphenation crossref entrysubtype execute gender sortkey sortyear
-  xref year
+  xref year origyear eventyear urlyear endyear origendyear eventendyear urlendyear
+  day origday eventday urlday endday origendday eventendday urlendday
+  month origmonth eventmonth urlmonth endmonth origendmonth eventendmonth urlendmonth
   };
 
 Readonly::Array our @TITLEFIELDS => qw{ title
@@ -83,7 +85,7 @@ Readonly::Array our @TITLEFIELDS => qw{ title
 
 # Fields that are used internally by biber but are not passed to the bbl output
 Readonly::Array our @SKIPFIELDS => qw{ sortname sorttitle presort sortkey
-  sortyear library remarks date urldate };
+  sortyear library remarks date urldate eventdate origdate};
 our %SKIPFIELDS = map { $_ => 1 } @SKIPFIELDS;
 
 Readonly::Array our @RANGEFIELDS     =>  qw{ pages };
