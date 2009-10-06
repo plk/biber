@@ -4,7 +4,7 @@ use utf8;
 use Storable qw (dclone);
 no warnings 'utf8';
 
-use Test::More tests => 35;
+use Test::More tests => 36;
 
 use Biber;
 use Log::Log4perl qw(:easy);
@@ -55,6 +55,90 @@ my $lists2      = 'chichester';
 my $lists3      = 'ibm1zzzz';
 my $lists4      = 'ibm2hp1zzzz';
 my $lists5      = 'ibm2hp2sun2sony';
+my $dates1      = '1979001002000000198000400808075006007019240070090192400002005019200200308020003004079003003';
+
+# Testing sorting using various date fields
+$biber->{config}{biblatex}{global}{sorting_label} =  [
+                                                [
+                                                 {'year'       => {}},
+                                                ],
+                                                [
+                                                 {'month'       => {}},
+                                                ],
+                                                [
+                                                 {'day'       => {pad_side => 'right',
+                                                                  pad_width => 7}},
+                                                ],
+                                                [
+                                                 {'endyear'       => {}},
+                                                ],
+                                                [
+                                                 {'endmonth'       => {}},
+                                                ],
+                                                [
+                                                 {'endday'       => {}},
+                                                ],
+                                                [
+                                                 {'origyear'   => {'sort_direction'  => 'descending'}}
+                                                ],
+                                                [
+                                                 {'origmonth'   => {}}
+                                                ],
+                                                [
+                                                 {'origday'   => {}}
+                                                ],
+                                                [
+                                                 {'origendyear'   => {}}
+                                                ],
+                                                [
+                                                 {'origendmonth'   => {}}
+                                                ],
+                                                [
+                                                 {'origendday'   => {}}
+                                                ],
+                                                [
+                                                 {'eventendyear'   => {}}
+                                                ],
+                                                [
+                                                 {'eventendmonth'   => {pad_side => 'left',
+                                                                  pad_width => 4}}
+                                                ],
+                                                [
+                                                 {'eventendday'   => {}}
+                                                ],
+                                                [
+                                                 {'eventyear'   => {'substring_side' => 'left',
+                                                                   'substring_width' => 3}}
+                                                ],
+                                                [
+                                                 {'eventmonth'   => {}}
+                                                ],
+                                                [
+                                                 {'eventday'   => {}}
+                                                ],
+                                                [
+                                                 {'urlendyear'   => {'sort_direction'  => 'descending'}}
+                                                ],
+                                                [
+                                                 {'urlendmonth'   => {}}
+                                                ],
+                                                [
+                                                 {'urlendday'   => {}}
+                                                ],
+                                                [
+                                                 {'urlyear'   => {'substring_side' => 'right',
+                                                                   'substring_width' => 2}}
+                                                ],
+                                                [
+                                                 {'urlmonth'   => {}}
+                                                ],
+                                                [
+                                                 {'urlday'   => {}}
+                                                ],
+                                               ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+$biber->prepare;
+is($biber->{bib}{moraux}{sortstring}, $dates1, 'Very contrived but thorough test of date sorting' );
 
 # Testing max/minITEMS with sorting using list fields
 # publisher
