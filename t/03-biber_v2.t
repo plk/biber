@@ -9,7 +9,7 @@ use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
 if ( eval "require Text::BibTeX; 1") {
-    plan( tests => 9 );
+    plan( tests => 10 );
 } 
 else {
     plan( skip_all => "Text::BibTeX unavailable! Skipping parsing with Biber::BibTeX" );
@@ -176,9 +176,41 @@ my $markey = q|\entry{markey}{online}{}
 
 | ;
 
-is( $biber->_print_biblatex_entry('set:aksin'), $setaksin, 'bbl entry 1' ) ;
+my $jaffe = q|\entry{jaffe}{collection}{}
+  \name{editor}{1}{%
+    {{Jaffé}{J}{Philipp}{P}{}{}{}{}}%
+  }
+  \name{editora}{3}{%
+    {{Loewenfeld}{L}{Samuel}{S}{}{}{}{}}%
+    {{Kaltenbrunner}{K}{Ferdinand}{F}{}{}{}{}}%
+    {{Ewald}{E}{Paul}{P}{}{}{}{}}%
+  }
+  \list{location}{1}{%
+    {Leipzig}%
+  }
+  \strng{namehash}{JP1}
+  \strng{fullhash}{JP1}
+  \field{labelalpha}{Jaf85}
+  \field{sortinit}{J}
+  \count{uniquename}{0}
+  \true{singletitle}
+  \field{title}{Regesta Pontificum Romanorum ab condita ecclesia ad annum post Christum natum \textsc{mcxcviii}}
+  \field{shorttitle}{Regesta Pontificum Romanorum}
+  \field{indextitle}{Regesta Pontificum Romanorum}
+  \field{annotation}{A \texttt{collection} entry with \texttt{edition} and \texttt{volumes} fields. Note the \texttt{editortype} field handling the redactor}
+  \field{edition}{2}
+  \field{volumes}{2}
+  \field{year}{1885}
+  \field{endyear}{1888}
+  \field{editoratype}{redactor}
+  \field{labelyear}{1885\bibdatedash 1888}
+\endentry
 
+|;
+
+is( $biber->_print_biblatex_entry('set:aksin'), $setaksin, 'bbl entry 1' ) ;
 is( $biber->_print_biblatex_entry('markey'), $markey, 'bbl entry 2' ) ;
+is( $biber->_print_biblatex_entry('jaffe'), $jaffe, 'bbl entry 3' ) ;
 
 my $Worman_N = { 'WN2' => 1, 'WN1' => 1 } ;
 

@@ -26,6 +26,7 @@ angenendtsk
 angenendtsa
 stdmodel:glashow
 stdmodel:ps_sc
+jaffe
 moraux
 murray
 aristotle:rhetoric

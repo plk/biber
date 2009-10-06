@@ -185,7 +185,13 @@ our $dispatch_sorting = {
              'citeorder'     =>  [\&_sort_citeorder,     []],
              'day'           =>  [\&_sort_dm,            ['day']],
              'debug'         =>  [\&_sort_debug,         []],
-             'editor'        =>  [\&_sort_editor,        []],
+             'editor'        =>  [\&_sort_editor,        ['editor']],
+             'editora'       =>  [\&_sort_editor,        ['editora']],
+             'editoratype'   =>  [\&_sort_editortype,    ['editoratype']],
+             'editorb'       =>  [\&_sort_editor,        ['editorb']],
+             'editorbtype'   =>  [\&_sort_editortype,    ['editorbtype']],
+             'editorc'       =>  [\&_sort_editor,        ['editorc']],
+             'editorctype'   =>  [\&_sort_editortype,    ['editorctype']],
              'endday'        =>  [\&_sort_dm,            ['endday']],
              'endmonth'      =>  [\&_sort_dm,            ['endmonth']],
              'endyear'       =>  [\&_sort_year,          ['endyear']],
@@ -344,11 +350,30 @@ sub _sort_dm {
   }
 }
 
+# This is a meta-sub which uses the optional arguments to the dispatch code
+# It's done to avoid having many repetitions of almost identical sorting code
+# for the editor roles
 sub _sort_editor {
-  my ($self, $citekey, $sortelementattributes) = @_;
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $ed = (@{$args})[0]; # get editor field
   my $be = $self->{bib}{$citekey};
-  if ($self->getblxoption('useeditor', $citekey) and $be->{editor}) {
-    return $self->_namestring($citekey, 'editor');
+  if ($self->getblxoption('useeditor', $citekey) and $be->{$ed}) {
+    return $self->_namestring($citekey, $ed);
+  }
+  else {
+    return '';
+  }
+}
+
+# This is a meta-sub which uses the optional arguments to the dispatch code
+# It's done to avoid having many repetitions of almost identical sorting code
+# for the editor type roles
+sub _sort_editortype {
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $edtype = (@{$args})[0]; # get editor type field
+  my $be = $self->{bib}{$citekey};
+  if ($self->getblxoption('useeditor', $citekey) and $be->{$edtype}) {
+    return $be->{$edtype};
   }
   else {
     return '';
