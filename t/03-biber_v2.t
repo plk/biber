@@ -9,7 +9,7 @@ use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
 if ( eval "require Text::BibTeX; 1") {
-    plan( tests => 9 );
+    plan( tests => 10 );
 } 
 else {
     plan( skip_all => "Text::BibTeX unavailable! Skipping parsing with Biber::BibTeX" );
@@ -162,9 +162,28 @@ my $markey = q|\entry{markey}{online}{}
 
 | ;
 
-is( $biber->_print_biblatex_entry('set:aksin'), $setaksin, 'bbl entry 1' ) ;
+my $pimentel1 = q|\entry{pimentel00}{thesis}{}
+  \name{author}{1}{%
+    {{Pimentel}{P}{Joseph~J.}{JJ}{}{}{Jr.}{J}}%
+  }
+  \list{institution}{1}{%
+    {University of Michigan}%
+  }
+  \strng{namehash}{PJJ1}
+  \strng{fullhash}{PJJ1}
+  \field{labelalpha}{Pim00}
+  \field{sortinit}{P}
+  \count{uniquename}{0}
+  \true{singletitle}
+  \field{title}{Sociolinguistic Reflections of Privitization and Globalization: The {Arabic} of {Egyptian} newspaper advertisements}
+  \field{year}{2000}
+\endentry
 
+|;
+
+is( $biber->_print_biblatex_entry('set:aksin'), $setaksin, 'bbl entry 1' ) ;
 is( $biber->_print_biblatex_entry('markey'), $markey, 'bbl entry 2' ) ;
+is( $biber->_print_biblatex_entry('pimentel00'), $pimentel1, 'bbl entry 4 - Suffix test' ) ;
 
 my $Worman_N = { 'WN2' => 1, 'WN1' => 1 } ;
 

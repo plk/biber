@@ -175,12 +175,12 @@ sub parsename {
                 $NAMERE
                )
                ,
-               \s+
+               \s*
                ( # suffix
                 $SUFFIXRE
                )
                ,
-               \s+
+               \s*
                ( # first name
                 $NAMERE
                )
