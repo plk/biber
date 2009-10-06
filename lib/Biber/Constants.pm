@@ -31,9 +31,9 @@ our @EXPORT = qw{
               };
 
 # this is the latest <major.minor> version of biblatex.sty
-Readonly::Scalar our $BIBLATEX_VERSION => '0.8';
+Readonly::Scalar our $BIBLATEX_VERSION => '0.9';
 # this is the latest version of the BCF xml format
-Readonly::Scalar our $BCF_VERSION => '0.8f';
+Readonly::Scalar our $BCF_VERSION => '0.9';
 
 our $BIBER_SORT_FINAL = 0;
 
