@@ -38,9 +38,9 @@ jaffe padhye cicero stdmodel:salam reese averroes/hercz murray
 aristotle:physics massa aristotle:anima gillies set kowalik gaonkar springer
 geer hammond wormanx westfahl:space worman set:herrmann augustine gerhardt
 piccato hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro sigfridsson ctan
-baez/online aristotle:rhetoric pines knuth:ct:c moraux cms angenendt angenendtsk loh markey
-cotton vangennepx kant:ku nussbaum nietzsche:ksa1 vangennep knuth:ct angenendtsa
-spiegelberg bertram brandt set:aksin chiu nietzsche:ksa set:yoon maron
+baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms angenendt
+angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1 vangennep knuth:ct
+angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa set:yoon maron
 coleridge } ;
 
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
@@ -72,7 +72,7 @@ my $stdmodel = {
                 'crossref' => 'stdmodel:glashow',
                 'volume' => '22',
                 'labelnamename' => 'author',
-                'labelyear'   => 1,
+                'extrayear'   => 1,
                 'entrytype' => 'set',
                 'title' => 'Partial Symmetries of Weak Interactions',
                 'datatype' => 'bibtex',
@@ -245,6 +245,7 @@ my $kastenholz = q|\entry{kastenholz}{article}{}
   \strng{namehash}{KMAHPH1}
   \strng{fullhash}{KMAHPH1}
   \field{sortinit}{K}
+  \field{labelyear}{2006}
   \count{uniquename}{0}
   \field{title}{Computation of methodology\hyphen independent ionic solvation free energies from molecular simulations}
   \field{subtitle}{I. The electrostatic potential in molecular liquids}

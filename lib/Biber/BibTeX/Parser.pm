@@ -3323,6 +3323,8 @@ __END__
 
 =pod
 
+=encoding utf-8
+
 =head1 NAME
 
 C<Biber::BibTeX::Parser> - A Parse::RecDescent BibTeX parser

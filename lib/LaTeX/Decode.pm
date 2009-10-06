@@ -4,6 +4,7 @@ use warnings;
 use strict;
 use Readonly;
 
+=encoding utf-8
 
 =head1 NAME
 

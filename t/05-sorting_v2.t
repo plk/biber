@@ -4,7 +4,7 @@ use utf8;
 use Storable qw (dclone);
 no warnings 'utf8';
 
-use Test::More tests => 35;
+use Test::More tests => 37;
 
 use Biber;
 use Log::Log4perl qw(:easy);
@@ -23,12 +23,12 @@ $biber->parse_bibtex($bibfile);
 my $yearoff1    = 'mm00knuth2donald e0computers typesetting0198400000';
 my $yearoff2    = 'mm00knuth2donald e0computers typesetting019800000';
 my $yearoff3    = 'mm00knuth2donald e0computers typesetting0198400000';
-my $yearoff4    = 'mm00knuth2donald e0computers typesetting098600000';
-my $yearoff5    = 'mm00knuth2donald e0computers typesetting0198600000';
+my $yearoff4    = 'mm00knuth2donald e0computers typesetting098400000';
+my $yearoff5    = 'mm00knuth2donald e0computers typesetting0198400000';
 my $yearoff6    = 'mm00knuth2donald e0computers typesetting0801500000';
 my $yearoff7    = 'mm00knuth2donald e0computers typesetting0980100000';
-my $yearoff8    = 'mm00knuth2donald e0computers typesetting0801300000';
-my $yearoff9    = 'mm00knuth2donald e0computers typesetting0901300000';
+my $yearoff8    = 'mm00knuth2donald e0computers typesetting0801500000';
+my $yearoff9    = 'mm00knuth2donald e0computers typesetting0901500000';
 my $vol1        = 'mm00glashow2sheldon0partial symmetries of weak interactions0196102200';
 my $vol2        = 'mm00glashow2sheldon0partial symmetries of weak interactions0196102200000';
 my $vol3        = 'mm00glashow2sheldon0partial symmetries of weak interactions019610aaa22';
@@ -55,6 +55,108 @@ my $lists2      = 'chichester';
 my $lists3      = 'ibm1zzzz';
 my $lists4      = 'ibm2hp1zzzz';
 my $lists5      = 'ibm2hp2sun2sony';
+my $dates1      = '1979001002000000198000400808075006007019240070090192400002005019200200308020003004079003003';
+my $edrole1     = 'redactor0jaffe2philipp0loewenfeld2samuel1kaltenbrunner2ferdinand1ewald2paul';
+
+# Testing editor roles
+$biber->{config}{biblatex}{global}{sorting_label} =  [
+                                                [
+                                                 {'editoratype'     => {}},
+                                                ],
+                                                [
+                                                 {'editor'     => {}},
+                                                ],
+                                                [
+                                                 {'editora'     => {}},
+                                                ],
+                                               ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+$biber->prepare;
+is($biber->{bib}{jaffe}{sortstring}, $edrole1, 'Editor roles' );
+
+
+# Testing sorting using various date fields
+$biber->{config}{biblatex}{global}{sorting_label} =  [
+                                                [
+                                                 {'year'       => {}},
+                                                ],
+                                                [
+                                                 {'month'       => {}},
+                                                ],
+                                                [
+                                                 {'day'       => {pad_side => 'right',
+                                                                  pad_width => 7}},
+                                                ],
+                                                [
+                                                 {'endyear'       => {}},
+                                                ],
+                                                [
+                                                 {'endmonth'       => {}},
+                                                ],
+                                                [
+                                                 {'endday'       => {}},
+                                                ],
+                                                [
+                                                 {'origyear'   => {'sort_direction'  => 'descending'}}
+                                                ],
+                                                [
+                                                 {'origmonth'   => {}}
+                                                ],
+                                                [
+                                                 {'origday'   => {}}
+                                                ],
+                                                [
+                                                 {'origendyear'   => {}}
+                                                ],
+                                                [
+                                                 {'origendmonth'   => {}}
+                                                ],
+                                                [
+                                                 {'origendday'   => {}}
+                                                ],
+                                                [
+                                                 {'eventendyear'   => {}}
+                                                ],
+                                                [
+                                                 {'eventendmonth'   => {pad_side => 'left',
+                                                                  pad_width => 4}}
+                                                ],
+                                                [
+                                                 {'eventendday'   => {}}
+                                                ],
+                                                [
+                                                 {'eventyear'   => {'substring_side' => 'left',
+                                                                   'substring_width' => 3}}
+                                                ],
+                                                [
+                                                 {'eventmonth'   => {}}
+                                                ],
+                                                [
+                                                 {'eventday'   => {}}
+                                                ],
+                                                [
+                                                 {'urlendyear'   => {'sort_direction'  => 'descending'}}
+                                                ],
+                                                [
+                                                 {'urlendmonth'   => {}}
+                                                ],
+                                                [
+                                                 {'urlendday'   => {}}
+                                                ],
+                                                [
+                                                 {'urlyear'   => {'substring_side' => 'right',
+                                                                   'substring_width' => 2}}
+                                                ],
+                                                [
+                                                 {'urlmonth'   => {}}
+                                                ],
+                                                [
+                                                 {'urlday'   => {}}
+                                                ],
+                                               ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+$biber->prepare;
+is($biber->{bib}{moraux}{sortstring}, $dates1, 'Very contrived but thorough test of date sorting' );
 
 # Testing max/minITEMS with sorting using list fields
 # publisher

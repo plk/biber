@@ -13,6 +13,8 @@ use Log::Log4perl qw(:no_extra_logdie_message);
 
 my $logger = Log::Log4perl::get_logger('main');
 
+=encoding utf-8
+
 =head1 NAME
 
 Biber::Utils - Various utility subs used in Biber
@@ -150,34 +152,34 @@ sub parsename {
                /x;
     my $SUFFIXRE = $NAMERE;
     my $NAMESEQRE = qr/ (?:\p{Lu}\S+[\s~]*)+ /x ;
-               
+
     if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}$/ ) 
     { 
-        $logger->debug("Catched namestring of type '{Some protected name string}'");
+        $logger->debug("Caught namestring of type '{Some protected name string}'");
         $namestr = remove_outer($namestr);
         $lastname = $namestr;
     } 
     elsif ( $namestr =~ /[^\\],.+[^\\],/ )    # pre? Lastname, suffix, Firstname
     {
-        $logger->debug("Catched namestring of type 'prefix? Lastname, suffix, Firstname'");
+        $logger->debug("Caught namestring of type 'prefix? Lastname, suffix, Firstname'");
         ( $prefix, $lastname, $suffix, $firstname ) = $namestr =~
-            m/^( # prefix?
+            m/\A( # prefix?
                 $PREFIXRE
                )?
                ( # last name
                 $NAMERE
                )
                ,
-               \s+
+               \s*
                ( # suffix
                 $SUFFIXRE
                )
                ,
-               \s+
+               \s*
                ( # first name
                 $NAMERE
                )
-             $/x;
+             \z/xms;
 
         $lastname =~ s/^{(.+)}$/$1/g;
         $firstname =~ s/^{(.+)}$/$1/g;
@@ -191,7 +193,7 @@ sub parsename {
     }
     elsif ( $namestr =~ /[^\\],/ )   # <pre> Lastname, Firstname
     {
-        $logger->debug("Catched namestring of type 'prefix? Lastname, Firstname'");
+        $logger->debug("Caught namestring of type 'prefix? Lastname, Firstname'");
         ( $prefix, $lastname, $firstname ) = $namestr =~
             m/^( # prefix?
                 $PREFIXRE
@@ -218,7 +220,7 @@ sub parsename {
     {
         if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}.*\s+$RE{balanced}{-parens => '{}'}$/ ) 
         { 
-            $logger->debug("Catched namestring of type '{Firstname} prefix? {Lastname}'");
+            $logger->debug("Caught namestring of type '{Firstname} prefix? {Lastname}'");
             ( $firstname, $prefix, $lastname ) = $namestr =~ 
                 m/^( # first name
                     $RE{balanced}{-parens=>'{}'}
@@ -234,7 +236,7 @@ sub parsename {
         } 
         elsif ( $namestr =~ /^.+\s+$RE{balanced}{-parens => '{}'}$/ ) 
         { 
-            $logger->debug("Catched namestring of type 'Firstname prefix? {Lastname}'");
+            $logger->debug("Caught namestring of type 'Firstname prefix? {Lastname}'");
             ( $firstname, $prefix, $lastname ) = $namestr =~ 
                 m/^( # first name
                     $NAMESEQRE
@@ -250,7 +252,7 @@ sub parsename {
         } 
         elsif ( $namestr =~ /^$RE{balanced}{-parens => '{}'}.+$/ ) 
         { 
-            $logger->debug("Catched namestring of type '{Firstname} prefix? Lastname'");
+            $logger->debug("Caught namestring of type '{Firstname} prefix? Lastname'");
             ( $firstname, $prefix, $lastname ) = $namestr =~ 
                 m/^( # first name
                     $RE{balanced}{-parens=>'{}'}
@@ -265,7 +267,7 @@ sub parsename {
                 $/x;
         } 
         else {
-            $logger->debug("Catched namestring of type 'Firstname prefix? Lastname'");
+            $logger->debug("Caught namestring of type 'Firstname prefix? Lastname'");
             ( $firstname, $prefix, $lastname ) = $namestr =~ 
                 m/^( # first name
                     $NAMESEQRE
@@ -293,7 +295,7 @@ sub parsename {
     }
     else 
     {    # Name alone
-        $logger->debug("Catched namestring of type 'Isolated_name_string'");
+        $logger->debug("Caught namestring of type 'Isolated_name_string'");
         $lastname = $namestr;
     }
 
@@ -538,8 +540,18 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 Copyright 2009 François Charette and Philip Kime, all rights reserved.
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+This program is free software; you can redistribute it and/or
+modify it under the terms of either:
+
+=over 4
+
+=item * the GNU General Public License as published by the Free
+Software Foundation; either version 1, or (at your option) any
+later version, or
+
+=item * the Artistic License version 2.0.
+
+=back
 
 =cut
 

@@ -16,6 +16,8 @@ use Log::Log4perl qw(:no_extra_logdie_message);
 use base 'Biber::Internals';
 our @ISA;
 
+=encoding utf-8
+
 =head1 NAME
 
 Biber - main module for biber, a bibtex replacement for users of biblatex
@@ -1117,28 +1119,24 @@ sub postprocess {
         $be->{origkey} = $origkey;
 
         $logger->debug("Postprocessing entry '$citekey'");
-        
+
 
         ##############################################################
-        # 1a. get day month year from date field if no year is supplied
+        # 1. DATES
         ##############################################################
 
-        if ( $be->{date} && !$be->{year} ) {
-            my $date = $be->{date};
-            $be->{year}  = substr $date, 0, 4;
-            $be->{month} = substr $date, 5, 2 if length $date > 6;
-            $be->{day}   = substr $date, 8, 2 if length $date > 9;
-        }
-        
-        ##############################################################
-        # 1b. get day month year from date field if no year is supplied
-        ##############################################################
-
-        if ( $be->{urldate} && !$be->{urlyear} ) {
-            my $urldate = $be->{urldate};
-            $be->{urlyear}  = substr $urldate, 0, 4;
-            $be->{urlmonth} = substr $urldate, 5, 2 if length $urldate > 6;
-            $be->{urlday}   = substr $urldate, 8, 2 if length $urldate > 9;
+        foreach my $datetype ('', 'orig', 'event', 'url') {
+          if ( $be->{$datetype . 'date'} and not $be->{$datetype . 'year'} ) {
+            my $date_re = qr|(\d{4})-?(\d{2})?-?(\d{2})?|xms;
+            if ($be->{$datetype . 'date'} =~ m|\A$date_re/?(?:$date_re)?|xms) {
+              $be->{$datetype . 'year'}      = $1 if $1;
+              $be->{$datetype . 'month'}     = $2 if $2;
+              $be->{$datetype . 'day'}       = $3 if $3;
+              $be->{$datetype . 'endyear'}   = $4 if $4;
+              $be->{$datetype . 'endmonth'}  = $5 if $5;
+              $be->{$datetype . 'endday'}    = $6 if $6;
+            }
+          }
         }
 
         ##############################################################
@@ -1420,7 +1418,7 @@ sub postprocess {
     Generate:
 
       * extraalpha
-      * labelyear
+      * extrayear
 
     For use in final sorting and generate final pass sort string
 
@@ -1434,7 +1432,7 @@ sub generate_final_sortinfo {
     if ($Biber::seenauthoryear{$authoryear} > 1) {
       $Biber::seenlabelyear{$authoryear}++;
       if ( $self->getblxoption('labelyear', $citekey) ) {
-        $be->{labelyear} = $Biber::seenlabelyear{$authoryear};
+        $be->{extrayear} = $Biber::seenlabelyear{$authoryear};
       }
       if ( $self->getblxoption('labelalpha', $citekey) ) {
         $be->{extraalpha} = $Biber::seenlabelyear{$authoryear};
@@ -1630,8 +1628,18 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 Copyright 2009 François Charette and Philip Kime, all rights reserved.
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+This program is free software; you can redistribute it and/or
+modify it under the terms of either:
+
+=over 4
+
+=item * the GNU General Public License as published by the Free
+Software Foundation; either version 1, or (at your option) any
+later version, or
+
+=item * the Artistic License version 2.0.
+
+=back
 
 =cut
 

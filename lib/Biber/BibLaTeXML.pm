@@ -1,6 +1,7 @@
 package Biber::BibLaTeXML;
 use strict;
 use warnings;
+no warnings 'once';
 use Carp;
 use XML::LibXML;
 use Biber::BibLaTeXML::Node;
@@ -212,9 +213,11 @@ sub _parse_biblatexml {
             }
         } 
         
+        # range fields
         # year, origyear
         # TODO support for localyear / origlocalyear and localcalendar
-        foreach my $field ( array_minus(\@RANGEFIELDS, [ 'pages' ]) ) {
+        foreach my $field (@RANGEFIELDS, @DATERANGEFIELDS) {
+            next if $field eq 'pages';
             if ($bibrecord->exists("bib:$field")) {
                 if ($bibrecord->exists("bib:$field/bib:start")) {
                      my $fieldstart = $bibrecord->findnodes("bib:$field/bib:start")->_normalize_string_value;
@@ -365,6 +368,8 @@ __END__
 
 =pod
 
+=encoding utf-8
+
 =head1 NAME
 
 Biber::BibLaTeXML - parse BibLaTeXML database
@@ -388,8 +393,18 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 Copyright 2009 François Charette, all rights reserved.
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+This program is free software; you can redistribute it and/or
+modify it under the terms of either:
+
+=over 4
+
+=item * the GNU General Public License as published by the Free
+Software Foundation; either version 1, or (at your option) any
+later version, or
+
+=item * the Artistic License version 2.0.
+
+=back
 
 =cut
 

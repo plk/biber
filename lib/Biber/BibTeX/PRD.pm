@@ -176,6 +176,8 @@ __END__
 
 =pod
 
+=encoding utf-8
+
 =head1 NAME
 
 Biber::BibTeX::PRD - Pure Perl BibTeX parser with Parse::RecDescent
@@ -200,8 +202,18 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 Copyright 2009 François Charette, all rights reserved.
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+This program is free software; you can redistribute it and/or
+modify it under the terms of either:
+
+=over 4
+
+=item * the GNU General Public License as published by the Free
+Software Foundation; either version 1, or (at your option) any
+later version, or
+
+=item * the Artistic License version 2.0.
+
+=back
 
 =cut
 

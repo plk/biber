@@ -10,6 +10,7 @@ our @EXPORT = qw{
                   @LISTFIELDS
                   @LITERALFIELDS_BASE
                   @RANGEFIELDS
+                  @DATERANGEFIELDS
                   @VERBATIMFIELDS
                   @TITLEFIELDS
                   @KEYFIELDS
@@ -31,9 +32,9 @@ our @EXPORT = qw{
               } ;
 
 # this is the latest <major.minor> version of biblatex.sty
-Readonly::Scalar our $BIBLATEX_VERSION => '0.8';
+Readonly::Scalar our $BIBLATEX_VERSION => '0.9';
 # this is the latest version of the BCF xml format
-Readonly::Scalar our $BCF_VERSION => '0.8f';
+Readonly::Scalar our $BCF_VERSION => '0.9';
 
 our $BIBER_SORT_FINAL = 0;
 
@@ -109,24 +110,26 @@ our %CONFIG_DEFAULT = (
 ### biblatex fields
 
 Readonly::Array our @NAMEFIELDS  =>   qw{
-  author editor shortauthor shorteditor commentator translator redactor 
-  annotator bookauthor introduction foreword afterword holder sortname 
-  namea nameb namec };
+  author editor editora editorb editorc shortauthor shorteditor commentator
+  translator annotator bookauthor introduction foreword afterword
+  holder sortname namea nameb namec };
 
 Readonly::Array our @LISTFIELDS  =>   qw{
   publisher address location school institution organization language origlocation
   origpublisher lista listb listc listd liste listf };
 
 Readonly::Array our @LITERALFIELDS_BASE  =>   qw{
-  abstract addendum annotation chapter date day edition eid howpublished isan isbn
-  ismn isrn issn issue iswc label month nameaddon note number pagetotal part
-  series shorthand shorthandintro shortjournal shortseries eprinttype urlday
-  urlmonth urlyear urldate venue version volume volumes usera userb userc userd
+  abstract addendum annotation chapter edition eid howpublished isan isbn
+  ismn isrn issn issue iswc labelnameaddon note number pagetotal part
+  series shorthand shorthandintro shortjournal shortseries eprinttype
+  venue version volume volumes usera userb userc userd
   usere userf hyphenation crossref entrysubtype execute gender sortkey sortyear
-  xref
+  xref year origyear eventyear urlyear endyear origendyear eventendyear urlendyear
+  day origday eventday urlday endday origendday eventendday urlendday
+  month origmonth eventmonth urlmonth endmonth origendmonth eventendmonth urlendmonth
   };
 
-Readonly::Array our @TITLEFIELDS => qw{ title 
+Readonly::Array our @TITLEFIELDS => qw{ title
   subtitle titleaddon shorttitle sorttitle indextitle indexsorttitle
   origtitle issuetitle issuesubtitle maintitle mainsubtitle maintitleaddon
   booktitle booksubtitle booktitleaddon journal journaltitle journalsubtitle
@@ -134,14 +137,16 @@ Readonly::Array our @TITLEFIELDS => qw{ title
 
 # Fields that are used internally by biber but are not passed to the bbl output
 Readonly::Array our @SKIPFIELDS => qw{ sortname sorttitle presort sortkey
-  sortyear library remarks date urldate };
+  sortyear library remarks date urldate eventdate origdate};
 our %SKIPFIELDS = map { $_ => 1 } @SKIPFIELDS;
 
-Readonly::Array our @RANGEFIELDS     =>  qw{ origyear pages year };
+Readonly::Array our @RANGEFIELDS     =>  qw{ pages };
+Readonly::Array our @DATERANGEFIELDS =>  qw{ date origdate eventdate urldate };
 Readonly::Array our @VERBATIMFIELDS  =>  qw{ doi eprint file pdf url verba verbb verbc };
 Readonly::Array our @KEYFIELDS  =>   qw{ 
-  authortype bookpagination editortype origlanguage pagination 
-  type nameatype namebtype namectype };
+  authortype bookpagination editortype origlanguage pagination
+  type nameatype namebtype namectype editoratype editorbtype editorctype editorclass
+  editoraclass editorbclass editorcclass};
 Readonly::Array our @COMMASEP_FIELDS => qw{ options keywords entryset };
 
 Readonly::Array our @ENTRIESTOSPLIT  =>  ( @NAMEFIELDS, @LISTFIELDS );
@@ -258,6 +263,8 @@ __END__
 
 =pod
 
+=encoding utf-8
+
 =head1 NAME
 
 Biber::Constants - global constants for biber
@@ -276,8 +283,18 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 Copyright 2009 François Charette and Philip Kime, all rights reserved.
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+This program is free software; you can redistribute it and/or
+modify it under the terms of either:
+
+=over 4
+
+=item * the GNU General Public License as published by the Free
+Software Foundation; either version 1, or (at your option) any
+later version, or
+
+=item * the Artistic License version 2.0.
+
+=back
 
 =cut
 

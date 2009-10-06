@@ -9,6 +9,8 @@ $Text::Wrap::columns = 80;
 use List::AllUtils qw( :all );
 use Log::Log4perl qw(:no_extra_logdie_message);
 
+=encoding utf-8
+
 =head1 NAME
 
 Biber::Internals - Internal methods for processing the bibliographic data
@@ -204,40 +206,74 @@ sub get_displaymode {
 our $sorting_sep = '0';
 
 # The keys are defined by BibLaTeX and passed in the control file
+# The value is an array pointer, first element is a code pointer, second is
+# a pointer to extra arguments to the code. This is to make code re-use possible
+# so the sorting can share code for similar things.
 our $dispatch_sorting = {
-             '0000'         =>  \&_sort_0000,
-             '9999'         =>  \&_sort_9999,
-             'address'      =>  \&_sort_address,
-             'author'       =>  \&_sort_author,
-             'citeorder'    =>  \&_sort_citeorder,
-             'debug'        =>  \&_sort_debug,
-             'editor'       =>  \&_sort_editor,
-             'extraalpha'   =>  \&_sort_extraalpha,
-             'issuetitle'   =>  \&_sort_issuetitle,
-             'institution'  =>  \&_sort_institution,
-             'journal'      =>  \&_sort_journal,
-             'labelalpha'   =>  \&_sort_labelalpha,
-             'location'     =>  \&_sort_location,
-             'mm'           =>  \&_sort_mm,
-             'organization' =>  \&_sort_organization,
-             'presort'      =>  \&_sort_presort,
-             'publisher'    =>  \&_sort_publisher,
-             'school'       =>  \&_sort_school,
-             'sortkey'      =>  \&_sort_sortkey,
-             'sortname'     =>  \&_sort_sortname,
-             'sorttitle'    =>  \&_sort_sorttitle,
-             'sortyear'     =>  \&_sort_sortyear,
-             'title'        =>  \&_sort_title,
-             'translator'   =>  \&_sort_translator,
-             'volume'       =>  \&_sort_volume,
-             'year'         =>  \&_sort_year,
+             '0000'          =>  [\&_sort_0000,          []],
+             '9999'          =>  [\&_sort_9999,          []],
+             'address'       =>  [\&_sort_place,         ['place']],
+             'author'        =>  [\&_sort_author,        []],
+             'citeorder'     =>  [\&_sort_citeorder,     []],
+             'day'           =>  [\&_sort_dm,            ['day']],
+             'debug'         =>  [\&_sort_debug,         []],
+             'editor'        =>  [\&_sort_editor,        ['editor']],
+             'editora'       =>  [\&_sort_editor,        ['editora']],
+             'editoratype'   =>  [\&_sort_editortype,    ['editoratype']],
+             'editorb'       =>  [\&_sort_editor,        ['editorb']],
+             'editorbtype'   =>  [\&_sort_editortype,    ['editorbtype']],
+             'editorc'       =>  [\&_sort_editor,        ['editorc']],
+             'editorctype'   =>  [\&_sort_editortype,    ['editorctype']],
+             'endday'        =>  [\&_sort_dm,            ['endday']],
+             'endmonth'      =>  [\&_sort_dm,            ['endmonth']],
+             'endyear'       =>  [\&_sort_year,          ['endyear']],
+             'eventday'      =>  [\&_sort_dm,            ['eventday']],
+             'eventendday'   =>  [\&_sort_dm,            ['eventendday']],
+             'eventendmonth' =>  [\&_sort_dm,            ['eventendmonth']],
+             'eventendyear'  =>  [\&_sort_year,          ['eventendyear']],
+             'eventmonth'    =>  [\&_sort_dm,            ['eventmonth']],
+             'eventyear'     =>  [\&_sort_year,          ['eventyear']],
+             'extraalpha'    =>  [\&_sort_extraalpha,    []],
+             'issuetitle'    =>  [\&_sort_issuetitle,    []],
+             'institution'   =>  [\&_sort_place,         ['institution']],
+             'journal'       =>  [\&_sort_journal,       []],
+             'labelalpha'    =>  [\&_sort_labelalpha,    []],
+             'location'      =>  [\&_sort_place,         ['location']],
+             'mm'            =>  [\&_sort_mm,            []],
+             'month'         =>  [\&_sort_dm,            ['month']],
+             'origday'       =>  [\&_sort_dm,            ['origday']],
+             'origendday'    =>  [\&_sort_dm,            ['origendday']],
+             'origendmonth'  =>  [\&_sort_dm,            ['origendmonth']],
+             'origendyear'   =>  [\&_sort_year,          ['origendyear']],
+             'origmonth'     =>  [\&_sort_dm,            ['origmonth']],
+             'origyear'      =>  [\&_sort_year,          ['origyear']],
+             'organization'  =>  [\&_sort_place,         ['organization']],
+             'presort'       =>  [\&_sort_presort,       []],
+             'publisher'     =>  [\&_sort_publisher,     []],
+             'school'        =>  [\&_sort_place,         ['school']],
+             'sortkey'       =>  [\&_sort_sortkey,       []],
+             'sortname'      =>  [\&_sort_sortname,      []],
+             'sorttitle'     =>  [\&_sort_title,         ['sorttitle']],
+             'sortyear'      =>  [\&_sort_year,          ['sortyear']],
+             'title'         =>  [\&_sort_title,         ['title']],
+             'translator'    =>  [\&_sort_translator,    []],
+             'urlday'        =>  [\&_sort_dm,            ['urlday']],
+             'urlendday'     =>  [\&_sort_dm,            ['urlendday']],
+             'urlendmonth'   =>  [\&_sort_dm,            ['urlendmonth']],
+             'urlendyear'    =>  [\&_sort_year,          ['urlendyear']],
+             'urlmonth'      =>  [\&_sort_dm,            ['urlmonth']],
+             'urlyear'       =>  [\&_sort_year,          ['urlyear']],
+             'volume'        =>  [\&_sort_volume,        []],
+             'year'          =>  [\&_sort_year,          ['year']],
 };
 
 
 # Main sorting dispatch method
 sub _dispatch_sorting {
   my ($self, $sortfield, $citekey, $sortelementattributes) = @_;
-  return &{$dispatch_sorting->{$sortfield}}($self, $citekey, $sortelementattributes);
+  my $code_ref = @{$dispatch_sorting->{$sortfield}}[0];
+  my $code_args_ref = @{$dispatch_sorting->{$sortfield}}[1];
+  return &{$code_ref}($self, $citekey, $sortelementattributes, $code_args_ref);
 }
 
 # Conjunctive set of sorting sets
@@ -286,17 +322,6 @@ sub _sort_9999 {
   return '9999';
 }
 
-sub _sort_address {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  if ($be->{address}) {
-    return $self->_liststring($citekey, 'address');
-  }
-  else {
-    return '';
-  }
-}
-
 sub _sort_author {
   my ($self, $citekey, $sortelementattributes) = @_;
   my $be = $self->{bib}{$citekey};
@@ -318,11 +343,58 @@ sub _sort_debug {
   return $citekey;
 }
 
-sub _sort_editor {
-  my ($self, $citekey, $sortelementattributes) = @_;
+# This is a meta-sub which uses the optional arguments to the dispatch code
+# It's done to avoid having many repetitions of almost identical sorting code
+# for the many date sorting options
+# It deals with day and month fields
+sub _sort_dm {
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $dmtype = (@{$args})[0]; # get day/month field type
   my $be = $self->{bib}{$citekey};
-  if ($self->getblxoption('useeditor', $citekey) and $be->{editor}) {
-    return $self->_namestring($citekey, 'editor');
+  my $default_pad_width = 2;
+  my $default_pad_side = 'left';
+  my $default_pad_char = '0';
+  if ($be->{$dmtype}) {
+    my $pad_width = ($sortelementattributes->{pad_width} or $default_pad_width);
+    my $pad_side = ($sortelementattributes->{pad_side} or $default_pad_side);
+    my $pad_char = ($sortelementattributes->{pad_char} or $default_pad_char);
+    my $pad_length = $pad_width - length($be->{$dmtype});
+    if ($pad_side eq 'left') {
+      return ($pad_char x $pad_length) . $be->{$dmtype};
+    }
+    elsif ($pad_side eq 'right') {
+      return $be->{$dmtype} . ($pad_char x $pad_length);
+    }
+  }
+  else {
+    return '';
+  }
+}
+
+# This is a meta-sub which uses the optional arguments to the dispatch code
+# It's done to avoid having many repetitions of almost identical sorting code
+# for the editor roles
+sub _sort_editor {
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $ed = (@{$args})[0]; # get editor field
+  my $be = $self->{bib}{$citekey};
+  if ($self->getblxoption('useeditor', $citekey) and $be->{$ed}) {
+    return $self->_namestring($citekey, $ed);
+  }
+  else {
+    return '';
+  }
+}
+
+# This is a meta-sub which uses the optional arguments to the dispatch code
+# It's done to avoid having many repetitions of almost identical sorting code
+# for the editor type roles
+sub _sort_editortype {
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $edtype = (@{$args})[0]; # get editor type field
+  my $be = $self->{bib}{$citekey};
+  if ($self->getblxoption('useeditor', $citekey) and $be->{$edtype}) {
+    return $be->{$edtype};
   }
   else {
     return '';
@@ -345,17 +417,6 @@ sub _sort_extraalpha {
     } elsif ($pad_side eq 'right') {
       return $be->{extraalpha} . ($pad_char x $pad_length);
     }
-  }
-  else {
-    return '';
-  }
-}
-
-sub _sort_institution {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  if ($be->{institution}) {
-    return $self->_liststring($citekey, 'institution');
   }
   else {
     return '';
@@ -401,22 +462,15 @@ sub _sort_labelalpha {
   }
 }
 
-sub _sort_location {
-  my ($self, $citekey, $sortelementattributes) = @_;
+# This is a meta-sub which uses the optional arguments to the dispatch code
+# It's done to avoid having many repetitions of almost identical sorting code
+# for the place (address/location/institution etc.) sorting options
+sub _sort_place {
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $pltype = (@{$args})[0]; # get place field type
   my $be = $self->{bib}{$citekey};
-  if ($be->{location}) {
-    return $self->_liststring($citekey, 'location');
-  }
-  else {
-    return '';
-  }
-}
-
-sub _sort_organization {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  if ($be->{organization}) {
-    return $self->_liststring($citekey, 'organization');
+  if ($be->{$pltype}) {
+    return $self->_liststring($citekey, $pltype);
   }
   else {
     return '';
@@ -434,17 +488,6 @@ sub _sort_publisher {
   my $be = $self->{bib}{$citekey};
   if ($be->{publisher}) {
     return $self->_liststring($citekey, 'publisher');
-  }
-  else {
-    return '';
-  }
-}
-
-sub _sort_school {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  if ($be->{school}) {
-    return $self->_liststring($citekey, 'school');
   }
   else {
     return '';
@@ -479,50 +522,16 @@ sub _sort_sortname {
   }
 }
 
-sub _sort_sorttitle {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  my $no_decode = $self->_nodecode($citekey);
-  if ($be->{sorttitle}) {
-    return normalize_string( $be->{sorttitle}, $no_decode );
-  }
-  else {
-    return '';
-  }
-}
-
-sub _sort_sortyear {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  my $default_substring_width = 4;
-  my $default_substring_side = 'left';
-  my $default_direction = 'ascending';
-  my $subs_offset = 0;
-  if ($be->{sortyear}) {
-    my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
-    my $subs_side = ($sortelementattributes->{substring_side} or $default_substring_side);
-    my $sort_dir = ($sortelementattributes->{sort_direction} or $default_direction);
-    if ($subs_side eq 'right') {
-      $subs_offset = 0 - $subs_width;
-    }
-    if ($sort_dir eq 'ascending') { # default, ascending sort
-      return substr( $be->{sortyear}, $subs_offset, $subs_width );
-    }
-    elsif ($sort_dir eq 'descending') { # descending sort
-      return 9999 - substr($be->{sortyear}, $subs_offset, $subs_width );
-    }
-  }
-  else {
-    return '';
-  }
-}
-
+# This is a meta-sub which uses the optional arguments to the dispatch code
+# It's done to avoid having many repetitions of almost identical sorting code
+# for the title sorting options
 sub _sort_title {
-  my ($self, $citekey, $sortelementattributes) = @_;
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $ttype = (@{$args})[0]; # get year field type
   my $be = $self->{bib}{$citekey};
   my $no_decode = $self->_nodecode($citekey);
-  if ($be->{title}) {
-    return normalize_string( $be->{title}, $no_decode );
+  if ($be->{$ttype}) {
+    return normalize_string( $be->{$ttype}, $no_decode );
   }
   else {
     return '';
@@ -562,15 +571,19 @@ sub _sort_volume {
     return '';
   }
 }
-
+# This is a meta-sub which uses the optional arguments to the dispatch code
+# It's done to avoid having many repetitions of almost identical sorting code
+# for the many date sorting options
+# It deals with year fields
 sub _sort_year {
-  my ($self, $citekey, $sortelementattributes) = @_;
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $ytype = (@{$args})[0]; # get year field type
   my $be = $self->{bib}{$citekey};
   my $default_substring_width = 4;
   my $default_substring_side = 'left';
   my $default_direction = 'ascending';
   my $subs_offset = 0;
-  if ($be->{year}) {
+  if ($be->{$ytype}) {
     my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
     my $subs_side = ($sortelementattributes->{substring_side} or $default_substring_side);
     my $sort_dir = ($sortelementattributes->{sort_direction} or $default_direction);
@@ -578,10 +591,10 @@ sub _sort_year {
       $subs_offset = 0 - $subs_width;
     }
     if ($sort_dir eq 'ascending') { # default, ascending sort
-      return substr( $be->{year}, $subs_offset, $subs_width );
+      return substr( $be->{$ytype}, $subs_offset, $subs_width );
     }
     elsif ($sort_dir eq 'descending') { # descending sort
-      return 9999 - substr($be->{year}, $subs_offset, $subs_width );
+      return 9999 - substr($be->{$ytype}, $subs_offset, $subs_width );
     }
   }
   else {
@@ -858,12 +871,31 @@ sub _print_biblatex_entry {
     }
     $str .= "  \\field{sortinit}{$sortinit}\n";
 
+    # The labelyear *option* determines whether "extrayear" is output
     if ( $self->getblxoption('labelyear', $citekey) ) {
         my $authoryear = $be->{authoryear};
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
-            $str .= "  \\field{labelyear}{" 
-              . $be->{labelyear} . "}\n";
+            $str .= "  \\field{extrayear}{" 
+              . $be->{extrayear} . "}\n";
         }
+
+        # Construct labelyear
+        if (_defined_and_nonempty($be->{date})) {
+          if ($be->{date} =~ m|\A(\d{4})[-\d]*/(\d{4})[-\d]*\z|xms) { # A date range
+            my $rfromyear = $1; # beginning year of range
+            my $rtoyear   = $2; # end year of range
+            if ($rfromyear == $rtoyear) {
+              $be->{labelyear} = $rfromyear;
+            } else {
+              $be->{labelyear} = "$rfromyear\\bibdatedash $rtoyear";
+            }
+          } elsif ($be->{date} =~ m|\A(\d{4})[-\d]*\z|xms) { # A single date
+            $be->{labelyear} = $1;
+          }
+        } elsif (_defined_and_nonempty($be->{year})) {
+          $be->{labelyear} = $be->{year};
+        }
+        $str .= "  \\field{labelyear}{" . $be->{labelyear} . "}\n";
     }
 
     if ( $self->getblxoption('labelalpha', $citekey) ) {
@@ -943,6 +975,14 @@ sub _print_biblatex_entry {
             $str .= "  \\field{$rfield}{$rf}\n";
         }
     }
+    foreach my $daterfield (@DATERANGEFIELDS) {
+        next if $SKIPFIELDS{$daterfield};
+        if ( _defined_and_nonempty($be->{$daterfield}) ) {
+            my $rf = $be->{$daterfield};
+            $str .= "  \\field{$daterfield}{$rf}\n";
+        }
+    }
+
     foreach my $vfield (@VERBATIMFIELDS) {
         next if $SKIPFIELDS{$vfield};
         if ( _defined_and_nonempty($be->{$vfield}) ) {
@@ -975,8 +1015,18 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 Copyright 2009 François Charette and Philip Kime, all rights reserved.
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+This program is free software; you can redistribute it and/or
+modify it under the terms of either:
+
+=over 4
+
+=item * the GNU General Public License as published by the Free
+Software Foundation; either version 1, or (at your option) any
+later version, or
+
+=item * the Artistic License version 2.0.
+
+=back
 
 =cut
 
