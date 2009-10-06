@@ -115,6 +115,7 @@ my $sc3 = q|\entry{L4}{book}{}
   \count{uniquename}{0}
   \field{title}{Some title about sorting}
   \field{year}{1995}
+  \field{labelyear}{1995}
 \endentry
 
 |;
@@ -137,6 +138,7 @@ my $sc4 = q|\entry{L1}{article}{}
   \count{uniquename}{0}
   \field{title}{Algorithms For Sorting}
   \field{year}{1995}
+  \field{labelyear}{1995}
 \endentry
 
 |;
@@ -159,6 +161,7 @@ my $sc5 = q|\entry{L2}{article}{}
   \count{uniquename}{0}
   \field{title}{Sorting Algorithms}
   \field{year}{1995}
+  \field{labelyear}{1995}
 \endentry
 
 |;
@@ -181,6 +184,7 @@ my $sc6 = q|\entry{L3}{article}{}
   \count{uniquename}{0}
   \field{title}{More and More Algorithms}
   \field{year}{1995}
+  \field{labelyear}{1995}
 \endentry
 
 |;

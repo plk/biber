@@ -53,7 +53,9 @@ my $setaksin = q|\entry{set:aksin}{article}{}
   \field{number}{13}
   \field{volume}{691}
   \field{year}{2006}
+  \field{month}{02}
   \field{pages}{3027\bibrangedash 3036}
+  \field{labelyear}{2006}
 \endentry
 
 | ;
@@ -74,11 +76,21 @@ my $markey = q|\entry{markey}{online}{}
   \field{version}{1.3}
   \field{hyphenation}{american}
   \field{year}{2005}
+  \field{origyear}{2004}
   \field{urlyear}{2006}
+  \field{endyear}{2006}
+  \field{origendyear}{2004}
   \field{day}{16}
+  \field{origday}{13}
   \field{urlday}{01}
+  \field{endday}{14}
+  \field{origendday}{11}
   \field{month}{10}
+  \field{origmonth}{02}
   \field{urlmonth}{10}
+  \field{endmonth}{12}
+  \field{origendmonth}{10}
+  \field{labelyear}{2005\bibdatedash 2006}
   \verb{url}
   \verb http://tug.ctan.org/tex-archive/info/bibtex/tamethebeast/ttb_en.pdf
   \endverb

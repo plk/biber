@@ -256,6 +256,7 @@ my $kastenholz = q|\entry{kastenholz}{article}{}
   \field{volume}{124}
   \field{hyphenation}{american}
   \field{year}{2006}
+  \field{labelyear}{2006}
   \verb{doi}
   \verb 10.1063/1.2172593
   \endverb

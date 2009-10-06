@@ -1119,7 +1119,7 @@ sub postprocess {
         $be->{origkey} = $origkey;
 
         $logger->debug("Postprocessing entry '$citekey'");
-        
+
 
         ##############################################################
         # 1. DATES
@@ -1137,7 +1137,7 @@ sub postprocess {
               $be->{$datetype . 'endday'}    = $6 if $6;
             }
           }
-        }        
+        }
 
         ##############################################################
         # 2. set local options to override global options for individual entries

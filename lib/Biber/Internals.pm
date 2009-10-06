@@ -782,7 +782,7 @@ sub _print_biblatex_entry {
           $be->{labelyear} = $rfromyear;
         }
         else {
-          $be->{labelyear} = "$rfromyear\bibdatedash $rtoyear";
+          $be->{labelyear} = "$rfromyear\\bibdatedash $rtoyear";
         }
       }
       elsif ($be->{date} =~ m|\A(\d{4})[-\d]*\z|xms) { # A single date
@@ -792,8 +792,6 @@ sub _print_biblatex_entry {
     elsif (_defined_and_nonempty($be->{year})) {
       $be->{labelyear} = $be->{year};
     }
-
-
 
     foreach my $namefield (@NAMEFIELDS) {
         next if $SKIPFIELDS{$namefield};
@@ -841,6 +839,7 @@ sub _print_biblatex_entry {
     }
     $str .= "  \\field{sortinit}{$sortinit}\n";
 
+    # The labelyear *option* determines whether "extrayear" is output
     if ( $self->getblxoption('labelyear', $citekey) ) {
         my $authoryear = $be->{authoryear};
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
@@ -933,6 +932,10 @@ sub _print_biblatex_entry {
             $str .= "  \\field{$daterfield}{$rf}\n";
         }
     }
+
+    # The labelyear *field* itself is always output,
+    $str .= "  \\field{labelyear}{" . $be->{labelyear} . "}\n";
+
     foreach my $vfield (@VERBATIMFIELDS) {
         next if $SKIPFIELDS{$vfield};
         if ( _defined_and_nonempty($be->{$vfield}) ) {
