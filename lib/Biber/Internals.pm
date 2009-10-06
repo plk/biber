@@ -180,7 +180,7 @@ our $sorting_sep = '0';
 our $dispatch_sorting = {
              '0000'          =>  [\&_sort_0000,          []],
              '9999'          =>  [\&_sort_9999,          []],
-             'address'       =>  [\&_sort_address,       []],
+             'address'       =>  [\&_sort_place,         ['place']],
              'author'        =>  [\&_sort_author,        []],
              'citeorder'     =>  [\&_sort_citeorder,     []],
              'day'           =>  [\&_sort_dm,            ['day']],
@@ -203,10 +203,10 @@ our $dispatch_sorting = {
              'eventyear'     =>  [\&_sort_year,          ['eventyear']],
              'extraalpha'    =>  [\&_sort_extraalpha,    []],
              'issuetitle'    =>  [\&_sort_issuetitle,    []],
-             'institution'   =>  [\&_sort_institution,   []],
+             'institution'   =>  [\&_sort_place,         ['institution']],
              'journal'       =>  [\&_sort_journal,       []],
              'labelalpha'    =>  [\&_sort_labelalpha,    []],
-             'location'      =>  [\&_sort_location,      []],
+             'location'      =>  [\&_sort_place,         ['location']],
              'mm'            =>  [\&_sort_mm,            []],
              'month'         =>  [\&_sort_dm,            ['month']],
              'origday'       =>  [\&_sort_dm,            ['origday']],
@@ -215,15 +215,15 @@ our $dispatch_sorting = {
              'origendyear'   =>  [\&_sort_year,          ['origendyear']],
              'origmonth'     =>  [\&_sort_dm,            ['origmonth']],
              'origyear'      =>  [\&_sort_year,          ['origyear']],
-             'organization'  =>  [\&_sort_organization,  []],
+             'organization'  =>  [\&_sort_place,         ['organization']],
              'presort'       =>  [\&_sort_presort,       []],
              'publisher'     =>  [\&_sort_publisher,     []],
-             'school'        =>  [\&_sort_school,        []],
+             'school'        =>  [\&_sort_place,         ['school']],
              'sortkey'       =>  [\&_sort_sortkey,       []],
              'sortname'      =>  [\&_sort_sortname,      []],
-             'sorttitle'     =>  [\&_sort_sorttitle,     []],
+             'sorttitle'     =>  [\&_sort_title,         ['sorttitle']],
              'sortyear'      =>  [\&_sort_year,          ['sortyear']],
-             'title'         =>  [\&_sort_title,         []],
+             'title'         =>  [\&_sort_title,         ['title']],
              'translator'    =>  [\&_sort_translator,    []],
              'urlday'        =>  [\&_sort_dm,            ['urlday']],
              'urlendday'     =>  [\&_sort_dm,            ['urlendday']],
@@ -288,17 +288,6 @@ sub _sort_0000 {
 
 sub _sort_9999 {
   return '9999';
-}
-
-sub _sort_address {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  if ($be->{address}) {
-    return $self->_liststring($citekey, 'address');
-  }
-  else {
-    return '';
-  }
 }
 
 sub _sort_author {
@@ -402,17 +391,6 @@ sub _sort_extraalpha {
   }
 }
 
-sub _sort_institution {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  if ($be->{institution}) {
-    return $self->_liststring($citekey, 'institution');
-  }
-  else {
-    return '';
-  }
-}
-
 sub _sort_issuetitle {
   my ($self, $citekey, $sortelementattributes) = @_;
   my $be = $self->{bib}{$citekey};
@@ -452,22 +430,15 @@ sub _sort_labelalpha {
   }
 }
 
-sub _sort_location {
-  my ($self, $citekey, $sortelementattributes) = @_;
+# This is a meta-sub which uses the optional arguments to the dispatch code
+# It's done to avoid having many repetitions of almost identical sorting code
+# for the place (address/location/institution etc.) sorting options
+sub _sort_place {
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $pltype = (@{$args})[0]; # get place field type
   my $be = $self->{bib}{$citekey};
-  if ($be->{location}) {
-    return $self->_liststring($citekey, 'location');
-  }
-  else {
-    return '';
-  }
-}
-
-sub _sort_organization {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  if ($be->{organization}) {
-    return $self->_liststring($citekey, 'organization');
+  if ($be->{$pltype}) {
+    return $self->_liststring($citekey, $pltype);
   }
   else {
     return '';
@@ -485,17 +456,6 @@ sub _sort_publisher {
   my $be = $self->{bib}{$citekey};
   if ($be->{publisher}) {
     return $self->_liststring($citekey, 'publisher');
-  }
-  else {
-    return '';
-  }
-}
-
-sub _sort_school {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  if ($be->{school}) {
-    return $self->_liststring($citekey, 'school');
   }
   else {
     return '';
@@ -530,24 +490,16 @@ sub _sort_sortname {
   }
 }
 
-sub _sort_sorttitle {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  my $no_decode = $self->_nodecode($citekey);
-  if ($be->{sorttitle}) {
-    return normalize_string( $be->{sorttitle}, $no_decode );
-  }
-  else {
-    return '';
-  }
-}
-
+# This is a meta-sub which uses the optional arguments to the dispatch code
+# It's done to avoid having many repetitions of almost identical sorting code
+# for the title sorting options
 sub _sort_title {
-  my ($self, $citekey, $sortelementattributes) = @_;
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $ttype = (@{$args})[0]; # get year field type
   my $be = $self->{bib}{$citekey};
   my $no_decode = $self->_nodecode($citekey);
-  if ($be->{title}) {
-    return normalize_string( $be->{title}, $no_decode );
+  if ($be->{$ttype}) {
+    return normalize_string( $be->{$ttype}, $no_decode );
   }
   else {
     return '';
