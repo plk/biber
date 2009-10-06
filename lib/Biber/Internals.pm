@@ -174,40 +174,68 @@ sub getblxoption {
 our $sorting_sep = '0';
 
 # The keys are defined by BibLaTeX and passed in the control file
+# The value is an array pointer, first element is a code pointer, second is
+# a pointer to extra arguments to the code. This is to make code re-use possible
+# so the sorting can share code for similar things.
 our $dispatch_sorting = {
-             '0000'         =>  \&_sort_0000,
-             '9999'         =>  \&_sort_9999,
-             'address'      =>  \&_sort_address,
-             'author'       =>  \&_sort_author,
-             'citeorder'    =>  \&_sort_citeorder,
-             'debug'        =>  \&_sort_debug,
-             'editor'       =>  \&_sort_editor,
-             'extraalpha'   =>  \&_sort_extraalpha,
-             'issuetitle'   =>  \&_sort_issuetitle,
-             'institution'  =>  \&_sort_institution,
-             'journal'      =>  \&_sort_journal,
-             'labelalpha'   =>  \&_sort_labelalpha,
-             'location'     =>  \&_sort_location,
-             'mm'           =>  \&_sort_mm,
-             'organization' =>  \&_sort_organization,
-             'presort'      =>  \&_sort_presort,
-             'publisher'    =>  \&_sort_publisher,
-             'school'       =>  \&_sort_school,
-             'sortkey'      =>  \&_sort_sortkey,
-             'sortname'     =>  \&_sort_sortname,
-             'sorttitle'    =>  \&_sort_sorttitle,
-             'sortyear'     =>  \&_sort_sortyear,
-             'title'        =>  \&_sort_title,
-             'translator'   =>  \&_sort_translator,
-             'volume'       =>  \&_sort_volume,
-             'year'         =>  \&_sort_year,
+             '0000'          =>  [\&_sort_0000,          []],
+             '9999'          =>  [\&_sort_9999,          []],
+             'address'       =>  [\&_sort_address,       []],
+             'author'        =>  [\&_sort_author,        []],
+             'citeorder'     =>  [\&_sort_citeorder,     []],
+             'day'           =>  [\&_sort_dm,            ['day']],
+             'debug'         =>  [\&_sort_debug,         []],
+             'editor'        =>  [\&_sort_editor,        []],
+             'endday'        =>  [\&_sort_dm,            ['endday']],
+             'endmonth'      =>  [\&_sort_dm,            ['endmonth']],
+             'endyear'       =>  [\&_sort_year,          ['endyear']],
+             'eventday'      =>  [\&_sort_dm,            ['eventday']],
+             'eventendday'   =>  [\&_sort_dm,            ['eventendday']],
+             'eventendmonth' =>  [\&_sort_dm,            ['eventendmonth']],
+             'eventendyear'  =>  [\&_sort_year,          ['eventendyear']],
+             'eventmonth'    =>  [\&_sort_dm,            ['eventmonth']],
+             'eventyear'     =>  [\&_sort_year,          ['eventyear']],
+             'extraalpha'    =>  [\&_sort_extraalpha,    []],
+             'issuetitle'    =>  [\&_sort_issuetitle,    []],
+             'institution'   =>  [\&_sort_institution,   []],
+             'journal'       =>  [\&_sort_journal,       []],
+             'labelalpha'    =>  [\&_sort_labelalpha,    []],
+             'location'      =>  [\&_sort_location,      []],
+             'mm'            =>  [\&_sort_mm,            []],
+             'month'         =>  [\&_sort_dm,            ['month']],
+             'origday'       =>  [\&_sort_dm,            ['origday']],
+             'origendday'    =>  [\&_sort_dm,            ['origendday']],
+             'origendmonth'  =>  [\&_sort_dm,            ['origendmonth']],
+             'origendyear'   =>  [\&_sort_year,          ['origendyear']],
+             'origmonth'     =>  [\&_sort_dm,            ['origmonth']],
+             'origyear'      =>  [\&_sort_year,          ['origyear']],
+             'organization'  =>  [\&_sort_organization,  []],
+             'presort'       =>  [\&_sort_presort,       []],
+             'publisher'     =>  [\&_sort_publisher,     []],
+             'school'        =>  [\&_sort_school,        []],
+             'sortkey'       =>  [\&_sort_sortkey,       []],
+             'sortname'      =>  [\&_sort_sortname,      []],
+             'sorttitle'     =>  [\&_sort_sorttitle,     []],
+             'sortyear'      =>  [\&_sort_year,          ['sortyear']],
+             'title'         =>  [\&_sort_title,         []],
+             'translator'    =>  [\&_sort_translator,    []],
+             'urlday'        =>  [\&_sort_dm,            ['urlday']],
+             'urlendday'     =>  [\&_sort_dm,            ['urlendday']],
+             'urlendmonth'   =>  [\&_sort_dm,            ['urlendmonth']],
+             'urlendyear'    =>  [\&_sort_year,          ['urlendyear']],
+             'urlmonth'      =>  [\&_sort_dm,            ['urlmonth']],
+             'urlyear'       =>  [\&_sort_year,          ['urlyear']],
+             'volume'        =>  [\&_sort_volume,        []],
+             'year'          =>  [\&_sort_year,          ['year']],
 };
 
 
 # Main sorting dispatch method
 sub _dispatch_sorting {
   my ($self, $sortfield, $citekey, $sortelementattributes) = @_;
-  return &{$dispatch_sorting->{$sortfield}}($self, $citekey, $sortelementattributes);
+  my $code_ref = @{$dispatch_sorting->{$sortfield}}[0];
+  my $code_args_ref = @{$dispatch_sorting->{$sortfield}}[1];
+  return &{$code_ref}($self, $citekey, $sortelementattributes, $code_args_ref);
 }
 
 # Conjunctive set of sorting sets
@@ -286,6 +314,34 @@ sub _sort_citeorder {
 sub _sort_debug {
   my ($self, $citekey, $sortelementattributes) = @_;
   return $citekey;
+}
+
+# This is a meta-sub which uses the optional arguments to the dispatch code
+# It's done to avoid having many repetitions of almost identical sorting code
+# for the many date sorting options
+# It deals with day and month fields
+sub _sort_dm {
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $dmtype = (@{$args})[0]; # get day/month field type
+  my $be = $self->{bib}{$citekey};
+  my $default_pad_width = 2;
+  my $default_pad_side = 'left';
+  my $default_pad_char = '0';
+  if ($be->{$dmtype}) {
+    my $pad_width = ($sortelementattributes->{pad_width} or $default_pad_width);
+    my $pad_side = ($sortelementattributes->{pad_side} or $default_pad_side);
+    my $pad_char = ($sortelementattributes->{pad_char} or $default_pad_char);
+    my $pad_length = $pad_width - length($be->{$dmtype});
+    if ($pad_side eq 'left') {
+      return ($pad_char x $pad_length) . $be->{$dmtype};
+    }
+    elsif ($pad_side eq 'right') {
+      return $be->{$dmtype} . ($pad_char x $pad_length);
+    }
+  }
+  else {
+    return '';
+  }
 }
 
 sub _sort_editor {
@@ -461,32 +517,6 @@ sub _sort_sorttitle {
   }
 }
 
-sub _sort_sortyear {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  my $default_substring_width = 4;
-  my $default_substring_side = 'left';
-  my $default_direction = 'ascending';
-  my $subs_offset = 0;
-  if ($be->{sortyear}) {
-    my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
-    my $subs_side = ($sortelementattributes->{substring_side} or $default_substring_side);
-    my $sort_dir = ($sortelementattributes->{sort_direction} or $default_direction);
-    if ($subs_side eq 'right') {
-      $subs_offset = 0 - $subs_width;
-    }
-    if ($sort_dir eq 'ascending') { # default, ascending sort
-      return substr( $be->{sortyear}, $subs_offset, $subs_width );
-    }
-    elsif ($sort_dir eq 'descending') { # descending sort
-      return 9999 - substr($be->{sortyear}, $subs_offset, $subs_width );
-    }
-  }
-  else {
-    return '';
-  }
-}
-
 sub _sort_title {
   my ($self, $citekey, $sortelementattributes) = @_;
   my $be = $self->{bib}{$citekey};
@@ -532,15 +562,19 @@ sub _sort_volume {
     return '';
   }
 }
-
+# This is a meta-sub which uses the optional arguments to the dispatch code
+# It's done to avoid having many repetitions of almost identical sorting code
+# for the many date sorting options
+# It deals with year fields
 sub _sort_year {
-  my ($self, $citekey, $sortelementattributes) = @_;
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $ytype = (@{$args})[0]; # get year field type
   my $be = $self->{bib}{$citekey};
   my $default_substring_width = 4;
   my $default_substring_side = 'left';
   my $default_direction = 'ascending';
   my $subs_offset = 0;
-  if ($be->{year}) {
+  if ($be->{$ytype}) {
     my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
     my $subs_side = ($sortelementattributes->{substring_side} or $default_substring_side);
     my $sort_dir = ($sortelementattributes->{sort_direction} or $default_direction);
@@ -548,10 +582,10 @@ sub _sort_year {
       $subs_offset = 0 - $subs_width;
     }
     if ($sort_dir eq 'ascending') { # default, ascending sort
-      return substr( $be->{year}, $subs_offset, $subs_width );
+      return substr( $be->{$ytype}, $subs_offset, $subs_width );
     }
     elsif ($sort_dir eq 'descending') { # descending sort
-      return 9999 - substr($be->{year}, $subs_offset, $subs_width );
+      return 9999 - substr($be->{$ytype}, $subs_offset, $subs_width );
     }
   }
   else {
