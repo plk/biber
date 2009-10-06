@@ -45,6 +45,7 @@ my $setaksin = q|\entry{set:aksin}{article}{}
   \strng{fullhash}{AÖTHALC̨BNCBOÖE1}
   \field{labelalpha}{Aks+06}
   \field{sortinit}{A}
+  \field{labelyear}{2006}
   \count{uniquename}{0}
   \true{singletitle}
   \field{title}{Effect of immobilization on catalytic characteristics of saturated Pd-N-heterocyclic carbenes in Mizoroki-Heck reactions}
@@ -55,7 +56,6 @@ my $setaksin = q|\entry{set:aksin}{article}{}
   \field{year}{2006}
   \field{month}{02}
   \field{pages}{3027\bibrangedash 3036}
-  \field{labelyear}{2006}
 \endentry
 
 | ;
@@ -68,6 +68,7 @@ my $markey = q|\entry{markey}{online}{}
   \strng{fullhash}{MN1}
   \field{labelalpha}{Mar05}
   \field{sortinit}{M}
+  \field{labelyear}{2005\bibdatedash 2006}
   \count{uniquename}{0}
   \true{singletitle}
   \field{title}{Tame the BeaST}
@@ -90,7 +91,6 @@ my $markey = q|\entry{markey}{online}{}
   \field{urlmonth}{10}
   \field{endmonth}{12}
   \field{origendmonth}{10}
-  \field{labelyear}{2005\bibdatedash 2006}
   \verb{url}
   \verb http://tug.ctan.org/tex-archive/info/bibtex/tamethebeast/ttb_en.pdf
   \endverb

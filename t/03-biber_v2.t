@@ -50,6 +50,7 @@ my $murray1 = q|\entry{murray}{article}{}
   \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
   \field{labelalpha}{Hos\textbf{+}98}
   \field{sortinit}{H}
+  \field{labelyear}{1998}
   \count{uniquename}{0}
   \true{singletitle}
   \field{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
@@ -63,7 +64,6 @@ my $murray1 = q|\entry{murray}{article}{}
   \field{hyphenation}{american}
   \field{year}{1998}
   \field{pages}{17\bibrangedash 30}
-  \field{labelyear}{1998}
 \endentry
 
 |;
@@ -89,6 +89,7 @@ my $murray2 = q|\entry{murray}{article}{}
   \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
   \field{labelalpha}{Hos98}
   \field{sortinit}{H}
+  \field{labelyear}{1998}
   \count{uniquename}{0}
   \true{singletitle}
   \field{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
@@ -102,7 +103,6 @@ my $murray2 = q|\entry{murray}{article}{}
   \field{hyphenation}{american}
   \field{year}{1998}
   \field{pages}{17\bibrangedash 30}
-  \field{labelyear}{1998}
 \endentry
 
 |;
@@ -123,6 +123,7 @@ my $setaksin = q|\entry{set:aksin}{article}{}
   \strng{fullhash}{AÖTHALC̨BNCBOÖE1}
   \field{labelalpha}{Aks\textbf{+}06}
   \field{sortinit}{A}
+  \field{labelyear}{2006}
   \count{uniquename}{0}
   \true{singletitle}
   \field{title}{Effect of immobilization on catalytic characteristics of saturated Pd-N-heterocyclic carbenes in Mizoroki-Heck reactions}
@@ -133,7 +134,6 @@ my $setaksin = q|\entry{set:aksin}{article}{}
   \field{year}{2006}
   \field{month}{02}
   \field{pages}{3027\bibrangedash 3036}
-  \field{labelyear}{2006}
 \endentry
 
 | ;
@@ -146,6 +146,7 @@ my $markey = q|\entry{markey}{online}{}
   \strng{fullhash}{MN1}
   \field{labelalpha}{Mar05}
   \field{sortinit}{M}
+  \field{labelyear}{2005\bibdatedash 2006}
   \count{uniquename}{0}
   \true{singletitle}
   \field{title}{Tame the BeaST}
@@ -168,7 +169,6 @@ my $markey = q|\entry{markey}{online}{}
   \field{urlmonth}{10}
   \field{endmonth}{12}
   \field{origendmonth}{10}
-  \field{labelyear}{2005\bibdatedash 2006}
   \verb{url}
   \verb http://tug.ctan.org/tex-archive/info/bibtex/tamethebeast/ttb_en.pdf
   \endverb
@@ -192,6 +192,7 @@ my $jaffe = q|\entry{jaffe}{collection}{}
   \strng{fullhash}{JP1}
   \field{labelalpha}{Jaf85}
   \field{sortinit}{J}
+  \field{labelyear}{1885\bibdatedash 1888}
   \count{uniquename}{0}
   \true{singletitle}
   \field{title}{Regesta Pontificum Romanorum ab condita ecclesia ad annum post Christum natum \textsc{mcxcviii}}
@@ -203,7 +204,6 @@ my $jaffe = q|\entry{jaffe}{collection}{}
   \field{year}{1885}
   \field{endyear}{1888}
   \field{editoratype}{redactor}
-  \field{labelyear}{1885\bibdatedash 1888}
 \endentry
 
 |;
@@ -219,11 +219,11 @@ my $pimentel1 = q|\entry{pimentel00}{thesis}{}
   \strng{fullhash}{PJJ1}
   \field{labelalpha}{Pim00}
   \field{sortinit}{P}
+  \field{labelyear}{2000}
   \count{uniquename}{0}
   \true{singletitle}
   \field{title}{Sociolinguistic Reflections of Privitization and Globalization: The {Arabic} of {Egyptian} newspaper advertisements}
   \field{year}{2000}
-  \field{labelyear}{2000}
 \endentry
 
 |;

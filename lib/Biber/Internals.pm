@@ -784,26 +784,6 @@ sub _print_biblatex_entry {
       $be->{labelname} = $be->{$be->{labelnamename}};
     }
 
-    # Construct labelyear
-    if (_defined_and_nonempty($be->{date})) {
-      if ($be->{date} =~ m|\A(\d{4})[-\d]*/(\d{4})[-\d]*\z|xms) { # A date range
-        my $rfromyear = $1; # beginning year of range
-        my $rtoyear   = $2; # end year of range
-        if ($rfromyear == $rtoyear) {
-          $be->{labelyear} = $rfromyear;
-        }
-        else {
-          $be->{labelyear} = "$rfromyear\\bibdatedash $rtoyear";
-        }
-      }
-      elsif ($be->{date} =~ m|\A(\d{4})[-\d]*\z|xms) { # A single date
-        $be->{labelyear} = $1;
-      }
-    }
-    elsif (_defined_and_nonempty($be->{year})) {
-      $be->{labelyear} = $be->{year};
-    }
-
     foreach my $namefield (@NAMEFIELDS) {
         next if $SKIPFIELDS{$namefield};
         if ( _defined_and_nonempty($be->{$namefield}) ) {
@@ -857,6 +837,24 @@ sub _print_biblatex_entry {
             $str .= "  \\field{extrayear}{" 
               . $be->{extrayear} . "}\n";
         }
+
+        # Construct labelyear
+        if (_defined_and_nonempty($be->{date})) {
+          if ($be->{date} =~ m|\A(\d{4})[-\d]*/(\d{4})[-\d]*\z|xms) { # A date range
+            my $rfromyear = $1; # beginning year of range
+            my $rtoyear   = $2; # end year of range
+            if ($rfromyear == $rtoyear) {
+              $be->{labelyear} = $rfromyear;
+            } else {
+              $be->{labelyear} = "$rfromyear\\bibdatedash $rtoyear";
+            }
+          } elsif ($be->{date} =~ m|\A(\d{4})[-\d]*\z|xms) { # A single date
+            $be->{labelyear} = $1;
+          }
+        } elsif (_defined_and_nonempty($be->{year})) {
+          $be->{labelyear} = $be->{year};
+        }
+        $str .= "  \\field{labelyear}{" . $be->{labelyear} . "}\n";
     }
 
     if ( $self->getblxoption('labelalpha', $citekey) ) {
@@ -943,9 +941,6 @@ sub _print_biblatex_entry {
             $str .= "  \\field{$daterfield}{$rf}\n";
         }
     }
-
-    # The labelyear *field* itself is always output,
-    $str .= "  \\field{labelyear}{" . $be->{labelyear} . "}\n";
 
     foreach my $vfield (@VERBATIMFIELDS) {
         next if $SKIPFIELDS{$vfield};
