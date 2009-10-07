@@ -1128,7 +1128,7 @@ sub postprocess {
         foreach my $datetype ('', 'orig', 'event', 'url') {
           if ( $be->{$datetype . 'date'} and not $be->{$datetype . 'year'} ) {
             my $date_re = qr|(\d{4})-?(\d{2})?-?(\d{2})?|xms;
-            if ($be->{$datetype . 'date'} =~ m|\A$date_re/?(?:$date_re)?|xms) {
+            if ($be->{$datetype . 'date'} =~ m|\A$date_re/?(?:$date_re)?\z|xms) {
               $be->{$datetype . 'year'}      = $1 if $1;
               $be->{$datetype . 'month'}     = $2 if $2;
               $be->{$datetype . 'day'}       = $3 if $3;
