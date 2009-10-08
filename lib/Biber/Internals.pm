@@ -752,8 +752,9 @@ sub _print_biblatex_entry {
     my ($self, $citekey) = @_;
     my $be      = $self->{bib}->{$citekey} 
         or $logger->logcroak("Cannot find $citekey");
-    my $opts    = "";
+    my $opts    = '';
     my $origkey = $citekey;
+    my $warnings; # var to hold warnings to pass to bbl
     if ( $be->{origkey} ) {
         $origkey = $be->{origkey}
     }
@@ -912,6 +913,13 @@ sub _print_biblatex_entry {
         $str .= "  \\true{singletitle}\n";
     }
 
+    foreach my $ifield (@DATECOMPONENTFIELDS) {
+        next if $SKIPFIELDS{$ifield};
+        if ( _defined_and_nonempty($be->{$ifield}) ) {
+	  $str .= $self->_printfield( $ifield, $be->{$ifield} );
+        }
+    }
+
     foreach my $lfield (@LITERALFIELDS) {
         next if $SKIPFIELDS{$lfield};
         if ( _defined_and_nonempty($be->{$lfield}) ) {
@@ -934,13 +942,6 @@ sub _print_biblatex_entry {
             $str .= "  \\field{$rfield}{$rf}\n";
         }
     }
-    foreach my $daterfield (@DATERANGEFIELDS) {
-        next if $SKIPFIELDS{$daterfield};
-        if ( _defined_and_nonempty($be->{$daterfield}) ) {
-            my $rf = $be->{$daterfield};
-            $str .= "  \\field{$daterfield}{$rf}\n";
-        }
-    }
 
     foreach my $vfield (@VERBATIMFIELDS) {
         next if $SKIPFIELDS{$vfield};
@@ -952,6 +953,11 @@ sub _print_biblatex_entry {
     }
     if ( _defined_and_nonempty($be->{keywords}) ) {
         $str .= "  \\keyw{" . $be->{keywords} . "}\n";
+    }
+
+    # Append any warnings to the entry, if any
+    if (_defined_and_nonempty($be->{warnings})) {
+      $str .= '  \warn{' . $be->{warnings} . "}\n";
     }
 
     $str .= "\\endentry\n\n";

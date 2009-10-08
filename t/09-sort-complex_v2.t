@@ -113,8 +113,8 @@ my $sc3 = q|\entry{L4}{book}{}
   \field{sortinit}{D}
   \field{extraalpha}{2}
   \count{uniquename}{0}
-  \field{title}{Some title about sorting}
   \field{year}{1995}
+  \field{title}{Some title about sorting}
 \endentry
 
 |;
@@ -135,8 +135,8 @@ my $sc4 = q|\entry{L1}{article}{}
   \field{sortinit}{D}
   \field{extraalpha}{1}
   \count{uniquename}{0}
-  \field{title}{Algorithms For Sorting}
   \field{year}{1995}
+  \field{title}{Algorithms For Sorting}
 \endentry
 
 |;
@@ -157,8 +157,8 @@ my $sc5 = q|\entry{L2}{article}{}
   \field{sortinit}{D}
   \field{extraalpha}{3}
   \count{uniquename}{0}
-  \field{title}{Sorting Algorithms}
   \field{year}{1995}
+  \field{title}{Sorting Algorithms}
 \endentry
 
 |;
@@ -179,8 +179,8 @@ my $sc6 = q|\entry{L3}{article}{}
   \field{sortinit}{D}
   \field{extraalpha}{2}
   \count{uniquename}{0}
-  \field{title}{More and More Algorithms}
   \field{year}{1995}
+  \field{title}{More and More Algorithms}
 \endentry
 
 |;
