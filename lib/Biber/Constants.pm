@@ -18,6 +18,7 @@ our @EXPORT = qw{
                   @ENTRIESTOSPLIT
                   @LITERALFIELDS
                   @DATECOMPONENTFIELDS
+                  @DATEFIELDS
                   %SKIPFIELDS
                   %CONFIG_DEFAULT
                   $BIBLATEX_VERSION
@@ -80,6 +81,10 @@ Readonly::Array our @DATECOMPONENTFIELDS  =>   qw{
   year origyear eventyear urlyear endyear origendyear eventendyear urlendyear
   day origday eventday urlday endday origendday eventendday urlendday
   month origmonth eventmonth urlmonth endmonth origendmonth eventendmonth urlendmonth
+};
+
+Readonly::Array our @DATEFIELDS  =>   qw{
+  year month
 };
 
 Readonly::Array our @TITLEFIELDS => qw{ title

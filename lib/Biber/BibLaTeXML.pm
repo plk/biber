@@ -183,7 +183,7 @@ sub _parse_biblatexml {
         }
 
         # then all other literal fields
-        foreach my $field (@LITERALFIELDS, @VERBATIMFIELDS) {
+        foreach my $field (@LITERALFIELDS, @VERBATIMFIELDS, @DATEFIELDS) {
             next if $field eq 'title';
             $self->{bib}->{$citekey}->{$field} = $bibrecord->findnodes("bib:$field")->_biblatex_value 
                 if $bibrecord->exists("bib:$field");
