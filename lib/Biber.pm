@@ -1125,29 +1125,39 @@ sub postprocess {
         # 1. DATES
         ##############################################################
 
-	# Here we do some sanity checking on date fields and then parse the
-	# *DATE fields into their components, collecting any warnings to put
-	# into the .bbl later
+        # Here we do some sanity checking on date fields and then parse the
+        # *DATE fields into their components, collecting any warnings to put
+        # into the .bbl later
 
-	# Quick check on YEAR and MONTH fields which are the only date related
-	# components which can be directly set and therefore don't go through
-	# the date parsing below
-	foreach my $allowed_dcs ('year', 'month') {
-	  if ($be->{$allowed_dcs} and $be->{$allowed_dcs} !~ /\A\d+\z/xms) {
-	    $logger->warn("Invalid format of field '$allowed_dcs' in entry '$citekey'");
-	    $self->{warnings}++;
-	    $be->{warnings} .= "\\item Invalid format of field '$allowed_dcs'\n";
-	  }
-	}
+        # Quick check on YEAR and MONTH fields which are the only date related
+        # components which can be directly set and therefore don't go through
+        # the date parsing below
+        foreach my $ymfield ('year', 'month') {
+          if ($be->{$ymfield} and $be->{$ymfield} !~ /\A\d+\z/xms) {
+            $logger->warn("Invalid format of field '$ymfield' - ignoring field in entry '$citekey'");
+            $self->{warnings}++;
+            $be->{warnings} .= "\\item Invalid format of field '$ymfield' - ignoring field\n";
+            delete $be->{$ymfield};
+          }
+        }
 
-	# Both DATE and (YEAR or MONTH) specified
-	if ($be->{date} and ($be->{year} or $be->{month})) {
-	  $logger->warn("Field conflict - 'date' will potentially overwrite 'year' and/or 'month'. Please use 'date' OR 'year' and 'month' in entry '$citekey'");
-	  $self->{warnings}++;
-	  $be->{warnings} .= "\\item Field conflict - 'date' will potentially overwrite 'year' and/or 'month'. Please use 'date' OR 'year' and 'month'\n";
-	}
+        # Both DATE and YEAR specified
+        if ($be->{date} and $be->{year}) {
+          $logger->warn("Field conflict - both 'date' and 'year' used - ignoring field 'year' in '$citekey'");
+          $self->{warnings}++;
+          $be->{warnings} .= "\\item Field conflict - both 'date' and 'year' used - ignoring field 'year'\n";
+          delete $be->{year};
+        }
 
-	# Generate date components from *DATE fields
+        # Both DATE and MONTH specified
+        if ($be->{date} and $be->{month}) {
+          $logger->warn("Field conflict - both 'date' and 'month' used - ignoring field 'month' in '$citekey'");
+          $self->{warnings}++;
+          $be->{warnings} .= "\\item Field conflict - both 'date' and 'month' used - ignoring field 'month'\n";
+          delete $be->{month};
+        }
+
+        # Generate date components from *DATE fields
         foreach my $datetype ('', 'orig', 'event', 'url') {
           if ($be->{$datetype . 'date'}) {
             my $date_re = qr|(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?|xms;
@@ -1158,39 +1168,40 @@ sub postprocess {
               $be->{$datetype . 'endyear'}   = $4 if $4;
               $be->{$datetype . 'endmonth'}  = $5 if $5;
               $be->{$datetype . 'endday'}    = $6 if $6;
+            } else {
+              $logger->warn("Invalid format of field '" . $datetype . 'date' . "' - ignoring field in entry '$citekey'");
+              $self->{warnings}++;
+              $be->{warnings} .= "\\item Invalid format of field '" . $datetype . 'date' . "' - ignoring field\n";
+              delete $be->{$datetype . 'date'};
             }
-	    else {
-	      $logger->warn("Invalid format of field '" . $datetype . 'date' . "' in entry '$citekey'");
-	      $self->{warnings}++;
-	      $be->{warnings} .= "\\item Invalid format of field '" . $datetype . 'date' . "'\n";
-	    }
           }
         }
 
-	# Now more carefully check the individual date components
-	my $opt_dm = qr/(?:event|orig|url)?(?:end)?/xms;
-	foreach my $dcf (@DATECOMPONENTFIELDS) {
-	  my $bad_format = '';
-	  if ($be->{$dcf}) {
-	    # months must be in right range
-	    if ($dcf =~ /\A$opt_dm month\z/xms) {
-	      unless ($be->{$dcf} >= 1 and $be->{$dcf} <= 12) {
-		$bad_format = 1;
-	      }
-	    }
-	    # days must be in right range
-	    if ($dcf =~ /\A$opt_dm day\z/xms) {
-	      unless ($be->{$dcf} >= 1 and $be->{$dcf} <= 31) {
-		$bad_format = 1;
-	      }
-	    }
-	    if ($bad_format) {
-	      $logger->warn("Warning--Value out bounds for field/date component '$dcf' in entry '$citekey'");
-	      $self->{warnings}++;
-	      $be->{warnings} .= "\\item Value out of bounds for field/date component '$dcf'\n";
-	    }
-	  }
-	}
+        # Now more carefully check the individual date components
+        my $opt_dm = qr/(?:event|orig|url)?(?:end)?/xms;
+        foreach my $dcf (@DATECOMPONENTFIELDS) {
+          my $bad_format = '';
+          if ($be->{$dcf}) {
+            # months must be in right range
+            if ($dcf =~ /\A$opt_dm month\z/xms) {
+              unless ($be->{$dcf} >= 1 and $be->{$dcf} <= 12) {
+                $bad_format = 1;
+              }
+            }
+            # days must be in right range
+            if ($dcf =~ /\A$opt_dm day\z/xms) {
+              unless ($be->{$dcf} >= 1 and $be->{$dcf} <= 31) {
+                $bad_format = 1;
+              }
+            }
+            if ($bad_format) {
+              $logger->warn("Warning--Value out bounds for field/date component '$dcf' - ignoring in entry '$citekey'");
+              $self->{warnings}++;
+              $be->{warnings} .= "\\item Value out of bounds for field/date component '$dcf' - ignoring\n";
+              delete $be->{$dcf};
+            }
+          }
+        }
 
         ##############################################################
         # 2. set local options to override global options for individual entries
