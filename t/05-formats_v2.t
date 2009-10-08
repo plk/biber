@@ -22,6 +22,8 @@ $biber->parse_bibtex($bibfile);
 $biber->prepare;
 
 my $l1 = q|\item Invalid format of field 'year'
+\item Invalid format of field 'origdate'
+\item Invalid format of field 'urldate'
 |;
 my $l2 = q|\item Invalid format of field 'origdate'
 |;
