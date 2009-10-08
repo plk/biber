@@ -24,11 +24,11 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =head1 VERSION
 
-Version 0.4.3
+Version 0.5
 
 =cut
 
-our $VERSION = '0.4.3';
+our $VERSION = '0.5';
 
 =head1 SYNOPSIS
 
@@ -1084,28 +1084,31 @@ sub postprocess {
     my $self = shift;
 
     my %namehashcount = ();
-    my @foundkeys = ();
+    my @foundkeys     = ();
 
     foreach my $citekey ( $self->citekeys ) {
 
         my $origkey = $citekey;
 
         # try lc($citekey), uc($citekey) and ucinit($citekey) before giving up
-        if ( ! $self->{bib}{$citekey} ) {
+        if ( !$self->{bib}{$citekey} ) {
 
-            if ($self->{bib}{lc($citekey)}) {
+            if ( $self->{bib}{ lc($citekey) } ) {
 
                 $citekey = lc($citekey);
 
-            } elsif ($self->{bib}{uc($citekey)}) {
+            }
+            elsif ( $self->{bib}{ uc($citekey) } ) {
 
                 $citekey = uc($citekey);
 
-            } elsif ($self->{bib}{ucinit($citekey)}) {
+            }
+            elsif ( $self->{bib}{ ucinit($citekey) } ) {
 
                 $citekey = ucinit($citekey);
 
-            } else {
+            }
+            else {
                 $logger->warn("I didn't find a database entry for '$citekey'");
                 $self->{warnings}++;
                 next;
@@ -1119,7 +1122,6 @@ sub postprocess {
         $be->{origkey} = $origkey;
 
         $logger->debug("Postprocessing entry '$citekey'");
-
 
         ##############################################################
         # 1. DATES
@@ -1234,19 +1236,23 @@ sub postprocess {
 
             my @entrysetkeys = split /\s*,\s*/, $be->{entryset};
             unless (@entrysetkeys) {
-	      $logger->warn("No entryset found for entry $citekey of type 'set'");
-	      $self->{warnings}++;
-	    }
-            if ( $be->{crossref} and
-                ($be->{crossref} ne $entrysetkeys[0]) ) {
+                $logger->warn("No entryset found for entry $citekey of type 'set'");
+                $self->{warnings}++;
+            }
+            if ( $be->{crossref}
+                and ( $be->{crossref} ne $entrysetkeys[0] ) )
+            {
 
-                $logger->warn("Problem with entry $citekey :\n" . 
-                     "\tcrossref (" . $be->{crossref} . 
-                     ") should be identical to the first element of the entryset");
-		$self->{warnings}++;
+                $logger->warn( "Problem with entry $citekey :\n"
+                      . "\tcrossref ("
+                      . $be->{crossref}
+                      . ") should be identical to the first element of the entryset"
+                );
+                $self->{warnings}++;
                 $be->{crossref} = $entrysetkeys[0];
 
-            } elsif ( ! $be->{crossref} ) {
+            }
+            elsif ( !$be->{crossref} ) {
 
                 $be->{crossref} = $entrysetkeys[0];
             }
@@ -1259,24 +1265,27 @@ sub postprocess {
         # Here, "labelnamename" is the name of the labelname field
         # and "labelname" is the actual copy of the relevant field
 
-        my $lnamescheme = $self->getblxoption('labelname', $citekey);
+        my $lnamescheme = $self->getblxoption( 'labelname', $citekey );
 
-        foreach my $ln (@{$lnamescheme}) {
+        foreach my $ln ( @{$lnamescheme} ) {
             my $lnameopt;
-            if ($ln =~ /\Ashort(.+)\z/) {
+            if ( $ln =~ /\Ashort(.+)\z/ ) {
                 $lnameopt = $1;
             }
             else {
                 $lnameopt = $ln;
             }
-            if ( $be->{$ln} and $self->getblxoption("use$lnameopt", $citekey) ) {
+            if (    $be->{$ln}
+                and $self->getblxoption( "use$lnameopt", $citekey ) )
+            {
                 $be->{labelnamename} = $ln;
                 last;
-           }
+            }
         }
 
-        unless ($be->{labelnamename}) {
-           $logger->debug("Could not determine the labelname of entry $citekey");
+        unless ( $be->{labelnamename} ) {
+            $logger->debug(
+                "Could not determine the labelname of entry $citekey");
         }
 
         ##############################################################
@@ -1287,46 +1296,66 @@ sub postprocess {
         my $fullhash;
         my $nameid;
         my $nameinitid;
-        if ($be->{sortname} and ($self->getblxoption('useauthor', $citekey)
-                                  or $self->getblxoption('useeditor', $citekey))) {
-          $namehash   = $self->_getnameinitials( $citekey, $be->{sortname});
-          $fullhash   = $self->_getallnameinitials( $citekey, $be->{sortname});
-          $nameid     = makenameid($be->{sortname});
-          $nameinitid = makenameinitid($be->{sortname}) if ( $self->getblxoption('uniquename', $citekey) == 2 );
+        if (
+            $be->{sortname}
+            and (  $self->getblxoption( 'useauthor', $citekey )
+                or $self->getblxoption( 'useeditor', $citekey ) )
+           )
+        {
+            $namehash = $self->_getnameinitials( $citekey, $be->{sortname} );
+            $fullhash = $self->_getallnameinitials( $citekey, $be->{sortname} );
+            $nameid = makenameid( $be->{sortname} );
+            $nameinitid = makenameinitid( $be->{sortname} )
+              if ( $self->getblxoption( 'uniquename', $citekey ) == 2 );
         }
-        elsif ($self->getblxoption('useauthor', $citekey) and $be->{author}) {
-          $namehash   = $self->_getnameinitials( $citekey, $be->{author});
-          $fullhash   = $self->_getallnameinitials( $citekey, $be->{author});
-          $nameid     = makenameid($be->{author});
-          $nameinitid = makenameinitid($be->{author}) if ( $self->getblxoption('uniquename', $citekey) == 2 );
+        elsif ( $self->getblxoption( 'useauthor', $citekey ) and $be->{author} )
+        {
+            $namehash = $self->_getnameinitials( $citekey, $be->{author} );
+            $fullhash   = $self->_getallnameinitials( $citekey, $be->{author} );
+            $nameid     = makenameid( $be->{author} );
+            $nameinitid = makenameinitid( $be->{author} )
+              if ( $self->getblxoption( 'uniquename', $citekey ) == 2 );
         }
-        elsif (($be->{entrytype} =~ /^(collection|proceedings)/ #<<-- keep this? FIXME
-                and $self->getblxoption('useeditor', $citekey))
-               and $be->{editor}) {
-          $namehash   = $self->_getnameinitials( $citekey, $be->{editor});
-          $fullhash   = $self->_getallnameinitials( $citekey, $be->{editor});
-          $nameid     = makenameid($be->{editor});
-          $nameinitid = makenameinitid($be->{editor}) if ( $self->getblxoption('uniquename', $citekey) == 2 );
+        elsif (
+            (  # keep this? FIXME
+                $be->{entrytype} =~ /^(collection|proceedings)/ 
+                and $self->getblxoption( 'useeditor', $citekey )
+            )
+            and $be->{editor}
+          )
+        {
+            $namehash   = $self->_getnameinitials( $citekey, $be->{editor} );
+            $fullhash   = $self->_getallnameinitials( $citekey, $be->{editor} );
+            $nameid     = makenameid( $be->{editor} );
+            $nameinitid = makenameinitid( $be->{editor} )
+              if ( $self->getblxoption( 'uniquename', $citekey ) == 2 );
         }
-        elsif ($self->getblxoption('usetranslator', $citekey) and $be->{translator}) {
-          $namehash   = $self->_getnameinitials( $citekey, $be->{translator});
-          $fullhash   = $self->_getallnameinitials( $citekey, $be->{translator});
-          $nameid     = makenameid($be->{translator});
-          $nameinitid = makenameinitid($be->{translator}) if ( $self->getblxoption('uniquename', $citekey) == 2 );
+        elsif ( 
+            $self->getblxoption( 'usetranslator', $citekey )
+            and $be->{translator} 
+              )
+        {
+            $namehash   = $self->_getnameinitials( $citekey, $be->{translator} );
+            $fullhash   = $self->_getallnameinitials( $citekey, $be->{translator} );
+            $nameid     = makenameid( $be->{translator} );
+            $nameinitid = makenameinitid( $be->{translator} )
+              if ( $self->getblxoption( 'uniquename', $citekey ) == 2 );
         }
         else {    # initials of title
-          if ( $be->{sorttitle} ) {
-            $namehash   = terseinitials( $be->{sorttitle} );
-            $fullhash   = $namehash;
-            $nameid     = normalize_string_underscore( $be->{sorttitle}, 1 );
-            $nameinitid = $nameid if ( $self->getblxoption('uniquename', $citekey) == 2 );
-          }
-          else {
-            $namehash   = terseinitials( $be->{title} );
-            $fullhash   = $namehash;
-            $nameid     = normalize_string_underscore( $be->{title}, 1 );
-            $nameinitid = $nameid if ( $self->getblxoption('uniquename', $citekey) == 2 );
-          }
+            if ( $be->{sorttitle} ) {
+                $namehash = terseinitials( $be->{sorttitle} );
+                $fullhash = $namehash;
+                $nameid   = normalize_string_underscore( $be->{sorttitle}, 1 );
+                $nameinitid = $nameid
+                  if ( $self->getblxoption( 'uniquename', $citekey ) == 2 );
+            }
+            else {
+                $namehash   = terseinitials( $be->{title} );
+                $fullhash   = $namehash;
+                $nameid     = normalize_string_underscore( $be->{title}, 1 );
+                $nameinitid = $nameid
+                  if ( $self->getblxoption( 'uniquename', $citekey ) == 2 );
+            }
         }
 
         ## hash suffix
@@ -1334,16 +1363,16 @@ sub postprocess {
         my $hashsuffix = 1;
 
         if ( $namehashcount{$namehash}{$nameid} ) {
-            $hashsuffix = $namehashcount{$namehash}{$nameid}
+            $hashsuffix = $namehashcount{$namehash}{$nameid};
         }
-        elsif ($namehashcount{$namehash}) {
+        elsif ( $namehashcount{$namehash} ) {
             my $count = scalar keys %{ $namehashcount{$namehash} };
             $hashsuffix = $count + 1;
             $namehashcount{$namehash}{$nameid} = $hashsuffix;
         }
         else {
-            $namehashcount{$namehash} = { $nameid => 1 }
-        };
+            $namehashcount{$namehash} = { $nameid => 1 };
+        }
 
         $namehash .= $hashsuffix;
         $fullhash .= $hashsuffix;
@@ -1354,56 +1383,65 @@ sub postprocess {
         $seennamehash{$fullhash}++;
 
         ##############################################################
-        # 5b. Populate the uniquenamecount hash to later determine 
+        # 5b. Populate the uniquenamecount hash to later determine
         #     the uniquename counter
         ##############################################################
 
         my $lname = $be->{labelnamename};
-            { # Keep these variables scoped over the new few blocks
-                my $lastname;
-                my $namestring;
-                my $singlename;
+        {    # Keep these variables scoped over the new few blocks
+            my $lastname;
+            my $namestring;
+            my $singlename;
 
-                if ($lname) {
-                    if ($lname =~ m/\Ashort/xms) { # short* fields are just strings, not complex data
-                        $lastname   = $be->{$lname};
-                        $namestring = $be->{$lname};
-                        $singlename = 1;
-                    } else {
-                        $lastname   = $be->{$lname}->[0]->{lastname};
-                        $namestring = $be->{$lname}->[0]->{nameinitstring};
-                        $singlename = scalar @{ $be->{$lname} };
+            if ($lname) {
+                if ( $lname =~ m/\Ashort/xms )
+                {    # short* fields are just strings, not complex data
+                    $lastname   = $be->{$lname};
+                    $namestring = $be->{$lname};
+                    $singlename = 1;
+                }
+                else {
+                    $lastname   = $be->{$lname}->[0]->{lastname};
+                    $namestring = $be->{$lname}->[0]->{nameinitstring};
+                    $singlename = scalar @{ $be->{$lname} };
+                }
+            }
+
+            if (    $lname
+                and $self->getblxoption( 'uniquename', $citekey )
+                and $singlename == 1 )
+            {
+
+                if ( !$uniquenamecount{$lastname}{$namehash} ) {
+                    if ( $uniquenamecount{$lastname} ) {
+                        $uniquenamecount{$lastname}{$namehash} = 1;
+                    }
+                    else {
+                        $uniquenamecount{$lastname} = { $namehash => 1 };
                     }
                 }
 
-                if ( $lname and $self->getblxoption('uniquename', $citekey) and $singlename == 1 ) {
-
-                    if ( ! $uniquenamecount{$lastname}{$namehash} ) {
-                        if ($uniquenamecount{$lastname}) {
-                            $uniquenamecount{$lastname}{$namehash} = 1;
-                        } else {
-                            $uniquenamecount{$lastname} = { $namehash => 1 };
-                        }
+                if ( !$uniquenamecount{$namestring}{$namehash} ) {
+                    if ( $uniquenamecount{$namestring} ) {
+                        $uniquenamecount{$namestring}{$namehash} = 1;
                     }
-
-                    if ( ! $uniquenamecount{$namestring}{$namehash} ) {
-                        if ($uniquenamecount{$namestring}) {
-                            $uniquenamecount{$namestring}{$namehash} = 1;
-                        } else {
-                            $uniquenamecount{$namestring} = { $namehash => 1 };
-                        }
+                    else {
+                        $uniquenamecount{$namestring} = { $namehash => 1 };
                     }
-                } else {
-                        $be->{ignoreuniquename} = 1
                 }
-           }
+            }
+            else {
+                $be->{ignoreuniquename} = 1;
+            }
+        }
 
         ##############################################################
         # 6. track author/year
         ##############################################################
 
-        my $tmp = $self->_getnamestring($citekey) . 
-            "0" . $self->_getyearstring($citekey);
+        my $tmp =
+            $self->_getnamestring($citekey) . "0"
+          . $self->_getyearstring($citekey);
         $seenauthoryear{$tmp}++;
         $be->{authoryear} = $tmp;
 
@@ -1411,34 +1449,36 @@ sub postprocess {
         # 7. Generate the labelalpha and also the variant for sorting
         ##############################################################
 
-        if ( $self->getblxoption('labelalpha', $citekey) ) {
+        if ( $self->getblxoption( 'labelalpha', $citekey ) ) {
             my $label;
             my $sortlabel;
 
-            if ($be->{shorthand}) {
-              $sortlabel = $label = $be->{shorthand};
+            if ( $be->{shorthand} ) {
+                $sortlabel = $label = $be->{shorthand};
             }
             else {
-              if ($be->{label}) {
-                $sortlabel = $label = $be->{label};
-              }
-              elsif ($be->{labelnamename} and $be->{$be->{labelnamename}}) {
-                ($label, $sortlabel) = @{$self->_getlabel($citekey, $be->{labelnamename})};
-              }
-              else {
-                $sortlabel = $label = '';
-              }
-              my $yr;
-              if ( $be->{year} ) {
-                $yr = substr $be->{year}, 2, 2;
-              }
-              else {
-                $yr = '00';
-              }
-              $label .= $yr;
-              $sortlabel .= $yr;
+                if ( $be->{label} ) {
+                    $sortlabel = $label = $be->{label};
+                }
+                elsif ( $be->{labelnamename} and $be->{ $be->{labelnamename} } )
+                {
+                    ( $label, $sortlabel ) =
+                      @{ $self->_getlabel( $citekey, $be->{labelnamename} ) };
+                }
+                else {
+                    $sortlabel = $label = '';
+                }
+                my $yr;
+                if ( $be->{year} ) {
+                    $yr = substr $be->{year}, 2, 2;
+                }
+                else {
+                    $yr = '00';
+                }
+                $label     .= $yr;
+                $sortlabel .= $yr;
             }
-            $be->{labelalpha} = $label;
+            $be->{labelalpha}     = $label;
             $be->{sortlabelalpha} = $sortlabel;
         }
 
@@ -1454,15 +1494,16 @@ sub postprocess {
         # 9. when type of patent is not stated, simply assume 'patent'
         ##############################################################
 
-        if ( ( $be->{entrytype} eq 'patent' )  &&  ( ! $be->{type} ) ) {
-            $be->{type} = 'patent'
+        if ( ( $be->{entrytype} eq 'patent' ) && ( !$be->{type} ) ) {
+            $be->{type} = 'patent';
         }
 
         ##############################################################
         # 10. First-pass sorting to generate basic labels
         ##############################################################
 
-        $self->_generatesortstring($citekey, $self->getblxoption('sorting_label', $citekey));
+        $self->_generatesortstring( $citekey,
+            $self->getblxoption( 'sorting_label', $citekey ) );
 
         ##############################################################
         # 11. update the entry in the biber object
@@ -1471,7 +1512,7 @@ sub postprocess {
         $self->{bib}->{$citekey} = $be;
     }
 
-    $self->{citekeys} = [ @foundkeys ];
+    $self->{citekeys} = [@foundkeys];
 
     $logger->debug("Finished postprocessing entries");
 
