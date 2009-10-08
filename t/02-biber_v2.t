@@ -254,6 +254,7 @@ my $kastenholz = q|\entry{kastenholz}{article}{}
   \field{sortinit}{K}
   \field{labelyear}{2006}
   \count{uniquename}{0}
+  \field{year}{2006}
   \field{title}{Computation of methodology\hyphen independent ionic solvation free energies from molecular simulations}
   \field{subtitle}{I. The electrostatic potential in molecular liquids}
   \field{indextitle}{Computation of ionic solvation free energies}
@@ -263,7 +264,6 @@ my $kastenholz = q|\entry{kastenholz}{article}{}
   \field{eid}{124106}
   \field{volume}{124}
   \field{hyphenation}{american}
-  \field{year}{2006}
   \verb{doi}
   \verb 10.1063/1.2172593
   \endverb

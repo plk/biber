@@ -1,0 +1,100 @@
+% WRONG - year is not integer, ORIGDATE is mistyped, URLDATE is just wrong
+@BOOK{L1,
+  AUTHOR	    = {John Doe},
+  TITLE		    = {Title 1},
+  PUBLISHER	    = {Oxford},
+  YEAR		    = {1995--1996},
+  ORIGDATE          = {1985-1030},
+  URLDATE           = {1.5.1998},
+}
+
+% WRONG - missing dash between month and day
+@BOOK{L2,
+  AUTHOR	    = {John Doe},
+  TITLE		    = {Title 2},
+  PUBLISHER	    = {Oxford},
+  ORIGDATE	    = {1995-1230},
+}
+
+% WRONG - completely wrong date range format
+@BOOK{L3,
+  AUTHOR	    = {John Doe},
+  TITLE		    = {Title 3},
+  PUBLISHER	    = {Oxford},
+  URL               = {http://a/b/c},
+  URLDATE	    = {1.5.1988},
+}
+
+% WRONG - 1 digit month
+@BOOK{L4,
+  AUTHOR	    = {John Doe and Albert Abrahams},
+  TITLE		    = {Title 1},
+  PUBLISHER	    = {Oxford},
+  DATE		    = {1995-1-04},
+}
+
+% WRONG - 1 digit day
+@BOOK{L5,
+  AUTHOR	    = {John Doe and Albert Abrahams},
+  TITLE		    = {Title 2},
+  PUBLISHER	    = {Oxford},
+  DATE		    = {1995-10-4},
+}
+
+% WRONG - month out of bounds
+@BOOK{L6,
+  AUTHOR	    = {John Doe and Albert Abrahams},
+  TITLE		    = {Title 1},
+  PUBLISHER	    = {Oxford},
+  DATE		    = {1996-13-03},
+}
+
+% WRONG - day out of bounds
+@BOOK{L7,
+  AUTHOR	    = {John Doe and Albert Abrahams},
+  TITLE		    = {Title 2},
+  PUBLISHER	    = {Oxford},
+  EVENTDATE	    = {1996-10-35},
+}
+
+% WRONG - YEAR not integer
+@BOOK{L8,
+  AUTHOR	    = {Bill Shakespeare},
+  TITLE		    = {Works},
+  PUBLISHER	    = {Oxford},
+  YEAR		    = {1985a},
+}
+
+% OK
+@BOOK{L9,
+  AUTHOR	    = {John Doe and Albert Abrahams},
+  TITLE		    = {Title 2},
+  PUBLISHER	    = {Oxford},
+  EVENTDATE	    = {1996-12-31},
+}
+
+% OK
+@BOOK{L10,
+  AUTHOR	    = {John Doe and Albert Abrahams},
+  TITLE		    = {Title 2},
+  PUBLISHER	    = {Oxford},
+  EVENTDATE	    = {1996-01-01},
+}
+
+% WRONG - DATE and YEAR specified
+@BOOK{L11,
+  AUTHOR	    = {John Doe and Albert Abrahams},
+  TITLE		    = {Title 2},
+  PUBLISHER	    = {Oxford},
+  DATE   	    = {1996-01-01},
+  YEAR              = {1998},
+}
+
+% WRONG - DATE and MONTH specified
+@BOOK{L12,
+  AUTHOR	    = {John Doe and Albert Abrahams},
+  TITLE		    = {Title 2},
+  PUBLISHER	    = {Oxford},
+  DATE   	    = {1996-01-01},
+  MONTH             = {02},
+}

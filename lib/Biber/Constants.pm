@@ -17,6 +17,7 @@ our @EXPORT = qw{
                   @COMMASEP_FIELDS
                   @ENTRIESTOSPLIT
                   @LITERALFIELDS
+                  @DATECOMPONENTFIELDS
                   %SKIPFIELDS
                   %CONFIG_DEFAULT
                   $BIBLATEX_VERSION
@@ -124,10 +125,14 @@ Readonly::Array our @LITERALFIELDS_BASE  =>   qw{
   series shorthand shorthandintro shortjournal shortseries eprinttype
   venue version volume volumes usera userb userc userd
   usere userf hyphenation crossref entrysubtype execute gender sortkey sortyear
-  xref year origyear eventyear urlyear endyear origendyear eventendyear urlendyear
+  xref
+  };
+
+Readonly::Array our @DATECOMPONENTFIELDS  =>   qw{
+  year origyear eventyear urlyear endyear origendyear eventendyear urlendyear
   day origday eventday urlday endday origendday eventendday urlendday
   month origmonth eventmonth urlmonth endmonth origendmonth eventendmonth urlendmonth
-  };
+};
 
 Readonly::Array our @TITLEFIELDS => qw{ title
   subtitle titleaddon shorttitle sorttitle indextitle indexsorttitle
