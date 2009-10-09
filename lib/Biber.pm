@@ -1163,13 +1163,18 @@ sub postprocess {
         foreach my $datetype ('', 'orig', 'event', 'url') {
           if ($be->{$datetype . 'date'}) {
             my $date_re = qr|(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?|xms;
-            if ($be->{$datetype . 'date'} =~ m|\A$date_re/?(?:$date_re)?\z|xms) {
+            if ($be->{$datetype . 'date'} =~ m|\A$date_re(/)?(?:$date_re)?\z|xms) {
               $be->{$datetype . 'year'}      = $1 if $1;
               $be->{$datetype . 'month'}     = $2 if $2;
               $be->{$datetype . 'day'}       = $3 if $3;
-              $be->{$datetype . 'endyear'}   = $4 if $4;
-              $be->{$datetype . 'endmonth'}  = $5 if $5;
-              $be->{$datetype . 'endday'}    = $6 if $6;
+              $be->{$datetype . 'endmonth'}  = $6 if $6;
+              $be->{$datetype . 'endday'}    = $7 if $7;
+              if ($4 and $5) { # normal range
+                $be->{$datetype . 'endyear'} = $5;
+              }
+              elsif ($4 and not $5) { # open ended range - endyear is defined but empty
+                $be->{$datetype . 'endyear'} = '';                  
+              }
             } else {
               $logger->warn("Invalid format of field '" . $datetype . 'date' . "' - ignoring field in entry '$citekey'");
               $self->{warnings}++;

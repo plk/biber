@@ -831,7 +831,7 @@ sub _print_biblatex_entry {
     }
     $str .= "  \\field{sortinit}{$sortinit}\n";
 
-    # The labelyear *option* determines whether "extrayear" is output
+    # The labelyear option determines whether "extrayear" and "labelyear" is output
     if ( $self->getblxoption('labelyear', $citekey) ) {
         my $authoryear = $be->{authoryear};
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
@@ -840,20 +840,11 @@ sub _print_biblatex_entry {
         }
 
         # Construct labelyear
-        if (_defined_and_nonempty($be->{date})) {
-          if ($be->{date} =~ m|\A(\d{4})[-\d]*/(\d{4})[-\d]*\z|xms) { # A date range
-            my $rfromyear = $1; # beginning year of range
-            my $rtoyear   = $2; # end year of range
-            if ($rfromyear == $rtoyear) {
-              $be->{labelyear} = $rfromyear;
-            } else {
-              $be->{labelyear} = "$rfromyear\\bibdatedash $rtoyear";
-            }
-          } elsif ($be->{date} =~ m|\A(\d{4})[-\d]*\z|xms) { # A single date
-            $be->{labelyear} = $1;
-          }
-        } elsif (_defined_and_nonempty($be->{year})) {
+        if (_defined_and_nonempty($be->{year})) {
           $be->{labelyear} = $be->{year};
+          if (_defined_and_nonempty($be->{endyear})) {
+            $be->{labelyear} .= '\bibdatedash ' . $be->{endyear};
+          }
         }
         $str .= "  \\field{labelyear}{" . $be->{labelyear} . "}\n";
     }
