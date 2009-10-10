@@ -842,7 +842,9 @@ sub _print_biblatex_entry {
         # Construct labelyear
         if (_defined_and_nonempty($be->{year})) {
           $be->{labelyear} = $be->{year};
-          if (_defined_and_nonempty($be->{endyear})) {
+          if (_defined_and_nonempty($be->{endyear})
+              and ($be->{year} ne $be->{endyear})) { # ignore endyear if it's the same
+                                                     # as year
             $be->{labelyear} .= '\bibdatedash ' . $be->{endyear};
           }
         }
