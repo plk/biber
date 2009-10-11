@@ -21,7 +21,7 @@ $bibfile = $biber->config('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 
 $biber->{config}{biblatex}{global}{labelalpha} = 1;
-$biber->{config}{biblatex}{global}{labelyear} = 0;
+delete $biber->{config}{biblatex}{global}{labelyear};
 $biber->{config}{biblatex}{global}{maxnames} = 1;
 $biber->{config}{biblatex}{global}{minnames} = 1;
 $biber->prepare;

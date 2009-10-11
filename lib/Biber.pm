@@ -465,6 +465,9 @@ sub parse_ctrlfile {
             unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION;
     }
 
+    if ($self->{config}{biblatex}{global}{labelyear}) {
+      $self->{config}{biblatex}{global}{labelyear} = [ 'year' ]; # set default
+    }
     $self->{config}{biblatex}{global}{labelname} = ['shortauthor', 'author', 'shorteditor', 'editor', 'translator']; # set default 
     my $sorting = ($self->{config}{biblatex}{global}{sorting_label} or '1');
     if ($sorting == 1) { # nty
@@ -1264,7 +1267,7 @@ sub postprocess {
         }
 
         ##############################################################
-        # 4. generate labelname name
+        # 4a. generate labelname name
         ##############################################################
 
         # Here, "labelnamename" is the name of the labelname field
@@ -1291,6 +1294,29 @@ sub postprocess {
         unless ( $be->{labelnamename} ) {
             $logger->debug(
                 "Could not determine the labelname of entry $citekey");
+        }
+
+        ##############################################################
+        # 4b. generate labelyear name
+        ##############################################################
+
+        # Here, "labelyearname" is the name of the labelyear field
+        # and "labelyear" is the actual copy of the relevant field
+
+        my $lyearscheme = $self->getblxoption( 'labelyear', $citekey );
+
+        if ($lyearscheme) {
+          foreach my $ly ( @{$lyearscheme} ) {
+            if ($be->{$ly}) {
+              $be->{labelyearname} = $ly;
+              last;
+            }
+          }
+
+          unless ( $be->{labelyearname} ) {
+            $logger->debug(
+                           "Could not determine the labelname of entry $citekey");
+          }
         }
 
         ##############################################################

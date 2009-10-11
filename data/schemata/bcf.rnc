@@ -164,9 +164,12 @@ labelalpha =
   }
 labelyear =
   element bcf:option {
-    attribute type { "singlevalued" },
+    attribute type { "multivalued" },
     element bcf:key { "labelyear" },
-    element bcf:value { "0" | "1" }
+    element bcf:value {
+      attribute order { xsd:integer },
+      year.list
+    }+
   }
 singletitle =
   element bcf:option {
@@ -226,6 +229,7 @@ maxline =
     element bcf:value { xsd:integer }
   }
 name.list = "shortauthor" | "shorteditor" | "author" | "editor" | "translator"
+year.list = "year" | "origyear" | "eventyear" | "urlyear"
 mincrossrefs =
   element bcf:option {
     attribute type { "singlevalued" },

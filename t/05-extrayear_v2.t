@@ -20,7 +20,7 @@ $biber->parse_auxfile_v2('60-extrayear_v2.aux');
 $bibfile = $biber->config('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 
-$biber->{config}{biblatex}{global}{labelyear} = 1;
+$biber->{config}{biblatex}{global}{labelyear} = [ 'year' ];
 $biber->prepare;
 
 is($biber->{bib}{l1}{extrayear}, '1', 'Entry L1 - one name, first in 1995');

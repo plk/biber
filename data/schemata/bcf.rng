@@ -422,17 +422,19 @@
   <define name="labelyear">
     <element name="bcf:option">
       <attribute name="type">
-        <value>singlevalued</value>
+        <value>multivalued</value>
       </attribute>
       <element name="bcf:key">
         <value>labelyear</value>
       </element>
-      <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
-      </element>
+      <oneOrMore>
+        <element name="bcf:value">
+          <attribute name="order">
+            <data type="integer"/>
+          </attribute>
+          <ref name="year.list"/>
+        </element>
+      </oneOrMore>
     </element>
   </define>
   <define name="singletitle">
@@ -573,6 +575,14 @@
       <value>author</value>
       <value>editor</value>
       <value>translator</value>
+    </choice>
+  </define>
+  <define name="year.list">
+    <choice>
+      <value>year</value>
+      <value>origyear</value>
+      <value>eventyear</value>
+      <value>urlyear</value>
     </choice>
   </define>
   <define name="mincrossrefs">

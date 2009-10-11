@@ -124,3 +124,20 @@
   PUBLISHER	  = {Oxford},
 }
 
+% OK
+@BOOK{L16,
+  AUTHOR	    = {John Doe and Albert Abrahams},
+  TITLE		    = {Title 2},
+  PUBLISHER	  = {Oxford},
+  EVENTDATE	  = {1996-01-01},
+}
+
+% OK - YEAR same as ENDYEAR, labelyear should only have YEAR
+@BOOK{L17,
+  AUTHOR	    = {John Doe and Albert Abrahams},
+  TITLE		    = {Title 2},
+  PUBLISHER	  = {Oxford},
+  DATE	      = {1996-12-10/1996-12-12},
+  ORIGDATE    = {1998-12-10/1998-12-12},
+}
+

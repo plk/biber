@@ -39,9 +39,11 @@
       <bcf:value order="4">editor</bcf:value>
       <bcf:value order="5">translator</bcf:value>
     </bcf:option>
-    <bcf:option type="singlevalued">
+    <bcf:option type="multivalued">
       <bcf:key>labelyear</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value order="1">year</bcf:value>
+      <bcf:value order="1">eventyear</bcf:value>
+      <bcf:value order="1">origyear</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxline</bcf:key>

@@ -20,7 +20,7 @@ $biber->parse_auxfile_v2('60-sort-complex_v2.aux');
 my $bibfile = $biber->config('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
 $biber->{config}{biblatex}{global}{labelalpha} = 1;
-$biber->{config}{biblatex}{global}{labelyear} = 0;
+delete $biber->{config}{biblatex}{global}{labelyear};
 $biber->prepare;
 
 my $sc1 = [

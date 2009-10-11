@@ -437,19 +437,20 @@
                 </xs:restriction>
               </xs:simpleType>
             </xs:element>
-            <xs:element name="value">
-              <xs:simpleType>
-                <xs:restriction base="xs:token">
-                  <xs:enumeration value="0"/>
-                  <xs:enumeration value="1"/>
-                </xs:restriction>
-              </xs:simpleType>
+            <xs:element maxOccurs="unbounded" name="value">
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:extension base="bcf:year.list">
+                    <xs:attribute name="order" use="required" type="xs:integer"/>
+                  </xs:extension>
+                </xs:simpleContent>
+              </xs:complexType>
             </xs:element>
           </xs:sequence>
           <xs:attribute name="type" use="required">
             <xs:simpleType>
               <xs:restriction base="xs:token">
-                <xs:enumeration value="singlevalued"/>
+                <xs:enumeration value="multivalued"/>
               </xs:restriction>
             </xs:simpleType>
           </xs:attribute>
@@ -718,6 +719,14 @@
       <xs:enumeration value="author"/>
       <xs:enumeration value="editor"/>
       <xs:enumeration value="translator"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="year.list">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="year"/>
+      <xs:enumeration value="origyear"/>
+      <xs:enumeration value="eventyear"/>
+      <xs:enumeration value="urlyear"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:group name="mincrossrefs">

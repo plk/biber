@@ -840,16 +840,17 @@ sub _print_biblatex_entry {
         }
 
         # Construct labelyear
-        if (_defined_and_nonempty($be->{year})) {
-          $be->{labelyear} = $be->{year};
-          if (_defined_and_nonempty($be->{endyear})
-              and ($be->{year} ne $be->{endyear})) { # ignore endyear if it's the same
-                                                     # as year
-            $be->{labelyear} .= '\bibdatedash ' . $be->{endyear};
+        if (_defined_and_nonempty($be->{labelyearname})) {
+          $be->{labelyear} = $be->{$be->{labelyearname}};
+          # ignore endyear if it's the same as year
+          if (_defined_and_nonempty($be->{'end' . $be->{labelyearname}})
+              and ($be->{$be->{labelyearname}} ne $be->{'end' . $be->{labelyearname}})) {
+            $be->{labelyear} .= '\bibdatedash ' . $be->{'end' . $be->{labelyearname}};
           }
         $str .= "  \\field{labelyear}{" . $be->{labelyear} . "}\n";
         }
       }
+
       if ( $self->getblxoption('labelalpha', $citekey) ) {
         my $authoryear = $be->{authoryear};
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
