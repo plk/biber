@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 24;
+use Test::More tests => 25;
 
 use Biber;
 use Log::Log4perl qw(:easy);
@@ -95,6 +95,24 @@ my $l14 = q|\entry{L14}{book}{}
 
 |;
 
+my $l15 = q|\entry{L15}{book}{}
+  \name{author}{2}{%
+    {{Doe}{D.}{John}{J.}{}{}{}{}}%
+    {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+  }
+  \list{publisher}{1}{%
+    {Oxford}%
+  }
+  \strng{namehash}{DJAA1}
+  \strng{fullhash}{DJAA1}
+  \field{sortinit}{D}
+  \field{extrayear}{6}
+  \count{uniquename}{0}
+  \field{title}{Title 2}
+\endentry
+
+|;
+
 is($biber->{bib}{l1}{warnings}, $l1, 'Format test 1' ) ;
 ok(! defined($biber->{bib}{l1}{origyear}), 'Format test 1a - ORIGYEAR undef since ORIGDATE is bad' ) ;
 ok(! defined($biber->{bib}{l1}{urlyear}), 'Format test 1b - URLYEAR undef since URLDATE is bad' ) ;
@@ -119,5 +137,6 @@ ok(! defined($biber->{bib}{l13}{endmonth}), 'Format test 13a - ENDMONTH undef fo
 ok(! defined($biber->{bib}{l13}{endday}), 'Format test 13b - ENDDAY undef for open-ended range' ) ;
 is( $biber->_print_biblatex_entry('l13'), $l13c, 'Format test 13c - labelyear open-ended range' ) ;
 is( $biber->_print_biblatex_entry('l14'), $l14, 'Format test 114 - labelyear same as YEAR when ENDYEAR == YEAR') ;
+is( $biber->_print_biblatex_entry('l15'), $l15, 'Format test 115 - labelyear should be undef, no DATE or YEAR') ;
 
 unlink "$bibfile.utf8";

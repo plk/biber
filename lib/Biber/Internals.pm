@@ -847,11 +847,10 @@ sub _print_biblatex_entry {
                                                      # as year
             $be->{labelyear} .= '\bibdatedash ' . $be->{endyear};
           }
-        }
         $str .= "  \\field{labelyear}{" . $be->{labelyear} . "}\n";
-    }
-
-    if ( $self->getblxoption('labelalpha', $citekey) ) {
+        }
+      }
+      if ( $self->getblxoption('labelalpha', $citekey) ) {
         my $authoryear = $be->{authoryear};
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
             $str .= "  \\field{extraalpha}{" 
