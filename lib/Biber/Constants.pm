@@ -59,7 +59,7 @@ our %CONFIG_DEFAULT = (
   quiet => 0,
   nolog => 0,
   wraplines => 0,
-  collate_options => 'level=>2, table=>"latinkeys.txt"',
+  collate_options => { level=>2, table=>"latinkeys.txt" }
 );
 
 ### biblatex fields
