@@ -5,15 +5,18 @@ use Carp;
 use IO::File;
 use File::Spec;
 use Encode;
-use POSIX qw/locale_h/; # for sorting with built-in "sort"
+use POSIX qw( locale_h ); # for sorting with built-in "sort"
+use IPC::Cmd qw( can_run run );
+use Cwd qw( abs_path );
 use Biber::Constants;
 use List::Util qw( first );
 use Biber::Internals;
 use Biber::Utils;
 use LaTeX::Decode;
-use Storable qw(dclone);
-use Log::Log4perl qw(:no_extra_logdie_message);
+use Storable qw( dclone );
+use Log::Log4perl qw( :no_extra_logdie_message );
 use base 'Biber::Internals';
+use Config::General qw( ParseConfig );
 our @ISA;
 
 =encoding utf-8
@@ -118,11 +121,52 @@ sub _init {
 
 sub _initopts {
     my $self = shift;
-    foreach (keys %CONFIG_DEFAULT) {
-        $self->{config}->{$_} = $CONFIG_DEFAULT{$_}
+    my %LOCALCONF = ();
+    if (defined $self->config_file) {
+        %LOCALCONF = ParseConfig(-ConfigFile => $self->config_file, -UTF8 => 1) or 
+            $logger->logcarp("Failure to read config file " . $self->config_file . "\n $@");
+    }
+    my %CONFIG = (%CONFIG_DEFAULT, %LOCALCONF);
+    foreach (keys %CONFIG) {
+        $self->{config}->{$_} = $CONFIG{$_}
     }
     return;
 }
+
+=head2 config_file
+
+Returns the full path of the B<Biber> configuration file. 
+If returns the first file found among:
+=over
+ =item C<biber.conf> in the current directory
+ =item C<$HOME/.biber.conf> 
+ =item the output of C<kpsewhich biber.conf> (if available on the system).
+=back
+If no file is found, it returns C<undef>.
+
+=cut
+
+sub config_file {
+    my $self = shift;
+    my $biberconf;
+    if ( -f "$BIBER_CONF_NAME" ) {
+        $biberconf = abs_path($BIBER_CONF_NAME);
+    }
+    elsif ( -f "$ENV{HOME}/.$BIBER_CONF_NAME" ) {
+        $biberconf = "$ENV{HOME}/.$BIBER_CONF_NAME";
+    }
+    elsif ( can_run("kpsewhich") ) {
+        scalar run( command => [ 'kpsewhich', $BIBER_CONF_NAME ], 
+                    verbose => 0, 
+                    buffer => \$biberconf );
+   }
+   else {
+        $biberconf = undef;
+    }
+    return $biberconf
+}
+
+
 
 =head2 citekeys
 

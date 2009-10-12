@@ -21,6 +21,7 @@ our @EXPORT = qw{
                   @DATEFIELDS
                   %SKIPFIELDS
                   %CONFIG_DEFAULT
+                  $BIBER_CONF_NAME
                   $BIBLATEX_VERSION
                   $BCF_VERSION
                   $BIBER_SORT_FINAL
@@ -38,6 +39,10 @@ Readonly::Scalar our $BIBLATEX_VERSION => '0.9';
 Readonly::Scalar our $BCF_VERSION => '0.9';
 
 our $BIBER_SORT_FINAL = 0;
+
+# the name of the Biber configuration file, which should be 
+# either returned by kpsewhich or located at "$HOME/.$BIBER_CONF_NAME"
+our $BIBER_CONF_NAME = "biber.conf";
 
 ## Biber CONFIGURATION DEFAULTS
 our %CONFIG_DEFAULT = (
