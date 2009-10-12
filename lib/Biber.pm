@@ -76,7 +76,11 @@ my $logger = Log::Log4perl::get_logger('main');
 sub new {
     my ($class, $opts) = @_;
     my $self = bless {}, $class;
-    $self->_initopts();
+    if (defined $opts->{configfile}) {
+        $self->_initopts( $opts->{configfile} );
+    } else {
+        $self->_initopts();
+    }
     if ($opts) {
         my %params = %$opts;
         foreach (keys %params) {
@@ -115,17 +119,23 @@ sub _init {
 
 =head2 _initopts
 
-    Initialise default options
+    Initialise default options, optionally with config file as argument
 
 =cut
 
 
 sub _initopts {
-    my $self = shift;
+    my ($self, $conffile) = @_;
     my %LOCALCONF = ();
-    if (defined $self->config_file) {
-        %LOCALCONF = ParseConfig(-ConfigFile => $self->config_file, -UTF8 => 1) or 
-            $logger->logcarp("Failure to read config file " . $self->config_file . "\n $@");
+
+    # if a config file was given as cmd-line arg, it overrides everything else
+    unless ( defined $conffile and -f $conffile ) {
+        $conffile = $self->config_file
+    }
+
+    if (defined $conffile) {
+        %LOCALCONF = ParseConfig(-ConfigFile => $conffile, -UTF8 => 1) or 
+            $logger->logcarp("Failure to read config file " . $conffile . "\n $@");
     }
     my %CONFIG = (%CONFIG_DEFAULT, %LOCALCONF);
     foreach (keys %CONFIG) {
@@ -149,6 +159,7 @@ If no file is found, it returns C<undef>.
 
 sub config_file {
     my $self = shift;
+
     my $biberconf;
     if ( -f "$BIBER_CONF_NAME" ) {
         $biberconf = abs_path($BIBER_CONF_NAME);
@@ -163,8 +174,8 @@ sub config_file {
    }
    else {
         $biberconf = undef;
-    }
-    return $biberconf
+   }
+   return $biberconf
 }
 
 
