@@ -139,7 +139,7 @@ sub _getlabel {
 
 =head2 getblxoption
 
-getblxoption('option', 'citekey') returns the value of option. In order of
+getblxoption('option', 'citekey', ['entrytype']) returns the value of option. In order of
 decreasing preference, returns:
     1. Biblatex option defined for entry
     2. Biblatex option defined for entry type

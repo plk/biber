@@ -1227,6 +1227,13 @@ sub postprocess {
                 elsif ( $2 and $2 eq "true" ) {
                     $localoptions{$citekey}->{$1} = 1;
                 }
+		# labelname and labelyear are special and need to be array refs
+		# They would not be specified as a list in an individual entry
+		# since this would make no sense - in an individual entry,
+		# you would want to force them to a specific field
+                elsif (($1 eq 'labelyear') or ($1 eq 'labelname')) {
+                    $localoptions{$citekey}->{$1} = [ $2 ];
+                }
                 elsif ($2) {
                     $localoptions{$citekey}->{$1} = $2;
                 }
