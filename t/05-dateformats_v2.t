@@ -291,7 +291,7 @@ $biber->prepare;
 is($biber->{bib}{l17}{labelyearname}, 'origyear', 'Date format test 17b - labelyearname = ORIGYEAR' ) ;
 is($biber->_print_biblatex_entry('l17'), $l17c, 'Date format test 17c - labelyear = ORIGYEAR value when ENDORIGYEAR is the same and YEAR is also present' ) ;
 
-$biber->{config}{biblatex}{global}{labelyear} = [ 'eventyear', 'year', 'origyear' ];
+$biber->{config}{biblatex}{book}{labelyear} = [ 'eventyear', 'year', 'origyear' ];
 delete $biber->{bib}{l17}{year};
 delete $biber->{bib}{l17}{month};
 $biber->prepare;
