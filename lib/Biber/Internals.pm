@@ -843,9 +843,10 @@ sub _print_biblatex_entry {
         if (_defined_and_nonempty($be->{labelyearname})) {
           $be->{labelyear} = $be->{$be->{labelyearname}};
           # ignore endyear if it's the same as year
-          if (_defined_and_nonempty($be->{'end' . $be->{labelyearname}})
-              and ($be->{$be->{labelyearname}} ne $be->{'end' . $be->{labelyearname}})) {
-            $be->{labelyear} .= '\bibdatedash ' . $be->{'end' . $be->{labelyearname}};
+	  my ($ytype) = $be->{labelyearname} =~ /\A(.*)year\z/xms;
+          if (_defined_and_nonempty($be->{$ytype . 'endyear'})
+              and ($be->{$be->{labelyearname}} ne $be->{$ytype . 'endyear'})) {
+            $be->{labelyear} .= '\bibdatedash ' . $be->{$ytype . 'endyear'};
           }
         $str .= "  \\field{labelyear}{" . $be->{labelyear} . "}\n";
         }

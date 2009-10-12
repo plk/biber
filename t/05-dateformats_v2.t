@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 31;
+use Test::More tests => 33;
 
 use Biber;
 use Log::Log4perl qw(:easy);
@@ -151,16 +151,22 @@ my $l17 = q|\entry{l17}{book}{}
   \count{uniquename}{0}
   \field{year}{1996}
   \field{origyear}{1998}
+  \field{eventyear}{1998}
   \field{endyear}{1996}
   \field{origendyear}{1998}
+  \field{eventendyear}{2004}
   \field{day}{10}
   \field{origday}{10}
+  \field{eventday}{10}
   \field{endday}{12}
   \field{origendday}{12}
+  \field{eventendday}{12}
   \field{month}{12}
   \field{origmonth}{12}
+  \field{eventmonth}{12}
   \field{endmonth}{12}
   \field{origendmonth}{12}
+  \field{eventendmonth}{12}
   \field{title}{Title 2}
 \endentry
 
@@ -182,16 +188,59 @@ my $l17c = q|\entry{l17}{book}{}
   \count{uniquename}{0}
   \field{year}{1996}
   \field{origyear}{1998}
+  \field{eventyear}{1998}
   \field{endyear}{1996}
   \field{origendyear}{1998}
+  \field{eventendyear}{2004}
   \field{day}{10}
   \field{origday}{10}
+  \field{eventday}{10}
   \field{endday}{12}
   \field{origendday}{12}
+  \field{eventendday}{12}
   \field{month}{12}
   \field{origmonth}{12}
+  \field{eventmonth}{12}
   \field{endmonth}{12}
   \field{origendmonth}{12}
+  \field{eventendmonth}{12}
+  \field{title}{Title 2}
+\endentry
+
+|;
+
+my $l17e = q|\entry{l17}{book}{}
+  \name{author}{2}{%
+    {{Doe}{D.}{John}{J.}{}{}{}{}}%
+    {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+  }
+  \list{publisher}{1}{%
+    {Oxford}%
+  }
+  \strng{namehash}{DJAA1}
+  \strng{fullhash}{DJAA1}
+  \field{sortinit}{D}
+  \field{extrayear}{6}
+  \field{labelyear}{1998\bibdatedash 2004}
+  \count{uniquename}{0}
+  \field{year}{1996}
+  \field{origyear}{1998}
+  \field{eventyear}{1998}
+  \field{endyear}{1996}
+  \field{origendyear}{1998}
+  \field{eventendyear}{2004}
+  \field{day}{10}
+  \field{origday}{10}
+  \field{eventday}{10}
+  \field{endday}{12}
+  \field{origendday}{12}
+  \field{eventendday}{12}
+  \field{month}{12}
+  \field{origmonth}{12}
+  \field{eventmonth}{12}
+  \field{endmonth}{12}
+  \field{origendmonth}{12}
+  \field{eventendmonth}{12}
   \field{title}{Title 2}
 \endentry
 
@@ -241,5 +290,14 @@ $biber->prepare;
 
 is($biber->{bib}{l17}{labelyearname}, 'origyear', 'Date format test 17b - labelyearname = ORIGYEAR' ) ;
 is($biber->_print_biblatex_entry('l17'), $l17c, 'Date format test 17c - labelyear = ORIGYEAR value when ENDORIGYEAR is the same and YEAR is also present' ) ;
+
+$biber->{config}{biblatex}{global}{labelyear} = [ 'eventyear', 'year', 'origyear' ];
+delete $biber->{bib}{l17}{year};
+delete $biber->{bib}{l17}{month};
+$biber->prepare;
+
+is($biber->{bib}{l17}{labelyearname}, 'eventyear', 'Date format test 17d - labelyearname = EVENTYEAR' ) ;
+is($biber->_print_biblatex_entry('l17'), $l17e, 'Date format test 17e - labelyear = ORIGYEAR-ORIGENDYEAR' ) ;
+
 
 unlink "$bibfile.utf8";
