@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../../data/schemas/bcf.rnc" type="compact"?>
-<bcf:controlfile version="0.8" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="0.9" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- BIBDATA -->
   <bcf:bibdata>
     <bcf:datasource type="file">examples.bib</bcf:datasource>

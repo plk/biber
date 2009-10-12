@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../data/schemata/bcf.rnc" type="compact"?>
-<bcf:controlfile version="0.8" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="0.9" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- BIB DATA -->
   <bcf:bibdata>
     <bcf:datasource type="file">file1.bib</bcf:datasource>
@@ -42,8 +42,8 @@
     <bcf:option type="multivalued">
       <bcf:key>labelyear</bcf:key>
       <bcf:value order="1">year</bcf:value>
-      <bcf:value order="1">eventyear</bcf:value>
-      <bcf:value order="1">origyear</bcf:value>
+      <bcf:value order="2">eventyear</bcf:value>
+      <bcf:value order="3">origyear</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxline</bcf:key>
