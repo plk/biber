@@ -17,6 +17,7 @@ use Storable qw( dclone );
 use Log::Log4perl qw( :no_extra_logdie_message );
 use base 'Biber::Internals';
 use Config::General qw( ParseConfig );
+use Data::Dump;
 our @ISA;
 
 =encoding utf-8
@@ -1663,10 +1664,10 @@ sub sortentries {
   } else {
     require Unicode::Collate;
     my $collopts = $self->config('collate_options');
-    my %collopts = eval "( $opts )" 
-    my $Collator = Unicode::Collate->new( %$collopts ) 
-        or $logger->logcarp("Problem with Unicode::Collate options: $@";
+    my $Collator = Unicode::Collate->new( $collopts ) 
+        or $logger->logcarp("Problem with Unicode::Collate options: $@");
     my $UCAversion = $Collator->version();
+    my $opts = Data::Dump->dump($collopts);
     $logger->info("Sorting with Unicode::Collate ($opts, UCA version: $UCAversion)"); 
     @auxcitekeys = sort {
       $Collator->cmp( $bibentries{$a}->{sortstring},
@@ -1790,7 +1791,6 @@ EOF
 
 sub _filedump {
     my ($self, $file) = @_;
-    require Data::Dump or carp "Module Data::Dump required for debugging";
     my $fh = IO::File->new($file, '>') or croak "Can't open file $file for writing";
     print $fh Data::Dump::pp($self);
     close $fh;
@@ -1799,7 +1799,6 @@ sub _filedump {
 
 sub _stringdump {
     my $self = shift ;
-    require Data::Dump or carp "Module Data::Dump required for debugging";
     return Data::Dump::pp($self);
 }
 
