@@ -59,7 +59,12 @@ our %CONFIG_DEFAULT = (
   quiet => 0,
   nolog => 0,
   wraplines => 0,
-  collate_options => { level=>2, table=>"latinkeys.txt" }
+  # these options are passed to the Unicode::Collate object
+  collate_options => { level=>2, table=>"latinkeys.txt" },
+  # Semitic (or eventually other) last names may begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
+  nosortdiacritics => qr/[\x{2bf}\x{2018}]/,
+  # Semitic (or eventually other) names may be prefixed with an article (e.g. Al-Hasan, as-Saleh)
+  nosortprefix => qr/\p{L}{2}\p{Pd}/
 );
 
 ### biblatex fields
