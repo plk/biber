@@ -719,6 +719,8 @@ sub _print_name {
     #FIXME The following is done by biblatex.bst, but shouldn't it be optional? 
     $fn =~ s/(\p{Lu}\.)\s+/$1~/g; # J. Frank -> J.~Frank
     $fn =~ s/\s+(\p{Lu}\.)/~$1/g; # Bernard H. -> Bernard~H.
+    $pre =~ s/\s/~/g if $pre; # van der -> van~der
+    $ln =~ s/\s/~/g if $ln; # Murder Smith -> Murder~Smith
     if ( $self->getblxoption('terseinits', $citekey) ) {
         $lni = tersify($lni);
         $fni = tersify($fni);
