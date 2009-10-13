@@ -150,7 +150,7 @@ sub parsename {
                 $RE{balanced}{-parens=>'{}'}
                /x;
     my $SUFFIXRE = $NAMERE;
-    my $NAMESEQRE = qr/ (?:\p{Lu}\S+[\s~]*)+ /x ;
+    my $NAMESEQRE = qr/ (?:\p{Lu}\S*[\s~]*)+ /x ;
 
     if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}$/ ) 
     { 
@@ -193,6 +193,7 @@ sub parsename {
     elsif ( $namestr =~ /[^\\],/ )   # <pre> Lastname, Firstname
     {
         $logger->debug("Caught namestring of type 'prefix? Lastname, Firstname'");
+
         ( $prefix, $lastname, $firstname ) = $namestr =~
             m/^( # prefix?
                 $PREFIXRE
