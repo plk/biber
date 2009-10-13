@@ -263,7 +263,7 @@ Options:
   --outfile|-O <file>    Output to <file> instead of <basename>.bbl
   --configfile|-g <file> Use <file> as configuration file for Biber.
                          The default is the first file found among
-                         "biber.conf" in the current directory, "$HOME/.biber.conf",
+                         "biber.conf" in the current directory, "\$HOME/.biber.conf",
                          or else the output of "kpsewhich biber.conf".
   --allentries|-a        Output all entries in the database.
                          (NB: this ignores the .aux file.)
