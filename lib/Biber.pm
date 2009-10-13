@@ -151,6 +151,9 @@ If returns the first file found among:
 =over
  =item C<biber.conf> in the current directory
  =item C<$HOME/.biber.conf> 
+ =item C<$ENV{XDG_HOME_CONFIG}/biber/biber.conf>
+ =item C<$HOME/Library/biber/biber.conf> (Mac OSX only)
+ =item C<$ENV{APPDATA}/biber.conf> (Windows only)
  =item the output of C<kpsewhich biber.conf> (if available on the system).
 =back
 If no file is found, it returns C<undef>.
@@ -161,11 +164,24 @@ sub config_file {
     my $self = shift;
 
     my $biberconf;
-    if ( -f "$BIBER_CONF_NAME" ) {
+    if ( -f $BIBER_CONF_NAME ) {
         $biberconf = abs_path($BIBER_CONF_NAME);
     }
-    elsif ( -f "$ENV{HOME}/.$BIBER_CONF_NAME" ) {
-        $biberconf = "$ENV{HOME}/.$BIBER_CONF_NAME";
+    elsif ( -f File::Spec->catfile($ENV{HOME}, ".$BIBER_CONF_NAME" ) ) {
+        $biberconf = File::Spec->catfile($ENV{HOME}, ".$BIBER_CONF_NAME" );
+    }
+    elsif ( defined $ENV{XDG_HOME_CONFIG}
+            and -f File::Spec->catfile($ENV{XDG_HOME_CONFIG}, "biber", $BIBER_CONF_NAME) ) {
+        $biberconf = File::Spec->catfile($ENV{XDG_HOME_CONFIG}, "biber", $BIBER_CONF_NAME);
+    }
+    elsif ( $^O =~ /Mac/ and -f File::Spec->catfile($ENV{HOME}, "Library", "biber", $BIBER_CONF_NAME) ) {
+        $biberconf = File::Spec->catfile($ENV{HOME}, "Library", "biber", $BIBER_CONF_NAME);
+
+    }
+    elsif ( $^O =~ /Win/ and defined $ENV{APPDATA} 
+            and -f File::Spec->catfile($ENV{APPDATA}, "biber", $BIBER_CONF_NAME) ) {
+        $biberconf = File::Spec->catfile($ENV{APPDATA}, $BIBER_CONF_NAME);
+
     }
     elsif ( can_run("kpsewhich") ) {
         scalar run( command => [ 'kpsewhich', $BIBER_CONF_NAME ], 
@@ -177,8 +193,6 @@ sub config_file {
    }
    return $biberconf
 }
-
-
 
 =head2 citekeys
 
