@@ -187,10 +187,13 @@ our $dispatch_sorting = {
              'debug'         =>  [\&_sort_debug,         []],
              'editor'        =>  [\&_sort_editor,        ['editor']],
              'editora'       =>  [\&_sort_editor,        ['editora']],
-             'editoratype'   =>  [\&_sort_editortype,    ['editoratype']],
+             'editoraclass'  =>  [\&_sort_editortc,      ['editoraclass']],
+             'editoratype'   =>  [\&_sort_editortc,      ['editoratype']],
              'editorb'       =>  [\&_sort_editor,        ['editorb']],
+             'editorbclass'  =>  [\&_sort_editortc,      ['editorbclass']],
              'editorbtype'   =>  [\&_sort_editortype,    ['editorbtype']],
              'editorc'       =>  [\&_sort_editor,        ['editorc']],
+             'editorcclass'  =>  [\&_sort_editortc,      ['editorcclass']],
              'editorctype'   =>  [\&_sort_editortype,    ['editorctype']],
              'endday'        =>  [\&_sort_dm,            ['endday']],
              'endmonth'      =>  [\&_sort_dm,            ['endmonth']],
@@ -356,13 +359,13 @@ sub _sort_editor {
 
 # This is a meta-sub which uses the optional arguments to the dispatch code
 # It's done to avoid having many repetitions of almost identical sorting code
-# for the editor type roles
-sub _sort_editortype {
+# for the editor type/class roles
+sub _sort_editortc {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
-  my $edtype = (@{$args})[0]; # get editor type field
+  my $edtypeclass = (@{$args})[0]; # get editor type/class field
   my $be = $self->{bib}{$citekey};
-  if ($self->getblxoption('useeditor', $citekey) and $be->{$edtype}) {
-    return $be->{$edtype};
+  if ($self->getblxoption('useeditor', $citekey) and $be->{$edtypeclass}) {
+    return $be->{$edtypeclass};
   }
   else {
     return '';
