@@ -221,6 +221,7 @@ our $dispatch_sorting = {
              'organization'  =>  [\&_sort_place,         ['organization']],
              'presort'       =>  [\&_sort_presort,       []],
              'publisher'     =>  [\&_sort_publisher,     []],
+             'pubstate'      =>  [\&_sort_pubstate,      []],
              'school'        =>  [\&_sort_place,         ['school']],
              'sortkey'       =>  [\&_sort_sortkey,       []],
              'sortname'      =>  [\&_sort_sortname,      []],
@@ -463,6 +464,12 @@ sub _sort_publisher {
   else {
     return '';
   }
+}
+
+sub _sort_pubstate {
+  my ($self, $citekey, $sortelementattributes) = @_;
+  my $be = $self->{bib}{$citekey};
+  return $be->{pubstate} ? $be->{pubstate} : '';
 }
 
 sub _sort_sortkey {
