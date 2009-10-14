@@ -56,10 +56,13 @@ my $lists3      = 'ibm1zzzz';
 my $lists4      = 'ibm2hp1zzzz';
 my $lists5      = 'ibm2hp2sun2sony';
 my $dates1      = '1979001002000000198000400808075006007019240070090192400002005019200200308020003004079003003';
-my $edrole1     = 'redactor0jaffe2philipp0loewenfeld2samuel1kaltenbrunner2ferdinand1ewald2paul';
+my $edtypeclass1 = 'vol0redactor0jaffe2philipp0loewenfeld2samuel1kaltenbrunner2ferdinand1ewald2paul';
 
 # Testing editor roles
 $biber->{config}{biblatex}{global}{sorting_label} =  [
+                                                [
+                                                 {'editoraclass'     => {}},
+                                                ],
                                                 [
                                                  {'editoratype'     => {}},
                                                 ],
@@ -72,7 +75,7 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                ];
 $biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 $biber->prepare;
-is($biber->{bib}{jaffe}{sortstring}, $edrole1, 'Editor roles' );
+is($biber->{bib}{jaffe}{sortstring}, $edtypeclass1, 'Editor type/class' );
 
 
 # Testing sorting using various date fields

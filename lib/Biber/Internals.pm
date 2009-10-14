@@ -139,7 +139,7 @@ sub _getlabel {
 
 =head2 getblxoption
 
-getblxoption($option, $citekey, $entrytype?) returns the value of option. In order of
+getblxoption('option', 'citekey', ['entrytype']) returns the value of option. In order of
 decreasing preference, returns:
     1. Biblatex option defined for entry
     2. Biblatex option defined for entry type
@@ -219,11 +219,14 @@ our $dispatch_sorting = {
              'debug'         =>  [\&_sort_debug,         []],
              'editor'        =>  [\&_sort_editor,        ['editor']],
              'editora'       =>  [\&_sort_editor,        ['editora']],
-             'editoratype'   =>  [\&_sort_editortype,    ['editoratype']],
+             'editoraclass'  =>  [\&_sort_editortc,      ['editoraclass']],
+             'editoratype'   =>  [\&_sort_editortc,      ['editoratype']],
              'editorb'       =>  [\&_sort_editor,        ['editorb']],
-             'editorbtype'   =>  [\&_sort_editortype,    ['editorbtype']],
+             'editorbclass'  =>  [\&_sort_editortc,      ['editorbclass']],
+             'editorbtype'   =>  [\&_sort_editortc,      ['editorbtype']],
              'editorc'       =>  [\&_sort_editor,        ['editorc']],
-             'editorctype'   =>  [\&_sort_editortype,    ['editorctype']],
+             'editorcclass'  =>  [\&_sort_editortc,      ['editorcclass']],
+             'editorctype'   =>  [\&_sort_editortc,      ['editorctype']],
              'endday'        =>  [\&_sort_dm,            ['endday']],
              'endmonth'      =>  [\&_sort_dm,            ['endmonth']],
              'endyear'       =>  [\&_sort_year,          ['endyear']],
@@ -388,13 +391,13 @@ sub _sort_editor {
 
 # This is a meta-sub which uses the optional arguments to the dispatch code
 # It's done to avoid having many repetitions of almost identical sorting code
-# for the editor type roles
-sub _sort_editortype {
+# for the editor type/class roles
+sub _sort_editortc {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
-  my $edtype = (@{$args})[0]; # get editor type field
+  my $edtypeclass = (@{$args})[0]; # get editor type/class field
   my $be = $self->{bib}{$citekey};
-  if ($self->getblxoption('useeditor', $citekey) and $be->{$edtype}) {
-    return $be->{$edtype};
+  if ($self->getblxoption('useeditor', $citekey) and $be->{$edtypeclass}) {
+    return $be->{$edtypeclass};
   }
   else {
     return '';
@@ -760,6 +763,8 @@ sub _print_name {
     #FIXME The following is done by biblatex.bst, but shouldn't it be optional? 
     $fn =~ s/(\p{Lu}\.)\s+/$1~/g; # J. Frank -> J.~Frank
     $fn =~ s/\s+(\p{Lu}\.)/~$1/g; # Bernard H. -> Bernard~H.
+    $pre =~ s/\s/~/g if $pre; # van der -> van~der
+    $ln =~ s/\s/~/g if $ln; # Murder Smith -> Murder~Smith
     if ( $self->getblxoption('terseinits', $citekey) ) {
         $lni = tersify($lni);
         $fni = tersify($fni);
@@ -872,7 +877,7 @@ sub _print_biblatex_entry {
     }
     $str .= "  \\field{sortinit}{$sortinit}\n";
 
-    # The labelyear *option* determines whether "extrayear" is output
+    # The labelyear option determines whether "extrayear" and "labelyear" is output
     if ( $self->getblxoption('labelyear', $citekey) ) {
         my $authoryear = $be->{authoryear};
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
@@ -881,25 +886,19 @@ sub _print_biblatex_entry {
         }
 
         # Construct labelyear
-        if (_defined_and_nonempty($be->{date})) {
-          if ($be->{date} =~ m|\A(\d{4})[-\d]*/(\d{4})[-\d]*\z|xms) { # A date range
-            my $rfromyear = $1; # beginning year of range
-            my $rtoyear   = $2; # end year of range
-            if ($rfromyear == $rtoyear) {
-              $be->{labelyear} = $rfromyear;
-            } else {
-              $be->{labelyear} = "$rfromyear\\bibdatedash $rtoyear";
-            }
-          } elsif ($be->{date} =~ m|\A(\d{4})[-\d]*\z|xms) { # A single date
-            $be->{labelyear} = $1;
+        if (_defined_and_nonempty($be->{labelyearname})) {
+          $be->{labelyear} = $be->{$be->{labelyearname}};
+          # ignore endyear if it's the same as year
+	  my ($ytype) = $be->{labelyearname} =~ /\A(.*)year\z/xms;
+          if (_defined_and_nonempty($be->{$ytype . 'endyear'})
+              and ($be->{$be->{labelyearname}} ne $be->{$ytype . 'endyear'})) {
+            $be->{labelyear} .= '\bibdatedash ' . $be->{$ytype . 'endyear'};
           }
-        } elsif (_defined_and_nonempty($be->{year})) {
-          $be->{labelyear} = $be->{year};
-        }
         $str .= "  \\field{labelyear}{" . $be->{labelyear} . "}\n";
-    }
+        }
+      }
 
-    if ( $self->getblxoption('labelalpha', $citekey) ) {
+      if ( $self->getblxoption('labelalpha', $citekey) ) {
         my $authoryear = $be->{authoryear};
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
             $str .= "  \\field{extraalpha}{" 
@@ -998,6 +997,7 @@ sub _print_biblatex_entry {
 
     # Append any warnings to the entry, if any
     if (_defined_and_nonempty($be->{warnings})) {
+      chomp $be->{warnings}; # remove final newline
       $str .= '  \warn{' . $be->{warnings} . "}\n";
     }
 

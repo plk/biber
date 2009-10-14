@@ -204,6 +204,7 @@ my $jaffe = q|\entry{jaffe}{collection}{}
   \field{edition}{2}
   \field{volumes}{2}
   \field{editoratype}{redactor}
+  \field{editoraclass}{vol}
 \endentry
 
 |;

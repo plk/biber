@@ -5,6 +5,7 @@
 ^_build
 ^_playground
 ^Build
+^Build\.bat
 ^Makefile\.PL
 ^META\.yml
 ^blib

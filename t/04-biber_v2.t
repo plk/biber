@@ -44,17 +44,17 @@ my $setaksin = q|\entry{set:aksin}{article}{}
   \strng{fullhash}{AOTHALCBNCBOOE1}
   \field{labelalpha}{Aks\textbf{+}06}
   \field{sortinit}{A}
+  \field{labelyear}{2006}
   \count{uniquename}{0}
   \true{singletitle}
+  \field{year}{2006}
+  \field{month}{02}
   \field{title}{Effect of immobilization on catalytic characteristics of saturated Pd-N-heterocyclic carbenes in Mizoroki-Heck reactions}
   \field{indextitle}{Effect of immobilization on catalytic characteristics}
   \field{journaltitle}{J.~Organomet. Chem.}
   \field{number}{13}
   \field{volume}{691}
-  \field{year}{2006}
-  \field{month}{02}
   \field{pages}{3027\bibrangedash 3036}
-  \field{labelyear}{2006}
 \endentry
 
 | ;
@@ -67,13 +67,9 @@ my $markey = q|\entry{markey}{online}{}
   \strng{fullhash}{MN1}
   \field{labelalpha}{Mar05}
   \field{sortinit}{M}
+  \field{labelyear}{2005\bibdatedash 2006}
   \count{uniquename}{0}
   \true{singletitle}
-  \field{title}{Tame the BeaST}
-  \field{subtitle}{The B to X of BibTeX}
-  \field{annotation}{An \texttt{online} entry for a tutorial. Note the format of the \texttt{date} field (\texttt{yyyy-mm-dd}) in the database file. It is also possible to use the fields \texttt{day}\slash \texttt{month}\slash \texttt{year} instead.}
-  \field{version}{1.3}
-  \field{hyphenation}{american}
   \field{year}{2005}
   \field{origyear}{2004}
   \field{urlyear}{2006}
@@ -89,7 +85,11 @@ my $markey = q|\entry{markey}{online}{}
   \field{urlmonth}{10}
   \field{endmonth}{12}
   \field{origendmonth}{10}
-  \field{labelyear}{2005\bibdatedash 2006}
+  \field{title}{Tame the BeaST}
+  \field{subtitle}{The B to X of BibTeX}
+  \field{annotation}{An \texttt{online} entry for a tutorial. Note the format of the \texttt{date} field (\texttt{yyyy-mm-dd}) in the database file. It is also possible to use the fields \texttt{day}\slash \texttt{month}\slash \texttt{year} instead.}
+  \field{version}{1.3}
+  \field{hyphenation}{american}
   \verb{url}
   \verb http://tug.ctan.org/tex-archive/info/bibtex/tamethebeast/ttb_en.pdf
   \endverb

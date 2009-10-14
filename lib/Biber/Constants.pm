@@ -18,8 +18,10 @@ our @EXPORT = qw{
                   @ENTRIESTOSPLIT
                   @LITERALFIELDS
                   @DATECOMPONENTFIELDS
+                  @DATEFIELDS
                   %SKIPFIELDS
                   %CONFIG_DEFAULT
+                  $BIBER_CONF_NAME
                   $BIBLATEX_VERSION
                   $BCF_VERSION
                   $BIBER_SORT_FINAL
@@ -39,6 +41,10 @@ Readonly::Scalar our $BCF_VERSION => '0.9';
 
 our $BIBER_SORT_FINAL = 0;
 
+# the name of the Biber configuration file, which should be 
+# either returned by kpsewhich or located at "$HOME/.$BIBER_CONF_NAME"
+our $BIBER_CONF_NAME = "biber.conf";
+
 ## Biber CONFIGURATION DEFAULTS
 my $locale = $ENV{LANG} || $ENV{LC_ALL} || "en_US.utf8" ;
 
@@ -56,14 +62,15 @@ our %CONFIG_DEFAULT = (
   quiet => 0,
   nolog => 0,
   wraplines => 0,
-  collate_options => 'level=>2, table=>"latinkeys.txt"',
+  # these options are passed to the Unicode::Collate object
+  collate_options => { level=>2, table=>"latinkeys.txt" },
   ## eventually this shall be moved to biblatex options:
   displaymode => 'uniform',
   locale => $locale,
   # Semitic (or eventually other) last names may begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
   nosortdiacritics => qr/[\x{2bf}\x{2018}]/,
   # Semitic (or eventually other) names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
-  nosortprefix => qr/\p{Ll}{2}\p{Pd}/,
+  nosortprefix => qr/\p{L}{2}\p{Pd}/,
   # default options for biblatex
   # in practice these will be obtained from the control file,
   # but we need this as a fallback, just in case,
@@ -132,6 +139,10 @@ Readonly::Array our @DATECOMPONENTFIELDS  =>   qw{
   year origyear eventyear urlyear endyear origendyear eventendyear urlendyear
   day origday eventday urlday endday origendday eventendday urlendday
   month origmonth eventmonth urlmonth endmonth origendmonth eventendmonth urlendmonth
+};
+
+Readonly::Array our @DATEFIELDS  =>   qw{
+  year month
 };
 
 Readonly::Array our @TITLEFIELDS => qw{ title

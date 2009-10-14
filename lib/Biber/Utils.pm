@@ -37,7 +37,6 @@ our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid
     normalize_string normalize_string_underscore latexescape array_minus
     remove_outer getinitials tersify ucinit };
 
-
 ######
 # These are used in the functions parsename and getinitials :
 # TODO : get them from $biber->config instead
@@ -151,7 +150,7 @@ sub parsename {
                 $RE{balanced}{-parens=>'{}'}
                /x;
     my $SUFFIXRE = $NAMERE;
-    my $NAMESEQRE = qr/ (?:\p{Lu}\S+[\s~]*)+ /x ;
+    my $NAMESEQRE = qr/ (?:\p{Lu}\S*[\s~]*)+ /x ;
 
     if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}$/ ) 
     { 
@@ -194,6 +193,7 @@ sub parsename {
     elsif ( $namestr =~ /[^\\],/ )   # <pre> Lastname, Firstname
     {
         $logger->debug("Caught namestring of type 'prefix? Lastname, Firstname'");
+
         ( $prefix, $lastname, $firstname ) = $namestr =~
             m/^( # prefix?
                 $PREFIXRE

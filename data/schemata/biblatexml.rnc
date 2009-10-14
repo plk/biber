@@ -84,12 +84,19 @@ BibLaTeXML.additional.fields =
 #########################################################
 ## We now define the biblatexml elements
 
-formattext = (emphasis?, superscript?, subscript?, text?)*
-formattextB = (nosort?, emphasis?, superscript?, subscript?, text?)*
+formattext = (emphasis?, superscript?, subscript?, quote?, math?, text?)*
+formattextB = (nosort?, emphasis?, superscript?, subscript?, math?, quote?, text?)*
 emphasis = element emphasis { text }
 superscript = element superscript { text }
 subscript = element subscript { text }
+quote = element quote { text }
+## The textual content of bib:math should be in (La)TeX notation  
+## MathML mathml:* insertions would also be possible with http://xsltml.sourceforge.net/
+## the optional attribute "text" gives a Unicode representation of the mathematical expression (if feasible), e.g., x³+y³=z³
+math = element math { attribute text { text }?, text }
+
 nosort = element nosort { text } ##FIXME could it be formattextB ? ie. <bib:nosort><bib:superscript>foo</bib:superscript><bib:nosort> ??
+
 
 abstract = element abstract { formattext }
 addendum = element addendum { formattext }
