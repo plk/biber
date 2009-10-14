@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 28;
+use Test::More tests => 29;
 
 use Biber::Utils;
 use Log::Log4perl qw(:easy);
@@ -127,6 +127,13 @@ my $nameEc =
          suffix => undef, 
      namestring => 'Poussin Lecoq, Jean Charles',
  nameinitstring => 'Poussin_Lecoq_JC' } ;
+my $nameEd =
+   {  firstname => 'J. C. G', 
+       lastname => 'Vallée Poussin', 
+         prefix => 'de la', 
+         suffix => undef, 
+     namestring => 'de la Vallée Poussin, J. C. G',
+ nameinitstring => 'Vallée_Poussin_JCG' } ;
  
 is_deeply(parsename('Jean Charles Gabriel de la Vallée Poussin'), $nameE, 'parsename E1');
 is_deeply(parsename('{Jean Charles Gabriel} de la Vallée Poussin'), $nameE, 'parsename E2');
@@ -136,6 +143,7 @@ is_deeply(parsename('{Jean Charles Gabriel} de la {Vallée Poussin}'), $nameE, '
 is_deeply(parsename('Jean Charles Gabriel Poussin'), $nameEb, 'parsename E6');
 is_deeply(parsename('{Jean Charles Gabriel} Poussin'), $nameEb, 'parsename E7');
 is_deeply(parsename('Jean Charles {Poussin Lecoq}'), $nameEc, 'parsename E8');
+is_deeply(parsename('J. C. G de la Vallée Poussin'), $nameEd, 'parsename E9');
 
 is( getinitials('{\"O}zt{\"u}rk'), '{\"O}.', 'getinitials 1' ) ;
 is( getinitials('{\c{C}}ok {\OE}illet'), '{\c{C}}.~{\OE}.', 'getinitials 2' ) ;
