@@ -62,7 +62,7 @@ our %is_name_entry = map { $_ => 1 } @NAMEFIELDS;
 
 my $logger = Log::Log4perl::get_logger('main');
 
-=head1 FUNCTIONS
+=head1 METHODS 
 
 =head2 new
 
@@ -148,14 +148,23 @@ sub _initopts {
 
 Returns the full path of the B<Biber> configuration file. 
 If returns the first file found among:
-=over
- =item C<biber.conf> in the current directory
- =item C<$HOME/.biber.conf> 
- =item C<$ENV{XDG_HOME_CONFIG}/biber/biber.conf>
- =item C<$HOME/Library/biber/biber.conf> (Mac OSX only)
- =item C<$ENV{APPDATA}/biber.conf> (Windows only)
- =item the output of C<kpsewhich biber.conf> (if available on the system).
+
+=over 4
+
+=item * C<biber.conf> in the current directory
+
+=item * C<$HOME/.biber.conf> 
+
+=item * C<$ENV{XDG_HOME_CONFIG}/biber/biber.conf>
+
+=item * C<$HOME/Library/biber/biber.conf> (Mac OSX only)
+
+=item * C<$ENV{APPDATA}/biber.conf> (Windows only)
+
+=item * the output of C<kpsewhich biber.conf> (if available on the system).
+
 =back
+
 If no file is found, it returns C<undef>.
 
 =cut
