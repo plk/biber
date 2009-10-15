@@ -44,7 +44,8 @@ t/05-sorting_v2.t
 t/06-labelname_v2.t
 t/07-bcfvalidation_v2.t
 t/08-biblatexml.t
-t/09-sort-complex_v2.t
+t/09-biblatexml-ml.t
+t/10-sort-complex_v2.t
 t/10-configfile.t
 t/pod-coverage.t
 t/pod.t
