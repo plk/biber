@@ -956,7 +956,7 @@ sub _print_biblatex_entry {
     foreach my $ifield (@DATECOMPONENTFIELDS) {
         next if $SKIPFIELDS{$ifield};
         if ( _defined_and_nonempty($be->{$ifield}) ) {
-	  $str .= $self->_printfield( $ifield, $be->{$ifield} );
+	        $str .= $self->_printfield( $ifield, $be->{$ifield} );
         }
     }
 
@@ -974,6 +974,8 @@ sub _print_biblatex_entry {
             $str .= $self->_printfield( $lfieldprint, $be->{$lfield} );
         }
     }
+
+    # this is currently "pages" only
     foreach my $rfield (@RANGEFIELDS) {
         next if $SKIPFIELDS{$rfield};
         if ( _defined_and_nonempty($be->{$rfield}) ) {
