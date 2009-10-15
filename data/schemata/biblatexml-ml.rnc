@@ -2,7 +2,7 @@ default namespace = "http://biblatex-biber.sourceforge.net/biblatexml"
 namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
 datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
 namespace user = "http://localhost/biblatexml/user"
-## TODO?  change namespace of bib:emphasis, bib:superscript, bib:subscript 
+## TODO?  change namespace of bib:emphasis, bib:superscript, bib:subscript
 ##        to db = "http://docbook.org/ns/docbook"
 start = entries
 
@@ -30,17 +30,17 @@ BibLaTeXML.standard.entries =
   | thesis
   | unpublished
   | set
-    
-BibLaTeXML.additional.entries = 
-review | 
-review.electronic | 
-article.electronic | 
-periodical.electronic | 
-preprint | 
-software | 
+
+BibLaTeXML.additional.entries =
+review |
+review.electronic |
+article.electronic |
+periodical.electronic |
+preprint |
+software |
 movie
-## TODO Unsupported types: 
-##   artwork, audio, image, jurisdiction, legislation, legal, movie, music,  
+## TODO Unsupported types:
+##   artwork, audio, image, jurisdiction, legislation, legal, movie, music,
 ##   performance, reference, inreference, review, software, standard, video
 ##   TODO: add manuscript and archivalrecord ??
 
@@ -50,13 +50,13 @@ BibLaTeXML.common.fields =
   shortauthor? &
   shorthand? &
   shorthandintro? &
-  shorttitle? & 
+  shorttitle? &
   origtitle? &
   origyear? &
   language? &
   origlanguage? &
-  script? & 
-  origscript? & 
+  script? &
+  origscript? &
   abstract? &
   annotation? &
   (file|pdf)? &
@@ -92,12 +92,14 @@ emphasis = element emphasis { text }
 superscript = element superscript { text }
 subscript = element subscript { text }
 quote = element quote { text }
-## The textual content of bib:math should be in (La)TeX notation  
+## The textual content of bib:math should be in (La)TeX notation
 ## MathML mathml:* insertions would also be possible with http://xsltml.sourceforge.net/
 ## the optional attribute "text" gives a Unicode representation of the mathematical expression (if feasible), e.g., x³+y³=z³
 math = element math { attribute text { text }?, text }
 
-nosort = element nosort { text } ##FIXME could it be formattextB ? ie. <bib:nosort><bib:superscript>foo</bib:superscript><bib:nosort> ??
+##FIXME could it be formattextB? ie:
+## <bib:nosort><bib:superscript>foo</bib:superscript><bib:nosort> ??
+nosort = element nosort { text }
 
 romanized = attribute mode { "romanized" }
 translated = att.lang?, attribute mode { "translated" }
@@ -171,7 +173,7 @@ issuesubtitle = ( element issuesubtitle { att.lang?, formattext },
                    element issuesubtitle { translated, formattext }* ) |
                  ( element issuesubtitle { translated, formattext }+ )
 iswc = element iswc { text }
-journal = ( element journal {attribute id {text}}) | 
+journal = ( element journal {attribute id {text}}) |
           ( element journal { att.lang?, formattextB },
             element journal { romanized, formattextB }?,
             element journal { translated, formattextB }* ) |
@@ -193,11 +195,11 @@ journalsubtitle = ( element journalsubtitle { att.lang?, formattext },
 label = element label { text }
 ## this element contains data relative to individual users of the database
 private = element private { attribute user {text} & library? & remarks? & topics? & user.field* }
-user.field = element user:* { text } 
+user.field = element user:* { text }
 library = element library { libraryitem+ }
-libraryitem = element item { attribute location {text}?, 
-                             attribute ref {text}?, 
-                             attribute url {xsd:anyURI}?, 
+libraryitem = element item { attribute location {text}?,
+                             attribute ref {text}?,
+                             attribute url {xsd:anyURI}?,
                              attribute note {text}? }
 mainsubtitle = ( element mainsubtitle { att.lang?, formattext },
                  element mainsubtitle { romanized, formattext }?,
@@ -234,7 +236,7 @@ reprinttitle = ( element reprinttitle { att.lang?, formattext },
                 ( element reprinttitle { romanized, formattext },
                   element reprinttitle { translated, formattext }* ) |
                 ( element reprinttitle { translated, formattext }+ )
-series = ( element series { attribute id {text}}) | 
+series = ( element series { attribute id {text}}) |
          ( element series { (formattext | item+) },
           element series { romanized, (formattext | item+) }?,
           element series { translated, (formattext | item+) }? ) |
@@ -243,19 +245,19 @@ series = ( element series { attribute id {text}}) |
           ( element series { translated, (formattext | item+) } )
 shorthand = ( element shorthand { text },
              element shorthand { romanized, text }?,
-             element shorthand { translated, text }? ) | 
+             element shorthand { translated, text }? ) |
              ( element shorthand { romanized, text },
              element shorthand { translated, text }? ) |
              ( element shorthand { translated, text } )
 shorthandintro = ( element shorthandintro { text },
              element shorthandintro { romanized, text }?,
-             element shorthandintro { translated, text }? ) | 
+             element shorthandintro { translated, text }? ) |
              ( element shorthandintro { romanized, text },
              element shorthandintro { translated, text }? ) |
              ( element shorthandintro { translated, text } )
 shorttitle = ( element shorttitle { att.lang?, formattextB },
              element shorttitle { romanized, formattextB }?,
-             element shorttitle { translated, formattextB }* ) | 
+             element shorttitle { translated, formattextB }* ) |
              ( element shorttitle { romanized, formattextB },
              element shorttitle { translated, formattextB }* ) |
              ( element shorttitle { translated, formattextB }+ )
@@ -319,39 +321,47 @@ sorttitle = ( element sorttitle { text },
 sortyear = element sortyear { text }
 useprefix = element useprefix { text }
 xref = element xref { text }
-# RANGE FIELDS
-origyear = element origyear { text | range }
-year = element year { attlist.year?, (text | range), localyear? }
 
-# approximate when exact date is uncertain, 
-# assumed when it is known but not stated on the document
-# and converted when it is stated in a different calendar
-attlist.year =
-  attribute type { "approximate" | "assumed" | "converted" }
-localyear = element localyear { attlist.localyear, (text | range)}
-attlist.localyear =
-  attribute calendar { "julian" | "hebrew" | "islamic" | "hijrishamsi" | "revolutionary" },
+# INTEGER FIELDS
+edition = element edition { xsd:integer | ( attribute string { text } ) }
+# DATE FIELDS
+month = element month { xsd:gMonth }
+  ##FIXME allow type="converted" attribute?
+  ## localmonth ??
+year = element year { xsd:gYear, optlist.year? }
+optlist.year =
+  ( attribute type { "approximate" | "assumed" }
+  | ( attribute type { "converted" }, localyear ) )
+localyear = element localyear { attlist.localdate, xsd:gYear }
+date = element date { (date.type | daterange), optlist.date? }
+origdate = element origdate { (date.type | daterange), optlist.date? }
+urldate = element urldate { (date.type | daterange), optlist.date? }
+eventdate = element eventdate { (date.type | daterange), optlist.date? }
+date.type = (xsd:date | xsd:gYearMonth | xsd:gYear)
+ # "approximate" when exact date is uncertain,
+ # "assumed" when it is known but not stated on the document
+ # and "converted" when it is stated in a different calendar,
+ # with child element "localyear" or "localdate"
+optlist.date =
+  ( attribute type { "approximate" | "assumed" }
+  | ( attribute type { "converted" }, localdate ) )
+localdate = element localdate { attlist.localdate, (date.type | daterange) }
+attlist.localdate =
+  attribute calendar { "julian" | "hebrew" | "islamic" | "hijrishamsi" | "revolutionary" | "japanese" | "bahai" | "chinese" | "tibetan" | "indian" },
   attribute note { text }?
-range = range.start, range.end
-range.start = element start { text }
-range.end = element end { text }
+daterange = daterange.start, daterange.end
+daterange.start = element start { date.type }
+daterange.end = element end { date.type }
 pages = element pages { attlist.pages?, (text | range | pagelist ) }
 pagelist = element list { text }
 attlist.pages =
   attribute pagination { "page" | "column" | "line" | "verse" | "paragraph" | "none" }?,
   attribute bookpagination { "page" | "column" | "line" | "verse" | "paragraph" | "none" }?,
-  attribute part { text }? # e.g. when a book has parts in different scripts, with respective paginations
-    
-# INTEGER FIELDS
-day = element day { xsd:integer }
-edition = element edition { xsd:integer | ( attribute string { text } ) }
-month = element month { xsd:integer }
-urlday = element urlday { xsd:integer }
-urlmonth = element urlmonth { xsd:integer }
-urlyear = element urlyear { xsd:integer }
-# DATE FIELDS
-date = element date { xsd:date | xsd:integer }
-urldate = element urldate { xsd:date }
+  attribute part { text }? ## e.g. when a book has parts in different scripts, with respective paginations
+range = range.start, range.end
+range.start = element start { text }
+range.end = element end { text }
+
 # LITERAL LISTS
 attlist.lists = attribute andothers { "true" }
 institution = ( element institution { attribute id {text}, attlist.lists? }) |
@@ -425,22 +435,22 @@ listf = element listf { attlist.lists?, (text | item+) }
 item = element item { formattext }
 pubitem = element item { publishername, location }
 publishername = element name { attribute id {text}?, formattext }
-publocation = element location { attribute id {text}?, text } 
+publocation = element location { attribute id {text}?, text }
 
-publisherinfos = (( publisherinfo | 
-    (location? & publisher?) 
-  )? & 
-  ( origpublisherinfo | 
-    (origlocation? & origpublisher?) 
+publisherinfos = (( publisherinfo |
+    (location? & publisher?)
+  )? &
+  ( origpublisherinfo |
+    (origlocation? & origpublisher?)
   )?)
 
 # KEY LISTS
-# TODO ? add attribute type = babel, xml, ISO-XXX etc 
+# TODO ? add attribute type = babel, xml, ISO-XXX etc
 language = element language { xsd:language | itemlang+ }
 origlanguage = element origlanguage { xsd:language | itemlang+ }
 itemlang = element item { xsd:language }
-script.list = "Arab" | "Armi" | "Armn" | "Avst" | "Bali" | "Batk" | "Beng" | "Blis" | "Bopo" | "Brah" | "Brai" | "Bugi" | "Buhd" | "Cakm" | "Cans" | "Cari" | "Cham" | "Cher" | "Cirt" | "Copt" | "Cprt" | "Cyrl" | "Cyrs" | "Deva" | "Dsrt" | "Egyd" | "Egyh" | "Egyp" | "Ethi" | "Geok" | "Geor" | "Glag" | "Goth" | "Grek" | "Gujr" | "Guru" | "Hang" | "Hani" | "Hano" | "Hans" | "Hant" | "Hebr" | "Hira" | "Hmng" | "Hrkt" | "Hung" | "Inds" | "Ital" | "Java" | "Jpan" | "Kali" | "Kana" | "Khar" | "Khmr" | "Knda" | "Kore" | "Kthi" | "Lana" | "Laoo" | "Latf" | "Latg" | "Latn" | "Lepc" | "Limb" | "Lina" | "Linb" | "Lisu" | "Lyci" | "Lydi" | "Mand" | "Mani" | "Maya" | "Mero" | "Mlym" | "Mong" | "Moon" | "Mtei" | "Mymr" | "Nkgb" | "Nkoo" | "Ogam" | "Olck" | "Orkh" | "Orya" | "Osma" | "Perm" | "Phag" | "Phli" | "Phlp" | "Phlv" | "Phnx" | "Plrd" | "Prti" | "Qaaa" | "Qabx" | "Rjng" | "Roro" | "Runr" | "Samr" | "Sara" | "Saur" | "Sgnw" | "Shaw" | "Sinh" | "Sund" | "Sylo" | "Syrc" | "Syre" | "Syrj" | "Syrn" | "Tagb" | "Tale" | "Talu" | "Taml" | "Tavt" | "Telu" | "Teng" | "Tfng" | "Tglg" | "Thaa" | "Thai" | "Tibt" | "Ugar" | "Vaii" | "Visp" | "Xpeo" | "Xsux" | "Yiii" | "Zinh" | "Zmth" | "Zsym" | "Zxxx" | "Zyyy" | "Zzzz" 
-script = element script { script.list | itemscript+ } 
+script.list = "Arab" | "Armi" | "Armn" | "Avst" | "Bali" | "Batk" | "Beng" | "Blis" | "Bopo" | "Brah" | "Brai" | "Bugi" | "Buhd" | "Cakm" | "Cans" | "Cari" | "Cham" | "Cher" | "Cirt" | "Copt" | "Cprt" | "Cyrl" | "Cyrs" | "Deva" | "Dsrt" | "Egyd" | "Egyh" | "Egyp" | "Ethi" | "Geok" | "Geor" | "Glag" | "Goth" | "Grek" | "Gujr" | "Guru" | "Hang" | "Hani" | "Hano" | "Hans" | "Hant" | "Hebr" | "Hira" | "Hmng" | "Hrkt" | "Hung" | "Inds" | "Ital" | "Java" | "Jpan" | "Kali" | "Kana" | "Khar" | "Khmr" | "Knda" | "Kore" | "Kthi" | "Lana" | "Laoo" | "Latf" | "Latg" | "Latn" | "Lepc" | "Limb" | "Lina" | "Linb" | "Lisu" | "Lyci" | "Lydi" | "Mand" | "Mani" | "Maya" | "Mero" | "Mlym" | "Mong" | "Moon" | "Mtei" | "Mymr" | "Nkgb" | "Nkoo" | "Ogam" | "Olck" | "Orkh" | "Orya" | "Osma" | "Perm" | "Phag" | "Phli" | "Phlp" | "Phlv" | "Phnx" | "Plrd" | "Prti" | "Qaaa" | "Qabx" | "Rjng" | "Roro" | "Runr" | "Samr" | "Sara" | "Saur" | "Sgnw" | "Shaw" | "Sinh" | "Sund" | "Sylo" | "Syrc" | "Syre" | "Syrj" | "Syrn" | "Tagb" | "Tale" | "Talu" | "Taml" | "Tavt" | "Telu" | "Teng" | "Tfng" | "Tglg" | "Thaa" | "Thai" | "Tibt" | "Ugar" | "Vaii" | "Visp" | "Xpeo" | "Xsux" | "Yiii" | "Zinh" | "Zmth" | "Zsym" | "Zxxx" | "Zyyy" | "Zzzz"
+script = element script { script.list | itemscript+ }
 origscript = element origscript { script.list | itemscript+ }
 itemscript = element item { script.list }
 # NAME LISTS
@@ -554,7 +564,7 @@ namec = ( element namec { attlist.lists?, (text | person+) },
            element namec { attlist.lists?, uniform, (text | person+) }? ) |
          ( element namec { attlist.lists?, uniform, (text | person+) } )
 person = element person {
-    attlist.person, 
+    attlist.person,
     ( text | (first, prefix?, last, suffix?) )
   }
 attlist.person |=
@@ -583,7 +593,7 @@ attlist.reprintinfo |=
    attribute note {text}?
 reviews = element reviews {reviewitem*}
 reviewitem = element item {attlist.review?, text?}
-attlist.review |= 
+attlist.review |=
    attribute type {text }?,
    attribute url {xsd:anyURI}?,
    attribute author { text }?,
@@ -620,7 +630,7 @@ BibLaTeXML.article.standard.fields =
   series? &
   volume? &
   number? &
-  publisherinfos & 
+  publisherinfos &
   eid? &
   eprint? &
   version? &
@@ -629,7 +639,7 @@ BibLaTeXML.article.standard.fields =
   issn? &
   addendum? &
   doi? &
-# url? &  
+# url? &
   (urldate | (urlday , urlmonth , urlyear))?
 BibLaTeXML.article.fields =
   BibLaTeXML.article.standard.fields &
@@ -646,13 +656,13 @@ attlist.article.electronic = attribute id {text}, attribute entrytype { "article
 
 #########################################################
 # for reviews we need attribute ref or title or both
-review = element entry { attlist.review & (crossref | title) & 
+review = element entry { attlist.review & (crossref | title) &
               url? & BibLaTeXML.article.fields }
 attlist.review = attribute id {text}, attribute entrytype { "review" }, attribute type {"printed"}?
 
 #########################################################
 # url mandatory if type is electronic
-review.electronic = element entry { attlist.review.electronic & (crossref | title) &  
+review.electronic = element entry { attlist.review.electronic & (crossref | title) &
               url & BibLaTeXML.article.fields }
 attlist.review.electronic = attribute id {text}, attribute entrytype { "review" }, attribute type {"electronic"}
 
@@ -660,7 +670,7 @@ attlist.review.electronic = attribute id {text}, attribute entrytype { "review" 
 BibLaTeXML.book.standard.fields =
   author? & #changed
   editor? & #changed
-  ((title & year) | 
+  ((title & year) |
    (title? & year? & crossref)) & #a book can inherit its elements from another book (e.g. individual volumes with diff titles)
   bookauthor? & #added
   shorteditor? &
@@ -698,13 +708,13 @@ BibLaTeXML.book.standard.fields =
   doi? &
   url? &
   eprint? &
-  (urldate | (urlday & urlmonth & urlyear))?
-  
+  urldate?
+
 BibLaTeXML.book.fields =
   BibLaTeXML.book.standard.fields &
   BibLaTeXML.common.fields &
   BibLaTeXML.additional.fields
-  
+
 book = element entry { attlist.book, BibLaTeXML.book.fields }
 attlist.book = attribute id {text}, attribute entrytype {"book"}
 
@@ -726,7 +736,7 @@ BibLaTeXML.booklet.standard.fields =
   doi? &
   eprint? &
   url? &
-  (urldate | (urlday & urlmonth & urlyear))?
+  urldate?
 BibLaTeXML.booklet.fields =
   BibLaTeXML.booklet.standard.fields &
   BibLaTeXML.common.fields &
@@ -768,7 +778,7 @@ BibLaTeXML.collection.standard.fields =
   isbn? &
   oclc ? &
   lccn ? &
-  issn? &  #added 
+  issn? &  #added
   chapter? &
   pages? &
   pagetotal? &
@@ -776,20 +786,20 @@ BibLaTeXML.collection.standard.fields =
   doi? &
   eprint? &
   url? &
-  (urldate | (urlday & urlmonth & urlyear))?
+  urldate?
 BibLaTeXML.collection.fields =
   BibLaTeXML.collection.standard.fields &
   BibLaTeXML.common.fields &
   BibLaTeXML.additional.fields
 collection = element entry { attlist.collection, BibLaTeXML.collection.fields }
-attlist.collection = attribute id {text}, attribute entrytype {"collection"} 
+attlist.collection = attribute id {text}, attribute entrytype {"collection"}
 
-#########################################################   
+#########################################################
 BibLaTeXML.inbook.standard.fields =
   author &
   title &
   # year can be provided with crossref if it refers to multivolume work
-  (((crossref | xref) & year?) | 
+  (((crossref | xref) & year?) |
   (bookauthor? &
   # FIXME: this is probably too strict
   booktitle &
@@ -798,7 +808,7 @@ BibLaTeXML.inbook.standard.fields =
   maintitleaddon? &
   booksubtitle? &
   booktitleaddon? &
-  year & 
+  year &
   editor? &
   shorteditor? &
   translator? &
@@ -828,13 +838,13 @@ BibLaTeXML.inbook.standard.fields =
   doi? &
   eprint? &
   url? &
-  (urldate | (urlday & urlmonth & urlyear))?
+  urldate?
 BibLaTeXML.inbook.fields =
   BibLaTeXML.inbook.standard.fields &
   BibLaTeXML.common.fields &
   BibLaTeXML.additional.fields
 inbook = element entry { attlist.inbook, BibLaTeXML.inbook.fields }
-attlist.inbook = attribute id {text}, attribute entrytype {"inbook"} 
+attlist.inbook = attribute id {text}, attribute entrytype {"inbook"}
 
 #########################################################
 BibLaTeXML.incollection.standard.fields =
@@ -843,7 +853,7 @@ BibLaTeXML.incollection.standard.fields =
    subtitle? &
    titleaddon? &
   # year can be provided with crossref if it refers to multivolume work
-  (((crossref | xref) & year?) | 
+  (((crossref | xref) & year?) |
   ( editor? & # made it optional
   # FIXME: this is probably too strict
   booktitle &
@@ -866,10 +876,10 @@ BibLaTeXML.incollection.standard.fields =
   number? &
   edition? &
   series? &
-  issn? &  #added  
+  issn? &  #added
   isbn? &
   oclc ? &
-  lccn ? )) & 
+  lccn ? )) &
   volume? &
   part? &
   note? &
@@ -879,13 +889,13 @@ BibLaTeXML.incollection.standard.fields =
   doi? &
   eprint? &
   url? &
-  (urldate | (urlday & urlmonth & urlyear))?
+  urldate?
 BibLaTeXML.incollection.fields =
   BibLaTeXML.incollection.standard.fields &
   BibLaTeXML.common.fields &
   BibLaTeXML.additional.fields
 incollection = element entry { attlist.incollection, BibLaTeXML.incollection.fields }
-attlist.incollection = attribute id {text}, attribute entrytype {"incollection"} 
+attlist.incollection = attribute id {text}, attribute entrytype {"incollection"}
 
 #########################################################
 BibLaTeXML.inproceedings.standard.fields =
@@ -909,7 +919,7 @@ BibLaTeXML.inproceedings.standard.fields =
   number? &
   organization? &
   publisherinfos &
-  issn? &  #added  
+  issn? &  #added
   isbn? &
   oclc ? &
   lccn ?)) &
@@ -922,7 +932,7 @@ BibLaTeXML.inproceedings.standard.fields =
   doi? &
   eprint? &
   url? &
-  (urldate | (urlday & urlmonth & urlyear))?
+  urldate?
 
 BibLaTeXML.inproceedings.fields =
   BibLaTeXML.inproceedings.standard.fields &
@@ -955,7 +965,7 @@ BibLaTeXML.manual.standard.fields =
   doi? &
   eprint? &
   url? &
-  (urldate | (urlday & urlmonth & urlyear))?
+  urldate?
 BibLaTeXML.manual.fields =
   BibLaTeXML.manual.standard.fields &
   BibLaTeXML.common.fields &
@@ -967,7 +977,7 @@ attlist.manual = attribute id {text}, attribute entrytype {"manual"}, attribute 
 BibLaTeXML.misc.standard.fields =
   (author|editor)? &
   title &
-  ((day? & month? & year)|date) &
+  ((month? & year)|date) &
   subtitle? &
   titleaddon? &
 #  howpublished? & -> attribute
@@ -979,7 +989,7 @@ BibLaTeXML.misc.standard.fields =
   doi? &
   eprint? &
   url? &
-  (urldate | (urlday & urlmonth & urlyear))?
+  urldate?
 BibLaTeXML.misc.fields =
   BibLaTeXML.misc.standard.fields &
   BibLaTeXML.common.fields &
@@ -991,15 +1001,15 @@ attlist.misc = attribute id {text}, attribute entrytype {"misc"}, attribute type
 BibLaTeXML.online.standard.fields =
   (author & editor?)? &
   title &
-  ((day? & month? & year)|date)? &
-  (url|eprint) & 
+  ((month? & year)|date)? &
+  (url|eprint) &
   subtitle? &
   titleaddon? &
   version? &
   note? &
   organization? &
   addendum? &
-  (urldate | (urlday & urlmonth & urlyear))?
+  urldate?
 BibLaTeXML.online.fields =
   BibLaTeXML.online.standard.fields &
   BibLaTeXML.common.fields &
@@ -1012,7 +1022,7 @@ BibLaTeXML.patent.standard.fields =
   author &
   title &
   number &
-  ((day? & month? & year)|date) &
+  ((month? & year)|date) &
   holder? &
   subtitle? &
   titleaddon? &
@@ -1022,7 +1032,7 @@ BibLaTeXML.patent.standard.fields =
   note? &
   addendum? &
   url? &
-  (urldate | (urlday & urlmonth & urlyear))?
+  urldate?
 BibLaTeXML.patent.fields =
   BibLaTeXML.patent.standard.fields &
   BibLaTeXML.common.fields &
@@ -1060,8 +1070,8 @@ att.patenttype = attribute type {
 #########################################################
 BibLaTeXML.periodical.standard.fields =
   editor? &  # made it optional
-  (journal|journaltitle) & # CHANGED from title 
-  ((((day? & month)|issue)? & year)|date) &
+  (journal|journaltitle) & # CHANGED from title
+  ((((month)|issue)? & year)|date) &
   shorteditor? &
   introduction? &
   subtitle? &
@@ -1078,7 +1088,7 @@ BibLaTeXML.periodical.standard.fields =
   doi? &
   eprint? &
 #  url? &
-  (urldate | (urlday & urlmonth & urlyear))?
+  urldate?
 BibLaTeXML.periodical.fields =
   BibLaTeXML.periodical.standard.fields &
   BibLaTeXML.common.fields &
@@ -1121,7 +1131,7 @@ BibLaTeXML.proceedings.standard.fields =
   doi? &
   eprint? &
   url? &
-  (urldate | (urlday & urlmonth & urlyear))?
+  urldate?
 BibLaTeXML.proceedings.fields =
   BibLaTeXML.proceedings.standard.fields &
   BibLaTeXML.common.fields &
@@ -1150,7 +1160,7 @@ BibLaTeXML.report.standard.fields =
   doi? &
   eprint? &
   url? &
-  (urldate | (urlday & urlmonth & urlyear))?
+  urldate?
 BibLaTeXML.report.fields =
   BibLaTeXML.report.standard.fields &
   BibLaTeXML.common.fields &
@@ -1180,7 +1190,7 @@ BibLaTeXML.thesis.standard.fields =
   doi? &
   eprint? &
   url? &
-  (urldate | (urlday & urlmonth & urlyear))?
+  urldate?
 BibLaTeXML.thesis.fields =
   BibLaTeXML.thesis.standard.fields &
   BibLaTeXML.common.fields &
@@ -1192,7 +1202,7 @@ attlist.thesis = attribute id {text}, attribute entrytype {"thesis"}, attribute 
 BibLaTeXML.unpublished.standard.fields =
   author &
   title &
-  ((day? & month? & year)|date)? &
+  ((month? & year)|date)? &
   subtitle? &
   titleaddon? &
   institution? & #added
@@ -1200,31 +1210,31 @@ BibLaTeXML.unpublished.standard.fields =
   note? &
   addendum? &
   url? &
-  (urldate | (urlday & urlmonth & urlyear))?
- 
+  urldate?
+
 BibLaTeXML.unpublished.fields =
   BibLaTeXML.unpublished.standard.fields &
   BibLaTeXML.common.fields &
   BibLaTeXML.additional.fields
 unpublished = element entry { attlist.unpublished, BibLaTeXML.unpublished.fields }
-attlist.unpublished = attribute id {text}, attribute entrytype {"unpublished"} 
+attlist.unpublished = attribute id {text}, attribute entrytype {"unpublished"}
 
 #########################################################
 BibLaTeXML.preprint.standard.fields =
   author &
   title &
-  ((day? & month? & year)|date) &
+  ((month? & year)|date) &
   institution? &
   location? &
   subtitle? &
   titleaddon? &
   series? &
-  pagetotal? & 
+  pagetotal? &
   note? &
   addendum? &
   url? &
-  (urldate | (urlday & urlmonth & urlyear))?
-  
+  urldate?
+
 BibLaTeXML.preprint.fields =
   BibLaTeXML.preprint.standard.fields &
   BibLaTeXML.common.fields &
@@ -1239,13 +1249,13 @@ software = element entry { attribute id {text}, attribute entrytype {"software"}
 movie = element entry { attribute id {text}, attribute entrytype {"movie"}, BibLaTeXML.misc.fields }
 
 #########################################################
-BibLaTeXML.set.fields = 
+BibLaTeXML.set.fields =
   entryset &
   crossref? & #actually this is not needed as it is the first element of the entryset
   annotation? &
-  keywords? & 
+  keywords? &
   remarks? &
   private* &
-  options? 
+  options?
 
 set = element entry { attribute id {text}, attribute entrytype {"set"}, BibLaTeXML.set.fields }
