@@ -12,11 +12,11 @@ use Log::Log4perl qw(:no_extra_logdie_message);
 my $logger = Log::Log4perl::get_logger('main');
 
 sub _text_bibtex_parse {
-        
+
     my ($self, $filename) = @_;
 
     my %bibentries = $self->bib;
-    
+
     my @localkeys;
 
     my $encoding;
@@ -44,12 +44,12 @@ sub _text_bibtex_parse {
             next;
         }
 
-        next if ( $entry->metatype == BTE_MACRODEF or $entry->metatype == BTE_UNKNOWN 
+        next if ( $entry->metatype == BTE_MACRODEF or $entry->metatype == BTE_UNKNOWN
                 or $entry->metatype == BTE_COMMENT ); #or $entry->type =~ m/^comment$/i
 
         unless ( $entry->key ) {
             $logger->warn("Cannot get the key of entry no $count : Skipping");
-            next 
+            next
         }
 
         my $origkey = $entry->key;
@@ -107,7 +107,7 @@ sub _text_bibtex_parse {
                         $Biber::inset_entries{$setkey} = $key;
                     }
                 }
-                elsif ($f eq 'crossref') { ### $entry->type ne 'set' and 
+                elsif ($f eq 'crossref') { ### $entry->type ne 'set' and
                     $Biber::crossrefkeys{$value}++;
                     $Biber::entrieswithcrossref{$key} = $value;
                 }
@@ -135,7 +135,7 @@ sub _text_bibtex_parse {
                     # ignore field e.g. "address" if "location" also exists
                     next if $entry->exists($af);
                 }
-                
+
                 my @tmp = map { decode($encoding, $_) } $entry->split($f);
 
                 if ($Biber::is_name_entry{$f}) {
@@ -148,9 +148,9 @@ sub _text_bibtex_parse {
 
                 } else {
                     @tmp = map { remove_outer($_) } @tmp;
-                } 
+                }
 
-                $bibentries{ $key }->{$af} = [ @tmp ]                 
+                $bibentries{ $key }->{$af} = [ @tmp ]
 
             };
 
@@ -191,7 +191,7 @@ Philip Kime C<< <philip at kime.org.uk> >>
 =head1 BUGS
 
 Please report any bugs or feature requests on our sourceforge tracker at
-L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
@@ -212,4 +212,4 @@ later version, or
 
 =cut
 
-# vim: set tabstop=4 shiftwidth=4 expandtab: 
+# vim: set tabstop=4 shiftwidth=4 expandtab:

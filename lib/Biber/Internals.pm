@@ -31,13 +31,13 @@ sub _getnameinitials {
     if ( $#names < $self->getblxoption('maxnames', $citekey ) ) {    # 1 to maxname names
         foreach my $a (@names) {
             if ( $a->{prefix} and $self->getblxoption('useprefix', $citekey ) ) {
-                $initstr .= terseinitials( $a->{prefix} ) 
+                $initstr .= terseinitials( $a->{prefix} )
             }
             $initstr .= terseinitials( $a->{lastname} );
 
             #FIXME suffix ?
             if ( $a->{firstname} ) {
-                $initstr .= terseinitials( $a->{firstname} ) 
+                $initstr .= terseinitials( $a->{firstname} )
             }
         }
     }
@@ -67,7 +67,7 @@ sub _getallnameinitials {
     my $initstr = "";
     foreach my $a (@{$names}) {
         if ( $a->{prefix} and $self->getblxoption('useprefix', $citekey ) ) {
-            $initstr .= terseinitials( $a->{prefix} ) 
+            $initstr .= terseinitials( $a->{prefix} )
         }
         $initstr .= terseinitials( $a->{lastname} );
 
@@ -85,7 +85,7 @@ sub _getlabel {
   my @names = @{ $self->{bib}{$citekey}{$namefield} };
   my $dt = $self->{bib}{$citekey}{datatype};
   my $alphaothers = $self->getblxoption('alphaothers', $citekey);
-  my $sortalphaothers = $self->getblxoption('sortalphaothers', $citekey) || $alphaothers; 
+  my $sortalphaothers = $self->getblxoption('sortalphaothers', $citekey) || $alphaothers;
   my $useprefix = $self->getblxoption('useprefix', $citekey);
   my $maxnames = $self->getblxoption('maxnames', $citekey);
   my $minnames = $self->getblxoption('minnames', $citekey);
@@ -182,14 +182,14 @@ sub get_displaymode {
     # in the latter case, return it directly
     my $dm = "uniform"; # default ?
 
-    if ( defined $citekey and 
-         defined $Biber::localoptions{$citekey} and 
+    if ( defined $citekey and
+         defined $Biber::localoptions{$citekey} and
          defined $Biber::localoptions{$citekey}{displaymode} ) {
         $dm = $Biber::localoptions{$citekey}{displaymode} ;
     }
     else {
         $dm = $self->{config}{displaymode} # {$fieldtype}
-    } 
+    }
 
     if ( ref $dm eq 'ARRAY') {
         return $dm
@@ -760,7 +760,7 @@ sub _print_name {
     $suf = $nh{suffix} if $nh{suffix};
     my $sufi = "";
     $sufi = getinitials($suf) if $nh{suffix};
-    #FIXME The following is done by biblatex.bst, but shouldn't it be optional? 
+    #FIXME The following is done by biblatex.bst, but shouldn't it be optional?
     $fn =~ s/(\p{Lu}\.)\s+/$1~/g; # J. Frank -> J.~Frank
     $fn =~ s/\s+(\p{Lu}\.)/~$1/g; # Bernard H. -> Bernard~H.
     $pre =~ s/\s/~/g if $pre; # van der -> van~der
@@ -781,7 +781,7 @@ sub _printfield {
         ## 12 is the length of '  \field{}{}'
         if ( 12 + length($field) + length($str) > 2*$Text::Wrap::columns ) {
             return "  \\field{$field}{%\n" . wrap('  ', '  ', $str) . "%\n  }\n";
-        } 
+        }
         elsif ( 12 + length($field) + length($str) > $Text::Wrap::columns ) {
             return wrap('  ', '  ', "\\field{$field}{$str}" ) . "\n";
         }
@@ -796,7 +796,7 @@ sub _printfield {
 
 sub _print_biblatex_entry {
     my ($self, $citekey) = @_;
-    my $be      = $self->{bib}->{$citekey} 
+    my $be      = $self->{bib}->{$citekey}
         or $logger->logcroak("Cannot find $citekey");
     my $opts    = '';
     my $origkey = $citekey;
@@ -811,7 +811,7 @@ sub _print_biblatex_entry {
 
     my $str = "";
 
-    $str .= "% sortstring = " . $be->{sortstring} . "\n" 
+    $str .= "% sortstring = " . $be->{sortstring} . "\n"
         if ($self->config('debug') || $self->getblxoption('debug'));
 
     $str .= "\\entry{$origkey}{" . $be->{entrytype} . "}{$opts}\n";
@@ -881,7 +881,7 @@ sub _print_biblatex_entry {
     if ( $self->getblxoption('labelyear', $citekey) ) {
         my $authoryear = $be->{authoryear};
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
-            $str .= "  \\field{extrayear}{" 
+            $str .= "  \\field{extrayear}{"
               . $be->{extrayear} . "}\n";
         }
 
@@ -901,7 +901,7 @@ sub _print_biblatex_entry {
       if ( $self->getblxoption('labelalpha', $citekey) ) {
         my $authoryear = $be->{authoryear};
         if ( $Biber::seenauthoryear{$authoryear} > 1) {
-            $str .= "  \\field{extraalpha}{" 
+            $str .= "  \\field{extraalpha}{"
               . $be->{extraalpha} . "}\n";
         }
     }
@@ -910,13 +910,13 @@ sub _print_biblatex_entry {
         if ($be->{shorthand}) {
             $str .= "  \\field{labelnumber}{"
               . $be->{shorthand} . "}\n";
-        } 
+        }
         elsif ($be->{labelnumber}) {
             $str .= "  \\field{labelnumber}{"
               . $be->{labelnumber} . "}\n";
-        } 
+        }
     }
-    
+
     if ( $be->{ignoreuniquename} ) {
 
         $str .= "  \\count{uniquename}{0}\n";
@@ -938,11 +938,11 @@ sub _print_biblatex_entry {
           }
         }
 
-        if (scalar keys %{ $Biber::uniquenamecount{$lastname} } == 1 ) { 
+        if (scalar keys %{ $Biber::uniquenamecount{$lastname} } == 1 ) {
             $str .= "  \\count{uniquename}{0}\n";
         } elsif (scalar keys %{ $Biber::uniquenamecount{$nameinitstr} } == 1 ) {
             $str .= "  \\count{uniquename}{1}\n";
-        } else { 
+        } else {
             $str .= "  \\count{uniquename}{2}\n";
         }
     }
@@ -963,12 +963,12 @@ sub _print_biblatex_entry {
     foreach my $lfield (@LITERALFIELDS) {
         next if $SKIPFIELDS{$lfield};
         if ( _defined_and_nonempty($be->{$lfield}) ) {
-            next if ( $lfield eq 'crossref' and 
-                       $Biber::seenkeys{ $be->{crossref} } ); # belongs to @auxcitekeys 
+            next if ( $lfield eq 'crossref' and
+                       $Biber::seenkeys{ $be->{crossref} } ); # belongs to @auxcitekeys
 
             my $lfieldprint = $lfield;
             if ($lfield eq 'journal') {
-                $lfieldprint = 'journaltitle' 
+                $lfieldprint = 'journaltitle'
             };
 
             $str .= $self->_printfield( $lfieldprint, $be->{$lfield} );
@@ -1017,7 +1017,7 @@ Philip Kime C<< <philip at kime.org.uk> >>
 =head1 BUGS
 
 Please report any bugs or feature requests on our sourceforge tracker at
-L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
@@ -1040,4 +1040,4 @@ later version, or
 
 1;
 
-# vim: set tabstop=4 shiftwidth=4 expandtab: 
+# vim: set tabstop=4 shiftwidth=4 expandtab:

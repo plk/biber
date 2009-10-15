@@ -34,7 +34,7 @@ GetOptions(
     'debug|D!',
     'trace|T!',
     'quiet|q',
-    'nolog!', 
+    'nolog!',
     'onlylog!',
     'wraplines|w!',
     'help|h|?',
@@ -45,7 +45,7 @@ GetOptions(
 
 use open IO => ':utf8';
 
-our $VERSION = $Biber::VERSION; 
+our $VERSION = $Biber::VERSION;
 
 die usage() if exists $opts->{'help'};
 
@@ -56,7 +56,7 @@ die version() if exists $opts->{'version'};
 # we can give a list of datafiles as argument, so
 # this option is passed as an anon array
 if ($opts->{bibdata}) {
-    $opts->{bibdata} = [ split /\s*,\s*/, $opts->{bibdata} ] 
+    $opts->{bibdata} = [ split /\s*,\s*/, $opts->{bibdata} ]
 }
 
 if ($opts->{collate}) {
@@ -91,7 +91,7 @@ if ($biber->config('onlylog')) {
     $LOGLEVEL_S = $LOGLEVEL
 }
 
-## TODO make Screen.Threshold optional: in some situations we'd like 
+## TODO make Screen.Threshold optional: in some situations we'd like
 #  to have debug msgs on the screen too!
 
 # configuration "file" for Log::Log4perl
@@ -107,7 +107,7 @@ my $l4pconf = qq(
     log4perl.appender.Logfile.layout.ConversionPattern = [%r] %F{1}:%L> %p - %m%n
 
     log4perl.appender.Screen                           = Log::Log4perl::Appender::Screen
-    ## the following option sets a max level of INFO for the console: 
+    ## the following option sets a max level of INFO for the console:
     ## i.e. debug messages can only go to the log file
     log4perl.appender.Screen.Threshold                 = INFO
     log4perl.appender.Screen.stderr                    = 0
@@ -158,7 +158,7 @@ else {
 if ($biber->config('trace')) {
     $logger->trace("\n###########################################################\n",
                      "############# Dump of initial biber object: ###############\n",
-                   $biber->_stringdump, 
+                   $biber->_stringdump,
                    "\n###########################################################")
 }
 
@@ -188,7 +188,7 @@ foreach my $bib (@{ $biber->config('bibdata') }) {
 if ($biber->config('trace')) {
     $logger->trace("\n###########################################################\n",
                      "############# Dump of post-parse biber object: ############\n",
-                   $biber->_stringdump, 
+                   $biber->_stringdump,
                    "\n###########################################################")
 }
 
@@ -197,7 +197,7 @@ $biber->prepare;
 if ($biber->config('trace')) {
     $logger->trace("\n###########################################################\n",
                      "############# Dump of final biber object: #################\n",
-                   $biber->_stringdump, 
+                   $biber->_stringdump,
                    "\n###########################################################")
 }
 
@@ -239,7 +239,7 @@ Usage:  biber file.aux
         Creates file.bbl
 
         biber -d foo.bib file.aux
-        Creates file.bbl from entries in foo.bib and the datafiles 
+        Creates file.bbl from entries in foo.bib and the datafiles
         listed in file.aux
 
         biber -d foo.bib,bar.xml -a
@@ -254,9 +254,9 @@ Options:
   --fastsort|-f          Use Perl’s sort instead of Unicode::Collate for sorting (TRUE).
   --locale|-l [locale]   Set the locale to be used for sorting with built-in sort function.
   --collate|-C           Sort with Unicode::Collate instead of the built-in sort function.
-  --collate_options|-c [options] 
+  --collate_options|-c [options]
                          Options to pass to the Unicode::Collate object used for sorting
-                         (default is 'level => 2, table => latinkeys.txt'). 
+                         (default is 'level => 2, table => latinkeys.txt').
                          See "perldoc Unicode::Collate" for details.
   --useprd|-p            Parse with Parse::RecDescent instead of Text::BibTeX.
   --bibdata|-d <files>   Use <files> as bibliography databases (comma separated list).
@@ -269,8 +269,8 @@ Options:
                          (NB: this ignores the .aux file.)
   --unicodebib|-u        Assume bib file is UTF-8 and skip latex_decode.
   --unicodebbl|-U        Encode the bbl output in UTF-8.
-  --bibencoding|-e [encoding] 
-                         Specify the encoding of the bib file(s). The bbl file 
+  --bibencoding|-e [encoding]
+                         Specify the encoding of the bib file(s). The bbl file
                          will also have this encoding when --unicodebbl is false.
                          See "perldoc Encode::Supported" for a list of supported encodings.
   --validate|-V          Schema validate both the <basename>.bcf biblatex control file
@@ -293,9 +293,9 @@ C<biber> - A bibtex replacement for users of biblatex
 
 =head1 SYNOPSIS
 
-biber [ { --bibdata | -d } database.{bib|xml|dbxml} ] [ --useprd | -p ] 
+biber [ { --bibdata | -d } database.{bib|xml|dbxml} ] [ --useprd | -p ]
       [ --mincrossrefs | -m ] [ [--collate|-C] | [ --fastsort | -f ] ]
-      [ --unicodebib | -u ] [ --unicodebbl | -U ] [ --debug | -D ] 
+      [ --unicodebib | -u ] [ --unicodebbl | -U ] [ --debug | -D ]
       [ { --outfile | -O } filename ] file.aux
 
 biber --bibdata database --allentries [ --outfile filename ] [ ... ]
@@ -316,7 +316,7 @@ François Charette, C<< <firmicus at gmx.net> >>
 =head1 BUGS
 
 Please report any bugs or feature requests on our sourceforge tracker at
-L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 

@@ -62,7 +62,7 @@ our %is_name_entry = map { $_ => 1 } @NAMEFIELDS;
 
 my $logger = Log::Log4perl::get_logger('main');
 
-=head1 METHODS 
+=head1 METHODS
 
 =head2 new
 
@@ -134,7 +134,7 @@ sub _initopts {
     }
 
     if (defined $conffile) {
-        %LOCALCONF = ParseConfig(-ConfigFile => $conffile, -UTF8 => 1) or 
+        %LOCALCONF = ParseConfig(-ConfigFile => $conffile, -UTF8 => 1) or
             $logger->logcarp("Failure to read config file " . $conffile . "\n $@");
     }
     my %CONFIG = (%CONFIG_DEFAULT, %LOCALCONF);
@@ -146,14 +146,14 @@ sub _initopts {
 
 =head2 config_file
 
-Returns the full path of the B<Biber> configuration file. 
+Returns the full path of the B<Biber> configuration file.
 If returns the first file found among:
 
 =over 4
 
 =item * C<biber.conf> in the current directory
 
-=item * C<$HOME/.biber.conf> 
+=item * C<$HOME/.biber.conf>
 
 =item * C<$ENV{XDG_HOME_CONFIG}/biber/biber.conf>
 
@@ -187,14 +187,14 @@ sub config_file {
         $biberconf = File::Spec->catfile($ENV{HOME}, "Library", "biber", $BIBER_CONF_NAME);
 
     }
-    elsif ( $^O =~ /Win/ and defined $ENV{APPDATA} 
+    elsif ( $^O =~ /Win/ and defined $ENV{APPDATA}
             and -f File::Spec->catfile($ENV{APPDATA}, "biber", $BIBER_CONF_NAME) ) {
         $biberconf = File::Spec->catfile($ENV{APPDATA}, $BIBER_CONF_NAME);
 
     }
     elsif ( can_run("kpsewhich") ) {
-        scalar run( command => [ 'kpsewhich', $BIBER_CONF_NAME ], 
-                    verbose => 0, 
+        scalar run( command => [ 'kpsewhich', $BIBER_CONF_NAME ],
+                    verbose => 0,
                     buffer => \$biberconf );
    }
    else {
@@ -206,7 +206,7 @@ sub config_file {
 =head2 citekeys
 
     my @citekeys = $biber->citekeys;
-    
+
     Returns the array of all citation keys currently registered by Biber.
 
 =cut
@@ -223,7 +223,7 @@ sub citekeys {
 =head2 bibentry
 
     my %bibentry = $biber->bibentry($citekey);
-    
+
     Returns a hash containing the data of bibliographic entry for a given citekey.
 
 =cut
@@ -242,16 +242,16 @@ sub bibentry {
 sub bib {
     my $self = shift;
     if ( $self->{bib} ) {
-        return %{ $self->{bib} } 
+        return %{ $self->{bib} }
     }
     else {
-        return 
+        return
     }
 }
 
 =head2 shorthands
-    
-    Returns the list of all shorthands. 
+
+    Returns the list of all shorthands.
 
 =cut
 
@@ -268,7 +268,7 @@ sub _addshorthand {
     my ($self, $key) = @_;
     my @los;
     if ( $self->{shorthands} ) {
-        @los = @{ $self->{shorthands} } 
+        @los = @{ $self->{shorthands} }
     } else {
         @los = ();
     };
@@ -289,7 +289,7 @@ sub parse_auxfile {
     my $self = shift;
     my $auxfile = shift;
     my @bibdatafiles = ();
-    if ($self->config('bibdata')) { 
+    if ($self->config('bibdata')) {
         @bibdatafiles = @{ $self->{config}->{bibdata} }
     };
 
@@ -305,24 +305,24 @@ sub parse_auxfile {
     local $/ = "\n";
 
     $logger->info("Reading $auxfile");
-    
+
     while (<$aux>) {
-    
-        if ( $_ =~ /^\\bibdata/ ) { 
-        
-            # There can be more than one bibdata file! 
+
+        if ( $_ =~ /^\\bibdata/ ) {
+
+            # There can be more than one bibdata file!
             # We can parse many bib and/or xml files
             # Datafile given as option -d should be parsed first, then the other ones
             (my $bibdatastring) = $_ =~ m/^\\bibdata{ #{ <- for balancing brackets in vim
                                                ([^}]+)
                                                       }/x;
-            
+
             my @tmp = split/,/, $bibdatastring;
-            
+
             $ctrl_file = shift @tmp;
 
             $logger->debug("control file is $ctrl_file.bib");
-            
+
             if (defined $bibdatafiles[0]) {
 
                 push (@bibdatafiles, @tmp);
@@ -337,7 +337,7 @@ sub parse_auxfile {
             $self->{config}->{bibdata} = [ @bibdatafiles ];
         }
 
-        if ( $_ =~ /^\\citation/ ) { 
+        if ( $_ =~ /^\\citation/ ) {
             m/^\\citation{ #{ for readability in vim
                           ([^}]+)
                                  }/x;
@@ -345,7 +345,7 @@ sub parse_auxfile {
 
                 $self->{config}->{allentries} = 1;
 
-                $logger->info("Processing all citekeys"); 
+                $logger->info("Processing all citekeys");
 
                 # we stop reading the aux file as soon as we encounter \citation{*}
                 last
@@ -361,7 +361,7 @@ sub parse_auxfile {
     }
 
     $self->parse_ctrlfile($ctrl_file) if $ctrl_file;
-    
+
     unless (@bibdatafiles) {
         $logger->logcroak("No database is provided in the file '$auxfile'! Exiting");
     }
@@ -370,14 +370,14 @@ sub parse_auxfile {
         $logger->logcroak("The file '$auxfile' does not contain any citations!")
     }
 
-    $logger->info("Found ", $#auxcitekeys+1 , " citekeys in aux file") 
+    $logger->info("Found ", $#auxcitekeys+1 , " citekeys in aux file")
         unless $self->config('allentries') ;
 
     @auxcitekeys = sort @auxcitekeys if $self->config('debug');
 
-    $logger->debug("The citekeys are:\n", "@auxcitekeys", "\n\n") 
+    $logger->debug("The citekeys are:\n", "@auxcitekeys", "\n\n")
         unless $self->config('allentries') ;
-    
+
     $self->{citekeys} = [ @auxcitekeys ];
 
     return;
@@ -413,13 +413,13 @@ sub parse_auxfile_v2 {
 
     local $/ = "\n";
 
-    $logger->info("Reading $auxfile"); 
+    $logger->info("Reading $auxfile");
 
     while (<$aux>) {
 
-        if ( $_ =~ /^\\bibdata/ ) { 
+        if ( $_ =~ /^\\bibdata/ ) {
 
-            # There can be more than one bibdata file! 
+            # There can be more than one bibdata file!
             # We can parse many bib and/or xml files
             # Datafile given as option -d should be parsed first, then the other ones
             (my $bibdatastring) = $_ =~ m/^\\bibdata{ #{ <- for balancing brackets in vim
@@ -447,7 +447,7 @@ sub parse_auxfile_v2 {
             $self->{config}{bibdata} = [ @bibdatafiles ];
         }
 
-        if ( $_ =~ /^\\citation/ ) { 
+        if ( $_ =~ /^\\citation/ ) {
             m/^\\citation{ #{ for readability in vim
                           ([^}]+)
                                  }/x;
@@ -455,7 +455,7 @@ sub parse_auxfile_v2 {
 
                 $self->{config}{allentries} = 1;
 
-                $logger->info("Processing all citekeys"); 
+                $logger->info("Processing all citekeys");
 
                 # we stop reading the aux file as soon as we encounter \citation{*}
                 last
@@ -480,7 +480,7 @@ sub parse_auxfile_v2 {
         $logger->logcroak("The file '$auxfile' does not contain any citations!")
     }
 
-    $logger->info("Found ", $#auxcitekeys+1 , " citekeys in aux file") 
+    $logger->info("Found ", $#auxcitekeys+1 , " citekeys in aux file")
         unless $self->config('allentries') ;
 
     if ($self->config('debug')) {
@@ -539,15 +539,15 @@ sub parse_ctrlfile {
         $self->{config}{biblatex}{global}{alphaothers}) = split /:/, $opts;
 
         my $controlversion = $self->{config}{biblatex}{global}{controlversion};
-        $logger->warn("You are using biblatex version $controlversion : 
-            biber is more likely to work with version $BIBLATEX_VERSION.") 
+        $logger->warn("You are using biblatex version $controlversion :
+            biber is more likely to work with version $BIBLATEX_VERSION.")
             unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION;
     }
 
     if ($self->{config}{biblatex}{global}{labelyear}) {
       $self->{config}{biblatex}{global}{labelyear} = [ 'year' ]; # set default
     }
-    $self->{config}{biblatex}{global}{labelname} = ['shortauthor', 'author', 'shorteditor', 'editor', 'translator']; # set default 
+    $self->{config}{biblatex}{global}{labelname} = ['shortauthor', 'author', 'shorteditor', 'editor', 'translator']; # set default
     my $sorting = ($self->{config}{biblatex}{global}{sorting_label} or '1');
     if ($sorting == 1) { # nty
       $self->{config}{biblatex}{global}{sorting_label} = [
@@ -800,8 +800,8 @@ sub parse_ctrlfile_v2 {
 
     # Set up schema
     # FIXME How can we be sure that Biber is installed in sitelib and not vendorlib ?
-    my $CFxmlschema = XML::LibXML::RelaxNG->new( 
-          location => File::Spec->catfile($Config::Config{sitelibexp}, 'Biber', 'bcf.rng') 
+    my $CFxmlschema = XML::LibXML::RelaxNG->new(
+          location => File::Spec->catfile($Config::Config{sitelibexp}, 'Biber', 'bcf.rng')
         )
         or $logger->warn("Cannot find XML::LibXML::RelaxNG schema. Skipping validation : $!");
 
@@ -976,7 +976,7 @@ sub parse_ctrlfile_v2 {
 
 sub parse_bibtex {
     my ($self, $filename) = @_;
-    
+
     $logger->info("Processing bibtex file $filename");
 
     my @localkeys = ();
@@ -996,22 +996,22 @@ sub parse_bibtex {
 #        } else {
 #            $mode = "";
 #        };
-        
+
         my $infile = IO::File->new( $filename, "<$mode" );
 
-        my $buf    = File::Slurp::read_file($infile) 
+        my $buf    = File::Slurp::read_file($infile)
            or $logger->logcroak("Can't read $filename");
 
         if ( $self->config('bibencoding') ) {
             $buf = decode($self->config('bibencoding'), $buf)
         };
 
-        print $ubib LaTeX::Decode::latex_decode($buf) 
+        print $ubib LaTeX::Decode::latex_decode($buf)
           or $logger->logcroak("Can't write to $ufilename : $!");
         $ubib->close or $logger->logcroak("Can't close filehandle to $ufilename: $!");
 
         $filename  = $ufilename;
-        
+
         $self->{config}->{unicodebib} = 1;
     }
 
@@ -1020,12 +1020,12 @@ sub parse_bibtex {
     }
 
     unless ( $self->config('useprd') ) {
-        
+
         require Biber::BibTeX;
         push @ISA, 'Biber::BibTeX';
 
         @localkeys = $self->_text_bibtex_parse($filename);
-        
+
     }
     else {
 
@@ -1039,7 +1039,7 @@ sub parse_bibtex {
             $logger->warn("Note that it can be very slow with large bib files!\n",
                           "You are advised to install Text::BibTeX for faster processing!");
         };
-        
+
         @localkeys = $self->_bibtex_prd_parse($filename);
     }
 
@@ -1049,7 +1049,7 @@ sub parse_bibtex {
     if ($self->config('allentries')) {
         map { $seenkeys{$_}++ } @localkeys
     }
-    
+
     my %bibentries = $self->bib;
 
     # if allentries, push all bibdata keys into citekeys (if they are not already there)
@@ -1057,7 +1057,7 @@ sub parse_bibtex {
     # that are missing data entries.
     if ($self->config('allentries')) {
         foreach my $bibkey (keys %{$self->{bib}}) {
-            push @{$self->{citekeys}}, $bibkey 
+            push @{$self->{citekeys}}, $bibkey
                 unless (first {$bibkey eq $_} @{$self->{citekeys}});
         }
     }
@@ -1085,10 +1085,10 @@ sub parse_biblatexml {
 }
 
 =head2 process_crossrefs
-    
+
     $biber->process_crossrefs;
 
-    Ensures proper inheritance of data from cross-references. 
+    Ensures proper inheritance of data from cross-references.
     This method is automatically called by C<prepare>.
 
 =cut
@@ -1129,13 +1129,13 @@ sub process_crossrefs {
             }
        }
        if ($type eq 'inbook') {
-            $bibentries{$citekeyx}->{bookauthor} = $bibentries{$xref}->{author} 
+            $bibentries{$citekeyx}->{bookauthor} = $bibentries{$xref}->{author}
         }
         # MORE?
-        #$bibentries{$citekeyx}->{} = $bibentries{$xref}->{} 
+        #$bibentries{$citekeyx}->{} = $bibentries{$xref}->{}
     }
 
-    # we make sure that crossrefs that are directly cited or cross-referenced 
+    # we make sure that crossrefs that are directly cited or cross-referenced
     # at least $mincrossrefs times are included in the bibliography
     foreach my $k ( keys %crossrefkeys ) {
         if ( $seenkeys{$k} || $crossrefkeys{$k} >= $self->config('mincrossrefs') ) {
@@ -1255,7 +1255,7 @@ sub postprocess {
                         $be->{$datetype . 'endyear'} = $5;
                     }
                     elsif ($4 and not $5) { # open ended range - endyear is defined but empty
-                        $be->{$datetype . 'endyear'} = '';                  
+                        $be->{$datetype . 'endyear'} = '';
                     }
                 } else {
                     $logger->warn("Invalid format of field '" . $datetype . 'date' . "' - ignoring field in entry '$citekey'");
@@ -1435,7 +1435,7 @@ sub postprocess {
         }
         elsif (
             (  # keep this? FIXME
-                $be->{entrytype} =~ /^(collection|proceedings)/ 
+                $be->{entrytype} =~ /^(collection|proceedings)/
                 and $self->getblxoption( 'useeditor', $citekey )
             )
             and $be->{editor}
@@ -1447,9 +1447,9 @@ sub postprocess {
             $nameinitid = makenameinitid( $be->{editor} )
               if ( $self->getblxoption( 'uniquename', $citekey ) == 2 );
         }
-        elsif ( 
+        elsif (
             $self->getblxoption( 'usetranslator', $citekey )
-            and $be->{translator} 
+            and $be->{translator}
               )
         {
             $namehash   = $self->_getnameinitials( $citekey, $be->{translator} );
@@ -1687,7 +1687,7 @@ sub sortentries {
     if ($self->config('locale')) {
       my $thislocale = $self->config('locale');
       $logger->debug("Sorting entries with built-in sort (with locale $thislocale) ...");
-      setlocale( LC_ALL, $thislocale ) 
+      setlocale( LC_ALL, $thislocale )
         or $logger->warn("Unavailable locale $thislocale")
     } else {
       $logger->debug("Sorting entries with built-in sort (with locale ", $ENV{LC_COLLATE}, ") ...");
@@ -1698,11 +1698,11 @@ sub sortentries {
   } else {
     require Unicode::Collate;
     my $collopts = $self->config('collate_options');
-    my $Collator = Unicode::Collate->new( $collopts ) 
+    my $Collator = Unicode::Collate->new( $collopts )
         or $logger->logcarp("Problem with Unicode::Collate options: $@");
     my $UCAversion = $Collator->version();
     my $opts = Data::Dump->dump($collopts);
-    $logger->info("Sorting with Unicode::Collate ($opts, UCA version: $UCAversion)"); 
+    $logger->info("Sorting with Unicode::Collate ($opts, UCA version: $UCAversion)");
     @auxcitekeys = sort {
       $Collator->cmp( $bibentries{$a}->{sortstring},
                       $bibentries{$b}->{sortstring} )
@@ -1760,7 +1760,7 @@ sub output_to_bbl {
         $mode = ":utf8";
     };
 
-    my $BBLFILE = IO::File->new($bblfile, ">$mode") 
+    my $BBLFILE = IO::File->new($bblfile, ">$mode")
       or $logger->logcroak("Failed to open $bblfile : $!");
 
     # $BBLFILE->binmode(':utf8') if $self->config('unicodebbl');
@@ -1788,11 +1788,11 @@ sub output_to_bbl {
 
 EOF
 
-    $BBL .= "\\preamble{%\n" . $self->{preamble} . "%\n}\n" 
+    $BBL .= "\\preamble{%\n" . $self->{preamble} . "%\n}\n"
         if $self->{preamble};
 
     foreach my $k (@auxcitekeys) {
-        ## skip crossrefkeys (those that are directly cited or 
+        ## skip crossrefkeys (those that are directly cited or
         #  crossref'd >= mincrossrefs were previously removed)
         next if ( $crossrefkeys{$k} );
         $BBL .= $self->_print_biblatex_entry($k);
@@ -1807,7 +1807,7 @@ EOF
     $BBL .= "\\endinput\n";
 
 #    if ( $self->config('bibencoding') and ! $self->config('unicodebbl') ) {
-#        $BBL = encode($self->config('bibencoding'), $BBL) 
+#        $BBL = encode($self->config('bibencoding'), $BBL)
 #    };
 
 
@@ -1844,7 +1844,7 @@ Philip Kime C<< <philip at kime.org.uk> >>
 =head1 BUGS
 
 Please report any bugs or feature requests on our sourceforge tracker at
-L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
