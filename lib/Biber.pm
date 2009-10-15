@@ -955,7 +955,7 @@ sub parse_ctrlfile_v2 {
 
   # BIB SECTIONS
   foreach my $section (@{$bcfxml->{section}}) {
-    push @{$self->{config}{biblatex}{global}{bibsections}{$section->{number}}}, @{$section->{citekey}};
+        push @{$self->{config}{biblatex}{global}{bibsections}{$section->{number}}}, @{$section->{citekey}};
   }
   return;
 }
@@ -1217,79 +1217,79 @@ sub postprocess {
         # components which can be directly set and therefore don't go through
         # the date parsing below
         foreach my $ymfield ('year', 'month') {
-          if ($be->{$ymfield} and $be->{$ymfield} !~ /\A\d+\z/xms) {
-            $logger->warn("Invalid format of field '$ymfield' - ignoring field in entry '$citekey'");
-            $self->{warnings}++;
-            $be->{warnings} .= "\\item Invalid format of field '$ymfield' - ignoring field\n";
-            delete $be->{$ymfield};
-          }
+            if ($be->{$ymfield} and $be->{$ymfield} !~ /\A\d+\z/xms) {
+                $logger->warn("Invalid format of field '$ymfield' - ignoring field in entry '$citekey'");
+                $self->{warnings}++;
+                $be->{warnings} .= "\\item Invalid format of field '$ymfield' - ignoring field\n";
+                delete $be->{$ymfield};
+            }
         }
 
         # Both DATE and YEAR specified
         if ($be->{date} and $be->{year}) {
-          $logger->warn("Field conflict - both 'date' and 'year' used - ignoring field 'year' in '$citekey'");
-          $self->{warnings}++;
-          $be->{warnings} .= "\\item Field conflict - both 'date' and 'year' used - ignoring field 'year'\n";
-          delete $be->{year};
+            $logger->warn("Field conflict - both 'date' and 'year' used - ignoring field 'year' in '$citekey'");
+            $self->{warnings}++;
+            $be->{warnings} .= "\\item Field conflict - both 'date' and 'year' used - ignoring field 'year'\n";
+            delete $be->{year};
         }
 
         # Both DATE and MONTH specified
         if ($be->{date} and $be->{month}) {
-          $logger->warn("Field conflict - both 'date' and 'month' used - ignoring field 'month' in '$citekey'");
-          $self->{warnings}++;
-          $be->{warnings} .= "\\item Field conflict - both 'date' and 'month' used - ignoring field 'month'\n";
-          delete $be->{month};
+            $logger->warn("Field conflict - both 'date' and 'month' used - ignoring field 'month' in '$citekey'");
+            $self->{warnings}++;
+            $be->{warnings} .= "\\item Field conflict - both 'date' and 'month' used - ignoring field 'month'\n";
+            delete $be->{month};
         }
 
         # Generate date components from *DATE fields
         foreach my $datetype ('', 'orig', 'event', 'url') {
-          if ($be->{$datetype . 'date'}) {
-            my $date_re = qr|(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?|xms;
-            if ($be->{$datetype . 'date'} =~ m|\A$date_re(/)?(?:$date_re)?\z|xms) {
-              $be->{$datetype . 'year'}      = $1 if $1;
-              $be->{$datetype . 'month'}     = $2 if $2;
-              $be->{$datetype . 'day'}       = $3 if $3;
-              $be->{$datetype . 'endmonth'}  = $6 if $6;
-              $be->{$datetype . 'endday'}    = $7 if $7;
-              if ($4 and $5) { # normal range
-                $be->{$datetype . 'endyear'} = $5;
-              }
-              elsif ($4 and not $5) { # open ended range - endyear is defined but empty
-                $be->{$datetype . 'endyear'} = '';                  
-              }
-            } else {
-              $logger->warn("Invalid format of field '" . $datetype . 'date' . "' - ignoring field in entry '$citekey'");
-              $self->{warnings}++;
-              $be->{warnings} .= "\\item Invalid format of field '" . $datetype . 'date' . "' - ignoring field\n";
-              delete $be->{$datetype . 'date'};
+            if ($be->{$datetype . 'date'}) {
+                my $date_re = qr|(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?|xms;
+                if ($be->{$datetype . 'date'} =~ m|\A$date_re(/)?(?:$date_re)?\z|xms) {
+                    $be->{$datetype . 'year'}      = $1 if $1;
+                    $be->{$datetype . 'month'}     = $2 if $2;
+                    $be->{$datetype . 'day'}       = $3 if $3;
+                    $be->{$datetype . 'endmonth'}  = $6 if $6;
+                    $be->{$datetype . 'endday'}    = $7 if $7;
+                    if ($4 and $5) { # normal range
+                        $be->{$datetype . 'endyear'} = $5;
+                    }
+                    elsif ($4 and not $5) { # open ended range - endyear is defined but empty
+                        $be->{$datetype . 'endyear'} = '';                  
+                    }
+                } else {
+                    $logger->warn("Invalid format of field '" . $datetype . 'date' . "' - ignoring field in entry '$citekey'");
+                    $self->{warnings}++;
+                    $be->{warnings} .= "\\item Invalid format of field '" . $datetype . 'date' . "' - ignoring field\n";
+                    delete $be->{$datetype . 'date'};
+                }
             }
-          }
         }
 
         # Now more carefully check the individual date components
         my $opt_dm = qr/(?:event|orig|url)?(?:end)?/xms;
         foreach my $dcf (@DATECOMPONENTFIELDS) {
-          my $bad_format = '';
-          if ($be->{$dcf}) {
-            # months must be in right range
-            if ($dcf =~ /\A$opt_dm month\z/xms) {
-              unless ($be->{$dcf} >= 1 and $be->{$dcf} <= 12) {
-                $bad_format = 1;
-              }
+            my $bad_format = '';
+            if ($be->{$dcf}) {
+                # months must be in right range
+                if ($dcf =~ /\A$opt_dm month\z/xms) {
+                    unless ($be->{$dcf} >= 1 and $be->{$dcf} <= 12) {
+                        $bad_format = 1;
+                    }
+                }
+                # days must be in right range
+                if ($dcf =~ /\A$opt_dm day\z/xms) {
+                    unless ($be->{$dcf} >= 1 and $be->{$dcf} <= 31) {
+                        $bad_format = 1;
+                    }
+                }
+                if ($bad_format) {
+                    $logger->warn("Warning--Value out bounds for field/date component '$dcf' - ignoring in entry '$citekey'");
+                    $self->{warnings}++;
+                    $be->{warnings} .= "\\item Value out of bounds for field/date component '$dcf' - ignoring\n";
+                    delete $be->{$dcf};
+                }
             }
-            # days must be in right range
-            if ($dcf =~ /\A$opt_dm day\z/xms) {
-              unless ($be->{$dcf} >= 1 and $be->{$dcf} <= 31) {
-                $bad_format = 1;
-              }
-            }
-            if ($bad_format) {
-              $logger->warn("Warning--Value out bounds for field/date component '$dcf' - ignoring in entry '$citekey'");
-              $self->{warnings}++;
-              $be->{warnings} .= "\\item Value out of bounds for field/date component '$dcf' - ignoring\n";
-              delete $be->{$dcf};
-            }
-          }
         }
 
         ##############################################################
