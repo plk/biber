@@ -10,15 +10,14 @@ our @EXPORT = qw{
                   @LISTFIELDS
                   @LITERALFIELDS_BASE
                   @RANGEFIELDS
-                  @DATERANGEFIELDS
                   @VERBATIMFIELDS
                   @TITLEFIELDS
                   @KEYFIELDS
                   @COMMASEP_FIELDS
                   @ENTRIESTOSPLIT
                   @LITERALFIELDS
+                  @DATERANGEFIELDS
                   @DATECOMPONENTFIELDS
-                  @DATEFIELDS
                   %SKIPFIELDS
                   %CONFIG_DEFAULT
                   $BIBER_CONF_NAME
@@ -43,7 +42,7 @@ our $BIBER_SORT_FINAL = 0;
 
 # the name of the Biber configuration file, which should be 
 # either returned by kpsewhich or located at "$HOME/.$BIBER_CONF_NAME"
-our $BIBER_CONF_NAME = "biber.conf";
+our $BIBER_CONF_NAME = 'biber.conf';
 
 ## Biber CONFIGURATION DEFAULTS
 my $locale = $ENV{LANG} || $ENV{LC_ALL} || "en_US.utf8" ;
@@ -78,7 +77,7 @@ our %CONFIG_DEFAULT = (
   # without an aux file
   biblatex => { 
       global => {
-            controlversion => '0.8',
+            controlversion => undef,
             debug => '0',
             terseinits => '0',
             useprefix => '0',
@@ -136,33 +135,31 @@ Readonly::Array our @LITERALFIELDS_BASE  =>   qw{
   };
 
 Readonly::Array our @DATECOMPONENTFIELDS  =>   qw{
-  year origyear eventyear urlyear endyear origendyear eventendyear urlendyear
-  day origday eventday urlday endday origendday eventendday urlendday
-  month origmonth eventmonth urlmonth endmonth origendmonth eventendmonth urlendmonth
+  year  endyear  origyear  origendyear   eventyear   eventendyear  urlyear  urlendyear
+  month endmonth origmonth origendmonth  eventmonth  eventendmonth urlmonth urlendmonth
+  day   endday   origday   origendday    eventday    eventendday   urlday   urlendday
 };
 
-Readonly::Array our @DATEFIELDS  =>   qw{
-  year month
-};
-
-Readonly::Array our @TITLEFIELDS => qw{ title
-  subtitle titleaddon shorttitle sorttitle indextitle indexsorttitle
+Readonly::Array our @TITLEFIELDS => qw{ 
+  title subtitle titleaddon shorttitle sorttitle indextitle indexsorttitle
   origtitle issuetitle issuesubtitle maintitle mainsubtitle maintitleaddon
   booktitle booksubtitle booktitleaddon journal journaltitle journalsubtitle
   reprinttitle eventtitle };
 
 # Fields that are used internally by biber but are not passed to the bbl output
-Readonly::Array our @SKIPFIELDS => qw{ sortname sorttitle presort sortkey
-  sortyear library remarks date urldate eventdate origdate};
+Readonly::Array our @SKIPFIELDS => qw{ 
+  sortname sorttitle presort sortkey sortyear library remarks date urldate
+  eventdate origdate };
 our %SKIPFIELDS = map { $_ => 1 } @SKIPFIELDS;
 
 Readonly::Array our @RANGEFIELDS     =>  qw{ pages };
 Readonly::Array our @DATERANGEFIELDS =>  qw{ date origdate eventdate urldate };
+## Readonly::Array our @TIMEFIELDS      =>  qw{ year month };
 Readonly::Array our @VERBATIMFIELDS  =>  qw{ doi eprint file pdf url verba verbb verbc };
-Readonly::Array our @KEYFIELDS  =>   qw{ 
+Readonly::Array our @KEYFIELDS       =>  qw{ 
   authortype bookpagination editortype origlanguage pagination
   type nameatype namebtype namectype editoratype editorbtype editorctype editorclass
-  editoraclass editorbclass editorcclass};
+  editoraclass editorbclass editorcclass };
 Readonly::Array our @COMMASEP_FIELDS => qw{ options keywords entryset };
 
 Readonly::Array our @ENTRIESTOSPLIT  =>  ( @NAMEFIELDS, @LISTFIELDS );

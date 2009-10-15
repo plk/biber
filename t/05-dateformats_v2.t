@@ -63,8 +63,8 @@ my $l13c = q|\entry{L13}{book}{}
   \field{labelyear}{1996}
   \count{uniquename}{0}
   \field{year}{1996}
-  \field{day}{01}
   \field{month}{01}
+  \field{day}{01}
   \field{title}{Title 2}
 \endentry
 
@@ -86,10 +86,10 @@ my $l14 = q|\entry{L14}{book}{}
   \count{uniquename}{0}
   \field{year}{1996}
   \field{endyear}{1996}
-  \field{day}{10}
-  \field{endday}{12}
   \field{month}{12}
   \field{endmonth}{12}
+  \field{day}{10}
+  \field{endday}{12}
   \field{title}{Title 2}
 \endentry
 
@@ -128,8 +128,8 @@ my $l16 = q|\entry{l16}{book}{}
   \field{labelyear}{1996}
   \count{uniquename}{0}
   \field{eventyear}{1996}
-  \field{eventday}{01}
   \field{eventmonth}{01}
+  \field{eventday}{01}
   \field{title}{Title 2}
 \endentry
 
@@ -150,23 +150,23 @@ my $l17 = q|\entry{l17}{book}{}
   \field{labelyear}{1996}
   \count{uniquename}{0}
   \field{year}{1996}
-  \field{origyear}{1998}
-  \field{eventyear}{1998}
   \field{endyear}{1996}
+  \field{origyear}{1998}
   \field{origendyear}{1998}
+  \field{eventyear}{1998}
   \field{eventendyear}{2004}
-  \field{day}{10}
-  \field{origday}{10}
-  \field{eventday}{10}
-  \field{endday}{12}
-  \field{origendday}{12}
-  \field{eventendday}{12}
   \field{month}{12}
-  \field{origmonth}{12}
-  \field{eventmonth}{12}
   \field{endmonth}{12}
+  \field{origmonth}{12}
   \field{origendmonth}{12}
+  \field{eventmonth}{12}
   \field{eventendmonth}{12}
+  \field{day}{10}
+  \field{endday}{12}
+  \field{origday}{10}
+  \field{origendday}{12}
+  \field{eventday}{10}
+  \field{eventendday}{12}
   \field{title}{Title 2}
 \endentry
 
@@ -187,23 +187,23 @@ my $l17c = q|\entry{l17}{book}{}
   \field{labelyear}{1998}
   \count{uniquename}{0}
   \field{year}{1996}
-  \field{origyear}{1998}
-  \field{eventyear}{1998}
   \field{endyear}{1996}
+  \field{origyear}{1998}
   \field{origendyear}{1998}
+  \field{eventyear}{1998}
   \field{eventendyear}{2004}
-  \field{day}{10}
-  \field{origday}{10}
-  \field{eventday}{10}
-  \field{endday}{12}
-  \field{origendday}{12}
-  \field{eventendday}{12}
   \field{month}{12}
-  \field{origmonth}{12}
-  \field{eventmonth}{12}
   \field{endmonth}{12}
+  \field{origmonth}{12}
   \field{origendmonth}{12}
+  \field{eventmonth}{12}
   \field{eventendmonth}{12}
+  \field{day}{10}
+  \field{endday}{12}
+  \field{origday}{10}
+  \field{origendday}{12}
+  \field{eventday}{10}
+  \field{eventendday}{12}
   \field{title}{Title 2}
 \endentry
 
@@ -224,23 +224,23 @@ my $l17e = q|\entry{l17}{book}{}
   \field{labelyear}{1998\bibdatedash 2004}
   \count{uniquename}{0}
   \field{year}{1996}
-  \field{origyear}{1998}
-  \field{eventyear}{1998}
   \field{endyear}{1996}
+  \field{origyear}{1998}
   \field{origendyear}{1998}
+  \field{eventyear}{1998}
   \field{eventendyear}{2004}
-  \field{day}{10}
-  \field{origday}{10}
-  \field{eventday}{10}
-  \field{endday}{12}
-  \field{origendday}{12}
-  \field{eventendday}{12}
   \field{month}{12}
-  \field{origmonth}{12}
-  \field{eventmonth}{12}
   \field{endmonth}{12}
+  \field{origmonth}{12}
   \field{origendmonth}{12}
+  \field{eventmonth}{12}
   \field{eventendmonth}{12}
+  \field{day}{10}
+  \field{endday}{12}
+  \field{origday}{10}
+  \field{origendday}{12}
+  \field{eventday}{10}
+  \field{eventendday}{12}
   \field{title}{Title 2}
 \endentry
 
