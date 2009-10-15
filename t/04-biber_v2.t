@@ -75,16 +75,16 @@ my $markey = q|\entry{markey}{online}{}
   \field{urlyear}{2006}
   \field{endyear}{2006}
   \field{origendyear}{2004}
-  \field{day}{16}
-  \field{origday}{13}
-  \field{urlday}{01}
-  \field{endday}{14}
-  \field{origendday}{11}
   \field{month}{10}
   \field{origmonth}{02}
   \field{urlmonth}{10}
   \field{endmonth}{12}
   \field{origendmonth}{10}
+  \field{day}{16}
+  \field{origday}{13}
+  \field{urlday}{01}
+  \field{endday}{14}
+  \field{origendday}{11}
   \field{title}{Tame the BeaST}
   \field{subtitle}{The B to X of BibTeX}
   \field{annotation}{An \texttt{online} entry for a tutorial. Note the format of the \texttt{date} field (\texttt{yyyy-mm-dd}) in the database file. It is also possible to use the fields \texttt{day}\slash \texttt{month}\slash \texttt{year} instead.}

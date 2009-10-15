@@ -72,10 +72,10 @@ my $l1 = q|\entry{l1}{book}{}
   \count{uniquename}{0}
   \field{year}{1998}
   \field{origyear}{1985}
-  \field{day}{05}
-  \field{origday}{30}
   \field{month}{04}
   \field{origmonth}{10}
+  \field{day}{05}
+  \field{origday}{30}
   \field{title}{Title 1}
 \endentry
 
@@ -99,10 +99,10 @@ my $l2 = q|\entry{l2}{book}{usetranslator=true,labelyear=origyear,labelname=tran
   \count{uniquename}{0}
   \field{year}{1998}
   \field{origyear}{1985}
-  \field{day}{05}
-  \field{origday}{30}
   \field{month}{04}
   \field{origmonth}{10}
+  \field{day}{05}
+  \field{origday}{30}
   \field{title}{Title 1}
 \endentry
 
