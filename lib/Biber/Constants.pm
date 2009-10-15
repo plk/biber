@@ -39,7 +39,7 @@ Readonly::Scalar our $BCF_VERSION => '0.9';
 
 our $BIBER_SORT_FINAL = 0;
 
-# the name of the Biber configuration file, which should be 
+# the name of the Biber configuration file, which should be
 # either returned by kpsewhich or located at "$HOME/.$BIBER_CONF_NAME"
 our $BIBER_CONF_NAME = 'biber.conf';
 
@@ -92,14 +92,14 @@ Readonly::Array our @DATECOMPONENTFIELDS  =>   qw{
   day   endday   origday   origendday    eventday    eventendday   urlday   urlendday
 };
 
-Readonly::Array our @TITLEFIELDS => qw{ 
+Readonly::Array our @TITLEFIELDS => qw{
   title subtitle titleaddon shorttitle sorttitle indextitle indexsorttitle
   origtitle issuetitle issuesubtitle maintitle mainsubtitle maintitleaddon
   booktitle booksubtitle booktitleaddon journal journaltitle journalsubtitle
   reprinttitle eventtitle };
 
 # Fields that are used internally by biber but are not passed to the bbl output
-Readonly::Array our @SKIPFIELDS => qw{ 
+Readonly::Array our @SKIPFIELDS => qw{
   sortname sorttitle presort sortkey sortyear library remarks date urldate
   eventdate origdate };
 our %SKIPFIELDS = map { $_ => 1 } @SKIPFIELDS;
@@ -108,7 +108,7 @@ Readonly::Array our @RANGEFIELDS     =>  qw{ pages };
 Readonly::Array our @DATERANGEFIELDS =>  qw{ date origdate eventdate urldate };
 ## Readonly::Array our @TIMEFIELDS      =>  qw{ year month };
 Readonly::Array our @VERBATIMFIELDS  =>  qw{ doi eprint file pdf url verba verbb verbc };
-Readonly::Array our @KEYFIELDS       =>  qw{ 
+Readonly::Array our @KEYFIELDS       =>  qw{
   authortype bookpagination editortype origlanguage pagination
   type nameatype namebtype namectype editoratype editorbtype editorctype editorclass
   editoraclass editorbclass editorcclass };
@@ -123,7 +123,7 @@ Readonly::Array our @ENTRIESTOSPLIT  =>  ( @NAMEFIELDS, @LISTFIELDS );
 
 Readonly::Array our @LITERALFIELDS => ( @TITLEFIELDS, @LITERALFIELDS_BASE, @KEYFIELDS );
 
-Readonly::Hash our %ALIASES => ( 
+Readonly::Hash our %ALIASES => (
   'address' => 'location',
   'school'  => 'institution',
   'annote'  => 'annotation',
@@ -200,7 +200,7 @@ Readonly::Array our @BIBLATEXML_FORMATTEXT => qw(
   publisherinfo
   item
   publishername
-  remarks 
+  remarks
   );
 
 Readonly::Array our @BIBLATEXML_FORMATTEXT_B => qw(
@@ -210,7 +210,7 @@ Readonly::Array our @BIBLATEXML_FORMATTEXT_B => qw(
   journaltitle
   maintitle
   shorttitle
-  title 
+  title
   );
 
 our %FIELDS_WITH_CHILDREN = map { 'bib:'. $_ => 1 } ( @BIBLATEXML_FORMATTEXT, @BIBLATEXML_FORMATTEXT_B );
@@ -235,7 +235,7 @@ Philip Kime C<< <philip at kime.org.uk> >>
 =head1 BUGS
 
 Please report any bugs or feature requests on our sourceforge tracker at
-L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
@@ -256,4 +256,4 @@ later version, or
 
 =cut
 
-# vim: set tabstop=4 shiftwidth=4 expandtab: 
+# vim: set tabstop=4 shiftwidth=4 expandtab:

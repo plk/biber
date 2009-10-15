@@ -2,7 +2,7 @@ package Biber::Utils;
 use strict;
 use warnings;
 use Carp;
-use File::Find; 
+use File::Find;
 use IPC::Cmd qw( can_run run );
 use LaTeX::Decode;
 use Biber::Constants;
@@ -33,14 +33,14 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid 
+our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid
     normalize_string normalize_string_underscore latexescape array_minus
     remove_outer getinitials tersify ucinit };
 
 ######
 # These are used in the functions parsename and getinitials :
 # TODO : get them from $biber->config instead
- 
+
 my $NOSORTDIACRITICS = $CONFIG_DEFAULT{nosortdiacritics} ;
 my $NOSORTPREFIX     = $CONFIG_DEFAULT{nosortprefix} ;
 
@@ -66,8 +66,8 @@ sub bibfind {
 
     if ( can_run("kpsepath") ) {
         my $kpsepath;
-        scalar run( command => [ 'kpsepath', 'bib' ], 
-                    verbose => 0, 
+        scalar run( command => [ 'kpsepath', 'bib' ],
+                    verbose => 0,
                     buffer => \$kpsepath );
         my @paths = split ( /:!*/, $kpsepath );
         sub _removetrailingslashes {
@@ -83,7 +83,7 @@ sub bibfind {
 
         sub _wanted {
             $_ =~ /^$_filename($|\.bib$)/ && push @_found, $File::Find::name;
-        } 
+        }
 
         if (@_found) {
             my $found = shift @_found;
@@ -105,21 +105,21 @@ sub bibfind {
     Given a name string, this function returns a hash with all parts of the name
     resolved according to the BibTeX conventions.
 
-    parsename('John Doe') 
-    returns: 
-    { firstname => 'John',  
-      lastname => 'Doe', 
-      prefix => undef, 
-      suffix => undef, 
+    parsename('John Doe')
+    returns:
+    { firstname => 'John',
+      lastname => 'Doe',
+      prefix => undef,
+      suffix => undef,
       namestring => 'Doe, John',
       nameinitstring => 'Doe_J' }
 
-    parsename('von Berlichingen zu Hornberg, Johann G{\"o}tz') 
-    returns: 
-    { firstname => 'Johann G{\"o}tz',  
-      lastname => 'Berlichingen zu Hornberg', 
-      prefix => 'von', 
-      suffix => undef, 
+    parsename('von Berlichingen zu Hornberg, Johann G{\"o}tz')
+    returns:
+    { firstname => 'Johann G{\"o}tz',
+      lastname => 'Berlichingen zu Hornberg',
+      prefix => 'von',
+      suffix => undef,
       namestring => 'Berlichingen zu Hornberg, Johann Gotz',
       nameinitstring => 'Berlichingen_zu_Hornberg_JG' }
 
@@ -152,12 +152,12 @@ sub parsename {
     my $SUFFIXRE = $NAMERE;
     my $NAMESEQRE = qr/ (?:\p{Lu}\S*[\s~]*)+ /x ;
 
-    if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}$/ ) 
-    { 
+    if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}$/ )
+    {
         $logger->debug("Caught namestring of type '{Some protected name string}'");
         $namestr = remove_outer($namestr);
         $lastname = $namestr;
-    } 
+    }
     elsif ( $namestr =~ /[^\\],.+[^\\],/ )    # pre? Lastname, suffix, Firstname
     {
         $logger->debug("Caught namestring of type 'prefix? Lastname, suffix, Firstname'");
@@ -218,10 +218,10 @@ sub parsename {
     }
     elsif ( $namestr =~ /\s/ ) # Firstname pre? Lastname
     {
-        if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}.*\s+$RE{balanced}{-parens => '{}'}$/ ) 
-        { 
+        if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}.*\s+$RE{balanced}{-parens => '{}'}$/ )
+        {
             $logger->debug("Caught namestring of type '{Firstname} prefix? {Lastname}'");
-            ( $firstname, $prefix, $lastname ) = $namestr =~ 
+            ( $firstname, $prefix, $lastname ) = $namestr =~
                 m/^( # first name
                     $RE{balanced}{-parens=>'{}'}
                 )
@@ -233,11 +233,11 @@ sub parsename {
                     $RE{balanced}{-parens=>'{}'}
                 )
                 $/x;
-        } 
-        elsif ( $namestr =~ /^.+\s+$RE{balanced}{-parens => '{}'}$/ ) 
-        { 
+        }
+        elsif ( $namestr =~ /^.+\s+$RE{balanced}{-parens => '{}'}$/ )
+        {
             $logger->debug("Caught namestring of type 'Firstname prefix? {Lastname}'");
-            ( $firstname, $prefix, $lastname ) = $namestr =~ 
+            ( $firstname, $prefix, $lastname ) = $namestr =~
                 m/^( # first name
                     $NAMESEQRE
                 )
@@ -249,11 +249,11 @@ sub parsename {
                     $RE{balanced}{-parens=>'{}'}
                 )
                 $/x;
-        } 
-        elsif ( $namestr =~ /^$RE{balanced}{-parens => '{}'}.+$/ ) 
-        { 
+        }
+        elsif ( $namestr =~ /^$RE{balanced}{-parens => '{}'}.+$/ )
+        {
             $logger->debug("Caught namestring of type '{Firstname} prefix? Lastname'");
-            ( $firstname, $prefix, $lastname ) = $namestr =~ 
+            ( $firstname, $prefix, $lastname ) = $namestr =~
                 m/^( # first name
                     $RE{balanced}{-parens=>'{}'}
                 )
@@ -265,10 +265,10 @@ sub parsename {
                     .+
                 )
                 $/x;
-        } 
+        }
         else {
             $logger->debug("Caught namestring of type 'Firstname prefix? Lastname'");
-            ( $firstname, $prefix, $lastname ) = $namestr =~ 
+            ( $firstname, $prefix, $lastname ) = $namestr =~
                 m/^( # first name
                     $NAMESEQRE
                 )
@@ -293,14 +293,14 @@ sub parsename {
         $namestr .= $lastname if $lastname;
         $namestr .= ", " . $firstname if $firstname;
     }
-    else 
+    else
     {    # Name alone
         $logger->debug("Caught namestring of type 'Isolated_name_string'");
         $lastname = $namestr;
     }
 
     #TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g;
-    ## remove punctuation, symbols, separator and control 
+    ## remove punctuation, symbols, separator and control
 
     $namestr =~ s/\b$NOSORTPREFIX//;
     $namestr =~ s/\b$NOSORTDIACRITICS//;
@@ -310,9 +310,9 @@ sub parsename {
     $nameinitstr .= $lastname;
     $nameinitstr =~ s/\b$NOSORTPREFIX//;
     $nameinitstr =~ s/\b$NOSORTDIACRITICS//;
-    $nameinitstr .= " " . terseinitials($suffix) 
+    $nameinitstr .= " " . terseinitials($suffix)
         if $suffix;
-    $nameinitstr .= " " . terseinitials($firstname) 
+    $nameinitstr .= " " . terseinitials($firstname)
         if $firstname;
     $nameinitstr =~ s/\s+/_/g;
 
@@ -397,7 +397,7 @@ Escapes the LaTeX special characters { } & ^ _ $ and %
 
 =cut
 
-sub latexescape { 
+sub latexescape {
   my $str = shift;
   my @latexspecials = qw| { } & _ % |;
   foreach my $char (@latexspecials) {
@@ -439,8 +439,8 @@ array_minus(\@a, \@b) returns all elements in @a that are not in @b
 sub array_minus {
   my ($a, $b) = @_;
   my %countb = ();
-    foreach my $elem (@$b) { 
-    $countb{$elem}++ 
+    foreach my $elem (@$b) {
+    $countb{$elem}++
   };
     my @result;
     foreach my $elem (@$a) {
@@ -450,8 +450,8 @@ sub array_minus {
 }
 
 =head2 remove_outer
-    
-    Remove surrounding curly brackets:  
+
+    Remove surrounding curly brackets:
         '{string}' -> 'string'
 
 =cut
@@ -463,7 +463,7 @@ sub remove_outer {
 }
 
 =head2 getinitials
-    
+
     Returns the initials of a name, preserving LaTeX code.
 
 =cut
@@ -483,7 +483,7 @@ sub _firstatom {
     my $str = shift;
     $str =~ s/^$NOSORTPREFIX//;
     $str =~ s/^$NOSORTDIACRITICS//;
-    if ($str =~ /^({ 
+    if ($str =~ /^({
                    \\ [^\p{Ps}\p{L}] \p{L}+ # {\\.x}
                    }
                    | {?
@@ -534,7 +534,7 @@ Philip Kime C<< <philip at kime.org.uk> >>
 =head1 BUGS
 
 Please report any bugs or feature requests on our sourceforge tracker at
-L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
@@ -557,4 +557,4 @@ later version, or
 
 1;
 
-# vim: set tabstop=4 shiftwidth=4 expandtab: 
+# vim: set tabstop=4 shiftwidth=4 expandtab:
