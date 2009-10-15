@@ -1,0 +1,1261 @@
+default namespace = "http://biblatex-biber.sourceforge.net/biblatexml"
+namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
+datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+namespace user = "http://localhost/biblatexml/user"
+## TODO?  change namespace of bib:emphasis, bib:superscript, bib:subscript
+##        to db = "http://docbook.org/ns/docbook"
+start = entries
+
+entries = element entries { BibLaTeXML.entries* }
+
+BibLaTeXML.entries =
+  BibLaTeXML.standard.entries | BibLaTeXML.additional.entries
+
+BibLaTeXML.standard.entries =
+  article
+  | book
+  | booklet
+  | collection
+  | inbook
+  | incollection
+  | proceedings
+  | inproceedings
+  | manual
+  | misc
+  | online
+  | patent
+  | periodical
+  | proceedings
+  | report
+  | thesis
+  | unpublished
+  | set
+
+BibLaTeXML.additional.entries =
+review |
+review.electronic |
+article.electronic |
+periodical.electronic |
+preprint |
+software |
+movie
+## TODO Unsupported types:
+##   artwork, audio, image, jurisdiction, legislation, legal, movie, music,
+##   performance, reference, inreference, review, software, standard, video
+##   TODO: add manuscript and archivalrecord ??
+
+#########################################################
+BibLaTeXML.common.fields =
+  nameaddon? &
+  shortauthor? &
+  shorthand? &
+  shorthandintro? &
+  shorttitle? &
+  origtitle? &
+  origyear? &
+  language? &
+  origlanguage? &
+  script? &
+  origscript? &
+  abstract? &
+  annotation? &
+  (file|pdf)? &
+  private* &
+  entrysubtype? &
+  execute? &
+  hyphenation? &
+  indexsorttitle? &
+  indextitle? &
+  keywords? &
+  label? &
+  options? &
+  presort? &
+  (sortkey | key)? &
+  sortname? &
+  sorttitle? &
+  sortyear? &
+  inset?
+
+BibLaTeXML.additional.fields =
+   reprintinfo* &
+   reviews? &
+   topics? &
+   remarks?
+
+
+#########################################################
+## We now define the biblatexml elements
+
+formattext = (emphasis?, superscript?, subscript?, quote?, math?, text?)*
+formattextB = (nosort?, emphasis?, superscript?, subscript?, math?, quote?, text?)*
+emphasis = element emphasis { text }
+superscript = element superscript { text }
+subscript = element subscript { text }
+quote = element quote { text }
+## The textual content of bib:math should be in (La)TeX notation
+## MathML mathml:* insertions would also be possible with http://xsltml.sourceforge.net/
+## the optional attribute "text" gives a Unicode representation of the mathematical expression (if feasible), e.g., x³+y³=z³
+math = element math { attribute text { text }?, text }
+
+##FIXME could it be formattextB? ie:
+## <bib:nosort><bib:superscript>foo</bib:superscript><bib:nosort> ??
+nosort = element nosort { text }
+
+romanized = attribute mode { "romanized" }
+translated = att.lang?, attribute mode { "translated" }
+uniform = attribute mode { "uniform" }
+
+att.lang = attribute xml:lang {xsd:language}
+
+abstract = element abstract { att.lang?, formattext }
+addendum = element addendum { att.lang?, formattext }
+annotation = element annotation { att.lang?, formattext }
+booksubtitle = ( element booksubtitle { att.lang?, formattext },
+                element booksubtitle { romanized, formattext }?,
+                element booksubtitle { translated, formattext }* ) |
+                ( element booksubtitle { romanized, formattext },
+                  element booksubtitle { translated, formattext }* ) |
+                ( element booksubtitle { translated, formattext }+ )
+booktitle = ( element booktitle { att.lang?, formattextB },
+             element booktitle { romanized, formattextB }?,
+             element booktitle { translated, formattextB }* ) |
+             ( element booktitle { romanized, formattextB },
+               element booktitle { translated, formattextB }* ) |
+             ( element booktitle { translated, formattextB }+ )
+booktitleaddon = ( element booktitleaddon { att.lang?, formattext },
+                  element booktitleaddon { romanized, formattext }?,
+                  element booktitleaddon { translated, formattext }* ) |
+                  ( element booktitleaddon { romanized, formattext },
+                    element booktitleaddon { translated, formattext }* ) |
+                  ( element booktitleaddon { translated, formattext }+ )
+chapter = element chapter { text }
+doi = element doi { text }
+eid = element eid { text }
+eprint = element eprint { attribute type {text}, text }
+eventtitle = ( element eventtitle { att.lang?, formattext },
+                element eventtitle { romanized, formattext }?,
+                element eventtitle { translated, formattext }* ) |
+                ( element eventtitle { romanized, formattext },
+                  element eventtitle { translated, formattext }* ) |
+                ( element eventtitle { translated, formattext }+ )
+file = element file { text }
+pdf = element pdf { text }
+id = element id { text }
+isan = element isan { text }
+isbn = element isbn { text } # validate with pattern ?
+oclc = element oclc { text } # validate with pattern ?
+lccn = element lccn { text } # validate with pattern ?
+ismn = element ismn { text }
+isrn = element isrn { text }
+issn = element issn { text }
+issue = ( element issue { att.lang?, formattext },
+         element issue { romanized, formattext }?,
+         element issue { translated, formattext }* ) |
+         ( element issue { romanized, formattext },
+           element issue { translated, formattext }* ) |
+         ( element issue { translated, formattext }+ )
+issuetitle = ( element issuetitle { att.lang?, formattextB },
+              element issuetitle { romanized, formattextB }?,
+              element issuetitle { translated, formattextB }* ) |
+              ( element issuetitle { romanized, formattextB },
+                element issuetitle { translated, formattextB }* ) |
+              ( element issuetitle { translated, formattextB }+ )
+issuetitleaddon = ( element issuetitleaddon { att.lang?, formattext },
+                   element issuetitleaddon { romanized, formattext }?,
+                   element issuetitleaddon { translated, formattext }* ) |
+                   ( element issuetitleaddon { romanized, formattext },
+                     element issuetitleaddon { translated, formattext }* ) |
+                   ( element issuetitleaddon { translated, formattext }+ )
+issuesubtitle = ( element issuesubtitle { att.lang?, formattext },
+                 element issuesubtitle { romanized, formattext }?,
+                 element issuesubtitle { translated, formattext }* ) |
+                 ( element issuesubtitle { romanized, formattext },
+                   element issuesubtitle { translated, formattext }* ) |
+                 ( element issuesubtitle { translated, formattext }+ )
+iswc = element iswc { text }
+journal = ( element journal {attribute id {text}}) |
+          ( element journal { att.lang?, formattextB },
+            element journal { romanized, formattextB }?,
+            element journal { translated, formattextB }* ) |
+          ( element journal { romanized, formattextB },
+             element journal { translated, formattextB }* ) |
+          ( element journal { translated, formattextB }+ )
+journaltitle = ( element journaltitle { att.lang?, formattextB },
+                element journaltitle { romanized, formattextB }?,
+                element journaltitle { translated, formattextB }* ) |
+                ( element journaltitle { romanized, formattextB },
+                  element journaltitle { translated, formattextB }* ) |
+                ( element journaltitle { translated, formattextB }+ )
+journalsubtitle = ( element journalsubtitle { att.lang?, formattext },
+                   element journalsubtitle { romanized, formattext }?,
+                   element journalsubtitle { translated, formattext }* ) |
+                   ( element journalsubtitle { romanized, formattext },
+                     element journalsubtitle { translated, formattext }* ) |
+                   ( element journalsubtitle { translated, formattext }+ )
+label = element label { text }
+## this element contains data relative to individual users of the database
+private = element private { attribute user {text} & library? & remarks? & topics? & user.field* }
+user.field = element user:* { text }
+library = element library { libraryitem+ }
+libraryitem = element item { attribute location {text}?,
+                             attribute ref {text}?,
+                             attribute url {xsd:anyURI}?,
+                             attribute note {text}? }
+mainsubtitle = ( element mainsubtitle { att.lang?, formattext },
+                 element mainsubtitle { romanized, formattext }?,
+                 element mainsubtitle { translated, formattext }* ) |
+               ( element mainsubtitle { romanized, formattext },
+                 element mainsubtitle { translated, formattext }* ) |
+               ( element mainsubtitle { translated, formattext }+ )
+maintitle = ( element maintitle { att.lang?, formattextB },
+              element maintitle { romanized, formattextB }?,
+              element maintitle { translated, formattextB }* ) |
+             ( element maintitle { romanized, formattextB },
+               element maintitle { translated, formattextB }* ) |
+             ( element maintitle { translated, formattextB }+ )
+maintitleaddon = ( element maintitleaddon { att.lang?, formattext },
+                   element maintitleaddon { romanized, formattext }?,
+                   element maintitleaddon { translated, formattext }* ) |
+                  ( element maintitleaddon { romanized, formattext },
+                    element maintitleaddon { translated, formattext }* ) |
+                  ( element maintitleaddon { translated, formattext }+ )
+nameaddon = ( element nameaddon { text },
+             element nameaddon { romanized, text }?,
+             element nameaddon { translated, text }? ) |
+             ( element nameaddon { romanized, text },
+               element nameaddon { translated, text }? ) |
+             ( element nameaddon { translated, text } )
+note = element note { att.lang?, formattext }
+number = element number { text }
+origtitle = element origtitle { formattext, element romanized {text}? }
+pagetotal = element pagetotal { text }
+part = element part { text }
+reprinttitle = ( element reprinttitle { att.lang?, formattext },
+                element reprinttitle { romanized, formattext }?,
+                element reprinttitle { translated, formattext }* ) |
+                ( element reprinttitle { romanized, formattext },
+                  element reprinttitle { translated, formattext }* ) |
+                ( element reprinttitle { translated, formattext }+ )
+series = ( element series { attribute id {text}}) |
+         ( element series { (formattext | item+) },
+          element series { romanized, (formattext | item+) }?,
+          element series { translated, (formattext | item+) }? ) |
+          ( element series { romanized, (formattext | item+) },
+            element series { translated, (formattext | item+) }? ) |
+          ( element series { translated, (formattext | item+) } )
+shorthand = ( element shorthand { text },
+             element shorthand { romanized, text }?,
+             element shorthand { translated, text }? ) |
+             ( element shorthand { romanized, text },
+             element shorthand { translated, text }? ) |
+             ( element shorthand { translated, text } )
+shorthandintro = ( element shorthandintro { text },
+             element shorthandintro { romanized, text }?,
+             element shorthandintro { translated, text }? ) |
+             ( element shorthandintro { romanized, text },
+             element shorthandintro { translated, text }? ) |
+             ( element shorthandintro { translated, text } )
+shorttitle = ( element shorttitle { att.lang?, formattextB },
+             element shorttitle { romanized, formattextB }?,
+             element shorttitle { translated, formattextB }* ) |
+             ( element shorttitle { romanized, formattextB },
+             element shorttitle { translated, formattextB }* ) |
+             ( element shorttitle { translated, formattextB }+ )
+subtitle = ( element subtitle { att.lang?, formattext },
+            element subtitle { romanized, formattext }?,
+            element subtitle { translated, formattext }* ) |
+            ( element subtitle { romanized, formattext },
+              element subtitle { translated, formattext }* ) |
+            ( element subtitle { translated, formattext }+ )
+title = ( element title { att.lang?, formattextB },
+         element title { romanized, formattextB }?,
+         element title { translated, formattextB }* ) |
+         ( element title { romanized, formattextB },
+           element title { translated, formattextB }* ) |
+         ( element title { translated, formattextB }+ )
+titleaddon = ( element titleaddon { att.lang?, formattext },
+              element titleaddon { romanized, formattext }?,
+              element titleaddon { translated, formattext }* ) |
+              ( element titleaddon { romanized, formattext },
+                element titleaddon { translated, formattext }* ) |
+              ( element titleaddon { translated, formattext }+ )
+url = element url { xsd:anyURI }
+venue = ( element venue { att.lang?, formattext },
+         element venue { romanized, formattext }?,
+         element venue { translated, formattext }* ) |
+         ( element venue { romanized, formattext },
+           element venue { translated, formattext }* ) |
+         ( element venue { translated, formattext }+ )
+version = element version { text }
+volume = element volume { text }
+volumes = element volumes { text }
+usera = element usera { text }
+userb = element userb { text }
+userc = element userc { text }
+userd = element userd { text }
+usere = element usere { text }
+userf = element userf { text }
+
+## special fields
+entryset = element entryset { item+ | text }
+inset = element entryset { text } ## Can it refer to more than one set???
+crossref = element crossref { text }
+entrysubtype = element entrysubtype { text }
+execute = element execute { text }
+hyphenation = element hyphenation { text }
+indexsorttitle = element indexsorttitle { text }
+indextitle = element indextitle { text }
+options = element options { text | option+ }
+option = element option { option.key, option.value }
+option.key = element key { text }
+option.value = element value { text }
+presort = element presort { text }
+sortkey = element sortkey { text }
+key = element key { text }
+sorttitle = ( element sorttitle { text },
+         element sorttitle { romanized, text }?,
+         element sorttitle { translated, text }* ) |
+         ( element sorttitle { romanized, text },
+           element sorttitle { translated, text }* ) |
+         ( element sorttitle { translated, text }+ )
+sortyear = element sortyear { text }
+useprefix = element useprefix { text }
+xref = element xref { text }
+
+# INTEGER FIELDS
+edition = element edition { xsd:integer | ( attribute string { text } ) }
+# DATE FIELDS
+month = element month { xsd:gMonth }
+  ##FIXME allow type="converted" attribute?
+  ## localmonth ??
+year = element year { xsd:gYear, optlist.year? }
+optlist.year =
+  ( attribute type { "approximate" | "assumed" }
+  | ( attribute type { "converted" }, localyear ) )
+localyear = element localyear { attlist.localdate, xsd:gYear }
+date = element date { (date.type | daterange), optlist.date? }
+origdate = element origdate { (date.type | daterange), optlist.date? }
+urldate = element urldate { (date.type | daterange), optlist.date? }
+eventdate = element eventdate { (date.type | daterange), optlist.date? }
+date.type = (xsd:date | xsd:gYearMonth | xsd:gYear)
+ # "approximate" when exact date is uncertain,
+ # "assumed" when it is known but not stated on the document
+ # and "converted" when it is stated in a different calendar,
+ # with child element "localyear" or "localdate"
+optlist.date =
+  ( attribute type { "approximate" | "assumed" }
+  | ( attribute type { "converted" }, localdate ) )
+localdate = element localdate { attlist.localdate, (date.type | daterange) }
+attlist.localdate =
+  attribute calendar { "julian" | "hebrew" | "islamic" | "hijrishamsi" | "revolutionary" | "japanese" | "bahai" | "chinese" | "tibetan" | "indian" },
+  attribute note { text }?
+daterange = daterange.start, daterange.end
+daterange.start = element start { date.type }
+daterange.end = element end { date.type }
+pages = element pages { attlist.pages?, (text | range | pagelist ) }
+pagelist = element list { text }
+attlist.pages =
+  attribute pagination { "page" | "column" | "line" | "verse" | "paragraph" | "none" }?,
+  attribute bookpagination { "page" | "column" | "line" | "verse" | "paragraph" | "none" }?,
+  attribute part { text }? ## e.g. when a book has parts in different scripts, with respective paginations
+range = range.start, range.end
+range.start = element start { text }
+range.end = element end { text }
+
+# LITERAL LISTS
+attlist.lists = attribute andothers { "true" }
+institution = ( element institution { attribute id {text}, attlist.lists? }) |
+              ( element institution { attlist.lists?, (text | item+) },
+               element institution { attlist.lists?, romanized, (text | item+) }?,
+               element institution { attlist.lists?, translated, (text | item+) }? ) |
+               ( element institution { attlist.lists?, romanized, (text | item+) },
+                 element institution { attlist.lists?, translated, (text | item+) }? ) |
+               ( element institution { attlist.lists?, translated, (text | item+) } )
+school = ( element school { attribute id {text}, attlist.lists? }) |
+         ( element school { attlist.lists?, (text | item+) },
+          element school { attlist.lists?, romanized, (text | item+) }?,
+          element school { attlist.lists?, translated, (text | item+) }? ) |
+          ( element school { attlist.lists?, romanized, (text | item+) },
+            element school { attlist.lists?, translated, (text | item+) }? ) |
+          ( element school { attlist.lists?, translated, (text | item+) } )
+organization = ( element organization { attribute id {text}, attlist.lists? }) |
+               ( element organization { attlist.lists?, (text | item+) },
+                element organization { attlist.lists?, romanized, (text | item+) }?,
+                element organization { attlist.lists?, translated, (text | item+) }? ) |
+                ( element organization { attlist.lists?, romanized, (text | item+) },
+                  element organization { attlist.lists?, translated, (text | item+) }? ) |
+                ( element organization { attlist.lists?, translated, (text | item+) } )
+location = ( element location { attribute id {text}, attlist.lists? }) |
+           ( element location { attlist.lists?, (text | item+) },
+            element location { attlist.lists?, romanized, (text | item+) }?,
+            element location { attlist.lists?, uniform, (text | item+) }? ) |
+            ( element location { attlist.lists?, romanized, (text | item+) },
+              element location { attlist.lists?, uniform, (text | item+) }? ) |
+            ( element location { attlist.lists?, uniform, (text | item+) } )
+origlocation = ( element origlocation { attribute id {text}, attlist.lists? }) |
+               ( element origlocation { attlist.lists?, (text | item+) },
+                element origlocation { attlist.lists?, romanized, (text | item+) }?,
+                element origlocation { attlist.lists?, uniform, (text | item+) }? ) |
+                ( element origlocation { attlist.lists?, romanized, (text | item+) },
+                  element origlocation { attlist.lists?, uniform, (text | item+) }? ) |
+                ( element origlocation { attlist.lists?, uniform, (text | pubitem+) } )
+publisher = ( element publisher { attribute id {formattext}, attlist.lists? }) |
+           ( element publisher { attlist.lists?, (formattext | item+) },
+            element publisher { attlist.lists?, romanized, (formattext | item+) }?,
+            element publisher { attlist.lists?, (uniform | translated), (formattext | item+) }? ) |
+            ( element publisher { attlist.lists?, romanized, (formattext | item+) },
+              element publisher { attlist.lists?, (uniform | translated), (formattext | item+) }? ) |
+            ( element publisher { attlist.lists?, (uniform | translated), (formattext | item+) } )
+origpublisher = ( element origpublisher { attribute id {formattext}, attlist.lists? }) |
+           ( element origpublisher { attlist.lists?, (formattext | item+) },
+            element origpublisher { attlist.lists?, romanized, (formattext | item+) }?,
+            element origpublisher { attlist.lists?, (uniform | translated), (formattext | item+) }? ) |
+            ( element origpublisher { attlist.lists?, romanized, (formattext | item+) },
+              element origpublisher { attlist.lists?, (uniform | translated), (formattext | item+) }? ) |
+            ( element origpublisher { attlist.lists?, (uniform | translated), (formattext | item+) } )
+publisherinfo = ( element publisher { attribute id {formattext}, attlist.lists? }) |
+            ( element publisher { attlist.lists?, ((publishername, publocation) | pubitem+) },
+             element publisher { attlist.lists?, romanized, ((publishername, publocation) | pubitem+) }?,
+             element publisher { attlist.lists?, translated, ((publishername, publocation)| pubitem+) }? ) |
+             ( element publisher { attlist.lists?, romanized, ((publishername, publocation) | pubitem+) },
+               element publisher { attlist.lists?, translated, ((publishername, publocation) | pubitem+) }? ) |
+             ( element publisher { attlist.lists?, translated, ((publishername, publocation) | pubitem+) } )
+origpublisherinfo = ( element origpublisher { attribute id {text}, attlist.lists? }) |
+                ( element origpublisher { attlist.lists?, ((publishername, publocation) | pubitem+) },
+                  element origpublisher { attlist.lists?, romanized, ((publishername, publocation) | pubitem+) }?,
+                  element origpublisher { attlist.lists?, translated, ((publishername, publocation) | pubitem+) }? ) |
+                 ( element origpublisher { attlist.lists?, romanized, ((publishername, publocation) | pubitem+) },
+                   element origpublisher { attlist.lists?, translated, ((publishername, publocation) | pubitem+) }? ) |
+                 ( element origpublisher { attlist.lists?, translated, ((publishername, publocation) | pubitem+) } )
+lista = element lista { attlist.lists?, (text | item+) }
+listb = element listb { attlist.lists?, (text | item+) }
+listc = element listc { attlist.lists?, (text | item+) }
+liste = element liste { attlist.lists?, (text | item+) }
+listf = element listf { attlist.lists?, (text | item+) }
+item = element item { formattext }
+pubitem = element item { publishername, location }
+publishername = element name { attribute id {text}?, formattext }
+publocation = element location { attribute id {text}?, text }
+
+publisherinfos = (( publisherinfo |
+    (location? & publisher?)
+  )? &
+  ( origpublisherinfo |
+    (origlocation? & origpublisher?)
+  )?)
+
+# KEY LISTS
+# TODO ? add attribute type = babel, xml, ISO-XXX etc
+language = element language { xsd:language | itemlang+ }
+origlanguage = element origlanguage { xsd:language | itemlang+ }
+itemlang = element item { xsd:language }
+script.list = "Arab" | "Armi" | "Armn" | "Avst" | "Bali" | "Batk" | "Beng" | "Blis" | "Bopo" | "Brah" | "Brai" | "Bugi" | "Buhd" | "Cakm" | "Cans" | "Cari" | "Cham" | "Cher" | "Cirt" | "Copt" | "Cprt" | "Cyrl" | "Cyrs" | "Deva" | "Dsrt" | "Egyd" | "Egyh" | "Egyp" | "Ethi" | "Geok" | "Geor" | "Glag" | "Goth" | "Grek" | "Gujr" | "Guru" | "Hang" | "Hani" | "Hano" | "Hans" | "Hant" | "Hebr" | "Hira" | "Hmng" | "Hrkt" | "Hung" | "Inds" | "Ital" | "Java" | "Jpan" | "Kali" | "Kana" | "Khar" | "Khmr" | "Knda" | "Kore" | "Kthi" | "Lana" | "Laoo" | "Latf" | "Latg" | "Latn" | "Lepc" | "Limb" | "Lina" | "Linb" | "Lisu" | "Lyci" | "Lydi" | "Mand" | "Mani" | "Maya" | "Mero" | "Mlym" | "Mong" | "Moon" | "Mtei" | "Mymr" | "Nkgb" | "Nkoo" | "Ogam" | "Olck" | "Orkh" | "Orya" | "Osma" | "Perm" | "Phag" | "Phli" | "Phlp" | "Phlv" | "Phnx" | "Plrd" | "Prti" | "Qaaa" | "Qabx" | "Rjng" | "Roro" | "Runr" | "Samr" | "Sara" | "Saur" | "Sgnw" | "Shaw" | "Sinh" | "Sund" | "Sylo" | "Syrc" | "Syre" | "Syrj" | "Syrn" | "Tagb" | "Tale" | "Talu" | "Taml" | "Tavt" | "Telu" | "Teng" | "Tfng" | "Tglg" | "Thaa" | "Thai" | "Tibt" | "Ugar" | "Vaii" | "Visp" | "Xpeo" | "Xsux" | "Yiii" | "Zinh" | "Zmth" | "Zsym" | "Zxxx" | "Zyyy" | "Zzzz"
+script = element script { script.list | itemscript+ }
+origscript = element origscript { script.list | itemscript+ }
+itemscript = element item { script.list }
+# NAME LISTS
+attlist.author |= attribute type { "author" | "editor" | "compiler" | text }?
+attlist.author |= att.gender?
+attlist.author |= attlist.lists?
+attlist.editor |= attribute type { "editor" | "compiler" }?
+attlist.editor |= att.gender?
+attlist.editor |= attlist.lists?
+att.gender = attribute gender { "sf" | "sm" | "sn" | "pf" | "pm" | "pn" | "pp" }
+author = ( element author { attlist.author, (text | person+) },
+          element author { attlist.author, romanized, (text | person+) }?,
+          element author { attlist.author, uniform, (text | person+) }? ) |
+          ( element author { attlist.author, romanized, (text | person+) },
+            element author { attlist.author, uniform, (text | person+) }? ) |
+          ( element author { attlist.author, uniform, (text | person+) } )
+editor = ( element editor { attlist.editor, (text | person+) },
+          element editor { attlist.editor, romanized, (text | person+) }?,
+          element editor { attlist.editor, uniform, (text | person+) }? ) |
+          ( element editor { attlist.editor, romanized, (text | person+) },
+            element editor { attlist.editor, uniform, (text | person+) }? ) |
+          ( element editor { attlist.editor, uniform, (text | person+) } )
+afterword = ( element afterword { attlist.lists?, (text | person+) },
+             element afterword { attlist.lists?, romanized, (text | person+) }?,
+             element afterword { attlist.lists?, uniform, (text | person+) }? ) |
+             ( element afterword { attlist.lists?, romanized, (text | person+) },
+               element afterword { attlist.lists?, uniform, (text | person+) }? ) |
+             ( element afterword { attlist.lists?, uniform, (text | person+) } )
+annotator = ( element annotator { attlist.lists?, (text | person+) },
+             element annotator { attlist.lists?, romanized, (text | person+) }?,
+             element annotator { attlist.lists?, uniform, (text | person+) }? ) |
+             ( element annotator { attlist.lists?, romanized, (text | person+) },
+               element annotator { attlist.lists?, uniform, (text | person+) }? ) |
+             ( element annotator { attlist.lists?, uniform, (text | person+) } )
+bookauthor = ( element bookauthor { attlist.lists?, (text | person+) },
+              element bookauthor { attlist.lists?, romanized, (text | person+) }?,
+              element bookauthor { attlist.lists?, uniform, (text | person+) }? ) |
+              ( element bookauthor { attlist.lists?, romanized, (text | person+) },
+                element bookauthor { attlist.lists?, uniform, (text | person+) }? ) |
+              ( element bookauthor { attlist.lists?, uniform, (text | person+) } )
+commentator = ( element commentator { attlist.lists?, (text | person+) },
+               element commentator { attlist.lists?, romanized, (text | person+) }?,
+               element commentator { attlist.lists?, uniform, (text | person+) }? ) |
+               ( element commentator { attlist.lists?, romanized, (text | person+) },
+                 element commentator { attlist.lists?, uniform, (text | person+) }? ) |
+               ( element commentator { attlist.lists?, uniform, (text | person+) } )
+foreword = ( element foreword { attlist.lists?, (text | person+) },
+            element foreword { attlist.lists?, romanized, (text | person+) }?,
+            element foreword { attlist.lists?, uniform, (text | person+) }? ) |
+            ( element foreword { attlist.lists?, romanized, (text | person+) },
+              element foreword { attlist.lists?, uniform, (text | person+) }? ) |
+            ( element foreword { attlist.lists?, uniform, (text | person+) } )
+holder = ( element holder { attlist.lists?, (text | person+) },
+          element holder { attlist.lists?, romanized, (text | person+) }?,
+          element holder { attlist.lists?, uniform, (text | person+) }? ) |
+          ( element holder { attlist.lists?, romanized, (text | person+) },
+            element holder { attlist.lists?, uniform, (text | person+) }? ) |
+          ( element holder { attlist.lists?, uniform, (text | person+) } )
+introduction = ( element introduction { attlist.lists?, (text | person+) },
+                element introduction { attlist.lists?, romanized, (text | person+) }?,
+                element introduction { attlist.lists?, uniform, (text | person+) }? ) |
+                ( element introduction { attlist.lists?, romanized, (text | person+) },
+                  element introduction { attlist.lists?, uniform, (text | person+) }? ) |
+                ( element introduction { attlist.lists?, uniform, (text | person+) } )
+redactor = ( element redactor { attlist.lists?, (text | person+) },
+            element redactor { attlist.lists?, romanized, (text | person+) }?,
+            element redactor { attlist.lists?, uniform, (text | person+) }? ) |
+            ( element redactor { attlist.lists?, romanized, (text | person+) },
+              element redactor { attlist.lists?, uniform, (text | person+) }? ) |
+            ( element redactor { attlist.lists?, uniform, (text | person+) } )
+translator = ( element translator { attlist.lists?, (text | person+) },
+              element translator { attlist.lists?, romanized, (text | person+) }?,
+              element translator { attlist.lists?, uniform, (text | person+) }? ) |
+              ( element translator { attlist.lists?, romanized, (text | person+) },
+                element translator { attlist.lists?, uniform, (text | person+) }? ) |
+              ( element translator { attlist.lists?, uniform, (text | person+) } )
+shortauthor = ( element shortauthor { attlist.lists?, (text | person+) },
+               element shortauthor { attlist.lists?, romanized, (text | person+) }?,
+               element shortauthor { attlist.lists?, uniform, (text | person+) }? ) |
+               ( element shortauthor { attlist.lists?, romanized, (text | person+) },
+                 element shortauthor { attlist.lists?, uniform, (text | person+) }? ) |
+               ( element shortauthor { attlist.lists?, uniform, (text | person+) } )
+shorteditor = ( element shorteditor { attlist.lists?, (text | person+) },
+               element shorteditor { attlist.lists?, romanized, (text | person+) }?,
+               element shorteditor { attlist.lists?, uniform, (text | person+) }? ) |
+               ( element shorteditor { attlist.lists?, romanized, (text | person+) },
+                 element shorteditor { attlist.lists?, uniform, (text | person+) }? ) |
+               ( element shorteditor { attlist.lists?, uniform, (text | person+) } )
+sortname = ( element sortname { attlist.lists?, (text | person+) },
+            element sortname { attlist.lists?, romanized, (text | person+) }?,
+            element sortname { attlist.lists?, uniform, (text | person+) }? ) |
+            ( element sortname { attlist.lists?, romanized, (text | person+) },
+              element sortname { attlist.lists?, uniform, (text | person+) }? ) |
+            ( element sortname { attlist.lists?, uniform, (text | person+) } )
+namea = ( element namea { attlist.lists?, (text | person+) },
+         element namea { attlist.lists?, romanized, (text | person+) }?,
+         element namea { attlist.lists?, uniform, (text | person+) }? ) |
+         ( element namea { attlist.lists?, romanized, (text | person+) },
+           element namea { attlist.lists?, uniform, (text | person+) }? ) |
+         ( element namea { attlist.lists?, uniform, (text | person+) } )
+nameb = ( element nameb { attlist.lists?, (text | person+) },
+         element nameb { attlist.lists?, romanized, (text | person+) }?,
+         element nameb { attlist.lists?, uniform, (text | person+) }? ) |
+         ( element nameb { attlist.lists?, romanized, (text | person+) },
+           element nameb { attlist.lists?, uniform, (text | person+) }? ) |
+         ( element nameb { attlist.lists?, uniform, (text | person+) } )
+namec = ( element namec { attlist.lists?, (text | person+) },
+         element namec { attlist.lists?, romanized, (text | person+) }?,
+         element namec { attlist.lists?, uniform, (text | person+) }? ) |
+         ( element namec { attlist.lists?, romanized, (text | person+) },
+           element namec { attlist.lists?, uniform, (text | person+) }? ) |
+         ( element namec { attlist.lists?, uniform, (text | person+) } )
+person = element person {
+    attlist.person,
+    ( text | (first, prefix?, last, suffix?) )
+  }
+attlist.person |=
+  attribute id { text }?,
+  # ?
+  attribute email { text }?,
+  attribute url { text }?,
+  # FIXME
+  attribute yearofbirth { xsd:integer }?,
+  attribute yearofdeath { xsd:integer }?,
+  attribute gender { "male" | "female" }?
+first = element first { text }
+# initials = element initials { text }
+last = element last { text }
+# middle = element middle { text }
+prefix = element prefix { text }
+suffix = element suffix { text }
+keywords |= element keywords { list {xsd:string+} | item+ }  #NB in biblatex this list is comma-separated, here it is separated by whitespace or itemized
+reprintinfo = element reprintinfo { attlist.reprintinfo | (attribute note {text}?, text) }
+attlist.reprintinfo |=
+   attribute crossref {text},
+   attribute volume {text}?,
+   attribute pages {text}?,
+   attribute item {text}?,
+   attribute year {text}?,
+   attribute note {text}?
+reviews = element reviews {reviewitem*}
+reviewitem = element item {attlist.review?, text?}
+attlist.review |=
+   attribute type {text }?,
+   attribute url {xsd:anyURI}?,
+   attribute author { text }?,
+   attribute note { text }?,
+   attribute crossref {text }?
+topics = element topics { topic* }
+topic = element * {text}
+remarks = element remarks {formattext|item+}
+## culture
+## language
+## country
+## person
+## century
+## author
+## works
+
+#########################################################
+BibLaTeXML.article.standard.fields =
+  author & # NB: this should be optional
+  (journaltitle|journal) &
+  ((((day?& month)|issue)?&year)|date) &
+  editor? &
+  shorteditor? &
+  translator? &
+  redactor? &
+  annotator? &
+  commentator? &
+  subtitle? &
+  titleaddon? &
+  journalsubtitle? &
+  issuetitle? &
+  issuesubtitle? &
+  issuetitleaddon? &
+  series? &
+  volume? &
+  number? &
+  publisherinfos &
+  eid? &
+  eprint? &
+  version? &
+  pages? &
+  note? &
+  issn? &
+  addendum? &
+  doi? &
+# url? &
+  (urldate | (urlday , urlmonth , urlyear))?
+BibLaTeXML.article.fields =
+  BibLaTeXML.article.standard.fields &
+  BibLaTeXML.common.fields &
+  BibLaTeXML.additional.fields
+
+article = element entry { attlist.article, (title & url? & BibLaTeXML.article.fields) }
+attlist.article = attribute id {text}, attribute entrytype { "article" }, attribute type {"printed"}?
+
+#########################################################
+# url mandatory if type is electronic
+article.electronic = element entry {attlist.article.electronic, (url & title & BibLaTeXML.article.fields) }
+attlist.article.electronic = attribute id {text}, attribute entrytype { "article" }, attribute type {"electronic"}
+
+#########################################################
+# for reviews we need attribute ref or title or both
+review = element entry { attlist.review & (crossref | title) &
+              url? & BibLaTeXML.article.fields }
+attlist.review = attribute id {text}, attribute entrytype { "review" }, attribute type {"printed"}?
+
+#########################################################
+# url mandatory if type is electronic
+review.electronic = element entry { attlist.review.electronic & (crossref | title) &
+              url & BibLaTeXML.article.fields }
+attlist.review.electronic = attribute id {text}, attribute entrytype { "review" }, attribute type {"electronic"}
+
+#########################################################
+BibLaTeXML.book.standard.fields =
+  author? & #changed
+  editor? & #changed
+  ((title & year) |
+   (title? & year? & crossref)) & #a book can inherit its elements from another book (e.g. individual volumes with diff titles)
+  bookauthor? & #added
+  shorteditor? &
+  translator? &
+  redactor? &
+  annotator? &
+  commentator? &
+  introduction? &
+  foreword? &
+  afterword? &
+  subtitle? &
+  titleaddon? &
+  maintitle? &
+  mainsubtitle? &
+  maintitleaddon? &
+  booktitle? & #added
+  booktitleaddon? & #added
+  booksubtitle? & #added
+  volume? &
+  part? &
+  edition? &
+  volumes? &
+  series? &
+  number? &
+  note? &
+  publisherinfos &
+  isbn? &
+  oclc ? &
+  lccn ? &
+  issn? & #added
+  chapter? &
+  pages? &
+  pagetotal? &
+  addendum? &
+  doi? &
+  url? &
+  eprint? &
+  urldate?
+
+BibLaTeXML.book.fields =
+  BibLaTeXML.book.standard.fields &
+  BibLaTeXML.common.fields &
+  BibLaTeXML.additional.fields
+
+book = element entry { attlist.book, BibLaTeXML.book.fields }
+attlist.book = attribute id {text}, attribute entrytype {"book"}
+
+#########################################################
+BibLaTeXML.booklet.standard.fields =
+  author? & #changed
+  editor? & #changed
+  title &
+  year &
+  subtitle? &
+  titleaddon? &
+  #howpublished? & -> attribute
+  note? &
+  publisherinfos &
+  chapter? &
+  pages? &
+  pagetotal? &
+  addendum? &
+  doi? &
+  eprint? &
+  url? &
+  urldate?
+BibLaTeXML.booklet.fields =
+  BibLaTeXML.booklet.standard.fields &
+  BibLaTeXML.common.fields &
+  BibLaTeXML.additional.fields
+booklet = element entry { attlist.booklet, BibLaTeXML.booklet.fields }
+attlist.booklet = attribute id {text}, attribute entrytype {"booklet"}, attribute type { text }?, attribute howpublished {text}?
+
+#########################################################
+BibLaTeXML.collection.standard.fields =
+  editor? & # changed
+  author? & #changed
+  title &
+  year &
+  bookauthor? & #added
+  shorteditor? &
+  translator? &
+  redactor? &
+  annotator? &
+  commentator? &
+  introduction? &
+  foreword? &
+  afterword? &
+  subtitle? &
+  titleaddon? &
+  maintitle? &
+  mainsubtitle? &
+  maintitleaddon? &
+  booktitle? & #added
+  booktitleaddon? & #added
+  booksubtitle? & #added
+  volume? &
+  part? &
+  edition? &
+  volumes? &
+  series? &
+  number? &
+  note? &
+  publisherinfos &
+  isbn? &
+  oclc ? &
+  lccn ? &
+  issn? &  #added
+  chapter? &
+  pages? &
+  pagetotal? &
+  addendum? &
+  doi? &
+  eprint? &
+  url? &
+  urldate?
+BibLaTeXML.collection.fields =
+  BibLaTeXML.collection.standard.fields &
+  BibLaTeXML.common.fields &
+  BibLaTeXML.additional.fields
+collection = element entry { attlist.collection, BibLaTeXML.collection.fields }
+attlist.collection = attribute id {text}, attribute entrytype {"collection"}
+
+#########################################################
+BibLaTeXML.inbook.standard.fields =
+  author &
+  title &
+  # year can be provided with crossref if it refers to multivolume work
+  (((crossref | xref) & year?) |
+  (bookauthor? &
+  # FIXME: this is probably too strict
+  booktitle &
+  maintitle? &
+  mainsubtitle? &
+  maintitleaddon? &
+  booksubtitle? &
+  booktitleaddon? &
+  year &
+  editor? &
+  shorteditor? &
+  translator? &
+  redactor? &
+  annotator? &
+  commentator? &
+  introduction? &
+  foreword? &
+  afterword? &
+  edition? &
+  volumes? &
+  series? &
+  number? &
+  publisherinfos &
+  issn? &  #added
+  isbn? &
+  oclc ? &
+  lccn ? )) &
+  subtitle? &
+  titleaddon? &
+  volume? &
+  part? &
+  note? &
+  chapter? &
+  (pages | pagetotal)? &
+  addendum? &
+  doi? &
+  eprint? &
+  url? &
+  urldate?
+BibLaTeXML.inbook.fields =
+  BibLaTeXML.inbook.standard.fields &
+  BibLaTeXML.common.fields &
+  BibLaTeXML.additional.fields
+inbook = element entry { attlist.inbook, BibLaTeXML.inbook.fields }
+attlist.inbook = attribute id {text}, attribute entrytype {"inbook"}
+
+#########################################################
+BibLaTeXML.incollection.standard.fields =
+  author &
+   title &
+   subtitle? &
+   titleaddon? &
+  # year can be provided with crossref if it refers to multivolume work
+  (((crossref | xref) & year?) |
+  ( editor? & # made it optional
+  # FIXME: this is probably too strict
+  booktitle &
+  year &
+  shorteditor? &
+  translator? &
+  redactor? &
+  annotator? &
+  commentator? &
+  introduction? &
+  foreword? &
+  afterword? &
+  maintitle? &
+  mainsubtitle? &
+  maintitleaddon? &
+  booksubtitle? &
+  booktitleaddon? &
+  publisherinfos &
+  volumes? &
+  number? &
+  edition? &
+  series? &
+  issn? &  #added
+  isbn? &
+  oclc ? &
+  lccn ? )) &
+  volume? &
+  part? &
+  note? &
+  chapter? &
+  (pages | pagetotal)? &
+  addendum? &
+  doi? &
+  eprint? &
+  url? &
+  urldate?
+BibLaTeXML.incollection.fields =
+  BibLaTeXML.incollection.standard.fields &
+  BibLaTeXML.common.fields &
+  BibLaTeXML.additional.fields
+incollection = element entry { attlist.incollection, BibLaTeXML.incollection.fields }
+attlist.incollection = attribute id {text}, attribute entrytype {"incollection"}
+
+#########################################################
+BibLaTeXML.inproceedings.standard.fields =
+  author &
+  title &
+  subtitle? &
+  titleaddon? &
+  (crossref | xref |
+  (editor? &  # made it optional
+  booktitle &
+  year &
+  shorteditor? &
+  maintitle? &
+  mainsubtitle? &
+  maintitleaddon? &
+  booksubtitle? &
+  booktitleaddon? &
+  venue? &
+  volumes? &
+  series? &
+  number? &
+  organization? &
+  publisherinfos &
+  issn? &  #added
+  isbn? &
+  oclc ? &
+  lccn ?)) &
+  volume? &
+  part? &
+  note? &
+  chapter? &
+  (pages | pagetotal)? &
+  addendum? &
+  doi? &
+  eprint? &
+  url? &
+  urldate?
+
+BibLaTeXML.inproceedings.fields =
+  BibLaTeXML.inproceedings.standard.fields &
+  BibLaTeXML.common.fields &
+  BibLaTeXML.additional.fields
+inproceedings = element entry { attlist.inproceedings, BibLaTeXML.inproceedings.fields }
+attlist.inproceedings = attribute id {text}, attribute entrytype {"inproceedings"}
+
+#########################################################
+BibLaTeXML.manual.standard.fields =
+  (author|editor)? &
+  title &
+  year &
+  subtitle? &
+  titleaddon? &
+  edition? &
+  version? &
+  series? &
+  number? &
+  note? &
+  organization? &
+  publisherinfos &
+  isbn? &
+  oclc ? &
+  lccn ? &
+  chapter? &
+  pages? &
+  pagetotal? &
+  addendum? &
+  doi? &
+  eprint? &
+  url? &
+  urldate?
+BibLaTeXML.manual.fields =
+  BibLaTeXML.manual.standard.fields &
+  BibLaTeXML.common.fields &
+  BibLaTeXML.additional.fields
+manual = element entry { attlist.manual, BibLaTeXML.manual.fields }
+attlist.manual = attribute id {text}, attribute entrytype {"manual"}, attribute type { text }?
+
+#########################################################
+BibLaTeXML.misc.standard.fields =
+  (author|editor)? &
+  title &
+  ((month? & year)|date) &
+  subtitle? &
+  titleaddon? &
+#  howpublished? & -> attribute
+  version? &
+  note? &
+  organization? &
+  publisherinfos &
+  addendum? &
+  doi? &
+  eprint? &
+  url? &
+  urldate?
+BibLaTeXML.misc.fields =
+  BibLaTeXML.misc.standard.fields &
+  BibLaTeXML.common.fields &
+  BibLaTeXML.additional.fields
+misc = element entry { attlist.misc, BibLaTeXML.misc.fields }
+attlist.misc = attribute id {text}, attribute entrytype {"misc"}, attribute type { text }?, attribute howpublished {text}?
+
+#########################################################
+BibLaTeXML.online.standard.fields =
+  (author & editor?)? &
+  title &
+  ((month? & year)|date)? &
+  (url|eprint) &
+  subtitle? &
+  titleaddon? &
+  version? &
+  note? &
+  organization? &
+  addendum? &
+  urldate?
+BibLaTeXML.online.fields =
+  BibLaTeXML.online.standard.fields &
+  BibLaTeXML.common.fields &
+  BibLaTeXML.additional.fields
+online = element entry { attlist.online , BibLaTeXML.online.fields }
+attlist.online = attribute id {text}, attribute entrytype {"online"}
+
+#########################################################
+BibLaTeXML.patent.standard.fields =
+  author &
+  title &
+  number &
+  ((month? & year)|date) &
+  holder? &
+  subtitle? &
+  titleaddon? &
+  version? &
+  location? &
+  origlocation? &
+  note? &
+  addendum? &
+  url? &
+  urldate?
+BibLaTeXML.patent.fields =
+  BibLaTeXML.patent.standard.fields &
+  BibLaTeXML.common.fields &
+  BibLaTeXML.additional.fields
+patent = element entry { attlist.patent, BibLaTeXML.patent.fields }
+#TODO specify all possible patent types
+attlist.patent = attribute id {text}, attribute entrytype {"patent"}, att.patenttype?
+att.patenttype = attribute type {
+    "patent"   |
+    "patentca" |
+    "patentde" |
+    "patentdk" |
+    "patentes" |
+    "patenteu" |
+    "patentfr" |
+    "patentit" |
+    "patentno" |
+    "patentse" |
+    "patentuk" |
+    "patentus" |
+    "patreq"   |
+    "patreqca" |
+    "patreqde" |
+    "patreqdk" |
+    "patreqes" |
+    "patreqeu" |
+    "patreqfr" |
+    "patreqit" |
+    "patreqno" |
+    "patreqse" |
+    "patrequk" |
+    "patrequs" |
+    text }
+
+#########################################################
+BibLaTeXML.periodical.standard.fields =
+  editor? &  # made it optional
+  (journal|journaltitle) & # CHANGED from title
+  ((((month)|issue)? & year)|date) &
+  shorteditor? &
+  introduction? &
+  subtitle? &
+  issuetitle? &
+  issuesubtitle? &
+  issuetitleaddon? &
+  (pagetotal|pages)? &  # added
+  series? &
+  volume? &
+  number? &
+  note? &
+  issn? &
+  addendum? &
+  doi? &
+  eprint? &
+#  url? &
+  urldate?
+BibLaTeXML.periodical.fields =
+  BibLaTeXML.periodical.standard.fields &
+  BibLaTeXML.common.fields &
+  BibLaTeXML.additional.fields
+periodical = element entry { attlist.periodical, (url? & BibLaTeXML.periodical.fields) }
+attlist.periodical = attribute id {text}, attribute entrytype {"periodical"}, attribute type {"printed"}?
+#########################################################
+# url mandatory if type is electronic
+periodical.electronic = element entry { attlist.periodical.electronic, (url & BibLaTeXML.periodical.fields) }
+attlist.periodical.electronic = attribute id {text}, attribute entrytype {"periodical"}, attribute type {"electronic"}
+
+#########################################################
+BibLaTeXML.proceedings.standard.fields =
+  editor? & # made it optional
+  title &
+  year &
+  shorteditor? &
+  subtitle? &
+  titleaddon? &
+  maintitle? &
+  mainsubtitle? &
+  maintitleaddon? &
+  venue? &
+  volume? &
+  part? &
+  volumes? &
+  series? &
+  number? &
+  note? &
+  organization? &
+  publisherinfos &
+  isbn? &
+  issn? &  #added
+  oclc ? &
+  lccn ? &
+  chapter? &
+  pages? &
+  pagetotal? &
+  addendum? &
+  doi? &
+  eprint? &
+  url? &
+  urldate?
+BibLaTeXML.proceedings.fields =
+  BibLaTeXML.proceedings.standard.fields &
+  BibLaTeXML.common.fields &
+  BibLaTeXML.additional.fields
+proceedings = element entry { attlist.proceedings, BibLaTeXML.proceedings.fields }
+attlist.proceedings = attribute id {text}, attribute entrytype {"proceedings"}
+
+#########################################################
+BibLaTeXML.report.standard.fields =
+  author &
+  title &
+  institution &
+  year &
+  subtitle? &
+  titleaddon? &
+  series? &
+  number? &
+  version? &
+  note? &
+  publisherinfos &
+  isrn? &
+  chapter? &
+  pages? &
+  pagetotal? &
+  addendum? &
+  doi? &
+  eprint? &
+  url? &
+  urldate?
+BibLaTeXML.report.fields =
+  BibLaTeXML.report.standard.fields &
+  BibLaTeXML.common.fields &
+  BibLaTeXML.additional.fields
+report = element entry { attlist.report, BibLaTeXML.report.fields }
+attlist.report = attribute id {text}, attribute entrytype {"report"}, attribute type { "techreport" | "resreport" | text }
+
+#########################################################
+BibLaTeXML.thesis.standard.fields =
+  author &
+  title &
+  (institution|school) &
+  year &
+  subtitle? &
+  titleaddon? &
+  note? &
+  location? &
+  origlocation? &
+  chapter? &
+  pages? &
+  pagetotal? &
+  volumes? & #added
+  isbn? & #added
+  oclc ? &
+  lccn ? &
+  addendum? &
+  doi? &
+  eprint? &
+  url? &
+  urldate?
+BibLaTeXML.thesis.fields =
+  BibLaTeXML.thesis.standard.fields &
+  BibLaTeXML.common.fields &
+  BibLaTeXML.additional.fields
+thesis = element entry { attlist.thesis, BibLaTeXML.thesis.fields }
+attlist.thesis = attribute id {text}, attribute entrytype {"thesis"}, attribute type { "phdthesis" | "mathesis" | text }
+
+#########################################################
+BibLaTeXML.unpublished.standard.fields =
+  author &
+  title &
+  ((month? & year)|date)? &
+  subtitle? &
+  titleaddon? &
+  institution? & #added
+  pagetotal? & #added
+  note? &
+  addendum? &
+  url? &
+  urldate?
+
+BibLaTeXML.unpublished.fields =
+  BibLaTeXML.unpublished.standard.fields &
+  BibLaTeXML.common.fields &
+  BibLaTeXML.additional.fields
+unpublished = element entry { attlist.unpublished, BibLaTeXML.unpublished.fields }
+attlist.unpublished = attribute id {text}, attribute entrytype {"unpublished"}
+
+#########################################################
+BibLaTeXML.preprint.standard.fields =
+  author &
+  title &
+  ((month? & year)|date) &
+  institution? &
+  location? &
+  subtitle? &
+  titleaddon? &
+  series? &
+  pagetotal? &
+  note? &
+  addendum? &
+  url? &
+  urldate?
+
+BibLaTeXML.preprint.fields =
+  BibLaTeXML.preprint.standard.fields &
+  BibLaTeXML.common.fields &
+  BibLaTeXML.additional.fields
+preprint = element entry { attlist.preprint, BibLaTeXML.preprint.fields }
+attlist.preprint = attribute id {text}, attribute entrytype {"preprint"}
+
+#########################################################
+software = element entry { attribute id {text}, attribute entrytype {"software"}, BibLaTeXML.misc.fields }
+
+#########################################################
+movie = element entry { attribute id {text}, attribute entrytype {"movie"}, BibLaTeXML.misc.fields }
+
+#########################################################
+BibLaTeXML.set.fields =
+  entryset &
+  crossref? & #actually this is not needed as it is the first element of the entryset
+  annotation? &
+  keywords? &
+  remarks? &
+  private* &
+  options?
+
+set = element entry { attribute id {text}, attribute entrytype {"set"}, BibLaTeXML.set.fields }

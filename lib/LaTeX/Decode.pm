@@ -310,16 +310,18 @@ Readonly::Hash our %WORDMACROSEXTRA => (
 );
 
 Readonly::Hash our %DIACRITICS => (
-    r   =>  "\x{030A}",
-    H   =>  "\x{030B}",
-    v   =>  "\x{030C}",
+    r  =>  "\x{030A}",
+    H  =>  "\x{030B}",
+    u  =>  "\x{0306}",
+    v  =>  "\x{030C}",
     G  =>  "\x{030F}",
     M  =>  "\x{0322}",
     d  =>  "\x{0323}",
     c  =>  "\x{0327}",
     k  =>  "\x{0328}",
     b  =>  "\x{0331}",
-    B  =>  "\x{0335}"
+    B  =>  "\x{0335}",
+    t  =>  "\x{0311}",
 );
 
 Readonly::Hash our %DIACRITICSEXTRA => (

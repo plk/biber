@@ -30,7 +30,8 @@ our @EXPORT = qw{
                   @BIBLATEXML_FORMATTEXT
                   @BIBLATEXML_FORMATTEXT_B
                   %FIELDS_WITH_CHILDREN
-              };
+                  %DISPLAYMODES
+              } ;
 
 # this is the latest <major.minor> version of biblatex.sty
 Readonly::Scalar our $BIBLATEX_VERSION => '0.9';
@@ -44,13 +45,15 @@ our $BIBER_SORT_FINAL = 0;
 our $BIBER_CONF_NAME = 'biber.conf';
 
 ## Biber CONFIGURATION DEFAULTS
+my $locale = $ENV{LANG} || $ENV{LC_ALL} || "en_US.utf8" ;
+
 our %CONFIG_DEFAULT = (
   validate => 0,
   fastsort => 1,
   mincrossrefs =>  2,
   unicodebbl =>  0,
   unicodebib =>  0,
-  bibdata =>  undef ,
+  bibdata =>  undef,
   allentries =>  0,
   useprd =>  0,
   debug =>  0,
@@ -60,11 +63,56 @@ our %CONFIG_DEFAULT = (
   wraplines => 0,
   # these options are passed to the Unicode::Collate object
   collate_options => { level=>2, table=>"latinkeys.txt" },
+  ## eventually this shall be moved to biblatex options:
+  displaymode => 'uniform',
+  locale => $locale,
   # Semitic (or eventually other) last names may begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
   nosortdiacritics => qr/[\x{2bf}\x{2018}]/,
-  # Semitic (or eventually other) names may be prefixed with an article (e.g. Al-Hasan, as-Saleh)
-  nosortprefix => qr/\p{L}{2}\p{Pd}/
-);
+  # Semitic (or eventually other) names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
+  nosortprefix => qr/\p{L}{2}\p{Pd}/,
+  # default options for biblatex
+  # in practice these will be obtained from the control file,
+  # but we need this as a fallback, just in case,
+  # or when using the command-line options "-a -d <datafile>"
+  # without an aux file
+  biblatex => {
+      global => {
+            controlversion => undef,
+            debug => '0',
+            terseinits => '0',
+            useprefix => '0',
+            useauthor => '1',
+            useeditor => '1',
+            usetranslator => '0',
+            labelalpha => '0',
+            labelyear => '0',
+            singletitle => '0',
+            uniquename => '0',
+            sorting => [  [  {'presort'    => []},
+                             {'mm'         => []} ],
+                          [  {'sortkey'    => ['final']}  ],
+                          [  {'sortname'   => []},
+                             {'author'     => []},
+                             {'editor'     => []},
+                             {'translator' => []},
+                             {'sorttitle'  => []},
+                             {'title'      => []}  ],
+                           [ {'sorttitle'  => []},
+                             {'title'      => []}  ],
+                           [ {'sortyear'   => []},
+                             {'year'       => []}  ],
+                           [ {'volume'     => []},
+                             {'0000'       => []}  ]
+                       ],
+            sortlos => '1',
+            maxnames => '3',
+            minnames => '1',
+            maxline => '79',
+            alphaothers  => '+',
+            labelname => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
+         }
+     }
+) ;
 
 ### biblatex fields
 
@@ -214,6 +262,13 @@ Readonly::Array our @BIBLATEXML_FORMATTEXT_B => qw(
   );
 
 our %FIELDS_WITH_CHILDREN = map { 'bib:'. $_ => 1 } ( @BIBLATEXML_FORMATTEXT, @BIBLATEXML_FORMATTEXT_B );
+
+Readonly::Hash our %DISPLAYMODES => {
+  uniform => [ qw/uniform romanized translated original/ ],
+  translated => [ qw/translated uniform romanized original/ ],
+  romanized => [ qw/romanized uniform translated original/ ],
+  original => [ qw/original romanized uniform translated/ ]
+} ;
 
 1;
 

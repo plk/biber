@@ -166,6 +166,38 @@ sub getblxoption {
     }
 }
 
+=head2 get_displaymode
+
+get_displaymode($citekey) returns an arrayref that gives, in order of preference, a
+list of display modes to try.
+
+=cut
+
+sub get_displaymode {
+    # TODO allow setting of display mode for individual fields
+    ## $field is IGNORED for now
+    my ($self, $citekey, $field) = @_ ;
+
+    # TODO check whether $dm is a scalar or an arrayref
+    # in the latter case, return it directly
+    my $dm = "uniform"; # default ?
+
+    if ( defined $citekey and
+         defined $Biber::localoptions{$citekey} and
+         defined $Biber::localoptions{$citekey}{displaymode} ) {
+        $dm = $Biber::localoptions{$citekey}{displaymode} ;
+    }
+    else {
+        $dm = $self->{config}{displaymode} # {$fieldtype}
+    }
+
+    if ( ref $dm eq 'ARRAY') {
+        return $dm
+    } else {
+        # this returns the arrayref
+        return $DISPLAYMODES{$dm}
+    }
+}
 
 #########
 # Sorting
@@ -578,6 +610,15 @@ sub _sort_year {
   else {
     return '';
   }
+}
+
+sub _get_display_mode {
+  my ($self, $citekey, $field) = @_ ;
+  #my $entrytype = $self->{bib}->{$citekey}->{entrytype};
+  # TODO extend getblxoption to accept 4th parameter $field :
+  #my $dm = $self->getblxoption('displaymode', $citekey, $entrytype, $field) ;
+  # TODO TODO TODO
+  return 'not(@mode)'
 }
 
 #========================================================
