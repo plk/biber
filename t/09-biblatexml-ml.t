@@ -23,8 +23,8 @@ $biber->parse_biblatexml($bibfile) ;
 
 is($biber->{bib}->{'Ani:1972'}->{title}, "al-Durr al-multaqaṭ fī tabyīn al-ghalaṭ li-l-Ṣaghānī", "title romanized") ;
 is($biber->{bib}->{'Ani:1972'}->{publisher}->[0], "Qism al-lugha al-ʿarabiyya – Kulliyyat al-ādāb – Jāmiʿat Baghdād", "publisher romanized") ;
-is($biber->{bib}->{'Ani:1972'}->{year}, "1972", "year (gregorian)") ;
-is($biber->{bib}->{'Ani:1972'}->{localyear}, "1392", "year (original)") ;
+is($biber->{bib}->{'Ani:1972'}->{date}, "1972", "year (gregorian)") ;
+is($biber->{bib}->{'Ani:1972'}->{localdate}, "1392", "year (original)") ;
 is($biber->{bib}->{'Ani:1972'}->{localcalendar}, "islamic", "localcalendar") ;
 
 is($biber->{bib}->{'BulgakovRozenfeld:1983'}->{title}, 'Мухаммад ибн муса ал-Хорезми. Около 783 – около 850', 'title original') ;

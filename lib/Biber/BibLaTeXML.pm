@@ -214,32 +214,12 @@ sub _parse_biblatexml {
             }
         }
 
-        # year + month (integer fields)
-        foreach my $field ( qw(year month) )  {
-            if ($bibrecord->exists("bib:$field\[not(\@converted)\]")) {
-                $self->{bib}->{$citekey}->{$field} =
-                    $bibrecord->findnodes("bib:$field/text()")->_normalize_string_value;
-            }
-        }
-        # support for year in non-Gregorian calendars:
-        # year => localyear and localcalendar
-        # localmonth is not supported: use date with subfield localdate instead
-        if ($bibrecord->exists("bib:year\[\@type='converted'\]")) {
-            $self->{bib}->{$citekey}->{year} =
-                $bibrecord->findnodes("bib:year/bib:value")->string_value;
-            $self->{bib}->{$citekey}->{"localyear"} =
-                $bibrecord->findnodes("bib:year/bib:localvalue")->string_value;
-
-            $self->{bib}->{$citekey}->{"localcalendar"} =
-                $bibrecord->findnodes("bib:year/bib:localvalue/\@calendar")->string_value;
-        }
-
-
         # date fields: date, origdate, urldate, eventdate
         # in format YYYY-MM-DD
         # optionally with start and end
-        foreach my $field (@DATERANGEFIELDS, qw(year))  {
-            if ($bibrecord->exists("bib:$field")) {
+        # >>> TODO support field/list/items <<<
+        foreach my $field (@DATERANGEFIELDS)  {
+            if ($bibrecord->exists("bib:$field\[not(\@type='converted')\]")) {
                 if ($bibrecord->exists("bib:$field/bib:start")) {
                     my $fieldstart = $bibrecord->findnodes("bib:$field/bib:start")->_normalize_string_value;
                     my $fieldend   = $bibrecord->findnodes("bib:$field/bib:end")->_normalize_string_value || undef;
@@ -259,18 +239,35 @@ sub _parse_biblatexml {
                         $bibrecord->findnodes("bib:$field/text()")->_normalize_string_value
                 }
             }
-
             # support for dates in non-Gregorian calendars:
             # *date / local*date / *localcalendar
-            #TODO support ranges (year/start year/end) for these too!
-            if ($bibrecord->exists("bib:$field\[\@type='converted'\]")) {
+            elsif ($bibrecord->exists("bib:$field\[\@type='converted'\]")) {
+
+                if ($bibrecord->exists("bib:$field/bib:value/bib:start")) {
+                    my $fieldstart = $bibrecord->findnodes("bib:$field/bib:value/bib:start")->_normalize_string_value;
+                    my $fieldend   = $bibrecord->findnodes("bib:$field/bib:value/bib:end")->_normalize_string_value || undef;
+
+
+                    $self->{bib}->{$citekey}->{$field} = $fieldstart;
+
+                    my $fieldendname = $field;
+                    # e.g. *date -> *enddate:
+                    $fieldendname =~ s/date/enddate/;
+
+                    $self->{bib}->{$citekey}->{$fieldendname} = $fieldend;
+
+                }
+                else {
+                    $self->{bib}->{$citekey}->{$field} =
+                        $bibrecord->findnodes("bib:$field/bib:value")->string_value
+                }
 
                 my $prefix = $field;
                 $prefix =~ s/date//;
 
-                if ($bibrecord->exists("bib:$field/bib:localdate/bib:start")) {
-                    my $fieldstart = $bibrecord->findnodes("bib:$field/bib:localdate/bib:start")->_normalize_string_value;
-                    my $fieldend   = $bibrecord->findnodes("bib:$field/bib:localdate/bib:end")->_normalize_string_value || undef;
+                if ($bibrecord->exists("bib:$field/bib:localvalue/bib:start")) {
+                    my $fieldstart = $bibrecord->findnodes("bib:$field/bib:localvalue/bib:start")->_normalize_string_value;
+                    my $fieldend   = $bibrecord->findnodes("bib:$field/bib:localvalue/bib:end")->_normalize_string_value || undef;
 
                     $self->{bib}->{$citekey}->{"local$field"} = $fieldstart;
 
@@ -282,10 +279,10 @@ sub _parse_biblatexml {
                 }
                 else {
                     $self->{bib}->{$citekey}->{"local$field"} =
-                        $bibrecord->findnodes("bib:$field/bib:localdate")->_normalize_string_value;
+                        $bibrecord->findnodes("bib:$field/bib:localvalue")->_normalize_string_value;
 
                     $self->{bib}->{$citekey}->{$prefix."localcalendar"} =
-                        $bibrecord->findnodes("bib:$field/bib:localdate/\@calendar")->string_value
+                        $bibrecord->findnodes("bib:$field/bib:localvalue/\@calendar")->string_value
                 }
             }
         }
