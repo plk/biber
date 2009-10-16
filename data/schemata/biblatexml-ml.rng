@@ -167,6 +167,9 @@
       <optional>
         <ref name="remarks"/>
       </optional>
+      <optional>
+        <ref name="relatedentries"/>
+      </optional>
     </interleave>
   </define>
   <define name="formattext">
@@ -262,22 +265,25 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <optional>
       <attribute name="convention"/>
     </optional>
-  </define>
-  <define name="translated">
     <optional>
       <ref name="att.lang"/>
     </optional>
+  </define>
+  <define name="translated">
     <attribute name="mode">
       <value>translated</value>
     </attribute>
+    <optional>
+      <ref name="att.lang"/>
+    </optional>
   </define>
   <define name="uniform">
-    <optional>
-      <ref name="att.locale"/>
-    </optional>
     <attribute name="mode">
       <value>uniform</value>
     </attribute>
+    <optional>
+      <ref name="att.locale"/>
+    </optional>
   </define>
   <define name="att.lang">
     <attribute name="xml:lang">
@@ -320,12 +326,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="booksubtitle">
             <ref name="romanized"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="booksubtitle">
             <ref name="translated"/>
@@ -334,10 +340,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="booksubtitle">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
+        <oneOrMore>
+          <element name="booksubtitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="booksubtitle">
             <ref name="translated"/>
@@ -362,12 +370,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattextB"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="booktitle">
             <ref name="romanized"/>
             <ref name="formattextB"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="booktitle">
             <ref name="translated"/>
@@ -376,10 +384,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="booktitle">
-          <ref name="romanized"/>
-          <ref name="formattextB"/>
-        </element>
+        <oneOrMore>
+          <element name="booktitle">
+            <ref name="romanized"/>
+            <ref name="formattextB"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="booktitle">
             <ref name="translated"/>
@@ -404,12 +414,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="booktitleaddon">
             <ref name="romanized"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="booktitleaddon">
             <ref name="translated"/>
@@ -418,10 +428,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="booktitleaddon">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
+        <oneOrMore>
+          <element name="booktitleaddon">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="booktitleaddon">
             <ref name="translated"/>
@@ -467,12 +479,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="eventtitle">
             <ref name="romanized"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="eventtitle">
             <ref name="translated"/>
@@ -481,10 +493,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="eventtitle">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
+        <oneOrMore>
+          <element name="eventtitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="eventtitle">
             <ref name="translated"/>
@@ -520,39 +534,43 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <text/>
     </element>
   </define>
+  <!-- TODO validate with pattern -->
   <define name="isbn">
     <element name="isbn">
       <text/>
     </element>
   </define>
-  <!-- validate with pattern ? -->
+  <!-- TODO validate with pattern -->
   <define name="oclc">
     <element name="oclc">
       <text/>
     </element>
   </define>
-  <!-- validate with pattern ? -->
+  <!-- TODO validate with pattern -->
   <define name="lccn">
     <element name="lccn">
       <text/>
     </element>
   </define>
-  <!-- validate with pattern ? -->
+  <!-- TODO validate with pattern -->
   <define name="ismn">
     <element name="ismn">
       <text/>
     </element>
   </define>
+  <!-- TODO validate with pattern -->
   <define name="isrn">
     <element name="isrn">
       <text/>
     </element>
   </define>
+  <!-- TODO validate with pattern -->
   <define name="issn">
     <element name="issn">
       <text/>
     </element>
   </define>
+  <!-- TODO validate with pattern -->
   <define name="issue">
     <choice>
       <group>
@@ -562,12 +580,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="issue">
             <ref name="romanized"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="issue">
             <ref name="translated"/>
@@ -576,10 +594,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="issue">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
+        <oneOrMore>
+          <element name="issue">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="issue">
             <ref name="translated"/>
@@ -604,12 +624,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattextB"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="issuetitle">
             <ref name="romanized"/>
             <ref name="formattextB"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="issuetitle">
             <ref name="translated"/>
@@ -618,10 +638,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="issuetitle">
-          <ref name="romanized"/>
-          <ref name="formattextB"/>
-        </element>
+        <oneOrMore>
+          <element name="issuetitle">
+            <ref name="romanized"/>
+            <ref name="formattextB"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="issuetitle">
             <ref name="translated"/>
@@ -646,12 +668,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="issuetitleaddon">
             <ref name="romanized"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="issuetitleaddon">
             <ref name="translated"/>
@@ -660,10 +682,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="issuetitleaddon">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
+        <oneOrMore>
+          <element name="issuetitleaddon">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="issuetitleaddon">
             <ref name="translated"/>
@@ -688,12 +712,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="issuesubtitle">
             <ref name="romanized"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="issuesubtitle">
             <ref name="translated"/>
@@ -702,10 +726,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="issuesubtitle">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
+        <oneOrMore>
+          <element name="issuesubtitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="issuesubtitle">
             <ref name="translated"/>
@@ -738,12 +764,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattextB"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="journal">
             <ref name="romanized"/>
             <ref name="formattextB"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="journal">
             <ref name="translated"/>
@@ -752,10 +778,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="journal">
-          <ref name="romanized"/>
-          <ref name="formattextB"/>
-        </element>
+        <oneOrMore>
+          <element name="journal">
+            <ref name="romanized"/>
+            <ref name="formattextB"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="journal">
             <ref name="translated"/>
@@ -780,12 +808,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattextB"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="journaltitle">
             <ref name="romanized"/>
             <ref name="formattextB"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="journaltitle">
             <ref name="translated"/>
@@ -794,10 +822,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="journaltitle">
-          <ref name="romanized"/>
-          <ref name="formattextB"/>
-        </element>
+        <oneOrMore>
+          <element name="journaltitle">
+            <ref name="romanized"/>
+            <ref name="formattextB"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="journaltitle">
             <ref name="translated"/>
@@ -822,12 +852,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="journalsubtitle">
             <ref name="romanized"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="journalsubtitle">
             <ref name="translated"/>
@@ -836,10 +866,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="journalsubtitle">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
+        <oneOrMore>
+          <element name="journalsubtitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="journalsubtitle">
             <ref name="translated"/>
@@ -920,12 +952,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="mainsubtitle">
             <ref name="romanized"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="mainsubtitle">
             <ref name="translated"/>
@@ -934,10 +966,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="mainsubtitle">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
+        <oneOrMore>
+          <element name="mainsubtitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="mainsubtitle">
             <ref name="translated"/>
@@ -962,12 +996,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattextB"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="maintitle">
             <ref name="romanized"/>
             <ref name="formattextB"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="maintitle">
             <ref name="translated"/>
@@ -976,10 +1010,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="maintitle">
-          <ref name="romanized"/>
-          <ref name="formattextB"/>
-        </element>
+        <oneOrMore>
+          <element name="maintitle">
+            <ref name="romanized"/>
+            <ref name="formattextB"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="maintitle">
             <ref name="translated"/>
@@ -1004,12 +1040,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="maintitleaddon">
             <ref name="romanized"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="maintitleaddon">
             <ref name="translated"/>
@@ -1018,10 +1054,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="maintitleaddon">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
+        <oneOrMore>
+          <element name="maintitleaddon">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="maintitleaddon">
             <ref name="translated"/>
@@ -1043,35 +1081,39 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <element name="nameaddon">
           <text/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="nameaddon">
             <ref name="romanized"/>
             <text/>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="nameaddon">
             <ref name="translated"/>
             <text/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
-        <element name="nameaddon">
-          <ref name="romanized"/>
-          <text/>
-        </element>
-        <optional>
+        <oneOrMore>
+          <element name="nameaddon">
+            <ref name="romanized"/>
+            <text/>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
           <element name="nameaddon">
             <ref name="translated"/>
             <text/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="nameaddon">
-        <ref name="translated"/>
-        <text/>
-      </element>
+      <oneOrMore>
+        <element name="nameaddon">
+          <ref name="translated"/>
+          <text/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="note">
@@ -1116,12 +1158,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="reprinttitle">
             <ref name="romanized"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="reprinttitle">
             <ref name="translated"/>
@@ -1130,10 +1172,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="reprinttitle">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
+        <oneOrMore>
+          <element name="reprinttitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="reprinttitle">
             <ref name="translated"/>
@@ -1163,7 +1207,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="series">
             <ref name="romanized"/>
             <choice>
@@ -1173,8 +1217,8 @@ the optional attribute "text" gives a Unicode representation of the mathematical
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="series">
             <ref name="translated"/>
             <choice>
@@ -1184,11 +1228,35 @@ the optional attribute "text" gives a Unicode representation of the mathematical
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="series">
+            <ref name="romanized"/>
+            <choice>
+              <ref name="formattext"/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="series">
+            <ref name="translated"/>
+            <choice>
+              <ref name="formattext"/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="series">
-          <ref name="romanized"/>
+          <ref name="translated"/>
           <choice>
             <ref name="formattext"/>
             <oneOrMore>
@@ -1196,27 +1264,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="series">
-            <ref name="translated"/>
-            <choice>
-              <ref name="formattext"/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="series">
-        <ref name="translated"/>
-        <choice>
-          <ref name="formattext"/>
-          <oneOrMore>
-            <ref name="item"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="shorthand">
@@ -1225,35 +1273,39 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <element name="shorthand">
           <text/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="shorthand">
             <ref name="romanized"/>
             <text/>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="shorthand">
             <ref name="translated"/>
             <text/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
-        <element name="shorthand">
-          <ref name="romanized"/>
-          <text/>
-        </element>
-        <optional>
+        <oneOrMore>
+          <element name="shorthand">
+            <ref name="romanized"/>
+            <text/>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
           <element name="shorthand">
             <ref name="translated"/>
             <text/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="shorthand">
-        <ref name="translated"/>
-        <text/>
-      </element>
+      <oneOrMore>
+        <element name="shorthand">
+          <ref name="translated"/>
+          <text/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="shorthandintro">
@@ -1262,35 +1314,39 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <element name="shorthandintro">
           <text/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="shorthandintro">
             <ref name="romanized"/>
             <text/>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="shorthandintro">
             <ref name="translated"/>
             <text/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
-        <element name="shorthandintro">
-          <ref name="romanized"/>
-          <text/>
-        </element>
-        <optional>
+        <oneOrMore>
+          <element name="shorthandintro">
+            <ref name="romanized"/>
+            <text/>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
           <element name="shorthandintro">
             <ref name="translated"/>
             <text/>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
-      <element name="shorthandintro">
-        <ref name="translated"/>
-        <text/>
-      </element>
+      <oneOrMore>
+        <element name="shorthandintro">
+          <ref name="translated"/>
+          <text/>
+        </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="shorttitle">
@@ -1302,12 +1358,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattextB"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="shorttitle">
             <ref name="romanized"/>
             <ref name="formattextB"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="shorttitle">
             <ref name="translated"/>
@@ -1316,10 +1372,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="shorttitle">
-          <ref name="romanized"/>
-          <ref name="formattextB"/>
-        </element>
+        <oneOrMore>
+          <element name="shorttitle">
+            <ref name="romanized"/>
+            <ref name="formattextB"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="shorttitle">
             <ref name="translated"/>
@@ -1344,12 +1402,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="subtitle">
             <ref name="romanized"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="subtitle">
             <ref name="translated"/>
@@ -1358,10 +1416,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="subtitle">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
+        <oneOrMore>
+          <element name="subtitle">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="subtitle">
             <ref name="translated"/>
@@ -1386,12 +1446,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattextB"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="title">
             <ref name="romanized"/>
             <ref name="formattextB"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="title">
             <ref name="translated"/>
@@ -1400,10 +1460,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="title">
-          <ref name="romanized"/>
-          <ref name="formattextB"/>
-        </element>
+        <oneOrMore>
+          <element name="title">
+            <ref name="romanized"/>
+            <ref name="formattextB"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="title">
             <ref name="translated"/>
@@ -1428,12 +1490,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="titleaddon">
             <ref name="romanized"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="titleaddon">
             <ref name="translated"/>
@@ -1442,10 +1504,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="titleaddon">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
+        <oneOrMore>
+          <element name="titleaddon">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="titleaddon">
             <ref name="translated"/>
@@ -1475,12 +1539,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </optional>
           <ref name="formattext"/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="venue">
             <ref name="romanized"/>
             <ref name="formattext"/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="venue">
             <ref name="translated"/>
@@ -1489,10 +1553,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="venue">
-          <ref name="romanized"/>
-          <ref name="formattext"/>
-        </element>
+        <oneOrMore>
+          <element name="venue">
+            <ref name="romanized"/>
+            <ref name="formattext"/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="venue">
             <ref name="translated"/>
@@ -1515,7 +1581,38 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="volume">
     <element name="volume">
+      <choice>
+        <text/>
+        <ref name="volume.range"/>
+      </choice>
+    </element>
+  </define>
+  <define name="volume.range">
+    <choice>
+      <ref name="volume.list"/>
+      <group>
+        <ref name="volume.start"/>
+        <ref name="volume.end"/>
+      </group>
+    </choice>
+  </define>
+  <define name="volume.start">
+    <element name="start">
       <text/>
+    </element>
+  </define>
+  <define name="volume.end">
+    <element name="end">
+      <text/>
+    </element>
+  </define>
+  <define name="volume.list">
+    <element name="list">
+      <oneOrMore>
+        <element name="item">
+          <text/>
+        </element>
+      </oneOrMore>
     </element>
   </define>
   <define name="volumes">
@@ -1554,6 +1651,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </element>
   </define>
   <define name="entryset">
+    <a:documentation>TODO add editorA etc (biblatex 0.9)</a:documentation>
     <a:documentation>special fields</a:documentation>
     <element name="entryset">
       <choice>
@@ -1647,12 +1745,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <element name="sorttitle">
           <text/>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="sorttitle">
             <ref name="romanized"/>
             <text/>
           </element>
-        </optional>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="sorttitle">
             <ref name="translated"/>
@@ -1661,10 +1759,12 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <group>
-        <element name="sorttitle">
-          <ref name="romanized"/>
-          <text/>
-        </element>
+        <oneOrMore>
+          <element name="sorttitle">
+            <ref name="romanized"/>
+            <text/>
+          </element>
+        </oneOrMore>
         <zeroOrMore>
           <element name="sorttitle">
             <ref name="translated"/>
@@ -1695,8 +1795,8 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <text/>
     </element>
   </define>
-  <!-- INTEGER FIELDS -->
   <define name="edition">
+    <a:documentation>INTEGER FIELDS</a:documentation>
     <element name="edition">
       <choice>
         <data type="integer"/>
@@ -1704,52 +1804,49 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       </choice>
     </element>
   </define>
-  <!-- DATE FIELDS -->
-  <define name="month">
-    <element name="month">
-      <data type="gMonth"/>
-    </element>
-  </define>
-  <define name="year">
-    <a:documentation>FIXME allow type="converted" attribute?
-localmonth ??</a:documentation>
-    <choice>
-      <ref name="year.simple"/>
-      <ref name="year.converted"/>
-    </choice>
-  </define>
-  <define name="year.simple">
-    <element name="year">
-      <optional>
-        <ref name="attlist.year"/>
-      </optional>
-      <data type="gYear"/>
-    </element>
-  </define>
-  <define name="year.converted">
-    <element name="year">
-      <attribute name="type">
-        <value>converted</value>
-      </attribute>
-      <ref name="localyear"/>
-    </element>
-  </define>
   <define name="attlist.year">
-    <attribute name="type">
-      <choice>
-        <value>approximate</value>
-        <value>assumed</value>
-      </choice>
-    </attribute>
+    <a:documentation>DATE FIELDS</a:documentation>
+    <!--
+      month = element month { xsd:gMonth }
+      year = ( year.simple | year.converted )
+      year.simple = element year { attlist.year?, ( xsd:gYear | year.range ) }
+    -->
+    <a:documentation>when a publication records a date in a different calendar than the Gregorian:</a:documentation>
+    <!--
+      year.converted = element year {
+             attribute type { "converted" },
+             element value { ( xsd:gYear | year.range ) },
+             localyear }
+    -->
+    <a:documentation>"approximate" when exact date is uncertain,
+"assumed" when it is known but not stated on the document</a:documentation>
+    <optional>
+      <attribute name="appeared">
+        <ref name="date.type"/>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="type">
+        <choice>
+          <value>approximate</value>
+          <value>assumed</value>
+        </choice>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="note"/>
+    </optional>
   </define>
-  <define name="localyear">
-    <element name="localyear">
-      <ref name="attlist.localdate"/>
-      <data type="gYear"/>
-    </element>
-  </define>
+  <!--
+    year.range = (year.range.list | ( year.range.start, year.range.end) )
+    year.range.start = element start { xsd:gYear }
+    year.range.end = element end { xsd:gYear }
+    year.range.list = element list { element item { xsd:gYear }+ }
+  -->
   <define name="date">
+    <a:documentation>now same thing for date formats</a:documentation>
     <choice>
+      <ref name="pubstate"/>
       <ref name="date.simple"/>
       <ref name="date.converted"/>
     </choice>
@@ -1761,7 +1858,7 @@ localmonth ??</a:documentation>
       </optional>
       <choice>
         <ref name="date.type"/>
-        <ref name="daterange"/>
+        <ref name="date.range"/>
       </choice>
     </element>
   </define>
@@ -1770,7 +1867,18 @@ localmonth ??</a:documentation>
       <attribute name="type">
         <value>converted</value>
       </attribute>
+      <element name="value">
+        <choice>
+          <ref name="date.type"/>
+          <ref name="date.range"/>
+        </choice>
+      </element>
       <ref name="localdate"/>
+    </element>
+  </define>
+  <define name="pubstate">
+    <element name="pubstate">
+      <text/>
     </element>
   </define>
   <define name="origdate">
@@ -1786,7 +1894,7 @@ localmonth ??</a:documentation>
       </optional>
       <choice>
         <ref name="date.type"/>
-        <ref name="daterange"/>
+        <ref name="date.range"/>
       </choice>
     </element>
   </define>
@@ -1795,6 +1903,12 @@ localmonth ??</a:documentation>
       <attribute name="type">
         <value>converted</value>
       </attribute>
+      <element name="value">
+        <choice>
+          <ref name="date.type"/>
+          <ref name="date.range"/>
+        </choice>
+      </element>
       <ref name="localdate"/>
     </element>
   </define>
@@ -1811,7 +1925,7 @@ localmonth ??</a:documentation>
       </optional>
       <choice>
         <ref name="date.type"/>
-        <ref name="daterange"/>
+        <ref name="date.range"/>
       </choice>
     </element>
   </define>
@@ -1820,6 +1934,12 @@ localmonth ??</a:documentation>
       <attribute name="type">
         <value>converted</value>
       </attribute>
+      <element name="value">
+        <choice>
+          <ref name="date.type"/>
+          <ref name="date.range"/>
+        </choice>
+      </element>
       <ref name="localdate"/>
     </element>
   </define>
@@ -1836,7 +1956,7 @@ localmonth ??</a:documentation>
       </optional>
       <choice>
         <ref name="date.type"/>
-        <ref name="daterange"/>
+        <ref name="date.range"/>
       </choice>
     </element>
   </define>
@@ -1845,6 +1965,12 @@ localmonth ??</a:documentation>
       <attribute name="type">
         <value>converted</value>
       </attribute>
+      <element name="value">
+        <choice>
+          <ref name="date.type"/>
+          <ref name="date.range"/>
+        </choice>
+      </element>
       <ref name="localdate"/>
     </element>
   </define>
@@ -1855,18 +1981,19 @@ localmonth ??</a:documentation>
       <data type="gYear"/>
     </choice>
   </define>
-  <!--
-    "approximate" when exact date is uncertain,
-    "assumed" when it is known but not stated on the document
-    and "converted" when it is stated in a different calendar,
-    with child element "localyear" or "localdate"
-  -->
+  <define name="localyear">
+    <element name="localvalue">
+      <ref name="attlist.localdate"/>
+      <data type="gYear"/>
+    </element>
+  </define>
   <define name="localdate">
-    <element name="localdate">
+    <a:documentation>we cannot use the xsd: datatypes for localdate since they serve for Gregorian dates only</a:documentation>
+    <element name="localvalue">
       <ref name="attlist.localdate"/>
       <choice>
-        <ref name="date.type"/>
-        <ref name="daterange"/>
+        <text/>
+        <ref name="range"/>
       </choice>
     </element>
   </define>
@@ -1889,21 +2016,41 @@ localmonth ??</a:documentation>
       <attribute name="note"/>
     </optional>
   </define>
-  <define name="daterange">
-    <ref name="daterange.start"/>
-    <ref name="daterange.end"/>
+  <define name="date.range">
+    <choice>
+      <ref name="date.range.list"/>
+      <group>
+        <ref name="date.range.start"/>
+        <optional>
+          <ref name="date.range.end"/>
+        </optional>
+      </group>
+    </choice>
   </define>
-  <define name="daterange.start">
+  <define name="date.range.start">
     <element name="start">
       <ref name="date.type"/>
     </element>
   </define>
-  <define name="daterange.end">
+  <define name="date.range.end">
     <element name="end">
       <ref name="date.type"/>
     </element>
   </define>
+  <define name="date.range.list">
+    <element name="list">
+      <oneOrMore>
+        <element name="item">
+          <choice>
+            <ref name="date.type"/>
+            <ref name="date.range"/>
+          </choice>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
   <define name="pages">
+    <a:documentation>PAGES</a:documentation>
     <element name="pages">
       <optional>
         <ref name="attlist.pages"/>
@@ -1917,7 +2064,14 @@ localmonth ??</a:documentation>
   </define>
   <define name="pagelist">
     <element name="list">
-      <text/>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <element name="item">
+            <text/>
+          </element>
+        </oneOrMore>
+      </choice>
     </element>
   </define>
   <define name="attlist.pages">
@@ -1964,8 +2118,8 @@ localmonth ??</a:documentation>
       <text/>
     </element>
   </define>
-  <!-- LITERAL LISTS -->
   <define name="attlist.lists">
+    <a:documentation>LITERAL LISTS</a:documentation>
     <attribute name="andothers">
       <value>true</value>
     </attribute>
@@ -1990,7 +2144,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="institution">
             <optional>
               <ref name="attlist.lists"/>
@@ -2003,8 +2157,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="institution">
             <optional>
               <ref name="attlist.lists"/>
@@ -2017,14 +2171,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="institution">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="institution">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="institution">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="translated"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -2032,33 +2216,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="institution">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="translated"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="institution">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="translated"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="item"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="school">
@@ -2081,7 +2239,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="school">
             <optional>
               <ref name="attlist.lists"/>
@@ -2094,8 +2252,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="school">
             <optional>
               <ref name="attlist.lists"/>
@@ -2108,14 +2266,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="school">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="school">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="school">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="translated"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -2123,33 +2311,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="school">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="translated"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="school">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="translated"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="item"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="organization">
@@ -2172,7 +2334,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="organization">
             <optional>
               <ref name="attlist.lists"/>
@@ -2185,8 +2347,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="organization">
             <optional>
               <ref name="attlist.lists"/>
@@ -2199,14 +2361,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="organization">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="organization">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="organization">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="translated"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -2214,33 +2406,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="organization">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="translated"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="organization">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="translated"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="item"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="location">
@@ -2266,7 +2432,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="location">
             <optional>
               <ref name="attlist.lists"/>
@@ -2279,8 +2445,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="location">
             <optional>
               <ref name="attlist.lists"/>
@@ -2293,14 +2459,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="location">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="location">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="location">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -2308,33 +2504,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="location">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="location">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="item"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="origlocation">
@@ -2357,7 +2527,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="origlocation">
             <optional>
               <ref name="attlist.lists"/>
@@ -2370,8 +2540,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="origlocation">
             <optional>
               <ref name="attlist.lists"/>
@@ -2384,48 +2554,52 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="origlocation">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="origlocation">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="origlocation">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
-              <ref name="item"/>
+              <ref name="pubitem"/>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="origlocation">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="origlocation">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="pubitem"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="publisher">
@@ -2450,7 +2624,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="publisher">
             <optional>
               <ref name="attlist.lists"/>
@@ -2463,8 +2637,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="publisher">
             <optional>
               <ref name="attlist.lists"/>
@@ -2480,14 +2654,50 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="publisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <ref name="formattext"/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="publisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <choice>
+              <ref name="uniform"/>
+              <ref name="translated"/>
+            </choice>
+            <choice>
+              <ref name="formattext"/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="publisher">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <choice>
+            <ref name="uniform"/>
+            <ref name="translated"/>
+          </choice>
           <choice>
             <ref name="formattext"/>
             <oneOrMore>
@@ -2495,39 +2705,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="publisher">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <choice>
-              <ref name="uniform"/>
-              <ref name="translated"/>
-            </choice>
-            <choice>
-              <ref name="formattext"/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="publisher">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <choice>
-          <ref name="uniform"/>
-          <ref name="translated"/>
-        </choice>
-        <choice>
-          <ref name="formattext"/>
-          <oneOrMore>
-            <ref name="item"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="origpublisher">
@@ -2552,7 +2730,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="origpublisher">
             <optional>
               <ref name="attlist.lists"/>
@@ -2565,8 +2743,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="origpublisher">
             <optional>
               <ref name="attlist.lists"/>
@@ -2582,14 +2760,50 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="origpublisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <ref name="formattext"/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="origpublisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <choice>
+              <ref name="uniform"/>
+              <ref name="translated"/>
+            </choice>
+            <choice>
+              <ref name="formattext"/>
+              <oneOrMore>
+                <ref name="item"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="origpublisher">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <choice>
+            <ref name="uniform"/>
+            <ref name="translated"/>
+          </choice>
           <choice>
             <ref name="formattext"/>
             <oneOrMore>
@@ -2597,39 +2811,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="origpublisher">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <choice>
-              <ref name="uniform"/>
-              <ref name="translated"/>
-            </choice>
-            <choice>
-              <ref name="formattext"/>
-              <oneOrMore>
-                <ref name="item"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="origpublisher">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <choice>
-          <ref name="uniform"/>
-          <ref name="translated"/>
-        </choice>
-        <choice>
-          <ref name="formattext"/>
-          <oneOrMore>
-            <ref name="item"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="publisherinfo">
@@ -2657,7 +2839,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="publisher">
             <optional>
               <ref name="attlist.lists"/>
@@ -2673,8 +2855,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="publisher">
             <optional>
               <ref name="attlist.lists"/>
@@ -2690,14 +2872,50 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="publisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <group>
+                <ref name="publishername"/>
+                <ref name="publocation"/>
+              </group>
+              <oneOrMore>
+                <ref name="pubitem"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="publisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <group>
+                <ref name="publishername"/>
+                <ref name="publocation"/>
+              </group>
+              <oneOrMore>
+                <ref name="pubitem"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="publisher">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="translated"/>
           <choice>
             <group>
               <ref name="publishername"/>
@@ -2708,39 +2926,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="publisher">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="translated"/>
-            <choice>
-              <group>
-                <ref name="publishername"/>
-                <ref name="publocation"/>
-              </group>
-              <oneOrMore>
-                <ref name="pubitem"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="publisher">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="translated"/>
-        <choice>
-          <group>
-            <ref name="publishername"/>
-            <ref name="publocation"/>
-          </group>
-          <oneOrMore>
-            <ref name="pubitem"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="origpublisherinfo">
@@ -2766,7 +2952,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="origpublisher">
             <optional>
               <ref name="attlist.lists"/>
@@ -2782,8 +2968,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="origpublisher">
             <optional>
               <ref name="attlist.lists"/>
@@ -2799,14 +2985,50 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="origpublisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <group>
+                <ref name="publishername"/>
+                <ref name="publocation"/>
+              </group>
+              <oneOrMore>
+                <ref name="pubitem"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="origpublisher">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="translated"/>
+            <choice>
+              <group>
+                <ref name="publishername"/>
+                <ref name="publocation"/>
+              </group>
+              <oneOrMore>
+                <ref name="pubitem"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="origpublisher">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="translated"/>
           <choice>
             <group>
               <ref name="publishername"/>
@@ -2817,39 +3039,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="origpublisher">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="translated"/>
-            <choice>
-              <group>
-                <ref name="publishername"/>
-                <ref name="publocation"/>
-              </group>
-              <oneOrMore>
-                <ref name="pubitem"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="origpublisher">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="translated"/>
-        <choice>
-          <group>
-            <ref name="publishername"/>
-            <ref name="publocation"/>
-          </group>
-          <oneOrMore>
-            <ref name="pubitem"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="lista">
@@ -3174,6 +3364,8 @@ localmonth ??</a:documentation>
           <value>author</value>
           <value>editor</value>
           <value>compiler</value>
+          <value>translator</value>
+          <value>editor+translator</value>
           <text/>
         </choice>
       </attribute>
@@ -3194,6 +3386,7 @@ localmonth ??</a:documentation>
       <attribute name="type">
         <choice>
           <value>editor</value>
+          <value>editor+translator</value>
           <value>compiler</value>
         </choice>
       </attribute>
@@ -3234,7 +3427,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="author">
             <ref name="attlist.author"/>
             <ref name="romanized"/>
@@ -3245,8 +3438,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="author">
             <ref name="attlist.author"/>
             <ref name="uniform"/>
@@ -3257,12 +3450,38 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="author">
+            <ref name="attlist.author"/>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="author">
+            <ref name="attlist.author"/>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="author">
           <ref name="attlist.author"/>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -3270,29 +3489,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="author">
-            <ref name="attlist.author"/>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="author">
-        <ref name="attlist.author"/>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="editor">
@@ -3307,7 +3504,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="editor">
             <ref name="attlist.editor"/>
             <ref name="romanized"/>
@@ -3318,8 +3515,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="editor">
             <ref name="attlist.editor"/>
             <ref name="uniform"/>
@@ -3330,12 +3527,38 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="editor">
+            <ref name="attlist.editor"/>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="editor">
+            <ref name="attlist.editor"/>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="editor">
           <ref name="attlist.editor"/>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -3343,29 +3566,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="editor">
-            <ref name="attlist.editor"/>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="editor">
-        <ref name="attlist.editor"/>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="afterword">
@@ -3382,7 +3583,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="afterword">
             <optional>
               <ref name="attlist.lists"/>
@@ -3395,8 +3596,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="afterword">
             <optional>
               <ref name="attlist.lists"/>
@@ -3409,14 +3610,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="afterword">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="afterword">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="afterword">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -3424,33 +3655,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="afterword">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="afterword">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="annotator">
@@ -3467,7 +3672,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="annotator">
             <optional>
               <ref name="attlist.lists"/>
@@ -3480,8 +3685,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="annotator">
             <optional>
               <ref name="attlist.lists"/>
@@ -3494,14 +3699,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="annotator">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="annotator">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="annotator">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -3509,33 +3744,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="annotator">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="annotator">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="bookauthor">
@@ -3552,7 +3761,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="bookauthor">
             <optional>
               <ref name="attlist.lists"/>
@@ -3565,8 +3774,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="bookauthor">
             <optional>
               <ref name="attlist.lists"/>
@@ -3579,14 +3788,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="bookauthor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="bookauthor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="bookauthor">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -3594,33 +3833,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="bookauthor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="bookauthor">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="commentator">
@@ -3637,7 +3850,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="commentator">
             <optional>
               <ref name="attlist.lists"/>
@@ -3650,8 +3863,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="commentator">
             <optional>
               <ref name="attlist.lists"/>
@@ -3664,14 +3877,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="commentator">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="commentator">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="commentator">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -3679,33 +3922,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="commentator">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="commentator">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="foreword">
@@ -3722,7 +3939,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="foreword">
             <optional>
               <ref name="attlist.lists"/>
@@ -3735,8 +3952,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="foreword">
             <optional>
               <ref name="attlist.lists"/>
@@ -3749,14 +3966,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="foreword">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="foreword">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="foreword">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -3764,33 +4011,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="foreword">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="foreword">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="holder">
@@ -3807,7 +4028,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="holder">
             <optional>
               <ref name="attlist.lists"/>
@@ -3820,8 +4041,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="holder">
             <optional>
               <ref name="attlist.lists"/>
@@ -3834,14 +4055,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="holder">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="holder">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="holder">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -3849,33 +4100,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="holder">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="holder">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="introduction">
@@ -3892,7 +4117,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="introduction">
             <optional>
               <ref name="attlist.lists"/>
@@ -3905,8 +4130,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="introduction">
             <optional>
               <ref name="attlist.lists"/>
@@ -3919,14 +4144,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="introduction">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="introduction">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="introduction">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -3934,33 +4189,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="introduction">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="introduction">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="redactor">
@@ -3977,7 +4206,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="redactor">
             <optional>
               <ref name="attlist.lists"/>
@@ -3990,8 +4219,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="redactor">
             <optional>
               <ref name="attlist.lists"/>
@@ -4004,14 +4233,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="redactor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="redactor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="redactor">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -4019,33 +4278,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="redactor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="redactor">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="translator">
@@ -4062,7 +4295,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="translator">
             <optional>
               <ref name="attlist.lists"/>
@@ -4075,8 +4308,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="translator">
             <optional>
               <ref name="attlist.lists"/>
@@ -4089,14 +4322,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="translator">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="translator">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="translator">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -4104,33 +4367,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="translator">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="translator">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="shortauthor">
@@ -4147,7 +4384,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="shortauthor">
             <optional>
               <ref name="attlist.lists"/>
@@ -4160,8 +4397,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="shortauthor">
             <optional>
               <ref name="attlist.lists"/>
@@ -4174,14 +4411,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="shortauthor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="shortauthor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="shortauthor">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -4189,33 +4456,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="shortauthor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="shortauthor">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="shorteditor">
@@ -4232,7 +4473,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="shorteditor">
             <optional>
               <ref name="attlist.lists"/>
@@ -4245,8 +4486,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="shorteditor">
             <optional>
               <ref name="attlist.lists"/>
@@ -4259,14 +4500,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="shorteditor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="shorteditor">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="shorteditor">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -4274,33 +4545,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="shorteditor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="shorteditor">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="sortname">
@@ -4317,7 +4562,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="sortname">
             <optional>
               <ref name="attlist.lists"/>
@@ -4330,8 +4575,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="sortname">
             <optional>
               <ref name="attlist.lists"/>
@@ -4344,14 +4589,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="sortname">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="sortname">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="sortname">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -4359,33 +4634,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="sortname">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="sortname">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="namea">
@@ -4402,7 +4651,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="namea">
             <optional>
               <ref name="attlist.lists"/>
@@ -4415,8 +4664,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="namea">
             <optional>
               <ref name="attlist.lists"/>
@@ -4429,14 +4678,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="namea">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="namea">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="namea">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -4444,33 +4723,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="namea">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="namea">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="nameb">
@@ -4487,7 +4740,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="nameb">
             <optional>
               <ref name="attlist.lists"/>
@@ -4500,8 +4753,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="nameb">
             <optional>
               <ref name="attlist.lists"/>
@@ -4514,14 +4767,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="nameb">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="nameb">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="nameb">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -4529,33 +4812,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="nameb">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="nameb">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="namec">
@@ -4572,7 +4829,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
+        <zeroOrMore>
           <element name="namec">
             <optional>
               <ref name="attlist.lists"/>
@@ -4585,8 +4842,8 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
-        <optional>
+        </zeroOrMore>
+        <zeroOrMore>
           <element name="namec">
             <optional>
               <ref name="attlist.lists"/>
@@ -4599,14 +4856,44 @@ localmonth ??</a:documentation>
               </oneOrMore>
             </choice>
           </element>
-        </optional>
+        </zeroOrMore>
       </group>
       <group>
+        <oneOrMore>
+          <element name="namec">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="namec">
+            <optional>
+              <ref name="attlist.lists"/>
+            </optional>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
         <element name="namec">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
-          <ref name="romanized"/>
+          <ref name="uniform"/>
           <choice>
             <text/>
             <oneOrMore>
@@ -4614,33 +4901,7 @@ localmonth ??</a:documentation>
             </oneOrMore>
           </choice>
         </element>
-        <optional>
-          <element name="namec">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </optional>
-      </group>
-      <element name="namec">
-        <optional>
-          <ref name="attlist.lists"/>
-        </optional>
-        <ref name="uniform"/>
-        <choice>
-          <text/>
-          <oneOrMore>
-            <ref name="person"/>
-          </oneOrMore>
-        </choice>
-      </element>
+      </oneOrMore>
     </choice>
   </define>
   <define name="person">
@@ -4819,14 +5080,38 @@ localmonth ??</a:documentation>
       </choice>
     </element>
   </define>
-  <define name="BibLaTeXML.article.standard.fields">
+  <define name="relatedentries">
     <a:documentation>culture
 language
 country
 person
 century
 author
-works</a:documentation>
+works
+This is used to record crossrefs to other entries that are related to the present one,
+for instance a reedition.</a:documentation>
+    <element name="relatedentries">
+      <oneOrMore>
+        <element name="item">
+          <attribute name="type">
+            <choice>
+              <value>reedition</value>
+              <value>reprint</value>
+              <value>contains</value>
+              <value>translation</value>
+              <value>reedition_of</value>
+              <value>reprint_of</value>
+              <value>part_of</value>
+              <value>translation_of</value>
+              <text/>
+            </choice>
+          </attribute>
+          <attribute name="id"/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="BibLaTeXML.article.standard.fields">
     <a:documentation/>
     <interleave>
       <ref name="author"/>
@@ -4835,18 +5120,12 @@ works</a:documentation>
         <ref name="journaltitle"/>
         <ref name="journal"/>
       </choice>
-      <choice>
-        <interleave>
-          <optional>
-            <choice>
-              <ref name="month"/>
-              <ref name="issue"/>
-            </choice>
-          </optional>
-          <ref name="year"/>
-        </interleave>
+      <interleave>
+        <optional>
+          <ref name="issue"/>
+        </optional>
         <ref name="date"/>
-      </choice>
+      </interleave>
       <optional>
         <ref name="editor"/>
       </optional>
@@ -5039,14 +5318,14 @@ works</a:documentation>
       <choice>
         <interleave>
           <ref name="title"/>
-          <ref name="year"/>
+          <ref name="date"/>
         </interleave>
         <interleave>
           <optional>
             <ref name="title"/>
           </optional>
           <optional>
-            <ref name="year"/>
+            <ref name="date"/>
           </optional>
           <ref name="crossref"/>
         </interleave>
@@ -5199,7 +5478,7 @@ works</a:documentation>
       </optional>
       <!-- changed -->
       <ref name="title"/>
-      <ref name="year"/>
+      <ref name="date"/>
       <optional>
         <ref name="subtitle"/>
       </optional>
@@ -5274,7 +5553,7 @@ works</a:documentation>
       </optional>
       <!-- changed -->
       <ref name="title"/>
-      <ref name="year"/>
+      <ref name="date"/>
       <optional>
         <ref name="bookauthor"/>
       </optional>
@@ -5413,8 +5692,28 @@ works</a:documentation>
   <define name="BibLaTeXML.inbook.standard.fields">
     <a:documentation/>
     <interleave>
-      <ref name="author"/>
       <ref name="title"/>
+      <optional>
+        <ref name="author"/>
+      </optional>
+      <optional>
+        <ref name="editor"/>
+      </optional>
+      <optional>
+        <ref name="shorteditor"/>
+      </optional>
+      <optional>
+        <ref name="translator"/>
+      </optional>
+      <optional>
+        <ref name="redactor"/>
+      </optional>
+      <optional>
+        <ref name="annotator"/>
+      </optional>
+      <optional>
+        <ref name="commentator"/>
+      </optional>
       <!-- year can be provided with crossref if it refers to multivolume work -->
       <choice>
         <interleave>
@@ -5423,7 +5722,7 @@ works</a:documentation>
             <ref name="xref"/>
           </choice>
           <optional>
-            <ref name="year"/>
+            <ref name="date"/>
           </optional>
         </interleave>
         <interleave>
@@ -5447,25 +5746,7 @@ works</a:documentation>
           <optional>
             <ref name="booktitleaddon"/>
           </optional>
-          <ref name="year"/>
-          <optional>
-            <ref name="editor"/>
-          </optional>
-          <optional>
-            <ref name="shorteditor"/>
-          </optional>
-          <optional>
-            <ref name="translator"/>
-          </optional>
-          <optional>
-            <ref name="redactor"/>
-          </optional>
-          <optional>
-            <ref name="annotator"/>
-          </optional>
-          <optional>
-            <ref name="commentator"/>
-          </optional>
+          <ref name="date"/>
           <optional>
             <ref name="introduction"/>
           </optional>
@@ -5582,7 +5863,7 @@ works</a:documentation>
             <ref name="xref"/>
           </choice>
           <optional>
-            <ref name="year"/>
+            <ref name="date"/>
           </optional>
         </interleave>
         <interleave>
@@ -5594,7 +5875,7 @@ works</a:documentation>
             FIXME: this is probably too strict
           -->
           <ref name="booktitle"/>
-          <ref name="year"/>
+          <ref name="date"/>
           <optional>
             <ref name="shorteditor"/>
           </optional>
@@ -5736,7 +6017,7 @@ works</a:documentation>
           </optional>
           <!-- made it optional -->
           <ref name="booktitle"/>
-          <ref name="year"/>
+          <ref name="date"/>
           <optional>
             <ref name="shorteditor"/>
           </optional>
@@ -5850,7 +6131,7 @@ works</a:documentation>
         </choice>
       </optional>
       <ref name="title"/>
-      <ref name="year"/>
+      <ref name="date"/>
       <optional>
         <ref name="subtitle"/>
       </optional>
@@ -5943,15 +6224,7 @@ works</a:documentation>
         </choice>
       </optional>
       <ref name="title"/>
-      <choice>
-        <interleave>
-          <optional>
-            <ref name="month"/>
-          </optional>
-          <ref name="year"/>
-        </interleave>
-        <ref name="date"/>
-      </choice>
+      <ref name="date"/>
       <optional>
         <ref name="subtitle"/>
       </optional>
@@ -6024,15 +6297,7 @@ works</a:documentation>
       </optional>
       <ref name="title"/>
       <optional>
-        <choice>
-          <interleave>
-            <optional>
-              <ref name="month"/>
-            </optional>
-            <ref name="year"/>
-          </interleave>
-          <ref name="date"/>
-        </choice>
+        <ref name="date"/>
       </optional>
       <choice>
         <ref name="url"/>
@@ -6086,15 +6351,7 @@ works</a:documentation>
       <ref name="author"/>
       <ref name="title"/>
       <ref name="number"/>
-      <choice>
-        <interleave>
-          <optional>
-            <ref name="month"/>
-          </optional>
-          <ref name="year"/>
-        </interleave>
-        <ref name="date"/>
-      </choice>
+      <ref name="date"/>
       <optional>
         <ref name="holder"/>
       </optional>
@@ -6192,19 +6449,11 @@ works</a:documentation>
         <ref name="journal"/>
         <ref name="journaltitle"/>
       </choice>
-      <!-- CHANGED from title -->
-      <choice>
-        <interleave>
-          <optional>
-            <choice>
-              <ref name="month"/>
-              <ref name="issue"/>
-            </choice>
-          </optional>
-          <ref name="year"/>
-        </interleave>
-        <ref name="date"/>
-      </choice>
+      <optional>
+        <!-- CHANGED from title -->
+        <ref name="issue"/>
+      </optional>
+      <ref name="date"/>
       <optional>
         <ref name="shorteditor"/>
       </optional>
@@ -6317,7 +6566,7 @@ works</a:documentation>
       </optional>
       <!-- made it optional -->
       <ref name="title"/>
-      <ref name="year"/>
+      <ref name="date"/>
       <optional>
         <ref name="shorteditor"/>
       </optional>
@@ -6425,7 +6674,7 @@ works</a:documentation>
       <ref name="author"/>
       <ref name="title"/>
       <ref name="institution"/>
-      <ref name="year"/>
+      <ref name="date"/>
       <optional>
         <ref name="subtitle"/>
       </optional>
@@ -6509,7 +6758,7 @@ works</a:documentation>
         <ref name="institution"/>
         <ref name="school"/>
       </choice>
-      <ref name="year"/>
+      <ref name="date"/>
       <optional>
         <ref name="subtitle"/>
       </optional>
@@ -6597,15 +6846,7 @@ works</a:documentation>
       <ref name="author"/>
       <ref name="title"/>
       <optional>
-        <choice>
-          <interleave>
-            <optional>
-              <ref name="month"/>
-            </optional>
-            <ref name="year"/>
-          </interleave>
-          <ref name="date"/>
-        </choice>
+        <ref name="date"/>
       </optional>
       <optional>
         <ref name="subtitle"/>
@@ -6659,15 +6900,7 @@ works</a:documentation>
     <interleave>
       <ref name="author"/>
       <ref name="title"/>
-      <choice>
-        <interleave>
-          <optional>
-            <ref name="month"/>
-          </optional>
-          <ref name="year"/>
-        </interleave>
-        <ref name="date"/>
-      </choice>
+      <ref name="date"/>
       <optional>
         <ref name="institution"/>
       </optional>

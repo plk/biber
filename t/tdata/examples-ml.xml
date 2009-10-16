@@ -25,9 +25,10 @@
     <bib:publisher mode="translated" xml:lang="en">Dept. of Arabic, Faculty of Letters, University of
       Baghdad</bib:publisher>
     <bib:volume>1</bib:volume>
-    <bib:year type="converted">1972 
-      <bib:localyear calendar="islamic">1392</bib:localyear>
-    </bib:year>
+    <bib:date type="converted">
+      <bib:value>1972</bib:value> 
+      <bib:localvalue calendar="islamic">1392</bib:localvalue>
+    </bib:date>
     <bib:pages>139–172</bib:pages>
     <!-- كلية الامام الاعظم ش 1 ، سال 1392
     الدرّ الملتقط فی تبيين الغلط للصاغاني
@@ -67,7 +68,7 @@
       </bib:person>
     </bib:author>
     <bib:title>حياة ومؤلّفات ابن البنّاء المرّاكشي مع نصوص غير منشورة</bib:title>
-    <bib:title mode="romanized">Ḥayāt wa-mu'allafāt Ibn al-Bannāʾ al-Murrākushī maʿa nuṣūṣ ghayr
+    <bib:title mode="romanized">Ḥayāt wa-muʾallafāt Ibn al-Bannāʾ al-Murrākushī maʿa nuṣūṣ ghayr
       manshūra</bib:title>
     <bib:title mode="translated" xml:lang="en">Life and Works of Ibn al-Bannā’ al-Marrākushī with unpublished
       sources</bib:title>
@@ -85,8 +86,8 @@
     <bib:series>سلسلة بحوث ودراسات, رقم 29 </bib:series>
     <bib:series mode="romanized">Silsilat Buḥūth wa-Dirāsāt, 29</bib:series>
     <bib:series mode="translated" xml:lang="en">Series Research and Studies, 29</bib:series>
-    <bib:series mode="translated" xml:lang="fr">Séries Recherches et Études, 29</bib:series>
-    <bib:year>2001</bib:year>
+    <bib:series mode="translated" xml:lang="fr">Série Recherches et Études, 29</bib:series>
+    <bib:date>2001</bib:date>
     <bib:isbn>9981590444</bib:isbn>
     <bib:issn>1113-0369</bib:issn>
     <bib:pagetotal>238</bib:pagetotal>
@@ -102,7 +103,7 @@
     <bib:publisher mode="romanized">Dōhōsha</bib:publisher>
     <bib:publisher mode="uniform">Dohosha</bib:publisher>
     <bib:language>Japanese</bib:language>
-    <bib:year>1982</bib:year>
+    <bib:date>1982</bib:date>
   </bib:entry>
   <bib:entry id="BulgakovRozenfeld:1983" entrytype="book">
     <bib:author>
@@ -134,7 +135,7 @@
       </bib:person>
     </bib:author>
     <bib:title>Мухаммад ибн муса ал-Хорезми. Около 783 – около 850</bib:title>
-    <bib:title mode="romanized">Mukhammad al-Khorezmi. Okolo 783 – okolo 850</bib:title>
+    <bib:title mode="romanized">Mukhammad ibn Musa al-Khorezmi. Okolo 783 – okolo 850</bib:title>
     <bib:location>Москва</bib:location>
     <bib:location mode="uniform">Moscow</bib:location>
     <bib:publisher>Наука</bib:publisher>
@@ -142,7 +143,7 @@
     <bib:language>Russian</bib:language>
     <bib:series>Научно-биографическая литература</bib:series>
     <bib:series mode="romanized">Nauchno-biograficheskaya literatura</bib:series>
-    <bib:year>1983</bib:year>
+    <bib:date>1983</bib:date>
     <bib:pagetotal>240</bib:pagetotal>
     <bib:reviews>
       <bib:item author="Kennedy" type="Mathematical Reviews">85k:01005a</bib:item>

@@ -216,7 +216,7 @@ sub _parse_biblatexml {
 
         # year + month (integer fields)
         foreach my $field ( qw(year month) )  {
-            if ($bibrecord->exists("bib:$field")) {
+            if ($bibrecord->exists("bib:$field\[not(\@converted)\]")) {
                 $self->{bib}->{$citekey}->{$field} =
                     $bibrecord->findnodes("bib:$field/text()")->_normalize_string_value;
             }
@@ -225,18 +225,20 @@ sub _parse_biblatexml {
         # year => localyear and localcalendar
         # localmonth is not supported: use date with subfield localdate instead
         if ($bibrecord->exists("bib:year\[\@type='converted'\]")) {
+            $self->{bib}->{$citekey}->{year} =
+                $bibrecord->findnodes("bib:year/bib:value")->string_value;
             $self->{bib}->{$citekey}->{"localyear"} =
-                $bibrecord->findnodes("bib:year/bib:localyear")->_normalize_string_value;
+                $bibrecord->findnodes("bib:year/bib:localvalue")->string_value;
 
             $self->{bib}->{$citekey}->{"localcalendar"} =
-                $bibrecord->findnodes("bib:year/bib:localyear/\@calendar")->string_value;
+                $bibrecord->findnodes("bib:year/bib:localvalue/\@calendar")->string_value;
         }
 
 
         # date fields: date, origdate, urldate, eventdate
         # in format YYYY-MM-DD
         # optionally with start and end
-        foreach my $field (@DATERANGEFIELDS)  {
+        foreach my $field (@DATERANGEFIELDS, qw(year))  {
             if ($bibrecord->exists("bib:$field")) {
                 if ($bibrecord->exists("bib:$field/bib:start")) {
                     my $fieldstart = $bibrecord->findnodes("bib:$field/bib:start")->_normalize_string_value;
