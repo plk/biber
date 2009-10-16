@@ -303,7 +303,7 @@
           </xs:element>
         </xs:choice>
         <xs:element ref="biblatexml:origtitle"/>
-        <xs:element ref="biblatexml:origyear"/>
+        <xs:group ref="biblatexml:origdate"/>
         <xs:element ref="biblatexml:language"/>
         <xs:element ref="biblatexml:origlanguage"/>
         <xs:element ref="biblatexml:script"/>
@@ -476,6 +476,8 @@
         <xs:element minOccurs="0" ref="biblatexml:emphasis"/>
         <xs:element minOccurs="0" ref="biblatexml:superscript"/>
         <xs:element minOccurs="0" ref="biblatexml:subscript"/>
+        <xs:element minOccurs="0" ref="biblatexml:quote"/>
+        <xs:element minOccurs="0" ref="biblatexml:math"/>
       </xs:sequence>
     </xs:sequence>
   </xs:group>
@@ -485,16 +487,25 @@
       <xs:element minOccurs="0" ref="biblatexml:emphasis"/>
       <xs:element minOccurs="0" ref="biblatexml:superscript"/>
       <xs:element minOccurs="0" ref="biblatexml:subscript"/>
+      <xs:element minOccurs="0" ref="biblatexml:quote"/>
+      <xs:element minOccurs="0" ref="biblatexml:math"/>
     </xs:sequence>
   </xs:complexType>
   <xs:element name="emphasis" type="xs:string"/>
   <xs:element name="superscript" type="xs:string"/>
   <xs:element name="subscript" type="xs:string"/>
-  <xs:element name="nosort" type="xs:string"/>
+  <xs:element name="quote" type="xs:string"/>
+  <xs:element name="math">
+    <xs:complexType mixed="true">
+      <xs:attribute name="text"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="nosort">
+    <xs:complexType mixed="true">
+      <xs:group ref="biblatexml:formattext"/>
+    </xs:complexType>
+  </xs:element>
   <xs:attributeGroup name="romanized">
-    <xs:annotation>
-      <xs:documentation>FIXME could it be formattextB ? ie. &lt;bib:nosort&gt;&lt;bib:superscript&gt;foo&lt;/bib:superscript&gt;&lt;bib:nosort&gt; ??</xs:documentation>
-    </xs:annotation>
     <xs:attribute name="mode" use="required">
       <xs:simpleType>
         <xs:restriction base="xs:token">
@@ -502,6 +513,7 @@
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
+    <xs:attribute name="convention"/>
   </xs:attributeGroup>
   <xs:attributeGroup name="translated">
     <xs:attribute ref="xml:lang"/>
@@ -514,6 +526,7 @@
     </xs:attribute>
   </xs:attributeGroup>
   <xs:attributeGroup name="uniform">
+    <xs:attribute name="locale"/>
     <xs:attribute name="mode" use="required">
       <xs:simpleType>
         <xs:restriction base="xs:token">
@@ -524,6 +537,9 @@
   </xs:attributeGroup>
   <xs:attributeGroup name="att.lang">
     <xs:attribute ref="xml:lang" use="required"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="att.locale">
+    <xs:attribute name="locale" use="required"/>
   </xs:attributeGroup>
   <xs:element name="abstract">
     <xs:complexType mixed="true">
@@ -1885,52 +1901,285 @@
   <xs:element name="sortyear" type="xs:string"/>
   <xs:element name="useprefix" type="xs:string"/>
   <xs:element name="xref" type="xs:string"/>
-  <!-- RANGE FIELDS -->
-  <xs:element name="origyear">
-    <xs:complexType mixed="true">
-      <xs:group minOccurs="0" ref="biblatexml:range"/>
+  <!-- INTEGER FIELDS -->
+  <xs:element name="edition">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:restriction base="xs:anyType">
+          <xs:simpleType>
+            <xs:union memberTypes="xs:integer">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:length value="0"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:union>
+          </xs:simpleType>
+          <xs:attribute name="string"/>
+        </xs:restriction>
+      </xs:simpleContent>
     </xs:complexType>
   </xs:element>
-  <xs:element name="year">
-    <xs:complexType mixed="true">
-      <xs:sequence>
-        <xs:group minOccurs="0" ref="biblatexml:range"/>
-        <xs:element minOccurs="0" ref="biblatexml:localyear"/>
-      </xs:sequence>
-      <xs:attribute name="type">
-        <xs:simpleType>
-          <xs:restriction base="xs:token">
-            <xs:enumeration value="approximate"/>
-            <xs:enumeration value="assumed"/>
-            <xs:enumeration value="converted"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
-    </xs:complexType>
-  </xs:element>
-  <!--
-    approximate when exact date is uncertain, 
-    assumed when it is known but not stated on the document
-    and converted when it is stated in a different calendar
-  -->
+  <!-- DATE FIELDS -->
+  <xs:element name="month" type="xs:gMonth"/>
+  <xs:group name="year">
+    <xs:choice>
+      <xs:group ref="biblatexml:year.simple"/>
+      <xs:group ref="biblatexml:year.converted"/>
+    </xs:choice>
+  </xs:group>
+  <xs:group name="year.simple">
+    <xs:sequence>
+      <xs:element name="year">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:gYear">
+              <xs:attribute name="type">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="approximate"/>
+                    <xs:enumeration value="assumed"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="year.converted">
+    <xs:sequence>
+      <xs:element name="year">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:localyear">
+              <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="converted"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
   <xs:attributeGroup name="attlist.year">
     <xs:attribute name="type" use="required">
       <xs:simpleType>
         <xs:restriction base="xs:token">
           <xs:enumeration value="approximate"/>
           <xs:enumeration value="assumed"/>
-          <xs:enumeration value="converted"/>
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
   </xs:attributeGroup>
+  <xs:complexType name="localyear">
+    <xs:sequence>
+      <xs:element ref="biblatexml:localyear"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:element name="localyear">
-    <xs:complexType mixed="true">
-      <xs:group minOccurs="0" ref="biblatexml:range"/>
-      <xs:attributeGroup ref="biblatexml:attlist.localyear"/>
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:gYear">
+          <xs:attributeGroup ref="biblatexml:attlist.localdate"/>
+        </xs:extension>
+      </xs:simpleContent>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="attlist.localyear">
+  <xs:group name="date">
+    <xs:choice>
+      <xs:group ref="biblatexml:date.simple"/>
+      <xs:group ref="biblatexml:date.converted"/>
+    </xs:choice>
+  </xs:group>
+  <xs:group name="date.simple">
+    <xs:sequence>
+      <xs:element name="date">
+        <xs:complexType mixed="true">
+          <xs:group minOccurs="0" ref="biblatexml:daterange"/>
+          <xs:attribute name="type">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="approximate"/>
+                <xs:enumeration value="assumed"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="date.converted">
+    <xs:sequence>
+      <xs:element name="date">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:localdate">
+              <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="converted"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="origdate">
+    <xs:choice>
+      <xs:group ref="biblatexml:origdate.simple"/>
+      <xs:group ref="biblatexml:origdate.converted"/>
+    </xs:choice>
+  </xs:group>
+  <xs:group name="origdate.simple">
+    <xs:sequence>
+      <xs:element name="origdate">
+        <xs:complexType mixed="true">
+          <xs:group minOccurs="0" ref="biblatexml:daterange"/>
+          <xs:attribute name="type">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="approximate"/>
+                <xs:enumeration value="assumed"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="origdate.converted">
+    <xs:sequence>
+      <xs:element name="origdate">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:localdate">
+              <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="converted"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="urldate">
+    <xs:choice>
+      <xs:group ref="biblatexml:urldate.simple"/>
+      <xs:group ref="biblatexml:urldate.converted"/>
+    </xs:choice>
+  </xs:group>
+  <xs:group name="urldate.simple">
+    <xs:sequence>
+      <xs:element name="urldate">
+        <xs:complexType mixed="true">
+          <xs:group minOccurs="0" ref="biblatexml:daterange"/>
+          <xs:attribute name="type">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="approximate"/>
+                <xs:enumeration value="assumed"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="urldate.converted">
+    <xs:sequence>
+      <xs:element name="urldate">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:localdate">
+              <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="converted"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="eventdate">
+    <xs:choice>
+      <xs:group ref="biblatexml:eventdate.simple"/>
+      <xs:group ref="biblatexml:eventdate.converted"/>
+    </xs:choice>
+  </xs:group>
+  <xs:group name="eventdate.simple">
+    <xs:sequence>
+      <xs:element name="eventdate">
+        <xs:complexType mixed="true">
+          <xs:group minOccurs="0" ref="biblatexml:daterange"/>
+          <xs:attribute name="type">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="approximate"/>
+                <xs:enumeration value="assumed"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="eventdate.converted">
+    <xs:sequence>
+      <xs:element name="eventdate">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="biblatexml:localdate">
+              <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                  <xs:restriction base="xs:token">
+                    <xs:enumeration value="converted"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:simpleType name="date.type">
+    <xs:union memberTypes="xs:date xs:gYearMonth xs:gYear"/>
+  </xs:simpleType>
+  <!--
+    "approximate" when exact date is uncertain,
+    "assumed" when it is known but not stated on the document
+    and "converted" when it is stated in a different calendar,
+    with child element "localyear" or "localdate"
+  -->
+  <xs:complexType name="localdate">
+    <xs:sequence>
+      <xs:element ref="biblatexml:localdate"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="localdate">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" ref="biblatexml:daterange"/>
+      <xs:attributeGroup ref="biblatexml:attlist.localdate"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="attlist.localdate">
     <xs:attribute name="calendar" use="required">
       <xs:simpleType>
         <xs:restriction base="xs:token">
@@ -1939,19 +2188,32 @@
           <xs:enumeration value="islamic"/>
           <xs:enumeration value="hijrishamsi"/>
           <xs:enumeration value="revolutionary"/>
+          <xs:enumeration value="japanese"/>
+          <xs:enumeration value="bahai"/>
+          <xs:enumeration value="chinese"/>
+          <xs:enumeration value="tibetan"/>
+          <xs:enumeration value="indian"/>
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
     <xs:attribute name="note"/>
   </xs:attributeGroup>
-  <xs:group name="range">
+  <xs:group name="daterange">
     <xs:sequence>
-      <xs:element ref="biblatexml:start"/>
-      <xs:element ref="biblatexml:end"/>
+      <xs:group ref="biblatexml:daterange.start"/>
+      <xs:group ref="biblatexml:daterange.end"/>
     </xs:sequence>
   </xs:group>
-  <xs:element name="start" type="xs:string"/>
-  <xs:element name="end" type="xs:string"/>
+  <xs:group name="daterange.start">
+    <xs:sequence>
+      <xs:element name="start" type="biblatexml:date.type"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="daterange.end">
+    <xs:sequence>
+      <xs:element name="end" type="biblatexml:date.type"/>
+    </xs:sequence>
+  </xs:group>
   <xs:element name="pages">
     <xs:complexType mixed="true">
       <xs:choice minOccurs="0">
@@ -1989,38 +2251,25 @@
     </xs:attribute>
     <xs:attribute name="part"/>
   </xs:attributeGroup>
-  <!-- e.g. when a book has parts in different scripts, with respective paginations -->
-  <!-- INTEGER FIELDS -->
-  <xs:element name="day" type="xs:integer"/>
-  <xs:element name="edition">
-    <xs:complexType>
-      <xs:simpleContent>
-        <xs:restriction base="xs:anyType">
-          <xs:simpleType>
-            <xs:union memberTypes="xs:integer">
-              <xs:simpleType>
-                <xs:restriction base="xs:token">
-                  <xs:length value="0"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:union>
-          </xs:simpleType>
-          <xs:attribute name="string"/>
-        </xs:restriction>
-      </xs:simpleContent>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="month" type="xs:integer"/>
-  <xs:element name="urlday" type="xs:integer"/>
-  <xs:element name="urlmonth" type="xs:integer"/>
-  <xs:element name="urlyear" type="xs:integer"/>
-  <!-- DATE FIELDS -->
-  <xs:element name="date">
-    <xs:simpleType>
-      <xs:union memberTypes="xs:date xs:integer"/>
-    </xs:simpleType>
-  </xs:element>
-  <xs:element name="urldate" type="xs:date"/>
+  <xs:group name="range">
+    <xs:annotation>
+      <xs:documentation>e.g. when a book has parts in different scripts, with respective paginations</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:group ref="biblatexml:range.start"/>
+      <xs:group ref="biblatexml:range.end"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="range.start">
+    <xs:sequence>
+      <xs:element name="start" type="xs:string"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="range.end">
+    <xs:sequence>
+      <xs:element name="end" type="xs:string"/>
+    </xs:sequence>
+  </xs:group>
   <!-- LITERAL LISTS -->
   <xs:attributeGroup name="attlist.lists">
     <xs:attribute name="andothers" use="required">
@@ -2347,6 +2596,7 @@
                 </xs:restriction>
               </xs:simpleType>
             </xs:attribute>
+            <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" name="location">
@@ -2575,7 +2825,16 @@
                 </xs:restriction>
               </xs:simpleType>
             </xs:attribute>
-            <xs:attributeGroup ref="biblatexml:uniform"/>
+            <xs:attribute name="mode" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="uniform"/>
+                  <xs:enumeration value="translated"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="locale"/>
+            <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
@@ -2609,7 +2868,16 @@
                 </xs:restriction>
               </xs:simpleType>
             </xs:attribute>
-            <xs:attributeGroup ref="biblatexml:uniform"/>
+            <xs:attribute name="mode" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="uniform"/>
+                  <xs:enumeration value="translated"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="locale"/>
+            <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
@@ -2626,7 +2894,16 @@
               </xs:restriction>
             </xs:simpleType>
           </xs:attribute>
-          <xs:attributeGroup ref="biblatexml:uniform"/>
+          <xs:attribute name="mode" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="uniform"/>
+                <xs:enumeration value="translated"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="locale"/>
+          <xs:attribute ref="xml:lang"/>
         </xs:complexType>
       </xs:element>
     </xs:choice>
@@ -2690,7 +2967,16 @@
                 </xs:restriction>
               </xs:simpleType>
             </xs:attribute>
-            <xs:attributeGroup ref="biblatexml:uniform"/>
+            <xs:attribute name="mode" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="uniform"/>
+                  <xs:enumeration value="translated"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="locale"/>
+            <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
@@ -2724,7 +3010,16 @@
                 </xs:restriction>
               </xs:simpleType>
             </xs:attribute>
-            <xs:attributeGroup ref="biblatexml:uniform"/>
+            <xs:attribute name="mode" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="uniform"/>
+                  <xs:enumeration value="translated"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="locale"/>
+            <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
@@ -2741,7 +3036,16 @@
               </xs:restriction>
             </xs:simpleType>
           </xs:attribute>
-          <xs:attributeGroup ref="biblatexml:uniform"/>
+          <xs:attribute name="mode" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="uniform"/>
+                <xs:enumeration value="translated"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="locale"/>
+          <xs:attribute ref="xml:lang"/>
         </xs:complexType>
       </xs:element>
     </xs:choice>
@@ -3268,6 +3572,7 @@
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:attribute>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
                 <xs:element name="location">
@@ -3397,7 +3702,16 @@
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:attribute>
-                    <xs:attributeGroup ref="biblatexml:uniform"/>
+                    <xs:attribute name="mode" use="required">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:token">
+                          <xs:enumeration value="uniform"/>
+                          <xs:enumeration value="translated"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:attribute>
+                    <xs:attribute name="locale"/>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
@@ -3431,7 +3745,16 @@
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:attribute>
-                    <xs:attributeGroup ref="biblatexml:uniform"/>
+                    <xs:attribute name="mode" use="required">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:token">
+                          <xs:enumeration value="uniform"/>
+                          <xs:enumeration value="translated"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:attribute>
+                    <xs:attribute name="locale"/>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
@@ -3448,7 +3771,16 @@
                       </xs:restriction>
                     </xs:simpleType>
                   </xs:attribute>
-                  <xs:attributeGroup ref="biblatexml:uniform"/>
+                  <xs:attribute name="mode" use="required">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:token">
+                        <xs:enumeration value="uniform"/>
+                        <xs:enumeration value="translated"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="locale"/>
+                  <xs:attribute ref="xml:lang"/>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
@@ -3740,7 +4072,16 @@
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:attribute>
-                    <xs:attributeGroup ref="biblatexml:uniform"/>
+                    <xs:attribute name="mode" use="required">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:token">
+                          <xs:enumeration value="uniform"/>
+                          <xs:enumeration value="translated"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:attribute>
+                    <xs:attribute name="locale"/>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
@@ -3774,7 +4115,16 @@
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:attribute>
-                    <xs:attributeGroup ref="biblatexml:uniform"/>
+                    <xs:attribute name="mode" use="required">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:token">
+                          <xs:enumeration value="uniform"/>
+                          <xs:enumeration value="translated"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:attribute>
+                    <xs:attribute name="locale"/>
+                    <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
               </xs:choice>
@@ -3791,7 +4141,16 @@
                       </xs:restriction>
                     </xs:simpleType>
                   </xs:attribute>
-                  <xs:attributeGroup ref="biblatexml:uniform"/>
+                  <xs:attribute name="mode" use="required">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:token">
+                        <xs:enumeration value="uniform"/>
+                        <xs:enumeration value="translated"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="locale"/>
+                  <xs:attribute ref="xml:lang"/>
                 </xs:complexType>
               </xs:element>
             </xs:choice>
@@ -3802,7 +4161,7 @@
   </xs:group>
   <!--
     KEY LISTS
-    TODO ? add attribute type = babel, xml, ISO-XXX etc 
+    TODO ? add attribute type = babel, xml, ISO-XXX etc
   -->
   <xs:element name="language">
     <xs:complexType mixed="true">
@@ -5916,10 +6275,7 @@
         <xs:choice>
           <xs:choice>
             <xs:choice>
-              <xs:choice>
-                <xs:element ref="biblatexml:day"/>
-                <xs:element ref="biblatexml:month"/>
-              </xs:choice>
+              <xs:element ref="biblatexml:month"/>
               <xs:choice>
                 <xs:choice>
                   <xs:element name="issue">
@@ -5963,9 +6319,9 @@
                 </xs:element>
               </xs:choice>
             </xs:choice>
-            <xs:element ref="biblatexml:year"/>
+            <xs:group ref="biblatexml:year"/>
           </xs:choice>
-          <xs:element ref="biblatexml:date"/>
+          <xs:group ref="biblatexml:date"/>
         </xs:choice>
         <xs:choice>
           <xs:choice>
@@ -6846,14 +7202,7 @@
         <xs:element ref="biblatexml:issn"/>
         <xs:element ref="biblatexml:addendum"/>
         <xs:element ref="biblatexml:doi"/>
-        <xs:choice>
-          <xs:element ref="biblatexml:urldate"/>
-          <xs:choice>
-            <xs:element ref="biblatexml:urlday"/>
-            <xs:element ref="biblatexml:urlmonth"/>
-            <xs:element ref="biblatexml:urlyear"/>
-          </xs:choice>
-        </xs:choice>
+        <xs:group ref="biblatexml:urldate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -7413,7 +7762,7 @@
                 </xs:complexType>
               </xs:element>
             </xs:choice>
-            <xs:element ref="biblatexml:year"/>
+            <xs:group ref="biblatexml:year"/>
           </xs:choice>
           <xs:choice>
             <xs:choice>
@@ -7476,7 +7825,7 @@
                 </xs:complexType>
               </xs:element>
             </xs:choice>
-            <xs:element ref="biblatexml:year"/>
+            <xs:group ref="biblatexml:year"/>
             <xs:element ref="biblatexml:crossref"/>
           </xs:choice>
         </xs:choice>
@@ -8789,14 +9138,7 @@
         <xs:element ref="biblatexml:doi"/>
         <xs:element ref="biblatexml:url"/>
         <xs:element ref="biblatexml:eprint"/>
-        <xs:choice>
-          <xs:element ref="biblatexml:urldate"/>
-          <xs:choice>
-            <xs:element ref="biblatexml:urlday"/>
-            <xs:element ref="biblatexml:urlmonth"/>
-            <xs:element ref="biblatexml:urlyear"/>
-          </xs:choice>
-        </xs:choice>
+        <xs:group ref="biblatexml:urldate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -9014,7 +9356,7 @@
             </xs:complexType>
           </xs:element>
         </xs:choice>
-        <xs:element ref="biblatexml:year"/>
+        <xs:group ref="biblatexml:year"/>
         <xs:choice>
           <xs:choice>
             <xs:element name="subtitle">
@@ -9108,14 +9450,7 @@
         <xs:element ref="biblatexml:doi"/>
         <xs:element ref="biblatexml:eprint"/>
         <xs:element ref="biblatexml:url"/>
-        <xs:choice>
-          <xs:element ref="biblatexml:urldate"/>
-          <xs:choice>
-            <xs:element ref="biblatexml:urlday"/>
-            <xs:element ref="biblatexml:urlmonth"/>
-            <xs:element ref="biblatexml:urlyear"/>
-          </xs:choice>
-        </xs:choice>
+        <xs:group ref="biblatexml:urldate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -9335,7 +9670,7 @@
             </xs:complexType>
           </xs:element>
         </xs:choice>
-        <xs:element ref="biblatexml:year"/>
+        <xs:group ref="biblatexml:year"/>
         <xs:choice>
           <xs:choice>
             <xs:element name="bookauthor">
@@ -10645,14 +10980,7 @@
         <xs:element ref="biblatexml:doi"/>
         <xs:element ref="biblatexml:eprint"/>
         <xs:element ref="biblatexml:url"/>
-        <xs:choice>
-          <xs:element ref="biblatexml:urldate"/>
-          <xs:choice>
-            <xs:element ref="biblatexml:urlday"/>
-            <xs:element ref="biblatexml:urlmonth"/>
-            <xs:element ref="biblatexml:urlyear"/>
-          </xs:choice>
-        </xs:choice>
+        <xs:group ref="biblatexml:urldate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -10688,7 +11016,7 @@
   </xs:attributeGroup>
   <xs:group name="BibLaTeXML.inbook.standard.fields">
     <xs:annotation>
-      <xs:documentation>  </xs:documentation>
+      <xs:documentation/>
     </xs:annotation>
     <xs:sequence>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -10817,7 +11145,7 @@
               <xs:element ref="biblatexml:crossref"/>
               <xs:element ref="biblatexml:xref"/>
             </xs:choice>
-            <xs:element ref="biblatexml:year"/>
+            <xs:group ref="biblatexml:year"/>
           </xs:choice>
           <xs:choice>
             <xs:choice>
@@ -11203,7 +11531,7 @@
                 </xs:complexType>
               </xs:element>
             </xs:choice>
-            <xs:element ref="biblatexml:year"/>
+            <xs:group ref="biblatexml:year"/>
             <xs:choice>
               <xs:choice>
                 <xs:element name="editor">
@@ -12193,14 +12521,7 @@
         <xs:element ref="biblatexml:doi"/>
         <xs:element ref="biblatexml:eprint"/>
         <xs:element ref="biblatexml:url"/>
-        <xs:choice>
-          <xs:element ref="biblatexml:urldate"/>
-          <xs:choice>
-            <xs:element ref="biblatexml:urlday"/>
-            <xs:element ref="biblatexml:urlmonth"/>
-            <xs:element ref="biblatexml:urlyear"/>
-          </xs:choice>
-        </xs:choice>
+        <xs:group ref="biblatexml:urldate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -12449,7 +12770,7 @@
               <xs:element ref="biblatexml:crossref"/>
               <xs:element ref="biblatexml:xref"/>
             </xs:choice>
-            <xs:element ref="biblatexml:year"/>
+            <xs:group ref="biblatexml:year"/>
           </xs:choice>
           <xs:choice>
             <xs:choice>
@@ -12571,7 +12892,7 @@
                 </xs:complexType>
               </xs:element>
             </xs:choice>
-            <xs:element ref="biblatexml:year"/>
+            <xs:group ref="biblatexml:year"/>
             <xs:choice>
               <xs:choice>
                 <xs:element name="shorteditor">
@@ -13646,14 +13967,7 @@
         <xs:element ref="biblatexml:doi"/>
         <xs:element ref="biblatexml:eprint"/>
         <xs:element ref="biblatexml:url"/>
-        <xs:choice>
-          <xs:element ref="biblatexml:urldate"/>
-          <xs:choice>
-            <xs:element ref="biblatexml:urlday"/>
-            <xs:element ref="biblatexml:urlmonth"/>
-            <xs:element ref="biblatexml:urlyear"/>
-          </xs:choice>
-        </xs:choice>
+        <xs:group ref="biblatexml:urldate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -14019,7 +14333,7 @@
                 </xs:complexType>
               </xs:element>
             </xs:choice>
-            <xs:element ref="biblatexml:year"/>
+            <xs:group ref="biblatexml:year"/>
             <xs:choice>
               <xs:choice>
                 <xs:element name="shorteditor">
@@ -14565,14 +14879,7 @@
         <xs:element ref="biblatexml:doi"/>
         <xs:element ref="biblatexml:eprint"/>
         <xs:element ref="biblatexml:url"/>
-        <xs:choice>
-          <xs:element ref="biblatexml:urldate"/>
-          <xs:choice>
-            <xs:element ref="biblatexml:urlday"/>
-            <xs:element ref="biblatexml:urlmonth"/>
-            <xs:element ref="biblatexml:urlyear"/>
-          </xs:choice>
-        </xs:choice>
+        <xs:group ref="biblatexml:urldate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -14792,7 +15099,7 @@
             </xs:complexType>
           </xs:element>
         </xs:choice>
-        <xs:element ref="biblatexml:year"/>
+        <xs:group ref="biblatexml:year"/>
         <xs:choice>
           <xs:choice>
             <xs:element name="subtitle">
@@ -15051,14 +15358,7 @@
         <xs:element ref="biblatexml:doi"/>
         <xs:element ref="biblatexml:eprint"/>
         <xs:element ref="biblatexml:url"/>
-        <xs:choice>
-          <xs:element ref="biblatexml:urldate"/>
-          <xs:choice>
-            <xs:element ref="biblatexml:urlday"/>
-            <xs:element ref="biblatexml:urlmonth"/>
-            <xs:element ref="biblatexml:urlyear"/>
-          </xs:choice>
-        </xs:choice>
+        <xs:group ref="biblatexml:urldate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -15281,11 +15581,10 @@
         </xs:choice>
         <xs:choice>
           <xs:choice>
-            <xs:element ref="biblatexml:day"/>
             <xs:element ref="biblatexml:month"/>
-            <xs:element ref="biblatexml:year"/>
+            <xs:group ref="biblatexml:year"/>
           </xs:choice>
-          <xs:element ref="biblatexml:date"/>
+          <xs:group ref="biblatexml:date"/>
         </xs:choice>
         <xs:choice>
           <xs:choice>
@@ -15473,14 +15772,7 @@
         <xs:element ref="biblatexml:doi"/>
         <xs:element ref="biblatexml:eprint"/>
         <xs:element ref="biblatexml:url"/>
-        <xs:choice>
-          <xs:element ref="biblatexml:urldate"/>
-          <xs:choice>
-            <xs:element ref="biblatexml:urlday"/>
-            <xs:element ref="biblatexml:urlmonth"/>
-            <xs:element ref="biblatexml:urlyear"/>
-          </xs:choice>
-        </xs:choice>
+        <xs:group ref="biblatexml:urldate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -15704,11 +15996,10 @@
         </xs:choice>
         <xs:choice>
           <xs:choice>
-            <xs:element ref="biblatexml:day"/>
             <xs:element ref="biblatexml:month"/>
-            <xs:element ref="biblatexml:year"/>
+            <xs:group ref="biblatexml:year"/>
           </xs:choice>
-          <xs:element ref="biblatexml:date"/>
+          <xs:group ref="biblatexml:date"/>
         </xs:choice>
         <xs:choice>
           <xs:element ref="biblatexml:url"/>
@@ -15896,14 +16187,7 @@
           </xs:element>
         </xs:choice>
         <xs:element ref="biblatexml:addendum"/>
-        <xs:choice>
-          <xs:element ref="biblatexml:urldate"/>
-          <xs:choice>
-            <xs:element ref="biblatexml:urlday"/>
-            <xs:element ref="biblatexml:urlmonth"/>
-            <xs:element ref="biblatexml:urlyear"/>
-          </xs:choice>
-        </xs:choice>
+        <xs:group ref="biblatexml:urldate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -16065,11 +16349,10 @@
         <xs:element ref="biblatexml:number"/>
         <xs:choice>
           <xs:choice>
-            <xs:element ref="biblatexml:day"/>
             <xs:element ref="biblatexml:month"/>
-            <xs:element ref="biblatexml:year"/>
+            <xs:group ref="biblatexml:year"/>
           </xs:choice>
-          <xs:element ref="biblatexml:date"/>
+          <xs:group ref="biblatexml:date"/>
         </xs:choice>
         <xs:choice>
           <xs:choice>
@@ -16275,6 +16558,7 @@
                     </xs:restriction>
                   </xs:simpleType>
                 </xs:attribute>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="location">
@@ -16444,14 +16728,7 @@
         <xs:element ref="biblatexml:note"/>
         <xs:element ref="biblatexml:addendum"/>
         <xs:element ref="biblatexml:url"/>
-        <xs:choice>
-          <xs:element ref="biblatexml:urldate"/>
-          <xs:choice>
-            <xs:element ref="biblatexml:urlday"/>
-            <xs:element ref="biblatexml:urlmonth"/>
-            <xs:element ref="biblatexml:urlyear"/>
-          </xs:choice>
-        </xs:choice>
+        <xs:group ref="biblatexml:urldate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -16685,10 +16962,7 @@
         <xs:choice>
           <xs:choice>
             <xs:choice>
-              <xs:choice>
-                <xs:element ref="biblatexml:day"/>
-                <xs:element ref="biblatexml:month"/>
-              </xs:choice>
+              <xs:element ref="biblatexml:month"/>
               <xs:choice>
                 <xs:choice>
                   <xs:element name="issue">
@@ -16732,9 +17006,9 @@
                 </xs:element>
               </xs:choice>
             </xs:choice>
-            <xs:element ref="biblatexml:year"/>
+            <xs:group ref="biblatexml:year"/>
           </xs:choice>
-          <xs:element ref="biblatexml:date"/>
+          <xs:group ref="biblatexml:date"/>
         </xs:choice>
         <xs:choice>
           <xs:choice>
@@ -17187,14 +17461,7 @@
         <xs:element ref="biblatexml:addendum"/>
         <xs:element ref="biblatexml:doi"/>
         <xs:element ref="biblatexml:eprint"/>
-        <xs:choice>
-          <xs:element ref="biblatexml:urldate"/>
-          <xs:choice>
-            <xs:element ref="biblatexml:urlday"/>
-            <xs:element ref="biblatexml:urlmonth"/>
-            <xs:element ref="biblatexml:urlyear"/>
-          </xs:choice>
-        </xs:choice>
+        <xs:group ref="biblatexml:urldate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -17396,7 +17663,7 @@
             </xs:complexType>
           </xs:element>
         </xs:choice>
-        <xs:element ref="biblatexml:year"/>
+        <xs:group ref="biblatexml:year"/>
         <xs:choice>
           <xs:choice>
             <xs:element name="shorteditor">
@@ -17938,14 +18205,7 @@
         <xs:element ref="biblatexml:doi"/>
         <xs:element ref="biblatexml:eprint"/>
         <xs:element ref="biblatexml:url"/>
-        <xs:choice>
-          <xs:element ref="biblatexml:urldate"/>
-          <xs:choice>
-            <xs:element ref="biblatexml:urlday"/>
-            <xs:element ref="biblatexml:urlmonth"/>
-            <xs:element ref="biblatexml:urlyear"/>
-          </xs:choice>
-        </xs:choice>
+        <xs:group ref="biblatexml:urldate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -18199,7 +18459,7 @@
             </xs:complexType>
           </xs:element>
         </xs:choice>
-        <xs:element ref="biblatexml:year"/>
+        <xs:group ref="biblatexml:year"/>
         <xs:choice>
           <xs:choice>
             <xs:element name="subtitle">
@@ -18360,14 +18620,7 @@
         <xs:element ref="biblatexml:doi"/>
         <xs:element ref="biblatexml:eprint"/>
         <xs:element ref="biblatexml:url"/>
-        <xs:choice>
-          <xs:element ref="biblatexml:urldate"/>
-          <xs:choice>
-            <xs:element ref="biblatexml:urlday"/>
-            <xs:element ref="biblatexml:urlmonth"/>
-            <xs:element ref="biblatexml:urlyear"/>
-          </xs:choice>
-        </xs:choice>
+        <xs:group ref="biblatexml:urldate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -18719,7 +18972,7 @@
             </xs:element>
           </xs:choice>
         </xs:choice>
-        <xs:element ref="biblatexml:year"/>
+        <xs:group ref="biblatexml:year"/>
         <xs:choice>
           <xs:choice>
             <xs:element name="subtitle">
@@ -18829,6 +19082,7 @@
                     </xs:restriction>
                   </xs:simpleType>
                 </xs:attribute>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="location">
@@ -19006,14 +19260,7 @@
         <xs:element ref="biblatexml:doi"/>
         <xs:element ref="biblatexml:eprint"/>
         <xs:element ref="biblatexml:url"/>
-        <xs:choice>
-          <xs:element ref="biblatexml:urldate"/>
-          <xs:choice>
-            <xs:element ref="biblatexml:urlday"/>
-            <xs:element ref="biblatexml:urlmonth"/>
-            <xs:element ref="biblatexml:urlyear"/>
-          </xs:choice>
-        </xs:choice>
+        <xs:group ref="biblatexml:urldate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -19175,11 +19422,10 @@
         </xs:choice>
         <xs:choice>
           <xs:choice>
-            <xs:element ref="biblatexml:day"/>
             <xs:element ref="biblatexml:month"/>
-            <xs:element ref="biblatexml:year"/>
+            <xs:group ref="biblatexml:year"/>
           </xs:choice>
-          <xs:element ref="biblatexml:date"/>
+          <xs:group ref="biblatexml:date"/>
         </xs:choice>
         <xs:choice>
           <xs:choice>
@@ -19364,14 +19610,7 @@
         <xs:element ref="biblatexml:note"/>
         <xs:element ref="biblatexml:addendum"/>
         <xs:element ref="biblatexml:url"/>
-        <xs:choice>
-          <xs:element ref="biblatexml:urldate"/>
-          <xs:choice>
-            <xs:element ref="biblatexml:urlday"/>
-            <xs:element ref="biblatexml:urlmonth"/>
-            <xs:element ref="biblatexml:urlyear"/>
-          </xs:choice>
-        </xs:choice>
+        <xs:group ref="biblatexml:urldate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -19532,11 +19771,10 @@
         </xs:choice>
         <xs:choice>
           <xs:choice>
-            <xs:element ref="biblatexml:day"/>
             <xs:element ref="biblatexml:month"/>
-            <xs:element ref="biblatexml:year"/>
+            <xs:group ref="biblatexml:year"/>
           </xs:choice>
-          <xs:element ref="biblatexml:date"/>
+          <xs:group ref="biblatexml:date"/>
         </xs:choice>
         <xs:choice>
           <xs:element name="institution">
@@ -19657,6 +19895,7 @@
                     </xs:restriction>
                   </xs:simpleType>
                 </xs:attribute>
+                <xs:attribute ref="xml:lang"/>
               </xs:complexType>
             </xs:element>
             <xs:element name="location">
@@ -19880,14 +20119,7 @@
         <xs:element ref="biblatexml:note"/>
         <xs:element ref="biblatexml:addendum"/>
         <xs:element ref="biblatexml:url"/>
-        <xs:choice>
-          <xs:element ref="biblatexml:urldate"/>
-          <xs:choice>
-            <xs:element ref="biblatexml:urlday"/>
-            <xs:element ref="biblatexml:urlmonth"/>
-            <xs:element ref="biblatexml:urlyear"/>
-          </xs:choice>
-        </xs:choice>
+        <xs:group ref="biblatexml:urldate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>

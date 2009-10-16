@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar ns="http://biblatex-biber.sourceforge.net/biblatexml" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:user="http://localhost/biblatexml/user" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <start>
-    <a:documentation>TODO?  change namespace of bib:emphasis, bib:superscript, bib:subscript 
+    <a:documentation>TODO?  change namespace of bib:emphasis, bib:superscript, bib:subscript
        to db = "http://docbook.org/ns/docbook"</a:documentation>
     <ref name="entries"/>
   </start>
@@ -52,8 +52,8 @@
     </choice>
   </define>
   <define name="BibLaTeXML.common.fields">
-    <a:documentation>TODO Unsupported types: 
-  artwork, audio, image, jurisdiction, legislation, legal, movie, music,  
+    <a:documentation>TODO Unsupported types:
+  artwork, audio, image, jurisdiction, legislation, legal, movie, music,
   performance, reference, inreference, review, software, standard, video
   TODO: add manuscript and archivalrecord ??</a:documentation>
     <a:documentation/>
@@ -77,7 +77,7 @@
         <ref name="origtitle"/>
       </optional>
       <optional>
-        <ref name="origyear"/>
+        <ref name="origdate"/>
       </optional>
       <optional>
         <ref name="language"/>
@@ -177,6 +177,12 @@ We now define the biblatexml elements</a:documentation>
         <ref name="subscript"/>
       </optional>
       <optional>
+        <ref name="quote"/>
+      </optional>
+      <optional>
+        <ref name="math"/>
+      </optional>
+      <optional>
         <text/>
       </optional>
     </zeroOrMore>
@@ -194,6 +200,12 @@ We now define the biblatexml elements</a:documentation>
       </optional>
       <optional>
         <ref name="subscript"/>
+      </optional>
+      <optional>
+        <ref name="quote"/>
+      </optional>
+      <optional>
+        <ref name="math"/>
       </optional>
       <optional>
         <text/>
@@ -215,13 +227,29 @@ We now define the biblatexml elements</a:documentation>
       <text/>
     </element>
   </define>
-  <define name="nosort">
-    <element name="nosort">
+  <define name="quote">
+    <element name="quote">
       <text/>
     </element>
   </define>
+  <define name="math">
+    <a:documentation>The textual content of bib:math should be in (La)TeX notation
+MathML mathml:* insertions would also be possible with http://xsltml.sourceforge.net/
+the optional attribute "text" gives a Unicode representation of the mathematical expression (if feasible), e.g., x³+y³=z³</a:documentation>
+    <element name="math">
+      <optional>
+        <attribute name="text"/>
+      </optional>
+      <text/>
+    </element>
+  </define>
+  <define name="nosort">
+    <a:documentation>this is to markup elements of a name or title that should not be taken into account for sorting</a:documentation>
+    <element name="nosort">
+      <ref name="formattext"/>
+    </element>
+  </define>
   <define name="abstract">
-    <a:documentation>FIXME could it be formattextB ? ie. &lt;bib:nosort&gt;&lt;bib:superscript&gt;foo&lt;/bib:superscript&gt;&lt;bib:nosort&gt; ??</a:documentation>
     <element name="abstract">
       <ref name="formattext"/>
     </element>
@@ -464,11 +492,6 @@ We now define the biblatexml elements</a:documentation>
   <define name="origtitle">
     <element name="origtitle">
       <ref name="formattext"/>
-      <optional>
-        <element name="romanized">
-          <text/>
-        </element>
-      </optional>
     </element>
   </define>
   <define name="pagetotal">
@@ -694,78 +717,77 @@ We now define the biblatexml elements</a:documentation>
       <text/>
     </element>
   </define>
-  <!-- RANGE FIELDS -->
-  <define name="origyear">
-    <element name="origyear">
+  <!-- INTEGER FIELDS -->
+  <define name="edition">
+    <element name="edition">
       <choice>
-        <text/>
-        <ref name="range"/>
+        <data type="integer"/>
+        <attribute name="string"/>
       </choice>
+    </element>
+  </define>
+  <!-- DATE FIELDS -->
+  <define name="month">
+    <element name="month">
+      <data type="gMonth"/>
     </element>
   </define>
   <define name="year">
     <element name="year">
-      <optional>
-        <ref name="attlist.year"/>
-      </optional>
-      <choice>
-        <text/>
-        <ref name="range"/>
-      </choice>
-      <optional>
-        <ref name="localyear"/>
-      </optional>
+      <data type="gYear"/>
     </element>
   </define>
-  <!--
-    approximate when exact date is uncertain, 
-    assumed when it is known but not stated on the document
-    and converted when it is stated in a different calendar
-  -->
-  <define name="attlist.year">
-    <attribute name="type">
+  <define name="date">
+    <element name="date">
       <choice>
-        <value>approximate</value>
-        <value>assumed</value>
-        <value>converted</value>
-      </choice>
-    </attribute>
-  </define>
-  <define name="localyear">
-    <element name="localyear">
-      <ref name="attlist.localyear"/>
-      <choice>
-        <text/>
-        <ref name="range"/>
+        <ref name="date.type"/>
+        <ref name="daterange"/>
       </choice>
     </element>
   </define>
-  <define name="attlist.localyear">
-    <attribute name="calendar">
+  <define name="origdate">
+    <element name="origdate">
       <choice>
-        <value>julian</value>
-        <value>hebrew</value>
-        <value>islamic</value>
-        <value>hijrishamsi</value>
-        <value>revolutionary</value>
+        <ref name="date.type"/>
+        <ref name="daterange"/>
       </choice>
-    </attribute>
-    <optional>
-      <attribute name="note"/>
-    </optional>
+    </element>
   </define>
-  <define name="range">
-    <ref name="range.start"/>
-    <ref name="range.end"/>
+  <define name="urldate">
+    <element name="urldate">
+      <choice>
+        <ref name="date.type"/>
+        <ref name="daterange"/>
+      </choice>
+    </element>
   </define>
-  <define name="range.start">
+  <define name="eventdate">
+    <element name="eventdate">
+      <choice>
+        <ref name="date.type"/>
+        <ref name="daterange"/>
+      </choice>
+    </element>
+  </define>
+  <define name="date.type">
+    <choice>
+      <data type="date"/>
+      <data type="gYearMonth"/>
+      <data type="gYear"/>
+    </choice>
+  </define>
+  <define name="daterange">
+    <ref name="daterange.start"/>
+    <ref name="daterange.end"/>
+  </define>
+  <define name="daterange.start">
     <element name="start">
-      <text/>
+      <ref name="date.type"/>
     </element>
   </define>
-  <define name="range.end">
+  <define name="daterange.end">
     <element name="end">
-      <text/>
+      <ref name="date.type"/>
     </element>
   </define>
   <define name="pages">
@@ -814,53 +836,19 @@ We now define the biblatexml elements</a:documentation>
       <attribute name="part"/>
     </optional>
   </define>
-  <!-- e.g. when a book has parts in different scripts, with respective paginations -->
-  <!-- INTEGER FIELDS -->
-  <define name="day">
-    <element name="day">
-      <data type="integer"/>
+  <define name="range">
+    <a:documentation>e.g. when a book has parts in different scripts, with respective paginations</a:documentation>
+    <ref name="range.start"/>
+    <ref name="range.end"/>
+  </define>
+  <define name="range.start">
+    <element name="start">
+      <text/>
     </element>
   </define>
-  <define name="edition">
-    <element name="edition">
-      <choice>
-        <data type="integer"/>
-        <attribute name="string"/>
-      </choice>
-    </element>
-  </define>
-  <define name="month">
-    <element name="month">
-      <data type="integer"/>
-    </element>
-  </define>
-  <define name="urlday">
-    <element name="urlday">
-      <data type="integer"/>
-    </element>
-  </define>
-  <define name="urlmonth">
-    <element name="urlmonth">
-      <data type="integer"/>
-    </element>
-  </define>
-  <define name="urlyear">
-    <element name="urlyear">
-      <data type="integer"/>
-    </element>
-  </define>
-  <!-- DATE FIELDS -->
-  <define name="date">
-    <element name="date">
-      <choice>
-        <data type="date"/>
-        <data type="integer"/>
-      </choice>
-    </element>
-  </define>
-  <define name="urldate">
-    <element name="urldate">
-      <data type="date"/>
+  <define name="range.end">
+    <element name="end">
+      <text/>
     </element>
   </define>
   <!-- LITERAL LISTS -->
@@ -1194,7 +1182,7 @@ We now define the biblatexml elements</a:documentation>
   </define>
   <!--
     KEY LISTS
-    TODO ? add attribute type = babel, xml, ISO-XXX etc 
+    TODO ? add attribute type = babel, xml, ISO-XXX etc
   -->
   <define name="language">
     <element name="language">
@@ -1690,12 +1678,7 @@ works</a:documentation>
         <interleave>
           <optional>
             <choice>
-              <interleave>
-                <optional>
-                  <ref name="day"/>
-                </optional>
-                <ref name="month"/>
-              </interleave>
+              <ref name="month"/>
               <ref name="issue"/>
             </choice>
           </optional>
@@ -1774,15 +1757,7 @@ works</a:documentation>
         <ref name="doi"/>
       </optional>
       <optional>
-        <!-- url? &  -->
-        <choice>
-          <ref name="urldate"/>
-          <group>
-            <ref name="urlday"/>
-            <ref name="urlmonth"/>
-            <ref name="urlyear"/>
-          </group>
-        </choice>
+        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -2028,14 +2003,7 @@ works</a:documentation>
         <ref name="eprint"/>
       </optional>
       <optional>
-        <choice>
-          <ref name="urldate"/>
-          <interleave>
-            <ref name="urlday"/>
-            <ref name="urlmonth"/>
-            <ref name="urlyear"/>
-          </interleave>
-        </choice>
+        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -2104,14 +2072,7 @@ works</a:documentation>
         <ref name="url"/>
       </optional>
       <optional>
-        <choice>
-          <ref name="urldate"/>
-          <interleave>
-            <ref name="urlday"/>
-            <ref name="urlmonth"/>
-            <ref name="urlyear"/>
-          </interleave>
-        </choice>
+        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -2265,14 +2226,7 @@ works</a:documentation>
         <ref name="url"/>
       </optional>
       <optional>
-        <choice>
-          <ref name="urldate"/>
-          <interleave>
-            <ref name="urlday"/>
-            <ref name="urlmonth"/>
-            <ref name="urlyear"/>
-          </interleave>
-        </choice>
+        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -2296,7 +2250,7 @@ works</a:documentation>
     </attribute>
   </define>
   <define name="BibLaTeXML.inbook.standard.fields">
-    <a:documentation>  </a:documentation>
+    <a:documentation/>
     <interleave>
       <ref name="author"/>
       <ref name="title"/>
@@ -2425,14 +2379,7 @@ works</a:documentation>
         <ref name="url"/>
       </optional>
       <optional>
-        <choice>
-          <ref name="urldate"/>
-          <interleave>
-            <ref name="urlday"/>
-            <ref name="urlmonth"/>
-            <ref name="urlyear"/>
-          </interleave>
-        </choice>
+        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -2543,7 +2490,7 @@ works</a:documentation>
             <ref name="issn"/>
           </optional>
           <optional>
-            <!-- added  -->
+            <!-- added -->
             <ref name="isbn"/>
           </optional>
           <optional>
@@ -2585,14 +2532,7 @@ works</a:documentation>
         <ref name="url"/>
       </optional>
       <optional>
-        <choice>
-          <ref name="urldate"/>
-          <interleave>
-            <ref name="urlday"/>
-            <ref name="urlmonth"/>
-            <ref name="urlyear"/>
-          </interleave>
-        </choice>
+        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -2674,7 +2614,7 @@ works</a:documentation>
             <ref name="issn"/>
           </optional>
           <optional>
-            <!-- added  -->
+            <!-- added -->
             <ref name="isbn"/>
           </optional>
           <optional>
@@ -2716,14 +2656,7 @@ works</a:documentation>
         <ref name="url"/>
       </optional>
       <optional>
-        <choice>
-          <ref name="urldate"/>
-          <interleave>
-            <ref name="urlday"/>
-            <ref name="urlmonth"/>
-            <ref name="urlyear"/>
-          </interleave>
-        </choice>
+        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -2813,14 +2746,7 @@ works</a:documentation>
         <ref name="url"/>
       </optional>
       <optional>
-        <choice>
-          <ref name="urldate"/>
-          <interleave>
-            <ref name="urlday"/>
-            <ref name="urlmonth"/>
-            <ref name="urlyear"/>
-          </interleave>
-        </choice>
+        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -2859,9 +2785,6 @@ works</a:documentation>
       <choice>
         <interleave>
           <optional>
-            <ref name="day"/>
-          </optional>
-          <optional>
             <ref name="month"/>
           </optional>
           <ref name="year"/>
@@ -2898,14 +2821,7 @@ works</a:documentation>
         <ref name="url"/>
       </optional>
       <optional>
-        <choice>
-          <ref name="urldate"/>
-          <interleave>
-            <ref name="urlday"/>
-            <ref name="urlmonth"/>
-            <ref name="urlyear"/>
-          </interleave>
-        </choice>
+        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -2938,24 +2854,25 @@ works</a:documentation>
     <a:documentation/>
     <interleave>
       <optional>
-        <choice>
+        <interleave>
           <ref name="author"/>
-          <ref name="editor"/>
-        </choice>
+          <optional>
+            <ref name="editor"/>
+          </optional>
+        </interleave>
       </optional>
       <ref name="title"/>
-      <choice>
-        <interleave>
-          <optional>
-            <ref name="day"/>
-          </optional>
-          <optional>
-            <ref name="month"/>
-          </optional>
-          <ref name="year"/>
-        </interleave>
-        <ref name="date"/>
-      </choice>
+      <optional>
+        <choice>
+          <interleave>
+            <optional>
+              <ref name="month"/>
+            </optional>
+            <ref name="year"/>
+          </interleave>
+          <ref name="date"/>
+        </choice>
+      </optional>
       <choice>
         <ref name="url"/>
         <ref name="eprint"/>
@@ -2979,14 +2896,7 @@ works</a:documentation>
         <ref name="addendum"/>
       </optional>
       <optional>
-        <choice>
-          <ref name="urldate"/>
-          <interleave>
-            <ref name="urlday"/>
-            <ref name="urlmonth"/>
-            <ref name="urlyear"/>
-          </interleave>
-        </choice>
+        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -3017,9 +2927,6 @@ works</a:documentation>
       <ref name="number"/>
       <choice>
         <interleave>
-          <optional>
-            <ref name="day"/>
-          </optional>
           <optional>
             <ref name="month"/>
           </optional>
@@ -3055,14 +2962,7 @@ works</a:documentation>
         <ref name="url"/>
       </optional>
       <optional>
-        <choice>
-          <ref name="urldate"/>
-          <interleave>
-            <ref name="urlday"/>
-            <ref name="urlmonth"/>
-            <ref name="urlyear"/>
-          </interleave>
-        </choice>
+        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -3136,12 +3036,7 @@ works</a:documentation>
         <interleave>
           <optional>
             <choice>
-              <interleave>
-                <optional>
-                  <ref name="day"/>
-                </optional>
-                <ref name="month"/>
-              </interleave>
+              <ref name="month"/>
               <ref name="issue"/>
             </choice>
           </optional>
@@ -3200,14 +3095,7 @@ works</a:documentation>
       </optional>
       <optional>
         <!--  url? & -->
-        <choice>
-          <ref name="urldate"/>
-          <interleave>
-            <ref name="urlday"/>
-            <ref name="urlmonth"/>
-            <ref name="urlyear"/>
-          </interleave>
-        </choice>
+        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -3347,14 +3235,7 @@ works</a:documentation>
         <ref name="url"/>
       </optional>
       <optional>
-        <choice>
-          <ref name="urldate"/>
-          <interleave>
-            <ref name="urlday"/>
-            <ref name="urlmonth"/>
-            <ref name="urlyear"/>
-          </interleave>
-        </choice>
+        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -3428,14 +3309,7 @@ works</a:documentation>
         <ref name="url"/>
       </optional>
       <optional>
-        <choice>
-          <ref name="urldate"/>
-          <interleave>
-            <ref name="urlday"/>
-            <ref name="urlmonth"/>
-            <ref name="urlyear"/>
-          </interleave>
-        </choice>
+        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -3526,14 +3400,7 @@ works</a:documentation>
         <ref name="url"/>
       </optional>
       <optional>
-        <choice>
-          <ref name="urldate"/>
-          <interleave>
-            <ref name="urlday"/>
-            <ref name="urlmonth"/>
-            <ref name="urlyear"/>
-          </interleave>
-        </choice>
+        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -3572,9 +3439,6 @@ works</a:documentation>
         <choice>
           <interleave>
             <optional>
-              <ref name="day"/>
-            </optional>
-            <optional>
               <ref name="month"/>
             </optional>
             <ref name="year"/>
@@ -3606,14 +3470,7 @@ works</a:documentation>
         <ref name="url"/>
       </optional>
       <optional>
-        <choice>
-          <ref name="urldate"/>
-          <interleave>
-            <ref name="urlday"/>
-            <ref name="urlmonth"/>
-            <ref name="urlyear"/>
-          </interleave>
-        </choice>
+        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -3643,9 +3500,6 @@ works</a:documentation>
       <ref name="title"/>
       <choice>
         <interleave>
-          <optional>
-            <ref name="day"/>
-          </optional>
           <optional>
             <ref name="month"/>
           </optional>
@@ -3681,14 +3535,7 @@ works</a:documentation>
         <ref name="url"/>
       </optional>
       <optional>
-        <choice>
-          <ref name="urldate"/>
-          <interleave>
-            <ref name="urlday"/>
-            <ref name="urlmonth"/>
-            <ref name="urlyear"/>
-          </interleave>
-        </choice>
+        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>

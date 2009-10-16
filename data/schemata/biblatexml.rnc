@@ -52,7 +52,7 @@ BibLaTeXML.common.fields =
   shorthandintro? &
   shorttitle? &
   origtitle? &
-  origyear? &
+  origdate? &
   language? &
   origlanguage? &
   abstract? &
@@ -85,7 +85,7 @@ BibLaTeXML.additional.fields =
 ## We now define the biblatexml elements
 
 formattext = (emphasis?, superscript?, subscript?, quote?, math?, text?)*
-formattextB = (nosort?, emphasis?, superscript?, subscript?, math?, quote?, text?)*
+formattextB = (nosort?, emphasis?, superscript?, subscript?, quote?, math?, text?)*
 emphasis = element emphasis { text }
 superscript = element superscript { text }
 subscript = element subscript { text }
@@ -94,10 +94,8 @@ quote = element quote { text }
 ## MathML mathml:* insertions would also be possible with http://xsltml.sourceforge.net/
 ## the optional attribute "text" gives a Unicode representation of the mathematical expression (if feasible), e.g., x³+y³=z³
 math = element math { attribute text { text }?, text }
-
-##FIXME could it be formattextB? ie:
-## <bib:nosort><bib:superscript>foo</bib:superscript><bib:nosort> ??
-nosort = element nosort { text }
+## this is to markup elements of a name or title that should not be taken into account for sorting
+nosort = element nosort { formattext }
 
 abstract = element abstract { formattext }
 addendum = element addendum { formattext }
@@ -193,29 +191,12 @@ xref = element xref { text }
 edition = element edition { xsd:integer | ( attribute string { text } ) }
 # DATE FIELDS
 month = element month { xsd:gMonth }
-  ##FIXME allow type="converted" attribute?
-  ## localmonth ??
-year = element year { xsd:gYear, optlist.year? }
-optlist.year =
-  ( attribute type { "approximate" | "assumed" }
-  | ( attribute type { "converted" }, localyear ) )
-localyear = element localyear { attlist.localdate, xsd:gYear }
-date = element date { (date.type | daterange), optlist.date? }
-origdate = element origdate { (date.type | daterange), optlist.date? }
-urldate = element urldate { (date.type | daterange), optlist.date? }
-eventdate = element eventdate { (date.type | daterange), optlist.date? }
+year = element year { xsd:gYear }
+date = element date { date.type | daterange }
+origdate = element origdate { date.type | daterange }
+urldate = element urldate { date.type | daterange }
+eventdate = element eventdate { date.type | daterange }
 date.type = (xsd:date | xsd:gYearMonth | xsd:gYear)
- # "approximate" when exact date is uncertain,
- # "assumed" when it is known but not stated on the document
- # and "converted" when it is stated in a different calendar,
- # with child element "localyear" or "localdate"
-optlist.date =
-  ( attribute type { "approximate" | "assumed" }
-  | ( attribute type { "converted" }, localdate ) )
-localdate = element localdate { attlist.localdate, (date.type | daterange) }
-attlist.localdate =
-  attribute calendar { "julian" | "hebrew" | "islamic" | "hijrishamsi" | "revolutionary" | "japanese" | "bahai" | "chinese" | "tibetan" | "indian" },
-  attribute note { text }?
 daterange = daterange.start, daterange.end
 daterange.start = element start { date.type }
 daterange.end = element end { date.type }
@@ -347,7 +328,7 @@ remarks = element remarks {formattext|item+}
 BibLaTeXML.article.standard.fields =
   author & # NB: this should be optional
   (journaltitle|journal) &
-  ((((day?& month)|issue)?&year)|date) &
+  (((month|issue)?&year)|date) &
   editor? &
   shorteditor? &
   translator? &
@@ -372,8 +353,7 @@ BibLaTeXML.article.standard.fields =
   issn? &
   addendum? &
   doi? &
-# url? &
-  (urldate | (urlday , urlmonth , urlyear))?
+  urldate?
 BibLaTeXML.article.fields =
   BibLaTeXML.article.standard.fields &
   BibLaTeXML.common.fields &
