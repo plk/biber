@@ -1,4 +1,4 @@
-#!/usr/bin/perl 
+#!/usr/bin/perl
 use strict;
 use warnings;
 use Carp;
@@ -28,8 +28,8 @@ GetOptions(
     'useprd|p!',
     'debug|D!',
     'stdout|c!',
-#    'validate|V!', 
-#    'schema|s=s', 
+#    'validate|V!',
+#    'schema|s=s',
 );
 
 our $VERSION = '0.0.3';
@@ -40,14 +40,14 @@ die version() if exists $opts->{'version'};
 
 my $unicodebib = 0;
 
-my $biber = Biber->new( { allentries => 1, unicodebbl => 1, 
+my $biber = Biber->new( { allentries => 1, unicodebbl => 1,
         unicodebib => $opts->{unicodebib},
         biberdebug => $opts->{debug}, useprd => $opts->{useprd},
         inputencoding => $opts->{inputencoding} } );
 
 my $filename = $ARGV[0] or croak "No filename specified!";
 
-unless ( -f $filename) { 
+unless ( -f $filename) {
 
     unless ( -f "$filename.bib" ) {
         croak "There is no file $filename !\n";
@@ -95,35 +95,35 @@ for my $citekey ( sort keys %bibentries ) {
   my $entry = $bibentries{$citekey};
     my @entryfields = keys %$entry;
     my @specialfields = ( @NAMEFIELDS, @LISTFIELDS, @TITLEFIELDS );
-    my @standardfields = ( @RANGEFIELDS, @VERBATIMFIELDS, 
+    my @standardfields = ( @RANGEFIELDS, @VERBATIMFIELDS,
                            @LITERALFIELDS_BASE, @KEYFIELDS, @COMMASEP_FIELDS );
     my @officialfields = ( @specialfields, @standardfields, 'entrytype', 'datatype' );
     my @privatefields = array_minus( \@entryfields, \@officialfields );
 
   if ($entry->{howpublished} and $entry->{type}) {
-    $writer->startTag("bib:entry", 
-      'id' => $citekey, 
-      'entrytype' => $entry->{entrytype}, 
+    $writer->startTag("bib:entry",
+      'id' => $citekey,
+      'entrytype' => $entry->{entrytype},
       'type' => $entry->{type},
       'howpublished' => $entry->{howpublished});
   }
-  elsif ( $entry->{type} ) { 
+  elsif ( $entry->{type} ) {
     $writer->startTag('bib:entry',
-      'id' => $citekey, 
-      'entrytype' => $entry->{entrytype}, 
+      'id' => $citekey,
+      'entrytype' => $entry->{entrytype},
       'type' => $entry->{type});
   }
-  elsif ( $entry->{howpublished} ) { 
+  elsif ( $entry->{howpublished} ) {
     $writer->startTag('bib:entry',
-      'id' => $citekey, 
-      'entrytype' => $entry->{entrytype}, 
+      'id' => $citekey,
+      'entrytype' => $entry->{entrytype},
       'howpublished' => $entry->{howpublished});
   } else {
     $writer->startTag('bib:entry',
-      'id' => $citekey, 
+      'id' => $citekey,
       'entrytype' => $entry->{entrytype});
     };
-  
+
 
   foreach my $field (@NAMEFIELDS) {
     if ($entry->{$field}) {
@@ -158,23 +158,23 @@ for my $citekey ( sort keys %bibentries ) {
       $writer->endTag(); # $field
     }
   };
-  
+
   foreach my $field (@LISTFIELDS) {
     if ($entry->{$field}) {
-      
+
             my @lf = @{$entry->{$field}};
-            
+
             my $afield = $field;
 
             if ( $ALIASES{$field} ) {
-                $afield = $ALIASES{$field} 
+                $afield = $ALIASES{$field}
             };
-      
+
             if ( $#lf > 0 ) {
         if ($lf[-1] eq "others" ) {
           $writer->startTag("bib:$afield", "andothers"=>"true");
           pop @lf;
-        } 
+        }
         else {
           $writer->startTag("bib:$afield");
         };
@@ -196,17 +196,17 @@ for my $citekey ( sort keys %bibentries ) {
   foreach my $field (array_minus( \@standardfields, ['type', 'howpublished'] )) {
         if ($entry->{$field}) {
             if ( $field eq 'month' && $entry->{month} =~ m/[a-z]/i) {
-                
+
                 my $monthnumber = $NUMERICALMONTH{$entry->{month}} || $entry->{month};
-  
+
                 $writer->dataElement("bib:month", $monthnumber);
             }
             elsif ($field eq 'pages') {
                 if ($entry->{entrytype} =~ /^(book|collection|proceedings|report|conference|unpublished|thesis|misc)/) {
                     $writer->dataElement('bib:pagetotal', $entry->{pages})
-                } 
+                }
                 # 1-3, 7 => <pages>1-3, 7</pages>
-                elsif ( $entry->{pages} =~ /[, ;]/ ) { 
+                elsif ( $entry->{pages} =~ /[, ;]/ ) {
                     $writer->startTag('bib:pages');
                     $writer->dataElement('bib:list', $entry->{pages});
                     $writer->endTag(); #pages
@@ -225,11 +225,11 @@ for my $citekey ( sort keys %bibentries ) {
         else {
 
                 my $afield = $field;
-            
+
                 if ( $ALIASES{$field} ) {
                     $afield = $ALIASES{$field}
                 }
-      
+
             $writer->dataElement("bib:$afield", $entry->{$field});
           }
         # we do it separately to get range and to fix pages -> pagetotal
@@ -269,31 +269,31 @@ unless ($opts->{stdout}) {
 #if ( $opts->{validate} ) {
 #
 #    require XML::LibXML;
-#    
+#
 #    my $xmldoc = XML::LibXML->new->parse_file($outfile);
-#    
+#
 #    my $schema = "biblatexml.rng";
 #
-#    if ( $opts->{schema} ) { 
+#    if ( $opts->{schema} ) {
 #        $schema = $opts->{schema}
 #    };
 #
 #    my $rngschema = XML::LibXML::RelaxNG->new( location => $schema );
-#    
+#
 #    my $validation = eval { $rngschema->validate($xmldoc) ; };
-#    
+#
 #    unless ($validation) {
 #        carp "!!!\nThe file $outfile does not validate against the BibLaTeXML RelaxNG schema\n!!!\n$@"
-#    } 
-#} 
+#    }
+#}
 
 sub version {
     my $me = "bib2biblatexml"; #basename($0);
 
     qq[
 $me Version: $VERSION
-    Warning: This is still alpha quality. 
-    You are advised to wait for a stable release before definitively 
+    Warning: This is still alpha quality.
+    You are advised to wait for a stable release before definitively
     switching to the BibLaTeXML format!
       \n]
 }
@@ -308,7 +308,7 @@ Usage:  $me <file>.bib
 Options:
   --help|-h              Show this help message.
   --version|-v           Display version number.
-  --inputencoding|-i [encoding] 
+  --inputencoding|-i [encoding]
                          Input file uses legacy encoding.
   --unicodebib|u!        Assume bib file is UTF-8 and skip latex_decode.
      \n]
@@ -328,7 +328,7 @@ NOTE: This is still alpha quality. Use at your own risk ;)
 
 =head1 SYNOPSIS
 
-biblatexml file.bib 
+biblatexml file.bib
     (outputs file.xml)
 
 =head1 DESCRIPTION
@@ -342,7 +342,7 @@ François Charette, C<< <firmicus at gmx.net> >>
 =head1 BUGS
 
 Please report any bugs or feature requests on our sourceforge tracker at
-L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 

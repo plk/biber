@@ -1,4 +1,4 @@
-ROADMAP / TODO 
+ROADMAP / TODO
 
 in decreasing order of priority:
 
@@ -8,13 +8,13 @@ in decreasing order of priority:
    * user-setting of diacritics to ignore in sorting (‘ and ʿ are currently built-in) / partly DONE
    * same thing with prefixes (e.g. al- el- etc.) / partly DONE
    * ==> make the nosort options affect the title
-   * ==> make Biber::BibLaTeXML also take the nosort options into account 
+   * ==> make Biber::BibLaTeXML also take the nosort options into account
    * Implement options in LaTeX::Decode?
-     ALTERNATIVELY: Upload an enhanced version of LaTeX::Decode to CPAN, 
+     ALTERNATIVELY: Upload an enhanced version of LaTeX::Decode to CPAN,
      and remove it from the Biber distribution.
    * use Log::Log4Perl / DONE
    ----------
-   * add validation mechanism for options and config (untaint data), 
+   * add validation mechanism for options and config (untaint data),
      probably with Params::Validate
    * validate bibtex data with Text::Bibtex::Structure (optional)?
    * plugin facility
@@ -23,8 +23,8 @@ in decreasing order of priority:
    * fix crossref handling of reviews
    * "<nosort>The</nosort> Title …" automatically generates "sorttitle = Title …, The" / DONE
    * "D[onald] E. Knuth" prints as D. E. Knuth but is sorted with Donald E. Knuth ??
-   * prototype of bbx style for handling multiscript bibliographies (will probably 
+   * prototype of bbx style for handling multiscript bibliographies (will probably
         require xelatex+polyglossia or lualatex+?)
    * PerlTeX integration ?
-   * ... 
+   * ...
 

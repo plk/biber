@@ -7,7 +7,7 @@ use Biber::Utils;
 use Data::Dump;
 
 ## this returns the title, sorttitle, indextitle and indexsorttitle
-## as a hash ref 
+## as a hash ref
 sub XML::LibXML::NodeList::_biblatex_title_values {
     my $nodelist = shift;
     my $node = $nodelist->get_node(1);
@@ -28,8 +28,8 @@ sub XML::LibXML::NodeList::_biblatex_title_values {
         } elsif ( $type == 1 ) {
 
             $fstring .= $child->_biblatex_fstring_value;
-        
-            $sortstring .= $child->_biblatex_sortstring_value 
+
+            $sortstring .= $child->_biblatex_sortstring_value
                 unless $child->nodeName eq 'bib:nosort';
 
             if (! $count && $child->nodeName eq 'bib:nosort') {
@@ -47,7 +47,7 @@ sub XML::LibXML::NodeList::_biblatex_title_values {
     $indexsorttitle .= ", $nosortprefix" if $nosortprefix;
     $indexsorttitle =~ s/\s+$//;
 
-    return { 
+    return {
         title          => $fstring,
         sorttitle      => $sorttitle,
         indextitle     => $indextitle,
@@ -81,14 +81,14 @@ sub XML::LibXML::Node::_biblatex_fstring_value {
            $value =~ s/\s+/ /gms;
            next if $value eq ' ';
            $innerstr .= $value;
-       } 
+       }
     }
 
     if ($BIBLATEXML_FORMAT_ELEMENTS{$childname}) {
         $str =  '\\' . $BIBLATEXML_FORMAT_ELEMENTS{$childname} . '{' . $innerstr . '}';
-    } 
+    }
     else {
-        $str = $innerstr   
+        $str = $innerstr
     }
 
     return $str
@@ -101,13 +101,13 @@ sub XML::LibXML::Node::_biblatex_sortstring_value {
         next if ( $child->nodeName eq 'bib:nosort' );
         my $value;
         if ( $child->hasChildNodes ) {
-            $value = $child->_biblatex_sortstring_value 
+            $value = $child->_biblatex_sortstring_value
         } else {
             $value = $child->string_value;
             $value =~ s/\s+/ /gms;
         }
         $str .= $value
-    } 
+    }
 
     return $str;
 }
@@ -120,9 +120,9 @@ sub XML::LibXML::Element::_find_biblatex_nodes {
     ## Ex: [ 'original', 'transliterated', 'uniform', 'translated' ]
     # only one node bib:$field
     unless ($self->exists("bib:$field\[\@mode\]")) {
-        $xpath = "bib:$field" ; 
+        $xpath = "bib:$field" ;
         $xpath .= "/bib:$subfield" if defined $subfield ;
-        return $self->findnodes($xpath) 
+        return $self->findnodes($xpath)
             or croak "Cannot find nodes for xpath $xpath : $@";
     } ;
     foreach my $dm (@{$dma}) {
@@ -133,19 +133,19 @@ sub XML::LibXML::Element::_find_biblatex_nodes {
             if ($self->exists($xpath)) {
                 return $self->findnodes($xpath)
             }
-        } 
-            # mode = translated with xml:lang 
-        if ( $dm eq 'translated' and 
+        }
+            # mode = translated with xml:lang
+        if ( $dm eq 'translated' and
              $self->exists("bib:$field\[\@mode=\"$dm\" and \@xml:lang\]") ) {
             my $locale = $biber->config("locale") or croak "No locale defined";
             $locale =~ s/\..+$//; # remove encoding suffix
-            my $localeb = $locale ; 
+            my $localeb = $locale ;
             $localeb =~ s/_.+$//; # base locale
             foreach my $l ( "$localeb", "$locale" ) {
                 $xpath = "bib:$field\[\@mode=\"$dm\" and \@xml:lang=\"$l\"\]" ;
                 $xpath .= "/bib:$subfield" if defined $subfield ;
                 if ($self->exists($xpath)) {
-                    return $self->findnodes($xpath) 
+                    return $self->findnodes($xpath)
                 }
             }
         }
@@ -153,7 +153,7 @@ sub XML::LibXML::Element::_find_biblatex_nodes {
         $xpath = "bib:$field\[\@mode=\"$dm\"\]" ;
         $xpath .= "/bib:$subfield" if defined $subfield ;
         if ($self->exists($xpath)) {
-            return $self->findnodes($xpath) 
+            return $self->findnodes($xpath)
         }
     }
 }
@@ -188,7 +188,7 @@ François Charette, C<< <firmicus at gmx.net> >>
 =head1 BUGS
 
 Please report any bugs or feature requests on our sourceforge tracker at
-L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
@@ -209,5 +209,5 @@ later version, or
 
 =cut
 
-# vim: set tabstop=4 shiftwidth=4 expandtab: 
+# vim: set tabstop=4 shiftwidth=4 expandtab:
 

@@ -16,12 +16,12 @@ sub _bibtex_prd_parse {
     my ($self, $filename) = @_;
 
     my @auxcitekeys = $self->citekeys;
-    
+
     my %bibentries = $self->bib;
 
     my @localkeys;
 
-    ## TODO 
+    ## TODO
     # $::RD_TRACE = 1 if $self->config('parserdebug');
 
     undef $/;
@@ -37,12 +37,12 @@ sub _bibtex_prd_parse {
     my $bib = IO::File->new( $filename, "<$mode" )
         or $logger->logcroak("Failed to open $filename : $!");
 
-    my $btparser = Biber::BibTeX::Parser->new 
+    my $btparser = Biber::BibTeX::Parser->new
         or $logger->logcroak("Cannot create Biber::BibTeX::Parser object: $!");
-    
-    my $bf       = $btparser->BibFile(<$bib>) 
+
+    my $bf       = $btparser->BibFile(<$bib>)
         or $logger->logcroak("Can't parse file $filename : Are you certain it is a BibTeX file?\n\t$!");
-    
+
     close $bib;
 
     my @tmp = @$bf;
@@ -50,10 +50,10 @@ sub _bibtex_prd_parse {
     my $preamble = undef;
 
     for my $n ( 0 .. $#tmp ) {
-    
+
         my @tmpk   = keys %{ $tmp[$n] };
         my $tmpkey = $tmpk[0];
-        
+
         if ( $tmpkey eq 'preamble' ) {
 
             $preamble = join("%\n", @{ $tmp[$n]->{preamble} });
@@ -61,13 +61,13 @@ sub _bibtex_prd_parse {
         elsif ( $tmpkey eq 'entries' ) {
 
             my @entries = @{ $tmp[$n]->{entries} };
-        
+
             foreach my $i ( 0 .. $#entries ) {
-               
+
                 my @tmpa   = keys %{ $entries[$i] };
                 my $origkey = $tmpa[0];
                 my $key = lc($origkey);
-            
+
                 if ( $bibentries{$origkey} or $bibentries{$key}) {
                     $self->{errors}++;
                     my (undef,undef,$f) = File::Spec->splitpath( $filename );
@@ -76,9 +76,9 @@ sub _bibtex_prd_parse {
                 }
 
                 push @localkeys, $key;
-                
+
                 $bibentries{ $key } = $entries[$i]->{$origkey};
-                
+
                 $bibentries{ $key }->{datatype} = 'bibtex';
             }
         }
@@ -100,14 +100,14 @@ sub _bibtex_prd_parse {
         foreach my $ets (@ENTRIESTOSPLIT) {
 
             if ( exists $bibentries{$key}->{$ets} ) {
-                
+
                 my $stringtosplit = $bibentries{$key}->{$ets};
-                
+
                 # next if ref($tmp) neq 'SCALAR'; # we skip those that have been split
 
                 # "and" within { } must be preserved: see biblatex manual §2.3.3
                 #      (this can probably be optimized)
-                
+
                 foreach my $x ( $stringtosplit =~ m/($RE{balanced}{-parens => '{}'})/gx ) {
 
                     ( my $xr = $x ) =~ s/\s+and\s+/_\x{ff08}_/g;
@@ -115,7 +115,7 @@ sub _bibtex_prd_parse {
                     $stringtosplit =~ s/\Q$x/$xr/g;
 
                 };
-                
+
                 my @tmp = split /\s+and\s+/, $stringtosplit;
 
                 sub _restore_and {
@@ -124,7 +124,7 @@ sub _bibtex_prd_parse {
                 };
 
                 @tmp = map { _restore_and($_) } @tmp;
-                
+
                 if ($Biber::is_name_entry{$ets}) {
                   # This is a special case - we need to get the option value even though the passed
                   # $self object isn't fully built yet so getblxoption() can't ask $self for the
@@ -136,15 +136,15 @@ sub _bibtex_prd_parse {
 
                 } else {
                     @tmp = map { remove_outer($_) } @tmp;
-                } 
+                }
 
-                $bibentries{ $key }->{$ets} = [ @tmp ] 
+                $bibentries{ $key }->{$ets} = [ @tmp ]
 
             }
         };
 
         if ($bibentries{ $key }->{'entrytype'} eq 'set') {
-            
+
             my @entrysetkeys = split /\s*,\s*/, $bibentries{$key}->{'entryset'};
 
             foreach my $setkey (@entrysetkeys) {
@@ -155,7 +155,7 @@ sub _bibtex_prd_parse {
         if ( $bibentries{$key}->{'crossref'} ) {
 
             my $crkey = $bibentries{$key}->{'crossref'};
-        
+
             $Biber::crossrefkeys{$crkey}++;
             $Biber::entrieswithcrossref{$key} = $crkey;
 
@@ -186,7 +186,7 @@ Biber::BibTeX::PRD - Pure Perl BibTeX parser with Parse::RecDescent
 
 =head2 _bibtex_prd_parse
 
-Internal method for parsing BibTeX data in Pure Perl instead of using 
+Internal method for parsing BibTeX data in Pure Perl instead of using
 the btparse C library with Text::BibTeX
 
 =head1 AUTHOR
@@ -196,7 +196,7 @@ François Charette, C<< <firmicus at gmx.net> >>
 =head1 BUGS
 
 Please report any bugs or feature requests on our sourceforge tracker at
-L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
@@ -217,4 +217,4 @@ later version, or
 
 =cut
 
-# vim: set tabstop=4 shiftwidth=4 expandtab: 
+# vim: set tabstop=4 shiftwidth=4 expandtab:

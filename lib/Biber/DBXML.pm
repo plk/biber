@@ -39,7 +39,7 @@ ENDXML
                 last;
             };
             ## now we add the crossref key to the citekeys, if present:
-            my $queryx = 'collection("' . $collname . '")//bib:entry[@id="' . $key . 
+            my $queryx = 'collection("' . $collname . '")//bib:entry[@id="' . $key .
                 '"]/bib:crossref/string()';
             my $resultsx = $mgr->query($queryx, $context);
             if ($resultsx->size > 0) {
@@ -53,7 +53,7 @@ ENDXML
                 }
             }
         }
-        
+
         chdir( $workingdir );
 
     };
@@ -125,7 +125,7 @@ François Charette, C<< <firmicus at gmx.net> >>
 =head1 BUGS
 
 Please report any bugs or feature requests on our sourceforge tracker at
-L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>. 
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
