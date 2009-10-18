@@ -4,7 +4,9 @@ use warnings;
 use Carp;
 use Biber::Constants;
 use Biber::Utils;
-use Data::Dump;
+use Log::Log4perl qw(:no_extra_logdie_message);
+my $logger = Log::Log4perl::get_logger('main');
+##use Data::Dump;
 
 ## this returns the title, sorttitle, indextitle and indexsorttitle
 ## as a hash ref
@@ -112,48 +114,73 @@ sub XML::LibXML::Node::_biblatex_sortstring_value {
     return $str;
 }
 
+## returns an array of xpaths in order of priority
+## given an entry field, display mode, locale and subfield as args
+sub _get_xpath_array {
+    my ($field, $dm, $locale, $subfield) = @_ ;
+
+    # $dm and $subfield can be undef
+
+    my $xpath_field = "bib:$field";
+    my $xpath_dm;
+    my $xpath_locale;
+    my $xpath_localeb;
+    my @xpath_array = ();
+
+    $locale =~ s/\..+$//; # remove encoding suffix
+    my $localeb = $locale ;
+    $localeb =~ s/_.+$//; # base locale
+    if ( ! defined $dm or $dm eq 'uniform' or $dm eq 'translated' ) {
+        $xpath_locale  = "\@xml:lang=\"$locale\"";
+        $xpath_localeb = "\@xml:lang=\"$localeb\"";
+    }
+
+    if ( defined $dm and $dm ne 'original' ) {
+        $xpath_dm = "\@mode=\"$dm\""
+    }
+    else {
+        $xpath_dm = 'not(@mode)'
+    }
+
+    if ( defined $xpath_locale ) {
+        push @xpath_array,
+            $xpath_field.'['.$xpath_dm.' and '.$xpath_locale.']';
+        push @xpath_array,
+            $xpath_field.'['.$xpath_dm.' and '.$xpath_localeb.']'
+                unless ( $xpath_locale eq $xpath_localeb );
+    }
+
+    push @xpath_array, $xpath_field.'['.$xpath_dm.']';
+
+    if (defined $subfield) {
+        map { $_ .= "/bib:$subfield" } @xpath_array
+    }
+
+    return @xpath_array
+}
+
+
 sub XML::LibXML::Element::_find_biblatex_nodes {
-    my ($self, $biber, $field, $dma, $subfield) = @_ ;
-    my $xpath ;
-
+    my ($node, $biber, $field, $dma, $subfield) = @_ ;
     ## $dma is an arrayref with list of displaymodes, in order of preference
-    ## Ex: [ 'original', 'transliterated', 'uniform', 'translated' ]
-    # only one node bib:$field
-    unless ($self->exists("bib:$field\[\@mode\]")) {
-        $xpath = "bib:$field" ;
-        $xpath .= "/bib:$subfield" if defined $subfield ;
-        return $self->findnodes($xpath)
-            or croak "Cannot find nodes for xpath $xpath : $@";
-    } ;
-    foreach my $dm (@{$dma}) {
-        # mode = original
-        if ($dm eq 'original') {
-            $xpath = "bib:$field\[not(\@mode)\]" ;
-            $xpath .= "/bib:$subfield" if defined $subfield ;
-            if ($self->exists($xpath)) {
-                return $self->findnodes($xpath)
-            }
-        }
-            # mode = translated with xml:lang
-        if ( $dm eq 'translated' and
-             $self->exists("bib:$field\[\@mode=\"$dm\" and \@xml:lang\]") ) {
-            my $locale = $biber->config("locale") or croak "No locale defined";
-            $locale =~ s/\..+$//; # remove encoding suffix
-            my $localeb = $locale ;
-            $localeb =~ s/_.+$//; # base locale
-            foreach my $l ( "$localeb", "$locale" ) {
-                $xpath = "bib:$field\[\@mode=\"$dm\" and \@xml:lang=\"$l\"\]" ;
-                $xpath .= "/bib:$subfield" if defined $subfield ;
-                if ($self->exists($xpath)) {
-                    return $self->findnodes($xpath)
-                }
-            }
-        }
+    ## Ex: [ 'original', 'romanized', 'uniform', 'translated' ]
 
-        $xpath = "bib:$field\[\@mode=\"$dm\"\]" ;
-        $xpath .= "/bib:$subfield" if defined $subfield ;
-        if ($self->exists($xpath)) {
-            return $self->findnodes($xpath)
+    my $locale = $biber->config("locale") or $logger->logcroak("No locale defined");
+
+    unless ($node->exists("bib:$field\[\@mode\]")) {
+         foreach my $xpath ( _get_xpath_array($field, undef, $locale, $subfield) ) {
+            return $node->findnodes($xpath) if $node->exists($xpath);
+        }
+    }
+
+    foreach my $dm (@{$dma}) {
+        foreach my $xpath ( _get_xpath_array($field, $dm, $locale, $subfield) ) {
+            ##ddx "Checking $xpath ...";
+            $logger->trace("Checking for node $xpath");
+            if ($node->exists($xpath)) {
+                $logger->debug("Found node $xpath");
+                return $node->findnodes($xpath)
+            }
         }
     }
 }

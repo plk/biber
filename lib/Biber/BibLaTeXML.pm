@@ -218,6 +218,7 @@ sub _parse_biblatexml {
         # in format YYYY-MM-DD
         # optionally with start and end
         # >>> TODO support field/list/items <<<
+        #     (also for fields volume and pages)
         foreach my $field (@DATERANGEFIELDS)  {
             if ($bibrecord->exists("bib:$field\[not(\@type='converted')\]")) {
                 if ($bibrecord->exists("bib:$field/bib:start")) {
@@ -287,7 +288,7 @@ sub _parse_biblatexml {
             }
         }
 
-        # pages
+        ## PAGES
         if ($bibrecord->exists("bib:pages")) {
             if ($bibrecord->exists("bib:pages/bib:start")) {
                  my $pagesstart = $bibrecord->findnodes("bib:pages/bib:start")->_normalize_string_value;
