@@ -78,8 +78,8 @@ BibLaTeXML.additional.fields =
    reprintinfo* &
    reviews? &
    topics? &
-   remarks?
-
+   remarks? &
+   relatedentries?
 
 #########################################################
 ## We now define the biblatexml elements
@@ -157,7 +157,11 @@ titleaddon = element titleaddon { formattext }
 url = element url { xsd:anyURI }
 venue = element venue { formattext }
 version = element version { text }
-volume = element volume { text }
+volume = element volume { ( text | volume.range )}
+volume.range = ( volume.list | (volume.start, volume.end))
+volume.start = element start { text }
+volume.end = element end { text }
+volume.list = element list { element item { text }+ }
 volumes = element volumes { text }
 usera = element usera { text }
 userb = element userb { text }
@@ -190,18 +194,17 @@ xref = element xref { text }
 # INTEGER FIELDS
 edition = element edition { xsd:integer | ( attribute string { text } ) }
 # DATE FIELDS
-month = element month { xsd:gMonth }
-year = element year { xsd:gYear }
 date = element date { date.type | daterange }
 origdate = element origdate { date.type | daterange }
 urldate = element urldate { date.type | daterange }
-eventdate = element eventdate { date.type | daterange }
+eventdate = element eventdate { date.type | date.range }
 date.type = (xsd:date | xsd:gYearMonth | xsd:gYear)
-daterange = daterange.start, daterange.end
-daterange.start = element start { date.type }
-daterange.end = element end { date.type }
+date.range = (date.range.list | (date.range.start, date.range.end?) )
+date.range.start = element start { date.type }
+date.range.end = element end { date.type }
+date.range.list = element list { element item { (date.type|date.range) }+ }
 pages = element pages { attlist.pages?, (text | range | pagelist ) }
-pagelist = element list { text }
+pagelist = element list { ( text | element item {text}+  ) }
 attlist.pages =
   attribute pagination { "page" | "column" | "line" | "verse" | "paragraph" | "none" }?,
   attribute bookpagination { "page" | "column" | "line" | "verse" | "paragraph" | "none" }?,
@@ -253,10 +256,10 @@ language = element language { xsd:language | itemlang+ }
 origlanguage = element origlanguage { xsd:language | itemlang+ }
 itemlang = element item { xsd:language }
 # NAME LISTS
-attlist.author |= attribute type { "author" | "editor" | "compiler" | text }?
+attlist.author |= attribute type { "author" | "editor" | "compiler" | "translator" | "editor+translator" | text }?
 attlist.author |= att.gender?
 attlist.author |= attlist.lists?
-attlist.editor |= attribute type { "editor" | "compiler" }?
+attlist.editor |= attribute type { "editor" | "editor+translator" | "compiler" }?
 attlist.editor |= att.gender?
 attlist.editor |= attlist.lists?
 att.gender = attribute gender { "sf" | "sm" | "sn" | "pf" | "pm" | "pn" | "pp" }
@@ -323,12 +326,19 @@ remarks = element remarks {formattext|item+}
 ## century
 ## author
 ## works
+## This is used to record crossrefs to other entries that are related to the present one,
+## for instance a reedition.
+relatedentries = element relatedentries {
+    element item {
+      attribute type { "reedition" | "reprint" | "contains" | "translation" | "reedition_of" | "reprint_of" | "part_of" | "translation_of" | text },
+      attribute id {text} }+
+    }
 
 #########################################################
 BibLaTeXML.article.standard.fields =
   author & # NB: this should be optional
   (journaltitle|journal) &
-  (((month|issue)?&year)|date) &
+  (issue? & date) &
   editor? &
   shorteditor? &
   translator? &
@@ -383,8 +393,8 @@ attlist.review.electronic = attribute id {text}, attribute entrytype { "review" 
 BibLaTeXML.book.standard.fields =
   author? & #changed
   editor? & #changed
-  ((title & year) |
-   (title? & year? & crossref)) & #a book can inherit its elements from another book (e.g. individual volumes with diff titles)
+  ((title & date) |
+   (title? & date? & crossref)) & #a book can inherit its elements from another book (e.g. individual volumes with diff titles)
   bookauthor? & #added
   shorteditor? &
   translator? &
@@ -436,7 +446,7 @@ BibLaTeXML.booklet.standard.fields =
   author? & #changed
   editor? & #changed
   title &
-  year &
+  date &
   subtitle? &
   titleaddon? &
   #howpublished? & -> attribute
@@ -462,7 +472,7 @@ BibLaTeXML.collection.standard.fields =
   editor? & # changed
   author? & #changed
   title &
-  year &
+  date &
   bookauthor? & #added
   shorteditor? &
   translator? &
@@ -509,10 +519,16 @@ attlist.collection = attribute id {text}, attribute entrytype {"collection"}
 
 #########################################################
 BibLaTeXML.inbook.standard.fields =
-  author &
   title &
+  author? &
+  editor? &
+  shorteditor? &
+  translator? &
+  redactor? &
+  annotator? &
+  commentator? &
   # year can be provided with crossref if it refers to multivolume work
-  (((crossref | xref) & year?) |
+  (((crossref | xref) & date?) |
   (bookauthor? &
   # FIXME: this is probably too strict
   booktitle &
@@ -521,13 +537,7 @@ BibLaTeXML.inbook.standard.fields =
   maintitleaddon? &
   booksubtitle? &
   booktitleaddon? &
-  year &
-  editor? &
-  shorteditor? &
-  translator? &
-  redactor? &
-  annotator? &
-  commentator? &
+  date &
   introduction? &
   foreword? &
   afterword? &
@@ -566,11 +576,11 @@ BibLaTeXML.incollection.standard.fields =
    subtitle? &
    titleaddon? &
   # year can be provided with crossref if it refers to multivolume work
-  (((crossref | xref) & year?) |
+  (((crossref | xref) & date?) |
   ( editor? & # made it optional
   # FIXME: this is probably too strict
   booktitle &
-  year &
+  date &
   shorteditor? &
   translator? &
   redactor? &
@@ -619,7 +629,7 @@ BibLaTeXML.inproceedings.standard.fields =
   (crossref | xref |
   (editor? &  # made it optional
   booktitle &
-  year &
+  date &
   shorteditor? &
   maintitle? &
   mainsubtitle? &
@@ -658,7 +668,7 @@ attlist.inproceedings = attribute id {text}, attribute entrytype {"inproceedings
 BibLaTeXML.manual.standard.fields =
   (author|editor)? &
   title &
-  year &
+  date &
   subtitle? &
   titleaddon? &
   edition? &
@@ -690,7 +700,7 @@ attlist.manual = attribute id {text}, attribute entrytype {"manual"}, attribute 
 BibLaTeXML.misc.standard.fields =
   (author|editor)? &
   title &
-  ((month? & year)|date) &
+  date &
   subtitle? &
   titleaddon? &
 #  howpublished? & -> attribute
@@ -714,7 +724,7 @@ attlist.misc = attribute id {text}, attribute entrytype {"misc"}, attribute type
 BibLaTeXML.online.standard.fields =
   (author & editor?)? &
   title &
-  ((month? & year)|date)? &
+  date? &
   (url|eprint) &
   subtitle? &
   titleaddon? &
@@ -735,7 +745,7 @@ BibLaTeXML.patent.standard.fields =
   author &
   title &
   number &
-  ((month? & year)|date) &
+  date &
   holder? &
   subtitle? &
   titleaddon? &
@@ -784,7 +794,8 @@ att.patenttype = attribute type {
 BibLaTeXML.periodical.standard.fields =
   editor? &  # made it optional
   (journal|journaltitle) & # CHANGED from title
-  ((((month)|issue)? & year)|date) &
+  issue? &
+  date &
   shorteditor? &
   introduction? &
   subtitle? &
@@ -817,7 +828,7 @@ attlist.periodical.electronic = attribute id {text}, attribute entrytype {"perio
 BibLaTeXML.proceedings.standard.fields =
   editor? & # made it optional
   title &
-  year &
+  date &
   shorteditor? &
   subtitle? &
   titleaddon? &
@@ -857,7 +868,7 @@ BibLaTeXML.report.standard.fields =
   author &
   title &
   institution &
-  year &
+  date &
   subtitle? &
   titleaddon? &
   series? &
@@ -886,7 +897,7 @@ BibLaTeXML.thesis.standard.fields =
   author &
   title &
   (institution|school) &
-  year &
+  date &
   subtitle? &
   titleaddon? &
   note? &
@@ -915,7 +926,7 @@ attlist.thesis = attribute id {text}, attribute entrytype {"thesis"}, attribute 
 BibLaTeXML.unpublished.standard.fields =
   author &
   title &
-  ((month? & year)|date)? &
+  date? &
   subtitle? &
   titleaddon? &
   institution? & #added
@@ -936,7 +947,7 @@ attlist.unpublished = attribute id {text}, attribute entrytype {"unpublished"}
 BibLaTeXML.preprint.standard.fields =
   author &
   title &
-  ((month? & year)|date) &
+  date &
   institution? &
   location? &
   subtitle? &
