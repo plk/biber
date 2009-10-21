@@ -101,9 +101,8 @@ nosort = element nosort { formattext }
 
 romanized = attribute mode { "romanized" }, attribute convention { text }?, att.lang?
 translated = attribute mode { "translated" }, att.lang?
-uniform = attribute mode { "uniform" }, att.locale?
+uniform = attribute mode { "uniform" }, att.lang?
 att.lang = attribute xml:lang {xsd:language}
-att.locale = attribute locale { text }
 
 abstract = element abstract { att.lang?, formattext }
 addendum = element addendum { att.lang?, formattext }
@@ -297,7 +296,6 @@ userc = element userc { text }
 userd = element userd { text }
 usere = element usere { text }
 userf = element userf { text }
-##TODO add editorA etc (biblatex 0.9)
 
 ## special fields
 entryset = element entryset { item+ | text }
@@ -488,7 +486,8 @@ itemscript = element item { script.list }
 attlist.author |= attribute type { "author" | "editor" | "compiler" | "translator" | "editor+translator" | text }?
 attlist.author |= att.gender?
 attlist.author |= attlist.lists?
-attlist.editor |= attribute type { "editor" | "editor+translator" | "compiler" }?
+attlist.editor |= attribute type { "editor" | "editor+translator" | "compiler" | text }?
+attlist.editor |= attribute class { "sub" | "vol" | "main" }?
 attlist.editor |= att.gender?
 attlist.editor |= attlist.lists?
 att.gender = attribute gender { "sf" | "sm" | "sn" | "pf" | "pm" | "pn" | "pp" }
@@ -498,12 +497,31 @@ author = ( element author { attlist.author, (text | person+) },
           ( element author { attlist.author, romanized, (text | person+) }+,
             element author { attlist.author, uniform, (text | person+) }* ) |
           ( element author { attlist.author, uniform, (text | person+) }+ )
+editors = editor & editorA? & editorB? & editorC?
 editor = ( element editor { attlist.editor, (text | person+) },
           element editor { attlist.editor, romanized, (text | person+) }*,
           element editor { attlist.editor, uniform, (text | person+) }* ) |
           ( element editor { attlist.editor, romanized, (text | person+) }+,
             element editor { attlist.editor, uniform, (text | person+) }* ) |
           ( element editor { attlist.editor, uniform, (text | person+) }+ )
+editorA = ( element editorA { attlist.editor, (text | person+) },
+          element editorA { attlist.editor, romanized, (text | person+) }*,
+          element editorA { attlist.editor, uniform, (text | person+) }* ) |
+          ( element editorA { attlist.editor, romanized, (text | person+) }+,
+            element editorA { attlist.editor, uniform, (text | person+) }* ) |
+          ( element editorA { attlist.editor, uniform, (text | person+) }+ )  
+editorB = ( element editorB { attlist.editor, (text | person+) },
+          element editorB { attlist.editor, romanized, (text | person+) }*,
+          element editorB { attlist.editor, uniform, (text | person+) }* ) |
+          ( element editorB { attlist.editor, romanized, (text | person+) }+,
+            element editorB { attlist.editor, uniform, (text | person+) }* ) |
+          ( element editorB { attlist.editor, uniform, (text | person+) }+ )
+editorC = ( element editorC { attlist.editor, (text | person+) },
+          element editorC { attlist.editor, romanized, (text | person+) }*,
+          element editorC { attlist.editor, uniform, (text | person+) }* ) |
+          ( element editorC { attlist.editor, romanized, (text | person+) }+,
+            element editorC { attlist.editor, uniform, (text | person+) }* ) |
+          ( element editorC { attlist.editor, uniform, (text | person+) }+ )
 afterword = ( element afterword { attlist.lists?, (text | person+) },
              element afterword { attlist.lists?, romanized, (text | person+) }*,
              element afterword { attlist.lists?, uniform, (text | person+) }* ) |
@@ -546,12 +564,6 @@ introduction = ( element introduction { attlist.lists?, (text | person+) },
                 ( element introduction { attlist.lists?, romanized, (text | person+) }+,
                   element introduction { attlist.lists?, uniform, (text | person+) }* ) |
                 ( element introduction { attlist.lists?, uniform, (text | person+) }+ )
-redactor = ( element redactor { attlist.lists?, (text | person+) },
-            element redactor { attlist.lists?, romanized, (text | person+) }*,
-            element redactor { attlist.lists?, uniform, (text | person+) }* ) |
-            ( element redactor { attlist.lists?, romanized, (text | person+) }+,
-              element redactor { attlist.lists?, uniform, (text | person+) }* ) |
-            ( element redactor { attlist.lists?, uniform, (text | person+) }+ )
 translator = ( element translator { attlist.lists?, (text | person+) },
               element translator { attlist.lists?, romanized, (text | person+) }*,
               element translator { attlist.lists?, uniform, (text | person+) }* ) |
@@ -653,10 +665,9 @@ BibLaTeXML.article.standard.fields =
   author & # NB: this should be optional
   (journaltitle|journal) &
   (issue? & date) &
-  editor? &
+  editors? &
   shorteditor? &
   translator? &
-  redactor? &
   annotator? &
   commentator? &
   subtitle? &
@@ -706,13 +717,12 @@ attlist.review.electronic = attribute id {text}, attribute entrytype { "review" 
 #########################################################
 BibLaTeXML.book.standard.fields =
   author? & #changed
-  editor? & #changed
+  editors? & #changed
   ((title & date) |
    (title? & date? & crossref)) & #a book can inherit its elements from another book (e.g. individual volumes with diff titles)
   bookauthor? & #added
   shorteditor? &
   translator? &
-  redactor? &
   annotator? &
   commentator? &
   introduction? &
@@ -758,7 +768,7 @@ attlist.book = attribute id {text}, attribute entrytype {"book"}
 #########################################################
 BibLaTeXML.booklet.standard.fields =
   author? & #changed
-  editor? & #changed
+  editors? & #changed
   title &
   date &
   subtitle? &
@@ -783,14 +793,13 @@ attlist.booklet = attribute id {text}, attribute entrytype {"booklet"}, attribut
 
 #########################################################
 BibLaTeXML.collection.standard.fields =
-  editor? & # changed
+  editors? & # changed
   author? & #changed
   title &
   date &
   bookauthor? & #added
   shorteditor? &
   translator? &
-  redactor? &
   annotator? &
   commentator? &
   introduction? &
@@ -835,10 +844,9 @@ attlist.collection = attribute id {text}, attribute entrytype {"collection"}
 BibLaTeXML.inbook.standard.fields =
   title &
   author? &
-  editor? &
+  editors? &
   shorteditor? &
   translator? &
-  redactor? &
   annotator? &
   commentator? &
   # year can be provided with crossref if it refers to multivolume work
@@ -891,13 +899,12 @@ BibLaTeXML.incollection.standard.fields =
    titleaddon? &
   # year can be provided with crossref if it refers to multivolume work
   (((crossref | xref) & date?) |
-  ( editor? & # made it optional
+  ( editors? & # made it optional
   # FIXME: this is probably too strict
   booktitle &
   date &
   shorteditor? &
   translator? &
-  redactor? &
   annotator? &
   commentator? &
   introduction? &
@@ -941,7 +948,7 @@ BibLaTeXML.inproceedings.standard.fields =
   subtitle? &
   titleaddon? &
   (crossref | xref |
-  (editor? &  # made it optional
+  (editors? &  # made it optional
   booktitle &
   date &
   shorteditor? &
@@ -980,7 +987,7 @@ attlist.inproceedings = attribute id {text}, attribute entrytype {"inproceedings
 
 #########################################################
 BibLaTeXML.manual.standard.fields =
-  (author|editor)? &
+  (author|editors)? &
   title &
   date &
   subtitle? &
@@ -1012,7 +1019,7 @@ attlist.manual = attribute id {text}, attribute entrytype {"manual"}, attribute 
 
 #########################################################
 BibLaTeXML.misc.standard.fields =
-  (author|editor)? &
+  (author|editors)? &
   title &
   date &
   subtitle? &
@@ -1036,7 +1043,7 @@ attlist.misc = attribute id {text}, attribute entrytype {"misc"}, attribute type
 
 #########################################################
 BibLaTeXML.online.standard.fields =
-  (author & editor?)? &
+  (author & editors?)? &
   title &
   date? &
   (url|eprint) &
@@ -1106,7 +1113,7 @@ att.patenttype = attribute type {
 
 #########################################################
 BibLaTeXML.periodical.standard.fields =
-  editor? &  # made it optional
+  editors? &  # made it optional
   (journal|journaltitle) & # CHANGED from title
   issue? &
   date &
@@ -1140,7 +1147,7 @@ attlist.periodical.electronic = attribute id {text}, attribute entrytype {"perio
 
 #########################################################
 BibLaTeXML.proceedings.standard.fields =
-  editor? & # made it optional
+  editors? & # made it optional
   title &
   date &
   shorteditor? &

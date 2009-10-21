@@ -393,8 +393,14 @@ sub _parse_biblatexml {
             'bib:pages/@bookpagination' => 'bookpagination',
             'bib:author/@type' => 'authortype',
             'bib:editor/@type' => 'editortype',
+            'bib:editorA/@type' => 'editoratype',
+            'bib:editorB/@type' => 'editorbtype',
+            'bib:editorC/@type' => 'editorctype',
+            'bib:editorA/@class' => 'editoraclass',
+            'bib:editorB/@class' => 'editorbclass',
+            'bib:editorC/@class' => 'editorcclass',
             'bib:author/@gender' => 'gender',
-            # 'bib:editor/@gender' => 'gender', (ignored for now)
+            ## 'bib:editor/@gender' => 'gender', (ignored for now)
             '@howpublished' => 'howpublished'
             );
         foreach my $attr (keys %xmlattributes) {
