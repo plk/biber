@@ -137,20 +137,20 @@ sub parsename {
     my $suffix;
     my $nameinitstr;
 
-    my $PREFIXRE = qr/
+    my $PREFIX_RE = qr/
                 {?
                 \p{Ll} # prefix starts with lowercase
                 [^\p{Lu},]+ # e.g. van der
                 }?
                 \s+
                /x ;
-    my $NAMERE = qr/
+    my $NAME_RE = qr/
                 [^,]+
                |
                 $RE{balanced}{-parens=>'{}'}
                /x;
-    my $SUFFIXRE = $NAMERE;
-    my $NAMESEQRE = qr/ (?:\p{Lu}\S*[\s~]*)+ /x ;
+    my $SUFFIX_RE = $NAME_RE;
+    my $NAME_SEQ_RE = qr/ (?:\p{Lu}\S*[\s~]*)+ /x ;
 
     if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}$/ )
     {
@@ -163,20 +163,20 @@ sub parsename {
         $logger->debug("Caught namestring of type 'prefix? Lastname, suffix, Firstname'");
         ( $prefix, $lastname, $suffix, $firstname ) = $namestr =~
             m/\A( # prefix?
-                $PREFIXRE
+                $PREFIX_RE
                )?
                ( # last name
-                $NAMERE
+                $NAME_RE
                )
                ,
                \s*
                ( # suffix
-                $SUFFIXRE
+                $SUFFIX_RE
                )
                ,
                \s*
                ( # first name
-                $NAMERE
+                $NAME_RE
                )
              \z/xms;
 
@@ -196,15 +196,15 @@ sub parsename {
 
         ( $prefix, $lastname, $firstname ) = $namestr =~
             m/^( # prefix?
-                $PREFIXRE
+                $PREFIX_RE
                )?
                ( # last name
-                $NAMERE
+                $NAME_RE
                )
                ,
                \s*
                ( # first name
-                $NAMERE
+                $NAME_RE
                )
              $/x;
 
@@ -227,7 +227,7 @@ sub parsename {
                 )
                     \s+
                 ( # prefix?
-                    $PREFIXRE
+                    $PREFIX_RE
                 )?
                 ( # last name
                     $RE{balanced}{-parens=>'{}'}
@@ -239,11 +239,11 @@ sub parsename {
             $logger->debug("Caught namestring of type 'Firstname prefix? {Lastname}'");
             ( $firstname, $prefix, $lastname ) = $namestr =~
                 m/^( # first name
-                    $NAMESEQRE
+                    $NAME_SEQ_RE
                 )
                     \s+
                 ( # prefix?
-                    $PREFIXRE
+                    $PREFIX_RE
                 )?
                 ( # last name
                     $RE{balanced}{-parens=>'{}'}
@@ -259,7 +259,7 @@ sub parsename {
                 )
                     \s+
                 ( # prefix?
-                    $PREFIXRE
+                    $PREFIX_RE
                 )?
                 ( # last name
                     .+
@@ -270,14 +270,14 @@ sub parsename {
             $logger->debug("Caught namestring of type 'Firstname prefix? Lastname'");
             ( $firstname, $prefix, $lastname ) = $namestr =~
                 m/^( # first name
-                    $NAMESEQRE
+                    $NAME_SEQ_RE
                 )
                  \s+
                 ( # prefix?
-                    $PREFIXRE
+                    $PREFIX_RE
                 )?
                 ( # last name
-                    $NAMESEQRE
+                    $NAME_SEQ_RE
                 )
                 $/x;
         }
