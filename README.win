@@ -32,9 +32,11 @@ Biber.exe also contains two utility scripts:
     - bib2biblatexml : converts bib files to the BibLaTeXML format
     - latex2utf8     : converts LaTeX encoding to UTF-8
 
-These are run when the basename of the executable is the name of one of the
-scripts: this is easy to implement with symbolic links, but these are only
-possible on Windows Vista.
+These can also be run by giving the name of the script as the first argument, e.g.
+  biber.exe bib2biblatexml ...
+is equivalent to running the script 
+  bib2biblatexml ...
+on its own.
 
 More information is available at:
 
