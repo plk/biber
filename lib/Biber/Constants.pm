@@ -85,7 +85,7 @@ our %CONFIG_DEFAULT = (
             useeditor => '1',
             usetranslator => '0',
             labelalpha => '0',
-            labelyear => '0',
+            labelyear => [ 'year' ],
             singletitle => '0',
             uniquename => '0',
             sorting => [  [  {'presort'    => []},

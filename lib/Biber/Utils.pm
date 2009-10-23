@@ -202,7 +202,7 @@ sub parsename {
                 $NAMERE
                )
                ,
-               \s+
+               \s*
                ( # first name
                 $NAMERE
                )
