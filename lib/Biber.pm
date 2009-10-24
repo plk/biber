@@ -45,8 +45,6 @@ our $VERSION = '0.5';
 
 =cut
 
-#TODO read config file (e.g. $HOME/.biber.conf to change default options)
-
 #TODO put the following hashes in a Biber::Config object ?
 
 our %seenkeys    = ();
@@ -59,6 +57,8 @@ our %uniquenamecount = ();
 our %seenauthoryear = ();
 our %seenlabelyear = ();
 our %is_name_entry = map { $_ => 1 } @NAMEFIELDS;
+our $BIBERCONFIG; # Place to store ref to config object so we can reference it
+                  # in utility subs which are not object methods
 
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -86,8 +86,8 @@ sub new {
         foreach (keys %params) {
           $self->{config}{setoncmdline}{$_} = $self->{config}{$_} = $params{$_};
         }
-    };
-    return $self
+    }
+    return $self;
 }
 
 =head2 config
@@ -139,8 +139,11 @@ sub _initopts {
     }
     my %CONFIG = (%CONFIG_DEFAULT, %LOCALCONF);
     foreach (keys %CONFIG) {
-        $self->{config}->{$_} = $CONFIG{$_}
+      $self->{config}{$_} = $CONFIG{$_};
     }
+    # Save the config in a variable so it doesn't need to be obtained from $self
+    # everywhere - it is used in many utility non-object methods.
+    $BIBERCONFIG = $self->{config};
     return;
 }
 

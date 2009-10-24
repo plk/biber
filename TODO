@@ -5,9 +5,6 @@ in decreasing order of priority:
    ----- version 0.5 ----- FIRST OFFICIAL RELEASE, in sync with biblatex 0.9
    * read config file (e.g. $HOME/.biber.conf) to change default settings / DONE
    * allow to ignore certain fields through conf settings / DONE
-   * user-setting of diacritics to ignore in sorting (‘ and ʿ are currently built-in) / partly DONE
-   * same thing with prefixes (e.g. al- el- etc.) / partly DONE
-   * ==> make the nosort options affect the title
    * ==> make Biber::BibLaTeXML also take the nosort options into account
    * Implement options in LaTeX::Decode?
      ALTERNATIVELY: Upload an enhanced version of LaTeX::Decode to CPAN,

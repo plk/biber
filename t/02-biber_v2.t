@@ -26,7 +26,9 @@ angenendtsk
 angenendtsa
 stdmodel:glashow
 stdmodel:ps_sc
+hasan
 jaffe
+luzzatto
 moraux
 murray
 aristotle:rhetoric
@@ -38,16 +40,16 @@ chiu
 
 my @allkeys = sort qw{ stdmodel aristotle:poetics vazques-de-parga shore
 gonzalez averroes/bland laufenberg westfahl:frontier knuth:ct:a kastenholz
-averroes/hannes iliad malinowski sorace knuth:ct:d britannica
+averroes/hannes iliad luzzatto malinowski sorace knuth:ct:d britannica
 nietzsche:historie stdmodel:weinberg knuth:ct:b baez/article knuth:ct:e itzhaki
 jaffe padhye cicero stdmodel:salam reese averroes/hercz murray
 aristotle:physics massa aristotle:anima gillies set kowalik gaonkar springer
 geer hammond wormanx westfahl:space worman set:herrmann augustine gerhardt
-piccato hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro sigfridsson ctan
-baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms angenendt
-angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1 vangennep knuth:ct
-angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa set:yoon maron
-coleridge } ;
+piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
+sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
+angenendt angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
+vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
+set:yoon maron coleridge } ;
 
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 

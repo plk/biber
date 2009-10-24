@@ -4,7 +4,7 @@ use utf8;
 use Storable qw (dclone);
 no warnings 'utf8';
 
-use Test::More tests => 37;
+use Test::More tests => 39;
 
 use Biber;
 use Log::Log4perl qw(:easy);
@@ -57,6 +57,42 @@ my $lists4      = 'ibm2hp1zzzz';
 my $lists5      = 'ibm2hp2sun2sony';
 my $dates1      = '1979001002000000198000400808075006007019240070090192400002005019200200308020003004079003003';
 my $edtypeclass1 = 'vol0redactor0jaffe2philipp0loewenfeld2samuel1kaltenbrunner2ferdinand1ewald2paul';
+my $prefix1     = 'mm00luzzatto2moshe ḥayyim0lashon laramḥal uvo sheloshah ḥiburim meet mosheh ḥayim lutsaṭo0200000000';
+my $diacritic1  = 'mm00hasan2alī0some title0200000000';
+
+# Testing nosortprefix and nosortdiacritics
+$biber->{config}{biblatex}{global}{sorting_label} =  [
+                                                [
+                                                 {'presort'    => {}},
+                                                 {'mm'         => {}},
+                                                ],
+                                                [
+                                                 {'sortkey'    => {'final' => 1}}
+                                                ],
+                                                [
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {'year'       => {}}
+                                                ],
+                                                [
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+$biber->prepare;
+is($biber->{bib}{luzzatto}{sortstring}, $prefix1, 'Title with nosortprefix' );
+is($biber->{bib}{hasan}{sortstring}, $diacritic1, 'Title with nosortdiacritic' );
 
 # Testing editor roles
 $biber->{config}{biblatex}{global}{sorting_label} =  [

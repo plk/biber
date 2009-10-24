@@ -665,7 +665,8 @@ sub _namestring {
   my @names = @{$be->{$field}};
   my $str = '';
   my $truncated = 0;
-  ## perform truncation according to options minnames, maxnames
+
+  # perform truncation according to options minnames, maxnames
   if ( $#names + 1 > $self->getblxoption('maxnames', $citekey) ) {
     $truncated = 1;
     @names = splice(@names, 0, $self->getblxoption('minnames', $citekey) );
@@ -674,8 +675,8 @@ sub _namestring {
   foreach ( @names ) {
     $str .= $_->{prefix} . '2'
       if ( $_->{prefix} and $self->getblxoption('useprefix', $citekey ) );
-    $str .= $_->{lastname} . '2';
-    $str .= $_->{firstname} . '2' if $_->{firstname};
+    $str .= strip_nosort($_->{lastname}) . '2';
+    $str .= strip_nosort($_->{firstname}) . '2' if $_->{firstname};
     $str .= $_->{suffix} if $_->{suffix};
     $str =~ s/2\z//xms;
     $str .= '1';
@@ -694,7 +695,7 @@ sub _liststring {
   my @items = @{$be->{$field}};
   my $str = '';
   my $truncated = 0;
-  ## perform truncation according to options minitems, maxitems
+  # perform truncation according to options minitems, maxitems
   if ( $#items + 1 > $self->getblxoption('maxitems', $citekey) ) {
     $truncated = 1;
     @items = splice(@items, 0, $self->getblxoption('minitems', $citekey) );

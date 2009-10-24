@@ -35,14 +35,8 @@ All functions are exported by default.
 
 our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid
     normalize_string normalize_string_underscore latexescape array_minus
-    remove_outer getinitials tersify ucinit };
-
-######
-# These are used in the functions parsename and getinitials :
-# TODO : get them from $biber->config instead
-
-my $NOSORTDIACRITICS = $CONFIG_DEFAULT{nosortdiacritics} ;
-my $NOSORTPREFIX     = $CONFIG_DEFAULT{nosortprefix} ;
+    remove_outer getinitials tersify ucinit strip_nosort strip_nosortdiacritics
+    strip_nosortprefix};
 
 ######
 
@@ -302,14 +296,9 @@ sub parsename {
     #TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g;
     ## remove punctuation, symbols, separator and control
 
-    $namestr =~ s/\b$NOSORTPREFIX//;
-    $namestr =~ s/\b$NOSORTDIACRITICS//;
-
     $nameinitstr = "";
     $nameinitstr .= substr( $prefix, 0, 1 ) . " " if ( $usepre and $prefix );
     $nameinitstr .= $lastname;
-    $nameinitstr =~ s/\b$NOSORTPREFIX//;
-    $nameinitstr =~ s/\b$NOSORTDIACRITICS//;
     $nameinitstr .= " " . terseinitials($suffix)
         if $suffix;
     $nameinitstr .= " " . terseinitials($firstname)
@@ -359,6 +348,46 @@ sub makenameinitid {
     return normalize_string_underscore($tmp, 1);
 }
 
+
+=head2 strip_nosort
+
+Removes elements which are not to be used in sorting from a string
+
+=cut
+
+sub strip_nosort {
+  my ($string) = @_;
+  $string = strip_nosortprefix($string); # First remove prefix ...
+  $string = strip_nosortdiacritics($string); # ... then diacritics
+  return $string;
+}
+
+=head2 strip_nosortdiacritics
+
+Removes diacritics from a string
+
+=cut
+
+sub strip_nosortdiacritics {
+  my ($string) = @_;
+  my $sds = $Biber::BIBERCONFIG->{'nosortdiacritics'};
+  $string =~ s/$sds//gxms;
+  return $string;
+}
+
+=head2 strip_nosortprefix
+
+Removes prefix from a string
+
+=cut
+
+sub strip_nosortprefix {
+  my ($string) = @_;
+  my $spr = $Biber::BIBERCONFIG->{'nosortprefix'};
+  $string =~ s/\A$spr//xms;
+  return $string;
+}
+
 =head2 normalize_string
 
 Removes LaTeX macros, and all punctuation, symbols, separators and control characters,
@@ -369,6 +398,7 @@ as well as leading and trailing whitespace.
 sub normalize_string {
     my ($str, $no_decode) = @_;
     $str = latex_decode($str) unless $no_decode;
+    $str = strip_nosort($str); # strip nosort elements
     $str =~ s/\\[A-Za-z]+//g; # remove latex macros (assuming they have only ASCII letters)
     $str =~ s/[\p{P}\p{S}\p{C}]+//g; ### remove punctuation, symbols, separator and control
     $str =~ s/^\s+//;
@@ -418,13 +448,12 @@ terseinitials($str) returns the contatenated initials of all the words in $str.
 
 sub terseinitials {
     my $str = shift;
-    $str =~ s/^$NOSORTPREFIX//;
-    $str =~ s/^$NOSORTDIACRITICS//;
+    $str = strip_nosort($str); # strip nosort elements
     $str =~ s/\\[\p{L}]+\s*//g; # remove tex macros
     $str =~ s/^{(\p{L}).+}$/$1/g; # {Aaaa Bbbbb Ccccc} -> A
     $str =~ s/{\s+(\S+)\s+}//g; # Aaaaa{ de }Bbbb -> AaaaaBbbbb
     # get rid of Punctuation (except DashPunctuation), Symbol and Other characters
-    $str =~ s/[\x{2bf}\x{2018}\p{Lm}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g;
+    $str =~ s/[\p{Lm}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g;
     $str =~ s/\B\p{L}//g;
     $str =~ s/[\s\p{Pd}]+//g;
     return $str;
@@ -481,8 +510,7 @@ sub getinitials {
 
 sub _firstatom {
     my $str = shift;
-    $str =~ s/^$NOSORTPREFIX//;
-    $str =~ s/^$NOSORTDIACRITICS//;
+    $str = strip_nosort($str); # strip nosort elements
     if ($str =~ /^({
                    \\ [^\p{Ps}\p{L}] \p{L}+ # {\\.x}
                    }
