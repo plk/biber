@@ -4,10 +4,11 @@ use utf8;
 no warnings 'utf8' ;
 
 use Test::More tests => 29;
-
+use Biber;
 use Biber::Utils;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
+my $biber = Biber->new();
 
 is( normalize_string('"a, b–c: d" ', 1),  'a bc d', 'normalize_string' );
 
@@ -101,8 +102,8 @@ my $nameD =
        lastname => 'al-Ṣāliḥ', 
          prefix => undef, 
          suffix => undef, 
-     namestring => 'Ṣāliḥ, Abdallāh',
- nameinitstring => 'Ṣāliḥ_A' } ;
+     namestring => 'al-Ṣāliḥ, ʿAbdallāh',
+ nameinitstring => 'al-Ṣāliḥ_A' } ;
 
 is_deeply(parsename('al-Ṣāliḥ, ʿAbdallāh'), $nameD, 'parsename 4') ;
 
