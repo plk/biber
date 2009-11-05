@@ -433,10 +433,10 @@ sub latexescape {
   foreach my $char (@latexspecials) {
     $str =~ s/^$char/\\$char/g;
     $str =~ s/([^\\])$char/$1\\$char/g;
-  };
-    $str =~ s/\$/\\\$/g;
-    $str =~ s/\^/\\\^/g;
-  return $str
+  }
+  $str =~ s/\$/\\\$/g;
+  $str =~ s/\^/\\\^/g;
+  return $str;
 }
 
 =head2 terseinitials
@@ -468,14 +468,14 @@ array_minus(\@a, \@b) returns all elements in @a that are not in @b
 sub array_minus {
   my ($a, $b) = @_;
   my %countb = ();
-    foreach my $elem (@$b) {
-    $countb{$elem}++
-  };
-    my @result;
-    foreach my $elem (@$a) {
-        push @result, $elem unless $countb{$elem}
-    };
-    return @result
+  foreach my $elem (@$b) {
+    $countb{$elem}++;
+  }
+  my @result;
+  foreach my $elem (@$a) {
+    push @result, $elem unless $countb{$elem};
+  }
+  return @result;
 }
 
 =head2 remove_outer
@@ -488,7 +488,7 @@ sub array_minus {
 sub remove_outer {
     my $str = shift;
     $str =~ s/^{(.+)}$/$1/;
-    return $str
+    return $str;
 }
 
 =head2 getinitials
@@ -504,8 +504,8 @@ sub getinitials {
     $str =~ s/{? ( \\ [^\p{Ps}\{\}]+ ) \s+ (\p{L}) }?/\{$1\{$2\}\}/gx; # {\\x y} -> {\x{y}}
     $str =~ s/( \\ [^\p{Ps}\{\}]+ ) \s+ { /$1\{/gx; # \\macro { -> \macro{
     my @words = split /\s+/, remove_outer($str);
-    $str = join ".~", ( map { _firstatom($_) } @words );
-    return $str . "."
+    $str = join '.~', ( map { _firstatom($_) } @words );
+    return $str . '.';
 }
 
 sub _firstatom {
@@ -520,9 +520,9 @@ sub _firstatom {
                      }?
                    | { \\\p{L}+ }           # {\\macro}
                    )/x ) {
-        return $1
+        return $1;
     } else {
-        return substr($str, 0, 1)
+      return substr($str, 0, 1);
     }
 }
 
@@ -538,7 +538,7 @@ sub tersify {
     my $str = shift;
     $str =~ s/~//g;
     $str =~ s/\.//g;
-    return $str
+    return $str;
 }
 
 =head2 ucinit

@@ -1716,6 +1716,43 @@ sub sortentries {
   return;
 }
 
+=head2 sortshorthands
+
+    Sort the shorthands according to a certain sorting scheme.
+    This is only called if "sortlos" is true
+
+=cut
+
+sub sortshorthands {
+  my $self = shift;
+  my @auxshorthands = $self->shorthands;
+
+  if ( $self->config('fastsort') ) {
+    if ($self->config('locale')) {
+      my $thislocale = $self->config('locale');
+      $logger->debug("Sorting shorthands with built-in sort (with locale $thislocale) ...");
+      setlocale( LC_ALL, $thislocale ) 
+        or $logger->warn("Unavailable locale $thislocale")
+    } else {
+      $logger->debug("Sorting shorthands with built-in sort (with locale ", $ENV{LC_COLLATE}, ") ...");
+    }
+    @auxshorthands = sort { $a cmp $b } @auxshorthands;
+  } else {
+    require Unicode::Collate;
+    my $opts = $self->config('collate_options');
+    my %collopts = eval "( $opts )" or carp "Incorrect collate_options: $@";
+    my $Collator = Unicode::Collate->new( %collopts );
+    my $UCAversion = $Collator->version();
+    $logger->info("Sorting with Unicode::Collate ($opts, UCA version: $UCAversion)"); 
+    @auxshorthands = sort {
+      $Collator->cmp($a, $b)
+    } @auxshorthands;
+  }
+  $self->{shorthands} = [ @auxshorthands ];
+
+  return;
+}
+
 =head2 prepare
 
     Post-process and sort all entries before writing the bbl output.
@@ -1801,6 +1838,7 @@ EOF
         $BBL .= $self->_print_biblatex_entry($k);
     }
     if ( $self->getblxoption('sortlos') and $self->shorthands ) {
+        $self->sortshorthands;
         $BBL .= "\\lossort\n";
         foreach my $sh ($self->shorthands) {
             $BBL .= "  \\key{$sh}\n";
