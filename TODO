@@ -21,7 +21,7 @@ in decreasing order of priority:
    * provide good documentation of the BibLaTeXML schema
    * refactor OO structure: add Biber::Conf and Biber::Entry classes ?
    * fix crossref handling of reviews
-   * "<nosort>The</nosort> Title â€¦" automatically generates "sorttitle = Title â€¦, The" / DONE
+   * "<nosort>The</nosort> Title ..." automatically generates "sorttitle = Title ..., The" / DONE
    * "D[onald] E. Knuth" prints as D. E. Knuth but is sorted with Donald E. Knuth ??
    * prototype of bbx style for handling multiscript bibliographies (will probably
         require xelatex+polyglossia or lualatex+?)
