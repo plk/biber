@@ -68,7 +68,7 @@ if ( $opts->{stdout} ) {
     $output = IO::Handle->new_from_fd('STDOUT', '>');
 } else {
     $outfile = $filename;
-    $outfile =~ s/\.bib$/.xml/;
+    $outfile =~ s/(?:\.bib)?$/.xml/;
 
     if ( -f $outfile ) {
         move($outfile, "$outfile.bak") or croak "Can't move existing $outfile to $outfile.bak!: $!";
