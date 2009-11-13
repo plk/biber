@@ -285,10 +285,8 @@ venue = ( element venue { att.lang?, formattext },
          ( element venue { translated, formattext }+ )
 version = element version { text }
 volume = element volume { ( text | volume.range )}
-volume.range = ( volume.list | (volume.start, volume.end))
-volume.start = element start { text }
-volume.end = element end { text }
-volume.list = element list { element item { text }+ }
+volume.range = ( volume.list | range )
+volume.list = element list { element item { ( text | volume.range ) }+ }
 volumes = element volumes { text }
 usera = element usera { text }
 userb = element userb { text }
@@ -382,7 +380,7 @@ date.range.list = element list { element item { (date.type|date.range) }+ }
 
 ## PAGES
 pages = element pages { attlist.pages?, (text | range | pagelist ) }
-pagelist = element list { ( text | element item {text}+  ) }
+pagelist = element list { ( text | element item {( text | range )}+  ) }
 attlist.pages =
   attribute pagination { "page" | "column" | "line" | "verse" | "paragraph" | "none" }?,
   attribute bookpagination { "page" | "column" | "line" | "verse" | "paragraph" | "none" }?,
@@ -656,8 +654,12 @@ remarks = element remarks {formattext|item+}
 ## for instance a reedition.
 relatedentries = element relatedentries {
     element item {
-      attribute type { "reedition" | "reprint" | "contains" | "translation" | "reedition_of" | "reprint_of" | "part_of" | "translation_of" | text },
-      attribute id {text} }+
+      attribute type { "reedition"    | "reprint"    | "contains" | "translation" | 
+                       "reedition_of" | "reprint_of" | "part_of"  | "translation_of" | 
+                       "revised_version"    | "expanded_version"     | "review"    | "essay_review" |
+                       "revised_version_of" |  "expanded_version_of" | "review_of" | "essay_review_of" |
+                       text },
+      attribute id { text } }+
     }
 
 #########################################################
@@ -776,6 +778,7 @@ BibLaTeXML.booklet.standard.fields =
   #howpublished? & -> attribute
   note? &
   publisherinfos &
+  series? &
   chapter? &
   pages? &
   pagetotal? &
