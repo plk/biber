@@ -28,6 +28,7 @@ GetOptions(
     'useprd|p!',
     'debug|D!',
     'stdout|c!',
+    'filter|f!',
 #    'validate|V!',
 #    'schema|s=s',
 );
@@ -45,15 +46,20 @@ my $biber = Biber->new( { allentries => 1, unicodebbl => 1,
         biberdebug => $opts->{debug}, useprd => $opts->{useprd},
         inputencoding => $opts->{inputencoding} } );
 
-my $filename = $ARGV[0] or croak "No filename specified!";
+my $filename;
 
-unless ( -f $filename) {
+if ($opts->{filter}) {
+    $filename = IO::Handle->new_from_fd('STDIN', '<');
+} else {
+    $filename = $ARGV[0] or croak "No filename specified!";
+    unless ( -f $filename) {
 
-    unless ( -f "$filename.bib" ) {
-        croak "There is no file $filename !\n";
+        unless ( -f "$filename.bib" ) {
+            croak "There is no file $filename !\n";
+        }
+
+        $filename .= ".bib";
     }
-
-    $filename .= ".bib";
 }
 
 print version();
@@ -64,7 +70,7 @@ my %bibentries = $biber->bib;
 my $outfile;
 my $output;
 
-if ( $opts->{stdout} ) {
+if ( $opts->{filter} or $opts->{stdout} ) {
     $output = IO::Handle->new_from_fd('STDOUT', '>');
 } else {
     $outfile = $filename;
@@ -193,6 +199,9 @@ for my $citekey ( sort keys %bibentries ) {
     }
   };
 
+
+  ## TODO convert year month day to "date"
+
   foreach my $field (array_minus( \@standardfields, ['type', 'howpublished'] )) {
         if ($entry->{$field}) {
             if ( $field eq 'month' && $entry->{month} =~ m/[a-z]/i) {
@@ -257,14 +266,14 @@ for my $citekey ( sort keys %bibentries ) {
   $writer->endTag(); #entry
 };
 
-$writer->endTag(); #entries
+$writer->endTag() unless $opts->{filter}; #entries
 
-unless ($opts->{stdout}) {
+unless ($opts->{filter} or $opts->{stdout}) {
     print "Converted $count entries\n";
     print "Output written to $outfile\n\n";
-    close $output;
 }
 
+close $output;
 
 #if ( $opts->{validate} ) {
 #
