@@ -101,9 +101,8 @@ nosort = element nosort { formattext }
 
 romanized = attribute mode { "romanized" }, attribute convention { text }?, att.lang?
 translated = attribute mode { "translated" }, att.lang?
-uniform = attribute mode { "uniform" }, att.locale?
+uniform = attribute mode { "uniform" }, att.lang?
 att.lang = attribute xml:lang {xsd:language}
-att.locale = attribute locale { text }
 
 abstract = element abstract { att.lang?, formattext }
 addendum = element addendum { att.lang?, formattext }
@@ -384,7 +383,7 @@ date.range.list = element list { element item { (date.type|date.range) }+ }
 
 ## PAGES
 pages = element pages { attlist.pages?, (text | range | pagelist ) }
-pagelist = element list { ( text | element item {text}+  ) }
+pagelist = element list { ( text | element item {range|text}+  ) }
 attlist.pages =
   attribute pagination { "page" | "column" | "line" | "verse" | "paragraph" | "none" }?,
   attribute bookpagination { "page" | "column" | "line" | "verse" | "paragraph" | "none" }?,
@@ -766,6 +765,7 @@ BibLaTeXML.booklet.standard.fields =
   #howpublished? & -> attribute
   note? &
   publisherinfos &
+  series? &
   chapter? &
   pages? &
   pagetotal? &
