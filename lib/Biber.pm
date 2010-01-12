@@ -1507,7 +1507,7 @@ sub sortshorthands {
     } else {
       $logger->debug("Sorting shorthands with built-in sort (with locale ", $ENV{LC_COLLATE}, ") ...");
     }
-    @auxshorthands = sort { $a cmp $b } @auxshorthands;
+    @auxshorthands = sort { $self->{bib}{$a}{shorthand} cmp $self->{bib}{$b}{shorthand} } @auxshorthands;
   } else {
     require Unicode::Collate;
     my $opts = $self->config('collate_options');
@@ -1516,7 +1516,7 @@ sub sortshorthands {
     my $UCAversion = $Collator->version();
     $logger->info("Sorting with Unicode::Collate ($opts, UCA version: $UCAversion)"); 
     @auxshorthands = sort {
-      $Collator->cmp($a, $b)
+      $Collator->cmp($self->{bib}{$a}{shorthand}, $self->{bib}{$b}{shorthand})
     } @auxshorthands;
   }
   $self->{shorthands} = [ @auxshorthands ];
