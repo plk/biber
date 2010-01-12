@@ -174,8 +174,8 @@ sub parsename {
                )
              \z/xms;
 
-        $lastname =~ s/^{(.+)}$/$1/g;
-        $firstname =~ s/^{(.+)}$/$1/g;
+        if ($lastname) {$lastname =~ s/^{(.+)}$/$1/g;} else {$logger->debug("Couldn't determine Last Name for name \"$namestr\"");}
+        if ($firstname) {$firstname =~ s/^{(.+)}$/$1/g;} else {$logger->debug("Couldn't determine First Name for name \"$namestr\"");}
         $prefix =~ s/\s+$// if $prefix;
         $prefix =~ s/^{(.+)}$/$1/ if $prefix;
         $suffix =~ s/\s+$//;
@@ -202,8 +202,8 @@ sub parsename {
                )
              $/x;
 
-        $lastname =~ s/^{(.+)}$/$1/g;
-        $firstname =~ s/^{(.+)}$/$1/g;
+	if ($lastname) {$lastname =~ s/^{(.+)}$/$1/g;} else {$logger->debug("! Couldn't determine Last Name for name \"$namestr\"");}
+        if ($firstname) {$firstname =~ s/^{(.+)}$/$1/g;} else {$logger->debug("! Couldn't determine First Name for name \"$namestr\"");}
         $prefix =~ s/\s+$// if $prefix;
         $prefix =~ s/^{(.+)}$/$1/ if $prefix;
         $namestr = "";
@@ -276,8 +276,8 @@ sub parsename {
                 $/x;
         }
 
-        $lastname =~ s/^{(.+)}$/$1/;
-        $firstname =~ s/^{(.+)}$/$1/;
+        if ($lastname) {$lastname =~ s/^{(.+)}$/$1/;} else {$logger->debug("! Couldn't determine Last Name for name \"$namestr\"");}
+        if ($firstname) {$firstname =~ s/^{(.+)}$/$1/;} else {$logger->debug("! Couldn't determine First Name for name \"$namestr\"");}
         $firstname =~ s/\s+$// if $firstname;
 
         $prefix =~ s/\s+$// if $prefix;
@@ -298,7 +298,7 @@ sub parsename {
 
     $nameinitstr = "";
     $nameinitstr .= substr( $prefix, 0, 1 ) . " " if ( $usepre and $prefix );
-    $nameinitstr .= $lastname;
+    $nameinitstr .= $lastname if $lastname;
     $nameinitstr .= " " . terseinitials($suffix)
         if $suffix;
     $nameinitstr .= " " . terseinitials($firstname)
