@@ -15,6 +15,11 @@ sub _text_bibtex_parse {
 
     my ($self, $filename) = @_;
 
+    # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
+    if ($self->config('quiet')) {
+      open STDERR, '>/dev/null';
+    }
+
     my %bibentries = $self->bib;
 
     my @localkeys;
@@ -163,7 +168,12 @@ sub _text_bibtex_parse {
 
    $self->{preamble} = join( "%\n", @preamble ) if @preamble;
 
-   return @localkeys
+
+   if ($self->config('quiet')) {
+      close STDERR;
+    }
+
+  return @localkeys;
 
 }
 
