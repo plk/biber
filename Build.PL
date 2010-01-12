@@ -13,6 +13,7 @@ my $builder = Module::Build->new(
     create_makefile_pl  => 'passthrough',
     add_to_cleanup      => [ 'biber-*' ],
     requires => {
+        'Config::General' => 0,
         'Data::Dump' => 0,
         'File::Slurp'  => 0,
         'List::AllUtils' => 0,
@@ -21,6 +22,7 @@ my $builder = Module::Build->new(
         'Readonly' => 0,
         'Text::BibTeX' => 0,
         'XML::LibXML'  => 0,
+        'XML::LibXML::Simple' => 0,
         'XML::Writer'  => 0,
     },
     recommends => {
