@@ -21,6 +21,7 @@ our @EXPORT = qw{
                   $BIBLATEX_VERSION
                   $BCF_VERSION
                   $BIBER_SORT_FINAL
+                  $BIBER_SORT_NULL
                   %ALIASES
                   %NUMERICALMONTH
                   %BIBLATEXML_FORMAT_ELEMENTS
@@ -35,6 +36,7 @@ Readonly::Scalar our $BIBLATEX_VERSION => '0.8';
 Readonly::Scalar our $BCF_VERSION => '0.8f';
 
 our $BIBER_SORT_FINAL = 0;
+our $BIBER_SORT_NULL  = 0;
 
 ## Biber CONFIGURATION DEFAULTS
 our %CONFIG_DEFAULT = (
