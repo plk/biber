@@ -285,12 +285,18 @@ sub _generatesortstring {
   my ($self, $citekey, $sortscheme) = @_;
   my $be = $self->{bib}{$citekey};
   my $sortstring;
-  $BIBER_SORT_FINAL = 0; # reset sorting short-circuit
   foreach my $sortset (@{$sortscheme}) {
-    # always append $sorting_sep, even if sortfield returns the empty string.
-    # This makes it easier to read sortstring for debugging etc.
-    $sortstring .= $self->_sortset($sortset, $citekey) . $sorting_sep;
-    if ($BIBER_SORT_FINAL) { # Sortfield was specified in attributes as the final one
+    $BIBER_SORT_FINAL = 0; # reset sorting short-circuit
+    $sortstring .= $self->_sortset($sortset, $citekey);
+
+    # Only append sorting separator if this isn't a null sort string element
+    # Put another way, null elements should be completely ignored and no seperator
+    # added
+    unless ($BIBER_SORT_NULL) {
+      $sortstring .= $sorting_sep;
+    }
+    # Stop here if this sort element is specified as "final" and it's non-null
+    if ($BIBER_SORT_FINAL and not $BIBER_SORT_NULL) {
       last;
     }
   }
@@ -305,13 +311,16 @@ sub _sortset {
   foreach my $sortelement (@{$sortset}) {
     my ($sortelementname, $sortelementattributes) = %{$sortelement};
     my $string = $self->_dispatch_sorting($sortelementname, $citekey, $sortelementattributes);
+    $BIBER_SORT_NULL  = 0; # reset sorting null flag
+    if ($sortelementattributes->{final}) { # set short-circuit flag if specified
+      $BIBER_SORT_FINAL = 1;
+    }
     if ($string) { # sort returns something for this key
-      if ($sortelementattributes->{final}) { # set short-circuit flag if specified
-        $BIBER_SORT_FINAL = 1;
-      }
       return $string;
     }
   }
+  $BIBER_SORT_NULL = 1; # set null flag - need this to deal with some cases
+  return '';
 }
 
 ##############################################

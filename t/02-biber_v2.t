@@ -78,7 +78,7 @@ my $stdmodel = {
                 'fullhash' => 'GS1',
                 'namehash' => 'GS1',
                 'extrayear' => 1,
-                'sortstring' => 'mm00glashow2sheldon019610partial symmetries of weak interactions00022',
+                'sortstring' => 'mm0glashow2sheldon019610partial symmetries of weak interactions00022',
                 'crossref' => 'stdmodel:glashow',
                 'volume' => '22',
                 'labelnamename' => 'author',
@@ -229,7 +229,7 @@ my $laufenberg = {
                  'day' => '13',
                  'ignoreuniquename' => 1,
                  'namehash' => 'LX+1',
-                 'sortstring' => 'mm00laufenberg2xaver1zzzz020060elektrische einrichtung und betriebsverfahren00000',
+                 'sortstring' => 'mm0laufenberg2xaver1zzzz020060elektrische einrichtung und betriebsverfahren00000',
                  'location' => [
                                  'countryde',
                                  'countrywo'
