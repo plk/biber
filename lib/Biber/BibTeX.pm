@@ -113,8 +113,8 @@ sub _text_bibtex_parse {
                     }
                 }
                 elsif ($f eq 'crossref') { ### $entry->type ne 'set' and
-                    $Biber::crossrefkeys{lc($value)}++;
-                    $Biber::entrieswithcrossref{$key} = lc($value);
+                    $Biber::crossrefkeys{$value}++;
+                    $Biber::entrieswithcrossref{$key} = $value;
                 }
             };
 

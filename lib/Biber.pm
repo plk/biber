@@ -1104,6 +1104,10 @@ sub process_crossrefs {
         $logger->debug("   * '$citekeyx'");
         my $xref = $entrieswithcrossref{$citekeyx};
         my $type = $bibentries{$citekeyx}->{entrytype};
+	# Canonicalise these before using them
+	$citekeyx = lc($citekeyx);
+	$xref = lc($xref);
+
         if ($type eq 'review') {
                 #TODO
         }
