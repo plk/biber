@@ -1469,8 +1469,11 @@ sub sortentries {
       $logger->debug("Sorting entries with built-in sort (with locale $thislocale) ...");
       setlocale( LC_ALL, $thislocale ) 
         or $logger->warn("Unavailable locale $thislocale")
-    } else {
+    } elsif ($ENV{LC_COLLATE}) {
       $logger->debug("Sorting entries with built-in sort (with locale ", $ENV{LC_COLLATE}, ") ...");
+    }
+    else {
+      $logger->debug("Sorting entries with built-in sort (no explicit locale set)");
     }
     @auxcitekeys = sort {
       $bibentries{$a}->{sortstring} cmp $bibentries{$b}->{sortstring}
@@ -1508,8 +1511,11 @@ sub sortshorthands {
       $logger->debug("Sorting shorthands with built-in sort (with locale $thislocale) ...");
       setlocale( LC_ALL, $thislocale ) 
         or $logger->warn("Unavailable locale $thislocale")
-    } else {
+    } elsif ($ENV{LC_COLLATE}) {
       $logger->debug("Sorting shorthands with built-in sort (with locale ", $ENV{LC_COLLATE}, ") ...");
+    }
+    else {
+      $logger->debug("Sorting shorthands with built-in sort (no explicit locale set)");
     }
     @auxshorthands = sort { $self->{bib}{$a}{shorthand} cmp $self->{bib}{$b}{shorthand} } @auxshorthands;
   } else {

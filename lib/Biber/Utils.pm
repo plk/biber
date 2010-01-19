@@ -424,6 +424,7 @@ terseinitials($str) returns the contatenated initials of all the words in $str.
 
 sub terseinitials {
     my $str = shift;
+    return $str unless $str;
     $str =~ s/^$NONSORTPREFIX//;
     $str =~ s/^$NONSORTDIACRITICS//;
     $str =~ s/\\[\p{L}]+\s*//g; # remove tex macros

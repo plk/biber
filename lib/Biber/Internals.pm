@@ -33,11 +33,11 @@ sub _getnameinitials {
             if ( $a->{prefix} and $self->getblxoption('useprefix', $citekey ) ) {
                 $initstr .= terseinitials( $a->{prefix} ) 
             }
-            $initstr .= terseinitials( $a->{lastname} );
+            $initstr .= terseinitials( $a->{lastname} ) if $a->{lastname};
 
             #FIXME suffix ?
             if ( $a->{firstname} ) {
-                $initstr .= terseinitials( $a->{firstname} ) 
+                $initstr .= terseinitials( $a->{firstname} ) if $a->{firstname};
             }
         }
     }
@@ -69,11 +69,11 @@ sub _getallnameinitials {
         if ( $a->{prefix} and $self->getblxoption('useprefix', $citekey ) ) {
             $initstr .= terseinitials( $a->{prefix} ) 
         }
-        $initstr .= terseinitials( $a->{lastname} );
+        $initstr .= terseinitials( $a->{lastname} ) if $a->{lastname};
 
         #FIXME suffix ?
         if ( $a->{firstname} ) {
-            $initstr .= terseinitials( $a->{firstname} );
+            $initstr .= terseinitials( $a->{firstname} ) if $a->{firstname};
         }
     }
     return $initstr;
@@ -621,7 +621,7 @@ sub _namestring {
   foreach ( @names ) {
     $str .= $_->{prefix} . '2'
       if ( $_->{prefix} and $self->getblxoption('useprefix', $citekey ) );
-    $str .= $_->{lastname} . '2';
+    $str .= $_->{lastname} . '2' if $_->{lastname};
     $str .= $_->{firstname} . '2' if $_->{firstname};
     $str .= $_->{suffix} if $_->{suffix};
     $str =~ s/2\z//xms;
@@ -700,7 +700,7 @@ sub _defined_and_nonempty {
 sub _print_name {
   my ($self, $au, $citekey) = @_;
     my %nh  = %{$au};
-    my $ln  = $nh{lastname};
+    my $ln  = defined($nh{lastname}) ? $nh{lastname} : '';
     my $lni = getinitials($ln);
     my $fn  = "";
     $fn = $nh{firstname} if $nh{firstname};
@@ -722,7 +722,7 @@ sub _print_name {
         $fni = tersify($fni);
         $prei = tersify($prei);
         $sufi = tersify($sufi);
-    };
+    }
     return "    {{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
 }
 
