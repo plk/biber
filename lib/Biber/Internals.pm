@@ -768,7 +768,7 @@ sub _print_biblatex_entry {
     $str .= "\\entry{$origkey}{" . $be->{entrytype} . "}{$opts}\n";
 
     if ( $be->{entrytype} eq 'set' ) {
-        $str .= "  \\entryset{" . $be->{entryset} . "}\n";
+        $str .= "  \\set{" . $be->{entryset} . "}\n";
     }
 
     if ($Biber::inset_entries{$citekey}) {
