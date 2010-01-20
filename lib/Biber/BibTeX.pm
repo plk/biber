@@ -109,7 +109,7 @@ sub _text_bibtex_parse {
                     my @entrysetkeys = split /\s*,\s*/, $value;
 
                     foreach my $setkey (@entrysetkeys) {
-                        $Biber::inset_entries{$setkey} = $key;
+                        $Biber::inset_entries{lc($setkey)} = $key;
                     }
                 }
                 elsif ($f eq 'crossref') { ### $entry->type ne 'set' and
