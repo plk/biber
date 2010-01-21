@@ -204,7 +204,7 @@ if ($biber->config('outfile')) {
     $bblfile = $biber->config('outfile')
 };
 
-$biber->output_to_bbl($bblfile);
+$biber->output_to_bbl($biber->create_bbl_string, $bblfile);
 
 # display warnings/errors summary, like BibTeX
 if (defined($biber->{errors})) { # if errors, ignore warnings
