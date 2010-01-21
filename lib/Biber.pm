@@ -1851,6 +1851,8 @@ sub create_bbl_string_body {
     $BBL .= "\\preamble{%\n" . $self->{preamble} . "%\n}\n" 
         if $self->{preamble};
 
+    # We rely on the order of this array for the order of the .bbl
+    # and therefore the .bib
     foreach my $k (@auxcitekeys) {
         ## skip crossrefkeys (those that are directly cited or 
         #  crossref'd >= mincrossrefs were previously removed)
