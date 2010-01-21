@@ -29,106 +29,9 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
 $biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
 $biber->prepare;
 
-my $sc1 = q|\entry{L2}{article}{}
-  \name{author}{1}{%
-    {{Britherthwaite}{B.}{Brian}{B.}{}{}{}{}}%
-  }
-  \list{publisher}{1}{%
-    {British Bulldog Press}%
-  }
-  \list{location}{1}{%
-    {Bridlington}%
-  }
-  \strng{namehash}{BB1}
-  \strng{fullhash}{BB1}
-  \field{sortinit}{B}
-  \count{uniquename}{0}
-  \field{title}{Best Barnacled Boat Bottoms}
-  \field{year}{2004}
-\endentry
 
-\entry{L1}{article}{}
-  \name{author}{1}{%
-    {{Adamson}{A.}{Aaron}{A.}{}{}{}{}}%
-  }
-  \list{publisher}{1}{%
-    {Aardvark Press}%
-  }
-  \list{location}{1}{%
-    {Arlington Press}%
-  }
-  \strng{namehash}{AA1}
-  \strng{fullhash}{AA1}
-  \field{sortinit}{A}
-  \count{uniquename}{0}
-  \field{title}{Anarchic Ambidexstrous Anomalies}
-  \field{year}{1995}
-\endentry
+is_deeply([$biber->citekeys] , ['l2','l1','l4','l3','l5'], 'citeorder');
 
-\entry{L4}{book}{}
-  \name{author}{2}{%
-    {{Ditherington}{D.}{Derek}{D.}{}{}{}{}}%
-    {{Dumpton}{D.}{David}{D.}{}{}{}{}}%
-  }
-  \list{publisher}{2}{%
-    {Dright}%
-    {Drought Press}%
-  }
-  \list{location}{1}{%
-    {Dunbar}%
-  }
-  \strng{namehash}{DDDD1}
-  \strng{fullhash}{DDDD1}
-  \field{sortinit}{D}
-  \count{uniquename}{0}
-  \field{title}{Dangerous Dames}
-  \field{subtitle}{Don't Dally Dude!}
-  \field{year}{2003}
-\endentry
-
-\entry{L3}{article}{}
-  \name{author}{1}{%
-    {{Clumberton}{C.}{Clive}{C.}{}{}{}{}}%
-  }
-  \list{publisher}{2}{%
-    {Clapp}%
-    {Clopp Press}%
-  }
-  \list{location}{1}{%
-    {Cambridge}%
-  }
-  \strng{namehash}{CC1}
-  \strng{fullhash}{CC1}
-  \field{sortinit}{C}
-  \count{uniquename}{0}
-  \field{title}{Clumsy Cultural Caveats}
-  \field{subtitle}{Counter-cultural Concepts}
-  \field{year}{1914}
-\endentry
-
-\entry{L5}{book}{}
-  \name{author}{1}{%
-    {{Ethoxon}{E.}{Edward~E.}{E.~E.}{}{}{}{}}%
-  }
-  \list{publisher}{1}{%
-    {Ethical Encouragement Press}%
-  }
-  \list{location}{1}{%
-    {Edinburgh}%
-  }
-  \strng{namehash}{EEE1}
-  \strng{fullhash}{EEE1}
-  \field{sortinit}{E}
-  \count{uniquename}{0}
-  \field{title}{Eating Evil Enemies}
-  \field{year}{2007}
-\endentry
-
-\endinput
-
-|;
-
-is(${$biber->create_bbl_string_body} , $sc1, 'citeorder');
 
 
 my $so1 = [
@@ -164,14 +67,6 @@ my $so1 = [
             {'title'       => {}}
            ],
           ];
-
-
-
-
-# is( $biber->_print_biblatex_entry('l4'), $sc3, '\alphaothers set by "and others"');
-# is( $biber->_print_biblatex_entry('l1'), $sc4, '2-pass - labelalpha after title');
-# is( $biber->_print_biblatex_entry('l2'), $sc5, '2-pass - labelalpha after title');
-# is( $biber->_print_biblatex_entry('l3'), $sc6, '2-pass - labelalpha after title');
 
 
 unlink "$bibfile.utf8";
