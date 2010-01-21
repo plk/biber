@@ -1783,38 +1783,32 @@ sub prepare {
     return;
 }
 
-=head2 output_to_bbl
+=head2 create_bbl_string
 
-    $biber->output_to_bbl("output.bbl");
+    $biber->create_bbl_string()
 
-    Write the bbl file for biblatex.
+    Create the .bbl file contents in a string ref
+    This is separate from the output to file so that
+    the string can be used for debugging and tests.
 
 =cut
 
-#=====================================================
-# OUTPUT .BBL FILE FOR BIBLATEX
-#=====================================================
-
-sub output_to_bbl {
+sub create_bbl_string {
     my $self = shift;
-    my $bblfile = shift;
-    my @auxcitekeys = $self->citekeys;
+    my $BBL = ${$self->create_bbl_string_head} . ${$self->create_bbl_string_body};
+    return \$BBL;
+}
 
-    $logger->debug("Preparing final output...");
+=head2 create_bbl_string_head
 
-    my $mode;
+    $biber->create_bbl_string_head()
 
-    if ( $self->config('bibencoding') and ! $self->config('unicodebbl') ) {
-        $mode = ':encoding(' . $self->config('bibencoding') . ')';
-    } else {
-        $mode = ":utf8";
-    };
+    Create the .bbl file contents header
 
-    my $BBLFILE = IO::File->new($bblfile, ">$mode")
-      or $logger->logcroak("Failed to open $bblfile : $!");
+=cut
 
-    # $BBLFILE->binmode(':utf8') if $self->config('unicodebbl');
-
+sub create_bbl_string_head {
+    my $self = shift;
     my $ctrlver = $self->getblxoption('controlversion');
     my $BBL = <<"EOF";
 % \$ biblatex auxiliary file \$
@@ -1837,12 +1831,28 @@ sub output_to_bbl {
 \\endgroup
 
 EOF
+    return \$BBL;
+}
 
-    $BBL .= "\\preamble{%\n" . $self->{preamble} . "%\n}\n"
+=head2 create_bbl_string_body
+
+    $biber->create_bbl_string_body()
+
+    Create the .bbl file body contents in a string ref
+    the string can be used for debugging and tests.
+
+=cut
+
+sub create_bbl_string_body {
+    my $self = shift;
+    my @auxcitekeys = $self->citekeys;
+    my $BBL = '';
+
+    $BBL .= "\\preamble{%\n" . $self->{preamble} . "%\n}\n" 
         if $self->{preamble};
 
     foreach my $k (@auxcitekeys) {
-        ## skip crossrefkeys (those that are directly cited or
+        ## skip crossrefkeys (those that are directly cited or 
         #  crossref'd >= mincrossrefs were previously removed)
         next if ( $crossrefkeys{$k} );
         $BBL .= $self->_print_biblatex_entry($k);
@@ -1855,18 +1865,50 @@ EOF
         }
         $BBL .= "\\endlossort\n";
     }
-    $BBL .= "\\endinput\n";
+    $BBL .= "\\endinput\n\n";
 
 #    if ( $self->config('bibencoding') and ! $self->config('unicodebbl') ) {
-#        $BBL = encode($self->config('bibencoding'), $BBL)
+#        $BBL = encode($self->config('bibencoding'), $BBL) 
 #    };
 
+    return \$BBL;
+}
 
-    print $BBLFILE $BBL or $logger->logcroak("Failure to write to $bblfile: $!");
+
+=head2 output_to_bbl
+
+    $biber->output_to_bbl($ref_to_bbl_string, $file_name.bbl);
+
+    Write the bbl file for biblatex.
+
+=cut
+
+sub output_to_bbl {
+    my $self = shift;
+    my $bblstring = shift;
+    my $bblfile = shift;
+
+    $logger->debug("Preparing final output...");
+
+    my $mode;
+
+    if ( $self->config('bibencoding') and ! $self->config('unicodebbl') ) {
+      $mode = ':encoding(' . $self->config('bibencoding') . ')';
+    } else {
+      $mode = ":utf8";
+    }
+
+    my $BBLFILE = IO::File->new($bblfile, ">$mode") 
+      or $logger->logcroak("Failed to open $bblfile : $!");
+
+    # $BBLFILE->binmode(':utf8') if $self->config('unicodebbl');
+
+    print $BBLFILE $$bblstring or $logger->logcroak("Failure to write to $bblfile: $!");
     $logger->info("Output to $bblfile");
     close $BBLFILE or $logger->logcroak("Failure to close $bblfile: $!");
-    return
+    return;
 }
+
 
 =head2 _filedump and _stringdump
 
