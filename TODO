@@ -7,7 +7,11 @@ in decreasing order of priority:
    * Implement options in LaTeX::Decode?
      ALTERNATIVELY: Upload an enhanced version of LaTeX::Decode to CPAN,
      and remove it from the Biber distribution.
+   * Improve bib2biblatexml:
+     - add print_biblatexml method to Biber::Internals and use it
+     - add support for latest features in biblatexml-ml schema
    ----------
+   * option --output-directory (https://sourceforge.net/support/tracker.php?aid=2876903)
    * add validation mechanism for options and config (untaint data),
      probably with Params::Validate
    * validate bibtex data with Text::Bibtex::Structure (optional)?
@@ -17,6 +21,6 @@ in decreasing order of priority:
    * fix crossref handling of reviews
    * "D[onald] E. Knuth" prints as D. E. Knuth but is sorted with Donald E. Knuth ??
    * prototype of bbx style for handling multiscript bibliographies (will probably
-        require xelatex+polyglossia or lualatex+?)
+        require xelatex+polyglossia or lualatex+(some-babel-equivalent)?)
    * PerlTeX integration ?
    * ...
