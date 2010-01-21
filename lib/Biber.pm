@@ -300,6 +300,9 @@ sub parse_auxfile {
         unless $self->config('allentries') ;
     
     $self->{citekeys} = [ @auxcitekeys ];
+    # Preserve the original cite order for citeorder sort
+    $self->{orig_order_citekeys} = [ @auxcitekeys ];
+
 
     return;
 }
@@ -466,8 +469,12 @@ sub parse_ctrlfile {
     }
 
     $self->{config}{biblatex}{global}{labelname} = ['shortauthor', 'author', 'shorteditor', 'editor', 'translator']; # set default 
-    my $sorting = ($self->{config}{biblatex}{global}{sorting_label} or '1');
-    if ($sorting == 1) { # nty
+    my $sorting = defined($self->{config}{biblatex}{global}{sorting_label}) ?
+      $self->{config}{biblatex}{global}{sorting_label} : '1';
+    if ($sorting == 0) { # none is a special case
+      $self->{config}{biblatex}{global}{sorting_label} = [ [ {'citeorder' => {}} ] ];
+    } 
+    elsif ($sorting == 1) { # nty
       $self->{config}{biblatex}{global}{sorting_label} = [
                                                     [
                                                      {'presort'    => {}},
