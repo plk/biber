@@ -8,6 +8,7 @@ use Log::Log4perl qw(:no_extra_logdie_message);
 use POSIX qw(strftime);
 use Biber;
 use Biber::Utils;
+use File::Spec;
 
 #Don't remove the next line!
 #<wrapper_snippet>---------------------------------
@@ -28,6 +29,7 @@ GetOptions(
     'useprd|p!',
     'bibdata|d=s',
     'outfile|O=s',
+    'output-directory=s',
     'configfile|g=s',
     'allentries|a!',
     'validate|V!',
@@ -61,6 +63,14 @@ if ($opts->{bibdata}) {
 
 if ($opts->{collate}) {
     $opts->{fastsort} = 0
+}
+
+my $outdir;
+my $biberlog = 'biber.log';
+
+if ( defined $opts->{'output-directory'} ) {
+    $outdir = $opts->{'output-directory'};
+    $biberlog = File::Spec->catfile($outdir, $biberlog);
 }
 
 my $biber = Biber->new($opts);
@@ -101,7 +111,7 @@ my $l4pconf = qq(
     log4perl.category.logfile                          = $LOGLEVEL_F, Logfile
 
     log4perl.appender.Logfile                          = Log::Log4perl::Appender::File
-    log4perl.appender.Logfile.filename                 = biber.log
+    log4perl.appender.Logfile.filename                 = $biberlog
     log4perl.appender.Logfile.mode                     = write
     log4perl.appender.Logfile.layout                   = Log::Log4perl::Layout::PatternLayout
     log4perl.appender.Logfile.layout.ConversionPattern = [%r] %F{1}:%L> %p - %m%n
@@ -133,7 +143,7 @@ $logfile->info("=== Biber version $VERSION");
 $logfile->info("=== $time_string");
 
 if ($biber->config('debug')) {
-    $screen->info('DEBUG mode: all messages are logged to "biber.log"')
+    $screen->info("DEBUG mode: all messages are logged to '$biberlog'")
 }
 
 if ( $opts->{allentries} && $opts->{bibdata} ) {
@@ -143,8 +153,15 @@ if ( $opts->{allentries} && $opts->{bibdata} ) {
 else {
     $auxfile = $ARGV[0] or croak usage();
     $auxfile .= '.aux' unless $auxfile =~ m/\.aux$/;
-    $bblfile = $auxfile;
-    $bblfile =~ s/aux$/bbl/;
+    if ($biber->config('outfile')) {
+        $bblfile = $biber->config('outfile')
+    } else {
+        $bblfile = $auxfile;
+        $bblfile =~ s/aux$/bbl/;
+    }
+    if (defined $opts->{'output-directory'}) {
+        $bblfile = File::Spec->catfile($outdir, $bblfile)
+    }
     #V2
     if ($opts->{v2}) {
       $logger->warn("** USING EXPERIMENTAL V2 OPTIONS CODE!! **");
@@ -200,10 +217,6 @@ if ($biber->config('trace')) {
                    $biber->_stringdump,
                    "\n###########################################################")
 }
-
-if ($biber->config('outfile')) {
-    $bblfile = $biber->config('outfile')
-};
 
 $biber->output_to_bbl($biber->create_bbl_string, $bblfile);
 
