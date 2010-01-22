@@ -1180,15 +1180,15 @@ sub postprocess {
     # try lc($citekey), uc($citekey) and ucinit($citekey) before giving up
     if ( !$self->{bib}{$citekey} ) {
       if ( $self->{bib}{ lc($citekey) } ) {
-	$citekey = lc($citekey);
+        $citekey = lc($citekey);
       } elsif ( $self->{bib}{ uc($citekey) } ) {
-	$citekey = uc($citekey);
+        $citekey = uc($citekey);
       } elsif ( $self->{bib}{ ucinit($citekey) } ) {
-	$citekey = ucinit($citekey);
+        $citekey = ucinit($citekey);
       } else {
-	$logger->warn("I didn't find a database entry for '$citekey'");
-	$self->{warnings}++;
-	next;
+        $logger->warn("I didn't find a database entry for '$citekey'");
+        $self->{warnings}++;
+        next;
       }
     }
 
@@ -1284,21 +1284,21 @@ sub postprocess_dates {
     if ($be->{$datetype . 'date'}) {
       my $date_re = qr|(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?|xms;
       if ($be->{$datetype . 'date'} =~ m|\A$date_re(/)?(?:$date_re)?\z|xms) {
-	$be->{$datetype . 'year'}      = $1 if $1;
-	$be->{$datetype . 'month'}     = $2 if $2;
-	$be->{$datetype . 'day'}       = $3 if $3;
-	$be->{$datetype . 'endmonth'}  = $6 if $6;
-	$be->{$datetype . 'endday'}    = $7 if $7;
-	if ($4 and $5) {	# normal range
-	  $be->{$datetype . 'endyear'} = $5;
-	} elsif ($4 and not $5) { # open ended range - endyear is defined but empty
-	  $be->{$datetype . 'endyear'} = '';
-	}
+        $be->{$datetype . 'year'}      = $1 if $1;
+        $be->{$datetype . 'month'}     = $2 if $2;
+        $be->{$datetype . 'day'}       = $3 if $3;
+        $be->{$datetype . 'endmonth'}  = $6 if $6;
+        $be->{$datetype . 'endday'}    = $7 if $7;
+        if ($4 and $5) {        # normal range
+          $be->{$datetype . 'endyear'} = $5;
+        } elsif ($4 and not $5) { # open ended range - endyear is defined but empty
+          $be->{$datetype . 'endyear'} = '';
+        }
       } else {
-	$logger->warn("Invalid format of field '" . $datetype . 'date' . "' - ignoring field in entry '$citekey'");
-	$self->{warnings}++;
-	$be->{warnings} .= "\\item Invalid format of field '" . $datetype . 'date' . "' - ignoring field\n";
-	delete $be->{$datetype . 'date'};
+        $logger->warn("Invalid format of field '" . $datetype . 'date' . "' - ignoring field in entry '$citekey'");
+        $self->{warnings}++;
+        $be->{warnings} .= "\\item Invalid format of field '" . $datetype . 'date' . "' - ignoring field\n";
+        delete $be->{$datetype . 'date'};
       }
     }
   }
@@ -1310,21 +1310,21 @@ sub postprocess_dates {
     if ($be->{$dcf}) {
       # months must be in right range
       if ($dcf =~ /\A$opt_dm month\z/xms) {
-	unless ($be->{$dcf} >= 1 and $be->{$dcf} <= 12) {
-	  $bad_format = 1;
-	}
+        unless ($be->{$dcf} >= 1 and $be->{$dcf} <= 12) {
+          $bad_format = 1;
+        }
       }
       # days must be in right range
       if ($dcf =~ /\A$opt_dm day\z/xms) {
-	unless ($be->{$dcf} >= 1 and $be->{$dcf} <= 31) {
-	  $bad_format = 1;
-	}
+        unless ($be->{$dcf} >= 1 and $be->{$dcf} <= 31) {
+          $bad_format = 1;
+        }
       }
       if ($bad_format) {
-	$logger->warn("Value out bounds for field/date component '$dcf' - ignoring in entry '$citekey'");
-	$self->{warnings}++;
-	$be->{warnings} .= "\\item Value out of bounds for field/date component '$dcf' - ignoring\n";
-	delete $be->{$dcf};
+        $logger->warn("Value out bounds for field/date component '$dcf' - ignoring in entry '$citekey'");
+        $self->{warnings}++;
+        $be->{warnings} .= "\\item Value out of bounds for field/date component '$dcf' - ignoring\n";
+        delete $be->{$dcf};
       }
     }
   }
@@ -1345,20 +1345,20 @@ sub postprocess_set_local_opts {
     foreach (@entryoptions) {
       m/^([^=]+)=?(.+)?$/;
       if ( $2 and $2 eq "false" ) {
-	$localoptions{$citekey}->{$1} = 0;
+        $localoptions{$citekey}->{$1} = 0;
       } elsif ( $2 and $2 eq "true" ) {
-	$localoptions{$citekey}->{$1} = 1;
+        $localoptions{$citekey}->{$1} = 1;
       }
       # labelname and labelyear are special and need to be array refs
       # They would not be specified as a list in an individual entry
       # since this would make no sense - in an individual entry,
       # you would want to force them to a specific field
       elsif (($1 eq 'labelyear') or ($1 eq 'labelname')) {
-	$localoptions{$citekey}->{$1} = [ $2 ];
+        $localoptions{$citekey}->{$1} = [ $2 ];
       } elsif ($2) {
-	$localoptions{$citekey}->{$1} = $2;
+        $localoptions{$citekey}->{$1} = $2;
       } else {
-	$localoptions{$citekey}->{$1} = 1;
+        $localoptions{$citekey}->{$1} = 1;
       }
     }
   }
@@ -1382,13 +1382,13 @@ sub postprocess_sets {
       $self->{warnings}++;
     }
     if ( $be->{crossref}
-	 and ( $be->{crossref} ne $entrysetkeys[0] ) ) {
+         and ( $be->{crossref} ne $entrysetkeys[0] ) ) {
 
       $logger->warn( "Problem with entry $citekey :\n"
-		     . "\tcrossref ("
-		     . $be->{crossref}
-		     . ") should be identical to the first element of the entryset"
-		   );
+                     . "\tcrossref ("
+                     . $be->{crossref}
+                     . ") should be identical to the first element of the entryset"
+                   );
       $self->{warnings}++;
       $be->{crossref} = $entrysetkeys[0];
 
@@ -1421,7 +1421,7 @@ sub postprocess_labelname {
       $lnameopt = $ln;
     }
     if ($be->{$ln}
-	and $self->getblxoption( "use$lnameopt", $citekey ) ) {
+        and $self->getblxoption( "use$lnameopt", $citekey ) ) {
       $be->{labelnamename} = $ln;
       last;
     }
@@ -1449,8 +1449,8 @@ sub postprocess_labelyear {
   if ($lyearscheme) {
     foreach my $ly ( @{$lyearscheme} ) {
       if ($be->{$ly}) {
-	$be->{labelyearname} = $ly;
-	last;
+        $be->{labelyearname} = $ly;
+        last;
       }
     }
 
@@ -1475,7 +1475,7 @@ sub postprocess_hashes {
   my $nameid;
   my $nameinitid;
   if ($be->{sortname} and ( $self->getblxoption( 'useauthor', $citekey )
-			    or $self->getblxoption( 'useeditor', $citekey ) )) {
+                            or $self->getblxoption( 'useeditor', $citekey ) )) {
     $namehash = $self->_getnameinitials( $citekey, $be->{sortname} );
     $fullhash = $self->_getallnameinitials( $citekey, $be->{sortname} );
     $nameid = makenameid( $be->{sortname} );
@@ -1488,11 +1488,11 @@ sub postprocess_hashes {
     $nameinitid = makenameinitid( $be->{author} )
       if ( $self->getblxoption( 'uniquename', $citekey ) == 2 );
   } elsif (
-	   (			# keep this? FIXME
-	    $be->{entrytype} =~ /^(collection|proceedings)/
-	    and $self->getblxoption( 'useeditor', $citekey )
-	   )
-	   and $be->{editor}
+           (                    # keep this? FIXME
+            $be->{entrytype} =~ /^(collection|proceedings)/
+            and $self->getblxoption( 'useeditor', $citekey )
+           )
+           and $be->{editor}
           ) {
     $namehash   = $self->_getnameinitials( $citekey, $be->{editor} );
     $fullhash   = $self->_getallnameinitials( $citekey, $be->{editor} );
@@ -1500,27 +1500,27 @@ sub postprocess_hashes {
     $nameinitid = makenameinitid( $be->{editor} )
       if ( $self->getblxoption( 'uniquename', $citekey ) == 2 );
   } elsif (
-	   $self->getblxoption( 'usetranslator', $citekey )
-	   and $be->{translator}
-	  ) {
+           $self->getblxoption( 'usetranslator', $citekey )
+           and $be->{translator}
+          ) {
     $namehash   = $self->_getnameinitials( $citekey, $be->{translator} );
     $fullhash   = $self->_getallnameinitials( $citekey, $be->{translator} );
     $nameid     = makenameid( $be->{translator} );
     $nameinitid = makenameinitid( $be->{translator} )
       if ( $self->getblxoption( 'uniquename', $citekey ) == 2 );
-  } else {			# initials of title
+  } else {                      # initials of title
     if ( $be->{sorttitle} ) {
-      $namehash = terseinitials( $be->{sorttitle} );
-      $fullhash = $namehash;
-      $nameid   = normalize_string_underscore( $be->{sorttitle}, 1 );
+      $namehash   = terseinitials( $be->{sorttitle} );
+      $fullhash   = $namehash;
+      $nameid     = normalize_string_underscore( $be->{sorttitle}, 1 );
       $nameinitid = $nameid
-	if ( $self->getblxoption( 'uniquename', $citekey ) == 2 );
+        if ( $self->getblxoption( 'uniquename', $citekey ) == 2 );
     } else {
       $namehash   = terseinitials( $be->{title} );
       $fullhash   = $namehash;
       $nameid     = normalize_string_underscore( $be->{title}, 1 );
       $nameinitid = $nameid
-	if ( $self->getblxoption( 'uniquename', $citekey ) == 2 );
+        if ( $self->getblxoption( 'uniquename', $citekey ) == 2 );
     }
   }
 
@@ -1547,47 +1547,46 @@ sub postprocess_hashes {
   $seennamehash{$fullhash}++;
 
   my $lname = $be->{labelnamename};
-  {		 # Keep these variables scoped over the new few blocks
+  {                   # Keep these variables scoped over the new few blocks
     my $lastname;
     my $namestring;
     my $singlename;
 
     if ($lname) {
       if ( $lname =~ m/\Ashort/xms ) { # short* fields are just strings, not complex data
-	$lastname   = $be->{$lname};
-	$namestring = $be->{$lname};
-	$singlename = 1;
+        $lastname   = $be->{$lname};
+        $namestring = $be->{$lname};
+        $singlename = 1;
       } else {
-	$lastname   = $be->{$lname}->[0]->{lastname};
-	$namestring = $be->{$lname}->[0]->{nameinitstring};
-	$singlename = scalar @{ $be->{$lname} };
+        $lastname   = $be->{$lname}->[0]->{lastname};
+        $namestring = $be->{$lname}->[0]->{nameinitstring};
+        $singlename = scalar @{ $be->{$lname} };
       }
     }
 
     if ($lname and
-	$self->getblxoption( 'uniquename', $citekey ) and
-	$singlename == 1 ) {
+        $self->getblxoption( 'uniquename', $citekey ) and
+        $singlename == 1 ) {
 
       if ( !$uniquenamecount{$lastname}{$namehash} ) {
-	if ( $uniquenamecount{$lastname} ) {
-	  $uniquenamecount{$lastname}{$namehash} = 1;
-	} else {
-	  $uniquenamecount{$lastname} = { $namehash => 1 };
-	}
+        if ( $uniquenamecount{$lastname} ) {
+          $uniquenamecount{$lastname}{$namehash} = 1;
+        } else {
+          $uniquenamecount{$lastname} = { $namehash => 1 };
+        }
       }
 
       if ( !$uniquenamecount{$namestring}{$namehash} ) {
-	if ( $uniquenamecount{$namestring} ) {
-	  $uniquenamecount{$namestring}{$namehash} = 1;
-	} else {
-	  $uniquenamecount{$namestring} = { $namehash => 1 };
-	}
+        if ( $uniquenamecount{$namestring} ) {
+          $uniquenamecount{$namestring}{$namehash} = 1;
+        } else {
+          $uniquenamecount{$namestring} = { $namehash => 1 };
+        }
       }
     } else {
       $be->{ignoreuniquename} = 1;
     }
   }
-
 }
 
 =head2 postprocess_authoryear
@@ -1625,18 +1624,18 @@ sub postprocess_labelalpha {
       $sortlabel = $label = $be->{shorthand};
     } else {
       if ( $be->{label} ) {
-	$sortlabel = $label = $be->{label};
+        $sortlabel = $label = $be->{label};
       } elsif ( $be->{labelnamename} and $be->{ $be->{labelnamename} } ) {
-	( $label, $sortlabel ) =
-	  @{ $self->_getlabel( $citekey, $be->{labelnamename} ) };
+        ( $label, $sortlabel ) =
+          @{ $self->_getlabel( $citekey, $be->{labelnamename} ) };
       } else {
-	$sortlabel = $label = '';
+        $sortlabel = $label = '';
       }
       my $yr;
       if ( $be->{year} ) {
-	$yr = substr $be->{year}, 2, 2;
+        $yr = substr $be->{year}, 2, 2;
       } else {
-	$yr = '00';
+        $yr = '00';
       }
       $label     .= $yr;
       $sortlabel .= $yr;
@@ -1644,7 +1643,6 @@ sub postprocess_labelalpha {
     $be->{labelalpha}     = $label;
     $be->{sortlabelalpha} = $sortlabel;
   }
-
 }
 
 =head2 postprocess_shorthands
