@@ -11,7 +11,6 @@ in decreasing order of priority:
      - add print_biblatexml method to Biber::Internals and use it
      - add support for latest features in biblatexml-ml schema
    ----------
-   * option --output-directory (https://sourceforge.net/support/tracker.php?aid=2876903)
    * add validation mechanism for options and config (untaint data),
      probably with Params::Validate
    * validate bibtex data with Text::Bibtex::Structure (optional)?
