@@ -838,9 +838,12 @@ sub _print_biblatex_entry {
     }
 
     if ($Biber::inset_entries{$citekey}) {
-        ## NB should be equal to $be->{entryset} but we prefer to make it optional
-        # TODO check against $be->entryset and warn if different!
-        $str .= "  \\inset{" . $Biber::inset_entries{$citekey} . "}\n";
+      unless (lc($Biber::inset_entries{$citekey}) eq lc($be->{entryset})) {
+	$logger->warn('Key \"' . lc($citekey) . '\" thinks it is in set ' .
+		     $Biber::inset_entries{$citekey} .
+		     ' but the set is called "' . lc($be->{entryset}) . '"!');
+      }
+      $str .= "  \\inset{" . $Biber::inset_entries{$citekey} . "}\n";
     }
 
     # make labelname a copy of the right thing before output of name lists
