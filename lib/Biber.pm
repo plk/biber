@@ -756,8 +756,8 @@ sub parse_ctrlfile {
                                                      {'sortkey'    => {'final' => 1}}
                                                     ],
                                                     [
-                                                     {'sortyearD'  => {}},
-                                                     {'yearD'      => {}},
+                                                     {'sortyear'  => {'sort_direction'  => 'descending'}},
+                                                     {'year'      => {'sort_direction'  => 'descending'}},
                                                      {'9999'       => {}}
                                                     ],
                                                     [
