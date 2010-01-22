@@ -46,6 +46,7 @@ t/07-bcfvalidation_v2.t
 t/08-biblatexml.t
 t/09-biblatexml-ml.t
 t/10-sort-complex_v2.t
+t/10-sort-order_v2.t
 t/10-configfile.t
 t/pod-coverage.t
 t/pod.t
@@ -71,6 +72,8 @@ t/tdata/60-labelalpha_v2.aux
 t/tdata/60-labelalpha_v2.bcf
 t/tdata/60-sort-complex_v2.aux
 t/tdata/60-sort-complex_v2.bcf
+t/tdata/70-sort-order_v2.aux
+t/tdata/70-sort-order_v2.bcf
 t/tdata/biber.conf
 t/tdata/examples-dateformats.bib
 t/tdata/examples-extrayear.bib
@@ -78,5 +81,6 @@ t/tdata/examples-labelalpha.bib
 t/tdata/examples-names.bib
 t/tdata/examples-options.bib
 t/tdata/examples-sort.bib
+t/tdata/examples-sort-order.bib
 t/tdata/examples.bib
 t/tdata/examples.xml

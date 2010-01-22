@@ -69,11 +69,5 @@ my $so1 = [
 
 
 
-# is( $biber->_print_biblatex_entry('l4'), $sc3, '\alphaothers set by "and others"');
-# is( $biber->_print_biblatex_entry('l1'), $sc4, '2-pass - labelalpha after title');
-# is( $biber->_print_biblatex_entry('l2'), $sc5, '2-pass - labelalpha after title');
-# is( $biber->_print_biblatex_entry('l3'), $sc6, '2-pass - labelalpha after title');
-
-
 unlink "$bibfile.utf8";
 
