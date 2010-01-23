@@ -621,6 +621,10 @@ sub _sort_year {
   }
 }
 
+#========================================================
+# Utility subs used elsewhere but relying on sorting code
+#========================================================
+
 sub _get_display_mode {
   my ($self, $citekey, $field) = @_ ;
   #my $entrytype = $self->{bib}->{$citekey}->{entrytype};
@@ -629,10 +633,6 @@ sub _get_display_mode {
   # TODO TODO TODO
   return 'not(@mode)'
 }
-
-#========================================================
-# Utility subs used elsewhere but relying on sorting code
-#========================================================
 
 sub _nodecode {
   my ($self, $citekey) = @_;
@@ -777,7 +777,6 @@ sub _print_name {
     $suf = $nh{suffix} if $nh{suffix};
     my $sufi = "";
     $sufi = getinitials($suf) if $nh{suffix};
-    #FIXME The following is done by biblatex.bst, but shouldn't it be optional?
     $fn =~ s/(\p{Lu}\.)\s+/$1~/g; # J. Frank -> J.~Frank
     $fn =~ s/\s+(\p{Lu}\.)/~$1/g; # Bernard H. -> Bernard~H.
     $pre =~ s/\s/~/g if $pre; # van der -> van~der
@@ -787,7 +786,7 @@ sub _print_name {
         $fni = tersify($fni);
         $prei = tersify($prei);
         $sufi = tersify($sufi);
-    };
+    }
     return "    {{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
 }
 

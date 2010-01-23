@@ -1105,61 +1105,56 @@ sub parse_biblatexml {
 =cut
 
 sub process_crossrefs {
-    my $self = shift;
-    my %bibentries = $self->bib;
-    $logger->debug("Processing crossrefs for keys:");
-    foreach my $citekeyx (keys %entrieswithcrossref) {
-        $logger->debug("   * '$citekeyx'");
-        my $xref = $entrieswithcrossref{$citekeyx};
-        my $type = $bibentries{$citekeyx}->{entrytype};
-	# Canonicalise these before using them
-	$citekeyx = lc($citekeyx);
-	$xref = lc($xref);
+  my $self = shift;
+  my %bibentries = $self->bib;
+  $logger->debug("Processing crossrefs for keys:");
+  foreach my $citekeyx (keys %entrieswithcrossref) {
+    $logger->debug("   * '$citekeyx'");
+    my $xref = $entrieswithcrossref{$citekeyx};
+    my $type = $bibentries{$citekeyx}->{entrytype};
+    # Canonicalise these before using them
+    $citekeyx = lc($citekeyx);
+    $xref = lc($xref);
 
-        if ($type eq 'review') {
-                #TODO
+    if ($type =~ /\Ain(proceedings|collection|book)\z/xms) {
+      # inherit all that is undefined, except title etc
+      foreach my $field (keys %{$bibentries{$xref}}) {
+        next if $field =~ /title/;
+        if (! $bibentries{$citekeyx}->{$field}) {
+          $bibentries{$citekeyx}->{$field} = $bibentries{$xref}->{$field};
         }
-        if ($type =~ /^in(proceedings|collection|book)$/) {
-            # inherit all that is undefined, except title etc
-            foreach my $field (keys %{$bibentries{$xref}}) {
-                next if $field =~ /title/;
-                if (! $bibentries{$citekeyx}->{$field}) {
-                    $bibentries{$citekeyx}->{$field} = $bibentries{$xref}->{$field};
-                }
-            }
-            # inherit title etc as booktitle etc
-            $bibentries{$citekeyx}->{booktitle} = $bibentries{$xref}->{title};
-            if ($bibentries{$xref}->{titleaddon}) {
-                $bibentries{$citekeyx}->{booktitleaddon} = $bibentries{$xref}->{titleaddon}
-            }
-            if ($bibentries{$xref}->{subtitle}) {
-                $bibentries{$citekeyx}->{booksubtitle} = $bibentries{$xref}->{subtitle}
-            }
-        }
-        else { # inherits all
-            foreach my $field (keys %{$bibentries{$xref}}) {
-                if (! $bibentries{$citekeyx}->{$field}) {
-                    $bibentries{$citekeyx}->{$field} = $bibentries{$xref}->{$field};
-                }
-            }
-       }
-       if ($type eq 'inbook') {
-            $bibentries{$citekeyx}->{bookauthor} = $bibentries{$xref}->{author}
-        }
-        # MORE?
-        #$bibentries{$citekeyx}->{} = $bibentries{$xref}->{}
+      }
+      # inherit title etc as booktitle etc
+      $bibentries{$citekeyx}->{booktitle} = $bibentries{$xref}->{title};
+      if ($bibentries{$xref}->{titleaddon}) {
+        $bibentries{$citekeyx}->{booktitleaddon} = $bibentries{$xref}->{titleaddon}
+      }
+      if ($bibentries{$xref}->{subtitle}) {
+        $bibentries{$citekeyx}->{booksubtitle} = $bibentries{$xref}->{subtitle}
+      }
     }
-
-    # we make sure that crossrefs that are directly cited or cross-referenced
-    # at least $mincrossrefs times are included in the bibliography
-    foreach my $k ( keys %crossrefkeys ) {
-        if ( $seenkeys{$k} || $crossrefkeys{$k} >= $self->config('mincrossrefs') ) {
-            $logger->debug("Removing unneeded crossrefkey $k");
-            delete $crossrefkeys{$k};
-        }
+    elsif ($type eq 'inbook') {
+      $bibentries{$citekeyx}->{bookauthor} = $bibentries{$xref}->{author}
     }
+    else { # inherits all
+      foreach my $field (keys %{$bibentries{$xref}}) {
+        if (! $bibentries{$citekeyx}->{$field}) {
+          $bibentries{$citekeyx}->{$field} = $bibentries{$xref}->{$field};
+        }
+      }
+    }
+  }
 
-    $self->{bib} = { %bibentries }
+  # we make sure that crossrefs that are directly cited or cross-referenced
+  # at least $mincrossrefs times are included in the bibliography
+  foreach my $k ( keys %crossrefkeys ) {
+    if ( $seenkeys{$k} || $crossrefkeys{$k} >= $self->config('mincrossrefs') ) {
+      $logger->debug("Removing unneeded crossrefkey $k");
+      delete $crossrefkeys{$k};
+    }
+  }
+
+  $self->{bib} = { %bibentries }
 }
 
 =head2 postprocess
