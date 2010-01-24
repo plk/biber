@@ -274,6 +274,8 @@ Options:
   --useprd|-p            Parse with Parse::RecDescent instead of Text::BibTeX.
   --bibdata|-d <files>   Use <files> as bibliography databases (comma separated list).
   --outfile|-O <file>    Output to <file> instead of <basename>.bbl
+  --output-directory <d> Files (bbl and log) are output to directory <d> instead
+                         of the current directory.
   --configfile|-g <file> Use <file> as configuration file for Biber.
                          The default is the first file found among
                          "biber.conf" in the current directory, "\$HOME/.biber.conf",
