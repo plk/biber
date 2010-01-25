@@ -77,25 +77,25 @@ my $biber = Biber->new($opts);
 
 # Setting the logging level of Log::Log4perl
 my $LOGLEVEL;
-if ($biber->config('trace')) {
+if (Biber::Config->getoption('trace')) {
     $LOGLEVEL = 'TRACE'
-} elsif ($biber->config('debug')) {
+} elsif (Biber::Config->getoption('debug')) {
     $LOGLEVEL = 'DEBUG'
-} elsif ($biber->config('quiet')) {
+} elsif (Biber::Config->getoption('quiet')) {
     $LOGLEVEL = 'ERROR'
 } else {
     $LOGLEVEL = 'INFO'
 }
 
 my $LOGLEVEL_F;
-if ($biber->config('nolog')) {
+if (Biber::Config->getoption('nolog')) {
     $LOGLEVEL_F = 'OFF'
 } else {
     $LOGLEVEL_F = $LOGLEVEL
 }
 
 my $LOGLEVEL_S;
-if ($biber->config('onlylog')) {
+if (Biber::Config->getoption('onlylog')) {
     $LOGLEVEL_S = 'OFF'
 } else {
     $LOGLEVEL_S = $LOGLEVEL
@@ -142,7 +142,7 @@ my $time_string = strftime "%a %b %e, %Y, %H:%M:%S", localtime;
 $logfile->info("=== Biber version $VERSION");
 $logfile->info("=== $time_string");
 
-if ($biber->config('debug')) {
+if (Biber::Config->getoption('debug')) {
     $screen->info("DEBUG mode: all messages are logged to '$biberlog'")
 }
 
@@ -153,8 +153,8 @@ if ( $opts->{allentries} && $opts->{bibdata} ) {
 else {
     $auxfile = $ARGV[0] or croak usage();
     $auxfile .= '.aux' unless $auxfile =~ m/\.aux$/;
-    if ($biber->config('outfile')) {
-        $bblfile = $biber->config('outfile')
+    if (Biber::Config->getoption('outfile')) {
+        $bblfile = Biber::Config->getoption('outfile')
     } else {
         $bblfile = $auxfile;
         $bblfile =~ s/aux$/bbl/;
@@ -172,7 +172,7 @@ else {
     }
 }
 
-if ($biber->config('trace')) {
+if (Biber::Config->getoption('trace')) {
     $logger->trace("\n###########################################################\n",
                      "############# Dump of initial biber object: ###############\n",
                    $biber->_stringdump,
@@ -183,7 +183,7 @@ if ($biber->config('trace')) {
 # Parse/query database
 #=====================================================
 
-foreach my $bib (@{ $biber->config('bibdata') }) {
+foreach my $bib (@{ Biber::Config->getoption('bibdata') }) {
 
     # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
     $bib = bibfind($bib);
@@ -202,7 +202,7 @@ foreach my $bib (@{ $biber->config('bibdata') }) {
     }
 }
 
-if ($biber->config('trace')) {
+if (Biber::Config->getoption('trace')) {
     $logger->trace("\n###########################################################\n",
                      "############# Dump of post-parse biber object: ############\n",
                    $biber->_stringdump,
@@ -211,7 +211,7 @@ if ($biber->config('trace')) {
 
 $biber->prepare;
 
-if ($biber->config('trace')) {
+if (Biber::Config->getoption('trace')) {
     $logger->trace("\n###########################################################\n",
                      "############# Dump of final biber object: #################\n",
                    $biber->_stringdump,

@@ -13,10 +13,10 @@ chdir("t/tdata");
 
 my $bibfile;
 my $biber = Biber->new;
-$biber->{config}{fastsort} = 1;
-$biber->{config}{locale} = 'C';
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('locale', 'C');
 $biber->parse_auxfile_v2('01-names_v2.aux');
-$bibfile = $biber->config('bibdata')->[0] . '.bib';
+$bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 $biber->prepare;
 

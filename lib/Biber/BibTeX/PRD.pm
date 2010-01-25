@@ -22,14 +22,14 @@ sub _bibtex_prd_parse {
     my @localkeys;
 
     ## TODO
-    # $::RD_TRACE = 1 if $self->config('parserdebug');
+    # $::RD_TRACE = 1 if Biber::Config->getoption('parserdebug');
 
     undef $/;
 
     my $mode = "";
 
-    if ( $self->config('inputencoding') && ! $self->config('unicodebbl') ) {
-        $mode = ':encoding(' . $self->config('inputencoding') . ')';
+    if ( Biber::Config->getoption('inputencoding') && ! Biber::Config->getoption('unicodebbl') ) {
+        $mode = ':encoding(' . Biber::Config->getoption('inputencoding') . ')';
     } else {
         $mode = ":utf8";
     };
@@ -125,11 +125,11 @@ sub _bibtex_prd_parse {
 
                 @tmp = map { _restore_and($_) } @tmp;
 
-                if ($Biber::is_name_entry{$ets}) {
+                if (Biber::Config->getstate('is_name_entry', $ets)) {
                   # This is a special case - we need to get the option value even though the passed
                   # $self object isn't fully built yet so getblxoption() can't ask $self for the
                   # $entrytype for $key. So, we have to pass it explicitly.
-                  my $useprefix = $self->getblxoption('useprefix', $key, $bibentries{$key}{entrytype});
+                  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentries{$key}{entrytype}, $key);
 
                     @tmp = map { parsename( $_ , {useprefix => $useprefix}) } @tmp;
 
@@ -148,7 +148,7 @@ sub _bibtex_prd_parse {
             my @entrysetkeys = split /\s*,\s*/, $bibentries{$key}->{'entryset'};
 
             foreach my $setkey (@entrysetkeys) {
-                $Biber::inset_entries{$setkey} = $key;
+                Biber::Config->setstate('inset_entries', $setkey, $key);
             }
         }
 
@@ -156,8 +156,8 @@ sub _bibtex_prd_parse {
 
             my $crkey = $bibentries{$key}->{'crossref'};
 
-            $Biber::crossrefkeys{$crkey}++;
-            $Biber::entrieswithcrossref{$key} = $crkey;
+            Biber::Config->incrstate('crossrefkeys', $crkey);
+            Biber::Config->setstate('entrieswithcrossref', $key, $crkey);
 
         };
     }

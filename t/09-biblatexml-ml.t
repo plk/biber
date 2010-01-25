@@ -7,17 +7,18 @@ use Biber;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
-my $opts = { displaymode => 'romanized', locale => 'fr_FR.utf8' } ;
+my $opts = {locale => 'fr_FR.utf8' } ;
 my $biber = Biber->new($opts);
+Biber::Config->set_displaymode('romanized');
 
 chdir("t/tdata") ;
 $biber->parse_auxfile('examples-ml.aux');
-my $bibfile = $biber->config('bibdata')->[0] ;
-$Biber::localoptions{"BulgakovRozenfeld:1983"}{displaymode} = 'original' ;
-$Biber::localoptions{"KiyosiFestschrift"}{displaymode} = 'translated' ;
-$Biber::localoptions{"DjebbarAballagh:2001"}{displaymode} = 'translated' ;
-is($biber->get_displaymode('Ani:1972')->[0], 'romanized', 'getdisplaymode 1') ;
-is($biber->get_displaymode('KiyosiFestschrift')->[0], 'translated', 'getdisplaymode 2') ;
+my $bibfile = Biber::Config->getoption('bibdata')->[0] ;
+Biber::Config->set_displaymode('original', '', '', 'BulgakovRozenfeld:1983');
+Biber::Config->set_displaymode('translated', undef, undef, 'KiyosiFestschrift');
+Biber::Config->set_displaymode('translated', undef, undef, 'DjebbarAballagh:2001');
+is(Biber::Config->get_displaymode('article', undef, 'Ani:1972')->[0], 'romanized', 'getdisplaymode 1') ;
+is(Biber::Config->get_displaymode('collection', undef, 'KiyosiFestschrift')->[0], 'translated', 'getdisplaymode 2') ;
 
 $biber->parse_biblatexml($bibfile) ;
 

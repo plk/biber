@@ -14,10 +14,10 @@ chdir("t/tdata");
 
 my $bibfile;
 my $biber = Biber->new;
-$biber->{config}{fastsort} = 1;
-$biber->{config}{locale} = 'C';
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('locale', 'C');
 $biber->parse_auxfile_v2("50-style-authoryear_v2.aux");
-$bibfile = $biber->config('bibdata')->[0] . '.bib';
+$bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 
 my $yearoff1    = 'mm0knuth2donald e0computers typesetting0198400000';
@@ -61,7 +61,7 @@ my $prefix1     = 'mm0luzzatto2moshe ḥayyim0lashon laramḥal uvo sheloshah �
 my $diacritic1  = 'mm0hasan2alī0some title0200000000';
 
 # Testing nosortprefix and nosortdiacritics
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -88,14 +88,15 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+
 $biber->prepare;
 is($biber->{bib}{luzzatto}{sortstring}, $prefix1, 'Title with nosortprefix' );
 is($biber->{bib}{hasan}{sortstring}, $diacritic1, 'Title with nosortdiacritic' );
 
 # Testing editor roles
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'editoraclass'     => {}},
                                                 ],
@@ -108,14 +109,15 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'editora'     => {}},
                                                 ],
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+
 $biber->prepare;
 is($biber->{bib}{jaffe}{sortstring}, $edtypeclass1, 'Editor type/class' );
 
 
 # Testing sorting using various date fields
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'year'       => {}},
                                                 ],
@@ -192,70 +194,76 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                 [
                                                  {'urlday'   => {}}
                                                 ],
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+
 $biber->prepare;
 is($biber->{bib}{moraux}{sortstring}, $dates1, 'Very contrived but thorough test of date sorting' );
 
 # Testing max/minITEMS with sorting using list fields
 # publisher
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'publisher'    => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+
 $biber->prepare;
 is($biber->{bib}{augustine}{sortstring}, $lists1, 'max/minitems test 1 (publisher)' );
 
 # location
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'location'    => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+
 $biber->prepare;
 is($biber->{bib}{cotton}{sortstring}, $lists2, 'max/minitems test 2 (location)' );
 
 
 # institution
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'institution'    => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+
 $biber->prepare;
 is($biber->{bib}{chiu}{sortstring}, $lists3, 'max/minitems test 3 (institution)' );
 
 # institution with minitems=2
-$biber->{config}{biblatex}{global}{minitems} = 2;
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('minitems', 2);
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'institution'    => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+
 $biber->prepare;
 is($biber->{bib}{chiu}{sortstring}, $lists4, 'max/minitems test 4 (institution - minitems=2)' );
 
 # institution with maxitems=4, minitems=3
-$biber->{config}{biblatex}{global}{maxitems} = 4;
-$biber->{config}{biblatex}{global}{minitems} = 3;
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('maxitems', 4);
+Biber::Config->setblxoption('minitems', 3);
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'institution'    => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+
 $biber->prepare;
 is($biber->{bib}{chiu}{sortstring}, $lists5, 'max/minitems test 5 (institution - maxitems=4/minitems=3)' );
 
 
 
 # nty with implicit default left, 4-digit year sort
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -282,13 +290,14 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff1, 'nty with default left offset, 4 digit year' );
 
 # nty with left, 3-digit year sort
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -316,15 +325,15 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff2, 'nty with left offset, 3 digit year' );
 
 
 # nty with left, 4-digit year sort
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -352,14 +361,14 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff3, 'nty with left offset, 4 digit year' );
 
 # nty with right, 3-digit year sort
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -387,14 +396,14 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff4, 'nty with right offset, 3 digit year' );
 
 # nty with right, 4-digit year sort
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -422,14 +431,14 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff5, 'nty with right offset, 4 digit year' );
 
 # ntyd with left, 4-digit year sort
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -458,14 +467,14 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff6, 'ntyd with left offset, 4 digit year' );
 
 # ntyd with left, 3-digit year sort
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -494,14 +503,14 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff7, 'ntyd with left offset, 3 digit year' );
 
 # ntyd with right, 4-digit year sort
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -530,14 +539,14 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff8, 'ntyd with right offset, 4 digit year' );
 
 # ntyd with right, 3-digit year sort
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -566,14 +575,14 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{'knuth:ct'}{sortstring}, $yearoff9, 'ntyd with right offset, 3 digit year' );
 
 # nty with right-padded vol
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -601,14 +610,14 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'volume'     => {pad_side => 'right'}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $vol1, 'nty with right-padded vol' );
 
 # nty with right-padded 7-char vol
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -637,14 +646,14 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                                   pad_width => 7}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $vol2, 'nty with right-padded 7-char vol' );
 
 # nty with left-padded 5-char using "a" as pad_char vol
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -674,15 +683,15 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                                   pad_char => 'a'}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $vol3, 'nty with left-padded 5-char "a" pad char vol' );
 
 
 # nty
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -710,15 +719,15 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $nty, 'basic nty sort' );
 is($biber->{bib}{angenendtsk}{sortstring}, $sk1, 'basic sortkey sort' );
 
 # nyt
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -746,14 +755,14 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $nyt, 'basic nyt sort' );
 
 # nyvt
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -781,15 +790,15 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $nyvt, 'basic nyvt sort' );
 
 # anyt with labelalpha
-$biber->{config}{biblatex}{global}{labelalpha} = 1;
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('labelalpha', 1);
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -820,12 +829,12 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'sorttitle'  => {}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $anyt_la, 'anyt sort (with labelalpha)' );
-$biber->{config}{biblatex}{global}{labelalpha} = 0;
+Biber::Config->setblxoption('labelalpha', 0);
 delete $biber->{bib}{stdmodel}{labelalpha};
 delete $biber->{bib}{stdmodel}{sortlabelalpha};
 delete $biber->{bib}{'stdmodel:glashow'}{labelalpha}; # it's a crossref so have to clear it here too
@@ -836,8 +845,8 @@ $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $anyt, 'anyt sort (without labelalpha)' );
 
 # anyvt with labelalpha
-$biber->{config}{biblatex}{global}{labelalpha} = 1;
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('labelalpha',1);
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -868,24 +877,24 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $anyvt_la, 'anyvt sort (with labelalpha)' );
 is($biber->{bib}{murray}{sortstring}, $anyvt_la2, 'anyvt sort (> maxnames=3 minnames=1, with labelalpha and alphaothers)' );
 
-$biber->{config}{biblatex}{global}{maxnames} = 2;
-$biber->{config}{biblatex}{global}{minnames} = 2;
+Biber::Config->setblxoption('maxnames', 2);
+Biber::Config->setblxoption('minnames', 2);
 $biber->prepare;
 is($biber->{bib}{murray}{sortstring}, $anyvt_la4, 'anyvt sort (> maxnames=2 minnames=2, with labelalpha and alphaothers)' );
 
-$biber->{config}{biblatex}{global}{alphaothers} = '';
-$biber->{config}{biblatex}{global}{sortalphaothers} = '';
+Biber::Config->setblxoption('alphaothers', '');
+Biber::Config->setblxoption('sortalphaothers', '');
 $biber->prepare;
 is($biber->{bib}{murray}{sortstring}, $anyvt_la3, 'anyvt sort (> maxnames=2 minnames=2,with labelalpha and without alphaothers)' );
 
-$biber->{config}{biblatex}{global}{labelalpha} = 0;
+Biber::Config->setblxoption('labelalpha', 0);
 delete $biber->{bib}{stdmodel}{labelalpha};
 delete $biber->{bib}{stdmodel}{sortlabelalpha};
 delete $biber->{bib}{'stdmodel:glashow'}{labelalpha}; # it's a crossref so have to clear it here too
@@ -898,7 +907,7 @@ $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $anyvt, 'anyvt sort (without labelalpha)' );
 
 # ynt
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -923,14 +932,14 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $ynt, 'basic ynt sort' );
 
 # ydnt
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -955,26 +964,26 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $ydnt, 'basic ydnt sort' );
-$biber->{config}{biblatex}{global}{labelalpha} = 0;
+Biber::Config->setblxoption('labelalpha', 0);
 
 # debug
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'debug'    => {}},
                                                 ],
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $debug, 'basic debug sort' );
 
 # per-type (book, ydnt)
-$biber->{config}{biblatex}{book}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -999,14 +1008,16 @@ $biber->{config}{biblatex}{book}{sorting_label} =  [
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
-                                               ];
-$biber->{config}{biblatex}{book}{sorting_final} = dclone($biber->{config}{biblatex}{book}{sorting_label});
+                                               ],
+			    'PER_TYPE',
+			    'book');
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label', 'book'), 'PER_TYPE', 'book');
 
 $biber->prepare;
 is($biber->{bib}{'aristotle:rhetoric'}{sortstring}, $pt1, 'book type ydnt sort' );
 
 # nty with modified presort and short_circuit at title
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -1034,17 +1045,17 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{'stdmodel:ps_sc'}{sortstring}, $ps_sc, 'nty with modified presort and short-circuit title' );
 
 # nty with use* all off
-$biber->{config}{biblatex}{global}{useauthor} = 0;
-$biber->{config}{biblatex}{global}{useeditor} = 0;
-$biber->{config}{biblatex}{global}{usetranslator} = 0;
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('useauthor', 0);
+Biber::Config->setblxoption('useeditor', 0);
+Biber::Config->setblxoption('usetranslator', 0);
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
                                                  {'mm'         => {}},
@@ -1072,20 +1083,20 @@ $biber->{config}{biblatex}{global}{sorting_label} =  [
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $noname, 'nty with use* all off' );
 
 # citeorder sort
 
-$biber->{config}{biblatex}{global}{sorting_label} =  [
+Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'citeorder'    => {}}
                                                 ]
-                                               ];
-$biber->{config}{biblatex}{global}{sorting_final} = dclone($biber->{config}{biblatex}{global}{sorting_label});
+                                               ]);
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 $biber->prepare;
 is($biber->{bib}{stdmodel}{sortstring}, $citeorder, 'citeorder' );
 

@@ -19,7 +19,8 @@ our @EXPORT = qw{
                   @DATERANGEFIELDS
                   @DATECOMPONENTFIELDS
                   %SKIPFIELDS
-                  %CONFIG_DEFAULT
+                  %CONFIG_DEFAULT_BIBER
+                  %CONFIG_DEFAULT_BIBLATEX
                   $BIBER_CONF_NAME
                   $BIBLATEX_VERSION
                   $BCF_VERSION
@@ -32,6 +33,7 @@ our @EXPORT = qw{
                   @BIBLATEXML_FORMATTEXT_B
                   %FIELDS_WITH_CHILDREN
                   %DISPLAYMODES
+                  $DISPLAYMODE_DEFAULT
               } ;
 
 # this is the latest <major.minor> version of biblatex.sty
@@ -49,7 +51,7 @@ our $BIBER_CONF_NAME = 'biber.conf';
 ## Biber CONFIGURATION DEFAULTS
 my $locale = $ENV{LANG} || $ENV{LC_ALL} || "en_US.utf8" ;
 
-our %CONFIG_DEFAULT = (
+our %CONFIG_DEFAULT_BIBER = (
   validate => 0,
   fastsort => 1,
   mincrossrefs =>  2,
@@ -72,49 +74,48 @@ our %CONFIG_DEFAULT = (
   nosortdiacritics => qr/[\x{2bf}\x{2018}]/,
   # Semitic (or eventually other) names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
   nosortprefix => qr/\p{L}{2}\p{Pd}/,
-  # default options for biblatex
-  # in practice these will be obtained from the control file,
-  # but we need this as a fallback, just in case,
-  # or when using the command-line options "-a -d <datafile>"
-  # without an aux file
-  biblatex => {
-      global => {
-            controlversion => undef,
-            debug => '0',
-            terseinits => '0',
-            useprefix => '0',
-            useauthor => '1',
-            useeditor => '1',
-            usetranslator => '0',
-            labelalpha => '0',
-            labelyear => [ 'year' ],
-            singletitle => '0',
-            uniquename => '0',
-            sorting => [  [  {'presort'    => []},
-                             {'mm'         => []} ],
-                          [  {'sortkey'    => ['final']}  ],
-                          [  {'sortname'   => []},
-                             {'author'     => []},
-                             {'editor'     => []},
-                             {'translator' => []},
-                             {'sorttitle'  => []},
-                             {'title'      => []}  ],
-                           [ {'sorttitle'  => []},
-                             {'title'      => []}  ],
-                           [ {'sortyear'   => []},
-                             {'year'       => []}  ],
-                           [ {'volume'     => []},
-                             {'0000'       => []}  ]
-                       ],
-            sortlos => '1',
-            maxnames => '3',
-            minnames => '1',
-            maxline => '79',
-            alphaothers  => '+',
-            labelname => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
-         }
-     }
-) ;
+);
+
+# default global options for biblatex
+# in practice these will be obtained from the control file,
+# but we need this as a fallback, just in case,
+# or when using the command-line options "-a -d <datafile>"
+# without an aux file
+our %CONFIG_DEFAULT_BIBLATEX = (
+  controlversion => undef,
+  debug => '0',
+  terseinits => '0',
+  useprefix => '0',
+  useauthor => '1',
+  useeditor => '1',
+  usetranslator => '0',
+  labelalpha => '0',
+  labelyear => [ 'year' ],
+  singletitle => '0',
+  uniquename => '0',
+  sorting => [  [  {'presort'    => []},
+                         {'mm'         => []} ],
+                      [  {'sortkey'    => ['final']}  ],
+                      [  {'sortname'   => []},
+                         {'author'     => []},
+                         {'editor'     => []},
+                         {'translator' => []},
+                         {'sorttitle'  => []},
+                         {'title'      => []}  ],
+                      [  {'sorttitle'  => []},
+                         {'title'      => []}  ],
+                      [  {'sortyear'   => []},
+                         {'year'       => []}  ],
+                      [  {'volume'     => []},
+                         {'0000'       => []}  ]
+             ],
+  sortlos => '1',
+  maxnames => '3',
+  minnames => '1',
+  maxline => '79',
+  alphaothers  => '+',
+  labelname => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
+);
 
 ### biblatex fields
 
@@ -271,6 +272,8 @@ Readonly::Hash our %DISPLAYMODES => {
   romanized => [ qw/romanized uniform translated original/ ],
   original => [ qw/original romanized uniform translated/ ]
 } ;
+
+Readonly::Scalar our $DISPLAYMODE_DEFAULT => 'uniform';
 
 1;
 

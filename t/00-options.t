@@ -9,22 +9,19 @@ use Biber;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
-
-
-
 my $biber = Biber->new();
 chdir("t/tdata") ;
 
 my $bibfile;
-$biber->{config}{fastsort} = 1;
-$biber->{config}{locale} = 'C';
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('locale', 'C');
 $biber->parse_auxfile_v2('00-options_v2.aux');
-$bibfile = $biber->config('bibdata')->[0] . '.bib';
+$bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 
-$biber->{config}{biblatex}{global}{labelyear} = [ 'year' ];
+Biber::Config->setblxoption('labelyear', [ 'year' ]);
 $biber->prepare;
-
+Biber::Config->dump;
 
 my $dmv =  [
               [
@@ -108,11 +105,11 @@ my $l2 = q|\entry{l2}{book}{usetranslator=true,labelyear=origyear,labelname=tran
 
 |;
 
-ok($biber->{config}{biblatex}{global}{uniquename} == 1, "Single-valued option") ;
-is_deeply($biber->{config}{biblatex}{global}{labelname}, [ 'author' ], "Multi-valued options");
-ok($biber->{config}{mincrossrefs} == 88, "Setting Biber options via control file");
-ok($biber->{config}{biblatex}{book}{useprefix} == 1 , "Per-type single-valued options");
-is_deeply($biber->{config}{biblatex}{book}{labelname}, $bln, "Per-type multi-valued options");
+ok(Biber::Config->getblxoption('uniquename') == 1, "Single-valued option") ;
+is_deeply(Biber::Config->getblxoption('labelname'), [ 'author' ], "Multi-valued options");
+ok(Biber::Config->getoption('mincrossrefs') == 88, "Setting Biber options via control file");
+ok(Biber::Config->getblxoption('useprefix', 'book') == 1 , "Per-type single-valued options");
+is_deeply(Biber::Config->getblxoption('labelname', 'book'), $bln, "Per-type multi-valued options");
 is($biber->{bib}{l1}{labelyearname}, 'year', 'Global labelyear setting' ) ;
 is( $biber->_print_biblatex_entry('l1'), $l1, 'Global labelyear setting - labelyear should be YEAR') ;
 is($biber->{bib}{l2}{labelyearname}, 'origyear', 'Entry-specific labelyear setting' ) ;

@@ -14,16 +14,16 @@ chdir("t/tdata");
 
 my $bibfile;
 my $biber = Biber->new;
-$biber->{config}{fastsort} = 1;
-$biber->{config}{locale} = 'C';
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('locale', 'C');
 $biber->parse_auxfile_v2('60-labelalpha_v2.aux');
-$bibfile = $biber->config('bibdata')->[0] . '.bib';
+$bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 
-$biber->{config}{biblatex}{global}{labelalpha} = 1;
-delete $biber->{config}{biblatex}{global}{labelyear};
-$biber->{config}{biblatex}{global}{maxnames} = 1;
-$biber->{config}{biblatex}{global}{minnames} = 1;
+Biber::Config->setblxoption('labelalpha', 1);
+Biber::Config->setblxoption('labelyear', undef);
+Biber::Config->setblxoption('maxnames', 1);
+Biber::Config->setblxoption('minnames', 1);
 $biber->prepare;
 
 is($biber->{bib}{l1}{sortlabelalpha}, 'Doe95', 'maxnames=1 minnames=1 entry L1 labelalpha');
@@ -43,8 +43,9 @@ is($biber->{bib}{l7}{extraalpha}, '6', 'maxnames=1 minnames=1 entry L7 extraalph
 is($biber->{bib}{l8}{sortlabelalpha}, 'Sha85', 'maxnames=1 minnames=1 entry L8 labelalpha');
 ok(! defined($biber->{bib}{l8}{extraalpha}), 'maxnames=1 minnames=1 entry L8 extraalpha');
 
-$biber->{config}{biblatex}{global}{maxnames} = 2;
-$biber->{config}{biblatex}{global}{minnames} = 1;
+Biber::Config->setblxoption('maxnames', 2);
+Biber::Config->setblxoption('minnames', 1);
+
 for (my $i=1; $i<9; $i++) {
   delete $biber->{bib}{"l$i"}{sortlabelalpha};
   delete $biber->{bib}{"l$i"}{labelalpha};
@@ -69,8 +70,10 @@ is($biber->{bib}{l7}{extraalpha}, '4', 'maxnames=2 minnames=1 entry L7 extraalph
 is($biber->{bib}{l8}{sortlabelalpha}, 'Sha85', 'maxnames=2 minnames=1 entry L8 labelalpha');
 ok(! defined($biber->{bib}{l8}{extraalpha}), 'maxnames=2 minnames=1 entry L8 extraalpha');
 
-$biber->{config}{biblatex}{global}{maxnames} = 2;
-$biber->{config}{biblatex}{global}{minnames} = 2;
+
+Biber::Config->setblxoption('maxnames', 2);
+Biber::Config->setblxoption('minnames', 2);
+
 for (my $i=1; $i<9; $i++) {
   delete $biber->{bib}{"l$i"}{sortlabelalpha};
   delete $biber->{bib}{"l$i"}{labelalpha};
@@ -95,8 +98,9 @@ is($biber->{bib}{l7}{extraalpha}, '2', 'maxnames=2 minnames=2 entry L7 extraalph
 is($biber->{bib}{l8}{sortlabelalpha}, 'Sha85', 'maxnames=2 minnames=2 entry L8 labelalpha');
 ok(! defined($biber->{bib}{l8}{extraalpha}), 'maxnames=2 minnames=2 entry L8 extraalpha');
 
-$biber->{config}{biblatex}{global}{maxnames} = 3;
-$biber->{config}{biblatex}{global}{minnames} = 1;
+Biber::Config->setblxoption('maxnames', 3);
+Biber::Config->setblxoption('minnames', 1);
+
 for (my $i=1; $i<9; $i++) {
   delete $biber->{bib}{"l$i"}{sortlabelalpha};
   delete $biber->{bib}{"l$i"}{labelalpha};

@@ -165,7 +165,7 @@ sub XML::LibXML::Element::_find_biblatex_nodes {
     ## $dma is an arrayref with list of displaymodes, in order of preference
     ## Ex: [ 'original', 'romanized', 'uniform', 'translated' ]
 
-    my $locale = $biber->config("locale") or $logger->logcroak("No locale defined");
+    my $locale = Biber::Config->getoption('locale') or $logger->logcroak("No locale defined");
 
     unless ($node->exists("bib:$field\[\@mode\]")) {
          foreach my $xpath ( _get_xpath_array($field, undef, $locale, $subfield) ) {

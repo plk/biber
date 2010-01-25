@@ -16,7 +16,7 @@ isa_ok($biber, "Biber");
 chdir("t/tdata") ;
 $biber->parse_auxfile('02-annotations_biblatexml.aux');
 
-my $bibfile = $biber->config('bibdata')->[0] ;
+my $bibfile = Biber::Config->getoption('bibdata')->[0] ;
 $biber->parse_biblatexml($bibfile) ;
 $biber->prepare ;
 

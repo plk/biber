@@ -16,7 +16,7 @@ sub _text_bibtex_parse {
     my ($self, $filename) = @_;
 
     # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
-    if ($self->config('quiet')) {
+    if (Biber::Config->getoption('quiet')) {
       open STDERR, '>/dev/null';
     }
 
@@ -26,8 +26,9 @@ sub _text_bibtex_parse {
 
     my $encoding;
 
-    if ( $self->config('bibencoding') && ! $self->config('unicodebbl') ) {
-        $encoding = $self->config('bibencoding');
+    if ( Biber::Config->getoption('bibencoding') and
+	 not Biber::Config->getoption('unicodebbl') ) {
+        $encoding = Biber::Config->getoption('bibencoding');
     } else {
         $encoding = "utf8";
     };
@@ -109,12 +110,12 @@ sub _text_bibtex_parse {
                     my @entrysetkeys = split /\s*,\s*/, $value;
 
                     foreach my $setkey (@entrysetkeys) {
-                        $Biber::inset_entries{lc($setkey)} = $key;
+                        Biber::Config->setstate('inset_entries', lc($setkey), $key);
                     }
                 }
                 elsif ($f eq 'crossref') { ### $entry->type ne 'set' and
-                    $Biber::crossrefkeys{$value}++;
-                    $Biber::entrieswithcrossref{$key} = $value;
+                    Biber::Config->incrstate('crossrefkeys', $value);
+                    Biber::Config->setstate('entrieswithcrossref', $key, $value);
                 }
             };
 
@@ -143,14 +144,13 @@ sub _text_bibtex_parse {
 
                 my @tmp = map { decode($encoding, $_) } $entry->split($f);
 
-                if ($Biber::is_name_entry{$f}) {
+                if (Biber::Config->getstate('is_name_entry', $f)) {
                   # This is a special case - we need to get the option value even though the passed
                   # $self object isn't fully built yet so getblxoption() can't ask $self for the
                   # $entrytype for $key. So, we have to pass it explicitly.
-                  my $useprefix = $self->getblxoption('useprefix', $key, $bibentries{$key}{entrytype});
+                  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentries{$key}{entrytype}, $key);
 
                   @tmp = map { parsename( $_ , {useprefix => $useprefix}) } @tmp;
-
                 } else {
                     @tmp = map { remove_outer($_) } @tmp;
                 }
@@ -169,7 +169,7 @@ sub _text_bibtex_parse {
    $self->{preamble} = join( "%\n", @preamble ) if @preamble;
 
 
-   if ($self->config('quiet')) {
+   if (Biber::Config->getoption('quiet')) {
       close STDERR;
     }
 

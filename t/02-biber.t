@@ -19,7 +19,7 @@ $biber->parse_auxfile("50-style-authoryear.aux") ;
 
 
 my @keys = sort $biber->citekeys;
-my @citedkeys = sort qw{ 
+my @citedkeys = sort qw{
     companion
     knuth:ct:c
     aristotle:physics
@@ -45,7 +45,7 @@ set:yoon maron coleridge } ;
 
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 
-my $bibfile = $biber->config('bibdata')->[0] . ".bib";
+my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile) ;
 $biber->prepare ;
 @keys = sort $biber->citekeys;
@@ -83,7 +83,7 @@ my $stdmodel = {
                 'origkey' => 'stdmodel'
                 } ;
 
-is_deeply($biber->{bib}->{stdmodel}, $stdmodel, 'entry stdmodel') ;
+is_deeply($biber->{bib}{stdmodel}, $stdmodel, 'entry stdmodel') ;
 
 my $laufenberg = {
                  'authoryear' => 'Laufenberg2Xaver1zzzz02006',

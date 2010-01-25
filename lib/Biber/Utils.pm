@@ -370,7 +370,7 @@ Removes diacritics from a string
 
 sub strip_nosortdiacritics {
   my ($string) = @_;
-  my $sds = $Biber::BIBERCONFIG->{'nosortdiacritics'};
+  my $sds = Biber::Config->getoption('nosortdiacritics');
   $string =~ s/$sds//gxms;
   return $string;
 }
@@ -383,7 +383,7 @@ Removes prefix from a string
 
 sub strip_nosortprefix {
   my ($string) = @_;
-  my $spr = $Biber::BIBERCONFIG->{'nosortprefix'};
+  my $spr = Biber::Config->getoption('nosortprefix');
   $string =~ s/\A$spr//xms;
   return $string;
 }

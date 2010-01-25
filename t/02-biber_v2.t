@@ -53,8 +53,8 @@ set:yoon maron coleridge } ;
 
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 
-my $bibfile = $biber->config('bibdata')->[0] . ".bib";
-$biber->{config}{allentries} = 1;
+my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
+Biber::Config->setoption('allentries',1);
 $biber->parse_bibtex($bibfile) ;
 $biber->prepare ;
 @keys = sort $biber->citekeys;

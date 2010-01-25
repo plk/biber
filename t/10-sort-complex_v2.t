@@ -17,10 +17,10 @@ isa_ok($biber, "Biber");
 chdir("t/tdata") ;
 $biber->parse_auxfile_v2('60-sort-complex_v2.aux');
 
-my $bibfile = $biber->config('bibdata')->[0] . ".bib";
+my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
-$biber->{config}{biblatex}{global}{labelalpha} = 1;
-delete $biber->{config}{biblatex}{global}{labelyear};
+Biber::Config->setblxoption('labelalpha', 1);
+Biber::Config->setblxoption('labelyear', undef);
 $biber->prepare;
 
 my $sc1 = [
@@ -188,8 +188,8 @@ my $sc6 = q|\entry{L3}{article}{}
 
 
 
-is_deeply( $biber->{config}{biblatex}{global}{sorting_label} , $sc1, 'first pass scheme');
-is_deeply( $biber->{config}{biblatex}{global}{sorting_final} , $sc2, 'second pass scheme');
+is_deeply( Biber::Config->getblxoption('sorting_label') , $sc1, 'first pass scheme');
+is_deeply( Biber::Config->getblxoption('sorting_final') , $sc2, 'second pass scheme');
 is( $biber->_print_biblatex_entry('l4'), $sc3, '\alphaothers set by "and others"');
 is( $biber->_print_biblatex_entry('l1'), $sc4, '2-pass - labelalpha after title');
 is( $biber->_print_biblatex_entry('l2'), $sc5, '2-pass - labelalpha after title');

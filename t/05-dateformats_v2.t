@@ -13,13 +13,13 @@ chdir("t/tdata");
 
 my $bibfile;
 my $biber = Biber->new;
-$biber->{config}{fastsort} = 1;
-$biber->{config}{locale} = 'C';
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('locale', 'C');
 $biber->parse_auxfile_v2('50-dateformats_v2.aux');
-$bibfile = $biber->config('bibdata')->[0] . '.bib';
+$bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 
-$biber->{config}{biblatex}{global}{labelyear} = [ 'year' ];
+Biber::Config->setblxoption('labelyear', [ 'year' ]);
 $biber->prepare;
 
 my $l1 = q|\item Invalid format of field 'year' - ignoring field
@@ -273,7 +273,7 @@ is( $biber->_print_biblatex_entry('l13'), $l13c, 'Date format test 13c - labelye
 is( $biber->_print_biblatex_entry('l14'), $l14, 'Date format test 14 - labelyear same as YEAR when ENDYEAR == YEAR') ;
 is( $biber->_print_biblatex_entry('l15'), $l15, 'Date format test 15 - labelyear should be undef, no DATE or YEAR') ;
 
-$biber->{config}{biblatex}{global}{labelyear} = [ 'year', 'eventyear', 'origyear' ];
+Biber::Config->setblxoption('labelyear', [ 'year', 'eventyear', 'origyear' ]);
 delete $biber->{bib}{l17}{year};
 delete $biber->{bib}{l17}{month};
 $biber->prepare;
@@ -283,7 +283,8 @@ is($biber->_print_biblatex_entry('l16'), $l16, 'Date format test 16a - labelyear
 is($biber->{bib}{l17}{labelyearname}, 'year', 'Date format test 17 - labelyearname = YEAR' ) ;
 is($biber->_print_biblatex_entry('l17'), $l17, 'Date format test 17a - labelyear = YEAR value when ENDYEAR is the same and ORIGYEAR is also present' ) ;
 
-$biber->{config}{biblatex}{global}{labelyear} = [ 'origyear', 'year', 'eventyear' ];
+
+Biber::Config->setblxoption('labelyear', [ 'origyear', 'year', 'eventyear' ]);
 delete $biber->{bib}{l17}{year};
 delete $biber->{bib}{l17}{month};
 $biber->prepare;
@@ -291,7 +292,7 @@ $biber->prepare;
 is($biber->{bib}{l17}{labelyearname}, 'origyear', 'Date format test 17b - labelyearname = ORIGYEAR' ) ;
 is($biber->_print_biblatex_entry('l17'), $l17c, 'Date format test 17c - labelyear = ORIGYEAR value when ENDORIGYEAR is the same and YEAR is also present' ) ;
 
-$biber->{config}{biblatex}{book}{labelyear} = [ 'eventyear', 'year', 'origyear' ];
+Biber::Config->setblxoption('labelyear', [ 'eventyear', 'year', 'origyear' ], 'PER_TYPE', 'book');
 delete $biber->{bib}{l17}{year};
 delete $biber->{bib}{l17}{month};
 $biber->prepare;

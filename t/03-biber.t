@@ -17,16 +17,15 @@ else {
 
 my $opts = { unicodebbl => 1, fastsort => 1 };
 my $biber = Biber->new($opts);
-
 use_ok( 'Biber::BibTeX' );
 
 isa_ok($biber, "Biber");
 
 chdir("t/tdata");
 $biber->parse_auxfile("02-annotations.aux");
-$biber->{config}{biblatex}{global}{sortalphaothers} = '+';
+Biber::Config->setblxoption('sortalphaothers', '+');
 
-my $bibfile = $biber->config('bibdata')->[0] . ".bib";
+my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
 $biber->prepare;
 
@@ -106,9 +105,9 @@ my $Worman_N = { 'WN2' => 1, 'WN1' => 1 } ;
 
 my $Gennep = { 'vGA1' => 1, 'vGJ1' => 1 } ;
 
-is_deeply( $Biber::uniquenamecount{'Worman_N'}, $Worman_N, 'uniquename count 1') ;
+is_deeply( Biber::Config->getstate('uniquenamecount', 'Worman_N'), $Worman_N, 'uniquename count 1') ;
 
-is_deeply( $Biber::uniquenamecount{'Gennep'}, $Gennep, 'uniquename count 2') ;
+is_deeply( Biber::Config->getstate('uniquenamecount', 'Gennep'), $Gennep, 'uniquename count 2') ;
 
 is_deeply( [ $biber->shorthands ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
 
