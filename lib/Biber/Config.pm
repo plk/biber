@@ -7,16 +7,23 @@ use Config::General qw( ParseConfig );
 use Data::Dump;
 use Carp;
 
-# This class contains a static object and static methods to access
-# configuration and state data. There are several classes of data in her
-# which have seperate accesors:
-#
-# * Biber options
-# * Biblatex options
-# * State information used by Biber as it processes entries
-# * displaymode date
+=encoding utf-8
 
+=head1 NAME
 
+Biber::Config - Configuration items which need to be saved across the
+                lifetime of a Biber object
+
+  This class contains a static object and static methods to access
+  configuration and state data. There are several classes of data in her
+  which have seperate accesors:
+
+  * Biber options
+  * Biblatex options
+  * State information used by Biber as it processes entries
+  * displaymode date
+
+=cut
 
 # Static (class) data
 our $CONFIG;
@@ -31,14 +38,6 @@ $CONFIG->{state}{'seenlabelyear'} = {};
 $CONFIG->{state}{'seenkeys'} = {};
 $CONFIG->{state}{'is_name_entry'} = { map { $_ => 1 } @NAMEFIELDS };
 
-=encoding utf-8
-
-=head1 NAME
-
-Biber::Config - Configuration items which need to be saved across the
-                lifetime of a Biber object
-
-=cut
 
 =head2 _init
 
