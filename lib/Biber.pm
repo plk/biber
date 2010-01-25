@@ -1740,7 +1740,7 @@ sub create_bbl_string {
 
 sub create_bbl_string_head {
     my $self = shift;
-    my $ctrlver = Biber::Config->getoption('controlversion');
+    my $ctrlver = Biber::Config->getblxoption('controlversion');
     my $BBL = <<"EOF";
 % \$ biblatex auxiliary file \$
 % \$ biblatex version $ctrlver \$

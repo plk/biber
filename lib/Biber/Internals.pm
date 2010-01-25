@@ -894,7 +894,7 @@ sub _print_biblatex_entry {
         }
         if (scalar keys %{ Biber::Config->getstate('uniquenamecount', $lastname) } == 1 ) {
             $str .= "  \\count{uniquename}{0}\n";
-        } elsif (scalar keys %{ Biber->Config->getstate('uniquenamecount', $nameinitstr) } == 1 ) {
+        } elsif (scalar keys %{ Biber::Config->getstate('uniquenamecount', $nameinitstr) } == 1 ) {
             $str .= "  \\count{uniquename}{1}\n";
         } else {
             $str .= "  \\count{uniquename}{2}\n";
