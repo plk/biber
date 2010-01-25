@@ -7,6 +7,17 @@ use Config::General qw( ParseConfig );
 use Data::Dump;
 use Carp;
 
+# This class contains a static object and static methods to access
+# configuration and state data. There are several classes of data in her
+# which have seperate accesors:
+#
+# * Biber options
+# * Biblatex options
+# * State information used by Biber as it processes entries
+# * displaymode date
+
+
+
 # Static (class) data
 our $CONFIG;
 $CONFIG->{state}{'crossrefkeys'} = {};
@@ -132,6 +143,10 @@ sub config_file {
   return $biberconf;
 }
 
+##############################
+# Biber options static methods
+##############################
+
 =head2 setoption
 
     Store a Biber config option
@@ -184,6 +199,9 @@ sub getcmdlineoption {
   return $CONFIG->{cmdlineoptions}{$opt};
 }
 
+#################################
+# BibLaTeX options static methods
+#################################
 
 =head2 setblxoption
 
@@ -235,8 +253,6 @@ sub getblxoption {
   }
 }
 
-
-
 =head2 setblxsection
 
     Set biblatex bibsections information
@@ -264,9 +280,9 @@ sub getblxsection {
 }
 
 
-
-
-
+##############################
+# Biber state static methods
+##############################
 
 =head2 setstate
 
@@ -376,6 +392,10 @@ sub incrstate {
   $state->{$state_val} += 1;
   return;
 }
+
+############################
+# Displaymode static methods
+############################
 
 =head2 set_displaymode
 
