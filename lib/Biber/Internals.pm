@@ -625,15 +625,6 @@ sub _sort_year {
 # Utility subs used elsewhere but relying on sorting code
 #========================================================
 
-sub _get_display_mode {
-  my ($self, $citekey, $field) = @_ ;
-  #my $entrytype = $self->{bib}->{$citekey}->{entrytype};
-  # TODO extend getblxoption to accept 4th parameter $field :
-  #my $dm = $self->getblxoption('displaymode', $citekey, $entrytype, $field) ;
-  # TODO TODO TODO
-  return 'not(@mode)'
-}
-
 sub _nodecode {
   my ($self, $citekey) = @_;
   my $no_decode = ($self->{config}->{unicodebib} or
