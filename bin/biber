@@ -111,6 +111,7 @@ my $l4pconf = qq(
     log4perl.category.logfile                          = $LOGLEVEL_F, Logfile
 
     log4perl.appender.Logfile                          = Log::Log4perl::Appender::File
+    log4perl.appender.Logfile.utf8                     = 1
     log4perl.appender.Logfile.filename                 = $biberlog
     log4perl.appender.Logfile.mode                     = write
     log4perl.appender.Logfile.layout                   = Log::Log4perl::Layout::PatternLayout
