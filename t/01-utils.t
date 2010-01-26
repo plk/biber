@@ -40,10 +40,10 @@ is( terseinitials(' Goldman-Sachs,  Antonio Ludwig '),  'GSAL', 'terseinitials')
 
 my @arrayA = qw/ a b c d e f c /;
 my @arrayB = qw/ c e /;
-my @AminusB = array_minus(\@arrayA, \@arrayB);
+my @AminusB = reduce_array(\@arrayA, \@arrayB);
 my @AminusBexpected = qw/ a b d f /;
 
-is_deeply(\@AminusB, \@AminusBexpected, 'array_minus') ;
+is_deeply(\@AminusB, \@AminusBexpected, 'reduce_array') ;
 
 is(remove_outer('{Some string}'), 'Some string', 'remove_outer') ;
 
