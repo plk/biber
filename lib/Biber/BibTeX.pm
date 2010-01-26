@@ -88,7 +88,7 @@ sub _text_bibtex_parse {
         my @flist = $entry->fieldlist;
 
         #here we only keep those that do not require splitting
-        my @flistnosplit = array_minus(\@flist, \@ENTRIESTOSPLIT);
+        my @flistnosplit = reduce_array(\@flist, \@ENTRIESTOSPLIT);
 
         if ( $entry->metatype == BTE_REGULAR ) {
 

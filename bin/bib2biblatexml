@@ -104,7 +104,7 @@ for my $citekey ( sort keys %bibentries ) {
     my @standardfields = ( @RANGEFIELDS, @VERBATIMFIELDS,
                            @LITERALFIELDS_BASE, @KEYFIELDS, @COMMASEP_FIELDS );
     my @officialfields = ( @specialfields, @standardfields, 'entrytype', 'datatype' );
-    my @privatefields = array_minus( \@entryfields, \@officialfields );
+    my @privatefields = reduce_array( \@entryfields, \@officialfields );
 
   if ($entry->{howpublished} and $entry->{type}) {
     $writer->startTag("bib:entry",
@@ -202,7 +202,7 @@ for my $citekey ( sort keys %bibentries ) {
 
   ## TODO convert year month day to "date"
 
-  foreach my $field (array_minus( \@standardfields, ['type', 'howpublished'] )) {
+  foreach my $field (reduce_array( \@standardfields, ['type', 'howpublished'] )) {
         if ($entry->{$field}) {
             if ( $field eq 'month' && $entry->{month} =~ m/[a-z]/i) {
 

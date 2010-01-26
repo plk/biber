@@ -34,7 +34,7 @@ All functions are exported by default.
 =cut
 
 our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid
-    normalize_string normalize_string_underscore latexescape array_minus
+    normalize_string normalize_string_underscore latexescape reduce_array
     remove_outer getinitials tersify ucinit strip_nosort strip_nosortdiacritics
     strip_nosortprefix};
 
@@ -459,13 +459,13 @@ sub terseinitials {
     return $str;
 }
 
-=head2 array_minus
+=head2 reduce_array
 
-array_minus(\@a, \@b) returns all elements in @a that are not in @b
+reduce_array(\@a, \@b) returns all elements in @a that are not in @b
 
 =cut
 
-sub array_minus {
+sub reduce_array {
   my ($a, $b) = @_;
   my %countb = ();
   foreach my $elem (@$b) {
