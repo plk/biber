@@ -952,9 +952,10 @@ sub _print_biblatex_entry {
     }
 
     # Append any warnings to the entry, if any
-    if (_defined_and_nonempty($be->{warnings})) {
-      chomp $be->{warnings}; # remove final newline
-      $str .= '  \warn{' . $be->{warnings} . "}\n";
+    if ($be->{warnings}) {
+      foreach my $warning (@{$be->{warnings}}) {
+        $str .= "  \\warn{$warning}\n";
+      }
     }
 
     $str .= "\\endentry\n\n";

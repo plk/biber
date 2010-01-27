@@ -1151,7 +1151,7 @@ sub postprocess_dates {
     if ($be->{$ymfield} and $be->{$ymfield} !~ /\A\d+\z/xms) {
       $logger->warn("Invalid format of field '$ymfield' - ignoring field in entry '$citekey'");
       $self->{warnings}++;
-      $be->{warnings} .= "\\item Invalid format of field '$ymfield' - ignoring field\n";
+      push @{$be->{warnings}}, "Invalid format of field '$ymfield' - ignoring field";
       delete $be->{$ymfield};
     }
   }
@@ -1160,7 +1160,7 @@ sub postprocess_dates {
   if ($be->{date} and $be->{year}) {
     $logger->warn("Field conflict - both 'date' and 'year' used - ignoring field 'year' in '$citekey'");
     $self->{warnings}++;
-    $be->{warnings} .= "\\item Field conflict - both 'date' and 'year' used - ignoring field 'year'\n";
+      push @{$be->{warnings}}, "Field conflict - both 'date' and 'year' used - ignoring field 'year'";
     delete $be->{year};
   }
 
@@ -1168,7 +1168,7 @@ sub postprocess_dates {
   if ($be->{date} and $be->{month}) {
     $logger->warn("Field conflict - both 'date' and 'month' used - ignoring field 'month' in '$citekey'");
     $self->{warnings}++;
-    $be->{warnings} .= "\\item Field conflict - both 'date' and 'month' used - ignoring field 'month'\n";
+      push @{$be->{warnings}}, "Field conflict - both 'date' and 'month' used - ignoring field 'month'";
     delete $be->{month};
   }
 
@@ -1190,7 +1190,7 @@ sub postprocess_dates {
       } else {
         $logger->warn("Invalid format of field '" . $datetype . 'date' . "' - ignoring field in entry '$citekey'");
         $self->{warnings}++;
-        $be->{warnings} .= "\\item Invalid format of field '" . $datetype . 'date' . "' - ignoring field\n";
+      push @{$be->{warnings}}, "Invalid format of field '" . $datetype . 'date' . "' - ignoring field";
         delete $be->{$datetype . 'date'};
       }
     }
@@ -1216,7 +1216,7 @@ sub postprocess_dates {
       if ($bad_format) {
         $logger->warn("Value out bounds for field/date component '$dcf' - ignoring in entry '$citekey'");
         $self->{warnings}++;
-        $be->{warnings} .= "\\item Value out of bounds for field/date component '$dcf' - ignoring\n";
+      push @{$be->{warnings}}, "Value out of bounds for field/date component '$dcf' - ignoring";
         delete $be->{$dcf};
       }
     }

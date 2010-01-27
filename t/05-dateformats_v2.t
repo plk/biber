@@ -22,31 +22,20 @@ $biber->parse_bibtex($bibfile);
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 $biber->prepare;
 
-my $l1 = q|\item Invalid format of field 'year' - ignoring field
-\item Invalid format of field 'origdate' - ignoring field
-\item Invalid format of field 'urldate' - ignoring field
-\item Value out of bounds for field/date component 'month' - ignoring
-|;
-my $l2 = q|\item Invalid format of field 'origdate' - ignoring field
-|;
-my $l3 = q|\item Invalid format of field 'urldate' - ignoring field
-|;
-my $l4 = q|\item Invalid format of field 'date' - ignoring field
-|;
-my $l5 = q|\item Invalid format of field 'date' - ignoring field
-|;
-my $l6 = q|\item Value out of bounds for field/date component 'month' - ignoring
-|;
-my $l7 = q|\item Value out of bounds for field/date component 'eventday' - ignoring
-|;
-my $l8 = q|\item Invalid format of field 'year' - ignoring field
-\item Invalid format of field 'month' - ignoring field
-|;
-
-my $l11 = q|\item Field conflict - both 'date' and 'year' used - ignoring field 'year'
-|;
-my $l12 = q|\item Field conflict - both 'date' and 'month' used - ignoring field 'month'
-|;
+my $l1 = [ "Invalid format of field 'year' - ignoring field",
+           "Invalid format of field 'origdate' - ignoring field",
+           "Invalid format of field 'urldate' - ignoring field",
+           "Value out of bounds for field/date component 'month' - ignoring" ];
+my $l2 = [ "Invalid format of field 'origdate' - ignoring field" ];
+my $l3 = [ "Invalid format of field 'urldate' - ignoring field" ];
+my $l4 = [ "Invalid format of field 'date' - ignoring field" ];
+my $l5 = [ "Invalid format of field 'date' - ignoring field" ];
+my $l6 = [ "Value out of bounds for field/date component 'month' - ignoring" ];
+my $l7 = [ "Value out of bounds for field/date component 'eventday' - ignoring" ];
+my $l8 = [ "Invalid format of field 'year' - ignoring field",
+           "Invalid format of field 'month' - ignoring field" ];
+my $l11 = [ "Field conflict - both 'date' and 'year' used - ignoring field 'year'" ];
+my $l12 = [ "Field conflict - both 'date' and 'month' used - ignoring field 'month'" ];
 
 my $l13c = q|\entry{L13}{book}{}
   \name{author}{2}{%
@@ -247,24 +236,24 @@ my $l17e = q|\entry{l17}{book}{}
 |;
 
 
-is($biber->{bib}{l1}{warnings}, $l1, 'Date format test 1' ) ;
+is_deeply($biber->{bib}{l1}{warnings}, $l1, 'Date format test 1' ) ;
 ok(! defined($biber->{bib}{l1}{origyear}), 'Date format test 1a - ORIGYEAR undef since ORIGDATE is bad' ) ;
 ok(! defined($biber->{bib}{l1}{urlyear}), 'Date format test 1b - URLYEAR undef since URLDATE is bad' ) ;
 ok(! defined($biber->{bib}{l1}{month}), 'Date format test 1c - MONTH undef since not integer' ) ;
-is($biber->{bib}{l2}{warnings}, $l2, 'Date format test 2' ) ;
-is($biber->{bib}{l3}{warnings}, $l3, 'Date format test 3' ) ;
-is($biber->{bib}{l4}{warnings}, $l4, 'Date format test 4' ) ;
-is($biber->{bib}{l5}{warnings}, $l5, 'Date format test 5' ) ;
-is($biber->{bib}{l6}{warnings}, $l6, 'Date format test 6' ) ;
-is($biber->{bib}{l7}{warnings}, $l7, 'Date format test 7' ) ;
-is($biber->{bib}{l8}{warnings}, $l8, 'Date format test 8' ) ;
+is_deeply($biber->{bib}{l2}{warnings}, $l2, 'Date format test 2' ) ;
+is_deeply($biber->{bib}{l3}{warnings}, $l3, 'Date format test 3' ) ;
+is_deeply($biber->{bib}{l4}{warnings}, $l4, 'Date format test 4' ) ;
+is_deeply($biber->{bib}{l5}{warnings}, $l5, 'Date format test 5' ) ;
+is_deeply($biber->{bib}{l6}{warnings}, $l6, 'Date format test 6' ) ;
+is_deeply($biber->{bib}{l7}{warnings}, $l7, 'Date format test 7' ) ;
+is_deeply($biber->{bib}{l8}{warnings}, $l8, 'Date format test 8' ) ;
 ok(! defined($biber->{bib}{l8}{year}), 'Date format test 8a - YEAR undef since not integer' ) ;
 ok(! defined($biber->{bib}{l8}{month}), 'Date format test 8b - MONTH undef since not integer' ) ;
 ok(! defined($biber->{bib}{l9}{warnings}), 'Date format test 9' ) ;
 ok(! defined($biber->{bib}{l10}{warnings}), 'Date format test 10' ) ;
-is($biber->{bib}{l11}{warnings}, $l11, 'Date format test 11' ) ;
+is_deeply($biber->{bib}{l11}{warnings}, $l11, 'Date format test 11' ) ;
 is($biber->{bib}{l11}{year}, '1996', 'Date format test 11a - DATE overrides YEAR' ) ;
-is($biber->{bib}{l12}{warnings}, $l12, 'Date format test 12' ) ;
+is_deeply($biber->{bib}{l12}{warnings}, $l12, 'Date format test 12' ) ;
 is($biber->{bib}{l12}{month}, '01', 'Date format test 12a - DATE overrides MONTH' ) ;
 is($biber->{bib}{l13}{endyear}, '', 'Date format test 13 - range with no end' ) ;
 ok(! defined($biber->{bib}{l13}{endmonth}), 'Date format test 13a - ENDMONTH undef for open-ended range' ) ;
