@@ -233,11 +233,12 @@ publisherinfo = ( element publisher { attribute id {formattext}, attlist.lists? 
             ( element publisher { attlist.lists?, ((publishername, publocation) | pubitem+) } )
 origpublisherinfo = ( element origpublisher { attribute id {text}, attlist.lists? } ) |
                 ( element origpublisher { attlist.lists?, ((publishername, publocation) | pubitem+) } )
-lista = element lista { attlist.lists?, (text | item+) }
-listb = element listb { attlist.lists?, (text | item+) }
-listc = element listc { attlist.lists?, (text | item+) }
-liste = element liste { attlist.lists?, (text | item+) }
-listf = element listf { attlist.lists?, (text | item+) }
+lista = element listA { attlist.lists?, (text | item+) }
+listb = element listB { attlist.lists?, (text | item+) }
+listc = element listC { attlist.lists?, (text | item+) }
+listd = element listD { attlist.lists?, (text | item+) }
+liste = element listE { attlist.lists?, (text | item+) }
+listf = element listF { attlist.lists?, (text | item+) }
 item = element item { formattext }
 pubitem = element item { publishername, location }
 publishername = element name { attribute id {text}?, formattext }
@@ -256,13 +257,12 @@ language = element language { xsd:language | itemlang+ }
 origlanguage = element origlanguage { xsd:language | itemlang+ }
 itemlang = element item { xsd:language }
 # NAME LISTS
-attlist.author |= attribute type { "author" | "editor" | "compiler" | "translator" | "editor+translator" | text }?
-attlist.author |= att.gender?
-attlist.author |= attlist.lists?
-attlist.editor |= attribute type { "editor" | "editor+translator" | "compiler" | text }?
-attlist.editor |= attribute class { "sub" | "vol" | "main" }?
-attlist.editor |= att.gender?
-attlist.editor |= attlist.lists?
+attlist.author = attribute type { "author" | "editor" | "compiler" | "translator" | "editor+translator" | text }?,
+                 att.gender?, attlist.lists?
+attlist.editor = attribute type { "editor" | "editor+translator" | "compiler" | text }?,
+                 attribute class { "sub" | "vol" | "main" }?,
+                 att.gender?,
+                 attlist.lists?
 att.gender = attribute gender { "sf" | "sm" | "sn" | "pf" | "pm" | "pn" | "pp" }
 author = element author { attlist.author, (text | person+) }
 editors = editor & editorA? & editorB? & editorC?
@@ -281,9 +281,9 @@ translator = element translator { attlist.lists?, (text | person+) }
 shortauthor = element shortauthor { attlist.lists?, (text | person+) }
 shorteditor = element shorteditor { attlist.lists?, (text | person+) }
 sortname = element sortname { attlist.lists?, (text | person+) }
-namea = element namea { attlist.lists?, (text | person+) }
-nameb = element nameb { attlist.lists?, (text | person+) }
-namec = element namec { attlist.lists?, (text | person+) }
+namea = element nameA { attlist.lists?, (text | person+) }
+nameb = element nameB { attlist.lists?, (text | person+) }
+namec = element nameC { attlist.lists?, (text | person+) }
 person = element person {
     attlist.person,
     ( text | (first, prefix?, last, suffix?) )
@@ -654,7 +654,8 @@ BibLaTeXML.inproceedings.standard.fields =
   doi? &
   eprint? &
   url? &
-  urldate?
+  urldate? &
+  eventdate?
 
 BibLaTeXML.inproceedings.fields =
   BibLaTeXML.inproceedings.standard.fields &
@@ -854,7 +855,8 @@ BibLaTeXML.proceedings.standard.fields =
   doi? &
   eprint? &
   url? &
-  urldate?
+  urldate? &
+  eventdate?
 BibLaTeXML.proceedings.fields =
   BibLaTeXML.proceedings.standard.fields &
   BibLaTeXML.common.fields &
