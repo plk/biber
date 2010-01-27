@@ -224,7 +224,7 @@ my $pimentel1 = q|\entry{pimentel00}{thesis}{}
   \count{uniquename}{0}
   \true{singletitle}
   \field{year}{2000}
-  \field{title}{Sociolinguistic Reflections of Privitization and Globalization: The {Arabic} of {Egyptian} newspaper advertisements}
+  \field{title}{Sociolinguistic Reflections of Privatization and Globalization: The {Arabic} of {Egyptian} newspaper advertisements}
 \endentry
 
 |;
