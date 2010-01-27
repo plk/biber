@@ -130,7 +130,7 @@ Readonly::Array our @LISTFIELDS  =>   qw{
 
 Readonly::Array our @LITERALFIELDS_BASE  =>   qw{
   abstract addendum annotation chapter edition eid howpublished isan isbn
-  ismn isrn issn issue iswc labelnameaddon note number pagetotal part pubstate
+  ismn isrn issn issue iswc label labelnameaddon note number pagetotal part pubstate
   series shorthand shorthandintro shortjournal shortseries eprinttype
   venue version volume volumes usera userb userc userd
   usere userf hyphenation crossref entrysubtype execute gender sortkey sortyear
