@@ -282,16 +282,13 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <value>uniform</value>
     </attribute>
     <optional>
-      <ref name="att.locale"/>
+      <ref name="att.lang"/>
     </optional>
   </define>
   <define name="att.lang">
     <attribute name="xml:lang">
       <data type="language"/>
     </attribute>
-  </define>
-  <define name="att.locale">
-    <attribute name="locale"/>
   </define>
   <define name="abstract">
     <element name="abstract">
@@ -1590,27 +1587,17 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="volume.range">
     <choice>
       <ref name="volume.list"/>
-      <group>
-        <ref name="volume.start"/>
-        <ref name="volume.end"/>
-      </group>
+      <ref name="range"/>
     </choice>
-  </define>
-  <define name="volume.start">
-    <element name="start">
-      <text/>
-    </element>
-  </define>
-  <define name="volume.end">
-    <element name="end">
-      <text/>
-    </element>
   </define>
   <define name="volume.list">
     <element name="list">
       <oneOrMore>
         <element name="item">
-          <text/>
+          <choice>
+            <text/>
+            <ref name="volume.range"/>
+          </choice>
         </element>
       </oneOrMore>
     </element>
@@ -1651,7 +1638,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </element>
   </define>
   <define name="entryset">
-    <a:documentation>TODO add editorA etc (biblatex 0.9)</a:documentation>
     <a:documentation>special fields</a:documentation>
     <element name="entryset">
       <choice>
@@ -2068,7 +2054,10 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <text/>
         <oneOrMore>
           <element name="item">
-            <text/>
+            <choice>
+              <text/>
+              <ref name="range"/>
+            </choice>
           </element>
         </oneOrMore>
       </choice>
@@ -3043,7 +3032,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </choice>
   </define>
   <define name="lista">
-    <element name="lista">
+    <element name="listA">
       <optional>
         <ref name="attlist.lists"/>
       </optional>
@@ -3056,7 +3045,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </element>
   </define>
   <define name="listb">
-    <element name="listb">
+    <element name="listB">
       <optional>
         <ref name="attlist.lists"/>
       </optional>
@@ -3069,7 +3058,20 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </element>
   </define>
   <define name="listc">
-    <element name="listc">
+    <element name="listC">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="item"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="listd">
+    <element name="listD">
       <optional>
         <ref name="attlist.lists"/>
       </optional>
@@ -3082,7 +3084,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </element>
   </define>
   <define name="liste">
-    <element name="liste">
+    <element name="listE">
       <optional>
         <ref name="attlist.lists"/>
       </optional>
@@ -3095,7 +3097,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </element>
   </define>
   <define name="listf">
-    <element name="listf">
+    <element name="listF">
       <optional>
         <ref name="attlist.lists"/>
       </optional>
@@ -3357,7 +3359,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </element>
   </define>
   <!-- NAME LISTS -->
-  <define name="attlist.author" combine="choice">
+  <define name="attlist.author">
     <optional>
       <attribute name="type">
         <choice>
@@ -3370,34 +3372,36 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </choice>
       </attribute>
     </optional>
-  </define>
-  <define name="attlist.author" combine="choice">
     <optional>
       <ref name="att.gender"/>
     </optional>
-  </define>
-  <define name="attlist.author" combine="choice">
     <optional>
       <ref name="attlist.lists"/>
     </optional>
   </define>
-  <define name="attlist.editor" combine="choice">
+  <define name="attlist.editor">
     <optional>
       <attribute name="type">
         <choice>
           <value>editor</value>
           <value>editor+translator</value>
           <value>compiler</value>
+          <text/>
         </choice>
       </attribute>
     </optional>
-  </define>
-  <define name="attlist.editor" combine="choice">
+    <optional>
+      <attribute name="class">
+        <choice>
+          <value>sub</value>
+          <value>vol</value>
+          <value>main</value>
+        </choice>
+      </attribute>
+    </optional>
     <optional>
       <ref name="att.gender"/>
     </optional>
-  </define>
-  <define name="attlist.editor" combine="choice">
     <optional>
       <ref name="attlist.lists"/>
     </optional>
@@ -3492,6 +3496,20 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       </oneOrMore>
     </choice>
   </define>
+  <define name="editors">
+    <interleave>
+      <ref name="editor"/>
+      <optional>
+        <ref name="editorA"/>
+      </optional>
+      <optional>
+        <ref name="editorB"/>
+      </optional>
+      <optional>
+        <ref name="editorC"/>
+      </optional>
+    </interleave>
+  </define>
   <define name="editor">
     <choice>
       <group>
@@ -3557,6 +3575,237 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       </group>
       <oneOrMore>
         <element name="editor">
+          <ref name="attlist.editor"/>
+          <ref name="uniform"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="editorA">
+    <choice>
+      <group>
+        <element name="editorA">
+          <ref name="attlist.editor"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <zeroOrMore>
+          <element name="editorA">
+            <ref name="attlist.editor"/>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+        <zeroOrMore>
+          <element name="editorA">
+            <ref name="attlist.editor"/>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <oneOrMore>
+          <element name="editorA">
+            <ref name="attlist.editor"/>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="editorA">
+            <ref name="attlist.editor"/>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="editorA">
+          <ref name="attlist.editor"/>
+          <ref name="uniform"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="editorB">
+    <choice>
+      <group>
+        <element name="editorB">
+          <ref name="attlist.editor"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <zeroOrMore>
+          <element name="editorB">
+            <ref name="attlist.editor"/>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+        <zeroOrMore>
+          <element name="editorB">
+            <ref name="attlist.editor"/>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <oneOrMore>
+          <element name="editorB">
+            <ref name="attlist.editor"/>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="editorB">
+            <ref name="attlist.editor"/>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="editorB">
+          <ref name="attlist.editor"/>
+          <ref name="uniform"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+      </oneOrMore>
+    </choice>
+  </define>
+  <define name="editorC">
+    <choice>
+      <group>
+        <element name="editorC">
+          <ref name="attlist.editor"/>
+          <choice>
+            <text/>
+            <oneOrMore>
+              <ref name="person"/>
+            </oneOrMore>
+          </choice>
+        </element>
+        <zeroOrMore>
+          <element name="editorC">
+            <ref name="attlist.editor"/>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+        <zeroOrMore>
+          <element name="editorC">
+            <ref name="attlist.editor"/>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <group>
+        <oneOrMore>
+          <element name="editorC">
+            <ref name="attlist.editor"/>
+            <ref name="romanized"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <element name="editorC">
+            <ref name="attlist.editor"/>
+            <ref name="uniform"/>
+            <choice>
+              <text/>
+              <oneOrMore>
+                <ref name="person"/>
+              </oneOrMore>
+            </choice>
+          </element>
+        </zeroOrMore>
+      </group>
+      <oneOrMore>
+        <element name="editorC">
           <ref name="attlist.editor"/>
           <ref name="uniform"/>
           <choice>
@@ -4192,95 +4441,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       </oneOrMore>
     </choice>
   </define>
-  <define name="redactor">
-    <choice>
-      <group>
-        <element name="redactor">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-        <zeroOrMore>
-          <element name="redactor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </zeroOrMore>
-        <zeroOrMore>
-          <element name="redactor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </zeroOrMore>
-      </group>
-      <group>
-        <oneOrMore>
-          <element name="redactor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="romanized"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </oneOrMore>
-        <zeroOrMore>
-          <element name="redactor">
-            <optional>
-              <ref name="attlist.lists"/>
-            </optional>
-            <ref name="uniform"/>
-            <choice>
-              <text/>
-              <oneOrMore>
-                <ref name="person"/>
-              </oneOrMore>
-            </choice>
-          </element>
-        </zeroOrMore>
-      </group>
-      <oneOrMore>
-        <element name="redactor">
-          <optional>
-            <ref name="attlist.lists"/>
-          </optional>
-          <ref name="uniform"/>
-          <choice>
-            <text/>
-            <oneOrMore>
-              <ref name="person"/>
-            </oneOrMore>
-          </choice>
-        </element>
-      </oneOrMore>
-    </choice>
-  </define>
   <define name="translator">
     <choice>
       <group>
@@ -4640,7 +4800,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="namea">
     <choice>
       <group>
-        <element name="namea">
+        <element name="nameA">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
@@ -4652,7 +4812,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </choice>
         </element>
         <zeroOrMore>
-          <element name="namea">
+          <element name="nameA">
             <optional>
               <ref name="attlist.lists"/>
             </optional>
@@ -4666,7 +4826,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </element>
         </zeroOrMore>
         <zeroOrMore>
-          <element name="namea">
+          <element name="nameA">
             <optional>
               <ref name="attlist.lists"/>
             </optional>
@@ -4682,7 +4842,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       </group>
       <group>
         <oneOrMore>
-          <element name="namea">
+          <element name="nameA">
             <optional>
               <ref name="attlist.lists"/>
             </optional>
@@ -4696,7 +4856,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </element>
         </oneOrMore>
         <zeroOrMore>
-          <element name="namea">
+          <element name="nameA">
             <optional>
               <ref name="attlist.lists"/>
             </optional>
@@ -4711,7 +4871,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <oneOrMore>
-        <element name="namea">
+        <element name="nameA">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
@@ -4729,7 +4889,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="nameb">
     <choice>
       <group>
-        <element name="nameb">
+        <element name="nameB">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
@@ -4741,7 +4901,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </choice>
         </element>
         <zeroOrMore>
-          <element name="nameb">
+          <element name="nameB">
             <optional>
               <ref name="attlist.lists"/>
             </optional>
@@ -4755,7 +4915,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </element>
         </zeroOrMore>
         <zeroOrMore>
-          <element name="nameb">
+          <element name="nameB">
             <optional>
               <ref name="attlist.lists"/>
             </optional>
@@ -4771,7 +4931,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       </group>
       <group>
         <oneOrMore>
-          <element name="nameb">
+          <element name="nameB">
             <optional>
               <ref name="attlist.lists"/>
             </optional>
@@ -4785,7 +4945,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </element>
         </oneOrMore>
         <zeroOrMore>
-          <element name="nameb">
+          <element name="nameB">
             <optional>
               <ref name="attlist.lists"/>
             </optional>
@@ -4800,7 +4960,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <oneOrMore>
-        <element name="nameb">
+        <element name="nameB">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
@@ -4818,7 +4978,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="namec">
     <choice>
       <group>
-        <element name="namec">
+        <element name="nameC">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
@@ -4830,7 +4990,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </choice>
         </element>
         <zeroOrMore>
-          <element name="namec">
+          <element name="nameC">
             <optional>
               <ref name="attlist.lists"/>
             </optional>
@@ -4844,7 +5004,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </element>
         </zeroOrMore>
         <zeroOrMore>
-          <element name="namec">
+          <element name="nameC">
             <optional>
               <ref name="attlist.lists"/>
             </optional>
@@ -4860,7 +5020,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       </group>
       <group>
         <oneOrMore>
-          <element name="namec">
+          <element name="nameC">
             <optional>
               <ref name="attlist.lists"/>
             </optional>
@@ -4874,7 +5034,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </element>
         </oneOrMore>
         <zeroOrMore>
-          <element name="namec">
+          <element name="nameC">
             <optional>
               <ref name="attlist.lists"/>
             </optional>
@@ -4889,7 +5049,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         </zeroOrMore>
       </group>
       <oneOrMore>
-        <element name="namec">
+        <element name="nameC">
           <optional>
             <ref name="attlist.lists"/>
           </optional>
@@ -5103,6 +5263,14 @@ for instance a reedition.</a:documentation>
               <value>reprint_of</value>
               <value>part_of</value>
               <value>translation_of</value>
+              <value>revised_version</value>
+              <value>expanded_version</value>
+              <value>review</value>
+              <value>essay_review</value>
+              <value>revised_version_of</value>
+              <value>expanded_version_of</value>
+              <value>review_of</value>
+              <value>essay_review_of</value>
               <text/>
             </choice>
           </attribute>
@@ -5127,16 +5295,13 @@ for instance a reedition.</a:documentation>
         <ref name="date"/>
       </interleave>
       <optional>
-        <ref name="editor"/>
+        <ref name="editors"/>
       </optional>
       <optional>
         <ref name="shorteditor"/>
       </optional>
       <optional>
         <ref name="translator"/>
-      </optional>
-      <optional>
-        <ref name="redactor"/>
       </optional>
       <optional>
         <ref name="annotator"/>
@@ -5312,7 +5477,7 @@ for instance a reedition.</a:documentation>
       </optional>
       <optional>
         <!-- changed -->
-        <ref name="editor"/>
+        <ref name="editors"/>
       </optional>
       <!-- changed -->
       <choice>
@@ -5340,9 +5505,6 @@ for instance a reedition.</a:documentation>
       </optional>
       <optional>
         <ref name="translator"/>
-      </optional>
-      <optional>
-        <ref name="redactor"/>
       </optional>
       <optional>
         <ref name="annotator"/>
@@ -5474,7 +5636,7 @@ for instance a reedition.</a:documentation>
       </optional>
       <optional>
         <!-- changed -->
-        <ref name="editor"/>
+        <ref name="editors"/>
       </optional>
       <!-- changed -->
       <ref name="title"/>
@@ -5490,6 +5652,9 @@ for instance a reedition.</a:documentation>
         <ref name="note"/>
       </optional>
       <ref name="publisherinfos"/>
+      <optional>
+        <ref name="series"/>
+      </optional>
       <optional>
         <ref name="chapter"/>
       </optional>
@@ -5545,7 +5710,7 @@ for instance a reedition.</a:documentation>
     <a:documentation/>
     <interleave>
       <optional>
-        <ref name="editor"/>
+        <ref name="editors"/>
       </optional>
       <optional>
         <!-- changed -->
@@ -5563,9 +5728,6 @@ for instance a reedition.</a:documentation>
       </optional>
       <optional>
         <ref name="translator"/>
-      </optional>
-      <optional>
-        <ref name="redactor"/>
       </optional>
       <optional>
         <ref name="annotator"/>
@@ -5697,16 +5859,13 @@ for instance a reedition.</a:documentation>
         <ref name="author"/>
       </optional>
       <optional>
-        <ref name="editor"/>
+        <ref name="editors"/>
       </optional>
       <optional>
         <ref name="shorteditor"/>
       </optional>
       <optional>
         <ref name="translator"/>
-      </optional>
-      <optional>
-        <ref name="redactor"/>
       </optional>
       <optional>
         <ref name="annotator"/>
@@ -5868,7 +6027,7 @@ for instance a reedition.</a:documentation>
         </interleave>
         <interleave>
           <optional>
-            <ref name="editor"/>
+            <ref name="editors"/>
           </optional>
           <!--
             made it optional
@@ -5881,9 +6040,6 @@ for instance a reedition.</a:documentation>
           </optional>
           <optional>
             <ref name="translator"/>
-          </optional>
-          <optional>
-            <ref name="redactor"/>
           </optional>
           <optional>
             <ref name="annotator"/>
@@ -6013,7 +6169,7 @@ for instance a reedition.</a:documentation>
         <ref name="xref"/>
         <interleave>
           <optional>
-            <ref name="editor"/>
+            <ref name="editors"/>
           </optional>
           <!-- made it optional -->
           <ref name="booktitle"/>
@@ -6100,6 +6256,9 @@ for instance a reedition.</a:documentation>
       <optional>
         <ref name="urldate"/>
       </optional>
+      <optional>
+        <ref name="eventdate"/>
+      </optional>
     </interleave>
   </define>
   <define name="BibLaTeXML.inproceedings.fields">
@@ -6127,7 +6286,7 @@ for instance a reedition.</a:documentation>
       <optional>
         <choice>
           <ref name="author"/>
-          <ref name="editor"/>
+          <ref name="editors"/>
         </choice>
       </optional>
       <ref name="title"/>
@@ -6220,7 +6379,7 @@ for instance a reedition.</a:documentation>
       <optional>
         <choice>
           <ref name="author"/>
-          <ref name="editor"/>
+          <ref name="editors"/>
         </choice>
       </optional>
       <ref name="title"/>
@@ -6291,7 +6450,7 @@ for instance a reedition.</a:documentation>
         <interleave>
           <ref name="author"/>
           <optional>
-            <ref name="editor"/>
+            <ref name="editors"/>
           </optional>
         </interleave>
       </optional>
@@ -6442,7 +6601,7 @@ for instance a reedition.</a:documentation>
     <a:documentation/>
     <interleave>
       <optional>
-        <ref name="editor"/>
+        <ref name="editors"/>
       </optional>
       <!-- made it optional -->
       <choice>
@@ -6562,7 +6721,7 @@ for instance a reedition.</a:documentation>
     <a:documentation/>
     <interleave>
       <optional>
-        <ref name="editor"/>
+        <ref name="editors"/>
       </optional>
       <!-- made it optional -->
       <ref name="title"/>
@@ -6646,6 +6805,9 @@ for instance a reedition.</a:documentation>
       </optional>
       <optional>
         <ref name="urldate"/>
+      </optional>
+      <optional>
+        <ref name="eventdate"/>
       </optional>
     </interleave>
   </define>

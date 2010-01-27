@@ -535,13 +535,10 @@
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
-    <xs:attribute name="locale"/>
+    <xs:attribute ref="xml:lang"/>
   </xs:attributeGroup>
   <xs:attributeGroup name="att.lang">
     <xs:attribute ref="xml:lang" use="required"/>
-  </xs:attributeGroup>
-  <xs:attributeGroup name="att.locale">
-    <xs:attribute name="locale" use="required"/>
   </xs:attributeGroup>
   <xs:element name="abstract">
     <xs:complexType mixed="true">
@@ -1828,28 +1825,19 @@
   <xs:group name="volume.range">
     <xs:choice>
       <xs:group ref="biblatexml:volume.list"/>
-      <xs:sequence>
-        <xs:group ref="biblatexml:volume.start"/>
-        <xs:group ref="biblatexml:volume.end"/>
-      </xs:sequence>
+      <xs:group ref="biblatexml:range"/>
     </xs:choice>
-  </xs:group>
-  <xs:group name="volume.start">
-    <xs:sequence>
-      <xs:element name="start" type="xs:string"/>
-    </xs:sequence>
-  </xs:group>
-  <xs:group name="volume.end">
-    <xs:sequence>
-      <xs:element name="end" type="xs:string"/>
-    </xs:sequence>
   </xs:group>
   <xs:group name="volume.list">
     <xs:sequence>
       <xs:element name="list">
         <xs:complexType>
           <xs:sequence>
-            <xs:element maxOccurs="unbounded" name="item" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" name="item">
+              <xs:complexType mixed="true">
+                <xs:group minOccurs="0" ref="biblatexml:volume.range"/>
+              </xs:complexType>
+            </xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -1864,7 +1852,7 @@
   <xs:element name="userf" type="xs:string"/>
   <xs:group name="entryset">
     <xs:annotation>
-      <xs:documentation>TODO add editorA etc (biblatex 0.9)</xs:documentation>
+      <xs:documentation>special fields</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element name="entryset">
@@ -2237,7 +2225,11 @@
       <xs:element name="list">
         <xs:complexType mixed="true">
           <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="unbounded" name="item" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="item">
+              <xs:complexType mixed="true">
+                <xs:group minOccurs="0" ref="biblatexml:range"/>
+              </xs:complexType>
+            </xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -2854,7 +2846,6 @@
                 </xs:restriction>
               </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="locale"/>
             <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
@@ -2897,7 +2888,6 @@
                 </xs:restriction>
               </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="locale"/>
             <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
@@ -2923,7 +2913,6 @@
               </xs:restriction>
             </xs:simpleType>
           </xs:attribute>
-          <xs:attribute name="locale"/>
           <xs:attribute ref="xml:lang"/>
         </xs:complexType>
       </xs:element>
@@ -2996,7 +2985,6 @@
                 </xs:restriction>
               </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="locale"/>
             <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
@@ -3039,7 +3027,6 @@
                 </xs:restriction>
               </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="locale"/>
             <xs:attribute ref="xml:lang"/>
           </xs:complexType>
         </xs:element>
@@ -3065,7 +3052,6 @@
               </xs:restriction>
             </xs:simpleType>
           </xs:attribute>
-          <xs:attribute name="locale"/>
           <xs:attribute ref="xml:lang"/>
         </xs:complexType>
       </xs:element>
@@ -3337,7 +3323,7 @@
       </xs:element>
     </xs:choice>
   </xs:group>
-  <xs:element name="lista">
+  <xs:element name="listA">
     <xs:complexType mixed="true">
       <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
       <xs:attribute name="andothers">
@@ -3349,7 +3335,7 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  <xs:element name="listb">
+  <xs:element name="listB">
     <xs:complexType mixed="true">
       <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
       <xs:attribute name="andothers">
@@ -3361,7 +3347,7 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  <xs:element name="listc">
+  <xs:element name="listC">
     <xs:complexType mixed="true">
       <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
       <xs:attribute name="andothers">
@@ -3373,7 +3359,7 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  <xs:element name="liste">
+  <xs:element name="listD">
     <xs:complexType mixed="true">
       <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
       <xs:attribute name="andothers">
@@ -3385,7 +3371,19 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  <xs:element name="listf">
+  <xs:element name="listE">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="listF">
     <xs:complexType mixed="true">
       <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
       <xs:attribute name="andothers">
@@ -3731,7 +3729,6 @@
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:attribute>
-                    <xs:attribute name="locale"/>
                     <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
@@ -3774,7 +3771,6 @@
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:attribute>
-                    <xs:attribute name="locale"/>
                     <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
@@ -3800,7 +3796,6 @@
                       </xs:restriction>
                     </xs:simpleType>
                   </xs:attribute>
-                  <xs:attribute name="locale"/>
                   <xs:attribute ref="xml:lang"/>
                 </xs:complexType>
               </xs:element>
@@ -4101,7 +4096,6 @@
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:attribute>
-                    <xs:attribute name="locale"/>
                     <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
@@ -4144,7 +4138,6 @@
                         </xs:restriction>
                       </xs:simpleType>
                     </xs:attribute>
-                    <xs:attribute name="locale"/>
                     <xs:attribute ref="xml:lang"/>
                   </xs:complexType>
                 </xs:element>
@@ -4170,7 +4163,6 @@
                       </xs:restriction>
                     </xs:simpleType>
                   </xs:attribute>
-                  <xs:attribute name="locale"/>
                   <xs:attribute ref="xml:lang"/>
                 </xs:complexType>
               </xs:element>
@@ -4377,12 +4369,13 @@
     </xs:attribute>
   </xs:attributeGroup>
   <xs:attributeGroup name="attlist.editor">
-    <xs:attribute name="type">
+    <xs:attribute name="type"/>
+    <xs:attribute name="class">
       <xs:simpleType>
         <xs:restriction base="xs:token">
-          <xs:enumeration value="editor"/>
-          <xs:enumeration value="editor+translator"/>
-          <xs:enumeration value="compiler"/>
+          <xs:enumeration value="sub"/>
+          <xs:enumeration value="vol"/>
+          <xs:enumeration value="main"/>
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
@@ -4483,6 +4476,248 @@
       </xs:element>
     </xs:choice>
   </xs:group>
+  <xs:group name="editors">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:choice>
+          <xs:choice>
+            <xs:element name="editor">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="editor">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="editor">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+                <xs:attributeGroup ref="biblatexml:uniform"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:choice>
+            <xs:element name="editor">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="editor">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+                <xs:attributeGroup ref="biblatexml:uniform"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:element name="editor">
+            <xs:complexType mixed="true">
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+              </xs:sequence>
+              <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+              <xs:attributeGroup ref="biblatexml:uniform"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+        <xs:choice>
+          <xs:choice>
+            <xs:element name="editorA">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="editorA">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="editorA">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+                <xs:attributeGroup ref="biblatexml:uniform"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:choice>
+            <xs:element name="editorA">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="editorA">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+                <xs:attributeGroup ref="biblatexml:uniform"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:element name="editorA">
+            <xs:complexType mixed="true">
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+              </xs:sequence>
+              <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+              <xs:attributeGroup ref="biblatexml:uniform"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+        <xs:choice>
+          <xs:choice>
+            <xs:element name="editorB">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="editorB">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="editorB">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+                <xs:attributeGroup ref="biblatexml:uniform"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:choice>
+            <xs:element name="editorB">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="editorB">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+                <xs:attributeGroup ref="biblatexml:uniform"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:element name="editorB">
+            <xs:complexType mixed="true">
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+              </xs:sequence>
+              <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+              <xs:attributeGroup ref="biblatexml:uniform"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+        <xs:choice>
+          <xs:choice>
+            <xs:element name="editorC">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="editorC">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="editorC">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+                <xs:attributeGroup ref="biblatexml:uniform"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:choice>
+            <xs:element name="editorC">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="editorC">
+              <xs:complexType mixed="true">
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+                </xs:sequence>
+                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+                <xs:attributeGroup ref="biblatexml:uniform"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:element name="editorC">
+            <xs:complexType mixed="true">
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+              </xs:sequence>
+              <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+              <xs:attributeGroup ref="biblatexml:uniform"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
   <xs:group name="editor">
     <xs:choice>
       <xs:sequence>
@@ -4534,6 +4769,189 @@
         </xs:element>
       </xs:sequence>
       <xs:element maxOccurs="unbounded" name="editor">
+        <xs:complexType mixed="true">
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+          </xs:sequence>
+          <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+          <xs:attributeGroup ref="biblatexml:uniform"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:group>
+  <xs:group name="editorA">
+    <xs:choice>
+      <xs:sequence>
+        <xs:element name="editorA">
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="editorA">
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+            <xs:attributeGroup ref="biblatexml:romanized"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="editorA">
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+            <xs:attributeGroup ref="biblatexml:uniform"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" name="editorA">
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+            <xs:attributeGroup ref="biblatexml:romanized"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="editorA">
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+            <xs:attributeGroup ref="biblatexml:uniform"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:element maxOccurs="unbounded" name="editorA">
+        <xs:complexType mixed="true">
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+          </xs:sequence>
+          <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+          <xs:attributeGroup ref="biblatexml:uniform"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:group>
+  <xs:group name="editorB">
+    <xs:choice>
+      <xs:sequence>
+        <xs:element name="editorB">
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="editorB">
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+            <xs:attributeGroup ref="biblatexml:romanized"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="editorB">
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+            <xs:attributeGroup ref="biblatexml:uniform"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" name="editorB">
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+            <xs:attributeGroup ref="biblatexml:romanized"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="editorB">
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+            <xs:attributeGroup ref="biblatexml:uniform"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:element maxOccurs="unbounded" name="editorB">
+        <xs:complexType mixed="true">
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+          </xs:sequence>
+          <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+          <xs:attributeGroup ref="biblatexml:uniform"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:group>
+  <xs:group name="editorC">
+    <xs:choice>
+      <xs:sequence>
+        <xs:element name="editorC">
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="editorC">
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+            <xs:attributeGroup ref="biblatexml:romanized"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="editorC">
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+            <xs:attributeGroup ref="biblatexml:uniform"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" name="editorC">
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+            <xs:attributeGroup ref="biblatexml:romanized"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="editorC">
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+            <xs:attributeGroup ref="biblatexml:uniform"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:element maxOccurs="unbounded" name="editorC">
         <xs:complexType mixed="true">
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5223,103 +5641,6 @@
       </xs:element>
     </xs:choice>
   </xs:group>
-  <xs:group name="redactor">
-    <xs:choice>
-      <xs:sequence>
-        <xs:element name="redactor">
-          <xs:complexType mixed="true">
-            <xs:sequence>
-              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-            </xs:sequence>
-            <xs:attribute name="andothers">
-              <xs:simpleType>
-                <xs:restriction base="xs:token">
-                  <xs:enumeration value="true"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:attribute>
-          </xs:complexType>
-        </xs:element>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="redactor">
-          <xs:complexType mixed="true">
-            <xs:sequence>
-              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-            </xs:sequence>
-            <xs:attribute name="andothers">
-              <xs:simpleType>
-                <xs:restriction base="xs:token">
-                  <xs:enumeration value="true"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:attribute>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
-          </xs:complexType>
-        </xs:element>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="redactor">
-          <xs:complexType mixed="true">
-            <xs:sequence>
-              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-            </xs:sequence>
-            <xs:attribute name="andothers">
-              <xs:simpleType>
-                <xs:restriction base="xs:token">
-                  <xs:enumeration value="true"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:attribute>
-            <xs:attributeGroup ref="biblatexml:uniform"/>
-          </xs:complexType>
-        </xs:element>
-      </xs:sequence>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" name="redactor">
-          <xs:complexType mixed="true">
-            <xs:sequence>
-              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-            </xs:sequence>
-            <xs:attribute name="andothers">
-              <xs:simpleType>
-                <xs:restriction base="xs:token">
-                  <xs:enumeration value="true"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:attribute>
-            <xs:attributeGroup ref="biblatexml:romanized"/>
-          </xs:complexType>
-        </xs:element>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="redactor">
-          <xs:complexType mixed="true">
-            <xs:sequence>
-              <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-            </xs:sequence>
-            <xs:attribute name="andothers">
-              <xs:simpleType>
-                <xs:restriction base="xs:token">
-                  <xs:enumeration value="true"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:attribute>
-            <xs:attributeGroup ref="biblatexml:uniform"/>
-          </xs:complexType>
-        </xs:element>
-      </xs:sequence>
-      <xs:element maxOccurs="unbounded" name="redactor">
-        <xs:complexType mixed="true">
-          <xs:sequence>
-            <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-          </xs:sequence>
-          <xs:attribute name="andothers">
-            <xs:simpleType>
-              <xs:restriction base="xs:token">
-                <xs:enumeration value="true"/>
-              </xs:restriction>
-            </xs:simpleType>
-          </xs:attribute>
-          <xs:attributeGroup ref="biblatexml:uniform"/>
-        </xs:complexType>
-      </xs:element>
-    </xs:choice>
-  </xs:group>
   <xs:group name="translator">
     <xs:choice>
       <xs:sequence>
@@ -5711,7 +6032,7 @@
   <xs:group name="namea">
     <xs:choice>
       <xs:sequence>
-        <xs:element name="namea">
+        <xs:element name="nameA">
           <xs:complexType mixed="true">
             <xs:sequence>
               <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5725,7 +6046,7 @@
             </xs:attribute>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="namea">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="nameA">
           <xs:complexType mixed="true">
             <xs:sequence>
               <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5740,7 +6061,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="namea">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="nameA">
           <xs:complexType mixed="true">
             <xs:sequence>
               <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5757,7 +6078,7 @@
         </xs:element>
       </xs:sequence>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" name="namea">
+        <xs:element maxOccurs="unbounded" name="nameA">
           <xs:complexType mixed="true">
             <xs:sequence>
               <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5772,7 +6093,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="namea">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="nameA">
           <xs:complexType mixed="true">
             <xs:sequence>
               <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5788,7 +6109,7 @@
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element maxOccurs="unbounded" name="namea">
+      <xs:element maxOccurs="unbounded" name="nameA">
         <xs:complexType mixed="true">
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5808,7 +6129,7 @@
   <xs:group name="nameb">
     <xs:choice>
       <xs:sequence>
-        <xs:element name="nameb">
+        <xs:element name="nameB">
           <xs:complexType mixed="true">
             <xs:sequence>
               <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5822,7 +6143,7 @@
             </xs:attribute>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="nameb">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="nameB">
           <xs:complexType mixed="true">
             <xs:sequence>
               <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5837,7 +6158,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="nameb">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="nameB">
           <xs:complexType mixed="true">
             <xs:sequence>
               <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5854,7 +6175,7 @@
         </xs:element>
       </xs:sequence>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" name="nameb">
+        <xs:element maxOccurs="unbounded" name="nameB">
           <xs:complexType mixed="true">
             <xs:sequence>
               <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5869,7 +6190,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="nameb">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="nameB">
           <xs:complexType mixed="true">
             <xs:sequence>
               <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5885,7 +6206,7 @@
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element maxOccurs="unbounded" name="nameb">
+      <xs:element maxOccurs="unbounded" name="nameB">
         <xs:complexType mixed="true">
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5905,7 +6226,7 @@
   <xs:group name="namec">
     <xs:choice>
       <xs:sequence>
-        <xs:element name="namec">
+        <xs:element name="nameC">
           <xs:complexType mixed="true">
             <xs:sequence>
               <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5919,7 +6240,7 @@
             </xs:attribute>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="namec">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="nameC">
           <xs:complexType mixed="true">
             <xs:sequence>
               <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5934,7 +6255,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="namec">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="nameC">
           <xs:complexType mixed="true">
             <xs:sequence>
               <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5951,7 +6272,7 @@
         </xs:element>
       </xs:sequence>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" name="namec">
+        <xs:element maxOccurs="unbounded" name="nameC">
           <xs:complexType mixed="true">
             <xs:sequence>
               <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5966,7 +6287,7 @@
             <xs:attributeGroup ref="biblatexml:romanized"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="namec">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="nameC">
           <xs:complexType mixed="true">
             <xs:sequence>
               <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -5982,7 +6303,7 @@
           </xs:complexType>
         </xs:element>
       </xs:sequence>
-      <xs:element maxOccurs="unbounded" name="namec">
+      <xs:element maxOccurs="unbounded" name="nameC">
         <xs:complexType mixed="true">
           <xs:sequence>
             <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -6351,65 +6672,7 @@
           </xs:choice>
           <xs:group ref="biblatexml:date"/>
         </xs:choice>
-        <xs:choice>
-          <xs:choice>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:choice>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:element name="editor">
-            <xs:complexType mixed="true">
-              <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-              </xs:sequence>
-              <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-              <xs:attributeGroup ref="biblatexml:uniform"/>
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
+        <xs:group ref="biblatexml:editors"/>
         <xs:choice>
           <xs:choice>
             <xs:element name="shorteditor">
@@ -6585,101 +6848,6 @@
             </xs:element>
           </xs:choice>
           <xs:element name="translator">
-            <xs:complexType mixed="true">
-              <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-              </xs:sequence>
-              <xs:attribute name="andothers">
-                <xs:simpleType>
-                  <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:attribute>
-              <xs:attributeGroup ref="biblatexml:uniform"/>
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
-        <xs:choice>
-          <xs:choice>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:choice>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:element name="redactor">
             <xs:complexType mixed="true">
               <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -7669,65 +7837,7 @@
             </xs:complexType>
           </xs:element>
         </xs:choice>
-        <xs:choice>
-          <xs:choice>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:choice>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:element name="editor">
-            <xs:complexType mixed="true">
-              <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-              </xs:sequence>
-              <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-              <xs:attributeGroup ref="biblatexml:uniform"/>
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
+        <xs:group ref="biblatexml:editors"/>
         <xs:choice>
           <xs:choice>
             <xs:choice>
@@ -8127,101 +8237,6 @@
             </xs:element>
           </xs:choice>
           <xs:element name="translator">
-            <xs:complexType mixed="true">
-              <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-              </xs:sequence>
-              <xs:attribute name="andothers">
-                <xs:simpleType>
-                  <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:attribute>
-              <xs:attributeGroup ref="biblatexml:uniform"/>
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
-        <xs:choice>
-          <xs:choice>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:choice>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:element name="redactor">
             <xs:complexType mixed="true">
               <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -9265,65 +9280,7 @@
             </xs:complexType>
           </xs:element>
         </xs:choice>
-        <xs:choice>
-          <xs:choice>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:choice>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:element name="editor">
-            <xs:complexType mixed="true">
-              <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-              </xs:sequence>
-              <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-              <xs:attributeGroup ref="biblatexml:uniform"/>
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
+        <xs:group ref="biblatexml:editors"/>
         <xs:choice>
           <xs:choice>
             <xs:element name="title">
@@ -9471,6 +9428,70 @@
         </xs:choice>
         <xs:element ref="biblatexml:note"/>
         <xs:group ref="biblatexml:publisherinfos"/>
+        <xs:choice>
+          <xs:element name="series">
+            <xs:complexType>
+              <xs:attribute name="id" use="required"/>
+            </xs:complexType>
+          </xs:element>
+          <xs:choice>
+            <xs:element name="series">
+              <xs:complexType mixed="true">
+                <xs:choice>
+                  <xs:group ref="biblatexml:formattext"/>
+                  <xs:group maxOccurs="unbounded" ref="biblatexml:item"/>
+                </xs:choice>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="series">
+              <xs:complexType mixed="true">
+                <xs:choice>
+                  <xs:group ref="biblatexml:formattext"/>
+                  <xs:group maxOccurs="unbounded" ref="biblatexml:item"/>
+                </xs:choice>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="series">
+              <xs:complexType mixed="true">
+                <xs:choice>
+                  <xs:group ref="biblatexml:formattext"/>
+                  <xs:group maxOccurs="unbounded" ref="biblatexml:item"/>
+                </xs:choice>
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:choice>
+            <xs:element name="series">
+              <xs:complexType mixed="true">
+                <xs:choice>
+                  <xs:group ref="biblatexml:formattext"/>
+                  <xs:group maxOccurs="unbounded" ref="biblatexml:item"/>
+                </xs:choice>
+                <xs:attributeGroup ref="biblatexml:romanized"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="series">
+              <xs:complexType mixed="true">
+                <xs:choice>
+                  <xs:group ref="biblatexml:formattext"/>
+                  <xs:group maxOccurs="unbounded" ref="biblatexml:item"/>
+                </xs:choice>
+                <xs:attributeGroup ref="biblatexml:translated"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+          <xs:element name="series">
+            <xs:complexType mixed="true">
+              <xs:choice>
+                <xs:group ref="biblatexml:formattext"/>
+                <xs:group maxOccurs="unbounded" ref="biblatexml:item"/>
+              </xs:choice>
+              <xs:attributeGroup ref="biblatexml:translated"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
         <xs:element ref="biblatexml:chapter"/>
         <xs:element ref="biblatexml:pages"/>
         <xs:element ref="biblatexml:pagetotal"/>
@@ -9520,65 +9541,7 @@
     </xs:annotation>
     <xs:sequence>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:choice>
-          <xs:choice>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:choice>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:element name="editor">
-            <xs:complexType mixed="true">
-              <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-              </xs:sequence>
-              <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-              <xs:attributeGroup ref="biblatexml:uniform"/>
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
+        <xs:group ref="biblatexml:editors"/>
         <xs:choice>
           <xs:choice>
             <xs:element name="author">
@@ -9969,101 +9932,6 @@
             </xs:element>
           </xs:choice>
           <xs:element name="translator">
-            <xs:complexType mixed="true">
-              <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-              </xs:sequence>
-              <xs:attribute name="andothers">
-                <xs:simpleType>
-                  <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:attribute>
-              <xs:attributeGroup ref="biblatexml:uniform"/>
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
-        <xs:choice>
-          <xs:choice>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:choice>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:element name="redactor">
             <xs:complexType mixed="true">
               <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -11167,65 +11035,7 @@
             </xs:complexType>
           </xs:element>
         </xs:choice>
-        <xs:choice>
-          <xs:choice>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:choice>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:element name="editor">
-            <xs:complexType mixed="true">
-              <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-              </xs:sequence>
-              <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-              <xs:attributeGroup ref="biblatexml:uniform"/>
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
+        <xs:group ref="biblatexml:editors"/>
         <xs:choice>
           <xs:choice>
             <xs:element name="shorteditor">
@@ -11401,101 +11211,6 @@
             </xs:element>
           </xs:choice>
           <xs:element name="translator">
-            <xs:complexType mixed="true">
-              <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-              </xs:sequence>
-              <xs:attribute name="andothers">
-                <xs:simpleType>
-                  <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:attribute>
-              <xs:attributeGroup ref="biblatexml:uniform"/>
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
-        <xs:choice>
-          <xs:choice>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:choice>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="redactor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attribute name="andothers">
-                  <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                      <xs:enumeration value="true"/>
-                    </xs:restriction>
-                  </xs:simpleType>
-                </xs:attribute>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:element name="redactor">
             <xs:complexType mixed="true">
               <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -12801,65 +12516,7 @@
             <xs:group ref="biblatexml:date"/>
           </xs:choice>
           <xs:choice>
-            <xs:choice>
-              <xs:choice>
-                <xs:element name="editor">
-                  <xs:complexType mixed="true">
-                    <xs:sequence>
-                      <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                    </xs:sequence>
-                    <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                  </xs:complexType>
-                </xs:element>
-                <xs:element name="editor">
-                  <xs:complexType mixed="true">
-                    <xs:sequence>
-                      <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                    </xs:sequence>
-                    <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
-                  </xs:complexType>
-                </xs:element>
-                <xs:element name="editor">
-                  <xs:complexType mixed="true">
-                    <xs:sequence>
-                      <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                    </xs:sequence>
-                    <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                    <xs:attributeGroup ref="biblatexml:uniform"/>
-                  </xs:complexType>
-                </xs:element>
-              </xs:choice>
-              <xs:choice>
-                <xs:element name="editor">
-                  <xs:complexType mixed="true">
-                    <xs:sequence>
-                      <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                    </xs:sequence>
-                    <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
-                  </xs:complexType>
-                </xs:element>
-                <xs:element name="editor">
-                  <xs:complexType mixed="true">
-                    <xs:sequence>
-                      <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                    </xs:sequence>
-                    <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                    <xs:attributeGroup ref="biblatexml:uniform"/>
-                  </xs:complexType>
-                </xs:element>
-              </xs:choice>
-              <xs:element name="editor">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                  <xs:attributeGroup ref="biblatexml:uniform"/>
-                </xs:complexType>
-              </xs:element>
-            </xs:choice>
+            <xs:group ref="biblatexml:editors"/>
             <xs:choice>
               <xs:choice>
                 <xs:element name="booktitle">
@@ -13096,101 +12753,6 @@
                 </xs:element>
               </xs:choice>
               <xs:element name="translator">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attribute name="andothers">
-                    <xs:simpleType>
-                      <xs:restriction base="xs:token">
-                        <xs:enumeration value="true"/>
-                      </xs:restriction>
-                    </xs:simpleType>
-                  </xs:attribute>
-                  <xs:attributeGroup ref="biblatexml:uniform"/>
-                </xs:complexType>
-              </xs:element>
-            </xs:choice>
-            <xs:choice>
-              <xs:choice>
-                <xs:element name="redactor">
-                  <xs:complexType mixed="true">
-                    <xs:sequence>
-                      <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                    </xs:sequence>
-                    <xs:attribute name="andothers">
-                      <xs:simpleType>
-                        <xs:restriction base="xs:token">
-                          <xs:enumeration value="true"/>
-                        </xs:restriction>
-                      </xs:simpleType>
-                    </xs:attribute>
-                  </xs:complexType>
-                </xs:element>
-                <xs:element name="redactor">
-                  <xs:complexType mixed="true">
-                    <xs:sequence>
-                      <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                    </xs:sequence>
-                    <xs:attribute name="andothers">
-                      <xs:simpleType>
-                        <xs:restriction base="xs:token">
-                          <xs:enumeration value="true"/>
-                        </xs:restriction>
-                      </xs:simpleType>
-                    </xs:attribute>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
-                  </xs:complexType>
-                </xs:element>
-                <xs:element name="redactor">
-                  <xs:complexType mixed="true">
-                    <xs:sequence>
-                      <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                    </xs:sequence>
-                    <xs:attribute name="andothers">
-                      <xs:simpleType>
-                        <xs:restriction base="xs:token">
-                          <xs:enumeration value="true"/>
-                        </xs:restriction>
-                      </xs:simpleType>
-                    </xs:attribute>
-                    <xs:attributeGroup ref="biblatexml:uniform"/>
-                  </xs:complexType>
-                </xs:element>
-              </xs:choice>
-              <xs:choice>
-                <xs:element name="redactor">
-                  <xs:complexType mixed="true">
-                    <xs:sequence>
-                      <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                    </xs:sequence>
-                    <xs:attribute name="andothers">
-                      <xs:simpleType>
-                        <xs:restriction base="xs:token">
-                          <xs:enumeration value="true"/>
-                        </xs:restriction>
-                      </xs:simpleType>
-                    </xs:attribute>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
-                  </xs:complexType>
-                </xs:element>
-                <xs:element name="redactor">
-                  <xs:complexType mixed="true">
-                    <xs:sequence>
-                      <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                    </xs:sequence>
-                    <xs:attribute name="andothers">
-                      <xs:simpleType>
-                        <xs:restriction base="xs:token">
-                          <xs:enumeration value="true"/>
-                        </xs:restriction>
-                      </xs:simpleType>
-                    </xs:attribute>
-                    <xs:attributeGroup ref="biblatexml:uniform"/>
-                  </xs:complexType>
-                </xs:element>
-              </xs:choice>
-              <xs:element name="redactor">
                 <xs:complexType mixed="true">
                   <xs:sequence>
                     <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -14242,65 +13804,7 @@
           <xs:element ref="biblatexml:crossref"/>
           <xs:element ref="biblatexml:xref"/>
           <xs:choice>
-            <xs:choice>
-              <xs:choice>
-                <xs:element name="editor">
-                  <xs:complexType mixed="true">
-                    <xs:sequence>
-                      <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                    </xs:sequence>
-                    <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                  </xs:complexType>
-                </xs:element>
-                <xs:element name="editor">
-                  <xs:complexType mixed="true">
-                    <xs:sequence>
-                      <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                    </xs:sequence>
-                    <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
-                  </xs:complexType>
-                </xs:element>
-                <xs:element name="editor">
-                  <xs:complexType mixed="true">
-                    <xs:sequence>
-                      <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                    </xs:sequence>
-                    <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                    <xs:attributeGroup ref="biblatexml:uniform"/>
-                  </xs:complexType>
-                </xs:element>
-              </xs:choice>
-              <xs:choice>
-                <xs:element name="editor">
-                  <xs:complexType mixed="true">
-                    <xs:sequence>
-                      <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                    </xs:sequence>
-                    <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                    <xs:attributeGroup ref="biblatexml:romanized"/>
-                  </xs:complexType>
-                </xs:element>
-                <xs:element name="editor">
-                  <xs:complexType mixed="true">
-                    <xs:sequence>
-                      <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                    </xs:sequence>
-                    <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                    <xs:attributeGroup ref="biblatexml:uniform"/>
-                  </xs:complexType>
-                </xs:element>
-              </xs:choice>
-              <xs:element name="editor">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                  <xs:attributeGroup ref="biblatexml:uniform"/>
-                </xs:complexType>
-              </xs:element>
-            </xs:choice>
+            <xs:group ref="biblatexml:editors"/>
             <xs:choice>
               <xs:choice>
                 <xs:element name="booktitle">
@@ -14908,6 +14412,7 @@
         <xs:element ref="biblatexml:eprint"/>
         <xs:element ref="biblatexml:url"/>
         <xs:group ref="biblatexml:urldate"/>
+        <xs:group ref="biblatexml:eventdate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -15007,65 +14512,7 @@
               </xs:complexType>
             </xs:element>
           </xs:choice>
-          <xs:choice>
-            <xs:choice>
-              <xs:element name="editor">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                </xs:complexType>
-              </xs:element>
-              <xs:element name="editor">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                  <xs:attributeGroup ref="biblatexml:romanized"/>
-                </xs:complexType>
-              </xs:element>
-              <xs:element name="editor">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                  <xs:attributeGroup ref="biblatexml:uniform"/>
-                </xs:complexType>
-              </xs:element>
-            </xs:choice>
-            <xs:choice>
-              <xs:element name="editor">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                  <xs:attributeGroup ref="biblatexml:romanized"/>
-                </xs:complexType>
-              </xs:element>
-              <xs:element name="editor">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                  <xs:attributeGroup ref="biblatexml:uniform"/>
-                </xs:complexType>
-              </xs:element>
-            </xs:choice>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
+          <xs:group ref="biblatexml:editors"/>
         </xs:choice>
         <xs:choice>
           <xs:choice>
@@ -15487,65 +14934,7 @@
               </xs:complexType>
             </xs:element>
           </xs:choice>
-          <xs:choice>
-            <xs:choice>
-              <xs:element name="editor">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                </xs:complexType>
-              </xs:element>
-              <xs:element name="editor">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                  <xs:attributeGroup ref="biblatexml:romanized"/>
-                </xs:complexType>
-              </xs:element>
-              <xs:element name="editor">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                  <xs:attributeGroup ref="biblatexml:uniform"/>
-                </xs:complexType>
-              </xs:element>
-            </xs:choice>
-            <xs:choice>
-              <xs:element name="editor">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                  <xs:attributeGroup ref="biblatexml:romanized"/>
-                </xs:complexType>
-              </xs:element>
-              <xs:element name="editor">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                  <xs:attributeGroup ref="biblatexml:uniform"/>
-                </xs:complexType>
-              </xs:element>
-            </xs:choice>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
+          <xs:group ref="biblatexml:editors"/>
         </xs:choice>
         <xs:choice>
           <xs:choice>
@@ -15896,65 +15285,7 @@
               </xs:complexType>
             </xs:element>
           </xs:choice>
-          <xs:choice>
-            <xs:choice>
-              <xs:element name="editor">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                </xs:complexType>
-              </xs:element>
-              <xs:element name="editor">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                  <xs:attributeGroup ref="biblatexml:romanized"/>
-                </xs:complexType>
-              </xs:element>
-              <xs:element name="editor">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                  <xs:attributeGroup ref="biblatexml:uniform"/>
-                </xs:complexType>
-              </xs:element>
-            </xs:choice>
-            <xs:choice>
-              <xs:element name="editor">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                  <xs:attributeGroup ref="biblatexml:romanized"/>
-                </xs:complexType>
-              </xs:element>
-              <xs:element name="editor">
-                <xs:complexType mixed="true">
-                  <xs:sequence>
-                    <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                  </xs:sequence>
-                  <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                  <xs:attributeGroup ref="biblatexml:uniform"/>
-                </xs:complexType>
-              </xs:element>
-            </xs:choice>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
+          <xs:group ref="biblatexml:editors"/>
         </xs:choice>
         <xs:choice>
           <xs:choice>
@@ -16783,65 +16114,7 @@
     </xs:annotation>
     <xs:sequence>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:choice>
-          <xs:choice>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:choice>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:element name="editor">
-            <xs:complexType mixed="true">
-              <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-              </xs:sequence>
-              <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-              <xs:attributeGroup ref="biblatexml:uniform"/>
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
+        <xs:group ref="biblatexml:editors"/>
         <xs:choice>
           <xs:choice>
             <xs:element name="journal">
@@ -17546,65 +16819,7 @@
     </xs:annotation>
     <xs:sequence>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:choice>
-          <xs:choice>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:choice>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:romanized"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="editor">
-              <xs:complexType mixed="true">
-                <xs:sequence>
-                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-                </xs:sequence>
-                <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-                <xs:attributeGroup ref="biblatexml:uniform"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:choice>
-          <xs:element name="editor">
-            <xs:complexType mixed="true">
-              <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-              </xs:sequence>
-              <xs:attributeGroup ref="biblatexml:attlist.editor"/>
-              <xs:attributeGroup ref="biblatexml:uniform"/>
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
+        <xs:group ref="biblatexml:editors"/>
         <xs:choice>
           <xs:choice>
             <xs:element name="title">
@@ -18208,6 +17423,7 @@
         <xs:element ref="biblatexml:eprint"/>
         <xs:element ref="biblatexml:url"/>
         <xs:group ref="biblatexml:urldate"/>
+        <xs:group ref="biblatexml:eventdate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>

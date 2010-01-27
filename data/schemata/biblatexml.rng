@@ -161,6 +161,9 @@
       <optional>
         <ref name="remarks"/>
       </optional>
+      <optional>
+        <ref name="relatedentries"/>
+      </optional>
     </interleave>
   </define>
   <define name="formattext">
@@ -571,7 +574,38 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="volume">
     <element name="volume">
+      <choice>
+        <text/>
+        <ref name="volume.range"/>
+      </choice>
+    </element>
+  </define>
+  <define name="volume.range">
+    <choice>
+      <ref name="volume.list"/>
+      <group>
+        <ref name="volume.start"/>
+        <ref name="volume.end"/>
+      </group>
+    </choice>
+  </define>
+  <define name="volume.start">
+    <element name="start">
       <text/>
+    </element>
+  </define>
+  <define name="volume.end">
+    <element name="end">
+      <text/>
+    </element>
+  </define>
+  <define name="volume.list">
+    <element name="list">
+      <oneOrMore>
+        <element name="item">
+          <text/>
+        </element>
+      </oneOrMore>
     </element>
   </define>
   <define name="volumes">
@@ -727,21 +761,11 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </element>
   </define>
   <!-- DATE FIELDS -->
-  <define name="month">
-    <element name="month">
-      <data type="gMonth"/>
-    </element>
-  </define>
-  <define name="year">
-    <element name="year">
-      <data type="gYear"/>
-    </element>
-  </define>
   <define name="date">
     <element name="date">
       <choice>
         <ref name="date.type"/>
-        <ref name="daterange"/>
+        <ref name="date.range"/>
       </choice>
     </element>
   </define>
@@ -749,7 +773,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="origdate">
       <choice>
         <ref name="date.type"/>
-        <ref name="daterange"/>
+        <ref name="date.range"/>
       </choice>
     </element>
   </define>
@@ -757,7 +781,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="urldate">
       <choice>
         <ref name="date.type"/>
-        <ref name="daterange"/>
+        <ref name="date.range"/>
       </choice>
     </element>
   </define>
@@ -765,7 +789,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="eventdate">
       <choice>
         <ref name="date.type"/>
-        <ref name="daterange"/>
+        <ref name="date.range"/>
       </choice>
     </element>
   </define>
@@ -776,18 +800,37 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <data type="gYear"/>
     </choice>
   </define>
-  <define name="daterange">
-    <ref name="daterange.start"/>
-    <ref name="daterange.end"/>
+  <define name="date.range">
+    <choice>
+      <ref name="date.range.list"/>
+      <group>
+        <ref name="date.range.start"/>
+        <optional>
+          <ref name="date.range.end"/>
+        </optional>
+      </group>
+    </choice>
   </define>
-  <define name="daterange.start">
+  <define name="date.range.start">
     <element name="start">
       <ref name="date.type"/>
     </element>
   </define>
-  <define name="daterange.end">
+  <define name="date.range.end">
     <element name="end">
       <ref name="date.type"/>
+    </element>
+  </define>
+  <define name="date.range.list">
+    <element name="list">
+      <oneOrMore>
+        <element name="item">
+          <choice>
+            <ref name="date.type"/>
+            <ref name="date.range"/>
+          </choice>
+        </element>
+      </oneOrMore>
     </element>
   </define>
   <define name="pages">
@@ -804,7 +847,14 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="pagelist">
     <element name="list">
-      <text/>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <element name="item">
+            <text/>
+          </element>
+        </oneOrMore>
+      </choice>
     </element>
   </define>
   <define name="attlist.pages">
@@ -1059,7 +1109,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </choice>
   </define>
   <define name="lista">
-    <element name="lista">
+    <element name="listA">
       <optional>
         <ref name="attlist.lists"/>
       </optional>
@@ -1072,7 +1122,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </element>
   </define>
   <define name="listb">
-    <element name="listb">
+    <element name="listB">
       <optional>
         <ref name="attlist.lists"/>
       </optional>
@@ -1085,7 +1135,20 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </element>
   </define>
   <define name="listc">
-    <element name="listc">
+    <element name="listC">
+      <optional>
+        <ref name="attlist.lists"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="item"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="listd">
+    <element name="listD">
       <optional>
         <ref name="attlist.lists"/>
       </optional>
@@ -1098,7 +1161,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </element>
   </define>
   <define name="liste">
-    <element name="liste">
+    <element name="listE">
       <optional>
         <ref name="attlist.lists"/>
       </optional>
@@ -1111,7 +1174,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </element>
   </define>
   <define name="listf">
-    <element name="listf">
+    <element name="listF">
       <optional>
         <ref name="attlist.lists"/>
       </optional>
@@ -1210,44 +1273,49 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </element>
   </define>
   <!-- NAME LISTS -->
-  <define name="attlist.author" combine="choice">
+  <define name="attlist.author">
     <optional>
       <attribute name="type">
         <choice>
           <value>author</value>
           <value>editor</value>
           <value>compiler</value>
+          <value>translator</value>
+          <value>editor+translator</value>
           <text/>
         </choice>
       </attribute>
     </optional>
-  </define>
-  <define name="attlist.author" combine="choice">
     <optional>
       <ref name="att.gender"/>
     </optional>
-  </define>
-  <define name="attlist.author" combine="choice">
     <optional>
       <ref name="attlist.lists"/>
     </optional>
   </define>
-  <define name="attlist.editor" combine="choice">
+  <define name="attlist.editor">
     <optional>
       <attribute name="type">
         <choice>
           <value>editor</value>
+          <value>editor+translator</value>
           <value>compiler</value>
+          <text/>
         </choice>
       </attribute>
     </optional>
-  </define>
-  <define name="attlist.editor" combine="choice">
+    <optional>
+      <attribute name="class">
+        <choice>
+          <value>sub</value>
+          <value>vol</value>
+          <value>main</value>
+        </choice>
+      </attribute>
+    </optional>
     <optional>
       <ref name="att.gender"/>
     </optional>
-  </define>
-  <define name="attlist.editor" combine="choice">
     <optional>
       <ref name="attlist.lists"/>
     </optional>
@@ -1276,8 +1344,55 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       </choice>
     </element>
   </define>
+  <define name="editors">
+    <interleave>
+      <ref name="editor"/>
+      <optional>
+        <ref name="editorA"/>
+      </optional>
+      <optional>
+        <ref name="editorB"/>
+      </optional>
+      <optional>
+        <ref name="editorC"/>
+      </optional>
+    </interleave>
+  </define>
   <define name="editor">
     <element name="editor">
+      <ref name="attlist.editor"/>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="editorA">
+    <element name="editorA">
+      <ref name="attlist.editor"/>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="editorB">
+    <element name="editorB">
+      <ref name="attlist.editor"/>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="editorC">
+    <element name="editorC">
       <ref name="attlist.editor"/>
       <choice>
         <text/>
@@ -1378,19 +1493,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       </choice>
     </element>
   </define>
-  <define name="redactor">
-    <element name="redactor">
-      <optional>
-        <ref name="attlist.lists"/>
-      </optional>
-      <choice>
-        <text/>
-        <oneOrMore>
-          <ref name="person"/>
-        </oneOrMore>
-      </choice>
-    </element>
-  </define>
   <define name="translator">
     <element name="translator">
       <optional>
@@ -1444,7 +1546,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </element>
   </define>
   <define name="namea">
-    <element name="namea">
+    <element name="nameA">
       <optional>
         <ref name="attlist.lists"/>
       </optional>
@@ -1457,7 +1559,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </element>
   </define>
   <define name="nameb">
-    <element name="nameb">
+    <element name="nameB">
       <optional>
         <ref name="attlist.lists"/>
       </optional>
@@ -1470,7 +1572,7 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </element>
   </define>
   <define name="namec">
-    <element name="namec">
+    <element name="nameC">
       <optional>
         <ref name="attlist.lists"/>
       </optional>
@@ -1658,14 +1760,38 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       </choice>
     </element>
   </define>
-  <define name="BibLaTeXML.article.standard.fields">
+  <define name="relatedentries">
     <a:documentation>culture
 language
 country
 person
 century
 author
-works</a:documentation>
+works
+This is used to record crossrefs to other entries that are related to the present one,
+for instance a reedition.</a:documentation>
+    <element name="relatedentries">
+      <oneOrMore>
+        <element name="item">
+          <attribute name="type">
+            <choice>
+              <value>reedition</value>
+              <value>reprint</value>
+              <value>contains</value>
+              <value>translation</value>
+              <value>reedition_of</value>
+              <value>reprint_of</value>
+              <value>part_of</value>
+              <value>translation_of</value>
+              <text/>
+            </choice>
+          </attribute>
+          <attribute name="id"/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="BibLaTeXML.article.standard.fields">
     <a:documentation/>
     <interleave>
       <ref name="author"/>
@@ -1674,29 +1800,20 @@ works</a:documentation>
         <ref name="journaltitle"/>
         <ref name="journal"/>
       </choice>
-      <choice>
-        <interleave>
-          <optional>
-            <choice>
-              <ref name="month"/>
-              <ref name="issue"/>
-            </choice>
-          </optional>
-          <ref name="year"/>
-        </interleave>
+      <interleave>
+        <optional>
+          <ref name="issue"/>
+        </optional>
         <ref name="date"/>
-      </choice>
+      </interleave>
       <optional>
-        <ref name="editor"/>
+        <ref name="editors"/>
       </optional>
       <optional>
         <ref name="shorteditor"/>
       </optional>
       <optional>
         <ref name="translator"/>
-      </optional>
-      <optional>
-        <ref name="redactor"/>
       </optional>
       <optional>
         <ref name="annotator"/>
@@ -1871,21 +1988,19 @@ works</a:documentation>
         <ref name="author"/>
       </optional>
       <optional>
-        <!-- changed -->
-        <ref name="editor"/>
+        <ref name="editors"/>
       </optional>
-      <!-- changed -->
       <choice>
         <interleave>
           <ref name="title"/>
-          <ref name="year"/>
+          <ref name="date"/>
         </interleave>
         <interleave>
           <optional>
             <ref name="title"/>
           </optional>
           <optional>
-            <ref name="year"/>
+            <ref name="date"/>
           </optional>
           <ref name="crossref"/>
         </interleave>
@@ -1895,14 +2010,10 @@ works</a:documentation>
         <ref name="bookauthor"/>
       </optional>
       <optional>
-        <!-- added -->
         <ref name="shorteditor"/>
       </optional>
       <optional>
         <ref name="translator"/>
-      </optional>
-      <optional>
-        <ref name="redactor"/>
       </optional>
       <optional>
         <ref name="annotator"/>
@@ -1938,15 +2049,12 @@ works</a:documentation>
         <ref name="booktitle"/>
       </optional>
       <optional>
-        <!-- added -->
         <ref name="booktitleaddon"/>
       </optional>
       <optional>
-        <!-- added -->
         <ref name="booksubtitle"/>
       </optional>
       <optional>
-        <!-- added -->
         <ref name="volume"/>
       </optional>
       <optional>
@@ -2034,11 +2142,11 @@ works</a:documentation>
       </optional>
       <optional>
         <!-- changed -->
-        <ref name="editor"/>
+        <ref name="editors"/>
       </optional>
       <!-- changed -->
       <ref name="title"/>
-      <ref name="year"/>
+      <ref name="date"/>
       <optional>
         <ref name="subtitle"/>
       </optional>
@@ -2105,7 +2213,7 @@ works</a:documentation>
     <a:documentation/>
     <interleave>
       <optional>
-        <ref name="editor"/>
+        <ref name="editors"/>
       </optional>
       <optional>
         <!-- changed -->
@@ -2113,7 +2221,7 @@ works</a:documentation>
       </optional>
       <!-- changed -->
       <ref name="title"/>
-      <ref name="year"/>
+      <ref name="date"/>
       <optional>
         <ref name="bookauthor"/>
       </optional>
@@ -2123,9 +2231,6 @@ works</a:documentation>
       </optional>
       <optional>
         <ref name="translator"/>
-      </optional>
-      <optional>
-        <ref name="redactor"/>
       </optional>
       <optional>
         <ref name="annotator"/>
@@ -2252,8 +2357,25 @@ works</a:documentation>
   <define name="BibLaTeXML.inbook.standard.fields">
     <a:documentation/>
     <interleave>
-      <ref name="author"/>
       <ref name="title"/>
+      <optional>
+        <ref name="author"/>
+      </optional>
+      <optional>
+        <ref name="editors"/>
+      </optional>
+      <optional>
+        <ref name="shorteditor"/>
+      </optional>
+      <optional>
+        <ref name="translator"/>
+      </optional>
+      <optional>
+        <ref name="annotator"/>
+      </optional>
+      <optional>
+        <ref name="commentator"/>
+      </optional>
       <!-- year can be provided with crossref if it refers to multivolume work -->
       <choice>
         <interleave>
@@ -2262,7 +2384,7 @@ works</a:documentation>
             <ref name="xref"/>
           </choice>
           <optional>
-            <ref name="year"/>
+            <ref name="date"/>
           </optional>
         </interleave>
         <interleave>
@@ -2286,25 +2408,7 @@ works</a:documentation>
           <optional>
             <ref name="booktitleaddon"/>
           </optional>
-          <ref name="year"/>
-          <optional>
-            <ref name="editor"/>
-          </optional>
-          <optional>
-            <ref name="shorteditor"/>
-          </optional>
-          <optional>
-            <ref name="translator"/>
-          </optional>
-          <optional>
-            <ref name="redactor"/>
-          </optional>
-          <optional>
-            <ref name="annotator"/>
-          </optional>
-          <optional>
-            <ref name="commentator"/>
-          </optional>
+          <ref name="date"/>
           <optional>
             <ref name="introduction"/>
           </optional>
@@ -2421,27 +2525,24 @@ works</a:documentation>
             <ref name="xref"/>
           </choice>
           <optional>
-            <ref name="year"/>
+            <ref name="date"/>
           </optional>
         </interleave>
         <interleave>
           <optional>
-            <ref name="editor"/>
+            <ref name="editors"/>
           </optional>
           <!--
             made it optional
             FIXME: this is probably too strict
           -->
           <ref name="booktitle"/>
-          <ref name="year"/>
+          <ref name="date"/>
           <optional>
             <ref name="shorteditor"/>
           </optional>
           <optional>
             <ref name="translator"/>
-          </optional>
-          <optional>
-            <ref name="redactor"/>
           </optional>
           <optional>
             <ref name="annotator"/>
@@ -2571,11 +2672,11 @@ works</a:documentation>
         <ref name="xref"/>
         <interleave>
           <optional>
-            <ref name="editor"/>
+            <ref name="editors"/>
           </optional>
           <!-- made it optional -->
           <ref name="booktitle"/>
-          <ref name="year"/>
+          <ref name="date"/>
           <optional>
             <ref name="shorteditor"/>
           </optional>
@@ -2658,6 +2759,9 @@ works</a:documentation>
       <optional>
         <ref name="urldate"/>
       </optional>
+      <optional>
+        <ref name="eventdate"/>
+      </optional>
     </interleave>
   </define>
   <define name="BibLaTeXML.inproceedings.fields">
@@ -2685,11 +2789,11 @@ works</a:documentation>
       <optional>
         <choice>
           <ref name="author"/>
-          <ref name="editor"/>
+          <ref name="editors"/>
         </choice>
       </optional>
       <ref name="title"/>
-      <ref name="year"/>
+      <ref name="date"/>
       <optional>
         <ref name="subtitle"/>
       </optional>
@@ -2778,19 +2882,11 @@ works</a:documentation>
       <optional>
         <choice>
           <ref name="author"/>
-          <ref name="editor"/>
+          <ref name="editors"/>
         </choice>
       </optional>
       <ref name="title"/>
-      <choice>
-        <interleave>
-          <optional>
-            <ref name="month"/>
-          </optional>
-          <ref name="year"/>
-        </interleave>
-        <ref name="date"/>
-      </choice>
+      <ref name="date"/>
       <optional>
         <ref name="subtitle"/>
       </optional>
@@ -2857,21 +2953,13 @@ works</a:documentation>
         <interleave>
           <ref name="author"/>
           <optional>
-            <ref name="editor"/>
+            <ref name="editors"/>
           </optional>
         </interleave>
       </optional>
       <ref name="title"/>
       <optional>
-        <choice>
-          <interleave>
-            <optional>
-              <ref name="month"/>
-            </optional>
-            <ref name="year"/>
-          </interleave>
-          <ref name="date"/>
-        </choice>
+        <ref name="date"/>
       </optional>
       <choice>
         <ref name="url"/>
@@ -2925,15 +3013,7 @@ works</a:documentation>
       <ref name="author"/>
       <ref name="title"/>
       <ref name="number"/>
-      <choice>
-        <interleave>
-          <optional>
-            <ref name="month"/>
-          </optional>
-          <ref name="year"/>
-        </interleave>
-        <ref name="date"/>
-      </choice>
+      <ref name="date"/>
       <optional>
         <ref name="holder"/>
       </optional>
@@ -3024,26 +3104,18 @@ works</a:documentation>
     <a:documentation/>
     <interleave>
       <optional>
-        <ref name="editor"/>
+        <ref name="editors"/>
       </optional>
       <!-- made it optional -->
       <choice>
         <ref name="journal"/>
         <ref name="journaltitle"/>
       </choice>
-      <!-- CHANGED from title -->
-      <choice>
-        <interleave>
-          <optional>
-            <choice>
-              <ref name="month"/>
-              <ref name="issue"/>
-            </choice>
-          </optional>
-          <ref name="year"/>
-        </interleave>
-        <ref name="date"/>
-      </choice>
+      <optional>
+        <!-- CHANGED from title -->
+        <ref name="issue"/>
+      </optional>
+      <ref name="date"/>
       <optional>
         <ref name="shorteditor"/>
       </optional>
@@ -3152,11 +3224,11 @@ works</a:documentation>
     <a:documentation/>
     <interleave>
       <optional>
-        <ref name="editor"/>
+        <ref name="editors"/>
       </optional>
       <!-- made it optional -->
       <ref name="title"/>
-      <ref name="year"/>
+      <ref name="date"/>
       <optional>
         <ref name="shorteditor"/>
       </optional>
@@ -3237,6 +3309,9 @@ works</a:documentation>
       <optional>
         <ref name="urldate"/>
       </optional>
+      <optional>
+        <ref name="eventdate"/>
+      </optional>
     </interleave>
   </define>
   <define name="BibLaTeXML.proceedings.fields">
@@ -3264,7 +3339,7 @@ works</a:documentation>
       <ref name="author"/>
       <ref name="title"/>
       <ref name="institution"/>
-      <ref name="year"/>
+      <ref name="date"/>
       <optional>
         <ref name="subtitle"/>
       </optional>
@@ -3348,7 +3423,7 @@ works</a:documentation>
         <ref name="institution"/>
         <ref name="school"/>
       </choice>
-      <ref name="year"/>
+      <ref name="date"/>
       <optional>
         <ref name="subtitle"/>
       </optional>
@@ -3436,15 +3511,7 @@ works</a:documentation>
       <ref name="author"/>
       <ref name="title"/>
       <optional>
-        <choice>
-          <interleave>
-            <optional>
-              <ref name="month"/>
-            </optional>
-            <ref name="year"/>
-          </interleave>
-          <ref name="date"/>
-        </choice>
+        <ref name="date"/>
       </optional>
       <optional>
         <ref name="subtitle"/>
@@ -3498,15 +3565,7 @@ works</a:documentation>
     <interleave>
       <ref name="author"/>
       <ref name="title"/>
-      <choice>
-        <interleave>
-          <optional>
-            <ref name="month"/>
-          </optional>
-          <ref name="year"/>
-        </interleave>
-        <ref name="date"/>
-      </choice>
+      <ref name="date"/>
       <optional>
         <ref name="institution"/>
       </optional>

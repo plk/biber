@@ -93,6 +93,7 @@
         <xs:element ref="biblatexml:reviews"/>
         <xs:element ref="biblatexml:topics"/>
         <xs:element ref="biblatexml:remarks"/>
+        <xs:element ref="biblatexml:relatedentries"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -314,7 +315,41 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="version" type="xs:string"/>
-  <xs:element name="volume" type="xs:string"/>
+  <xs:element name="volume">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" ref="biblatexml:volume.range"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="volume.range">
+    <xs:choice>
+      <xs:group ref="biblatexml:volume.list"/>
+      <xs:sequence>
+        <xs:group ref="biblatexml:volume.start"/>
+        <xs:group ref="biblatexml:volume.end"/>
+      </xs:sequence>
+    </xs:choice>
+  </xs:group>
+  <xs:group name="volume.start">
+    <xs:sequence>
+      <xs:element name="start" type="xs:string"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="volume.end">
+    <xs:sequence>
+      <xs:element name="end" type="xs:string"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="volume.list">
+    <xs:sequence>
+      <xs:element name="list">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="item" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
   <xs:element name="volumes" type="xs:string"/>
   <xs:element name="usera" type="xs:string"/>
   <xs:element name="userb" type="xs:string"/>
@@ -388,57 +423,83 @@
     </xs:complexType>
   </xs:element>
   <!-- DATE FIELDS -->
-  <xs:element name="month" type="xs:gMonth"/>
-  <xs:element name="year" type="xs:gYear"/>
   <xs:element name="date">
     <xs:complexType mixed="true">
-      <xs:group minOccurs="0" ref="biblatexml:daterange"/>
+      <xs:group minOccurs="0" ref="biblatexml:date.range"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="origdate">
     <xs:complexType mixed="true">
-      <xs:group minOccurs="0" ref="biblatexml:daterange"/>
+      <xs:group minOccurs="0" ref="biblatexml:date.range"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="urldate">
     <xs:complexType mixed="true">
-      <xs:group minOccurs="0" ref="biblatexml:daterange"/>
+      <xs:group minOccurs="0" ref="biblatexml:date.range"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="eventdate">
     <xs:complexType mixed="true">
-      <xs:group minOccurs="0" ref="biblatexml:daterange"/>
+      <xs:group minOccurs="0" ref="biblatexml:date.range"/>
     </xs:complexType>
   </xs:element>
   <xs:simpleType name="date.type">
     <xs:union memberTypes="xs:date xs:gYearMonth xs:gYear"/>
   </xs:simpleType>
-  <xs:group name="daterange">
-    <xs:sequence>
-      <xs:group ref="biblatexml:daterange.start"/>
-      <xs:group ref="biblatexml:daterange.end"/>
-    </xs:sequence>
+  <xs:group name="date.range">
+    <xs:choice>
+      <xs:group ref="biblatexml:date.range.list"/>
+      <xs:sequence>
+        <xs:group ref="biblatexml:date.range.start"/>
+        <xs:group minOccurs="0" ref="biblatexml:date.range.end"/>
+      </xs:sequence>
+    </xs:choice>
   </xs:group>
-  <xs:group name="daterange.start">
+  <xs:group name="date.range.start">
     <xs:sequence>
       <xs:element name="start" type="biblatexml:date.type"/>
     </xs:sequence>
   </xs:group>
-  <xs:group name="daterange.end">
+  <xs:group name="date.range.end">
     <xs:sequence>
       <xs:element name="end" type="biblatexml:date.type"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="date.range.list">
+    <xs:sequence>
+      <xs:element name="list">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="item">
+              <xs:complexType mixed="true">
+                <xs:group minOccurs="0" ref="biblatexml:date.range"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
     </xs:sequence>
   </xs:group>
   <xs:element name="pages">
     <xs:complexType mixed="true">
       <xs:choice minOccurs="0">
         <xs:group ref="biblatexml:range"/>
-        <xs:element ref="biblatexml:list"/>
+        <xs:group ref="biblatexml:pagelist"/>
       </xs:choice>
       <xs:attributeGroup ref="biblatexml:attlist.pages"/>
     </xs:complexType>
   </xs:element>
-  <xs:element name="list" type="xs:string"/>
+  <xs:group name="pagelist">
+    <xs:sequence>
+      <xs:element name="list">
+        <xs:complexType mixed="true">
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="item" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
   <xs:attributeGroup name="attlist.pages">
     <xs:attribute name="pagination">
       <xs:simpleType>
@@ -765,7 +826,7 @@
       </xs:element>
     </xs:choice>
   </xs:group>
-  <xs:element name="lista">
+  <xs:element name="listA">
     <xs:complexType mixed="true">
       <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
       <xs:attribute name="andothers">
@@ -777,7 +838,7 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  <xs:element name="listb">
+  <xs:element name="listB">
     <xs:complexType mixed="true">
       <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
       <xs:attribute name="andothers">
@@ -789,7 +850,7 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  <xs:element name="listc">
+  <xs:element name="listC">
     <xs:complexType mixed="true">
       <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
       <xs:attribute name="andothers">
@@ -801,7 +862,7 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  <xs:element name="liste">
+  <xs:element name="listD">
     <xs:complexType mixed="true">
       <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
       <xs:attribute name="andothers">
@@ -813,7 +874,19 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  <xs:element name="listf">
+  <xs:element name="listE">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
+      <xs:attribute name="andothers">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="listF">
     <xs:complexType mixed="true">
       <xs:group minOccurs="0" maxOccurs="unbounded" ref="biblatexml:item"/>
       <xs:attribute name="andothers">
@@ -925,11 +998,13 @@
     </xs:attribute>
   </xs:attributeGroup>
   <xs:attributeGroup name="attlist.editor">
-    <xs:attribute name="type">
+    <xs:attribute name="type"/>
+    <xs:attribute name="class">
       <xs:simpleType>
         <xs:restriction base="xs:token">
-          <xs:enumeration value="editor"/>
-          <xs:enumeration value="compiler"/>
+          <xs:enumeration value="sub"/>
+          <xs:enumeration value="vol"/>
+          <xs:enumeration value="main"/>
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
@@ -977,7 +1052,41 @@
       <xs:attributeGroup ref="biblatexml:attlist.author"/>
     </xs:complexType>
   </xs:element>
+  <xs:group name="editors">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="biblatexml:editor"/>
+        <xs:element ref="biblatexml:editorA"/>
+        <xs:element ref="biblatexml:editorB"/>
+        <xs:element ref="biblatexml:editorC"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
   <xs:element name="editor">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="editorA">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="editorB">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="biblatexml:attlist.editor"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="editorC">
     <xs:complexType mixed="true">
       <xs:sequence>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -1083,20 +1192,6 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  <xs:element name="redactor">
-    <xs:complexType mixed="true">
-      <xs:sequence>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
-      </xs:sequence>
-      <xs:attribute name="andothers">
-        <xs:simpleType>
-          <xs:restriction base="xs:token">
-            <xs:enumeration value="true"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
-    </xs:complexType>
-  </xs:element>
   <xs:element name="translator">
     <xs:complexType mixed="true">
       <xs:sequence>
@@ -1153,7 +1248,7 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  <xs:element name="namea">
+  <xs:element name="nameA">
     <xs:complexType mixed="true">
       <xs:sequence>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -1167,7 +1262,7 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  <xs:element name="nameb">
+  <xs:element name="nameB">
     <xs:complexType mixed="true">
       <xs:sequence>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -1181,7 +1276,7 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  <xs:element name="namec">
+  <xs:element name="nameC">
     <xs:complexType mixed="true">
       <xs:sequence>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="biblatexml:person"/>
@@ -1298,6 +1393,18 @@
       </xs:choice>
     </xs:complexType>
   </xs:element>
+  <xs:element name="relatedentries">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" name="item">
+          <xs:complexType>
+            <xs:attribute name="type" use="required"/>
+            <xs:attribute name="id" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:group name="BibLaTeXML.article.standard.fields">
     <xs:annotation>
       <xs:documentation/>
@@ -1310,19 +1417,12 @@
           <xs:group ref="biblatexml:journal"/>
         </xs:choice>
         <xs:choice>
-          <xs:choice>
-            <xs:choice>
-              <xs:element ref="biblatexml:month"/>
-              <xs:element ref="biblatexml:issue"/>
-            </xs:choice>
-            <xs:element ref="biblatexml:year"/>
-          </xs:choice>
+          <xs:element ref="biblatexml:issue"/>
           <xs:element ref="biblatexml:date"/>
         </xs:choice>
-        <xs:element ref="biblatexml:editor"/>
+        <xs:group ref="biblatexml:editors"/>
         <xs:element ref="biblatexml:shorteditor"/>
         <xs:element ref="biblatexml:translator"/>
-        <xs:element ref="biblatexml:redactor"/>
         <xs:element ref="biblatexml:annotator"/>
         <xs:element ref="biblatexml:commentator"/>
         <xs:element ref="biblatexml:subtitle"/>
@@ -1488,22 +1588,21 @@
     <xs:sequence>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="biblatexml:author"/>
-        <xs:element ref="biblatexml:editor"/>
+        <xs:group ref="biblatexml:editors"/>
         <xs:choice>
           <xs:choice>
             <xs:element ref="biblatexml:title"/>
-            <xs:element ref="biblatexml:year"/>
+            <xs:element ref="biblatexml:date"/>
           </xs:choice>
           <xs:choice>
             <xs:element ref="biblatexml:title"/>
-            <xs:element ref="biblatexml:year"/>
+            <xs:element ref="biblatexml:date"/>
             <xs:element ref="biblatexml:crossref"/>
           </xs:choice>
         </xs:choice>
         <xs:element ref="biblatexml:bookauthor"/>
         <xs:element ref="biblatexml:shorteditor"/>
         <xs:element ref="biblatexml:translator"/>
-        <xs:element ref="biblatexml:redactor"/>
         <xs:element ref="biblatexml:annotator"/>
         <xs:element ref="biblatexml:commentator"/>
         <xs:element ref="biblatexml:introduction"/>
@@ -1577,9 +1676,9 @@
     <xs:sequence>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="biblatexml:author"/>
-        <xs:element ref="biblatexml:editor"/>
+        <xs:group ref="biblatexml:editors"/>
         <xs:element ref="biblatexml:title"/>
-        <xs:element ref="biblatexml:year"/>
+        <xs:element ref="biblatexml:date"/>
         <xs:element ref="biblatexml:subtitle"/>
         <xs:element ref="biblatexml:titleaddon"/>
         <xs:element ref="biblatexml:note"/>
@@ -1633,14 +1732,13 @@
     </xs:annotation>
     <xs:sequence>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element ref="biblatexml:editor"/>
+        <xs:group ref="biblatexml:editors"/>
         <xs:element ref="biblatexml:author"/>
         <xs:element ref="biblatexml:title"/>
-        <xs:element ref="biblatexml:year"/>
+        <xs:element ref="biblatexml:date"/>
         <xs:element ref="biblatexml:bookauthor"/>
         <xs:element ref="biblatexml:shorteditor"/>
         <xs:element ref="biblatexml:translator"/>
-        <xs:element ref="biblatexml:redactor"/>
         <xs:element ref="biblatexml:annotator"/>
         <xs:element ref="biblatexml:commentator"/>
         <xs:element ref="biblatexml:introduction"/>
@@ -1713,15 +1811,20 @@
     </xs:annotation>
     <xs:sequence>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element ref="biblatexml:author"/>
         <xs:element ref="biblatexml:title"/>
+        <xs:element ref="biblatexml:author"/>
+        <xs:group ref="biblatexml:editors"/>
+        <xs:element ref="biblatexml:shorteditor"/>
+        <xs:element ref="biblatexml:translator"/>
+        <xs:element ref="biblatexml:annotator"/>
+        <xs:element ref="biblatexml:commentator"/>
         <xs:choice>
           <xs:choice>
             <xs:choice>
               <xs:element ref="biblatexml:crossref"/>
               <xs:element ref="biblatexml:xref"/>
             </xs:choice>
-            <xs:element ref="biblatexml:year"/>
+            <xs:element ref="biblatexml:date"/>
           </xs:choice>
           <xs:choice>
             <xs:element ref="biblatexml:bookauthor"/>
@@ -1731,13 +1834,7 @@
             <xs:element ref="biblatexml:maintitleaddon"/>
             <xs:element ref="biblatexml:booksubtitle"/>
             <xs:element ref="biblatexml:booktitleaddon"/>
-            <xs:element ref="biblatexml:year"/>
-            <xs:element ref="biblatexml:editor"/>
-            <xs:element ref="biblatexml:shorteditor"/>
-            <xs:element ref="biblatexml:translator"/>
-            <xs:element ref="biblatexml:redactor"/>
-            <xs:element ref="biblatexml:annotator"/>
-            <xs:element ref="biblatexml:commentator"/>
+            <xs:element ref="biblatexml:date"/>
             <xs:element ref="biblatexml:introduction"/>
             <xs:element ref="biblatexml:foreword"/>
             <xs:element ref="biblatexml:afterword"/>
@@ -1816,15 +1913,14 @@
               <xs:element ref="biblatexml:crossref"/>
               <xs:element ref="biblatexml:xref"/>
             </xs:choice>
-            <xs:element ref="biblatexml:year"/>
+            <xs:element ref="biblatexml:date"/>
           </xs:choice>
           <xs:choice>
-            <xs:element ref="biblatexml:editor"/>
+            <xs:group ref="biblatexml:editors"/>
             <xs:element ref="biblatexml:booktitle"/>
-            <xs:element ref="biblatexml:year"/>
+            <xs:element ref="biblatexml:date"/>
             <xs:element ref="biblatexml:shorteditor"/>
             <xs:element ref="biblatexml:translator"/>
-            <xs:element ref="biblatexml:redactor"/>
             <xs:element ref="biblatexml:annotator"/>
             <xs:element ref="biblatexml:commentator"/>
             <xs:element ref="biblatexml:introduction"/>
@@ -1906,9 +2002,9 @@
           <xs:element ref="biblatexml:crossref"/>
           <xs:element ref="biblatexml:xref"/>
           <xs:choice>
-            <xs:element ref="biblatexml:editor"/>
+            <xs:group ref="biblatexml:editors"/>
             <xs:element ref="biblatexml:booktitle"/>
-            <xs:element ref="biblatexml:year"/>
+            <xs:element ref="biblatexml:date"/>
             <xs:element ref="biblatexml:shorteditor"/>
             <xs:element ref="biblatexml:maintitle"/>
             <xs:element ref="biblatexml:mainsubtitle"/>
@@ -1940,6 +2036,7 @@
         <xs:element ref="biblatexml:eprint"/>
         <xs:element ref="biblatexml:url"/>
         <xs:element ref="biblatexml:urldate"/>
+        <xs:element ref="biblatexml:eventdate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -1981,10 +2078,10 @@
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:choice>
           <xs:element ref="biblatexml:author"/>
-          <xs:element ref="biblatexml:editor"/>
+          <xs:group ref="biblatexml:editors"/>
         </xs:choice>
         <xs:element ref="biblatexml:title"/>
-        <xs:element ref="biblatexml:year"/>
+        <xs:element ref="biblatexml:date"/>
         <xs:element ref="biblatexml:subtitle"/>
         <xs:element ref="biblatexml:titleaddon"/>
         <xs:element ref="biblatexml:edition"/>
@@ -2047,16 +2144,10 @@
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:choice>
           <xs:element ref="biblatexml:author"/>
-          <xs:element ref="biblatexml:editor"/>
+          <xs:group ref="biblatexml:editors"/>
         </xs:choice>
         <xs:element ref="biblatexml:title"/>
-        <xs:choice>
-          <xs:choice>
-            <xs:element ref="biblatexml:month"/>
-            <xs:element ref="biblatexml:year"/>
-          </xs:choice>
-          <xs:element ref="biblatexml:date"/>
-        </xs:choice>
+        <xs:element ref="biblatexml:date"/>
         <xs:element ref="biblatexml:subtitle"/>
         <xs:element ref="biblatexml:titleaddon"/>
         <xs:element ref="biblatexml:version"/>
@@ -2111,16 +2202,10 @@
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:choice>
           <xs:element ref="biblatexml:author"/>
-          <xs:element ref="biblatexml:editor"/>
+          <xs:group ref="biblatexml:editors"/>
         </xs:choice>
         <xs:element ref="biblatexml:title"/>
-        <xs:choice>
-          <xs:choice>
-            <xs:element ref="biblatexml:month"/>
-            <xs:element ref="biblatexml:year"/>
-          </xs:choice>
-          <xs:element ref="biblatexml:date"/>
-        </xs:choice>
+        <xs:element ref="biblatexml:date"/>
         <xs:choice>
           <xs:element ref="biblatexml:url"/>
           <xs:element ref="biblatexml:eprint"/>
@@ -2174,13 +2259,7 @@
         <xs:element ref="biblatexml:author"/>
         <xs:element ref="biblatexml:title"/>
         <xs:element ref="biblatexml:number"/>
-        <xs:choice>
-          <xs:choice>
-            <xs:element ref="biblatexml:month"/>
-            <xs:element ref="biblatexml:year"/>
-          </xs:choice>
-          <xs:element ref="biblatexml:date"/>
-        </xs:choice>
+        <xs:element ref="biblatexml:date"/>
         <xs:element ref="biblatexml:holder"/>
         <xs:element ref="biblatexml:subtitle"/>
         <xs:element ref="biblatexml:titleaddon"/>
@@ -2235,21 +2314,13 @@
     </xs:annotation>
     <xs:sequence>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element ref="biblatexml:editor"/>
+        <xs:group ref="biblatexml:editors"/>
         <xs:choice>
           <xs:group ref="biblatexml:journal"/>
           <xs:element ref="biblatexml:journaltitle"/>
         </xs:choice>
-        <xs:choice>
-          <xs:choice>
-            <xs:choice>
-              <xs:element ref="biblatexml:month"/>
-              <xs:element ref="biblatexml:issue"/>
-            </xs:choice>
-            <xs:element ref="biblatexml:year"/>
-          </xs:choice>
-          <xs:element ref="biblatexml:date"/>
-        </xs:choice>
+        <xs:element ref="biblatexml:issue"/>
+        <xs:element ref="biblatexml:date"/>
         <xs:element ref="biblatexml:shorteditor"/>
         <xs:element ref="biblatexml:introduction"/>
         <xs:element ref="biblatexml:subtitle"/>
@@ -2351,9 +2422,9 @@
     </xs:annotation>
     <xs:sequence>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element ref="biblatexml:editor"/>
+        <xs:group ref="biblatexml:editors"/>
         <xs:element ref="biblatexml:title"/>
-        <xs:element ref="biblatexml:year"/>
+        <xs:element ref="biblatexml:date"/>
         <xs:element ref="biblatexml:shorteditor"/>
         <xs:element ref="biblatexml:subtitle"/>
         <xs:element ref="biblatexml:titleaddon"/>
@@ -2381,6 +2452,7 @@
         <xs:element ref="biblatexml:eprint"/>
         <xs:element ref="biblatexml:url"/>
         <xs:element ref="biblatexml:urldate"/>
+        <xs:element ref="biblatexml:eventdate"/>
       </xs:choice>
     </xs:sequence>
   </xs:group>
@@ -2423,7 +2495,7 @@
         <xs:element ref="biblatexml:author"/>
         <xs:element ref="biblatexml:title"/>
         <xs:group ref="biblatexml:institution"/>
-        <xs:element ref="biblatexml:year"/>
+        <xs:element ref="biblatexml:date"/>
         <xs:element ref="biblatexml:subtitle"/>
         <xs:element ref="biblatexml:titleaddon"/>
         <xs:group ref="biblatexml:series"/>
@@ -2486,7 +2558,7 @@
           <xs:group ref="biblatexml:institution"/>
           <xs:group ref="biblatexml:school"/>
         </xs:choice>
-        <xs:element ref="biblatexml:year"/>
+        <xs:element ref="biblatexml:date"/>
         <xs:element ref="biblatexml:subtitle"/>
         <xs:element ref="biblatexml:titleaddon"/>
         <xs:element ref="biblatexml:note"/>
@@ -2546,13 +2618,7 @@
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="biblatexml:author"/>
         <xs:element ref="biblatexml:title"/>
-        <xs:choice>
-          <xs:choice>
-            <xs:element ref="biblatexml:month"/>
-            <xs:element ref="biblatexml:year"/>
-          </xs:choice>
-          <xs:element ref="biblatexml:date"/>
-        </xs:choice>
+        <xs:element ref="biblatexml:date"/>
         <xs:element ref="biblatexml:subtitle"/>
         <xs:element ref="biblatexml:titleaddon"/>
         <xs:group ref="biblatexml:institution"/>
@@ -2602,13 +2668,7 @@
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="biblatexml:author"/>
         <xs:element ref="biblatexml:title"/>
-        <xs:choice>
-          <xs:choice>
-            <xs:element ref="biblatexml:month"/>
-            <xs:element ref="biblatexml:year"/>
-          </xs:choice>
-          <xs:element ref="biblatexml:date"/>
-        </xs:choice>
+        <xs:element ref="biblatexml:date"/>
         <xs:group ref="biblatexml:institution"/>
         <xs:group ref="biblatexml:location"/>
         <xs:element ref="biblatexml:subtitle"/>
