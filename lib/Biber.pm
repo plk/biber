@@ -693,7 +693,6 @@ sub parse_ctrlfile_v2 {
 
   # Validate if asked to
   if (Biber::Config->getoption('validate')) {
-    require Config;
     require XML::LibXML;
 
     # Set up XML parser
@@ -701,11 +700,18 @@ sub parse_ctrlfile_v2 {
     $CFxmlparser->line_numbers(1); # line numbers for more informative errors
 
     # Set up schema
-    # FIXME How can we be sure that Biber is installed in sitelib and not vendorlib ?
-    my $CFxmlschema = XML::LibXML::RelaxNG->new(
-          location => File::Spec->catfile($Config::Config{sitelibexp}, 'Biber', 'bcf.rng')
-        )
-        or $logger->warn("Cannot find XML::LibXML::RelaxNG schema. Skipping validation : $!");
+    my $CFxmlschema;
+    # we assume that the schema files are in the same dir as Biber.pm:
+    (undef, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
+    ## NB the following also works, but the above approach is better
+    #my $bcfpath = first { -f File::Spec->catfile($_, 'Biber', 'bcf.rng') } @INC;
+    my $bcf_rng = File::Spec->catfile($biber_path, 'Biber', 'bcf.rng');
+
+    if (-f $bcf_rng) {
+        $CFxmlschema = XML::LibXML::RelaxNG->new( location => $bcf_rng )
+    } else {
+        $logger->warn("Cannot find XML::LibXML::RelaxNG schema. Skipping validation : $!");
+    }
 
     # basic parse and XInclude processing
     my $CFxp = $CFxmlparser->parse_file("$ctrl_file.bcf");
@@ -718,14 +724,14 @@ sub parse_ctrlfile_v2 {
     if ($CFxmlschema) {
         eval { $CFxmlschema->validate($CFxp) };
         if (ref($@)) {
-        $logger->debug( $@->dump() );
-        $logger->logcroak("BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@");
+            $logger->debug( $@->dump() );
+            $logger->logcroak("BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@");
         }
         elsif ($@) {
-        $logger->logcroak("BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@");
+            $logger->logcroak("BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@");
         }
         else {
-        $logger->info("BibLaTeX control file \"$ctrl_file.bcf\" validates");
+            $logger->info("BibLaTeX control file \"$ctrl_file.bcf\" validates");
         }
     }
 
@@ -1673,7 +1679,7 @@ sub sortshorthands {
     if (Biber::Config->getoption('locale')) {
       my $thislocale = Biber::Config->getoption('locale');
       $logger->debug("Sorting shorthands with built-in sort (with locale $thislocale) ...");
-      setlocale( LC_ALL, $thislocale ) 
+      setlocale( LC_ALL, $thislocale )
         or $logger->warn("Unavailable locale $thislocale")
     } else {
       $logger->debug("Sorting shorthands with built-in sort (with locale ", $ENV{LC_COLLATE}, ") ...");
@@ -1685,7 +1691,7 @@ sub sortshorthands {
     my %collopts = eval "( $opts )" or carp "Incorrect collate_options: $@";
     my $Collator = Unicode::Collate->new( %collopts );
     my $UCAversion = $Collator->version();
-    $logger->info("Sorting with Unicode::Collate ($opts, UCA version: $UCAversion)"); 
+    $logger->info("Sorting with Unicode::Collate ($opts, UCA version: $UCAversion)");
     @auxshorthands = sort {
       $Collator->cmp($self->{bib}{$a}{shorthand}, $self->{bib}{$b}{shorthand})
     } @auxshorthands;
@@ -1779,13 +1785,13 @@ sub create_bbl_string_body {
     my @auxcitekeys = $self->citekeys;
     my $BBL = '';
 
-    $BBL .= "\\preamble{%\n" . $self->{preamble} . "%\n}\n" 
+    $BBL .= "\\preamble{%\n" . $self->{preamble} . "%\n}\n"
         if $self->{preamble};
 
     # We rely on the order of this array for the order of the .bbl
     # and therefore the .bib
     foreach my $k (@auxcitekeys) {
-        ## skip crossrefkeys (those that are directly cited or 
+        ## skip crossrefkeys (those that are directly cited or
         #  crossref'd >= mincrossrefs were previously removed)
         next if ( Biber::Config->getstate('crossrefkeys', $k) );
         $BBL .= $self->_print_biblatex_entry($k);
@@ -1801,7 +1807,7 @@ sub create_bbl_string_body {
     $BBL .= "\\endinput\n\n";
 
 #    if ( Biber::Config->getoption('bibencoding') and ! Biber::Config->getoption('unicodebbl') ) {
-#        $BBL = encode(Biber::Config->getoption('bibencoding'), $BBL) 
+#        $BBL = encode(Biber::Config->getoption('bibencoding'), $BBL)
 #    };
 
     return \$BBL;
@@ -1831,7 +1837,7 @@ sub output_to_bbl {
       $mode = ":utf8";
     }
 
-    my $BBLFILE = IO::File->new($bblfile, ">$mode") 
+    my $BBLFILE = IO::File->new($bblfile, ">$mode")
       or $logger->logcroak("Failed to open $bblfile : $!");
 
     # $BBLFILE->binmode(':utf8') if Biber::Config->getoption('unicodebbl');
