@@ -1165,7 +1165,7 @@ sub postprocess_dates {
   }
 
   # let's accommodate bib files which have e.g. "year = {1912-1918}"
-  if ($be->{year} =~ m/\A(\d{4})[-\x{2013}](\d{1,4})\z/) {
+  if ($be->{year} and $be->{year} =~ m/\A(\d{4})[-\x{2013}](\d{1,4})\z/) {
       $be->{year} = $1;
       # if we have year = 1998-9, then we pad endyear to become 1999
       my $pad = substr($1, 0, length($2) - 1);
