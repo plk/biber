@@ -15,8 +15,8 @@ Biber::Config - Configuration items which need to be saved across the
                 lifetime of a Biber object
 
   This class contains a static object and static methods to access
-  configuration and state data. There are several classes of data in her
-  which have seperate accesors:
+  configuration and state data. There are several classes of data in here
+  which have separate accessors:
 
   * Biber options
   * Biblatex options
