@@ -74,23 +74,24 @@ sub _parse_biblatexml {
     foreach my $citekey (@auxcitekeys) {
         my $lc_key = lc($citekey);
         if ( $self->{bib}{$citekey} or $self->{bib}{$lc_key} ) {
-            $logger->debug("Entry for \"$citekey\" was already found: skipping");
+            $logger->debug("Entry \"$citekey\" was already found: skipping");
             $citekeys_to_skip{$citekey} = 1;
             next;
         }
-        $logger->debug("Looking for $citekey");
         my $xpath = '/*/bib:entry[@id="' . $citekey . '"]';
         my $results = $db->findnodes($xpath);
 
-        unless ( $results ) {
-            $logger->info("Can't find entry with citekey $citekey... skipping");
-
+        if ( $results ) {
+            $logger->debug("Found entry \"$citekey\"");
+        }
+        else {
+            $logger->debug("Can't find entry \"$citekey\": skipping");
             $citekeys_to_skip{$citekey} = 1;
             next
         };
 
         if ( $results->size() > 1 ) {
-            $logger->warn("The database contains more than one bib:entry with id=\"$citekey\" !")
+            $logger->warn("The XML database contains more than one entry with id=\"$citekey\"!\nI'll take the first one.")
         };
 
         my $bibrecord = $results->get_node(1);
