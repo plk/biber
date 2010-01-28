@@ -1003,7 +1003,7 @@ will eventually make its way to CPAN.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009 François Charette, all rights reserved.
+Copyright 2009-2010 François Charette, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

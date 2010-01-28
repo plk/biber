@@ -486,3 +486,35 @@ sub dump {
   shift; # class method so don't care about class name
   dd($CONFIG);
 }
+
+=head1 AUTHORS
+
+François Charette, C<< <firmicus at gmx.net> >>
+Philip Kime C<< <philip at kime.org.uk> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests on our sourceforge tracker at
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2009-2010 François Charette and Philip Kime, all rights reserved.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of either:
+
+=over 4
+
+=item * the GNU General Public License as published by the Free
+Software Foundation; either version 1, or (at your option) any
+later version, or
+
+=item * the Artistic License version 2.0.
+
+=back
+
+=cut
+
+1;
+# vim: set tabstop=4 shiftwidth=4 expandtab:
