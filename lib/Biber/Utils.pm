@@ -148,13 +148,13 @@ sub parsename {
 
     if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}$/ )
     {
-        $logger->debug("Caught namestring of type '{Some protected name string}'");
+        $logger->debug("   Caught namestring of type '{Some protected name string}'");
         $namestr = remove_outer($namestr);
         $lastname = $namestr;
     }
     elsif ( $namestr =~ /[^\\],.+[^\\],/ )    # pre? Lastname, suffix, Firstname
     {
-        $logger->debug("Caught namestring of type 'prefix? Lastname, suffix, Firstname'");
+        $logger->debug("   Caught namestring of type 'prefix? Lastname, suffix, Firstname'");
         ( $prefix, $lastname, $suffix, $firstname ) = $namestr =~
             m/\A( # prefix?
                 $PREFIX_RE
@@ -186,7 +186,7 @@ sub parsename {
     }
     elsif ( $namestr =~ /[^\\],/ )   # <pre> Lastname, Firstname
     {
-        $logger->debug("Caught namestring of type 'prefix? Lastname, Firstname'");
+        $logger->debug("   Caught namestring of type 'prefix? Lastname, Firstname'");
 
         ( $prefix, $lastname, $firstname ) = $namestr =~
             m/^( # prefix?
@@ -214,7 +214,7 @@ sub parsename {
     {
         if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}.*\s+$RE{balanced}{-parens => '{}'}$/ )
         {
-            $logger->debug("Caught namestring of type '{Firstname} prefix? {Lastname}'");
+            $logger->debug("   Caught namestring of type '{Firstname} prefix? {Lastname}'");
             ( $firstname, $prefix, $lastname ) = $namestr =~
                 m/^( # first name
                     $RE{balanced}{-parens=>'{}'}
@@ -230,7 +230,7 @@ sub parsename {
         }
         elsif ( $namestr =~ /^.+\s+$RE{balanced}{-parens => '{}'}$/ )
         {
-            $logger->debug("Caught namestring of type 'Firstname prefix? {Lastname}'");
+            $logger->debug("   Caught namestring of type 'Firstname prefix? {Lastname}'");
             ( $firstname, $prefix, $lastname ) = $namestr =~
                 m/^( # first name
                     $NAME_SEQ_RE
@@ -246,7 +246,7 @@ sub parsename {
         }
         elsif ( $namestr =~ /^$RE{balanced}{-parens => '{}'}.+$/ )
         {
-            $logger->debug("Caught namestring of type '{Firstname} prefix? Lastname'");
+            $logger->debug("   Caught namestring of type '{Firstname} prefix? Lastname'");
             ( $firstname, $prefix, $lastname ) = $namestr =~
                 m/^( # first name
                     $RE{balanced}{-parens=>'{}'}
@@ -261,7 +261,7 @@ sub parsename {
                 $/x;
         }
         else {
-            $logger->debug("Caught namestring of type 'Firstname prefix? Lastname'");
+            $logger->debug("   Caught namestring of type 'Firstname prefix? Lastname'");
             ( $firstname, $prefix, $lastname ) = $namestr =~
                 m/^( # first name
                     $NAME_SEQ_RE
@@ -289,7 +289,7 @@ sub parsename {
     }
     else
     {    # Name alone
-        $logger->debug("Caught namestring of type 'Isolated_name_string'");
+        $logger->debug("   Caught namestring of type 'Isolated_name_string'");
         $lastname = $namestr;
     }
 

@@ -1019,11 +1019,11 @@ sub process_crossrefs {
   $logger->debug("Processing crossrefs for keys:");
   foreach my $citekeyx (keys %{Biber::Config->getstate('entrieswithcrossref')}) {
     $logger->debug("   * '$citekeyx'");
-    my $xref = Biber::Config->getstate('entrieswithcrossref', $citekeyx);
-    my $type = $bibentries{$citekeyx}->{entrytype};
-    # Canonicalise these before using them
+    # Canonicalise citekeyx and xref before using them
     $citekeyx = lc($citekeyx);
+    my $xref = Biber::Config->getstate('entrieswithcrossref', $citekeyx);
     $xref = lc($xref);
+    my $type = $bibentries{$citekeyx}->{entrytype};
 
     if ($type =~ /\Ain(proceedings|collection|book)\z/xms) {
       # inherit all that is undefined, except title etc
