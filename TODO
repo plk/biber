@@ -8,8 +8,8 @@ in decreasing order of priority:
      ALTERNATIVELY: Upload an enhanced version of LaTeX::Decode to CPAN,
      and remove it from the Biber distribution.
    * Improve bib2biblatexml:
-     - add print_biblatexml method to Biber::Internals and use it
-     - add support for latest features in biblatexml-ml schema
+     - add print_biblatexml method to Biber::Internals and use it ?
+     - add support for latest features in biblatexml-ml schema / DONE
    ----------
    * add validation mechanism for options and config (untaint data),
      probably with Params::Validate
