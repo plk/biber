@@ -12,7 +12,7 @@ if ($ENV{TEST_BIBTEX_PRD} or ! eval "require Text::BibTeX; 1") {
     plan( tests => 4);
 }
 else {
-    plan( skip_all => "Skipping parsing with Biber::BibTeX::PRD" );
+    plan( skip_all => "parsing with Biber::BibTeX::PRD (set TEST_BIBTEX_PRD=1 to enable)" );
 }
 
 my $opts = { unicodebbl => 0, useprd => 1 };
