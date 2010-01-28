@@ -1168,7 +1168,7 @@ sub postprocess_dates {
   if ($be->{year} and $be->{year} =~ m/\A(\d{4})[-\x{2013}](\d{1,4})\z/) {
       $be->{year} = $1;
       # if we have year = 1998-9, then we pad endyear to become 1999
-      my $pad = substr($1, 0, length($2) - 1);
+      my $pad = substr($1, 0, 4 - length($2));
       $be->{endyear} = $pad . $2;
   }
 
