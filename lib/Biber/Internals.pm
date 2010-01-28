@@ -728,6 +728,7 @@ sub _print_name {
 
 sub _printfield {
     my ($self, $field, $str) = @_;
+    $str = latexescape($str);
 
     if (Biber::Config->getoption('wraplines')) {
         ## 12 is the length of '  \field{}{}'
@@ -814,7 +815,7 @@ sub _print_biblatex_entry {
             my $total = $#lf + 1;
             $str .= "  \\list{$listfield}{$total}{%\n";
             foreach my $f (@lf) {
-                $str .= "    {$f}%\n";
+                $str .= "    {". latexescape($f) . "}%\n";
             }
             $str .= "  }\n";
         }
