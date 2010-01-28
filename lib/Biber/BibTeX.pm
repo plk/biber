@@ -66,7 +66,7 @@ sub _text_bibtex_parse {
             next
         }
 
-        $logger->debug("Processing entry '$key'");
+        $logger->debug("Processing entry '$origkey'");
 
         if ( $bibentries{ $origkey } or $bibentries{ $key } ) {
             $self->{errors}++;

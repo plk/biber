@@ -56,7 +56,7 @@ sub _parse_biblatexml {
     }
 
     # keep track of citekeys that were not found in this database
-    my %citekeysnotfound = ();
+    my %citekeys_to_skip = ();
     my @auxcitekeys = $self->citekeys;
 
     if (Biber::Config->getoption('allentries')) {
@@ -72,7 +72,12 @@ sub _parse_biblatexml {
     # Contrary to the bibtex approach, we are not extracting all data to
     # the bibentries hash, but only the ones corresponding to @auxcitekeys
     foreach my $citekey (@auxcitekeys) {
-        next if $self->{bib}{$citekey}; # skip if this is already found in another database
+        my $lc_key = lc($citekey);
+        if ( $self->{bib}{$citekey} or $self->{bib}{$lc_key} ) {
+            $logger->debug("Entry for \"$citekey\" was already found: skipping");
+            $citekeys_to_skip{$citekey} = 1;
+            next;
+        }
         $logger->debug("Looking for $citekey");
         my $xpath = '/*/bib:entry[@id="' . $citekey . '"]';
         my $results = $db->findnodes($xpath);
@@ -80,7 +85,7 @@ sub _parse_biblatexml {
         unless ( $results ) {
             $logger->info("Can't find entry with citekey $citekey... skipping");
 
-            $citekeysnotfound{$citekey} = 1;
+            $citekeys_to_skip{$citekey} = 1;
             next
         };
 
@@ -119,18 +124,18 @@ sub _parse_biblatexml {
     #--------------------------------------------------
 
     foreach my $citekey (@auxcitekeys) {
-        next if $citekeysnotfound{$citekey};
-        next if $self->{bib}{$citekey}; # skip if this is already found in another database
+        my $lc_key = lc($citekey);
+        next if $citekeys_to_skip{$citekey}; # skip entries already found or not present in current xml file
         $logger->debug("Processing entry '$citekey'");
         my $xpath = '/*/bib:entry[@id="' . $citekey . '"]';
         my $results = $db->findnodes($xpath) or croak "Cannot find node $xpath";
         my $bibrecord = $results->get_node(1);
 
-        $self->{bib}{$citekey}{entrytype} = $bibrecord->findnodes('@entrytype')->string_value;
+        $self->{bib}{$lc_key}{entrytype} = $bibrecord->findnodes('@entrytype')->string_value;
         if ($bibrecord->exists('@type')) {
-            $self->{bib}{$citekey}{type} = $bibrecord->findnodes('@type')->string_value;
+            $self->{bib}{$lc_key}{type} = $bibrecord->findnodes('@type')->string_value;
         };
-        $self->{bib}{$citekey}{datatype} = 'xml';
+        $self->{bib}{$lc_key}{datatype} = 'xml';
 
         #TODO get the options field first
         #options/text or option: key+value
@@ -142,10 +147,10 @@ sub _parse_biblatexml {
                     my $v = $o->findnodes("bib:value")->_normalize_string_value;
                     push @opts, "$k=$v";
                 };
-                $self->{bib}{$citekey}{options} = join(",", @opts);
+                $self->{bib}{$lc_key}{options} = join(",", @opts);
             }
             else {
-                $self->{bib}{$citekey}{options} = $bibrecord->findnodes("bib:options")->_normalize_string_value;
+                $self->{bib}{$lc_key}{options} = $bibrecord->findnodes("bib:options")->_normalize_string_value;
             }
         };
 
@@ -155,7 +160,7 @@ sub _parse_biblatexml {
 
         my $titlename = "title";
 
-        if ( $self->{bib}{$citekey}{entrytype} eq 'periodical') {
+        if ( $self->{bib}{$lc_key}{entrytype} eq 'periodical') {
             if ($bibrecord->exists("bib:journaltitle")) {
                 $titlename = 'journaltitle'
             } elsif ($bibrecord->exists("bib:journal")) {
@@ -171,16 +176,16 @@ sub _parse_biblatexml {
         else {
 
             # displaymode
-            my $titledm = Biber::Config->get_displaymode($self->{bib}{$citekey}{entrytype}, $titlename, $citekey);
+            my $titledm = Biber::Config->get_displaymode($self->{bib}{$lc_key}{entrytype}, $titlename, $citekey);
 
             my $titlestrings = $bibrecord->_find_biblatex_nodes($self, $titlename, $titledm)->_biblatex_title_values;
 
-            $self->{bib}{$citekey}{$titlename} = $titlestrings->{'title'};
+            $self->{bib}{$lc_key}{$titlename} = $titlestrings->{'title'};
 
             my @specialtitlefields = qw/sorttitle indextitle indexsorttitle/;
             foreach my $field (@specialtitlefields) {
                 if (! $bibrecord->exists("bib:$field") ) {
-                    $self->{bib}{$citekey}{$field} = $titlestrings->{$field}
+                    $self->{bib}{$lc_key}{$field} = $titlestrings->{$field}
                 }
             }
         }
@@ -188,15 +193,15 @@ sub _parse_biblatexml {
         # then all other literal fields
         foreach my $field (@LITERALFIELDS, @VERBATIMFIELDS) {
             next if $field eq 'title';
-            my $dm = Biber::Config->get_displaymode($self->{bib}{$citekey}{entrytype}, $field, $citekey);
-            $self->{bib}{$citekey}{$field}
+            my $dm = Biber::Config->get_displaymode($self->{bib}{$lc_key}{entrytype}, $field, $citekey);
+            $self->{bib}{$lc_key}{$field}
                 = $bibrecord->_find_biblatex_nodes($self, $field, $dm)->_biblatex_value
                   if $bibrecord->exists("bib:$field");
         }
 
         # list fields
         foreach my $field (@LISTFIELDS) {
-            my $dm = Biber::Config->get_displaymode($self->{bib}{$citekey}{entrytype}, $field, $citekey);
+            my $dm = Biber::Config->get_displaymode($self->{bib}{$lc_key}{entrytype}, $field, $citekey);
             my @z;
             if ($bibrecord->exists("bib:$field")) {
                 if ($bibrecord->exists("bib:$field/bib:item")) {
@@ -210,7 +215,7 @@ sub _parse_biblatexml {
                 if ($bibrecord->exists("bib:$field\[\@andothers='true'\]")) {
                     push @z, "others"
                 };
-                $self->{bib}{$citekey}{$field} = [ @z ]
+                $self->{bib}{$lc_key}{$field} = [ @z ]
             }
         }
 
@@ -226,17 +231,17 @@ sub _parse_biblatexml {
                     my $fieldend   = $bibrecord->findnodes("bib:$field/bib:end")->_normalize_string_value || undef;
 
 
-                    $self->{bib}{$citekey}{$field} = $fieldstart;
+                    $self->{bib}{$lc_key}{$field} = $fieldstart;
 
                     my $fieldendname = $field;
                     # e.g. *date -> *enddate:
                     $fieldendname =~ s/date/enddate/;
 
-                    $self->{bib}{$citekey}{$fieldendname} = $fieldend;
+                    $self->{bib}{$lc_key}{$fieldendname} = $fieldend;
 
                 }
                 else {
-                    $self->{bib}{$citekey}{$field} =
+                    $self->{bib}{$lc_key}{$field} =
                         $bibrecord->findnodes("bib:$field/text()")->_normalize_string_value
                 }
             }
@@ -249,17 +254,17 @@ sub _parse_biblatexml {
                     my $fieldend   = $bibrecord->findnodes("bib:$field/bib:value/bib:end")->_normalize_string_value || undef;
 
 
-                    $self->{bib}{$citekey}{$field} = $fieldstart;
+                    $self->{bib}{$lc_key}{$field} = $fieldstart;
 
                     my $fieldendname = $field;
                     # e.g. *date -> *enddate:
                     $fieldendname =~ s/date/enddate/;
 
-                    $self->{bib}{$citekey}{$fieldendname} = $fieldend;
+                    $self->{bib}{$lc_key}{$fieldendname} = $fieldend;
 
                 }
                 else {
-                    $self->{bib}{$citekey}{$field} =
+                    $self->{bib}{$lc_key}{$field} =
                         $bibrecord->findnodes("bib:$field/bib:value")->string_value
                 }
 
@@ -270,19 +275,19 @@ sub _parse_biblatexml {
                     my $fieldstart = $bibrecord->findnodes("bib:$field/bib:localvalue/bib:start")->_normalize_string_value;
                     my $fieldend   = $bibrecord->findnodes("bib:$field/bib:localvalue/bib:end")->_normalize_string_value || undef;
 
-                    $self->{bib}{$citekey}{"local$field"} = $fieldstart;
+                    $self->{bib}{$lc_key}{"local$field"} = $fieldstart;
 
                     my $fieldendname = "local$field";
                     # e.g. origdate -> origenddate:
                     $fieldendname =~ s/date/enddate/;
 
-                    $self->{bib}{$citekey}{$fieldendname} = $fieldend;
+                    $self->{bib}{$lc_key}{$fieldendname} = $fieldend;
                 }
                 else {
-                    $self->{bib}{$citekey}{"local$field"} =
+                    $self->{bib}{$lc_key}{"local$field"} =
                         $bibrecord->findnodes("bib:$field/bib:localvalue")->_normalize_string_value;
 
-                    $self->{bib}{$citekey}{$prefix."localcalendar"} =
+                    $self->{bib}{$lc_key}{$prefix."localcalendar"} =
                         $bibrecord->findnodes("bib:$field/bib:localvalue/\@calendar")->string_value
                 }
             }
@@ -293,21 +298,21 @@ sub _parse_biblatexml {
             if ($bibrecord->exists("bib:pages/bib:start")) {
                  my $pagesstart = $bibrecord->findnodes("bib:pages/bib:start")->_normalize_string_value;
                  my $pagesend   = $bibrecord->findnodes("bib:pages/bib:end")->_normalize_string_value;
-                 $self->{bib}{$citekey}{pages} = "$pagesstart\\bibrangedash $pagesend";
+                 $self->{bib}{$lc_key}{pages} = "$pagesstart\\bibrangedash $pagesend";
             }
             elsif ($bibrecord->exists("bib:pages/bib:list")) {
-                $self->{bib}{$citekey}{pages} =
+                $self->{bib}{$lc_key}{pages} =
                     $bibrecord->findnodes("bib:pages/bib:list")->_normalize_string_value
             }
             else {
-                $self->{bib}{$citekey}{pages} =
+                $self->{bib}{$lc_key}{pages} =
                     $bibrecord->findnodes("bib:pages")->_normalize_string_value
             }
         }
 
         # the name fields are somewhat more complex ...
         foreach my $field (@NAMEFIELDS) {
-            my $dm = Biber::Config->get_displaymode($self->{bib}{$citekey}{entrytype}, $field, $citekey);
+            my $dm = Biber::Config->get_displaymode($self->{bib}{$lc_key}{entrytype}, $field, $citekey);
             if ($bibrecord->exists("bib:$field")) {
                 my @z;
                 if ($bibrecord->exists("bib:$field/bib:person")) {
@@ -333,7 +338,7 @@ sub _parse_biblatexml {
 
                             $nameinitstr = "";
                             $nameinitstr .= substr( $prefix, 0, 1 ) . "_"
-                              if ( Biber::Config->getblxoption('useprefix', $self->{bib}{$citekey}{entrytype}, $citekey) and $prefix );
+                              if ( Biber::Config->getblxoption('useprefix', $self->{bib}{$lc_key}{entrytype}, $citekey) and $prefix );
                             $nameinitstr .= $lastname;
                             $nameinitstr .= "_" . terseinitials($firstname)
                                 if $firstname;
@@ -353,7 +358,7 @@ sub _parse_biblatexml {
                             my $namestr = $person->string_value;
 
                             if ($namestr =~ /,\s+/) {
-                                my $useprefix = Biber::Config->getblxoption('useprefix', $self->{bib}{$citekey}{entrytype}, $citekey);
+                                my $useprefix = Biber::Config->getblxoption('useprefix', $self->{bib}{$lc_key}{entrytype}, $citekey);
                                 push @z, parsename(
                                      $person->string_value, {useprefix => $useprefix} )
                             } else {
@@ -383,7 +388,7 @@ sub _parse_biblatexml {
                     push @z, { lastname => "others", namestring => "others" }
                 };
 
-                $self->{bib}{$citekey}{$field} = [ @z ]
+                $self->{bib}{$lc_key}{$field} = [ @z ]
             }
         };
 
@@ -400,19 +405,19 @@ sub _parse_biblatexml {
             'bib:editorB/@class' => 'editorbclass',
             'bib:editorC/@class' => 'editorcclass',
             'bib:author/@gender' => 'gender',
-            ## 'bib:editor/@gender' => 'gender', (ignored for now)
+            ## TODO 'bib:editor/@gender' => 'gender', (ignored for now)
             '@howpublished' => 'howpublished'
             );
         foreach my $attr (keys %xmlattributes) {
             if ($bibrecord->exists($attr)) {
-                $self->{bib}{$citekey}{ $xmlattributes{$attr} }
+                $self->{bib}{$lc_key}{ $xmlattributes{$attr} }
                     = $bibrecord->findnodes($attr)->string_value;
             }
         }
     };
 
     # now we keep only citekeys that actually exist in the database
-    $self->{citekeys} = [ grep { defined $self->{bib}->{$_} } @auxcitekeys ];
+    $self->{citekeys} = [ grep { defined $self->{bib}->{lc($_)} } @auxcitekeys ];
 
     return
 }

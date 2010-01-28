@@ -216,6 +216,7 @@ sub setblxoption {
     $CONFIG->{options}{biblatex}{GLOBAL}{$opt} = $val;
   }
   else { # Per-type/entry options need to specify type/entry too
+    $scopeval = lc($scopeval) if $scope eq 'PER_ENTRY';
     $CONFIG->{options}{biblatex}{$scope}{$scopeval}{$opt} = $val;
   }
   return;
@@ -238,9 +239,9 @@ sub getblxoption {
   shift; # class method so don't care about class name
   my ($opt, $entrytype, $citekey) = @_;
   if ( defined($citekey) and
-       defined $CONFIG->{options}{biblatex}{PER_ENTRY}{$citekey} and
-       defined $CONFIG->{options}{biblatex}{PER_ENTRY}{$citekey}{$opt}) {
-    return $CONFIG->{options}{biblatex}{PER_ENTRY}{$citekey}{$opt};
+       defined $CONFIG->{options}{biblatex}{PER_ENTRY}{lc($citekey)} and
+       defined $CONFIG->{options}{biblatex}{PER_ENTRY}{lc($citekey)}{$opt}) {
+    return $CONFIG->{options}{biblatex}{PER_ENTRY}{lc($citekey)}{$opt};
   }
   elsif (defined($entrytype) and
            defined $CONFIG->{options}{biblatex}{PER_TYPE}{$entrytype} and
@@ -412,11 +413,12 @@ sub set_displaymode {
   shift; # class method so don't care about class name
   my ($val, $entrytype, $fieldtype, $citekey) = @_;
   if ($citekey) {
+    my $key = lc($citekey);
     if ($fieldtype) {
-      $CONFIG->{displaymodes}{PER_FIELD}{$citekey}{$fieldtype} = $val;
+      $CONFIG->{displaymodes}{PER_FIELD}{$key}{$fieldtype} = $val;
     }
     else {
-      $CONFIG->{displaymodes}{PER_ENTRY}{$citekey} = $val;
+      $CONFIG->{displaymodes}{PER_ENTRY}{$key} = $val;
     }
   }
   elsif ($fieldtype) {
@@ -450,12 +452,13 @@ sub get_displaymode {
   my ($entrytype, $fieldtype, $citekey) = @_;
   my $dm;
   if ($citekey) {
+    my $key = lc($citekey);
     if ($fieldtype and
-        defined $CONFIG->{displaymodes}{PER_FIELD}{$citekey}{$fieldtype}) {
-      $dm = $CONFIG->{displaymodes}{PER_FIELD}{$citekey}{$fieldtype};
+        defined $CONFIG->{displaymodes}{PER_FIELD}{$key}{$fieldtype}) {
+      $dm = $CONFIG->{displaymodes}{PER_FIELD}{$key}{$fieldtype};
     }
-    elsif (defined $CONFIG->{displaymodes}{PER_ENTRY}{$citekey}) {
-      $dm = $CONFIG->{displaymodes}{PER_ENTRY}{$citekey};
+    elsif (defined $CONFIG->{displaymodes}{PER_ENTRY}{$key}) {
+      $dm = $CONFIG->{displaymodes}{PER_ENTRY}{$key};
     }
   }
   elsif ($fieldtype and
