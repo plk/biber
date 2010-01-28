@@ -303,6 +303,8 @@ __END__
 
 =pod
 
+=encoding utf8
+
 =head1 NAME
 
 C<biber> - A bibtex replacement for users of biblatex

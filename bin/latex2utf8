@@ -71,13 +71,15 @@ Example: latex2utf8 -i latin1 infile.tex > outfile.tex
 
 =pod
 
+=encoding utf8
+
 =head1 NAME
 
 C<latex2utf8> - converts LaTeX encoding to UTF-8
 
 =head1 VERSION
 
-Version 0.1
+Version 0.2
 
 =head1 SYNOPSIS
 

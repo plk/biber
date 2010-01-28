@@ -449,13 +449,15 @@ Options:
 
 =pod
 
+=encoding utf8
+
 =head1 NAME
 
 C<bib2biblatexml> - converts BibTeX files to BibLaTeXML
 
 =head1 VERSION
 
-Version 0.0.1
+Version 0.0.4
 
 NOTE: This is still alpha quality. Use at your own risk ;)
 
