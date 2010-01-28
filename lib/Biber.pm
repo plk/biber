@@ -1147,14 +1147,6 @@ sub postprocess_dates {
   my $self = shift;
   my $citekey = shift;
   my $be = $self->{bib}{$citekey};
-  foreach my $ymfield ('year', 'month') {
-    if ($be->{$ymfield} and $be->{$ymfield} !~ /\A\d+\z/xms) {
-      $logger->warn("Invalid format of field '$ymfield' - ignoring field in entry '$citekey'");
-      $self->{warnings}++;
-      push @{$be->{warnings}}, "Invalid format of field '$ymfield' - ignoring field";
-      delete $be->{$ymfield};
-    }
-  }
 
   # Both DATE and YEAR specified
   if ($be->{date} and $be->{year}) {
@@ -1170,6 +1162,23 @@ sub postprocess_dates {
     $self->{warnings}++;
       push @{$be->{warnings}}, "Field conflict - both 'date' and 'month' used - ignoring field 'month'";
     delete $be->{month};
+  }
+
+  # let's accommodate bib files which have e.g. "year = {1912-1918}"
+  if ($be->{year} =~ m/\A(\d{4})[-\x{2013}](\d{1,4})\z/) {
+      $be->{year} = $1;
+      # if we have year = 1998-9, then we pad endyear to become 1999
+      my $pad = substr($1, 0, length($2) - 1);
+      $be->{endyear} = $pad . $2;
+  }
+
+  foreach my $ymfield ('year', 'month') {
+    if ($be->{$ymfield} and $be->{$ymfield} !~ /\A\d+\z/xms) {
+      $logger->warn("Invalid format of field '$ymfield' - ignoring field in entry '$citekey'");
+      $self->{warnings}++;
+      push @{$be->{warnings}}, "Invalid format of field '$ymfield' - ignoring field";
+      delete $be->{$ymfield};
+    }
   }
 
   # Generate date components from *DATE fields
