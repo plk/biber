@@ -32,8 +32,8 @@ is( makenameid($names), 'Askdjksdj_Bsadk_Cklsjd_von_Üsakdjskd_Vsajd_Wasdjh_Xask
 is( makenameinitid($names), 'Askdjksdj_BC_v_Üsakdjskd_VW_Xaskldjdd_YZ_Maksjdakj_N', 
     'makenameinitid' );
 
-is( latexescape('{5}: Joe & Sons: $3.01 + 5% of some_function()'), 
-               '\{5\}: Joe \& Sons: \$3.01 + 5\% of some\_function()',
+is( latexescape('Joe & Sons: $3.01 + 5% of some_function()'),
+               'Joe \& Sons: \$3.01 + 5\% of some\_function()',
                'latexescape'); 
 
 is( terseinitials(' Goldman-Sachs,  Antonio Ludwig '),  'GSAL', 'terseinitials');

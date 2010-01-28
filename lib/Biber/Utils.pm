@@ -423,13 +423,13 @@ sub normalize_string_underscore {
 
 =head2 latexescape
 
-Escapes the LaTeX special characters { } & ^ _ $ and %
+Escapes the LaTeX special characters & ^ _ $ and %
 
 =cut
 
 sub latexescape {
   my $str = shift;
-  my @latexspecials = qw| { } & _ % |;
+  my @latexspecials = qw| & _ % |;
   foreach my $char (@latexspecials) {
     $str =~ s/^$char/\\$char/g;
     $str =~ s/([^\\])$char/$1\\$char/g;
