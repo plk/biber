@@ -33,7 +33,7 @@ sub _parse_biblatexml {
         $db = $parser->parse_string( $xmlstring )
             or $logger->logcroak("Cannot parse xml string");
     } else {
-        $logger->info("Parsing the XML data ...");
+        $logger->info("Parsing the file $xml ...");
         $db = $parser->parse_file($xml)
             or $logger->logcroak("Can't parse file $xml");
     }
