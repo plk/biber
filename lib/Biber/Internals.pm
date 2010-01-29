@@ -26,12 +26,13 @@ sub _getnameinitials {
     my ($self, $citekey, $names) = @_;
     my @names = @{$names};
     my $initstr = "";
-    my $be = $self->{bib}{$citekey};
+    my $bibentries = $self->bib;
+    my $be = $bibentries->entry($citekey);
     ## my $nodecodeflag = $self->_decode_or_not($citekey);
 
-    if ( $#names < Biber::Config->getblxoption('maxnames', $be->{entrytype}, $citekey ) ) {    # 1 to maxname names
+    if ( $#names < Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey ) ) {    # 1 to maxname names
         foreach my $a (@names) {
-            if ( $a->{prefix} and Biber::Config->getblxoption('useprefix', $be->{entrytype}, $citekey ) ) {
+            if ( $a->{prefix} and Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
                 $initstr .= terseinitials( $a->{prefix} )
             }
             $initstr .= terseinitials( $a->{lastname} );
@@ -44,8 +45,8 @@ sub _getnameinitials {
     }
     else
     { # more than maxname names: only take initials of first getblxoption('minnames', $citekey)
-        foreach my $i ( 0 .. Biber::Config->getblxoption('minnames', $be->{entrytype}, $citekey ) - 1 ) {
-            if ( $names[$i]->{prefix} and Biber::Config->getblxoption('useprefix', $be->{entrytype}, $citekey) ) {
+        foreach my $i ( 0 .. Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey ) - 1 ) {
+            if ( $names[$i]->{prefix} and Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey) ) {
                 $initstr .= terseinitials( $names[$i]->{prefix} );
             }
             my $tmp = $names[$i]->{lastname};
@@ -66,9 +67,10 @@ sub _getnameinitials {
 sub _getallnameinitials {
     my ($self, $citekey, $names) = @_;
     my $initstr = "";
-    my $be = $self->{bib}{$citekey};
+    my $bibentries = $self->bib;
+    my $be = $bibentries->entry($citekey);
     foreach my $a (@{$names}) {
-        if ( $a->{prefix} and Biber::Config->getblxoption('useprefix', $be->{entrytype}, $citekey ) ) {
+        if ( $a->{prefix} and Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
             $initstr .= terseinitials( $a->{prefix} )
         }
         $initstr .= terseinitials( $a->{lastname} );
@@ -83,15 +85,15 @@ sub _getallnameinitials {
 
 sub _getlabel {
   my ($self, $citekey, $namefield) = @_;
-
   my @names = @{ $self->{bib}{$citekey}{$namefield} };
-  my $dt = $self->{bib}{$citekey}{datatype};
-  my $be = $self->{bib}{$citekey};
-  my $alphaothers = Biber::Config->getblxoption('alphaothers', $be->{entrytype}, $citekey);
-  my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->{entrytype}, $citekey) || $alphaothers;
-  my $useprefix = Biber::Config->getblxoption('useprefix', $be->{entrytype}, $citekey);
-  my $maxnames = Biber::Config->getblxoption('maxnames', $be->{entrytype}, $citekey);
-  my $minnames = Biber::Config->getblxoption('minnames', $be->{entrytype}, $citekey);
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  my $dt = $be->get_field('datatype');
+  my $alphaothers = Biber::Config->getblxoption('alphaothers', $be->get_field('entrytype'), $citekey);
+  my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->get_field('entrytype'), $citekey) || $alphaothers;
+  my $useprefix = Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey);
+  my $maxnames = Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey);
+  my $minnames = Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey);
   my $label = '';
   my $sortlabel = ''; # This contains sortalphaothers instead of alphaothers, if defined
   # This is needed in cases where alphaothers is something like
@@ -243,7 +245,7 @@ sub _generatesortstring {
     }
   }
   $sortstring =~ s/0\z//xms; # strip off the last '0' added by _sortset()
-  $be->{sortstring} = lc($sortstring);
+  $be->set_field('sortstring', lc($sortstring));
   return;
 }
 
@@ -279,9 +281,10 @@ sub _sort_9999 {
 
 sub _sort_author {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  if (Biber::Config->getblxoption('useauthor', $be->{entrytype}, $citekey) and
-      $be->{author}) {
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  if (Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey) and
+      $be->get_field('author')) {
     return $self->_namestring($citekey, 'author');
   }
   else {
@@ -306,20 +309,21 @@ sub _sort_debug {
 sub _sort_dm {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $dmtype = (@{$args})[0]; # get day/month field type
-  my $be = $self->{bib}{$citekey};
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
   my $default_pad_width = 2;
   my $default_pad_side = 'left';
   my $default_pad_char = '0';
-  if ($be->{$dmtype}) {
+  if ($be->get_field($dmtype)) {
     my $pad_width = ($sortelementattributes->{pad_width} or $default_pad_width);
     my $pad_side = ($sortelementattributes->{pad_side} or $default_pad_side);
     my $pad_char = ($sortelementattributes->{pad_char} or $default_pad_char);
-    my $pad_length = $pad_width - length($be->{$dmtype});
+    my $pad_length = $pad_width - length($be->get_field($dmtype));
     if ($pad_side eq 'left') {
-      return ($pad_char x $pad_length) . $be->{$dmtype};
+      return ($pad_char x $pad_length) . $be->get_field($dmtype);
     }
     elsif ($pad_side eq 'right') {
-      return $be->{$dmtype} . ($pad_char x $pad_length);
+      return $be->get_field($dmtype) . ($pad_char x $pad_length);
     }
   }
   else {
@@ -333,9 +337,10 @@ sub _sort_dm {
 sub _sort_editor {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $ed = (@{$args})[0]; # get editor field
-  my $be = $self->{bib}{$citekey};
-  if (Biber::Config->getblxoption('useeditor', $be->{entrytype}, $citekey) and
-      $be->{$ed}) {
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  if (Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) and
+      $be->get_field($ed)) {
     return $self->_namestring($citekey, $ed);
   }
   else {
@@ -349,10 +354,11 @@ sub _sort_editor {
 sub _sort_editortc {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $edtypeclass = (@{$args})[0]; # get editor type/class field
-  my $be = $self->{bib}{$citekey};
-  if (Biber::Config->getblxoption('useeditor', $be->{entrytype}, $citekey) and
-      $be->{$edtypeclass}) {
-    return $be->{$edtypeclass};
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  if (Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) and
+      $be->get_field($edtypeclass)) {
+    return $be->get_field($edtypeclass);
   }
   else {
     return '';
@@ -361,20 +367,21 @@ sub _sort_editortc {
 
 sub _sort_extraalpha {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
   my $default_pad_width = 4;
   my $default_pad_side = 'left';
   my $default_pad_char = '0';
-  if (Biber::Config->getblxoption('labelalpha', $be->{entrytype}, $citekey) and
-      $be->{extraalpha}) {
+  if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) and
+      $be->get_field('extraalpha')) {
     my $pad_width = ($sortelementattributes->{pad_width} or $default_pad_width);
     my $pad_side = ($sortelementattributes->{pad_side} or $default_pad_side);
     my $pad_char = ($sortelementattributes->{pad_char} or $default_pad_char);
-    my $pad_length = $pad_width - length($be->{extraalpha});
+    my $pad_length = $pad_width - length($be->get_field('extraalpha'));
     if ($pad_side eq 'left') {
-      return ($pad_char x $pad_length) . $be->{extraalpha};
+      return ($pad_char x $pad_length) . $be->get_field('extraalpha');
     } elsif ($pad_side eq 'right') {
-      return $be->{extraalpha} . ($pad_char x $pad_length);
+      return $be->get_field('extraalpha') . ($pad_char x $pad_length);
     }
   }
   else {
@@ -384,9 +391,10 @@ sub _sort_extraalpha {
 
 sub _sort_issuetitle {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  if ($be->{issuetitle}) {
-    return normalize_string( $be->{issuetitle}, $self->_nodecode($citekey) );
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  if ($be->get_field('issuetitle')) {
+    return normalize_string( $be->get_field('issuetitle'), $self->_nodecode($citekey) );
   }
   else {
     return '';
@@ -395,9 +403,10 @@ sub _sort_issuetitle {
 
 sub _sort_journal {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  if ($be->{journal}) {
-    return normalize_string( $be->{journal}, $self->_nodecode($citekey) );
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  if ($be->get_field('journal')) {
+    return normalize_string( $be->get_field('journal'), $self->_nodecode($citekey) );
   }
   else {
     return '';
@@ -410,9 +419,10 @@ sub _sort_mm {
 
 sub _sort_labelalpha {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  if ($be->{sortlabelalpha}) {
-    return $be->{sortlabelalpha};
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  if ($be->get_field('sortlabelalpha')) {
+    return $be->get_field('sortlabelalpha');
   }
   else {
     return '';
@@ -425,8 +435,9 @@ sub _sort_labelalpha {
 sub _sort_place {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $pltype = (@{$args})[0]; # get place field type
-  my $be = $self->{bib}{$citekey};
-  if ($be->{$pltype}) {
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  if ($be->get_field($pltype)) {
     return $self->_liststring($citekey, $pltype);
   }
   else {
@@ -436,14 +447,16 @@ sub _sort_place {
 
 sub _sort_presort {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  return $be->{presort} ? $be->{presort} : '';
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  return $be->get_field('presort') ? $be->get_field('presort') : '';
 }
 
 sub _sort_publisher {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  if ($be->{publisher}) {
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  if ($be->get_field('publisher')) {
     return $self->_liststring($citekey, 'publisher');
   }
   else {
@@ -453,15 +466,17 @@ sub _sort_publisher {
 
 sub _sort_pubstate {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  return $be->{pubstate} ? $be->{pubstate} : '';
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  return $be->get_field('pubstate') ? $be->get_field('pubstate') : '';
 }
 
 sub _sort_sortkey {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  if ($be->{sortkey}) {
-    my $sortkey = lc($be->{sortkey});
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  if ($be->get_field('sortkey')) {
+    my $sortkey = lc($be->get_field('sortkey'));
     $sortkey = LaTeX::Decode::latex_decode($sortkey) unless $self->_nodecode($citekey);
     return $sortkey;
   }
@@ -472,12 +487,13 @@ sub _sort_sortkey {
 
 sub _sort_sortname {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
   # see biblatex manual §3.4 - sortname is ignored if no use<name> option is defined
-  if ($be->{sortname} and
-      (Biber::Config->getblxoption('useauthor', $be->{entrytype}, $citekey) or
-       Biber::Config->getblxoption('useeditor', $be->{entrytype}, $citekey) or
-       Biber::Config->getblxoption('useetranslator', $be->{entrytype}, $citekey))) {
+  if ($be->get_field('sortname') and
+      (Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey) or
+       Biber::Config->getblxoption('useeditor', $be->get_field('{entrytype'), $citekey) or
+       Biber::Config->getblxoption('useetranslator', $be->get_field('entrytype'), $citekey))) {
     return $self->_namestring($citekey, 'sortname');
   }
   else {
@@ -491,9 +507,10 @@ sub _sort_sortname {
 sub _sort_title {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $ttype = (@{$args})[0]; # get year field type
-  my $be = $self->{bib}{$citekey};
-  if ($be->{$ttype}) {
-    return normalize_string( $be->{$ttype}, $self->_nodecode($citekey));
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  if ($be->get_field($ttype)) {
+    return normalize_string( $be->get_field($ttype), $self->_nodecode($citekey));
   }
   else {
     return '';
@@ -502,9 +519,10 @@ sub _sort_title {
 
 sub _sort_translator {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
-  if (Biber::Config->getblxoption('usetranslator', $be->{entrytype}, $citekey) and
-                   $be->{translator}) {
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  if (Biber::Config->getblxoption('usetranslator', $be->get_field('entrytype'), $citekey) and
+                   $be->get_field('translator')) {
     return $self->_namestring($citekey, 'translator');
   }
   else {
@@ -514,20 +532,21 @@ sub _sort_translator {
 
 sub _sort_volume {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $be = $self->{bib}{$citekey};
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
   my $default_pad_width = 4;
   my $default_pad_side = 'left';
   my $default_pad_char = '0';
-  if ($be->{volume}) {
+  if ($be->get_field('volume')) {
     my $pad_width = ($sortelementattributes->{pad_width} or $default_pad_width);
     my $pad_side = ($sortelementattributes->{pad_side} or $default_pad_side);
     my $pad_char = ($sortelementattributes->{pad_char} or $default_pad_char);
-    my $pad_length = $pad_width - length($be->{volume});
+    my $pad_length = $pad_width - length($be->get_field('volume'));
     if ($pad_side eq 'left') {
-      return ($pad_char x $pad_length) . $be->{volume};
+      return ($pad_char x $pad_length) . $be->get_field('volume');
     }
     elsif ($pad_side eq 'right') {
-      return $be->{volume} . ($pad_char x $pad_length);
+      return $be->get_field('volume') . ($pad_char x $pad_length);
     }
   }
   else {
@@ -541,12 +560,13 @@ sub _sort_volume {
 sub _sort_year {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $ytype = (@{$args})[0]; # get year field type
-  my $be = $self->{bib}{$citekey};
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
   my $default_substring_width = 4;
   my $default_substring_side = 'left';
   my $default_direction = 'ascending';
   my $subs_offset = 0;
-  if ($be->{$ytype}) {
+  if ($be->get_field($ytype)) {
     my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
     my $subs_side = ($sortelementattributes->{substring_side} or $default_substring_side);
     my $sort_dir = ($sortelementattributes->{sort_direction} or $default_direction);
@@ -554,10 +574,10 @@ sub _sort_year {
       $subs_offset = 0 - $subs_width;
     }
     if ($sort_dir eq 'ascending') { # default, ascending sort
-      return substr( $be->{$ytype}, $subs_offset, $subs_width );
+      return substr( $be->get_field($ytype), $subs_offset, $subs_width );
     }
     elsif ($sort_dir eq 'descending') { # descending sort
-      return 9999 - substr($be->{$ytype}, $subs_offset, $subs_width );
+      return 9999 - substr($be->get_field($ytype), $subs_offset, $subs_width );
     }
   }
   else {
@@ -605,20 +625,21 @@ sub _getnamestring {
 
 sub _namestring {
   my ( $self, $citekey, $field ) = @_;
-  my $be = $self->{bib}{$citekey};
-  my @names = @{$be->{$field}};
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  my @names = @{$be->get_field($field)};
   my $str = '';
   my $truncated = 0;
 
   # perform truncation according to options minnames, maxnames
-  if ( $#names + 1 > Biber::Config->getblxoption('maxnames', $be->{entrytype}, $citekey) ) {
+  if ( $#names + 1 > Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey) ) {
     $truncated = 1;
-    @names = splice(@names, 0, Biber::Config->getblxoption('minnames', $be->{entrytype}, $citekey) );
+    @names = splice(@names, 0, Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey) );
   }
 
   foreach ( @names ) {
     $str .= $_->{prefix} . '2'
-      if ( $_->{prefix} and Biber::Config->getblxoption('useprefix', $be->{entrytype}, $citekey ) );
+      if ( $_->{prefix} and Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) );
     $str .= strip_nosort($_->{lastname}) . '2';
     $str .= strip_nosort($_->{firstname}) . '2' if $_->{firstname};
     $str .= $_->{suffix} if $_->{suffix};
@@ -635,14 +656,15 @@ sub _namestring {
 
 sub _liststring {
   my ( $self, $citekey, $field ) = @_;
-  my $be = $self->{bib}{$citekey};
-  my @items = @{$be->{$field}};
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  my @items = @{$be->get_field($field)};
   my $str = '';
   my $truncated = 0;
   # perform truncation according to options minitems, maxitems
-  if ( $#items + 1 > Biber::Config->getblxoption('maxitems', $be->{entrytype}, $citekey) ) {
+  if ( $#items + 1 > Biber::Config->getblxoption('maxitems', $be->get_field('entrytype'), $citekey) ) {
     $truncated = 1;
-    @items = splice(@items, 0, Biber::Config->getblxoption('minitems', $be->{entrytype}, $citekey) );
+    @items = splice(@items, 0, Biber::Config->getblxoption('minitems', $be->get_field('entrytype'), $citekey) );
   }
 
   # separate the items by a string to give some structure
@@ -661,7 +683,7 @@ sub _liststring {
 # OUTPUT SUBS
 #=====================================================
 
-# This is to test whether the fields " $be->{$field} " are defined and non empty
+# This is to test whether the fields " $be->get_field($field) " are defined and non empty
 # (empty fields allow to suppress crossref inheritance)
 sub _defined_and_nonempty {
     my $arg = shift;
@@ -697,7 +719,8 @@ sub _defined_and_nonempty {
 #TODO this could be done earlier as a method and stored in the object
 sub _print_name {
   my ($self, $au, $citekey) = @_;
-  my $be = $self->{bib}{$citekey};
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
   my %nh  = %{$au};
   my $ln  = $nh{lastname};
   my $lni = getinitials($ln);
@@ -717,7 +740,7 @@ sub _print_name {
   $fn =~ s/\s+(\p{Lu}\.)/~$1/g;   # Bernard H. -> Bernard~H.
   $pre =~ s/\s/~/g if $pre;       # van der -> van~der
   $ln =~ s/\s/~/g if $ln;         # Murder Smith -> Murder~Smith
-  if ( Biber::Config->getblxoption('terseinits', $be->{entrytype}, $citekey) ) {
+  if ( Biber::Config->getblxoption('terseinits', $be->get_field('entrytype'), $citekey) ) {
     $lni = tersify($lni);
     $fni = tersify($fni);
     $prei = tersify($prei);
@@ -754,44 +777,44 @@ sub _print_biblatex_entry {
     my $opts    = '';
     my $origkey = $citekey;
     my $warnings; # var to hold warnings to pass to bbl
-    if ( $be->{origkey} ) {
-        $origkey = $be->{origkey}
+    if ( $be->get_field('origkey') ) {
+        $origkey = $be->get_field('origkey');
     }
 
-    if ( _defined_and_nonempty($be->{options}) ) {
-        $opts = $be->{options};
+    if ( _defined_and_nonempty($be->get_field('options')) ) {
+        $opts = $be->get_field('options');
     }
 
     my $str = "";
 
-    $str .= "% sortstring = " . $be->{sortstring} . "\n"
+    $str .= "% sortstring = " . $be->get_field('sortstring') . "\n"
         if (Biber::Config->getoption('debug') || Biber::Config->getblxoption('debug'));
 
-    $str .= "\\entry{$origkey}{" . $be->{entrytype} . "}{$opts}\n";
+    $str .= "\\entry{$origkey}{" . $be->get_field('entrytype') . "}{$opts}\n";
 
-    if ( $be->{entrytype} eq 'set' ) {
-        $str .= "  \\set{" . $be->{entryset} . "}\n";
+    if ( $be->get_field('entrytype') eq 'set' ) {
+        $str .= "  \\set{" . $be->get_field('entryset') . "}\n";
     }
 
     if (Biber::Config->getstate('inset_entries', $citekey)) {
-      unless (lc(Biber::Config->getstate('inset_entries', $citekey)) eq lc($be->{entryset})) {
+      unless (lc(Biber::Config->getstate('inset_entries', $citekey)) eq lc($be->get_field('entryset'))) {
 	$logger->warn('Key \"' . lc($citekey) . '\" thinks it is in set ' .
 		     Biber::Config->getstate('inset_entries', $citekey) .
-		     ' but the set is called "' . lc($be->{entryset}) . '"!');
+		     ' but the set is called "' . lc($be->get_field('entryset')) . '"!');
       }
       $str .= "  \\inset{" . Biber::Config->getstate('inset_entries', $citekey) . "}\n";
     }
 
     # make labelname a copy of the right thing before output of name lists
-    if (_defined_and_nonempty($be->{labelnamename})) { # avoid unitialised variable warnings
-      $be->{labelname} = $be->{$be->{labelnamename}};
+    if (_defined_and_nonempty($be->get_field('labelnamename'))) { # avoid unitialised variable warnings
+      $be->set_field('labelname', $be->get_field($be->get_field('labelnamename')));
     }
 
     foreach my $namefield (@NAMEFIELDS) {
         next if $SKIPFIELDS{$namefield};
-        if ( _defined_and_nonempty($be->{$namefield}) ) {
-            my @nf    = @{ $be->{$namefield} };
-            if ( $be->{$namefield}->[-1]->{namestring} eq 'others' ) {
+        if ( _defined_and_nonempty($be->get_field($namefield)) ) {
+            my @nf = @{ $be->get_field($namefield) };
+            if ( $be->get_field($namefield)->[-1]->{namestring} eq 'others' ) {
                 $str .= "  \\true{more$namefield}\n";
                 pop @nf; # remove the last element in the array
             };
@@ -806,9 +829,9 @@ sub _print_biblatex_entry {
 
     foreach my $listfield (@LISTFIELDS) {
         next if $SKIPFIELDS{$listfield};
-        if ( _defined_and_nonempty($be->{$listfield}) ) {
-            my @lf    = @{ $be->{$listfield} };
-            if ( $be->{$listfield}->[-1] eq 'others' ) {
+        if ( _defined_and_nonempty($be->get_field($listfield)) ) {
+            my @lf    = @{ $be->get_field($listfield) };
+            if ( $be->get_field($listfield)->[-1] eq 'others' ) {
                 $str .= "  \\true{more$listfield}\n";
                 pop @lf; # remove the last element in the array
             };
@@ -821,74 +844,75 @@ sub _print_biblatex_entry {
         }
     }
 
-    my $namehash = $be->{namehash};
+    my $namehash = $be->get_field('namehash');
     my $sortinit = substr $namehash, 0, 1;
     $str .= "  \\strng{namehash}{$namehash}\n";
-    my $fullhash = $be->{fullhash};
+    my $fullhash = $be->get_field('fullhash');
     $str .= "  \\strng{fullhash}{$fullhash}\n";
 
-    if ( Biber::Config->getblxoption('labelalpha', $be->{entrytype}, $citekey) ) {
-        my $label = $be->{labelalpha};
+    if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
+        my $label = $be->get_field('labelalpha');
         $str .= "  \\field{labelalpha}{$label}\n";
     }
     $str .= "  \\field{sortinit}{$sortinit}\n";
 
     # The labelyear option determines whether "extrayear" and "labelyear" is output
-    if ( Biber::Config->getblxoption('labelyear', $be->{entrytype}, $citekey) ) {
-        my $authoryear = $be->{authoryear};
+    if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
+        my $authoryear = $be->get_field('authoryear');
         if ( Biber::Config->getstate('seenauthoryear', $authoryear) > 1) {
             $str .= "  \\field{extrayear}{"
-              . $be->{extrayear} . "}\n";
+              . $be->get_field('extrayear') . "}\n";
         }
 
         # Construct labelyear
-        if (_defined_and_nonempty($be->{labelyearname})) {
-          $be->{labelyear} = $be->{$be->{labelyearname}};
+        if (_defined_and_nonempty($be->get_field('labelyearname'))) {
+          $be->set_field('labelyear', $be->get_field($be->get_field('labelyearname')));
           # ignore endyear if it's the same as year
-	  my ($ytype) = $be->{labelyearname} =~ /\A(.*)year\z/xms;
-          if (_defined_and_nonempty($be->{$ytype . 'endyear'})
-              and ($be->{$be->{labelyearname}} ne $be->{$ytype . 'endyear'})) {
-            $be->{labelyear} .= '\bibdatedash ' . $be->{$ytype . 'endyear'};
+	  my ($ytype) = $be->get_field('labelyearname') =~ /\A(.*)year\z/xms;
+          if (_defined_and_nonempty($be->get_field($ytype . 'endyear'))
+              and ($be->get_field($be->get_field('labelyearname')) ne $be->get_field($ytype . 'endyear'))) {
+            $be->set_field('labelyear',
+			   $be->get_field('labelyear') .= '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
           }
-        $str .= "  \\field{labelyear}{" . $be->{labelyear} . "}\n";
+        $str .= "  \\field{labelyear}{" . $be->get_field('labelyear') . "}\n";
         }
       }
 
-      if ( Biber::Config->getblxoption('labelalpha', $be->{entrytype}, $citekey) ) {
-        my $authoryear = $be->{authoryear};
+      if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
+        my $authoryear = $be->get_field('authoryear');
         if ( Biber::Config->getstate('seenauthoryear', $authoryear) > 1) {
             $str .= "  \\field{extraalpha}{"
-              . $be->{extraalpha} . "}\n";
+              . $be->get_field('extraalpha') . "}\n";
         }
     }
 
-    if ( Biber::Config->getblxoption('labelnumber', $be->{entrytype}, $citekey) ) {
-        if ($be->{shorthand}) {
+    if ( Biber::Config->getblxoption('labelnumber', $be->get_field('entrytype'), $citekey) ) {
+        if ($be->get_field('shorthand')) {
             $str .= "  \\field{labelnumber}{"
-              . $be->{shorthand} . "}\n";
+              . $be->get_field('shorthand') . "}\n";
         }
-        elsif ($be->{labelnumber}) {
+        elsif ($be->get_field('labelnumber')) {
             $str .= "  \\field{labelnumber}{"
-              . $be->{labelnumber} . "}\n";
+              . $be->get_field('labelnumber') . "}\n";
         }
     }
 
-    if ( $be->{ignoreuniquename} ) {
+    if ( $be->get_field('ignoreuniquename') ) {
 
         $str .= "  \\count{uniquename}{0}\n";
 
     } else {
-        my $lname = $be->{labelnamename};
+        my $lname = $be->get_field('labelnamename');
         my $name;
         my $lastname;
         my $nameinitstr;
 
         if ($lname) {
           if ($lname =~ m/\Ashort/xms) { # short* fields are just strings, not complex data
-            $lastname    = $be->{$lname};
-            $nameinitstr = $be->{$lname};
+            $lastname    = $be->get_field($lname);
+            $nameinitstr = $be->get_field($lname);
           } else {
-            $name = $be->{$lname}->[0];
+            $name = $be->get_field($lname)->[0];
             $lastname = $name->{lastname};
             $nameinitstr = $name->{nameinitstring};
           }
@@ -902,39 +926,39 @@ sub _print_biblatex_entry {
         }
     }
 
-    if ( Biber::Config->getblxoption('singletitle', $be->{entrytype}, $citekey)
-        and Biber::Config->getstate('seennamehash', $be->{fullhash}) < 2 )
+    if ( Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'), $citekey)
+        and Biber::Config->getstate('seennamehash', $be->get_field('fullhash')) < 2 )
     {
         $str .= "  \\true{singletitle}\n";
     }
 
     foreach my $ifield (@DATECOMPONENTFIELDS) {
         next if $SKIPFIELDS{$ifield};
-        if ( _defined_and_nonempty($be->{$ifield}) ) {
-	        $str .= $self->_printfield( $ifield, $be->{$ifield} );
+        if ( _defined_and_nonempty($be->get_field($ifield)) ) {
+	        $str .= $self->_printfield( $ifield, $be->get_field($ifield) );
         }
     }
 
     foreach my $lfield (@LITERALFIELDS) {
         next if $SKIPFIELDS{$lfield};
-        if ( _defined_and_nonempty($be->{$lfield}) ) {
+        if ( _defined_and_nonempty($be->get_field($lfield)) ) {
             next if ( $lfield eq 'crossref' and
-                      Biber::Config->getstate('seenkeys', $be->{crossref}) ); # belongs to @auxcitekeys
+                      Biber::Config->getstate('seenkeys', $be->get_field('crossref')) ); # belongs to @auxcitekeys
 
             my $lfieldprint = $lfield;
             if ($lfield eq 'journal') {
                 $lfieldprint = 'journaltitle'
             };
 
-            $str .= $self->_printfield( $lfieldprint, $be->{$lfield} );
+            $str .= $self->_printfield( $lfieldprint, $be->get_field($lfield) );
         }
     }
 
     # this is currently "pages" only
     foreach my $rfield (@RANGEFIELDS) {
         next if $SKIPFIELDS{$rfield};
-        if ( _defined_and_nonempty($be->{$rfield}) ) {
-            my $rf = $be->{$rfield};
+        if ( _defined_and_nonempty($be->get_field($rfield)) ) {
+            my $rf = $be->get_fielf($rfield);
             $rf =~ s/[-–]+/\\bibrangedash /g;
             $str .= "  \\field{$rfield}{$rf}\n";
         }
@@ -942,19 +966,19 @@ sub _print_biblatex_entry {
 
     foreach my $vfield (@VERBATIMFIELDS) {
         next if $SKIPFIELDS{$vfield};
-        if ( _defined_and_nonempty($be->{$vfield}) ) {
-            my $rf = $be->{$vfield};
+        if ( _defined_and_nonempty($be->get_field($vfield)) ) {
+            my $rf = $be->get_field($vfield);
             $str .= "  \\verb{$vfield}\n";
             $str .= "  \\verb $rf\n  \\endverb\n";
         }
     }
-    if ( _defined_and_nonempty($be->{keywords}) ) {
-        $str .= "  \\keyw{" . $be->{keywords} . "}\n";
+    if ( _defined_and_nonempty($be->get_field('keywords')) ) {
+        $str .= "  \\keyw{" . $be->get_field('keywords') . "}\n";
     }
 
     # Append any warnings to the entry, if any
-    if ($be->{warnings}) {
-      foreach my $warning (@{$be->{warnings}}) {
+    if ($be->get_field('warnings')) {
+      foreach my $warning (@{$be->get_field('warnings')}) {
         $str .= "  \\warn{$warning}\n";
       }
     }
