@@ -29,11 +29,11 @@ sub _text_bibtex_parse {
     my $encoding;
 
     if ( Biber::Config->getoption('bibencoding') and
-	 not Biber::Config->getoption('unicodebbl') ) {
-        $encoding = Biber::Config->getoption('bibencoding');
+         not Biber::Config->getoption('unicodebbl') ) {
+      $encoding = Biber::Config->getoption('bibencoding');
     } else {
         $encoding = "utf8";
-    };
+    }
 
     my $bib = Text::BibTeX::File->new( $filename, "<" )
         or $logger->logcroak("Cannot create Text::BibTeX::File object from $filename: $!");

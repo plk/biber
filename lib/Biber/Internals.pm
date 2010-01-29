@@ -492,7 +492,7 @@ sub _sort_sortname {
   # see biblatex manual §3.4 - sortname is ignored if no use<name> option is defined
   if ($be->get_field('sortname') and
       (Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey) or
-       Biber::Config->getblxoption('useeditor', $be->get_field('{entrytype'), $citekey) or
+       Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) or
        Biber::Config->getblxoption('useetranslator', $be->get_field('entrytype'), $citekey))) {
     return $self->_namestring($citekey, 'sortname');
   }
@@ -872,7 +872,7 @@ sub _print_biblatex_entry {
           if (_defined_and_nonempty($be->get_field($ytype . 'endyear'))
               and ($be->get_field($be->get_field('labelyearname')) ne $be->get_field($ytype . 'endyear'))) {
             $be->set_field('labelyear',
-			   $be->get_field('labelyear') .= '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
+			   $be->get_field('labelyear') . '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
           }
         $str .= "  \\field{labelyear}{" . $be->get_field('labelyear') . "}\n";
         }
@@ -958,7 +958,7 @@ sub _print_biblatex_entry {
     foreach my $rfield (@RANGEFIELDS) {
         next if $SKIPFIELDS{$rfield};
         if ( _defined_and_nonempty($be->get_field($rfield)) ) {
-            my $rf = $be->get_fielf($rfield);
+            my $rf = $be->get_field($rfield);
             $rf =~ s/[-–]+/\\bibrangedash /g;
             $str .= "  \\field{$rfield}{$rf}\n";
         }

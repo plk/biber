@@ -10,8 +10,15 @@ package Biber::Entry;
 =cut
 
 sub new {
-  my ($class) = @_;
-  my $self = bless {}, $class;
+  my $class = shift;
+  my ($obj) = @_;
+  my $self;
+  if (defined($obj) and ref($obj) eq 'HASH') {
+    $self = bless $obj, $class;
+  }
+  else {
+    $self = bless {}, $class;
+  }
   return $self;
 }
 
@@ -39,7 +46,7 @@ sub set_field {
 sub get_field {
   my $self = shift;
   my $key = shift;
-  return $self->{$key};
+  return defined($self->{$key}) ? $self->{$key} : '';
 }
 
 =head2 del_field

@@ -25,9 +25,10 @@ Biber::Config->setblxoption('labelname', ['shortauthor', 'author', 'shorteditor'
 Biber::Config->setblxoption('labelname', ['editor', 'translator'], 'PER_TYPE', 'book');
 
 $biber->prepare;
-is($biber->{bib}{angenendtsa}{labelnamename}, $sa, 'global shortauthor' );
-is($biber->{bib}{stdmodel}{labelnamename}, $a, 'global author' );
-is($biber->{bib}{'aristotle:anima'}{labelnamename}, $ted, 'type-specific editor' );
+my $bibentries = $biber->bib;
+is($bibentries->entry('angenendtsa')->get_field('labelnamename'), $sa, 'global shortauthor' );
+is($bibentries->entry('stdmodel')->get_field('labelnamename'), $a, 'global author' );
+is($bibentries->entry('aristotle:anima')->get_field('labelnamename'), $ted, 'type-specific editor' );
 
 
 

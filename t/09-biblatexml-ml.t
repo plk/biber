@@ -21,15 +21,15 @@ is(Biber::Config->get_displaymode('article', undef, 'Ani:1972')->[0], 'romanized
 is(Biber::Config->get_displaymode('collection', undef, 'KiyosiFestschrift')->[0], 'translated', 'getdisplaymode 2') ;
 
 $biber->parse_biblatexml($bibfile) ;
+my $bibentries = $biber->bib;
+is($bibentries->entry('ani:1972')->get_field('title'), "al-Durr al-multaqaṭ fī tabyīn al-ghalaṭ li-l-Ṣaghānī", "title romanized") ;
+is($bibentries->entry('ani:1972')->get_field('publisher')->[0], "Qism al-lugha al-ʿarabiyya – Kulliyyat al-ādāb – Jāmiʿat Baghdād", "publisher romanized") ;
+is($bibentries->entry('ani:1972')->get_field('date'), "1972", "year (gregorian)") ;
+is($bibentries->entry('ani:1972')->get_field('localdate'), "1392", "year (original)") ;
+is($bibentries->entry('ani:1972')->get_field('localcalendar'), "islamic", "localcalendar") ;
 
-is($biber->{bib}->{'ani:1972'}->{title}, "al-Durr al-multaqaṭ fī tabyīn al-ghalaṭ li-l-Ṣaghānī", "title romanized") ;
-is($biber->{bib}->{'ani:1972'}->{publisher}->[0], "Qism al-lugha al-ʿarabiyya – Kulliyyat al-ādāb – Jāmiʿat Baghdād", "publisher romanized") ;
-is($biber->{bib}->{'ani:1972'}->{date}, "1972", "year (gregorian)") ;
-is($biber->{bib}->{'ani:1972'}->{localdate}, "1392", "year (original)") ;
-is($biber->{bib}->{'ani:1972'}->{localcalendar}, "islamic", "localcalendar") ;
+is($bibentries->entry('bulgakovrozenfeld:1983')->get_field('title'), 'Мухаммад ибн муса ал-Хорезми. Около 783 – около 850', 'title original') ;
 
-is($biber->{bib}->{'bulgakovrozenfeld:1983'}->{title}, 'Мухаммад ибн муса ал-Хорезми. Около 783 – около 850', 'title original') ;
+is($bibentries->entry('kiyosifestschrift')->get_field('title'), 'Science and Skills in Asia. A Festschrift for the 77-th Birthday of Professor Yabuuti Kiyosi', 'title translated') ;
 
-is($biber->{bib}->{'kiyosifestschrift'}->{title}, 'Science and Skills in Asia. A Festschrift for the 77-th Birthday of Professor Yabuuti Kiyosi', 'title translated') ;
-
-is($biber->{bib}->{'djebbaraballagh:2001'}->{publisher}->[0], 'Faculté des Lettres et des Sciences Humaines de Rabat', "translated field with xml:lang");
+is($bibentries->entry('djebbaraballagh:2001')->get_field('publisher')->[0], 'Faculté des Lettres et des Sciences Humaines de Rabat', "translated field with xml:lang");

@@ -4,6 +4,8 @@ use warnings;
 use Carp;
 use Biber::Constants;
 use Biber::Utils;
+use Biber::Entries;
+use Biber::Entry;
 use Parse::RecDescent;
 use Regexp::Common qw{ balanced };
 use Biber::BibTeX::Parser;
@@ -17,7 +19,7 @@ sub _bibtex_prd_parse {
 
     my @auxcitekeys = $self->citekeys;
 
-    my %bibentries = $self->bib;
+    my $bibentries = $self->bib;
 
     my @localkeys;
 
@@ -68,7 +70,7 @@ sub _bibtex_prd_parse {
                 my $origkey = $tmpa[0];
                 my $key = lc($origkey);
 
-                if ( $bibentries{$origkey} or $bibentries{$key}) {
+                if ( $bibentries->entry_exists($origkey) or $bibentries->entry_exists($key)) {
                     $self->{errors}++;
                     my (undef,undef,$f) = File::Spec->splitpath( $filename );
                     $logger->warn("Repeated entry---key $origkey in file $f\nI'm skipping whatever remains of this entry");
@@ -77,9 +79,10 @@ sub _bibtex_prd_parse {
 
                 push @localkeys, $key;
 
-                $bibentries{ $key } = $entries[$i]->{$origkey};
+                my $bibentry = new Biber::Entry($entries[$i]->{$origkey});
 
-                $bibentries{ $key }->{datatype} = 'bibtex';
+                $bibentry->set_field('datatype', 'bibtex');
+                $bibentries->add_entry($key, $bibentry);
             }
         }
     }
@@ -88,20 +91,22 @@ sub _bibtex_prd_parse {
 
         $logger->debug("Processing entry '$key'");
 
+        my $bibentry = $bibentries->entry($key);
+
         foreach my $alias (keys %ALIASES) {
 
-            if ( $bibentries{$key}->{$alias} ) {
+            if ( $bibentry->get_field($alias) ) {
                 my $field = $ALIASES{$alias};
-                $bibentries{$key}->{$field} = $bibentries{$key}->{$alias};
-                delete $bibentries{$key}->{$alias}
+                $bibentry->set_field($field, $bibentry->get_field($alias));
+                $bibentry->del_field($alias);
             }
         }
 
         foreach my $ets (@ENTRIESTOSPLIT) {
 
-            if ( exists $bibentries{$key}->{$ets} ) {
+            if ( $bibentry->get_field($ets) ) {
 
-                my $stringtosplit = $bibentries{$key}->{$ets};
+                my $stringtosplit = $bibentry->get_field($ets);
 
                 # next if ref($tmp) neq 'SCALAR'; # we skip those that have been split
 
@@ -129,7 +134,7 @@ sub _bibtex_prd_parse {
                   # This is a special case - we need to get the option value even though the passed
                   # $self object isn't fully built yet so getblxoption() can't ask $self for the
                   # $entrytype for $key. So, we have to pass it explicitly.
-                  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentries{$key}{entrytype}, $key);
+                  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
 
                     @tmp = map { parsename( $_ , {useprefix => $useprefix}) } @tmp;
 
@@ -138,23 +143,23 @@ sub _bibtex_prd_parse {
                     @tmp = map { remove_outer($_) } @tmp;
                 }
 
-                $bibentries{ $key }->{$ets} = [ @tmp ]
+                $bibentry->set_field($ets, [ @tmp ]);
 
             }
-        };
+        }
 
-        if ($bibentries{ $key }->{'entrytype'} eq 'set') {
+        if ($bibentry->get_field('entrytype') eq 'set') {
 
-            my @entrysetkeys = split /\s*,\s*/, $bibentries{$key}->{'entryset'};
+            my @entrysetkeys = split /\s*,\s*/, $bibentry->get_field('entryset');
 
             foreach my $setkey (@entrysetkeys) {
                 Biber::Config->setstate('inset_entries', $setkey, $key);
             }
         }
 
-        if ( $bibentries{$key}->{'crossref'} ) {
+        if ( $bibentry->get_field('crossref') ) {
 
-            my $crkey = $bibentries{$key}->{'crossref'};
+            my $crkey = $bibentry->get_field('crossref');
 
             Biber::Config->incrstate('crossrefkeys', $crkey);
             Biber::Config->setstate('entrieswithcrossref', $key, $crkey);
@@ -164,9 +169,8 @@ sub _bibtex_prd_parse {
 
     $self->{preamble} .= $preamble if $preamble;
 
-    $self->{bib} = { %bibentries };
 
-    return @localkeys
+    return @localkeys;
 
 }
 

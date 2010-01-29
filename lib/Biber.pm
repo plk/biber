@@ -1053,7 +1053,7 @@ sub process_crossrefs {
     else { # inherits all
       foreach my $field ($bex->fields) {
         if (not $be->get_field($field)) {
-	  $be->get_field($field, $bex->get_field($field));
+	  $be->set_field($field, $bex->get_field($field));
         }
       }
     }
@@ -1087,7 +1087,6 @@ sub postprocess {
   my $bibentries = $self->bib;
   foreach my $citekey ( $self->citekeys ) {
     my $origkey = $citekey;
-    my $bibentry = $bibentries->entry($citekey);
     # try lc($citekey), uc($citekey) and ucinit($citekey) before giving up
     if ( not $bibentries->entry_exists($citekey) ) {
       if ( $bibentries->entry_exists(lc($citekey)) ) {
@@ -1102,6 +1101,7 @@ sub postprocess {
         next;
       }
     }
+    my $bibentry = $bibentries->entry($citekey);
 
     push @foundkeys, $citekey;
     $bibentry->set_field('origkey', $origkey);
@@ -1169,14 +1169,6 @@ sub postprocess_dates {
     $self->{warnings}++;
     $be->add_warning("Field conflict - both 'date' and 'month' used - ignoring field 'month'");
     $be->del_field('month');
-  }
-
-  # let's accommodate bib files which have e.g. "year = {1912-1918}"
-  if ($be->{year} and $be->{year} =~ m/\A(\d{4})[-\x{2013}](\d{1,4})\z/) {
-      $be->{year} = $1;
-      # if we have year = 1998-9, then we pad endyear to become 1999
-      my $pad = substr($1, 0, 4 - length($2));
-      $be->{endyear} = $pad . $2;
   }
 
   foreach my $ymfield ('year', 'month') {
@@ -1368,7 +1360,7 @@ sub postprocess_labelyear {
     }
 
     unless ( $be->get_field('labelyearname') ) {
-      $logger->debug("Could not determine the labelname of entry $citekey");
+      $logger->debug("Could not determine the labelyearname of entry $citekey");
     }
   }
 }
@@ -1425,7 +1417,7 @@ sub postprocess_hashes {
     $nameinitid = makenameinitid( $be->get_field('translator') )
       if ( Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey) == 2 );
   } else {                      # initials of title
-    if ( $be->get_field('{sorttitle') ) {
+    if ( $be->get_field('sorttitle') ) {
       $namehash   = terseinitials( $be->get_field('sorttitle') );
       $fullhash   = $namehash;
       $nameid     = normalize_string_underscore( $be->get_field('sorttitle'), 1 );
@@ -1634,7 +1626,7 @@ sub generate_final_sortinfo {
     my $authoryear = $be->get_field('authoryear');
     if (Biber::Config->getstate('seenauthoryear', $authoryear) > 1) {
       Biber::Config->incrstate('seenlabelyear', $authoryear);
-      if ( Biber::Config->getblxoption('labelyear', $be->get_field('{entrytype'), $citekey) ) {
+      if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
         $be->set_field('extrayear', Biber::Config->getstate('seenlabelyear', $authoryear));
       }
       if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {

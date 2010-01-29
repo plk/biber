@@ -18,6 +18,7 @@ sub _parse_biblatexml {
     my ($self, $xml) = @_;
     my $parser = XML::LibXML->new();
     my $db;
+    my $bibentries = $self->bib;
 
     # FIXME : a user _could_ want to encode the bbl in LaTeX!
     # ... in which case we would need LaTeX::Encode
@@ -64,8 +65,8 @@ sub _parse_biblatexml {
         my $res = $db->findnodes('/*/bib:entry');
         foreach my $r ($res->get_nodelist) {
             push @auxcitekeys, $r->findnodes('@id')->string_value
-        };
-    };
+        }
+    }
 
    $logger->info("Processing the XML data ...");
 
@@ -73,7 +74,6 @@ sub _parse_biblatexml {
     # the bibentries hash, but only the ones corresponding to @auxcitekeys
     foreach my $citekey (@auxcitekeys) {
       my $lc_key = lc($citekey);
-      my $bibentries = $self->bib;
       if ( $bibentries->entry_exists($citekey) or $bibentries->entry_exists($lc_key) ) {
 	$logger->debug("Entry \"$citekey\" was already found: skipping");
 	$citekeys_to_skip{$citekey} = 1;
@@ -91,7 +91,7 @@ sub _parse_biblatexml {
             $logger->debug("Can't find entry \"$citekey\": skipping");
             $citekeys_to_skip{$citekey} = 1;
             next
-        };
+        }
 
         if ( $results->size() > 1 ) {
             $logger->warn("The XML database contains more than one entry with id=\"$citekey\"!\nI'll take the first one.")
@@ -119,19 +119,18 @@ sub _parse_biblatexml {
             Biber::Config->setstate('entrieswithcrossref', $citekey, $crefkey);
         }
 
-    };
+    }
 
     # now we add all crossrefs to the stack
     unless ( Biber::Config->getoption('allentries') ) {
         push @auxcitekeys, ( keys %Biber::crossrefkeys );
-    };
+    }
     #--------------------------------------------------
 
     foreach my $citekey (@auxcitekeys) {
         my $lc_key = lc($citekey);
         next if $citekeys_to_skip{$citekey}; # skip entries already found or not present in current xml file
-	my $bibentries = $self->bib;
-	my $bibentry = $bibentries->entry($lc_key);
+        my $bibentry = new Biber::Entry;
 
         $logger->debug("Processing entry '$citekey'");
         my $xpath = '/*/bib:entry[@id="' . $citekey . '"]';
@@ -416,7 +415,8 @@ sub _parse_biblatexml {
                     $bibrecord->findnodes($attr)->string_value);
             }
         }
-    }
+	$bibentries->add_entry($lc_key, $bibentry);
+      }
 
     # now we keep only citekeys that actually exist in the database
     $self->{citekeys} = [ grep { $bibentries->entry_exists(lc($_)) } @auxcitekeys ];
