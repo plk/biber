@@ -1349,6 +1349,9 @@ sub postprocess_labelyear {
   my $lyearscheme = Biber::Config->getblxoption('labelyear', $be->{entrytype}, $citekey);
 
   if ($lyearscheme) {
+    # make sure we gave the correct data type:
+    $logger->logcroak("Invalid value for option labelyear: $lyearscheme\n")
+        unless ref $lyearscheme eq 'ARRAY';
     foreach my $ly ( @{$lyearscheme} ) {
       if ($be->{$ly}) {
         $be->{labelyearname} = $ly;
