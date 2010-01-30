@@ -109,7 +109,7 @@ sub citekeys {
 sub bibentry {
   my ($self, $key) = @_;
   $key = lc($key);
-  return $self->{bib}->entry($key);
+  return $self->bib->entry($key);
 }
 
 =head2 bib
