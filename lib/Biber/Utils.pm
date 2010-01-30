@@ -328,7 +328,7 @@ sub makenameid {
     foreach my $n (@{$names}) {
         push @namestrings, $n->{namestring};
     }
-    my $tmp = join " ", @namestrings;
+    my $tmp = join ' ', @namestrings;
     return normalize_string_underscore($tmp, 1);
 }
 
@@ -344,7 +344,7 @@ sub makenameinitid {
     foreach my $n (@{$names}) {
         push @namestrings, $n->{nameinitstring};
     }
-    my $tmp = join " ", @namestrings;
+    my $tmp = join ' ', @namestrings;
     return normalize_string_underscore($tmp, 1);
 }
 

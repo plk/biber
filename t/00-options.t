@@ -21,7 +21,7 @@ $biber->parse_bibtex($bibfile);
 
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 $biber->prepare;
-Biber::Config->dump;
+my $bibentries = $biber->bib;
 
 my $dmv =  [
               [
@@ -110,10 +110,10 @@ is_deeply(Biber::Config->getblxoption('labelname'), [ 'author' ], "Multi-valued 
 ok(Biber::Config->getoption('mincrossrefs') == 88, "Setting Biber options via control file");
 ok(Biber::Config->getblxoption('useprefix', 'book') == 1 , "Per-type single-valued options");
 is_deeply(Biber::Config->getblxoption('labelname', 'book'), $bln, "Per-type multi-valued options");
-is($biber->{bib}{l1}{labelyearname}, 'year', 'Global labelyear setting' ) ;
+is($bibentries->entry('l1')->get_field('labelyearname'), 'year', 'Global labelyear setting' ) ;
 is( $biber->_print_biblatex_entry('l1'), $l1, 'Global labelyear setting - labelyear should be YEAR') ;
 is($biber->{bib}{l2}{labelyearname}, 'origyear', 'Entry-specific labelyear setting' ) ;
 is( $biber->_print_biblatex_entry('l2'), $l2, 'Entry-specific labelyear setting - labelyear should be ORIGYEAR') ;
-is($biber->{bib}{l2}{labelnamename}, 'translator', 'Entry-specific labelname setting' ) ;
+is($bibentries->entry('l2')->get_field('labelnamename'), 'translator', 'Entry-specific labelname setting' ) ;
 
 

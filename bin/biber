@@ -227,21 +227,21 @@ if (Biber::Config->getoption('trace')) {
 
 $biber->output_to_bbl($biber->create_bbl_string, $bblfile);
 
-# display warnings/errors summary, like BibTeX
-if (defined($biber->{errors})) { # if errors, ignore warnings
-  if ($biber->{errors} == 1) {
-    print "(There was 1 error message)\n";
-  }
-  elsif ($biber->{errors} > 1) {
-    print "(There were ", $biber->{errors}, " error messages)\n";
-  }
-}
-elsif (defined($biber->{warnings})) {
-  if ($biber->{warnings} == 1) {
-    print "(There was 1 warning)\n";
-  }
-  elsif ($biber->{warnings} > 1) {
-    print "(There were ", $biber->{warnings}, " warnings)\n";
+# display warnings/errors summary, like BibTeX's format
+# unless in quiet mode
+unless (Biber::Config->getoption('quiet')) {
+  if (defined($biber->{errors})) { # if errors, ignore warnings
+    if ($biber->{errors} == 1) {
+      print "(There was 1 error message)\n";
+    } elsif ($biber->{errors} > 1) {
+      print "(There were ", $biber->{errors}, " error messages)\n";
+    }
+  } elsif (defined($biber->{warnings})) {
+    if ($biber->{warnings} == 1) {
+      print "(There was 1 warning)\n";
+    } elsif ($biber->{warnings} > 1) {
+      print "(There were ", $biber->{warnings}, " warnings)\n";
+    }
   }
 }
 

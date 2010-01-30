@@ -12,6 +12,8 @@ lib/Biber/BibTeX/PRD.pm
 lib/Biber/BibTeX/Parser.pm
 lib/Biber/Config.pm
 lib/Biber/Constants.pm
+lib/Biber/Entries.pm
+lib/Biber/Entry.pm
 lib/Biber/DBXML.pm
 lib/Biber/BibLaTeXML.pm
 lib/Biber/BibLaTeXML/Node.pm

@@ -4,6 +4,8 @@ use warnings;
 use Carp;
 use Text::BibTeX;
 use Biber::Constants;
+use Biber::Entries;
+use Biber::Entry;
 use Biber::Utils;
 use Encode;
 use File::Spec;
@@ -20,18 +22,18 @@ sub _text_bibtex_parse {
       open STDERR, '>/dev/null';
     }
 
-    my %bibentries = $self->bib;
+    my $bibentries = $self->bib;
 
     my @localkeys;
 
     my $encoding;
 
     if ( Biber::Config->getoption('bibencoding') and
-	 not Biber::Config->getoption('unicodebbl') ) {
-        $encoding = Biber::Config->getoption('bibencoding');
+         not Biber::Config->getoption('unicodebbl') ) {
+      $encoding = Biber::Config->getoption('bibencoding');
     } else {
         $encoding = "utf8";
-    };
+    }
 
     my $bib = Text::BibTeX::File->new( $filename, "<" )
         or $logger->logcroak("Cannot create Text::BibTeX::File object from $filename: $!");
@@ -55,7 +57,7 @@ sub _text_bibtex_parse {
 
         unless ( $entry->key ) {
             $logger->warn("Cannot get the key of entry no $count : Skipping");
-            next
+            next;
         }
 
         my $origkey = $entry->key;
@@ -63,12 +65,12 @@ sub _text_bibtex_parse {
 
         if (!defined $origkey or $origkey =~ /\s/ or $origkey eq '') {
             $logger->warn("Invalid BibTeX key! Skipping...");
-            next
+            next;
         }
 
         $logger->debug("Processing entry '$origkey'");
 
-        if ( $bibentries{ $origkey } or $bibentries{ $key } ) {
+        if ( $bibentries->entry_exists($origkey) or $bibentries->entry_exists($key) ) {
             $self->{errors}++;
             my (undef,undef,$f) = File::Spec->splitpath( $filename );
             $logger->warn("Repeated entry---key $origkey in file $f\nI'm skipping whatever remains of this entry");
@@ -83,6 +85,7 @@ sub _text_bibtex_parse {
             next;
         }
 
+        my $bibentry = new Biber::Entry;
 
         # all fields used for this entry
         my @flist = $entry->fieldlist;
@@ -103,7 +106,7 @@ sub _text_bibtex_parse {
                     $af = $ALIASES{$f}
                 }
 
-                $bibentries{ $key }->{$af} = $value;
+                $bibentry->set_field($af, $value);
 
                 if ($entry->type eq 'set' and $f eq 'entryset') {
 
@@ -117,16 +120,16 @@ sub _text_bibtex_parse {
                     Biber::Config->incrstate('crossrefkeys', $value);
                     Biber::Config->setstate('entrieswithcrossref', $key, $value);
                 }
-            };
+            }
 
             if (lc($entry->type) eq 'phdthesis') {
-                $bibentries{ $key }->{entrytype} = 'thesis';
-                $bibentries{ $key }->{type} = 'phdthesis';
+                $bibentry->set_field('entrytype', 'thesis');
+                $bibentry->set_field('type', 'phdthesis');
             } elsif (lc($entry->type) eq 'mathesis') {
-                $bibentries{ $key }->{entrytype} = 'thesis';
-                $bibentries{ $key }->{type} = 'mathesis';
+                $bibentry->set_field('entrytype', 'thesis');
+                $bibentry->set_field('type', 'mathesis');
             } else {
-                $bibentries{ $key }->{entrytype} = $entry->type;
+                $bibentry->set_field('entrytype', $entry->type);
             }
 
             foreach my $f ( @ENTRIESTOSPLIT ) {
@@ -148,25 +151,24 @@ sub _text_bibtex_parse {
                   # This is a special case - we need to get the option value even though the passed
                   # $self object isn't fully built yet so getblxoption() can't ask $self for the
                   # $entrytype for $key. So, we have to pass it explicitly.
-                  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentries{$key}{entrytype}, $key);
+                  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
 
                   @tmp = map { parsename( $_ , {useprefix => $useprefix}) } @tmp;
                 } else {
                     @tmp = map { remove_outer($_) } @tmp;
                 }
 
-                $bibentries{ $key }->{$af} = [ @tmp ]
+                $bibentry->set_field($af, [ @tmp ]);
 
-            };
+            }
 
-            $bibentries{ $key }->{datatype} = 'bibtex';
-        }
+            $bibentry->set_field('datatype', 'bibtex');
+            $bibentries->add_entry($key, $bibentry);
 
-    }
+          }
+      }
 
-   $self->{bib} = { %bibentries };
-
-   $self->{preamble} = join( "%\n", @preamble ) if @preamble;
+    $self->{preamble} = join( "%\n", @preamble ) if @preamble;
 
 
    if (Biber::Config->getoption('quiet')) {

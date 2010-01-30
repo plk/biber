@@ -21,6 +21,7 @@ $biber->parse_bibtex($bibfile);
 
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 $biber->prepare;
+my $bibentries = $biber->bib;
 
 my $l1 = [ "Invalid format of field 'year' - ignoring field",
            "Invalid format of field 'origdate' - ignoring field",
@@ -236,57 +237,57 @@ my $l17e = q|\entry{l17}{book}{}
 |;
 
 
-is_deeply($biber->{bib}{l1}{warnings}, $l1, 'Date format test 1' ) ;
-ok(! defined($biber->{bib}{l1}{origyear}), 'Date format test 1a - ORIGYEAR undef since ORIGDATE is bad' ) ;
-ok(! defined($biber->{bib}{l1}{urlyear}), 'Date format test 1b - URLYEAR undef since URLDATE is bad' ) ;
-ok(! defined($biber->{bib}{l1}{month}), 'Date format test 1c - MONTH undef since not integer' ) ;
-is_deeply($biber->{bib}{l2}{warnings}, $l2, 'Date format test 2' ) ;
-is_deeply($biber->{bib}{l3}{warnings}, $l3, 'Date format test 3' ) ;
-is_deeply($biber->{bib}{l4}{warnings}, $l4, 'Date format test 4' ) ;
-is_deeply($biber->{bib}{l5}{warnings}, $l5, 'Date format test 5' ) ;
-is_deeply($biber->{bib}{l6}{warnings}, $l6, 'Date format test 6' ) ;
-is_deeply($biber->{bib}{l7}{warnings}, $l7, 'Date format test 7' ) ;
-is_deeply($biber->{bib}{l8}{warnings}, $l8, 'Date format test 8' ) ;
-ok(! defined($biber->{bib}{l8}{year}), 'Date format test 8a - YEAR undef since not integer' ) ;
-ok(! defined($biber->{bib}{l8}{month}), 'Date format test 8b - MONTH undef since not integer' ) ;
-ok(! defined($biber->{bib}{l9}{warnings}), 'Date format test 9' ) ;
-ok(! defined($biber->{bib}{l10}{warnings}), 'Date format test 10' ) ;
-is_deeply($biber->{bib}{l11}{warnings}, $l11, 'Date format test 11' ) ;
-is($biber->{bib}{l11}{year}, '1996', 'Date format test 11a - DATE overrides YEAR' ) ;
-is_deeply($biber->{bib}{l12}{warnings}, $l12, 'Date format test 12' ) ;
-is($biber->{bib}{l12}{month}, '01', 'Date format test 12a - DATE overrides MONTH' ) ;
-is($biber->{bib}{l13}{endyear}, '', 'Date format test 13 - range with no end' ) ;
-ok(! defined($biber->{bib}{l13}{endmonth}), 'Date format test 13a - ENDMONTH undef for open-ended range' ) ;
-ok(! defined($biber->{bib}{l13}{endday}), 'Date format test 13b - ENDDAY undef for open-ended range' ) ;
+is_deeply($bibentries->entry('l1')->get_field('warnings'), $l1, 'Date format test 1' ) ;
+is($bibentries->entry('l1')->get_field('origyear'), '', 'Date format test 1a - ORIGYEAR undef since ORIGDATE is bad' ) ;
+is($bibentries->entry('l1')->get_field('urlyear'), '', 'Date format test 1b - URLYEAR undef since URLDATE is bad' ) ;
+is($bibentries->entry('l1')->get_field('month'), '', 'Date format test 1c - MONTH undef since not integer' ) ;
+is_deeply($bibentries->entry('l2')->get_field('warnings'), $l2, 'Date format test 2' ) ;
+is_deeply($bibentries->entry('l3')->get_field('warnings'), $l3, 'Date format test 3' ) ;
+is_deeply($bibentries->entry('l4')->get_field('warnings'), $l4, 'Date format test 4' ) ;
+is_deeply($bibentries->entry('l5')->get_field('warnings'), $l5, 'Date format test 5' ) ;
+is_deeply($bibentries->entry('l6')->get_field('warnings'), $l6, 'Date format test 6' ) ;
+is_deeply($bibentries->entry('l7')->get_field('warnings'), $l7, 'Date format test 7' ) ;
+is_deeply($bibentries->entry('l8')->get_field('warnings'), $l8, 'Date format test 8' ) ;
+is($bibentries->entry('l8')->get_field('year'), '', 'Date format test 8a - YEAR undef since not integer' ) ;
+is($bibentries->entry('l8')->get_field('month'), '', 'Date format test 8b - MONTH undef since not integer' ) ;
+is($bibentries->entry('l9')->get_field('warnings'), '', 'Date format test 9' ) ;
+is($bibentries->entry('l10')->get_field('warnings'), '', 'Date format test 10' ) ;
+is_deeply($bibentries->entry('l11')->get_field('warnings'), $l11, 'Date format test 11' );
+is($bibentries->entry('l11')->get_field('year'), '1996', 'Date format test 11a - DATE overrides YEAR' ) ;
+is_deeply($bibentries->entry('l12')->get_field('warnings'), $l12, 'Date format test 12' );
+is($bibentries->entry('l12')->get_field('month'), '01', 'Date format test 12a - DATE overrides MONTH' ) ;
+is($bibentries->entry('l13')->get_field('endyear'), '', 'Date format test 13 - range with no end' ) ;
+is($bibentries->entry('l13')->get_field('endmonth'), '', 'Date format test 13a - ENDMONTH undef for open-ended range' ) ;
+is($bibentries->entry('l13')->get_field('endday'), '', 'Date format test 13b - ENDDAY undef for open-ended range' ) ;
 is( $biber->_print_biblatex_entry('l13'), $l13c, 'Date format test 13c - labelyear open-ended range' ) ;
 is( $biber->_print_biblatex_entry('l14'), $l14, 'Date format test 14 - labelyear same as YEAR when ENDYEAR == YEAR') ;
 is( $biber->_print_biblatex_entry('l15'), $l15, 'Date format test 15 - labelyear should be undef, no DATE or YEAR') ;
 
 Biber::Config->setblxoption('labelyear', [ 'year', 'eventyear', 'origyear' ]);
-delete $biber->{bib}{l17}{year};
-delete $biber->{bib}{l17}{month};
+$bibentries->entry('l17')->del_field('year');
+$bibentries->entry('l17')->del_field('month');
 $biber->prepare;
 
-is($biber->{bib}{l16}{labelyearname}, 'eventyear', 'Date format test 16 - labelyearname = eventyear' ) ;
+is($bibentries->entry('l16')->get_field('labelyearname'), 'eventyear', 'Date format test 16 - labelyearname = eventyear' ) ;
 is($biber->_print_biblatex_entry('l16'), $l16, 'Date format test 16a - labelyear = eventyear value' ) ;
-is($biber->{bib}{l17}{labelyearname}, 'year', 'Date format test 17 - labelyearname = YEAR' ) ;
+is($bibentries->entry('l17')->get_field('labelyearname'), 'year', 'Date format test 17 - labelyearname = YEAR' ) ;
 is($biber->_print_biblatex_entry('l17'), $l17, 'Date format test 17a - labelyear = YEAR value when ENDYEAR is the same and ORIGYEAR is also present' ) ;
 
 
 Biber::Config->setblxoption('labelyear', [ 'origyear', 'year', 'eventyear' ]);
-delete $biber->{bib}{l17}{year};
-delete $biber->{bib}{l17}{month};
+$bibentries->entry('l17')->del_field('year');
+$bibentries->entry('l17')->del_field('month');
 $biber->prepare;
 
-is($biber->{bib}{l17}{labelyearname}, 'origyear', 'Date format test 17b - labelyearname = ORIGYEAR' ) ;
+is($bibentries->entry('l17')->get_field('labelyearname'), 'origyear', 'Date format test 17b - labelyearname = ORIGYEAR' ) ;
 is($biber->_print_biblatex_entry('l17'), $l17c, 'Date format test 17c - labelyear = ORIGYEAR value when ENDORIGYEAR is the same and YEAR is also present' ) ;
 
 Biber::Config->setblxoption('labelyear', [ 'eventyear', 'year', 'origyear' ], 'PER_TYPE', 'book');
-delete $biber->{bib}{l17}{year};
-delete $biber->{bib}{l17}{month};
+$bibentries->entry('l17')->del_field('year');
+$bibentries->entry('l17')->del_field('month');
 $biber->prepare;
 
-is($biber->{bib}{l17}{labelyearname}, 'eventyear', 'Date format test 17d - labelyearname = EVENTYEAR' ) ;
+is($bibentries->entry('l17')->get_field('labelyearname'), 'eventyear', 'Date format test 17d - labelyearname = EVENTYEAR' ) ;
 is($biber->_print_biblatex_entry('l17'), $l17e, 'Date format test 17e - labelyear = ORIGYEAR-ORIGENDYEAR' ) ;
 
 

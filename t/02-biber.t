@@ -11,6 +11,7 @@ Log::Log4perl->easy_init($ERROR);
 
 my $opts = { fastsort => 1 };
 my $biber = Biber->new($opts);
+my $bibentries = $biber->bib;
 
 isa_ok($biber, "Biber");
 
@@ -83,7 +84,8 @@ my $stdmodel = {
                 'origkey' => 'stdmodel'
                 } ;
 
-is_deeply($biber->{bib}{stdmodel}, $stdmodel, 'entry stdmodel') ;
+
+is_deeply($bibentries->entry('stdmodel'), $stdmodel, 'entry stdmodel') ;
 
 my $laufenberg = {
                  'authoryear' => 'Laufenberg2Xaver1zzzz02006',
@@ -237,7 +239,7 @@ my $laufenberg = {
                 'origkey' => 'laufenberg'
                 } ;
 
-is_deeply($biber->{bib}->{laufenberg}, $laufenberg, 'entry laufenberg') ;
+is_deeply($bibentries->entry('laufenberg'), $laufenberg, 'entry laufenberg') ;
 
 my $kastenholz = q|\entry{kastenholz}{article}{}
   \name{author}{2}{%

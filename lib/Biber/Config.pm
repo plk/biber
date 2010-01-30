@@ -454,19 +454,24 @@ sub get_displaymode {
   if ($citekey) {
     my $key = lc($citekey);
     if ($fieldtype and
-        defined $CONFIG->{displaymodes}{PER_FIELD}{$key}{$fieldtype}) {
+	defined($CONFIG->{displaymodes}{PER_FIELD}) and
+        defined($CONFIG->{displaymodes}{PER_FIELD}{$key}) and
+	defined($CONFIG->{displaymodes}{PER_FIELD}{$key}{$fieldtype})) {
       $dm = $CONFIG->{displaymodes}{PER_FIELD}{$key}{$fieldtype};
     }
-    elsif (defined $CONFIG->{displaymodes}{PER_ENTRY}{$key}) {
+    elsif (defined($CONFIG->{displaymodes}{PER_ENTRY}) and
+	   defined($CONFIG->{displaymodes}{PER_ENTRY}{$key})) {
       $dm = $CONFIG->{displaymodes}{PER_ENTRY}{$key};
     }
   }
   elsif ($fieldtype and
-         defined $CONFIG->{displaymodes}{PER_FIELDTYPE}{$fieldtype}) {
+	 defined($CONFIG->{displaymodes}{PER_FIELDTYPE}) and
+         defined($CONFIG->{displaymodes}{PER_FIELDTYPE}{$fieldtype})) {
     $dm = $CONFIG->{displaymodes}{PER_FIELDTYPE}{$fieldtype};
   }
   elsif ($entrytype and
-         defined $CONFIG->{displaymodes}{PER_ENTRYTYPE}{$entrytype}) {
+	 defined($CONFIG->{displaymodes}{PER_ENTRYTYPE}) and
+         defined($CONFIG->{displaymodes}{PER_ENTRYTYPE}{$entrytype})) {
     $dm = $CONFIG->{displaymodes}{PER_ENTRYTYPE}{$entrytype};
   }
   $dm = $CONFIG->{displaymodes}{GLOBAL} unless $dm; # Global if nothing else;
@@ -478,6 +483,7 @@ sub get_displaymode {
     return $DISPLAYMODES{$dm};
   }
 }
+
 
 =head2 dump
 

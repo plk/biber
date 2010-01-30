@@ -22,14 +22,15 @@ $biber->parse_bibtex($bibfile);
 
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 $biber->prepare;
+my $bibentries = $biber->bib;
 
-is($biber->{bib}{l1}{extrayear}, '1', 'Entry L1 - one name, first in 1995');
-is($biber->{bib}{l2}{extrayear}, '2', 'Entry L2 - one name, second in 1995');
-is($biber->{bib}{l3}{extrayear}, '3', 'Entry L3 - one name, third in 1995');
-is($biber->{bib}{l4}{extrayear}, '1', 'Entry L4 - two names, first in 1995');
-is($biber->{bib}{l5}{extrayear}, '2', 'Entry L5 - two names, second in 1995');
-is($biber->{bib}{l6}{extrayear}, '1', 'Entry L6 - two names, first in 1996');
-is($biber->{bib}{l7}{extrayear}, '2', 'Entry L7 - two names, second in 1996');
-ok(! defined($biber->{bib}{l8}{extrayear}), 'Entry L8 - one name, only in year');
+is($bibentries->entry('l1')->get_field('extrayear'), '1', 'Entry L1 - one name, first in 1995');
+is($bibentries->entry('l2')->get_field('extrayear'), '2', 'Entry L2 - one name, second in 1995');
+is($bibentries->entry('l3')->get_field('extrayear'), '3', 'Entry L3 - one name, third in 1995');
+is($bibentries->entry('l4')->get_field('extrayear'), '1', 'Entry L4 - two names, first in 1995');
+is($bibentries->entry('l5')->get_field('extrayear'), '2', 'Entry L5 - two names, second in 1995');
+is($bibentries->entry('l6')->get_field('extrayear'), '1', 'Entry L6 - two names, first in 1996');
+is($bibentries->entry('l7')->get_field('extrayear'), '2', 'Entry L7 - two names, second in 1996');
+is($bibentries->entry('l8')->get_field('extrayear'), '', 'Entry L8 - one name, only in year');
 
 unlink "$bibfile.utf8";
