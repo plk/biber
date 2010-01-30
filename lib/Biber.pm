@@ -1173,7 +1173,7 @@ sub postprocess_dates {
   }
 
   foreach my $ymfield ('year', 'month') {
-    if ($be->{$ymfield} and $be->{$ymfield} !~ /\A\d+\z/xms) {
+    if ($be->get_field($ymfield) and $be->get_field($ymfield) !~ /\A\d+\z/xms) {
       $logger->warn("Invalid format of field '$ymfield' - ignoring field in entry '$citekey'");
       $self->{warnings}++;
       $be->add_warning("Invalid format of field '$ymfield' - ignoring field");
