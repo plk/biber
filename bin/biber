@@ -175,8 +175,10 @@ else {
 
 if (Biber::Config->getoption('trace')) {
     $logger->trace("\n###########################################################\n",
+                     "############# Dump of initial config object: ##############\n",
+                      Data::Dump::pp($Biber::Config::CONFIG), "\n",
                      "############# Dump of initial biber object: ###############\n",
-                   $biber->_stringdump,
+                      $biber->_stringdump,
                    "\n###########################################################")
 }
 
@@ -205,6 +207,8 @@ foreach my $bib (@{ Biber::Config->getoption('bibdata') }) {
 
 if (Biber::Config->getoption('trace')) {
     $logger->trace("\n###########################################################\n",
+                     "############# Dump of post-parse config object: ###########\n",
+                      Data::Dump::pp($Biber::Config::CONFIG), "\n",
                      "############# Dump of post-parse biber object: ############\n",
                    $biber->_stringdump,
                    "\n###########################################################")
@@ -214,6 +218,8 @@ $biber->prepare;
 
 if (Biber::Config->getoption('trace')) {
     $logger->trace("\n###########################################################\n",
+                     "############# Dump of final config object: ################\n",
+                      Data::Dump::pp($Biber::Config::CONFIG), "\n",
                      "############# Dump of final biber object: #################\n",
                    $biber->_stringdump,
                    "\n###########################################################")
