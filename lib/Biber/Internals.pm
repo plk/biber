@@ -85,10 +85,10 @@ sub _getallnameinitials {
 
 sub _getlabel {
   my ($self, $citekey, $namefield) = @_;
-  my @names = @{ $self->{bib}{$citekey}{$namefield} };
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
   my $dt = $be->get_field('datatype');
+  my @names = @{ $be->get_field($namefield) };
   my $alphaothers = Biber::Config->getblxoption('alphaothers', $be->get_field('entrytype'), $citekey);
   my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->get_field('entrytype'), $citekey) || $alphaothers;
   my $useprefix = Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey);
@@ -104,7 +104,7 @@ sub _getlabel {
   my $numnames  = scalar @names;
 
   # If name list was truncated in bib with "and others", this overrides maxnames
-  my $morenames = ($self->{bib}{$citekey}{$namefield}[-1]{namestring} eq 'others') ? 1 :0;
+  my $morenames = ($names[-1]->{namestring} eq 'others') ? 1 : 0;
   my $nametrunc;
   my $loopnames;
 
@@ -227,7 +227,7 @@ sub _dispatch_sorting {
 # Conjunctive set of sorting sets
 sub _generatesortstring {
   my ($self, $citekey, $sortscheme) = @_;
-  my $be = $self->{bib}{$citekey};
+  my $be = $self->bibentry($citekey);
   my $sortstring;
   foreach my $sortset (@{$sortscheme}) {
     $BIBER_SORT_FINAL = 0; # reset sorting short-circuit
@@ -591,15 +591,16 @@ sub _sort_year {
 
 sub _nodecode {
   my ($self, $citekey) = @_;
+  my $be = $self->bibentry($citekey);
   my $no_decode = (Biber::Config->getoption('unicodebib') or
                    Biber::Config->getoption('fastsort') or
-                   $self->{bib}{$citekey}{datatype} eq 'xml');
+                   $be->get_field('datatype') eq 'xml');
   return $no_decode;
 }
 
 sub _getyearstring {
   my ($self, $citekey) = @_;
-  my $be = $self->{bib}{$citekey};
+  my $be = $self->bibentry($citekey);
   my $string;
   $string = $self->_dispatch_sorting('sortyear', $citekey);
   return $string if $string;
@@ -610,7 +611,7 @@ sub _getyearstring {
 
 sub _getnamestring {
   my ($self, $citekey) = @_;
-  my $be = $self->{bib}{$citekey};
+  my $be = $self->bibentry($citekey);
   my $string;
   $string = $self->_dispatch_sorting('sortname', $citekey);
   return $string if $string;
@@ -772,11 +773,10 @@ sub _printfield {
 
 sub _print_biblatex_entry {
     my ($self, $citekey) = @_;
-    my $be = $self->{bib}{$citekey}
+    my $be = $self->bibentry($citekey)
         or $logger->logcroak("Cannot find $citekey");
     my $opts    = '';
     my $origkey = $citekey;
-    my $warnings; # var to hold warnings to pass to bbl
     if ( $be->get_field('origkey') ) {
         $origkey = $be->get_field('origkey');
     }

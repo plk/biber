@@ -108,6 +108,7 @@ sub citekeys {
 
 sub bibentry {
   my ($self, $key) = @_;
+  $key = lc($key);
   return $self->{bib}->entry($key);
 }
 
@@ -1053,7 +1054,7 @@ sub process_crossrefs {
     else { # inherits all
       foreach my $field ($bex->fields) {
         if (not $be->get_field($field)) {
-	  $be->set_field($field, $bex->get_field($field));
+          $be->set_field($field, $bex->get_field($field));
         }
       }
     }
@@ -1175,8 +1176,8 @@ sub postprocess_dates {
     if ($be->{$ymfield} and $be->{$ymfield} !~ /\A\d+\z/xms) {
       $logger->warn("Invalid format of field '$ymfield' - ignoring field in entry '$citekey'");
       $self->{warnings}++;
-      push @{$be->{warnings}}, "Invalid format of field '$ymfield' - ignoring field";
-      delete $be->{$ymfield};
+      $be->add_warning("Invalid format of field '$ymfield' - ignoring field");
+      $be->del_field($ymfield);
     }
   }
 

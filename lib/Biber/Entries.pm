@@ -28,6 +28,7 @@ sub new {
 sub entry_exists {
   my $self = shift;
   my $citekey = shift;
+  $citekey = lc($citekey);
   return defined($self->{$citekey}) ? 1 : 0;
 }
 
@@ -41,6 +42,7 @@ sub entry_exists {
 sub entry {
   my $self = shift;
   my $citekey = shift;
+  $citekey = lc($citekey);
   return $self->{$citekey};
 }
 
@@ -64,6 +66,7 @@ sub entries_keys {
 sub add_entry {
   my $self = shift;
   my ($key, $entry) = @_;
+  $key = lc($key);
   $self->{$key} = $entry;
   return;
 }
