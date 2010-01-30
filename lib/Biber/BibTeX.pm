@@ -103,7 +103,7 @@ sub _text_bibtex_parse {
                 my $af = $f;
 
                 if ( $ALIASES{$f} ) {
-                    $af = $ALIASES{$f}
+                  $af = $ALIASES{$f};
                 }
 
                 $bibentry->set_field($af, $value);

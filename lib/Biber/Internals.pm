@@ -684,39 +684,6 @@ sub _liststring {
 # OUTPUT SUBS
 #=====================================================
 
-# This is to test whether the fields " $be->get_field($field) " are defined and non empty
-# (empty fields allow to suppress crossref inheritance)
-sub _defined_and_nonempty {
-    my $arg = shift;
-    if (defined $arg) {
-        if (ref \$arg eq 'SCALAR') {
-            if ($arg ne '') {
-                return 1
-            } else {
-                return 0
-            }
-        } elsif (ref $arg eq 'ARRAY') {
-            my @arr = @$arg;
-            if ( $#arr > -1 ) {
-                return 1
-            } else {
-                return 0
-            }
-        } elsif (ref $arg eq 'HASH') {
-            my @arr = keys %$arg;
-            if ($#arr > -1 ) {
-                return 1
-            } else {
-                return 0
-            }
-        } else {
-            return 0
-        }
-    } else {
-        return 0
-    }
-}
-
 #TODO this could be done earlier as a method and stored in the object
 sub _print_name {
   my ($self, $au, $citekey) = @_;
@@ -781,7 +748,7 @@ sub _print_biblatex_entry {
         $origkey = $be->get_field('origkey');
     }
 
-    if ( _defined_and_nonempty($be->get_field('options')) ) {
+    if ( is_def_and_notnull($be->get_field('options')) ) {
         $opts = $be->get_field('options');
     }
 
@@ -806,13 +773,13 @@ sub _print_biblatex_entry {
     }
 
     # make labelname a copy of the right thing before output of name lists
-    if (_defined_and_nonempty($be->get_field('labelnamename'))) { # avoid unitialised variable warnings
+    if (is_def_and_notnull($be->get_field('labelnamename'))) { # avoid unitialised variable warnings
       $be->set_field('labelname', $be->get_field($be->get_field('labelnamename')));
     }
 
     foreach my $namefield (@NAMEFIELDS) {
         next if $SKIPFIELDS{$namefield};
-        if ( _defined_and_nonempty($be->get_field($namefield)) ) {
+        if ( is_def_and_notnull($be->get_field($namefield)) ) {
             my @nf = @{ $be->get_field($namefield) };
             if ( $be->get_field($namefield)->[-1]->{namestring} eq 'others' ) {
                 $str .= "  \\true{more$namefield}\n";
@@ -829,7 +796,7 @@ sub _print_biblatex_entry {
 
     foreach my $listfield (@LISTFIELDS) {
         next if $SKIPFIELDS{$listfield};
-        if ( _defined_and_nonempty($be->get_field($listfield)) ) {
+        if ( is_def_and_notnull($be->get_field($listfield)) ) {
             my @lf    = @{ $be->get_field($listfield) };
             if ( $be->get_field($listfield)->[-1] eq 'others' ) {
                 $str .= "  \\true{more$listfield}\n";
@@ -865,11 +832,11 @@ sub _print_biblatex_entry {
         }
 
         # Construct labelyear
-        if (_defined_and_nonempty($be->get_field('labelyearname'))) {
+        if (is_def_and_notnull($be->get_field('labelyearname'))) {
           $be->set_field('labelyear', $be->get_field($be->get_field('labelyearname')));
           # ignore endyear if it's the same as year
 	  my ($ytype) = $be->get_field('labelyearname') =~ /\A(.*)year\z/xms;
-          if (_defined_and_nonempty($be->get_field($ytype . 'endyear'))
+          if (is_def_and_notnull($be->get_field($ytype . 'endyear'))
               and ($be->get_field($be->get_field('labelyearname')) ne $be->get_field($ytype . 'endyear'))) {
             $be->set_field('labelyear',
 			   $be->get_field('labelyear') . '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
@@ -934,14 +901,14 @@ sub _print_biblatex_entry {
 
     foreach my $ifield (@DATECOMPONENTFIELDS) {
         next if $SKIPFIELDS{$ifield};
-        if ( _defined_and_nonempty($be->get_field($ifield)) ) {
+        if ( is_def_and_notnull($be->get_field($ifield)) ) {
 	        $str .= $self->_printfield( $ifield, $be->get_field($ifield) );
         }
     }
 
     foreach my $lfield (@LITERALFIELDS) {
         next if $SKIPFIELDS{$lfield};
-        if ( _defined_and_nonempty($be->get_field($lfield)) ) {
+        if ( is_def_and_notnull($be->get_field($lfield)) ) {
             next if ( $lfield eq 'crossref' and
                       Biber::Config->getstate('seenkeys', $be->get_field('crossref')) ); # belongs to @auxcitekeys
 
@@ -957,7 +924,7 @@ sub _print_biblatex_entry {
     # this is currently "pages" only
     foreach my $rfield (@RANGEFIELDS) {
         next if $SKIPFIELDS{$rfield};
-        if ( _defined_and_nonempty($be->get_field($rfield)) ) {
+        if ( is_def_and_notnull($be->get_field($rfield)) ) {
             my $rf = $be->get_field($rfield);
             $rf =~ s/[-–]+/\\bibrangedash /g;
             $str .= "  \\field{$rfield}{$rf}\n";
@@ -966,13 +933,13 @@ sub _print_biblatex_entry {
 
     foreach my $vfield (@VERBATIMFIELDS) {
         next if $SKIPFIELDS{$vfield};
-        if ( _defined_and_nonempty($be->get_field($vfield)) ) {
+        if ( is_def_and_notnull($be->get_field($vfield)) ) {
             my $rf = $be->get_field($vfield);
             $str .= "  \\verb{$vfield}\n";
             $str .= "  \\verb $rf\n  \\endverb\n";
         }
     }
-    if ( _defined_and_nonempty($be->get_field('keywords')) ) {
+    if ( is_def_and_notnull($be->get_field('keywords')) ) {
         $str .= "  \\keyw{" . $be->get_field('keywords') . "}\n";
     }
 

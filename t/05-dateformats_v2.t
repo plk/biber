@@ -6,6 +6,7 @@ no warnings 'utf8';
 use Test::More tests => 33;
 
 use Biber;
+use Biber::Utils;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
@@ -238,9 +239,9 @@ my $l17e = q|\entry{L17}{book}{}
 
 
 is_deeply($bibentries->entry('l1')->get_field('warnings'), $l1, 'Date format test 1' ) ;
-is($bibentries->entry('l1')->get_field('origyear'), '', 'Date format test 1a - ORIGYEAR undef since ORIGDATE is bad' ) ;
-is($bibentries->entry('l1')->get_field('urlyear'), '', 'Date format test 1b - URLYEAR undef since URLDATE is bad' ) ;
-is($bibentries->entry('l1')->get_field('month'), '', 'Date format test 1c - MONTH undef since not integer' ) ;
+ok(is_undef($bibentries->entry('l1')->get_field('origyear')), 'Date format test 1a - ORIGYEAR undef since ORIGDATE is bad' ) ;
+ok(is_undef($bibentries->entry('l1')->get_field('urlyear')), 'Date format test 1b - URLYEAR undef since URLDATE is bad' ) ;
+ok(is_undef($bibentries->entry('l1')->get_field('month')), 'Date format test 1c - MONTH undef since not integer' ) ;
 is_deeply($bibentries->entry('l2')->get_field('warnings'), $l2, 'Date format test 2' ) ;
 is_deeply($bibentries->entry('l3')->get_field('warnings'), $l3, 'Date format test 3' ) ;
 is_deeply($bibentries->entry('l4')->get_field('warnings'), $l4, 'Date format test 4' ) ;
@@ -248,17 +249,18 @@ is_deeply($bibentries->entry('l5')->get_field('warnings'), $l5, 'Date format tes
 is_deeply($bibentries->entry('l6')->get_field('warnings'), $l6, 'Date format test 6' ) ;
 is_deeply($bibentries->entry('l7')->get_field('warnings'), $l7, 'Date format test 7' ) ;
 is_deeply($bibentries->entry('l8')->get_field('warnings'), $l8, 'Date format test 8' ) ;
-is($bibentries->entry('l8')->get_field('year'), '', 'Date format test 8a - YEAR undef since not integer' ) ;
-is($bibentries->entry('l8')->get_field('month'), '', 'Date format test 8b - MONTH undef since not integer' ) ;
-is($bibentries->entry('l9')->get_field('warnings'), '', 'Date format test 9' ) ;
-is($bibentries->entry('l10')->get_field('warnings'), '', 'Date format test 10' ) ;
+ok(is_undef($bibentries->entry('l8')->get_field('year')), 'Date format test 8a - YEAR undef since not integer' ) ;
+ok(is_undef($bibentries->entry('l8')->get_field('month')), 'Date format test 8b - MONTH undef since not integer' ) ;
+ok(is_undef($bibentries->entry('l9')->get_field('warnings')), 'Date format test 9' ) ;
+ok(is_undef($bibentries->entry('l10')->get_field('warnings')), 'Date format test 10' ) ;
 is_deeply($bibentries->entry('l11')->get_field('warnings'), $l11, 'Date format test 11' );
 is($bibentries->entry('l11')->get_field('year'), '1996', 'Date format test 11a - DATE overrides YEAR' ) ;
 is_deeply($bibentries->entry('l12')->get_field('warnings'), $l12, 'Date format test 12' );
 is($bibentries->entry('l12')->get_field('month'), '01', 'Date format test 12a - DATE overrides MONTH' ) ;
-is($bibentries->entry('l13')->get_field('endyear'), '', 'Date format test 13 - range with no end' ) ;
-is($bibentries->entry('l13')->get_field('endmonth'), '', 'Date format test 13a - ENDMONTH undef for open-ended range' ) ;
-is($bibentries->entry('l13')->get_field('endday'), '', 'Date format test 13b - ENDDAY undef for open-ended range' ) ;
+# it means something if endyear is defined but null ("1935-")
+ok(is_undef_or_null($bibentries->entry('l13')->get_field('endyear')), 'Date format test 13 - range with no end' ) ;
+ok(is_undef($bibentries->entry('l13')->get_field('endmonth')), 'Date format test 13a - ENDMONTH undef for open-ended range' ) ;
+ok(is_undef($bibentries->entry('l13')->get_field('endday')), 'Date format test 13b - ENDDAY undef for open-ended range' ) ;
 is( $biber->_print_biblatex_entry('l13'), $l13c, 'Date format test 13c - labelyear open-ended range' ) ;
 is( $biber->_print_biblatex_entry('l14'), $l14, 'Date format test 14 - labelyear same as YEAR when ENDYEAR == YEAR') ;
 is( $biber->_print_biblatex_entry('l15'), $l15, 'Date format test 15 - labelyear should be undef, no DATE or YEAR') ;

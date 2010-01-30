@@ -49,7 +49,7 @@ sub set_field {
 sub get_field {
   my $self = shift;
   my $key = shift;
-  return defined($self->{$key}) ? $self->{$key} : '';
+  return $self->{$key};
 }
 
 =head2 del_field

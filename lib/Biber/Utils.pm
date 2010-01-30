@@ -36,7 +36,7 @@ All functions are exported by default.
 our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid
     normalize_string normalize_string_underscore latexescape reduce_array
     remove_outer getinitials tersify ucinit strip_nosort strip_nosortdiacritics
-    strip_nosortprefix};
+    strip_nosortprefix is_def is_undef is_def_and_notnull is_undef_or_null is_notnull};
 
 ######
 
@@ -553,6 +553,137 @@ sub ucinit {
         $str =~ s/\b(\p{Ll})/\u$1/g;
         return $str;
 }
+
+=head2 is_undef
+
+    Checks for undefness of arbitrary things, including
+    composite method chain calls which don't reliably work
+    with defined() (see perldoc for defined())
+    This works because we are just testing the value passed
+    to this sub. So, for example, this is randomly unreliable
+    even if the resulting value of the arg to defined() is "undef":
+
+    defined($thing->method($arg)->method)
+
+    wheras:
+
+    is_undef($thing->method($arg)->method)
+
+    works since we only test the return value of all the methods
+    with defined()
+
+=cut
+
+sub is_undef {
+  my $val = shift;
+  return defined($val) ? 0 : 1;
+}
+
+=head2 is_def
+
+    Checks for definedness in the same way as is_undef()
+
+=cut
+
+sub is_def {
+  my $val = shift;
+  return defined($val) ? 1 : 0;
+}
+
+
+=head2 is_undef_or_null
+
+    Checks for undef or nullness (see is_undef() above)
+
+=cut
+
+sub is_undef_or_null {
+  my $val = shift;
+  return 1 if is_undef($val);
+  return $val ? 0 : 1;
+}
+
+=head2 is_def_and_notnull
+
+    Checks for def and unnullness (see is_undef() above)
+
+=cut
+
+sub is_def_and_notnull {
+  my $arg = shift;
+  if (defined($arg) and is_notnull($arg)) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+=head2 is_notnull
+
+    Checks for notnullness
+
+=cut
+
+sub is_notnull {
+  my $arg = shift;
+  my $st = is_notnull_scalar($arg);
+  if (defined($st) and $st) { return 1; }
+  my $at = is_notnull_array($arg);
+  if (defined($at) and $at) { return 1; }
+  my $ht = is_notnull_array($arg);
+  if (defined($ht) and $ht) { return 1; }
+  return 0;
+}
+
+
+=head2 is_notnull_scalar
+
+    Checks for notnullness of a scalar
+
+=cut
+
+sub is_notnull_scalar {
+  my $arg = shift;
+  unless (ref \$arg eq 'SCALAR') {
+    return undef;
+  }
+  return $arg ? 1 : 0;
+}
+
+=head2 is_notnull_array
+
+    Checks for notnullness of an array (passed by ref)
+
+=cut
+
+sub is_notnull_array {
+  my $arg = shift;
+  unless (ref $arg eq 'ARRAY') {
+    return undef;
+  }
+  my @arr = @$arg;
+  return $#arr > -1 ? 1 : 0;
+}
+
+
+=head2 is_notnull_hash
+
+    Checks for notnullness of an hash (passed by ref)
+
+=cut
+
+sub is_notnull_hash {
+  my $arg = shift;
+  unless (ref $arg eq 'HASH') {
+    return undef;
+  }
+  my @arr = keys %$arg;
+  return $#arr > -1 ? 1 : 0;
+}
+
+
+
 
 =head1 AUTHOR
 
