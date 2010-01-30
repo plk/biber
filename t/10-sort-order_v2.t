@@ -29,7 +29,7 @@ Biber::Config->setblxoption('sorting_label', [
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 Biber::Config->setblxoption('labelyear', undef);
 $biber->prepare;
-is_deeply([$biber->citekeys] , ['l2','l1b','l1','l4','l3','l5','l1a'], 'citeorder');
+is_deeply([$biber->citekeys] , ['L2','L1B','L1','L4','L3','L5','L1A'], 'citeorder');
 
 # nty
 Biber::Config->setblxoption('sorting_label', [
@@ -64,7 +64,7 @@ Biber::Config->setblxoption('sorting_label', [
 
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 $biber->prepare;
-is_deeply([$biber->citekeys] , ['l5','l1a','l1','l1b','l2','l3','l4'], 'nty');
+is_deeply([$biber->citekeys] , ['L5','L1A','L1','L1B','L2','L3','L4'], 'nty');
 
 # nyt
 Biber::Config->setblxoption('sorting_label', [
@@ -99,7 +99,7 @@ Biber::Config->setblxoption('sorting_label', [
 
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 $biber->prepare;
-is_deeply([$biber->citekeys] , ['l5','l1a','l1','l1b','l2','l3','l4'], 'nyt');
+is_deeply([$biber->citekeys] , ['L5','L1A','L1','L1B','L2','L3','L4'], 'nyt');
 
 # nyvt
 Biber::Config->setblxoption('sorting_label', [
@@ -135,7 +135,7 @@ Biber::Config->setblxoption('sorting_label', [
 
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 $biber->prepare;
-is_deeply([$biber->citekeys] , ['l5','l1','l1a','l1b','l2','l3','l4'], 'nyvt');
+is_deeply([$biber->citekeys] , ['L5','L1','L1A','L1B','L2','L3','L4'], 'nyvt');
 
 # nyvt with volume padding
 Biber::Config->setblxoption('sorting_label', [
@@ -171,7 +171,7 @@ Biber::Config->setblxoption('sorting_label', [
 
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 $biber->prepare;
-is_deeply([$biber->citekeys] , ['l5','l1a','l1','l1b','l2','l3','l4'], 'nyvt with volume padding');
+is_deeply([$biber->citekeys] , ['L5','L1A','L1','L1B','L2','L3','L4'], 'nyvt with volume padding');
 
 # ynt
 Biber::Config->setblxoption('sorting_label', [
@@ -204,7 +204,7 @@ Biber::Config->setblxoption('sorting_label', [
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
-is_deeply([$biber->citekeys] , ['l3','l1b','l1a','l1','l4','l2','l5'], 'ynt');
+is_deeply([$biber->citekeys] , ['L3','L1B','L1A','L1','L4','L2','L5'], 'ynt');
 
 # ynt with year substring
 Biber::Config->setblxoption('sorting_label', [
@@ -238,7 +238,7 @@ Biber::Config->setblxoption('sorting_label', [
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 
 $biber->prepare;
-is_deeply([$biber->citekeys] , ['l3','l1b','l1a','l1','l2','l4','l5'], 'ynt with year substring');
+is_deeply([$biber->citekeys] , ['L3','L1B','L1A','L1','L2','L4','L5'], 'ynt with year substring');
 
 # ydnt
 Biber::Config->setblxoption('sorting_label', [
@@ -270,7 +270,7 @@ Biber::Config->setblxoption('sorting_label', [
 
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 $biber->prepare;
-is_deeply([$biber->citekeys] , ['l2','l4','l1a','l1','l1b','l3','l5'], 'ydnt');
+is_deeply([$biber->citekeys] , ['L2','L4','L1A','L1','L1B','L3','L5'], 'ydnt');
 
 
 # anyt
@@ -310,7 +310,7 @@ Biber::Config->setblxoption('sorting_label', [
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 Biber::Config->setblxoption('labelalpha', 1);
 $biber->prepare;
-is_deeply([$biber->citekeys] , ['l1b','l1a','l1','l2','l3','l4','l5'], 'anyt');
+is_deeply([$biber->citekeys] , ['L1B','L1A','L1','L2','L3','L4','L5'], 'anyt');
 Biber::Config->setblxoption('labelalpha', 0);
 
 # anyvt
@@ -350,7 +350,7 @@ Biber::Config->setblxoption('sorting_label', [
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 Biber::Config->setblxoption('labelalpha', 1);
 $biber->prepare;
-is_deeply([$biber->citekeys] , ['l1b','l1','l1a','l2','l3','l4','l5'], 'anyvt');
+is_deeply([$biber->citekeys] , ['L1B','L1','L1A','L2','L3','L4','L5'], 'anyvt');
 
 unlink "$bibfile.utf8";
 

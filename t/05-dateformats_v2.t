@@ -103,7 +103,7 @@ my $l15 = q|\entry{L15}{book}{}
 
 |;
 
-my $l16 = q|\entry{l16}{book}{}
+my $l16 = q|\entry{L16}{book}{}
   \name{author}{2}{%
     {{Doe}{D.}{John}{J.}{}{}{}{}}%
     {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
@@ -125,7 +125,7 @@ my $l16 = q|\entry{l16}{book}{}
 
 |;
 
-my $l17 = q|\entry{l17}{book}{}
+my $l17 = q|\entry{L17}{book}{}
   \name{author}{2}{%
     {{Doe}{D.}{John}{J.}{}{}{}{}}%
     {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
@@ -162,7 +162,7 @@ my $l17 = q|\entry{l17}{book}{}
 
 |;
 
-my $l17c = q|\entry{l17}{book}{}
+my $l17c = q|\entry{L17}{book}{}
   \name{author}{2}{%
     {{Doe}{D.}{John}{J.}{}{}{}{}}%
     {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
@@ -199,7 +199,7 @@ my $l17c = q|\entry{l17}{book}{}
 
 |;
 
-my $l17e = q|\entry{l17}{book}{}
+my $l17e = q|\entry{L17}{book}{}
   \name{author}{2}{%
     {{Doe}{D.}{John}{J.}{}{}{}{}}%
     {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
