@@ -73,8 +73,7 @@ sub _parse_biblatexml {
     # Contrary to the bibtex approach, we are not extracting all data to
     # the bibentries hash, but only the ones corresponding to @auxcitekeys
     foreach my $citekey (@auxcitekeys) {
-      my $lc_key = lc($citekey);
-      if ( $bibentries->entry_exists($citekey) or $bibentries->entry_exists($lc_key) ) {
+      if ( $bibentries->entry_exists($citekey) ) {
 	$logger->debug("Entry \"$citekey\" was already found: skipping");
 	$citekeys_to_skip{$citekey} = 1;
 	next;
@@ -128,7 +127,6 @@ sub _parse_biblatexml {
     #--------------------------------------------------
 
     foreach my $citekey (@auxcitekeys) {
-        my $lc_key = lc($citekey);
         next if $citekeys_to_skip{$citekey}; # skip entries already found or not present in current xml file
         my $bibentry = new Biber::Entry;
 
@@ -415,7 +413,7 @@ sub _parse_biblatexml {
                     $bibrecord->findnodes($attr)->string_value);
             }
         }
-	$bibentries->add_entry($lc_key, $bibentry);
+        $bibentries->add_entry($citekey, $bibentry);
       }
 
     # now we keep only citekeys that actually exist in the database

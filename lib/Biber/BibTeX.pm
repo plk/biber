@@ -61,7 +61,7 @@ sub _text_bibtex_parse {
         }
 
         my $origkey = $entry->key;
-        my $key = lc($origkey);
+        my $lc_key = lc($origkey);
 
         if (!defined $origkey or $origkey =~ /\s/ or $origkey eq '') {
             $logger->warn("Invalid BibTeX key! Skipping...");
@@ -70,14 +70,14 @@ sub _text_bibtex_parse {
 
         $logger->debug("Processing entry '$origkey'");
 
-        if ( $bibentries->entry_exists($origkey) or $bibentries->entry_exists($key) ) {
+        if ( $bibentries->entry_exists($origkey) ) {
             $self->{errors}++;
             my (undef,undef,$f) = File::Spec->splitpath( $filename );
             $logger->warn("Repeated entry---key $origkey in file $f\nI'm skipping whatever remains of this entry");
             next;
         }
 
-        push @localkeys, $key;
+        push @localkeys, $lc_key;
 
         unless ($entry->parse_ok) {
             $self->{errors}++;
@@ -113,12 +113,12 @@ sub _text_bibtex_parse {
                     my @entrysetkeys = split /\s*,\s*/, $value;
 
                     foreach my $setkey (@entrysetkeys) {
-                        Biber::Config->setstate('inset_entries', lc($setkey), $key);
+                        Biber::Config->setstate('inset_entries', lc($setkey), $lc_key);
                     }
                 }
                 elsif ($f eq 'crossref') { ### $entry->type ne 'set' and
                     Biber::Config->incrstate('crossrefkeys', $value);
-                    Biber::Config->setstate('entrieswithcrossref', $key, $value);
+                    Biber::Config->setstate('entrieswithcrossref', $lc_key, $value);
                 }
             }
 
@@ -150,8 +150,8 @@ sub _text_bibtex_parse {
                 if (Biber::Config->getstate('is_name_entry', $f)) {
                   # This is a special case - we need to get the option value even though the passed
                   # $self object isn't fully built yet so getblxoption() can't ask $self for the
-                  # $entrytype for $key. So, we have to pass it explicitly.
-                  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
+                  # $entrytype for $lc_key. So, we have to pass it explicitly.
+                  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
 
                   @tmp = map { parsename( $_ , {useprefix => $useprefix}) } @tmp;
                 } else {
@@ -163,7 +163,7 @@ sub _text_bibtex_parse {
             }
 
             $bibentry->set_field('datatype', 'bibtex');
-            $bibentries->add_entry($key, $bibentry);
+            $bibentries->add_entry($lc_key, $bibentry);
 
           }
       }
