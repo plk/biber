@@ -73,7 +73,7 @@ print version();
 
 $biber->parse_bibtex($filename);
 
-my %bibentries = $biber->bib;
+my $bibentries = $biber->bib;
 my $outfile;
 my $output;
 
@@ -113,10 +113,10 @@ $writer->startTag(
 
 my $count = 0;
 
-for my $citekey ( sort keys %bibentries ) {
+for my $citekey ( $bibentries->entries_keys ) {
     $count++;
-    my $entry          = $bibentries{$citekey};
-    my @entryfields    = keys %$entry;
+    my $entry          = $bibentries->entry($citekey);
+    my @entryfields    = $entry->fields;
     my @specialfields  = ( @NAMEFIELDS, @LISTFIELDS, @TITLEFIELDS );
     my @standardfields = (
         @RANGEFIELDS, @DATERANGEFIELDS, @DATECOMPONENTFIELDS,
@@ -129,18 +129,18 @@ for my $citekey ( sort keys %bibentries ) {
 
     my %attrs; # hash for storing attributes
 
-    $attrs{entrytype} = $entry->{entrytype};
+    $attrs{entrytype} = $entry->get_field('entrytype');
     $attrs{id}        = $citekey;
 
-    if ( $entry->{howpublished} ) {
-        $attrs{howpublished} = $entry->{howpublished}
+    if ( $entry->get_field('howpublished') ) {
+        $attrs{howpublished} = $entry->get_field('howpublished')
     }
-    if ( $entry->{type} ) {
-        $attrs{type} = $entry->{type}
+    if ( $entry->get_field('type') ) {
+        $attrs{type} = $entry->get_field('type')
     }
 
     # we assume phdthesis when type is omitted
-    if ($entry->{entrytype} eq 'thesis' and ! $entry->{type}) {
+    if ($entry->get_field('entrytype') eq 'thesis' and ! $entry->get_field('type')) {
         $attrs{type} = 'phdthesis'
     }
 
@@ -148,7 +148,7 @@ for my $citekey ( sort keys %bibentries ) {
 
 
     foreach my $field (@NAMEFIELDS) {
-        if ( $entry->{$field} ) {
+        if ( $entry->get_field($field) ) {
 
             my $afield = $field;
             if ($field =~ /^(editor|name)(a|b|c)/) {
@@ -156,7 +156,7 @@ for my $citekey ( sort keys %bibentries ) {
             }
             my %attrs ; # hash for storing attributes
 
-            my @nf = @{ $entry->{$field} };
+            my @nf = @{ $entry->get_field($field) };
 
             if (    @nf
                 and $nf[-1]->{"lastname"}
@@ -166,11 +166,11 @@ for my $citekey ( sort keys %bibentries ) {
                 pop @nf;
             }
 
-            if ($entry->{"${field}type"}) {
-                $attrs{type} = $entry->{"${field}type"}
+            if ($entry->get_field("${field}type")) {
+                $attrs{type} = $entry->get_field("${field}type")
             }
-            if ($entry->{"${field}class"}) {
-                $attrs{class} = $entry->{"${field}class"}
+            if ($entry->get_field("${field}class")) {
+                $attrs{class} = $entry->get_field("${field}class")
             }
 
             $writer->startTag("bib:$afield", %attrs);
@@ -196,17 +196,17 @@ for my $citekey ( sort keys %bibentries ) {
         }
     }
     foreach my $field (@TITLEFIELDS) {
-        if ( $entry->{$field} ) {
+        if ( $entry->get_field($field) ) {
             $writer->startTag("bib:$field");
-            $writer->characters( $entry->{$field} );
+            $writer->characters( $entry->get_field($field) );
             $writer->endTag();        # $field
         }
     }
 
     foreach my $field (@LISTFIELDS) {
-        if ( $entry->{$field} ) {
+        if ( $entry->get_field($field) ) {
 
-            my @lf = @{ $entry->{$field} };
+            my @lf = @{ $entry->get_field($field) };
 
             my $afield = $field;
 
@@ -238,7 +238,7 @@ for my $citekey ( sort keys %bibentries ) {
             }
             else {
                 $writer->startTag("bib:$afield");
-                $writer->characters( $entry->{$afield}->[0] );
+                $writer->characters( $entry->get_field($afield)->[0] );
                 $writer->endTag();        #field
             }
         }
@@ -246,9 +246,9 @@ for my $citekey ( sort keys %bibentries ) {
 
     # handle date fields with slash separator
     foreach my $datefield (@DATERANGEFIELDS) {
-        if ( $entry->{$datefield} ) {
+        if ( $entry->get_field($datefield) ) {
             $writer->startTag("bib:$datefield");
-            my $datestring = $entry->{$datefield};
+            my $datestring = $entry->get_field($datefield);
             if ($datestring =~ m|/|) {
                 my @datelist = split('/', $datestring);
                 if ($#datelist == 1) {
@@ -272,14 +272,14 @@ for my $citekey ( sort keys %bibentries ) {
 
 
     ## convert year month day to "date"
-    if ( $entry->{year} && ! $entry->{date} ) {
-        my $datestring = $entry->{year};
-        if ( $entry->{month} && $entry->{month} =~ m/[a-z]/i ) {
-            my $monthnumber = $NUMERICALMONTH{ $entry->{month} }
-              || $entry->{month};
+    if ( $entry->get_field('year') && ! $entry->get_field('date') ) {
+        my $datestring = $entry->get_field('year');
+        if ( $entry->get_field('month') && $entry->get_field('month') =~ m/[a-z]/i ) {
+            my $monthnumber = $NUMERICALMONTH{ $entry->get_field('month') }
+              || $entry->get_field('month');
             $datestring .= "-" . sprintf("%02d", $monthnumber);
-            if ($entry->{day}) {
-                $datestring .= "-" . sprintf("%02d", $entry->{day});
+            if ($entry->get_field('day')) {
+                $datestring .= "-" . sprintf("%02d", $entry->get_field('day'));
             }
         }
         $writer->dataElement( "bib:date", $datestring );
@@ -294,39 +294,39 @@ for my $citekey ( sort keys %bibentries ) {
         )
       )
     {
-        if ( $entry->{$field} ) {
+        if ( $entry->get_field($field) ) {
             if ( $field eq 'pages' ) {
-                if ( $entry->{entrytype} =~
+                if ( $entry->get_field('entrytype') =~
                      /^(book|collection|proceedings|report|conference|unpublished|thesis|misc)/
                    )
                 {
-                    $writer->dataElement( 'bib:pagetotal', $entry->{pages} );
+                    $writer->dataElement( 'bib:pagetotal', $entry->get_field('pages') );
                 }
 
                 # 1-3, 7 => <pages>1-3, 7</pages>
-                elsif ( $entry->{pages} =~ /[, ;]/ ) {
+                elsif ( $entry->get_field('pages') =~ /[, ;]/ ) {
                     $writer->startTag('bib:pages');
-                    $writer->dataElement( 'bib:list', $entry->{pages} );
+                    $writer->dataElement( 'bib:list', $entry->get_field('pages') );
                     $writer->endTag();    #pages
                 }
-                elsif ( $entry->{pages} =~ /(-|\x{2013})/ ) {
+                elsif ( $entry->get_field('pages') =~ /(-|\x{2013})/ ) {
                     my ( $startpage, $endpage ) =
-                      $entry->{pages} =~ /([^\s\-]+)[\s\-\x{2013}]+([^\s\-]+)/;
+                      $entry->get_field('pages') =~ /([^\s\-]+)[\s\-\x{2013}]+([^\s\-]+)/;
                     $writer->startTag('bib:pages');
                     $writer->dataElement( 'bib:start', $startpage );
                     $writer->dataElement( 'bib:end',   $endpage );
                     $writer->endTag();    #pages
                 }
                 else {
-                    $writer->dataElement( 'bib:pages', $entry->{pages} );
+                    $writer->dataElement( 'bib:pages', $entry->get_field('pages') );
                 }
             }
             # fields with attribute "type" (right now only "eprint")
-            elsif ( $entry->{"${field}type"} ) {
+            elsif ( $entry->get_field("${field}type") ) {
                 $writer->dataElement(
                     "bib:$field",
-                    $entry->{$field},
-                    type => $entry->{"${field}type"}
+                    $entry->get_field($field),
+                    type => $entry->get_field("${field}type")
                 )
             }
             else {
@@ -336,7 +336,7 @@ for my $citekey ( sort keys %bibentries ) {
                 if ( $ALIASES{$field} ) {
                     $afield = $ALIASES{$field};
                 }
-                $writer->dataElement( "bib:$afield", $entry->{$field} );
+                $writer->dataElement( "bib:$afield", $entry->get_field($field) );
             }
 
             # we do it separately to get range and to fix pages -> pagetotal
@@ -351,7 +351,7 @@ for my $citekey ( sort keys %bibentries ) {
 
             # TODO add more like this, e.g. Zotero, BibSonomy, etc.
             if ( $field eq 'citeulike-article-id' ) {
-                my $id = $entry->{'citeulike-article-id'};
+                my $id = $entry->get_field('citeulike-article-id');
                 $writer->startTag('bib:library');
                 $writer->dataElement(
                     'bib:item', '',
@@ -361,7 +361,7 @@ for my $citekey ( sort keys %bibentries ) {
                 $writer->endTag();    #library
             }
             else {
-                $writer->dataElement( "user:$field", $entry->{$field} );
+                $writer->dataElement( "user:$field", $entry->get_field($field) );
             }
         }
         $writer->endTag();            #user
