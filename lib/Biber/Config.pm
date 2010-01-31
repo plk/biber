@@ -36,8 +36,6 @@ $CONFIG->{state}{'uniquenamecount'} = {};
 $CONFIG->{state}{'seenauthoryear'} = {};
 $CONFIG->{state}{'seenlabelyear'} = {};
 $CONFIG->{state}{'seenkeys'} = {};
-$CONFIG->{state}{'is_name_entry'} = { map { $_ => 1 } @NAMEFIELDS };
-
 
 =head2 _init
 

@@ -147,10 +147,7 @@ sub _text_bibtex_parse {
 
                 my @tmp = map { decode($encoding, $_) } $entry->split($f);
 
-                if (Biber::Config->getstate('is_name_entry', $f)) {
-                  # This is a special case - we need to get the option value even though the passed
-                  # $self object isn't fully built yet so getblxoption() can't ask $self for the
-                  # $entrytype for $lc_key. So, we have to pass it explicitly.
+                if (is_name_field($f)) {
                   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
 
                   @tmp = map { parsename( $_ , {useprefix => $useprefix}) } @tmp;

@@ -4,8 +4,10 @@ use warnings;
 use Carp;
 use File::Find;
 use IPC::Cmd qw( can_run run );
+use List::Util qw( first );
 use LaTeX::Decode;
 use Biber::Constants;
+use Biber::Entry::Name;
 use Regexp::Common qw( balanced );
 use re 'eval';
 use base 'Exporter';
@@ -36,7 +38,8 @@ All functions are exported by default.
 our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid
     normalize_string normalize_string_underscore latexescape reduce_array
     remove_outer getinitials tersify ucinit strip_nosort strip_nosortdiacritics
-    strip_nosortprefix is_def is_undef is_def_and_notnull is_undef_or_null is_notnull};
+    strip_nosortprefix is_def is_undef is_def_and_notnull is_undef_or_null is_notnull
+    is_name_field };
 
 ######
 
@@ -96,11 +99,12 @@ sub bibfind {
 
 =head2 parsename
 
-    Given a name string, this function returns a hash with all parts of the name
-    resolved according to the BibTeX conventions.
+    Given a name string, this function returns a Biber::Entry:Name object
+    with all parts of the name resolved according to the BibTeX conventions.
 
     parsename('John Doe')
-    returns:
+    returns an object which internally looks a bit like this:
+
     { firstname => 'John',
       lastname => 'Doe',
       prefix => undef,
@@ -110,6 +114,7 @@ sub bibfind {
 
     parsename('von Berlichingen zu Hornberg, Johann G{\"o}tz')
     returns:
+
     { firstname => 'Johann G{\"o}tz',
       lastname => 'Berlichingen zu Hornberg',
       prefix => 'von',
@@ -305,14 +310,29 @@ sub parsename {
         if $firstname;
     $nameinitstr =~ s/\s+/_/g;
 
-    return {
-            namestring     => $namestr,
-            nameinitstring => $nameinitstr,
-            lastname       => $lastname,
-            firstname      => $firstname,
-            prefix         => $prefix,
-            suffix         => $suffix
-           }
+
+    my $name_obj = new Biber::Entry::Name;
+
+    $name_obj->set_namepart('namestring', $namestr);
+    $name_obj->set_namepart('nameinitstring', $nameinitstr);
+    $name_obj->set_namepart('lastname', $lastname);
+    $name_obj->set_namepart('firstname', $firstname);
+    $name_obj->set_namepart('prefix', $prefix);
+    $name_obj->set_namepart('suffix', $suffix);
+
+    return $name_obj;
+}
+
+=head2 is_name_field
+
+    Returns boolean depending on whether the passed field name
+    is a name field or not.
+
+=cut
+
+sub is_name_field {
+  my $fieldname = shift;
+  return defined(first {$fieldname eq $_} @NAMEFIELDS) ? 1 : 0;
 }
 
 =head2 makenameid

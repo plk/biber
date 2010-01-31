@@ -14,6 +14,7 @@ use List::Util qw( first );
 use Biber::Internals;
 use Biber::Entries;
 use Biber::Entry;
+use Biber::Entry::Name;
 use Biber::Utils;
 use LaTeX::Decode;
 use Storable qw( dclone );
