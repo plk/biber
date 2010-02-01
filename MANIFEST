@@ -15,6 +15,7 @@ lib/Biber/Constants.pm
 lib/Biber/Entries.pm
 lib/Biber/Entry.pm
 lib/Biber/Entry/Name.pm
+lib/Biber/Entry/Names.pm
 lib/Biber/DBXML.pm
 lib/Biber/BibLaTeXML.pm
 lib/Biber/BibLaTeXML/Node.pm
