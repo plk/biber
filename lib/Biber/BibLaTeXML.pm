@@ -6,6 +6,7 @@ use Carp;
 use XML::LibXML;
 use Biber::BibLaTeXML::Node;
 use Biber::Utils;
+use Biber::Entry::Name;
 use Biber::Constants;
 use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
@@ -342,11 +343,14 @@ sub _parse_biblatexml {
                             $nameinitstr .= "_" . terseinitials($firstname)
                                 if $firstname;
 
-                            push @z,
-                                { lastname => $lastname, firstname => $firstname,
-                                  prefix => $prefix, suffix => $suffix,
+                            push @z, Biber::Entry::Name->new(
+                                  lastname => $lastname,
+                                  firstname => $firstname,
+                                  prefix => $prefix,
+                                  suffix => $suffix,
                                   namestring => $namestr,
-                                  nameinitstring => $nameinitstr }
+                                  nameinitstring => $nameinitstr
+                              );
                         }
                         # Schema allows <person>text<person>
                         # If there is no comma in the string,
@@ -361,11 +365,14 @@ sub _parse_biblatexml {
                                 push @z, parsename(
                                      $person->string_value, {useprefix => $useprefix} )
                             } else {
-                                push @z,
-                                    { lastname => $namestr, firstname => undef,
-                                    prefix => undef, suffix => undef,
+                                push @z, Biber::Entry::Name->new(
+                                    lastname => $namestr,
+                                    firstname => undef,
+                                    prefix => undef,
+                                    suffix => undef,
                                     namestring => $namestr,
-                                    nameinitstring => normalize_string_underscore( $namestr ) }
+                                    nameinitstring => normalize_string_underscore( $namestr )
+                                )
                             }
                         }
                     }

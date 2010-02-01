@@ -42,14 +42,12 @@ die version() if exists $opts->{'version'};
 my $unicodebib = 0;
 
 my $biber = Biber->new(
-    {
         allentries    => 1,
         unicodebbl    => 1,
         unicodebib    => $opts->{unicodebib},
         biberdebug    => $opts->{debug},
         useprd        => $opts->{useprd},
         inputencoding => $opts->{inputencoding}
-    }
 );
 
 my $filename;
@@ -159,8 +157,8 @@ for my $citekey ( $bibentries->sorted_keys ) {
             my @nf = @{ $entry->get_field($field) };
 
             if (    @nf
-                and $nf[-1]->{"lastname"}
-                and $nf[-1]->{"lastname"} eq "others" )
+                and $nf[-1]->get_lastname
+                and $nf[-1]->get_lastname eq "others" )
             {
                 $attrs{andothers} = "true";
                 pop @nf;
@@ -176,19 +174,21 @@ for my $citekey ( $bibentries->sorted_keys ) {
             $writer->startTag("bib:$afield", %attrs);
 
             for my $i ( 0 .. $#nf ) {
-                $writer->startTag("bib:person")
-                  ;    # TODO add attribute gender if exists
-                 # if there is no firstname, we take the lastname as name string
-                if ( !$nf[$i]->{"firstname"} ) {
-                    $writer->characters( $nf[$i]->{"lastname"} );
+                my $person = $nf[$i]; # a Biber::Entry::Name object
+                $writer->startTag("bib:person");
+                 # TODO add attribute gender if exists
+                 #
+                 # If there is no firstname, we take the lastname as name string
+                if ( !$person->get_firstname ) {
+                    $writer->characters( $person->get_lastname );
                 }
                 else {
-                    $writer->dataElement( "bib:first", $nf[$i]->{"firstname"} );
-                    $writer->dataElement( "bib:prefix", $nf[$i]->{"prefix"} )
-                      if $nf[$i]->{"prefix"};
-                    $writer->dataElement( "bib:last",   $nf[$i]->{"lastname"} );
-                    $writer->dataElement( "bib:suffix", $nf[$i]->{"suffix"} )
-                      if $nf[$i]->{"suffix"};
+                    $writer->dataElement( "bib:first", $person->get_firstname );
+                    $writer->dataElement( "bib:prefix", $person->get_prefix )
+                      if $person->get_prefix;
+                    $writer->dataElement( "bib:last",   $person->get_lastname );
+                    $writer->dataElement( "bib:suffix", $person->get_suffix )
+                      if $person->get_suffix;
                 }
                 $writer->endTag();    # person
             }

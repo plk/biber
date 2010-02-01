@@ -311,16 +311,14 @@ sub parsename {
     $nameinitstr =~ s/\s+/_/g;
 
 
-    my $name_obj = new Biber::Entry::Name;
-
-    $name_obj->set_namepart('namestring', $namestr);
-    $name_obj->set_namepart('nameinitstring', $nameinitstr);
-    $name_obj->set_namepart('lastname', $lastname);
-    $name_obj->set_namepart('firstname', $firstname);
-    $name_obj->set_namepart('prefix', $prefix);
-    $name_obj->set_namepart('suffix', $suffix);
-
-    return $name_obj;
+    return Biber::Entry::Name->new(
+        firstname => $firstname,
+        lastname  => $lastname,
+        namestring => $namestr,
+        nameinitstring => $nameinitstr,
+        prefix => $prefix,
+        suffix => $suffix
+    );
 }
 
 =head2 is_name_field
