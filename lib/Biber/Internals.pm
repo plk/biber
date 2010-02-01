@@ -684,39 +684,6 @@ sub _liststring {
 # OUTPUT SUBS
 #=====================================================
 
-#TODO this could be done earlier as a method and stored in the object
-sub _print_name {
-  my ($self, $au, $citekey) = @_;
-  my $bibentries = $self->bib;
-  my $be = $bibentries->entry($citekey);
-  my %nh  = %{$au};
-  my $ln  = $nh{lastname};
-  my $lni = getinitials($ln);
-  my $fn  = "";
-  $fn = $nh{firstname} if $nh{firstname};
-  my $fni = "";
-  $fni = getinitials($fn) if $nh{firstname};
-  my $pre = "";
-  $pre = $nh{prefix} if $nh{prefix};
-  my $prei = "";
-  $prei = getinitials($pre) if $nh{prefix};
-  my $suf = "";
-  $suf = $nh{suffix} if $nh{suffix};
-  my $sufi = "";
-  $sufi = getinitials($suf) if $nh{suffix};
-  $fn =~ s/(\p{Lu}\.)\s+/$1~/g;   # J. Frank -> J.~Frank
-  $fn =~ s/\s+(\p{Lu}\.)/~$1/g;   # Bernard H. -> Bernard~H.
-  $pre =~ s/\s/~/g if $pre;       # van der -> van~der
-  $ln =~ s/\s/~/g if $ln;         # Murder Smith -> Murder~Smith
-  if ( Biber::Config->getblxoption('terseinits', $be->get_field('entrytype'), $citekey) ) {
-    $lni = tersify($lni);
-    $fni = tersify($fni);
-    $prei = tersify($prei);
-    $sufi = tersify($sufi);
-  }
-  return "    {{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
-}
-
 sub _printfield {
     my ($self, $field, $str) = @_;
     $str = latexescape($str);
@@ -779,16 +746,15 @@ sub _print_biblatex_entry {
 
     foreach my $namefield (@NAMEFIELDS) {
         next if $SKIPFIELDS{$namefield};
-        if ( is_def_and_notnull($be->get_field($namefield)) ) {
-            my @nf = @{ $be->get_field($namefield) };
-            if ( $be->get_field($namefield)->[-1]->{namestring} eq 'others' ) {
+        if ( my $nf = $be->get_field($namefield) ) {
+          if ( $nf->last_name->get_namestring eq 'others' ) {
                 $str .= "  \\true{more$namefield}\n";
-                pop @nf; # remove the last element in the array
-            };
-            my $total = $#nf + 1;
+                $nf->del_last_name;
+            }
+            my $total = $nf->count_names;
             $str .= "  \\name{$namefield}{$total}{%\n";
-            foreach my $n (@nf) {
-                $str .= $self->_print_name($n, $citekey);
+            foreach my $n (@{$nf->names}) {
+              $str .= $n->name_to_bbl;
             }
             $str .= "  }\n";
         }

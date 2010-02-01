@@ -6,6 +6,8 @@ use Biber::Constants;
 use Biber::Utils;
 use Biber::Entries;
 use Biber::Entry;
+use Biber::Entry::Names;
+use Biber::Entry::Name;
 use Parse::RecDescent;
 use Regexp::Common qw{ balanced };
 use Biber::BibTeX::Parser;
@@ -131,19 +133,17 @@ sub _bibtex_prd_parse {
                 @tmp = map { _restore_and($_) } @tmp;
 
                 if (is_name_field($ets)) {
-                  # This is a special case - we need to get the option value even though the passed
-                  # $self object isn't fully built yet so getblxoption() can't ask $self for the
-                  # $entrytype for $key. So, we have to pass it explicitly.
                   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
-
-                    @tmp = map { parsename( $_ , {useprefix => $useprefix}) } @tmp;
-
+                  my $names = new Biber::Entry::Names;
+                  foreach my $name (@tmp) {
+                    $names->add_name(parsename($name, {useprefix => $useprefix}));
+                  }
+                  $bibentry->set_field($ets, $names);
 
                 } else {
                     @tmp = map { remove_outer($_) } @tmp;
+                    $bibentry->set_field($ets, [ @tmp ]);
                 }
-
-                $bibentry->set_field($ets, [ @tmp ]);
 
             }
         }

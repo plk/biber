@@ -7,6 +7,7 @@ use XML::LibXML;
 use Biber::BibLaTeXML::Node;
 use Biber::Utils;
 use Biber::Entry::Name;
+use Biber::Entry::Names;
 use Biber::Constants;
 use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
@@ -314,7 +315,8 @@ sub _parse_biblatexml {
         foreach my $field (@NAMEFIELDS) {
             my $dm = Biber::Config->get_displaymode($bibentry->get_field('entrytype'), $field, $citekey);
             if ($bibrecord->exists("bib:$field")) {
-                my @z;
+              my $names = new Biber::Entry::Names;
+              my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $citekey);
                 if ($bibrecord->exists("bib:$field/bib:person")) {
                     foreach my $person ($bibrecord->_find_biblatex_nodes($self, $field, $dm, "person")->get_nodelist) {
                         my $lastname;
@@ -338,19 +340,19 @@ sub _parse_biblatexml {
 
                             $nameinitstr = "";
                             $nameinitstr .= substr( $prefix, 0, 1 ) . "_"
-                              if ( Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $citekey) and $prefix );
+                              if ( $useprefix and $prefix );
                             $nameinitstr .= $lastname;
                             $nameinitstr .= "_" . terseinitials($firstname)
                                 if $firstname;
 
-                            push @z, Biber::Entry::Name->new(
+                            $names->add_name(Biber::Entry::Name->new(
                                   lastname => $lastname,
                                   firstname => $firstname,
                                   prefix => $prefix,
                                   suffix => $suffix,
                                   namestring => $namestr,
                                   nameinitstring => $nameinitstr
-                              );
+                              ));
                         }
                         # Schema allows <person>text<person>
                         # If there is no comma in the string,
@@ -361,19 +363,14 @@ sub _parse_biblatexml {
                             my $namestr = $person->string_value;
 
                             if ($namestr =~ /,\s+/) {
-                                my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $citekey);
-                                push @z, parsename(
-                                     $person->string_value, {useprefix => $useprefix} )
+                                $names->add_name(parsename(
+                                     $person->string_value, {useprefix => $useprefix} ));
                             } else {
-                                push @z, Biber::Entry::Name->new(
+                                $names->add_name(Biber::Entry::Name->new(
                                     lastname => $namestr,
-                                    firstname => undef,
-                                    prefix => undef,
-                                    suffix => undef,
                                     namestring => $namestr,
-                                    nameinitstring => normalize_string_underscore( $namestr )
-                                )
-                            }
+                                    nameinitstring => normalize_string_underscore( $namestr )));
+                              }
                         }
                     }
                 }
@@ -383,18 +380,20 @@ sub _parse_biblatexml {
                 else {
                     my $namestr = $bibrecord->findnodes("bib:$field")->string_value;
 
-                    push @z,
-                        {   lastname => $namestr, firstname => undef,
-                            prefix => undef, suffix => undef,
-                            namestring => $namestr,
-                            nameinitstring => normalize_string_underscore( $namestr ) }
-                };
+                    $names->add_name(Biber::Entry::Name->new(
+                        lastname => $namestr,
+                        namestring => $namestr,
+                        nameinitstring => normalize_string_underscore( $namestr )));
+                }
+
 
                 if ($bibrecord->exists("bib:$field\[\@andothers='true'\]")) {
-                    push @z, { lastname => "others", namestring => "others" }
-                };
+                    $names->add_name(Biber::Entry::Name->new(
+                        lastname => 'others',
+                        namestring => 'others'));
+                }
 
-                $bibentry->set_field($field, [ @z ]);
+                $bibentry->set_field($field, $names);
             }
         }
 

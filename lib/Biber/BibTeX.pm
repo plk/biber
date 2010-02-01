@@ -6,6 +6,8 @@ use Text::BibTeX;
 use Biber::Constants;
 use Biber::Entries;
 use Biber::Entry;
+use Biber::Entry::Names;
+use Biber::Entry::Name;
 use Biber::Utils;
 use Encode;
 use File::Spec;
@@ -149,14 +151,16 @@ sub _text_bibtex_parse {
 
                 if (is_name_field($f)) {
                   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
+                  my $names = new Biber::Entry::Names;
+                  foreach my $name (@tmp) {
+                    $names->add_name(parsename($name, {useprefix => $useprefix}));
+                  }
+                  $bibentry->set_field($af, $names);
 
-                  @tmp = map { parsename( $_ , {useprefix => $useprefix}) } @tmp;
                 } else {
                     @tmp = map { remove_outer($_) } @tmp;
+                    $bibentry->set_field($af, [ @tmp ]);
                 }
-
-                $bibentry->set_field($af, [ @tmp ]);
-
             }
 
             $bibentry->set_field('datatype', 'bibtex');

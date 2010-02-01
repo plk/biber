@@ -172,6 +172,65 @@ sub get_nameinitstring {
   return $self->{nameinitstring};
 }
 
+=head2 name_to_bbl {
+
+    Return bbl data for a name
+
+=cut
+
+sub name_to_bbl {
+  my $self = shift;
+  # lastname is always defined
+  my $ln  = $self->get_lastname;
+  my $lni = Biber::Utils::getinitials($ln);
+
+  # firstname
+  my $fn;
+  my $fni;
+  if ($fn = $self->get_firstname) {
+    $fni = Biber::Utils::getinitials($fn);
+  }
+  else {
+    $fn  = '';
+    $fni = '';
+  }
+
+  # prefix
+  my $pre;
+  my $prei;
+  if ($pre = $self->get_prefix) {
+    $prei = Biber::Utils::getinitials($pre);
+  }
+  else {
+    $pre  = '';
+    $prei = '';
+  }
+
+  # suffix
+  my $suf;
+  my $sufi;
+  if ($suf = $self->get_suffix) {
+    $sufi = Biber::Utils::getinitials($suf);
+  }
+  else {
+    $suf  = '';
+    $sufi = '';
+  }
+
+  $fn =~ s/(\p{Lu}\.)\s+/$1~/g;   # J. Frank -> J.~Frank
+  $fn =~ s/\s+(\p{Lu}\.)/~$1/g;   # Bernard H. -> Bernard~H.
+  $pre =~ s/\s/~/g if $pre;       # van der -> van~der
+  $ln =~ s/\s/~/g if $ln;         # Murder Smith -> Murder~Smith
+  if ( Biber::Config->getblxoption('terseinits') ) {
+    $lni = Biber::Utils::tersify($lni);
+    $fni = Biber::Utils::tersify($fni);
+    $prei = Biber::Utils::tersify($prei);
+    $sufi = Biber::Utils::tersify($sufi);
+  }
+  return "    {{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
+}
+
+
 
 =head1 AUTHORS
 
