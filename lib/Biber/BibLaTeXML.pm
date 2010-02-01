@@ -361,7 +361,7 @@ sub _parse_biblatexml {
                             my $namestr = $person->string_value;
 
                             if ($namestr =~ /,\s+/) {
-                                my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->set_field('entrytype'), $citekey);
+                                my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $citekey);
                                 push @z, parsename(
                                      $person->string_value, {useprefix => $useprefix} )
                             } else {
