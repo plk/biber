@@ -6,6 +6,7 @@ use Biber::Constants;
 use Biber::Utils;
 use Text::Wrap;
 $Text::Wrap::columns = 80;
+use Storable qw( dclone );
 use List::AllUtils qw( :all );
 use Log::Log4perl qw(:no_extra_logdie_message);
 
@@ -24,37 +25,38 @@ my $logger = Log::Log4perl::get_logger('main');
 
 sub _getnameinitials {
     my ($self, $citekey, $names) = @_;
-    my @names = @{$names};
-    my $initstr = "";
+    my $initstr = '';
     my $bibentries = $self->bib;
     my $be = $bibentries->entry($citekey);
     ## my $nodecodeflag = $self->_decode_or_not($citekey);
 
-    if ( $#names < Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey ) ) {    # 1 to maxname names
-        foreach my $a (@names) {
-            if ( $a->{prefix} and Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-                $initstr .= terseinitials( $a->{prefix} )
+    if ( $names->count_names <= Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey ) ) {    # 1 to maxname names
+        foreach my $n (@{$names->names}) {
+            if ( $n->get_prefix and
+                 Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+                $initstr .= terseinitials( $n->get_prefix )
             }
-            $initstr .= terseinitials( $a->{lastname} );
+            $initstr .= terseinitials( $n->get_lastname );
 
             #FIXME suffix ?
-            if ( $a->{firstname} ) {
-                $initstr .= terseinitials( $a->{firstname} )
+            if ( $n->get_firstname ) {
+                $initstr .= terseinitials( $n->get_firstname )
             }
         }
     }
     else
     { # more than maxname names: only take initials of first getblxoption('minnames', $citekey)
-        foreach my $i ( 0 .. Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey ) - 1 ) {
-            if ( $names[$i]->{prefix} and Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey) ) {
-                $initstr .= terseinitials( $names[$i]->{prefix} );
+        foreach my $i ( 1 .. Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey ) ) {
+            if ( $names->nth_name($i)->get_prefix and
+                 Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey) ) {
+                $initstr .= terseinitials( $names->nth_name($i)->get_prefix );
             }
-            my $tmp = $names[$i]->{lastname};
+            my $tmp = $names->nth_name($i)->get_lastname;
 
             #FIXME suffix ?
             $initstr .= terseinitials($tmp);
-            if ( $names[$i]->{firstname} ) {
-                $tmp = $names[$i]->{firstname};
+            if ( $names->nth_name($i)->get_firstname ) {
+                $tmp = $names->nth_name($i)->get_firstname;
                 $initstr .= terseinitials($tmp);
             }
             $initstr .= "+";
@@ -66,18 +68,19 @@ sub _getnameinitials {
 
 sub _getallnameinitials {
     my ($self, $citekey, $names) = @_;
-    my $initstr = "";
+    my $initstr = '';
     my $bibentries = $self->bib;
     my $be = $bibentries->entry($citekey);
-    foreach my $a (@{$names}) {
-        if ( $a->{prefix} and Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-            $initstr .= terseinitials( $a->{prefix} )
+    foreach my $n (@{$names->names}) {
+        if ( $n->get_prefix and
+             Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+            $initstr .= terseinitials( $n->get_prefix )
         }
-        $initstr .= terseinitials( $a->{lastname} );
+        $initstr .= terseinitials( $n->get_lastname );
 
         #FIXME suffix ?
-        if ( $a->{firstname} ) {
-            $initstr .= terseinitials( $a->{firstname} );
+        if ( $n->get_firstname ) {
+            $initstr .= terseinitials( $n->get_firstname );
         }
     }
     return $initstr;
@@ -88,7 +91,7 @@ sub _getlabel {
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
   my $dt = $be->get_field('datatype');
-  my @names = @{ $be->get_field($namefield) };
+  my $names = $be->get_field($namefield);
   my $alphaothers = Biber::Config->getblxoption('alphaothers', $be->get_field('entrytype'), $citekey);
   my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->get_field('entrytype'), $citekey) || $alphaothers;
   my $useprefix = Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey);
@@ -99,12 +102,12 @@ sub _getlabel {
   # This is needed in cases where alphaothers is something like
   # '\textasteriskcentered' which would mess up sorting.
 
-  my @lastnames = map { normalize_string( $_->{lastname}, $dt ) } @names;
-  my @prefixes  = map { $_->{prefix} } @names;
-  my $numnames  = scalar @names;
+  my @lastnames = map { normalize_string( $_->get_lastname, $dt ) } @{$names->names};
+  my @prefices  = map { $_->get_prefix } @{$names->names};
+  my $numnames  = $names->count_names;
 
   # If name list was truncated in bib with "and others", this overrides maxnames
-  my $morenames = ($names[-1]->{namestring} eq 'others') ? 1 : 0;
+  my $morenames = ($names->last_name->get_namestring eq 'others') ? 1 : 0;
   my $nametrunc;
   my $loopnames;
 
@@ -117,7 +120,7 @@ sub _getlabel {
   }
 
   # Now loop over the name list, grabbing a substring of each surname
-  # The substring length depends on whether we are using prefixes and also whether
+  # The substring length depends on whether we are using prefices and also whether
   # we have truncated to one name:
   #   1. If there is only one name
   #      1. label string is first 3 chars of surname if there is no prefix
@@ -127,8 +130,8 @@ sub _getlabel {
   #      2.  label string is first char of prefix plus first char of each surname (up to minnames)
   #          if there is a prefix
   for (my $i=0; $i<$loopnames; $i++) {
-    $label .= substr($prefixes[$i] , 0, 1) if ($useprefix and $prefixes[$i]);
-    $label .= substr($lastnames[$i], 0, $loopnames == 1 ? (($useprefix and $prefixes[$i]) ? 2 : 3) : 1);
+    $label .= substr($prefices[$i] , 0, 1) if ($useprefix and $prefices[$i]);
+    $label .= substr($lastnames[$i], 0, $loopnames == 1 ? (($useprefix and $prefices[$i]) ? 2 : 3) : 1);
   }
 
   $sortlabel = $label;
@@ -628,22 +631,24 @@ sub _namestring {
   my ( $self, $citekey, $field ) = @_;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
-  my @names = @{$be->get_field($field)};
+  my $names = $be->get_field($field);
   my $str = '';
   my $truncated = 0;
+  my $truncnames = dclone($names);
 
   # perform truncation according to options minnames, maxnames
-  if ( $#names + 1 > Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey) ) {
+  if ( $names->count_names > Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey) ) {
     $truncated = 1;
-    @names = splice(@names, 0, Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey) );
+    $truncnames = $truncnames->first_n_names(Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey));
   }
 
-  foreach ( @names ) {
-    $str .= $_->{prefix} . '2'
-      if ( $_->{prefix} and Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) );
-    $str .= strip_nosort($_->{lastname}) . '2';
-    $str .= strip_nosort($_->{firstname}) . '2' if $_->{firstname};
-    $str .= $_->{suffix} if $_->{suffix};
+  foreach my $n ( @{$truncnames->names} ) {
+    $str .= $n->get_prefix . '2'
+      if ( $n->get_prefix and
+           Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) );
+    $str .= strip_nosort($n->get_lastname) . '2';
+    $str .= strip_nosort($n->get_firstname) . '2' if $n->get_firstname;
+    $str .= $n->get_suffix if $n->get_suffix;
     $str =~ s/2\z//xms;
     $str .= '1';
   }
@@ -845,9 +850,9 @@ sub _print_biblatex_entry {
             $lastname    = $be->get_field($lname);
             $nameinitstr = $be->get_field($lname);
           } else {
-            $name = $be->get_field($lname)->[0];
-            $lastname = $name->{lastname};
-            $nameinitstr = $name->{nameinitstring};
+            $name = $be->get_field($lname)->nth_name(1);
+            $lastname = $name->get_lastname;
+            $nameinitstr = $name->get_nameinitstring;
           }
         }
         if (scalar keys %{ Biber::Config->getstate('uniquenamecount', $lastname) } == 1 ) {

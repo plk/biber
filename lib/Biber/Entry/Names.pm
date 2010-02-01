@@ -69,6 +69,20 @@ sub nth_name {
   return @$self[$n-1];
 }
 
+=head2 first_n_names
+
+    Returns a new Biber::Entry::Names object containing only
+    the first n entries of $self
+
+=cut
+
+sub first_n_names {
+  my $self = shift;
+  my $n = shift;
+  return bless [ splice(@$self, 0, $n) ], Biber::Entry::Names;
+}
+
+
 =head2 del_last_name
 
     Deletes the last Biber::Entry::Name object in the object

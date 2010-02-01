@@ -11,6 +11,8 @@ use XML::Writer;
 
 use Biber;
 use Biber::Constants;
+use Biber::Entry::Names;
+use Biber::Entry::Name;
 use Biber::Utils;
 
 use Log::Log4perl qw(:easy);
@@ -157,8 +159,8 @@ for my $citekey ( $bibentries->sorted_keys ) {
             my @nf = @{ $entry->get_field($field) };
 
             if (    @nf
-                and $nf[-1]->get_lastname
-                and $nf[-1]->get_lastname eq "others" )
+                and $nf->last_name->get_lastname
+                and $nf->last_name->get_lastname eq "others" )
             {
                 $attrs{andothers} = "true";
                 pop @nf;

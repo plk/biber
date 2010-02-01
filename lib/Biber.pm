@@ -1379,59 +1379,78 @@ sub postprocess_hashes {
   my $citekey = shift;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
+  my $bee = $be->get_field('entrytype');
   my $namehash;
   my $fullhash;
   my $nameid;
   my $nameinitid;
+  # Sortname
   if ($be->get_field('sortname') and
-      ( Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey)
-	or Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) )) {
-    $namehash = $self->_getnameinitials( $citekey, $be->get_field('sortname') );
-    $fullhash = $self->_getallnameinitials( $citekey, $be->get_field('sortname') );
-    $nameid = makenameid( $be->get_field('sortname') );
-    $nameinitid = makenameinitid( $be->get_field('sortname') )
-      if ( Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey) == 2 );
-  } elsif ( Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey) and
-	    $be->get_field('author') ) {
-    $namehash = $self->_getnameinitials( $citekey, $be->get_field('author') );
-    $fullhash   = $self->_getallnameinitials( $citekey, $be->get_field('author') );
-    $nameid     = makenameid( $be->get_field('author') );
-    $nameinitid = makenameinitid( $be->get_field('author') )
-      if ( Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey) == 2 );
-  } elsif (
-           (                    # keep this? FIXME
-            $be->get_field('entrytype') =~ /^(collection|proceedings)/
-            and Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey)
+      (Biber::Config->getblxoption('useauthor', $bee, $citekey)
+       or Biber::Config->getblxoption('useeditor', $bee, $citekey))) {
+    my $field = $be->get_field('sortname');
+    $namehash = $self->_getnameinitials($citekey, $field);
+    $fullhash = $self->_getallnameinitials($citekey, $field);
+    $nameid = makenameid($field);
+    if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
+      $nameinitid = makenameinitid($field);
+    }
+  }
+  # Author
+  elsif (Biber::Config->getblxoption('useauthor', $bee, $citekey) and
+         $be->get_field('author') ) {
+    my $field = $be->get_field('author');
+    $namehash = $self->_getnameinitials($citekey, $field);
+    $fullhash = $self->_getallnameinitials( $citekey, $field );
+    $nameid = makenameid($field);
+    if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
+      $nameinitid = makenameinitid($field);
+    }
+  }
+  # Editor in collection/proceedings
+  elsif (
+           (# keep this? FIXME
+            $bee =~ /^(collection|proceedings)/ and
+            Biber::Config->getblxoption('useeditor', $bee, $citekey)
            )
            and $be->get_field('editor')
           ) {
-    $namehash   = $self->_getnameinitials( $citekey, $be->get_field('editor') );
-    $fullhash   = $self->_getallnameinitials( $citekey, $be->get_field('editor') );
-    $nameid     = makenameid( $be->get_field('editor') );
-    $nameinitid = makenameinitid( $be->get_field('editor') )
-      if ( Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey) == 2 );
-  } elsif (
-           Biber::Config->getblxoption('usetranslator', $be->get_field('entrytype'), $citekey)
-           and $be->get_field('translator')
-          ) {
-    $namehash   = $self->_getnameinitials( $citekey, $be->get_field('translator') );
-    $fullhash   = $self->_getallnameinitials( $citekey, $be->get_field('translator') );
-    $nameid     = makenameid( $be->get_field('translator') );
-    $nameinitid = makenameinitid( $be->get_field('translator') )
-      if ( Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey) == 2 );
-  } else {                      # initials of title
-    if ( $be->get_field('sorttitle') ) {
-      $namehash   = terseinitials( $be->get_field('sorttitle') );
-      $fullhash   = $namehash;
-      $nameid     = normalize_string_underscore( $be->get_field('sorttitle'), 1 );
-      $nameinitid = $nameid
-        if ( Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey) == 2 );
-    } else {
-      $namehash   = terseinitials( $be->get_field('title') );
-      $fullhash   = $namehash;
-      $nameid     = normalize_string_underscore( $be->get_field('title'), 1 );
-      $nameinitid = $nameid
-        if ( Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey) == 2 );
+    my $field = $be->get_field('editor');
+    $namehash = $self->_getnameinitials($citekey, $field);
+    $fullhash = $self->_getallnameinitials($citekey, $field);
+    $nameid = makenameid($field);
+    if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
+      $nameinitid = makenameinitid($field)
+    }
+  }
+  # Translator
+  elsif ( Biber::Config->getblxoption('usetranslator', $bee, $citekey) and
+          $be->get_field('translator')) {
+    my $field = $be->get_field('translator');
+    $namehash = $self->_getnameinitials($citekey, $field);
+    $fullhash = $self->_getallnameinitials($citekey, $field);
+    $nameid = makenameid($field);
+    if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
+      $nameinitid = makenameinitid($field);
+    }
+  }
+  # initials of title
+  else {
+    if ($be->get_field('sorttitle')) {
+      $namehash = terseinitials($be->get_field('sorttitle'));
+      $fullhash = $namehash;
+      $nameid = normalize_string_underscore($be->get_field('sorttitle'), 1);
+      if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
+        $nameinitid = $nameid;
+      }
+    }
+    else {
+      $namehash = terseinitials($be->get_field('title'));
+      $fullhash = $namehash;
+      $nameid = normalize_string_underscore($be->get_field('title'), 1);
+      if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
+        $nameinitid = $nameid;
+      }
     }
   }
 
@@ -1439,13 +1458,15 @@ sub postprocess_hashes {
 
   my $hashsuffix = 1;
 
-  if ( Biber::Config->getstate('namehashcount', $namehash, $nameid) ) {
+  if (Biber::Config->getstate('namehashcount', $namehash, $nameid)) {
     $hashsuffix = Biber::Config->getstate('namehashcount', $namehash, $nameid);
-  } elsif ( Biber::Config->getstate('namehashcount', $namehash) ) {
+  }
+  elsif (Biber::Config->getstate('namehashcount', $namehash)) {
     my $count = scalar keys %{ Biber::Config->getstate('namehashcount', $namehash) };
     $hashsuffix = $count + 1;
     Biber::Config->setstate('namehashcount', $namehash, $nameid, $hashsuffix);
-  } else {
+  }
+  else {
     Biber::Config->delstate('namehashcount', $namehash);
     Biber::Config->setstate('namehashcount', $namehash, $nameid, 1);
   }
@@ -1465,41 +1486,35 @@ sub postprocess_hashes {
     my $singlename;
 
     if ($lname) {
-      if ( $lname =~ m/\Ashort/xms ) { # short* fields are just strings, not complex data
-        $lastname   = $be->get_field($lname);
-        $namestring = $be->get_field($lname);
-        $singlename = 1;
-      }
-      else {
-        $lastname   = $be->get_field($lname)->[0]->{lastname};
-        $namestring = $be->get_field($lname)->[0]->{nameinitstring};
-        $singlename = scalar @{ $be->get_field($lname) };
-      }
+      $lastname   = $be->get_field($lname)->nth_name(1)->get_lastname;
+      $namestring = $be->get_field($lname)->nth_name(1)->get_nameinitstring;
+      $singlename = $be->get_field($lname)->count_names;
     }
 
     if ($lname and
-        Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey) and
+        Biber::Config->getblxoption('uniquename', $bee, $citekey) and
         $singlename == 1 ) {
-      if ( ! Biber::Config->getstate('uniquenamecount', $lastname, $namehash) ) {
+      if ( not Biber::Config->getstate('uniquenamecount', $lastname, $namehash) ) {
         if ( Biber::Config->getstate('uniquenamecount', $lastname) ) {
           Biber::Config->setstate('uniquenamecount', $lastname, $namehash, 1);
         }
-	else {
+        else {
           Biber::Config->delstate('uniquenamecount', $lastname);
           Biber::Config->setstate('uniquenamecount', $lastname, $namehash, 1);
         }
       }
 
-      if ( ! Biber::Config->getstate('uniquenamecount', $namestring, $namehash) ) {
+      if ( not Biber::Config->getstate('uniquenamecount', $namestring, $namehash) ) {
         if ( Biber::Config->getstate('uniquenamecount', $namestring) ) {
           Biber::Config->setstate('uniquenamecount', $namestring, $namehash, 1);
         }
-	else {
+        else {
           Biber::Config->delstate('uniquenamecount', $namestring);
           Biber::Config->setstate('uniquenamecount', $namestring, $namehash, 1);
         }
       }
-    } else {
+    }
+    else {
       $be->set_field('ignoreuniquename', 1);
     }
   }

@@ -337,6 +337,7 @@ sub getstate {
   return $state->{$state_val};
 }
 
+
 =head2 delstate
 
     Delete a Biber internal state value
