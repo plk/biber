@@ -113,7 +113,7 @@ $writer->startTag(
 
 my $count = 0;
 
-for my $citekey ( $bibentries->entries_keys ) {
+for my $citekey ( $bibentries->sorted_keys ) {
     $count++;
     my $entry          = $bibentries->entry($citekey);
     my @entryfields    = $entry->fields;

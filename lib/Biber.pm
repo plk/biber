@@ -981,7 +981,7 @@ sub parse_bibtex {
     # Can't just make citekeys = bibdata keys as this loses information about citekeys
     # that are missing data entries.
     if (Biber::Config->getoption('allentries')) {
-        foreach my $bibkey ($bibentries->entries_keys) {
+        foreach my $bibkey ($bibentries->sorted_keys) {
             push @{$self->{citekeys}}, $bibkey
                 unless (first {$bibkey eq $_} $self->citekeys);
         }

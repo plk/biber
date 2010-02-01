@@ -34,7 +34,7 @@ sub entry_exists {
 
 =head2 entry
 
-    Returns a Biber::Entry object for the passesd
+    Returns a Biber::Entry object for the passed
     citation key
 
 =cut
@@ -46,13 +46,13 @@ sub entry {
   return $self->{$citekey};
 }
 
-=head2 entries_keys
+=head2 sorted_keys
 
     Returns a sorted array of Biber::Entry object citekeys
 
 =cut
 
-sub entries_keys {
+sub sorted_keys {
   my $self = shift;
   return sort keys %$self;
 }
