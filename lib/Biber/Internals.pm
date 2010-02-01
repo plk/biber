@@ -716,6 +716,7 @@ sub _print_biblatex_entry {
         or $logger->logcroak("Cannot find $citekey");
     my $opts    = '';
     my $origkey = $citekey;
+    $citekey = lc($citekey);
     if ( $be->get_field('origkey') ) {
         $origkey = $be->get_field('origkey');
     }
@@ -737,7 +738,7 @@ sub _print_biblatex_entry {
 
     if (Biber::Config->getstate('inset_entries', $citekey)) {
       unless (lc(Biber::Config->getstate('inset_entries', $citekey)) eq lc($be->get_field('entryset'))) {
-	$logger->warn('Key \"' . lc($citekey) . '\" thinks it is in set ' .
+	$logger->warn('Key \"' . $citekey . '\" thinks it is in set ' .
 		     Biber::Config->getstate('inset_entries', $citekey) .
 		     ' but the set is called "' . lc($be->get_field('entryset')) . '"!');
       }

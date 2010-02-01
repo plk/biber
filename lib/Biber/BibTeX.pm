@@ -119,8 +119,8 @@ sub _text_bibtex_parse {
                     }
                 }
                 elsif ($f eq 'crossref') { ### $entry->type ne 'set' and
-                    Biber::Config->incrstate('crossrefkeys', $value);
-                    Biber::Config->setstate('entrieswithcrossref', $lc_key, $value);
+                    Biber::Config->incrstate('crossrefkeys', lc($value));
+                    Biber::Config->setstate('entrieswithcrossref', $lc_key, lc($value));
                 }
             }
 
