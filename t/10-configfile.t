@@ -8,7 +8,7 @@ use File::Spec;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
-my $biberA = Biber->new( {configfile => "t/tdata/biber2.conf"} );
+my $biberA = Biber->new( configfile => "t/tdata/biber2.conf" );
 is(Biber::Config->getoption('mincrossrefs'), 5);
 my %colloptsA = ( level => 3, table => "/home/user/data/otherkeys.txt" );
 is_deeply(Biber::Config->getoption('collate_options'), \%colloptsA);

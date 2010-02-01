@@ -10,8 +10,7 @@ use Biber;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
-my $opts = { unicodebbl => 1, fastsort => 1 };
-my $biber = Biber->new($opts);
+my $biber = Biber->new( unicodebbl => 1, fastsort => 1 );
 
 isa_ok($biber, "Biber");
 chdir("t/tdata") ;

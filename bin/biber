@@ -73,7 +73,7 @@ if ( defined $opts->{'output-directory'} ) {
     $biberlog = File::Spec->catfile($outdir, $biberlog);
 }
 
-my $biber = Biber->new($opts);
+my $biber = Biber->new(%$opts);
 
 # Setting the logging level of Log::Log4perl
 my $LOGLEVEL;
@@ -249,7 +249,7 @@ unless (Biber::Config->getoption('quiet')) {
 
 sub version {
     qq{
-biber Version: $VERSION
+biber version: $VERSION
       \n}
 }
 

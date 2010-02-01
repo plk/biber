@@ -7,8 +7,7 @@ use Biber;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
-my $opts = {locale => 'fr_FR.utf8' } ;
-my $biber = Biber->new($opts);
+my $biber = Biber->new( locale => 'fr_FR.utf8' );
 Biber::Config->set_displaymode('romanized');
 
 chdir("t/tdata") ;

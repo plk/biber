@@ -55,27 +55,25 @@ my $logger = Log::Log4perl::get_logger('main');
 
 =head2 new
 
-    Initialize the Biber object, optionally passing options as argument in a hashref.
+    Initialize the Biber object, optionally passing named options as arguments.
 
-    my $opts = { fastsort => 1, datafile => 'biblatex.xml', outfile => 'test.bbl' };
-    my $biber = Biber->new($opts);
+    my $biber = Biber->new( fastsort => 1, datafile => 'biblatex.xml', outfile => 'test.bbl' );
 
 =cut
 
 sub new {
-    my ($class, $opts) = @_;
+    my ($class, %opts) = @_;
     my $self = bless {}, $class;
     # Set up config object. There is only one per Biber object instance so
     # it is all class methods
-    if (defined $opts->{configfile}) {
-        Biber::Config->_initopts( $opts->{configfile} );
+    if (defined $opts{configfile}) {
+        Biber::Config->_initopts( $opts{configfile} );
     } else {
         Biber::Config->_initopts();
     }
-    if ($opts) {
-        my %params = %$opts;
-        foreach (keys %params) {
-          Biber::Config->setcmdlineoption($_, $params{$_});
+    if (%opts) {
+        foreach (keys %opts) {
+          Biber::Config->setcmdlineoption($_, $opts{$_});
         }
     }
     $self->{bib} = new Biber::Entries;
