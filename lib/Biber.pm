@@ -1020,6 +1020,7 @@ sub process_crossrefs {
   my $self = shift;
   my $bibentries = $self->bib;
   $logger->debug("Processing crossrefs for keys:");
+  #FIXME shouldn't we skip all entries that bear no relation to the citekeys?
   foreach my $citekeyx (keys %{Biber::Config->getstate('entrieswithcrossref')}) {
     my $be = $bibentries->entry($citekeyx);
     $logger->debug("   * '$citekeyx'");
@@ -1072,6 +1073,32 @@ sub process_crossrefs {
   }
 
   $self->{bib} = $bibentries;
+}
+
+=head2 process_sets
+
+    $biber->process_sets
+
+    Ensures that all citekeys that are within cited entry sets will be output in the bbl.
+    (Not yet enabled)
+
+=cut
+
+sub process_sets {
+    my $self = shift;
+    my @citekeys = $self->citekeys;
+    my $bibentries = $self->bib;
+    $logger->debug("Processing entry sets");
+    my @citekeys_to_add;
+    foreach my $insetkey (keys %{Biber::Config->getstate('inset_entries')}) {
+        my $setkey = Biber::Config->getstate('inset_entries', $insetkey);
+        next unless Biber::Config->getstate('seenkeys', $setkey);
+        # add inset_entries to the array of citekeys
+        $logger->debug("Adding inset entry '$setkey' to the citekeys");
+        push @citekeys_to_add, $setkey;
+    }
+    push @citekeys, @citekeys_to_add;
+    $self->{citekeys} = [@citekeys]
 }
 
 =head2 postprocess
@@ -1747,6 +1774,7 @@ sub prepare {
     my $self = shift;
     Biber::Config->_init;
     $self->process_crossrefs;
+    #TODO $self->process_sets;
     $self->postprocess; # in here we generate the label sort string
     $self->sortentries; # then we do a label sort pass
     $self->generate_final_sortinfo; # in here we generate the final sort string
