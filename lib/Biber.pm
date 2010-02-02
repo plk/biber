@@ -1836,7 +1836,9 @@ sub create_bbl_string_body {
     foreach my $k (@auxcitekeys) {
         ## skip crossrefkeys (those that are directly cited or
         #  crossref'd >= mincrossrefs were previously removed)
-        next if ( Biber::Config->getstate('crossrefkeys', $k) );
+        #  EXCEPT those that are also in a set
+        next if ( Biber::Config->getstate('crossrefkeys', lc($k)) and
+            not Biber::Config->getstate('inset_entries', lc($k)) );
         $BBL .= $self->_print_biblatex_entry($k);
     }
     if ( Biber::Config->getoption('sortlos') and $self->shorthands ) {
