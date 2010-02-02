@@ -1088,25 +1088,15 @@ sub postprocess {
   my @foundkeys = ();
   my $bibentries = $self->bib;
   foreach my $citekey ( $self->citekeys ) {
-    my $origkey = $citekey;
-    # try lc($citekey), uc($citekey) and ucinit($citekey) before giving up
-    if ( not $bibentries->entry_exists($citekey) ) {
-      if ( $bibentries->entry_exists(lc($citekey)) ) {
-        $citekey = lc($citekey);
-      } elsif ( $bibentries->entry_exists(uc($citekey)) ) {
-        $citekey = uc($citekey);
-      } elsif ( $bibentries->entry_exists(ucinit($citekey)) ) {
-        $citekey = ucinit($citekey);
-      } else {
+    unless ( $bibentries->entry_exists($citekey) ) {
         $logger->warn("I didn't find a database entry for '$citekey'");
         $self->{warnings}++;
         next;
-      }
     }
     my $bibentry = $bibentries->entry($citekey);
 
     push @foundkeys, $citekey;
-    $bibentry->set_field('origkey', $origkey);
+    $bibentry->set_field('origkey', $citekey);
     $logger->debug("Postprocessing entry '$citekey'");
     # Postprocess dates
     $self->postprocess_dates($citekey);
@@ -1299,6 +1289,7 @@ sub postprocess_sets {
 
     }
     elsif ( not $be->get_field('crossref') ) {
+      $logger->warn("Adding missing field 'crossref' to entry $citekey");
       $be->set_field('crossref', $entrysetkeys[0]);
     }
   }
