@@ -109,7 +109,7 @@ sub _parse_biblatexml {
             push @auxcitekeys, @entrysetkeys;
 
             foreach my $setkey (@entrysetkeys) {
-                Biber::Config->setstate('inset_entries', lc($setkey), lc($citekey));
+                Biber::Config->setstate('inset_entries', $setkey, $citekey);
             }
         }
         # if there is a crossref, we increment its citekey in %crossrefkeys
@@ -118,7 +118,7 @@ sub _parse_biblatexml {
             my $crefkey = $bibrecord->findnodes('bib:crossref')->_normalize_string_value;
 
             Biber::Config->incrstate('crossrefkeys', $crefkey);
-            Biber::Config->setstate('entrieswithcrossref', lc($citekey), lc($crefkey));
+            Biber::Config->setstate('entrieswithcrossref', $citekey, $crefkey);
         }
 
     }

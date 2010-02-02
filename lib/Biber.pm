@@ -229,12 +229,12 @@ sub parse_auxfile {
                 last
 
             }
-	    elsif ( ! Biber::Config->getstate('seenkeys', lc($1)) and
+	    elsif ( ! Biber::Config->getstate('seenkeys', $1) and
 		    ( $1 ne "biblatex-control" ) ) {
 
                 push @auxcitekeys, decode_utf8($1);
 
-                Biber::Config->incrstate('seenkeys', lc($1));
+                Biber::Config->incrstate('seenkeys', $1);
 
             }
         }
@@ -341,11 +341,11 @@ sub parse_auxfile_v2 {
                 # we stop reading the aux file as soon as we encounter \citation{*}
                 last
 
-            } elsif ( ! Biber::Config->getstate('seenkeys', lc($1)) ) {
+            } elsif ( ! Biber::Config->getstate('seenkeys', $1) ) {
 
                 push @auxcitekeys, decode_utf8($1);
 
-                Biber::Config->incrstate('seenkeys', lc($1));
+                Biber::Config->incrstate('seenkeys', $1);
 
             }
         }
@@ -970,7 +970,7 @@ sub parse_bibtex {
     unlink $ufilename if -f $ufilename;
 
     if (Biber::Config->getoption('allentries')) {
-        map { Biber::Config->incrstate('seenkeys', lc($_)) } @localkeys
+        map { Biber::Config->incrstate('seenkeys', $_) } @localkeys
     }
 
     my $bibentries = $self->bib;
@@ -1064,7 +1064,7 @@ sub process_crossrefs {
   # All crossrefs that are kept in "crossrefkeys" will be skipped
   # when writing the bbl output.
   foreach my $k ( keys %{Biber::Config->getstate('crossrefkeys')} ) {
-    if ( Biber::Config->getstate('seenkeys', lc($k)) or
+    if ( Biber::Config->getstate('seenkeys', $k) or
          Biber::Config->getstate('crossrefkeys', $k) >= Biber::Config->getoption('mincrossrefs') ) {
       $logger->debug("Removing unneeded crossrefkey $k");
       Biber::Config->delstate('crossrefkeys', $k);
@@ -1837,8 +1837,8 @@ sub create_bbl_string_body {
         ## skip crossrefkeys (those that are directly cited or
         #  crossref'd >= mincrossrefs were previously removed)
         #  EXCEPT those that are also in a set
-        next if ( Biber::Config->getstate('crossrefkeys', lc($k)) and
-            not Biber::Config->getstate('inset_entries', lc($k)) );
+        next if ( Biber::Config->getstate('crossrefkeys', $k) and
+            not Biber::Config->getstate('inset_entries', $k) );
         $BBL .= $self->_print_biblatex_entry($k);
     }
     if ( Biber::Config->getoption('sortlos') and $self->shorthands ) {

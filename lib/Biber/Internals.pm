@@ -716,7 +716,6 @@ sub _print_biblatex_entry {
         or $logger->logcroak("Cannot find $citekey");
     my $opts    = '';
     my $origkey = $citekey;
-    $citekey = lc($citekey);
     if ( $be->get_field('origkey') ) {
         $origkey = $be->get_field('origkey');
     }
@@ -737,7 +736,7 @@ sub _print_biblatex_entry {
     }
 
     if (Biber::Config->getstate('inset_entries', $citekey)) {
-      unless (lc(Biber::Config->getstate('inset_entries', $citekey)) eq lc($be->get_field('entryset'))) {
+      unless (Biber::Config->getstate('inset_entries', $citekey) eq lc($be->get_field('entryset'))) {
 	$logger->warn('Key \"' . $citekey . '\" thinks it is in set ' .
 		     Biber::Config->getstate('inset_entries', $citekey) .
 		     ' but the set is called "' . lc($be->get_field('entryset')) . '"!');
@@ -882,7 +881,7 @@ sub _print_biblatex_entry {
         next if $SKIPFIELDS{$lfield};
         if ( is_def_and_notnull($be->get_field($lfield)) ) {
             next if ( $lfield eq 'crossref' and
-                      Biber::Config->getstate('seenkeys', lc($be->get_field('crossref')))
+                      Biber::Config->getstate('seenkeys', $be->get_field('crossref'))
                     ); # belongs to @auxcitekeys
 
             my $lfieldprint = $lfield;
