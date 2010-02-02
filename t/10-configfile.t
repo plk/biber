@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More tests => 7;
 use Biber;
 use Cwd qw(getcwd);
 use File::Spec;
@@ -21,3 +21,7 @@ is(Biber::Config->getoption('mincrossrefs'), 3);
 my %colloptsB = ( level => 1, table => "/home/user/data/mykeys.txt" );
 is_deeply(Biber::Config->getoption('collate_options'), \%colloptsB);
 
+Biber::Config->setstate('inset_entries', 'KeyA', 'keyB');
+Biber::Config->incrstate('crossrefkeys', 'SOME_KEY');
+is(Biber::Config->getstate('inset_entries', 'KEYA'), 'keyb', 'case-insensitive state methods 1');
+is(Biber::Config->getstate('crossrefkeys', 'SoMe_KeY'), 1, 'case-insensitive state methods 2');

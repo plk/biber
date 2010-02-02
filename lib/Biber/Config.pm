@@ -25,6 +25,13 @@ Biber::Config - Configuration items which need to be saved across the
 
 =cut
 
+our %is_case_insensitive = (
+    crossrefkeys => 1,
+    entrieswithcrossref => 1,
+    inset_entries => 1,
+    seenkeys => 1
+);
+
 # Static (class) data
 our $CONFIG;
 $CONFIG->{state}{'crossrefkeys'} = {};
@@ -298,7 +305,9 @@ sub setstate {
   my ($statevar, @state_args) = @_;
   my $state = $CONFIG->{state}{$statevar};
   my $state_val = pop @state_args; # save the value to set
+  $state_val = lc($state_val) if $is_case_insensitive{$statevar};
   my $state_key = pop @state_args; # save the key to set
+  $state_key = lc($state_key) if ($state_key and $is_case_insensitive{$statevar});
   foreach my $state_arg (@state_args) {
     if (defined($state->{$state_arg})) {
       $state = $state->{$state_arg}; # walk down the hash structure if existing
@@ -331,7 +340,9 @@ sub getstate {
   my $state = $CONFIG->{state}{$statevar};
   return $state unless @state_args;
   my $state_val = pop @state_args; # save the value to get
+  $state_val = lc($state_val) if $is_case_insensitive{$statevar};
   foreach my $state_arg (@state_args) {
+    $state_arg = lc($state_arg) if $is_case_insensitive{$statevar};
     $state = $state->{$state_arg}; # walk down the hash structure
   }
   return $state->{$state_val};
@@ -360,7 +371,9 @@ sub delstate {
   }
   my $state = $CONFIG->{state}{$statevar};
   my $state_val = pop @state_args; # save the value to delete
+  $state_val = lc($state_val) if $is_case_insensitive{$statevar};
   foreach my $state_arg (@state_args) {
+    $state_arg = lc($state_arg) if $is_case_insensitive{$statevar};
     $state = $state->{$state_arg}; # walk down the hash structure
   }
   delete $state->{$state_val};
@@ -385,7 +398,9 @@ sub incrstate {
   my ($statevar, @state_args) = @_;
   my $state = $CONFIG->{state}{$statevar};
   my $state_val = pop @state_args; # save the value to increment
+  $state_val = lc($state_val) if $is_case_insensitive{$statevar};
   foreach my $state_arg (@state_args) {
+    $state_arg = lc($state_arg) if $is_case_insensitive{$statevar};
     $state = $state->{$state_arg}; # walk down the hash structure
   }
   $state->{$state_val} += 1;
