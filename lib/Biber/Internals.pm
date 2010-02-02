@@ -882,7 +882,8 @@ sub _print_biblatex_entry {
         next if $SKIPFIELDS{$lfield};
         if ( is_def_and_notnull($be->get_field($lfield)) ) {
             next if ( $lfield eq 'crossref' and
-                      Biber::Config->getstate('seenkeys', $be->get_field('crossref')) ); # belongs to @auxcitekeys
+                      Biber::Config->getstate('seenkeys', lc($be->get_field('crossref')))
+                    ); # belongs to @auxcitekeys
 
             my $lfieldprint = $lfield;
             if ($lfield eq 'journal') {
