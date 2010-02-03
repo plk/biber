@@ -130,6 +130,9 @@ sub _text_bibtex_parse {
       } elsif (lc($entry->type) eq 'mathesis') {
         $bibentry->set_field('entrytype', 'thesis');
         $bibentry->set_field('type', 'mathesis');
+      } elsif (lc($entry->type) eq 'techreport') {
+        $bibentry->set_field('entrytype', 'report');
+        $bibentry->set_field('type', 'techreport');
       } else {
         $bibentry->set_field('entrytype', $entry->type);
       }
