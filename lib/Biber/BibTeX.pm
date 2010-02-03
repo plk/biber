@@ -123,6 +123,9 @@ sub _text_bibtex_parse {
       } elsif (lc($entry->type) eq 'mathesis') {
         $bibentries{ $key }->{entrytype} = 'thesis';
         $bibentries{ $key }->{type} = 'mathesis';
+      } elsif (lc($entry->type) eq 'techreport') {
+        $bibentries{ $key }->{entrytype} = 'report';
+        $bibentries{ $key }->{type} = 'techreport';
       } else {
         $bibentries{ $key }->{entrytype} = $entry->type;
       }
