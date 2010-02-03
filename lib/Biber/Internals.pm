@@ -765,7 +765,16 @@ sub _print_biblatex_entry {
     $str .= "% sortstring = " . $be->{sortstring} . "\n" 
         if ($self->config('debug') || $self->getblxoption('debug'));
 
-    $str .= "\\entry{$origkey}{" . $be->{entrytype} . "}{$opts}\n";
+    # Deal with special cases
+    my $special = '';
+    my $etfinal = $be->{entrytype};
+    if ($be->{entrytype} eq 'techreport') { # techreports are reports with a special field
+      $etfinal = 'report';
+      $special .=  "  \\field{type}{techreport}\n";
+    }
+
+    $str .= "\\entry{$origkey}{$etfinal}{$opts}\n";
+
 
     if ( $be->{entrytype} eq 'set' ) {
         $str .= "  \\set{" . $be->{entryset} . "}\n";
@@ -924,6 +933,9 @@ sub _print_biblatex_entry {
     if ( _defined_and_nonempty($be->{keywords}) ) {
         $str .= "  \\keyw{" . $be->{keywords} . "}\n";
     }
+
+    # Append any special case things created above
+    $str .= $special if $special;
 
     $str .= "\\endentry\n\n";
 
