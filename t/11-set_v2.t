@@ -49,7 +49,7 @@ my $string1p = q|\entry{Elias1955}{set}{}
 \endentry
 
 \entry{Elias1955a}{article}{}
-  \inset{elias1955}
+  \inset{Elias1955}
   \name{author}{1}{%
     {{Elias}{E.}{P.}{P.}{}{}{}{}}%
   }
@@ -74,7 +74,7 @@ my $string1p = q|\entry{Elias1955}{set}{}
 \endentry
 
 \entry{Elias1955b}{article}{}
-  \inset{elias1955}
+  \inset{Elias1955}
   \name{author}{1}{%
     {{Elias}{E.}{P.}{P.}{}{}{}{}}%
   }

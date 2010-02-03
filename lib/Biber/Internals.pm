@@ -736,12 +736,16 @@ sub _print_biblatex_entry {
   }
 
   if (Biber::Config->getstate('inset_entries', $citekey)) {
-    unless (Biber::Config->getstate('inset_entries', $citekey) eq lc($be->get_field('entryset'))) {
-      $logger->warn('Key \"' . $citekey . '\" thinks it is in set ' .
-          Biber::Config->getstate('inset_entries', $citekey) .
+    my $inset_key = Biber::Config->getstate('inset_entries', $citekey);
+    my $orig_inset_key = $inset_key;
+    if ($self->bibentry($inset_key)->get_field('origkey')) {
+      $orig_inset_key = $self->bibentry($inset_key)->get_field('origkey');
+    };
+    unless ($inset_key eq lc($be->get_field('entryset'))) {
+      $logger->warn('Key \"' . $citekey . '\" thinks it is in set ' . $inset_key .
           ' but the set is called "' . lc($be->get_field('entryset')) . '"!');
     }
-    $str .= "  \\inset{" . Biber::Config->getstate('inset_entries', $citekey) . "}\n";
+    $str .= "  \\inset{" . $orig_inset_key . "}\n";
   }
 
   # make labelname a copy of the right thing before output of name lists
