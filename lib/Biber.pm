@@ -94,9 +94,28 @@ sub citekeys {
   if ( $self->{citekeys} ) {
     return @{ $self->{citekeys} }
   } else {
-    return ()
+    return ();
   }
 }
+
+=head2 orig_order_citekeys
+
+    my @orig_order_citekeys = $biber->orig_order_citekeys;
+
+    Returns the array of all citation keys currently registered by Biber
+    guaranteed to be in the order they were cited.
+
+=cut
+
+sub orig_order_citekeys {
+  my $self = shift;
+  if ( $self->{orig_order_citekeys} ) {
+    return @{ $self->{orig_order_citekeys} }
+  } else {
+    return ();
+  }
+}
+
 
 =head2 has_citekey
 
@@ -122,8 +141,10 @@ sub has_citekey {
 sub add_citekey {
   my ($self, $key) = @_;
   return if $self->has_citekey($key);
-  my @origkeys = $self->citekeys;
-  $self->{orig_order_citekeys} = $self->{citekeys} = [@origkeys, $key];
+  my @citekeys = $self->citekeys;
+  my @orig_order_citekeys = $self->orig_order_citekeys;
+  $self->{citekeys} = [@citekeys, $key];
+  $self->{orig_order_citekeys} = [@orig_order_citekeys, $key];
   return;
 }
 
