@@ -920,7 +920,7 @@ sub _print_biblatex_entry {
   # Append any warnings to the entry, if any
   if ($be->get_field('warnings')) {
     foreach my $warning (@{$be->get_field('warnings')}) {
-      $str .= "  \\warn{$warning}\n";
+      $str .= "  \\warn{\\item $warning}\n";
     }
   }
 
