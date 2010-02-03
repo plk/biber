@@ -6,32 +6,33 @@ use Readonly;
 use base 'Exporter';
 
 our @EXPORT = qw{
-                  @NAMEFIELDS
-                  @LISTFIELDS
-                  @LITERALFIELDS_BASE
-                  @RANGEFIELDS
-                  @VERBATIMFIELDS
-                  @TITLEFIELDS
-                  @KEYFIELDS
-                  @COMMASEP_FIELDS
-                  @ENTRIESTOSPLIT
-                  @LITERALFIELDS
-                  %SKIPFIELDS
-                  %CONFIG_DEFAULT
-                  $BIBLATEX_VERSION
-                  $BCF_VERSION
-                  $BIBER_SORT_FINAL
-                  $BIBER_SORT_NULL
-                  %ALIASES
-                  %NUMERICALMONTH
-                  %BIBLATEXML_FORMAT_ELEMENTS
-                  @BIBLATEXML_FORMATTEXT
-                  @BIBLATEXML_FORMATTEXT_B
-                  %FIELDS_WITH_CHILDREN
-              };
+  @NAMEFIELDS
+  @LISTFIELDS
+  @LITERALFIELDS_BASE
+  @RANGEFIELDS
+  @VERBATIMFIELDS
+  @TITLEFIELDS
+  @KEYFIELDS
+  @COMMASEP_FIELDS
+  @ENTRIESTOSPLIT
+  @LITERALFIELDS
+  %SKIPFIELDS
+  %CONFIG_DEFAULT
+  $BIBLATEX_VERSION
+  $BCF_VERSION
+  $BIBER_SORT_FINAL
+  $BIBER_SORT_NULL
+  %ALIASES
+  %NUMERICALMONTH
+  %BIBLATEXML_FORMAT_ELEMENTS
+  @BIBLATEXML_FORMATTEXT
+  @BIBLATEXML_FORMATTEXT_B
+  %FIELDS_WITH_CHILDREN
+  };
 
 # this is the latest <major.minor> version of biblatex.sty
 Readonly::Scalar our $BIBLATEX_VERSION => '0.8';
+
 # this is the latest version of the BCF xml format
 Readonly::Scalar our $BCF_VERSION => '0.8f';
 
@@ -54,13 +55,13 @@ our %CONFIG_DEFAULT = (
   nolog => 0,
   wraplines => 0,
   collate_options => 'level=>2, table=>"latinkeys.txt"',
-);
+  );
 
 ### biblatex fields
 
 Readonly::Array our @NAMEFIELDS  =>   qw{
-  author editor shortauthor shorteditor commentator translator redactor 
-  annotator bookauthor introduction foreword afterword holder sortname 
+  author editor shortauthor shorteditor commentator translator redactor
+  annotator bookauthor introduction foreword afterword holder sortname
   namea nameb namec };
 
 Readonly::Array our @LISTFIELDS  =>   qw{
@@ -76,7 +77,7 @@ Readonly::Array our @LITERALFIELDS_BASE  =>   qw{
   xref
   };
 
-Readonly::Array our @TITLEFIELDS => qw{ title 
+Readonly::Array our @TITLEFIELDS => qw{ title
   subtitle titleaddon shorttitle sorttitle indextitle indexsorttitle
   origtitle issuetitle issuesubtitle maintitle mainsubtitle maintitleaddon
   booktitle booksubtitle booktitleaddon journal journaltitle journalsubtitle
@@ -89,8 +90,8 @@ our %SKIPFIELDS = map { $_ => 1 } @SKIPFIELDS;
 
 Readonly::Array our @RANGEFIELDS     =>  qw{ origyear pages year };
 Readonly::Array our @VERBATIMFIELDS  =>  qw{ doi eprint file pdf url verba verbb verbc };
-Readonly::Array our @KEYFIELDS  =>   qw{ 
-  authortype bookpagination editortype origlanguage pagination 
+Readonly::Array our @KEYFIELDS  =>   qw{
+  authortype bookpagination editortype origlanguage pagination
   type nameatype namebtype namectype };
 Readonly::Array our @COMMASEP_FIELDS => qw{ options keywords entryset };
 
@@ -103,12 +104,12 @@ Readonly::Array our @ENTRIESTOSPLIT  =>  ( @NAMEFIELDS, @LISTFIELDS );
 
 Readonly::Array our @LITERALFIELDS => ( @TITLEFIELDS, @LITERALFIELDS_BASE, @KEYFIELDS );
 
-Readonly::Hash our %ALIASES => ( 
+Readonly::Hash our %ALIASES => (
   'address' => 'location',
   'school'  => 'institution',
   'annote'  => 'annotation',
   'key'     => 'sortkey'
-);
+  );
 
 Readonly::Hash our %NUMERICALMONTH => (
   'January' => 1,
@@ -147,7 +148,7 @@ Readonly::Hash our %NUMERICALMONTH => (
   'oct' => 10,
   'nov' => 11,
   'dec' => 12
-);
+  );
 
 # TODO ask PL to define mkbibsubscript in biblatex ?
 Readonly::Hash our %BIBLATEXML_FORMAT_ELEMENTS => (
@@ -155,7 +156,7 @@ Readonly::Hash our %BIBLATEXML_FORMAT_ELEMENTS => (
   'bib:subscript'   => 'textsubscript',
   'bib:superscript' => 'mkbibsuperscript',
   'bib:emphasis'    => 'mkbibemph'
-);
+  );
 
 Readonly::Array our @BIBLATEXML_FORMATTEXT => qw(
   abstract
@@ -180,7 +181,7 @@ Readonly::Array our @BIBLATEXML_FORMATTEXT => qw(
   publisherinfo
   item
   publishername
-  remarks 
+  remarks
   );
 
 Readonly::Array our @BIBLATEXML_FORMATTEXT_B => qw(
@@ -190,7 +191,7 @@ Readonly::Array our @BIBLATEXML_FORMATTEXT_B => qw(
   journaltitle
   maintitle
   shorttitle
-  title 
+  title
   );
 
 our %FIELDS_WITH_CHILDREN = map { 'bib:'. $_ => 1 } ( @BIBLATEXML_FORMATTEXT, @BIBLATEXML_FORMATTEXT_B );
@@ -236,4 +237,4 @@ later version, or
 
 =cut
 
-# vim: set tabstop=4 shiftwidth=4 expandtab: 
+# vim: set tabstop=2 shiftwidth=2 expandtab: 

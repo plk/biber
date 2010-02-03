@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+
 # no warnings 'utf8';
 use Carp;
 use IPC::Cmd qw( can_run run );
@@ -15,36 +16,36 @@ use Biber::Utils;
 use Getopt::Long qw/:config no_ignore_case/;
 my $opts = {};
 GetOptions(
-    $opts,
-    'v2',
-    'fastsort|f!', ## now the default
-    'collate|C!', ## to sort with Unicode::Collate
-    'collate_options|c=s',
-    'mincrossrefs|m=s',
-    'unicodebbl|U!',
-    'unicodebib|u!',
-    'inputenc|i=s',  ## TODO
-    'bibencoding|e=s',
-    'useprd|p!',
-    'bibdata|d=s',
-    'outfile|O=s',
-    'allentries|a!',
-    'validate|V!',
-    'debug|D!',
-    'trace|T!',
-    'quiet|q',
-    'nolog!', 
-    'onlylog!',
-    'wraplines|w!',
-    'help|h|?',
-    'version|v'
-);
+  $opts,
+  'v2',
+  'fastsort|f!', ## now the default
+  'collate|C!', ## to sort with Unicode::Collate
+  'collate_options|c=s',
+  'mincrossrefs|m=s',
+  'unicodebbl|U!',
+  'unicodebib|u!',
+  'inputenc|i=s',  ## TODO
+  'bibencoding|e=s',
+  'useprd|p!',
+  'bibdata|d=s',
+  'outfile|O=s',
+  'allentries|a!',
+  'validate|V!',
+  'debug|D!',
+  'trace|T!',
+  'quiet|q',
+  'nolog!',
+  'onlylog!',
+  'wraplines|w!',
+  'help|h|?',
+  'version|v'
+  );
 
 #--------------------------------------------------
 
 use open IO => ':utf8';
 
-our $VERSION = $Biber::VERSION; 
+our $VERSION = $Biber::VERSION;
 
 die usage() if exists $opts->{'help'};
 
@@ -55,11 +56,11 @@ die version() if exists $opts->{'version'};
 # we can give a list of datafiles as argument, so
 # this option is passed as an anon array
 if ($opts->{bibdata}) {
-    $opts->{bibdata} = [ split /\s*,\s*/, $opts->{bibdata} ] 
+  $opts->{bibdata} = [ split /\s*,\s*/, $opts->{bibdata} ]
 }
 
 if ($opts->{collate}) {
-    $opts->{fastsort} = 0
+  $opts->{fastsort} = 0
 }
 
 my $biber = Biber->new($opts);
@@ -67,30 +68,30 @@ my $biber = Biber->new($opts);
 # Setting the logging level of Log::Log4perl
 my $LOGLEVEL;
 if ($biber->config('trace')) {
-    $LOGLEVEL = 'TRACE'
+  $LOGLEVEL = 'TRACE'
 } elsif ($biber->config('debug')) {
-    $LOGLEVEL = 'DEBUG'
+  $LOGLEVEL = 'DEBUG'
 } elsif ($biber->config('quiet')) {
-    $LOGLEVEL = 'ERROR'
+  $LOGLEVEL = 'ERROR'
 } else {
-    $LOGLEVEL = 'INFO'
+  $LOGLEVEL = 'INFO'
 }
 
 my $LOGLEVEL_F;
 if ($biber->config('nolog')) {
-    $LOGLEVEL_F = 'OFF'
+  $LOGLEVEL_F = 'OFF'
 } else {
-    $LOGLEVEL_F = $LOGLEVEL
+  $LOGLEVEL_F = $LOGLEVEL
 }
 
 my $LOGLEVEL_S;
 if ($biber->config('onlylog')) {
-    $LOGLEVEL_S = 'OFF'
+  $LOGLEVEL_S = 'OFF'
 } else {
-    $LOGLEVEL_S = $LOGLEVEL
+  $LOGLEVEL_S = $LOGLEVEL
 }
 
-## TODO make Screen.Threshold optional: in some situations we'd like 
+## TODO make Screen.Threshold optional: in some situations we'd like
 #  to have debug msgs on the screen too!
 
 # configuration "file" for Log::Log4perl
@@ -132,33 +133,34 @@ $logfile->info("=== Biber version $VERSION");
 $logfile->info("=== $time_string");
 
 if ($biber->config('debug')) {
-    $screen->info('DEBUG mode: all messages are logged to "biber.log"')
+  $screen->info('DEBUG mode: all messages are logged to "biber.log"')
 }
 
 if ( $opts->{allentries} && $opts->{bibdata} ) {
-    $bblfile = $opts->{bibdata}->[0];
-    $bblfile =~ s/(?:\.(bib|xml|dbxml))?$/\.bbl/;
+  $bblfile = $opts->{bibdata}->[0];
+  $bblfile =~ s/(?:\.(bib|xml|dbxml))?$/\.bbl/;
 }
 else {
-    $auxfile = $ARGV[0] or croak usage();
-    $auxfile .= '.aux' unless $auxfile =~ m/\.aux$/;
-    $bblfile = $auxfile;
-    $bblfile =~ s/aux$/bbl/;
-    #V2
-    if ($opts->{v2}) {
-      $logger->warn("** USING EXPERIMENTAL V2 OPTIONS CODE!! **");
-      $biber->parse_auxfile_v2($auxfile);
-    }
-    else {
-      $biber->parse_auxfile($auxfile);
-    }
+  $auxfile = $ARGV[0] or croak usage();
+  $auxfile .= '.aux' unless $auxfile =~ m/\.aux$/;
+  $bblfile = $auxfile;
+  $bblfile =~ s/aux$/bbl/;
+
+  #V2
+  if ($opts->{v2}) {
+    $logger->warn("** USING EXPERIMENTAL V2 OPTIONS CODE!! **");
+    $biber->parse_auxfile_v2($auxfile);
+  }
+  else {
+    $biber->parse_auxfile($auxfile);
+  }
 }
 
 if ($biber->config('trace')) {
-    $logger->trace("\n###########################################################\n",
-                     "############# Dump of initial biber object: ###############\n",
-                   $biber->_stringdump, 
-                   "\n###########################################################")
+  $logger->trace("\n###########################################################\n",
+    "############# Dump of initial biber object: ###############\n",
+    $biber->_stringdump,
+    "\n###########################################################")
 }
 
 #=====================================================
@@ -167,41 +169,41 @@ if ($biber->config('trace')) {
 
 foreach my $bib (@{ $biber->config('bibdata') }) {
 
-    # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
-    $bib = bibfind($bib);
+  # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
+  $bib = bibfind($bib);
 
-    if ($bib =~ /\.(db)?xml$/) {
-        $logger->logcroak("File $bib does not exist!") unless -f $bib;
-        $biber->parse_biblatexml( $bib )
-    }
-    elsif ($bib =~ /\.bib$/) {
-        $logger->logcroak("File $bib does not exist!") unless -f $bib;
-        $biber->parse_bibtex($bib)
-    }
-    else {
-        $logger->logcroak("File $bib.bib does not exist!") unless -f "$bib.bib";
-        $biber->parse_bibtex("$bib.bib");
-    }
+  if ($bib =~ /\.(db)?xml$/) {
+    $logger->logcroak("File $bib does not exist!") unless -f $bib;
+    $biber->parse_biblatexml( $bib )
+  }
+  elsif ($bib =~ /\.bib$/) {
+    $logger->logcroak("File $bib does not exist!") unless -f $bib;
+    $biber->parse_bibtex($bib)
+  }
+  else {
+    $logger->logcroak("File $bib.bib does not exist!") unless -f "$bib.bib";
+    $biber->parse_bibtex("$bib.bib");
+  }
 }
 
 if ($biber->config('trace')) {
-    $logger->trace("\n###########################################################\n",
-                     "############# Dump of post-parse biber object: ############\n",
-                   $biber->_stringdump, 
-                   "\n###########################################################")
+  $logger->trace("\n###########################################################\n",
+    "############# Dump of post-parse biber object: ############\n",
+    $biber->_stringdump,
+    "\n###########################################################")
 }
 
 $biber->prepare;
 
 if ($biber->config('trace')) {
-    $logger->trace("\n###########################################################\n",
-                     "############# Dump of final biber object: #################\n",
-                   $biber->_stringdump, 
-                   "\n###########################################################")
+  $logger->trace("\n###########################################################\n",
+    "############# Dump of final biber object: #################\n",
+    $biber->_stringdump,
+    "\n###########################################################")
 }
 
 if ($biber->config('outfile')) {
-    $bblfile = $biber->config('outfile')
+  $bblfile = $biber->config('outfile')
 };
 
 $biber->output_to_bbl($biber->create_bbl_string, $bblfile);
@@ -227,13 +229,13 @@ elsif (defined($biber->{warnings})) {
 #======================================================
 
 sub version {
-    qq{
+  qq{
 biber Version: $VERSION
       \n}
 }
 
 sub usage {
-    qq{
+  qq{
 Usage:  biber file.aux
         Creates file.bbl
 
@@ -332,4 +334,4 @@ later version, or
 
 =cut
 
-# vim: set tabstop=4 shiftwidth=4 expandtab:
+# vim: set tabstop=2 shiftwidth=2 expandtab:

@@ -1,6 +1,7 @@
 #!/usr/bin/perl 
 use strict;
 use warnings;
+
 #no warnings 'utf8';
 use Carp;
 use LaTeX::Decode;
@@ -12,12 +13,12 @@ use Getopt::Long qw/:config no_ignore_case/;
 
 my $opts = {};
 GetOptions(
-    $opts,
-    'help|h|?',
-    'version|v',
-    'decodescheme|s=s',
-    'inputencoding|i=s'
-);
+  $opts,
+  'help|h|?',
+  'version|v',
+  'decodescheme|s=s',
+  'inputencoding|i=s'
+  );
 
 our $VERSION = '0.2';
 
@@ -32,12 +33,12 @@ my $text = read_file($infile) or croak "Cannot read input file";
 my $scheme = 'base';
 
 if (exists $opts->{decodescheme} ) {
-    $scheme = $opts->{decodescheme}
-} ; 
+  $scheme = $opts->{decodescheme}
+} ;
 
 if (exists $opts->{inputencoding}) {
-    my $encoding = $opts->{inputencoding};
-    $text = decode($encoding, $text);
+  my $encoding = $opts->{inputencoding};
+  $text = decode($encoding, $text);
 };
 
 $text = decode_utf8($text);
@@ -45,9 +46,9 @@ $text = decode_utf8($text);
 print latex_decode($text);
 
 sub version {
-    my $me = "latex2utf8"; #basename($0);
+  my $me = "latex2utf8"; #basename($0);
 
-    qq[
+  qq[
 $me Version: $VERSION
     Warning: This is still alpha quality. 
     You are advised to wait for a stable release before definitively 
@@ -56,7 +57,7 @@ $me Version: $VERSION
 }
 
 sub usage {
-    qq[
+  qq[
 Usage: latex2utf8 infile > outfile
 
 Options:
@@ -66,7 +67,7 @@ Options:
                         Input file uses legacy encoding 
 
 Example: latex2utf8 -i latin1 infile.tex > outfile.tex                       
-     \n] 
+\n]
 }
 
 =pod
@@ -105,5 +106,5 @@ under the same terms as Perl itself.
 
 =cut
 
-# vim: set tabstop=4 shiftwidth=4 expandtab:
+# vim: set tabstop=2 shiftwidth=2 expandtab:
 
