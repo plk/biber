@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 6 ;
+use Test::More tests => 10 ;
 
 use Biber;
 use Log::Log4perl qw(:easy);
@@ -47,9 +47,16 @@ is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile) ;
-$biber->prepare ;
-@keys = sort $biber->citekeys;
+$biber->prepare;
 
+ok(!$biber->has_citekey("SomethingUnexistent"), 'has_citekey 1');
+ok($biber->has_citekey("companion"), 'has_citekey 2');
+$biber->add_citekey("TestKey");
+ok($biber->has_citekey("testKEY"), 'add_citekey');
+$biber->del_citekey("TestKEy");
+ok(!$biber->has_citekey("TestKey"), 'del_citekey');
+
+@keys = sort $biber->citekeys;
 is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
 my $stdmodel = {

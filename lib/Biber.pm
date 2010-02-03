@@ -97,6 +97,52 @@ sub citekeys {
     }
 }
 
+=head2 has_citekey
+
+    $biber->has_citekey($key)
+
+    Returns true when $key is registered in the $biber object (case-insensitive)
+
+=cut
+
+sub has_citekey {
+    my ($self, $key) = @_;
+    return defined ( first { lc($_) eq lc($key) } $self->citekeys ) ? 1 : 0;
+}
+
+=head2 add_citekey
+
+    $biber->add_citekey($key)
+
+    Adds citekey $key to the $biber object
+
+=cut
+
+sub add_citekey {
+    my ($self, $key) = @_;
+    return if $self->has_citekey($key);
+    my @origkeys = $self->citekeys;
+    $self->{citekeys} = [@origkeys, $key];
+    return
+}
+
+=head2 del_citekey
+
+    $biber->del_citekey($key)
+
+    Removes citekey $key from the $biber object (case-insensitive)
+
+=cut
+
+sub del_citekey {
+    my ($self, $key) = @_;
+    return unless $self->has_citekey($key);
+    my @origkeys = $self->citekeys;
+    my @newkeys = grep { lc($_) ne lc($key) } @origkeys;
+    $self->{citekeys} = [@newkeys];
+    return
+}
+
 =head2 bibentry
 
     my $bibentry = $biber->bibentry($citekey);
@@ -966,7 +1012,6 @@ sub parse_bibtex {
         @localkeys = $self->_bibtex_prd_parse($filename);
     }
 
-    #FIXME optional?
     unlink $ufilename if -f $ufilename;
 
     if (Biber::Config->getoption('allentries')) {
@@ -980,8 +1025,7 @@ sub parse_bibtex {
     # that are missing data entries.
     if (Biber::Config->getoption('allentries')) {
         foreach my $bibkey ($bibentries->sorted_keys) {
-            push @{$self->{citekeys}}, $bibkey
-                unless (first {$bibkey eq $_} $self->citekeys);
+            $self->add_citekey($bibkey) unless $self->has_citekey($bibkey);
         }
     }
 
@@ -1020,7 +1064,7 @@ sub process_crossrefs {
   my $self = shift;
   my $bibentries = $self->bib;
   $logger->debug("Processing crossrefs for keys:");
-  #FIXME shouldn't we skip all entries that bear no relation to the citekeys?
+  #FIXME shouldn't we skip all entries that are of no use for the final output?
   foreach my $citekeyx (keys %{Biber::Config->getstate('entrieswithcrossref')}) {
     my $be = $bibentries->entry($citekeyx);
     $logger->debug("   * '$citekeyx'");
@@ -1065,7 +1109,7 @@ sub process_crossrefs {
   # All crossrefs that are kept in "crossrefkeys" will be skipped
   # when writing the bbl output.
   foreach my $k ( keys %{Biber::Config->getstate('crossrefkeys')} ) {
-    if ( Biber::Config->getstate('seenkeys', $k) or
+    if ( $self->has_citekey($k) or
          Biber::Config->getstate('crossrefkeys', $k) >= Biber::Config->getoption('mincrossrefs') ) {
       $logger->debug("Removing unneeded crossrefkey $k");
       Biber::Config->delstate('crossrefkeys', $k);
@@ -1086,19 +1130,16 @@ sub process_crossrefs {
 
 sub process_sets {
     my $self = shift;
-    my @citekeys = $self->citekeys;
-    my $bibentries = $self->bib;
     $logger->debug("Processing entry sets");
-    my @citekeys_to_add;
     foreach my $insetkey (keys %{Biber::Config->getstate('inset_entries')}) {
         my $setkey = Biber::Config->getstate('inset_entries', $insetkey);
-        next unless Biber::Config->getstate('seenkeys', $setkey);
-        # add inset_entries to the array of citekeys
-        $logger->debug("Adding inset entry '$setkey' to the citekeys");
-        push @citekeys_to_add, $setkey;
+        $logger->debug("  Found key $insetkey within set $setkey");
+        if (! $self->has_citekey($setkey) ) {
+            # add inset_entries to the array of citekeys
+            $logger->debug("  Adding inset entry '$insetkey' to the citekeys");
+            $self->add_citekey($insetkey); # FIXME add origkey thereof instead
+        }
     }
-    push @citekeys, @citekeys_to_add;
-    $self->{citekeys} = [@citekeys]
 }
 
 =head2 postprocess
@@ -1773,8 +1814,8 @@ sub sortshorthands {
 sub prepare {
     my $self = shift;
     Biber::Config->_init;
+    #$self->process_sets; # to push the inset keys to the stack of citekeys
     $self->process_crossrefs;
-    #TODO $self->process_sets;
     $self->postprocess; # in here we generate the label sort string
     $self->sortentries; # then we do a label sort pass
     $self->generate_final_sortinfo; # in here we generate the final sort string

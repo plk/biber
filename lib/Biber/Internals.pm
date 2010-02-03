@@ -881,8 +881,9 @@ sub _print_biblatex_entry {
         next if $SKIPFIELDS{$lfield};
         if ( is_def_and_notnull($be->get_field($lfield)) ) {
             next if ( $lfield eq 'crossref' and
-                      Biber::Config->getstate('seenkeys', $be->get_field('crossref'))
-                    ); # belongs to @auxcitekeys
+                      ($be->get_field('entrytype') ne 'set') and
+                      $self->has_citekey($be->get_field('crossref'))
+                    ); # we skip crossref when it belongs to @auxcitekeys
 
             my $lfieldprint = $lfield;
             if ($lfield eq 'journal') {
