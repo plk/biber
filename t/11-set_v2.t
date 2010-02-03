@@ -20,7 +20,7 @@ $biber->parse_bibtex($bibfile);
 
 
 $biber->prepare;
-
+my $bibentries = $biber->bib;
 my $string1 = $biber->create_bbl_string_body;
 my $string1p = q|\entry{Elias1955}{set}{}
   \set{Elias1955a,Elias1955b}
@@ -102,9 +102,6 @@ my $string1p = q|\entry{Elias1955}{set}{}
 
 |;
 
-TODO: {
-  local $TODO = "FIXME: sorting order has changed here!";
-  is($$string1 , $string1p, 'Set test 1');
-}
+is($$string1 , $string1p, 'Set test 1');
 
 unlink "$bibfile.utf8";

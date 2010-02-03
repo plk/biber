@@ -123,8 +123,8 @@ sub add_citekey {
   my ($self, $key) = @_;
   return if $self->has_citekey($key);
   my @origkeys = $self->citekeys;
-  $self->{citekeys} = [@origkeys, $key];
-  return
+  $self->{orig_order_citekeys} = $self->{citekeys} = [@origkeys, $key];
+  return;
 }
 
 =head2 del_citekey
