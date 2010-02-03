@@ -847,14 +847,9 @@ sub _print_biblatex_entry {
     my $nameinitstr;
 
     if ($lname) {
-      if ($lname =~ m/\Ashort/xms) { # short* fields are just strings, not complex data
-        $lastname    = $be->get_field($lname);
-        $nameinitstr = $be->get_field($lname);
-      } else {
-        $name = $be->get_field($lname)->nth_element(1);
-        $lastname = $name->get_lastname;
-        $nameinitstr = $name->get_nameinitstring;
-      }
+      $name = $be->get_field($lname)->nth_element(1);
+      $lastname = $name->get_lastname;
+      $nameinitstr = $name->get_nameinitstring;
     }
     if (scalar keys %{ Biber::Config->getstate('uniquenamecount', $lastname) } == 1 ) {
       $str .= "  \\count{uniquename}{0}\n";
