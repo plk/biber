@@ -154,7 +154,7 @@ sub _text_bibtex_parse {
           my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
           my $names = new Biber::Entry::Names;
           foreach my $name (@tmp) {
-            $names->add_name(parsename($name, {useprefix => $useprefix}));
+            $names->add_element(parsename($name, {useprefix => $useprefix}));
           }
           $bibentry->set_field($af, $names);
 

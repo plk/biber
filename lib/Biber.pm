@@ -1584,9 +1584,9 @@ sub postprocess_hashes {
     my $singlename;
 
     if ($lname) {
-      $lastname   = $be->get_field($lname)->nth_name(1)->get_lastname;
-      $namestring = $be->get_field($lname)->nth_name(1)->get_nameinitstring;
-      $singlename = $be->get_field($lname)->count_names;
+      $lastname   = $be->get_field($lname)->nth_element(1)->get_lastname;
+      $namestring = $be->get_field($lname)->nth_element(1)->get_nameinitstring;
+      $singlename = $be->get_field($lname)->count_elements;
     }
 
     if ($lname and

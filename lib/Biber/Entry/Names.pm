@@ -31,82 +31,82 @@ sub names {
   return $self;
 }
 
-=head2 add_name
+=head2 add_element
 
     Add a Biber::Entry::Name object to the Biber::Entry::Names
     object
 
 =cut
 
-sub add_name {
+sub add_element {
   my $self = shift;
   my $name_obj = shift;
   push @$self, $name_obj;
   return;
 }
 
-=head2 count_names
+=head2 count_elements
 
     Returns the number of Biber::Entry::Name objects in the object
 
 =cut
 
-sub count_names {
+sub count_elements {
   my $self = shift;
   return scalar @$self;
 }
 
-=head2 nth_name
+=head2 nth_element
 
     Returns the nth Biber::Entry::Name object in the object
 
 =cut
 
-sub nth_name {
+sub nth_element {
   my $self = shift;
   my $n = shift;
   return @$self[$n-1];
 }
 
-=head2 first_n_names
+=head2 first_n_elements
 
     Returns a new Biber::Entry::Names object containing only
     the first n entries of $self
 
 =cut
 
-sub first_n_names {
+sub first_n_elements {
   my $self = shift;
   my $n = shift;
   return bless [ splice(@$self, 0, $n) ], Biber::Entry::Names;
 }
 
-=head2 del_last_name
+=head2 del_last_element
 
     Deletes the last Biber::Entry::Name object in the object
 
 =cut
 
-sub del_last_name {
+sub del_last_element {
   my $self = shift;
   $self = [ pop(@$self) ];
   return;
 }
 
-=head2 last_name
+=head2 last_element
 
     Returns the last Biber::Entry::Name object in the object
 
 =cut
 
-sub last_name {
+sub last_element {
   my $self = shift;
   return @$self[-1];
 }
 
 =head2 dump
 
-    Dump a Biber::Entry::Name object for debuggig purposes
+    Dump a Biber::Entry::Name object for debugging purposes
 
 =cut
 

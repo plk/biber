@@ -30,7 +30,7 @@ sub _getnameinitials {
   my $be = $bibentries->entry($citekey);
   ## my $nodecodeflag = $self->_decode_or_not($citekey);
 
-  if ( $names->count_names <= Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey ) ) {    # 1 to maxname names
+  if ( $names->count_elements <= Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey ) ) {    # 1 to maxname names
     foreach my $n (@{$names->names}) {
       if ( $n->get_prefix and
         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
@@ -47,16 +47,16 @@ sub _getnameinitials {
   else
   { # more than maxname names: only take initials of first getblxoption('minnames', $citekey)
     foreach my $i ( 1 .. Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey ) ) {
-      if ( $names->nth_name($i)->get_prefix and
+      if ( $names->nth_element($i)->get_prefix and
         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey) ) {
-        $initstr .= terseinitials( $names->nth_name($i)->get_prefix );
+        $initstr .= terseinitials( $names->nth_element($i)->get_prefix );
       }
-      my $tmp = $names->nth_name($i)->get_lastname;
+      my $tmp = $names->nth_element($i)->get_lastname;
 
       #FIXME suffix ?
       $initstr .= terseinitials($tmp);
-      if ( $names->nth_name($i)->get_firstname ) {
-        $tmp = $names->nth_name($i)->get_firstname;
+      if ( $names->nth_element($i)->get_firstname ) {
+        $tmp = $names->nth_element($i)->get_firstname;
         $initstr .= terseinitials($tmp);
       }
       $initstr .= "+";
@@ -103,10 +103,10 @@ sub _getlabel {
 
   my @lastnames = map { normalize_string( $_->get_lastname, $dt ) } @{$names->names};
   my @prefices  = map { $_->get_prefix } @{$names->names};
-  my $numnames  = $names->count_names;
+  my $numnames  = $names->count_elements;
 
   # If name list was truncated in bib with "and others", this overrides maxnames
-  my $morenames = ($names->last_name->get_namestring eq 'others') ? 1 : 0;
+  my $morenames = ($names->last_element->get_namestring eq 'others') ? 1 : 0;
   my $nametrunc;
   my $loopnames;
 
@@ -637,9 +637,9 @@ sub _namestring {
   my $truncnames = dclone($names);
 
   # perform truncation according to options minnames, maxnames
-  if ( $names->count_names > Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey) ) {
+  if ( $names->count_elements > Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey) ) {
     $truncated = 1;
-    $truncnames = $truncnames->first_n_names(Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey));
+    $truncnames = $truncnames->first_n_elements(Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey));
   }
 
   foreach my $n ( @{$truncnames->names} ) {
@@ -760,11 +760,11 @@ sub _print_biblatex_entry {
   foreach my $namefield (@NAMEFIELDS) {
     next if $SKIPFIELDS{$namefield};
     if ( my $nf = $be->get_field($namefield) ) {
-      if ( $nf->last_name->get_namestring eq 'others' ) {
+      if ( $nf->last_element->get_namestring eq 'others' ) {
         $str .= "  \\true{more$namefield}\n";
-        $nf->del_last_name;
+        $nf->del_last_element;
       }
-      my $total = $nf->count_names;
+      my $total = $nf->count_elements;
       $str .= "  \\name{$namefield}{$total}{%\n";
       foreach my $n (@{$nf->names}) {
         $str .= $n->name_to_bbl;
@@ -859,7 +859,7 @@ sub _print_biblatex_entry {
         $lastname    = $be->get_field($lname);
         $nameinitstr = $be->get_field($lname);
       } else {
-        $name = $be->get_field($lname)->nth_name(1);
+        $name = $be->get_field($lname)->nth_element(1);
         $lastname = $name->get_lastname;
         $nameinitstr = $name->get_nameinitstring;
       }

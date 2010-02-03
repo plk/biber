@@ -348,7 +348,7 @@ sub _parse_biblatexml {
               $nameinitstr .= "_" . terseinitials($firstname)
                 if $firstname;
 
-              $names->add_name(Biber::Entry::Name->new(
+              $names->add_element(Biber::Entry::Name->new(
                   lastname => $lastname,
                   firstname => $firstname,
                   prefix => $prefix,
@@ -367,10 +367,10 @@ sub _parse_biblatexml {
               my $namestr = $person->string_value;
 
               if ($namestr =~ /,\s+/) {
-                $names->add_name(parsename(
+                $names->add_element(parsename(
                     $person->string_value, {useprefix => $useprefix} ));
               } else {
-                $names->add_name(Biber::Entry::Name->new(
+                $names->add_element(Biber::Entry::Name->new(
                     lastname => $namestr,
                     namestring => $namestr,
                     nameinitstring => normalize_string_underscore( $namestr )));
@@ -385,14 +385,14 @@ sub _parse_biblatexml {
         else {
           my $namestr = $bibrecord->findnodes("bib:$field")->string_value;
 
-          $names->add_name(Biber::Entry::Name->new(
+          $names->add_element(Biber::Entry::Name->new(
               lastname => $namestr,
               namestring => $namestr,
               nameinitstring => normalize_string_underscore( $namestr )));
         }
 
         if ($bibrecord->exists("bib:$field\[\@andothers='true'\]")) {
-          $names->add_name(Biber::Entry::Name->new(
+          $names->add_element(Biber::Entry::Name->new(
               lastname => 'others',
               namestring => 'others'));
         }
