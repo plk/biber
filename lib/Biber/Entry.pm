@@ -87,6 +87,52 @@ sub add_warning {
   return;
 }
 
+=head2 inherit_from
+
+    Inherit fields from parent entry (as indicated by the crossref field)
+
+    $entry->inherit_from($parententry);
+
+    Takes a second Biber::Entry object as argument
+
+=cut
+
+sub inherit_from {
+  my ($self, $parent) = @_;
+
+  my $type = $self->get_field('entrytype');
+
+  if ($type =~ /\Ain(proceedings|collection|book)\z/xms) {
+
+    # inherit all that is undefined, except title etc
+    foreach my $field ($parent->fields) {
+      next if $field =~ /title/;
+      if (not $self->get_field($field)) {
+        $self->set_field($field, $parent->get_field($field));
+      }
+    }
+
+    # inherit title etc as booktitle etc
+    $self->set_field('booktitle', $parent->get_field('title'));
+    if ($parent->get_field('titleaddon')) {
+      $self->get_field('booktitleaddon', $parent->get_field('titleaddon'));
+    }
+    if ($parent->get_field('subtitle')) {
+      $self->get_field('booksubtitle', $parent->get_field('subtitle'));
+    }
+  }
+  elsif ($type eq 'inbook') {
+    $self->get_field('bookauthor', $parent->get_field('author'));
+  }
+  else { # inherits all
+    foreach my $field ($parent->fields) {
+      if (not $self->get_field($field)) {
+        $self->set_field($field, $parent->get_field($field));
+      }
+    }
+  }
+}
+
 =head1 AUTHORS
 
 François Charette, C<< <firmicus at gmx.net> >>

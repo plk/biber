@@ -1063,63 +1063,39 @@ sub parse_biblatexml {
   $self->_parse_biblatexml($xml);
 }
 
-=head2 process_crossrefs
+=head2 process_sets_and_crossrefs
 
-    $biber->process_crossrefs;
+    $biber->process_sets_and_crossrefs
 
-    Ensures proper inheritance of data from cross-references.
+    This does three things:
+    1. Ensures that all citekeys that are within entry sets will be output in the bbl.
+    2. Ensures proper inheritance of data from cross-references.
+    3. Ensures that crossrefs that are directly cited or cross-referenced
+       at least $mincrossrefs times are included in the bibliography.
+
     This method is automatically called by C<prepare>.
 
 =cut
 
-sub process_crossrefs {
+sub process_sets_and_crossrefs {
   my $self = shift;
-  my $bibentries = $self->bib;
-  $logger->debug("Processing crossrefs for keys:");
-
-  #FIXME shouldn't we skip all entries that are of no use for the final output?
-  foreach my $citekeyx (keys %{Biber::Config->getstate('entrieswithcrossref')}) {
-    my $be = $bibentries->entry($citekeyx);
-    $logger->debug("   * '$citekeyx'");
-
-    # Canonicalise citekeyx and xref before using them
-    $citekeyx = lc($citekeyx);
-    my $xref = Biber::Config->getstate('entrieswithcrossref', $citekeyx);
-    $xref = lc($xref);
-    my $type = $be->get_field('entrytype');
-    my $bex = $bibentries->entry($xref);
-
-    if ($type =~ /\Ain(proceedings|collection|book)\z/xms) {
-
-      # inherit all that is undefined, except title etc
-      foreach my $field ($bex->fields) {
-        next if $field =~ /title/;
-        if (not $be->get_field($field)) {
-          $be->set_field($field, $bex->get_field($field));
-        }
-      }
-
-      # inherit title etc as booktitle etc
-      $be->set_field('booktitle', $bex->get_field('title'));
-      if ($bex->get_field('titleaddon')) {
-        $be->get_field('booktitleaddon', $bex->get_field('titleaddon'));
-      }
-      if ($bex->get_field('subtitle')) {
-        $be->get_field('booksubtitle', $bex->get_field('subtitle'));
+  $logger->debug("Processing entry sets and crossrefs");
+  foreach my $citekey ($self->citekeys) {
+    my $be = $self->bibentry($citekey);
+    if (lc($be->get_field('entrytype')) eq 'set') {
+      my @inset_keys = split /,\s*/, $be->get_field('entryset');
+      foreach my $inset_key (@inset_keys) {
+        $logger->debug("  Adding inset entry '$inset_key' to the citekeys");
+        $self->add_citekey($inset_key);
       }
     }
-    elsif ($type eq 'inbook') {
-      $be->get_field('bookauthor', $bex->get_field('author'));
-    }
-    else { # inherits all
-      foreach my $field ($bex->fields) {
-        if (not $be->get_field($field)) {
-          $be->set_field($field, $bex->get_field($field));
-        }
-      }
+    if ($be->get_field('crossref')) {
+      my $crossrefkey = $be->get_field('crossref');
+      my $parent = $self->bibentry($crossrefkey);
+      $logger->debug("  Entry $citekey inheriting fields from parent $crossrefkey");
+      $be->inherit_from($parent);
     }
   }
-
   # We make sure that crossrefs that are directly cited or cross-referenced
   # at least $mincrossrefs times are included in the bibliography.
   # All crossrefs that are kept in "crossrefkeys" will be skipped
@@ -1129,32 +1105,6 @@ sub process_crossrefs {
       Biber::Config->getstate('crossrefkeys', $k) >= Biber::Config->getoption('mincrossrefs') ) {
       $logger->debug("Removing unneeded crossrefkey $k");
       Biber::Config->delstate('crossrefkeys', $k);
-    }
-  }
-
-  $self->{bib} = $bibentries;
-}
-
-=head2 process_sets
-
-    $biber->process_sets
-
-    Ensures that all citekeys that are within cited entry sets will be output in the bbl.
-    (Not yet enabled)
-
-=cut
-
-sub process_sets {
-  my $self = shift;
-  $logger->debug("Processing entry sets");
-  foreach my $insetkey (keys %{Biber::Config->getstate('inset_entries')}) {
-    my $setkey = Biber::Config->getstate('inset_entries', $insetkey);
-    $logger->debug("  Found key $insetkey within set $setkey");
-    if (! $self->has_citekey($setkey) ) {
-
-      # add inset_entries to the array of citekeys
-      $logger->debug("  Adding inset entry '$insetkey' to the citekeys");
-      $self->add_citekey($insetkey); # FIXME add origkey thereof instead
     }
   }
 }
@@ -1170,17 +1120,16 @@ sub process_sets {
 
 sub postprocess {
   my $self = shift;
-  my @foundkeys = ();
   my $bibentries = $self->bib;
   foreach my $citekey ( $self->citekeys ) {
     unless ( $bibentries->entry_exists($citekey) ) {
       $logger->warn("I didn't find a database entry for '$citekey'");
       $self->{warnings}++;
+      $self->del_citekey($citekey);
       next;
     }
     my $bibentry = $bibentries->entry($citekey);
 
-    push @foundkeys, $citekey;
     $bibentry->set_field('origkey', $citekey);
     $logger->debug("Postprocessing entry '$citekey'");
 
@@ -1217,8 +1166,6 @@ sub postprocess {
     # first-pass sorting to generate basic labels
     $self->postprocess_sorting_firstpass($citekey);
   }
-
-  $self->{citekeys} = [@foundkeys];
 
   $logger->debug("Finished postprocessing entries");
 
@@ -1850,8 +1797,7 @@ sub prepare {
   my $self = shift;
   Biber::Config->_init;
 
-  #$self->process_sets; # to push the inset keys to the stack of citekeys
-  $self->process_crossrefs;
+  $self->process_sets_and_crossrefs;
   $self->postprocess; # in here we generate the label sort string
   $self->sortentries; # then we do a label sort pass
   $self->generate_final_sortinfo; # in here we generate the final sort string
