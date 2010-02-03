@@ -29,7 +29,6 @@ sub new {
   }
 }
 
-
 =head2 set_firstname
 
     Set firstname for a Biber::Entry::Name object
@@ -52,7 +51,6 @@ sub get_firstname {
   my $self = shift;
   return $self->{firstname};
 }
-
 
 =head2 set_lastname
 
@@ -77,7 +75,6 @@ sub get_lastname {
   return $self->{lastname};
 }
 
-
 =head2 set_suffix
 
     Set suffix for a Biber::Entry::Name object
@@ -101,7 +98,6 @@ sub get_suffix {
   return $self->{suffix};
 }
 
-
 =head2 set_prefix
 
     Set prefix for a Biber::Entry::Name object
@@ -124,7 +120,6 @@ sub get_prefix {
   my $self = shift;
   return $self->{prefix};
 }
-
 
 =head2 set_namestring
 
@@ -180,6 +175,7 @@ sub get_nameinitstring {
 
 sub name_to_bbl {
   my $self = shift;
+
   # lastname is always defined
   my $ln  = $self->get_lastname;
   my $lni = Biber::Utils::getinitials($ln);
@@ -230,8 +226,6 @@ sub name_to_bbl {
   return "    {{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
 }
 
-
-
 =head1 AUTHORS
 
 François Charette, C<< <firmicus at gmx.net> >>
@@ -263,6 +257,5 @@ later version, or
 
 1;
 
-# vim: set tabstop=4 shiftwidth=4 expandtab:
-
+# vim: set tabstop=2 shiftwidth=2 expandtab:
 

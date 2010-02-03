@@ -26,11 +26,11 @@ Biber::Config - Configuration items which need to be saved across the
 =cut
 
 our %is_case_insensitive = (
-    crossrefkeys => 1,
-    entrieswithcrossref => 1,
-    inset_entries => 1,
-    seenkeys => 1
-);
+  crossrefkeys => 1,
+  entrieswithcrossref => 1,
+  inset_entries => 1,
+  seenkeys => 1
+  );
 
 # Static (class) data
 our $CONFIG;
@@ -61,7 +61,6 @@ sub _init {
   delete $CONFIG->{options}{biblatex}{PER_ENTRY};
   return;
 }
-
 
 =head2 _initopts
 
@@ -126,21 +125,21 @@ sub config_file {
   } elsif ( -f File::Spec->catfile($ENV{HOME}, ".$BIBER_CONF_NAME" ) ) {
     $biberconf = File::Spec->catfile($ENV{HOME}, ".$BIBER_CONF_NAME" );
   } elsif ( defined $ENV{XDG_HOME_CONFIG} and
-            -f File::Spec->catfile($ENV{XDG_HOME_CONFIG}, "biber", $BIBER_CONF_NAME) ) {
+    -f File::Spec->catfile($ENV{XDG_HOME_CONFIG}, "biber", $BIBER_CONF_NAME) ) {
     $biberconf = File::Spec->catfile($ENV{XDG_HOME_CONFIG}, "biber", $BIBER_CONF_NAME);
   } elsif ( $^O =~ /Mac/ and
-            -f File::Spec->catfile($ENV{HOME}, "Library", "biber", $BIBER_CONF_NAME) ) {
+    -f File::Spec->catfile($ENV{HOME}, "Library", "biber", $BIBER_CONF_NAME) ) {
     $biberconf = File::Spec->catfile($ENV{HOME}, "Library", "biber", $BIBER_CONF_NAME);
 
   } elsif ( $^O =~ /Win/ and
-            defined $ENV{APPDATA} and
-            -f File::Spec->catfile($ENV{APPDATA}, "biber", $BIBER_CONF_NAME) ) {
+    defined $ENV{APPDATA} and
+    -f File::Spec->catfile($ENV{APPDATA}, "biber", $BIBER_CONF_NAME) ) {
     $biberconf = File::Spec->catfile($ENV{APPDATA}, $BIBER_CONF_NAME);
 
   } elsif ( can_run("kpsewhich") ) {
     scalar run( command => [ 'kpsewhich', $BIBER_CONF_NAME ],
-                verbose => 0,
-                buffer => \$biberconf );
+      verbose => 0,
+      buffer => \$biberconf );
   } else {
     $biberconf = undef;
   }
@@ -185,11 +184,11 @@ sub getoption {
 sub setcmdlineoption {
   shift; # class method so don't care about class name
   my ($opt, $val) = @_;
+
   # Command line options are also options ...
   $CONFIG->{options}{biber}{$opt} = $CONFIG->{cmdlineoptions}{$opt} = $val;
   return;
 }
-
 
 =head2 getcmdlineoption
 
@@ -212,7 +211,6 @@ sub getcmdlineoption {
     Set a biblatex option on the global or per entry-type scope
 
 =cut
-
 
 sub setblxoption {
   shift; # class method so don't care about class name
@@ -244,13 +242,13 @@ sub getblxoption {
   shift; # class method so don't care about class name
   my ($opt, $entrytype, $citekey) = @_;
   if ( defined($citekey) and
-       defined $CONFIG->{options}{biblatex}{PER_ENTRY}{lc($citekey)} and
-       defined $CONFIG->{options}{biblatex}{PER_ENTRY}{lc($citekey)}{$opt}) {
+    defined $CONFIG->{options}{biblatex}{PER_ENTRY}{lc($citekey)} and
+    defined $CONFIG->{options}{biblatex}{PER_ENTRY}{lc($citekey)}{$opt}) {
     return $CONFIG->{options}{biblatex}{PER_ENTRY}{lc($citekey)}{$opt};
   }
   elsif (defined($entrytype) and
-           defined $CONFIG->{options}{biblatex}{PER_TYPE}{$entrytype} and
-           defined $CONFIG->{options}{biblatex}{PER_TYPE}{$entrytype}{$opt}) {
+    defined $CONFIG->{options}{biblatex}{PER_TYPE}{$entrytype} and
+    defined $CONFIG->{options}{biblatex}{PER_TYPE}{$entrytype}{$opt}) {
     return $CONFIG->{options}{biblatex}{PER_TYPE}{$entrytype}{$opt};
   }
   else {
@@ -263,7 +261,6 @@ sub getblxoption {
     Set biblatex bibsections information
 
 =cut
-
 
 sub setblxsection {
   shift; # class method so don't care about class name
@@ -283,7 +280,6 @@ sub getblxsection {
   my ($num) = @_;
   return $CONFIG->{options}{biblatex}{GLOBAL}{bibsections}{$num};
 }
-
 
 ##############################
 # Biber state static methods
@@ -320,7 +316,6 @@ sub setstate {
   return;
 }
 
-
 =head2 getstate
 
     Get a complete Biber internal state
@@ -347,7 +342,6 @@ sub getstate {
   }
   return $state->{$state_val};
 }
-
 
 =head2 delstate
 
@@ -379,7 +373,6 @@ sub delstate {
   delete $state->{$state_val};
   return;
 }
-
 
 =head2 incrstate
 
@@ -446,7 +439,6 @@ sub set_displaymode {
   }
 }
 
-
 =head2 get_displaymode
 
     Get the display mode for a field.
@@ -468,24 +460,24 @@ sub get_displaymode {
   if ($citekey) {
     my $key = lc($citekey);
     if ($fieldtype and
-	defined($CONFIG->{displaymodes}{PER_FIELD}) and
-        defined($CONFIG->{displaymodes}{PER_FIELD}{$key}) and
-	defined($CONFIG->{displaymodes}{PER_FIELD}{$key}{$fieldtype})) {
+      defined($CONFIG->{displaymodes}{PER_FIELD}) and
+      defined($CONFIG->{displaymodes}{PER_FIELD}{$key}) and
+      defined($CONFIG->{displaymodes}{PER_FIELD}{$key}{$fieldtype})) {
       $dm = $CONFIG->{displaymodes}{PER_FIELD}{$key}{$fieldtype};
     }
     elsif (defined($CONFIG->{displaymodes}{PER_ENTRY}) and
-	   defined($CONFIG->{displaymodes}{PER_ENTRY}{$key})) {
+      defined($CONFIG->{displaymodes}{PER_ENTRY}{$key})) {
       $dm = $CONFIG->{displaymodes}{PER_ENTRY}{$key};
     }
   }
   elsif ($fieldtype and
-	 defined($CONFIG->{displaymodes}{PER_FIELDTYPE}) and
-         defined($CONFIG->{displaymodes}{PER_FIELDTYPE}{$fieldtype})) {
+    defined($CONFIG->{displaymodes}{PER_FIELDTYPE}) and
+    defined($CONFIG->{displaymodes}{PER_FIELDTYPE}{$fieldtype})) {
     $dm = $CONFIG->{displaymodes}{PER_FIELDTYPE}{$fieldtype};
   }
   elsif ($entrytype and
-	 defined($CONFIG->{displaymodes}{PER_ENTRYTYPE}) and
-         defined($CONFIG->{displaymodes}{PER_ENTRYTYPE}{$entrytype})) {
+    defined($CONFIG->{displaymodes}{PER_ENTRYTYPE}) and
+    defined($CONFIG->{displaymodes}{PER_ENTRYTYPE}{$entrytype})) {
     $dm = $CONFIG->{displaymodes}{PER_ENTRYTYPE}{$entrytype};
   }
   $dm = $CONFIG->{displaymodes}{GLOBAL} unless $dm; # Global if nothing else;
@@ -497,7 +489,6 @@ sub get_displaymode {
     return $DISPLAYMODES{$dm};
   }
 }
-
 
 =head2 dump
 
@@ -540,4 +531,5 @@ later version, or
 =cut
 
 1;
-# vim: set tabstop=4 shiftwidth=4 expandtab:
+
+# vim: set tabstop=2 shiftwidth=2 expandtab:

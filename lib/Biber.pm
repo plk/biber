@@ -62,22 +62,23 @@ my $logger = Log::Log4perl::get_logger('main');
 =cut
 
 sub new {
-    my ($class, %opts) = @_;
-    my $self = bless {}, $class;
-    # Set up config object. There is only one per Biber object instance so
-    # it is all class methods
-    if (defined $opts{configfile}) {
-        Biber::Config->_initopts( $opts{configfile} );
-    } else {
-        Biber::Config->_initopts();
+  my ($class, %opts) = @_;
+  my $self = bless {}, $class;
+
+  # Set up config object. There is only one per Biber object instance so
+  # it is all class methods
+  if (defined $opts{configfile}) {
+    Biber::Config->_initopts( $opts{configfile} );
+  } else {
+    Biber::Config->_initopts();
+  }
+  if (%opts) {
+    foreach (keys %opts) {
+      Biber::Config->setcmdlineoption($_, $opts{$_});
     }
-    if (%opts) {
-        foreach (keys %opts) {
-          Biber::Config->setcmdlineoption($_, $opts{$_});
-        }
-    }
-    $self->{bib} = new Biber::Entries;
-    return $self;
+  }
+  $self->{bib} = new Biber::Entries;
+  return $self;
 }
 
 =head2 citekeys
@@ -89,12 +90,12 @@ sub new {
 =cut
 
 sub citekeys {
-    my $self = shift;
-    if ( $self->{citekeys} ) {
-        return @{ $self->{citekeys} }
-    } else {
-        return ()
-    }
+  my $self = shift;
+  if ( $self->{citekeys} ) {
+    return @{ $self->{citekeys} }
+  } else {
+    return ()
+  }
 }
 
 =head2 has_citekey
@@ -106,8 +107,8 @@ sub citekeys {
 =cut
 
 sub has_citekey {
-    my ($self, $key) = @_;
-    return defined ( first { lc($_) eq lc($key) } $self->citekeys ) ? 1 : 0;
+  my ($self, $key) = @_;
+  return defined ( first { lc($_) eq lc($key) } $self->citekeys ) ? 1 : 0;
 }
 
 =head2 add_citekey
@@ -119,11 +120,11 @@ sub has_citekey {
 =cut
 
 sub add_citekey {
-    my ($self, $key) = @_;
-    return if $self->has_citekey($key);
-    my @origkeys = $self->citekeys;
-    $self->{citekeys} = [@origkeys, $key];
-    return
+  my ($self, $key) = @_;
+  return if $self->has_citekey($key);
+  my @origkeys = $self->citekeys;
+  $self->{citekeys} = [@origkeys, $key];
+  return
 }
 
 =head2 del_citekey
@@ -135,12 +136,12 @@ sub add_citekey {
 =cut
 
 sub del_citekey {
-    my ($self, $key) = @_;
-    return unless $self->has_citekey($key);
-    my @origkeys = $self->citekeys;
-    my @newkeys = grep { lc($_) ne lc($key) } @origkeys;
-    $self->{citekeys} = [@newkeys];
-    return
+  my ($self, $key) = @_;
+  return unless $self->has_citekey($key);
+  my @origkeys = $self->citekeys;
+  my @newkeys = grep { lc($_) ne lc($key) } @origkeys;
+  $self->{citekeys} = [@newkeys];
+  return
 }
 
 =head2 bibentry
@@ -180,25 +181,25 @@ sub bib {
 =cut
 
 sub shorthands {
-    my $self = shift;
-    if ( $self->{shorthands} ) {
-        return @{ $self->{shorthands} }
-    } else {
-        return
-    }
+  my $self = shift;
+  if ( $self->{shorthands} ) {
+    return @{ $self->{shorthands} }
+  } else {
+    return
+  }
 }
 
 sub _addshorthand {
-    my ($self, $key) = @_;
-    my @los;
-    if ( $self->{shorthands} ) {
-        @los = @{ $self->{shorthands} }
-    } else {
-        @los = ();
-    };
-    push @los, $key;
-    $self->{shorthands} = [ @los ];
-    return
+  my ($self, $key) = @_;
+  my @los;
+  if ( $self->{shorthands} ) {
+    @los = @{ $self->{shorthands} }
+  } else {
+    @los = ();
+  };
+  push @los, $key;
+  $self->{shorthands} = [ @los ];
+  return
 }
 
 =head2 parse_auxfile
@@ -210,107 +211,107 @@ sub _addshorthand {
 
 sub parse_auxfile {
 
-    my $self = shift;
-    my $auxfile = shift;
-    my @bibdatafiles = ();
-    if (Biber::Config->getoption('bibdata')) {
-        @bibdatafiles = @{ Biber::Config->getoption('bibdata') };
-    };
+  my $self = shift;
+  my $auxfile = shift;
+  my @bibdatafiles = ();
+  if (Biber::Config->getoption('bibdata')) {
+    @bibdatafiles = @{ Biber::Config->getoption('bibdata') };
+  };
 
-    my @auxcitekeys = $self->citekeys;
+  my @auxcitekeys = $self->citekeys;
 
-    $logger->logdie("Cannot find file '$auxfile'!") unless -f $auxfile;
-    $logger->logcroak("File '$auxfile' is not an .aux file!") unless $auxfile =~ m/\.aux$/;
+  $logger->logdie("Cannot find file '$auxfile'!") unless -f $auxfile;
+  $logger->logcroak("File '$auxfile' is not an .aux file!") unless $auxfile =~ m/\.aux$/;
 
-    my $aux = new IO::File "<$auxfile" or $logger->logcroak("Failed to open $auxfile : $!");
+  my $aux = new IO::File "<$auxfile" or $logger->logcroak("Failed to open $auxfile : $!");
 
-    my $ctrl_file = "";
+  my $ctrl_file = "";
 
-    local $/ = "\n";
+  local $/ = "\n";
 
-    $logger->info("Reading $auxfile");
+  $logger->info("Reading $auxfile");
 
-    while (<$aux>) {
+  while (<$aux>) {
 
-        if ( $_ =~ /^\\bibdata/ ) {
+    if ( $_ =~ /^\\bibdata/ ) {
 
-            # There can be more than one bibdata file!
-            # We can parse many bib and/or xml files
-            # Datafile given as option -d should be parsed first, then the other ones
-            (my $bibdatastring) = $_ =~ m/^\\bibdata{ #{ <- for balancing brackets in vim
+      # There can be more than one bibdata file!
+      # We can parse many bib and/or xml files
+      # Datafile given as option -d should be parsed first, then the other ones
+      (my $bibdatastring) = $_ =~ m/^\\bibdata{ #{ <- for balancing brackets in vim
                                                ([^}]+)
-                                                      }/x;
+}/x;
 
-            my @tmp = split/,/, $bibdatastring;
+      my @tmp = split/,/, $bibdatastring;
 
-            $ctrl_file = shift @tmp;
+      $ctrl_file = shift @tmp;
 
-            $logger->debug("control file is $ctrl_file.bib");
+      $logger->debug("control file is $ctrl_file.bib");
 
-            if (defined $bibdatafiles[0]) {
+      if (defined $bibdatafiles[0]) {
 
-                push (@bibdatafiles, @tmp);
+        push (@bibdatafiles, @tmp);
 
-            }
-            else {
+      }
+      else {
 
-                @bibdatafiles = @tmp;
+        @bibdatafiles = @tmp;
 
-            }
+      }
 
-            Biber::Config->setoption('bibdata', [ @bibdatafiles ]);
-        }
+      Biber::Config->setoption('bibdata', [ @bibdatafiles ]);
+    }
 
-        if ( $_ =~ /^\\citation/ ) {
-            m/^\\citation{ #{ for readability in vim
+    if ( $_ =~ /^\\citation/ ) {
+      m/^\\citation{ #{ for readability in vim
                           ([^}]+)
-                                 }/x;
-            if ( $1 eq '*' ) {
+}/x;
+      if ( $1 eq '*' ) {
 
-                Biber::Config->setoption('allentries', 1);
+        Biber::Config->setoption('allentries', 1);
 
-                $logger->info("Processing all citekeys");
+        $logger->info("Processing all citekeys");
 
-                # we stop reading the aux file as soon as we encounter \citation{*}
-                last
+        # we stop reading the aux file as soon as we encounter \citation{*}
+        last
 
-            }
-	    elsif ( ! Biber::Config->getstate('seenkeys', $1) and
-		    ( $1 ne "biblatex-control" ) ) {
+      }
+      elsif ( ! Biber::Config->getstate('seenkeys', $1) and
+        ( $1 ne "biblatex-control" ) ) {
 
-                push @auxcitekeys, decode_utf8($1);
+        push @auxcitekeys, decode_utf8($1);
 
-                Biber::Config->incrstate('seenkeys', $1);
+        Biber::Config->incrstate('seenkeys', $1);
 
-            }
-        }
+      }
     }
+  }
 
-    $self->parse_ctrlfile($ctrl_file) if $ctrl_file;
+  $self->parse_ctrlfile($ctrl_file) if $ctrl_file;
 
-    unless (@bibdatafiles) {
-        $logger->logcroak("No database is provided in the file '$auxfile'! Exiting");
-    }
+  unless (@bibdatafiles) {
+    $logger->logcroak("No database is provided in the file '$auxfile'! Exiting");
+  }
 
-    unless (Biber::Config->getoption('allentries') or @auxcitekeys) {
-        $logger->logcroak("The file '$auxfile' does not contain any citations!")
-    }
+  unless (Biber::Config->getoption('allentries') or @auxcitekeys) {
+    $logger->logcroak("The file '$auxfile' does not contain any citations!")
+  }
 
-    $logger->info("Found ", $#auxcitekeys+1 , " citekeys in aux file")
-        unless Biber::Config->getoption('allentries') ;
+  $logger->info("Found ", $#auxcitekeys+1 , " citekeys in aux file")
+    unless Biber::Config->getoption('allentries') ;
 
-    @auxcitekeys = sort @auxcitekeys if Biber::Config->getoption('debug');
+  @auxcitekeys = sort @auxcitekeys if Biber::Config->getoption('debug');
 
-    $logger->debug("The citekeys are:\n", "@auxcitekeys", "\n\n")
-        unless Biber::Config->getoption('allentries') ;
+  $logger->debug("The citekeys are:\n", "@auxcitekeys", "\n\n")
+    unless Biber::Config->getoption('allentries') ;
 
-    $self->{citekeys} = [ @auxcitekeys ];
-    # Preserve the original cite order for citeorder sort
-    $self->{orig_order_citekeys} = [ @auxcitekeys ];
+  $self->{citekeys} = [ @auxcitekeys ];
 
-    return;
+  # Preserve the original cite order for citeorder sort
+  $self->{orig_order_citekeys} = [ @auxcitekeys ];
+
+  return;
 }
-
 
 =head2 parse_auxfile_v2
 
@@ -323,105 +324,106 @@ sub parse_auxfile {
 #V2
 sub parse_auxfile_v2 {
 
-    my $self = shift;
-    my $auxfile = shift;
-    my @bibdatafiles = ();
-    if (Biber::Config->getoption('bibdata')) {
-        @bibdatafiles = @{ Biber::Config->getoption('bibdata') }
-    };
+  my $self = shift;
+  my $auxfile = shift;
+  my @bibdatafiles = ();
+  if (Biber::Config->getoption('bibdata')) {
+    @bibdatafiles = @{ Biber::Config->getoption('bibdata') }
+  };
 
-    my @auxcitekeys = $self->citekeys;
+  my @auxcitekeys = $self->citekeys;
 
-    $logger->logcroak("Cannot find file '$auxfile'!") unless -f $auxfile;
-    $logger->logcroak("File '$auxfile' is not an .aux file!") unless $auxfile =~ m/\.aux$/;
+  $logger->logcroak("Cannot find file '$auxfile'!") unless -f $auxfile;
+  $logger->logcroak("File '$auxfile' is not an .aux file!") unless $auxfile =~ m/\.aux$/;
 
-    my $aux = new IO::File "<$auxfile" or $logger->logcroak("Failed to open $auxfile : $!");
+  my $aux = new IO::File "<$auxfile" or $logger->logcroak("Failed to open $auxfile : $!");
 
-    my $ctrl_file = "";
+  my $ctrl_file = "";
 
-    local $/ = "\n";
+  local $/ = "\n";
 
-    $logger->info("Reading $auxfile");
+  $logger->info("Reading $auxfile");
 
-    while (<$aux>) {
+  while (<$aux>) {
 
-        if ( $_ =~ /^\\bibdata/ ) {
+    if ( $_ =~ /^\\bibdata/ ) {
 
-            # There can be more than one bibdata file!
-            # We can parse many bib and/or xml files
-            # Datafile given as option -d should be parsed first, then the other ones
-            (my $bibdatastring) = $_ =~ m/^\\bibdata{ #{ <- for balancing brackets in vim
+      # There can be more than one bibdata file!
+      # We can parse many bib and/or xml files
+      # Datafile given as option -d should be parsed first, then the other ones
+      (my $bibdatastring) = $_ =~ m/^\\bibdata{ #{ <- for balancing brackets in vim
                                                ([^}]+)
-                                                      }/x;
+}/x;
 
-            my @tmp = split/,/, $bibdatastring;
+      my @tmp = split/,/, $bibdatastring;
 
-                        $ctrl_file = $auxfile;
-                        $ctrl_file =~ s/\.aux\z//xms;
+      $ctrl_file = $auxfile;
+      $ctrl_file =~ s/\.aux\z//xms;
 
-            $logger->debug("control file is $ctrl_file.bcf");
+      $logger->debug("control file is $ctrl_file.bcf");
 
-            if (defined $bibdatafiles[0]) {
+      if (defined $bibdatafiles[0]) {
 
-                push (@bibdatafiles, @tmp);
+        push (@bibdatafiles, @tmp);
 
-            }
-            else {
+      }
+      else {
 
-                @bibdatafiles = @tmp;
+        @bibdatafiles = @tmp;
 
-            }
-            Biber::Config->setoption('bibdata', [ @bibdatafiles ]);
-        }
+      }
+      Biber::Config->setoption('bibdata', [ @bibdatafiles ]);
+    }
 
-        if ( $_ =~ /^\\citation/ ) {
-            m/^\\citation{ #{ for readability in vim
+    if ( $_ =~ /^\\citation/ ) {
+      m/^\\citation{ #{ for readability in vim
                           ([^}]+)
-                                 }/x;
-            if ( $1 eq '*' ) {
+}/x;
+      if ( $1 eq '*' ) {
 
-                Biber::Config->setoption('allentries', 1);
+        Biber::Config->setoption('allentries', 1);
 
-                $logger->info("Processing all citekeys");
+        $logger->info("Processing all citekeys");
 
-                # we stop reading the aux file as soon as we encounter \citation{*}
-                last
+        # we stop reading the aux file as soon as we encounter \citation{*}
+        last
 
-            } elsif ( ! Biber::Config->getstate('seenkeys', $1) ) {
+      } elsif ( ! Biber::Config->getstate('seenkeys', $1) ) {
 
-                push @auxcitekeys, decode_utf8($1);
+        push @auxcitekeys, decode_utf8($1);
 
-                Biber::Config->incrstate('seenkeys', $1);
+        Biber::Config->incrstate('seenkeys', $1);
 
-            }
-        }
-    }
-
-    $self->parse_ctrlfile_v2($ctrl_file) if $ctrl_file;
-
-    unless (@bibdatafiles) {
-        $logger->logcroak("No database is provided in the file '$auxfile'! Exiting")
-    }
-
-    unless (Biber::Config->getoption('allentries') or @auxcitekeys) {
-        $logger->logcroak("The file '$auxfile' does not contain any citations!")
-    }
-
-    $logger->info("Found ", $#auxcitekeys+1 , " citekeys in aux file")
-        unless Biber::Config->getoption('allentries') ;
-
-    if (Biber::Config->getoption('debug')) {
-      my @debug_auxcitekeys = sort @auxcitekeys;
-      unless (Biber::Config->getoption('allentries')) {
-        $logger->debug("The citekeys are:\n", "@debug_auxcitekeys", "\n");
       }
     }
+  }
 
-    $self->{citekeys} = [ @auxcitekeys ];
-    # Preserve the original cite order for citekeys sort
-    $self->{orig_order_citekeys} = [ @auxcitekeys ];
+  $self->parse_ctrlfile_v2($ctrl_file) if $ctrl_file;
 
-    return;
+  unless (@bibdatafiles) {
+    $logger->logcroak("No database is provided in the file '$auxfile'! Exiting")
+  }
+
+  unless (Biber::Config->getoption('allentries') or @auxcitekeys) {
+    $logger->logcroak("The file '$auxfile' does not contain any citations!")
+  }
+
+  $logger->info("Found ", $#auxcitekeys+1 , " citekeys in aux file")
+    unless Biber::Config->getoption('allentries') ;
+
+  if (Biber::Config->getoption('debug')) {
+    my @debug_auxcitekeys = sort @auxcitekeys;
+    unless (Biber::Config->getoption('allentries')) {
+      $logger->debug("The citekeys are:\n", "@debug_auxcitekeys", "\n");
+    }
+  }
+
+  $self->{citekeys} = [ @auxcitekeys ];
+
+  # Preserve the original cite order for citekeys sort
+  $self->{orig_order_citekeys} = [ @auxcitekeys ];
+
+  return;
 }
 
 =head2 parse_ctrlfile
@@ -432,297 +434,297 @@ sub parse_auxfile_v2 {
 =cut
 
 sub parse_ctrlfile {
-    my ($self, $ctrl_file) = @_;
+  my ($self, $ctrl_file) = @_;
 
-    $logger->warn("Cannot find control file '$ctrl_file.bib'!") unless -f "$ctrl_file.bib";
+  $logger->warn("Cannot find control file '$ctrl_file.bib'!") unless -f "$ctrl_file.bib";
 
-    my $ctrl = new IO::File "<$ctrl_file.bib"
-          or $logger->logcroak("Cannot open $ctrl_file.bib: $!");
+  my $ctrl = new IO::File "<$ctrl_file.bib"
+    or $logger->logcroak("Cannot open $ctrl_file.bib: $!");
 
-    $logger->info("Reading $ctrl_file.bib") ;
+  $logger->info("Reading $ctrl_file.bib") ;
 
-    while (<$ctrl>) {
+  while (<$ctrl>) {
 
-        next unless /^\s*ctrl-options/;
+    next unless /^\s*ctrl-options/;
 
-        (my $opts) = /{(.+)}/; ## ex: {0.8b:0:0:0:0:1:1:0:0:1:0:1:2:1:3:1:79:+}
-        my @blxopts = split /:/, $opts;
-        Biber::Config->setblxoption('controlversion', $blxopts[0]);
-        Biber::Config->setblxoption('debug',          $blxopts[1]);
-        Biber::Config->setblxoption('terseinits',     $blxopts[3]);
-        Biber::Config->setblxoption('useprefix',      $blxopts[4]);
-        Biber::Config->setblxoption('useauthor',      $blxopts[5]);
-        Biber::Config->setblxoption('useeditor',      $blxopts[6]);
-        Biber::Config->setblxoption('usetranslator',  $blxopts[7]);
-        Biber::Config->setblxoption('labelalpha',     $blxopts[8]);
-        Biber::Config->setblxoption('labelyear',      $blxopts[9]);
-        Biber::Config->setblxoption('singletitle',    $blxopts[10]);
-        Biber::Config->setblxoption('uniquename',     $blxopts[11]);
-        Biber::Config->setblxoption('sorting_label',  $blxopts[12]);
-        Biber::Config->setblxoption('sortlos',        $blxopts[13]);
-        Biber::Config->setblxoption('maxnames',       $blxopts[14]);
-        Biber::Config->setblxoption('minnames',       $blxopts[15]);
-        Biber::Config->setblxoption('alphaothers',    $blxopts[17]);
+    (my $opts) = /{(.+)}/; ## ex: {0.8b:0:0:0:0:1:1:0:0:1:0:1:2:1:3:1:79:+}
+    my @blxopts = split /:/, $opts;
+    Biber::Config->setblxoption('controlversion', $blxopts[0]);
+    Biber::Config->setblxoption('debug',          $blxopts[1]);
+    Biber::Config->setblxoption('terseinits',     $blxopts[3]);
+    Biber::Config->setblxoption('useprefix',      $blxopts[4]);
+    Biber::Config->setblxoption('useauthor',      $blxopts[5]);
+    Biber::Config->setblxoption('useeditor',      $blxopts[6]);
+    Biber::Config->setblxoption('usetranslator',  $blxopts[7]);
+    Biber::Config->setblxoption('labelalpha',     $blxopts[8]);
+    Biber::Config->setblxoption('labelyear',      $blxopts[9]);
+    Biber::Config->setblxoption('singletitle',    $blxopts[10]);
+    Biber::Config->setblxoption('uniquename',     $blxopts[11]);
+    Biber::Config->setblxoption('sorting_label',  $blxopts[12]);
+    Biber::Config->setblxoption('sortlos',        $blxopts[13]);
+    Biber::Config->setblxoption('maxnames',       $blxopts[14]);
+    Biber::Config->setblxoption('minnames',       $blxopts[15]);
+    Biber::Config->setblxoption('alphaothers',    $blxopts[17]);
 
-        my $controlversion = Biber::Config->getblxoption('controlversion');
-        $logger->warn("You are using biblatex version $controlversion :
-            biber is more likely to work with version $BIBLATEX_VERSION.")
-            unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION;
-    }
+    my $controlversion = Biber::Config->getblxoption('controlversion');
+    $logger->warn("You are using biblatex version $controlversion :
+biber is more likely to work with version $BIBLATEX_VERSION.")
+      unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION;
+  }
 
-    if (Biber::Config->getblxoption('labelyear')) {
-      Biber::Config->setblxoption('labelyear', [ 'year' ]); # set default
-    }
-    Biber::Config->setblxoption('labelname', ['shortauthor', 'author', 'shorteditor', 'editor', 'translator']); # set default
-    my $sorting = defined(Biber::Config->getblxoption('sorting_label')) ?
-      Biber::Config->getblxoption('sorting_label') : '1';
-    if ($sorting == 0) { # none is a special case
-      Biber::Config->setblxoption('sorting_label', [ [ {'citeorder' => {}} ] ]);
-    }
-    elsif ($sorting == 1) { # nty
-      Biber::Config->setblxoption('sorting_label',
-                                  [
-                                   [
-                                    {
-                                     'presort'    => {}},
-                                    {
-                                     'mm'         => {}},
-                                   ],
-                                   [
-                                    {
-                                     'sortkey'    => {'final' => 1}}
-                                   ],
-                                   [
-                                    {
-                                     'sortname'   => {}},
-                                    {
-                                     'author'     => {}},
-                                    {
-                                     'editor'     => {}},
-                                    {
-                                     'translator' => {}},
-                                    {
-                                     'sorttitle'  => {}},
-                                    {
-                                     'title'      => {}}
-                                   ],
-                                   [
-                                    {
-                                     'sorttitle'  => {}},
-                                    {
-                                     'title'      => {}}
-                                   ],
-                                   [
-                                    {
-                                     'sortyear'   => {}},
-                                    {
-                                     'year'       => {}}
-                                   ],
-                                   [
-                                    {
-                                     'volume'     => {}},
-                                    {
-                                     '0000'       => {}}
-                                   ]
-                                  ]);
-    } elsif ($sorting == 2) { # nyt
-      Biber::Config->setblxoption('sorting_label',
-                                  [
+  if (Biber::Config->getblxoption('labelyear')) {
+    Biber::Config->setblxoption('labelyear', [ 'year' ]); # set default
+  }
+  Biber::Config->setblxoption('labelname', ['shortauthor', 'author', 'shorteditor', 'editor', 'translator']); # set default
+  my $sorting = defined(Biber::Config->getblxoption('sorting_label')) ?
+    Biber::Config->getblxoption('sorting_label') : '1';
+  if ($sorting == 0) { # none is a special case
+    Biber::Config->setblxoption('sorting_label', [ [ {'citeorder' => {}} ] ]);
+  }
+  elsif ($sorting == 1) { # nty
+    Biber::Config->setblxoption('sorting_label',
+      [
+        [
+          {
+            'presort'    => {}},
+          {
+            'mm'         => {}},
+        ],
+        [
+          {
+            'sortkey'    => {'final' => 1}}
+        ],
+        [
+          {
+            'sortname'   => {}},
+          {
+            'author'     => {}},
+          {
+            'editor'     => {}},
+          {
+            'translator' => {}},
+          {
+            'sorttitle'  => {}},
+          {
+            'title'      => {}}
+        ],
+        [
+          {
+            'sorttitle'  => {}},
+          {
+            'title'      => {}}
+        ],
+        [
+          {
+            'sortyear'   => {}},
+          {
+            'year'       => {}}
+        ],
+        [
+          {
+            'volume'     => {}},
+          {
+            '0000'       => {}}
+        ]
+      ]);
+  } elsif ($sorting == 2) { # nyt
+    Biber::Config->setblxoption('sorting_label',
+      [
 
-                                                    [
-                                                     {'presort'    => {}},
-                                                     {'mm'         => {}},
-                                                    ],
-                                                    [
-                                                     {'sortkey'    => {'final' => 1}}
-                                                    ],
-                                                    [
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {'sortyear'   => {}},
-                                                     {'year'       => {}}
-                                                    ],
-                                                    [
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {'volume'     => {}},
-                                                     {'0000'       => {}}
-                                                    ]
-                                                   ]);
-    } elsif ($sorting == 3) { # nyvt
-      Biber::Config->setblxoption('sorting_label',
-                                  [
-                                                    [
-                                                     {'presort'    => {}},
-                                                     {'mm'         => {}},
-                                                    ],
-                                                    [
-                                                     {'sortkey'    => {'final' => 1}}
-                                                    ],
-                                                    [
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {'sortyear'   => {}},
-                                                     {'year'       => {}}
-                                                    ],
-                                                    [
-                                                     {'volume'     => {}},
-                                                     {'0000'       => {}}
-                                                    ],
-                                                    [
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ]
-                                                   ]);
-    } elsif ($sorting == 12) { # anyt
-      Biber::Config->setblxoption('sorting_label',
-                                  [
-                                                    [
-                                                     {'presort'    => {}},
-                                                     {'mm'         => {}},
-                                                    ],
-                                                    [
-                                                     {'labelalpha' => {}}
-                                                    ],
-                                                    [
-                                                     {'sortkey'    => {'final' => 1}}
-                                                    ],
-                                                    [
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {'sortyear'   => {}},
-                                                     {'year'       => {}}
-                                                    ],
-                                                    [
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {'sorttitle'  => {}},
-                                                     {'0000'       => {}}
-                                                    ]
-                                                   ]);
-    } elsif ($sorting == 13) { # anyvt
-      Biber::Config->setblxoption('sorting_label',
-                                  [
-                                                    [
-                                                     {'presort'    => {}},
-                                                     {'mm'         => {}},
-                                                    ],
-                                                    [
-                                                     {'labelalpha' => {}}
-                                                    ],
-                                                    [
-                                                     {'sortkey'    => {'final' => 1}}
-                                                    ],
-                                                    [
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {'sortyear'   => {}},
-                                                     {'year'       => {}}
-                                                    ],
-                                                    [
-                                                     {'volume'     => {}},
-                                                     {'0000'       => {}}
-                                                    ],
-                                                    [
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ]
-                                                   ]);
-    } elsif ($sorting == 21) { # ynt
-      Biber::Config->setblxoption('sorting_label',
-                                  [
-                                                    [
-                                                     {'presort'    => {}},
-                                                     {'mm'         => {}},
-                                                    ],
-                                                    [
-                                                     {'sortkey'    => {'final' => 1}}
-                                                    ],
-                                                    [
-                                                     {'sortyear'   => {}},
-                                                     {'year'       => {}},
-                                                     {'9999'       => {}}
-                                                    ],
-                                                    [
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                   ]);
-    } elsif ($sorting == 22) { # ydnt
-      Biber::Config->setblxoption('sorting_label',
-                                  [
-                                                    [
-                                                     {'presort'    => {}},
-                                                     {'mm'         => {}},
-                                                    ],
-                                                    [
-                                                     {'sortkey'    => {'final' => 1}}
-                                                    ],
-                                                    [
-                                                     {'sortyear'  => {'sort_direction'  => 'descending'}},
-                                                     {'year'      => {'sort_direction'  => 'descending'}},
-                                                     {'9999'       => {}}
-                                                    ],
-                                                    [
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                   ]);
-    } elsif ($sorting == 99) { # debug
-      Biber::Config->setblxoption('sorting_label',
-                                  [
-                                                    [
-                                                     {'debug'    => {}},
-                                                    ],
-                                                   ]);
-    }
-    Biber::Config->setblxoption('sorting_final',
-                                dclone(Biber::Config->getblxoption('sorting_label')));
-    return;
+        [
+          {'presort'    => {}},
+          {'mm'         => {}},
+        ],
+        [
+          {'sortkey'    => {'final' => 1}}
+        ],
+        [
+          {'sortname'   => {}},
+          {'author'     => {}},
+          {'editor'     => {}},
+          {'translator' => {}},
+          {'sorttitle'  => {}},
+          {'title'      => {}}
+        ],
+        [
+          {'sortyear'   => {}},
+          {'year'       => {}}
+        ],
+        [
+          {'sorttitle'  => {}},
+          {'title'      => {}}
+        ],
+        [
+          {'volume'     => {}},
+          {'0000'       => {}}
+        ]
+      ]);
+  } elsif ($sorting == 3) { # nyvt
+    Biber::Config->setblxoption('sorting_label',
+      [
+        [
+          {'presort'    => {}},
+          {'mm'         => {}},
+        ],
+        [
+          {'sortkey'    => {'final' => 1}}
+        ],
+        [
+          {'sortname'   => {}},
+          {'author'     => {}},
+          {'editor'     => {}},
+          {'translator' => {}},
+          {'sorttitle'  => {}},
+          {'title'      => {}}
+        ],
+        [
+          {'sortyear'   => {}},
+          {'year'       => {}}
+        ],
+        [
+          {'volume'     => {}},
+          {'0000'       => {}}
+        ],
+        [
+          {'sorttitle'  => {}},
+          {'title'      => {}}
+        ]
+      ]);
+  } elsif ($sorting == 12) { # anyt
+    Biber::Config->setblxoption('sorting_label',
+      [
+        [
+          {'presort'    => {}},
+          {'mm'         => {}},
+        ],
+        [
+          {'labelalpha' => {}}
+        ],
+        [
+          {'sortkey'    => {'final' => 1}}
+        ],
+        [
+          {'sortname'   => {}},
+          {'author'     => {}},
+          {'editor'     => {}},
+          {'translator' => {}},
+          {'sorttitle'  => {}},
+          {'title'      => {}}
+        ],
+        [
+          {'sortyear'   => {}},
+          {'year'       => {}}
+        ],
+        [
+          {'sorttitle'  => {}},
+          {'title'      => {}}
+        ],
+        [
+          {'sorttitle'  => {}},
+          {'0000'       => {}}
+        ]
+      ]);
+  } elsif ($sorting == 13) { # anyvt
+    Biber::Config->setblxoption('sorting_label',
+      [
+        [
+          {'presort'    => {}},
+          {'mm'         => {}},
+        ],
+        [
+          {'labelalpha' => {}}
+        ],
+        [
+          {'sortkey'    => {'final' => 1}}
+        ],
+        [
+          {'sortname'   => {}},
+          {'author'     => {}},
+          {'editor'     => {}},
+          {'translator' => {}},
+          {'sorttitle'  => {}},
+          {'title'      => {}}
+        ],
+        [
+          {'sortyear'   => {}},
+          {'year'       => {}}
+        ],
+        [
+          {'volume'     => {}},
+          {'0000'       => {}}
+        ],
+        [
+          {'sorttitle'  => {}},
+          {'title'      => {}}
+        ]
+      ]);
+  } elsif ($sorting == 21) { # ynt
+    Biber::Config->setblxoption('sorting_label',
+      [
+        [
+          {'presort'    => {}},
+          {'mm'         => {}},
+        ],
+        [
+          {'sortkey'    => {'final' => 1}}
+        ],
+        [
+          {'sortyear'   => {}},
+          {'year'       => {}},
+          {'9999'       => {}}
+        ],
+        [
+          {'sortname'   => {}},
+          {'author'     => {}},
+          {'editor'     => {}},
+          {'translator' => {}},
+          {'sorttitle'  => {}},
+          {'title'      => {}}
+        ],
+        [
+          {'sorttitle'  => {}},
+          {'title'      => {}}
+        ],
+      ]);
+  } elsif ($sorting == 22) { # ydnt
+    Biber::Config->setblxoption('sorting_label',
+      [
+        [
+          {'presort'    => {}},
+          {'mm'         => {}},
+        ],
+        [
+          {'sortkey'    => {'final' => 1}}
+        ],
+        [
+          {'sortyear'  => {'sort_direction'  => 'descending'}},
+          {'year'      => {'sort_direction'  => 'descending'}},
+          {'9999'       => {}}
+        ],
+        [
+          {'sortname'   => {}},
+          {'author'     => {}},
+          {'editor'     => {}},
+          {'translator' => {}},
+          {'sorttitle'  => {}},
+          {'title'      => {}}
+        ],
+        [
+          {'sorttitle'  => {}},
+          {'title'      => {}}
+        ],
+      ]);
+  } elsif ($sorting == 99) { # debug
+    Biber::Config->setblxoption('sorting_label',
+      [
+        [
+          {'debug'    => {}},
+        ],
+      ]);
+  }
+  Biber::Config->setblxoption('sorting_final',
+    dclone(Biber::Config->getblxoption('sorting_label')));
+  return;
 }
 
 =head2 parse_ctrlfile_v2
@@ -750,16 +752,17 @@ sub parse_ctrlfile_v2 {
 
     # Set up schema
     my $CFxmlschema;
+
     # we assume that the schema files are in the same dir as Biber.pm:
     (undef, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
     ## NB the following also works, but the above approach is better
-    #my $bcfpath = first { -f File::Spec->catfile($_, 'Biber', 'bcf.rng') } @INC;
+   #my $bcfpath = first { -f File::Spec->catfile($_, 'Biber', 'bcf.rng') } @INC;
     my $bcf_rng = File::Spec->catfile($biber_path, 'Biber', 'bcf.rng');
 
     if (-f $bcf_rng) {
-        $CFxmlschema = XML::LibXML::RelaxNG->new( location => $bcf_rng )
+      $CFxmlschema = XML::LibXML::RelaxNG->new( location => $bcf_rng )
     } else {
-        $logger->warn("Cannot find XML::LibXML::RelaxNG schema. Skipping validation : $!");
+      $logger->warn("Cannot find XML::LibXML::RelaxNG schema. Skipping validation : $!");
     }
 
     # basic parse and XInclude processing
@@ -771,17 +774,17 @@ sub parse_ctrlfile_v2 {
 
     # Validate against schema. Dies if it fails.
     if ($CFxmlschema) {
-        eval { $CFxmlschema->validate($CFxp) };
-        if (ref($@)) {
-            $logger->debug( $@->dump() );
-            $logger->logcroak("BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@");
-        }
-        elsif ($@) {
-            $logger->logcroak("BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@");
-        }
-        else {
-            $logger->info("BibLaTeX control file \"$ctrl_file.bcf\" validates");
-        }
+      eval { $CFxmlschema->validate($CFxp) };
+      if (ref($@)) {
+        $logger->debug( $@->dump() );
+        $logger->logcroak("BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@");
+      }
+      elsif ($@) {
+        $logger->logcroak("BibLaTeX control file \"$ctrl_file.bcf\" FAILED TO VALIDATE\n$@");
+      }
+      else {
+        $logger->info("BibLaTeX control file \"$ctrl_file.bcf\" validates");
+      }
     }
 
   }
@@ -798,15 +801,17 @@ sub parse_ctrlfile_v2 {
   my $controlversion = $bcfxml->{'version'};
   Biber::Config->setblxoption('controlversion', $controlversion);
   $logger->warn("Warning: You are using biblatex version $controlversion :
-        biber is more likely to work with version $BIBLATEX_VERSION.")
+biber is more likely to work with version $BIBLATEX_VERSION.")
     unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION;
 
-  # Look at control file and populate our main data structure with its information
+# Look at control file and populate our main data structure with its information
 
   # OPTIONS
   foreach my $bcfopts (@{$bcfxml->{options}}) {
+
     # Biber options
     if (lc($bcfopts->{component}) eq 'biber') {
+
       # Global options
       if (lc($bcfopts->{type}) eq 'global') {
         foreach my $bcfopt (@{$bcfopts->{option}}) {
@@ -815,14 +820,16 @@ sub parse_ctrlfile_v2 {
               Biber::Config->setoption($bcfopt->{key}, $bcfopt->{value});
             } elsif (lc($bcfopt->{type}) eq 'multivalued') {
               Biber::Config->setoption($bcfopt->{key},
-                                       [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ]);
+                [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ]);
             }
           }
         }
       }
     }
+
     # BibLaTeX options
     if (lc($bcfopts->{component}) eq 'biblatex') {
+
       # Global options
       if (lc($bcfopts->{type}) eq 'global') {
         foreach my $bcfopt (@{$bcfopts->{option}}) {
@@ -830,10 +837,11 @@ sub parse_ctrlfile_v2 {
             Biber::Config->setblxoption($bcfopt->{key}, $bcfopt->{value});
           } elsif (lc($bcfopt->{type}) eq 'multivalued') {
             Biber::Config->setblxoption($bcfopt->{key},
-                                        [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ]);
+              [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ]);
           }
         }
       }
+
       # Entrytype options
       else {
         my $entrytype = $bcfopts->{type};
@@ -842,14 +850,15 @@ sub parse_ctrlfile_v2 {
             Biber::Config->setblxoption($bcfopt->{key}, $bcfopt->{value}, 'PER_TYPE', $entrytype);
           } elsif (lc($bcfopt->{type}) eq 'multivalued') {
             Biber::Config->setblxoption($bcfopt->{key},
-                                        [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ],
-                                        'PER_TYPE',
-                                        $entrytype);
+              [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ],
+              'PER_TYPE',
+              $entrytype);
           }
         }
       }
     }
   }
+
   # SORTING schemes
   foreach my $sortschemes (@{$bcfxml->{sorting}}) {
     my $sorting_label = [];
@@ -885,26 +894,29 @@ sub parse_ctrlfile_v2 {
         if (defined($sortitem->{sort_direction})) { # Found sorting direction attribute
           $sortitemattributes->{sort_direction} = $sortitem->{sort_direction};
         }
-        # No pass specified, sortitem is included in both sort passes
-        # Note that we're cloning the sortitemattributes object so as not to have pointers
-        # from one structure to the other
+
+# No pass specified, sortitem is included in both sort passes
+# Note that we're cloning the sortitemattributes object so as not to have pointers
+# from one structure to the other
         if (lc($whichpass) eq 'both') {
           push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
           push @{$sortingitems_final}, {$sortitem->{content} => dclone($sortitemattributes)};
         }
+
         # "label" specified, sortitem is included only on "label" sort pass
         elsif (lc($whichpass) eq 'label') {
           push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
         }
+
         # "final" specified, sortitem is included only on "final" sort pass
         elsif (lc($whichpass) eq 'final') {
           push @{$sortingitems_final}, {$sortitem->{content} => $sortitemattributes};
         }
       }
 
-      # Only push a sortitem if defined. If the item has a conditional "pass"
-      # attribute, it may be ommitted in which case we don't want an empty array ref
-      # pushing
+  # Only push a sortitem if defined. If the item has a conditional "pass"
+  # attribute, it may be ommitted in which case we don't want an empty array ref
+  # pushing
       push @{$sorting_label}, $sortingitems_label if defined($sortingitems_label);
       push @{$sorting_final}, $sortingitems_final if defined($sortingitems_final);
     }
@@ -942,22 +954,23 @@ sub parse_ctrlfile_v2 {
 =cut
 
 sub parse_bibtex {
-    my ($self, $filename) = @_;
+  my ($self, $filename) = @_;
 
-    $logger->info("Processing bibtex file $filename");
+  $logger->info("Processing bibtex file $filename");
 
-    my @localkeys = ();
+  my @localkeys = ();
 
-    my $ufilename = "$filename.utf8";
+  my $ufilename = "$filename.utf8";
 
-    if ( not Biber::Config->getoption('unicodebib') and
-         Biber::Config->getoption('unicodebbl') ) {
-      require LaTeX::Decode;
-      require File::Slurp;
-      my $ubib = IO::File->new( $ufilename, ">:utf8" );
-      # $ubib->binmode(':utf8');
+  if ( not Biber::Config->getoption('unicodebib') and
+    Biber::Config->getoption('unicodebbl') ) {
+    require LaTeX::Decode;
+    require File::Slurp;
+    my $ubib = IO::File->new( $ufilename, ">:utf8" );
 
-      my $mode = "";
+    # $ubib->binmode(':utf8');
+
+    my $mode = "";
 
 #        if ( Biber::Config->getoption('bibencoding') ) {
 #            $mode = ':encoding(' . Biber::Config->getoption('bibencoding') . ')';
@@ -965,71 +978,70 @@ sub parse_bibtex {
 #            $mode = "";
 #        };
 
-        my $infile = IO::File->new( $filename, "<$mode" );
+    my $infile = IO::File->new( $filename, "<$mode" );
 
-        my $buf    = File::Slurp::read_file($infile)
-           or $logger->logcroak("Can't read $filename");
+    my $buf    = File::Slurp::read_file($infile)
+      or $logger->logcroak("Can't read $filename");
 
-        if ( Biber::Config->getoption('bibencoding') ) {
-            $buf = decode(Biber::Config->getoption('bibencoding'), $buf)
-        };
+    if ( Biber::Config->getoption('bibencoding') ) {
+      $buf = decode(Biber::Config->getoption('bibencoding'), $buf)
+    };
 
-        print $ubib LaTeX::Decode::latex_decode($buf)
-          or $logger->logcroak("Can't write to $ufilename : $!");
-        $ubib->close or $logger->logcroak("Can't close filehandle to $ufilename: $!");
+    print $ubib LaTeX::Decode::latex_decode($buf)
+      or $logger->logcroak("Can't write to $ufilename : $!");
+    $ubib->close or $logger->logcroak("Can't close filehandle to $ufilename: $!");
 
-        $filename  = $ufilename;
+    $filename  = $ufilename;
 
+    Biber::Config->setoption('unicodebib', 1);
+  }
 
-        Biber::Config->setoption('unicodebib', 1);
+  unless ( eval "require Text::BibTeX; 1" ) {
+    Biber::Config->setoption('useprd', 1);
+  }
+
+  unless ( Biber::Config->getoption('useprd') ) {
+
+    require Biber::BibTeX;
+    push @ISA, 'Biber::BibTeX';
+
+    @localkeys = $self->_text_bibtex_parse($filename);
+
+  }
+  else {
+
+    require Biber::BibTeX::PRD;
+    push @ISA, 'Biber::BibTeX::PRD';
+
+    $logger->info("Using a Parse::RecDescent parser...");
+
+    # we only add this warning if the bib file is larger than 20KB
+    if (-s $filename > 20000 ) {
+      $logger->warn("Note that it can be very slow with large bib files!\n",
+        "You are advised to install Text::BibTeX for faster processing!");
+    };
+
+    @localkeys = $self->_bibtex_prd_parse($filename);
+  }
+
+  unlink $ufilename if -f $ufilename;
+
+  if (Biber::Config->getoption('allentries')) {
+    map { Biber::Config->incrstate('seenkeys', $_) } @localkeys
+  }
+
+  my $bibentries = $self->bib;
+
+# if allentries, push all bibdata keys into citekeys (if they are not already there)
+# Can't just make citekeys = bibdata keys as this loses information about citekeys
+# that are missing data entries.
+  if (Biber::Config->getoption('allentries')) {
+    foreach my $bibkey ($bibentries->sorted_keys) {
+      $self->add_citekey($bibkey) unless $self->has_citekey($bibkey);
     }
+  }
 
-    unless ( eval "require Text::BibTeX; 1" ) {
-        Biber::Config->setoption('useprd', 1);
-    }
-
-    unless ( Biber::Config->getoption('useprd') ) {
-
-        require Biber::BibTeX;
-        push @ISA, 'Biber::BibTeX';
-
-        @localkeys = $self->_text_bibtex_parse($filename);
-
-    }
-    else {
-
-        require Biber::BibTeX::PRD;
-        push @ISA, 'Biber::BibTeX::PRD';
-
-        $logger->info("Using a Parse::RecDescent parser...");
-
-        # we only add this warning if the bib file is larger than 20KB
-        if (-s $filename > 20000 ) {
-            $logger->warn("Note that it can be very slow with large bib files!\n",
-                          "You are advised to install Text::BibTeX for faster processing!");
-        };
-
-        @localkeys = $self->_bibtex_prd_parse($filename);
-    }
-
-    unlink $ufilename if -f $ufilename;
-
-    if (Biber::Config->getoption('allentries')) {
-        map { Biber::Config->incrstate('seenkeys', $_) } @localkeys
-    }
-
-    my $bibentries = $self->bib;
-
-    # if allentries, push all bibdata keys into citekeys (if they are not already there)
-    # Can't just make citekeys = bibdata keys as this loses information about citekeys
-    # that are missing data entries.
-    if (Biber::Config->getoption('allentries')) {
-        foreach my $bibkey ($bibentries->sorted_keys) {
-            $self->add_citekey($bibkey) unless $self->has_citekey($bibkey);
-        }
-    }
-
-    return;
+  return;
 
 }
 
@@ -1045,10 +1057,10 @@ sub parse_bibtex {
 =cut
 
 sub parse_biblatexml {
-    my ($self, $xml) = @_;
-    require Biber::BibLaTeXML;
-    push @ISA, 'Biber::BibLaTeXML';
-    $self->_parse_biblatexml($xml);
+  my ($self, $xml) = @_;
+  require Biber::BibLaTeXML;
+  push @ISA, 'Biber::BibLaTeXML';
+  $self->_parse_biblatexml($xml);
 }
 
 =head2 process_crossrefs
@@ -1064,10 +1076,12 @@ sub process_crossrefs {
   my $self = shift;
   my $bibentries = $self->bib;
   $logger->debug("Processing crossrefs for keys:");
+
   #FIXME shouldn't we skip all entries that are of no use for the final output?
   foreach my $citekeyx (keys %{Biber::Config->getstate('entrieswithcrossref')}) {
     my $be = $bibentries->entry($citekeyx);
     $logger->debug("   * '$citekeyx'");
+
     # Canonicalise citekeyx and xref before using them
     $citekeyx = lc($citekeyx);
     my $xref = Biber::Config->getstate('entrieswithcrossref', $citekeyx);
@@ -1076,6 +1090,7 @@ sub process_crossrefs {
     my $bex = $bibentries->entry($xref);
 
     if ($type =~ /\Ain(proceedings|collection|book)\z/xms) {
+
       # inherit all that is undefined, except title etc
       foreach my $field ($bex->fields) {
         next if $field =~ /title/;
@@ -1083,6 +1098,7 @@ sub process_crossrefs {
           $be->set_field($field, $bex->get_field($field));
         }
       }
+
       # inherit title etc as booktitle etc
       $be->set_field('booktitle', $bex->get_field('title'));
       if ($bex->get_field('titleaddon')) {
@@ -1110,7 +1126,7 @@ sub process_crossrefs {
   # when writing the bbl output.
   foreach my $k ( keys %{Biber::Config->getstate('crossrefkeys')} ) {
     if ( $self->has_citekey($k) or
-         Biber::Config->getstate('crossrefkeys', $k) >= Biber::Config->getoption('mincrossrefs') ) {
+      Biber::Config->getstate('crossrefkeys', $k) >= Biber::Config->getoption('mincrossrefs') ) {
       $logger->debug("Removing unneeded crossrefkey $k");
       Biber::Config->delstate('crossrefkeys', $k);
     }
@@ -1129,17 +1145,18 @@ sub process_crossrefs {
 =cut
 
 sub process_sets {
-    my $self = shift;
-    $logger->debug("Processing entry sets");
-    foreach my $insetkey (keys %{Biber::Config->getstate('inset_entries')}) {
-        my $setkey = Biber::Config->getstate('inset_entries', $insetkey);
-        $logger->debug("  Found key $insetkey within set $setkey");
-        if (! $self->has_citekey($setkey) ) {
-            # add inset_entries to the array of citekeys
-            $logger->debug("  Adding inset entry '$insetkey' to the citekeys");
-            $self->add_citekey($insetkey); # FIXME add origkey thereof instead
-        }
+  my $self = shift;
+  $logger->debug("Processing entry sets");
+  foreach my $insetkey (keys %{Biber::Config->getstate('inset_entries')}) {
+    my $setkey = Biber::Config->getstate('inset_entries', $insetkey);
+    $logger->debug("  Found key $insetkey within set $setkey");
+    if (! $self->has_citekey($setkey) ) {
+
+      # add inset_entries to the array of citekeys
+      $logger->debug("  Adding inset entry '$insetkey' to the citekeys");
+      $self->add_citekey($insetkey); # FIXME add origkey thereof instead
     }
+  }
 }
 
 =head2 postprocess
@@ -1157,35 +1174,46 @@ sub postprocess {
   my $bibentries = $self->bib;
   foreach my $citekey ( $self->citekeys ) {
     unless ( $bibentries->entry_exists($citekey) ) {
-        $logger->warn("I didn't find a database entry for '$citekey'");
-        $self->{warnings}++;
-        next;
+      $logger->warn("I didn't find a database entry for '$citekey'");
+      $self->{warnings}++;
+      next;
     }
     my $bibentry = $bibentries->entry($citekey);
 
     push @foundkeys, $citekey;
     $bibentry->set_field('origkey', $citekey);
     $logger->debug("Postprocessing entry '$citekey'");
+
     # Postprocess dates
     $self->postprocess_dates($citekey);
+
     # set local options to override global options for individual entries
     $self->postprocess_set_local_opts($citekey);
+
     # post process "set" entries:
     $self->postprocess_sets($citekey);
+
     # generate labelname name
     $self->postprocess_labelname($citekey);
+
     # generate labelyear name
     $self->postprocess_labelyear($citekey);
+
     # generate namehash,fullhash and uniquenamecount
     $self->postprocess_hashes($citekey);
+
     # track author/year
     $self->postprocess_authoryear($citekey);
+
     # generate labelalpha information
     $self->postprocess_labelalpha($citekey);
+
     # track shorthands
     $self->postprocess_shorthands($citekey);
+
     # Set default type for patens entries
     $self->postprocess_patents($citekey);
+
     # first-pass sorting to generate basic labels
     $self->postprocess_sorting_firstpass($citekey);
   }
@@ -1258,7 +1286,7 @@ sub postprocess_dates {
       } else {
         $logger->warn("Invalid format of field '" . $datetype . 'date' . "' - ignoring field in entry '$citekey'");
         $self->{warnings}++;
-	$be->add_warning("Invalid format of field '" . $datetype . 'date' . "' - ignoring field");
+        $be->add_warning("Invalid format of field '" . $datetype . 'date' . "' - ignoring field");
         $be->del_field($datetype . 'date');
       }
     }
@@ -1269,12 +1297,14 @@ sub postprocess_dates {
   foreach my $dcf (@DATECOMPONENTFIELDS) {
     my $bad_format = '';
     if ($be->get_field($dcf)) {
+
       # months must be in right range
       if ($dcf =~ /\A$opt_dm month\z/xms) {
         unless ($be->get_field($dcf) >= 1 and $be->get_field($dcf) <= 12) {
           $bad_format = 1;
         }
       }
+
       # days must be in right range
       if ($dcf =~ /\A$opt_dm day\z/xms) {
         unless ($be->get_field($dcf) >= 1 and $be->get_field($dcf) <= 31) {
@@ -1284,7 +1314,7 @@ sub postprocess_dates {
       if ($bad_format) {
         $logger->warn("Value out bounds for field/date component '$dcf' - ignoring in entry '$citekey'");
         $self->{warnings}++;
-	$be->add_warning("Value out of bounds for field/date component '$dcf' - ignoring");
+        $be->add_warning("Value out of bounds for field/date component '$dcf' - ignoring");
         $be->del_field($dcf);
       }
     }
@@ -1311,6 +1341,7 @@ sub postprocess_set_local_opts {
       } elsif ( $2 and $2 eq "true" ) {
         Biber::Config->setblxoption($1, 1, 'PER_ENTRY', $citekey);
       }
+
       # labelname and labelyear are special and need to be array refs
       # They would not be specified as a list in an individual entry
       # since this would make no sense - in an individual entry,
@@ -1345,13 +1376,13 @@ sub postprocess_sets {
       $self->{warnings}++;
     }
     if ( $be->get_field('crossref')
-         and ( $be->get_field('crossref') ne $entrysetkeys[0] ) ) {
+      and ( $be->get_field('crossref') ne $entrysetkeys[0] ) ) {
 
       $logger->warn( "Problem with entry $citekey :\n"
-                     . "\tcrossref ("
-                     . $be->get_field('crossref')
-                     . ") should be identical to the first element of the entryset"
-                   );
+          . "\tcrossref ("
+          . $be->get_field('crossref')
+          . ") should be identical to the first element of the entryset"
+        );
       $self->{warnings}++;
       $be->set_field('crossref', $entrysetkeys[0]);
 
@@ -1386,7 +1417,7 @@ sub postprocess_labelname {
       $lnameopt = $ln;
     }
     if ($be->get_field($ln) and
-        Biber::Config->getblxoption("use$lnameopt", $be->get_field('entrytype'), $citekey ) ) {
+      Biber::Config->getblxoption("use$lnameopt", $be->get_field('entrytype'), $citekey ) ) {
       $be->set_field('labelnamename', $ln);
       last;
     }
@@ -1413,9 +1444,10 @@ sub postprocess_labelyear {
   my $lyearscheme = Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey);
 
   if ($lyearscheme) {
+
     # make sure we gave the correct data type:
     $logger->logcroak("Invalid value for option labelyear: $lyearscheme\n")
-        unless ref $lyearscheme eq 'ARRAY';
+      unless ref $lyearscheme eq 'ARRAY';
     foreach my $ly ( @{$lyearscheme} ) {
       if ($be->get_field($ly)) {
         $be->set_field('labelyearname', $ly);
@@ -1445,10 +1477,11 @@ sub postprocess_hashes {
   my $fullhash;
   my $nameid;
   my $nameinitid;
+
   # Sortname
   if ($be->get_field('sortname') and
-      (Biber::Config->getblxoption('useauthor', $bee, $citekey)
-       or Biber::Config->getblxoption('useeditor', $bee, $citekey))) {
+    (Biber::Config->getblxoption('useauthor', $bee, $citekey)
+      or Biber::Config->getblxoption('useeditor', $bee, $citekey))) {
     my $field = $be->get_field('sortname');
     $namehash = $self->_getnameinitials($citekey, $field);
     $fullhash = $self->_getallnameinitials($citekey, $field);
@@ -1457,9 +1490,10 @@ sub postprocess_hashes {
       $nameinitid = makenameinitid($field);
     }
   }
+
   # Author
   elsif (Biber::Config->getblxoption('useauthor', $bee, $citekey) and
-         $be->get_field('author') ) {
+    $be->get_field('author') ) {
     my $field = $be->get_field('author');
     $namehash = $self->_getnameinitials($citekey, $field);
     $fullhash = $self->_getallnameinitials( $citekey, $field );
@@ -1468,14 +1502,15 @@ sub postprocess_hashes {
       $nameinitid = makenameinitid($field);
     }
   }
+
   # Editor in collection/proceedings
   elsif (
-           (# keep this? FIXME
-            $bee =~ /^(collection|proceedings)/ and
-            Biber::Config->getblxoption('useeditor', $bee, $citekey)
-           )
-           and $be->get_field('editor')
-          ) {
+    (# keep this? FIXME
+      $bee =~ /^(collection|proceedings)/ and
+      Biber::Config->getblxoption('useeditor', $bee, $citekey)
+    )
+    and $be->get_field('editor')
+    ) {
     my $field = $be->get_field('editor');
     $namehash = $self->_getnameinitials($citekey, $field);
     $fullhash = $self->_getallnameinitials($citekey, $field);
@@ -1484,9 +1519,10 @@ sub postprocess_hashes {
       $nameinitid = makenameinitid($field)
     }
   }
+
   # Translator
   elsif ( Biber::Config->getblxoption('usetranslator', $bee, $citekey) and
-          $be->get_field('translator')) {
+    $be->get_field('translator')) {
     my $field = $be->get_field('translator');
     $namehash = $self->_getnameinitials($citekey, $field);
     $fullhash = $self->_getallnameinitials($citekey, $field);
@@ -1495,6 +1531,7 @@ sub postprocess_hashes {
       $nameinitid = makenameinitid($field);
     }
   }
+
   # initials of title
   else {
     if ($be->get_field('sorttitle')) {
@@ -1553,8 +1590,8 @@ sub postprocess_hashes {
     }
 
     if ($lname and
-        Biber::Config->getblxoption('uniquename', $bee, $citekey) and
-        $singlename == 1 ) {
+      Biber::Config->getblxoption('uniquename', $bee, $citekey) and
+      $singlename == 1 ) {
       if ( not Biber::Config->getstate('uniquenamecount', $lastname, $namehash) ) {
         if ( Biber::Config->getstate('uniquenamecount', $lastname) ) {
           Biber::Config->setstate('uniquenamecount', $lastname, $namehash, 1);
@@ -1594,7 +1631,7 @@ sub postprocess_authoryear {
   my $be = $bibentries->entry($citekey);
   my $tmp =
     $self->_getnamestring($citekey) . "0"
-      . $self->_getyearstring($citekey);
+    . $self->_getyearstring($citekey);
   Biber::Config->incrstate('seenauthoryear', $tmp);
   $be->set_field('authoryear', $tmp);
 }
@@ -1618,18 +1655,18 @@ sub postprocess_labelalpha {
       $sortlabel = $label = $be->get_field('shorthand');
     } else {
       if ( $be->get_field('label') ) {
-	$sortlabel = $label = $be->get_field('label');
+        $sortlabel = $label = $be->get_field('label');
       } elsif ( $be->get_field('labelnamename') and $be->get_field($be->get_field('labelnamename'))) {
-	( $label, $sortlabel ) =
-	  @{ $self->_getlabel( $citekey, $be->get_field('labelnamename') ) };
+        ( $label, $sortlabel ) =
+          @{ $self->_getlabel( $citekey, $be->get_field('labelnamename') ) };
       } else {
-	$sortlabel = $label = '';
+        $sortlabel = $label = '';
       }
       my $yr;
       if ( $be->get_field('year') ) {
-	$yr = substr $be->get_field('year'), 2, 2;
+        $yr = substr $be->get_field('year'), 2, 2;
       } else {
-	$yr = '00';
+        $yr = '00';
       }
       $label     .= $yr;
       $sortlabel .= $yr;
@@ -1685,7 +1722,6 @@ sub postprocess_sorting_firstpass {
   $self->_generatesortstring( $citekey, Biber::Config->getblxoption('sorting_label', $be->get_field('entrytype'), $citekey));
 }
 
-
 =head2 generate_final_sortinfo
 
     Generate:
@@ -1733,7 +1769,6 @@ sub sortentries {
   my $bibentries = $self->bib;
   my @auxcitekeys = $self->citekeys;
 
-
   if ( Biber::Config->getoption('fastsort') ) {
     if (Biber::Config->getoption('locale')) {
       my $thislocale = Biber::Config->getoption('locale');
@@ -1745,19 +1780,19 @@ sub sortentries {
     }
     @auxcitekeys = sort {
       $bibentries->entry($a)->get_field('sortstring') cmp $bibentries->entry($b)->get_field('sortstring')
-    } @auxcitekeys;
+      } @auxcitekeys;
   } else {
     require Unicode::Collate;
     my $collopts = Biber::Config->getoption('collate_options');
     my $Collator = Unicode::Collate->new( $collopts )
-        or $logger->logcarp("Problem with Unicode::Collate options: $@");
+      or $logger->logcarp("Problem with Unicode::Collate options: $@");
     my $UCAversion = $Collator->version();
     my $opts = Data::Dump->dump($collopts);
     $logger->info("Sorting with Unicode::Collate ($opts, UCA version: $UCAversion)");
     @auxcitekeys = sort {
       $Collator->cmp( $bibentries->entry($a)->get_field('sortstring'),
-                      $bibentries->entry($b)->get_field('sortstring') )
-    } @auxcitekeys;
+        $bibentries->entry($b)->get_field('sortstring') )
+      } @auxcitekeys;
   }
   $self->{citekeys} = [ @auxcitekeys ];
 
@@ -1795,8 +1830,8 @@ sub sortshorthands {
     $logger->info("Sorting with Unicode::Collate ($opts, UCA version: $UCAversion)");
     @auxshorthands = sort {
       $Collator->cmp($bibentries->entry($a)->get_field('shorthand'),
-		     $bibentries->entry($b)->get_field('shorthand'))
-    } @auxshorthands;
+        $bibentries->entry($b)->get_field('shorthand'))
+      } @auxshorthands;
   }
   $self->{shorthands} = [ @auxshorthands ];
 
@@ -1812,15 +1847,16 @@ sub sortshorthands {
 =cut
 
 sub prepare {
-    my $self = shift;
-    Biber::Config->_init;
-    #$self->process_sets; # to push the inset keys to the stack of citekeys
-    $self->process_crossrefs;
-    $self->postprocess; # in here we generate the label sort string
-    $self->sortentries; # then we do a label sort pass
-    $self->generate_final_sortinfo; # in here we generate the final sort string
-    $self->sortentries; # and then we do a final sort pass
-    return;
+  my $self = shift;
+  Biber::Config->_init;
+
+  #$self->process_sets; # to push the inset keys to the stack of citekeys
+  $self->process_crossrefs;
+  $self->postprocess; # in here we generate the label sort string
+  $self->sortentries; # then we do a label sort pass
+  $self->generate_final_sortinfo; # in here we generate the final sort string
+  $self->sortentries; # and then we do a final sort pass
+  return;
 }
 
 =head2 create_bbl_string
@@ -1834,9 +1870,9 @@ sub prepare {
 =cut
 
 sub create_bbl_string {
-    my $self = shift;
-    my $BBL = ${$self->create_bbl_string_head} . ${$self->create_bbl_string_body};
-    return \$BBL;
+  my $self = shift;
+  my $BBL = ${$self->create_bbl_string_head} . ${$self->create_bbl_string_body};
+  return \$BBL;
 }
 
 =head2 create_bbl_string_head
@@ -1848,9 +1884,9 @@ sub create_bbl_string {
 =cut
 
 sub create_bbl_string_head {
-    my $self = shift;
-    my $ctrlver = Biber::Config->getblxoption('controlversion');
-    my $BBL = <<"EOF";
+  my $self = shift;
+  my $ctrlver = Biber::Config->getblxoption('controlversion');
+  my $BBL = <<"EOF";
 % \$ biblatex auxiliary file \$
 % \$ biblatex version $ctrlver \$
 % \$ biber version $VERSION \$
@@ -1871,7 +1907,7 @@ sub create_bbl_string_head {
 \\endgroup
 
 EOF
-    return \$BBL;
+  return \$BBL;
 }
 
 =head2 create_bbl_string_body
@@ -1884,40 +1920,39 @@ EOF
 =cut
 
 sub create_bbl_string_body {
-    my $self = shift;
-    my @auxcitekeys = $self->citekeys;
-    my $BBL = '';
+  my $self = shift;
+  my @auxcitekeys = $self->citekeys;
+  my $BBL = '';
 
-    $BBL .= "\\preamble{%\n" . $self->{preamble} . "%\n}\n"
-        if $self->{preamble};
+  $BBL .= "\\preamble{%\n" . $self->{preamble} . "%\n}\n"
+    if $self->{preamble};
 
-    # We rely on the order of this array for the order of the .bbl
-    # and therefore the .bib
-    foreach my $k (@auxcitekeys) {
-        ## skip crossrefkeys (those that are directly cited or
-        #  crossref'd >= mincrossrefs were previously removed)
-        #  EXCEPT those that are also in a set
-        next if ( Biber::Config->getstate('crossrefkeys', $k) and
-            not Biber::Config->getstate('inset_entries', $k) );
-        $BBL .= $self->_print_biblatex_entry($k);
+  # We rely on the order of this array for the order of the .bbl
+  # and therefore the .bib
+  foreach my $k (@auxcitekeys) {
+    ## skip crossrefkeys (those that are directly cited or
+    #  crossref'd >= mincrossrefs were previously removed)
+    #  EXCEPT those that are also in a set
+    next if ( Biber::Config->getstate('crossrefkeys', $k) and
+      not Biber::Config->getstate('inset_entries', $k) );
+    $BBL .= $self->_print_biblatex_entry($k);
+  }
+  if ( Biber::Config->getoption('sortlos') and $self->shorthands ) {
+    $self->sortshorthands;
+    $BBL .= "\\lossort\n";
+    foreach my $sh ($self->shorthands) {
+      $BBL .= "  \\key{$sh}\n";
     }
-    if ( Biber::Config->getoption('sortlos') and $self->shorthands ) {
-        $self->sortshorthands;
-        $BBL .= "\\lossort\n";
-        foreach my $sh ($self->shorthands) {
-            $BBL .= "  \\key{$sh}\n";
-        }
-        $BBL .= "\\endlossort\n";
-    }
-    $BBL .= "\\endinput\n\n";
+    $BBL .= "\\endlossort\n";
+  }
+  $BBL .= "\\endinput\n\n";
 
 #    if ( Biber::Config->getoption('bibencoding') and ! Biber::Config->getoption('unicodebbl') ) {
 #        $BBL = encode(Biber::Config->getoption('bibencoding'), $BBL)
 #    };
 
-    return \$BBL;
+  return \$BBL;
 }
-
 
 =head2 output_to_bbl
 
@@ -1928,31 +1963,30 @@ sub create_bbl_string_body {
 =cut
 
 sub output_to_bbl {
-    my $self = shift;
-    my $bblstring = shift;
-    my $bblfile = shift;
+  my $self = shift;
+  my $bblstring = shift;
+  my $bblfile = shift;
 
-    $logger->debug("Preparing final output...");
+  $logger->debug("Preparing final output...");
 
-    my $mode;
+  my $mode;
 
-    if ( Biber::Config->getoption('bibencoding') and ! Biber::Config->getoption('unicodebbl') ) {
-      $mode = ':encoding(' . Biber::Config->getoption('bibencoding') . ')';
-    } else {
-      $mode = ":utf8";
-    }
+  if ( Biber::Config->getoption('bibencoding') and ! Biber::Config->getoption('unicodebbl') ) {
+    $mode = ':encoding(' . Biber::Config->getoption('bibencoding') . ')';
+  } else {
+    $mode = ":utf8";
+  }
 
-    my $BBLFILE = IO::File->new($bblfile, ">$mode")
-      or $logger->logcroak("Failed to open $bblfile : $!");
+  my $BBLFILE = IO::File->new($bblfile, ">$mode")
+    or $logger->logcroak("Failed to open $bblfile : $!");
 
-    # $BBLFILE->binmode(':utf8') if Biber::Config->getoption('unicodebbl');
+  # $BBLFILE->binmode(':utf8') if Biber::Config->getoption('unicodebbl');
 
-    print $BBLFILE $$bblstring or $logger->logcroak("Failure to write to $bblfile: $!");
-    $logger->info("Output to $bblfile");
-    close $BBLFILE or $logger->logcroak("Failure to close $bblfile: $!");
-    return;
+  print $BBLFILE $$bblstring or $logger->logcroak("Failure to write to $bblfile: $!");
+  $logger->info("Output to $bblfile");
+  close $BBLFILE or $logger->logcroak("Failure to close $bblfile: $!");
+  return;
 }
-
 
 =head2 _filedump and _stringdump
 
@@ -1961,16 +1995,16 @@ sub output_to_bbl {
 =cut
 
 sub _filedump {
-    my ($self, $file) = @_;
-    my $fh = IO::File->new($file, '>') or croak "Can't open file $file for writing";
-    print $fh Data::Dump::pp($self);
-    close $fh;
-    return
+  my ($self, $file) = @_;
+  my $fh = IO::File->new($file, '>') or croak "Can't open file $file for writing";
+  print $fh Data::Dump::pp($self);
+  close $fh;
+  return
 }
 
 sub _stringdump {
-    my $self = shift ;
-    return Data::Dump::pp($self);
+  my $self = shift ;
+  return Data::Dump::pp($self);
 }
 
 =head1 AUTHORS
@@ -2004,4 +2038,4 @@ later version, or
 
 1;
 
-# vim: set tabstop=4 shiftwidth=4 expandtab:
+# vim: set tabstop=2 shiftwidth=2 expandtab:

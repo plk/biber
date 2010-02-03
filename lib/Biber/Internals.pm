@@ -24,66 +24,65 @@ Biber::Internals - Internal methods for processing the bibliographic data
 my $logger = Log::Log4perl::get_logger('main');
 
 sub _getnameinitials {
-    my ($self, $citekey, $names) = @_;
-    my $initstr = '';
-    my $bibentries = $self->bib;
-    my $be = $bibentries->entry($citekey);
-    ## my $nodecodeflag = $self->_decode_or_not($citekey);
+  my ($self, $citekey, $names) = @_;
+  my $initstr = '';
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  ## my $nodecodeflag = $self->_decode_or_not($citekey);
 
-    if ( $names->count_names <= Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey ) ) {    # 1 to maxname names
-        foreach my $n (@{$names->names}) {
-            if ( $n->get_prefix and
-                 Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-                $initstr .= terseinitials( $n->get_prefix )
-            }
-            $initstr .= terseinitials( $n->get_lastname );
+  if ( $names->count_names <= Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey ) ) {    # 1 to maxname names
+    foreach my $n (@{$names->names}) {
+      if ( $n->get_prefix and
+        Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+        $initstr .= terseinitials( $n->get_prefix )
+      }
+      $initstr .= terseinitials( $n->get_lastname );
 
-            #FIXME suffix ?
-            if ( $n->get_firstname ) {
-                $initstr .= terseinitials( $n->get_firstname )
-            }
-        }
+      #FIXME suffix ?
+      if ( $n->get_firstname ) {
+        $initstr .= terseinitials( $n->get_firstname )
+      }
     }
-    else
-    { # more than maxname names: only take initials of first getblxoption('minnames', $citekey)
-        foreach my $i ( 1 .. Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey ) ) {
-            if ( $names->nth_name($i)->get_prefix and
-                 Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey) ) {
-                $initstr .= terseinitials( $names->nth_name($i)->get_prefix );
-            }
-            my $tmp = $names->nth_name($i)->get_lastname;
+  }
+  else
+  { # more than maxname names: only take initials of first getblxoption('minnames', $citekey)
+    foreach my $i ( 1 .. Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey ) ) {
+      if ( $names->nth_name($i)->get_prefix and
+        Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey) ) {
+        $initstr .= terseinitials( $names->nth_name($i)->get_prefix );
+      }
+      my $tmp = $names->nth_name($i)->get_lastname;
 
-            #FIXME suffix ?
-            $initstr .= terseinitials($tmp);
-            if ( $names->nth_name($i)->get_firstname ) {
-                $tmp = $names->nth_name($i)->get_firstname;
-                $initstr .= terseinitials($tmp);
-            }
-            $initstr .= "+";
-        }
+      #FIXME suffix ?
+      $initstr .= terseinitials($tmp);
+      if ( $names->nth_name($i)->get_firstname ) {
+        $tmp = $names->nth_name($i)->get_firstname;
+        $initstr .= terseinitials($tmp);
+      }
+      $initstr .= "+";
     }
-    return $initstr;
+  }
+  return $initstr;
 }
 
-
 sub _getallnameinitials {
-    my ($self, $citekey, $names) = @_;
-    my $initstr = '';
-    my $bibentries = $self->bib;
-    my $be = $bibentries->entry($citekey);
-    foreach my $n (@{$names->names}) {
-        if ( $n->get_prefix and
-             Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-            $initstr .= terseinitials( $n->get_prefix )
-        }
-        $initstr .= terseinitials( $n->get_lastname );
-
-        #FIXME suffix ?
-        if ( $n->get_firstname ) {
-            $initstr .= terseinitials( $n->get_firstname );
-        }
+  my ($self, $citekey, $names) = @_;
+  my $initstr = '';
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  foreach my $n (@{$names->names}) {
+    if ( $n->get_prefix and
+      Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+      $initstr .= terseinitials( $n->get_prefix )
     }
-    return $initstr;
+    $initstr .= terseinitials( $n->get_lastname );
+
+    #FIXME suffix ?
+    if ( $n->get_firstname ) {
+      $initstr .= terseinitials( $n->get_firstname );
+    }
+  }
+  return $initstr;
 }
 
 sub _getlabel {
@@ -111,7 +110,7 @@ sub _getlabel {
   my $nametrunc;
   my $loopnames;
 
-  # loopnames is the number of names to loop over in the name list when constructing the label
+# loopnames is the number of names to loop over in the name list when constructing the label
   if ($morenames or ($numnames > $maxnames)) {
     $nametrunc = 1;
     $loopnames = $minnames; # Only look at $minnames names if we are truncating ...
@@ -119,16 +118,16 @@ sub _getlabel {
     $loopnames = $numnames; # ... otherwise look at all names
   }
 
-  # Now loop over the name list, grabbing a substring of each surname
-  # The substring length depends on whether we are using prefices and also whether
-  # we have truncated to one name:
-  #   1. If there is only one name
-  #      1. label string is first 3 chars of surname if there is no prefix
-  #      2. label string is first char of prefix plus first 2 chars of surname if there is a prefix
-  #   2. If there is more than one name
-  #      1.  label string is first char of each surname (up to minnames) if there is no prefix
-  #      2.  label string is first char of prefix plus first char of each surname (up to minnames)
-  #          if there is a prefix
+# Now loop over the name list, grabbing a substring of each surname
+# The substring length depends on whether we are using prefices and also whether
+# we have truncated to one name:
+#   1. If there is only one name
+#      1. label string is first 3 chars of surname if there is no prefix
+#      2. label string is first char of prefix plus first 2 chars of surname if there is a prefix
+#   2. If there is more than one name
+#      1.  label string is first char of each surname (up to minnames) if there is no prefix
+#      2.  label string is first char of prefix plus first char of each surname (up to minnames)
+#          if there is a prefix
   for (my $i=0; $i<$loopnames; $i++) {
     $label .= substr($prefices[$i] , 0, 1) if ($useprefix and $prefices[$i]);
     $label .= substr($lastnames[$i], 0, $loopnames == 1 ? (($useprefix and $prefices[$i]) ? 2 : 3) : 1);
@@ -145,7 +144,6 @@ sub _getlabel {
   return [$label, $sortlabel];
 }
 
-
 #########
 # Sorting
 #########
@@ -157,67 +155,66 @@ our $sorting_sep = '0';
 # a pointer to extra arguments to the code. This is to make code re-use possible
 # so the sorting can share code for similar things.
 our $dispatch_sorting = {
-             '0000'          =>  [\&_sort_0000,          []],
-             '9999'          =>  [\&_sort_9999,          []],
-             'address'       =>  [\&_sort_place,         ['place']],
-             'author'        =>  [\&_sort_author,        []],
-             'citeorder'     =>  [\&_sort_citeorder,     []],
-             'day'           =>  [\&_sort_dm,            ['day']],
-             'debug'         =>  [\&_sort_debug,         []],
-             'editor'        =>  [\&_sort_editor,        ['editor']],
-             'editora'       =>  [\&_sort_editor,        ['editora']],
-             'editoraclass'  =>  [\&_sort_editortc,      ['editoraclass']],
-             'editoratype'   =>  [\&_sort_editortc,      ['editoratype']],
-             'editorb'       =>  [\&_sort_editor,        ['editorb']],
-             'editorbclass'  =>  [\&_sort_editortc,      ['editorbclass']],
-             'editorbtype'   =>  [\&_sort_editortc,      ['editorbtype']],
-             'editorc'       =>  [\&_sort_editor,        ['editorc']],
-             'editorcclass'  =>  [\&_sort_editortc,      ['editorcclass']],
-             'editorctype'   =>  [\&_sort_editortc,      ['editorctype']],
-             'endday'        =>  [\&_sort_dm,            ['endday']],
-             'endmonth'      =>  [\&_sort_dm,            ['endmonth']],
-             'endyear'       =>  [\&_sort_year,          ['endyear']],
-             'eventday'      =>  [\&_sort_dm,            ['eventday']],
-             'eventendday'   =>  [\&_sort_dm,            ['eventendday']],
-             'eventendmonth' =>  [\&_sort_dm,            ['eventendmonth']],
-             'eventendyear'  =>  [\&_sort_year,          ['eventendyear']],
-             'eventmonth'    =>  [\&_sort_dm,            ['eventmonth']],
-             'eventyear'     =>  [\&_sort_year,          ['eventyear']],
-             'extraalpha'    =>  [\&_sort_extraalpha,    []],
-             'issuetitle'    =>  [\&_sort_issuetitle,    []],
-             'institution'   =>  [\&_sort_place,         ['institution']],
-             'journal'       =>  [\&_sort_journal,       []],
-             'labelalpha'    =>  [\&_sort_labelalpha,    []],
-             'location'      =>  [\&_sort_place,         ['location']],
-             'mm'            =>  [\&_sort_mm,            []],
-             'month'         =>  [\&_sort_dm,            ['month']],
-             'origday'       =>  [\&_sort_dm,            ['origday']],
-             'origendday'    =>  [\&_sort_dm,            ['origendday']],
-             'origendmonth'  =>  [\&_sort_dm,            ['origendmonth']],
-             'origendyear'   =>  [\&_sort_year,          ['origendyear']],
-             'origmonth'     =>  [\&_sort_dm,            ['origmonth']],
-             'origyear'      =>  [\&_sort_year,          ['origyear']],
-             'organization'  =>  [\&_sort_place,         ['organization']],
-             'presort'       =>  [\&_sort_presort,       []],
-             'publisher'     =>  [\&_sort_publisher,     []],
-             'pubstate'      =>  [\&_sort_pubstate,      []],
-             'school'        =>  [\&_sort_place,         ['school']],
-             'sortkey'       =>  [\&_sort_sortkey,       []],
-             'sortname'      =>  [\&_sort_sortname,      []],
-             'sorttitle'     =>  [\&_sort_title,         ['sorttitle']],
-             'sortyear'      =>  [\&_sort_year,          ['sortyear']],
-             'title'         =>  [\&_sort_title,         ['title']],
-             'translator'    =>  [\&_sort_translator,    []],
-             'urlday'        =>  [\&_sort_dm,            ['urlday']],
-             'urlendday'     =>  [\&_sort_dm,            ['urlendday']],
-             'urlendmonth'   =>  [\&_sort_dm,            ['urlendmonth']],
-             'urlendyear'    =>  [\&_sort_year,          ['urlendyear']],
-             'urlmonth'      =>  [\&_sort_dm,            ['urlmonth']],
-             'urlyear'       =>  [\&_sort_year,          ['urlyear']],
-             'volume'        =>  [\&_sort_volume,        []],
-             'year'          =>  [\&_sort_year,          ['year']],
-};
-
+  '0000'          =>  [\&_sort_0000,          []],
+  '9999'          =>  [\&_sort_9999,          []],
+  'address'       =>  [\&_sort_place,         ['place']],
+  'author'        =>  [\&_sort_author,        []],
+  'citeorder'     =>  [\&_sort_citeorder,     []],
+  'day'           =>  [\&_sort_dm,            ['day']],
+  'debug'         =>  [\&_sort_debug,         []],
+  'editor'        =>  [\&_sort_editor,        ['editor']],
+  'editora'       =>  [\&_sort_editor,        ['editora']],
+  'editoraclass'  =>  [\&_sort_editortc,      ['editoraclass']],
+  'editoratype'   =>  [\&_sort_editortc,      ['editoratype']],
+  'editorb'       =>  [\&_sort_editor,        ['editorb']],
+  'editorbclass'  =>  [\&_sort_editortc,      ['editorbclass']],
+  'editorbtype'   =>  [\&_sort_editortc,      ['editorbtype']],
+  'editorc'       =>  [\&_sort_editor,        ['editorc']],
+  'editorcclass'  =>  [\&_sort_editortc,      ['editorcclass']],
+  'editorctype'   =>  [\&_sort_editortc,      ['editorctype']],
+  'endday'        =>  [\&_sort_dm,            ['endday']],
+  'endmonth'      =>  [\&_sort_dm,            ['endmonth']],
+  'endyear'       =>  [\&_sort_year,          ['endyear']],
+  'eventday'      =>  [\&_sort_dm,            ['eventday']],
+  'eventendday'   =>  [\&_sort_dm,            ['eventendday']],
+  'eventendmonth' =>  [\&_sort_dm,            ['eventendmonth']],
+  'eventendyear'  =>  [\&_sort_year,          ['eventendyear']],
+  'eventmonth'    =>  [\&_sort_dm,            ['eventmonth']],
+  'eventyear'     =>  [\&_sort_year,          ['eventyear']],
+  'extraalpha'    =>  [\&_sort_extraalpha,    []],
+  'issuetitle'    =>  [\&_sort_issuetitle,    []],
+  'institution'   =>  [\&_sort_place,         ['institution']],
+  'journal'       =>  [\&_sort_journal,       []],
+  'labelalpha'    =>  [\&_sort_labelalpha,    []],
+  'location'      =>  [\&_sort_place,         ['location']],
+  'mm'            =>  [\&_sort_mm,            []],
+  'month'         =>  [\&_sort_dm,            ['month']],
+  'origday'       =>  [\&_sort_dm,            ['origday']],
+  'origendday'    =>  [\&_sort_dm,            ['origendday']],
+  'origendmonth'  =>  [\&_sort_dm,            ['origendmonth']],
+  'origendyear'   =>  [\&_sort_year,          ['origendyear']],
+  'origmonth'     =>  [\&_sort_dm,            ['origmonth']],
+  'origyear'      =>  [\&_sort_year,          ['origyear']],
+  'organization'  =>  [\&_sort_place,         ['organization']],
+  'presort'       =>  [\&_sort_presort,       []],
+  'publisher'     =>  [\&_sort_publisher,     []],
+  'pubstate'      =>  [\&_sort_pubstate,      []],
+  'school'        =>  [\&_sort_place,         ['school']],
+  'sortkey'       =>  [\&_sort_sortkey,       []],
+  'sortname'      =>  [\&_sort_sortname,      []],
+  'sorttitle'     =>  [\&_sort_title,         ['sorttitle']],
+  'sortyear'      =>  [\&_sort_year,          ['sortyear']],
+  'title'         =>  [\&_sort_title,         ['title']],
+  'translator'    =>  [\&_sort_translator,    []],
+  'urlday'        =>  [\&_sort_dm,            ['urlday']],
+  'urlendday'     =>  [\&_sort_dm,            ['urlendday']],
+  'urlendmonth'   =>  [\&_sort_dm,            ['urlendmonth']],
+  'urlendyear'    =>  [\&_sort_year,          ['urlendyear']],
+  'urlmonth'      =>  [\&_sort_dm,            ['urlmonth']],
+  'urlyear'       =>  [\&_sort_year,          ['urlyear']],
+  'volume'        =>  [\&_sort_volume,        []],
+  'year'          =>  [\&_sort_year,          ['year']],
+  };
 
 # Main sorting dispatch method
 sub _dispatch_sorting {
@@ -236,12 +233,13 @@ sub _generatesortstring {
     $BIBER_SORT_FINAL = 0; # reset sorting short-circuit
     $sortstring .= $self->_sortset($sortset, $citekey);
 
-    # Only append sorting separator if this isn't a null sort string element
-    # Put another way, null elements should be completely ignored and no seperator
-    # added
+  # Only append sorting separator if this isn't a null sort string element
+  # Put another way, null elements should be completely ignored and no seperator
+  # added
     unless ($BIBER_SORT_NULL) {
       $sortstring .= $sorting_sep;
     }
+
     # Stop here if this sort element is specified as "final" and it's non-null
     if ($BIBER_SORT_FINAL and not $BIBER_SORT_NULL) {
       last;
@@ -287,7 +285,7 @@ sub _sort_author {
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
   if (Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey) and
-      $be->get_field('author')) {
+    $be->get_field('author')) {
     return $self->_namestring($citekey, 'author');
   }
   else {
@@ -343,7 +341,7 @@ sub _sort_editor {
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
   if (Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) and
-      $be->get_field($ed)) {
+    $be->get_field($ed)) {
     return $self->_namestring($citekey, $ed);
   }
   else {
@@ -360,7 +358,7 @@ sub _sort_editortc {
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
   if (Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) and
-      $be->get_field($edtypeclass)) {
+    $be->get_field($edtypeclass)) {
     return $be->get_field($edtypeclass);
   }
   else {
@@ -376,7 +374,7 @@ sub _sort_extraalpha {
   my $default_pad_side = 'left';
   my $default_pad_char = '0';
   if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) and
-      $be->get_field('extraalpha')) {
+    $be->get_field('extraalpha')) {
     my $pad_width = ($sortelementattributes->{pad_width} or $default_pad_width);
     my $pad_side = ($sortelementattributes->{pad_side} or $default_pad_side);
     my $pad_char = ($sortelementattributes->{pad_char} or $default_pad_char);
@@ -492,11 +490,12 @@ sub _sort_sortname {
   my ($self, $citekey, $sortelementattributes) = @_;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
-  # see biblatex manual §3.4 - sortname is ignored if no use<name> option is defined
+
+# see biblatex manual §3.4 - sortname is ignored if no use<name> option is defined
   if ($be->get_field('sortname') and
-      (Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey) or
-       Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) or
-       Biber::Config->getblxoption('useetranslator', $be->get_field('entrytype'), $citekey))) {
+    (Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey) or
+      Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) or
+      Biber::Config->getblxoption('useetranslator', $be->get_field('entrytype'), $citekey))) {
     return $self->_namestring($citekey, 'sortname');
   }
   else {
@@ -525,7 +524,7 @@ sub _sort_translator {
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
   if (Biber::Config->getblxoption('usetranslator', $be->get_field('entrytype'), $citekey) and
-                   $be->get_field('translator')) {
+    $be->get_field('translator')) {
     return $self->_namestring($citekey, 'translator');
   }
   else {
@@ -556,6 +555,7 @@ sub _sort_volume {
     return '';
   }
 }
+
 # This is a meta-sub which uses the optional arguments to the dispatch code
 # It's done to avoid having many repetitions of almost identical sorting code
 # for the many date sorting options
@@ -596,8 +596,8 @@ sub _nodecode {
   my ($self, $citekey) = @_;
   my $be = $self->bibentry($citekey);
   my $no_decode = (Biber::Config->getoption('unicodebib') or
-                   Biber::Config->getoption('fastsort') or
-                   $be->get_field('datatype') eq 'xml');
+      Biber::Config->getoption('fastsort') or
+      $be->get_field('datatype') eq 'xml');
   return $no_decode;
 }
 
@@ -645,7 +645,7 @@ sub _namestring {
   foreach my $n ( @{$truncnames->names} ) {
     $str .= $n->get_prefix . '2'
       if ( $n->get_prefix and
-           Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) );
+      Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) );
     $str .= strip_nosort($n->get_lastname) . '2';
     $str .= strip_nosort($n->get_firstname) . '2' if $n->get_firstname;
     $str .= $n->get_suffix if $n->get_suffix;
@@ -667,6 +667,7 @@ sub _liststring {
   my @items = @{$be->get_field($field)};
   my $str = '';
   my $truncated = 0;
+
   # perform truncation according to options minitems, maxitems
   if ( $#items + 1 > Biber::Config->getblxoption('maxitems', $be->get_field('entrytype'), $citekey) ) {
     $truncated = 1;
@@ -684,261 +685,260 @@ sub _liststring {
   return $str;
 }
 
-
 #=====================================================
 # OUTPUT SUBS
 #=====================================================
 
 sub _printfield {
-    my ($self, $field, $str) = @_;
-    $str = latexescape($str);
+  my ($self, $field, $str) = @_;
+  $str = latexescape($str);
 
-    if (Biber::Config->getoption('wraplines')) {
-        ## 12 is the length of '  \field{}{}'
-        if ( 12 + length($field) + length($str) > 2*$Text::Wrap::columns ) {
-            return "  \\field{$field}{%\n" . wrap('  ', '  ', $str) . "%\n  }\n";
-        }
-        elsif ( 12 + length($field) + length($str) > $Text::Wrap::columns ) {
-            return wrap('  ', '  ', "\\field{$field}{$str}" ) . "\n";
-        }
-        else {
-            return "  \\field{$field}{$str}\n";
-        }
+  if (Biber::Config->getoption('wraplines')) {
+    ## 12 is the length of '  \field{}{}'
+    if ( 12 + length($field) + length($str) > 2*$Text::Wrap::columns ) {
+      return "  \\field{$field}{%\n" . wrap('  ', '  ', $str) . "%\n  }\n";
     }
-     else {
-       return "  \\field{$field}{$str}\n";
+    elsif ( 12 + length($field) + length($str) > $Text::Wrap::columns ) {
+      return wrap('  ', '  ', "\\field{$field}{$str}" ) . "\n";
     }
+    else {
+      return "  \\field{$field}{$str}\n";
+    }
+  }
+  else {
+    return "  \\field{$field}{$str}\n";
+  }
 }
 
 sub _print_biblatex_entry {
-    my ($self, $citekey) = @_;
-    my $be = $self->bibentry($citekey)
-        or $logger->logcroak("Cannot find $citekey");
-    my $opts    = '';
-    my $origkey = $citekey;
-    if ( $be->get_field('origkey') ) {
-        $origkey = $be->get_field('origkey');
+  my ($self, $citekey) = @_;
+  my $be = $self->bibentry($citekey)
+    or $logger->logcroak("Cannot find $citekey");
+  my $opts    = '';
+  my $origkey = $citekey;
+  if ( $be->get_field('origkey') ) {
+    $origkey = $be->get_field('origkey');
+  }
+
+  if ( is_def_and_notnull($be->get_field('options')) ) {
+    $opts = $be->get_field('options');
+  }
+
+  my $str = "";
+
+  $str .= "% sortstring = " . $be->get_field('sortstring') . "\n"
+    if (Biber::Config->getoption('debug') || Biber::Config->getblxoption('debug'));
+
+  # Deal with special cases
+  my $special = '';
+  my $etfinal = $be->get_field('entrytype');
+  if ($be->get_field('entrytype') eq 'techreport') { # techreports are reports with a special field
+    $etfinal = 'report';
+    $special .=  "  \\field{type}{techreport}\n";
+  }
+
+  $str .= "\\entry{$origkey}{$etfinal}{$opts}\n";
+
+  if ( $be->get_field('entrytype') eq 'set' ) {
+    $str .= "  \\set{" . $be->get_field('entryset') . "}\n";
+  }
+
+  if (Biber::Config->getstate('inset_entries', $citekey)) {
+    unless (Biber::Config->getstate('inset_entries', $citekey) eq lc($be->get_field('entryset'))) {
+      $logger->warn('Key \"' . $citekey . '\" thinks it is in set ' .
+          Biber::Config->getstate('inset_entries', $citekey) .
+          ' but the set is called "' . lc($be->get_field('entryset')) . '"!');
     }
+    $str .= "  \\inset{" . Biber::Config->getstate('inset_entries', $citekey) . "}\n";
+  }
 
-    if ( is_def_and_notnull($be->get_field('options')) ) {
-        $opts = $be->get_field('options');
-    }
+  # make labelname a copy of the right thing before output of name lists
+  if (is_def_and_notnull($be->get_field('labelnamename'))) { # avoid unitialised variable warnings
+    $be->set_field('labelname', $be->get_field($be->get_field('labelnamename')));
+  }
 
-    my $str = "";
-
-    $str .= "% sortstring = " . $be->get_field('sortstring') . "\n"
-        if (Biber::Config->getoption('debug') || Biber::Config->getblxoption('debug'));
-
-    # Deal with special cases
-    my $special = '';
-    my $etfinal = $be->get_field('entrytype');
-    if ($be->get_field('entrytype') eq 'techreport') { # techreports are reports with a special field
-      $etfinal = 'report';
-      $special .=  "  \\field{type}{techreport}\n";
-    }
-
-    $str .= "\\entry{$origkey}{$etfinal}{$opts}\n";
-
-    if ( $be->get_field('entrytype') eq 'set' ) {
-        $str .= "  \\set{" . $be->get_field('entryset') . "}\n";
-    }
-
-    if (Biber::Config->getstate('inset_entries', $citekey)) {
-      unless (Biber::Config->getstate('inset_entries', $citekey) eq lc($be->get_field('entryset'))) {
-	$logger->warn('Key \"' . $citekey . '\" thinks it is in set ' .
-		     Biber::Config->getstate('inset_entries', $citekey) .
-		     ' but the set is called "' . lc($be->get_field('entryset')) . '"!');
+  foreach my $namefield (@NAMEFIELDS) {
+    next if $SKIPFIELDS{$namefield};
+    if ( my $nf = $be->get_field($namefield) ) {
+      if ( $nf->last_name->get_namestring eq 'others' ) {
+        $str .= "  \\true{more$namefield}\n";
+        $nf->del_last_name;
       }
-      $str .= "  \\inset{" . Biber::Config->getstate('inset_entries', $citekey) . "}\n";
-    }
-
-    # make labelname a copy of the right thing before output of name lists
-    if (is_def_and_notnull($be->get_field('labelnamename'))) { # avoid unitialised variable warnings
-      $be->set_field('labelname', $be->get_field($be->get_field('labelnamename')));
-    }
-
-    foreach my $namefield (@NAMEFIELDS) {
-        next if $SKIPFIELDS{$namefield};
-        if ( my $nf = $be->get_field($namefield) ) {
-          if ( $nf->last_name->get_namestring eq 'others' ) {
-                $str .= "  \\true{more$namefield}\n";
-                $nf->del_last_name;
-            }
-            my $total = $nf->count_names;
-            $str .= "  \\name{$namefield}{$total}{%\n";
-            foreach my $n (@{$nf->names}) {
-              $str .= $n->name_to_bbl;
-            }
-            $str .= "  }\n";
-        }
-    }
-
-    foreach my $listfield (@LISTFIELDS) {
-        next if $SKIPFIELDS{$listfield};
-        if ( is_def_and_notnull($be->get_field($listfield)) ) {
-            my @lf    = @{ $be->get_field($listfield) };
-            if ( $be->get_field($listfield)->[-1] eq 'others' ) {
-                $str .= "  \\true{more$listfield}\n";
-                pop @lf; # remove the last element in the array
-            };
-            my $total = $#lf + 1;
-            $str .= "  \\list{$listfield}{$total}{%\n";
-            foreach my $f (@lf) {
-                $str .= "    {". latexescape($f) . "}%\n";
-            }
-            $str .= "  }\n";
-        }
-    }
-
-    my $namehash = $be->get_field('namehash');
-    my $sortinit = substr $namehash, 0, 1;
-    $str .= "  \\strng{namehash}{$namehash}\n";
-    my $fullhash = $be->get_field('fullhash');
-    $str .= "  \\strng{fullhash}{$fullhash}\n";
-
-    if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
-        my $label = $be->get_field('labelalpha');
-        $str .= "  \\field{labelalpha}{$label}\n";
-    }
-    $str .= "  \\field{sortinit}{$sortinit}\n";
-
-    # The labelyear option determines whether "extrayear" and "labelyear" is output
-    if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
-        my $authoryear = $be->get_field('authoryear');
-        if ( Biber::Config->getstate('seenauthoryear', $authoryear) > 1) {
-            $str .= "  \\field{extrayear}{"
-              . $be->get_field('extrayear') . "}\n";
-        }
-
-        # Construct labelyear
-        if (is_def_and_notnull($be->get_field('labelyearname'))) {
-          $be->set_field('labelyear', $be->get_field($be->get_field('labelyearname')));
-          # ignore endyear if it's the same as year
-	  my ($ytype) = $be->get_field('labelyearname') =~ /\A(.*)year\z/xms;
-          if (is_def_and_notnull($be->get_field($ytype . 'endyear'))
-              and ($be->get_field($be->get_field('labelyearname')) ne $be->get_field($ytype . 'endyear'))) {
-            $be->set_field('labelyear',
-			   $be->get_field('labelyear') . '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
-          }
-        $str .= "  \\field{labelyear}{" . $be->get_field('labelyear') . "}\n";
-        }
+      my $total = $nf->count_names;
+      $str .= "  \\name{$namefield}{$total}{%\n";
+      foreach my $n (@{$nf->names}) {
+        $str .= $n->name_to_bbl;
       }
+      $str .= "  }\n";
+    }
+  }
 
-      if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
-        my $authoryear = $be->get_field('authoryear');
-        if ( Biber::Config->getstate('seenauthoryear', $authoryear) > 1) {
-            $str .= "  \\field{extraalpha}{"
-              . $be->get_field('extraalpha') . "}\n";
-        }
+  foreach my $listfield (@LISTFIELDS) {
+    next if $SKIPFIELDS{$listfield};
+    if ( is_def_and_notnull($be->get_field($listfield)) ) {
+      my @lf    = @{ $be->get_field($listfield) };
+      if ( $be->get_field($listfield)->[-1] eq 'others' ) {
+        $str .= "  \\true{more$listfield}\n";
+        pop @lf; # remove the last element in the array
+      };
+      my $total = $#lf + 1;
+      $str .= "  \\list{$listfield}{$total}{%\n";
+      foreach my $f (@lf) {
+        $str .= "    {". latexescape($f) . "}%\n";
+      }
+      $str .= "  }\n";
+    }
+  }
+
+  my $namehash = $be->get_field('namehash');
+  my $sortinit = substr $namehash, 0, 1;
+  $str .= "  \\strng{namehash}{$namehash}\n";
+  my $fullhash = $be->get_field('fullhash');
+  $str .= "  \\strng{fullhash}{$fullhash}\n";
+
+  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
+    my $label = $be->get_field('labelalpha');
+    $str .= "  \\field{labelalpha}{$label}\n";
+  }
+  $str .= "  \\field{sortinit}{$sortinit}\n";
+
+ # The labelyear option determines whether "extrayear" and "labelyear" is output
+  if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
+    my $authoryear = $be->get_field('authoryear');
+    if ( Biber::Config->getstate('seenauthoryear', $authoryear) > 1) {
+      $str .= "  \\field{extrayear}{"
+        . $be->get_field('extrayear') . "}\n";
     }
 
-    if ( Biber::Config->getblxoption('labelnumber', $be->get_field('entrytype'), $citekey) ) {
-        if ($be->get_field('shorthand')) {
-            $str .= "  \\field{labelnumber}{"
-              . $be->get_field('shorthand') . "}\n";
-        }
-        elsif ($be->get_field('labelnumber')) {
-            $str .= "  \\field{labelnumber}{"
-              . $be->get_field('labelnumber') . "}\n";
-        }
+    # Construct labelyear
+    if (is_def_and_notnull($be->get_field('labelyearname'))) {
+      $be->set_field('labelyear', $be->get_field($be->get_field('labelyearname')));
+
+      # ignore endyear if it's the same as year
+      my ($ytype) = $be->get_field('labelyearname') =~ /\A(.*)year\z/xms;
+      if (is_def_and_notnull($be->get_field($ytype . 'endyear'))
+        and ($be->get_field($be->get_field('labelyearname')) ne $be->get_field($ytype . 'endyear'))) {
+        $be->set_field('labelyear',
+          $be->get_field('labelyear') . '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
+      }
+      $str .= "  \\field{labelyear}{" . $be->get_field('labelyear') . "}\n";
     }
+  }
 
-    if ( $be->get_field('ignoreuniquename') ) {
+  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
+    my $authoryear = $be->get_field('authoryear');
+    if ( Biber::Config->getstate('seenauthoryear', $authoryear) > 1) {
+      $str .= "  \\field{extraalpha}{"
+        . $be->get_field('extraalpha') . "}\n";
+    }
+  }
 
-        $str .= "  \\count{uniquename}{0}\n";
+  if ( Biber::Config->getblxoption('labelnumber', $be->get_field('entrytype'), $citekey) ) {
+    if ($be->get_field('shorthand')) {
+      $str .= "  \\field{labelnumber}{"
+        . $be->get_field('shorthand') . "}\n";
+    }
+    elsif ($be->get_field('labelnumber')) {
+      $str .= "  \\field{labelnumber}{"
+        . $be->get_field('labelnumber') . "}\n";
+    }
+  }
 
+  if ( $be->get_field('ignoreuniquename') ) {
+
+    $str .= "  \\count{uniquename}{0}\n";
+
+  } else {
+    my $lname = $be->get_field('labelnamename');
+    my $name;
+    my $lastname;
+    my $nameinitstr;
+
+    if ($lname) {
+      if ($lname =~ m/\Ashort/xms) { # short* fields are just strings, not complex data
+        $lastname    = $be->get_field($lname);
+        $nameinitstr = $be->get_field($lname);
+      } else {
+        $name = $be->get_field($lname)->nth_name(1);
+        $lastname = $name->get_lastname;
+        $nameinitstr = $name->get_nameinitstring;
+      }
+    }
+    if (scalar keys %{ Biber::Config->getstate('uniquenamecount', $lastname) } == 1 ) {
+      $str .= "  \\count{uniquename}{0}\n";
+    } elsif (scalar keys %{ Biber::Config->getstate('uniquenamecount', $nameinitstr) } == 1 ) {
+      $str .= "  \\count{uniquename}{1}\n";
     } else {
-        my $lname = $be->get_field('labelnamename');
-        my $name;
-        my $lastname;
-        my $nameinitstr;
-
-        if ($lname) {
-          if ($lname =~ m/\Ashort/xms) { # short* fields are just strings, not complex data
-            $lastname    = $be->get_field($lname);
-            $nameinitstr = $be->get_field($lname);
-          } else {
-            $name = $be->get_field($lname)->nth_name(1);
-            $lastname = $name->get_lastname;
-            $nameinitstr = $name->get_nameinitstring;
-          }
-        }
-        if (scalar keys %{ Biber::Config->getstate('uniquenamecount', $lastname) } == 1 ) {
-            $str .= "  \\count{uniquename}{0}\n";
-        } elsif (scalar keys %{ Biber::Config->getstate('uniquenamecount', $nameinitstr) } == 1 ) {
-            $str .= "  \\count{uniquename}{1}\n";
-        } else {
-            $str .= "  \\count{uniquename}{2}\n";
-        }
+      $str .= "  \\count{uniquename}{2}\n";
     }
+  }
 
-    if ( Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'), $citekey)
-        and Biber::Config->getstate('seennamehash', $be->get_field('fullhash')) < 2 )
-    {
-        $str .= "  \\true{singletitle}\n";
+  if ( Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'), $citekey)
+    and Biber::Config->getstate('seennamehash', $be->get_field('fullhash')) < 2 )
+  {
+    $str .= "  \\true{singletitle}\n";
+  }
+
+  foreach my $ifield (@DATECOMPONENTFIELDS) {
+    next if $SKIPFIELDS{$ifield};
+    if ( is_def_and_notnull($be->get_field($ifield)) ) {
+      $str .= $self->_printfield( $ifield, $be->get_field($ifield) );
     }
+  }
 
-    foreach my $ifield (@DATECOMPONENTFIELDS) {
-        next if $SKIPFIELDS{$ifield};
-        if ( is_def_and_notnull($be->get_field($ifield)) ) {
-	        $str .= $self->_printfield( $ifield, $be->get_field($ifield) );
-        }
+  foreach my $lfield (@LITERALFIELDS) {
+    next if $SKIPFIELDS{$lfield};
+    if ( is_def_and_notnull($be->get_field($lfield)) ) {
+      next if ( $lfield eq 'crossref' and
+        ($be->get_field('entrytype') ne 'set') and
+        $self->has_citekey($be->get_field('crossref'))
+        ); # we skip crossref when it belongs to @auxcitekeys
+
+      my $lfieldprint = $lfield;
+      if ($lfield eq 'journal') {
+        $lfieldprint = 'journaltitle'
+      };
+
+      $str .= $self->_printfield( $lfieldprint, $be->get_field($lfield) );
     }
+  }
 
-    foreach my $lfield (@LITERALFIELDS) {
-        next if $SKIPFIELDS{$lfield};
-        if ( is_def_and_notnull($be->get_field($lfield)) ) {
-            next if ( $lfield eq 'crossref' and
-                      ($be->get_field('entrytype') ne 'set') and
-                      $self->has_citekey($be->get_field('crossref'))
-                    ); # we skip crossref when it belongs to @auxcitekeys
-
-            my $lfieldprint = $lfield;
-            if ($lfield eq 'journal') {
-                $lfieldprint = 'journaltitle'
-            };
-
-            $str .= $self->_printfield( $lfieldprint, $be->get_field($lfield) );
-        }
+  # this is currently "pages" only
+  foreach my $rfield (@RANGEFIELDS) {
+    next if $SKIPFIELDS{$rfield};
+    if ( is_def_and_notnull($be->get_field($rfield)) ) {
+      my $rf = $be->get_field($rfield);
+      $rf =~ s/[-–]+/\\bibrangedash /g;
+      $str .= "  \\field{$rfield}{$rf}\n";
     }
+  }
 
-    # this is currently "pages" only
-    foreach my $rfield (@RANGEFIELDS) {
-        next if $SKIPFIELDS{$rfield};
-        if ( is_def_and_notnull($be->get_field($rfield)) ) {
-            my $rf = $be->get_field($rfield);
-            $rf =~ s/[-–]+/\\bibrangedash /g;
-            $str .= "  \\field{$rfield}{$rf}\n";
-        }
+  foreach my $vfield (@VERBATIMFIELDS) {
+    next if $SKIPFIELDS{$vfield};
+    if ( is_def_and_notnull($be->get_field($vfield)) ) {
+      my $rf = $be->get_field($vfield);
+      $str .= "  \\verb{$vfield}\n";
+      $str .= "  \\verb $rf\n  \\endverb\n";
     }
+  }
+  if ( is_def_and_notnull($be->get_field('keywords')) ) {
+    $str .= "  \\keyw{" . $be->get_field('keywords') . "}\n";
+  }
 
-    foreach my $vfield (@VERBATIMFIELDS) {
-        next if $SKIPFIELDS{$vfield};
-        if ( is_def_and_notnull($be->get_field($vfield)) ) {
-            my $rf = $be->get_field($vfield);
-            $str .= "  \\verb{$vfield}\n";
-            $str .= "  \\verb $rf\n  \\endverb\n";
-        }
+  # Append any special case things created above
+  $str .= $special if $special;
+
+  # Append any warnings to the entry, if any
+  if ($be->get_field('warnings')) {
+    foreach my $warning (@{$be->get_field('warnings')}) {
+      $str .= "  \\warn{$warning}\n";
     }
-    if ( is_def_and_notnull($be->get_field('keywords')) ) {
-        $str .= "  \\keyw{" . $be->get_field('keywords') . "}\n";
-    }
+  }
 
+  $str .= "\\endentry\n\n";
 
-    # Append any special case things created above
-    $str .= $special if $special;
-
-    # Append any warnings to the entry, if any
-    if ($be->get_field('warnings')) {
-      foreach my $warning (@{$be->get_field('warnings')}) {
-        $str .= "  \\warn{$warning}\n";
-      }
-    }
-
-    $str .= "\\endentry\n\n";
-
-    #     $str = encode_utf8($str) if Biber::Config->getoption('unicodebbl');
-    return $str;
+  #     $str = encode_utf8($str) if Biber::Config->getoption('unicodebbl');
+  return $str;
 }
 
 =head1 AUTHOR
@@ -972,4 +972,4 @@ later version, or
 
 1;
 
-# vim: set tabstop=4 shiftwidth=4 expandtab:
+# vim: set tabstop=2 shiftwidth=2 expandtab:

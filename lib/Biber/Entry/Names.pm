@@ -19,7 +19,6 @@ sub new {
   return bless [], $class;
 }
 
-
 =head2 names
 
     Return ref to array of all Biber::Entry::Names objects
@@ -82,7 +81,6 @@ sub first_n_names {
   return bless [ splice(@$self, 0, $n) ], Biber::Entry::Names;
 }
 
-
 =head2 del_last_name
 
     Deletes the last Biber::Entry::Name object in the object
@@ -94,7 +92,6 @@ sub del_last_name {
   $self = [ pop(@$self) ];
   return;
 }
-
 
 =head2 last_name
 
@@ -118,8 +115,6 @@ sub dump {
   dd($self);
   return;
 }
-
-
 
 =head1 AUTHORS
 
@@ -152,6 +147,5 @@ later version, or
 
 1;
 
-# vim: set tabstop=4 shiftwidth=4 expandtab:
-
+# vim: set tabstop=2 shiftwidth=2 expandtab:
 

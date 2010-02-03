@@ -36,10 +36,10 @@ All functions are exported by default.
 =cut
 
 our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid
-    normalize_string normalize_string_underscore latexescape reduce_array
-    remove_outer getinitials tersify ucinit strip_nosort strip_nosortdiacritics
-    strip_nosortprefix is_def is_undef is_def_and_notnull is_undef_or_null is_notnull
-    is_name_field };
+  normalize_string normalize_string_underscore latexescape reduce_array
+  remove_outer getinitials tersify ucinit strip_nosort strip_nosortdiacritics
+  strip_nosortprefix is_def is_undef is_def_and_notnull is_undef_or_null is_notnull
+  is_name_field };
 
 ######
 
@@ -54,48 +54,47 @@ our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid
 =cut
 
 sub bibfind {
-    ## since these variables are used in the _wanted sub, they need to be made global
-    ## FIXME there must be a way to avoid this
-    our $_filename = shift;
-    our @_found = ();
+  ## since these variables are used in the _wanted sub, they need to be made global
+  ## FIXME there must be a way to avoid this
+  our $_filename = shift;
+  our @_found = ();
 
-    $_filename .= '.bib' unless $_filename =~ /\.(bib|xml|dbxml)$/;
+  $_filename .= '.bib' unless $_filename =~ /\.(bib|xml|dbxml)$/;
 
-    if ( can_run("kpsepath") ) {
-        my $kpsepath;
-        scalar run( command => [ 'kpsepath', 'bib' ],
-                    verbose => 0,
-                    buffer => \$kpsepath );
-        my @paths = split ( /:!*/, $kpsepath );
-        sub _removetrailingslashes {
-            my $str = shift;
-            $str =~ s|/+\s*$||;
-            return $str
-        };
+  if ( can_run("kpsepath") ) {
+    my $kpsepath;
+    scalar run( command => [ 'kpsepath', 'bib' ],
+      verbose => 0,
+      buffer => \$kpsepath );
+    my @paths = split ( /:!*/, $kpsepath );
+    sub _removetrailingslashes {
+      my $str = shift;
+      $str =~ s|/+\s*$||;
+      return $str
+    };
 
-        @paths = map { _removetrailingslashes( $_ ) } @paths;
+    @paths = map { _removetrailingslashes( $_ ) } @paths;
 
-        no warnings 'File::Find';
-        find (\&_wanted, @paths);
+    no warnings 'File::Find';
+    find (\&_wanted, @paths);
 
-        sub _wanted {
-            $_ =~ /^$_filename($|\.bib$)/ && push @_found, $File::Find::name;
-        }
-
-        if (@_found) {
-            my $found = shift @_found;
-            $logger->debug("Found bib file $found");
-            return $found ;
-        } else {
-            $logger->debug("Found bib file $_filename");
-            return $_filename ;
-        }
-
-    } else {
-        return $_filename
+    sub _wanted {
+      $_ =~ /^$_filename($|\.bib$)/ && push @_found, $File::Find::name;
     }
-}
 
+    if (@_found) {
+      my $found = shift @_found;
+      $logger->debug("Found bib file $found");
+      return $found ;
+    } else {
+      $logger->debug("Found bib file $_filename");
+      return $_filename ;
+    }
+
+  } else {
+    return $_filename
+  }
+}
 
 =head2 parsename
 
@@ -125,43 +124,43 @@ sub bibfind {
 =cut
 
 sub parsename {
-    my ($namestr, $opts) = @_;
-    $logger->debug("   Parsing namestring '$namestr'");
-    $namestr =~ s/\\,\s*|{\\,\s*}/~/g; # get rid of LaTeX small spaces \,
-    my $usepre = $opts->{useprefix};
+  my ($namestr, $opts) = @_;
+  $logger->debug("   Parsing namestring '$namestr'");
+  $namestr =~ s/\\,\s*|{\\,\s*}/~/g; # get rid of LaTeX small spaces \,
+  my $usepre = $opts->{useprefix};
 
-    my $lastname;
-    my $firstname;
-    my $prefix;
-    my $suffix;
-    my $nameinitstr;
+  my $lastname;
+  my $firstname;
+  my $prefix;
+  my $suffix;
+  my $nameinitstr;
 
-    my $PREFIX_RE = qr/
+  my $PREFIX_RE = qr/
                 {?
                 \p{Ll} # prefix starts with lowercase
                 [^\p{Lu},]+ # e.g. van der
                 }?
                 \s+
-               /x ;
-    my $NAME_RE = qr/
+/x ;
+  my $NAME_RE = qr/
                 [^,]+
                |
                 $RE{balanced}{-parens=>'{}'}
-               /x;
-    my $SUFFIX_RE = $NAME_RE;
-    my $NAME_SEQ_RE = qr/ (?:\p{Lu}\S*[\s~]*)+ /x ;
+/x;
+  my $SUFFIX_RE = $NAME_RE;
+  my $NAME_SEQ_RE = qr/ (?:\p{Lu}\S*[\s~]*)+ /x ;
 
-    if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}$/ )
-    {
-        $logger->debug("   Caught namestring of type '{Some protected name string}'");
-        $namestr = remove_outer($namestr);
-        $lastname = $namestr;
-    }
-    elsif ( $namestr =~ /[^\\],.+[^\\],/ )    # pre? Lastname, suffix, Firstname
-    {
-        $logger->debug("   Caught namestring of type 'prefix? Lastname, suffix, Firstname'");
-        ( $prefix, $lastname, $suffix, $firstname ) = $namestr =~
-            m/\A( # prefix?
+  if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}$/ )
+  {
+    $logger->debug("   Caught namestring of type '{Some protected name string}'");
+    $namestr = remove_outer($namestr);
+    $lastname = $namestr;
+  }
+  elsif ( $namestr =~ /[^\\],.+[^\\],/ )    # pre? Lastname, suffix, Firstname
+  {
+    $logger->debug("   Caught namestring of type 'prefix? Lastname, suffix, Firstname'");
+    ( $prefix, $lastname, $suffix, $firstname ) = $namestr =~
+      m/\A( # prefix?
                 $PREFIX_RE
                )?
                ( # last name
@@ -177,24 +176,24 @@ sub parsename {
                ( # first name
                 $NAME_RE
                )
-             \z/xms;
+\z/xms;
 
-        if ($lastname) {$lastname =~ s/^{(.+)}$/$1/g;} else {$logger->debug("Couldn't determine Last Name for name \"$namestr\"");}
-        if ($firstname) {$firstname =~ s/^{(.+)}$/$1/g;} else {$logger->debug("Couldn't determine First Name for name \"$namestr\"");}
-        $prefix =~ s/\s+$// if $prefix;
-        $prefix =~ s/^{(.+)}$/$1/ if $prefix;
-        $suffix =~ s/\s+$//;
-        $suffix =~ s/^{(.+)}$/$1/;
-        $namestr = "";
-        $namestr .= "$prefix " if ($prefix && $usepre);
-        $namestr .= "$lastname, $suffix, $firstname";
-    }
-    elsif ( $namestr =~ /[^\\],/ )   # <pre> Lastname, Firstname
-    {
-        $logger->debug("   Caught namestring of type 'prefix? Lastname, Firstname'");
+    if ($lastname) {$lastname =~ s/^{(.+)}$/$1/g;} else {$logger->debug("Couldn't determine Last Name for name \"$namestr\"");}
+    if ($firstname) {$firstname =~ s/^{(.+)}$/$1/g;} else {$logger->debug("Couldn't determine First Name for name \"$namestr\"");}
+    $prefix =~ s/\s+$// if $prefix;
+    $prefix =~ s/^{(.+)}$/$1/ if $prefix;
+    $suffix =~ s/\s+$//;
+    $suffix =~ s/^{(.+)}$/$1/;
+    $namestr = "";
+    $namestr .= "$prefix " if ($prefix && $usepre);
+    $namestr .= "$lastname, $suffix, $firstname";
+  }
+  elsif ( $namestr =~ /[^\\],/ )   # <pre> Lastname, Firstname
+  {
+    $logger->debug("   Caught namestring of type 'prefix? Lastname, Firstname'");
 
-        ( $prefix, $lastname, $firstname ) = $namestr =~
-            m/^( # prefix?
+    ( $prefix, $lastname, $firstname ) = $namestr =~
+      m/^( # prefix?
                 $PREFIX_RE
                )?
                ( # last name
@@ -205,23 +204,23 @@ sub parsename {
                ( # first name
                 $NAME_RE
                )
-             $/x;
+$/x;
 
-	if ($lastname) {$lastname =~ s/^{(.+)}$/$1/g;} else {$logger->debug("! Couldn't determine Last Name for name \"$namestr\"");}
-        if ($firstname) {$firstname =~ s/^{(.+)}$/$1/g;} else {$logger->debug("! Couldn't determine First Name for name \"$namestr\"");}
-        $prefix =~ s/\s+$// if $prefix;
-        $prefix =~ s/^{(.+)}$/$1/ if $prefix;
-        $namestr = "";
-        $namestr .= "$prefix " if ($prefix && $usepre);
-        $namestr .= "$lastname, $firstname";
-    }
-    elsif ( $namestr =~ /\s/ ) # Firstname pre? Lastname
+    if ($lastname) {$lastname =~ s/^{(.+)}$/$1/g;} else {$logger->debug("! Couldn't determine Last Name for name \"$namestr\"");}
+    if ($firstname) {$firstname =~ s/^{(.+)}$/$1/g;} else {$logger->debug("! Couldn't determine First Name for name \"$namestr\"");}
+    $prefix =~ s/\s+$// if $prefix;
+    $prefix =~ s/^{(.+)}$/$1/ if $prefix;
+    $namestr = "";
+    $namestr .= "$prefix " if ($prefix && $usepre);
+    $namestr .= "$lastname, $firstname";
+  }
+  elsif ( $namestr =~ /\s/ ) # Firstname pre? Lastname
+  {
+    if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}.*\s+$RE{balanced}{-parens => '{}'}$/ )
     {
-        if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}.*\s+$RE{balanced}{-parens => '{}'}$/ )
-        {
-            $logger->debug("   Caught namestring of type '{Firstname} prefix? {Lastname}'");
-            ( $firstname, $prefix, $lastname ) = $namestr =~
-                m/^( # first name
+      $logger->debug("   Caught namestring of type '{Firstname} prefix? {Lastname}'");
+      ( $firstname, $prefix, $lastname ) = $namestr =~
+        m/^( # first name
                     $RE{balanced}{-parens=>'{}'}
                 )
                     \s+
@@ -231,13 +230,13 @@ sub parsename {
                 ( # last name
                     $RE{balanced}{-parens=>'{}'}
                 )
-                $/x;
-        }
-        elsif ( $namestr =~ /^.+\s+$RE{balanced}{-parens => '{}'}$/ )
-        {
-            $logger->debug("   Caught namestring of type 'Firstname prefix? {Lastname}'");
-            ( $firstname, $prefix, $lastname ) = $namestr =~
-                m/^( # first name
+$/x;
+    }
+    elsif ( $namestr =~ /^.+\s+$RE{balanced}{-parens => '{}'}$/ )
+    {
+      $logger->debug("   Caught namestring of type 'Firstname prefix? {Lastname}'");
+      ( $firstname, $prefix, $lastname ) = $namestr =~
+        m/^( # first name
                     $NAME_SEQ_RE
                 )
                     \s+
@@ -247,13 +246,13 @@ sub parsename {
                 ( # last name
                     $RE{balanced}{-parens=>'{}'}
                 )
-                $/x;
-        }
-        elsif ( $namestr =~ /^$RE{balanced}{-parens => '{}'}.+$/ )
-        {
-            $logger->debug("   Caught namestring of type '{Firstname} prefix? Lastname'");
-            ( $firstname, $prefix, $lastname ) = $namestr =~
-                m/^( # first name
+$/x;
+    }
+    elsif ( $namestr =~ /^$RE{balanced}{-parens => '{}'}.+$/ )
+    {
+      $logger->debug("   Caught namestring of type '{Firstname} prefix? Lastname'");
+      ( $firstname, $prefix, $lastname ) = $namestr =~
+        m/^( # first name
                     $RE{balanced}{-parens=>'{}'}
                 )
                     \s+
@@ -263,12 +262,12 @@ sub parsename {
                 ( # last name
                     .+
                 )
-                $/x;
-        }
-        else {
-            $logger->debug("   Caught namestring of type 'Firstname prefix? Lastname'");
-            ( $firstname, $prefix, $lastname ) = $namestr =~
-                m/^( # first name
+$/x;
+    }
+    else {
+      $logger->debug("   Caught namestring of type 'Firstname prefix? Lastname'");
+      ( $firstname, $prefix, $lastname ) = $namestr =~
+        m/^( # first name
                     $NAME_SEQ_RE
                 )
                  \s+
@@ -278,46 +277,45 @@ sub parsename {
                 ( # last name
                     $NAME_SEQ_RE
                 )
-                $/x;
-        }
-
-        if ($lastname) {$lastname =~ s/^{(.+)}$/$1/;} else {$logger->debug("! Couldn't determine Last Name for name \"$namestr\"");}
-        if ($firstname) {$firstname =~ s/^{(.+)}$/$1/;} else {$logger->debug("! Couldn't determine First Name for name \"$namestr\"");}
-        $firstname =~ s/\s+$// if $firstname;
-
-        $prefix =~ s/\s+$// if $prefix;
-        $prefix =~ s/^{(.+)}$/$1/ if $prefix;
-        $namestr = "";
-        $namestr = "$prefix " if $prefix;
-        $namestr .= $lastname if $lastname;
-        $namestr .= ", " . $firstname if $firstname;
-    }
-    else
-    {    # Name alone
-        $logger->debug("   Caught namestring of type 'Isolated_name_string'");
-        $lastname = $namestr;
+$/x;
     }
 
-    #TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g;
-    ## remove punctuation, symbols, separator and control
+    if ($lastname) {$lastname =~ s/^{(.+)}$/$1/;} else {$logger->debug("! Couldn't determine Last Name for name \"$namestr\"");}
+    if ($firstname) {$firstname =~ s/^{(.+)}$/$1/;} else {$logger->debug("! Couldn't determine First Name for name \"$namestr\"");}
+    $firstname =~ s/\s+$// if $firstname;
 
-    $nameinitstr = "";
-    $nameinitstr .= substr( $prefix, 0, 1 ) . " " if ( $usepre and $prefix );
-    $nameinitstr .= $lastname if $lastname;
-    $nameinitstr .= " " . terseinitials($suffix)
-        if $suffix;
-    $nameinitstr .= " " . terseinitials($firstname)
-        if $firstname;
-    $nameinitstr =~ s/\s+/_/g;
+    $prefix =~ s/\s+$// if $prefix;
+    $prefix =~ s/^{(.+)}$/$1/ if $prefix;
+    $namestr = "";
+    $namestr = "$prefix " if $prefix;
+    $namestr .= $lastname if $lastname;
+    $namestr .= ", " . $firstname if $firstname;
+  }
+  else
+  {    # Name alone
+    $logger->debug("   Caught namestring of type 'Isolated_name_string'");
+    $lastname = $namestr;
+  }
 
+  #TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g;
+  ## remove punctuation, symbols, separator and control
 
-    return Biber::Entry::Name->new(
-        firstname => $firstname,
-        lastname  => $lastname,
-        namestring => $namestr,
-        nameinitstring => $nameinitstr,
-        prefix => $prefix,
-        suffix => $suffix
+  $nameinitstr = "";
+  $nameinitstr .= substr( $prefix, 0, 1 ) . " " if ( $usepre and $prefix );
+  $nameinitstr .= $lastname if $lastname;
+  $nameinitstr .= " " . terseinitials($suffix)
+    if $suffix;
+  $nameinitstr .= " " . terseinitials($firstname)
+    if $firstname;
+  $nameinitstr =~ s/\s+/_/g;
+
+  return Biber::Entry::Name->new(
+    firstname => $firstname,
+    lastname  => $lastname,
+    namestring => $namestr,
+    nameinitstring => $nameinitstr,
+    prefix => $prefix,
+    suffix => $suffix
     );
 }
 
@@ -341,13 +339,13 @@ with the concatenation of all names.
 =cut
 
 sub makenameid {
-    my ($names) = @_;
-    my @namestrings;
-    foreach my $n (@{$names}) {
-        push @namestrings, $n->{namestring};
-    }
-    my $tmp = join ' ', @namestrings;
-    return normalize_string_underscore($tmp, 1);
+  my ($names) = @_;
+  my @namestrings;
+  foreach my $n (@{$names}) {
+    push @namestrings, $n->{namestring};
+  }
+  my $tmp = join ' ', @namestrings;
+  return normalize_string_underscore($tmp, 1);
 }
 
 =head2 makenameinitid
@@ -357,15 +355,14 @@ Similar to makenameid, with the first names converted to initials.
 =cut
 
 sub makenameinitid {
-    my ($names) = @_;
-    my @namestrings;
-    foreach my $n (@{$names}) {
-        push @namestrings, $n->{nameinitstring};
-    }
-    my $tmp = join ' ', @namestrings;
-    return normalize_string_underscore($tmp, 1);
+  my ($names) = @_;
+  my @namestrings;
+  foreach my $n (@{$names}) {
+    push @namestrings, $n->{nameinitstring};
+  }
+  my $tmp = join ' ', @namestrings;
+  return normalize_string_underscore($tmp, 1);
 }
-
 
 =head2 strip_nosort
 
@@ -414,15 +411,15 @@ as well as leading and trailing whitespace.
 =cut
 
 sub normalize_string {
-    my ($str, $no_decode) = @_;
-    $str = latex_decode($str) unless $no_decode;
-    $str = strip_nosort($str); # strip nosort elements
-    $str =~ s/\\[A-Za-z]+//g; # remove latex macros (assuming they have only ASCII letters)
-    $str =~ s/[\p{P}\p{S}\p{C}]+//g; ### remove punctuation, symbols, separator and control
-    $str =~ s/^\s+//;
-    $str =~ s/\s+$//;
-    $str =~ s/\s+/ /g;
-    return $str;
+  my ($str, $no_decode) = @_;
+  $str = latex_decode($str) unless $no_decode;
+  $str = strip_nosort($str); # strip nosort elements
+  $str =~ s/\\[A-Za-z]+//g; # remove latex macros (assuming they have only ASCII letters)
+  $str =~ s/[\p{P}\p{S}\p{C}]+//g; ### remove punctuation, symbols, separator and control
+  $str =~ s/^\s+//;
+  $str =~ s/\s+$//;
+  $str =~ s/\s+/ /g;
+  return $str;
 }
 
 =head2 normalize_string_underscore
@@ -432,11 +429,11 @@ Like normalize_string, but also substitutes ~ and whitespace with underscore.
 =cut
 
 sub normalize_string_underscore {
-    my ($str, $no_decode) = @_;
-    $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
-    $str = normalize_string($str, $no_decode);
-    $str =~ s/\s+/_/g;
-    return $str;
+  my ($str, $no_decode) = @_;
+  $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
+  $str = normalize_string($str, $no_decode);
+  $str =~ s/\s+/_/g;
+  return $str;
 }
 
 =head2 latexescape
@@ -465,16 +462,16 @@ terseinitials($str) returns the contatenated initials of all the words in $str.
 =cut
 
 sub terseinitials {
-    my $str = shift;
-    $str = strip_nosort($str); # strip nosort elements
-    $str =~ s/\\[\p{L}]+\s*//g; # remove tex macros
-    $str =~ s/^{(\p{L}).+}$/$1/g; # {Aaaa Bbbbb Ccccc} -> A
-    $str =~ s/{\s+(\S+)\s+}//g; # Aaaaa{ de }Bbbb -> AaaaaBbbbb
-    # get rid of Punctuation (except DashPunctuation), Symbol and Other characters
-    $str =~ s/[\p{Lm}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g;
-    $str =~ s/\B\p{L}//g;
-    $str =~ s/[\s\p{Pd}]+//g;
-    return $str;
+  my $str = shift;
+  $str = strip_nosort($str); # strip nosort elements
+  $str =~ s/\\[\p{L}]+\s*//g; # remove tex macros
+  $str =~ s/^{(\p{L}).+}$/$1/g; # {Aaaa Bbbbb Ccccc} -> A
+  $str =~ s/{\s+(\S+)\s+}//g; # Aaaaa{ de }Bbbb -> AaaaaBbbbb
+  # get rid of Punctuation (except DashPunctuation), Symbol and Other characters
+  $str =~ s/[\p{Lm}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g;
+  $str =~ s/\B\p{L}//g;
+  $str =~ s/[\s\p{Pd}]+//g;
+  return $str;
 }
 
 =head2 reduce_array
@@ -504,9 +501,9 @@ sub reduce_array {
 =cut
 
 sub remove_outer {
-    my $str = shift;
-    $str =~ s/^{(.+)}$/$1/;
-    return $str;
+  my $str = shift;
+  $str =~ s/^{(.+)}$/$1/;
+  return $str;
 }
 
 =head2 getinitials
@@ -516,20 +513,20 @@ sub remove_outer {
 =cut
 
 sub getinitials {
-    my $str = shift;
-    $str =~ s/{\s+(\S+)\s+}//g; # Aaaaa{ de }Bbbb -> AaaaaBbbbb
-    # remove pseudo-space after macros
-    $str =~ s/{? ( \\ [^\p{Ps}\{\}]+ ) \s+ (\p{L}) }?/\{$1\{$2\}\}/gx; # {\\x y} -> {\x{y}}
-    $str =~ s/( \\ [^\p{Ps}\{\}]+ ) \s+ { /$1\{/gx; # \\macro { -> \macro{
-    my @words = split /\s+/, remove_outer($str);
-    $str = join '.~', ( map { _firstatom($_) } @words );
-    return $str . '.';
+  my $str = shift;
+  $str =~ s/{\s+(\S+)\s+}//g; # Aaaaa{ de }Bbbb -> AaaaaBbbbb
+  # remove pseudo-space after macros
+  $str =~ s/{? ( \\ [^\p{Ps}\{\}]+ ) \s+ (\p{L}) }?/\{$1\{$2\}\}/gx; # {\\x y} -> {\x{y}}
+  $str =~ s/( \\ [^\p{Ps}\{\}]+ ) \s+ { /$1\{/gx; # \\macro { -> \macro{
+  my @words = split /\s+/, remove_outer($str);
+  $str = join '.~', ( map { _firstatom($_) } @words );
+  return $str . '.';
 }
 
 sub _firstatom {
-    my $str = shift;
-    $str = strip_nosort($str); # strip nosort elements
-    if ($str =~ /^({
+  my $str = shift;
+  $str = strip_nosort($str); # strip nosort elements
+  if ($str =~ /^({
                    \\ [^\p{Ps}\p{L}] \p{L}+ # {\\.x}
                    }
                    | {?
@@ -537,11 +534,11 @@ sub _firstatom {
                      { \p{L} }
                      }?
                    | { \\\p{L}+ }           # {\\macro}
-                   )/x ) {
-        return $1;
-    } else {
-      return substr($str, 0, 1);
-    }
+)/x ) {
+    return $1;
+  } else {
+    return substr($str, 0, 1);
+  }
 }
 
 =head2 tersify
@@ -553,10 +550,10 @@ sub _firstatom {
 =cut
 
 sub tersify {
-    my $str = shift;
-    $str =~ s/~//g;
-    $str =~ s/\.//g;
-    return $str;
+  my $str = shift;
+  $str =~ s/~//g;
+  $str =~ s/\.//g;
+  return $str;
 }
 
 =head2 ucinit
@@ -566,10 +563,10 @@ sub tersify {
 =cut
 
 sub ucinit {
-        my $str = shift;
-        $str = lc($str);
-        $str =~ s/\b(\p{Ll})/\u$1/g;
-        return $str;
+  my $str = shift;
+  $str = lc($str);
+  $str =~ s/\b(\p{Ll})/\u$1/g;
+  return $str;
 }
 
 =head2 is_undef
@@ -607,7 +604,6 @@ sub is_def {
   my $val = shift;
   return defined($val) ? 1 : 0;
 }
-
 
 =head2 is_undef_or_null
 
@@ -654,7 +650,6 @@ sub is_notnull {
   return 0;
 }
 
-
 =head2 is_notnull_scalar
 
     Checks for notnullness of a scalar
@@ -684,7 +679,6 @@ sub is_notnull_array {
   return $#arr > -1 ? 1 : 0;
 }
 
-
 =head2 is_notnull_hash
 
     Checks for notnullness of an hash (passed by ref)
@@ -699,9 +693,6 @@ sub is_notnull_hash {
   my @arr = keys %$arg;
   return $#arr > -1 ? 1 : 0;
 }
-
-
-
 
 =head1 AUTHOR
 
@@ -734,4 +725,4 @@ later version, or
 
 1;
 
-# vim: set tabstop=4 shiftwidth=4 expandtab:
+# vim: set tabstop=2 shiftwidth=2 expandtab:

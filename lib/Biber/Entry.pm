@@ -25,7 +25,6 @@ sub new {
   return $self;
 }
 
-
 =head2 set_field
 
     Set a field for a Biber::Entry object
@@ -38,7 +37,6 @@ sub set_field {
   $self->{$key} = $val;
   return;
 }
-
 
 =head2 get_field
 
@@ -75,7 +73,6 @@ sub fields {
   my $self = shift;
   return sort keys %$self;
 }
-
 
 =head2 add_warning
 
@@ -121,4 +118,4 @@ later version, or
 
 1;
 
-# vim: set tabstop=4 shiftwidth=4 expandtab:
+# vim: set tabstop=2 shiftwidth=2 expandtab:

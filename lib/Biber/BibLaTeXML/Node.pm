@@ -11,189 +11,188 @@ my $logger = Log::Log4perl::get_logger('main');
 ## this returns the title, sorttitle, indextitle and indexsorttitle
 ## as a hash ref
 sub XML::LibXML::NodeList::_biblatex_title_values {
-    my $nodelist = shift;
-    my $node = $nodelist->get_node(1);
-    my $fstring = '';
-    my $sortstring = '';
-    my $nosortprefix;
-    my $count = 0;
+  my $nodelist = shift;
+  my $node = $nodelist->get_node(1);
+  my $fstring = '';
+  my $sortstring = '';
+  my $nosortprefix;
+  my $count = 0;
 
-    foreach my $child ($node->childNodes) {
-        my $type  = $child->nodeType;
+  foreach my $child ($node->childNodes) {
+    my $type  = $child->nodeType;
 
-        if ( $type == 3 ) {
-            my $value = $child->string_value;
-            $value =~ s/\s+/ /gms;
-            next if $value eq ' ';
-            $fstring .= $value;
-            $sortstring .= $value;
-        } elsif ( $type == 1 ) {
+    if ( $type == 3 ) {
+      my $value = $child->string_value;
+      $value =~ s/\s+/ /gms;
+      next if $value eq ' ';
+      $fstring .= $value;
+      $sortstring .= $value;
+    } elsif ( $type == 1 ) {
 
-            $fstring .= $child->_biblatex_fstring_value;
+      $fstring .= $child->_biblatex_fstring_value;
 
-            $sortstring .= $child->_biblatex_sortstring_value
-                unless $child->nodeName eq 'bib:nosort';
+      $sortstring .= $child->_biblatex_sortstring_value
+        unless $child->nodeName eq 'bib:nosort';
 
-            if (! $count && $child->nodeName eq 'bib:nosort') {
-                $nosortprefix = $child->string_value;
-            }
-        }
-        $count++
-    };
-    my $sorttitle = $sortstring;
-    $sorttitle =~ s/^\s+//;
-    my $indextitle = $fstring;
-    $indextitle =~ s/^$nosortprefix\s*(.+)$/$1, $nosortprefix/ if $nosortprefix;
-    $indextitle =~ s/\s+$//;
-    my $indexsorttitle = $sorttitle;
-    $indexsorttitle .= ", $nosortprefix" if $nosortprefix;
-    $indexsorttitle =~ s/\s+$//;
+      if (! $count && $child->nodeName eq 'bib:nosort') {
+        $nosortprefix = $child->string_value;
+      }
+    }
+    $count++
+  };
+  my $sorttitle = $sortstring;
+  $sorttitle =~ s/^\s+//;
+  my $indextitle = $fstring;
+  $indextitle =~ s/^$nosortprefix\s*(.+)$/$1, $nosortprefix/ if $nosortprefix;
+  $indextitle =~ s/\s+$//;
+  my $indexsorttitle = $sorttitle;
+  $indexsorttitle .= ", $nosortprefix" if $nosortprefix;
+  $indexsorttitle =~ s/\s+$//;
 
-    return {
-        title          => $fstring,
-        sorttitle      => $sorttitle,
-        indextitle     => $indextitle,
-        indexsorttitle => $indexsorttitle
+  return {
+    title          => $fstring,
+    sorttitle      => $sorttitle,
+    indextitle     => $indextitle,
+    indexsorttitle => $indexsorttitle
     }
 }
 
 sub XML::LibXML::NodeList::_biblatex_value {
-    my $nodelist = shift;
-    my $node = $nodelist->get_node(1);
-    return $node->_biblatex_fstring_value
+  my $nodelist = shift;
+  my $node = $nodelist->get_node(1);
+  return $node->_biblatex_fstring_value
 }
 
 sub XML::LibXML::Node::_biblatex_value {
-    my $node = shift ;
-    return $node->_biblatex_fstring_value
+  my $node = shift ;
+  return $node->_biblatex_fstring_value
 }
 
 sub XML::LibXML::Node::_biblatex_fstring_value {
-    my $node = shift;
-    my $childname = $node->nodeName;
-    my $str = '';
-    my $innerstr = '';
+  my $node = shift;
+  my $childname = $node->nodeName;
+  my $str = '';
+  my $innerstr = '';
 
-    foreach my $child ($node->childNodes) {
-       my $type  = $child->nodeType;
-       if ( $type == 1 ) {
-           $innerstr .= $child->_biblatex_fstring_value;
-       } elsif ( $type == 3 ) {
-           my $value = $child->string_value;
-           $value =~ s/\s+/ /gms;
-           next if $value eq ' ';
-           $innerstr .= $value;
-       }
+  foreach my $child ($node->childNodes) {
+    my $type  = $child->nodeType;
+    if ( $type == 1 ) {
+      $innerstr .= $child->_biblatex_fstring_value;
+    } elsif ( $type == 3 ) {
+      my $value = $child->string_value;
+      $value =~ s/\s+/ /gms;
+      next if $value eq ' ';
+      $innerstr .= $value;
     }
+  }
 
-    if ($BIBLATEXML_FORMAT_ELEMENTS{$childname}) {
-        $str =  '\\' . $BIBLATEXML_FORMAT_ELEMENTS{$childname} . '{' . $innerstr . '}';
-    }
-    else {
-        $str = $innerstr
-    }
+  if ($BIBLATEXML_FORMAT_ELEMENTS{$childname}) {
+    $str =  '\\' . $BIBLATEXML_FORMAT_ELEMENTS{$childname} . '{' . $innerstr . '}';
+  }
+  else {
+    $str = $innerstr
+  }
 
-    return $str
+  return $str
 }
 
 sub XML::LibXML::Node::_biblatex_sortstring_value {
-    my $node = shift;
-    my $str = '';
-    foreach my $child ($node->childNodes) {
-        next if ( $child->nodeName eq 'bib:nosort' );
-        my $value;
-        if ( $child->hasChildNodes ) {
-            $value = $child->_biblatex_sortstring_value
-        } else {
-            $value = $child->string_value;
-            $value =~ s/\s+/ /gms;
-        }
-        $str .= $value
+  my $node = shift;
+  my $str = '';
+  foreach my $child ($node->childNodes) {
+    next if ( $child->nodeName eq 'bib:nosort' );
+    my $value;
+    if ( $child->hasChildNodes ) {
+      $value = $child->_biblatex_sortstring_value
+    } else {
+      $value = $child->string_value;
+      $value =~ s/\s+/ /gms;
     }
+    $str .= $value
+  }
 
-    return $str;
+  return $str;
 }
 
 ## returns an array of xpaths in order of priority
 ## given an entry field, display mode, locale and subfield as args
 sub _get_xpath_array {
-    my ($field, $dm, $locale, $subfield) = @_ ;
+  my ($field, $dm, $locale, $subfield) = @_ ;
 
-    # $dm and $subfield can be undef
+  # $dm and $subfield can be undef
 
-    my $xpath_field = "bib:$field";
-    my $xpath_dm;
-    my $xpath_locale;
-    my $xpath_localeb;
-    my @xpath_array = ();
+  my $xpath_field = "bib:$field";
+  my $xpath_dm;
+  my $xpath_locale;
+  my $xpath_localeb;
+  my @xpath_array = ();
 
-    $locale =~ s/\..+$//; # remove encoding suffix
-    my $localeb = $locale ;
-    $localeb =~ s/_.+$//; # base locale
-    if ( ! defined $dm or $dm eq 'uniform' or $dm eq 'translated' ) {
-        $xpath_locale  = "\@xml:lang=\"$locale\"";
-        $xpath_localeb = "\@xml:lang=\"$localeb\"";
-    }
+  $locale =~ s/\..+$//; # remove encoding suffix
+  my $localeb = $locale ;
+  $localeb =~ s/_.+$//; # base locale
+  if ( ! defined $dm or $dm eq 'uniform' or $dm eq 'translated' ) {
+    $xpath_locale  = "\@xml:lang=\"$locale\"";
+    $xpath_localeb = "\@xml:lang=\"$localeb\"";
+  }
 
-    if ( defined $dm and $dm ne 'original' ) {
-        $xpath_dm = "\@mode=\"$dm\""
-    }
-    else {
-        $xpath_dm = 'not(@mode)'
-    }
+  if ( defined $dm and $dm ne 'original' ) {
+    $xpath_dm = "\@mode=\"$dm\""
+  }
+  else {
+    $xpath_dm = 'not(@mode)'
+  }
 
-    if ( defined $xpath_locale ) {
-        push @xpath_array,
-            $xpath_field.'['.$xpath_dm.' and '.$xpath_locale.']';
-        push @xpath_array,
-            $xpath_field.'['.$xpath_dm.' and '.$xpath_localeb.']'
-                unless ( $xpath_locale eq $xpath_localeb );
-    }
+  if ( defined $xpath_locale ) {
+    push @xpath_array,
+      $xpath_field.'['.$xpath_dm.' and '.$xpath_locale.']';
+    push @xpath_array,
+      $xpath_field.'['.$xpath_dm.' and '.$xpath_localeb.']'
+      unless ( $xpath_locale eq $xpath_localeb );
+  }
 
-    push @xpath_array, $xpath_field.'['.$xpath_dm.']';
+  push @xpath_array, $xpath_field.'['.$xpath_dm.']';
 
-    if (defined $subfield) {
-        map { $_ .= "/bib:$subfield" } @xpath_array
-    }
+  if (defined $subfield) {
+    map { $_ .= "/bib:$subfield" } @xpath_array
+  }
 
-    return @xpath_array
+  return @xpath_array
 }
 
-
 sub XML::LibXML::Element::_find_biblatex_nodes {
-    my ($node, $biber, $field, $dma, $subfield) = @_ ;
-    ## $dma is an arrayref with list of displaymodes, in order of preference
-    ## Ex: [ 'original', 'romanized', 'uniform', 'translated' ]
+  my ($node, $biber, $field, $dma, $subfield) = @_ ;
+  ## $dma is an arrayref with list of displaymodes, in order of preference
+  ## Ex: [ 'original', 'romanized', 'uniform', 'translated' ]
 
-    my $locale = Biber::Config->getoption('locale') or $logger->logcroak("No locale defined");
+  my $locale = Biber::Config->getoption('locale') or $logger->logcroak("No locale defined");
 
-    unless ($node->exists("bib:$field\[\@mode\]")) {
-         foreach my $xpath ( _get_xpath_array($field, undef, $locale, $subfield) ) {
-            return $node->findnodes($xpath) if $node->exists($xpath);
-        }
+  unless ($node->exists("bib:$field\[\@mode\]")) {
+    foreach my $xpath ( _get_xpath_array($field, undef, $locale, $subfield) ) {
+      return $node->findnodes($xpath) if $node->exists($xpath);
     }
+  }
 
-    foreach my $dm (@{$dma}) {
-        foreach my $xpath ( _get_xpath_array($field, $dm, $locale, $subfield) ) {
-            ##ddx "Checking $xpath ...";
-            $logger->trace("Checking for node $xpath");
-            if ($node->exists($xpath)) {
-                $logger->debug("Found node $xpath");
-                return $node->findnodes($xpath)
-            }
-        }
+  foreach my $dm (@{$dma}) {
+    foreach my $xpath ( _get_xpath_array($field, $dm, $locale, $subfield) ) {
+      ##ddx "Checking $xpath ...";
+      $logger->trace("Checking for node $xpath");
+      if ($node->exists($xpath)) {
+        $logger->debug("Found node $xpath");
+        return $node->findnodes($xpath)
+      }
     }
+  }
 }
 
 sub XML::LibXML::NodeList::_normalize_string_value {
-    my $nodelist = shift ;
-    my $node = $nodelist->get_node(1) || croak "Can't get node : $@";
-    return $node->findvalue("normalize-space()")
+  my $nodelist = shift ;
+  my $node = $nodelist->get_node(1) || croak "Can't get node : $@";
+  return $node->findvalue("normalize-space()")
 }
 
 sub XML::LibXML::Element::_normalize_string_value {
-    my $node = shift ;
-    return $node->findvalue("normalize-space()")
+  my $node = shift ;
+  return $node->findvalue("normalize-space()")
 }
 
 1;
@@ -236,5 +235,5 @@ later version, or
 
 =cut
 
-# vim: set tabstop=4 shiftwidth=4 expandtab:
+# vim: set tabstop=2 shiftwidth=2 expandtab:
 

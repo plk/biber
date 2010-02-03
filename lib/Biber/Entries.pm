@@ -13,9 +13,9 @@ Biber::Entries
 =cut
 
 sub new {
-    my ($class) = @_;
-    my $self = bless {}, $class;
-    return $self;
+  my ($class) = @_;
+  my $self = bless {}, $class;
+  return $self;
 }
 
 =head2 entry_exists
@@ -102,4 +102,4 @@ later version, or
 
 1;
 
-# vim: set tabstop=4 shiftwidth=4 expandtab:
+# vim: set tabstop=2 shiftwidth=2 expandtab:

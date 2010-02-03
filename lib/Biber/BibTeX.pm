@@ -17,164 +17,164 @@ my $logger = Log::Log4perl::get_logger('main');
 
 sub _text_bibtex_parse {
 
-    my ($self, $filename) = @_;
+  my ($self, $filename) = @_;
 
-    # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
-    if (Biber::Config->getoption('quiet')) {
-      open STDERR, '>/dev/null';
+# Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
+  if (Biber::Config->getoption('quiet')) {
+    open STDERR, '>/dev/null';
+  }
+
+  my $bibentries = $self->bib;
+
+  my @localkeys;
+
+  my $encoding;
+
+  if ( Biber::Config->getoption('bibencoding') and
+    not Biber::Config->getoption('unicodebbl') ) {
+    $encoding = Biber::Config->getoption('bibencoding');
+  } else {
+    $encoding = "utf8";
+  }
+
+  my $bib = Text::BibTeX::File->new( $filename, "<" )
+    or $logger->logcroak("Cannot create Text::BibTeX::File object from $filename: $!");
+
+  #TODO validate with Text::BibTeX::Structure ?
+
+  my @preamble = ();
+  my $count = 0;
+
+  while ( my $entry = new Text::BibTeX::Entry $bib ) {
+
+    $count++;
+
+    if ( $entry->metatype == BTE_PREAMBLE ) {
+      push @preamble, $entry->value;
+      next;
     }
 
-    my $bibentries = $self->bib;
+    next if ( $entry->metatype == BTE_MACRODEF or $entry->metatype == BTE_UNKNOWN
+      or $entry->metatype == BTE_COMMENT ); #or $entry->type =~ m/^comment$/i
 
-    my @localkeys;
-
-    my $encoding;
-
-    if ( Biber::Config->getoption('bibencoding') and
-         not Biber::Config->getoption('unicodebbl') ) {
-      $encoding = Biber::Config->getoption('bibencoding');
-    } else {
-        $encoding = "utf8";
+    unless ( $entry->key ) {
+      $logger->warn("Cannot get the key of entry no $count : Skipping");
+      next;
     }
 
-    my $bib = Text::BibTeX::File->new( $filename, "<" )
-        or $logger->logcroak("Cannot create Text::BibTeX::File object from $filename: $!");
+    my $origkey = $entry->key;
+    my $lc_key = lc($origkey);
 
-    #TODO validate with Text::BibTeX::Structure ?
+    if (!defined $origkey or $origkey =~ /\s/ or $origkey eq '') {
+      $logger->warn("Invalid BibTeX key! Skipping...");
+      next;
+    }
 
-    my @preamble = ();
-    my $count = 0;
+    $logger->debug("Processing entry '$origkey'");
 
-    while ( my $entry = new Text::BibTeX::Entry $bib ) {
+    if ( $bibentries->entry_exists($origkey) ) {
+      $self->{errors}++;
+      my (undef,undef,$f) = File::Spec->splitpath( $filename );
+      $logger->warn("Repeated entry---key $origkey in file $f\nI'm skipping whatever remains of this entry");
+      next;
+    }
 
-        $count++;
+    push @localkeys, $lc_key;
 
-        if ( $entry->metatype == BTE_PREAMBLE ) {
-            push @preamble, $entry->value;
-            next;
+    unless ($entry->parse_ok) {
+      $self->{errors}++;
+      $logger->warn("Entry $origkey does not parse correctly: skipping");
+      next;
+    }
+
+    my $bibentry = new Biber::Entry;
+
+    # all fields used for this entry
+    my @flist = $entry->fieldlist;
+
+    #here we only keep those that do not require splitting
+    my @flistnosplit = reduce_array(\@flist, \@ENTRIESTOSPLIT);
+
+    if ( $entry->metatype == BTE_REGULAR ) {
+
+      foreach my $f ( @flistnosplit ) {
+
+        #my $value = decode_utf8( $entry->get($f) );
+        my $value = decode( $encoding, $entry->get($f) );
+
+        my $af = $f;
+
+        if ( $ALIASES{$f} ) {
+          $af = $ALIASES{$f};
         }
 
-        next if ( $entry->metatype == BTE_MACRODEF or $entry->metatype == BTE_UNKNOWN
-                or $entry->metatype == BTE_COMMENT ); #or $entry->type =~ m/^comment$/i
+        $bibentry->set_field($af, $value);
 
-        unless ( $entry->key ) {
-            $logger->warn("Cannot get the key of entry no $count : Skipping");
-            next;
-        }
+        if ($entry->type eq 'set' and $f eq 'entryset') {
 
-        my $origkey = $entry->key;
-        my $lc_key = lc($origkey);
+          my @entrysetkeys = split /\s*,\s*/, $value;
 
-        if (!defined $origkey or $origkey =~ /\s/ or $origkey eq '') {
-            $logger->warn("Invalid BibTeX key! Skipping...");
-            next;
-        }
-
-        $logger->debug("Processing entry '$origkey'");
-
-        if ( $bibentries->entry_exists($origkey) ) {
-            $self->{errors}++;
-            my (undef,undef,$f) = File::Spec->splitpath( $filename );
-            $logger->warn("Repeated entry---key $origkey in file $f\nI'm skipping whatever remains of this entry");
-            next;
-        }
-
-        push @localkeys, $lc_key;
-
-        unless ($entry->parse_ok) {
-            $self->{errors}++;
-            $logger->warn("Entry $origkey does not parse correctly: skipping");
-            next;
-        }
-
-        my $bibentry = new Biber::Entry;
-
-        # all fields used for this entry
-        my @flist = $entry->fieldlist;
-
-        #here we only keep those that do not require splitting
-        my @flistnosplit = reduce_array(\@flist, \@ENTRIESTOSPLIT);
-
-        if ( $entry->metatype == BTE_REGULAR ) {
-
-            foreach my $f ( @flistnosplit ) {
-
-                #my $value = decode_utf8( $entry->get($f) );
-                my $value = decode( $encoding, $entry->get($f) );
-
-                my $af = $f;
-
-                if ( $ALIASES{$f} ) {
-                  $af = $ALIASES{$f};
-                }
-
-                $bibentry->set_field($af, $value);
-
-                if ($entry->type eq 'set' and $f eq 'entryset') {
-
-                    my @entrysetkeys = split /\s*,\s*/, $value;
-
-                    foreach my $setkey (@entrysetkeys) {
-                        Biber::Config->setstate('inset_entries', $setkey, $lc_key);
-                    }
-                }
-                elsif ($f eq 'crossref') { ### $entry->type ne 'set' and
-                    Biber::Config->incrstate('crossrefkeys', $value);
-                    Biber::Config->setstate('entrieswithcrossref', $lc_key, $value);
-                }
-            }
-
-            if (lc($entry->type) eq 'phdthesis') {
-                $bibentry->set_field('entrytype', 'thesis');
-                $bibentry->set_field('type', 'phdthesis');
-            } elsif (lc($entry->type) eq 'mathesis') {
-                $bibentry->set_field('entrytype', 'thesis');
-                $bibentry->set_field('type', 'mathesis');
-            } else {
-                $bibentry->set_field('entrytype', $entry->type);
-            }
-
-            foreach my $f ( @ENTRIESTOSPLIT ) {
-
-                next unless $entry->exists($f);
-
-                my $af = $f;
-
-                # support for legacy BibTeX field names as aliases
-                if ( $ALIASES{$f} ) {
-                    $af = $ALIASES{$f};
-                    # ignore field e.g. "address" if "location" also exists
-                    next if $entry->exists($af);
-                }
-
-                my @tmp = map { decode($encoding, $_) } $entry->split($f);
-
-                if (is_name_field($f)) {
-                  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
-                  my $names = new Biber::Entry::Names;
-                  foreach my $name (@tmp) {
-                    $names->add_name(parsename($name, {useprefix => $useprefix}));
-                  }
-                  $bibentry->set_field($af, $names);
-
-                } else {
-                    @tmp = map { remove_outer($_) } @tmp;
-                    $bibentry->set_field($af, [ @tmp ]);
-                }
-            }
-
-            $bibentry->set_field('datatype', 'bibtex');
-            $bibentries->add_entry($lc_key, $bibentry);
-
+          foreach my $setkey (@entrysetkeys) {
+            Biber::Config->setstate('inset_entries', $setkey, $lc_key);
           }
+        }
+        elsif ($f eq 'crossref') { ### $entry->type ne 'set' and
+          Biber::Config->incrstate('crossrefkeys', $value);
+          Biber::Config->setstate('entrieswithcrossref', $lc_key, $value);
+        }
       }
 
-    $self->{preamble} = join( "%\n", @preamble ) if @preamble;
+      if (lc($entry->type) eq 'phdthesis') {
+        $bibentry->set_field('entrytype', 'thesis');
+        $bibentry->set_field('type', 'phdthesis');
+      } elsif (lc($entry->type) eq 'mathesis') {
+        $bibentry->set_field('entrytype', 'thesis');
+        $bibentry->set_field('type', 'mathesis');
+      } else {
+        $bibentry->set_field('entrytype', $entry->type);
+      }
 
+      foreach my $f ( @ENTRIESTOSPLIT ) {
 
-   if (Biber::Config->getoption('quiet')) {
-      close STDERR;
+        next unless $entry->exists($f);
+
+        my $af = $f;
+
+        # support for legacy BibTeX field names as aliases
+        if ( $ALIASES{$f} ) {
+          $af = $ALIASES{$f};
+
+          # ignore field e.g. "address" if "location" also exists
+          next if $entry->exists($af);
+        }
+
+        my @tmp = map { decode($encoding, $_) } $entry->split($f);
+
+        if (is_name_field($f)) {
+          my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
+          my $names = new Biber::Entry::Names;
+          foreach my $name (@tmp) {
+            $names->add_name(parsename($name, {useprefix => $useprefix}));
+          }
+          $bibentry->set_field($af, $names);
+
+        } else {
+          @tmp = map { remove_outer($_) } @tmp;
+          $bibentry->set_field($af, [ @tmp ]);
+        }
+      }
+
+      $bibentry->set_field('datatype', 'bibtex');
+      $bibentries->add_entry($lc_key, $bibentry);
+
     }
+  }
+
+  $self->{preamble} = join( "%\n", @preamble ) if @preamble;
+
+  if (Biber::Config->getoption('quiet')) {
+    close STDERR;
+  }
 
   return @localkeys;
 
@@ -225,4 +225,4 @@ later version, or
 
 =cut
 
-# vim: set tabstop=4 shiftwidth=4 expandtab:
+# vim: set tabstop=2 shiftwidth=2 expandtab:

@@ -6,38 +6,39 @@ use Readonly;
 use base 'Exporter';
 
 our @EXPORT = qw{
-                  @NAMEFIELDS
-                  @LISTFIELDS
-                  @LITERALFIELDS_BASE
-                  @RANGEFIELDS
-                  @VERBATIMFIELDS
-                  @TITLEFIELDS
-                  @KEYFIELDS
-                  @COMMASEP_FIELDS
-                  @ENTRIESTOSPLIT
-                  @LITERALFIELDS
-                  @DATERANGEFIELDS
-                  @DATECOMPONENTFIELDS
-                  %SKIPFIELDS
-                  %CONFIG_DEFAULT_BIBER
-                  %CONFIG_DEFAULT_BIBLATEX
-                  $BIBER_CONF_NAME
-                  $BIBLATEX_VERSION
-                  $BCF_VERSION
-                  $BIBER_SORT_FINAL
-                  $BIBER_SORT_NULL
-                  %ALIASES
-                  %NUMERICALMONTH
-                  %BIBLATEXML_FORMAT_ELEMENTS
-                  @BIBLATEXML_FORMATTEXT
-                  @BIBLATEXML_FORMATTEXT_B
-                  %FIELDS_WITH_CHILDREN
-                  %DISPLAYMODES
-                  $DISPLAYMODE_DEFAULT
-              } ;
+  @NAMEFIELDS
+  @LISTFIELDS
+  @LITERALFIELDS_BASE
+  @RANGEFIELDS
+  @VERBATIMFIELDS
+  @TITLEFIELDS
+  @KEYFIELDS
+  @COMMASEP_FIELDS
+  @ENTRIESTOSPLIT
+  @LITERALFIELDS
+  @DATERANGEFIELDS
+  @DATECOMPONENTFIELDS
+  %SKIPFIELDS
+  %CONFIG_DEFAULT_BIBER
+  %CONFIG_DEFAULT_BIBLATEX
+  $BIBER_CONF_NAME
+  $BIBLATEX_VERSION
+  $BCF_VERSION
+  $BIBER_SORT_FINAL
+  $BIBER_SORT_NULL
+  %ALIASES
+  %NUMERICALMONTH
+  %BIBLATEXML_FORMAT_ELEMENTS
+  @BIBLATEXML_FORMATTEXT
+  @BIBLATEXML_FORMATTEXT_B
+  %FIELDS_WITH_CHILDREN
+  %DISPLAYMODES
+  $DISPLAYMODE_DEFAULT
+  } ;
 
 # this is the latest <major.minor> version of biblatex.sty
 Readonly::Scalar our $BIBLATEX_VERSION => '0.9';
+
 # this is the latest version of the BCF xml format
 Readonly::Scalar our $BCF_VERSION => '0.9';
 
@@ -65,16 +66,19 @@ our %CONFIG_DEFAULT_BIBER = (
   quiet => 0,
   nolog => 0,
   wraplines => 0,
+
   # these options are passed to the Unicode::Collate object
   collate_options => { level=>2, table=>"latinkeys.txt" },
   ## eventually this shall be moved to biblatex options:
   displaymode => 'uniform',
   locale => $locale,
-  # Semitic (or eventually other) last names may begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
+
+# Semitic (or eventually other) last names may begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
   nosortdiacritics => qr/[\x{2bf}\x{2018}]/,
-  # Semitic (or eventually other) names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
+
+# Semitic (or eventually other) names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
   nosortprefix => qr/\p{L}{2}\p{Pd}/,
-);
+  );
 
 # default global options for biblatex
 # in practice these will be obtained from the control file,
@@ -94,28 +98,28 @@ our %CONFIG_DEFAULT_BIBLATEX = (
   singletitle => '0',
   uniquename => '0',
   sorting => [  [  {'presort'    => []},
-                         {'mm'         => []} ],
-                      [  {'sortkey'    => ['final']}  ],
-                      [  {'sortname'   => []},
-                         {'author'     => []},
-                         {'editor'     => []},
-                         {'translator' => []},
-                         {'sorttitle'  => []},
-                         {'title'      => []}  ],
-                      [  {'sorttitle'  => []},
-                         {'title'      => []}  ],
-                      [  {'sortyear'   => []},
-                         {'year'       => []}  ],
-                      [  {'volume'     => []},
-                         {'0000'       => []}  ]
-             ],
+      {'mm'         => []} ],
+    [  {'sortkey'    => ['final']}  ],
+    [  {'sortname'   => []},
+      {'author'     => []},
+      {'editor'     => []},
+      {'translator' => []},
+      {'sorttitle'  => []},
+      {'title'      => []}  ],
+    [  {'sorttitle'  => []},
+      {'title'      => []}  ],
+    [  {'sortyear'   => []},
+      {'year'       => []}  ],
+    [  {'volume'     => []},
+      {'0000'       => []}  ]
+    ],
   sortlos => '1',
   maxnames => '3',
   minnames => '1',
   maxline => '79',
   alphaothers  => '+',
   labelname => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
-);
+  );
 
 ### biblatex fields
 
@@ -141,7 +145,7 @@ Readonly::Array our @DATECOMPONENTFIELDS  =>   qw{
   year  endyear  origyear  origendyear   eventyear   eventendyear  urlyear  urlendyear
   month endmonth origmonth origendmonth  eventmonth  eventendmonth urlmonth urlendmonth
   day   endday   origday   origendday    eventday    eventendday   urlday   urlendday
-};
+  };
 
 Readonly::Array our @TITLEFIELDS => qw{
   title subtitle titleaddon shorttitle sorttitle indextitle indexsorttitle
@@ -179,7 +183,7 @@ Readonly::Hash our %ALIASES => (
   'school'  => 'institution',
   'annote'  => 'annotation',
   'key'     => 'sortkey'
-);
+  );
 
 Readonly::Hash our %NUMERICALMONTH => (
   'January' => 1,
@@ -218,7 +222,7 @@ Readonly::Hash our %NUMERICALMONTH => (
   'oct' => 10,
   'nov' => 11,
   'dec' => 12
-);
+  );
 
 # TODO ask PL to define mkbibsubscript in biblatex ?
 Readonly::Hash our %BIBLATEXML_FORMAT_ELEMENTS => (
@@ -226,7 +230,7 @@ Readonly::Hash our %BIBLATEXML_FORMAT_ELEMENTS => (
   'bib:subscript'   => 'textsubscript',
   'bib:superscript' => 'mkbibsuperscript',
   'bib:emphasis'    => 'mkbibemph'
-);
+  );
 
 Readonly::Array our @BIBLATEXML_FORMATTEXT => qw(
   abstract
@@ -271,7 +275,7 @@ Readonly::Hash our %DISPLAYMODES => {
   translated => [ qw/translated uniform romanized original/ ],
   romanized => [ qw/romanized uniform translated original/ ],
   original => [ qw/original romanized uniform translated/ ]
-} ;
+  } ;
 
 Readonly::Scalar our $DISPLAYMODE_DEFAULT => 'uniform';
 
@@ -316,4 +320,4 @@ later version, or
 
 =cut
 
-# vim: set tabstop=4 shiftwidth=4 expandtab:
+# vim: set tabstop=2 shiftwidth=2 expandtab:

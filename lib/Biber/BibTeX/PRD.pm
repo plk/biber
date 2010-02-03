@@ -17,160 +17,159 @@ my $logger = Log::Log4perl::get_logger('main');
 
 sub _bibtex_prd_parse {
 
-    my ($self, $filename) = @_;
+  my ($self, $filename) = @_;
 
-    my @auxcitekeys = $self->citekeys;
+  my @auxcitekeys = $self->citekeys;
 
-    my $bibentries = $self->bib;
+  my $bibentries = $self->bib;
 
-    my @localkeys;
+  my @localkeys;
 
-    ## TODO
-    # $::RD_TRACE = 1 if Biber::Config->getoption('parserdebug');
+  ## TODO
+  # $::RD_TRACE = 1 if Biber::Config->getoption('parserdebug');
 
-    undef $/;
+  undef $/;
 
-    my $mode = "";
+  my $mode = "";
 
-    if ( Biber::Config->getoption('inputencoding') && ! Biber::Config->getoption('unicodebbl') ) {
-        $mode = ':encoding(' . Biber::Config->getoption('inputencoding') . ')';
-    } else {
-        $mode = ":utf8";
-    };
+  if ( Biber::Config->getoption('inputencoding') && ! Biber::Config->getoption('unicodebbl') ) {
+    $mode = ':encoding(' . Biber::Config->getoption('inputencoding') . ')';
+  } else {
+    $mode = ":utf8";
+  };
 
-    my $bib = IO::File->new( $filename, "<$mode" )
-        or $logger->logcroak("Failed to open $filename : $!");
+  my $bib = IO::File->new( $filename, "<$mode" )
+    or $logger->logcroak("Failed to open $filename : $!");
 
-    my $btparser = Biber::BibTeX::Parser->new
-        or $logger->logcroak("Cannot create Biber::BibTeX::Parser object: $!");
+  my $btparser = Biber::BibTeX::Parser->new
+    or $logger->logcroak("Cannot create Biber::BibTeX::Parser object: $!");
 
-    my $bf       = $btparser->BibFile(<$bib>)
-        or $logger->logcroak("Can't parse file $filename : Are you certain it is a BibTeX file?\n\t$!");
+  my $bf       = $btparser->BibFile(<$bib>)
+    or $logger->logcroak("Can't parse file $filename : Are you certain it is a BibTeX file?\n\t$!");
 
-    close $bib;
+  close $bib;
 
-    my @tmp = @$bf;
+  my @tmp = @$bf;
 
-    my $preamble = undef;
+  my $preamble = undef;
 
-    for my $n ( 0 .. $#tmp ) {
+  for my $n ( 0 .. $#tmp ) {
 
-        my @tmpk   = keys %{ $tmp[$n] };
-        my $tmpkey = $tmpk[0];
+    my @tmpk   = keys %{ $tmp[$n] };
+    my $tmpkey = $tmpk[0];
 
-        if ( $tmpkey eq 'preamble' ) {
+    if ( $tmpkey eq 'preamble' ) {
 
-            $preamble = join("%\n", @{ $tmp[$n]->{preamble} });
+      $preamble = join("%\n", @{ $tmp[$n]->{preamble} });
+    }
+    elsif ( $tmpkey eq 'entries' ) {
+
+      my @entries = @{ $tmp[$n]->{entries} };
+
+      foreach my $i ( 0 .. $#entries ) {
+
+        my @tmpa   = keys %{ $entries[$i] };
+        my $origkey = $tmpa[0];
+        my $key = lc($origkey);
+
+        if ( $bibentries->entry_exists($origkey) or $bibentries->entry_exists($key)) {
+          $self->{errors}++;
+          my (undef,undef,$f) = File::Spec->splitpath( $filename );
+          $logger->warn("Repeated entry---key $origkey in file $f\nI'm skipping whatever remains of this entry");
+          next;
         }
-        elsif ( $tmpkey eq 'entries' ) {
 
-            my @entries = @{ $tmp[$n]->{entries} };
+        push @localkeys, $key;
 
-            foreach my $i ( 0 .. $#entries ) {
+        my $bibentry = new Biber::Entry($entries[$i]->{$origkey});
 
-                my @tmpa   = keys %{ $entries[$i] };
-                my $origkey = $tmpa[0];
-                my $key = lc($origkey);
+        $bibentry->set_field('datatype', 'bibtex');
+        $bibentries->add_entry($key, $bibentry);
+      }
+    }
+  }
 
-                if ( $bibentries->entry_exists($origkey) or $bibentries->entry_exists($key)) {
-                    $self->{errors}++;
-                    my (undef,undef,$f) = File::Spec->splitpath( $filename );
-                    $logger->warn("Repeated entry---key $origkey in file $f\nI'm skipping whatever remains of this entry");
-                    next;
-                }
+  foreach my $key ( @localkeys ) {
 
-                push @localkeys, $key;
+    $logger->debug("Processing entry '$key'");
 
-                my $bibentry = new Biber::Entry($entries[$i]->{$origkey});
+    my $bibentry = $bibentries->entry($key);
 
-                $bibentry->set_field('datatype', 'bibtex');
-                $bibentries->add_entry($key, $bibentry);
-            }
-        }
+    foreach my $alias (keys %ALIASES) {
+
+      if ( $bibentry->get_field($alias) ) {
+        my $field = $ALIASES{$alias};
+        $bibentry->set_field($field, $bibentry->get_field($alias));
+        $bibentry->del_field($alias);
+      }
     }
 
-    foreach my $key ( @localkeys ) {
+    foreach my $ets (@ENTRIESTOSPLIT) {
 
-        $logger->debug("Processing entry '$key'");
+      if ( $bibentry->get_field($ets) ) {
 
-        my $bibentry = $bibentries->entry($key);
+        my $stringtosplit = $bibentry->get_field($ets);
 
-        foreach my $alias (keys %ALIASES) {
+        # next if ref($tmp) neq 'SCALAR'; # we skip those that have been split
 
-            if ( $bibentry->get_field($alias) ) {
-                my $field = $ALIASES{$alias};
-                $bibentry->set_field($field, $bibentry->get_field($alias));
-                $bibentry->del_field($alias);
-            }
-        }
+        # "and" within { } must be preserved: see biblatex manual §2.3.3
+        #      (this can probably be optimized)
 
-        foreach my $ets (@ENTRIESTOSPLIT) {
+        foreach my $x ( $stringtosplit =~ m/($RE{balanced}{-parens => '{}'})/gx ) {
 
-            if ( $bibentry->get_field($ets) ) {
+          ( my $xr = $x ) =~ s/\s+and\s+/_\x{ff08}_/g;
 
-                my $stringtosplit = $bibentry->get_field($ets);
-
-                # next if ref($tmp) neq 'SCALAR'; # we skip those that have been split
-
-                # "and" within { } must be preserved: see biblatex manual §2.3.3
-                #      (this can probably be optimized)
-
-                foreach my $x ( $stringtosplit =~ m/($RE{balanced}{-parens => '{}'})/gx ) {
-
-                    ( my $xr = $x ) =~ s/\s+and\s+/_\x{ff08}_/g;
-
-                    $stringtosplit =~ s/\Q$x/$xr/g;
-
-                };
-
-                my @tmp = split /\s+and\s+/, $stringtosplit;
-
-                sub _restore_and {
-                    s/_\x{ff08}_/ and /g;
-                    return $_
-                };
-
-                @tmp = map { _restore_and($_) } @tmp;
-
-                if (is_name_field($ets)) {
-                  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
-                  my $names = new Biber::Entry::Names;
-                  foreach my $name (@tmp) {
-                    $names->add_name(parsename($name, {useprefix => $useprefix}));
-                  }
-                  $bibentry->set_field($ets, $names);
-
-                } else {
-                    @tmp = map { remove_outer($_) } @tmp;
-                    $bibentry->set_field($ets, [ @tmp ]);
-                }
-
-            }
-        }
-
-        if ($bibentry->get_field('entrytype') eq 'set') {
-
-            my @entrysetkeys = split /\s*,\s*/, $bibentry->get_field('entryset');
-
-            foreach my $setkey (@entrysetkeys) {
-                Biber::Config->setstate('inset_entries', $setkey, $key);
-            }
-        }
-
-        if ( $bibentry->get_field('crossref') ) {
-
-            my $crkey = $bibentry->get_field('crossref');
-
-            Biber::Config->incrstate('crossrefkeys', $crkey);
-            Biber::Config->setstate('entrieswithcrossref', $key, $crkey);
+          $stringtosplit =~ s/\Q$x/$xr/g;
 
         };
+
+        my @tmp = split /\s+and\s+/, $stringtosplit;
+
+        sub _restore_and {
+          s/_\x{ff08}_/ and /g;
+          return $_
+        };
+
+        @tmp = map { _restore_and($_) } @tmp;
+
+        if (is_name_field($ets)) {
+          my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
+          my $names = new Biber::Entry::Names;
+          foreach my $name (@tmp) {
+            $names->add_name(parsename($name, {useprefix => $useprefix}));
+          }
+          $bibentry->set_field($ets, $names);
+
+        } else {
+          @tmp = map { remove_outer($_) } @tmp;
+          $bibentry->set_field($ets, [ @tmp ]);
+        }
+
+      }
     }
 
-    $self->{preamble} .= $preamble if $preamble;
+    if ($bibentry->get_field('entrytype') eq 'set') {
 
+      my @entrysetkeys = split /\s*,\s*/, $bibentry->get_field('entryset');
 
-    return @localkeys;
+      foreach my $setkey (@entrysetkeys) {
+        Biber::Config->setstate('inset_entries', $setkey, $key);
+      }
+    }
+
+    if ( $bibentry->get_field('crossref') ) {
+
+      my $crkey = $bibentry->get_field('crossref');
+
+      Biber::Config->incrstate('crossrefkeys', $crkey);
+      Biber::Config->setstate('entrieswithcrossref', $key, $crkey);
+
+    };
+  }
+
+  $self->{preamble} .= $preamble if $preamble;
+
+  return @localkeys;
 
 }
 
@@ -221,4 +220,4 @@ later version, or
 
 =cut
 
-# vim: set tabstop=4 shiftwidth=4 expandtab:
+# vim: set tabstop=2 shiftwidth=2 expandtab:

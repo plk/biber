@@ -9,66 +9,67 @@ use Log::Log4perl qw(:no_extra_logdie_message);
 my $logger = Log::Log4perl::get_logger('main');
 
 sub dbxml_to_xml {
-    my ($self, $dbxmlfile) = @_;
-    my @auxcitekeys = $self->citekeys;
-    my $mgr = new XmlManager() or croak;
-    my $collname = basename($dbxmlfile);
-    my $xmlstring = <<ENDXML
+  my ($self, $dbxmlfile) = @_;
+  my @auxcitekeys = $self->citekeys;
+  my $mgr = new XmlManager() or croak;
+  my $collname = basename($dbxmlfile);
+  my $xmlstring = <<ENDXML
 <?xml version="1.0" encoding="UTF-8"?>
 <bib:entries xmlns:bib="http://biblatex-biber.sourceforge.net/biblatexml"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 ENDXML
-   ;
-    eval {
-        my $workingdir = getcwd;
-        chdir( dirname($dbxmlfile) ) or $logger->logcroak("Cannot chdir: $!");
-        my $cont = $mgr->openContainer("$collname");
-        my $context = $mgr->createQueryContext();
-        $context->setNamespace("bib", "http://biblatex-biber.sourceforge.net/biblatexml");
-        foreach my $key (@auxcitekeys) {
-            $logger->debug("Querying dbxml for key $key");
-            my $query = 'collection("' . $collname . '")//bib:entry[@id="' . $key . '"]';
-            my $results = $mgr->query($query, $context);
-            my $ressize = $results->size;
-            if ($ressize > 1) {
-                $logger->warn("Found $ressize entries for key $key!");
-            };
-            my $xmlvalue = new XmlValue;
-            while ($results->next($xmlvalue)) {
-                $xmlstring .= $xmlvalue->asString() . "\n    \n";
-                last;
-            };
-            ## now we add the crossref key to the citekeys, if present:
-            my $queryx = 'collection("' . $collname . '")//bib:entry[@id="' . $key .
-                '"]/bib:crossref/string()';
-            my $resultsx = $mgr->query($queryx, $context);
-            if ($resultsx->size > 0) {
-                my $xmlvaluex = new XmlValue;
-                while ($resultsx->next($xmlvaluex)) {
-                    my $xkey = $xmlvaluex->asString();
-                    $logger->debug("Adding crossref key $xkey to the stack");
-                    #FIXME take also care of entryset keys!
-                    push @auxcitekeys, $xkey;
-                    last
-                }
-            }
+    ;
+  eval {
+    my $workingdir = getcwd;
+    chdir( dirname($dbxmlfile) ) or $logger->logcroak("Cannot chdir: $!");
+    my $cont = $mgr->openContainer("$collname");
+    my $context = $mgr->createQueryContext();
+    $context->setNamespace("bib", "http://biblatex-biber.sourceforge.net/biblatexml");
+    foreach my $key (@auxcitekeys) {
+      $logger->debug("Querying dbxml for key $key");
+      my $query = 'collection("' . $collname . '")//bib:entry[@id="' . $key . '"]';
+      my $results = $mgr->query($query, $context);
+      my $ressize = $results->size;
+      if ($ressize > 1) {
+        $logger->warn("Found $ressize entries for key $key!");
+      };
+      my $xmlvalue = new XmlValue;
+      while ($results->next($xmlvalue)) {
+        $xmlstring .= $xmlvalue->asString() . "\n    \n";
+        last;
+      };
+      ## now we add the crossref key to the citekeys, if present:
+      my $queryx = 'collection("' . $collname . '")//bib:entry[@id="' . $key .
+        '"]/bib:crossref/string()';
+      my $resultsx = $mgr->query($queryx, $context);
+      if ($resultsx->size > 0) {
+        my $xmlvaluex = new XmlValue;
+        while ($resultsx->next($xmlvaluex)) {
+          my $xkey = $xmlvaluex->asString();
+          $logger->debug("Adding crossref key $xkey to the stack");
+
+          #FIXME take also care of entryset keys!
+          push @auxcitekeys, $xkey;
+          last
         }
-
-        chdir( $workingdir );
-
-    };
-    if (my $e = catch std::exception) {
-        $logger->logwarn("Query failed\n", $e->what() );
-        exit ( -1 )
+      }
     }
-    elsif ($@) {
-        $logger->logwarn("Query failed\n", $@ );
-        exit( -1 );
+
+    chdir( $workingdir );
+
     };
+  if (my $e = catch std::exception) {
+    $logger->logwarn("Query failed\n", $e->what() );
+    exit ( -1 )
+  }
+  elsif ($@) {
+    $logger->logwarn("Query failed\n", $@ );
+    exit( -1 );
+  };
 
-    $xmlstring .= "\n</bib:entries>\n";
+  $xmlstring .= "\n</bib:entries>\n";
 
-    return $xmlstring;
+  return $xmlstring;
 }
 
 1;
