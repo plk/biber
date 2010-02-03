@@ -729,15 +729,7 @@ sub _print_biblatex_entry {
   $str .= "% sortstring = " . $be->get_field('sortstring') . "\n"
     if (Biber::Config->getoption('debug') || Biber::Config->getblxoption('debug'));
 
-  # Deal with special cases
-  my $special = '';
-  my $etfinal = $be->get_field('entrytype');
-  if ($be->get_field('entrytype') eq 'techreport') { # techreports are reports with a special field
-    $etfinal = 'report';
-    $special .=  "  \\field{type}{techreport}\n";
-  }
-
-  $str .= "\\entry{$origkey}{$etfinal}{$opts}\n";
+  $str .= "\\entry{$origkey}{" . $be->get_field('entrytype') . "}{$opts}\n";
 
   if ( $be->get_field('entrytype') eq 'set' ) {
     $str .= "  \\set{" . $be->get_field('entryset') . "}\n";
@@ -924,9 +916,6 @@ sub _print_biblatex_entry {
   if ( is_def_and_notnull($be->get_field('keywords')) ) {
     $str .= "  \\keyw{" . $be->get_field('keywords') . "}\n";
   }
-
-  # Append any special case things created above
-  $str .= $special if $special;
 
   # Append any warnings to the entry, if any
   if ($be->get_field('warnings')) {
