@@ -445,7 +445,7 @@ sub parse_ctrlfile {
 
   while (<$ctrl>) {
 
-    next unless /^\s*ctrl-options/;
+    next unless /^\s*options/;
 
     (my $opts) = /{(.+)}/; ## ex: {0.8b:0:0:0:0:1:1:0:0:1:0:1:2:1:3:1:79:+}
     my @blxopts = split /:/, $opts;
