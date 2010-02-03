@@ -258,4 +258,3 @@ later version, or
 1;
 
 # vim: set tabstop=2 shiftwidth=2 expandtab:
-

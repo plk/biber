@@ -146,3 +146,5 @@ later version, or
 =back
 
 =cut
+
+# vim: set tabstop=2 shiftwidth=2 expandtab:

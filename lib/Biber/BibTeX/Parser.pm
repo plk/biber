@@ -3149,6 +3149,8 @@ package Biber::BibTeX::Parser; sub new { my $self = bless( {
         }
     }, 'Parse::RecDescent' );
 }
+
+1;
 __END__
 
 =pod
@@ -3188,5 +3190,3 @@ under the same terms as Perl itself.
 =cut
 
 # vim: set tabstop=2 shiftwidth=2 expandtab:
-
-

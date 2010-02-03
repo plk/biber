@@ -1015,4 +1015,6 @@ under the same terms as Perl itself.
 
 =cut
 
-1; # End of LaTeX::Decode
+1;
+
+# vim: set tabstop=2 shiftwidth=2 expandtab:
