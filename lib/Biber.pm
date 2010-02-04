@@ -464,12 +464,14 @@ sub parse_ctrlfile {
 
   $logger->info("Reading $ctrl_file.bib") ;
 
+  my @blxopts;
+
   while (<$ctrl>) {
 
-    next unless /^\s*options/;
+    next unless /^\s*(ctrl-)?options/;
 
     (my $opts) = /{(.+)}/; ## ex: {0.8b:0:0:0:0:1:1:0:0:1:0:1:2:1:3:1:79:+}
-    my @blxopts = split /:/, $opts;
+    @blxopts = split /:/, $opts;
     Biber::Config->setblxoption('controlversion', $blxopts[0]);
     Biber::Config->setblxoption('debug',          $blxopts[1]);
     Biber::Config->setblxoption('terseinits',     $blxopts[3]);
@@ -487,11 +489,23 @@ sub parse_ctrlfile {
     Biber::Config->setblxoption('minnames',       $blxopts[15]);
     Biber::Config->setblxoption('alphaothers',    $blxopts[17]);
 
-    my $controlversion = Biber::Config->getblxoption('controlversion');
-    $logger->warn("You are using biblatex version $controlversion :
-biber is more likely to work with version $BIBLATEX_VERSION.")
-      unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION;
   }
+
+  if (@blxopts) {
+    if ($#blxopts != 17) {
+      $logger->warn("Incorrect number of biblatex options in $ctrl_file: expected 18 fields, but have " . $#blxopts+1);
+    }
+  }
+  else {
+    $logger->croak("No options found in $ctrl_file!")
+  }
+
+  my $controlversion = Biber::Config->getblxoption('controlversion');
+  $logger->warn('Strange: option controlversion is undefined!')
+    unless defined $controlversion;
+  $logger->warn("You are using biblatex version $controlversion:\n",
+         "       Biber v$VERSION is more likely to work with version $BIBLATEX_VERSION.")
+    unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION;
 
   if (Biber::Config->getblxoption('labelyear')) {
     Biber::Config->setblxoption('labelyear', [ 'year' ]); # set default
