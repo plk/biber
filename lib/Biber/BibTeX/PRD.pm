@@ -153,7 +153,7 @@ sub _bibtex_prd_parse {
       my @entrysetkeys = split /\s*,\s*/, $bibentry->get_field('entryset');
 
       foreach my $setkey (@entrysetkeys) {
-        Biber::Config->setstate('inset_entries', $setkey, $key);
+        Biber::Config->set_setparentkey($setkey, $key);
       }
     }
 
@@ -161,8 +161,7 @@ sub _bibtex_prd_parse {
 
       my $crkey = $bibentry->get_field('crossref');
 
-      Biber::Config->incrstate('crossrefkeys', $crkey);
-      Biber::Config->setstate('entrieswithcrossref', $key, $crkey);
+      Biber::Config->incr_crossrefkey($crkey);
 
     };
   }

@@ -21,7 +21,7 @@ is(Biber::Config->getoption('mincrossrefs'), 3);
 my %colloptsB = ( level => 1, table => "/home/user/data/mykeys.txt" );
 is_deeply(Biber::Config->getoption('collate_options'), \%colloptsB);
 
-Biber::Config->setstate('inset_entries', 'KeyA', 'keyB');
-Biber::Config->incrstate('crossrefkeys', 'SOME_KEY');
-is(Biber::Config->getstate('inset_entries', 'KEYA'), 'keyb', 'case-insensitive state methods 1');
-is(Biber::Config->getstate('crossrefkeys', 'SoMe_KeY'), 1, 'case-insensitive state methods 2');
+Biber::Config->set_setparentkey('KeyA', 'keyB');
+Biber::Config->incr_crossrefkey('SOME_KEY');
+is(Biber::Config->get_setparentkey('KEYA'), 'keyb', 'case-insensitive state methods 1');
+is(Biber::Config->get_crossrefkey('SoMe_KeY'), 1, 'case-insensitive state methods 2');

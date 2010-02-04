@@ -104,9 +104,9 @@ my $Worman_N = { 'WN2' => 1, 'WN1' => 1 } ;
 
 my $Gennep = { 'vGA1' => 1, 'vGJ1' => 1 } ;
 
-is_deeply( Biber::Config->getstate('uniquenamecount', 'Worman_N'), $Worman_N, 'uniquename count 1') ;
+is_deeply( Biber::Config->_get_uniquename('Worman_N'), $Worman_N, 'uniquename count 1') ;
 
-is_deeply( Biber::Config->getstate('uniquenamecount', 'Gennep'), $Gennep, 'uniquename count 2') ;
+is_deeply( Biber::Config->_get_uniquename('Gennep'), $Gennep, 'uniquename count 2') ;
 
 is_deeply( [ $biber->shorthands ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
 

@@ -297,12 +297,12 @@ sub parse_auxfile {
         last
 
       }
-      elsif ( ! Biber::Config->getstate('seenkeys', $1) and
+      elsif ( ! Biber::Config->get_seenkey($1) and
         ( $1 ne "biblatex-control" ) ) {
 
         push @auxcitekeys, decode_utf8($1);
 
-        Biber::Config->incrstate('seenkeys', $1);
+        Biber::Config->incr_seenkey($1);
 
       }
     }
@@ -409,11 +409,11 @@ sub parse_auxfile_v2 {
         # we stop reading the aux file as soon as we encounter \citation{*}
         last
 
-      } elsif ( ! Biber::Config->getstate('seenkeys', $1) ) {
+      } elsif ( ! Biber::Config->get_seenkey($1) ) {
 
         push @auxcitekeys, decode_utf8($1);
 
-        Biber::Config->incrstate('seenkeys', $1);
+        Biber::Config->incr_seenkey($1);
 
       }
     }
@@ -1062,7 +1062,7 @@ sub parse_bibtex {
   unlink $ufilename if -f $ufilename;
 
   if (Biber::Config->getoption('allentries')) {
-    map { Biber::Config->incrstate('seenkeys', $_) } @localkeys
+    map { Biber::Config->incr_seenkey($_) } @localkeys
   }
 
   my $bibentries = $self->bib;
@@ -1135,11 +1135,11 @@ sub process_sets_and_crossrefs {
   # at least $mincrossrefs times are included in the bibliography.
   # All crossrefs that are kept in "crossrefkeys" will be skipped
   # when writing the bbl output.
-  foreach my $k ( keys %{Biber::Config->getstate('crossrefkeys')} ) {
+  foreach my $k ( @{Biber::Config->get_crossrefkeys} ) {
     if ( $self->has_citekey($k) or
-      Biber::Config->getstate('crossrefkeys', $k) >= Biber::Config->getoption('mincrossrefs') ) {
+      Biber::Config->get_crossrefkey($k) >= Biber::Config->getoption('mincrossrefs') ) {
       $logger->debug("Removing unneeded crossrefkey $k");
-      Biber::Config->delstate('crossrefkeys', $k);
+      Biber::Config->del_crossrefkey($k);
     }
   }
 }
@@ -1538,17 +1538,17 @@ sub postprocess_hashes {
 
   my $hashsuffix = 1;
 
-  if (Biber::Config->getstate('namehashcount', $namehash, $nameid)) {
-    $hashsuffix = Biber::Config->getstate('namehashcount', $namehash, $nameid);
+  if (Biber::Config->get_namehashcount($namehash, $nameid)) {
+    $hashsuffix = Biber::Config->get_namehashcount($namehash, $nameid);
   }
-  elsif (Biber::Config->getstate('namehashcount', $namehash)) {
-    my $count = scalar keys %{ Biber::Config->getstate('namehashcount', $namehash) };
+  elsif (Biber::Config->namehashexists($namehash)) {
+    my $count = Biber::Config->get_numofnamehashes($namehash);
     $hashsuffix = $count + 1;
-    Biber::Config->setstate('namehashcount', $namehash, $nameid, $hashsuffix);
+    Biber::Config->set_namehashcount($namehash, $nameid, $hashsuffix);
   }
   else {
-    Biber::Config->delstate('namehashcount', $namehash);
-    Biber::Config->setstate('namehashcount', $namehash, $nameid, 1);
+    Biber::Config->del_namehash($namehash);
+    Biber::Config->set_namehashcount($namehash, $nameid, 1);
   }
 
   $namehash .= $hashsuffix;
@@ -1557,7 +1557,8 @@ sub postprocess_hashes {
   $be->set_field('namehash', $namehash);
   $be->set_field('fullhash', $fullhash);
 
-  Biber::Config->incrstate('seennamehash', $fullhash);
+  Biber::Config->incr_seennamehash($fullhash);
+
 
   my $lname = $be->get_field('labelnamename');
   {                   # Keep these variables scoped over the new few blocks
@@ -1574,23 +1575,23 @@ sub postprocess_hashes {
     if ($lname and
       Biber::Config->getblxoption('uniquename', $bee, $citekey) and
       $singlename == 1 ) {
-      if ( not Biber::Config->getstate('uniquenamecount', $lastname, $namehash) ) {
-        if ( Biber::Config->getstate('uniquenamecount', $lastname) ) {
-          Biber::Config->setstate('uniquenamecount', $lastname, $namehash, 1);
+      if ( not Biber::Config->get_uniquenamecount($lastname, $namehash) ) {
+        if ( Biber::Config->uniquenameexists($lastname) ) {
+          Biber::Config->set_uniquenamecount($lastname, $namehash, 1);
         }
         else {
-          Biber::Config->delstate('uniquenamecount', $lastname);
-          Biber::Config->setstate('uniquenamecount', $lastname, $namehash, 1);
+          Biber::Config->del_uniquenamecount($lastname);
+          Biber::Config->set_uniquenamecount($lastname, $namehash, 1);
         }
       }
 
-      if ( not Biber::Config->getstate('uniquenamecount', $namestring, $namehash) ) {
-        if ( Biber::Config->getstate('uniquenamecount', $namestring) ) {
-          Biber::Config->setstate('uniquenamecount', $namestring, $namehash, 1);
+      if ( not Biber::Config->get_uniquenamecount($namestring, $namehash) ) {
+        if ( Biber::Config->uniquenameexists($namestring) ) {
+          Biber::Config->set_uniquenamecount($namestring, $namehash, 1);
         }
         else {
-          Biber::Config->delstate('uniquenamecount', $namestring);
-          Biber::Config->setstate('uniquenamecount', $namestring, $namehash, 1);
+          Biber::Config->del_uniquenamecount($namestring);
+          Biber::Config->set_uniquenamecount($namestring, $namehash, 1);
         }
       }
     }
@@ -1614,7 +1615,7 @@ sub postprocess_authoryear {
   my $tmp =
     $self->_getnamestring($citekey) . "0"
     . $self->_getyearstring($citekey);
-  Biber::Config->incrstate('seenauthoryear', $tmp);
+  Biber::Config->incr_seenauthoryear($tmp);
   $be->set_field('authoryear', $tmp);
 }
 
@@ -1721,13 +1722,13 @@ sub generate_final_sortinfo {
   foreach my $citekey ($self->citekeys) {
     my $be = $bibentries->entry($citekey);
     my $authoryear = $be->get_field('authoryear');
-    if (Biber::Config->getstate('seenauthoryear', $authoryear) > 1) {
-      Biber::Config->incrstate('seenlabelyear', $authoryear);
+    if (Biber::Config->get_seenauthoryear($authoryear) > 1) {
+      Biber::Config->incr_seenlabelyear($authoryear);
       if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
-        $be->set_field('extrayear', Biber::Config->getstate('seenlabelyear', $authoryear));
+        $be->set_field('extrayear', Biber::Config->get_seenlabelyear($authoryear));
       }
       if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
-        $be->set_field('extraalpha',Biber::Config->getstate('seenlabelyear', $authoryear));
+        $be->set_field('extraalpha',Biber::Config->get_seenlabelyear($authoryear));
       }
     }
     $self->_generatesortstring($citekey, Biber::Config->getblxoption('sorting_final', $be->get_field('entrytype'), $citekey));
@@ -1914,8 +1915,8 @@ sub create_bbl_string_body {
     ## skip crossrefkeys (those that are directly cited or
     #  crossref'd >= mincrossrefs were previously removed)
     #  EXCEPT those that are also in a set
-    next if ( Biber::Config->getstate('crossrefkeys', $k) and
-      not Biber::Config->getstate('inset_entries', $k) );
+    next if ( Biber::Config->get_crossrefkey($k) and
+      not Biber::Config->get_setparentkey($k) );
     $BBL .= $self->_print_biblatex_entry($k);
   }
   if ( Biber::Config->getoption('sortlos') and $self->shorthands ) {

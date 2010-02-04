@@ -735,12 +735,12 @@ sub _print_biblatex_entry {
     $str .= "  \\set{" . $be->get_field('entryset') . "}\n";
   }
 
-  if (Biber::Config->getstate('inset_entries', $citekey)) {
-    my $inset_key = Biber::Config->getstate('inset_entries', $citekey);
+  if (Biber::Config->get_setparentkey($citekey)) {
+    my $inset_key = Biber::Config->get_setparentkey($citekey);
     my $orig_inset_key = $inset_key;
     if ($self->bibentry($inset_key)->get_field('origkey')) {
       $orig_inset_key = $self->bibentry($inset_key)->get_field('origkey');
-    };
+    }
     unless ($inset_key eq lc($be->get_field('entryset'))) {
       $logger->warn('Key \"' . $citekey . '\" thinks it is in set ' . $inset_key .
           ' but the set is called "' . lc($be->get_field('entryset')) . '"!');
@@ -801,7 +801,7 @@ sub _print_biblatex_entry {
  # The labelyear option determines whether "extrayear" and "labelyear" is output
   if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
     my $authoryear = $be->get_field('authoryear');
-    if ( Biber::Config->getstate('seenauthoryear', $authoryear) > 1) {
+    if ( Biber::Config->get_seenauthoryear($authoryear) > 1) {
       $str .= "  \\field{extrayear}{"
         . $be->get_field('extrayear') . "}\n";
     }
@@ -823,7 +823,7 @@ sub _print_biblatex_entry {
 
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
     my $authoryear = $be->get_field('authoryear');
-    if ( Biber::Config->getstate('seenauthoryear', $authoryear) > 1) {
+    if ( Biber::Config->get_seenauthoryear($authoryear) > 1) {
       $str .= "  \\field{extraalpha}{"
         . $be->get_field('extraalpha') . "}\n";
     }
@@ -855,9 +855,9 @@ sub _print_biblatex_entry {
       $lastname = $name->get_lastname;
       $nameinitstr = $name->get_nameinitstring;
     }
-    if (scalar keys %{ Biber::Config->getstate('uniquenamecount', $lastname) } == 1 ) {
+    if (Biber::Config->get_numofuniquenames($lastname) == 1 ) {
       $str .= "  \\count{uniquename}{0}\n";
-    } elsif (scalar keys %{ Biber::Config->getstate('uniquenamecount', $nameinitstr) } == 1 ) {
+    } elsif (Biber::Config->get_numofuniquenames($nameinitstr) == 1 ) {
       $str .= "  \\count{uniquename}{1}\n";
     } else {
       $str .= "  \\count{uniquename}{2}\n";
@@ -865,7 +865,7 @@ sub _print_biblatex_entry {
   }
 
   if ( Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'), $citekey)
-    and Biber::Config->getstate('seennamehash', $be->get_field('fullhash')) < 2 )
+    and Biber::Config->get_seennamehash($be->get_field('fullhash')) < 2 )
   {
     $str .= "  \\true{singletitle}\n";
   }

@@ -115,12 +115,11 @@ sub _text_bibtex_parse {
           my @entrysetkeys = split /\s*,\s*/, $value;
 
           foreach my $setkey (@entrysetkeys) {
-            Biber::Config->setstate('inset_entries', $setkey, $lc_key);
+            Biber::Config->set_setparentkey($setkey, $lc_key);
           }
         }
         elsif ($f eq 'crossref') { ### $entry->type ne 'set' and
-          Biber::Config->incrstate('crossrefkeys', $value);
-          Biber::Config->setstate('entrieswithcrossref', $lc_key, $value);
+          Biber::Config->incr_crossrefkey($value);
         }
       }
 

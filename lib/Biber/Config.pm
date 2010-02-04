@@ -25,24 +25,17 @@ Biber::Config - Configuration items which need to be saved across the
 
 =cut
 
-our %is_case_insensitive = (
-  crossrefkeys => 1,
-  entrieswithcrossref => 1,
-  inset_entries => 1,
-  seenkeys => 1
-  );
 
 # Static (class) data
 our $CONFIG;
-$CONFIG->{state}{'crossrefkeys'} = {};
-$CONFIG->{state}{'entrieswithcrossref'} = {};
-$CONFIG->{state}{'inset_entries'} = {};
-$CONFIG->{state}{'seennamehash'} = {};
-$CONFIG->{state}{'namehashcount'} = {};
-$CONFIG->{state}{'uniquenamecount'} = {};
-$CONFIG->{state}{'seenauthoryear'} = {};
-$CONFIG->{state}{'seenlabelyear'} = {};
-$CONFIG->{state}{'seenkeys'} = {};
+$CONFIG->{state}{crossrefkeys} = {};
+$CONFIG->{state}{inset_entries} = {};
+$CONFIG->{state}{seennamehash} = {};
+$CONFIG->{state}{namehashcount} = {};
+$CONFIG->{state}{uniquenamecount} = {};
+$CONFIG->{state}{seenauthoryear} = {};
+$CONFIG->{state}{seenlabelyear} = {};
+$CONFIG->{state}{seenkeys} = {};
 
 =head2 _init
 
@@ -52,12 +45,12 @@ $CONFIG->{state}{'seenkeys'} = {};
 =cut
 
 sub _init {
-  $CONFIG->{state}{'seennamehash'} = {};
-  $CONFIG->{state}{'namehashcount'} = {};
-  $CONFIG->{state}{'uniquenamecount'} = {};
-  $CONFIG->{state}{'seenauthoryear'} = {};
-  $CONFIG->{state}{'seenlabelyear'} = {};
-  $CONFIG->{state}{'seenkeys'} = {};
+  $CONFIG->{state}{seennamehash} = {};
+  $CONFIG->{state}{namehashcount} = {};
+  $CONFIG->{state}{uniquenamecount} = {};
+  $CONFIG->{state}{seenauthoryear} = {};
+  $CONFIG->{state}{seenlabelyear} = {};
+  $CONFIG->{state}{seenkeys} = {};
   delete $CONFIG->{options}{biblatex}{PER_ENTRY};
   return;
 }
@@ -285,120 +278,416 @@ sub getblxsection {
 # Biber state static methods
 ##############################
 
-=head2 setstate
+#============================
+#        seenkey
+#============================
 
-    Set a Biber internal state value
-    setstate(<state_name>, $1, $2, $3 ... $n)
+=head2 get_seenkey
 
-    results in:
+    Get the count of a key
 
-    $CONFIG->{state}{$state_name}{$1}{$2}{$3}{...} = $n
+    Biber::Config->get_seenkey($hash);
 
 =cut
 
-sub setstate {
+sub get_seenkey {
   shift; # class method so don't care about class name
-  my ($statevar, @state_args) = @_;
-  my $state = $CONFIG->{state}{$statevar};
-  my $state_val = pop @state_args; # save the value to set
-  $state_val = lc($state_val) if $is_case_insensitive{$statevar};
-  my $state_key = pop @state_args; # save the key to set
-  $state_key = lc($state_key) if ($state_key and $is_case_insensitive{$statevar});
-  foreach my $state_arg (@state_args) {
-    if (defined($state->{$state_arg})) {
-      $state = $state->{$state_arg}; # walk down the hash structure if existing
-    }
-    else {
-      $state = $state->{$state_arg} = {}; # otherwise instantiate as we walk
-    }
-  }
-  $state->{$state_key} = $state_val;
+  my $key = shift;
+  return $CONFIG->{state}{seenkeys}{lc($key)};
+}
+
+=head2 incr_seenkey
+
+    Increment the seen count of a key
+
+    Biber::Config->incr_seenkey($ay);
+
+=cut
+
+sub incr_seenkey {
+  shift; # class method so don't care about class name
+  my $key = shift;
+  $CONFIG->{state}{seenkeys}{lc($key)}++;
   return;
 }
 
-=head2 getstate
+#============================
+#        seenlabelyear
+#============================
 
-    Get a complete Biber internal state
+=head2 get_seenlabelyear
 
-    getstate(<state_name>, $1, $2, $3 ... $n)
+    Get the count of a labelyear
 
-    returns:
-
-    $CONFIG->{state}{$state_name}{$1}{$2}{$3}{...}{$n}
-
+    Biber::Config->get_seenlabelyear($hash);
 
 =cut
 
-sub getstate {
+sub get_seenlabelyear {
   shift; # class method so don't care about class name
-  my ($statevar, @state_args) = @_;
-  my $state = $CONFIG->{state}{$statevar};
-  return $state unless @state_args;
-  my $state_val = pop @state_args; # save the value to get
-  $state_val = lc($state_val) if $is_case_insensitive{$statevar};
-  foreach my $state_arg (@state_args) {
-    $state_arg = lc($state_arg) if $is_case_insensitive{$statevar};
-    $state = $state->{$state_arg}; # walk down the hash structure
-  }
-  return $state->{$state_val};
+  my $ay = shift;
+  return $CONFIG->{state}{seenlabelyear}{$ay};
 }
 
-=head2 delstate
+=head2 incr_seenlabelyear
 
-    Delete a Biber internal state value
+    Increment the count of a labelyear
 
-    delstate(<state_name>, $1, $2, $3 ... $n)
-
-    deletes:
-
-    $CONFIG->{state}{$state_name}{$1}{$2}{$3}{...}{$n}
-
+    Biber::Config->incr_seenlabelyear($ay);
 
 =cut
 
-sub delstate {
+sub incr_seenlabelyear {
   shift; # class method so don't care about class name
-  my ($statevar, @state_args) = @_;
-  unless (@state_args) {
-    delete $CONFIG->{state}{$statevar};
-    return;
-  }
-  my $state = $CONFIG->{state}{$statevar};
-  my $state_val = pop @state_args; # save the value to delete
-  $state_val = lc($state_val) if $is_case_insensitive{$statevar};
-  foreach my $state_arg (@state_args) {
-    $state_arg = lc($state_arg) if $is_case_insensitive{$statevar};
-    $state = $state->{$state_arg}; # walk down the hash structure
-  }
-  delete $state->{$state_val};
+  my $ay = shift;
+  $CONFIG->{state}{seenlabelyear}{$ay}++;
   return;
 }
 
-=head2 incrstate
+#============================
+#       seenauthoryear
+#============================
 
-    Increment a state variable counter
+=head2 get_seenauthoryear
 
-    incrstate(<state_name>, $1, $2, $3 ... $n)
+    Get the count of an author/year combination
 
-    increments the value of
-
-    $CONFIG->{state}{$state_name}{$1}{$2}{$3}{...}{$n}
+    Biber::Config->get_seenauthoryear($hash);
 
 =cut
 
-sub incrstate {
+sub get_seenauthoryear {
   shift; # class method so don't care about class name
-  my ($statevar, @state_args) = @_;
-  my $state = $CONFIG->{state}{$statevar};
-  my $state_val = pop @state_args; # save the value to increment
-  $state_val = lc($state_val) if $is_case_insensitive{$statevar};
-  foreach my $state_arg (@state_args) {
-    $state_arg = lc($state_arg) if $is_case_insensitive{$statevar};
-    $state = $state->{$state_arg}; # walk down the hash structure
-  }
-  $state->{$state_val} += 1;
+  my $ay = shift;
+  return $CONFIG->{state}{seenauthoryear}{$ay};
+}
+
+=head2 incr_seenauthoryear
+
+    Increment the count of an author/year combination
+
+    Biber::Config->incr_seenauthoryear($ay);
+
+=cut
+
+sub incr_seenauthoryear {
+  shift; # class method so don't care about class name
+  my $ay = shift;
+  $CONFIG->{state}{seenauthoryear}{$ay}++;
   return;
 }
+
+
+#============================
+#       uniquenamecount
+#============================
+
+=head2 get_numofuniquenames
+
+    Get the number of uniquenames entries for a name
+
+    Biber::Config->get_numofuniquenames($name);
+
+=cut
+
+sub get_numofuniquenames {
+  shift; # class method so don't care about class name
+  my $name = shift;
+  return scalar keys %{$CONFIG->{state}{uniquenamecount}{$name}};
+}
+
+
+=head2 get_uniquenamecount
+
+    Get the uniquenamecount of a lastname/hash combination
+
+    Biber::Config->get_uniquenamecount($lastname, $hash);
+
+=cut
+
+sub get_uniquenamecount {
+  shift; # class method so don't care about class name
+  my ($lname, $hash) = @_;
+  return $CONFIG->{state}{uniquenamecount}{$lname}{$hash};
+}
+
+=head2 _get_uniquename
+
+    Get the uniquename hash of a lastname/hash combination
+    Mainly for use in tests
+
+    Biber::Config->get_uniquename($name);
+
+=cut
+
+sub _get_uniquename {
+  shift; # class method so don't care about class name
+  my $name = shift;
+  return $CONFIG->{state}{uniquenamecount}{$name};
+}
+
+
+=head2 set_uniquenamecount
+
+    Set the uniquenamecount of a lastname/hash combination
+
+    Biber::Config->set_uniquenamecount($lastname, $hash, $num);
+
+=cut
+
+sub set_uniquenamecount {
+  shift; # class method so don't care about class name
+  my ($lname, $hash, $num) = @_;
+  $CONFIG->{state}{uniquenamecount}{$lname}{$hash} = $num;
+  return;
+}
+
+=head2 del_uniquename
+
+    Del the uniquename entry of a name
+
+    Biber::Config->del_uniquename($name);
+
+=cut
+
+sub del_uniquename{
+  shift; # class method so don't care about class name
+  my $name = shift;
+  delete $CONFIG->{state}{uniquenamecount}{$name};
+  return;
+}
+
+
+=head2 uniquenameexists
+
+    Return true if the last name has a uniquecount entry
+
+    Biber::Config->get_uniquenameexists($lastname);
+
+=cut
+
+sub uniquenameexists {
+  shift; # class method so don't care about class name
+  my $lname = shift;
+  return exists($CONFIG->{state}{uniquenamecount}{$lname}) ? 1 : 0;
+}
+
+#============================
+#       namehashcount
+#============================
+
+
+=head2 get_numofnamehashes
+
+    Get the number of name hashes
+
+    Biber::Config->get_numofnamehashes($hash);
+
+=cut
+
+sub get_numofnamehashes {
+  shift; # class method so don't care about class name
+  my $hash = shift;
+  return scalar keys %{$CONFIG->{state}{namehashcount}{$hash}};
+}
+
+=head2 namehashexists
+
+    Check if there is an entry for a namehash
+
+    Biber::Config->namehashexists($hash);
+
+=cut
+
+sub namehashexists {
+  shift; # class method so don't care about class name
+  my $hash = shift;
+  return exists($CONFIG->{state}{namehashcount}{$hash}) ? 1 : 0;
+}
+
+
+=head2 get_namehashcount
+
+    Get the count of a name hash and name id
+
+    Biber::Config->get_namehashcount($hash, $id);
+
+=cut
+
+sub get_namehashcount {
+  shift; # class method so don't care about class name
+  my ($hash, $id) = @_;
+  return $CONFIG->{state}{namehashcount}{$hash}{$id};
+}
+
+=head2 set_namehashcount
+
+    Set the count of a name hash and name id
+
+    Biber::Config->set_namehashcount($hash, $id, $num);
+
+=cut
+
+sub set_namehashcount {
+  shift; # class method so don't care about class name
+  my ($hash, $id, $num) = @_;
+  $CONFIG->{state}{namehashcount}{$hash}{$id} = $num;
+  return;
+}
+
+
+=head2 del_namehash
+
+    Delete the count information for a name hash
+
+    Biber::Config->del_namehashcount($hash);
+
+=cut
+
+sub del_namehash {
+  shift; # class method so don't care about class name
+  my $hash = shift;
+  if (exists($CONFIG->{state}{namehashcount}{$hash})) {
+    delete $CONFIG->{state}{namehashcount}{$hash};
+  }
+  return;
+}
+
+#============================
+#       seennamehash
+#============================
+
+
+=head2 get_seennamehash
+
+    Get the count of a seen name hash
+
+    Biber::Config->get_seennamehash($hash);
+
+=cut
+
+sub get_seennamehash {
+  shift; # class method so don't care about class name
+  my $hash = shift;
+  return $CONFIG->{state}{seennamehash}{$hash};
+}
+
+
+=head2 incr_seennamehash
+
+    Increment the count of a seen name hash
+
+    Biber::Config->incr_seennamehash($hash);
+
+=cut
+
+sub incr_seennamehash {
+  shift; # class method so don't care about class name
+  my $hash = shift;
+  $CONFIG->{state}{seennamehash}{$hash}++;
+  return;
+}
+
+#============================
+#       set entries
+#============================
+
+
+
+=head2 get_setparentkey
+
+    Return the key of the set parent of the passed key
+
+    Biber::Config->get_setparentkey($key);
+
+=cut
+
+sub get_setparentkey {
+  shift; # class method so don't care about class name
+  my $key = shift;
+  return $CONFIG->{state}{inset_entries}{lc($key)};
+}
+
+=head2 set_setparentkey
+
+    Set the set parent key of the passed key
+
+    Biber::Config->set_setparentkey($key, $parent);
+
+=cut
+
+sub set_setparentkey {
+  shift; # class method so don't care about class name
+  my ($key, $parent) = @_;
+  $CONFIG->{state}{inset_entries}{lc($key)} = lc($parent);
+  return;
+}
+
+#============================
+#       crossrefkeys
+#============================
+
+
+=head2 get_crossrefkeys
+
+    Return ref to array of keys which are crossref targets
+
+    Biber::Config->get_crossrefkeys();
+
+=cut
+
+sub get_crossrefkeys {
+  shift; # class method so don't care about class name
+  return [ keys %{$CONFIG->{state}{crossrefkeys}} ];
+}
+
+=head2 get_crossrefkey
+
+    Return an integer representing the number of times a
+    crossref target key has been ref'ed
+
+    Biber::Config->get_crossrefkey($key);
+
+=cut
+
+sub get_crossrefkey {
+  shift; # class method so don't care about class name
+  my $k = shift;
+  return $CONFIG->{state}{crossrefkeys}{lc($k)};
+}
+
+=head2 del_crossrefkey
+
+    Remove a crossref target key from the crossrefkeys state
+
+    Biber::Config->del_crossrefkey($key);
+
+=cut
+
+sub del_crossrefkey {
+  shift; # class method so don't care about class name
+  my $k = shift;
+  if (exists($CONFIG->{state}{crossrefkeys}{lc($k)})) {
+    delete $CONFIG->{state}{crossrefkeys}{lc($k)};
+  }
+  return;
+}
+
+=head2 incr_crossrefkey
+
+    Increment the crossreferences count for a target crossref key
+
+    Biber::Config->incr_crossrefkey($key);
+
+=cut
+
+sub incr_crossrefkey {
+  shift; # class method so don't care about class name
+  my $k = shift;
+  $CONFIG->{state}{crossrefkeys}{lc($k)}++;
+  return;
+}
+
 
 ############################
 # Displaymode static methods
