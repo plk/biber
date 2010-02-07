@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 33;
+use Test::More tests => 32;
 
 use Biber;
 use Biber::Utils;
@@ -24,8 +24,7 @@ Biber::Config->setblxoption('labelyear', [ 'year' ]);
 $biber->prepare;
 my $bibentries = $biber->bib;
 
-my $l1 = [ "Invalid format of field 'year' - ignoring field",
-           "Invalid format of field 'origdate' - ignoring field",
+my $l1 = [ "Invalid format of field 'origdate' - ignoring field",
            "Invalid format of field 'urldate' - ignoring field",
            "Value out of bounds for field/date component 'month' - ignoring" ];
 my $l2 = [ "Invalid format of field 'origdate' - ignoring field" ];
@@ -34,8 +33,7 @@ my $l4 = [ "Invalid format of field 'date' - ignoring field" ];
 my $l5 = [ "Invalid format of field 'date' - ignoring field" ];
 my $l6 = [ "Value out of bounds for field/date component 'month' - ignoring" ];
 my $l7 = [ "Value out of bounds for field/date component 'eventday' - ignoring" ];
-my $l8 = [ "Invalid format of field 'year' - ignoring field",
-           "Invalid format of field 'month' - ignoring field" ];
+my $l8 = [ "Invalid format of field 'month' - ignoring field" ];
 my $l11 = [ "Field conflict - both 'date' and 'year' used - ignoring field 'year'" ];
 my $l12 = [ "Field conflict - both 'date' and 'month' used - ignoring field 'month'" ];
 
@@ -249,7 +247,6 @@ is_deeply($bibentries->entry('l5')->get_field('warnings'), $l5, 'Date format tes
 is_deeply($bibentries->entry('l6')->get_field('warnings'), $l6, 'Date format test 6' ) ;
 is_deeply($bibentries->entry('l7')->get_field('warnings'), $l7, 'Date format test 7' ) ;
 is_deeply($bibentries->entry('l8')->get_field('warnings'), $l8, 'Date format test 8' ) ;
-ok(is_undef($bibentries->entry('l8')->get_field('year')), 'Date format test 8a - YEAR undef since not integer' ) ;
 ok(is_undef($bibentries->entry('l8')->get_field('month')), 'Date format test 8b - MONTH undef since not integer' ) ;
 ok(is_undef($bibentries->entry('l9')->get_field('warnings')), 'Date format test 9' ) ;
 ok(is_undef($bibentries->entry('l10')->get_field('warnings')), 'Date format test 10' ) ;

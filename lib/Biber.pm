@@ -1241,13 +1241,13 @@ sub postprocess_dates {
     $be->del_field('month');
   }
 
-  foreach my $ymfield ('year', 'month') {
-    if ($be->get_field($ymfield) and $be->get_field($ymfield) !~ /\A\d+\z/xms) {
-      $logger->warn("Invalid format of field '$ymfield' - ignoring field in entry '$citekey'");
-      $self->{warnings}++;
-      $be->add_warning("Invalid format of field '$ymfield' - ignoring field");
-      $be->del_field($ymfield);
-    }
+  # MONTH must be an integer - YEAR doesn't have to be to allow for things like
+  # "in press" which sometimes need an extrayear disambiguator (in APA styles for example)
+  if ($be->get_field('month') and $be->get_field('month') !~ /\A\d+\z/xms) {
+    $logger->warn("Invalid format of field 'month' - ignoring field in entry '$citekey'");
+    $self->{warnings}++;
+    $be->add_warning("Invalid format of field 'month' - ignoring field");
+    $be->del_field('month');
   }
 
   # Generate date components from *DATE fields
