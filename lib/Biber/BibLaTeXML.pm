@@ -102,7 +102,7 @@ sub _parse_biblatexml {
     # if we have an entryset we add the keys to the stack
     if ($bibrecord->findnodes('@entrytype')->string_value eq 'set') {
 
-      my @entrysetkeys = split /,/, $bibrecord->findnodes('bib:entryset')->_normalize_string_value;
+      my @entrysetkeys = split /\s*,\s*/, $bibrecord->findnodes('bib:entryset')->_normalize_string_value;
 
       # add all keys of inset_entries to the stack
       push @auxcitekeys, @entrysetkeys;
