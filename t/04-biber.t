@@ -22,8 +22,7 @@ use_ok( 'Biber::BibTeX::PRD' );
 isa_ok($biber, "Biber");
 
 chdir("t/tdata");
-$biber->parse_auxfile("02-annotations.aux");
-Biber::Config->setblxoption('sortalphaothers', '+');
+$biber->parse_auxfile_v2("annotations.aux");
 
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
@@ -42,7 +41,7 @@ my $setaksin = q|\entry{set:aksin}{article}{}
   }
   \strng{namehash}{AO+1}
   \strng{fullhash}{AOTHALCBNCBOOE1}
-  \field{labelalpha}{Aks+06}
+  \field{labelalpha}{Aks\textbf{+}06}
   \field{sortinit}{A}
   \field{labelyear}{2006}
   \count{uniquename}{0}

@@ -3,33 +3,41 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 10 ;
+use Test::More tests => 6 ;
 
 use Biber;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
-my $biber = Biber->new(fastsort => 1);
+my $biber = Biber->new( fastsort => 1 );
 my $bibentries = $biber->bib;
 
 isa_ok($biber, "Biber");
 
 chdir("t/tdata") ;
-$biber->parse_auxfile("50-style-authoryear.aux") ;
+$biber->parse_auxfile_v2("style-authoryear.aux") ;
 
 
 my @keys = sort $biber->citekeys;
 my @citedkeys = sort qw{
-    companion
-    knuth:ct:c
-    aristotle:physics
-    knuth:ct:b
-    aristotle:poetics
-    aristotle:rhetoric
-    knuth:ct:d
-    kant:kpv
-    kant:ku
-    } ;
+stdmodel
+knuth:ct
+angenendtsk
+angenendtsa
+stdmodel:glashow
+stdmodel:ps_sc
+hasan
+jaffe
+luzzatto
+moraux
+murray
+aristotle:rhetoric
+aristotle:anima
+augustine
+cotton
+chiu
+};
+
 my @allkeys = sort qw{ stdmodel aristotle:poetics vazques-de-parga shore
 gonzalez averroes/bland laufenberg westfahl:frontier knuth:ct:a kastenholz
 averroes/hannes iliad luzzatto malinowski sorace knuth:ct:d britannica
@@ -46,17 +54,11 @@ set:yoon maron coleridge } ;
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
+Biber::Config->setoption('allentries',1);
 $biber->parse_bibtex($bibfile) ;
-$biber->prepare;
-
-ok(!$biber->has_citekey("SomethingUnexistent"), 'has_citekey 1');
-ok($biber->has_citekey("companion"), 'has_citekey 2');
-$biber->add_citekey("TestKey");
-ok($biber->has_citekey("testKEY"), 'add_citekey');
-$biber->del_citekey("TestKEy");
-ok(!$biber->has_citekey("TestKey"), 'del_citekey');
-
+$biber->prepare ;
 @keys = sort $biber->citekeys;
+
 is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
 my $stdmodel = {
@@ -75,12 +77,12 @@ my $stdmodel = {
                             ],
                 'fullhash' => 'GS1',
                 'namehash' => 'GS1',
+                'extrayear' => 1,
                 'sortstring' => 'mm0glashow2sheldon019610partial symmetries of weak interactions00022',
                 'crossref' => 'stdmodel:glashow',
                 'volume' => '22',
                 'labelnamename' => 'author',
                 'labelyearname' => 'year',
-                'extrayear'   => 1,
                 'entrytype' => 'set',
                 'title' => 'Partial Symmetries of Weak Interactions',
                 'datatype' => 'bibtex',
@@ -89,7 +91,6 @@ my $stdmodel = {
                 'pages' => '579\\psqq',
                 'origkey' => 'stdmodel'
                 } ;
-
 
 is_deeply($bibentries->entry('stdmodel'), $stdmodel, 'entry stdmodel') ;
 
@@ -233,7 +234,7 @@ my $laufenberg = {
                                  'countryde',
                                  'countrywo'
                                ],
-                 'labelnamename' => 'author',
+                  'labelnamename' => 'author',
                   'labelyearname' => 'year',
                  'entrytype' => 'patent',
                  'abstract' => 'The invention relates to an electric device comprising a generator, in particular for use in the vehicle electric system of a motor vehicle and a controller for controlling the generator voltage. The device is equipped with a control zone, in which the voltage is controlled and zones, in which the torque is controlled. The invention also relates to methods for operating a device of this type.',

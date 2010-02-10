@@ -9,24 +9,103 @@ use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
 if ( eval "require Text::BibTeX; 1") {
-    plan( tests => 7 );
+    plan( tests => 11 );
 } 
 else {
     plan( skip_all => "Text::BibTeX unavailable! Skipping parsing with Biber::BibTeX" );
 }
 
 my $biber = Biber->new( unicodebbl => 1, fastsort => 1 );
+
 use_ok( 'Biber::BibTeX' );
 
 isa_ok($biber, "Biber");
 
 chdir("t/tdata");
-$biber->parse_auxfile("02-annotations.aux");
-Biber::Config->setblxoption('sortalphaothers', '+');
+$biber->parse_auxfile_v2("annotations.aux");
 
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
 $biber->prepare;
+
+my $murray1 = q|\entry{murray}{article}{}
+  \name{author}{14}{%
+    {{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
+    {{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
+    {{Zhong}{Z}{Chuan-Jian}{C}{}{}{}{}}%
+    {{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
+    {{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
+    {{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
+    {{Londono}{L}{J.~David}{JD}{}{}{}{}}%
+    {{Green}{G}{Stephen~J.}{SJ}{}{}{}{}}%
+    {{Stokes}{S}{Jennifer~J.}{JJ}{}{}{}{}}%
+    {{Wignall}{W}{George~D.}{GD}{}{}{}{}}%
+    {{Glish}{G}{Gary~L.}{GL}{}{}{}{}}%
+    {{Porter}{P}{Marc~D.}{MD}{}{}{}{}}%
+    {{Evans}{E}{Neal~D.}{ND}{}{}{}{}}%
+    {{Murray}{M}{Royce~W.}{RW}{}{}{}{}}%
+  }
+  \strng{namehash}{HMJ+1}
+  \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
+  \field{labelalpha}{Hos\textbf{+}98}
+  \field{sortinit}{H}
+  \field{labelyear}{1998}
+  \count{uniquename}{0}
+  \true{singletitle}
+  \field{year}{1998}
+  \field{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
+  \field{subtitle}{Core and monolayer properties as a function of core size}
+  \field{shorttitle}{Alkanethiolate gold cluster molecules}
+  \field{indextitle}{Alkanethiolate gold cluster molecules}
+  \field{journaltitle}{Langmuir}
+  \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
+  \field{number}{1}
+  \field{volume}{14}
+  \field{hyphenation}{american}
+  \field{pages}{17\bibrangedash 30}
+\endentry
+
+|;
+
+my $murray2 = q|\entry{murray}{article}{}
+  \name{author}{14}{%
+    {{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
+    {{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
+    {{Zhong}{Z}{Chuan-Jian}{C}{}{}{}{}}%
+    {{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
+    {{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
+    {{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
+    {{Londono}{L}{J.~David}{JD}{}{}{}{}}%
+    {{Green}{G}{Stephen~J.}{SJ}{}{}{}{}}%
+    {{Stokes}{S}{Jennifer~J.}{JJ}{}{}{}{}}%
+    {{Wignall}{W}{George~D.}{GD}{}{}{}{}}%
+    {{Glish}{G}{Gary~L.}{GL}{}{}{}{}}%
+    {{Porter}{P}{Marc~D.}{MD}{}{}{}{}}%
+    {{Evans}{E}{Neal~D.}{ND}{}{}{}{}}%
+    {{Murray}{M}{Royce~W.}{RW}{}{}{}{}}%
+  }
+  \strng{namehash}{HMJ+1}
+  \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
+  \field{labelalpha}{Hos98}
+  \field{sortinit}{H}
+  \field{labelyear}{1998}
+  \count{uniquename}{0}
+  \true{singletitle}
+  \field{year}{1998}
+  \field{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
+  \field{subtitle}{Core and monolayer properties as a function of core size}
+  \field{shorttitle}{Alkanethiolate gold cluster molecules}
+  \field{indextitle}{Alkanethiolate gold cluster molecules}
+  \field{journaltitle}{Langmuir}
+  \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
+  \field{number}{1}
+  \field{volume}{14}
+  \field{hyphenation}{american}
+  \field{pages}{17\bibrangedash 30}
+\endentry
+
+|;
+
 
 my $setaksin = q|\entry{set:aksin}{article}{}
   \inset{set}
@@ -41,7 +120,7 @@ my $setaksin = q|\entry{set:aksin}{article}{}
   }
   \strng{namehash}{AÖ+1}
   \strng{fullhash}{AÖTHALC̨BNCBOÖE1}
-  \field{labelalpha}{Aks+06}
+  \field{labelalpha}{Aks\textbf{+}06}
   \field{sortinit}{A}
   \field{labelyear}{2006}
   \count{uniquename}{0}
@@ -96,9 +175,63 @@ my $markey = q|\entry{markey}{online}{}
 
 | ;
 
-is( $biber->_print_biblatex_entry('set:aksin'), $setaksin, 'bbl entry 1' ) ;
+my $jaffe = q|\entry{jaffe}{collection}{}
+  \name{editor}{1}{%
+    {{Jaffé}{J}{Philipp}{P}{}{}{}{}}%
+  }
+  \name{editora}{3}{%
+    {{Loewenfeld}{L}{Samuel}{S}{}{}{}{}}%
+    {{Kaltenbrunner}{K}{Ferdinand}{F}{}{}{}{}}%
+    {{Ewald}{E}{Paul}{P}{}{}{}{}}%
+  }
+  \list{location}{1}{%
+    {Leipzig}%
+  }
+  \strng{namehash}{JP1}
+  \strng{fullhash}{JP1}
+  \field{labelalpha}{Jaf85}
+  \field{sortinit}{J}
+  \field{labelyear}{1885\bibdatedash 1888}
+  \count{uniquename}{0}
+  \true{singletitle}
+  \field{year}{1885}
+  \field{endyear}{1888}
+  \field{title}{Regesta Pontificum Romanorum ab condita ecclesia ad annum post Christum natum \textsc{mcxcviii}}
+  \field{shorttitle}{Regesta Pontificum Romanorum}
+  \field{indextitle}{Regesta Pontificum Romanorum}
+  \field{annotation}{A \texttt{collection} entry with \texttt{edition} and \texttt{volumes} fields. Note the \texttt{editortype} field handling the redactor}
+  \field{edition}{2}
+  \field{volumes}{2}
+  \field{editoratype}{redactor}
+  \field{editoraclass}{vol}
+\endentry
 
+|;
+
+my $pimentel1 = q|\entry{pimentel00}{thesis}{}
+  \name{author}{1}{%
+    {{Pimentel}{P}{Joseph~J.}{JJ}{}{}{Jr.}{J}}%
+  }
+  \list{institution}{1}{%
+    {University of Michigan}%
+  }
+  \strng{namehash}{PJJ1}
+  \strng{fullhash}{PJJ1}
+  \field{labelalpha}{Pim00}
+  \field{sortinit}{P}
+  \field{labelyear}{2000}
+  \count{uniquename}{0}
+  \true{singletitle}
+  \field{year}{2000}
+  \field{title}{Sociolinguistic Reflections of Privatization and Globalization: The {Arabic} of {Egyptian} newspaper advertisements}
+\endentry
+
+|;
+
+is( $biber->_print_biblatex_entry('set:aksin'), $setaksin, 'bbl entry 1' ) ;
 is( $biber->_print_biblatex_entry('markey'), $markey, 'bbl entry 2' ) ;
+is( $biber->_print_biblatex_entry('jaffe'), $jaffe, 'bbl entry 3' ) ;
+is( $biber->_print_biblatex_entry('pimentel00'), $pimentel1, 'bbl entry 4 - Suffix test 1' ) ;
 
 my $Worman_N = { 'WN2' => 1, 'WN1' => 1 } ;
 
@@ -109,6 +242,13 @@ is_deeply( Biber::Config->_get_uniquename('Worman_N'), $Worman_N, 'uniquename co
 is_deeply( Biber::Config->_get_uniquename('Gennep'), $Gennep, 'uniquename count 2') ;
 
 is_deeply( [ $biber->shorthands ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
+
+is( $biber->_print_biblatex_entry('murray'), $murray1, 'bbl with > maxnames' ) ;
+
+Biber::Config->setblxoption('alphaothers', '');
+Biber::Config->setblxoption('sortalphaothers', '');
+$biber->prepare ;
+is( $biber->_print_biblatex_entry('murray'), $murray2, 'bbl with > maxnames, empty alphaothers' ) ;
 
 unlink "$bibfile.utf8" ;
 
