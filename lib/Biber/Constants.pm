@@ -28,10 +28,6 @@ our @EXPORT = qw{
   $BIBER_SORT_NULL
   %ALIASES
   %NUMERICALMONTH
-  %BIBLATEXML_FORMAT_ELEMENTS
-  @BIBLATEXML_FORMATTEXT
-  @BIBLATEXML_FORMATTEXT_B
-  %FIELDS_WITH_CHILDREN
   %DISPLAYMODES
   $DISPLAYMODE_DEFAULT
   } ;
@@ -48,6 +44,8 @@ our $BIBER_SORT_NULL  = 0;
 # the name of the Biber configuration file, which should be
 # either returned by kpsewhich or located at "$HOME/.$BIBER_CONF_NAME"
 our $BIBER_CONF_NAME = 'biber.conf';
+
+Readonly::Scalar our $DISPLAYMODE_DEFAULT => 'uniform';
 
 ## Biber CONFIGURATION DEFAULTS
 my $locale = $ENV{LANG} || $ENV{LC_ALL} || "en_US.utf8" ;
@@ -66,17 +64,18 @@ our %CONFIG_DEFAULT_BIBER = (
   quiet => 0,
   nolog => 0,
   wraplines => 0,
-
+  #
   # these options are passed to the Unicode::Collate object
   collate_options => { level=>2, table=>"latinkeys.txt" },
-  ## eventually this shall be moved to biblatex options:
-  displaymode => 'uniform',
+  #
+  # eventually this shall be moved to biblatex options:
+  displaymode => $DISPLAYMODE_DEFAULT,
   locale => $locale,
-
-# Semitic (or eventually other) last names may begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
+  #
+  # Semitic (or eventually other) last names may begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
   nosortdiacritics => qr/[\x{2bf}\x{2018}]/,
-
-# Semitic (or eventually other) names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
+  #
+  # Semitic (or eventually other) names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
   nosortprefix => qr/\p{L}{2}\p{Pd}/,
   );
 
@@ -224,51 +223,6 @@ Readonly::Hash our %NUMERICALMONTH => (
   'dec' => 12
   );
 
-# TODO ask PL to define mkbibsubscript in biblatex ?
-Readonly::Hash our %BIBLATEXML_FORMAT_ELEMENTS => (
-  'bib:quote'       => 'mkbibquote',
-  'bib:subscript'   => 'textsubscript',
-  'bib:superscript' => 'mkbibsuperscript',
-  'bib:emphasis'    => 'mkbibemph'
-  );
-
-Readonly::Array our @BIBLATEXML_FORMATTEXT => qw(
-  abstract
-  addendum
-  annotation
-  booksubtitle
-  booktitleaddon
-  issue
-  issuetitleaddon
-  issuesubtitle
-  journalsubtitle
-  mainsubtitle
-  maintitleaddon
-  note
-  origtitle
-  reprinttitle
-  subtitle
-  titleaddon
-  venue
-  publisher
-  origpublisher
-  publisherinfo
-  item
-  publishername
-  remarks
-  );
-
-Readonly::Array our @BIBLATEXML_FORMATTEXT_B => qw(
-  booktitle
-  eventtitle
-  issuetitle
-  journaltitle
-  maintitle
-  shorttitle
-  title
-  );
-
-our %FIELDS_WITH_CHILDREN = map { 'bib:'. $_ => 1 } ( @BIBLATEXML_FORMATTEXT, @BIBLATEXML_FORMATTEXT_B );
 
 Readonly::Hash our %DISPLAYMODES => {
   uniform => [ qw/uniform romanized translated original/ ],
@@ -276,8 +230,6 @@ Readonly::Hash our %DISPLAYMODES => {
   romanized => [ qw/romanized uniform translated original/ ],
   original => [ qw/original romanized uniform translated/ ]
   } ;
-
-Readonly::Scalar our $DISPLAYMODE_DEFAULT => 'uniform';
 
 1;
 
