@@ -31,6 +31,7 @@ my $builder = Module::Build->new(
         'Config::General' => 0,
         'Data::Dump' => 0,
         'File::Slurp'  => 0,
+        'IPC::Cmd' => 0,
         'List::AllUtils' => 0,
         'Regexp::Common' => 0,
         'Log::Log4perl' => 0,
