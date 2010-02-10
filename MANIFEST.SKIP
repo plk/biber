@@ -16,3 +16,4 @@
 PRDgrammar
 ^etc
 \.swp$
+^MYMETA.yml$
