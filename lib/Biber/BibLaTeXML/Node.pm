@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use Carp;
 use Biber::Constants;
+use Biber::BibLaTeXML::Constants;
 use Biber::Utils;
 use Log::Log4perl qw(:no_extra_logdie_message);
 my $logger = Log::Log4perl::get_logger('main');
