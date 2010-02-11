@@ -1,13 +1,15 @@
-#!perl -T
+use Test::More tests => 10;
 
-use Test::More tests => 5;
+use_ok( 'Biber' );
+use_ok( 'Biber::Constants' );
+use_ok( 'Biber::Config' );
+use_ok( 'Biber::Entries' );
+use_ok( 'Biber::Entry' );
+use_ok( 'Biber::Entry::Names' );
+use_ok( 'Biber::Entry::Name' );
+use_ok( 'Biber::Internals' );
+use_ok( 'Biber::Utils' );
+use_ok( 'LaTeX::Decode' );
 
-BEGIN {
-	use_ok( 'Biber' );
-	use_ok( 'Biber::Constants' );
-	use_ok( 'Biber::Internals' );
-	use_ok( 'Biber::Utils' );
-	use_ok( 'LaTeX::Decode' );
-}
 
-diag( "Testing Biber $Biber::VERSION, Perl $], $^X" );
+
