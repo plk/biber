@@ -1,88 +1,114 @@
 ==========================
 
-    BIBER Version 0.4.3
+    BIBER Version 0.5
 
 ==========================
 
-Biber is a bibtex replacement for users of biblatex, with full Unicode-support.
-It also introduces a new XML format (BibLaTeXML) for storing bibliographic
-data, partly inspired by BibTeXML, but extended to account for the much richer
-data model of biblatex, and much more. One major aim of the project is to make
-multilingual and multiscript bibliographic management possible under a biblatex
-environment.
+Biber is a BibTeX replacement for users of biblatex, with full Unicode
+support.  This release coincides with the release of biblatex 0.9, the
+first one that is likely to be integrated within the most popular TeX
+distributions (TeX Live, MikTeX, etc.)
 
 
-REQUIREMENTS 
+REQUIREMENTS
 
-biber requires the following CPAN modules:
-    
-    * Readonly (but Readonly::XS is highly recommended)
-    * List::AllUtils
+  Biber is written in Perl. Version 5.8.x or higher is recommended. Be aware
+  that if your version of Perl is older than that, Biber may work, but we
+  won't be offering support.
+
+  In addition Biber requires a number of CPAN modules, which if missing
+  should be automatically installed during the install process described
+  below.
+
+    * IPC::Cmd (included in Perl 5.9.5 or higher)
+    * Readonly (but Readonly::XS is highly recommended for performance reasons)
+    * List::AllUtils (a wrapper for List::Util and List::MoreUtils)
     * Log::Log4perl
-    
-    For parsing bibtex files, you need either 
-    * Text::BibTeX (strongly recommended). 
-      (NB: For Windows, ppm packages for Perl 5.8.* and 5.10.* are available on
-      the biber download page).
+    * XML::LibXML::Simple (XML::LibXML clone of XML::Simple)
+
+    For parsing bibtex files, you need either
+    * Text::BibTeX (strongly recommended).
+      ==> Windows users please read the note below! <==
     or
-    * Parse::RecDescent 
+    * Parse::RecDescent
       and
     * Regexp::Common
-    
-    * File::Slurp (for latex2utf8 or if converting bib files to UTF-8 with biber)
-    
-    For parsing data in the BibLaTeXML format, you'll need 
-    * XML::LibXML 
 
-    bib2biblatexml also requires
-    * XML::Writer
-    
-    Optionally, if you want to place your xml files in a Berkeley DBXML container:
-    * Sleepycat::DbXml 
-     (see http://www.oracle.com/technology/products/berkeley-db/xml/index.html)
+    * File::Slurp (for latex2utf8 or if converting bib files to UTF-8 with biber).
+
+  ==> IMPORTANT NOTE FOR WINDOWS USERS <==
+  Because the CPAN distribution of Text::BibTeX cannot be straightforwardly
+  installed on Windows, users are urged to download and install a
+  pre-compiled package for Text::BibTeX available on our sourceforge download
+  page. Choose the link that corresponds to your version of Perl (5.8.x or
+  5.10.x):
+      http://sourceforge.net/projects/biblatex-biber/files/Text-BibTeX%20for%20windows/0.38/Text-BibTeX-0.38-perl-5.8.zip/download
+      http://sourceforge.net/projects/biblatex-biber/files/Text-BibTeX%20for%20windows/0.38/Text-BibTeX-0.38-perl-5.10.zip/download
+  Unzip the file, and follow the instructions in the file README.txt. (Note
+  that versions for 64-bit Windows are not available at present.)
 
 
 INSTALLATION
 
-To install this module, run the following commands:
+  To install this module, run the following commands:
 
-	perl Build.PL
-	./Build
-	./Build test         [optional]
-	./Build install
+    perl Build.PL
+    ./Build
+    ./Build test         [optional but recommended]
+    ./Build install
 
 SUPPORT AND DOCUMENTATION
 
-After installing, biber --help will give you the basic documentation.
+  After installing, biber --help will give you the basic documentation.
 
-Biber also comes with two utility scripts:
+  Biber also comes with the utility script latex2utf8 to convert files with
+  LaTeX encoding to UTF-8.
 
-    - bib2biblatexml : converts bib files to the BibLaTeXML format
-    - latex2utf8     : converts LaTeX encoding to UTF-8
+  You can also find documentation for the included modules with the perldoc command:
 
-You can also find documentation for the included modules with the perldoc command:
+      perldoc Biber
+      perldoc LaTeX::Decode
+      etc.
 
-    perldoc Biber
-    perldoc LaTeX::Decode
-    etc.
+  More information is available at:
 
-More information is available at:
+      http://biblatex-biber.sourceforge.net
 
-    http://biblatex-biber.sourceforge.net
+
+CONFIG FILE
+
+  Biber options can now be set in a configuration file. Biber will load the
+  first file found among:
+    - biber.conf (in the current directory)
+    - $HOME/.biber.conf
+    - $ENV{XDG_CONFIG_HOME}/biber/biber.conf (Unix/Linux/BSD with Gnome, KDE, etc)
+    - $HOME/Library/biber/biber.conf" (Mac OSX only)
+    - $ENV{APPDATA}/biber.conf" (Windows only)
+    - the output of "kpsewhich biber.conf" (if available on the system).
+
+  A sample config file is included in the source tarball under
+    etc/biber.conf
+
+
+BUGS
+
+  Please report any bugs or feature requests on our sourceforge tracker at
+    https://sourceforge.net/tracker2/?func=browse&group_id=228270
+
 
 ==========================
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2009 François Charette and Philip Kime
+  Copyright (C) 2009–2010 François Charette and Philip Kime
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of either:
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of either:
 
-  * the GNU General Public License as published by the Free
-  Software Foundation; either version 1, or (at your option) any
-  later version, or
+    * the GNU General Public License as published by the Free
+    Software Foundation; either version 1, or (at your option) any
+    later version, or
 
-  * the Artistic License version 2.0.
+    * the Artistic License version 2.0.
 
 ==========================
