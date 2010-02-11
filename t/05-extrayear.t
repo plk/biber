@@ -4,7 +4,7 @@ use utf8;
 use Storable qw (dclone);
 no warnings 'utf8';
 
-use Test::More tests => 8;
+use Test::More tests => 10;
 
 use Biber;
 use Biber::Utils;
@@ -33,5 +33,7 @@ is($bibentries->entry('l5')->get_field('extrayear'), '2', 'Entry L5 - two names,
 is($bibentries->entry('l6')->get_field('extrayear'), '1', 'Entry L6 - two names, first in 1996');
 is($bibentries->entry('l7')->get_field('extrayear'), '2', 'Entry L7 - two names, second in 1996');
 ok(is_undef($bibentries->entry('l8')->get_field('extrayear')), 'Entry L8 - one name, only in year');
+ok(is_undef($bibentries->entry('l9')->get_field('extrayear')), 'Entry L9 - No name, same year as another with no name');
+ok(is_undef($bibentries->entry('l10')->get_field('extrayear')), 'Entry L10 - No name, same year as another with no name');
 
 unlink "$bibfile.utf8";

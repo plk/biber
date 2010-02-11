@@ -95,7 +95,6 @@ my $l15 = q|\entry{L15}{book}{}
   \strng{namehash}{DJAA1}
   \strng{fullhash}{DJAA1}
   \field{sortinit}{D}
-  \field{extrayear}{6}
   \count{uniquename}{0}
   \field{title}{Title 2}
 \endentry
@@ -113,7 +112,6 @@ my $l16 = q|\entry{L16}{book}{}
   \strng{namehash}{DJAA1}
   \strng{fullhash}{DJAA1}
   \field{sortinit}{D}
-  \field{extrayear}{7}
   \field{labelyear}{1996}
   \count{uniquename}{0}
   \field{eventyear}{1996}

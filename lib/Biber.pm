@@ -1612,10 +1612,10 @@ sub postprocess_authoryear {
   my $citekey = shift;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
-  my $tmp =
-    $self->_getnamestring($citekey) . "0"
-    . $self->_getyearstring($citekey);
-  Biber::Config->incr_seenauthoryear($tmp);
+  my $ns = $self->_getnamestring($citekey);
+  my $ys = $self->_getyearstring($citekey);
+  my $tmp = $ns . '0' . $ys;
+  Biber::Config->incr_seenauthoryear($ns, $ys);
   $be->set_field('authoryear', $tmp);
 }
 
@@ -1728,7 +1728,7 @@ sub generate_final_sortinfo {
         $be->set_field('extrayear', Biber::Config->get_seenlabelyear($authoryear));
       }
       if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
-        $be->set_field('extraalpha',Biber::Config->get_seenlabelyear($authoryear));
+        $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($authoryear));
       }
     }
     $self->_generatesortstring($citekey, Biber::Config->getblxoption('sorting_final', $be->get_field('entrytype'), $citekey));

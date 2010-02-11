@@ -366,14 +366,31 @@ sub get_seenauthoryear {
 
     Increment the count of an author/year combination
 
-    Biber::Config->incr_seenauthoryear($ay);
+    Biber::Config->incr_seenauthoryear($ns, $ys);
+
+    We pass in the name and year strings seperately as we have to
+    be careful and only increment this counter beyond 1 if there is
+    both a name ans year component. Otherwise, extrayear gets defined for all
+    entries with no author but the same year.
 
 =cut
 
 sub incr_seenauthoryear {
   shift; # class method so don't care about class name
-  my $ay = shift;
-  $CONFIG->{state}{seenauthoryear}{$ay}++;
+  my ($ns, $ys) = @_;
+  $tmp = $ns . '0' . $ys;
+  # We can always increment this to 1
+  unless  ($CONFIG->{state}{seenauthoryear}{$tmp}) {
+    $CONFIG->{state}{seenauthoryear}{$tmp}++;
+  }
+  # But beyond that only if we have an author and year to in the entry since
+  # this counter is used to create extrayear which doesn't mean anyhing for
+  # entries with no author.
+  else {
+    if ($ns and $ys) {
+      $CONFIG->{state}{seenauthoryear}{$tmp}++;
+    }
+  }
   return;
 }
 
