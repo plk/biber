@@ -97,7 +97,7 @@ If returns the first file found among:
 
 =item * C<$HOME/.biber.conf>
 
-=item * C<$ENV{XDG_HOME_CONFIG}/biber/biber.conf>
+=item * C<$ENV{XDG_CONFIG_HOME}/biber/biber.conf>
 
 =item * C<$HOME/Library/biber/biber.conf> (Mac OSX only)
 
@@ -117,9 +117,9 @@ sub config_file {
     $biberconf = abs_path($BIBER_CONF_NAME);
   } elsif ( -f File::Spec->catfile($ENV{HOME}, ".$BIBER_CONF_NAME" ) ) {
     $biberconf = File::Spec->catfile($ENV{HOME}, ".$BIBER_CONF_NAME" );
-  } elsif ( defined $ENV{XDG_HOME_CONFIG} and
-    -f File::Spec->catfile($ENV{XDG_HOME_CONFIG}, "biber", $BIBER_CONF_NAME) ) {
-    $biberconf = File::Spec->catfile($ENV{XDG_HOME_CONFIG}, "biber", $BIBER_CONF_NAME);
+  } elsif ( defined $ENV{XDG_CONFIG_HOME} and
+    -f File::Spec->catfile($ENV{XDG_CONFIG_HOME}, "biber", $BIBER_CONF_NAME) ) {
+    $biberconf = File::Spec->catfile($ENV{XDG_CONFIG_HOME}, "biber", $BIBER_CONF_NAME);
   } elsif ( $^O =~ /Mac/ and
     -f File::Spec->catfile($ENV{HOME}, "Library", "biber", $BIBER_CONF_NAME) ) {
     $biberconf = File::Spec->catfile($ENV{HOME}, "Library", "biber", $BIBER_CONF_NAME);
