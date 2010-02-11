@@ -62,9 +62,9 @@ my $l1 = q|\entry{l1}{book}{}
   \list{publisher}{1}{%
     {Oxford}%
   }
-  \strng{namehash}{T11}
-  \strng{fullhash}{T11}
-  \field{sortinit}{T}
+  \strng{namehash}{DJ1}
+  \strng{fullhash}{DJ1}
+  \field{sortinit}{D}
   \field{labelyear}{1998}
   \count{uniquename}{0}
   \field{year}{1998}
@@ -88,10 +88,10 @@ my $l2 = q|\entry{l2}{book}{usetranslator=true,labelyear=origyear,labelname=tran
   \list{publisher}{1}{%
     {Oxford}%
   }
-  \strng{namehash}{SB1}
-  \strng{fullhash}{SB1}
+  \strng{namehash}{DJ1}
+  \strng{fullhash}{DJ1}
   \field{labelalpha}{Smi98}
-  \field{sortinit}{S}
+  \field{sortinit}{D}
   \field{labelyear}{1985}
   \count{uniquename}{0}
   \field{year}{1998}

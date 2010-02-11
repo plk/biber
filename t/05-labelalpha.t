@@ -22,7 +22,6 @@ $bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 
 Biber::Config->setblxoption('labelalpha', 1);
-Biber::Config->setblxoption('labelyear', undef);
 Biber::Config->setblxoption('maxnames', 1);
 Biber::Config->setblxoption('minnames', 1);
 $biber->prepare;

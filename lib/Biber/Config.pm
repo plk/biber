@@ -33,7 +33,7 @@ $CONFIG->{state}{inset_entries} = {};
 $CONFIG->{state}{seennamehash} = {};
 $CONFIG->{state}{namehashcount} = {};
 $CONFIG->{state}{uniquenamecount} = {};
-$CONFIG->{state}{seenauthoryear} = {};
+$CONFIG->{state}{seennameyear} = {};
 $CONFIG->{state}{seenlabelyear} = {};
 $CONFIG->{state}{seenkeys} = {};
 
@@ -48,7 +48,7 @@ sub _init {
   $CONFIG->{state}{seennamehash} = {};
   $CONFIG->{state}{namehashcount} = {};
   $CONFIG->{state}{uniquenamecount} = {};
-  $CONFIG->{state}{seenauthoryear} = {};
+  $CONFIG->{state}{seennameyear} = {};
   $CONFIG->{state}{seenlabelyear} = {};
   $CONFIG->{state}{seenkeys} = {};
   delete $CONFIG->{options}{biblatex}{PER_ENTRY};
@@ -345,50 +345,50 @@ sub incr_seenlabelyear {
 }
 
 #============================
-#       seenauthoryear
+#       seennameyear
 #============================
 
-=head2 get_seenauthoryear
+=head2 get_seennameyear
 
-    Get the count of an author/year combination
+    Get the count of an labelname/labelyear combination
 
-    Biber::Config->get_seenauthoryear($hash);
+    Biber::Config->get_seennameyear($ny);
 
 =cut
 
-sub get_seenauthoryear {
+sub get_seennameyear {
   shift; # class method so don't care about class name
-  my $ay = shift;
-  return $CONFIG->{state}{seenauthoryear}{$ay};
+  my $ny = shift;
+  return $CONFIG->{state}{seennameyear}{$ny};
 }
 
-=head2 incr_seenauthoryear
+=head2 incr_seennameyear
 
-    Increment the count of an author/year combination
+    Increment the count of an labelname/labelyear combination
 
-    Biber::Config->incr_seenauthoryear($ns, $ys);
+    Biber::Config->incr_seenameyear($ns, $ys);
 
     We pass in the name and year strings seperately as we have to
     be careful and only increment this counter beyond 1 if there is
-    both a name ans year component. Otherwise, extrayear gets defined for all
-    entries with no author but the same year.
+    both a name and year component. Otherwise, extrayear gets defined for all
+    entries with no name but the same year etc.
 
 =cut
 
-sub incr_seenauthoryear {
+sub incr_seennameyear {
   shift; # class method so don't care about class name
   my ($ns, $ys) = @_;
   $tmp = $ns . '0' . $ys;
   # We can always increment this to 1
-  unless  ($CONFIG->{state}{seenauthoryear}{$tmp}) {
-    $CONFIG->{state}{seenauthoryear}{$tmp}++;
+  unless  ($CONFIG->{state}{seennameyear}{$tmp}) {
+    $CONFIG->{state}{seennameyear}{$tmp}++;
   }
-  # But beyond that only if we have an author and year to in the entry since
-  # this counter is used to create extrayear which doesn't mean anyhing for
-  # entries with no author.
+  # But beyond that only if we have a labelname and labelyear in the entry since
+  # this counter is used to create extrayear which doesn't mean anything for
+  # entries with only one of these.
   else {
     if ($ns and $ys) {
-      $CONFIG->{state}{seenauthoryear}{$tmp}++;
+      $CONFIG->{state}{seennameyear}{$tmp}++;
     }
   }
   return;

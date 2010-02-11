@@ -601,34 +601,9 @@ sub _nodecode {
   return $no_decode;
 }
 
-sub _getyearstring {
-  my ($self, $citekey) = @_;
-  my $be = $self->bibentry($citekey);
-  my $string;
-  $string = $self->_dispatch_sorting('sortyear', $citekey);
-  return $string if $string;
-  $string = $self->_dispatch_sorting('year', $citekey);
-  return $string if $string;
-  return '';
-}
-
-sub _getnamestring {
-  my ($self, $citekey) = @_;
-  my $be = $self->bibentry($citekey);
-  my $string;
-  $string = $self->_dispatch_sorting('sortname', $citekey);
-  return $string if $string;
-  $string = $self->_dispatch_sorting('author', $citekey);
-  return $string if $string;
-  $string = $self->_dispatch_sorting('editor', $citekey);
-  return $string if $string;
-  $string = $self->_dispatch_sorting('translator', $citekey);
-  return $string if $string;
-  return '';
-}
-
 sub _namestring {
-  my ( $self, $citekey, $field ) = @_;
+  my $self = shift;
+  my ($citekey, $field) = @_;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
   my $names = $be->get_field($field);
@@ -800,8 +775,8 @@ sub _print_biblatex_entry {
 
  # The labelyear option determines whether "extrayear" and "labelyear" is output
   if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
-    my $authoryear = $be->get_field('authoryear');
-    if ( Biber::Config->get_seenauthoryear($authoryear) > 1) {
+    my $nameyear = $be->get_field('nameyear');
+    if ( Biber::Config->get_seennameyear($nameyear) > 1) {
       $str .= "  \\field{extrayear}{"
         . $be->get_field('extrayear') . "}\n";
     }
@@ -822,8 +797,8 @@ sub _print_biblatex_entry {
   }
 
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
-    my $authoryear = $be->get_field('authoryear');
-    if ( Biber::Config->get_seenauthoryear($authoryear) > 1) {
+    my $nameyear = $be->get_field('nameyear');
+    if ( Biber::Config->get_seennameyear($nameyear) > 1) {
       $str .= "  \\field{extraalpha}{"
         . $be->get_field('extraalpha') . "}\n";
     }

@@ -112,6 +112,7 @@ my $l16 = q|\entry{L16}{book}{}
   \strng{namehash}{DJAA1}
   \strng{fullhash}{DJAA1}
   \field{sortinit}{D}
+  \field{extrayear}{4}
   \field{labelyear}{1996}
   \count{uniquename}{0}
   \field{eventyear}{1996}
@@ -133,7 +134,7 @@ my $l17 = q|\entry{L17}{book}{}
   \strng{namehash}{DJAA1}
   \strng{fullhash}{DJAA1}
   \field{sortinit}{D}
-  \field{extrayear}{6}
+  \field{extrayear}{10}
   \field{labelyear}{1996}
   \count{uniquename}{0}
   \field{year}{1996}
@@ -170,7 +171,6 @@ my $l17c = q|\entry{L17}{book}{}
   \strng{namehash}{DJAA1}
   \strng{fullhash}{DJAA1}
   \field{sortinit}{D}
-  \field{extrayear}{6}
   \field{labelyear}{1998}
   \count{uniquename}{0}
   \field{year}{1996}
@@ -207,7 +207,6 @@ my $l17e = q|\entry{L17}{book}{}
   \strng{namehash}{DJAA1}
   \strng{fullhash}{DJAA1}
   \field{sortinit}{D}
-  \field{extrayear}{6}
   \field{labelyear}{1998\bibdatedash 2004}
   \count{uniquename}{0}
   \field{year}{1996}

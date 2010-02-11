@@ -4,7 +4,7 @@ use utf8;
 use Storable qw (dclone);
 no warnings 'utf8';
 
-use Test::More tests => 10;
+use Test::More tests => 15;
 
 use Biber;
 use Biber::Utils;
@@ -22,6 +22,7 @@ $bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
+Biber::Config->setblxoption('maxnames', 1);
 $biber->prepare;
 my $bibentries = $biber->bib;
 
@@ -35,5 +36,11 @@ is($bibentries->entry('l7')->get_field('extrayear'), '2', 'Entry L7 - two names,
 ok(is_undef($bibentries->entry('l8')->get_field('extrayear')), 'Entry L8 - one name, only in year');
 ok(is_undef($bibentries->entry('l9')->get_field('extrayear')), 'Entry L9 - No name, same year as another with no name');
 ok(is_undef($bibentries->entry('l10')->get_field('extrayear')), 'Entry L10 - No name, same year as another with no name');
+is($bibentries->entry('companion1')->get_field('extrayear'), '1', 'Entry companion1 - names truncated to same as another entry in same year');
+is($bibentries->entry('companion2')->get_field('extrayear'), '2', 'Entry companion2 - names truncated to same as another entry in same year');
+ok(is_undef($bibentries->entry('companion3')->get_field('extrayear')), 'Entry companion3 - one name, same year as truncated names');
+ok(is_undef($bibentries->entry('vangennep')->get_field('extrayear')), 'Entry vangennep - prefix makes it different');
+ok(is_undef($bibentries->entry('gennep')->get_field('extrayear')), 'Entry gennep - different from prefix name');
+
 
 unlink "$bibfile.utf8";

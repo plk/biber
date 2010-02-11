@@ -1186,8 +1186,8 @@ sub postprocess {
     # generate namehash,fullhash and uniquenamecount
     $self->postprocess_hashes($citekey);
 
-    # track author/year
-    $self->postprocess_authoryear($citekey);
+    # track labelname/year combinations
+    $self->postprocess_labelnameyear($citekey);
 
     # generate labelalpha information
     $self->postprocess_labelalpha($citekey);
@@ -1601,22 +1601,40 @@ sub postprocess_hashes {
   }
 }
 
-=head2 postprocess_authoryear
+=head2 postprocess_labelnameyear
 
     Track author/year combination
 
 =cut
 
-sub postprocess_authoryear {
+sub postprocess_labelnameyear {
   my $self = shift;
   my $citekey = shift;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
-  my $ns = $self->_getnamestring($citekey);
-  my $ys = $self->_getyearstring($citekey);
-  my $tmp = $ns . '0' . $ys;
-  Biber::Config->incr_seenauthoryear($ns, $ys);
-  $be->set_field('authoryear', $tmp);
+  # This is all used to generate extrayear and the rules for this are:
+  # * Generate labelname/year combination for tracking extrayear
+  # * If there is no labelname to use, use empty string
+  # * If there is no labelyear to use, use empty string
+  # * Don't increment the seennameyear count if either name or year string is empty
+  #   (see code in incr_nameyear method).
+  my $name_string;
+  if ($be->get_field('labelnamename')) {
+    $name_string = $self->_namestring($citekey, $be->get_field('labelnamename'));
+  }
+  else {
+    $name_string = '';
+  }
+  my $year_string;
+  if ($be->get_field('labelyearname')) {
+    $year_string = $be->get_field($be->get_field('labelyearname'));
+  }
+  else {
+    $year_string = '';
+  }
+  my $nameyear_string = $name_string . '0' . $year_string;
+  Biber::Config->incr_seennameyear($name_string, $year_string);
+  $be->set_field('nameyear', $nameyear_string);
 }
 
 =head2 postprocess_labelalpha
@@ -1721,14 +1739,14 @@ sub generate_final_sortinfo {
   my $bibentries = $self->bib;
   foreach my $citekey ($self->citekeys) {
     my $be = $bibentries->entry($citekey);
-    my $authoryear = $be->get_field('authoryear');
-    if (Biber::Config->get_seenauthoryear($authoryear) > 1) {
-      Biber::Config->incr_seenlabelyear($authoryear);
+    my $nameyear = $be->get_field('nameyear');
+    if (Biber::Config->get_seennameyear($nameyear) > 1) {
+      Biber::Config->incr_seenlabelyear($nameyear);
       if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
-        $be->set_field('extrayear', Biber::Config->get_seenlabelyear($authoryear));
+        $be->set_field('extrayear', Biber::Config->get_seenlabelyear($nameyear));
       }
       if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
-        $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($authoryear));
+        $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($nameyear));
       }
     }
     $self->_generatesortstring($citekey, Biber::Config->getblxoption('sorting_final', $be->get_field('entrytype'), $citekey));

@@ -62,7 +62,7 @@ $biber->prepare ;
 is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
 my $stdmodel = {
-                'authoryear' => 'Glashow2Sheldon01961',
+                'nameyear' => 'Glashow2Sheldon01961',
                 'journaltitle' => 'Nucl.~Phys.',
                 'entryset' => 'stdmodel:glashow,stdmodel:weinberg,stdmodel:salam',
                 'author' => [
@@ -95,7 +95,7 @@ my $stdmodel = {
 is_deeply($bibentries->entry('stdmodel'), $stdmodel, 'entry stdmodel') ;
 
 my $laufenberg = {
-                 'authoryear' => 'Laufenberg2Xaver1zzzz02006',
+                 'nameyear' => 'Laufenberg2Xaver1zzzz02006',
                  'number' => '1700367',
                  'month' => '09',
                  'holder' => [
