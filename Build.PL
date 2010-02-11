@@ -25,7 +25,6 @@ my $builder = Module::Build->new(
     build_recommends => {
        'Test::More'   => 0,
     },
-    create_makefile_pl  => 'passthrough',
     add_to_cleanup      => [ 'biber-*' ],
     requires => {
         'Config::General' => 0,
