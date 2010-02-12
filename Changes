@@ -3,20 +3,20 @@ Revision history for Biber
 0.5     13.02.2010
         * Supports all changes introduced by biblatex 0.9
         * Moved all parts relating to the experimental BibLaTeXML format to the
-          "biblatexml" branch on the git repo.
-        * Communication between biblatex and Biber is done through a
+          "biblatexml" branch on the git repo
+        * Communication between biblatex and Biber can be done through a
           XML-based config file (extension .bcf): this is enabled with the
-          biblatex option "backend=biber".
-        * Biber can now be customized with a configuration file.
+          experimental biblatex option "backend=biber"
+        * Biber can now be customized with a configuration file
         * Considerable refactoring and cleanup of the code
         * Further enhancements to the test suite
         * Improved logging mechanism
         * More robust parsing of personal names
         * Ignore certain prefixes and diacritics in sort strings, for
           instance ʿAlī is sorted under A, and al-Hasan under H. This can
-          be customized in biber.conf.
+          be customized in the configuration file (biber.conf).
         * New command-line option --output-directory (like TeX)
-        * Many bugfixes :)
+        * Many, many bugfixes :)
         (See the output of "git log" for all details...)
 
 0.4.3   23.07.2009

@@ -25,20 +25,13 @@ REQUIREMENTS
     * List::AllUtils (a wrapper for List::Util and List::MoreUtils)
     * Log::Log4perl
     * XML::LibXML::Simple (XML::LibXML clone of XML::Simple)
-
-    For parsing bibtex files, you need either
-    * Text::BibTeX (strongly recommended).
-      ==> Windows users please read the note below! <==
-    or
-    * Parse::RecDescent
-      and
-    * Regexp::Common
-
     * File::Slurp (for latex2utf8 or if converting bib files to UTF-8 with biber).
+    * Text::BibTeX (strongly recommended) OR
+      Parse::RecDescent AND Regexp::Common
 
   ==> IMPORTANT NOTE FOR WINDOWS USERS <==
   Because the CPAN distribution of Text::BibTeX cannot be straightforwardly
-  installed on Windows, users are urged to download and install a
+  installed on Windows yet, users are urged to download and install a
   pre-compiled package for Text::BibTeX available on our sourceforge download
   page. Choose the link that corresponds to your version of Perl (5.8.x or
   5.10.x):
