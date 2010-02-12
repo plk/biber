@@ -206,21 +206,26 @@ sub shorthands {
   if ( $self->{shorthands} ) {
     return @{ $self->{shorthands} }
   } else {
-    return
+    return;
   }
 }
 
 sub _addshorthand {
   my ($self, $key) = @_;
+  # Don't add to los if skiplos is set for entry
+  if (Biber::Config->getblxoption('skiplos', undef, $key)) {
+    return;
+  }
   my @los;
-  if ( $self->{shorthands} ) {
-    @los = @{ $self->{shorthands} }
-  } else {
+  if ( $self->shorthands ) {
+    @los = $self->shorthands;
+  }
+  else {
     @los = ();
-  };
+  }
   push @los, $key;
   $self->{shorthands} = [ @los ];
-  return
+  return;
 }
 
 =head2 parse_auxfile
@@ -1651,6 +1656,10 @@ sub postprocess_labelalpha {
   my $citekey = shift;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
+  # Don't add a label if skiplab is set for entry
+  if (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
+    return;
+  }
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
     my $label;
     my $sortlabel;
