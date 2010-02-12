@@ -1629,6 +1629,9 @@ sub postprocess_labelnameyear {
   if ($be->get_field('labelyearname')) {
     $year_string = $be->get_field($be->get_field('labelyearname'));
   }
+  elsif ($be->get_field('year')) {
+    $year_string = $be->get_field('year');
+  }
   else {
     $year_string = '';
   }

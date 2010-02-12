@@ -19,7 +19,7 @@ $biber->parse_auxfile_v2('sort-complex.aux');
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
 Biber::Config->setblxoption('labelalpha', 1);
-Biber::Config->setblxoption('labelyear', ['year']);
+Biber::Config->setblxoption('labelyear', undef);
 $biber->prepare;
 
 my $sc1 = [
@@ -110,8 +110,6 @@ my $sc3 = q|\entry{L4}{book}{}
   \strng{fullhash}{DJo1}
   \field{labelalpha}{Doe\textbf{+}95}
   \field{sortinit}{D}
-  \field{extrayear}{2}
-  \field{labelyear}{1995}
   \field{extraalpha}{2}
   \count{uniquename}{0}
   \field{year}{1995}
@@ -134,8 +132,6 @@ my $sc4 = q|\entry{L1}{article}{}
   \strng{fullhash}{DJ1}
   \field{labelalpha}{Doe95}
   \field{sortinit}{D}
-  \field{extrayear}{1}
-  \field{labelyear}{1995}
   \field{extraalpha}{1}
   \count{uniquename}{0}
   \field{year}{1995}
@@ -158,8 +154,6 @@ my $sc5 = q|\entry{L2}{article}{}
   \strng{fullhash}{DJ1}
   \field{labelalpha}{Doe95}
   \field{sortinit}{D}
-  \field{extrayear}{3}
-  \field{labelyear}{1995}
   \field{extraalpha}{3}
   \count{uniquename}{0}
   \field{year}{1995}
@@ -182,8 +176,6 @@ my $sc6 = q|\entry{L3}{article}{}
   \strng{fullhash}{DJ1}
   \field{labelalpha}{Doe95}
   \field{sortinit}{D}
-  \field{extrayear}{2}
-  \field{labelyear}{1995}
   \field{extraalpha}{2}
   \count{uniquename}{0}
   \field{year}{1995}

@@ -23,7 +23,7 @@ $biber->parse_bibtex($bibfile);
 
 Biber::Config->setblxoption('labelalpha', 1);
 Biber::Config->setblxoption('maxnames', 1);
-Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('labelyear', undef);
 $biber->prepare;
 my $bibentries = $biber->bib;
 
