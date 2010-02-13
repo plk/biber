@@ -1312,6 +1312,10 @@ sub postprocess_dates {
 
     Set per-entry options
 
+    "dataonly" is a special case and expands to "skiplab,skiplos,skipbib"
+    but only "skiplab" and "skiplos" are dealt with in Biber, "skipbib" is
+    dealt with in biblatex.
+
 =cut
 
 sub postprocess_set_local_opts {
@@ -1323,10 +1327,23 @@ sub postprocess_set_local_opts {
     my @entryoptions = split /\s*,\s*/, $be->get_field('options');
     foreach (@entryoptions) {
       m/^([^=]+)=?(.+)?$/;
-      if ( $2 and $2 eq "false" ) {
-        Biber::Config->setblxoption($1, 0, 'PER_ENTRY', $citekey);
-      } elsif ( $2 and $2 eq "true" ) {
-        Biber::Config->setblxoption($1, 1, 'PER_ENTRY', $citekey);
+      if ( $2 and $2 eq 'false' ) {
+        if (lc($1) eq 'dataonly') {
+          Biber::Config->setblxoption('skiplab', 0, 'PER_ENTRY', $citekey);
+          Biber::Config->setblxoption('skiplos', 0, 'PER_ENTRY', $citekey);
+        }
+        else {
+          Biber::Config->setblxoption($1, 0, 'PER_ENTRY', $citekey);
+        }
+      }
+      elsif ( $2 and $2 eq 'true' ) {
+        if (lc($1) eq 'dataonly') {
+          Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $citekey);
+          Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $citekey);
+        }
+        else {
+          Biber::Config->setblxoption($1, 1, 'PER_ENTRY', $citekey);
+        }
       }
 
       # labelname and labelyear are special and need to be array refs
@@ -1335,10 +1352,24 @@ sub postprocess_set_local_opts {
       # you would want to force them to a specific field
       elsif (($1 eq 'labelyear') or ($1 eq 'labelname')) {
         Biber::Config->setblxoption($1, [ $2 ], 'PER_ENTRY', $citekey);
-      } elsif ($2) {
-        Biber::Config->setblxoption($1, $2, 'PER_ENTRY', $citekey);
-      } else {
-        Biber::Config->setblxoption($1, 1, 'PER_ENTRY', $citekey);
+      }
+      elsif ($2) {
+        if (lc($1) eq 'dataonly') {
+          Biber::Config->setblxoption('skiplab', $2, 'PER_ENTRY', $citekey);
+          Biber::Config->setblxoption('skiplos', $2, 'PER_ENTRY', $citekey);
+        }
+        else {
+          Biber::Config->setblxoption($1, $2, 'PER_ENTRY', $citekey);
+        }
+      }
+      else {
+        if (lc($1) eq 'dataonly') {
+          Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $citekey);
+          Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $citekey);
+        }
+        else {
+          Biber::Config->setblxoption($1, 1, 'PER_ENTRY', $citekey);
+        }
       }
     }
   }
@@ -1431,7 +1462,9 @@ sub postprocess_labelyear {
   my $lyearscheme = Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey);
 
   if ($lyearscheme) {
-
+    if (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
+      return;
+    }
     # make sure we gave the correct data type:
     $logger->logcroak("Invalid value for option labelyear: $lyearscheme\n")
       unless ref $lyearscheme eq 'ARRAY';

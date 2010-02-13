@@ -106,6 +106,7 @@ t/10-sort-complex.t
 t/10-sort-order.t
 t/10-configfile.t
 t/11-set.t
+t/12-skips.t
 t/pod-coverage.t
 t/pod.t
 t/tdata/options.aux
@@ -126,6 +127,8 @@ t/tdata/extrayear.aux
 t/tdata/extrayear.bcf
 t/tdata/labelalpha.aux
 t/tdata/labelalpha.bcf
+t/tdata/skips.aux
+t/tdata/skips.bcf
 t/tdata/sort-complex.aux
 t/tdata/sort-complex.bcf
 t/tdata/sort-order.aux
@@ -136,6 +139,7 @@ t/tdata/examples-extrayear.bib
 t/tdata/examples-labelalpha.bib
 t/tdata/examples-names.bib
 t/tdata/examples-options.bib
+t/tdata/examples-skips.bib
 t/tdata/examples-sort.bib
 t/tdata/examples-sort-order.bib
 t/tdata/examples.bib
