@@ -372,6 +372,7 @@ Removes elements which are not to be used in sorting from a string
 
 sub strip_nosort {
   my ($string) = @_;
+  return '' unless $string; # Sanitise missing data
   $string = strip_nosortprefix($string); # First remove prefix ...
   $string = strip_nosortdiacritics($string); # ... then diacritics
   return $string;
@@ -385,6 +386,7 @@ Removes diacritics from a string
 
 sub strip_nosortdiacritics {
   my ($string) = @_;
+  return '' unless $string; # Sanitise missing data
   my $sds = Biber::Config->getoption('nosortdiacritics');
   $string =~ s/$sds//gxms;
   return $string;
@@ -398,6 +400,7 @@ Removes prefix from a string
 
 sub strip_nosortprefix {
   my ($string) = @_;
+  return '' unless $string; # Sanitise missing data
   my $spr = Biber::Config->getoption('nosortprefix');
   $string =~ s/\A$spr//xms;
   return $string;
@@ -412,6 +415,7 @@ as well as leading and trailing whitespace.
 
 sub normalize_string {
   my ($str, $no_decode) = @_;
+  return '' unless $str; # Sanitise missing data
   $str = latex_decode($str) unless $no_decode;
   $str = strip_nosort($str); # strip nosort elements
   $str =~ s/\\[A-Za-z]+//g; # remove latex macros (assuming they have only ASCII letters)
@@ -430,6 +434,7 @@ Like normalize_string, but also substitutes ~ and whitespace with underscore.
 
 sub normalize_string_underscore {
   my ($str, $no_decode) = @_;
+  return '' unless $str; # Sanitise missing data
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
   $str = normalize_string($str, $no_decode);
   $str =~ s/\s+/_/g;
@@ -463,6 +468,7 @@ terseinitials($str) returns the contatenated initials of all the words in $str.
 
 sub terseinitials {
   my $str = shift;
+  return '' unless $str; # Sanitise missing data
   $str = strip_nosort($str); # strip nosort elements
   $str =~ s/\\[\p{L}]+\s*//g; # remove tex macros
   $str =~ s/^{(\p{L}).+}$/$1/g; # {Aaaa Bbbbb Ccccc} -> A
@@ -514,6 +520,7 @@ sub remove_outer {
 
 sub getinitials {
   my $str = shift;
+  return '' unless $str; # Sanitise missing data
   $str =~ s/{\s+(\S+)\s+}//g; # Aaaaa{ de }Bbbb -> AaaaaBbbbb
   # remove pseudo-space after macros
   $str =~ s/{? ( \\ [^\p{Ps}\{\}]+ ) \s+ (\p{L}) }?/\{$1\{$2\}\}/gx; # {\\x y} -> {\x{y}}
