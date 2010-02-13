@@ -120,9 +120,7 @@ my $setaksin = q|\entry{set:aksin}{article}{}
   }
   \strng{namehash}{AÖ+1}
   \strng{fullhash}{AÖTHALC̨BNCBOÖE1}
-  \field{labelalpha}{Aks\textbf{+}06}
   \field{sortinit}{A}
-  \field{labelyear}{2006}
   \count{uniquename}{0}
   \true{singletitle}
   \field{year}{2006}

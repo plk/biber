@@ -706,21 +706,14 @@ sub _print_biblatex_entry {
 
   $str .= "\\entry{$origkey}{" . $be->get_field('entrytype') . "}{$opts}\n";
 
-  if ( $be->get_field('entrytype') eq 'set' ) {
+  # Generate set information
+  if ( $be->get_field('entrytype') eq 'set' ) {   # Set parents get \set entry ...
     $str .= "  \\set{" . $be->get_field('entryset') . "}\n";
   }
-
-  if (Biber::Config->get_setparentkey($citekey)) {
-    my $inset_key = Biber::Config->get_setparentkey($citekey);
-    my $orig_inset_key = $inset_key;
-    if ($self->bibentry($inset_key)->get_field('origkey')) {
-      $orig_inset_key = $self->bibentry($inset_key)->get_field('origkey');
+  else { # Everything else that isn't a set parent ...
+    if (my $es = $be->get_field('entryset')) { # ... gets a \inset if it's a set member
+      $str .= "  \\inset{$es}\n";
     }
-    unless ($inset_key eq lc($be->get_field('entryset'))) {
-      $logger->warn('Key \"' . $citekey . '\" thinks it is in set ' . $inset_key .
-          ' but the set is called "' . lc($be->get_field('entryset')) . '"!');
-    }
-    $str .= "  \\inset{" . $orig_inset_key . "}\n";
   }
 
   # make labelname a copy of the right thing before output of name lists
@@ -768,27 +761,32 @@ sub _print_biblatex_entry {
   $str .= "  \\strng{fullhash}{$fullhash}\n";
 
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
-    my $label = $be->get_field('labelalpha');
-    $str .= "  \\field{labelalpha}{$label}\n";
+    # Might not have been set due to skiplab/dataonly
+    if (my $label = $be->get_field('labelalpha')) {
+      $str .= "  \\field{labelalpha}{$label}\n";
+    }
   }
   $str .= "  \\field{sortinit}{$sortinit}\n";
 
- # The labelyear option determines whether "extrayear" and "labelyear" is output
-  if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
-    my $nameyear = $be->get_field('nameyear');
-    if ( Biber::Config->get_seennameyear($nameyear) > 1) {
-      $str .= "  \\field{extrayear}{"
-        . $be->get_field('extrayear') . "}\n";
+  # The labelyear option determines whether "extrayear" is output
+  # Skip generating extrayear for entries with "skiplab" set
+  if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey)) {
+    # Might not have been set due to skiplab/dataonly
+    if (my $ey = $be->get_field('extrayear')) {
+      my $nameyear = $be->get_field('nameyear');
+      if ( Biber::Config->get_seennameyear($nameyear) > 1) {
+        $str .= "  \\field{extrayear}{$ey}\n";
+      }
     }
-
     # Construct labelyear
-    if (is_def_and_notnull($be->get_field('labelyearname'))) {
-      $be->set_field('labelyear', $be->get_field($be->get_field('labelyearname')));
+    # Might not have been set due to skiplab/dataonly
+    if (my $yf = $be->get_field('labelyearname')) {
+      $be->set_field('labelyear', $be->get_field($yf));
 
       # ignore endyear if it's the same as year
-      my ($ytype) = $be->get_field('labelyearname') =~ /\A(.*)year\z/xms;
+      my ($ytype) = $yf =~ /\A(.*)year\z/xms;
       if (is_def_and_notnull($be->get_field($ytype . 'endyear'))
-        and ($be->get_field($be->get_field('labelyearname')) ne $be->get_field($ytype . 'endyear'))) {
+        and ($be->get_field($yf) ne $be->get_field($ytype . 'endyear'))) {
         $be->set_field('labelyear',
           $be->get_field('labelyear') . '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
       }
@@ -796,11 +794,15 @@ sub _print_biblatex_entry {
     }
   }
 
-  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
-    my $nameyear = $be->get_field('nameyear');
-    if ( Biber::Config->get_seennameyear($nameyear) > 1) {
-      $str .= "  \\field{extraalpha}{"
-        . $be->get_field('extraalpha') . "}\n";
+  # The labelalpha option determines whether "extraalpha" is output
+  # Skip generating extraalpha for entries with "skiplab" set
+  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey)) {
+    # Might not have been set due to skiplab/dataonly
+    if (my $ea = $be->get_field('extraalpha')) {
+      my $nameyear = $be->get_field('nameyear');
+      if ( Biber::Config->get_seennameyear($nameyear) > 1) {
+        $str .= "  \\field{extraalpha}{$ea}\n";
+      }
     }
   }
 

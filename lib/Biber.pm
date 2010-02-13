@@ -1316,6 +1316,13 @@ sub postprocess_dates {
     but only "skiplab" and "skiplos" are dealt with in Biber, "skipbib" is
     dealt with in biblatex.
 
+    The skip* local options are dealt with by not generating at all:
+
+    * labelyear
+    * extrayear
+    * labelalpha
+    * extraalpha
+
 =cut
 
 sub postprocess_set_local_opts {
@@ -1379,6 +1386,8 @@ sub postprocess_set_local_opts {
 
     Postprocess set entries
 
+    Checks for common set errors and enforces 'dataonly' for set members
+
 =cut
 
 sub postprocess_sets {
@@ -1387,8 +1396,14 @@ sub postprocess_sets {
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
   if ( $be->get_field('entrytype') eq 'set' ) {
-
     my @entrysetkeys = split /\s*,\s*/, $be->get_field('entryset');
+
+    # Enforce Biber parts of virtual "dataonly" for set members
+    foreach my $member (@entrysetkeys) {
+      Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $member);
+      Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $member);
+    }
+
     unless (@entrysetkeys) {
       $logger->warn("No entryset found for entry $citekey of type 'set'");
       $self->{warnings}++;
@@ -1785,13 +1800,17 @@ sub generate_final_sortinfo {
   foreach my $citekey ($self->citekeys) {
     my $be = $bibentries->entry($citekey);
     my $nameyear = $be->get_field('nameyear');
-    if (Biber::Config->get_seennameyear($nameyear) > 1) {
-      Biber::Config->incr_seenlabelyear($nameyear);
-      if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
-        $be->set_field('extrayear', Biber::Config->get_seenlabelyear($nameyear));
-      }
-      if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
-        $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($nameyear));
+    # Only generate extrayear and extraapha if skiplab is not set.
+    # Don't forget that skiplab is implied for set members
+    unless (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
+      if (Biber::Config->get_seennameyear($nameyear) > 1) {
+        Biber::Config->incr_seenlabelyear($nameyear);
+        if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
+          $be->set_field('extrayear', Biber::Config->get_seenlabelyear($nameyear));
+        }
+        if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
+          $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($nameyear));
+        }
       }
     }
     $self->_generatesortstring($citekey, Biber::Config->getblxoption('sorting_final', $be->get_field('entrytype'), $citekey));

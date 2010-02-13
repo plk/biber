@@ -56,8 +56,6 @@ my $string1p = q|\entry{Elias1955}{set}{}
   \strng{namehash}{EP1}
   \strng{fullhash}{EP1}
   \field{sortinit}{E}
-  \field{extrayear}{2}
-  \field{labelyear}{1955}
   \count{uniquename}{0}
   \field{year}{1955}
   \field{month}{3}
@@ -81,8 +79,6 @@ my $string1p = q|\entry{Elias1955}{set}{}
   \strng{namehash}{EP1}
   \strng{fullhash}{EP1}
   \field{sortinit}{E}
-  \field{extrayear}{3}
-  \field{labelyear}{1955}
   \count{uniquename}{0}
   \field{year}{1955}
   \field{month}{3}
