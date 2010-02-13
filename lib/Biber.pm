@@ -1612,45 +1612,42 @@ sub postprocess_hashes {
 
   Biber::Config->incr_seennamehash($fullhash);
 
-
   my $lname = $be->get_field('labelnamename');
-  {                   # Keep these variables scoped over the new few blocks
-    my $lastname;
-    my $namestring;
-    my $singlename;
+  my $lastname;
+  my $namestring;
+  my $singlename;
 
-    if ($lname) {
-      $lastname   = $be->get_field($lname)->nth_element(1)->get_lastname;
-      $namestring = $be->get_field($lname)->nth_element(1)->get_nameinitstring;
-      $singlename = $be->get_field($lname)->count_elements;
-    }
+  if ($lname) {
+    $lastname   = $be->get_field($lname)->nth_element(1)->get_lastname;
+    $namestring = $be->get_field($lname)->nth_element(1)->get_nameinitstring;
+    $singlename = $be->get_field($lname)->count_elements;
+  }
 
-    if ($lname and
+  if ($lname and
       Biber::Config->getblxoption('uniquename', $bee, $citekey) and
       $singlename == 1 ) {
-      if ( not Biber::Config->get_uniquenamecount($lastname, $namehash) ) {
-        if ( Biber::Config->uniquenameexists($lastname) ) {
-          Biber::Config->set_uniquenamecount($lastname, $namehash, 1);
-        }
-        else {
-          Biber::Config->del_uniquenamecount($lastname);
-          Biber::Config->set_uniquenamecount($lastname, $namehash, 1);
-        }
+    if ( not Biber::Config->get_uniquenamecount($lastname, $namehash) ) {
+      if ( Biber::Config->uniquenameexists($lastname) ) {
+        Biber::Config->set_uniquenamecount($lastname, $namehash, 1);
       }
+      else {
+        Biber::Config->del_uniquenamecount($lastname);
+        Biber::Config->set_uniquenamecount($lastname, $namehash, 1);
+      }
+    }
 
-      if ( not Biber::Config->get_uniquenamecount($namestring, $namehash) ) {
-        if ( Biber::Config->uniquenameexists($namestring) ) {
-          Biber::Config->set_uniquenamecount($namestring, $namehash, 1);
-        }
-        else {
-          Biber::Config->del_uniquenamecount($namestring);
-          Biber::Config->set_uniquenamecount($namestring, $namehash, 1);
-        }
+    if ( not Biber::Config->get_uniquenamecount($namestring, $namehash) ) {
+      if ( Biber::Config->uniquenameexists($namestring) ) {
+        Biber::Config->set_uniquenamecount($namestring, $namehash, 1);
+      }
+      else {
+        Biber::Config->del_uniquenamecount($namestring);
+        Biber::Config->set_uniquenamecount($namestring, $namehash, 1);
       }
     }
-    else {
-      $be->set_field('ignoreuniquename', 1);
-    }
+  }
+  else {
+    $be->set_field('ignoreuniquename', 1);
   }
 }
 
