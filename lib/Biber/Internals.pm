@@ -34,30 +34,34 @@ sub _getnameinitials {
     foreach my $n (@{$names->names}) {
       if ( $n->get_prefix and
         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-        $initstr .= terseinitials( $n->get_prefix )
+        $initstr .= terseinitials( $n->get_prefix );
       }
       $initstr .= terseinitials( $n->get_lastname );
 
-      #FIXME suffix ?
+      if ( $n->get_suffix ) {
+        $initstr .= terseinitials( $n->get_suffix )
+      }
+
       if ( $n->get_firstname ) {
         $initstr .= terseinitials( $n->get_firstname )
       }
     }
   }
-  else
-  { # more than maxname names: only take initials of first getblxoption('minnames', $citekey)
+  # > maxname names: only take initials of first getblxoption('minnames', $citekey)
+  else {
     foreach my $i ( 1 .. Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey ) ) {
       if ( $names->nth_element($i)->get_prefix and
         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey) ) {
         $initstr .= terseinitials( $names->nth_element($i)->get_prefix );
       }
-      my $tmp = $names->nth_element($i)->get_lastname;
 
-      #FIXME suffix ?
-      $initstr .= terseinitials($tmp);
+      if ( $names->nth_element($i)->get_suffix ) {
+        $initstr .= terseinitials(  $names->nth_element($i)->get_suffix );
+      }
+
+      $initstr .= terseinitials($names->nth_element($i)->get_lastname);
       if ( $names->nth_element($i)->get_firstname ) {
-        $tmp = $names->nth_element($i)->get_firstname;
-        $initstr .= terseinitials($tmp);
+        $initstr .= terseinitials($names->nth_element($i)->get_firstname);
       }
       $initstr .= "+";
     }
@@ -77,7 +81,10 @@ sub _getallnameinitials {
     }
     $initstr .= terseinitials( $n->get_lastname );
 
-    #FIXME suffix ?
+    if ( $n->get_suffix ) {
+      $initstr .= terseinitials( $n->get_suffix )
+    }
+
     if ( $n->get_firstname ) {
       $initstr .= terseinitials( $n->get_firstname );
     }

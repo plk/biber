@@ -213,8 +213,8 @@ my $pimentel1 = q|\entry{pimentel00}{thesis}{}
   \list{institution}{1}{%
     {University of Michigan}%
   }
-  \strng{namehash}{PJJ1}
-  \strng{fullhash}{PJJ1}
+  \strng{namehash}{PJJJ1}
+  \strng{fullhash}{PJJJ1}
   \field{labelalpha}{Pim00}
   \field{sortinit}{P}
   \field{labelyear}{2000}

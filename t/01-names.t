@@ -132,8 +132,8 @@ my $l10 = q|\entry{l10}{book}{}
   \name{author}{1}{%
     {{Jolly}{J.}{James}{J.}{}{}{III}{I.}}%
   }
-  \strng{namehash}{JJ1}
-  \strng{fullhash}{JJ1}
+  \strng{namehash}{JIJ1}
+  \strng{fullhash}{JIJ1}
   \field{sortinit}{J}
   \count{uniquename}{0}
 \endentry
@@ -144,8 +144,8 @@ my $l11 = q|\entry{l11}{book}{}
   \name{author}{1}{%
     {{Kluster}{K.}{Kevin}{K.}{van}{v.}{Jr.}{J.}}%
   }
-  \strng{namehash}{KK1}
-  \strng{fullhash}{KK1}
+  \strng{namehash}{KJK1}
+  \strng{fullhash}{KJK1}
   \field{sortinit}{K}
   \count{uniquename}{0}
 \endentry
