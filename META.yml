@@ -1,7 +1,7 @@
 ---
 abstract: 'main module for biber, a bibtex replacement for users of biblatex'
 author:
-  - 'FranÃ§ois Charette <firmicus@gmx.net>'
+  - 'François Charette <firmicus@gmx.net>'
 configure_requires:
   Module::Build: 0.36
 generated_by: 'Module::Build version 0.3603'
