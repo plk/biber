@@ -371,6 +371,7 @@ as well as leading and trailing whitespace.
 
 sub normalize_string {
   my ($str, $no_decode) = @_;
+  return '' unless $str; # Sanitise missing data
   $str = latex_decode($str) unless $no_decode;
   $str =~ s/\\[A-Za-z]+//g; # remove latex macros (assuming they have only ASCII letters)
   $str =~ s/[\p{P}\p{S}\p{C}]+//g; ### remove punctuation, symbols, separator and control
@@ -388,6 +389,7 @@ Like normalize_string, but also substitutes ~ and whitespace with underscore.
 
 sub normalize_string_underscore {
   my ($str, $no_decode) = @_;
+  return '' unless $str; # Sanitise missing data
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
   $str = normalize_string($str, $no_decode);
   $str =~ s/\s+/_/g;
@@ -474,6 +476,7 @@ sub remove_outer {
 
 sub getinitials {
   my $str = shift;
+  return '' unless $str; # Sanitise missing data
   $str =~ s/{\s+(\S+)\s+}//g; # Aaaaa{ de }Bbbb -> AaaaaBbbbb
   # remove pseudo-space after macros
   $str =~ s/{? ( \\ [^\p{Ps}\{\}]+ ) \s+ (\p{L}) }?/\{$1\{$2\}\}/gx; # {\\x y} -> {\x{y}}
