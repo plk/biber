@@ -1,5 +1,11 @@
 Revision history for Biber
 
+0.4.4   14.02.2010
+        * Mainly a bugfix release: see the log of our git repo for details. 
+          See also the Changes in the v0.5 release.
+        * The BibLaTeXML format is not supported in this release: it was moved
+          to the git branch 'biblatexml'.
+
 0.4.3   23.07.2009
         * With biblatex option "backend=biber" and biber option --v2
           the new experimental control file \jobname.bcf is used,
