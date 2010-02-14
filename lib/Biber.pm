@@ -1532,16 +1532,22 @@ sub postprocess_hashes {
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $namehash; # biblatex namehash field (manual, section 4.2.4.1)
-  my $fullhash; # biblatex fullhash field (manual, section 4.2.4.1)
-  my $nameid;
+  my $namehash = ''; # biblatex namehash field (manual, section 4.2.4.1)
+  my $fullhash = ''; # biblatex fullhash field (manual, section 4.2.4.1)
+  my $nameid   = '';
 #  my $nameinitid;
 
-  my $lname   = $be->get_field('labelnamename');
-  my $lnamefh = $be->get_field('labelnamenamefullhash');
-  $namehash = $self->_getnameinitials($citekey, $be->get_field($lname));
-  $fullhash = $self->_getallnameinitials($citekey, $be->get_field($lnamefh));
-  $nameid   = makenameid($be->get_field($lname));
+  if (my $lname = $be->get_field('labelnamename')) {
+    if ($be->get_field($lname)) {
+      $namehash .= $self->_getnameinitials($citekey, $be->get_field($lname));
+      $nameid   .= makenameid($be->get_field($lname));
+    }
+  }
+  if (my $lnamefh = $be->get_field('labelnamenamefullhash')) {
+    if ($be->get_field($lnamefh)) {
+      $fullhash .= $self->_getallnameinitials($citekey, $be->get_field($lnamefh));
+    }
+  }
 
 
   # # Sortname
@@ -1643,7 +1649,7 @@ sub postprocess_hashes {
 
   Biber::Config->incr_seennamehash($fullhash);
 
-#  my $lname = $be->get_field('labelnamename');
+  my $lname = $be->get_field('labelnamename');
   my $lastname;
   my $namestring;
   my $singlename;

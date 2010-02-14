@@ -119,7 +119,7 @@ my $un5 = q|\entry{un5}{article}{}
     {{Chaps}{C.}{}{}{}{}{}{}}%
   }
   \list{publisher}{1}{%
-     {A press}%
+    {A press}%
   }
   \list{location}{1}{%
     {Cambridge}%
@@ -135,6 +135,7 @@ my $un5 = q|\entry{un5}{article}{}
 \endentry
 
 |;
+
 
 is($biber->_print_biblatex_entry('un1'), $un1, 'Uniquename requiring full name expansion - 1');
 is($biber->_print_biblatex_entry('un3'), $un3, 'Uniquename requiring full name expansion - 2');

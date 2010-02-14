@@ -88,8 +88,8 @@ my $l2 = q|\entry{l2}{book}{usetranslator=true,labelyear=origyear,labelname=tran
   \list{publisher}{1}{%
     {Oxford}%
   }
-  \strng{namehash}{DJ1}
-  \strng{fullhash}{DJ1}
+  \strng{namehash}{SB1}
+  \strng{fullhash}{SB1}
   \field{labelalpha}{Smi98}
   \field{sortinit}{D}
   \field{labelyear}{1985}

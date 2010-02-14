@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 29;
+use Test::More tests => 28;
 use Biber;
 use Biber::Utils;
 use Log::Log4perl qw(:easy);
@@ -29,8 +29,6 @@ my $names = [
 
 is( makenameid($names), 'Askdjksdj_Bsadk_Cklsjd_von_Üsakdjskd_Vsajd_Wasdjh_Xaskldjdd_Yajsdajks_Z_Maksjdakj_Nsjahdajsdhj', 'makenameid' );
 
-is( makenameinitid($names), 'Askdjksdj_BC_v_Üsakdjskd_VW_Xaskldjdd_YZ_Maksjdakj_N', 
-    'makenameinitid' );
 
 is( latexescape('Joe & Sons: $3.01 + 5% of some_function()'),
                'Joe \& Sons: \$3.01 + 5\% of some\_function()',

@@ -83,6 +83,7 @@ my $stdmodel = {
                 'crossref' => 'stdmodel:glashow',
                 'volume' => '22',
                 'labelnamename' => 'author',
+                'labelnamenamefullhash' => 'author',
                 'labelyearname' => 'year',
                 'entrytype' => 'set',
                 'title' => 'Partial Symmetries of Weak Interactions',
@@ -237,6 +238,7 @@ my $laufenberg = {
                                  'countrywo'
                                ],
                   'labelnamename' => 'author',
+                  'labelnamenamefullhash' => 'author',
                   'labelyearname' => 'year',
                  'entrytype' => 'patent',
                  'abstract' => 'The invention relates to an electric device comprising a generator, in particular for use in the vehicle electric system of a motor vehicle and a controller for controlling the generator voltage. The device is equipped with a control zone, in which the voltage is controlled and zones, in which the torque is controlled. The invention also relates to methods for operating a device of this type.',
