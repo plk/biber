@@ -333,7 +333,8 @@ sub is_name_field {
 
 =head2 makenameid
 
-Given a Biber::Names object,  with the concatenation of all names.
+Given a Biber::Names object, return an underscore normalised
+concatenation of all of the full name strings.
 
 =cut
 

@@ -1635,61 +1635,96 @@ sub postprocess_hashes {
 
   my $hashsuffix = 1;
 
+  # First, check to see if we've already seen this exact name before
   if (Biber::Config->get_namehashcount($namehash, $nameid)) {
+    # If we have, our suffix is already known
     $hashsuffix = Biber::Config->get_namehashcount($namehash, $nameid);
   }
+  # Otherwise, if the namehash already exists, we'll make a new entry with a new suffix
   elsif (Biber::Config->namehashexists($namehash)) {
+    # Count the suffixes already defined ...
     my $count = Biber::Config->get_numofnamehashes($namehash);
+    # ... add one to the number ...
     $hashsuffix = $count + 1;
+    # ... and define a new suffix for that name
     Biber::Config->set_namehashcount($namehash, $nameid, $hashsuffix);
   }
+  # No entry for the namehash at all so make a new one, a new name and suffix
   else {
     Biber::Config->del_namehash($namehash);
     Biber::Config->set_namehashcount($namehash, $nameid, 1);
   }
 
+  # Now append the suffices, making the hashes unique
   $namehash .= $hashsuffix;
   $fullhash .= $hashsuffix;
 
+  # Set the hashes
   $be->set_field('namehash', $namehash);
   $be->set_field('fullhash', $fullhash);
 
   Biber::Config->incr_seennamehash($fullhash);
 
+  # Now we set uniquename, if required
+  # Note that we don't determine if a name is unique here - 
+  # we can't, were still processing entries at this point.
+  # Here we are just recording seen combinations of:
+  #
+  # lastnames and what hashes were generated from them (uniquename = 0)
+  # lastnames+initials and what hashes were generated from them (uniquename = 1)
+  #
+  # Naturally, anything which has more than one combination for both of these would
+  # be uniquename = 2
+  #
+  # See the logic in Internals.pm for generating the actual uniquename count
+  # from the information collected here
   my $lname = $be->get_field('labelnamename');
   my $lastname;
   my $namestring;
   my $singlename;
 
+  # uniquename only works (currently) with single names
   if ($lname) {
     $lastname   = $be->get_field($lname)->nth_element(1)->get_lastname;
     $namestring = $be->get_field($lname)->nth_element(1)->get_nameinitstring;
     $singlename = $be->get_field($lname)->count_elements;
   }
 
+  # If we need to provide uniquename, labelnamename exists and we are only
+  # dealing with a single name
   if ($lname and
       Biber::Config->getblxoption('uniquename', $bee, $citekey) and
       $singlename == 1 ) {
+
+    # Record an entry for the lastname showing all the hashes which use this
+    # last name if an entry doesn't already exist
     if ( not Biber::Config->get_uniquenamecount($lastname, $namehash) ) {
+      # Here we are just adding a new hash for an existing lastname
       if ( Biber::Config->uniquenameexists($lastname) ) {
         Biber::Config->set_uniquenamecount($lastname, $namehash, 1);
       }
+      # Here we are creating a new lastname record
       else {
         Biber::Config->del_uniquenamecount($lastname);
         Biber::Config->set_uniquenamecount($lastname, $namehash, 1);
       }
     }
 
+    # Record an entry for the lastname+initials showing all the hashes
+    # which use this lastname+initials combination if an entry doesn't already exist
     if ( not Biber::Config->get_uniquenamecount($namestring, $namehash) ) {
+      # Here we are just adding a new hash for an existing lastname+initials
       if ( Biber::Config->uniquenameexists($namestring) ) {
         Biber::Config->set_uniquenamecount($namestring, $namehash, 1);
       }
+      # Here we are creating a new lastname_initials record
       else {
         Biber::Config->del_uniquenamecount($namestring);
         Biber::Config->set_uniquenamecount($namestring, $namehash, 1);
       }
     }
   }
+  # Otherwise just ignore uniquename
   else {
     $be->set_field('ignoreuniquename', 1);
   }

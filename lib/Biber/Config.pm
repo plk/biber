@@ -31,7 +31,12 @@ our $CONFIG;
 $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{inset_entries} = {};
 $CONFIG->{state}{seennamehash} = {};
+
+# namehashcount holds a hash of namehashes and 
+# occurences of unique names that generate the hash. For example:
+# {AA => { Adams_A => 1, Allport_A => 2 }}
 $CONFIG->{state}{namehashcount} = {};
+
 $CONFIG->{state}{uniquenamecount} = {};
 $CONFIG->{state}{seennameyear} = {};
 $CONFIG->{state}{seenlabelyear} = {};

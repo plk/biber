@@ -847,11 +847,17 @@ sub _print_biblatex_entry {
       $lastname = $name->get_lastname;
       $nameinitstr = $name->get_nameinitstring;
     }
+    # If there is one entry (hash) for the lastname, then it's unique
     if (Biber::Config->get_numofuniquenames($lastname) == 1 ) {
       $str .= "  \\count{uniquename}{0}\n";
-    } elsif (Biber::Config->get_numofuniquenames($nameinitstr) == 1 ) {
+    }
+    # Otherwise, if there is one entry (hash) for the lastname plus initials,
+    # the it needs the initials to make it unique
+    elsif (Biber::Config->get_numofuniquenames($nameinitstr) == 1 ) {
       $str .= "  \\count{uniquename}{1}\n";
-    } else {
+    }
+    # Otherwise the name needs to be full to make it unique
+    else {
       $str .= "  \\count{uniquename}{2}\n";
     }
   }
