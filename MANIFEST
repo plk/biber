@@ -56,3 +56,5 @@ t/tdata/examples-labelalpha.bib
 t/tdata/examples-sort-order.bib
 t/tdata/examples-sort.bib
 t/tdata/examples.bib
+Makefile.PL
+META.yml
