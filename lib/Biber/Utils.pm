@@ -354,15 +354,15 @@ Similar to makenameid, with the first names converted to initials.
 
 =cut
 
-sub makenameinitid {
-  my ($names) = @_;
-  my @namestrings;
-  foreach my $n (@{$names}) {
-    push @namestrings, $n->{nameinitstring};
-  }
-  my $tmp = join ' ', @namestrings;
-  return normalize_string_underscore($tmp, 1);
-}
+# sub makenameinitid {
+#   my ($names) = @_;
+#   my @namestrings;
+#   foreach my $n (@{$names}) {
+#     push @namestrings, $n->{nameinitstring};
+#   }
+#   my $tmp = join ' ', @namestrings;
+#   return normalize_string_underscore($tmp, 1);
+# }
 
 =head2 strip_nosort
 

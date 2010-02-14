@@ -754,7 +754,7 @@ sub _print_biblatex_entry {
     }
   }
 
-  my $namehash = $be->get_field('namehash');
+  my $namehash = $be->get_field('sortstring');
   my $sortinit = substr $namehash, 0, 1;
   $str .= "  \\strng{namehash}{$namehash}\n";
   my $fullhash = $be->get_field('fullhash');

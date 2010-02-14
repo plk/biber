@@ -1429,9 +1429,18 @@ sub postprocess_sets {
 
 =head2 postprocess_labelname
 
-    Generate labelname.
-    Here, "labelnamename" is the name of the labelname field
-    and "labelname" is the actual copy of the relevant field
+    Generate labelname information. Fields set are:
+
+    * labelnamename - the name of the labelname field to use
+    * labelnamenamefullhash - the name of the labelname field to use for
+                              fulhash generation.
+
+    We can retreive the actual labelname value later with:
+
+    $entry->get_field($entry->get_field('labelnamename))
+
+    It's neat this was as we often need to know what the labelname field is
+    as well as it's actual string value
 
 =cut
 
@@ -1442,6 +1451,7 @@ sub postprocess_labelname {
   my $be = $bibentries->entry($citekey);
   my $lnamescheme = Biber::Config->getblxoption('labelname', $be->get_field('entrytype'), $citekey);
 
+  # First we set the normal labelname name
   foreach my $ln ( @{$lnamescheme} ) {
     my $lnameopt;
     if ( $ln =~ /\Ashort(.+)\z/ ) {
@@ -1452,6 +1462,20 @@ sub postprocess_labelname {
     if ($be->get_field($ln) and
       Biber::Config->getblxoption("use$lnameopt", $be->get_field('entrytype'), $citekey ) ) {
       $be->set_field('labelnamename', $ln);
+      last;
+    }
+  }
+
+  # Then we loop again to set the labelname name for the fullhash generation code
+  # This is because fullhash generation ignores SHORT* fields (section 4.2.4.1, BibLaTeX
+  # manual)
+  foreach my $ln ( @{$lnamescheme} ) {
+    if ( $ln =~ /\Ashort(.+)\z/ ) {
+      next;
+    }
+    if ($be->get_field($ln) and
+      Biber::Config->getblxoption("use$ln", $be->get_field('entrytype'), $citekey ) ) {
+      $be->set_field('labelnamenamefullhash', $ln);
       last;
     }
   }
@@ -1508,84 +1532,91 @@ sub postprocess_hashes {
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $namehash;
-  my $fullhash;
+  my $namehash; # biblatex namehash field (manual, section 4.2.4.1)
+  my $fullhash; # biblatex fullhash field (manual, section 4.2.4.1)
   my $nameid;
-  my $nameinitid;
+#  my $nameinitid;
 
-  # Sortname
-  if ($be->get_field('sortname') and
-    (Biber::Config->getblxoption('useauthor', $bee, $citekey)
-      or Biber::Config->getblxoption('useeditor', $bee, $citekey))) {
-    my $field = $be->get_field('sortname');
-    $namehash = $self->_getnameinitials($citekey, $field);
-    $fullhash = $self->_getallnameinitials($citekey, $field);
-    $nameid = makenameid($field);
-    if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
-      $nameinitid = makenameinitid($field);
-    }
-  }
+  my $lname   = $be->get_field('labelnamename');
+  my $lnamefh = $be->get_field('labelnamenamefullhash');
+  $namehash = $self->_getnameinitials($citekey, $be->get_field($lname));
+  $fullhash = $self->_getallnameinitials($citekey, $be->get_field($lnamefh));
+  $nameid   = makenameid($be->get_field($lname));
 
-  # Author
-  elsif (Biber::Config->getblxoption('useauthor', $bee, $citekey) and
-    $be->get_field('author') ) {
-    my $field = $be->get_field('author');
-    $namehash = $self->_getnameinitials($citekey, $field);
-    $fullhash = $self->_getallnameinitials( $citekey, $field );
-    $nameid = makenameid($field);
-    if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
-      $nameinitid = makenameinitid($field);
-    }
-  }
 
-  # Editor in collection/proceedings
-  elsif (
-    (# keep this? FIXME
-      $bee =~ /^(collection|proceedings)/ and
-      Biber::Config->getblxoption('useeditor', $bee, $citekey)
-    )
-    and $be->get_field('editor')
-    ) {
-    my $field = $be->get_field('editor');
-    $namehash = $self->_getnameinitials($citekey, $field);
-    $fullhash = $self->_getallnameinitials($citekey, $field);
-    $nameid = makenameid($field);
-    if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
-      $nameinitid = makenameinitid($field)
-    }
-  }
+  # # Sortname
+  # if ($be->get_field('sortname') and
+  #   (Biber::Config->getblxoption('useauthor', $bee, $citekey)
+  #     or Biber::Config->getblxoption('useeditor', $bee, $citekey))) {
+  #   my $field = $be->get_field('sortname');
+  #   $namehash = $self->_getnameinitials($citekey, $field);
+  #   $fullhash = $self->_getallnameinitials($citekey, $field);
+  #   $nameid = makenameid($field);
+  #   if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
+  #     $nameinitid = makenameinitid($field);
+  #   }
+  # }
 
-  # Translator
-  elsif ( Biber::Config->getblxoption('usetranslator', $bee, $citekey) and
-    $be->get_field('translator')) {
-    my $field = $be->get_field('translator');
-    $namehash = $self->_getnameinitials($citekey, $field);
-    $fullhash = $self->_getallnameinitials($citekey, $field);
-    $nameid = makenameid($field);
-    if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
-      $nameinitid = makenameinitid($field);
-    }
-  }
+  # # Author
+  # elsif (Biber::Config->getblxoption('useauthor', $bee, $citekey) and
+  #   $be->get_field('author') ) {
+  #   my $field = $be->get_field('author');
+  #   $namehash = $self->_getnameinitials($citekey, $field);
+  #   $fullhash = $self->_getallnameinitials( $citekey, $field );
+  #   $nameid = makenameid($field);
+  #   if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
+  #     $nameinitid = makenameinitid($field);
+  #   }
+  # }
 
-  # initials of title
-  else {
-    if ($be->get_field('sorttitle')) {
-      $namehash = terseinitials($be->get_field('sorttitle'));
-      $fullhash = $namehash;
-      $nameid = normalize_string_underscore($be->get_field('sorttitle'), 1);
-      if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
-        $nameinitid = $nameid;
-      }
-    }
-    else {
-      $namehash = terseinitials($be->get_field('title'));
-      $fullhash = $namehash;
-      $nameid = normalize_string_underscore($be->get_field('title'), 1);
-      if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
-        $nameinitid = $nameid;
-      }
-    }
-  }
+  # # Editor in collection/proceedings
+  # elsif (
+  #   (# keep this? FIXME
+  #     $bee =~ /^(collection|proceedings)/ and
+  #     Biber::Config->getblxoption('useeditor', $bee, $citekey)
+  #   )
+  #   and $be->get_field('editor')
+  #   ) {
+  #   my $field = $be->get_field('editor');
+  #   $namehash = $self->_getnameinitials($citekey, $field);
+  #   $fullhash = $self->_getallnameinitials($citekey, $field);
+  #   $nameid = makenameid($field);
+  #   if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
+  #     $nameinitid = makenameinitid($field)
+  #   }
+  # }
+
+  # # Translator
+  # elsif ( Biber::Config->getblxoption('usetranslator', $bee, $citekey) and
+  #   $be->get_field('translator')) {
+  #   my $field = $be->get_field('translator');
+  #   $namehash = $self->_getnameinitials($citekey, $field);
+  #   $fullhash = $self->_getallnameinitials($citekey, $field);
+  #   $nameid = makenameid($field);
+  #   if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
+  #     $nameinitid = makenameinitid($field);
+  #   }
+  # }
+
+  # # initials of title
+  # else {
+  #   if ($be->get_field('sorttitle')) {
+  #     $namehash = terseinitials($be->get_field('sorttitle'));
+  #     $fullhash = $namehash;
+  #     $nameid = normalize_string_underscore($be->get_field('sorttitle'), 1);
+  #     if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
+  #       $nameinitid = $nameid;
+  #     }
+  #   }
+  #   else {
+  #     $namehash = terseinitials($be->get_field('title'));
+  #     $fullhash = $namehash;
+  #     $nameid = normalize_string_underscore($be->get_field('title'), 1);
+  #     if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
+  #       $nameinitid = $nameid;
+  #     }
+  #   }
+  # }
 
   # hash suffix
 
@@ -1612,7 +1643,7 @@ sub postprocess_hashes {
 
   Biber::Config->incr_seennamehash($fullhash);
 
-  my $lname = $be->get_field('labelnamename');
+#  my $lname = $be->get_field('labelnamename');
   my $lastname;
   my $namestring;
   my $singlename;
