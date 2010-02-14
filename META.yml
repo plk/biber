@@ -1,0 +1,47 @@
+---
+name: biblatex-biber
+version: 0.4.4
+author:
+  - 'François Charette <firmicus@gmx.net>'
+abstract: 'main module for biber, a bibtex replacement for users of biblatex'
+license: perl
+resources:
+  license: http://dev.perl.org/licenses/
+requires:
+  Data::Dump: 0
+  File::Slurp: 0
+  List::AllUtils: 0
+  Log::Log4perl: 0
+  Readonly: 0
+  Regexp::Common: 0
+  Text::BibTeX: 0
+  XML::LibXML::Simple: 0
+recommends:
+  Readonly::XS: 0
+configure_requires:
+  Module::Build: 0.340201
+provides:
+  Biber:
+    file: lib/Biber.pm
+    version: 0.4.4
+  Biber::BibTeX:
+    file: lib/Biber/BibTeX.pm
+  Biber::BibTeX::PRD:
+    file: lib/Biber/BibTeX/PRD.pm
+  Biber::BibTeX::Parser:
+    file: lib/Biber/BibTeX/Parser.pm
+  Biber::Constants:
+    file: lib/Biber/Constants.pm
+  Biber::Internals:
+    file: lib/Biber/Internals.pm
+  Biber::Utils:
+    file: lib/Biber/Utils.pm
+  LaTeX::Decode:
+    file: lib/LaTeX/Decode.pm
+    version: 0.1
+  Parse::RecDescent::Biber::BibTeX::Parser:
+    file: lib/Biber/BibTeX/Parser.pm
+generated_by: Module::Build version 0.340201
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
