@@ -1,6 +1,22 @@
 use strict;
 use warnings;
-use Module::Build;
+use utf8;
+my $Bundled_MB = 0.3603;
+
+# Find out what version of Module::Build is installed or fail quietly.
+# This should be cross-platform.
+my $Installed_MB =
+    `$^X -e "eval q{require Module::Build; print Module::Build->VERSION} or exit 1"`;
+
+# some operating systems put a newline at the end of every print.
+chomp $Installed_MB;
+
+$Installed_MB = 0 if $?;
+
+# Use our bundled copy of Module::Build if it's newer than the installed.
+unshift @INC, "inc/Module-Build/lib/perl5" if $Bundled_MB > $Installed_MB;
+
+require Module::Build;
 
 my $builder = Module::Build->new(
     dist_name           => 'biblatex-biber',
@@ -10,7 +26,6 @@ my $builder = Module::Build->new(
     build_recommends => {
        'Test::More'   => 0,
     },
-    create_makefile_pl  => 'passthrough',
     add_to_cleanup      => [ 'biber-*' ],
     requires => {
         'Data::Dump' => 0,
