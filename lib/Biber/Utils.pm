@@ -333,16 +333,15 @@ sub is_name_field {
 
 =head2 makenameid
 
-Given an array of names (as hashes), this internal sub returns a long string
-with the concatenation of all names.
+Given a Biber::Names object,  with the concatenation of all names.
 
 =cut
 
 sub makenameid {
-  my ($names) = @_;
+  my $names = shift;
   my @namestrings;
-  foreach my $n (@{$names}) {
-    push @namestrings, $n->{namestring};
+  foreach my $name (@{$names->names}) {
+    push @namestrings, $name->get_namestring;
   }
   my $tmp = join ' ', @namestrings;
   return normalize_string_underscore($tmp, 1);

@@ -21,7 +21,7 @@ sub new {
 
 =head2 names
 
-    Return ref to array of all Biber::Entry::Names objects
+    Return ref to array of all Biber::Entry::Name objects
     in object
 
 =cut

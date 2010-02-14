@@ -1537,18 +1537,20 @@ sub postprocess_hashes {
   my $nameid   = '';
 #  my $nameinitid;
 
+  # namehash is generated from the labelname
   if (my $lname = $be->get_field('labelnamename')) {
     if ($be->get_field($lname)) {
       $namehash .= $self->_getnameinitials($citekey, $be->get_field($lname));
-      $nameid   .= makenameid($be->get_field($lname));
+      $nameid .= makenameid($be->get_field($lname));
     }
   }
+  # fullhash is generated from the labelname but ignores SHORT* fields and
+  # maxnames/minnames settings
   if (my $lnamefh = $be->get_field('labelnamenamefullhash')) {
     if ($be->get_field($lnamefh)) {
       $fullhash .= $self->_getallnameinitials($citekey, $be->get_field($lnamefh));
     }
   }
-
 
   # # Sortname
   # if ($be->get_field('sortname') and
@@ -1624,7 +1626,12 @@ sub postprocess_hashes {
   #   }
   # }
 
-  # hash suffix
+  # After the initial generation of namehash and fullhash, we have to append
+  # a suffix as they must be unique. It is possible that different entries have
+  # the same hashes at this stage. For example:
+
+  # AUTHOR = {Fred Grimble and Bill Bullter} = "FGBB"
+  # AUTHOR = {Frank Garby and Brian Blunkley} = "FGBB"
 
   my $hashsuffix = 1;
 
