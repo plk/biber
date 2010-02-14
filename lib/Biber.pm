@@ -1535,7 +1535,6 @@ sub postprocess_hashes {
   my $namehash = ''; # biblatex namehash field (manual, section 4.2.4.1)
   my $fullhash = ''; # biblatex fullhash field (manual, section 4.2.4.1)
   my $nameid   = '';
-#  my $nameinitid;
 
   # namehash is generated from the labelname
   if (my $lname = $be->get_field('labelnamename')) {
@@ -1551,80 +1550,6 @@ sub postprocess_hashes {
       $fullhash .= $self->_getallnameinitials($citekey, $be->get_field($lnamefh));
     }
   }
-
-  # # Sortname
-  # if ($be->get_field('sortname') and
-  #   (Biber::Config->getblxoption('useauthor', $bee, $citekey)
-  #     or Biber::Config->getblxoption('useeditor', $bee, $citekey))) {
-  #   my $field = $be->get_field('sortname');
-  #   $namehash = $self->_getnameinitials($citekey, $field);
-  #   $fullhash = $self->_getallnameinitials($citekey, $field);
-  #   $nameid = makenameid($field);
-  #   if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
-  #     $nameinitid = makenameinitid($field);
-  #   }
-  # }
-
-  # # Author
-  # elsif (Biber::Config->getblxoption('useauthor', $bee, $citekey) and
-  #   $be->get_field('author') ) {
-  #   my $field = $be->get_field('author');
-  #   $namehash = $self->_getnameinitials($citekey, $field);
-  #   $fullhash = $self->_getallnameinitials( $citekey, $field );
-  #   $nameid = makenameid($field);
-  #   if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
-  #     $nameinitid = makenameinitid($field);
-  #   }
-  # }
-
-  # # Editor in collection/proceedings
-  # elsif (
-  #   (# keep this? FIXME
-  #     $bee =~ /^(collection|proceedings)/ and
-  #     Biber::Config->getblxoption('useeditor', $bee, $citekey)
-  #   )
-  #   and $be->get_field('editor')
-  #   ) {
-  #   my $field = $be->get_field('editor');
-  #   $namehash = $self->_getnameinitials($citekey, $field);
-  #   $fullhash = $self->_getallnameinitials($citekey, $field);
-  #   $nameid = makenameid($field);
-  #   if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
-  #     $nameinitid = makenameinitid($field)
-  #   }
-  # }
-
-  # # Translator
-  # elsif ( Biber::Config->getblxoption('usetranslator', $bee, $citekey) and
-  #   $be->get_field('translator')) {
-  #   my $field = $be->get_field('translator');
-  #   $namehash = $self->_getnameinitials($citekey, $field);
-  #   $fullhash = $self->_getallnameinitials($citekey, $field);
-  #   $nameid = makenameid($field);
-  #   if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
-  #     $nameinitid = makenameinitid($field);
-  #   }
-  # }
-
-  # # initials of title
-  # else {
-  #   if ($be->get_field('sorttitle')) {
-  #     $namehash = terseinitials($be->get_field('sorttitle'));
-  #     $fullhash = $namehash;
-  #     $nameid = normalize_string_underscore($be->get_field('sorttitle'), 1);
-  #     if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
-  #       $nameinitid = $nameid;
-  #     }
-  #   }
-  #   else {
-  #     $namehash = terseinitials($be->get_field('title'));
-  #     $fullhash = $namehash;
-  #     $nameid = normalize_string_underscore($be->get_field('title'), 1);
-  #     if (Biber::Config->getblxoption('uniquename', $bee, $citekey) == 2) {
-  #       $nameinitid = $nameid;
-  #     }
-  #   }
-  # }
 
   # After the initial generation of namehash and fullhash, we have to append
   # a suffix as they must be unique. It is possible that different entries have

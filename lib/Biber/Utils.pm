@@ -35,7 +35,7 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ bibfind parsename terseinitials makenameid makenameinitid
+our @EXPORT = qw{ bibfind parsename terseinitials makenameid
   normalize_string normalize_string_underscore latexescape reduce_array
   remove_outer getinitials tersify ucinit strip_nosort strip_nosortdiacritics
   strip_nosortprefix is_def is_undef is_def_and_notnull is_undef_or_null is_notnull
@@ -347,22 +347,6 @@ sub makenameid {
   my $tmp = join ' ', @namestrings;
   return normalize_string_underscore($tmp, 1);
 }
-
-=head2 makenameinitid
-
-Similar to makenameid, with the first names converted to initials.
-
-=cut
-
-# sub makenameinitid {
-#   my ($names) = @_;
-#   my @namestrings;
-#   foreach my $n (@{$names}) {
-#     push @namestrings, $n->{nameinitstring};
-#   }
-#   my $tmp = join ' ', @namestrings;
-#   return normalize_string_underscore($tmp, 1);
-# }
 
 =head2 strip_nosort
 
