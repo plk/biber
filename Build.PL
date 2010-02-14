@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use utf8;
 my $Bundled_MB = 0.3603;
 
 # Find out what version of Module::Build is installed or fail quietly.
