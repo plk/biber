@@ -56,7 +56,6 @@ t/tdata/examples-labelalpha.bib
 t/tdata/examples-sort-order.bib
 t/tdata/examples-sort.bib
 t/tdata/examples.bib
-Makefile.PL
 META.yml
 inc/Module-Build/bin/config_data
 inc/Module-Build/lib/perl5/Module/Build.pm

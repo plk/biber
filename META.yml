@@ -1,29 +1,19 @@
 ---
-name: biblatex-biber
-version: 0.4.4
-author:
-  - 'FranÃ§ois Charette <firmicus@gmx.net>'
 abstract: 'main module for biber, a bibtex replacement for users of biblatex'
-license: perl
-resources:
-  license: http://dev.perl.org/licenses/
-requires:
-  Data::Dump: 0
-  File::Slurp: 0
-  List::AllUtils: 0
-  Log::Log4perl: 0
-  Readonly: 0
-  Regexp::Common: 0
-  Text::BibTeX: 0
-  XML::LibXML::Simple: 0
-recommends:
-  Readonly::XS: 0
+author:
+  - 'François Charette <firmicus@gmx.net>'
 configure_requires:
-  Module::Build: 0.340201
+  Module::Build: 0.36
+generated_by: 'Module::Build version 0.3603'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: biblatex-biber
 provides:
   Biber:
     file: lib/Biber.pm
-    version: 0.4.4
+    version: v0.4.4
   Biber::BibTeX:
     file: lib/Biber/BibTeX.pm
   Biber::BibTeX::PRD:
@@ -41,7 +31,17 @@ provides:
     version: 0.1
   Parse::RecDescent::Biber::BibTeX::Parser:
     file: lib/Biber/BibTeX/Parser.pm
-generated_by: Module::Build version 0.340201
-meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.4.html
-  version: 1.4
+recommends:
+  Readonly::XS: 0
+requires:
+  Data::Dump: 0
+  File::Slurp: 0
+  List::AllUtils: 0
+  Log::Log4perl: 0
+  Readonly: 0
+  Regexp::Common: 0
+  Text::BibTeX: 0
+  XML::LibXML::Simple: 0
+resources:
+  license: http://dev.perl.org/licenses/
+version: v0.4.4
