@@ -234,7 +234,7 @@ sub _generatesortstring {
     $sortstring .= $self->_sortset($sortset, $citekey);
 
   # Only append sorting separator if this isn't a null sort string element
-  # Put another way, null elements should be completely ignored and no seperator
+  # Put another way, null elements should be completely ignored and no separator
   # added
     unless ($BIBER_SORT_NULL) {
       $sortstring .= $sorting_sep;
@@ -247,6 +247,22 @@ sub _generatesortstring {
   }
   $sortstring =~ s/0\z//xms; # strip off the last '0' added by _sortset()
   $be->set_field('sortstring', lc($sortstring));
+
+  # Generate sortinit - the initial letter of the sortstring. This must ignore
+  # presort characters, naturally
+  my $pre;
+  my $ss = $sortstring;
+  # Prefix is either specified or 'mm' default plus the $sorting_sep
+  if ($be->get_field('presort')) {
+    $pre = $be->get_field('presort');
+    $pre .= $sorting_sep;
+  }
+  else {
+    $pre = 'mm' . $sorting_sep;
+  }
+  # Strip off the prefix
+  $ss =~ s/\A$pre//;
+  $be->set_field('sortinit', substr $ss, 0, 1);
   return;
 }
 
@@ -754,8 +770,7 @@ sub _print_biblatex_entry {
     }
   }
 
-  my $namehash = $be->get_field('sortstring');
-  my $sortinit = substr $namehash, 0, 1;
+  my $namehash = $be->get_field('namehash');
   $str .= "  \\strng{namehash}{$namehash}\n";
   my $fullhash = $be->get_field('fullhash');
   $str .= "  \\strng{fullhash}{$fullhash}\n";
@@ -766,7 +781,7 @@ sub _print_biblatex_entry {
       $str .= "  \\field{labelalpha}{$label}\n";
     }
   }
-  $str .= "  \\field{sortinit}{$sortinit}\n";
+  $str .= "  \\field{sortinit}{" . $be->get_field('sortinit') . "}\n";
 
   # The labelyear option determines whether "extrayear" is output
   # Skip generating extrayear for entries with "skiplab" set
