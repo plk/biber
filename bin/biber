@@ -174,7 +174,9 @@ foreach my $bib (@{ $biber->config('bibdata') }) {
 
   if ($bib =~ /\.(db)?xml$/) {
     $logger->logcroak("File $bib does not exist!") unless -f $bib;
-    $biber->parse_biblatexml( $bib )
+    ##DISABLED: $biber->parse_biblatexml( $bib )
+    $logger->logcroak("Support for the BibLaTeXML format is not included in this version of Biber.\n",
+                      "You can try (at your own risk) to pull the \"biblatexml\" branch of our git repo.")
   }
   elsif ($bib =~ /\.bib$/) {
     $logger->logcroak("File $bib does not exist!") unless -f $bib;

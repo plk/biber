@@ -23,11 +23,6 @@ our @EXPORT = qw{
   $BIBER_SORT_FINAL
   $BIBER_SORT_NULL
   %ALIASES
-  %NUMERICALMONTH
-  %BIBLATEXML_FORMAT_ELEMENTS
-  @BIBLATEXML_FORMATTEXT
-  @BIBLATEXML_FORMATTEXT_B
-  %FIELDS_WITH_CHILDREN
   };
 
 # this is the latest <major.minor> version of biblatex.sty
@@ -110,91 +105,6 @@ Readonly::Hash our %ALIASES => (
   'annote'  => 'annotation',
   'key'     => 'sortkey'
   );
-
-Readonly::Hash our %NUMERICALMONTH => (
-  'January' => 1,
-  'February' => 2,
-  'March' => 3,
-  'April' => 4,
-  'May' => 5,
-  'June' => 6,
-  'July' => 7,
-  'August' => 8,
-  'September' => 9,
-  'October' => 10,
-  'November' => 11,
-  'December' => 12,
-  'january' => 1,
-  'february' => 2,
-  'march' => 3,
-  'april' => 4,
-  'may' => 5,
-  'june' => 6,
-  'july' => 7,
-  'august' => 8,
-  'september' => 9,
-  'october' => 10,
-  'november' => 11,
-  'december' => 12,
-  'jan' => 1,
-  'feb' => 2,
-  'mar' => 3,
-  'apr' => 4,
-  'may' => 5,
-  'jun' => 6,
-  'jul' => 7,
-  'aug' => 8,
-  'sep' => 9,
-  'oct' => 10,
-  'nov' => 11,
-  'dec' => 12
-  );
-
-# TODO ask PL to define mkbibsubscript in biblatex ?
-Readonly::Hash our %BIBLATEXML_FORMAT_ELEMENTS => (
-  'bib:quote'       => 'mkbibquote',
-  'bib:subscript'   => 'textsubscript',
-  'bib:superscript' => 'mkbibsuperscript',
-  'bib:emphasis'    => 'mkbibemph'
-  );
-
-Readonly::Array our @BIBLATEXML_FORMATTEXT => qw(
-  abstract
-  addendum
-  annotation
-  booksubtitle
-  booktitleaddon
-  issue
-  issuetitleaddon
-  issuesubtitle
-  journalsubtitle
-  mainsubtitle
-  maintitleaddon
-  note
-  origtitle
-  reprinttitle
-  subtitle
-  titleaddon
-  venue
-  publisher
-  origpublisher
-  publisherinfo
-  item
-  publishername
-  remarks
-  );
-
-Readonly::Array our @BIBLATEXML_FORMATTEXT_B => qw(
-  booktitle
-  eventtitle
-  issuetitle
-  journaltitle
-  maintitle
-  shorttitle
-  title
-  );
-
-our %FIELDS_WITH_CHILDREN = map { 'bib:'. $_ => 1 } ( @BIBLATEXML_FORMATTEXT, @BIBLATEXML_FORMATTEXT_B );
 
 1;
 
