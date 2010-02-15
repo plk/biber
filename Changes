@@ -1,5 +1,11 @@
 Revision history for Biber
 
+0.5.1   15.02.2010
+        * Remove support for legacy control files (\jobname-blx.bib):
+          Biber now only reads .bcf files written by biblatex with the 
+          option "backend=biber".
+        * Improved handling of "uniquename" and "namehash".
+
 0.5     13.02.2010
         * Supports all changes introduced by biblatex 0.9
         * Moved all parts relating to the experimental BibLaTeXML format to the
