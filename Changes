@@ -5,6 +5,7 @@ Revision history for Biber
           Biber now only reads .bcf files written by biblatex with the 
           option "backend=biber".
         * Improved handling of "uniquename" and "namehash".
+        * Don't apply latexescape in bbl output, as it breaks math formatting.
 
 0.5     13.02.2010
         * Supports all changes introduced by biblatex 0.9
