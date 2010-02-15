@@ -13,7 +13,7 @@ Log::Log4perl->easy_init($ERROR);
 my $biber = Biber->new( unicodebbl => 1, fastsort => 1 );
 
 chdir("t/tdata") ;
-$biber->parse_auxfile_v2('uniquename.aux');
+$biber->parse_auxfile('uniquename.aux');
 
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);

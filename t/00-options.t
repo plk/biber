@@ -15,7 +15,7 @@ chdir("t/tdata") ;
 my $bibfile;
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
-$biber->parse_auxfile_v2('options.aux');
+$biber->parse_auxfile('options.aux');
 $bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 

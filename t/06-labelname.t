@@ -13,7 +13,7 @@ chdir("t/tdata");
 
 my $bibfile;
 my $biber = Biber->new;
-$biber->parse_auxfile_v2("style-authoryear.aux");
+$biber->parse_auxfile("style-authoryear.aux");
 $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
 

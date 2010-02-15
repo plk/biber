@@ -17,7 +17,7 @@ my $bibfile;
 my $biber = Biber->new;
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
-$biber->parse_auxfile_v2('extrayear.aux');
+$biber->parse_auxfile('extrayear.aux');
 $bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 

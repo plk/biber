@@ -18,7 +18,6 @@ use Getopt::Long qw/:config no_ignore_case/;
 my $opts = {};
 GetOptions(
   $opts,
-  'v2',
   'fastsort|f!', ## now the default
   'collate|C!', ## to sort with Unicode::Collate
   'collate_options|c=s',
@@ -165,14 +164,7 @@ else {
     $bblfile = File::Spec->catfile($outdir, $bblfile)
   }
 
-  #V2
-  if ($opts->{v2}) {
-    $logger->warn("** USING EXPERIMENTAL V2 OPTIONS CODE!! **");
-    $biber->parse_auxfile_v2($auxfile);
-  }
-  else {
-    $biber->parse_auxfile($auxfile);
-  }
+  $biber->parse_auxfile($auxfile);
 }
 
 if (Biber::Config->getoption('trace')) {
@@ -271,8 +263,6 @@ Usage:  biber file.aux
 
 Options:
   --help|-h              Show this help message.
-  --v2                   Enable experimental Biblatex/Biber version 2 options processing.
-                         Don't use this unless you truly understand what it means.
   --version|-v           Display version number.
   --mincrossrefs|-m <n>  Set threshold for crossrefs.
   --fastsort|-f          Use Perl’s sort instead of Unicode::Collate for sorting (TRUE).

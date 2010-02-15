@@ -13,7 +13,7 @@ my $biber = Biber->new( unicodebbl => 1, fastsort => 1 );
 
 isa_ok($biber, "Biber");
 chdir("t/tdata") ;
-$biber->parse_auxfile_v2('set.aux');
+$biber->parse_auxfile('set.aux');
 
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
