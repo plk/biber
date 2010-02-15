@@ -99,7 +99,7 @@ sub _getlabel {
   my $dt = $be->get_field('datatype');
   my $names = $be->get_field($namefield);
   my $alphaothers = Biber::Config->getblxoption('alphaothers', $be->get_field('entrytype'), $citekey);
-  my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->get_field('entrytype'), $citekey) || $alphaothers;
+  my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->get_field('entrytype'), $citekey);
   my $useprefix = Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey);
   my $maxnames = Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey);
   my $minnames = Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey);
