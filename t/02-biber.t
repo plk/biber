@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 6 ;
+use Test::More tests => 7 ;
 
 use Biber;
 use Log::Log4perl qw(:easy);
@@ -20,6 +20,7 @@ $biber->parse_auxfile("style-authoryear.aux") ;
 
 my @keys = sort $biber->citekeys;
 my @citedkeys = sort qw{
+t1
 stdmodel
 knuth:ct
 angenendtsk
@@ -38,7 +39,7 @@ cotton
 chiu
 };
 
-my @allkeys = sort qw{ stdmodel aristotle:poetics vazques-de-parga shore
+my @allkeys = sort qw{ stdmodel aristotle:poetics vazques-de-parga shore t1
 gonzalez averroes/bland laufenberg westfahl:frontier knuth:ct:a kastenholz
 averroes/hannes iliad luzzatto malinowski sorace knuth:ct:d britannica
 nietzsche:historie stdmodel:weinberg knuth:ct:b baez/article knuth:ct:e itzhaki
@@ -281,3 +282,20 @@ my $kastenholz = q|\entry{kastenholz}{article}{}
 
 
 is( $biber->_print_biblatex_entry('kastenholz'), $kastenholz, 'bbl entry' ) ;
+
+my $t1 = q|\entry{t1}{misc}{}
+  \name{author}{1}{%
+    {{Brown}{B.}{Bill}{B.}{}{}{}{}}%
+  }
+  \strng{namehash}{BB1}
+  \strng{fullhash}{BB1}
+  \field{sortinit}{B}
+  \field{labelyear}{1992}
+  \count{uniquename}{0}
+  \field{year}{1992}
+  \field{title}{Normal things {$^{3}$}}
+\endentry
+
+|;
+
+is( $biber->_print_biblatex_entry('t1'), $t1, 'bbl entry with maths in title' ) ;
