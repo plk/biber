@@ -838,11 +838,7 @@ sub _print_biblatex_entry {
     }
   }
 
-  if ( $be->get_field('ignoreuniquename') ) {
-
-    $str .= "  \\count{uniquename}{0}\n";
-
-  } else {
+  if (Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey)) {
     my $lname = $be->get_field('labelnamename');
     my $name;
     my $lastname;
@@ -853,8 +849,13 @@ sub _print_biblatex_entry {
       $lastname = $name->get_lastname;
       $nameinitstr = $name->get_nameinitstring;
     }
+    # uniquename is requested but there is no labelname or there are more than two names in
+    # labelname
+    if ($be->get_field('ignoreuniquename')) {
+      $str .= "  \\count{uniquename}{0}\n";
+    }
     # If there is one entry (hash) for the lastname, then it's unique
-    if (Biber::Config->get_numofuniquenames($lastname) == 1 ) {
+    elsif (Biber::Config->get_numofuniquenames($lastname) == 1 ) {
       $str .= "  \\count{uniquename}{0}\n";
     }
     # Otherwise, if there is one entry (hash) for the lastname plus initials,

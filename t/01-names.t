@@ -27,7 +27,6 @@ my $l1 = q|\entry{l1}{book}{}
   \strng{namehash}{AA1}
   \strng{fullhash}{AA1}
   \field{sortinit}{A}
-  \count{uniquename}{0}
 \endentry
 
 |;
@@ -39,7 +38,6 @@ my $l2 = q|\entry{l2}{book}{}
   \strng{namehash}{BBB1}
   \strng{fullhash}{BBB1}
   \field{sortinit}{B}
-  \count{uniquename}{0}
 \endentry
 
 |;
@@ -51,7 +49,6 @@ my $l3 = q|\entry{l3}{book}{}
   \strng{namehash}{CCZ1}
   \strng{fullhash}{CCZ1}
   \field{sortinit}{C}
-  \count{uniquename}{0}
 \endentry
 
 |;
@@ -63,7 +60,6 @@ my $l4 = q|\entry{l4}{book}{}
   \strng{namehash}{DDD1}
   \strng{fullhash}{DDD1}
   \field{sortinit}{D}
-  \count{uniquename}{0}
 \endentry
 
 |;
@@ -75,7 +71,6 @@ my $l5 = q|\entry{l5}{book}{}
   \strng{namehash}{EE1}
   \strng{fullhash}{EE1}
   \field{sortinit}{E}
-  \count{uniquename}{0}
 \endentry
 
 |;
@@ -87,7 +82,6 @@ my $l6 = q|\entry{l6}{book}{}
   \strng{namehash}{FF1}
   \strng{fullhash}{FF1}
   \field{sortinit}{F}
-  \count{uniquename}{0}
 \endentry
 
 |;
@@ -99,7 +93,6 @@ my $l7 = q|\entry{l7}{book}{}
   \strng{namehash}{GGR1}
   \strng{fullhash}{GGR1}
   \field{sortinit}{G}
-  \count{uniquename}{0}
 \endentry
 
 |;
@@ -111,7 +104,6 @@ my $l8 = q|\entry{l8}{book}{}
   \strng{namehash}{HHF1}
   \strng{fullhash}{HHF1}
   \field{sortinit}{H}
-  \count{uniquename}{0}
 \endentry
 
 |;
@@ -123,7 +115,6 @@ my $l9 = q|\entry{l9}{book}{}
   \strng{namehash}{III1}
   \strng{fullhash}{III1}
   \field{sortinit}{I}
-  \count{uniquename}{0}
 \endentry
 
 |;
@@ -135,7 +126,6 @@ my $l10 = q|\entry{l10}{book}{}
   \strng{namehash}{JIJ1}
   \strng{fullhash}{JIJ1}
   \field{sortinit}{J}
-  \count{uniquename}{0}
 \endentry
 
 |;
@@ -147,7 +137,6 @@ my $l11 = q|\entry{l11}{book}{}
   \strng{namehash}{KJK1}
   \strng{fullhash}{KJK1}
   \field{sortinit}{K}
-  \count{uniquename}{0}
 \endentry
 
 |;
@@ -159,7 +148,6 @@ my $l12 = q|\entry{l12}{book}{}
   \strng{namehash}{VPCLXJ1}
   \strng{fullhash}{VPCLXJ1}
   \field{sortinit}{V}
-  \count{uniquename}{0}
 \endentry
 
 |;
@@ -171,7 +159,6 @@ my $l13 = q|\entry{l13}{book}{}
   \strng{namehash}{VdGRJ1}
   \strng{fullhash}{VdGRJ1}
   \field{sortinit}{V}
-  \count{uniquename}{0}
 \endentry
 
 |;
@@ -183,7 +170,6 @@ my $l14 = q|\entry{l14}{book}{}
   \strng{namehash}{SJMO1}
   \strng{fullhash}{SJMO1}
   \field{sortinit}{S}
-  \count{uniquename}{0}
 \endentry
 
 |;

@@ -1175,55 +1175,54 @@ sub postprocess_hashes {
   #
   # See the logic in Internals.pm for generating the actual uniquename count
   # from the information collected here
-  my $lname = $be->get_field('labelnamename');
-  my $lastname;
-  my $namestring;
-  my $singlename;
+  if (Biber::Config->getblxoption('uniquename', $bee, $citekey)) {
+    my $lname = $be->get_field('labelnamename');
+    my $lastname;
+    my $namestring;
+    my $singlename;
 
-  # uniquename only works (currently) with single names
-  if ($lname) {
-    $lastname   = $be->get_field($lname)->nth_element(1)->get_lastname;
-    $namestring = $be->get_field($lname)->nth_element(1)->get_nameinitstring;
-    $singlename = $be->get_field($lname)->count_elements;
-  }
-
-  # If we need to provide uniquename, labelnamename exists and we are only
-  # dealing with a single name
-  if ($lname and
-      Biber::Config->getblxoption('uniquename', $bee, $citekey) and
-      $singlename == 1 ) {
-
-    # Record an entry for the lastname showing all the hashes which use this
-    # last name if an entry doesn't already exist
-    if ( not Biber::Config->get_uniquenamecount($lastname, $namehash) ) {
-      # Here we are just adding a new hash for an existing lastname
-      if ( Biber::Config->uniquenameexists($lastname) ) {
-        Biber::Config->set_uniquenamecount($lastname, $namehash, 1);
-      }
-      # Here we are creating a new lastname record
-      else {
-        Biber::Config->del_uniquenamecount($lastname);
-        Biber::Config->set_uniquenamecount($lastname, $namehash, 1);
-      }
+    # uniquename only works (currently) with single names
+    if ($lname) {
+      $lastname   = $be->get_field($lname)->nth_element(1)->get_lastname;
+      $namestring = $be->get_field($lname)->nth_element(1)->get_nameinitstring;
+      $singlename = $be->get_field($lname)->count_elements;
     }
 
-    # Record an entry for the lastname+initials showing all the hashes
-    # which use this lastname+initials combination if an entry doesn't already exist
-    if ( not Biber::Config->get_uniquenamecount($namestring, $namehash) ) {
-      # Here we are just adding a new hash for an existing lastname+initials
-      if ( Biber::Config->uniquenameexists($namestring) ) {
-        Biber::Config->set_uniquenamecount($namestring, $namehash, 1);
+    # If we need to provide uniquename, labelnamename exists and we are only
+    # dealing with a single name
+    if ($lname and $singlename == 1 ) {
+
+      # Record an entry for the lastname showing all the hashes which use this
+      # last name if an entry doesn't already exist
+      if ( not Biber::Config->get_uniquenamecount($lastname, $namehash) ) {
+	# Here we are just adding a new hash for an existing lastname
+	if ( Biber::Config->uniquenameexists($lastname) ) {
+	  Biber::Config->set_uniquenamecount($lastname, $namehash, 1);
+	}
+	# Here we are creating a new lastname record
+	else {
+	  Biber::Config->del_uniquenamecount($lastname);
+	  Biber::Config->set_uniquenamecount($lastname, $namehash, 1);
+	}
       }
-      # Here we are creating a new lastname_initials record
-      else {
-        Biber::Config->del_uniquenamecount($namestring);
-        Biber::Config->set_uniquenamecount($namestring, $namehash, 1);
+
+      # Record an entry for the lastname+initials showing all the hashes
+      # which use this lastname+initials combination if an entry doesn't already exist
+      if ( not Biber::Config->get_uniquenamecount($namestring, $namehash) ) {
+	# Here we are just adding a new hash for an existing lastname+initials
+	if ( Biber::Config->uniquenameexists($namestring) ) {
+	  Biber::Config->set_uniquenamecount($namestring, $namehash, 1);
+	}
+	# Here we are creating a new lastname_initials record
+	else {
+	  Biber::Config->del_uniquenamecount($namestring);
+	  Biber::Config->set_uniquenamecount($namestring, $namehash, 1);
+	}
       }
     }
-  }
-  # Otherwise just ignore uniquename
-  else {
-    $be->set_field('ignoreuniquename', 1);
+    else {
+      $be->set_field('ignoreuniquename', 1);
+    }
   }
 }
 

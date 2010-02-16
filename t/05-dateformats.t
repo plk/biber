@@ -50,7 +50,6 @@ my $l13c = q|\entry{L13}{book}{}
   \field{sortinit}{D}
   \field{extrayear}{4}
   \field{labelyear}{1996}
-  \count{uniquename}{0}
   \field{year}{1996}
   \field{month}{01}
   \field{day}{01}
@@ -72,7 +71,6 @@ my $l14 = q|\entry{L14}{book}{}
   \field{sortinit}{D}
   \field{extrayear}{5}
   \field{labelyear}{1996}
-  \count{uniquename}{0}
   \field{year}{1996}
   \field{endyear}{1996}
   \field{month}{12}
@@ -95,7 +93,6 @@ my $l15 = q|\entry{L15}{book}{}
   \strng{namehash}{DJAA1}
   \strng{fullhash}{DJAA1}
   \field{sortinit}{D}
-  \count{uniquename}{0}
   \field{title}{Title 2}
 \endentry
 
@@ -114,7 +111,6 @@ my $l16 = q|\entry{L16}{book}{}
   \field{sortinit}{D}
   \field{extrayear}{4}
   \field{labelyear}{1996}
-  \count{uniquename}{0}
   \field{eventyear}{1996}
   \field{eventmonth}{01}
   \field{eventday}{01}
@@ -136,7 +132,6 @@ my $l17 = q|\entry{L17}{book}{}
   \field{sortinit}{D}
   \field{extrayear}{10}
   \field{labelyear}{1996}
-  \count{uniquename}{0}
   \field{year}{1996}
   \field{endyear}{1996}
   \field{origyear}{1998}
@@ -172,7 +167,6 @@ my $l17c = q|\entry{L17}{book}{}
   \strng{fullhash}{DJAA1}
   \field{sortinit}{D}
   \field{labelyear}{1998}
-  \count{uniquename}{0}
   \field{year}{1996}
   \field{endyear}{1996}
   \field{origyear}{1998}
@@ -208,7 +202,6 @@ my $l17e = q|\entry{L17}{book}{}
   \strng{fullhash}{DJAA1}
   \field{sortinit}{D}
   \field{labelyear}{1998\bibdatedash 2004}
-  \count{uniquename}{0}
   \field{year}{1996}
   \field{endyear}{1996}
   \field{origyear}{1998}
