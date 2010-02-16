@@ -38,8 +38,9 @@ All functions are exported by default.
 our @EXPORT = qw{ bibfind parsename terseinitials makenameid
   normalize_string normalize_string_underscore latexescape reduce_array
   remove_outer getinitials tersify ucinit strip_nosort strip_nosortdiacritics
-  strip_nosortprefix is_def is_undef is_def_and_notnull is_undef_or_null is_notnull
-  is_name_field };
+  strip_nosortprefix is_def is_undef is_def_and_notnull is_def_and_null is_undef_or_null
+  is_notnull is_name_field is_null};
+
 
 ######
 
@@ -622,6 +623,33 @@ sub is_def_and_notnull {
   else {
     return 0;
   }
+}
+
+=head2 is_def_and_null
+
+    Checks for def and nullness (see is_undef() above)
+
+=cut
+
+sub is_def_and_null {
+  my $arg = shift;
+  if (defined($arg) and is_null($arg)) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+=head2 is_null
+
+    Checks for nullness
+
+=cut
+
+sub is_null {
+  my $arg = shift;
+  return is_notnull($arg) ? 0 : 1;
 }
 
 =head2 is_notnull

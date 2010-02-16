@@ -51,6 +51,7 @@ my $l13c = q|\entry{L13}{book}{}
   \field{extrayear}{4}
   \field{labelyear}{1996}
   \field{year}{1996}
+  \field{endyear}{}
   \field{month}{01}
   \field{day}{01}
   \field{title}{Title 2}
@@ -245,7 +246,7 @@ is($bibentries->entry('l11')->get_field('year'), '1996', 'Date format test 11a -
 is_deeply($bibentries->entry('l12')->get_field('warnings'), $l12, 'Date format test 12' );
 is($bibentries->entry('l12')->get_field('month'), '01', 'Date format test 12a - DATE overrides MONTH' ) ;
 # it means something if endyear is defined but null ("1935-")
-ok(is_undef_or_null($bibentries->entry('l13')->get_field('endyear')), 'Date format test 13 - range with no end' ) ;
+ok(is_def_and_null($bibentries->entry('l13')->get_field('endyear')), 'Date format test 13 - range with no end' ) ;
 ok(is_undef($bibentries->entry('l13')->get_field('endmonth')), 'Date format test 13a - ENDMONTH undef for open-ended range' ) ;
 ok(is_undef($bibentries->entry('l13')->get_field('endday')), 'Date format test 13b - ENDDAY undef for open-ended range' ) ;
 is( $biber->_print_biblatex_entry('l13'), $l13c, 'Date format test 13c - labelyear open-ended range' ) ;

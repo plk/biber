@@ -877,7 +877,9 @@ sub _print_biblatex_entry {
 
   foreach my $ifield (@DATECOMPONENTFIELDS) {
     next if $SKIPFIELDS{$ifield};
-    if ( is_def_and_notnull($be->get_field($ifield)) ) {
+    # Here we do want to output if the field is null as this means something
+    # for example in open-ended ranges
+    if ( $be->field_exists($ifield) ) {
       $str .= $self->_printfield( $ifield, $be->get_field($ifield) );
     }
   }
