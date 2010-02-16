@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 15;
+use Test::More tests => 16;
 
 use Biber;
 use Log::Log4perl qw(:easy);
@@ -176,7 +176,7 @@ my $l14 = q|\entry{l14}{book}{}
 
 my $l15 = q|\entry{l15}{book}{}
   \name{author}{4}{%
-    {{Gompel}{G.}{Roger~{P.\,G.}}{R.~{P.\,G.}}{van}{v.}{}{}}%
+    {{Gompel}{G.}{Roger~P.{\,}G.}{R.~P.~G.}{van}{v.}{}{}}%
     {{Fischer}{F.}{Martin~H.}{M.~H.}{}{}{}{}}%
     {{Murray}{M.}{Wayne~S.}{W.~S.}{}{}{}{}}%
     {{Hill}{H.}{Robin~L.}{R.~L.}{}{}{}{}}%
@@ -184,6 +184,17 @@ my $l15 = q|\entry{l15}{book}{}
   \strng{namehash}{GRP+1}
   \strng{fullhash}{GRPFMHMWSHRL1}
   \field{sortinit}{G}
+\endentry
+
+|;
+
+my $l16 = q|\entry{l16}{book}{}
+  \name{author}{1}{%
+    {{Lovecraft}{L.}{H.{\,}P.}{H.~P.}{}{}{}{}}%
+  }
+  \strng{namehash}{LH1}
+  \strng{fullhash}{LH1}
+  \field{sortinit}{L}
 \endentry
 
 |;
@@ -203,5 +214,6 @@ is( $biber->_print_biblatex_entry('l12'), $l12, 'First First First First prefix 
 is( $biber->_print_biblatex_entry('l13'), $l13, 'Last Last Last, Initial. Initial.');
 is( $biber->_print_biblatex_entry('l14'), $l14, 'Last Last-Last, First');
 is( $biber->_print_biblatex_entry('l15'), $l15, 'First {Initials} prefix Last');
+is( $biber->_print_biblatex_entry('l16'), $l16, 'prefix? Last, First I.{\,}I.');
 
 unlink "$bibfile.utf8";

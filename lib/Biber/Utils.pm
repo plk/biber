@@ -127,6 +127,10 @@ sub bibfind {
 sub parsename {
   my ($namestr, $opts) = @_;
   $logger->debug("   Parsing namestring '$namestr'");
+  # Change small spaces to something else temporarily to make parsing easier
+  # We rely on looking for commas to parse names and latex small spaces confuse
+  # things a lot
+  $namestr =~ s/\\,\s*|{\\,\s*}/BSM~~~BSM/g;
   my $usepre = $opts->{useprefix};
 
   my $lastname;
@@ -305,6 +309,14 @@ $/x;
 
   #TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g;
   ## remove punctuation, symbols, separator and control
+
+  # Now put the LaTeX small spaces back again since we're finished parsing
+  $namestr =~ s/BSM~~~BSM/{\\,}/g if $namestr;
+  $firstname =~ s/BSM~~~BSM/{\\,}/g if $firstname;
+  $lastname =~ s/BSM~~~BSM/{\\,}/g if $lastname;
+  $nameinitstr =~ s/BSM~~~BSM/{\\,}/g if $nameinitstr;
+  $prefix =~ s/BSM~~~BSM/{\\,}/g if $prefix;
+  $suffix =~ s/BSM~~~BSM/{\\,}/g if $suffix;
 
   $nameinitstr = "";
   $nameinitstr .= substr( $prefix, 0, 1 ) . " " if ( $usepre and $prefix );
@@ -548,7 +560,8 @@ sub getinitials {
   # remove pseudo-space after macros
   $str =~ s/{? ( \\ [^\p{Ps}\{\}]+ ) \s+ (\p{L}) }?/\{$1\{$2\}\}/gx; # {\\x y} -> {\x{y}}
   $str =~ s/( \\ [^\p{Ps}\{\}]+ ) \s+ { /$1\{/gx; # \\macro { -> \macro{
-  my @words = split /\s+/, remove_outer($str);
+  # Split first names on space or protected LaTeX small space
+  my @words = split /(?:\s+|{\\,})/, remove_outer($str);
   $str = join '.~', ( map { _firstatom($_) } @words );
   # Add a final period if there isn't already one at the "end"
   # where "end" could be inside a brace to the left too
