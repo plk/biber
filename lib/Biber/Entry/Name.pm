@@ -1,5 +1,7 @@
 package Biber::Entry::Name;
 
+use Regexp::Common qw( balanced );
+
 =encoding utf-8
 
 =head1 NAME
@@ -213,8 +215,15 @@ sub name_to_bbl {
     $sufi = '';
   }
 
-  $fn =~ s/(\p{Lu}\.)\s+/$1~/g;   # J. Frank -> J.~Frank
-  $fn =~ s/\s+(\p{Lu}\.)/~$1/g;   # Bernard H. -> Bernard~H.
+  # Can't just replace all spaces in first names with "~" as this could
+  # potentially be too long and would do nasty line-break things in LaTeX
+  # So, be a bit picky and only attach initials/protected things
+  # J. Frank -> J.~Frank
+  # {J.\,P.} Frank -> {J.\,P.}~Frank
+  $fn =~ s/(\p{Lu}\.|$RE{balanced}{-parens=>'{}'})\s+/$1~/g;
+  # Bernard H. -> Bernard~H.
+  # Bernard {H.\,P.} -> Bernard~{H.\,P.}
+  $fn =~ s/\s+(\p{Lu}\.|$RE{balanced}{-parens=>'{}'})/~$1/g;
   $pre =~ s/\s/~/g if $pre;       # van der -> van~der
   $ln =~ s/\s/~/g if $ln;         # Murder Smith -> Murder~Smith
   if ( Biber::Config->getblxoption('terseinits') ) {

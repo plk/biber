@@ -127,7 +127,6 @@ sub bibfind {
 sub parsename {
   my ($namestr, $opts) = @_;
   $logger->debug("   Parsing namestring '$namestr'");
-  $namestr =~ s/\\,\s*|{\\,\s*}/~/g; # get rid of LaTeX small spaces \,
   my $usepre = $opts->{useprefix};
 
   my $lastname;
@@ -149,7 +148,7 @@ sub parsename {
                 $RE{balanced}{-parens=>'{}'}
 /x;
   my $SUFFIX_RE = $NAME_RE;
-  my $NAME_SEQ_RE = qr/ (?:\p{Lu}\S*[\s~]*)+ /x ;
+  my $NAME_SEQ_RE = qr/ (?:(?:\p{Lu}\S*|{\p{Lu}\S*})[\s~]*)+ /x ;
 
   if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}$/ )
   {
@@ -179,8 +178,10 @@ sub parsename {
                )
 \z/xms;
 
-    if ($lastname) {$lastname =~ s/^{(.+)}$/$1/g;} else {$logger->debug("Couldn't determine Last Name for name \"$namestr\"");}
-    if ($firstname) {$firstname =~ s/^{(.+)}$/$1/g;} else {$logger->debug("Couldn't determine First Name for name \"$namestr\"");}
+    $logger->debug("! Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
+    $logger->debug("! Couldn't determine First Name for name \"$namestr\"") unless $firstname;
+    if ($lastname) {$lastname =~ s/^{(.+)}$/$1/g;}
+    if ($firstname) {$firstname =~ s/^{(.+)}$/$1/g;}
     $prefix =~ s/\s+$// if $prefix;
     $prefix =~ s/^{(.+)}$/$1/ if $prefix;
     $suffix =~ s/\s+$//;
@@ -207,8 +208,10 @@ sub parsename {
                )
 $/x;
 
-    if ($lastname) {$lastname =~ s/^{(.+)}$/$1/g;} else {$logger->debug("! Couldn't determine Last Name for name \"$namestr\"");}
-    if ($firstname) {$firstname =~ s/^{(.+)}$/$1/g;} else {$logger->debug("! Couldn't determine First Name for name \"$namestr\"");}
+    $logger->debug("! Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
+    $logger->debug("! Couldn't determine First Name for name \"$namestr\"") unless $firstname;
+    if ($lastname) {$lastname =~ s/^{(.+)}$/$1/g;}
+    if ($firstname) {$firstname =~ s/^{(.+)}$/$1/g;}
     $prefix =~ s/\s+$// if $prefix;
     $prefix =~ s/^{(.+)}$/$1/ if $prefix;
     $namestr = "";
@@ -265,7 +268,7 @@ $/x;
                 )
 $/x;
     }
-    else {
+   else {
       $logger->debug("   Caught namestring of type 'Firstname prefix? Lastname'");
       ( $firstname, $prefix, $lastname ) = $namestr =~
         m/^( # first name
@@ -281,8 +284,10 @@ $/x;
 $/x;
     }
 
-    if ($lastname) {$lastname =~ s/^{(.+)}$/$1/;} else {$logger->debug("! Couldn't determine Last Name for name \"$namestr\"");}
-    if ($firstname) {$firstname =~ s/^{(.+)}$/$1/;} else {$logger->debug("! Couldn't determine First Name for name \"$namestr\"");}
+    $logger->debug("! Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
+    $logger->debug("! Couldn't determine First Name for name \"$namestr\"") unless $firstname;
+    if ($lastname) {$lastname =~ s/^{(.+)}$/$1/;}
+    if ($firstname) {$firstname =~ s/^{(.+)}$/$1/;}
     $firstname =~ s/\s+$// if $firstname;
 
     $prefix =~ s/\s+$// if $prefix;
@@ -512,7 +517,10 @@ sub getinitials {
   $str =~ s/( \\ [^\p{Ps}\{\}]+ ) \s+ { /$1\{/gx; # \\macro { -> \macro{
   my @words = split /\s+/, remove_outer($str);
   $str = join '.~', ( map { _firstatom($_) } @words );
-  return $str . '.';
+  # Add a final period if there isn't already one at the "end"
+  # where "end" could be inside a brace to the left too
+  $str .= '.' unless $str =~ m/\.}?\z/xms;
+  return $str;
 }
 
 sub _firstatom {
@@ -526,6 +534,7 @@ sub _firstatom {
                      { \p{L} }
                      }?
                    | { \\\p{L}+ }           # {\\macro}
+                   | {.+}                   # {something protected}
 )/x ) {
     return $1;
   } else {
