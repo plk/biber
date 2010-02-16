@@ -63,6 +63,18 @@ sub del_field {
   return;
 }
 
+=head2 field_exists
+
+    Check whether a field exists (even if null)
+
+=cut
+
+sub field_exists {
+  my $self = shift;
+  my $key = shift;
+  return exists $self->{$key} ? 1 : 0;
+}
+
 =head2 fields
 
     Returns a sorted array of the Biber::Entry object fields

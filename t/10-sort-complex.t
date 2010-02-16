@@ -111,7 +111,6 @@ my $sc3 = q|\entry{L4}{book}{}
   \field{labelalpha}{Doe\textbf{+}95}
   \field{sortinit}{D}
   \field{extraalpha}{2}
-  \count{uniquename}{0}
   \field{year}{1995}
   \field{title}{Some title about sorting}
 \endentry
@@ -133,7 +132,6 @@ my $sc4 = q|\entry{L1}{article}{}
   \field{labelalpha}{Doe95}
   \field{sortinit}{D}
   \field{extraalpha}{1}
-  \count{uniquename}{0}
   \field{year}{1995}
   \field{title}{Algorithms For Sorting}
 \endentry
@@ -155,7 +153,6 @@ my $sc5 = q|\entry{L2}{article}{}
   \field{labelalpha}{Doe95}
   \field{sortinit}{D}
   \field{extraalpha}{3}
-  \count{uniquename}{0}
   \field{year}{1995}
   \field{title}{Sorting Algorithms}
 \endentry
@@ -177,7 +174,6 @@ my $sc6 = q|\entry{L3}{article}{}
   \field{labelalpha}{Doe95}
   \field{sortinit}{D}
   \field{extraalpha}{2}
-  \count{uniquename}{0}
   \field{year}{1995}
   \field{title}{More and More Algorithms}
 \endentry

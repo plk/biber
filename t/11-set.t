@@ -32,7 +32,6 @@ my $string1p = q|\entry{Elias1955}{set}{}
   \field{sortinit}{1}
   \field{extrayear}{1}
   \field{labelyear}{1955}
-  \count{uniquename}{0}
   \field{year}{1955}
   \field{month}{3}
   \field{title}{Predictive coding--I}
@@ -56,7 +55,6 @@ my $string1p = q|\entry{Elias1955}{set}{}
   \strng{namehash}{EP1}
   \strng{fullhash}{EP1}
   \field{sortinit}{2}
-  \count{uniquename}{0}
   \field{year}{1955}
   \field{month}{3}
   \field{title}{Predictive coding--I}
@@ -79,7 +77,6 @@ my $string1p = q|\entry{Elias1955}{set}{}
   \strng{namehash}{EP1}
   \strng{fullhash}{EP1}
   \field{sortinit}{3}
-  \count{uniquename}{0}
   \field{year}{1955}
   \field{month}{3}
   \field{title}{Predictive coding--II}
