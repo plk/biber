@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 28;
+use Test::More tests => 29;
 use Biber;
 use Biber::Entry::Name;
 use Biber::Entry::Names;
@@ -135,7 +135,14 @@ my $nameEd =
          suffix => undef, 
      namestring => 'de la Vallée Poussin, J. C. G',
  nameinitstring => 'Vallée_Poussin_JCG' } ;
- 
+
+my $pstring = '{$}Some string & with \% some specials and then {some \{ & % $^{3}$
+protected specials} and then some more things % $$ _^';
+
+my $pstring_processed = '{$}Some string \& with \% some specials and then {some \{ & % $^{3}$
+protected specials} and then some more things \% \$\$ \_\^';
+
+is( latexescape($pstring), $pstring_processed, 'latexescape test');
 is_deeply(parsename('Jean Charles Gabriel de la Vallée Poussin'), $nameE, 'parsename E1');
 is_deeply(parsename('{Jean Charles Gabriel} de la Vallée Poussin'), $nameE, 'parsename E2');
 is_deeply(parsename('Jean Charles Gabriel {de la} Vallée Poussin'), $nameE, 'parsename E3');

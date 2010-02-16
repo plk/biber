@@ -433,21 +433,54 @@ sub normalize_string_underscore {
 
 =head2 latexescape
 
-Escapes the LaTeX special characters & ^ _ $ and %
+Escapes the LaTeX special characters & ^ _ $ and % but only when not inside
+top-level protecting brace pairs {}
 
 =cut
 
+# Why isn't this a simple regexp? Because it would either need some esoteric perl 5.10
+# only tricks or negative zero-width variable width look-behind which perl doesn't do.
+# All this is another good reason to move to BibLaTeXML ...
 sub latexescape {
-  my $str = shift;
-  my @latexspecials = qw| & _ % |;
-  foreach my $char (@latexspecials) {
-    $str =~ s/^$char/\\$char/g;
-    $str =~ s/([^\\])$char/$1\\$char/g;
-  }
-  $str =~ s/\$/\\\$/g;
-  $str =~ s/\^/\\\^/g;
-  return $str;
+ my $str = shift;
+ my $latexspecials = qr/(\&|\_|\%|\$|\^)/;
+ my $rstr;
+ my $protected = 0;
+ for (my $i=0;$i<length($str);$i++) {
+   my $prea = substr($str,$i-1,1);
+   my $a = substr($str,$i,1);
+   # Opening brace that isn't escaped
+   if ($a eq '{' and $prea ne "\\") {
+     $protected += 1;
+   }
+   # Closing brace that isn't escaped
+   elsif ($a eq '}' and $prea ne "\\") {
+     $protected -= 1;
+   }
+   # We escape non-escaped things which aren't in protecting braces
+   if ($prea ne "\\" and not $protected) {
+     $a =~ s/$latexspecials/\\$1/x;
+   }
+   $rstr .= $a;
+ }
+ unless ($protected == 0) {
+  $logger->warn("Found unbalanced escape sequence in braces for string \"$str\"");
+ }
+ return $rstr;
 }
+
+
+# sub latexescape {
+#   my $str = shift;
+#   my @latexspecials = qw| & _ % |;
+#   foreach my $char (@latexspecials) {
+#     $str =~ s/^$char/\\$char/g;
+#     $str =~ s/([^\\])$char/$1\\$char/g;
+#   }
+#   $str =~ s/\$/\\\$/g;
+#   $str =~ s/\^/\\\^/g;
+#   return $str;
+# }
 
 =head2 terseinitials
 

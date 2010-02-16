@@ -689,7 +689,7 @@ sub _liststring {
 
 sub _printfield {
   my ($self, $field, $str) = @_;
-
+  $str = latexescape($str) if $str;
   if (Biber::Config->getoption('wraplines')) {
     ## 12 is the length of '  \field{}{}'
     if ( 12 + length($field) + length($str) > 2*$Text::Wrap::columns ) {
@@ -770,7 +770,7 @@ sub _print_biblatex_entry {
       my $total = $#lf + 1;
       $str .= "  \\list{$listfield}{$total}{%\n";
       foreach my $f (@lf) {
-        $str .= "    {$f}%\n";
+        $str .= "    {" . latexescape($f) . "}%\n";
       }
       $str .= "  }\n";
     }
