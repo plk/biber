@@ -352,7 +352,7 @@ sub parse_auxfile {
 sub parse_ctrlfile {
   my ($self, $ctrl_file) = @_;
 
-  $logger->warn("Cannot find control file '$ctrl_file.bcf'!") unless -f "$ctrl_file.bcf";
+  $logger->warn("Cannot find control file '$ctrl_file.bcf'! - did you pass the \"backend=biber\" option to BibLaTeX?") unless -f "$ctrl_file.bcf";
 
   # Validate if asked to
   if (Biber::Config->getoption('validate')) {
