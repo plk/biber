@@ -307,9 +307,6 @@ $/x;
     $lastname = $namestr;
   }
 
-  #TODO? $namestr =~ s/[\p{P}\p{S}\p{C}]+//g;
-  ## remove punctuation, symbols, separator and control
-
   # Now put the LaTeX small spaces back again since we're finished parsing
   $namestr =~ s/BSM~~~BSM/{\\,}/g if $namestr;
   $firstname =~ s/BSM~~~BSM/{\\,}/g if $firstname;
@@ -560,8 +557,8 @@ sub getinitials {
   # remove pseudo-space after macros
   $str =~ s/{? ( \\ [^\p{Ps}\{\}]+ ) \s+ (\p{L}) }?/\{$1\{$2\}\}/gx; # {\\x y} -> {\x{y}}
   $str =~ s/( \\ [^\p{Ps}\{\}]+ ) \s+ { /$1\{/gx; # \\macro { -> \macro{
-  # Split first names on space or protected LaTeX small space
-  my @words = split /(?:\s+|{\\,})/, remove_outer($str);
+  # Split first names on space
+  my @words = split /\s+/, remove_outer($str);
   $str = join '.~', ( map { _firstatom($_) } @words );
   # Add a final period if there isn't already one at the "end"
   # where "end" could be inside a brace to the left too

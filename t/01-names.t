@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 16;
+use Test::More tests => 18;
 
 use Biber;
 use Log::Log4perl qw(:easy);
@@ -174,32 +174,31 @@ my $l14 = q|\entry{l14}{book}{}
 
 |;
 
-my $l15 = q|\entry{L15}{book}{}
+my $l15 = q|\entry{l15}{book}{}
   \name{author}{1}{%
     {{Gompel}{G.}{Roger~P.{\,}G.}{R.~P.}{van}{v.}{}{}}%
   }
-  \strng{namehash}{GRPv1}
-  \strng{fullhash}{GRPv1}
+  \strng{namehash}{GRP1}
+  \strng{fullhash}{GRP1}
   \field{sortinit}{G}
 \endentry
 
 |;
 
-my $l16 = q|\entry{L16}{book}{}
+my $l16 = q|\entry{l16}{book}{}
   \name{author}{1}{%
-    {{Gompel}{G.}{Roger~{P.\,G.}}{R.~P.}{van}{v.}{}{}}%
+    {{Gompel}{G.}{Roger~{P.{\,}G.}}{R.~{P.{\,}G.}}{van}{v.}{}{}}%
   }
-  \strng{namehash}{GRPv2}
-  \strng{fullhash}{GRPv2}
+  \strng{namehash}{GRP1}
+  \strng{fullhash}{GRP1}
   \field{sortinit}{G}
 \endentry
 
 |;
 
-my $l17 = q|\entry{L17}{book}{}
+my $l17 = q|\entry{l17}{book}{}
   \name{author}{1}{%
-    {{Lovecraft}{L.}{Bill~H.{\,}P.}{B.~H.}{}{}%
-     {}{}}%
+    {{Lovecraft}{L.}{Bill~H.{\,}P.}{B.~H.}{}{}{}{}}%
   }
   \strng{namehash}{LBH1}
   \strng{fullhash}{LBH1}
@@ -208,13 +207,12 @@ my $l17 = q|\entry{L17}{book}{}
 
 |;
 
-my $l18 = q|\entry{L18}{book}{}
+my $l18 = q|\entry{l18}{book}{}
   \name{author}{1}{%
-    {{Lovecraft}{L.}{Bill~{H.\,P.}}{B.~H.}{}{}%
-     {}{}}%
+    {{Lovecraft}{L.}{Bill~{H.{\,}P.}}{B.~{H.{\,}P.}}{}{}{}{}}%
   }
-  \strng{namehash}{LBH2}
-  \strng{fullhash}{LBH2}
+  \strng{namehash}{LBH1}
+  \strng{fullhash}{LBH1}
   \field{sortinit}{L}
 \endentry
 
