@@ -66,11 +66,11 @@ and reliable emulation of the BibTeX processor with the biblatex.bst style
 file. In other words, given the same .aux file as input, biber should
 output a functionally identical .bbl file as BibTeX.</p>
 
-<p>Biber also introduces support for a new XML format
+<p>In a future version, Biber will also support a new XML format
 tailored specifically for biblatex data, unimaginatively called
 <i>BibLaTeXML</i>. It owes its inspiration partly to the <a
 href="http://bibtexml.sourceforge.net/">BibTeXML</a> format, but it is far
-more complex. RelaXNG and W3C schemata are provided, as
+more complex. RelaXNG and W3C schemata will be provided, as
 well as a tool for converting .bib files to biblatexml. To parse
 BibLaTeXML databases the Perl module <a
 href="http://search.cpan.org/dist/XML-LibXML/">XML::LibXML</a> is
@@ -87,8 +87,11 @@ or remote resources via network protocols (such as SRU) might also be
 implemented.</p>
 
 <br/>
-<p><strong>Biber v0.4.3 is now 
-<a href="http://sourceforge.net/project/platformdownload.php?group_id=228270">released</a></strong>.</p> 
+<p><strong>Biber v0.5.1 is now
+<a href="http://sourceforge.net/project/platformdownload.php?group_id=228270">released</a></strong>.
+It should be used in conjunction with biblatex 0.9 with the option "backend=biber".
+For version 0.8 please use Biber v0.4.4 instead!
+</p> 
 
 <p>You are also welcome to fetch the current development version:</p>
 <pre class="small">git clone git://biblatex-biber.git.sourceforge.net/gitroot/biblatex-biber</pre>

@@ -47,44 +47,50 @@
 <br/>
 
 <pre>
-Usage:  biber file[.aux]
+Usage:  biber file.aux
         Creates file.bbl
 
-        biber -d foo.bib file[.aux]
-        Creates file.bbl from entries in foo.bib and the datafiles 
+        biber -d foo.bib file.aux
+        Creates file.bbl from entries in foo.bib and the datafiles
         listed in file.aux
 
-        biber -d foo.bib,bar.xml -a
-        Creates foo.bbl from all entries in foo.bib and bar.xml
+        biber -d foo.bib,bar.bib -a
+        Creates foo.bbl from all entries in foo.bib and bar.bib
 
 Options:
   --help|-h              Show this help message.
-  --v2                   Enable experimental Biblatex/Biber version 2 options processing.
-                         Don't use this unless you truly understand what it means.
   --version|-v           Display version number.
   --mincrossrefs|-m &lt;n&gt;  Set threshold for crossrefs.
-  --fastsort|-f          Use Perl’s sort instead of Unicode::Collate for sorting.
-  --locale|-l [locale]   Set the locale to be used for sorting with option --fastsort
-  --collate|-C           Sort with Unicode::Collate
-  --collate_options|-c [options] 
+  --fastsort|-f          Use Perl’s sort instead of Unicode::Collate for sorting (TRUE).
+  --locale|-l [locale]   Set the locale to be used for sorting with built-in sort function.
+  --collate|-C           Sort with Unicode::Collate instead of the built-in sort function.
+  --collate_options|-c [options]
                          Options to pass to the Unicode::Collate object used for sorting
-                         (default is 'level =&gt; 2, table =&gt; latinkeys.txt'). 
+                         (default is 'level =&gt; 2, table =&gt; latinkeys.txt').
                          See "perldoc Unicode::Collate" for details.
   --useprd|-p            Parse with Parse::RecDescent instead of Text::BibTeX.
   --bibdata|-d &lt;files&gt;   Use &lt;files&gt; as bibliography databases (comma separated list).
   --outfile|-O &lt;file&gt;    Output to &lt;file&gt; instead of &lt;basename&gt;.bbl
+  --output-directory &lt;d&gt; Files (bbl and log) are output to directory &lt;d&gt; instead
+                         of the current directory.
+  --configfile|-g &lt;file&gt; Use &lt;file&gt; as configuration file for Biber.
+                         The default is the first file found among
+                         "biber.conf" in the current directory, "$HOME/.biber.conf",
+                         or else the output of "kpsewhich biber.conf".
   --allentries|-a        Output all entries in the database.
                          (NB: this ignores the .aux file.)
   --unicodebib|-u        Assume bib file is UTF-8 and skip latex_decode.
   --unicodebbl|-U        Encode the bbl output in UTF-8.
-  --bibencoding|-e [encoding] 
-                         Specify the encoding of the bib file(s). The bbl file 
+  --bibencoding|-e [encoding]
+                         Specify the encoding of the bib file(s). The bbl file
                          will also have this encoding when --unicodebbl is false.
                          See "perldoc Encode::Supported" for a list of supported encodings.
-  --validate|-V          Schema Validate both the &lt;basename&gt;.bcf biblatex control file
-                         and biblatexml bib files (if used). Dies on validation error.
+  --validate|-V          Schema validate both the &lt;basename&gt;.bcf biblatex control file
+                         and the BibLateXML files (if used). Dies on validation error.
   --debug|-D             Turn on debugging for biber.
-  --quiet|-q             Turn warnings off.
+  --quiet|-q             Turn infos and warnings off.
+  --nolog                Do not write any logfile.
+  --onlylog              Do not write any message to screen.
   --wraplines|-w         Wrap lines in the bbl file.
 </pre>
 
