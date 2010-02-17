@@ -174,26 +174,47 @@ my $l14 = q|\entry{l14}{book}{}
 
 |;
 
-my $l15 = q|\entry{l15}{book}{}
-  \name{author}{4}{%
-    {{Gompel}{G.}{Roger~P.{\,}G.}{R.~P.~G.}{van}{v.}{}{}}%
-    {{Fischer}{F.}{Martin~H.}{M.~H.}{}{}{}{}}%
-    {{Murray}{M.}{Wayne~S.}{W.~S.}{}{}{}{}}%
-    {{Hill}{H.}{Robin~L.}{R.~L.}{}{}{}{}}%
+my $l15 = q|\entry{L15}{book}{}
+  \name{author}{1}{%
+    {{Gompel}{G.}{Roger~P.{\,}G.}{R.~P.}{van}{v.}{}{}}%
   }
-  \strng{namehash}{GRP+1}
-  \strng{fullhash}{GRPFMHMWSHRL1}
+  \strng{namehash}{GRPv1}
+  \strng{fullhash}{GRPv1}
   \field{sortinit}{G}
 \endentry
 
 |;
 
-my $l16 = q|\entry{l16}{book}{}
+my $l16 = q|\entry{L16}{book}{}
   \name{author}{1}{%
-    {{Lovecraft}{L.}{H.{\,}P.}{H.~P.}{}{}{}{}}%
+    {{Gompel}{G.}{Roger~{P.\,G.}}{R.~P.}{van}{v.}{}{}}%
   }
-  \strng{namehash}{LH1}
-  \strng{fullhash}{LH1}
+  \strng{namehash}{GRPv2}
+  \strng{fullhash}{GRPv2}
+  \field{sortinit}{G}
+\endentry
+
+|;
+
+my $l17 = q|\entry{L17}{book}{}
+  \name{author}{1}{%
+    {{Lovecraft}{L.}{Bill~H.{\,}P.}{B.~H.}{}{}%
+     {}{}}%
+  }
+  \strng{namehash}{LBH1}
+  \strng{fullhash}{LBH1}
+  \field{sortinit}{L}
+\endentry
+
+|;
+
+my $l18 = q|\entry{L18}{book}{}
+  \name{author}{1}{%
+    {{Lovecraft}{L.}{Bill~{H.\,P.}}{B.~H.}{}{}%
+     {}{}}%
+  }
+  \strng{namehash}{LBH2}
+  \strng{fullhash}{LBH2}
   \field{sortinit}{L}
 \endentry
 
@@ -213,7 +234,9 @@ is( $biber->_print_biblatex_entry('l11'), $l11, 'prefix Last, Suffix, First') ;
 is( $biber->_print_biblatex_entry('l12'), $l12, 'First First First First prefix prefix Last Last') ;
 is( $biber->_print_biblatex_entry('l13'), $l13, 'Last Last Last, Initial. Initial.');
 is( $biber->_print_biblatex_entry('l14'), $l14, 'Last Last-Last, First');
-is( $biber->_print_biblatex_entry('l15'), $l15, 'First {Initials} prefix Last');
-is( $biber->_print_biblatex_entry('l16'), $l16, 'prefix? Last, First I.{\,}I.');
+is( $biber->_print_biblatex_entry('l15'), $l15, 'First F.{\,}F. Last');
+is( $biber->_print_biblatex_entry('l16'), $l16, 'First {F.\,F.} Last');
+is( $biber->_print_biblatex_entry('l17'), $l17, 'Last, First {F.\,F.}');
+is( $biber->_print_biblatex_entry('l18'), $l18, 'Last, First F.{\,}F.');
 
 unlink "$bibfile.utf8";
