@@ -1420,11 +1420,11 @@ sub sortentries {
       } @auxcitekeys;
   } else {
     require Unicode::Collate;
-    my $collopts = Biber::Config->getoption('collate_options');
-    my $Collator = Unicode::Collate->new( $collopts )
+    my $opts = Biber::Config->getoption('collate_options');
+    my %collopts = eval "( $opts )" or carp "Incorrect collate_options: $@";
+    my $Collator = Unicode::Collate->new( %collopts )
       or $logger->logcarp("Problem with Unicode::Collate options: $@");
     my $UCAversion = $Collator->version();
-    my $opts = Data::Dump->dump($collopts);
     $logger->info("Sorting with Unicode::Collate ($opts, UCA version: $UCAversion)");
     @auxcitekeys = sort {
       $Collator->cmp( $bibentries->entry($a)->get_field('sortstring'),
