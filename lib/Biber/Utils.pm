@@ -127,10 +127,10 @@ sub bibfind {
 sub parsename {
   my ($namestr, $opts) = @_;
   $logger->debug("   Parsing namestring '$namestr'");
-  # Change small spaces to something else temporarily to make parsing easier
-  # We rely on looking for commas to parse names and latex small spaces confuse
-  # things a lot
-  $namestr =~ s/\\,\s*|{\\,\s*}/BSM~~~BSM/g;
+  # Change small spaces to something else in the Unicode private zone
+  # temporarily to make parsing easier. We rely on looking for commas
+  # to parse names and latex small spaces confuse things a lot
+  $namestr =~ s/\\,\s*|{\\,\s*}/{\x{e35a}}/g;
   my $usepre = $opts->{useprefix};
 
   my $lastname;
@@ -308,12 +308,11 @@ $/x;
   }
 
   # Now put the LaTeX small spaces back again since we're finished parsing
-  $namestr =~ s/BSM~~~BSM/{\\,}/g if $namestr;
-  $firstname =~ s/BSM~~~BSM/{\\,}/g if $firstname;
-  $lastname =~ s/BSM~~~BSM/{\\,}/g if $lastname;
-  $nameinitstr =~ s/BSM~~~BSM/{\\,}/g if $nameinitstr;
-  $prefix =~ s/BSM~~~BSM/{\\,}/g if $prefix;
-  $suffix =~ s/BSM~~~BSM/{\\,}/g if $suffix;
+  $namestr =~ s/{\x{e35a}}/{\\,}/g if $namestr;
+  $firstname =~ s/{\x{e35a}}/{\\,}/g if $firstname;
+  $lastname =~ s/{\x{e35a}}/{\\,}/g if $lastname;
+  $prefix =~ s/{\x{e35a}}/{\\,}/g if $prefix;
+  $suffix =~ s/{\x{e35a}}/{\\,}/g if $suffix;
 
   $nameinitstr = "";
   $nameinitstr .= substr( $prefix, 0, 1 ) . " " if ( $usepre and $prefix );
