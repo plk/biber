@@ -212,8 +212,8 @@ sub parsename {
                )
 $/x;
 
-    $logger->debug("! Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
-    $logger->debug("! Couldn't determine First Name for name \"$namestr\"") unless $firstname;
+    $logger->warn("Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
+    $logger->warn("Couldn't determine First Name for name \"$namestr\"") unless $firstname;
     if ($lastname) {$lastname =~ s/^{(.+)}$/$1/g;}
     if ($firstname) {$firstname =~ s/^{(.+)}$/$1/g;}
     $prefix =~ s/\s+$// if $prefix;
@@ -288,8 +288,8 @@ $/x;
 $/x;
     }
 
-    $logger->debug("! Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
-    $logger->debug("! Couldn't determine First Name for name \"$namestr\"") unless $firstname;
+    $logger->warn("Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
+    $logger->warn("Couldn't determine First Name for name \"$namestr\"") unless $firstname;
     if ($lastname) {$lastname =~ s/^{(.+)}$/$1/;}
     if ($firstname) {$firstname =~ s/^{(.+)}$/$1/;}
     $firstname =~ s/\s+$// if $firstname;
