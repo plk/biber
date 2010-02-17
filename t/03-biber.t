@@ -206,7 +206,7 @@ my $jaffe = q|\entry{jaffe}{collection}{}
 
 |;
 
-my $pimentel1 = q|\entry{pimentel00}{thesis}{}
+my $pimentel1 = q|\entry{Pimentel00}{thesis}{}
   \name{author}{1}{%
     {{Pimentel}{P}{Joseph~J.}{JJ}{}{}{Jr.}{J}}%
   }

@@ -20,7 +20,7 @@ $bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 $biber->prepare;
 
-my $l1 = q|\entry{l1}{book}{}
+my $l1 = q|\entry{L1}{book}{}
   \name{author}{1}{%
     {{Adler}{A.}{Alfred}{A.}{}{}{}{}}%
   }
@@ -31,7 +31,7 @@ my $l1 = q|\entry{l1}{book}{}
 
 |;
 
-my $l2 = q|\entry{l2}{book}{}
+my $l2 = q|\entry{L2}{book}{}
   \name{author}{1}{%
     {{Bull}{B.}{Bertie~B.}{B.~B.}{}{}{}{}}%
   }
@@ -42,7 +42,7 @@ my $l2 = q|\entry{l2}{book}{}
 
 |;
 
-my $l3 = q|\entry{l3}{book}{}
+my $l3 = q|\entry{L3}{book}{}
   \name{author}{1}{%
     {{Crop}{C.}{C.~Z.}{C.~Z.}{}{}{}{}}%
   }
@@ -53,7 +53,7 @@ my $l3 = q|\entry{l3}{book}{}
 
 |;
 
-my $l4 = q|\entry{l4}{book}{}
+my $l4 = q|\entry{L4}{book}{}
   \name{author}{1}{%
     {{Decket}{D.}{Derek D}{D.~D.}{}{}{}{}}%
   }
@@ -64,7 +64,7 @@ my $l4 = q|\entry{l4}{book}{}
 
 |;
 
-my $l5 = q|\entry{l5}{book}{}
+my $l5 = q|\entry{L5}{book}{}
   \name{author}{1}{%
     {{Eel}{E.}{Egbert}{E.}{von}{v.}{}{}}%
   }
@@ -75,7 +75,7 @@ my $l5 = q|\entry{l5}{book}{}
 
 |;
 
-my $l6 = q|\entry{l6}{book}{}
+my $l6 = q|\entry{L6}{book}{}
   \name{author}{1}{%
     {{Frome}{F.}{Francis}{F.}{van~der~valt}{v.~d.~v.}{}{}}%
   }
@@ -86,7 +86,7 @@ my $l6 = q|\entry{l6}{book}{}
 
 |;
 
-my $l7 = q|\entry{l7}{book}{}
+my $l7 = q|\entry{L7}{book}{}
   \name{author}{1}{%
     {{Gloom}{G.}{Gregory~R.}{G.~R.}{van}{v.}{}{}}%
   }
@@ -97,7 +97,7 @@ my $l7 = q|\entry{l7}{book}{}
 
 |;
 
-my $l8 = q|\entry{l8}{book}{}
+my $l8 = q|\entry{L8}{book}{}
   \name{author}{1}{%
     {{Henkel}{H.}{Henry~F.}{H.~F.}{van}{v.}{}{}}%
   }
@@ -108,7 +108,7 @@ my $l8 = q|\entry{l8}{book}{}
 
 |;
 
-my $l9 = q|\entry{l9}{book}{}
+my $l9 = q|\entry{L9}{book}{}
   \name{author}{1}{%
     {{Iliad~Ipswich}{I.~I.}{Ian}{I.}{}{}{}{}}%
   }
@@ -119,7 +119,7 @@ my $l9 = q|\entry{l9}{book}{}
 
 |;
 
-my $l10 = q|\entry{l10}{book}{}
+my $l10 = q|\entry{L10}{book}{}
   \name{author}{1}{%
     {{Jolly}{J.}{James}{J.}{}{}{III}{I.}}%
   }
@@ -130,7 +130,7 @@ my $l10 = q|\entry{l10}{book}{}
 
 |;
 
-my $l11 = q|\entry{l11}{book}{}
+my $l11 = q|\entry{L11}{book}{}
   \name{author}{1}{%
     {{Kluster}{K.}{Kevin}{K.}{van}{v.}{Jr.}{J.}}%
   }
@@ -141,7 +141,7 @@ my $l11 = q|\entry{l11}{book}{}
 
 |;
 
-my $l12 = q|\entry{l12}{book}{}
+my $l12 = q|\entry{L12}{book}{}
   \name{author}{1}{%
     {{Vall{\'e}e~Poussin}{V.~P.}{Charles Louis Xavier Joseph}{C.~L.~X.~J.}{de~la}{d.~l.}{}{}}%
   }
@@ -152,7 +152,7 @@ my $l12 = q|\entry{l12}{book}{}
 
 |;
 
-my $l13 = q|\entry{l13}{book}{}
+my $l13 = q|\entry{L13}{book}{}
   \name{author}{1}{%
     {{Van~de~Graaff}{V.~d.~G.}{R.~J.}{R.~J.}{}{}{}{}}%
   }
@@ -163,7 +163,7 @@ my $l13 = q|\entry{l13}{book}{}
 
 |;
 
-my $l14 = q|\entry{l14}{book}{}
+my $l14 = q|\entry{L14}{book}{}
   \name{author}{1}{%
     {{St~John-Mollusc}{S.~J.}{Oliver}{O.}{}{}{}{}}%
   }
@@ -174,7 +174,7 @@ my $l14 = q|\entry{l14}{book}{}
 
 |;
 
-my $l15 = q|\entry{l15}{book}{}
+my $l15 = q|\entry{L15}{book}{}
   \name{author}{1}{%
     {{Gompel}{G.}{Roger~P.{\,}G.}{R.~P.}{van}{v.}{}{}}%
   }
@@ -185,7 +185,7 @@ my $l15 = q|\entry{l15}{book}{}
 
 |;
 
-my $l16 = q|\entry{l16}{book}{}
+my $l16 = q|\entry{L16}{book}{}
   \name{author}{1}{%
     {{Gompel}{G.}{Roger~{P.{\,}G.}}{R.~{P.{\,}G.}}{van}{v.}{}{}}%
   }
@@ -196,7 +196,7 @@ my $l16 = q|\entry{l16}{book}{}
 
 |;
 
-my $l17 = q|\entry{l17}{book}{}
+my $l17 = q|\entry{L17}{book}{}
   \name{author}{1}{%
     {{Lovecraft}{L.}{Bill~H.{\,}P.}{B.~H.}{}{}{}{}}%
   }
@@ -207,7 +207,7 @@ my $l17 = q|\entry{l17}{book}{}
 
 |;
 
-my $l18 = q|\entry{l18}{book}{}
+my $l18 = q|\entry{L18}{book}{}
   \name{author}{1}{%
     {{Lovecraft}{L.}{Bill~{H.{\,}P.}}{B.~{H.{\,}P.}}{}{}{}{}}%
   }

@@ -742,7 +742,6 @@ sub postprocess {
     }
     my $bibentry = $bibentries->entry($citekey);
 
-    $bibentry->set_field('origkey', $citekey);
     $logger->debug("Postprocessing entry '$citekey'");
 
     # Postprocess dates

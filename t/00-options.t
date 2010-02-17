@@ -55,7 +55,7 @@ my $dmv =  [
 
 my $bln = [ 'author', 'editor' ];
 
-my $l1 = q|\entry{l1}{book}{}
+my $l1 = q|\entry{L1}{book}{}
   \name{author}{1}{%
     {{Doe}{D.}{John}{J.}{}{}{}{}}%
   }
@@ -78,7 +78,7 @@ my $l1 = q|\entry{l1}{book}{}
 
 |;
 
-my $l2 = q|\entry{l2}{book}{usetranslator=true,labelyear=origyear,labelname=translator,labelalpha=true}
+my $l2 = q|\entry{L2}{book}{usetranslator=true,labelyear=origyear,labelname=translator,labelalpha=true}
   \name{author}{1}{%
     {{Doe}{D.}{John}{J.}{}{}{}{}}%
   }

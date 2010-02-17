@@ -89,6 +89,7 @@ sub _text_bibtex_parse {
     }
 
     my $bibentry = new Biber::Entry;
+    $bibentry->set_field('origkey', $origkey);
 
     # all fields used for this entry
     my @flist = $entry->fieldlist;
