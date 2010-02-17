@@ -35,7 +35,7 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ bibfind parsename terseinitials makenameid
+our @EXPORT = qw{ bibfind parsename terseinitials makenameid stringify_hash
   normalize_string normalize_string_underscore latexescape reduce_array
   remove_outer getinitials tersify ucinit strip_nosort strip_nosortdiacritics
   strip_nosortprefix is_def is_undef is_def_and_notnull is_def_and_null is_undef_or_null
@@ -766,6 +766,24 @@ sub is_notnull_hash {
   }
   my @arr = keys %$arg;
   return $#arr > -1 ? 1 : 0;
+}
+
+=head2 stringify_hash
+
+    Turns a hash into a string of keys and values
+
+=cut
+
+sub stringify_hash {
+  my $hashref = shift;
+  my $string;
+  while (my ($k,$v) = each %{$hashref}) {
+    $string .= "$k => $v, ";
+  }
+  # Take off the trailing comma and space
+  chop $string;
+  chop $string;
+  return $string;
 }
 
 =head1 AUTHOR

@@ -1421,11 +1421,18 @@ sub sortentries {
   } else {
     require Unicode::Collate;
     my $opts = Biber::Config->getoption('collate_options');
-    my %collopts = eval "( $opts )" or carp "Incorrect collate_options: $@";
-    my $Collator = Unicode::Collate->new( %collopts )
+    my $collopts;
+    unless (ref($opts) eq "HASH") { # opts for this can come in a string from cmd line
+      $collopts = eval "{ $opts }" or $logger->logcarp("Incorrect collate_options: $@");
+    }
+    else {
+      $collopts = $opts;
+    }
+    my $Collator = Unicode::Collate->new( %{$collopts} )
       or $logger->logcarp("Problem with Unicode::Collate options: $@");
     my $UCAversion = $Collator->version();
-    $logger->info("Sorting with Unicode::Collate ($opts, UCA version: $UCAversion)");
+    $logger->info("Sorting with Unicode::Collate (" .
+		  stringify_hash($collopts) . ", UCA version: $UCAversion)");
     @auxcitekeys = sort {
       $Collator->cmp( $bibentries->entry($a)->get_field('sortstring'),
         $bibentries->entry($b)->get_field('sortstring') )
@@ -1461,10 +1468,18 @@ sub sortshorthands {
   } else {
     require Unicode::Collate;
     my $opts = Biber::Config->getoption('collate_options');
-    my %collopts = eval "( $opts )" or carp "Incorrect collate_options: $@";
-    my $Collator = Unicode::Collate->new( %collopts );
+    my $collopts;
+    unless (ref($opts) eq "HASH") { # opts for this can come in a string from cmd line
+      $collopts = eval "{ $opts }" or $logger->logcarp("Incorrect collate_options: $@");
+    }
+    else {
+      $collopts = $opts;
+    }
+    my $Collator = Unicode::Collate->new( %{$collopts} )
+      or $logger->logcarp("Problem with Unicode::Collate options: $@");
     my $UCAversion = $Collator->version();
-    $logger->info("Sorting with Unicode::Collate ($opts, UCA version: $UCAversion)");
+    $logger->info("Sorting with Unicode::Collate (" .
+		  stringify_hash($collopts) . ", UCA version: $UCAversion)");
     @auxshorthands = sort {
       $Collator->cmp($bibentries->entry($a)->get_field('shorthand'),
         $bibentries->entry($b)->get_field('shorthand'))
