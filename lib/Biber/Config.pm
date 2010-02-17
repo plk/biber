@@ -125,7 +125,7 @@ sub config_file {
   } elsif ( defined $ENV{XDG_CONFIG_HOME} and
     -f File::Spec->catfile($ENV{XDG_CONFIG_HOME}, "biber", $BIBER_CONF_NAME) ) {
     $biberconf = File::Spec->catfile($ENV{XDG_CONFIG_HOME}, "biber", $BIBER_CONF_NAME);
-  } elsif ( $^O =~ /Mac/ and
+  } elsif ( $^O =~ /(?:Mac|darwin)/ and
     -f File::Spec->catfile($ENV{HOME}, "Library", "biber", $BIBER_CONF_NAME) ) {
     $biberconf = File::Spec->catfile($ENV{HOME}, "Library", "biber", $BIBER_CONF_NAME);
   } elsif ( $^O =~ /Win/ and
