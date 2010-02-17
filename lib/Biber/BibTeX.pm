@@ -84,6 +84,7 @@ sub _text_bibtex_parse {
     unless ($entry->parse_ok) {
       $self->{errors}++;
       $logger->warn("Entry $origkey does not parse correctly: skipping");
+      $self->del_citekey($origkey);
       next;
     }
 
