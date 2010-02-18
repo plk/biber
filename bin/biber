@@ -53,6 +53,8 @@ die usage() if exists $opts->{'help'};
 
 die version() if exists $opts->{'version'};
 
+die usage() unless @ARGV;
+
 #--------------------------------------------------
 
 # we can give a list of datafiles as argument, so
