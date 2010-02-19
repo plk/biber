@@ -32,7 +32,7 @@ my $murray1 = q|\entry{murray}{article}{}
   \name{author}{14}{%
     {{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
     {{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
-    {{Zhong}{Z}{Chuan-Jian}{C}{}{}{}{}}%
+    {{Zhong}{Z}{Chuan-Jian}{C-J}{}{}{}{}}%
     {{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
     {{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
     {{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
@@ -71,7 +71,7 @@ my $murray2 = q|\entry{murray}{article}{}
   \name{author}{14}{%
     {{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
     {{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
-    {{Zhong}{Z}{Chuan-Jian}{C}{}{}{}{}}%
+    {{Zhong}{Z}{Chuan-Jian}{C-J}{}{}{}{}}%
     {{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
     {{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
     {{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%

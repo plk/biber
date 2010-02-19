@@ -548,21 +548,35 @@ sub remove_outer {
     Returns the initials of a name, preserving LaTeX code.
 
 =cut
-
 sub getinitials {
   my $str = shift;
+  my $rstr;
+  my @rwords;
   return '' unless $str; # Sanitise missing data
   $str =~ s/{\s+(\S+)\s+}//g; # Aaaaa{ de }Bbbb -> AaaaaBbbbb
   # remove pseudo-space after macros
   $str =~ s/{? ( \\ [^\p{Ps}\{\}]+ ) \s+ (\p{L}) }?/\{$1\{$2\}\}/gx; # {\\x y} -> {\x{y}}
   $str =~ s/( \\ [^\p{Ps}\{\}]+ ) \s+ { /$1\{/gx; # \\macro { -> \macro{
-  # Split first names on space
+  # Split first names on space and/or hypen
   my @words = split /\s+/, remove_outer($str);
-  $str = join '.~', ( map { _firstatom($_) } @words );
+  foreach my $n (@words) {
+    if ($n =~ /[^\\]-+/x) { # hyphenated name
+      my @nps = split /-+/, $n;
+      # reconstruct hyphenated name initials
+      push @rwords, join '.-', ( map { _firstatom($_) } @nps );
+    }
+    else { # normal name
+      push @rwords, _firstatom($n);
+    }
+  }
+  # Join all initials together
+  $rstr = join '.~', @rwords;
+  # Remove final no-break space if there is one
+  $rstr =~ s/~\z//xms;
   # Add a final period if there isn't already one at the "end"
   # where "end" could be inside a brace to the left too
-  $str .= '.' unless $str =~ m/\.}?\z/xms;
-  return $str;
+  $rstr .= '.' unless $rstr =~ m/\.}?\z/xms;
+  return $rstr;
 }
 
 sub _firstatom {
