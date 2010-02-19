@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 18;
+use Test::More tests => 19;
 
 use Biber;
 use Log::Log4perl qw(:easy);
@@ -165,7 +165,7 @@ my $l13 = q|\entry{L13}{book}{}
 
 my $l14 = q|\entry{L14}{book}{}
   \name{author}{1}{%
-    {{St~John-Mollusc}{S.~J.}{Oliver}{O.}{}{}{}{}}%
+    {{St~John-Mollusc}{S.~J.-M.}{Oliver}{O.}{}{}{}{}}%
   }
   \strng{namehash}{SJMO1}
   \strng{fullhash}{SJMO1}
@@ -218,6 +218,18 @@ my $l18 = q|\entry{L18}{book}{}
 
 |;
 
+my $l19 = q|\entry{L19}{book}{}
+  \name{author}{1}{%
+    {{Mustermann}{M.}{Klaus-Peter}{K.-P.}{}{}{}{}}%
+  }
+  \strng{namehash}{MKP1}
+  \strng{fullhash}{MKP1}
+  \field{sortinit}{M}
+\endentry
+
+|;
+
+
 is( $biber->_print_biblatex_entry('l1'), $l1, 'First Last') ;
 is( $biber->_print_biblatex_entry('l2'), $l2, 'First Initial. Last') ;
 is( $biber->_print_biblatex_entry('l3'), $l3, 'Initial. Initial. Last') ;
@@ -236,5 +248,6 @@ is( $biber->_print_biblatex_entry('l15'), $l15, 'First F.{\,}F. Last');
 is( $biber->_print_biblatex_entry('l16'), $l16, 'First {F.\,F.} Last');
 is( $biber->_print_biblatex_entry('l17'), $l17, 'Last, First {F.\,F.}');
 is( $biber->_print_biblatex_entry('l18'), $l18, 'Last, First F.{\,}F.');
+is( $biber->_print_biblatex_entry('l19'), $l19, 'Firstname with hyphen');
 
 unlink "$bibfile.utf8";
