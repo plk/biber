@@ -1010,7 +1010,7 @@ sub postprocess_sets {
 
     $entry->get_field($entry->get_field('labelnamename))
 
-    It's neat this was as we often need to know what the labelname field is
+    It's neat this way as we often need to know what the labelname field is
     as well as it's actual string value
 
 =cut

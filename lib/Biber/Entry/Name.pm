@@ -20,7 +20,7 @@ sub new {
   my ($class, %params) = @_;
   if (%params) {
     my $name = {};
-    foreach my $attr (qw/lastname firstname prefix suffix namestring nameinitstring/) {
+    foreach my $attr (qw/lastname firstname prefix suffix namestring nameinitstring strip/) {
       if (exists $params{$attr}) {
         $name->{$attr} = $params{$attr}
       }
@@ -30,6 +30,18 @@ sub new {
     return bless {}, $class;
   }
 }
+
+=head2 get_stripped
+
+    Get a boolean to tell if the passed field had braces stripped from the original
+
+=cut
+
+sub get_stripped {
+  my ($self, $part) = @_;
+  return $self->{strip}{$part};
+}
+
 
 =head2 set_firstname
 
@@ -53,6 +65,18 @@ sub get_firstname {
   my $self = shift;
   return $self->{firstname};
 }
+
+=head2 get_firstname_inits
+
+    Get initials for firstname for a Biber::Entry::Name object
+
+=cut
+
+sub get_firstname_inits {
+  my $self = shift;
+  return $self->{firstname_inits};
+}
+
 
 =head2 set_lastname
 
@@ -180,13 +204,16 @@ sub name_to_bbl {
 
   # lastname is always defined
   my $ln  = $self->get_lastname;
-  my $lni = Biber::Utils::getinitials($ln);
+  my $lni = Biber::Utils::getinitials($self->get_stripped('lastname') ?
+                                     add_outer($ln) : $ln);
 
   # firstname
   my $fn;
   my $fni;
   if ($fn = $self->get_firstname) {
-    $fni = Biber::Utils::getinitials($fn);
+    $fni = Biber::Utils::getinitials($self->get_stripped('firstname') ?
+                                     add_outer($fn) : $fn);
+
   }
   else {
     $fn  = '';
@@ -197,7 +224,8 @@ sub name_to_bbl {
   my $pre;
   my $prei;
   if ($pre = $self->get_prefix) {
-    $prei = Biber::Utils::getinitials($pre);
+    $prei = Biber::Utils::getinitials($self->get_stripped('prefix') ?
+                                     add_outer($pre) : $pre);
   }
   else {
     $pre  = '';
@@ -208,7 +236,8 @@ sub name_to_bbl {
   my $suf;
   my $sufi;
   if ($suf = $self->get_suffix) {
-    $sufi = Biber::Utils::getinitials($suf);
+    $sufi = Biber::Utils::getinitials($self->get_stripped('suffix') ?
+                                     add_outer($suf) : $suf);
   }
   else {
     $suf  = '';

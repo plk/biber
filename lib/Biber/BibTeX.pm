@@ -1,4 +1,5 @@
 package Biber::BibTeX;
+use sigtrap qw(handler TBSIG SEGV);
 use strict;
 use warnings;
 use Carp;
@@ -14,6 +15,13 @@ use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
 
 my $logger = Log::Log4perl::get_logger('main');
+
+sub TBSIG {
+  my $sig = shift;
+    $logger->logcroak("Caught signal: $sig\nLikely your .bib has a bad entry: $!");
+}
+
+
 
 sub _text_bibtex_parse {
 

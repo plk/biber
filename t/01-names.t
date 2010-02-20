@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 19;
+use Test::More tests => 22;
 
 use Biber;
 use Log::Log4perl qw(:easy);
@@ -68,9 +68,9 @@ my $l5 = q|\entry{L5}{book}{}
   \name{author}{1}{%
     {{Eel}{E.}{Egbert}{E.}{von}{v.}{}{}}%
   }
-  \strng{namehash}{EE1}
-  \strng{fullhash}{EE1}
-  \field{sortinit}{E}
+  \strng{namehash}{vEE1}
+  \strng{fullhash}{vEE1}
+  \field{sortinit}{v}
 \endentry
 
 |;
@@ -79,9 +79,9 @@ my $l6 = q|\entry{L6}{book}{}
   \name{author}{1}{%
     {{Frome}{F.}{Francis}{F.}{van~der~valt}{v.~d.~v.}{}{}}%
   }
-  \strng{namehash}{FF1}
-  \strng{fullhash}{FF1}
-  \field{sortinit}{F}
+  \strng{namehash}{vdvFF1}
+  \strng{fullhash}{vdvFF1}
+  \field{sortinit}{v}
 \endentry
 
 |;
@@ -90,9 +90,9 @@ my $l7 = q|\entry{L7}{book}{}
   \name{author}{1}{%
     {{Gloom}{G.}{Gregory~R.}{G.~R.}{van}{v.}{}{}}%
   }
-  \strng{namehash}{GGR1}
-  \strng{fullhash}{GGR1}
-  \field{sortinit}{G}
+  \strng{namehash}{vGGR1}
+  \strng{fullhash}{vGGR1}
+  \field{sortinit}{v}
 \endentry
 
 |;
@@ -101,9 +101,9 @@ my $l8 = q|\entry{L8}{book}{}
   \name{author}{1}{%
     {{Henkel}{H.}{Henry~F.}{H.~F.}{van}{v.}{}{}}%
   }
-  \strng{namehash}{HHF1}
-  \strng{fullhash}{HHF1}
-  \field{sortinit}{H}
+  \strng{namehash}{vHHF1}
+  \strng{fullhash}{vHHF1}
+  \field{sortinit}{v}
 \endentry
 
 |;
@@ -134,9 +134,9 @@ my $l11 = q|\entry{L11}{book}{}
   \name{author}{1}{%
     {{Kluster}{K.}{Kevin}{K.}{van}{v.}{Jr.}{J.}}%
   }
-  \strng{namehash}{KJK1}
-  \strng{fullhash}{KJK1}
-  \field{sortinit}{K}
+  \strng{namehash}{vKJK1}
+  \strng{fullhash}{vKJK1}
+  \field{sortinit}{v}
 \endentry
 
 |;
@@ -145,9 +145,9 @@ my $l12 = q|\entry{L12}{book}{}
   \name{author}{1}{%
     {{Vall{\'e}e~Poussin}{V.~P.}{Charles Louis Xavier Joseph}{C.~L.~X.~J.}{de~la}{d.~l.}{}{}}%
   }
-  \strng{namehash}{VPCLXJ1}
-  \strng{fullhash}{VPCLXJ1}
-  \field{sortinit}{V}
+  \strng{namehash}{dlVPCLXJ1}
+  \strng{fullhash}{dlVPCLXJ1}
+  \field{sortinit}{d}
 \endentry
 
 |;
@@ -178,20 +178,20 @@ my $l15 = q|\entry{L15}{book}{}
   \name{author}{1}{%
     {{Gompel}{G.}{Roger~P.{\,}G.}{R.~P.}{van}{v.}{}{}}%
   }
-  \strng{namehash}{GRP1}
-  \strng{fullhash}{GRP1}
-  \field{sortinit}{G}
+  \strng{namehash}{vGRP1}
+  \strng{fullhash}{vGRP1}
+  \field{sortinit}{v}
 \endentry
 
 |;
 
 my $l16 = q|\entry{L16}{book}{}
   \name{author}{1}{%
-    {{Gompel}{G.}{Roger~{P.{\,}G.}}{R.~{P.{\,}G.}}{van}{v.}{}{}}%
+    {{Gompel}{G.}{Roger~{P.\,G.}}{R.~{P.\,G.}}{van}{v.}{}{}}%
   }
-  \strng{namehash}{GRP1}
-  \strng{fullhash}{GRP1}
-  \field{sortinit}{G}
+  \strng{namehash}{vGRP1}
+  \strng{fullhash}{vGRP1}
+  \field{sortinit}{v}
 \endentry
 
 |;
@@ -209,7 +209,7 @@ my $l17 = q|\entry{L17}{book}{}
 
 my $l18 = q|\entry{L18}{book}{}
   \name{author}{1}{%
-    {{Lovecraft}{L.}{Bill~{H.{\,}P.}}{B.~{H.{\,}P.}}{}{}{}{}}%
+    {{Lovecraft}{L.}{Bill~{H.\,P.}}{B.~{H.\,P.}}{}{}{}{}}%
   }
   \strng{namehash}{LBH1}
   \strng{fullhash}{LBH1}
@@ -229,6 +229,38 @@ my $l19 = q|\entry{L19}{book}{}
 
 |;
 
+my $l20 = q|\entry{L20}{book}{}
+  \name{author}{1}{%
+    {{Ford}{F.}{John Henry}{J.}{}{}{}{}}%
+  }
+  \strng{namehash}{FJ1}
+  \strng{fullhash}{FJ1}
+  \field{sortinit}{F}
+\endentry
+
+|;
+
+my $l21 = q|\entry{L21}{book}{}
+  \name{author}{1}{%
+    {{Smith}{S.}{{\v S}omeone}{{\v{S}}.}{}{}{}{}}%
+  }
+  \strng{namehash}{SS1}
+  \strng{fullhash}{SS1}
+  \field{sortinit}{S}
+\endentry
+
+|;
+
+my $l22 = q|\entry{L22}{book}{}
+  \name{author}{1}{%
+    {{Smith}{S.}{Šomeone}{Š.}{}{}{}{}}%
+  }
+  \strng{namehash}{SŠ1}
+  \strng{fullhash}{SŠ1}
+  \field{sortinit}{S}
+\endentry
+
+|;
 
 is( $biber->_print_biblatex_entry('l1'), $l1, 'First Last') ;
 is( $biber->_print_biblatex_entry('l2'), $l2, 'First Initial. Last') ;
@@ -249,5 +281,8 @@ is( $biber->_print_biblatex_entry('l16'), $l16, 'First {F.\,F.} Last');
 is( $biber->_print_biblatex_entry('l17'), $l17, 'Last, First {F.\,F.}');
 is( $biber->_print_biblatex_entry('l18'), $l18, 'Last, First F.{\,}F.');
 is( $biber->_print_biblatex_entry('l19'), $l19, 'Firstname with hyphen');
+is( $biber->_print_biblatex_entry('l20'), $l20, 'Protected dual first name');
+is( $biber->_print_biblatex_entry('l21'), $l21, 'LaTeX encoded unicode');
+is( $biber->_print_biblatex_entry('l22'), $l22, 'Unicode');
 
 unlink "$bibfile.utf8";
