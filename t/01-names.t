@@ -110,10 +110,10 @@ my $l8 = q|\entry{L8}{book}{}
 
 my $l9 = q|\entry{L9}{book}{}
   \name{author}{1}{%
-    {{Iliad~Ipswich}{I.~I.}{Ian}{I.}{}{}{}{}}%
+    {{{Iliad~Ipswich}}{I.}{Ian}{I.}{}{}{}{}}%
   }
-  \strng{namehash}{III1}
-  \strng{fullhash}{III1}
+  \strng{namehash}{II1}
+  \strng{fullhash}{II1}
   \field{sortinit}{I}
 \endentry
 
@@ -187,7 +187,7 @@ my $l15 = q|\entry{L15}{book}{}
 
 my $l16 = q|\entry{L16}{book}{}
   \name{author}{1}{%
-    {{Gompel}{G.}{Roger~{P.\,G.}}{R.~{P.\,G.}}{van}{v.}{}{}}%
+    {{Gompel}{G.}{Roger~{P.\,G.}}{R.~P.}{van}{v.}{}{}}%
   }
   \strng{namehash}{vGRP1}
   \strng{fullhash}{vGRP1}
@@ -209,7 +209,7 @@ my $l17 = q|\entry{L17}{book}{}
 
 my $l18 = q|\entry{L18}{book}{}
   \name{author}{1}{%
-    {{Lovecraft}{L.}{Bill~{H.\,P.}}{B.~{H.\,P.}}{}{}{}{}}%
+    {{Lovecraft}{L.}{Bill~{H.\,P.}}{B.~H.}{}{}{}{}}%
   }
   \strng{namehash}{LBH1}
   \strng{fullhash}{LBH1}
@@ -231,7 +231,7 @@ my $l19 = q|\entry{L19}{book}{}
 
 my $l20 = q|\entry{L20}{book}{}
   \name{author}{1}{%
-    {{Ford}{F.}{John Henry}{J.}{}{}{}{}}%
+    {{Ford}{F.}{{John Henry}}{J.}{}{}{}{}}%
   }
   \strng{namehash}{FJ1}
   \strng{fullhash}{FJ1}
@@ -242,7 +242,7 @@ my $l20 = q|\entry{L20}{book}{}
 
 my $l21 = q|\entry{L21}{book}{}
   \name{author}{1}{%
-    {{Smith}{S.}{{\v S}omeone}{{\v{S}}.}{}{}{}{}}%
+    {{Smith}{S.}{{\v S}omeone}{{\v S}.}{}{}{}{}}%
   }
   \strng{namehash}{SS1}
   \strng{fullhash}{SS1}

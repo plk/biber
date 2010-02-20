@@ -44,13 +44,13 @@ sub notnull {
 }
 
 
-=head2 get_stripped
+=head2 was_stripped
 
-    Get a boolean to tell if the passed field had braces stripped from the original
+    Return boolean to tell if the passed field had braces stripped from the original
 
 =cut
 
-sub get_stripped {
+sub was_stripped {
   my ($self, $part) = @_;
   return $self->{strip}{$part};
 }
@@ -77,17 +77,6 @@ sub set_firstname {
 sub get_firstname {
   my $self = shift;
   return $self->{firstname};
-}
-
-=head2 get_firstname_inits
-
-    Get initials for firstname for a Biber::Entry::Name object
-
-=cut
-
-sub get_firstname_inits {
-  my $self = shift;
-  return $self->{firstname_inits};
 }
 
 
@@ -217,44 +206,39 @@ sub name_to_bbl {
 
   # lastname is always defined
   my $ln  = $self->get_lastname;
-  my $lni = Biber::Utils::getinitials($self->get_stripped('lastname') ?
-                                     add_outer($ln) : $ln);
+  if ($self->was_stripped('lastname')) {
+    $ln = Biber::Utils::add_outer($ln);
+  }
+  my $lni = Biber::Utils::getinitials($ln);
 
   # firstname
-  my $fn;
-  my $fni;
+  my $fn = '';
+  my $fni = '';
   if ($fn = $self->get_firstname) {
-    $fni = Biber::Utils::getinitials($self->get_stripped('firstname') ?
-                                     add_outer($fn) : $fn);
-
-  }
-  else {
-    $fn  = '';
-    $fni = '';
+    if ($self->was_stripped('firstname')) {
+      $fn = Biber::Utils::add_outer($fn);
+    }
+    $fni = Biber::Utils::getinitials($fn);
   }
 
   # prefix
-  my $pre;
-  my $prei;
+  my $pre = '';
+  my $prei = '';
   if ($pre = $self->get_prefix) {
-    $prei = Biber::Utils::getinitials($self->get_stripped('prefix') ?
-                                     add_outer($pre) : $pre);
-  }
-  else {
-    $pre  = '';
-    $prei = '';
+    if ($self->was_stripped('prefix')) {
+      $pre = Biber::Utils::add_outer($pre);
+    }
+    $prei = Biber::Utils::getinitials($pre);
   }
 
   # suffix
-  my $suf;
-  my $sufi;
+  my $suf = '';
+  my $sufi = '';
   if ($suf = $self->get_suffix) {
-    $sufi = Biber::Utils::getinitials($self->get_stripped('suffix') ?
-                                     add_outer($suf) : $suf);
-  }
-  else {
-    $suf  = '';
-    $sufi = '';
+    if ($self->was_stripped('sufffix')) {
+      $suf = Biber::Utils::add_outer($suf);
+    }
+    $sufi = Biber::Utils::getinitials($suf);
   }
 
   # Can't just replace all spaces in first names with "~" as this could

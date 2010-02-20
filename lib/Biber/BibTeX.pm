@@ -29,7 +29,8 @@ sub _text_bibtex_parse {
 
 # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
   if (Biber::Config->getoption('quiet')) {
-    open STDERR, '>/dev/null';
+    open OLDERR, '>&', \*STDERR;
+    open STDERR, '>', '/dev/null';
   }
 
   my $bibentries = $self->bib;
@@ -185,7 +186,7 @@ sub _text_bibtex_parse {
   $self->{preamble} = join( "%\n", @preamble ) if @preamble;
 
   if (Biber::Config->getoption('quiet')) {
-    close STDERR;
+    open STDERR, '>&', \*OLDERR;
   }
 
   return @localkeys;

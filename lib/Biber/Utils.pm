@@ -138,9 +138,10 @@ sub parsename {
   $namestr =~ s/\s*\z//xms; # trailing whitespace
   $namestr =~ s/\s+/ /g;    # Collapse internal whitespace
 
-  open STDERR, '>/dev/null';
+  open OLDERR, '>&', \*STDERR;
+  open STDERR, '>', '/dev/null';
   my $name = new Text::BibTeX::Name($namestr);
-  close STDERR;
+  open STDERR, '>&', \*OLDERR;
 
   my $firstname   = join(' ', map {decode_utf8($_)} $name->part('first'));
   my $lastname    = join(' ', map {decode_utf8($_)} $name->part('last'));
@@ -183,6 +184,7 @@ sub parsename {
 
   # Remove any trailing comma and space if, e.g. missing firstname
   $namestring =~ s/,\s+\z//xms;
+
 
   # Construct $nameinitstring
   my $nameinitstr = '';
@@ -418,59 +420,109 @@ sub add_outer {
 }
 
 
+
+
 =head2 getinitials
 
     Returns the initials of a name, preserving LaTeX code.
+    This has to be a token parser as we need to take account of
+    brace groupings:
+
+    e.g. getting firstname initials:
+
+    "{John Henry} Ford" -> "J."
+    "John Henry Ford" -> "J.H."
 
 =cut
+
 sub getinitials {
   my $str = shift;
   my $rstr;
-  my @rwords;
   return '' unless $str; # Sanitise missing data
-  $str =~ s/{\s+(\S+)\s+}//g; # Aaaaa{ de }Bbbb -> AaaaaBbbbb
-  # remove pseudo-space after macros
-  $str =~ s/{? ( \\ [^\p{Ps}\{\}]+ ) \s+ (\p{L}) }?/\{$1\{$2\}\}/gx; # {\\x y} -> {\x{y}}
-  $str =~ s/( \\ [^\p{Ps}\{\}]+ ) \s+ { /$1\{/gx; # \\macro { -> \macro{
-  # Split first names on space and/or hypen
-  my @words = split /\s+/, $str;
-  foreach my $n (@words) {
-    if ($n =~ /[^\\]-+/x) { # hyphenated name
-      my @nps = split /-+/, $n;
-      # reconstruct hyphenated name initials
-      push @rwords, join '.-', ( map { _firstatom($_) } @nps );
+  while (my $atom = get_atom(\$str)) {
+    # We have to look inside braces to see what we have
+    # Just normal protected names:
+
+    # hyphens in names are special atoms
+    if ($atom =~ m/\A-\z/xms) {
+      $rstr =~ s/~\z//xms; # If we're appending a hypehn, don't want nbsp too
+      $rstr .= '-';
     }
-    else { # normal name
-      push @rwords, _firstatom($n);
+    # Initials - P. or {P.\,G.}
+    elsif ($atom =~ m/\A{?(\p{L}+)?\./xms) {
+      $rstr .= substr($1, 0, 1) . '.~';
+    }
+    # John
+    elsif ($atom =~ m/\A\p{L}+\z/xms) {
+      $rstr .= substr($atom, 0, 1) . '.~';
+    }
+    # {John Henry}
+    elsif ($atom =~ m/\A{([\p{L}\s]+)}\z/xms) {
+      $rstr .= substr($1, 0, 1) . '.~';
+    }
+    # {\v S}omeone or {\v Someone}
+    elsif ($atom =~ m/\A({\\\S+\s+\p{L}+}).+\z/xms) {
+      $rstr .= $1 . '.~';
+    }
+    # {\v{S}}omeone
+    elsif ($atom =~ m/\A({\\\S+{\p{L}}}).+\z/xms) {
+      $rstr .= $1 . '.~';
+    }
+    # \v{S}omeone
+    elsif ($atom =~ m/\A(\\\S+{\p{L}}).+\z/xms) {
+      $rstr .= $1 . '.~';
+    }
+    # Default
+    else {
+      $rstr .= substr($atom, 0, 1) . '.~';
     }
   }
-  # Join all initials together
-  $rstr = join '.~', @rwords;
-  # Remove final no-break space if there is one
+  # remove trailing nbsp
   $rstr =~ s/~\z//xms;
-  # Add a final period if there isn't already one at the "end"
-  # where "end" could be inside a brace to the left too
-  $rstr .= '.' unless $rstr =~ m/\.}?\z/xms;
   return $rstr;
 }
 
-sub _firstatom {
+sub get_atom {
   my $str = shift;
-  $str = strip_nosort($str); # strip nosort elements
-  if ($str =~ /^({
-                   \\ [^\p{Ps}\p{L}] \p{L}+ # {\\.x}
-                   }
-                   | {?
-                    \\[^\p{Ps}\{\}]+        # \\macro{x}
-                     { \p{L} }
-                     }?
-                   | { \\\p{L}+ }           # {\\macro}
-                   | {.+}                   # {something protected}
-)/x ) {
-    return $1;
-  } else {
-    return substr($str, 0, 1);
+  unless ($$str) {
+    return undef;
   }
+  # strip nosort elements as they shouldn't be initials either
+  $$str = strip_nosort($$str);
+  my $bl = 0;
+  my $atom;
+  for (my $i=0;$i<length($$str);$i++) {
+    my $prea = substr($$str,$i-1,1);
+    my $a = substr($$str,$i,1);
+    if ($a =~ m/\s/ and $bl == 0)  {
+      $$str = substr($$str, $i+1);
+      return $atom;
+    }
+    elsif ($a eq '{' and $prea ne "\\") {
+      $bl++;
+    }
+    # Hypens are special atoms
+    elsif ($a eq '-') {
+      # If the hyphen is at the beginning of the string, return it as an atom
+      # Since we left it there to be so consumed
+      if ($i == 0) {
+        $$str = substr($$str, $i+1);
+        return '-';
+      }
+      # Leave the hyphen on the string so it can be consumed as a separate atom
+      # and return the current token
+      else {
+        $$str = substr($$str, $i);
+        return $atom;
+      }
+    }
+    elsif ($a eq '}') {
+      $bl--;
+    }
+    $atom .= $a;
+  }
+  $$str = '';
+  return $atom;
 }
 
 =head2 tersify
