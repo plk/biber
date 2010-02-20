@@ -18,6 +18,7 @@ our @EXPORT = qw{
   @LITERALFIELDS
   @DATERANGEFIELDS
   @DATECOMPONENTFIELDS
+  @NULL_OK
   %SKIPFIELDS
   %CONFIG_DEFAULT_BIBER
   %CONFIG_DEFAULT_BIBLATEX
@@ -168,6 +169,9 @@ Readonly::Array our @KEYFIELDS       =>  qw{
 Readonly::Array our @COMMASEP_FIELDS => qw{ options keywords entryset };
 
 Readonly::Array our @ENTRIESTOSPLIT  =>  ( @NAMEFIELDS, @LISTFIELDS );
+
+# These fields can be present when null. All others are not set if null
+Readonly::Array our @NULL_OK  => qw{ endyear origendyear eventendyear urlendyear };
 
 # literal and integer fields
 # TODO add keys for selecting script, language, translation, transliteration.

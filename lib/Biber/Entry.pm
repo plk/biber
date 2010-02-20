@@ -1,4 +1,7 @@
 package Biber::Entry;
+use List::Util qw( first );
+use Biber::Utils;
+use Biber::Constants;
 
 =encoding utf-8
 
@@ -25,6 +28,18 @@ sub new {
   return $self;
 }
 
+=head2 notnull
+
+    Test for an empty object
+
+=cut
+
+sub notnull {
+  my $self = shift;
+  my @arr = keys %$self;
+  return $#arr > -1 ? 1 : 0;
+}
+
 =head2 set_field
 
     Set a field for a Biber::Entry object
@@ -34,7 +49,10 @@ sub new {
 sub set_field {
   my $self = shift;
   my ($key, $val) = @_;
-  $self->{$key} = $val;
+  # Only set fields which are either not null or are ok to be null
+  if ( first { $key eq $_ } @NULL_OK or is_notnull($val)) {
+    $self->{$key} = $val;
+  }
   return;
 }
 

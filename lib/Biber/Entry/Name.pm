@@ -31,6 +31,19 @@ sub new {
   }
 }
 
+=head2 notnull
+
+    Test for an empty object
+
+=cut
+
+sub notnull {
+  my $self = shift;
+  my @arr = keys %$self;
+  return $#arr > -1 ? 1 : 0;
+}
+
+
 =head2 set_firstname
 
     Set firstname for a Biber::Entry::Name object
