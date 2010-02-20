@@ -604,8 +604,10 @@ sub is_notnull {
   if (defined($st) and $st) { return 1; }
   my $at = is_notnull_array($arg);
   if (defined($at) and $at) { return 1; }
-  my $ht = is_notnull_array($arg);
+  my $ht = is_notnull_hash($arg);
   if (defined($ht) and $ht) { return 1; }
+  my $ot = is_notnull_object($arg);
+  if (defined($ot) and $ot) { return 1; }
   return 0;
 }
 
@@ -652,6 +654,21 @@ sub is_notnull_hash {
   my @arr = keys %$arg;
   return $#arr > -1 ? 1 : 0;
 }
+
+=head2 is_notnull_object
+
+    Checks for notnullness of an object (passed by ref)
+
+=cut
+
+sub is_notnull_object {
+  my $arg = shift;
+  unless (ref($arg) =~ m/\ABiber::/xms) {
+    return undef;
+  }
+  return $arg->notnull ? 1 : 0;
+}
+
 
 =head2 stringify_hash
 

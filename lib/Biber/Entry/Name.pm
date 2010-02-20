@@ -31,6 +31,19 @@ sub new {
   }
 }
 
+=head2 notnull
+
+    Test for an empty object
+
+=cut
+
+sub notnull {
+  my $self = shift;
+  my @arr = keys %$self;
+  return $#arr > -1 ? 1 : 0;
+}
+
+
 =head2 get_stripped
 
     Get a boolean to tell if the passed field had braces stripped from the original

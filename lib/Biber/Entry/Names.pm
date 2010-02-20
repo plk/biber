@@ -19,6 +19,19 @@ sub new {
   return bless [], $class;
 }
 
+
+=head2 notnull
+
+    Test for an empty object
+
+=cut
+
+sub notnull {
+  my $self = shift;
+  my @arr = @$self;
+  return $#arr > -1 ? 1 : 0;
+}
+
 =head2 names
 
     Return ref to array of all Biber::Entry::Name objects

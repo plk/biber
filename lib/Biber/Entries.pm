@@ -18,6 +18,18 @@ sub new {
   return $self;
 }
 
+=head2 notnull
+
+    Test for an empty object
+
+=cut
+
+sub notnull {
+  my $self = shift;
+  my @arr = keys %$self;
+  return $#arr > -1 ? 1 : 0;
+}
+
 =head2 entry_exists
 
     Boolean values sub to tell if there is an entry
