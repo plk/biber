@@ -36,7 +36,7 @@ is( latexescape('Joe & Sons: $3.01 + 5% of some_function()'),
                'Joe \& Sons: \$3.01 + 5\% of some\_function()',
                'latexescape'); 
 
-is( terseinitials(' Goldman-Sachs,  Antonio Ludwig '),  'GSAL', 'terseinitials');
+is( terseinitials('G.-S.'),  'GS', 'terseinitials');
 
 my @arrayA = qw/ a b c d e f c /;
 my @arrayB = qw/ c e /;
@@ -48,38 +48,76 @@ is_deeply(\@AminusB, \@AminusBexpected, 'reduce_array') ;
 is(remove_outer('{Some string}'), 'Some string', 'remove_outer') ;
 
 my $nameA =
-    { firstname => 'John',
-      lastname => 'Doe',
-      prefix => undef,
-      suffix => undef,
-      namestring => 'Doe, John',
-      nameinitstring => 'Doe_J' } ;
+    { firstname      => "John",
+      firstname_i    => "J.",
+      firstname_it   => "J",
+      lastname       => "Doe",
+      lastname_i     => "D.",
+      lastname_it    => "D",
+      nameinitstring => "Doe_J",
+      namestring     => "Doe, John",
+      prefix         => undef,
+      prefix_i       => undef,
+      prefix_it      => undef,
+      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      suffix         => undef,
+      suffix_i       => undef,
+      suffix_it      => undef};
 my $nameAb =
-    { firstname => 'John',
-      lastname => 'Doe',
-      prefix => undef,
-      suffix => 'Jr',
-      namestring => 'Doe, Jr, John',
-      nameinitstring => 'Doe_J_J' } ;
+    { firstname      => "John",
+      firstname_i    => "J.",
+      firstname_it   => "J",
+      lastname       => "Doe",
+      lastname_i     => "D.",
+      lastname_it    => "D",
+      nameinitstring => "Doe_J_J",
+      namestring     => "Doe, Jr, John",
+      prefix         => undef,
+      prefix_i       => undef,
+      prefix_it      => undef,
+      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => 0 },
+      suffix         => "Jr",
+      suffix_i       => "J.",
+      suffix_it      => "J" } ;
 
 is_deeply(parsename('John Doe'), $nameA, 'parsename 1a');
 
 is_deeply(parsename('Doe, Jr, John'), $nameAb, 'parsename 1b');
 
 my $nameB =
-    { firstname => 'Johann Gottfried',
-      lastname => 'Berlichingen zu Hornberg',
-      prefix => 'von',
-      suffix => undef,
-      namestring => 'von Berlichingen zu Hornberg, Johann Gottfried',
-      nameinitstring => 'v_Berlichingen_zu_Hornberg_JG' } ;
+    { firstname      => "Johann Gottfried",
+      firstname_i    => "J.~G.",
+      firstname_it   => "JG",
+      lastname       => "Berlichingen zu Hornberg",
+      lastname_i     => "B.~z.~H.",
+      lastname_it    => "BzH",
+      nameinitstring => "v_Berlichingen_zu_Hornberg_JG",
+      namestring     => "von Berlichingen zu Hornberg, Johann Gottfried",
+      prefix         => "von",
+      prefix_i       => "v.",
+      prefix_it      => "v",
+      strip          => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
+      suffix         => undef,
+      suffix_i       => undef,
+      suffix_it      => undef};
+
 my $nameBb =
-    { firstname => 'Johann Gottfried',
-      lastname => 'Berlichingen zu Hornberg',
-      prefix => 'von',
-      suffix => undef,
-      namestring => 'Berlichingen zu Hornberg, Johann Gottfried',
-      nameinitstring => 'Berlichingen_zu_Hornberg_JG' } ;
+    { firstname      => "Johann Gottfried",
+      firstname_i    => "J.~G.",
+      firstname_it   => "JG",
+      lastname       => "Berlichingen zu Hornberg",
+      lastname_i     => "B.~z.~H.",
+      lastname_it    => "BzH",
+      nameinitstring => "Berlichingen_zu_Hornberg_JG",
+      namestring     => "Berlichingen zu Hornberg, Johann Gottfried",
+      prefix         => undef,
+      prefix_i       => undef,
+      prefix_it      => undef,
+      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      suffix         => undef,
+      suffix_i       => undef,
+      suffix_it      => undef};
+
 
 is_deeply(parsename('von Berlichingen zu Hornberg, Johann Gottfried', {useprefix => 1}),
                     $nameB, 'parsename 2a') ;
@@ -88,82 +126,173 @@ is_deeply(parsename('von Berlichingen zu Hornberg, Johann Gottfried', {useprefix
                     $nameBb, 'parsename 2b') ;
 
 my $nameC =
-   {  firstname => undef,
-      lastname => '{Robert and Sons, Inc.}',
-      prefix => undef,
-      suffix => undef,
-      namestring => 'Robert and Sons, Inc.',
-      nameinitstring => 'Robert_and_Sons,_Inc.' } ;
+   {  firstname      => undef,
+      firstname_i    => undef,
+      firstname_it   => undef,
+      lastname       => "Robert and Sons, Inc.",
+      lastname_i     => "{.",
+      lastname_it    => "",
+      nameinitstring => "{Robert_and_Sons,_Inc.}",
+      namestring     => "Robert and Sons, Inc.",
+      prefix         => undef,
+      prefix_i       => undef,
+      prefix_it      => undef,
+      strip          => { firstname => undef, lastname => 1, prefix => undef, suffix => undef },
+      suffix         => undef,
+      suffix_i       => undef,
+      suffix_it      => undef};
+
 
 is_deeply(parsename('{Robert and Sons, Inc.}'), $nameC, 'parsename 3') ;
 
 my $nameD =
    {  firstname => 'ʿAbdallāh',
-       lastname => 'al-Ṣāliḥ',
-         prefix => undef,
-         suffix => undef,
-     namestring => 'al-Ṣāliḥ, ʿAbdallāh',
- nameinitstring => 'al-Ṣāliḥ_A' } ;
+      firstname_i => 'A.',
+      firstname_it => 'A',
+      lastname => 'al-Ṣāliḥ',
+      lastname_i => 'Ṣ.',
+      lastname_it => 'Ṣ',
+      prefix => undef,
+      prefix_i => undef,
+      prefix_it => undef,
+      suffix => undef,
+      suffix_i => undef,
+      suffix_it => undef,
+      strip => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      namestring => 'al-Ṣāliḥ, ʿAbdallāh',
+      nameinitstring => 'al-Ṣāliḥ_A' } ;
 
 is_deeply(parsename('al-Ṣāliḥ, ʿAbdallāh'), $nameD, 'parsename 4') ;
 
 my $nameE =
-   {  firstname => 'Jean Charles Gabriel',
-       lastname => 'Vallée Poussin',
-         prefix => 'de la',
-         suffix => undef,
-     namestring => 'de la Vallée Poussin, Jean Charles Gabriel',
- nameinitstring => 'd_Vallée_Poussin_JCG' } ;
+   {  firstname    => 'Jean Charles Gabriel',
+      firstname_i  => 'J.~C.~G.',
+      firstname_it => 'JCG',
+      lastname_i   => 'V.~P.',
+      lastname_it  => 'VP',
+      lastname     => 'Vallée Poussin',
+      prefix       => 'de la',
+      prefix_i     => 'd.~l.',
+      prefix_it    => 'dl',
+      suffix       => undef,
+      suffix_i     => undef,
+      suffix_it    => undef,
+      strip => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
+      namestring => 'de la Vallée Poussin, Jean Charles Gabriel',
+      nameinitstring => 'dl_Vallée_Poussin_JCG' } ;
 my $nameE2 =
-   {  firstname => '{Jean Charles Gabriel}',
-       lastname => 'Vallée Poussin',
-         prefix => 'de la',
-         suffix => undef,
-     namestring => 'Vallée Poussin, Jean Charles Gabriel',
- nameinitstring => 'Vallée_Poussin_J' } ;
+   {  firstname    => 'Jean Charles Gabriel',
+      firstname_i  => 'J.',
+      firstname_it => 'J',
+      lastname     => 'Vallée Poussin',
+      lastname_i   => 'V.~P.',
+      lastname_it  => 'VP',
+      prefix       => undef,
+      prefix_i     => undef,
+      prefix_it    => undef,
+      suffix       => undef,
+      suffix_i     => undef,
+      suffix_it    => undef,
+      strip => { firstname => 1, lastname => 0, prefix => undef, suffix => undef },
+      namestring => 'Vallée Poussin, Jean Charles Gabriel',
+      nameinitstring => 'Vallée_Poussin_J' } ;
 my $nameE3 =
-   {  firstname => 'Jean Charles Gabriel {de la} Vallée',
-       lastname => 'Poussin',
-         prefix => undef,
-         suffix => undef,
-     namestring => 'Poussin, Jean Charles Gabriel {de la} Vallée',
- nameinitstring => 'Poussin_JCGdlV' } ;
+   {  firstname     => 'Jean Charles Gabriel {de la} Vallée',
+      firstname_i   => 'J.~C.~G.~d.~V.',
+      firstname_it  => 'JCGdV',
+      lastname      => 'Poussin',
+      lastname_i    => 'P.',
+      lastname_it   => 'P',
+      prefix        => undef,
+      prefix_i      => undef,
+      prefix_it     => undef,
+      suffix        => undef,
+      suffix_i      => undef,
+      suffix_it     => undef,
+      strip => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      namestring => 'Poussin, Jean Charles Gabriel {de la} Vallée',
+      nameinitstring => 'Poussin_JCGdV' } ;
 my $nameE4 =
-   {  firstname => 'Jean Charles Gabriel',
-       lastname => '{Vallée Poussin}',
-         prefix => 'de la',
-         suffix => undef,
-     namestring => 'Vallée Poussin, Jean Charles Gabriel',
- nameinitstring => 'Vallée_Poussin_JCG' } ;
+   {  firstname    => 'Jean Charles Gabriel',
+      firstname_i  => 'J.~C.~G.',
+      firstname_it => 'JCG',
+      lastname     => 'Vallée Poussin',
+      lastname_i   => 'V.',
+      lastname_it  => 'V',
+      prefix       => undef,
+      prefix_i     => undef,
+      prefix_it    => undef,
+      suffix       => undef,
+      suffix_i     => undef,
+      suffix_it    => undef,
+      strip => { firstname => 0, lastname => 1, prefix => undef, suffix => undef },
+      namestring => 'Vallée Poussin, Jean Charles Gabriel',
+      nameinitstring => '{Vallée_Poussin}_JCG' } ;
 my $nameE5 =
-   {  firstname => '{Jean Charles Gabriel}',
-       lastname => '{Vallée Poussin}',
-         prefix => 'de la',
-         suffix => undef,
-     namestring => 'Vallée Poussin, Jean Charles Gabriel',
- nameinitstring => 'Vallée_Poussin_J' } ;
+   {  firstname    => 'Jean Charles Gabriel',
+      firstname_i  => 'J.',
+      firstname_it => 'J',
+      lastname     => 'Vallée Poussin',
+      lastname_i   => 'V.',
+      lastname_it  => 'V',
+      prefix       => undef,
+      prefix_i     => undef,
+      prefix_it    => undef,
+      suffix       => undef,
+      suffix_i     => undef,
+      suffix_it    => undef,
+      strip => { firstname => 1, lastname => 1, prefix => undef, suffix => undef },
+      namestring => 'Vallée Poussin, Jean Charles Gabriel',
+      nameinitstring => '{Vallée_Poussin}_J' } ;
 
-my $nameEb =
-   {  firstname => 'Jean Charles Gabriel',
-       lastname => 'Poussin',
-         prefix => undef,
-         suffix => undef,
-     namestring => 'Poussin, Jean Charles Gabriel',
- nameinitstring => 'Poussin_JCG' } ;
-my $nameEc =
-   {  firstname => 'Jean Charles',
-       lastname => '{Poussin Lecoq}',
-         prefix => undef,
-         suffix => undef,
-     namestring => 'Poussin Lecoq, Jean Charles',
- nameinitstring => 'Poussin_Lecoq_JC' } ;
-my $nameEd =
-   {  firstname => 'J. C. G',
-       lastname => 'Vallée Poussin',
-         prefix => 'de la',
-         suffix => undef,
-     namestring => 'de la Vallée Poussin, J. C. G',
- nameinitstring => 'd_Vallée_Poussin_JCG' } ;
+my $nameE6 =
+   {  firstname    => 'Jean Charles Gabriel',
+      firstname_i  => 'J.~C.~G.',
+      firstname_it => 'JCG',
+      lastname      => 'Poussin',
+      lastname_i    => 'P.',
+      lastname_it   => 'P',
+      prefix       => undef,
+      prefix_i     => undef,
+      prefix_it    => undef,
+      suffix       => undef,
+      suffix_i     => undef,
+      suffix_it    => undef,
+      strip => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      namestring => 'Poussin, Jean Charles Gabriel',
+      nameinitstring => 'Poussin_JCG' } ;
+my $nameE7 =
+   {  firstname    => 'Jean Charles',
+      firstname_i  => 'J.~C.',
+      firstname_it => 'JC',
+      lastname     => 'Poussin Lecoq',
+      lastname_i   => 'P.',
+      lastname_it  => 'P',
+      prefix       => undef,
+      prefix_i     => undef,
+      prefix_it    => undef,
+      suffix       => undef,
+      suffix_i     => undef,
+      suffix_it    => undef,
+      strip => { firstname => 0, lastname => 1, prefix => undef, suffix => undef },
+      namestring => 'Poussin Lecoq, Jean Charles',
+      nameinitstring => '{Poussin_Lecoq}_JC' } ;
+my $nameE8 =
+   {  firstname    => 'J. C. G.',
+      firstname_i  => 'J.~C.~G.',
+      firstname_it => 'JCG',
+      lastname     => 'Vallée Poussin',
+      lastname_i   => 'V.~P.',
+      lastname_it  => 'VP',
+      prefix       => 'de la',
+      prefix_i     => 'd.~l.',
+      prefix_it    => 'dl',
+      suffix       => undef,
+      suffix_i     => undef,
+      suffix_it    => undef,
+      strip => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
+      namestring => 'de la Vallée Poussin, J. C. G.',
+      nameinitstring => 'dl_Vallée_Poussin_JCG' } ;
 
 my $pstring = '{$}Some string & with \% some specials and then {some \{ & % $^{3}$
 protected specials} and then some more things % $$ _^';
@@ -177,14 +306,14 @@ is_deeply(parsename('{Jean Charles Gabriel} de la Vallée Poussin'), $nameE2, 'p
 is_deeply(parsename('Jean Charles Gabriel {de la} Vallée Poussin'), $nameE3, 'parsename E3');
 is_deeply(parsename('Jean Charles Gabriel de la {Vallée Poussin}'), $nameE4, 'parsename E4');
 is_deeply(parsename('{Jean Charles Gabriel} de la {Vallée Poussin}'), $nameE5, 'parsename E5');
-is_deeply(parsename('Jean Charles Gabriel Poussin'), $nameEb, 'parsename E6');
-is_deeply(parsename('Jean Charles {Poussin Lecoq}'), $nameEc, 'parsename E8');
-is_deeply(parsename('J. C. G de la Vallée Poussin', {useprefix => 1}), $nameEd, 'parsename E9');
+is_deeply(parsename('Jean Charles Gabriel Poussin'), $nameE6, 'parsename E6');
+is_deeply(parsename('Jean Charles {Poussin Lecoq}'), $nameE7, 'parsename E8');
+is_deeply(parsename('J. C. G. de la Vallée Poussin', {useprefix => 1}), $nameE8, 'parsename E8');
 
 is( getinitials('{\"O}zt{\"u}rk'), '{\"O}.', 'getinitials 1' ) ;
 is( getinitials('{\c{C}}ok {\OE}illet'), '{\c{C}}.~{\OE}.', 'getinitials 2' ) ;
 is( getinitials('Ḥusayn ʿĪsā'), 'Ḥ.~Ī.', 'getinitials 3' ) ;
 
-is( tersify('Ä.~{\c{C}}.~{\c S}.'), 'Ä{\c{C}}{\c S}', 'tersify' ) ;
+is( tersify('Ä.~{\c{C}}.~{\c S}.'), 'Ä{\c{C}}{\c S}', 'terseinitials' ) ;
 
 # vim: set tabstop=4 shiftwidth=4: 

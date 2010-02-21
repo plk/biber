@@ -20,7 +20,21 @@ sub new {
   my ($class, %params) = @_;
   if (%params) {
     my $name = {};
-    foreach my $attr (qw/lastname firstname prefix suffix namestring nameinitstring strip/) {
+    foreach my $attr (qw/lastname
+                         lastname_i
+                         lastname_it
+                         firstname
+                         firstname_i
+                         firstname_it
+                         prefix
+                         prefix_i
+                         prefix_it
+                         suffix
+                         suffix_i
+                         suffix_it
+                         namestring
+                         nameinitstring
+                         strip/) {
       if (exists $params{$attr}) {
         $name->{$attr} = $params{$attr}
       }
@@ -79,6 +93,28 @@ sub get_firstname {
   return $self->{firstname};
 }
 
+=head2 get_firstname_i
+
+    Get firstname initials for a Biber::Entry::Name object
+
+=cut
+
+sub get_firstname_i {
+  my $self = shift;
+  return $self->{firstname_i};
+}
+
+=head2 get_firstname_it
+
+    Get firstname terse initials for a Biber::Entry::Name object
+
+=cut
+
+sub get_firstname_it {
+  my $self = shift;
+  return $self->{firstname_it};
+}
+
 
 =head2 set_lastname
 
@@ -103,6 +139,29 @@ sub get_lastname {
   return $self->{lastname};
 }
 
+=head2 get_lastname_i
+
+    Get lastname initials for a Biber::Entry::Name object
+
+=cut
+
+sub get_lastname_i {
+  my $self = shift;
+  return $self->{lastname_i};
+}
+
+=head2 get_lastname_it
+
+    Get lastname terse initials for a Biber::Entry::Name object
+
+=cut
+
+sub get_lastname_it {
+  my $self = shift;
+  return $self->{lastname_it};
+}
+
+
 =head2 set_suffix
 
     Set suffix for a Biber::Entry::Name object
@@ -126,6 +185,29 @@ sub get_suffix {
   return $self->{suffix};
 }
 
+=head2 get_suffix_i
+
+    Get suffix initials for a Biber::Entry::Name object
+
+=cut
+
+sub get_suffix_i {
+  my $self = shift;
+  return $self->{suffix_i};
+}
+
+=head2 get_suffix_it
+
+    Get suffix terse initials for a Biber::Entry::Name object
+
+=cut
+
+sub get_suffix_it {
+  my $self = shift;
+  return $self->{suffix_it};
+}
+
+
 =head2 set_prefix
 
     Set prefix for a Biber::Entry::Name object
@@ -148,6 +230,29 @@ sub get_prefix {
   my $self = shift;
   return $self->{prefix};
 }
+
+=head2 get_prefix_i
+
+    Get prefix initials for a Biber::Entry::Name object
+
+=cut
+
+sub get_prefix_i {
+  my $self = shift;
+  return $self->{prefix_i};
+}
+
+=head2 get_prefix_it
+
+    Get prefix terse initials for a Biber::Entry::Name object
+
+=cut
+
+sub get_prefix_it {
+  my $self = shift;
+  return $self->{prefix_it};
+}
+
 
 =head2 set_namestring
 
@@ -209,36 +314,48 @@ sub name_to_bbl {
   if ($self->was_stripped('lastname')) {
     $ln = Biber::Utils::add_outer($ln);
   }
-  my $lni = Biber::Utils::getinitials($ln);
+  my $lni = $self->get_lastname_i;
 
   # firstname
-  my $fn = '';
-  my $fni = '';
+  my $fn;
+  my $fni;
   if ($fn = $self->get_firstname) {
     if ($self->was_stripped('firstname')) {
       $fn = Biber::Utils::add_outer($fn);
     }
-    $fni = Biber::Utils::getinitials($fn);
+    $fni = $self->get_firstname_i;
+  }
+  else {
+    $fn = '';
+    $fni = '';
   }
 
   # prefix
-  my $pre = '';
-  my $prei = '';
+  my $pre;
+  my $prei;
   if ($pre = $self->get_prefix) {
     if ($self->was_stripped('prefix')) {
       $pre = Biber::Utils::add_outer($pre);
     }
-    $prei = Biber::Utils::getinitials($pre);
+    $prei = $self->get_prefix_i;
+  }
+  else {
+    $pre = '';
+    $prei = '';
   }
 
   # suffix
-  my $suf = '';
-  my $sufi = '';
+  my $suf;
+  my $sufi;
   if ($suf = $self->get_suffix) {
-    if ($self->was_stripped('sufffix')) {
+    if ($self->was_stripped('suffix')) {
       $suf = Biber::Utils::add_outer($suf);
     }
-    $sufi = Biber::Utils::getinitials($suf);
+    $sufi = $self->get_suffix_i;
+  }
+  else {
+    $suf = '';
+    $sufi = '';
   }
 
   # Can't just replace all spaces in first names with "~" as this could
@@ -252,9 +369,9 @@ sub name_to_bbl {
   $fn =~ s/\s+(\p{Lu}\.|$RE{balanced}{-parens=>'{}'})/~$1/g;
   $pre =~ s/\s/~/g if $pre;       # van der -> van~der
   $ln =~ s/\s/~/g if $ln;         # Murder Smith -> Murder~Smith
-  if ( Biber::Config->getblxoption('terseinits') ) {
-    $lni = Biber::Utils::tersify($lni);
-    $fni = Biber::Utils::tersify($fni);
+  if (Biber::Config->getblxoption('terseinits')) {
+    $lni  = Biber::Utils::tersify($lni);
+    $fni  = Biber::Utils::tersify($fni);
     $prei = Biber::Utils::tersify($prei);
     $sufi = Biber::Utils::tersify($sufi);
   }

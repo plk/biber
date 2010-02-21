@@ -39,9 +39,9 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ bibfind parsename terseinitials makenameid stringify_hash
+our @EXPORT = qw{ bibfind parsename tersify terseinitials makenameid stringify_hash
   normalize_string normalize_string_underscore latexescape reduce_array
-  remove_outer add_outer getinitials tersify ucinit strip_nosort strip_nosortdiacritics
+  remove_outer add_outer getinitials ucinit strip_nosort strip_nosortdiacritics
   strip_nosortprefix is_def is_undef is_def_and_notnull is_def_and_null is_undef_or_null
   is_notnull is_name_field is_null};
 
@@ -132,7 +132,6 @@ sub parsename {
   my ($namestr, $opts) = @_;
   $logger->debug("   Parsing namestring '$namestr'");
   my $usepre = $opts->{useprefix};
-
   # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
   $namestr =~ s/\A\s*//xms; # leading whitespace
   $namestr =~ s/\s*\z//xms; # trailing whitespace
@@ -151,32 +150,48 @@ sub parsename {
   $logger->warn("Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
   $logger->warn("Couldn't determine First Name for name \"$namestr\"") unless $firstname;
 
-  # Construct $namestring
+  # Construct $namestring, initials and terseinitials
   my $namestring = '';
   my $ps;
   my $prefix_stripped;
+  my $prefix_i;
+  my $prefix_it;
   if ($prefix and $usepre) {
+    $prefix_i     = getinitials($prefix);
+    $prefix_it    = terseinitials($prefix_i);
     $prefix_stripped = remove_outer($prefix);
     $ps = $prefix ne $prefix_stripped ? 1 : 0;
     $namestring .= "$prefix_stripped ";
   }
   my $ls;
   my $lastname_stripped;
+  my $lastname_i;
+  my $lastname_it;
   if ($lastname) {
+    $lastname_i   = getinitials($lastname);
+    $lastname_it  = terseinitials($lastname_i);
     $lastname_stripped = remove_outer($lastname);
     $ls = $lastname ne $lastname_stripped ? 1 : 0;
     $namestring .= "$lastname_stripped, ";
   }
   my $ss;
   my $suffix_stripped;
+  my $suffix_i;
+  my $suffix_it;
   if ($suffix) {
+    $suffix_i     = getinitials($suffix);
+    $suffix_it     = terseinitials($suffix_i);
     $suffix_stripped = remove_outer($suffix);
     $ss = $suffix ne $suffix_stripped ? 1 : 0;
     $namestring .= "$suffix_stripped, ";
   }
   my $fs;
   my $firstname_stripped;
+  my $firstname_i;
+  my $firstname_it;
   if ($firstname) {
+    $firstname_i  = getinitials($firstname);
+    $firstname_it = terseinitials($firstname_i);
     $firstname_stripped = remove_outer($firstname);
     $fs = $firstname ne $firstname_stripped ? 1 : 0;
     $namestring .= "$firstname_stripped";
@@ -185,21 +200,27 @@ sub parsename {
   # Remove any trailing comma and space if, e.g. missing firstname
   $namestring =~ s/,\s+\z//xms;
 
-
   # Construct $nameinitstring
   my $nameinitstr = '';
-  $nameinitstr .= substr($prefix, 0, 1) . '_' if ( $usepre and $prefix );
+  $nameinitstr .= $prefix_it . '_' if ( $usepre and $prefix );
   $nameinitstr .= $lastname if $lastname;
-  $nameinitstr .= '_' . terseinitials($suffix) if $suffix;
-  $nameinitstr .= '_' . terseinitials($firstname) if $firstname;
+  $nameinitstr .= '_' . $suffix_it if $suffix;
+  $nameinitstr .= '_' . $firstname_it if $firstname;
   $nameinitstr =~ s/\s+/_/g;
-  $nameinitstr = remove_outer($nameinitstr);
 
   return Biber::Entry::Name->new(
     firstname       => $firstname      eq '' ? undef : $firstname_stripped,
+    firstname_i     => $firstname      eq '' ? undef : $firstname_i,
+    firstname_it    => $firstname      eq '' ? undef : $firstname_it,
     lastname        => $lastname       eq '' ? undef : $lastname_stripped,
+    lastname_i      => $lastname       eq '' ? undef : $lastname_i,
+    lastname_it     => $lastname       eq '' ? undef : $lastname_it,
     prefix          => $prefix         eq '' ? undef : $prefix_stripped,
+    prefix_i        => $prefix         eq '' ? undef : $prefix_i,
+    prefix_it       => $prefix         eq '' ? undef : $prefix_it,
     suffix          => $suffix         eq '' ? undef : $suffix_stripped,
+    suffix_i        => $suffix         eq '' ? undef : $suffix_i,
+    suffix_it       => $suffix         eq '' ? undef : $suffix_it,
     namestring      => $namestring,
     nameinitstring  => $nameinitstr,
     strip           => {'firstname' => $fs,
@@ -356,22 +377,44 @@ sub latexescape {
 
 =head2 terseinitials
 
-terseinitials($str) returns the contatenated initials of all the words in $str.
-    terseinitials('Louis Pierre de la Ramée') => 'LPdlR'
+terseinitials($str) returns the contatenated initials of the raw initials list
+passed in $str. It removes LaTeX formatting. This is used to create hashes.
+
+   terseinitials('L.~P.~D.) => 'LPD'
+   terseinitials('{\v S}~P.~D.) => '{\v S}PD'
+   terseinitials('J.-M.) => 'J-M'
 
 =cut
 
 sub terseinitials {
   my $str = shift;
   return '' unless $str; # Sanitise missing data
-  $str = strip_nosort($str); # strip nosort elements
   $str =~ s/\\[\p{L}]+\s*//g; # remove tex macros
   $str =~ s/^{(\p{L}).+}$/$1/g; # {Aaaa Bbbbb Ccccc} -> A
-  $str =~ s/{\s+(\S+)\s+}//g; # Aaaaa{ de }Bbbb -> AaaaaBbbbb
-  # get rid of Punctuation (except DashPunctuation), Symbol and Other characters
-  $str =~ s/[\p{Lm}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g;
-  $str =~ s/\B\p{L}//g;
-  $str =~ s/[\s\p{Pd}]+//g;
+  # get rid of Punctuation, Symbol and Other characters
+  $str =~ s/[\p{Lm}\p{Pd}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g;
+  $str =~ s/\s+//g;
+  $str =~ s/~//g;
+  $str =~ s/\.//g;
+  return $str;
+}
+
+=head2 tersify
+
+tersify($str) sanitises the initials string passed in $str to a format
+required by the "terseinits" option of biblatex
+
+   tersify('L.~P.~D.) => 'LPD'
+   tersify('{\v S}~P.~D.) => '{\v S}PD'
+   tersify('J.-M.) => 'J-M'
+
+=cut
+
+sub tersify {
+  my $str = shift;
+  return '' unless $str; # Sanitise missing data
+  $str =~ s/~//g;
+  $str =~ s/\.//g;
   return $str;
 }
 
@@ -419,9 +462,6 @@ sub add_outer {
   return '{' . $str . '}';
 }
 
-
-
-
 =head2 getinitials
 
     Returns the initials of a name, preserving LaTeX code.
@@ -460,6 +500,10 @@ sub getinitials {
     elsif ($atom =~ m/\A{([\p{L}\s]+)}\z/xms) {
       $rstr .= substr($1, 0, 1) . '.~';
     }
+    # {\OE}illet
+    elsif ($atom =~ m/\A({\\\p{L}+}).+\z/xms) {
+      $rstr .= $1 . '.~';
+    }
     # {\v S}omeone or {\v Someone}
     elsif ($atom =~ m/\A({\\\S+\s+\p{L}+}).+\z/xms) {
       $rstr .= $1 . '.~';
@@ -472,6 +516,10 @@ sub getinitials {
     elsif ($atom =~ m/\A(\\\S+{\p{L}}).+\z/xms) {
       $rstr .= $1 . '.~';
     }
+    # {\"O}zt{\"u}rk
+    elsif ($atom =~ m/\A({\\[^\p{L}]\p{L}}).+\z/xms) {
+      $rstr .= $1 . '.~';
+    }
     # Default
     else {
       $rstr .= substr($atom, 0, 1) . '.~';
@@ -481,6 +529,16 @@ sub getinitials {
   $rstr =~ s/~\z//xms;
   return $rstr;
 }
+
+=head2 get_atom
+
+     Pull an "atom" from a name list. An "atom" is the first chunk
+     of a name that will have a separate initial created for it.
+     This has to be a token parser with a "brace level 0" concept
+     It cannot be done with regexps due to BibTeX's parsing semantics
+     which we are emulating.
+
+=cut
 
 sub get_atom {
   my $str = shift;
@@ -523,21 +581,6 @@ sub get_atom {
   }
   $$str = '';
   return $atom;
-}
-
-=head2 tersify
-
-    Removes '.' and '~' from initials.
-
-    tersify('A.~B.~C.') -> 'ABC'
-
-=cut
-
-sub tersify {
-  my $str = shift;
-  $str =~ s/~//g;
-  $str =~ s/\.//g;
-  return $str;
 }
 
 =head2 ucinit

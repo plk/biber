@@ -34,16 +34,16 @@ sub _getnameinitials {
     foreach my $n (@{$names->names}) {
       if ( $n->get_prefix and
         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-        $initstr .= terseinitials( $n->get_prefix );
+        $initstr .= $n->get_prefix_it;
       }
-      $initstr .= terseinitials( $n->get_lastname );
+      $initstr .= $n->get_lastname_it;
 
       if ( $n->get_suffix ) {
-        $initstr .= terseinitials( $n->get_suffix )
+        $initstr .= $n->get_suffix_it;
       }
 
       if ( $n->get_firstname ) {
-        $initstr .= terseinitials( $n->get_firstname )
+        $initstr .= $n->get_firstname_it;
       }
     }
   }
@@ -52,16 +52,16 @@ sub _getnameinitials {
     foreach my $i ( 1 .. Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey ) ) {
       if ( $names->nth_element($i)->get_prefix and
         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey) ) {
-        $initstr .= terseinitials( $names->nth_element($i)->get_prefix );
+        $initstr .= $names->nth_element($i)->get_prefix_it;
       }
 
       if ( $names->nth_element($i)->get_suffix ) {
-        $initstr .= terseinitials(  $names->nth_element($i)->get_suffix );
+        $initstr .= $names->nth_element($i)->get_suffix_it;
       }
 
-      $initstr .= terseinitials($names->nth_element($i)->get_lastname);
+      $initstr .= $names->nth_element($i)->get_lastname_it;
       if ( $names->nth_element($i)->get_firstname ) {
-        $initstr .= terseinitials($names->nth_element($i)->get_firstname);
+        $initstr .= $names->nth_element($i)->get_firstname_it;
       }
       $initstr .= "+";
     }
@@ -77,16 +77,16 @@ sub _getallnameinitials {
   foreach my $n (@{$names->names}) {
     if ( $n->get_prefix and
       Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-      $initstr .= terseinitials( $n->get_prefix )
+      $initstr .= $n->get_prefix_it;
     }
-    $initstr .= terseinitials( $n->get_lastname );
+    $initstr .= $n->get_lastname_it;
 
     if ( $n->get_suffix ) {
-      $initstr .= terseinitials( $n->get_suffix )
+      $initstr .= $n->get_suffix_it;
     }
 
     if ( $n->get_firstname ) {
-      $initstr .= terseinitials( $n->get_firstname );
+      $initstr .= $n->get_firstname_it;
     }
   }
   return $initstr;
@@ -643,7 +643,7 @@ sub _namestring {
   foreach my $n ( @{$truncnames->names} ) {
     $str .= $n->get_prefix . '2'
       if ( $n->get_prefix and
-      Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) );
+           Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) );
     $str .= strip_nosort($n->get_lastname) . '2';
     $str .= strip_nosort($n->get_firstname) . '2' if $n->get_firstname;
     $str .= $n->get_suffix if $n->get_suffix;
@@ -682,6 +682,79 @@ sub _liststring {
   $str .= '1zzzz' if $truncated;
   return $str;
 }
+
+=head2 process_entry_options
+
+    Set per-entry options
+
+    "dataonly" is a special case and expands to "skiplab,skiplos,skipbib"
+    but only "skiplab" and "skiplos" are dealt with in Biber, "skipbib" is
+    dealt with in biblatex.
+
+    The skip* local options are dealt with by not generating at all:
+
+    * labelyear
+    * extrayear
+    * labelalpha
+    * extraalpha
+
+=cut
+
+sub process_entry_options {
+  my $self = shift;
+  my $be = shift;
+  my $citekey = lc($be->get_field('origkey'));
+  if ( my $options = $be->get_field('options') ) {
+    my @entryoptions = split /\s*,\s*/, $options;
+    foreach (@entryoptions) {
+      m/^([^=]+)=?(.+)?$/;
+      if ( $2 and $2 eq 'false' ) {
+        if (lc($1) eq 'dataonly') {
+          Biber::Config->setblxoption('skiplab', 0, 'PER_ENTRY', $citekey);
+          Biber::Config->setblxoption('skiplos', 0, 'PER_ENTRY', $citekey);
+        }
+        else {
+          Biber::Config->setblxoption($1, 0, 'PER_ENTRY', $citekey);
+        }
+      }
+      elsif ( ($2 and $2 eq 'true') or not $2) {
+        if (lc($1) eq 'dataonly') {
+          Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $citekey);
+          Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $citekey);
+        }
+        else {
+          Biber::Config->setblxoption($1, 1, 'PER_ENTRY', $citekey);
+        }
+      }
+      # labelname and labelyear are special and need to be array refs
+      # They would not be specified as a list in an individual entry
+      # since this would make no sense - in an individual entry,
+      # you would want to force them to a specific field
+      elsif (($1 eq 'labelyear') or ($1 eq 'labelname')) {
+        Biber::Config->setblxoption($1, [ $2 ], 'PER_ENTRY', $citekey);
+      }
+      elsif ($2) {
+        if (lc($1) eq 'dataonly') {
+          Biber::Config->setblxoption('skiplab', $2, 'PER_ENTRY', $citekey);
+          Biber::Config->setblxoption('skiplos', $2, 'PER_ENTRY', $citekey);
+        }
+        else {
+          Biber::Config->setblxoption($1, $2, 'PER_ENTRY', $citekey);
+        }
+      }
+      else {
+        if (lc($1) eq 'dataonly') {
+          Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $citekey);
+          Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $citekey);
+        }
+        else {
+          Biber::Config->setblxoption($1, 1, 'PER_ENTRY', $citekey);
+        }
+      }
+    }
+  }
+}
+
 
 #=====================================================
 # OUTPUT SUBS

@@ -16,11 +16,17 @@ use Log::Log4perl qw(:no_extra_logdie_message);
 
 my $logger = Log::Log4perl::get_logger('main');
 
+=head2 TBSIG
+
+     Signal handler to catch fatal Text::BibTex SEGFAULTS. It has bugs
+     and we want to say at least something when it coredumps
+
+=cut
+
 sub TBSIG {
   my $sig = shift;
     $logger->logcroak("Caught signal: $sig\nLikely your .bib has a bad entry: $!");
 }
-
 
 
 sub _text_bibtex_parse {
@@ -121,6 +127,12 @@ sub _text_bibtex_parse {
 
         $bibentry->set_field($af, $value);
 
+        # We have to process local options as early as possible in order
+        # to make them available for things that need them like parsename()
+        if (lc($af) eq 'options') {
+          $self->process_entry_options($bibentry);
+        }
+
         if ($entry->type eq 'set' and $f eq 'entryset') {
 
           my @entrysetkeys = split /\s*,\s*/, $value;
@@ -179,7 +191,6 @@ sub _text_bibtex_parse {
 
       $bibentry->set_field('datatype', 'bibtex');
       $bibentries->add_entry($lc_key, $bibentry);
-
     }
   }
 

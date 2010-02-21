@@ -56,7 +56,6 @@ sub _init {
   $CONFIG->{state}{seennameyear} = {};
   $CONFIG->{state}{seenlabelyear} = {};
   $CONFIG->{state}{seenkeys} = {};
-  delete $CONFIG->{options}{biblatex}{PER_ENTRY};
   return;
 }
 

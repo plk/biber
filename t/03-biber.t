@@ -119,7 +119,7 @@ my $setaksin = q|\entry{set:aksin}{article}{}
     {{Özkal}{Ö}{Erhan}{E}{}{}{}{}}%
   }
   \strng{namehash}{AÖ+1}
-  \strng{fullhash}{AÖTHALC̨BNCBOÖE1}
+  \strng{fullhash}{AÖTHALCBNCBOÖE1}
   \field{sortinit}{A}
   \count{uniquename}{0}
   \true{singletitle}

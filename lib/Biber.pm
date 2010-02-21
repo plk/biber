@@ -747,9 +747,6 @@ sub postprocess {
     # Postprocess dates
     $self->postprocess_dates($citekey);
 
-    # set local options to override global options for individual entries
-    $self->postprocess_set_local_opts($citekey);
-
     # post process "set" entries:
     $self->postprocess_sets($citekey);
 
@@ -879,79 +876,6 @@ sub postprocess_dates {
   }
 }
 
-=head2 postprocess_set_local_opts
-
-    Set per-entry options
-
-    "dataonly" is a special case and expands to "skiplab,skiplos,skipbib"
-    but only "skiplab" and "skiplos" are dealt with in Biber, "skipbib" is
-    dealt with in biblatex.
-
-    The skip* local options are dealt with by not generating at all:
-
-    * labelyear
-    * extrayear
-    * labelalpha
-    * extraalpha
-
-=cut
-
-sub postprocess_set_local_opts {
-  my $self = shift;
-  my $citekey = shift;
-  my $bibentries = $self->bib;
-  my $be = $bibentries->entry($citekey);
-  if ( $be->get_field('options') ) {
-    my @entryoptions = split /\s*,\s*/, $be->get_field('options');
-    foreach (@entryoptions) {
-      m/^([^=]+)=?(.+)?$/;
-      if ( $2 and $2 eq 'false' ) {
-        if (lc($1) eq 'dataonly') {
-          Biber::Config->setblxoption('skiplab', 0, 'PER_ENTRY', $citekey);
-          Biber::Config->setblxoption('skiplos', 0, 'PER_ENTRY', $citekey);
-        }
-        else {
-          Biber::Config->setblxoption($1, 0, 'PER_ENTRY', $citekey);
-        }
-      }
-      elsif ( $2 and $2 eq 'true' ) {
-        if (lc($1) eq 'dataonly') {
-          Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $citekey);
-          Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $citekey);
-        }
-        else {
-          Biber::Config->setblxoption($1, 1, 'PER_ENTRY', $citekey);
-        }
-      }
-
-      # labelname and labelyear are special and need to be array refs
-      # They would not be specified as a list in an individual entry
-      # since this would make no sense - in an individual entry,
-      # you would want to force them to a specific field
-      elsif (($1 eq 'labelyear') or ($1 eq 'labelname')) {
-        Biber::Config->setblxoption($1, [ $2 ], 'PER_ENTRY', $citekey);
-      }
-      elsif ($2) {
-        if (lc($1) eq 'dataonly') {
-          Biber::Config->setblxoption('skiplab', $2, 'PER_ENTRY', $citekey);
-          Biber::Config->setblxoption('skiplos', $2, 'PER_ENTRY', $citekey);
-        }
-        else {
-          Biber::Config->setblxoption($1, $2, 'PER_ENTRY', $citekey);
-        }
-      }
-      else {
-        if (lc($1) eq 'dataonly') {
-          Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $citekey);
-          Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $citekey);
-        }
-        else {
-          Biber::Config->setblxoption($1, 1, 'PER_ENTRY', $citekey);
-        }
-      }
-    }
-  }
-}
 
 =head2 postprocess_sets
 
