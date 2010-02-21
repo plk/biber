@@ -41,22 +41,25 @@ sub TBSIG {
     parsename('John Doe')
     returns an object which internally looks a bit like this:
 
-    { firstname => 'John',
-      lastname => 'Doe',
-      prefix => undef,
-      suffix => undef,
-      namestring => 'Doe, John',
-      nameinitstring => 'Doe_J' }
-
-    parsename('von Berlichingen zu Hornberg, Johann G{\"o}tz')
-    returns:
-
-    { firstname => 'Johann G{\"o}tz',
-      lastname => 'Berlichingen zu Hornberg',
-      prefix => 'von',
-      suffix => undef,
-      namestring => 'Berlichingen zu Hornberg, Johann G{\"o}tz',
-      nameinitstring => 'Berlichingen_zu_Hornberg_JG' }
+    { firstname     => 'John',
+      firstname_i   => 'J.',
+      firstname_it  => 'J',
+      lastname      => 'Doe',
+      lastname_i    => 'D.',
+      lastname_it   => 'D',
+      prefix        => undef,
+      prefix_i      => undef,
+      prefix_it     => undef,
+      suffix        => undef,
+      suffix_i      => undef,
+      suffix_it     => undef,
+      namestring    => 'Doe, John',
+      nameinitstring => 'Doe_J',
+      strip          => {'firstname' => 0,
+                         'lastname'  => 0,
+                         'prefix'    => 0,
+                         'suffix'    => 0}
+      }
 
 =cut
 
@@ -84,6 +87,7 @@ sub parsename {
 
   # Construct $namestring, initials and terseinitials
   my $namestring = '';
+  # prefix
   my $ps;
   my $prefix_stripped;
   my $prefix_i;
@@ -95,6 +99,7 @@ sub parsename {
     $ps = $prefix ne $prefix_stripped ? 1 : 0;
     $namestring .= "$prefix_stripped ";
   }
+  # lastname
   my $ls;
   my $lastname_stripped;
   my $lastname_i;
@@ -106,6 +111,7 @@ sub parsename {
     $ls = $lastname ne $lastname_stripped ? 1 : 0;
     $namestring .= "$lastname_stripped, ";
   }
+  # suffix
   my $ss;
   my $suffix_stripped;
   my $suffix_i;
@@ -117,6 +123,7 @@ sub parsename {
     $ss = $suffix ne $suffix_stripped ? 1 : 0;
     $namestring .= "$suffix_stripped, ";
   }
+  # firstname
   my $fs;
   my $firstname_stripped;
   my $firstname_i;
@@ -140,6 +147,9 @@ sub parsename {
   $nameinitstr .= '_' . $firstname_it if $firstname;
   $nameinitstr =~ s/\s+/_/g;
 
+  # The "strip" entry tells us which of the name parts had outer braces
+  # stripped during processing so we can add them back when printing the
+  # .bbl so as to maintain maximum BibTeX compatibility
   return Biber::Entry::Name->new(
     firstname       => $firstname      eq '' ? undef : $firstname_stripped,
     firstname_i     => $firstname      eq '' ? undef : $firstname_i,

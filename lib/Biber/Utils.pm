@@ -364,8 +364,8 @@ sub getinitials {
     elsif ($atom =~ m/\A\p{L}+\z/xms) {
       $rstr .= substr($atom, 0, 1) . '.~';
     }
-    # {John Henry}
-    elsif ($atom =~ m/\A{([\p{L}\s]+)}\z/xms) {
+    # {John Henry} or {American Automobile Association, Canada}
+    elsif ($atom =~ m/\A{([^\\\{\}]+)}\z/xms) {
       $rstr .= substr($1, 0, 1) . '.~';
     }
     # {\OE}illet
@@ -427,8 +427,8 @@ sub get_atom {
     elsif ($a eq '{' and $prea ne "\\") {
       $bl++;
     }
-    # Hypens are special atoms
-    elsif ($a eq '-') {
+    # Hyphens are special atoms at brace level zero
+    elsif ($a eq '-' and $bl == 0) {
       # If the hyphen is at the beginning of the string, return it as an atom
       # Since we left it there to be so consumed
       if ($i == 0) {

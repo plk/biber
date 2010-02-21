@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 22;
+use Test::More tests => 24;
 
 use Biber;
 use Log::Log4perl qw(:easy);
@@ -262,6 +262,29 @@ my $l22 = q|\entry{L22}{book}{}
 
 |;
 
+my $l23 = q|\entry{L23}{book}{}
+  \name{author}{1}{%
+    {{{American Psychological Association, Task Force on the Sexualization of Girls}}{A.}{}{}{}{}{}{}}%
+  }
+  \strng{namehash}{A1}
+  \strng{fullhash}{A1}
+  \field{sortinit}{A}
+\endentry
+
+|;
+
+my $l24 = q|\entry{L24}{book}{}
+  \name{author}{1}{%
+    {{{Sci-Art~Publishers}}{S.}{}{}{}{}{}{}}%
+  }
+  \strng{namehash}{S1}
+  \strng{fullhash}{S1}
+  \field{sortinit}{S}
+\endentry
+
+|;
+
+
 is( $biber->_print_biblatex_entry('l1'), $l1, 'First Last') ;
 is( $biber->_print_biblatex_entry('l2'), $l2, 'First Initial. Last') ;
 is( $biber->_print_biblatex_entry('l3'), $l3, 'Initial. Initial. Last') ;
@@ -284,5 +307,8 @@ is( $biber->_print_biblatex_entry('l19'), $l19, 'Firstname with hyphen');
 is( $biber->_print_biblatex_entry('l20'), $l20, 'Protected dual first name');
 is( $biber->_print_biblatex_entry('l21'), $l21, 'LaTeX encoded unicode');
 is( $biber->_print_biblatex_entry('l22'), $l22, 'Unicode');
+is( $biber->_print_biblatex_entry('l23'), $l23, 'Single string name');
+is( $biber->_print_biblatex_entry('l24'), $l24, 'Hyphen at brace level <> 0');
+
 
 unlink "$bibfile.utf8";
