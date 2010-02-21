@@ -35,7 +35,7 @@ sub TBSIG {
 
 =head2 parsename
 
-    Given a name string, this function returns a Biber::Entry:Name object
+    Given a name string, this function returns a Biber::Entry::Name object
     with all parts of the name resolved according to the BibTeX conventions.
 
     parsename('John Doe')
