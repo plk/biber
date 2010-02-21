@@ -13,7 +13,11 @@ use Regexp::Common qw{ balanced };
 use Biber::BibTeX::Parser;
 use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
+use base 'Exporter';
+
 my $logger = Log::Log4perl::get_logger('main');
+
+our @EXPORT = qw{ parsename };
 
 =head2 parsename
 
