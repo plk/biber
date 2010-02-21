@@ -5,6 +5,7 @@ no warnings 'utf8' ;
 
 use Test::More tests => 28;
 use Biber;
+use Biber::BibTeX;
 use Biber::Entry::Name;
 use Biber::Entry::Names;
 use Biber::Utils;

@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use Carp;
 use Text::BibTeX;
+use Text::BibTeX::Name;
 use Biber::Constants;
 use Biber::Entries;
 use Biber::Entry;
@@ -13,8 +14,11 @@ use Biber::Utils;
 use Encode;
 use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
+use base 'Exporter';
 
 my $logger = Log::Log4perl::get_logger('main');
+
+our @EXPORT = qw{ parsename };
 
 =head2 TBSIG
 
@@ -26,6 +30,136 @@ my $logger = Log::Log4perl::get_logger('main');
 sub TBSIG {
   my $sig = shift;
     $logger->logcroak("Caught signal: $sig\nLikely your .bib has a bad entry: $!");
+}
+
+
+=head2 parsename
+
+    Given a name string, this function returns a Biber::Entry:Name object
+    with all parts of the name resolved according to the BibTeX conventions.
+
+    parsename('John Doe')
+    returns an object which internally looks a bit like this:
+
+    { firstname => 'John',
+      lastname => 'Doe',
+      prefix => undef,
+      suffix => undef,
+      namestring => 'Doe, John',
+      nameinitstring => 'Doe_J' }
+
+    parsename('von Berlichingen zu Hornberg, Johann G{\"o}tz')
+    returns:
+
+    { firstname => 'Johann G{\"o}tz',
+      lastname => 'Berlichingen zu Hornberg',
+      prefix => 'von',
+      suffix => undef,
+      namestring => 'Berlichingen zu Hornberg, Johann G{\"o}tz',
+      nameinitstring => 'Berlichingen_zu_Hornberg_JG' }
+
+=cut
+
+sub parsename {
+  my ($namestr, $opts) = @_;
+  $logger->debug("   Parsing namestring '$namestr'");
+  my $usepre = $opts->{useprefix};
+  # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
+  $namestr =~ s/\A\s*//xms; # leading whitespace
+  $namestr =~ s/\s*\z//xms; # trailing whitespace
+  $namestr =~ s/\s+/ /g;    # Collapse internal whitespace
+
+  open OLDERR, '>&', \*STDERR;
+  open STDERR, '>', '/dev/null';
+  my $name = new Text::BibTeX::Name($namestr);
+  open STDERR, '>&', \*OLDERR;
+
+  my $firstname   = join(' ', map {decode_utf8($_)} $name->part('first'));
+  my $lastname    = join(' ', map {decode_utf8($_)} $name->part('last'));
+  my $prefix      = join(' ', map {decode_utf8($_)} $name->part('von'));
+  my $suffix      = join(' ', map {decode_utf8($_)} $name->part('jr'));
+
+  $logger->warn("Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
+  $logger->warn("Couldn't determine First Name for name \"$namestr\"") unless $firstname;
+
+  # Construct $namestring, initials and terseinitials
+  my $namestring = '';
+  my $ps;
+  my $prefix_stripped;
+  my $prefix_i;
+  my $prefix_it;
+  if ($prefix and $usepre) {
+    $prefix_i     = getinitials($prefix);
+    $prefix_it    = terseinitials($prefix_i);
+    $prefix_stripped = remove_outer($prefix);
+    $ps = $prefix ne $prefix_stripped ? 1 : 0;
+    $namestring .= "$prefix_stripped ";
+  }
+  my $ls;
+  my $lastname_stripped;
+  my $lastname_i;
+  my $lastname_it;
+  if ($lastname) {
+    $lastname_i   = getinitials($lastname);
+    $lastname_it  = terseinitials($lastname_i);
+    $lastname_stripped = remove_outer($lastname);
+    $ls = $lastname ne $lastname_stripped ? 1 : 0;
+    $namestring .= "$lastname_stripped, ";
+  }
+  my $ss;
+  my $suffix_stripped;
+  my $suffix_i;
+  my $suffix_it;
+  if ($suffix) {
+    $suffix_i     = getinitials($suffix);
+    $suffix_it     = terseinitials($suffix_i);
+    $suffix_stripped = remove_outer($suffix);
+    $ss = $suffix ne $suffix_stripped ? 1 : 0;
+    $namestring .= "$suffix_stripped, ";
+  }
+  my $fs;
+  my $firstname_stripped;
+  my $firstname_i;
+  my $firstname_it;
+  if ($firstname) {
+    $firstname_i  = getinitials($firstname);
+    $firstname_it = terseinitials($firstname_i);
+    $firstname_stripped = remove_outer($firstname);
+    $fs = $firstname ne $firstname_stripped ? 1 : 0;
+    $namestring .= "$firstname_stripped";
+  }
+
+  # Remove any trailing comma and space if, e.g. missing firstname
+  $namestring =~ s/,\s+\z//xms;
+
+  # Construct $nameinitstring
+  my $nameinitstr = '';
+  $nameinitstr .= $prefix_it . '_' if ( $usepre and $prefix );
+  $nameinitstr .= $lastname if $lastname;
+  $nameinitstr .= '_' . $suffix_it if $suffix;
+  $nameinitstr .= '_' . $firstname_it if $firstname;
+  $nameinitstr =~ s/\s+/_/g;
+
+  return Biber::Entry::Name->new(
+    firstname       => $firstname      eq '' ? undef : $firstname_stripped,
+    firstname_i     => $firstname      eq '' ? undef : $firstname_i,
+    firstname_it    => $firstname      eq '' ? undef : $firstname_it,
+    lastname        => $lastname       eq '' ? undef : $lastname_stripped,
+    lastname_i      => $lastname       eq '' ? undef : $lastname_i,
+    lastname_it     => $lastname       eq '' ? undef : $lastname_it,
+    prefix          => $prefix         eq '' ? undef : $prefix_stripped,
+    prefix_i        => $prefix         eq '' ? undef : $prefix_i,
+    prefix_it       => $prefix         eq '' ? undef : $prefix_it,
+    suffix          => $suffix         eq '' ? undef : $suffix_stripped,
+    suffix_i        => $suffix         eq '' ? undef : $suffix_i,
+    suffix_it       => $suffix         eq '' ? undef : $suffix_it,
+    namestring      => $namestring,
+    nameinitstring  => $nameinitstr,
+    strip           => {'firstname' => $fs,
+                        'lastname'  => $ls,
+                        'prefix'    => $ps,
+                        'suffix'    => $ss}
+    );
 }
 
 

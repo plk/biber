@@ -15,6 +15,299 @@ use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
 my $logger = Log::Log4perl::get_logger('main');
 
+=head2 parsename
+
+    Given a name string, this function returns a Biber::Entry:Name object
+    with all parts of the name resolved according to the BibTeX conventions.
+
+    parsename('John Doe')
+    returns an object which internally looks a bit like this:
+
+    { firstname => 'John',
+      lastname => 'Doe',
+      prefix => undef,
+      suffix => undef,
+      namestring => 'Doe, John',
+      nameinitstring => 'Doe_J' }
+
+    parsename('von Berlichingen zu Hornberg, Johann G{\"o}tz')
+    returns:
+
+    { firstname => 'Johann G{\"o}tz',
+      lastname => 'Berlichingen zu Hornberg',
+      prefix => 'von',
+      suffix => undef,
+      namestring => 'Berlichingen zu Hornberg, Johann Gotz',
+      nameinitstring => 'Berlichingen_zu_Hornberg_JG' }
+
+=cut
+
+sub parsename {
+  my ($namestr, $opts) = @_;
+  $logger->debug("   Parsing namestring '$namestr'");
+  # Change small spaces to something else in the Unicode private zone
+  # temporarily to make parsing easier. We rely on looking for commas
+  # to parse names and latex small spaces confuse things a lot
+  $namestr =~ s/\\,\s*|{\\,\s*}/{\x{e35a}}/g;
+  my $usepre = $opts->{useprefix};
+
+  my $lastname;
+  my $firstname;
+  my $prefix;
+  my $suffix;
+  my $nameinitstr;
+
+  my $PREFIX_RE = qr/
+                {?
+                \p{Ll} # prefix starts with lowercase
+                [^\p{Lu},]+ # e.g. van der
+                }?
+                \s+
+/x ;
+  my $NAME_RE = qr/
+                [^,]+
+               |
+                $RE{balanced}{-parens=>'{}'}
+/x;
+  my $SUFFIX_RE = $NAME_RE;
+  my $NAME_SEQ_RE = qr/ (?:(?:\p{Lu}\S*|{\p{Lu}\S*})[\s~]*)+ /x ;
+
+  if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}$/ )
+  {
+    $logger->debug("   Caught namestring of type '{Some protected name string}'");
+    $namestr = remove_outer($namestr);
+    $lastname = $namestr;
+  }
+  elsif ( $namestr =~ /[^\\],.+[^\\],/ )    # pre? Lastname, suffix, Firstname
+  {
+    $logger->debug("   Caught namestring of type 'prefix? Lastname, suffix, Firstname'");
+    ( $prefix, $lastname, $suffix, $firstname ) = $namestr =~
+      m/\A( # prefix?
+                $PREFIX_RE
+               )?
+               ( # last name
+                $NAME_RE
+               )
+               ,
+               \s*
+               ( # suffix
+                $SUFFIX_RE
+               )
+               ,
+               \s*
+               ( # first name
+                $NAME_RE
+               )
+\z/xms;
+
+    $logger->warn("Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
+    $logger->warn("Couldn't determine First Name for name \"$namestr\"") unless $firstname;
+    if ($lastname) {$lastname =~ s/^{(.+)}$/$1/g;}
+    if ($firstname) {$firstname =~ s/^{(.+)}$/$1/g;}
+    $prefix =~ s/\s+$// if $prefix;
+    $prefix =~ s/^{(.+)}$/$1/ if $prefix;
+    $suffix =~ s/\s+$//;
+    $suffix =~ s/^{(.+)}$/$1/;
+    $namestr = "";
+    $namestr .= "$prefix " if ($prefix && $usepre);
+    $namestr .= "$lastname, $suffix, $firstname";
+  }
+  elsif ( $namestr =~ /[^\\],/ )   # <pre> Lastname, Firstname
+  {
+    $logger->debug("   Caught namestring of type 'prefix? Lastname, Firstname'");
+
+    ( $prefix, $lastname, $firstname ) = $namestr =~
+      m/^( # prefix?
+                $PREFIX_RE
+               )?
+               ( # last name
+                $NAME_RE
+               )
+               ,
+               \s*
+               ( # first name
+                $NAME_RE
+               )
+$/x;
+
+    $logger->warn("Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
+    $logger->warn("Couldn't determine First Name for name \"$namestr\"") unless $firstname;
+    if ($lastname) {$lastname =~ s/^{(.+)}$/$1/g;}
+    if ($firstname) {$firstname =~ s/^{(.+)}$/$1/g;}
+    $prefix =~ s/\s+$// if $prefix;
+    $prefix =~ s/^{(.+)}$/$1/ if $prefix;
+    $namestr = "";
+    $namestr .= "$prefix " if ($prefix && $usepre);
+    $namestr .= "$lastname, $firstname";
+  }
+  elsif ( $namestr =~ /\s/ ) # Firstname pre? Lastname
+  {
+    if ( $namestr =~ /^$RE{balanced}{-parens => '{}'}.*\s+$RE{balanced}{-parens => '{}'}$/ )
+    {
+      $logger->debug("   Caught namestring of type '{Firstname} prefix? {Lastname}'");
+      ( $firstname, $prefix, $lastname ) = $namestr =~
+        m/^( # first name
+                    $RE{balanced}{-parens=>'{}'}
+                )
+                    \s+
+                ( # prefix?
+                    $PREFIX_RE
+                )?
+                ( # last name
+                    $RE{balanced}{-parens=>'{}'}
+                )
+$/x;
+    }
+    elsif ( $namestr =~ /^.+\s+$RE{balanced}{-parens => '{}'}$/ )
+    {
+      $logger->debug("   Caught namestring of type 'Firstname prefix? {Lastname}'");
+      ( $firstname, $prefix, $lastname ) = $namestr =~
+        m/^( # first name
+                    $NAME_SEQ_RE
+                )
+                    \s+
+                ( # prefix?
+                    $PREFIX_RE
+                )?
+                ( # last name
+                    $RE{balanced}{-parens=>'{}'}
+                )
+$/x;
+    }
+    elsif ( $namestr =~ /^$RE{balanced}{-parens => '{}'}.+$/ )
+    {
+      $logger->debug("   Caught namestring of type '{Firstname} prefix? Lastname'");
+      ( $firstname, $prefix, $lastname ) = $namestr =~
+        m/^( # first name
+                    $RE{balanced}{-parens=>'{}'}
+                )
+                    \s+
+                ( # prefix?
+                    $PREFIX_RE
+                )?
+                ( # last name
+                    .+
+                )
+$/x;
+    }
+   else {
+      $logger->debug("   Caught namestring of type 'Firstname prefix? Lastname'");
+      ( $firstname, $prefix, $lastname ) = $namestr =~
+        m/^( # first name
+                    $NAME_SEQ_RE
+                )
+                 \s+
+                ( # prefix?
+                    $PREFIX_RE
+                )?
+                ( # last name
+                    $NAME_SEQ_RE
+                )
+$/x;
+    }
+
+    $logger->warn("Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
+    $logger->warn("Couldn't determine First Name for name \"$namestr\"") unless $firstname;
+    if ($lastname) {$lastname =~ s/^{(.+)}$/$1/;}
+    if ($firstname) {$firstname =~ s/^{(.+)}$/$1/;}
+    $firstname =~ s/\s+$// if $firstname;
+
+    $prefix =~ s/\s+$// if $prefix;
+    $prefix =~ s/^{(.+)}$/$1/ if $prefix;
+    $namestr = "";
+    $namestr = "$prefix " if $prefix;
+    $namestr .= $lastname if $lastname;
+    $namestr .= ", " . $firstname if $firstname;
+  }
+  else
+  {    # Name alone
+    $logger->debug("   Caught namestring of type 'Isolated_name_string'");
+    $lastname = $namestr;
+  }
+
+  # Now put the LaTeX small spaces back again since we're finished parsing
+  $namestr =~ s/{\x{e35a}}/{\\,}/g if $namestr;
+  $firstname =~ s/{\x{e35a}}/{\\,}/g if $firstname;
+  $lastname =~ s/{\x{e35a}}/{\\,}/g if $lastname;
+  $prefix =~ s/{\x{e35a}}/{\\,}/g if $prefix;
+  $suffix =~ s/{\x{e35a}}/{\\,}/g if $suffix;
+
+  # Construct $namestring, initials and terseinitials
+  my $ps;
+  my $prefix_stripped;
+  my $prefix_i;
+  my $prefix_it;
+  if ($prefix and $usepre) {
+    $prefix_i     = getinitials($prefix);
+    $prefix_it    = terseinitials($prefix_i);
+    $prefix_stripped = remove_outer($prefix);
+    $ps = $prefix ne $prefix_stripped ? 1 : 0;
+  }
+  my $ls;
+  my $lastname_stripped;
+  my $lastname_i;
+  my $lastname_it;
+  if ($lastname) {
+    $lastname_i   = getinitials($lastname);
+    $lastname_it  = terseinitials($lastname_i);
+    $lastname_stripped = remove_outer($lastname);
+    $ls = $lastname ne $lastname_stripped ? 1 : 0;
+  }
+  my $ss;
+  my $suffix_stripped;
+  my $suffix_i;
+  my $suffix_it;
+  if ($suffix) {
+    $suffix_i     = getinitials($suffix);
+    $suffix_it     = terseinitials($suffix_i);
+    $suffix_stripped = remove_outer($suffix);
+    $ss = $suffix ne $suffix_stripped ? 1 : 0;
+  }
+  my $fs;
+  my $firstname_stripped;
+  my $firstname_i;
+  my $firstname_it;
+  if ($firstname) {
+    $firstname_i  = getinitials($firstname);
+    $firstname_it = terseinitials($firstname_i);
+    $firstname_stripped = remove_outer($firstname);
+    $fs = $firstname ne $firstname_stripped ? 1 : 0;
+  }
+
+
+
+  $nameinitstr = "";
+  $nameinitstr .= substr( $prefix, 0, 1 ) . " " if ( $usepre and $prefix );
+  $nameinitstr .= $lastname if $lastname;
+  $nameinitstr .= " " . terseinitials($suffix)
+    if $suffix;
+  $nameinitstr .= " " . terseinitials($firstname)
+    if $firstname;
+  $nameinitstr =~ s/\s+/_/g;
+
+  return Biber::Entry::Name->new(
+    firstname => $firstname,
+    firstname_i => $firstname_i,
+    firstname_it => $firstname_it,
+    lastname  => $lastname,
+    lastname_i => $lastname_i,
+    lastname_it => $lastname_it,
+    namestring => $namestr,
+    nameinitstring => $nameinitstr,
+    prefix => $prefix,
+    prefix_i => $prefix_i,
+    prefix_it => $prefix_it,
+    suffix => $suffix,
+    suffix_i => $suffix_i,
+    suffix_it => $suffix_it,
+    strip           => {'firstname' => $fs,
+                        'lastname'  => $ls,
+                        'prefix'    => $ps,
+                        'suffix'    => $ss}
+
+    );
+}
+
 sub _bibtex_prd_parse {
 
   my ($self, $filename) = @_;
