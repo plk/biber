@@ -82,17 +82,17 @@ sub parsename {
   # Formats so we can get BibTeX compatible nbsp inserted
   # We can't use formats to get initials as Text::BibTeX::NameFormat
   # has a problem dealing with braced names when extracting initials
-  my $ln_f   = new Text::BibTeX::NameFormat('l', 0);
-  my $fn_f  = new Text::BibTeX::NameFormat('f', 0);
-  my $p_f  = new Text::BibTeX::NameFormat('v', 0);
-  my $s_f  = new Text::BibTeX::NameFormat('j', 0);
-  $ln_f->set_options(BTN_LAST, 0, BTJ_MAYTIE, BTJ_NOTHING);
-  $fn_f->set_options(BTN_FIRST, 0, BTJ_MAYTIE, BTJ_NOTHING);
-  $p_f->set_options(BTN_VON, 0, BTJ_MAYTIE, BTJ_NOTHING);
-  $s_f->set_options(BTN_JR, 0, BTJ_MAYTIE, BTJ_NOTHING);
+  my $l_f = new Text::BibTeX::NameFormat('l', 0);
+  my $f_f = new Text::BibTeX::NameFormat('f', 0);
+  my $p_f = new Text::BibTeX::NameFormat('v', 0);
+  my $s_f = new Text::BibTeX::NameFormat('j', 0);
+  $l_f->set_options(BTN_LAST,  0, BTJ_MAYTIE, BTJ_NOTHING);
+  $f_f->set_options(BTN_FIRST, 0, BTJ_MAYTIE, BTJ_NOTHING);
+  $p_f->set_options(BTN_VON,   0, BTJ_MAYTIE, BTJ_NOTHING);
+  $s_f->set_options(BTN_JR,    0, BTJ_MAYTIE, BTJ_NOTHING);
 
-  my $lastname  = decode_utf8($name->format($ln_f));
-  my $firstname = decode_utf8($name->format($fn_f));
+  my $lastname  = decode_utf8($name->format($l_f));
+  my $firstname = decode_utf8($name->format($f_f));
   my $prefix    = decode_utf8($name->format($p_f));
   my $suffix    = decode_utf8($name->format($s_f));
 
