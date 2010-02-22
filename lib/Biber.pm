@@ -300,14 +300,18 @@ sub parse_auxfile {
         $logger->info("Processing all citekeys");
 
         # we stop reading the aux file as soon as we encounter \citation{*}
-        last
+        last;
 
-      } elsif ( ! Biber::Config->get_seenkey($1) ) {
-
+      }
+      elsif ( not Biber::Config->get_seenkey($1) ) {
         push @auxcitekeys, decode_utf8($1);
-
         Biber::Config->incr_seenkey($1);
-
+      }
+      elsif ( Biber::Config->get_keycase($1) ne $1) {
+        $logger->warn("Case mismatch error between cite keys $1 and " . Biber::Config->get_keycase($1));
+        $logger->warn("I'm skipping whatever remains of this command");
+        $self->{warnings}++;
+        next;
       }
     }
   }
