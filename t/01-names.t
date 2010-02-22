@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 38;
+use Test::More tests => 39;
 
 use Biber;
 use Biber::BibTeX;
@@ -56,7 +56,7 @@ my $l3 = q|\entry{L3}{book}{}
 
 my $l4 = q|\entry{L4}{book}{}
   \name{author}{1}{%
-    {{Decket}{D.}{Derek D}{D.~D.}{}{}{}{}}%
+    {{Decket}{D.}{Derek~D}{D.~D.}{}{}{}{}}%
   }
   \strng{namehash}{DDD1}
   \strng{fullhash}{DDD1}
@@ -111,7 +111,7 @@ my $l8 = q|\entry{L8}{book}{}
 
 my $l9 = q|\entry{L9}{book}{}
   \name{author}{1}{%
-    {{{Iliad~Ipswich}}{I.}{Ian}{I.}{}{}{}{}}%
+    {{{Iliad Ipswich}}{I.}{Ian}{I.}{}{}{}{}}%
   }
   \strng{namehash}{II1}
   \strng{fullhash}{II1}
@@ -144,7 +144,7 @@ my $l11 = q|\entry{L11}{book}{}
 
 my $l12 = q|\entry{L12}{book}{}
   \name{author}{1}{%
-    {{Vall{\'e}e~Poussin}{V.~P.}{Charles Louis Xavier Joseph}{C.~L.~X.~J.}{de~la}{d.~l.}{}{}}%
+    {{Vall{\'e}e~Poussin}{V.~P.}{Charles Louis Xavier~Joseph}{C.~L.~X.~J.}{de~la}{d.~l.}{}{}}%
   }
   \strng{namehash}{dlVPCLXJ1}
   \strng{fullhash}{dlVPCLXJ1}
@@ -155,7 +155,7 @@ my $l12 = q|\entry{L12}{book}{}
 
 my $l13 = q|\entry{L13}{book}{}
   \name{author}{1}{%
-    {{Van~de~Graaff}{V.~d.~G.}{R.~J.}{R.~J.}{}{}{}{}}%
+    {{Van de~Graaff}{V.~d.~G.}{R.~J.}{R.~J.}{}{}{}{}}%
   }
   \strng{namehash}{VdGRJ1}
   \strng{fullhash}{VdGRJ1}
@@ -265,6 +265,17 @@ my $l22 = q|\entry{L22}{book}{}
 
 my $l23 = q|\entry{L23}{book}{}
   \name{author}{1}{%
+    {{{\v S}mith}{{\v S}.}{Someone}{S.}{}{}{}{}}%
+  }
+  \strng{namehash}{SS1}
+  \strng{fullhash}{SS1}
+  \field{sortinit}{S}
+\endentry
+
+|;
+
+my $l24 = q|\entry{L24}{book}{}
+  \name{author}{1}{%
     {{{American Psychological Association, Task Force on the Sexualization of Girls}}{A.}{}{}{}{}{}{}}%
   }
   \strng{namehash}{A1}
@@ -274,9 +285,9 @@ my $l23 = q|\entry{L23}{book}{}
 
 |;
 
-my $l24 = q|\entry{L24}{book}{}
+my $l25 = q|\entry{L25}{book}{}
   \name{author}{1}{%
-    {{{Sci-Art~Publishers}}{S.}{}{}{}{}{}{}}%
+    {{{Sci-Art Publishers}}{S.}{}{}{}{}{}{}}%
   }
   \strng{namehash}{S1}
   \strng{fullhash}{S1}
@@ -321,10 +332,10 @@ my $name2 =
 
 
 my $name3 =
-    { firstname      => "Johann Gottfried",
+    { firstname      => "Johann~Gottfried",
       firstname_i    => "J.~G.",
       firstname_it   => "JG",
-      lastname       => "Berlichingen zu Hornberg",
+      lastname       => "Berlichingen zu~Hornberg",
       lastname_i     => "B.~z.~H.",
       lastname_it    => "BzH",
       nameinitstring => "v_Berlichingen_zu_Hornberg_JG",
@@ -338,10 +349,10 @@ my $name3 =
       suffix_it      => undef};
 
 my $name4 =
-    { firstname      => "Johann Gottfried",
+    { firstname      => "Johann~Gottfried",
       firstname_i    => "J.~G.",
       firstname_it   => "JG",
-      lastname       => "Berlichingen zu Hornberg",
+      lastname       => "Berlichingen zu~Hornberg",
       lastname_i     => "B.~z.~H.",
       lastname_it    => "BzH",
       nameinitstring => "Berlichingen_zu_Hornberg_JG",
@@ -392,13 +403,13 @@ my $name6 =
 
 
 my $name7 =
-   {  firstname    => 'Jean Charles Gabriel',
+   {  firstname    => 'Jean Charles~Gabriel',
       firstname_i  => 'J.~C.~G.',
       firstname_it => 'JCG',
       lastname_i   => 'V.~P.',
       lastname_it  => 'VP',
-      lastname     => 'Vallée Poussin',
-      prefix       => 'de la',
+      lastname     => 'Vallée~Poussin',
+      prefix       => 'de~la',
       prefix_i     => 'd.~l.',
       prefix_it    => 'dl',
       suffix       => undef,
@@ -411,7 +422,7 @@ my $name8 =
    {  firstname    => 'Jean Charles Gabriel',
       firstname_i  => 'J.',
       firstname_it => 'J',
-      lastname     => 'Vallée Poussin',
+      lastname     => 'Vallée~Poussin',
       lastname_i   => 'V.~P.',
       lastname_it  => 'VP',
       prefix       => undef,
@@ -424,7 +435,7 @@ my $name8 =
       namestring => 'Vallée Poussin, Jean Charles Gabriel',
       nameinitstring => 'Vallée_Poussin_J' } ;
 my $name9 =
-   {  firstname     => 'Jean Charles Gabriel {de la} Vallée',
+   {  firstname     => 'Jean Charles Gabriel {de la}~Vallée',
       firstname_i   => 'J.~C.~G.~d.~V.',
       firstname_it  => 'JCGdV',
       lastname      => 'Poussin',
@@ -440,7 +451,7 @@ my $name9 =
       namestring => 'Poussin, Jean Charles Gabriel {de la} Vallée',
       nameinitstring => 'Poussin_JCGdV' } ;
 my $name10 =
-   {  firstname    => 'Jean Charles Gabriel',
+   {  firstname    => 'Jean Charles~Gabriel',
       firstname_i  => 'J.~C.~G.',
       firstname_it => 'JCG',
       lastname     => 'Vallée Poussin',
@@ -473,7 +484,7 @@ my $name11 =
       nameinitstring => '{Vallée_Poussin}_J' } ;
 
 my $name12 =
-   {  firstname    => 'Jean Charles Gabriel',
+   {  firstname    => 'Jean Charles~Gabriel',
       firstname_i  => 'J.~C.~G.',
       firstname_it => 'JCG',
       lastname      => 'Poussin',
@@ -489,7 +500,7 @@ my $name12 =
       namestring => 'Poussin, Jean Charles Gabriel',
       nameinitstring => 'Poussin_JCG' } ;
 my $name13 =
-   {  firstname    => 'Jean Charles',
+   {  firstname    => 'Jean~Charles',
       firstname_i  => 'J.~C.',
       firstname_it => 'JC',
       lastname     => 'Poussin Lecoq',
@@ -505,13 +516,13 @@ my $name13 =
       namestring => 'Poussin Lecoq, Jean Charles',
       nameinitstring => '{Poussin_Lecoq}_JC' } ;
 my $name14 =
-   {  firstname    => 'J. C. G.',
+   {  firstname    => 'J.~C.~G.',
       firstname_i  => 'J.~C.~G.',
       firstname_it => 'JCG',
-      lastname     => 'Vallée Poussin',
+      lastname     => 'Vallée~Poussin',
       lastname_i   => 'V.~P.',
       lastname_it  => 'VP',
-      prefix       => 'de la',
+      prefix       => 'de~la',
       prefix_i     => 'd.~l.',
       prefix_it    => 'dl',
       suffix       => undef,
@@ -560,9 +571,10 @@ is( $biber->_print_biblatex_entry('l18'), $l18, 'Last, First F.{\,}F.');
 is( $biber->_print_biblatex_entry('l19'), $l19, 'Firstname with hyphen');
 is( $biber->_print_biblatex_entry('l20'), $l20, 'Protected dual first name');
 is( $biber->_print_biblatex_entry('l21'), $l21, 'LaTeX encoded unicode');
-is( $biber->_print_biblatex_entry('l22'), $l22, 'Unicode');
-is( $biber->_print_biblatex_entry('l23'), $l23, 'Single string name');
-is( $biber->_print_biblatex_entry('l24'), $l24, 'Hyphen at brace level <> 0');
+is( $biber->_print_biblatex_entry('l22'), $l22, 'Unicode firstname');
+is( $biber->_print_biblatex_entry('l23'), $l23, 'Unicode lastname');
+is( $biber->_print_biblatex_entry('l24'), $l24, 'Single string name');
+is( $biber->_print_biblatex_entry('l25'), $l25, 'Hyphen at brace level <> 0');
 
 
 unlink "$bibfile.utf8";

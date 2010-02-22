@@ -3,8 +3,10 @@ use sigtrap qw(handler TBSIG SEGV);
 use strict;
 use warnings;
 use Carp;
-use Text::BibTeX;
+
+use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
+use Text::BibTeX::NameFormat;
 use Biber::Constants;
 use Biber::Entries;
 use Biber::Entry;
@@ -77,13 +79,29 @@ sub parsename {
   my $name = new Text::BibTeX::Name($namestr);
   open STDERR, '>&', \*OLDERR;
 
-  my $firstname   = join(' ', map {decode_utf8($_)} $name->part('first'));
-  my $lastname    = join(' ', map {decode_utf8($_)} $name->part('last'));
-  my $prefix      = join(' ', map {decode_utf8($_)} $name->part('von'));
-  my $suffix      = join(' ', map {decode_utf8($_)} $name->part('jr'));
 
+  my $ln_f  = new Text::BibTeX::NameFormat('l', 0);
+#  $ln_f->set_text(BTN_LAST, undef, undef, undef, undef);
+  $ln_f->set_options(BTN_LAST, 0, BTJ_MAYTIE, BTJ_NOTHING);
+  my $fn_f  = new Text::BibTeX::NameFormat('f', 0);
+#  $fn_f->set_text(BTN_LAST, undef, undef, undef, undef);
+  $fn_f->set_options(BTN_FIRST, 0, BTJ_MAYTIE, BTJ_NOTHING);
+  my $p_f  = new Text::BibTeX::NameFormat('v', 0);
+#  $p_f->set_text(BTN_LAST, undef, undef, undef, undef);
+  $p_f->set_options(BTN_VON, 0, BTJ_MAYTIE, BTJ_NOTHING);
+  my $s_f  = new Text::BibTeX::NameFormat('j', 0);
+#  $s_f->set_text(BTN_LAST, undef, undef, undef, undef);
+  $s_f->set_options(BTN_JR, 0, BTJ_MAYTIE, BTJ_NOTHING);
+
+  my $firstname = decode_utf8($name->format($fn_f));
+  my $lastname  = decode_utf8($name->format($ln_f));
+  my $prefix    = decode_utf8($name->format($p_f));
+  my $suffix    = decode_utf8($name->format($s_f));
+#  my $prefix      = join(' ', map {decode_utf8($_)} $name->part('von'));
+#  my $suffix      = join(' ', map {decode_utf8($_)} $name->part('jr'));
+
+  # Only warn about lastnames since there should always be one
   $logger->warn("Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
-  $logger->warn("Couldn't determine First Name for name \"$namestr\"") unless $firstname;
 
   # Construct $namestring, initials and terseinitials
   my $namestring = '';
@@ -137,7 +155,9 @@ sub parsename {
   }
 
   # Remove any trailing comma and space if, e.g. missing firstname
+  # Replace any nbspes
   $namestring =~ s/,\s+\z//xms;
+  $namestring =~ s/~/ /gxms;
 
   # Construct $nameinitstring
   my $nameinitstr = '';
@@ -146,6 +166,7 @@ sub parsename {
   $nameinitstr .= '_' . $suffix_it if $suffix;
   $nameinitstr .= '_' . $firstname_it if $firstname;
   $nameinitstr =~ s/\s+/_/g;
+  $nameinitstr =~ s/~/_/g;
 
   # The "strip" entry tells us which of the name parts had outer braces
   # stripped during processing so we can add them back when printing the

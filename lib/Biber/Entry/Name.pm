@@ -368,12 +368,6 @@ sub name_to_bbl {
   # Bernard {H.\,P.} -> Bernard~{H.\,P.}
   $fn =~ s/\s+(\p{Lu}\.|$RE{balanced}{-parens=>'{}'})/~$1/g;
   $pre =~ s/\s/~/g if $pre;       # van der -> van~der
-  # Put ties in if the lastname isn't composed of too many parts
-  # BibTeX's heuristic for this is more complex but inscrutable
-  my @lnspaces = $ln =~ m/\s/g;
-  if ($#lnspaces < 3) {
-    $ln =~ s/\s/~/g;
-  }
   if (Biber::Config->getblxoption('terseinits')) {
     $lni  = Biber::Utils::tersify($lni);
     $fni  = Biber::Utils::tersify($fni);
