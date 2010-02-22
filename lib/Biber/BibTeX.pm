@@ -12,6 +12,7 @@ use Biber::Utils;
 use Encode;
 use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
+use List::AllUtils qw(first);
 
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -63,12 +64,18 @@ sub _text_bibtex_parse {
     }
 
     my $origkey = $entry->key;
-    my $lc_key = lc($origkey);
 
     if (!defined $origkey or $origkey =~ /\s/ or $origkey eq '') {
       $logger->warn("Invalid BibTeX key! Skipping...");
       next;
     }
+
+    # Want a version of the key that is the same case as any citations which
+    # reference it, in case they are different. We use this as the .bbl
+    # entry key
+    my $citecasekey = first {lc($origkey) eq lc($_)} $self->citekeys;
+    $citecasekey = $origkey unless $citecasekey;
+    my $lc_key = lc($origkey);
 
     $logger->debug("Processing entry '$origkey'");
 
@@ -90,6 +97,7 @@ sub _text_bibtex_parse {
 
     my $bibentry = new Biber::Entry;
     $bibentry->set_field('origkey', $origkey);
+    $bibentry->set_field('citecasekey', $citecasekey);
 
     # all fields used for this entry
     my @flist = $entry->fieldlist;

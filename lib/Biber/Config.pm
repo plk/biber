@@ -6,6 +6,7 @@ use Cwd qw( abs_path );
 use Config::General qw( ParseConfig );
 use Data::Dump;
 use Carp;
+use List::AllUtils qw(first);
 
 =encoding utf-8
 
@@ -31,6 +32,7 @@ our $CONFIG;
 $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{inset_entries} = {};
 $CONFIG->{state}{seennamehash} = {};
+$CONFIG->{state}{keycase} = {};
 
 # namehashcount holds a hash of namehashes and 
 # occurences of unique names that generate the hash. For example:
@@ -56,6 +58,7 @@ sub _init {
   $CONFIG->{state}{seennameyear} = {};
   $CONFIG->{state}{seenlabelyear} = {};
   $CONFIG->{state}{seenkeys} = {};
+  $CONFIG->{state}{keycase} = {};
   delete $CONFIG->{options}{biblatex}{PER_ENTRY};
   return;
 }
@@ -299,6 +302,21 @@ sub get_seenkey {
   return $CONFIG->{state}{seenkeys}{lc($key)};
 }
 
+=head2 get_keycase
+
+    Return a key in the original case it was cited with so we
+    can return mismatched cite key errors
+
+    Biber::Config->get_keycase($key);
+
+=cut
+
+sub get_keycase {
+  shift; # class method so don't care about class name
+  my $key = shift;
+  return $CONFIG->{state}{keycase}{lc($key)};
+}
+
 =head2 incr_seenkey
 
     Increment the seen count of a key
@@ -310,6 +328,7 @@ sub get_seenkey {
 sub incr_seenkey {
   shift; # class method so don't care about class name
   my $key = shift;
+  $CONFIG->{state}{keycase}{lc($key)} = $key;
   $CONFIG->{state}{seenkeys}{lc($key)}++;
   return;
 }

@@ -711,9 +711,9 @@ sub _print_biblatex_entry {
   my $be = $self->bibentry($citekey)
     or $logger->logcroak("Cannot find $citekey");
   my $opts    = '';
-  my $origkey = $citekey;
-  if ( $be->get_field('origkey') ) {
-    $origkey = $be->get_field('origkey');
+  my $citecasekey; # entry key forced to case of any citations(s) which reference it
+  if ( $be->get_field('citecasekey') ) {
+    $citecasekey = $be->get_field('citecasekey');
   }
 
   if ( is_def_and_notnull($be->get_field('options')) ) {
@@ -725,7 +725,7 @@ sub _print_biblatex_entry {
   $str .= "% sortstring = " . $be->get_field('sortstring') . "\n"
     if (Biber::Config->getoption('debug') || Biber::Config->getblxoption('debug'));
 
-  $str .= "\\entry{$origkey}{" . $be->get_field('entrytype') . "}{$opts}\n";
+  $str .= "\\entry{$citecasekey}{" . $be->get_field('entrytype') . "}{$opts}\n";
 
   # Generate set information
   if ( $be->get_field('entrytype') eq 'set' ) {   # Set parents get \set entry ...

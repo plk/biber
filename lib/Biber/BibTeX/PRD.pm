@@ -12,6 +12,7 @@ use Parse::RecDescent;
 use Regexp::Common qw{ balanced };
 use Biber::BibTeX::Parser;
 use File::Spec;
+use List::AllUtils qw(first);
 use Log::Log4perl qw(:no_extra_logdie_message);
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -70,6 +71,9 @@ sub _bibtex_prd_parse {
 
         my @tmpa   = keys %{ $entries[$i] };
         my $origkey = $tmpa[0];
+
+        my $citecasekey = first {lc($origkey) eq lc($_)} $self->citekeys;
+        $citecasekey = $origkey unless $citecasekey;
         my $key = lc($origkey);
 
         if ( $bibentries->entry_exists($origkey) or $bibentries->entry_exists($key)) {
@@ -84,6 +88,8 @@ sub _bibtex_prd_parse {
         my $bibentry = new Biber::Entry($entries[$i]->{$origkey});
 
         $bibentry->set_field('datatype', 'bibtex');
+        $bibentry->set_field('origkey', $origkey);
+        $bibentry->set_field('citecasekey', $citecasekey);
         $bibentries->add_entry($key, $bibentry);
       }
     }
