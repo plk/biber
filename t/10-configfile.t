@@ -14,9 +14,9 @@ my %colloptsA = ( level => 3, table => "/home/user/data/otherkeys.txt" );
 is_deeply(Biber::Config->getoption('collate_options'), \%colloptsA);
 
 chdir("t/tdata");
-my $biberB = Biber->new();
 my $cwdB = getcwd();
-is(Biber::Config->config_file, File::Spec->catfile($cwdB, "biber.conf"));
+my $biberB = Biber->new(configfile => "biber3.conf");
+is(Biber::Config->getcmdlineoption('configfile'), File::Spec->catfile("biber3.conf"));
 is(Biber::Config->getoption('mincrossrefs'), 3);
 my %colloptsB = ( level => 1, table => "/home/user/data/mykeys.txt" );
 is_deeply(Biber::Config->getoption('collate_options'), \%colloptsB);
@@ -25,3 +25,4 @@ Biber::Config->set_setparentkey('KeyA', 'keyB');
 Biber::Config->incr_crossrefkey('SOME_KEY');
 is(Biber::Config->get_setparentkey('KEYA'), 'keyb', 'case-insensitive state methods 1');
 is(Biber::Config->get_crossrefkey('SoMe_KeY'), 1, 'case-insensitive state methods 2');
+

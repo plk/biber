@@ -15,7 +15,7 @@ else {
     plan( skip_all => "parsing with Biber::BibTeX::PRD (set TEST_BIBTEX_PRD=1 to enable)" );
 }
 
-my $biber = Biber->new( unicodebbl => 0, useprd => 1 );
+my $biber = Biber->new( unicodebbl => 0, useprd => 1, noconf => 1 );
 
 use_ok( 'Biber::BibTeX::PRD' );
 

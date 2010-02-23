@@ -12,7 +12,7 @@ Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata");
 
 my $bibfile;
-my $biber = Biber->new;
+my $biber = Biber->new(noconf => 1);
 $biber->parse_auxfile("style-authoryear.aux");
 $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
