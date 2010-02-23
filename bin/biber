@@ -31,6 +31,7 @@ GetOptions(
   'outfile|O=s',
   'output-directory=s',
   'configfile|g=s',
+  'noconf',
   'allentries|a!',
   'validate|V!',
   'debug|D!',
@@ -283,6 +284,7 @@ Options:
                          The default is the first file found among
                          "biber.conf" in the current directory, "\$HOME/.biber.conf",
                          or else the output of "kpsewhich biber.conf".
+  --noconf               Don't look for a configfile
   --allentries|-a        Output all entries in the database.
                          (NB: this ignores the .aux file.)
   --unicodebib|-u        Assume bib file is UTF-8 and skip latex_decode.

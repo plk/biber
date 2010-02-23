@@ -15,7 +15,7 @@ else {
     plan( skip_all => "Text::BibTeX unavailable! Skipping parsing with Biber::BibTeX" );
 }
 
-my $biber = Biber->new( unicodebbl => 1, fastsort => 1 );
+my $biber = Biber->new( unicodebbl => 1, fastsort => 1, noconf => 1 );
 
 use_ok( 'Biber::BibTeX' );
 
