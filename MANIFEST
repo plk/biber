@@ -101,7 +101,7 @@ t/tdata/sort-complex.aux
 t/tdata/sort-complex.bcf
 t/tdata/sort-order.aux
 t/tdata/sort-order.bcf
-t/tdata/biber.conf
+t/tdata/biber3.conf
 t/tdata/examples-dateformats.bib
 t/tdata/examples-extrayear.bib
 t/tdata/examples-labelalpha.bib
