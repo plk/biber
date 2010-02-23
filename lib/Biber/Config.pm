@@ -72,6 +72,7 @@ sub _init {
 sub _initopts {
   shift; # class method so don't care about class name
   my $conffile = shift;
+  my $noconf = shift;
   my %LOCALCONF = ();
 
   # For testing, need to be able to force ignore of conf file in case user
