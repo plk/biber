@@ -71,16 +71,21 @@ sub _init {
 sub _initopts {
   shift; # class method so don't care about class name
   my $conffile = shift;
+  my $noconf = shift;
   my %LOCALCONF = ();
 
-  # if a config file was given as cmd-line arg, it overrides everything else
-  unless ( defined $conffile and -f $conffile ) {
-    $conffile = config_file();
-  }
+  # For testing, need to be able to force ignore of conf file in case user
+  # already has one which interferes with test settings.
+  unless ($noconf) {
+    # if a config file was given as cmd-line arg, it overrides everything else
+    unless ( defined $conffile and -f $conffile ) {
+      $conffile = config_file();
+    }
 
-  if (defined $conffile) {
-    %LOCALCONF = ParseConfig(-ConfigFile => $conffile, -UTF8 => 1) or
-      $logger->logcarp("Failure to read config file " . $conffile . "\n $@");
+    if (defined $conffile) {
+      %LOCALCONF = ParseConfig(-ConfigFile => $conffile, -UTF8 => 1) or
+	$logger->logcarp("Failure to read config file " . $conffile . "\n $@");
+    }
   }
   my %CONFIG = (%CONFIG_DEFAULT_BIBER, %LOCALCONF);
 
@@ -133,7 +138,7 @@ sub config_file {
   } elsif ( $^O =~ /Win/ and
     defined $ENV{APPDATA} and
     -f File::Spec->catfile($ENV{APPDATA}, "biber", $BIBER_CONF_NAME) ) {
-    $biberconf = File::Spec->catfile($ENV{APPDATA}, $BIBER_CONF_NAME);
+    $biberconf = File::Spec->catfile($ENV{APPDATA}, "biber", $BIBER_CONF_NAME);
   } elsif ( can_run("kpsewhich") ) {
     scalar run( command => [ 'kpsewhich', $BIBER_CONF_NAME ],
       verbose => 0,

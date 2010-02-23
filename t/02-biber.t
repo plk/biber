@@ -9,7 +9,7 @@ use Biber;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
-my $biber = Biber->new( fastsort => 1 );
+my $biber = Biber->new( fastsort => 1, noconf => 1 );
 my $bibentries = $biber->bib;
 
 isa_ok($biber, "Biber");

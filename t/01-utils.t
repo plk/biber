@@ -10,7 +10,7 @@ use Biber::Entry::Names;
 use Biber::Utils;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
-my $biber = Biber->new();
+my $biber = Biber->new(noconf => 1);
 
 is( normalize_string('"a, b–c: d" ', 1),  'a bc d', 'normalize_string' );
 

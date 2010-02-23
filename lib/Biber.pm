@@ -70,7 +70,7 @@ sub new {
   if (defined $opts{configfile}) {
     Biber::Config->_initopts( $opts{configfile} );
   } else {
-    Biber::Config->_initopts();
+    Biber::Config->_initopts(undef, $opts{noconf});
   }
   if (%opts) {
     foreach (keys %opts) {

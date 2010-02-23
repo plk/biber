@@ -13,7 +13,7 @@ Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata");
 
 my $bibfile;
-my $biber = Biber->new;
+my $biber = Biber->new(noconf => 1);
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
 $biber->parse_auxfile('names.aux');

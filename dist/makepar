@@ -1,1 +1,8 @@
-pp -M Readonly::XS -p -o biber.par bin/*
+#!/bin/sh
+cd ../blib
+_ver=$(grep -e "^our \$VERSION" lib/Biber.pm | cut -d'=' | sed -e "s/.\+'\(.\+\)'.\+/\1/")
+_OS=$(uname -s)
+_arch=$(uname -m)
+pp -cd=../dist/.cachedeps -M Readonly::XS -p -o ..dist/biber-${_ver}-${_OS}_${_arch}.par script/*
+cd ../dist
+par.pl -O./biber biber-${_ver}-${_OS}_${_arch}.par
