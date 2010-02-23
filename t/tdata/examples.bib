@@ -1366,8 +1366,10 @@
   year		   = {2000}
 }
 
+% Without braces round this prefixed lastname, T::B::N fails to get
+% the lastname on Windows for some reason
 @Book{hasan,
-  author	   = {al-Hasan, ʿAlī},
+  author	   = {{al-Hasan}, ʿAlī},
   title		   = {Some title},
   publisher  = {Some press},
   year		   = {2000}
@@ -1378,3 +1380,4 @@ AUTHOR = {Bill Brown},
 TITLE = {Normal things {$^{3}$}},
 YEAR = {1992}
 }
+
