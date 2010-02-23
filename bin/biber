@@ -19,6 +19,7 @@ my $opts = {};
 GetOptions(
   $opts,
   'fastsort|f!', ## now the default
+  'locale|l=s',
   'collate|C!', ## to sort with Unicode::Collate
   'collate_options|c=s',
   'mincrossrefs|m=s',
