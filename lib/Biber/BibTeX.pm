@@ -222,7 +222,7 @@ sub _text_bibtex_parse {
   my @preamble = ();
   my $count = 0;
 
-  while ( my $entry = new Text::BibTeX::Entry $bib ) {
+BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
 
     $count++;
 
@@ -348,6 +348,26 @@ sub _text_bibtex_parse {
           my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
           my $names = new Biber::Entry::Names;
           foreach my $name (@tmp) {
+
+	    # Check for malformed names ...
+
+	    # Too many commas
+	    my @commas = $name =~ m/,/g;
+	    if ($#commas > 1) {
+	      $logger->warn("Name \"$name\" has too many commas: skipping");
+	      $self->{errors}++;
+	      $self->del_citekey($origkey);
+	      next BIBLOOP;
+	    }
+
+	    # Consecutive commas cause Text::BibTeX::Name to segfault
+	    if ($name =~ /,,/) {
+	      $logger->warn("Name \"$name\" is malformed (consecutive commas): skipping");
+	      $self->{errors}++;
+	      $self->del_citekey($origkey);
+	      next BIBLOOP;
+	    }
+
             $names->add_element(parsename($name, {useprefix => $useprefix}));
           }
           $bibentry->set_field($af, $names);

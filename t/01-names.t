@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 39;
+use Test::More tests => 41;
 
 use Biber;
 use Biber::BibTeX;
@@ -20,6 +20,244 @@ $biber->parse_auxfile('names.aux');
 $bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 $biber->prepare;
+
+
+my $name1 =
+    { firstname      => "John",
+      firstname_i    => "J.",
+      firstname_it   => "J",
+      lastname       => "Doe",
+      lastname_i     => "D.",
+      lastname_it    => "D",
+      nameinitstring => "Doe_J",
+      namestring     => "Doe, John",
+      prefix         => undef,
+      prefix_i       => undef,
+      prefix_it      => undef,
+      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      suffix         => undef,
+      suffix_i       => undef,
+      suffix_it      => undef};
+my $name2 =
+    { firstname      => "John",
+      firstname_i    => "J.",
+      firstname_it   => "J",
+      lastname       => "Doe",
+      lastname_i     => "D.",
+      lastname_it    => "D",
+      nameinitstring => "Doe_J_J",
+      namestring     => "Doe, Jr, John",
+      prefix         => undef,
+      prefix_i       => undef,
+      prefix_it      => undef,
+      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => 0 },
+      suffix         => "Jr",
+      suffix_i       => "J.",
+      suffix_it      => "J" } ;
+
+
+
+my $name3 =
+    { firstname      => "Johann~Gottfried",
+      firstname_i    => "J.~G.",
+      firstname_it   => "JG",
+      lastname       => "Berlichingen zu~Hornberg",
+      lastname_i     => "B.~z.~H.",
+      lastname_it    => "BzH",
+      nameinitstring => "v_Berlichingen_zu_Hornberg_JG",
+      namestring     => "von Berlichingen zu Hornberg, Johann Gottfried",
+      prefix         => "von",
+      prefix_i       => "v.",
+      prefix_it      => "v",
+      strip          => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
+      suffix         => undef,
+      suffix_i       => undef,
+      suffix_it      => undef};
+
+my $name4 =
+    { firstname      => "Johann~Gottfried",
+      firstname_i    => "J.~G.",
+      firstname_it   => "JG",
+      lastname       => "Berlichingen zu~Hornberg",
+      lastname_i     => "B.~z.~H.",
+      lastname_it    => "BzH",
+      nameinitstring => "Berlichingen_zu_Hornberg_JG",
+      namestring     => "Berlichingen zu Hornberg, Johann Gottfried",
+      prefix         => undef,
+      prefix_i       => undef,
+      prefix_it      => undef,
+      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      suffix         => undef,
+      suffix_i       => undef,
+      suffix_it      => undef};
+
+
+my $name5 =
+   {  firstname      => undef,
+      firstname_i    => undef,
+      firstname_it   => undef,
+      lastname       => "Robert and Sons, Inc.",
+      lastname_i     => "R.",
+      lastname_it    => "R",
+      nameinitstring => "{Robert_and_Sons,_Inc.}",
+      namestring     => "Robert and Sons, Inc.",
+      prefix         => undef,
+      prefix_i       => undef,
+      prefix_it      => undef,
+      strip          => { firstname => undef, lastname => 1, prefix => undef, suffix => undef },
+      suffix         => undef,
+      suffix_i       => undef,
+      suffix_it      => undef};
+
+
+my $name6 =
+   {  firstname => 'ʿAbdallāh',
+      firstname_i => 'A.',
+      firstname_it => 'A',
+      lastname => 'al-Ṣāliḥ',
+      lastname_i => 'Ṣ.',
+      lastname_it => 'Ṣ',
+      prefix => undef,
+      prefix_i => undef,
+      prefix_it => undef,
+      suffix => undef,
+      suffix_i => undef,
+      suffix_it => undef,
+      strip => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      namestring => 'al-Ṣāliḥ, ʿAbdallāh',
+      nameinitstring => 'al-Ṣāliḥ_A' } ;
+
+
+my $name7 =
+   {  firstname    => 'Jean Charles~Gabriel',
+      firstname_i  => 'J.~C.~G.',
+      firstname_it => 'JCG',
+      lastname_i   => 'V.~P.',
+      lastname_it  => 'VP',
+      lastname     => 'Vallée~Poussin',
+      prefix       => 'de~la',
+      prefix_i     => 'd.~l.',
+      prefix_it    => 'dl',
+      suffix       => undef,
+      suffix_i     => undef,
+      suffix_it    => undef,
+      strip => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
+      namestring => 'de la Vallée Poussin, Jean Charles Gabriel',
+      nameinitstring => 'dl_Vallée_Poussin_JCG' } ;
+my $name8 =
+   {  firstname    => 'Jean Charles Gabriel',
+      firstname_i  => 'J.',
+      firstname_it => 'J',
+      lastname     => 'Vallée~Poussin',
+      lastname_i   => 'V.~P.',
+      lastname_it  => 'VP',
+      prefix       => undef,
+      prefix_i     => undef,
+      prefix_it    => undef,
+      suffix       => undef,
+      suffix_i     => undef,
+      suffix_it    => undef,
+      strip => { firstname => 1, lastname => 0, prefix => undef, suffix => undef },
+      namestring => 'Vallée Poussin, Jean Charles Gabriel',
+      nameinitstring => 'Vallée_Poussin_J' } ;
+my $name9 =
+   {  firstname     => 'Jean Charles Gabriel {de la}~Vallée',
+      firstname_i   => 'J.~C.~G.~d.~V.',
+      firstname_it  => 'JCGdV',
+      lastname      => 'Poussin',
+      lastname_i    => 'P.',
+      lastname_it   => 'P',
+      prefix        => undef,
+      prefix_i      => undef,
+      prefix_it     => undef,
+      suffix        => undef,
+      suffix_i      => undef,
+      suffix_it     => undef,
+      strip => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      namestring => 'Poussin, Jean Charles Gabriel {de la} Vallée',
+      nameinitstring => 'Poussin_JCGdV' } ;
+my $name10 =
+   {  firstname    => 'Jean Charles~Gabriel',
+      firstname_i  => 'J.~C.~G.',
+      firstname_it => 'JCG',
+      lastname     => 'Vallée Poussin',
+      lastname_i   => 'V.',
+      lastname_it  => 'V',
+      prefix       => undef,
+      prefix_i     => undef,
+      prefix_it    => undef,
+      suffix       => undef,
+      suffix_i     => undef,
+      suffix_it    => undef,
+      strip => { firstname => 0, lastname => 1, prefix => undef, suffix => undef },
+      namestring => 'Vallée Poussin, Jean Charles Gabriel',
+      nameinitstring => '{Vallée_Poussin}_JCG' } ;
+my $name11 =
+   {  firstname    => 'Jean Charles Gabriel',
+      firstname_i  => 'J.',
+      firstname_it => 'J',
+      lastname     => 'Vallée Poussin',
+      lastname_i   => 'V.',
+      lastname_it  => 'V',
+      prefix       => undef,
+      prefix_i     => undef,
+      prefix_it    => undef,
+      suffix       => undef,
+      suffix_i     => undef,
+      suffix_it    => undef,
+      strip => { firstname => 1, lastname => 1, prefix => undef, suffix => undef },
+      namestring => 'Vallée Poussin, Jean Charles Gabriel',
+      nameinitstring => '{Vallée_Poussin}_J' } ;
+
+my $name12 =
+   {  firstname    => 'Jean Charles~Gabriel',
+      firstname_i  => 'J.~C.~G.',
+      firstname_it => 'JCG',
+      lastname      => 'Poussin',
+      lastname_i    => 'P.',
+      lastname_it   => 'P',
+      prefix       => undef,
+      prefix_i     => undef,
+      prefix_it    => undef,
+      suffix       => undef,
+      suffix_i     => undef,
+      suffix_it    => undef,
+      strip => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      namestring => 'Poussin, Jean Charles Gabriel',
+      nameinitstring => 'Poussin_JCG' } ;
+my $name13 =
+   {  firstname    => 'Jean~Charles',
+      firstname_i  => 'J.~C.',
+      firstname_it => 'JC',
+      lastname     => 'Poussin Lecoq',
+      lastname_i   => 'P.',
+      lastname_it  => 'P',
+      prefix       => undef,
+      prefix_i     => undef,
+      prefix_it    => undef,
+      suffix       => undef,
+      suffix_i     => undef,
+      suffix_it    => undef,
+      strip => { firstname => 0, lastname => 1, prefix => undef, suffix => undef },
+      namestring => 'Poussin Lecoq, Jean Charles',
+      nameinitstring => '{Poussin_Lecoq}_JC' } ;
+my $name14 =
+   {  firstname    => 'J.~C.~G.',
+      firstname_i  => 'J.~C.~G.',
+      firstname_it => 'JCG',
+      lastname     => 'Vallée~Poussin',
+      lastname_i   => 'V.~P.',
+      lastname_it  => 'VP',
+      prefix       => 'de~la',
+      prefix_i     => 'd.~l.',
+      prefix_it    => 'dl',
+      suffix       => undef,
+      suffix_i     => undef,
+      suffix_it    => undef,
+      strip => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
+      namestring => 'de la Vallée Poussin, J. C. G.',
+      nameinitstring => 'dl_Vallée_Poussin_JCG' } ;
+
 
 my $l1 = q|\entry{L1}{book}{}
   \name{author}{1}{%
@@ -296,242 +534,6 @@ my $l25 = q|\entry{L25}{book}{}
 
 |;
 
-my $name1 =
-    { firstname      => "John",
-      firstname_i    => "J.",
-      firstname_it   => "J",
-      lastname       => "Doe",
-      lastname_i     => "D.",
-      lastname_it    => "D",
-      nameinitstring => "Doe_J",
-      namestring     => "Doe, John",
-      prefix         => undef,
-      prefix_i       => undef,
-      prefix_it      => undef,
-      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
-      suffix         => undef,
-      suffix_i       => undef,
-      suffix_it      => undef};
-my $name2 =
-    { firstname      => "John",
-      firstname_i    => "J.",
-      firstname_it   => "J",
-      lastname       => "Doe",
-      lastname_i     => "D.",
-      lastname_it    => "D",
-      nameinitstring => "Doe_J_J",
-      namestring     => "Doe, Jr, John",
-      prefix         => undef,
-      prefix_i       => undef,
-      prefix_it      => undef,
-      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => 0 },
-      suffix         => "Jr",
-      suffix_i       => "J.",
-      suffix_it      => "J" } ;
-
-
-
-my $name3 =
-    { firstname      => "Johann~Gottfried",
-      firstname_i    => "J.~G.",
-      firstname_it   => "JG",
-      lastname       => "Berlichingen zu~Hornberg",
-      lastname_i     => "B.~z.~H.",
-      lastname_it    => "BzH",
-      nameinitstring => "v_Berlichingen_zu_Hornberg_JG",
-      namestring     => "von Berlichingen zu Hornberg, Johann Gottfried",
-      prefix         => "von",
-      prefix_i       => "v.",
-      prefix_it      => "v",
-      strip          => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
-      suffix         => undef,
-      suffix_i       => undef,
-      suffix_it      => undef};
-
-my $name4 =
-    { firstname      => "Johann~Gottfried",
-      firstname_i    => "J.~G.",
-      firstname_it   => "JG",
-      lastname       => "Berlichingen zu~Hornberg",
-      lastname_i     => "B.~z.~H.",
-      lastname_it    => "BzH",
-      nameinitstring => "Berlichingen_zu_Hornberg_JG",
-      namestring     => "Berlichingen zu Hornberg, Johann Gottfried",
-      prefix         => undef,
-      prefix_i       => undef,
-      prefix_it      => undef,
-      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
-      suffix         => undef,
-      suffix_i       => undef,
-      suffix_it      => undef};
-
-
-my $name5 =
-   {  firstname      => undef,
-      firstname_i    => undef,
-      firstname_it   => undef,
-      lastname       => "Robert and Sons, Inc.",
-      lastname_i     => "R.",
-      lastname_it    => "R",
-      nameinitstring => "{Robert_and_Sons,_Inc.}",
-      namestring     => "Robert and Sons, Inc.",
-      prefix         => undef,
-      prefix_i       => undef,
-      prefix_it      => undef,
-      strip          => { firstname => undef, lastname => 1, prefix => undef, suffix => undef },
-      suffix         => undef,
-      suffix_i       => undef,
-      suffix_it      => undef};
-
-
-my $name6 =
-   {  firstname => 'ʿAbdallāh',
-      firstname_i => 'A.',
-      firstname_it => 'A',
-      lastname => 'al-Ṣāliḥ',
-      lastname_i => 'Ṣ.',
-      lastname_it => 'Ṣ',
-      prefix => undef,
-      prefix_i => undef,
-      prefix_it => undef,
-      suffix => undef,
-      suffix_i => undef,
-      suffix_it => undef,
-      strip => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
-      namestring => 'al-Ṣāliḥ, ʿAbdallāh',
-      nameinitstring => 'al-Ṣāliḥ_A' } ;
-
-
-my $name7 =
-   {  firstname    => 'Jean Charles~Gabriel',
-      firstname_i  => 'J.~C.~G.',
-      firstname_it => 'JCG',
-      lastname_i   => 'V.~P.',
-      lastname_it  => 'VP',
-      lastname     => 'Vallée~Poussin',
-      prefix       => 'de~la',
-      prefix_i     => 'd.~l.',
-      prefix_it    => 'dl',
-      suffix       => undef,
-      suffix_i     => undef,
-      suffix_it    => undef,
-      strip => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
-      namestring => 'de la Vallée Poussin, Jean Charles Gabriel',
-      nameinitstring => 'dl_Vallée_Poussin_JCG' } ;
-my $name8 =
-   {  firstname    => 'Jean Charles Gabriel',
-      firstname_i  => 'J.',
-      firstname_it => 'J',
-      lastname     => 'Vallée~Poussin',
-      lastname_i   => 'V.~P.',
-      lastname_it  => 'VP',
-      prefix       => undef,
-      prefix_i     => undef,
-      prefix_it    => undef,
-      suffix       => undef,
-      suffix_i     => undef,
-      suffix_it    => undef,
-      strip => { firstname => 1, lastname => 0, prefix => undef, suffix => undef },
-      namestring => 'Vallée Poussin, Jean Charles Gabriel',
-      nameinitstring => 'Vallée_Poussin_J' } ;
-my $name9 =
-   {  firstname     => 'Jean Charles Gabriel {de la}~Vallée',
-      firstname_i   => 'J.~C.~G.~d.~V.',
-      firstname_it  => 'JCGdV',
-      lastname      => 'Poussin',
-      lastname_i    => 'P.',
-      lastname_it   => 'P',
-      prefix        => undef,
-      prefix_i      => undef,
-      prefix_it     => undef,
-      suffix        => undef,
-      suffix_i      => undef,
-      suffix_it     => undef,
-      strip => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
-      namestring => 'Poussin, Jean Charles Gabriel {de la} Vallée',
-      nameinitstring => 'Poussin_JCGdV' } ;
-my $name10 =
-   {  firstname    => 'Jean Charles~Gabriel',
-      firstname_i  => 'J.~C.~G.',
-      firstname_it => 'JCG',
-      lastname     => 'Vallée Poussin',
-      lastname_i   => 'V.',
-      lastname_it  => 'V',
-      prefix       => undef,
-      prefix_i     => undef,
-      prefix_it    => undef,
-      suffix       => undef,
-      suffix_i     => undef,
-      suffix_it    => undef,
-      strip => { firstname => 0, lastname => 1, prefix => undef, suffix => undef },
-      namestring => 'Vallée Poussin, Jean Charles Gabriel',
-      nameinitstring => '{Vallée_Poussin}_JCG' } ;
-my $name11 =
-   {  firstname    => 'Jean Charles Gabriel',
-      firstname_i  => 'J.',
-      firstname_it => 'J',
-      lastname     => 'Vallée Poussin',
-      lastname_i   => 'V.',
-      lastname_it  => 'V',
-      prefix       => undef,
-      prefix_i     => undef,
-      prefix_it    => undef,
-      suffix       => undef,
-      suffix_i     => undef,
-      suffix_it    => undef,
-      strip => { firstname => 1, lastname => 1, prefix => undef, suffix => undef },
-      namestring => 'Vallée Poussin, Jean Charles Gabriel',
-      nameinitstring => '{Vallée_Poussin}_J' } ;
-
-my $name12 =
-   {  firstname    => 'Jean Charles~Gabriel',
-      firstname_i  => 'J.~C.~G.',
-      firstname_it => 'JCG',
-      lastname      => 'Poussin',
-      lastname_i    => 'P.',
-      lastname_it   => 'P',
-      prefix       => undef,
-      prefix_i     => undef,
-      prefix_it    => undef,
-      suffix       => undef,
-      suffix_i     => undef,
-      suffix_it    => undef,
-      strip => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
-      namestring => 'Poussin, Jean Charles Gabriel',
-      nameinitstring => 'Poussin_JCG' } ;
-my $name13 =
-   {  firstname    => 'Jean~Charles',
-      firstname_i  => 'J.~C.',
-      firstname_it => 'JC',
-      lastname     => 'Poussin Lecoq',
-      lastname_i   => 'P.',
-      lastname_it  => 'P',
-      prefix       => undef,
-      prefix_i     => undef,
-      prefix_it    => undef,
-      suffix       => undef,
-      suffix_i     => undef,
-      suffix_it    => undef,
-      strip => { firstname => 0, lastname => 1, prefix => undef, suffix => undef },
-      namestring => 'Poussin Lecoq, Jean Charles',
-      nameinitstring => '{Poussin_Lecoq}_JC' } ;
-my $name14 =
-   {  firstname    => 'J.~C.~G.',
-      firstname_i  => 'J.~C.~G.',
-      firstname_it => 'JCG',
-      lastname     => 'Vallée~Poussin',
-      lastname_i   => 'V.~P.',
-      lastname_it  => 'VP',
-      prefix       => 'de~la',
-      prefix_i     => 'd.~l.',
-      prefix_it    => 'dl',
-      suffix       => undef,
-      suffix_i     => undef,
-      suffix_it    => undef,
-      strip => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
-      namestring => 'de la Vallée Poussin, J. C. G.',
-      nameinitstring => 'dl_Vallée_Poussin_JCG' } ;
-
 
 is_deeply(parsename('John Doe'), $name1, 'parsename 1');
 is_deeply(parsename('Doe, Jr, John'), $name2, 'parsename 2');
@@ -575,6 +577,10 @@ is( $biber->_print_biblatex_entry('l22'), $l22, 'Unicode firstname');
 is( $biber->_print_biblatex_entry('l23'), $l23, 'Unicode lastname');
 is( $biber->_print_biblatex_entry('l24'), $l24, 'Single string name');
 is( $biber->_print_biblatex_entry('l25'), $l25, 'Hyphen at brace level <> 0');
+is($biber->has_citekey('l26'), '0', 'Bad name with 3 commas');
+is($biber->has_citekey('l27'), '0', 'Bad name with consecutive commas');
+
+
 
 
 unlink "$bibfile.utf8";

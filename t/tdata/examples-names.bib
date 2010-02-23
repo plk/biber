@@ -96,14 +96,14 @@
   AUTHOR = {{Sci-Art Publishers}}
 }
 
+% Should skip the first name as it has too many commas
+@BOOK{L26,
+  AUTHOR = {Smith, Jr., Bill, Lee and James Smith}
+}
 
-
-% The two examples cause Text::BibTeX <=0.4 to segfault when reading them
-% @BOOK{L26,
-%   AUTHOR = {Deux et al.,, O.}
-% }
-% @BOOK{L27,
-%   AUTHOR = {Smith, Jr., Bill, Lee}
-% }
+% This causes Text::BibTeX <=0.4 to segfault
+@BOOK{L27,
+  AUTHOR = {Deux et al.,, O.}
+}
 
 
