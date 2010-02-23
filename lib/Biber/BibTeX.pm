@@ -354,7 +354,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
 	    # Too many commas
 	    my @commas = $name =~ m/,/g;
 	    if ($#commas > 1) {
-	      $logger->warn("Name \"$name\" has too many commas: skipping");
+	      $logger->warn("Name \"$name\" has too many commas: skipping entry $origkey");
 	      $self->{errors}++;
 	      $self->del_citekey($origkey);
 	      next BIBLOOP;
@@ -362,7 +362,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
 
 	    # Consecutive commas cause Text::BibTeX::Name to segfault
 	    if ($name =~ /,,/) {
-	      $logger->warn("Name \"$name\" is malformed (consecutive commas): skipping");
+	      $logger->warn("Name \"$name\" is malformed (consecutive commas): skipping entry $origkey");
 	      $self->{errors}++;
 	      $self->del_citekey($origkey);
 	      next BIBLOOP;
