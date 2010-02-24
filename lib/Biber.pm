@@ -760,8 +760,11 @@ sub postprocess {
     # generate labelyear name
     $self->postprocess_labelyear($citekey);
 
-    # generate namehash,fullhash and uniquenamecount
+    # generate namehash,fullhash
     $self->postprocess_hashes($citekey);
+
+    # generate uniqueness information
+    $self->postprocess_unique($citekey);
 
     # track labelname/year combinations
     $self->postprocess_labelnameyear($citekey);
@@ -1088,8 +1091,23 @@ sub postprocess_hashes {
   $be->set_field('fullhash', $fullhash);
 
   Biber::Config->incr_seennamehash($fullhash);
+}
 
-  # Now we set uniquename, if required
+=head2 postprocess_unique
+
+    Generate uniqueness information. This is used later to generate unique* fields
+
+=cut
+
+sub postprocess_unique {
+  my $self = shift;
+  my $citekey = shift;
+  my $bibentries = $self->bib;
+  my $be = $bibentries->entry($citekey);
+  my $bee = $be->get_field('entrytype');
+  my $namehash = $be->get_field('namehash');
+
+  # Set uniquename, if required
   # Note that we don't determine if a name is unique here - 
   # we can't, were still processing entries at this point.
   # Here we are just recording seen combinations of:
