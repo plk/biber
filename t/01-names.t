@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 41;
+use Test::More tests => 42;
 
 use Biber;
 use Biber::BibTeX;
@@ -534,6 +534,16 @@ my $l25 = q|\entry{L25}{book}{}
 
 |;
 
+my $l28 = q|\entry{L28}{book}{}
+  \name{author}{1}{%
+    {{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart  Lung and Blood Institute}}{U.}{}{}{}{}{}{}}%
+  }
+  \strng{namehash}{U1}
+  \strng{fullhash}{U1}
+  \field{sortinit}{U}
+\endentry
+
+|;
 
 is_deeply(parsename('John Doe'), $name1, 'parsename 1');
 is_deeply(parsename('Doe, Jr, John'), $name2, 'parsename 2');
@@ -579,6 +589,7 @@ is( $biber->_print_biblatex_entry('l24'), $l24, 'Single string name');
 is( $biber->_print_biblatex_entry('l25'), $l25, 'Hyphen at brace level <> 0');
 is($biber->has_citekey('l26'), '0', 'Bad name with 3 commas');
 is($biber->has_citekey('l27'), '0', 'Bad name with consecutive commas');
+is( $biber->_print_biblatex_entry('l28'), $l28, 'Escaped name with 3 commas');
 
 
 

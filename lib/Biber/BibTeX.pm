@@ -349,24 +349,26 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
           my $names = new Biber::Entry::Names;
           foreach my $name (@tmp) {
 
-	    # Check for malformed names ...
+            # Check for malformed names in names which aren't completely escaped
 
-	    # Too many commas
-	    my @commas = $name =~ m/,/g;
-	    if ($#commas > 1) {
-	      $logger->warn("Name \"$name\" has too many commas: skipping entry $origkey");
-	      $self->{errors}++;
-	      $self->del_citekey($origkey);
-	      next BIBLOOP;
-	    }
+            # Too many commas
+            unless ($name =~ m/\A{.+}\z/xms) { # Ignore these tests for escaped names
+              my @commas = $name =~ m/,/g;
+              if ($#commas > 1) {
+                $logger->warn("Name \"$name\" has too many commas: skipping entry $origkey");
+                $self->{errors}++;
+                $self->del_citekey($origkey);
+                next BIBLOOP;
+              }
 
-	    # Consecutive commas cause Text::BibTeX::Name to segfault
-	    if ($name =~ /,,/) {
-	      $logger->warn("Name \"$name\" is malformed (consecutive commas): skipping entry $origkey");
-	      $self->{errors}++;
-	      $self->del_citekey($origkey);
-	      next BIBLOOP;
-	    }
+              # Consecutive commas cause Text::BibTeX::Name to segfault
+              if ($name =~ /,,/) {
+                $logger->warn("Name \"$name\" is malformed (consecutive commas): skipping entry $origkey");
+                $self->{errors}++;
+                $self->del_citekey($origkey);
+                next BIBLOOP;
+              }
+            }
 
             $names->add_element(parsename($name, {useprefix => $useprefix}));
           }
