@@ -587,7 +587,7 @@ sub is_notnull_scalar {
   unless (ref \$arg eq 'SCALAR') {
     return undef;
   }
-  return $arg ? 1 : 0;
+  return $arg ne '' ? 1 : 0;
 }
 
 =head2 is_notnull_array
