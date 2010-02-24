@@ -1242,14 +1242,19 @@ sub postprocess_labelalpha {
       } else {
         $sortlabel = $label = '';
       }
-      my $yr;
-      if ( $be->get_field('year') ) {
-        $yr = substr $be->get_field('year'), 2, 2;
-      } else {
-        $yr = '00';
+      if ( my $year = $be->get_field('year') ) {
+        my $yr;
+        # Make "in press" years look nice in alpha styles
+        if ($year =~ m/\A\s*in\s*press\s*\z/ixms) {
+          $yr = 'ip';
+        }
+        # Normal year
+        else {
+          $yr = substr $year, 2, 2;
+        }
+        $label     .= $yr;
+        $sortlabel .= $yr;
       }
-      $label     .= $yr;
-      $sortlabel .= $yr;
     }
     $be->set_field('labelalpha', $label);
     $be->set_field('sortlabelalpha', $sortlabel);
