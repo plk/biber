@@ -679,6 +679,26 @@ sub parse_biblatexml {
   $self->_parse_biblatexml($xml);
 }
 
+=head2 process_missing
+
+   Check for missing citation keys
+
+=cut
+
+sub process_missing {
+  my $self = shift;
+  my $bibentries = $self->bib;
+  $logger->debug("Checking for missing citekeys");
+  foreach my $citekey ( $self->citekeys ) {
+    unless ( $bibentries->entry_exists($citekey) ) {
+      $logger->warn("I didn't find a database entry for '$citekey'");
+      $self->{warnings}++;
+      $self->del_citekey($citekey);
+      next;
+    }
+  }
+}
+
 =head2 process_sets_and_crossrefs
 
     $biber->process_sets_and_crossrefs
@@ -738,14 +758,6 @@ sub postprocess {
   my $self = shift;
   my $bibentries = $self->bib;
   foreach my $citekey ( $self->citekeys ) {
-    unless ( $bibentries->entry_exists($citekey) ) {
-      $logger->warn("I didn't find a database entry for '$citekey'");
-      $self->{warnings}++;
-      $self->del_citekey($citekey);
-      next;
-    }
-    my $bibentry = $bibentries->entry($citekey);
-
     $logger->debug("Postprocessing entry '$citekey'");
 
     # Postprocess dates
@@ -1447,7 +1459,8 @@ sub prepare {
   my $self = shift;
   Biber::Config->_init;
 
-  $self->process_sets_and_crossrefs;
+  $self->process_missing; # Check for missing citekeys before anything else
+  $self->process_sets_and_crossrefs; # Process sets and crossrefs
   $self->postprocess; # in here we generate the label sort string
   $self->sortentries; # then we do a label sort pass
   $self->generate_final_sortinfo; # in here we generate the final sort string
