@@ -409,8 +409,10 @@ sub name_to_bbl {
       push @pno, 'uniquename=1';
     }
     # Otherwise the name needs to be full to make it unique
+    # However, if uniquename biblatex option is "init" (2), then restrict to
+    # value 1. Confusing.
     else {
-      push @pno, 'uniquename=2';
+      push @pno, $uniquename == 2 ? 'uniquename=1' : 'uniquename=2';
     }
     $pno = join(',', @pno);
   }
