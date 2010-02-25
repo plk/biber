@@ -39,6 +39,8 @@ $CONFIG->{state}{keycase} = {};
 # {AA => { Adams_A => 1, Allport_A => 2 }}
 $CONFIG->{state}{namehashcount} = {};
 
+# uniquenamecount holds a hash of lastnames and lastname/initials which point to a list
+# of name(hashes) which contain them
 $CONFIG->{state}{uniquenamecount} = {};
 $CONFIG->{state}{seennameyear} = {};
 $CONFIG->{state}{seenlabelyear} = {};
@@ -436,23 +438,32 @@ sub incr_seennameyear {
 sub get_numofuniquenames {
   shift; # class method so don't care about class name
   my $name = shift;
-  return scalar keys %{$CONFIG->{state}{uniquenamecount}{$name}};
+  return $#{$CONFIG->{state}{uniquenamecount}{$name}} + 1;
 }
 
+=head2 add_uniquenamecount
 
-=head2 get_uniquenamecount
+    Add a has to the list of name(hashes) which have the name part in it
 
-    Get the uniquenamecount of a lastname/hash combination
-
-    Biber::Config->get_uniquenamecount($lastname, $hash);
+    Biber::Config->add_uniquenamecount($name);
 
 =cut
 
-sub get_uniquenamecount {
+sub add_uniquenamecount {
   shift; # class method so don't care about class name
-  my ($lname, $hash) = @_;
-  return $CONFIG->{state}{uniquenamecount}{$lname}{$hash};
+  my $namestring = shift;
+  my $hash = shift;
+  # name(hash) already recorded as containing namestring
+  if (first {$hash eq $_} @{$CONFIG->{state}{uniquenamecount}{$namestring}}) {
+    return;
+  }
+  # Record name(hash) as containing namestring
+  else {
+    push @{$CONFIG->{state}{uniquenamecount}{$namestring}}, $hash;
+  }
+  return;
 }
+
 
 =head2 _get_uniquename
 
@@ -466,54 +477,10 @@ sub get_uniquenamecount {
 sub _get_uniquename {
   shift; # class method so don't care about class name
   my $name = shift;
-  return $CONFIG->{state}{uniquenamecount}{$name};
+  my @list = sort @{$CONFIG->{state}{uniquenamecount}{$name}};
+  return \@list;
 }
 
-
-=head2 set_uniquenamecount
-
-    Set the uniquenamecount of a lastname/hash combination
-
-    Biber::Config->set_uniquenamecount($lastname, $hash, $num);
-
-=cut
-
-sub set_uniquenamecount {
-  shift; # class method so don't care about class name
-  my ($lname, $hash, $num) = @_;
-  $CONFIG->{state}{uniquenamecount}{$lname}{$hash} = $num;
-  return;
-}
-
-=head2 del_uniquename
-
-    Del the uniquename entry of a name
-
-    Biber::Config->del_uniquename($name);
-
-=cut
-
-sub del_uniquename{
-  shift; # class method so don't care about class name
-  my $name = shift;
-  delete $CONFIG->{state}{uniquenamecount}{$name};
-  return;
-}
-
-
-=head2 uniquenameexists
-
-    Return true if the last name has a uniquecount entry
-
-    Biber::Config->get_uniquenameexists($lastname);
-
-=cut
-
-sub uniquenameexists {
-  shift; # class method so don't care about class name
-  my $lname = shift;
-  return exists($CONFIG->{state}{uniquenamecount}{$lname}) ? 1 : 0;
-}
 
 #============================
 #       namehashcount
