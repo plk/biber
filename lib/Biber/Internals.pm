@@ -812,7 +812,21 @@ sub _print_biblatex_entry {
 
   # make labelname a copy of the right thing before output of name lists
   if (is_def_and_notnull($be->get_field('labelnamename'))) { # avoid unitialised variable warnings
-    $be->set_field('labelname', $be->get_field($be->get_field('labelnamename')));
+    my $lnf = $be->get_field($be->get_field('labelnamename'));
+    $be->set_field('labelname', $lnf);
+
+    # Output a copy of the labelname information to avoid having to do real coding in biblatex
+    # Otherwise, you'd have to search to find the labelname name information using TeX and that
+    # isn't nice.
+    my $total = $lnf->count_elements;
+    $str .= "  \\name{labelname}{$total}{%\n";
+    foreach my $ln (@{$lnf->names}) {
+      # For labelname entry, we need to generate uniquename and uniquelist
+      $str .= $ln->name_to_bbl({uniquename => Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey),
+                                uniquelist => Biber::Config->getblxoption('uniquelist', $be->get_field('entrytype'), $citekey),
+                                ignoreuniquename => $be->get_field('ignoreuniquename')});
+    }
+    $str .= "  }\n";
   }
 
   foreach my $namefield (@NAMEFIELDS) {
@@ -907,37 +921,6 @@ sub _print_biblatex_entry {
     elsif ($be->get_field('labelnumber')) {
       $str .= "  \\field{labelnumber}{"
         . $be->get_field('labelnumber') . "}\n";
-    }
-  }
-
-  if (Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey)) {
-    my $lname = $be->get_field('labelnamename');
-    my $name;
-    my $lastname;
-    my $nameinitstr;
-
-    if ($lname) {
-      $name = $be->get_field($lname)->nth_element(1);
-      $lastname = $name->get_lastname;
-      $nameinitstr = $name->get_nameinitstring;
-    }
-    # uniquename is requested but there is no labelname or there are more than two names in
-    # labelname
-    if ($be->get_field('ignoreuniquename')) {
-      $str .= "  \\count{uniquename}{0}\n";
-    }
-    # If there is one entry (hash) for the lastname, then it's unique
-    elsif (Biber::Config->get_numofuniquenames($lastname) == 1 ) {
-      $str .= "  \\count{uniquename}{0}\n";
-    }
-    # Otherwise, if there is one entry (hash) for the lastname plus initials,
-    # the it needs the initials to make it unique
-    elsif (Biber::Config->get_numofuniquenames($nameinitstr) == 1 ) {
-      $str .= "  \\count{uniquename}{1}\n";
-    }
-    # Otherwise the name needs to be full to make it unique
-    else {
-      $str .= "  \\count{uniquename}{2}\n";
     }
   }
 

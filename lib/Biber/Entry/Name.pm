@@ -308,6 +308,17 @@ sub get_nameinitstring {
 
 sub name_to_bbl {
   my $self = shift;
+  my $options = shift;
+  my $uniquename;
+  my $uniquelist;
+  my @pno; # per-name options
+  my $pno; # per-name options final string
+
+  if ($options) {
+    $uniquename       = $options->{uniquename};
+    $uniquelist       = $options->{uniquelist};
+    $ignoreuniquename = $options->{ignoreuniquename};
+  }
 
   # lastname is always defined
   my $ln  = $self->get_lastname;
@@ -374,7 +385,37 @@ sub name_to_bbl {
     $prei = Biber::Utils::tersify($prei);
     $sufi = Biber::Utils::tersify($sufi);
   }
-  return "    {{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
+
+  # Generate uniquename if uniquename is requested
+  # This only happens for \name{labelname} pseudo-name lists
+
+  if ($uniquename) {
+    my $lastname = $self->get_lastname;
+    my $nameinitstr = $self->get_nameinitstring;
+
+    # uniquename is requested but there is no labelname or there are more than two names in
+    # labelname
+    if ($ignoreuniquename) {
+      push @pno, 'uniquename=0';
+
+    }
+    # If there is one entry (hash) for the lastname, then it's unique
+    elsif (Biber::Config->get_numofuniquenames($lastname) == 1 ) {
+      push @pno, 'uniquename=0';
+    }
+    # Otherwise, if there is one entry (hash) for the lastname plus initials,
+    # the it needs the initials to make it unique
+    elsif (Biber::Config->get_numofuniquenames($nameinitstr) == 1 ) {
+      push @pno, 'uniquename=1';
+    }
+    # Otherwise the name needs to be full to make it unique
+    else {
+      push @pno, 'uniquename=2';
+    }
+    $pno = join(',', @pno);
+  }
+
+  return "    {{$pno}{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
 }
 
 =head1 AUTHORS
