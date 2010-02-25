@@ -910,11 +910,12 @@ sub _print_biblatex_entry {
     }
   }
 
-  if (Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey)) {
+  if (my $unopt = Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey)) {
     my $lname = $be->get_field('labelnamename');
     my $name;
     my $lastname;
     my $nameinitstr;
+    my $un;
 
     if ($lname) {
       $name = $be->get_field($lname)->nth_element(1);
@@ -924,21 +925,24 @@ sub _print_biblatex_entry {
     # uniquename is requested but there is no labelname or there are more than two names in
     # labelname
     if ($be->get_field('ignoreuniquename')) {
-      $str .= "  \\count{uniquename}{0}\n";
+      $un = '0';
     }
     # If there is one entry (hash) for the lastname, then it's unique
     elsif (Biber::Config->get_numofuniquenames($lastname) == 1 ) {
-      $str .= "  \\count{uniquename}{0}\n";
+      $un = '0';
     }
     # Otherwise, if there is one entry (hash) for the lastname plus initials,
     # the it needs the initials to make it unique
     elsif (Biber::Config->get_numofuniquenames($nameinitstr) == 1 ) {
-      $str .= "  \\count{uniquename}{1}\n";
+      $un = '1';
     }
     # Otherwise the name needs to be full to make it unique
+    # However, if uniquename biblatex option is "init" (2), then restrict to
+    # value 1. Confusing.
     else {
-      $str .= "  \\count{uniquename}{2}\n";
+      $un = $unopt == 2 ? 1 : 2;
     }
+    $str .= "  \\count{uniquename}{$un}\n";
   }
 
   if ( Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'), $citekey)
