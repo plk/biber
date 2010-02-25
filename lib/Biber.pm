@@ -1120,7 +1120,7 @@ sub postprocess_unique {
   my $namehash = $be->get_field('namehash');
 
   # Set uniquename, if required
-  # Note that we don't determine if a name is unique here - 
+  # Note that we don't determine if a name is unique here -
   # we can't, were still processing entries at this point.
   # Here we are just recording seen combinations of:
   #
@@ -1148,34 +1148,13 @@ sub postprocess_unique {
     # If we need to provide uniquename, labelnamename exists and we are only
     # dealing with a single name
     if ($lname and $singlename == 1 ) {
+      # Record a uniqueness information entry for the lastname showing that
+      # this lastname has been seen in the name with the namehash
+      Biber::Config->add_uniquenamecount($lastname, $namehash);
 
-      # Record an entry for the lastname showing all the hashes which use this
-      # last name if an entry doesn't already exist
-      if ( not Biber::Config->get_uniquenamecount($lastname, $namehash) ) {
-	# Here we are just adding a new hash for an existing lastname
-	if ( Biber::Config->uniquenameexists($lastname) ) {
-	  Biber::Config->set_uniquenamecount($lastname, $namehash, 1);
-	}
-	# Here we are creating a new lastname record
-	else {
-	  Biber::Config->del_uniquenamecount($lastname);
-	  Biber::Config->set_uniquenamecount($lastname, $namehash, 1);
-	}
-      }
-
-      # Record an entry for the lastname+initials showing all the hashes
-      # which use this lastname+initials combination if an entry doesn't already exist
-      if ( not Biber::Config->get_uniquenamecount($namestring, $namehash) ) {
-	# Here we are just adding a new hash for an existing lastname+initials
-	if ( Biber::Config->uniquenameexists($namestring) ) {
-	  Biber::Config->set_uniquenamecount($namestring, $namehash, 1);
-	}
-	# Here we are creating a new lastname_initials record
-	else {
-	  Biber::Config->del_uniquenamecount($namestring);
-	  Biber::Config->set_uniquenamecount($namestring, $namehash, 1);
-	}
-      }
+      # Record a uniqueness information entry for the lastname+initials showing that
+      # this lastname_initials has been seen in the name with the namehash
+      Biber::Config->add_uniquenamecount($namestring, $namehash);
     }
     else {
       $be->set_field('ignoreuniquename', 1);

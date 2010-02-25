@@ -231,9 +231,9 @@ is( $biber->_print_biblatex_entry('markey'), $markey, 'bbl entry 2' ) ;
 is( $biber->_print_biblatex_entry('jaffe'), $jaffe, 'bbl entry 3' ) ;
 is( $biber->_print_biblatex_entry('pimentel00'), $pimentel1, 'bbl entry 4 - Suffix test 1' ) ;
 
-my $Worman_N = { 'WN2' => 1, 'WN1' => 1 } ;
+my $Worman_N = [ 'WN1', 'WN2' ] ;
 
-my $Gennep = { 'vGA1' => 1, 'vGJ1' => 1 } ;
+my $Gennep = [ 'vGA1', 'vGJ1' ] ;
 
 is_deeply( Biber::Config->_get_uniquename('Worman_N'), $Worman_N, 'uniquename count 1') ;
 

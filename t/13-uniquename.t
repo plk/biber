@@ -131,7 +131,7 @@ my $un5 = q|\entry{un5}{article}{}
   \field{labelyear}{1921}
   \count{uniquename}{0}
   \field{year}{1921}
-  \field{title}{Unique 4}
+  \field{title}{Unique 5}
 \endentry
 
 |;
