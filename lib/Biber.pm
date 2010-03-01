@@ -6,6 +6,7 @@ use IO::File;
 use File::Spec;
 use Encode;
 use POSIX qw( locale_h ); # for sorting with built-in "sort"
+use locale;
 use IPC::Cmd qw( can_run run );
 use Cwd qw( abs_path );
 use Biber::Config;

@@ -2,6 +2,7 @@ package Biber::Entry;
 use List::Util qw( first );
 use Biber::Utils;
 use Biber::Constants;
+use locale;
 
 =encoding utf-8
 
