@@ -1,4 +1,5 @@
 package Biber::Entries;
+use locale;
 
 =encoding utf-8
 
