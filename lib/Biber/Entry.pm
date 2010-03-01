@@ -2,7 +2,6 @@ package Biber::Entry;
 use List::Util qw( first );
 use Biber::Utils;
 use Biber::Constants;
-use locale;
 
 =encoding utf-8
 
@@ -102,6 +101,7 @@ sub field_exists {
 
 sub fields {
   my $self = shift;
+  use locale;
   return sort keys %$self;
 }
 
