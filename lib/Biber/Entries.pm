@@ -1,5 +1,4 @@
 package Biber::Entries;
-use locale;
 
 =encoding utf-8
 
@@ -67,6 +66,7 @@ sub entry {
 
 sub sorted_keys {
   my $self = shift;
+  use locale;
   return sort keys %$self;
 }
 

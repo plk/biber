@@ -6,7 +6,6 @@ use IO::File;
 use File::Spec;
 use Encode;
 use POSIX qw( locale_h ); # for sorting with built-in "sort"
-use locale;
 use IPC::Cmd qw( can_run run );
 use Cwd qw( abs_path );
 use Biber::Config;
@@ -1340,6 +1339,7 @@ sub sortentries {
   my @auxcitekeys = $self->citekeys;
 
   if ( Biber::Config->getoption('fastsort') ) {
+    use locale;
     if (Biber::Config->getoption('locale')) {
       my $thislocale = Biber::Config->getoption('locale');
       $logger->debug("Sorting entries with built-in sort (with locale $thislocale) ...");
