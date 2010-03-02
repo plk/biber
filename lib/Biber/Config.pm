@@ -443,9 +443,9 @@ sub get_numofuniquenames {
 
 =head2 add_uniquenamecount
 
-    Add a has to the list of name(hashes) which have the name part in it
+    Add a hash to the list of name(hashes) which have the name part in it
 
-    Biber::Config->add_uniquenamecount($name);
+    Biber::Config->add_uniquenamecount($name, $hash);
 
 =cut
 
