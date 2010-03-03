@@ -42,6 +42,10 @@ $CONFIG->{state}{namehashcount} = {};
 # uniquenamecount holds a hash of lastnames and lastname/initials which point to a list
 # of name(hashes) which contain them
 $CONFIG->{state}{uniquenamecount} = {};
+
+# uniquelistcount holds a hash of hashes to list part counts
+$CONFIG->{state}{uniquelistcount} = {};
+
 $CONFIG->{state}{seennameyear} = {};
 $CONFIG->{state}{seenlabelyear} = {};
 $CONFIG->{state}{seenkeys} = {};
@@ -57,6 +61,7 @@ sub _init {
   $CONFIG->{state}{seennamehash} = {};
   $CONFIG->{state}{namehashcount} = {};
   $CONFIG->{state}{uniquenamecount} = {};
+  $CONFIG->{state}{uniquelistcount} = {};
   $CONFIG->{state}{seennameyear} = {};
   $CONFIG->{state}{seenlabelyear} = {};
   $CONFIG->{state}{seenkeys} = {};
@@ -421,6 +426,41 @@ sub incr_seennameyear {
   }
   return;
 }
+
+#============================
+#       uniquelistcount
+#============================
+
+=head2 get_uniquelistcount
+
+    Get the number of uniquelist entries for a (possibly partial) list
+
+    Biber::Config->get_uniquelistcount($namelist);
+
+=cut
+
+sub get_uniquelistcount {
+  shift; # class method so don't care about class name
+  my $liststring = shift;
+  return $CONFIG->{state}{uniquelistcount}{$liststring};
+}
+
+=head2 add_uniquelistcount
+
+    Incremenent the count for a list part to the data for a namehash
+
+    Biber::Config->add_uniquelistcount($hash, $liststring);
+
+=cut
+
+sub add_uniquelistcount {
+  shift; # class method so don't care about class name
+  my $liststring = shift;
+  $CONFIG->{state}{uniquelistcount}{$liststring}++;
+  return;
+}
+
+
 
 
 #============================

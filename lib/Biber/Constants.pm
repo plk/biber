@@ -96,6 +96,8 @@ our %CONFIG_DEFAULT_BIBLATEX = (
   labelalpha => '0',
   singletitle => '0',
   uniquename => '0',
+  uniquelist => '0',
+  uniqueness => [ 'name', 'namelist', 'year' ],
   sorting => [  [  {'presort'    => []},
       {'mm'         => []} ],
     [  {'sortkey'    => ['final']}  ],

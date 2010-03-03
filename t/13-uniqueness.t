@@ -16,8 +16,9 @@ chdir("t/tdata") ;
 $biber->parse_auxfile('uniqueness.aux');
 
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
+Biber::Config->setblxoption('uniquelist', 1);
 $biber->parse_bibtex($bibfile);
-
+Biber::Config->dump;
 $biber->prepare;
 my $bibentries = $biber->bib;
 

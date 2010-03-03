@@ -16,7 +16,7 @@ Biber::Entry::Names
 
 sub new {
   my $class = shift;
-  return bless [], $class;
+  return bless {}, $class;
 }
 
 
@@ -28,7 +28,7 @@ sub new {
 
 sub notnull {
   my $self = shift;
-  my @arr = @$self;
+  my @arr = @{$self->{namelist}};
   return $#arr > -1 ? 1 : 0;
 }
 
@@ -41,7 +41,47 @@ sub notnull {
 
 sub names {
   my $self = shift;
-  return $self;
+  return $self->{namelist};
+}
+
+=head2 set_uniquelist
+
+    Add a uniquelist count to the Biber::Entry::Names
+    object
+
+=cut
+
+sub set_uniquelist {
+  my $self = shift;
+  my $uniquelist = shift;
+  $self->{uniquelist} = $uniquelist;
+  return;
+}
+
+=head2 get_uniquelist
+
+    Get the uniquelist count from the Biber::Entry::Names
+    object
+
+=cut
+
+sub get_uniquelist {
+  my $self = shift;
+  return $self->{uniquelist};
+}
+
+=head2 count_uniquelist
+
+    Count the names in a string used to determine uniquelist.
+
+=cut
+
+sub count_uniquelist {
+  my $self = shift;
+  my $liststring = shift;
+  $liststring =~ s/\|\z//xms;
+  my @liststring_array = split(/\|/, $liststring);
+  return $#liststring_array + 1;
 }
 
 =head2 add_element
@@ -54,7 +94,7 @@ sub names {
 sub add_element {
   my $self = shift;
   my $name_obj = shift;
-  push @$self, $name_obj;
+  push @{$self->{namelist}}, $name_obj;
   return;
 }
 
@@ -66,7 +106,7 @@ sub add_element {
 
 sub count_elements {
   my $self = shift;
-  return scalar @$self;
+  return scalar @{$self->{namelist}};
 }
 
 =head2 nth_element
@@ -78,7 +118,7 @@ sub count_elements {
 sub nth_element {
   my $self = shift;
   my $n = shift;
-  return @$self[$n-1];
+  return $self->{namelist}[$n-1];
 }
 
 =head2 first_n_elements
@@ -91,7 +131,10 @@ sub nth_element {
 sub first_n_elements {
   my $self = shift;
   my $n = shift;
-  return bless [ splice(@$self, 0, $n) ], Biber::Entry::Names;
+  my $uniquelist =  $self->{uniquelist};
+  my $newnames =  [ splice(@{$self->{namelist}}, 0, $n) ];
+  return bless  {'uniquelist' => $uniquelist, 'namelist' => $newnames},
+    Biber::Entry::Names;
 }
 
 =head2 del_last_element
@@ -102,7 +145,7 @@ sub first_n_elements {
 
 sub del_last_element {
   my $self = shift;
-  $self = [ pop(@$self) ];
+  $self->{namelist} = [ pop(@{$self->{namelist}}) ];
   return;
 }
 
@@ -114,7 +157,7 @@ sub del_last_element {
 
 sub last_element {
   my $self = shift;
-  return @$self[-1];
+  return $self->{namelist}[-1];
 }
 
 =head2 dump

@@ -819,12 +819,17 @@ sub _print_biblatex_entry {
     # Otherwise, you'd have to search to find the labelname name information using TeX and that
     # isn't nice.
     my $total = $lnf->count_elements;
-    $str .= "  \\name{labelname}{$total}{%\n";
+    my @plo; # per-list options
+
+    # Add uniquelist, if defined
+    if (defined($lnf->get_uniquelist)){
+      push @plo, 'uniquelist=' . $lnf->get_uniquelist;
+    }
+
+    my $plo =join(',', @plo);
+    $str .= "  \\name{labelname}{$total}{$plo}{%\n";
     foreach my $ln (@{$lnf->names}) {
-      # For labelname entry, we need to generate uniquename and uniquelist
-      $str .= $ln->name_to_bbl({uniquename => Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey),
-                                uniquelist => Biber::Config->getblxoption('uniquelist', $be->get_field('entrytype'), $citekey),
-                                ignoreuniquename => $be->get_field('ignoreuniquename')});
+      $str .= $ln->name_to_bbl('labelname_special');
     }
     $str .= "  }\n";
   }
