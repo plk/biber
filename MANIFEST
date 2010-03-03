@@ -79,7 +79,7 @@ t/10-sort-order.t
 t/10-configfile.t
 t/11-set.t
 t/12-skips.t
-t/13-uniquename.t
+t/13-uniqueness.t
 t/pod-coverage.t
 t/pod.t
 t/tdata/options.aux
@@ -111,11 +111,11 @@ t/tdata/examples-options.bib
 t/tdata/examples-skips.bib
 t/tdata/examples-sort.bib
 t/tdata/examples-sort-order.bib
-t/tdata/examples-uniquename.bib
+t/tdata/examples-uniqueness.bib
 t/tdata/examples.bib
 t/tdata/biber2.conf
 t/tdata/examples-set.bib
 t/tdata/set.aux
 t/tdata/set.bcf
-t/tdata/uniquename.aux
-t/tdata/uniquename.bcf
+t/tdata/uniqueness.aux
+t/tdata/uniqueness.bcf
