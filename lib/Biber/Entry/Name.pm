@@ -333,7 +333,7 @@ sub name_to_bbl {
   my $self = shift;
   my $arg = shift;
   my $ln_special = 0;
-  if ($arg eq 'labelname_special') {
+  if (defined($arg) and ($arg eq 'labelname_special')) {
     $ln_special = 1;
   }
   my @pno; # per-name options

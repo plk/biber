@@ -24,8 +24,11 @@ my $bibentries = $biber->bib;
 my $string1 = $biber->create_bbl_string_body;
 my $string1p = q|\entry{Elias1955}{set}{}
   \set{Elias1955a,Elias1955b}
-  \name{author}{1}{%
-    {{Elias}{E.}{P.}{P.}{}{}{}{}}%
+  \name{labelname}{1}{}{%
+    {{}{Elias}{E.}{P.}{P.}{}{}{}{}}%
+  }
+  \name{author}{1}{}{%
+    {{}{Elias}{E.}{P.}{P.}{}{}{}{}}%
   }
   \strng{namehash}{EP1}
   \strng{fullhash}{EP1}
@@ -49,8 +52,11 @@ my $string1p = q|\entry{Elias1955}{set}{}
 
 \entry{Elias1955a}{article}{}
   \inset{Elias1955}
-  \name{author}{1}{%
-    {{Elias}{E.}{P.}{P.}{}{}{}{}}%
+  \name{labelname}{1}{}{%
+    {{}{Elias}{E.}{P.}{P.}{}{}{}{}}%
+  }
+  \name{author}{1}{}{%
+    {{}{Elias}{E.}{P.}{P.}{}{}{}{}}%
   }
   \strng{namehash}{EP1}
   \strng{fullhash}{EP1}
@@ -71,8 +77,11 @@ my $string1p = q|\entry{Elias1955}{set}{}
 
 \entry{Elias1955b}{article}{}
   \inset{Elias1955}
-  \name{author}{1}{%
-    {{Elias}{E.}{P.}{P.}{}{}{}{}}%
+  \name{labelname}{1}{}{%
+    {{}{Elias}{E.}{P.}{P.}{}{}{}{}}%
+  }
+  \name{author}{1}{}{%
+    {{}{Elias}{E.}{P.}{P.}{}{}{}{}}%
   }
   \strng{namehash}{EP1}
   \strng{fullhash}{EP1}

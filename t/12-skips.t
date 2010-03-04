@@ -23,8 +23,11 @@ my $bibentries = $biber->bib;
 
 my $set1 = q|\entry{seta}{set}{}
   \set{set:membera,set:memberb,set:memberc}
-  \name{author}{1}{%
-    {{Doe}{D.}{John}{J.}{}{}{}{}}%
+  \name{labelname}{1}{}{%
+    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+  }
+  \name{author}{1}{}{%
+    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
   }
   \strng{namehash}{DJ1}
   \strng{fullhash}{DJ1}
@@ -42,8 +45,11 @@ my $set1 = q|\entry{seta}{set}{}
 
 my $set2 = q|\entry{set:membera}{book}{}
   \inset{set}
-  \name{author}{1}{%
-    {{Doe}{D.}{John}{J.}{}{}{}{}}%
+  \name{labelname}{1}{}{%
+    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+  }
+  \name{author}{1}{}{%
+    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
   }
   \strng{namehash}{DJ1}
   \strng{fullhash}{DJ1}
@@ -56,8 +62,11 @@ my $set2 = q|\entry{set:membera}{book}{}
 
 my $set3 = q|\entry{set:memberb}{book}{}
   \inset{set}
-  \name{author}{1}{%
-    {{Doe}{D.}{John}{J.}{}{}{}{}}%
+  \name{labelname}{1}{}{%
+    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+  }
+  \name{author}{1}{}{%
+    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
   }
   \strng{namehash}{DJ1}
   \strng{fullhash}{DJ1}
@@ -70,8 +79,11 @@ my $set3 = q|\entry{set:memberb}{book}{}
 
 my $set4 = q|\entry{set:memberc}{book}{}
   \inset{set}
-  \name{author}{1}{%
-    {{Doe}{D.}{John}{J.}{}{}{}{}}%
+  \name{labelname}{1}{}{%
+    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+  }
+  \name{author}{1}{}{%
+    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
   }
   \strng{namehash}{DJ1}
   \strng{fullhash}{DJ1}
@@ -83,8 +95,11 @@ my $set4 = q|\entry{set:memberc}{book}{}
 |;
 
 my $noset1 = q|\entry{noseta}{book}{}
-  \name{author}{1}{%
-    {{Doe}{D.}{John}{J.}{}{}{}{}}%
+  \name{labelname}{1}{}{%
+    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+  }
+  \name{author}{1}{}{%
+    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
   }
   \strng{namehash}{DJ1}
   \strng{fullhash}{DJ1}
@@ -100,8 +115,11 @@ my $noset1 = q|\entry{noseta}{book}{}
 |;
 
 my $noset2 = q|\entry{nosetb}{book}{}
-  \name{author}{1}{%
-    {{Doe}{D.}{John}{J.}{}{}{}{}}%
+  \name{labelname}{1}{}{%
+    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+  }
+  \name{author}{1}{}{%
+    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
   }
   \strng{namehash}{DJ1}
   \strng{fullhash}{DJ1}
@@ -117,8 +135,11 @@ my $noset2 = q|\entry{nosetb}{book}{}
 |;
 
 my $noset3 = q|\entry{nosetc}{book}{}
-  \name{author}{1}{%
-    {{Doe}{D.}{John}{J.}{}{}{}{}}%
+  \name{labelname}{1}{}{%
+    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+  }
+  \name{author}{1}{}{%
+    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
   }
   \strng{namehash}{DJ1}
   \strng{fullhash}{DJ1}

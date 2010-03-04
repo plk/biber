@@ -29,28 +29,43 @@ $biber->parse_bibtex($bibfile);
 $biber->prepare;
 
 my $murray1 = q|\entry{murray}{article}{}
-  \name{author}{14}{%
-    {{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
-    {{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
-    {{Zhong}{Z}{Chuan-Jian}{C-J}{}{}{}{}}%
-    {{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
-    {{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
-    {{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
-    {{Londono}{L}{J.~David}{JD}{}{}{}{}}%
-    {{Green}{G}{Stephen~J.}{SJ}{}{}{}{}}%
-    {{Stokes}{S}{Jennifer~J.}{JJ}{}{}{}{}}%
-    {{Wignall}{W}{George~D.}{GD}{}{}{}{}}%
-    {{Glish}{G}{Gary~L.}{GL}{}{}{}{}}%
-    {{Porter}{P}{Marc~D.}{MD}{}{}{}{}}%
-    {{Evans}{E}{Neal~D.}{ND}{}{}{}{}}%
-    {{Murray}{M}{Royce~W.}{RW}{}{}{}{}}%
+  \name{labelname}{14}{}{%
+    {{uniquename=0}{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
+    {{uniquename=0}{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
+    {{uniquename=0}{Zhong}{Z}{Chuan-Jian}{C-J}{}{}{}{}}%
+    {{uniquename=0}{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
+    {{uniquename=0}{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
+    {{uniquename=0}{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
+    {{uniquename=0}{Londono}{L}{J.~David}{JD}{}{}{}{}}%
+    {{uniquename=0}{Green}{G}{Stephen~J.}{SJ}{}{}{}{}}%
+    {{uniquename=0}{Stokes}{S}{Jennifer~J.}{JJ}{}{}{}{}}%
+    {{uniquename=0}{Wignall}{W}{George~D.}{GD}{}{}{}{}}%
+    {{uniquename=0}{Glish}{G}{Gary~L.}{GL}{}{}{}{}}%
+    {{uniquename=0}{Porter}{P}{Marc~D.}{MD}{}{}{}{}}%
+    {{uniquename=0}{Evans}{E}{Neal~D.}{ND}{}{}{}{}}%
+    {{uniquename=0}{Murray}{M}{Royce~W.}{RW}{}{}{}{}}%
+  }
+  \name{author}{14}{}{%
+    {{}{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
+    {{}{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
+    {{}{Zhong}{Z}{Chuan-Jian}{C-J}{}{}{}{}}%
+    {{}{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
+    {{}{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
+    {{}{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
+    {{}{Londono}{L}{J.~David}{JD}{}{}{}{}}%
+    {{}{Green}{G}{Stephen~J.}{SJ}{}{}{}{}}%
+    {{}{Stokes}{S}{Jennifer~J.}{JJ}{}{}{}{}}%
+    {{}{Wignall}{W}{George~D.}{GD}{}{}{}{}}%
+    {{}{Glish}{G}{Gary~L.}{GL}{}{}{}{}}%
+    {{}{Porter}{P}{Marc~D.}{MD}{}{}{}{}}%
+    {{}{Evans}{E}{Neal~D.}{ND}{}{}{}{}}%
+    {{}{Murray}{M}{Royce~W.}{RW}{}{}{}{}}%
   }
   \strng{namehash}{HMJ+1}
   \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
   \field{labelalpha}{Hos\textbf{+}98}
   \field{sortinit}{H}
   \field{labelyear}{1998}
-  \count{uniquename}{0}
   \true{singletitle}
   \field{year}{1998}
   \field{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
@@ -68,28 +83,43 @@ my $murray1 = q|\entry{murray}{article}{}
 |;
 
 my $murray2 = q|\entry{murray}{article}{}
-  \name{author}{14}{%
-    {{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
-    {{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
-    {{Zhong}{Z}{Chuan-Jian}{C-J}{}{}{}{}}%
-    {{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
-    {{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
-    {{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
-    {{Londono}{L}{J.~David}{JD}{}{}{}{}}%
-    {{Green}{G}{Stephen~J.}{SJ}{}{}{}{}}%
-    {{Stokes}{S}{Jennifer~J.}{JJ}{}{}{}{}}%
-    {{Wignall}{W}{George~D.}{GD}{}{}{}{}}%
-    {{Glish}{G}{Gary~L.}{GL}{}{}{}{}}%
-    {{Porter}{P}{Marc~D.}{MD}{}{}{}{}}%
-    {{Evans}{E}{Neal~D.}{ND}{}{}{}{}}%
-    {{Murray}{M}{Royce~W.}{RW}{}{}{}{}}%
+  \name{labelname}{14}{}{%
+    {{uniquename=0}{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
+    {{uniquename=0}{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
+    {{uniquename=0}{Zhong}{Z}{Chuan-Jian}{C-J}{}{}{}{}}%
+    {{uniquename=0}{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
+    {{uniquename=0}{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
+    {{uniquename=0}{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
+    {{uniquename=0}{Londono}{L}{J.~David}{JD}{}{}{}{}}%
+    {{uniquename=0}{Green}{G}{Stephen~J.}{SJ}{}{}{}{}}%
+    {{uniquename=0}{Stokes}{S}{Jennifer~J.}{JJ}{}{}{}{}}%
+    {{uniquename=0}{Wignall}{W}{George~D.}{GD}{}{}{}{}}%
+    {{uniquename=0}{Glish}{G}{Gary~L.}{GL}{}{}{}{}}%
+    {{uniquename=0}{Porter}{P}{Marc~D.}{MD}{}{}{}{}}%
+    {{uniquename=0}{Evans}{E}{Neal~D.}{ND}{}{}{}{}}%
+    {{uniquename=0}{Murray}{M}{Royce~W.}{RW}{}{}{}{}}%
+  }
+  \name{author}{14}{}{%
+    {{}{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
+    {{}{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
+    {{}{Zhong}{Z}{Chuan-Jian}{C-J}{}{}{}{}}%
+    {{}{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
+    {{}{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
+    {{}{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
+    {{}{Londono}{L}{J.~David}{JD}{}{}{}{}}%
+    {{}{Green}{G}{Stephen~J.}{SJ}{}{}{}{}}%
+    {{}{Stokes}{S}{Jennifer~J.}{JJ}{}{}{}{}}%
+    {{}{Wignall}{W}{George~D.}{GD}{}{}{}{}}%
+    {{}{Glish}{G}{Gary~L.}{GL}{}{}{}{}}%
+    {{}{Porter}{P}{Marc~D.}{MD}{}{}{}{}}%
+    {{}{Evans}{E}{Neal~D.}{ND}{}{}{}{}}%
+    {{}{Murray}{M}{Royce~W.}{RW}{}{}{}{}}%
   }
   \strng{namehash}{HMJ+1}
   \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
   \field{labelalpha}{Hos98}
   \field{sortinit}{H}
   \field{labelyear}{1998}
-  \count{uniquename}{0}
   \true{singletitle}
   \field{year}{1998}
   \field{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
@@ -109,19 +139,27 @@ my $murray2 = q|\entry{murray}{article}{}
 
 my $setaksin = q|\entry{set:aksin}{article}{}
   \inset{set}
-  \name{author}{7}{%
-    {{Aksın}{A}{Özge}{Ö}{}{}{}{}}%
-    {{Türkmen}{T}{Hayati}{H}{}{}{}{}}%
-    {{Artok}{A}{Levent}{L}{}{}{}{}}%
-    {{C̨etinkaya}{C}{Bekir}{B}{}{}{}{}}%
-    {{Ni}{N}{Chaoying}{C}{}{}{}{}}%
-    {{Büyükgüngör}{B}{Orhan}{O}{}{}{}{}}%
-    {{Özkal}{Ö}{Erhan}{E}{}{}{}{}}%
+  \name{labelname}{7}{}{%
+    {{uniquename=0}{Aksın}{A}{Özge}{Ö}{}{}{}{}}%
+    {{uniquename=0}{Türkmen}{T}{Hayati}{H}{}{}{}{}}%
+    {{uniquename=0}{Artok}{A}{Levent}{L}{}{}{}{}}%
+    {{uniquename=0}{C̨etinkaya}{C}{Bekir}{B}{}{}{}{}}%
+    {{uniquename=0}{Ni}{N}{Chaoying}{C}{}{}{}{}}%
+    {{uniquename=0}{Büyükgüngör}{B}{Orhan}{O}{}{}{}{}}%
+    {{uniquename=0}{Özkal}{Ö}{Erhan}{E}{}{}{}{}}%
+  }
+  \name{author}{7}{}{%
+    {{}{Aksın}{A}{Özge}{Ö}{}{}{}{}}%
+    {{}{Türkmen}{T}{Hayati}{H}{}{}{}{}}%
+    {{}{Artok}{A}{Levent}{L}{}{}{}{}}%
+    {{}{C̨etinkaya}{C}{Bekir}{B}{}{}{}{}}%
+    {{}{Ni}{N}{Chaoying}{C}{}{}{}{}}%
+    {{}{Büyükgüngör}{B}{Orhan}{O}{}{}{}{}}%
+    {{}{Özkal}{Ö}{Erhan}{E}{}{}{}{}}%
   }
   \strng{namehash}{AÖ+1}
   \strng{fullhash}{AÖTHALCBNCBOÖE1}
   \field{sortinit}{A}
-  \count{uniquename}{0}
   \true{singletitle}
   \field{year}{2006}
   \field{month}{02}
@@ -136,15 +174,17 @@ my $setaksin = q|\entry{set:aksin}{article}{}
 | ;
 
 my $markey = q|\entry{markey}{online}{}
-  \name{author}{1}{%
-    {{Markey}{M}{Nicolas}{N}{}{}{}{}}%
+  \name{labelname}{1}{}{%
+    {{uniquename=0}{Markey}{M}{Nicolas}{N}{}{}{}{}}%
+  }
+  \name{author}{1}{}{%
+    {{}{Markey}{M}{Nicolas}{N}{}{}{}{}}%
   }
   \strng{namehash}{MN1}
   \strng{fullhash}{MN1}
   \field{labelalpha}{Mar05}
   \field{sortinit}{M}
   \field{labelyear}{2005\bibdatedash 2006}
-  \count{uniquename}{0}
   \true{singletitle}
   \field{year}{2005}
   \field{endyear}{2006}
@@ -174,13 +214,16 @@ my $markey = q|\entry{markey}{online}{}
 | ;
 
 my $jaffe = q|\entry{jaffe}{collection}{}
-  \name{editor}{1}{%
-    {{Jaffé}{J}{Philipp}{P}{}{}{}{}}%
+  \name{labelname}{1}{}{%
+    {{uniquename=0}{Jaffé}{J}{Philipp}{P}{}{}{}{}}%
   }
-  \name{editora}{3}{%
-    {{Loewenfeld}{L}{Samuel}{S}{}{}{}{}}%
-    {{Kaltenbrunner}{K}{Ferdinand}{F}{}{}{}{}}%
-    {{Ewald}{E}{Paul}{P}{}{}{}{}}%
+  \name{editor}{1}{}{%
+    {{}{Jaffé}{J}{Philipp}{P}{}{}{}{}}%
+  }
+  \name{editora}{3}{}{%
+    {{}{Loewenfeld}{L}{Samuel}{S}{}{}{}{}}%
+    {{}{Kaltenbrunner}{K}{Ferdinand}{F}{}{}{}{}}%
+    {{}{Ewald}{E}{Paul}{P}{}{}{}{}}%
   }
   \list{location}{1}{%
     {Leipzig}%
@@ -190,7 +233,6 @@ my $jaffe = q|\entry{jaffe}{collection}{}
   \field{labelalpha}{Jaf85}
   \field{sortinit}{J}
   \field{labelyear}{1885\bibdatedash 1888}
-  \count{uniquename}{0}
   \true{singletitle}
   \field{year}{1885}
   \field{endyear}{1888}
@@ -207,8 +249,11 @@ my $jaffe = q|\entry{jaffe}{collection}{}
 |;
 
 my $pimentel1 = q|\entry{Pimentel00}{thesis}{}
-  \name{author}{1}{%
-    {{Pimentel}{P}{Joseph~J.}{JJ}{}{}{Jr.}{J}}%
+  \name{labelname}{1}{}{%
+    {{uniquename=0}{Pimentel}{P}{Joseph~J.}{JJ}{}{}{Jr.}{J}}%
+  }
+  \name{author}{1}{}{%
+    {{}{Pimentel}{P}{Joseph~J.}{JJ}{}{}{Jr.}{J}}%
   }
   \list{institution}{1}{%
     {University of Michigan}%
@@ -218,7 +263,6 @@ my $pimentel1 = q|\entry{Pimentel00}{thesis}{}
   \field{labelalpha}{Pim00}
   \field{sortinit}{P}
   \field{labelyear}{2000}
-  \count{uniquename}{0}
   \true{singletitle}
   \field{year}{2000}
   \field{title}{Sociolinguistic Reflections of Privatization and Globalization: The {Arabic} of {Egyptian} newspaper advertisements}
@@ -231,9 +275,9 @@ is( $biber->_print_biblatex_entry('markey'), $markey, 'bbl entry 2' ) ;
 is( $biber->_print_biblatex_entry('jaffe'), $jaffe, 'bbl entry 3' ) ;
 is( $biber->_print_biblatex_entry('pimentel00'), $pimentel1, 'bbl entry 4 - Suffix test 1' ) ;
 
-my $Worman_N = [ 'WN1', 'WN2' ] ;
+my $Worman_N = [ 'Worman, Nana', 'Worman, Nancy' ] ;
 
-my $Gennep = [ 'vGA1', 'vGJ1' ] ;
+my $Gennep = [ 'van Gennep, Arnold', 'van Gennep, Jean' ] ;
 
 is_deeply( Biber::Config->_get_uniquename('Worman_N'), $Worman_N, 'uniquename count 1') ;
 

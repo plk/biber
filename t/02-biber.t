@@ -66,8 +66,10 @@ my $stdmodel = {
                 'nameyear' => 'Glashow2Sheldon01961',
                 'journaltitle' => 'Nucl.~Phys.',
                 'entryset' => 'stdmodel:glashow,stdmodel:weinberg,stdmodel:salam',
-                'author' => [
+                'author' => {namelist =>
+                             [
                               {
+                               uniquename   => 0,
                                firstname    => 'Sheldon',
                                firstname_i  => 'S.',
                                firstname_it => 'S',
@@ -84,7 +86,7 @@ my $stdmodel = {
                                prefix_it    => undef,
                                strip        => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
                               }
-                            ],
+                            ]},
                 'fullhash' => 'GS1',
                 'namehash' => 'GS1',
                 'extrayear' => 1,
@@ -111,7 +113,7 @@ my $laufenberg = {
                  'nameyear' => 'Laufenberg2Xaver1zzzz02006',
                  'number' => '1700367',
                  'month' => '09',
-                 'holder' => [
+                 'holder' => {namelist => [
                               {
                                firstname => undef,
                                firstname_i => undef,
@@ -163,11 +165,12 @@ my $laufenberg = {
                                namestring => 'Bayerische Motoren Werke AG',
                                strip => { firstname => undef, lastname => 1, prefix => undef, suffix => undef },
                                }
-                             ],
+                             ]},
                  'date' => '2006-09-13',
                  'file' => 'http://v3.espacenet.com/textdoc?IDX=EP1700367',
-                 'author' => [
+                 'author' => {namelist => [
                                {
+                                 uniquename   => 0,
                                  firstname      => "Xaver",
                                  firstname_i    => "X.",
                                  firstname_it   => "X",
@@ -185,6 +188,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 uniquename   => 0,
                                  firstname      => "Dominique",
                                  firstname_i    => "D.",
                                  firstname_it   => "D",
@@ -202,6 +206,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 uniquename   => 0,
                                  firstname      => "Helmut",
                                  firstname_i    => "H.",
                                  firstname_it   => "H",
@@ -219,6 +224,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 uniquename   => 0,
                                  firstname      => "Stephan",
                                  firstname_i    => "S.",
                                  firstname_it   => "S",
@@ -236,6 +242,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 uniquename   => 0,
                                  firstname      => "Matthias",
                                  firstname_i    => "M.",
                                  firstname_it   => "M",
@@ -253,6 +260,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 uniquename   => 0,
                                  firstname      => "Miriam",
                                  firstname_i    => "M.",
                                  firstname_it   => "M",
@@ -270,6 +278,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 uniquename   => 0,
                                  firstname      => "Christian",
                                  firstname_i    => "C.",
                                  firstname_it   => "C",
@@ -287,6 +296,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 uniquename   => 0,
                                  firstname      => "Manfred",
                                  firstname_i    => "M.",
                                  firstname_it   => "M",
@@ -304,6 +314,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 uniquename   => 0,
                                  firstname      => "Franz",
                                  firstname_i    => "F.",
                                  firstname_it   => "F",
@@ -321,6 +332,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 uniquename   => 0,
                                  firstname      => "Alexander",
                                  firstname_i    => "A.",
                                  firstname_it   => "A",
@@ -338,6 +350,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 uniquename   => 0,
                                  firstname      => "Harald",
                                  firstname_i    => "H.",
                                  firstname_it   => "H",
@@ -355,6 +368,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 uniquename   => 0,
                                  firstname      => "Norbert",
                                  firstname_i    => "N.",
                                  firstname_it   => "N",
@@ -371,7 +385,7 @@ my $laufenberg = {
                                  suffix_i       => undef,
                                  suffix_it      => undef,
                                }
-                             ],
+                             ]},
                  'fullhash' => 'LXEDSHUSSMNHMMCSMNFTABHEN1',
                  'hyphenation' => 'german',
                  'day' => '13',
@@ -399,15 +413,18 @@ my $laufenberg = {
 is_deeply($bibentries->entry('laufenberg'), $laufenberg, 'entry laufenberg') ;
 
 my $kastenholz = q|\entry{kastenholz}{article}{}
-  \name{author}{2}{%
-    {{Kastenholz}{K.}{M.~A.}{M.~A.}{}{}{}{}}%
-    {{H{\"u}nenberger}{H.}{Philippe~H.}{P.~H.}{}{}{}{}}%
+  \name{labelname}{2}{}{%
+    {{uniquename=0}{Kastenholz}{K.}{M.~A.}{M.~A.}{}{}{}{}}%
+    {{uniquename=0}{H{\"u}nenberger}{H.}{Philippe~H.}{P.~H.}{}{}{}{}}%
+  }
+  \name{author}{2}{}{%
+    {{}{Kastenholz}{K.}{M.~A.}{M.~A.}{}{}{}{}}%
+    {{}{H{\"u}nenberger}{H.}{Philippe~H.}{P.~H.}{}{}{}{}}%
   }
   \strng{namehash}{KMAHPH1}
   \strng{fullhash}{KMAHPH1}
   \field{sortinit}{K}
   \field{labelyear}{2006}
-  \count{uniquename}{0}
   \field{year}{2006}
   \field{title}{Computation of methodology\hyphen independent ionic solvation free energies from molecular simulations}
   \field{subtitle}{I. The electrostatic potential in molecular liquids}
@@ -429,14 +446,16 @@ my $kastenholz = q|\entry{kastenholz}{article}{}
 is( $biber->_print_biblatex_entry('kastenholz'), $kastenholz, 'bbl entry' ) ;
 
 my $t1 = q|\entry{t1}{misc}{}
-  \name{author}{1}{%
-    {{Brown}{B.}{Bill}{B.}{}{}{}{}}%
+  \name{labelname}{1}{}{%
+    {{uniquename=0}{Brown}{B.}{Bill}{B.}{}{}{}{}}%
+  }
+  \name{author}{1}{}{%
+    {{}{Brown}{B.}{Bill}{B.}{}{}{}{}}%
   }
   \strng{namehash}{BB1}
   \strng{fullhash}{BB1}
   \field{sortinit}{B}
   \field{labelyear}{1992}
-  \count{uniquename}{0}
   \field{year}{1992}
   \field{title}{Normal things {$^{3}$}}
 \endentry

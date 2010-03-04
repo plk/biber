@@ -1307,6 +1307,112 @@ sub uniqueness {
 }
 
 
+
+
+=head2 create_uniquename_info
+
+    Gather the uniquename information as we look through the names
+
+=cut
+
+
+sub create_uniquename_info {
+  my $self = shift;
+  my $bibentries = $self->bib;
+
+  foreach my $citekey ( $self->citekeys ) {
+    $logger->debug("Generating uniquename information for '$citekey'");
+    my $be = $bibentries->entry($citekey);
+    my $bee = $be->get_field('entrytype');
+    my $namehash = $be->get_field('namehash');
+    if (my $lname = $be->get_field('labelnamename')) {
+
+      # Note that we don't determine if a name is unique here -
+      # we can't, were still processing entries at this point.
+      # Here we are just recording seen combinations of:
+      #
+      # lastnames and how many hashes were generated from them (uniquename = 0)
+      # lastnames+initials how many hashes were generated from them (uniquename = 1)
+      # Full name and  how many hashes were generated from them (uniquename = 2)
+      #
+      # Anything which has more than one combination for both of these would
+      # be uniquename = 2 unless even the full name doesn't disambiguate
+      # and then it is left at 0
+
+      foreach my $name (@{$be->get_field($lname)->names}) {
+        my $lastname   = $name->get_lastname;
+        my $nameinitstring = $name->get_nameinitstring;
+        my $namestring = $name->get_namestring;
+
+        # Record a uniqueness information entry for the lastname showing that
+        # this lastname has been seen in the name with the namehash
+        Biber::Config->add_uniquenamecount($lastname, $namestring);
+
+        # Record a uniqueness information entry for the lastname+initials showing that
+        # this lastname_initials has been seen in the name with the namehash
+        Biber::Config->add_uniquenamecount($nameinitstring, $namestring);
+
+        # Record a uniqueness information entry for the fullname
+        # showing that this fullname has been seen in the name with the namehash
+        Biber::Config->add_uniquenamecount($namestring, $namestring);
+      }
+    }
+  }
+}
+
+=head2 generate_uniquename
+
+   Generate the per-name uniquename values using the information
+   harvested by create_uniquename_info()
+
+=cut
+
+sub generate_uniquename {
+  my $self = shift;
+  my $bibentries = $self->bib;
+  my $un = Biber::Config->getblxoption('uniquename', undef, undef);
+
+  # Now use the information to set the actual uniquename information
+  foreach my $citekey ( $self->citekeys ) {
+    $logger->debug("Setting uniquename for '$citekey'");
+    my $be = $bibentries->entry($citekey);
+    my $bee = $be->get_field('entrytype');
+    my $namehash = $be->get_field('namehash');
+
+    if (my $lname = $be->get_field('labelnamename')) {
+      foreach my $name (@{$be->get_field($lname)->names}) {
+        my $lastname   = $name->get_lastname;
+        my $nameinitstring = $name->get_nameinitstring;
+        my $namestring = $name->get_namestring;
+
+        # If there is one entry (hash) for the lastname, then it's unique
+        if (Biber::Config->get_numofuniquenames($lastname) == 1 ) {
+          $name->set_uniquename(0);
+        }
+        # Otherwise, if there is one entry (hash) for the lastname plus initials,
+        # then it needs the initials to make it unique
+        elsif (Biber::Config->get_numofuniquenames($nameinitstring) == 1 ) {
+          $name->set_uniquename(1);
+        }
+        # Otherwise the name needs to be full to make it unique
+        # However, if uniquename biblatex option is "init" (2), then restrict to
+        # value 1. Confusing.
+        elsif (Biber::Config->get_numofuniquenames($namestring) == 1 ) {
+          $un == 2 ? $name->set_uniquename(1) : $name->set_uniquename(2);
+        }
+        # Otherwise, if there is more than one entry (hash) for the full name,
+        # then set to 0 since nothing will uniqueify this name and it's just
+        # misleading to expand it
+        elsif (Biber::Config->get_numofuniquenames($namestring) > 1 ) {
+          $name->set_uniquename(0);
+        } else {
+          $name->set_uniquename(0);
+        }
+      }
+    }
+  }
+}
+
 =head2 create_uniquelist_info
 
     Gather the uniquename information as we look through the names
@@ -1398,113 +1504,6 @@ sub generate_uniquelist {
       }
       $logger->trace("Setting uniquelist for '$citekey' using '$liststring'");
       $namefield->set_uniquelist($namefield->count_uniquelist($liststring));
-    }
-  }
-
-
-
-}
-
-=head2 create_uniquename_info
-
-    Gather the uniquename information as we look through the names
-
-=cut
-
-
-sub create_uniquename_info {
-  my $self = shift;
-  my $bibentries = $self->bib;
-
-  foreach my $citekey ( $self->citekeys ) {
-    $logger->debug("Generating uniquename information for '$citekey'");
-    my $be = $bibentries->entry($citekey);
-    my $bee = $be->get_field('entrytype');
-    my $namehash = $be->get_field('namehash');
-    if (my $lname = $be->get_field('labelnamename')) {
-
-      # Note that we don't determine if a name is unique here -
-      # we can't, were still processing entries at this point.
-      # Here we are just recording seen combinations of:
-      #
-      # lastnames and how many hashes were generated from them (uniquename = 0)
-      # lastnames+initials how many hashes were generated from them (uniquename = 1)
-      # Full name and  how many hashes were generated from them (uniquename = 2)
-      #
-      # Anything which has more than one combination for both of these would
-      # be uniquename = 2 unless even the full name doesn't disambiguate
-      # and then it is left at 0
-
-      foreach my $name (@{$be->get_field($lname)->names}) {
-        my $lastname   = $name->get_lastname;
-        my $nameinitstring = $name->get_nameinitstring;
-        my $namestring = $name->get_namestring;
-
-        # Record a uniqueness information entry for the lastname showing that
-        # this lastname has been seen in the name with the namehash
-        Biber::Config->add_uniquenamecount($lastname, $namehash);
-
-        # Record a uniqueness information entry for the lastname+initials showing that
-        # this lastname_initials has been seen in the name with the namehash
-        Biber::Config->add_uniquenamecount($nameinitstring, $namehash);
-
-        # Record a uniqueness information entry for the fullname
-        # showing that this fullname has been seen in the name with the namehash
-        Biber::Config->add_uniquenamecount($namestring, $namehash);
-      }
-    }
-  }
-}
-
-=head2 generate_uniquename
-
-   Generate the per-name uniquename values using the information
-   harvested by create_uniquename_info()
-
-=cut
-
-sub generate_uniquename {
-  my $self = shift;
-  my $bibentries = $self->bib;
-  my $un = Biber::Config->getblxoption('uniquename', undef, undef);
-
-  # Now use the information to set the actual uniquename information
-  foreach my $citekey ( $self->citekeys ) {
-    $logger->debug("Setting uniquename for '$citekey'");
-    my $be = $bibentries->entry($citekey);
-    my $bee = $be->get_field('entrytype');
-    my $namehash = $be->get_field('namehash');
-
-    if (my $lname = $be->get_field('labelnamename')) {
-      foreach my $name (@{$be->get_field($lname)->names}) {
-        my $lastname   = $name->get_lastname;
-        my $nameinitstring = $name->get_nameinitstring;
-        my $namestring = $name->get_namestring;
-
-        # If there is one entry (hash) for the lastname, then it's unique
-        if (Biber::Config->get_numofuniquenames($lastname) == 1 ) {
-          $name->set_uniquename(0);
-        }
-        # Otherwise, if there is one entry (hash) for the lastname plus initials,
-        # then it needs the initials to make it unique
-        elsif (Biber::Config->get_numofuniquenames($nameinitstring) == 1 ) {
-          $name->set_uniquename(1);
-        }
-        # Otherwise the name needs to be full to make it unique
-        # However, if uniquename biblatex option is "init" (2), then restrict to
-        # value 1. Confusing.
-        elsif (Biber::Config->get_numofuniquenames($namestring) == 1 ) {
-          $un == 2 ? $name->set_uniquename(1) : $name->set_uniquename(2);
-        }
-        # Otherwise, if there is more than one entry (hash) for the full name,
-        # then set to 0 since nothing will uniqueify this name and it's just
-        # misleading to expand it
-        elsif (Biber::Config->get_numofuniquenames($namestring) > 1 ) {
-          $name->set_uniquename(0);
-        } else {
-          $name->set_uniquename(0);
-        }
-      }
     }
   }
 }

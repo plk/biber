@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 7;
+use Test::More tests => 10;
 
 use Biber;
 use Log::Log4perl qw(:easy);
@@ -21,6 +21,7 @@ $biber->parse_bibtex($bibfile);
 Biber::Config->setblxoption('labelalpha', 1);
 Biber::Config->setblxoption('labelyear', undef);
 $biber->prepare;
+my $bibentries = $biber->bib;
 
 my $sc1 = [
            [
@@ -95,101 +96,18 @@ my $sc2 = [
            ],
           ];
 
-my $sc3 = q|\entry{L4}{book}{}
-  \true{moreauthor}
-  \name{author}{1}{%
-    {{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \list{publisher}{1}{%
-    {Another press}%
-  }
-  \list{location}{1}{%
-    {Cambridge}%
-  }
-  \strng{namehash}{DJo1}
-  \strng{fullhash}{DJo1}
-  \field{labelalpha}{Doe\textbf{+}95}
-  \field{sortinit}{D}
-  \field{extraalpha}{2}
-  \field{year}{1995}
-  \field{title}{Some title about sorting}
-\endentry
-
-|;
-
-my $sc4 = q|\entry{L1}{article}{}
-  \name{author}{1}{%
-    {{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \list{publisher}{1}{%
-    {A press}%
-  }
-  \list{location}{1}{%
-    {Cambridge}%
-  }
-  \strng{namehash}{DJ1}
-  \strng{fullhash}{DJ1}
-  \field{labelalpha}{Doe95}
-  \field{sortinit}{D}
-  \field{extraalpha}{1}
-  \field{year}{1995}
-  \field{title}{Algorithms For Sorting}
-\endentry
-
-|;
-
-my $sc5 = q|\entry{L2}{article}{}
-  \name{author}{1}{%
-    {{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \list{publisher}{1}{%
-    {A press}%
-  }
-  \list{location}{1}{%
-    {Cambridge}%
-  }
-  \strng{namehash}{DJ1}
-  \strng{fullhash}{DJ1}
-  \field{labelalpha}{Doe95}
-  \field{sortinit}{D}
-  \field{extraalpha}{3}
-  \field{year}{1995}
-  \field{title}{Sorting Algorithms}
-\endentry
-
-|;
-
-my $sc6 = q|\entry{L3}{article}{}
-  \name{author}{1}{%
-    {{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \list{publisher}{1}{%
-    {A press}%
-  }
-  \list{location}{1}{%
-    {Cambridge}%
-  }
-  \strng{namehash}{DJ1}
-  \strng{fullhash}{DJ1}
-  \field{labelalpha}{Doe95}
-  \field{sortinit}{D}
-  \field{extraalpha}{2}
-  \field{year}{1995}
-  \field{title}{More and More Algorithms}
-\endentry
-
-|;
-
-
 
 
 is_deeply( Biber::Config->getblxoption('sorting_label') , $sc1, 'first pass scheme');
 is_deeply( Biber::Config->getblxoption('sorting_final') , $sc2, 'second pass scheme');
-is( $biber->_print_biblatex_entry('l4'), $sc3, '\alphaothers set by "and others"');
-is( $biber->_print_biblatex_entry('l1'), $sc4, '2-pass - labelalpha after title');
-is( $biber->_print_biblatex_entry('l2'), $sc5, '2-pass - labelalpha after title');
-is( $biber->_print_biblatex_entry('l3'), $sc6, '2-pass - labelalpha after title');
 
+is ($bibentries->entry('l4')->get_field('labelalpha'), 'Doe\textbf{+}95', '\alphaothers set by "and others"');
+is ($bibentries->entry('l1')->get_field('labelalpha'), 'Doe95', '2-pass - labelalpha after title - 1');
+is ($bibentries->entry('l1')->get_field('extraalpha'), '1', '2-pass - labelalpha after title - 2');
+is ($bibentries->entry('l2')->get_field('labelalpha'), 'Doe95', '2-pass - labelalpha after title - 3');
+is ($bibentries->entry('l2')->get_field('extraalpha'), '3', '2-pass - labelalpha after title - 4');
+is ($bibentries->entry('l3')->get_field('labelalpha'), 'Doe95', '2-pass - labelalpha after title - 5');
+is ($bibentries->entry('l3')->get_field('extraalpha'), '2', '2-pass - labelalpha after title - 6');
 
 unlink "$bibfile.utf8";
 

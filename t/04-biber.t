@@ -30,19 +30,27 @@ $biber->prepare;
 
 my $setaksin = q|\entry{set:aksin}{article}{}
   \inset{set}
-  \name{author}{7}{%
-    {{Aks{\i}n}{A}{{\"O}zge}{{\"O}}{}{}{}{}}%
-    {{T{\"u}rkmen}{T}{Hayati}{H}{}{}{}{}}%
-    {{Artok}{A}{Levent}{L}{}{}{}{}}%
-    {{{\k{C}}etinkaya}{{\k{C}}}{Bekir}{B}{}{}{}{}}%
-    {{Ni}{N}{Chaoying}{C}{}{}{}{}}%
-    {{B{\"u}y{\"u}kg{\"u}ng{\"o}r}{B}{Orhan}{O}{}{}{}{}}%
-    {{{\"O}zkal}{{\"O}}{Erhan}{E}{}{}{}{}}%
+  \name{labelname}{7}{}{%
+    {{uniquename=0}{Aks{\i}n}{A}{{\"O}zge}{{\"O}}{}{}{}{}}%
+    {{uniquename=0}{T{\"u}rkmen}{T}{Hayati}{H}{}{}{}{}}%
+    {{uniquename=0}{Artok}{A}{Levent}{L}{}{}{}{}}%
+    {{uniquename=0}{{\k{C}}etinkaya}{{\k{C}}}{Bekir}{B}{}{}{}{}}%
+    {{uniquename=0}{Ni}{N}{Chaoying}{C}{}{}{}{}}%
+    {{uniquename=0}{B{\"u}y{\"u}kg{\"u}ng{\"o}r}{B}{Orhan}{O}{}{}{}{}}%
+    {{uniquename=0}{{\"O}zkal}{{\"O}}{Erhan}{E}{}{}{}{}}%
+  }
+  \name{author}{7}{}{%
+    {{}{Aks{\i}n}{A}{{\"O}zge}{{\"O}}{}{}{}{}}%
+    {{}{T{\"u}rkmen}{T}{Hayati}{H}{}{}{}{}}%
+    {{}{Artok}{A}{Levent}{L}{}{}{}{}}%
+    {{}{{\k{C}}etinkaya}{{\k{C}}}{Bekir}{B}{}{}{}{}}%
+    {{}{Ni}{N}{Chaoying}{C}{}{}{}{}}%
+    {{}{B{\"u}y{\"u}kg{\"u}ng{\"o}r}{B}{Orhan}{O}{}{}{}{}}%
+    {{}{{\"O}zkal}{{\"O}}{Erhan}{E}{}{}{}{}}%
   }
   \strng{namehash}{AO+1}
   \strng{fullhash}{AOTHALCBNCBOOE1}
   \field{sortinit}{A}
-  \count{uniquename}{0}
   \true{singletitle}
   \field{year}{2006}
   \field{month}{02}
@@ -57,15 +65,17 @@ my $setaksin = q|\entry{set:aksin}{article}{}
 | ;
 
 my $markey = q|\entry{markey}{online}{}
-  \name{author}{1}{%
-    {{Markey}{M}{Nicolas}{N}{}{}{}{}}%
+  \name{labelname}{1}{}{%
+    {{uniquename=0}{Markey}{M}{Nicolas}{N}{}{}{}{}}%
+  }
+  \name{author}{1}{}{%
+    {{}{Markey}{M}{Nicolas}{N}{}{}{}{}}%
   }
   \strng{namehash}{MN1}
   \strng{fullhash}{MN1}
   \field{labelalpha}{Mar05}
   \field{sortinit}{M}
   \field{labelyear}{2005\bibdatedash 2006}
-  \count{uniquename}{0}
   \true{singletitle}
   \field{year}{2005}
   \field{endyear}{2006}

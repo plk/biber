@@ -842,7 +842,7 @@ sub _print_biblatex_entry {
         $nf->del_last_element;
       }
       my $total = $nf->count_elements;
-      $str .= "  \\name{$namefield}{$total}{%\n";
+      $str .= "  \\name{$namefield}{$total}{}{%\n";
       foreach my $n (@{$nf->names}) {
         $str .= $n->name_to_bbl;
       }

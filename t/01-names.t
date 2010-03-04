@@ -20,7 +20,7 @@ $biber->parse_auxfile('names.aux');
 $bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 $biber->prepare;
-
+my $bibentries = $biber->bib;
 
 my $name1 =
     { firstname      => "John",
@@ -259,291 +259,6 @@ my $name14 =
       nameinitstring => 'dl_Vallée_Poussin_JCG' } ;
 
 
-my $l1 = q|\entry{L1}{book}{}
-  \name{author}{1}{%
-    {{Adler}{A.}{Alfred}{A.}{}{}{}{}}%
-  }
-  \strng{namehash}{AA1}
-  \strng{fullhash}{AA1}
-  \field{sortinit}{A}
-\endentry
-
-|;
-
-my $l2 = q|\entry{L2}{book}{}
-  \name{author}{1}{%
-    {{Bull}{B.}{Bertie~B.}{B.~B.}{}{}{}{}}%
-  }
-  \strng{namehash}{BBB1}
-  \strng{fullhash}{BBB1}
-  \field{sortinit}{B}
-\endentry
-
-|;
-
-my $l3 = q|\entry{L3}{book}{}
-  \name{author}{1}{%
-    {{Crop}{C.}{C.~Z.}{C.~Z.}{}{}{}{}}%
-  }
-  \strng{namehash}{CCZ1}
-  \strng{fullhash}{CCZ1}
-  \field{sortinit}{C}
-\endentry
-
-|;
-
-my $l4 = q|\entry{L4}{book}{}
-  \name{author}{1}{%
-    {{Decket}{D.}{Derek~D}{D.~D.}{}{}{}{}}%
-  }
-  \strng{namehash}{DDD1}
-  \strng{fullhash}{DDD1}
-  \field{sortinit}{D}
-\endentry
-
-|;
-
-my $l5 = q|\entry{L5}{book}{}
-  \name{author}{1}{%
-    {{Eel}{E.}{Egbert}{E.}{von}{v.}{}{}}%
-  }
-  \strng{namehash}{vEE1}
-  \strng{fullhash}{vEE1}
-  \field{sortinit}{v}
-\endentry
-
-|;
-
-my $l6 = q|\entry{L6}{book}{}
-  \name{author}{1}{%
-    {{Frome}{F.}{Francis}{F.}{van~der~valt}{v.~d.~v.}{}{}}%
-  }
-  \strng{namehash}{vdvFF1}
-  \strng{fullhash}{vdvFF1}
-  \field{sortinit}{v}
-\endentry
-
-|;
-
-my $l7 = q|\entry{L7}{book}{}
-  \name{author}{1}{%
-    {{Gloom}{G.}{Gregory~R.}{G.~R.}{van}{v.}{}{}}%
-  }
-  \strng{namehash}{vGGR1}
-  \strng{fullhash}{vGGR1}
-  \field{sortinit}{v}
-\endentry
-
-|;
-
-my $l8 = q|\entry{L8}{book}{}
-  \name{author}{1}{%
-    {{Henkel}{H.}{Henry~F.}{H.~F.}{van}{v.}{}{}}%
-  }
-  \strng{namehash}{vHHF1}
-  \strng{fullhash}{vHHF1}
-  \field{sortinit}{v}
-\endentry
-
-|;
-
-my $l9 = q|\entry{L9}{book}{}
-  \name{author}{1}{%
-    {{{Iliad Ipswich}}{I.}{Ian}{I.}{}{}{}{}}%
-  }
-  \strng{namehash}{II1}
-  \strng{fullhash}{II1}
-  \field{sortinit}{I}
-\endentry
-
-|;
-
-my $l10 = q|\entry{L10}{book}{}
-  \name{author}{1}{%
-    {{Jolly}{J.}{James}{J.}{}{}{III}{I.}}%
-  }
-  \strng{namehash}{JIJ1}
-  \strng{fullhash}{JIJ1}
-  \field{sortinit}{J}
-\endentry
-
-|;
-
-my $l11 = q|\entry{L11}{book}{}
-  \name{author}{1}{%
-    {{Kluster}{K.}{Kevin}{K.}{van}{v.}{Jr.}{J.}}%
-  }
-  \strng{namehash}{vKJK1}
-  \strng{fullhash}{vKJK1}
-  \field{sortinit}{v}
-\endentry
-
-|;
-
-my $l12 = q|\entry{L12}{book}{}
-  \name{author}{1}{%
-    {{Vall{\'e}e~Poussin}{V.~P.}{Charles Louis Xavier~Joseph}{C.~L.~X.~J.}{de~la}{d.~l.}{}{}}%
-  }
-  \strng{namehash}{dlVPCLXJ1}
-  \strng{fullhash}{dlVPCLXJ1}
-  \field{sortinit}{d}
-\endentry
-
-|;
-
-my $l13 = q|\entry{L13}{book}{}
-  \name{author}{1}{%
-    {{Van de~Graaff}{V.~d.~G.}{R.~J.}{R.~J.}{}{}{}{}}%
-  }
-  \strng{namehash}{VdGRJ1}
-  \strng{fullhash}{VdGRJ1}
-  \field{sortinit}{V}
-\endentry
-
-|;
-
-my $l14 = q|\entry{L14}{book}{}
-  \name{author}{1}{%
-    {{St~John-Mollusc}{S.~J.-M.}{Oliver}{O.}{}{}{}{}}%
-  }
-  \strng{namehash}{SJMO1}
-  \strng{fullhash}{SJMO1}
-  \field{sortinit}{S}
-\endentry
-
-|;
-
-my $l15 = q|\entry{L15}{book}{}
-  \name{author}{1}{%
-    {{Gompel}{G.}{Roger~P.{\,}G.}{R.~P.}{van}{v.}{}{}}%
-  }
-  \strng{namehash}{vGRP1}
-  \strng{fullhash}{vGRP1}
-  \field{sortinit}{v}
-\endentry
-
-|;
-
-my $l16 = q|\entry{L16}{book}{}
-  \name{author}{1}{%
-    {{Gompel}{G.}{Roger~{P.\,G.}}{R.~P.}{van}{v.}{}{}}%
-  }
-  \strng{namehash}{vGRP1}
-  \strng{fullhash}{vGRP1}
-  \field{sortinit}{v}
-\endentry
-
-|;
-
-my $l17 = q|\entry{L17}{book}{}
-  \name{author}{1}{%
-    {{Lovecraft}{L.}{Bill~H.{\,}P.}{B.~H.}{}{}{}{}}%
-  }
-  \strng{namehash}{LBH1}
-  \strng{fullhash}{LBH1}
-  \field{sortinit}{L}
-\endentry
-
-|;
-
-my $l18 = q|\entry{L18}{book}{}
-  \name{author}{1}{%
-    {{Lovecraft}{L.}{Bill~{H.\,P.}}{B.~H.}{}{}{}{}}%
-  }
-  \strng{namehash}{LBH1}
-  \strng{fullhash}{LBH1}
-  \field{sortinit}{L}
-\endentry
-
-|;
-
-my $l19 = q|\entry{L19}{book}{}
-  \name{author}{1}{%
-    {{Mustermann}{M.}{Klaus-Peter}{K.-P.}{}{}{}{}}%
-  }
-  \strng{namehash}{MKP1}
-  \strng{fullhash}{MKP1}
-  \field{sortinit}{M}
-\endentry
-
-|;
-
-my $l20 = q|\entry{L20}{book}{}
-  \name{author}{1}{%
-    {{Ford}{F.}{{John Henry}}{J.}{}{}{}{}}%
-  }
-  \strng{namehash}{FJ1}
-  \strng{fullhash}{FJ1}
-  \field{sortinit}{F}
-\endentry
-
-|;
-
-my $l21 = q|\entry{L21}{book}{}
-  \name{author}{1}{%
-    {{Smith}{S.}{{\v S}omeone}{{\v S}.}{}{}{}{}}%
-  }
-  \strng{namehash}{SS1}
-  \strng{fullhash}{SS1}
-  \field{sortinit}{S}
-\endentry
-
-|;
-
-my $l22 = q|\entry{L22}{book}{}
-  \name{author}{1}{%
-    {{Smith}{S.}{Šomeone}{Š.}{}{}{}{}}%
-  }
-  \strng{namehash}{SŠ1}
-  \strng{fullhash}{SŠ1}
-  \field{sortinit}{S}
-\endentry
-
-|;
-
-my $l23 = q|\entry{L23}{book}{}
-  \name{author}{1}{%
-    {{{\v S}mith}{{\v S}.}{Someone}{S.}{}{}{}{}}%
-  }
-  \strng{namehash}{SS1}
-  \strng{fullhash}{SS1}
-  \field{sortinit}{S}
-\endentry
-
-|;
-
-my $l24 = q|\entry{L24}{book}{}
-  \name{author}{1}{%
-    {{{American Psychological Association, Task Force on the Sexualization of Girls}}{A.}{}{}{}{}{}{}}%
-  }
-  \strng{namehash}{A1}
-  \strng{fullhash}{A1}
-  \field{sortinit}{A}
-\endentry
-
-|;
-
-my $l25 = q|\entry{L25}{book}{}
-  \name{author}{1}{%
-    {{{Sci-Art Publishers}}{S.}{}{}{}{}{}{}}%
-  }
-  \strng{namehash}{S1}
-  \strng{fullhash}{S1}
-  \field{sortinit}{S}
-\endentry
-
-|;
-
-my $l28 = q|\entry{L28}{book}{}
-  \name{author}{1}{%
-    {{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart  Lung and Blood Institute}}{U.}{}{}{}{}{}{}}%
-  }
-  \strng{namehash}{U1}
-  \strng{fullhash}{U1}
-  \field{sortinit}{U}
-\endentry
-
-|;
 
 is_deeply(parsename('John Doe'), $name1, 'parsename 1');
 is_deeply(parsename('Doe, Jr, John'), $name2, 'parsename 2');
@@ -562,36 +277,34 @@ is_deeply(parsename('Jean Charles Gabriel Poussin'), $name12, 'parsename 12');
 is_deeply(parsename('Jean Charles {Poussin Lecoq}'), $name13, 'parsename 13');
 is_deeply(parsename('J. C. G. de la Vallée Poussin', {useprefix => 1}), $name14, 'parsename 14');
 
-is( $biber->_print_biblatex_entry('l1'), $l1, 'First Last') ;
-is( $biber->_print_biblatex_entry('l2'), $l2, 'First Initial. Last') ;
-is( $biber->_print_biblatex_entry('l3'), $l3, 'Initial. Initial. Last') ;
-is( $biber->_print_biblatex_entry('l4'), $l4, 'First Initial Last') ;
-is( $biber->_print_biblatex_entry('l5'), $l5, 'First prefix Last') ;
-is( $biber->_print_biblatex_entry('l6'), $l6, 'First prefix prefix Last') ;
-is( $biber->_print_biblatex_entry('l7'), $l7, 'First Initial. prefix Last') ;
-is( $biber->_print_biblatex_entry('l8'), $l8, 'First Initial prefix Last') ;
-is( $biber->_print_biblatex_entry('l9'), $l9, 'First {Last Last}') ;
-is( $biber->_print_biblatex_entry('l10'), $l10, 'Last, Suffix, First') ;
-is( $biber->_print_biblatex_entry('l11'), $l11, 'prefix Last, Suffix, First') ;
-is( $biber->_print_biblatex_entry('l12'), $l12, 'First First First First prefix prefix Last Last') ;
-is( $biber->_print_biblatex_entry('l13'), $l13, 'Last Last Last, Initial. Initial.');
-is( $biber->_print_biblatex_entry('l14'), $l14, 'Last Last-Last, First');
-is( $biber->_print_biblatex_entry('l15'), $l15, 'First F.{\,}F. Last');
-is( $biber->_print_biblatex_entry('l16'), $l16, 'First {F.\,F.} Last');
-is( $biber->_print_biblatex_entry('l17'), $l17, 'Last, First {F.\,F.}');
-is( $biber->_print_biblatex_entry('l18'), $l18, 'Last, First F.{\,}F.');
-is( $biber->_print_biblatex_entry('l19'), $l19, 'Firstname with hyphen');
-is( $biber->_print_biblatex_entry('l20'), $l20, 'Protected dual first name');
-is( $biber->_print_biblatex_entry('l21'), $l21, 'LaTeX encoded unicode');
-is( $biber->_print_biblatex_entry('l22'), $l22, 'Unicode firstname');
-is( $biber->_print_biblatex_entry('l23'), $l23, 'Unicode lastname');
-is( $biber->_print_biblatex_entry('l24'), $l24, 'Single string name');
-is( $biber->_print_biblatex_entry('l25'), $l25, 'Hyphen at brace level <> 0');
+is($bibentries->entry('l1')->get_field($bibentries->entry('l1')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Adler}{A.}{Alfred}{A.}{}{}{}{}}%' . "\n", 'First Last');
+is($bibentries->entry('l2')->get_field($bibentries->entry('l2')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Bull}{B.}{Bertie~B.}{B.~B.}{}{}{}{}}%' . "\n", 'First Initial. Last');
+is($bibentries->entry('l3')->get_field($bibentries->entry('l3')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Crop}{C.}{C.~Z.}{C.~Z.}{}{}{}{}}%' . "\n", 'Initial. Initial. Last');
+is($bibentries->entry('l4')->get_field($bibentries->entry('l4')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Decket}{D.}{Derek~D}{D.~D.}{}{}{}{}}%' . "\n", 'First Initial Last');
+is($bibentries->entry('l5')->get_field($bibentries->entry('l5')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Eel}{E.}{Egbert}{E.}{von}{v.}{}{}}%' . "\n", 'First prefix Last');
+is($bibentries->entry('l6')->get_field($bibentries->entry('l6')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Frome}{F.}{Francis}{F.}{van~der~valt}{v.~d.~v.}{}{}}%' . "\n", 'First prefix prefix Last');
+is($bibentries->entry('l7')->get_field($bibentries->entry('l7')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Gloom}{G.}{Gregory~R.}{G.~R.}{van}{v.}{}{}}%' . "\n", 'First Initial. prefix Last');
+is($bibentries->entry('l8')->get_field($bibentries->entry('l8')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Henkel}{H.}{Henry~F.}{H.~F.}{van}{v.}{}{}}%' . "\n", 'First Initial prefix Last');
+is($bibentries->entry('l9')->get_field($bibentries->entry('l9')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{{Iliad Ipswich}}{I.}{Ian}{I.}{}{}{}{}}%' . "\n", 'First {Last Last}');
+is($bibentries->entry('l10')->get_field($bibentries->entry('l10')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Jolly}{J.}{James}{J.}{}{}{III}{I.}}%' . "\n", 'Last, Suffix, First') ;
+is($bibentries->entry('l11')->get_field($bibentries->entry('l11')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Kluster}{K.}{Kevin}{K.}{van}{v.}{Jr.}{J.}}%' . "\n", 'prefix Last, Suffix, First');
+is($bibentries->entry('l12')->get_field($bibentries->entry('l12')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, "    {{}{Vall{\\'e}e~Poussin}{V.~P.}{Charles Louis Xavier~Joseph}{C.~L.~X.~J.}{de~la}{d.~l.}{}{}}%" . "\n", 'First First First First prefix prefix Last Last');
+is($bibentries->entry('l13')->get_field($bibentries->entry('l13')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Van de~Graaff}{V.~d.~G.}{R.~J.}{R.~J.}{}{}{}{}}%' . "\n", 'Last Last Last, Initial. Initial.');
+is($bibentries->entry('l14')->get_field($bibentries->entry('l14')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{St~John-Mollusc}{S.~J.-M.}{Oliver}{O.}{}{}{}{}}%' . "\n", 'Last Last-Last, First');
+is($bibentries->entry('l15')->get_field($bibentries->entry('l15')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Gompel}{G.}{Roger~P.{\,}G.}{R.~P.}{van}{v.}{}{}}%' . "\n", 'First F.{\,}F. Last');
+is($bibentries->entry('l16')->get_field($bibentries->entry('l16')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Gompel}{G.}{Roger~{P.\,G.}}{R.~P.}{van}{v.}{}{}}%' . "\n", 'First {F.\,F.} Last');
+is($bibentries->entry('l17')->get_field($bibentries->entry('l17')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Lovecraft}{L.}{Bill~H.{\,}P.}{B.~H.}{}{}{}{}}%' . "\n", 'Last, First {F.\,F.}');
+is($bibentries->entry('l18')->get_field($bibentries->entry('l18')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Lovecraft}{L.}{Bill~{H.\,P.}}{B.~H.}{}{}{}{}}%' . "\n", 'Last, First F.{\,}F.');
+is($bibentries->entry('l19')->get_field($bibentries->entry('l19')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Mustermann}{M.}{Klaus-Peter}{K.-P.}{}{}{}{}}%' . "\n", 'Firstname with hyphen');
+is($bibentries->entry('l20')->get_field($bibentries->entry('l20')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Ford}{F.}{{John Henry}}{J.}{}{}{}{}}%' . "\n", 'Protected dual first name');
+is($bibentries->entry('l21')->get_field($bibentries->entry('l21')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Smith}{S.}{{\v S}omeone}{{\v S}.}{}{}{}{}}%' . "\n", 'LaTeX encoded unicode');
+is($bibentries->entry('l22')->get_field($bibentries->entry('l22')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Smith}{S.}{Šomeone}{Š.}{}{}{}{}}%' . "\n", 'Unicode firstname');
+is($bibentries->entry('l23')->get_field($bibentries->entry('l23')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{{\v S}mith}{{\v S}.}{Someone}{S.}{}{}{}{}}%' . "\n", 'Unicode lastname');
+is($bibentries->entry('l24')->get_field($bibentries->entry('l24')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{{American Psychological Association, Task Force on the Sexualization of Girls}}{A.}{}{}{}{}{}{}}%' . "\n", 'Single string name');
+is($bibentries->entry('l25')->get_field($bibentries->entry('l25')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{{Sci-Art Publishers}}{S.}{}{}{}{}{}{}}%' . "\n", 'Hyphen at brace level <> 0');
 is($biber->has_citekey('l26'), '0', 'Bad name with 3 commas');
 is($biber->has_citekey('l27'), '0', 'Bad name with consecutive commas');
-is( $biber->_print_biblatex_entry('l28'), $l28, 'Escaped name with 3 commas');
-
-
+is($bibentries->entry('l28')->get_field($bibentries->entry('l28')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart  Lung and Blood Institute}}{U.}{}{}{}{}{}{}}%' . "\n",  'Escaped name with 3 commas');
 
 
 unlink "$bibfile.utf8";
