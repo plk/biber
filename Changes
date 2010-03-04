@@ -1,5 +1,23 @@
 Revision history for Biber
 
+0.5.2   04-03-2010
+       * Locale fixes
+       * Uniquename fixed to match BibLaTeX option values
+       * Improved error message for malformed names
+       * Fixed config file problems under windows and also added option to ignore config file
+       * Bug with conflicting case between citations and bib entries
+       * Moved pure perl parsename to PRD.pm
+       * Re-write of name parsing to use Text::BibTeX::Name by default
+       * Fields which can be null are explicitly flagged
+       * Add THANKS file
+       * Die early when biber is called without argument
+       * Fixed Mac config path error
+       * .bib parse continues after certain errors
+       * regularised collate options processing
+       * field nameaddon was missing from Biber::Constants
+       * Improved warning message for missing backend=biber
+       * SF bug 2952347 fix (empty date range end)
+       * uniquename counter was being provided incorrectly
 0.5.1   15.02.2010
         * Remove support for legacy control files (\jobname-blx.bib):
           Biber now only reads .bcf files written by biblatex with the 
