@@ -1105,7 +1105,7 @@ sub postprocess_hashes {
 
 =head2 postprocess_labelnameyear
 
-    Track author/year combination
+    Track labelname/year combination
 
 =cut
 
@@ -1114,7 +1114,7 @@ sub postprocess_labelnameyear {
   my $citekey = shift;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
-  # This is all used to generate extrayear and the rules for this are:
+  # This is all used to generate extrayear/extralpha and the rules for this are:
   # * Generate labelname/year combination for tracking extrayear
   # * If there is no labelname to use, use empty string
   # * If there is no labelyear to use, use empty string
@@ -1237,14 +1237,38 @@ sub postprocess_sorting_firstpass {
   $self->_generatesortstring( $citekey, Biber::Config->getblxoption('sorting_label', $be->get_field('entrytype'), $citekey));
 }
 
+=head2 generate_extras
+
+    Generate extrayear and extraalpha
+
+=cut
+
+sub generate_extras {
+  my $self = shift;
+  my $bibentries = $self->bib;
+  foreach my $citekey ($self->citekeys) {
+    my $be = $bibentries->entry($citekey);
+    my $nameyear = $be->get_field('nameyear');
+    # Only generate extrayear if skiplab is not set.
+    # Don't forget that skiplab is implied for set members
+    unless (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
+      if (Biber::Config->get_seennameyear($nameyear) > 1) {
+        Biber::Config->incr_seenlabelyear($nameyear);
+        if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
+          $be->set_field('extrayear', Biber::Config->get_seenlabelyear($nameyear));
+        }
+        if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
+          $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($nameyear));
+        }
+      }
+    }
+  }
+  return;
+}
+
 =head2 generate_final_sortinfo
 
-    Generate:
-
-      * extraalpha
-      * extrayear
-
-    For use in final sorting and generate final pass sort string
+    Generate final sort information
 
 =cut
 
@@ -1253,20 +1277,6 @@ sub generate_final_sortinfo {
   my $bibentries = $self->bib;
   foreach my $citekey ($self->citekeys) {
     my $be = $bibentries->entry($citekey);
-    my $nameyear = $be->get_field('nameyear');
-    # Only generate extrayear and extraapha if skiplab is not set.
-    # Don't forget that skiplab is implied for set members
-    unless (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
-      if (Biber::Config->get_seennameyear($nameyear) > 1) {
-        Biber::Config->incr_seenlabelyear($nameyear);
-        if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
-          $be->set_field('extrayear', Biber::Config->get_seenlabelyear($nameyear));
-        }
-        if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
-          $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($nameyear));
-        }
-      }
-    }
     $self->_generatesortstring($citekey, Biber::Config->getblxoption('sorting_final', $be->get_field('entrytype'), $citekey));
   }
   return;
@@ -1300,6 +1310,7 @@ sub uniqueness {
       }
     }
     elsif ($uscheme eq 'year') {
+      $self->generate_extras;
     }
     elsif ($uscheme eq 'title') {
     }
@@ -1351,6 +1362,7 @@ sub create_uniquename_info {
         # We don't want to record disambiguation information for any names
         # that are hidden by a maxnames/uniquelist limit
         unless ($name->get_index > $maxnames) {
+          # In here, could be uniqueness NAMELIST->NAME flow (unless it's just because of maxnames)
           my $lastname   = $name->get_lastname;
           my $nameinitstring = $name->get_nameinitstring;
           my $namestring = $name->get_namestring;
@@ -1453,14 +1465,17 @@ sub create_uniquelist_info {
         }
         # uniquename indicates unique with just lastname
         elsif ($name->get_uniquename eq '0') {
+          # uniqueness NAME->NAMELIST flow
           $liststring .= $lastname . '|';
         }
         # uniquename indicates unique with lastname with initials
         elsif ($name->get_uniquename eq '1') {
+          # uniqueness NAME->NAMELIST flow
           $liststring .= $nameinitstring . '|';
         }
         # uniquename indicates unique with full name
         elsif ($name->get_uniquename eq '2') {
+          # uniqueness NAME->NAMELIST flow
           $liststring .= $namestring . '|';
         }
         Biber::Config->add_uniquelistcount($liststring);
@@ -1637,9 +1652,10 @@ sub prepare {
   $self->process_sets_and_crossrefs; # Process sets and crossrefs
   $self->postprocess; # in here we generate the label sort string
   $self->sortentries; # then we do a label sort pass
+  $self->uniqueness; # Here we generate uniqueness information (extra*, unique* etc.)
   $self->generate_final_sortinfo; # in here we generate the final sort string
   $self->sortentries; # and then we do a final sort pass
-  $self->uniqueness; # Here we generate final uniqueness information
+
   return;
 }
 
