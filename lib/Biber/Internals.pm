@@ -30,7 +30,7 @@ sub _getnameinitials {
   my $be = $bibentries->entry($citekey);
   ## my $nodecodeflag = $self->_decode_or_not($citekey);
 
-  if ( $names->count_elements <= Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey ) ) {    # 1 to maxname names
+  if ( $names->count_elements <= Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), undef ) ) {    # 1 to maxname names
     foreach my $n (@{$names->names}) {
       if ( $n->get_prefix and
         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
@@ -101,8 +101,8 @@ sub _getlabel {
   my $alphaothers = Biber::Config->getblxoption('alphaothers', $be->get_field('entrytype'), $citekey);
   my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->get_field('entrytype'), $citekey);
   my $useprefix = Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey);
-  my $maxnames = Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey);
-  my $minnames = Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey);
+  my $maxnames = Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), undef);
+  my $minnames = Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), undef);
   my $label = '';
   my $sortlabel = ''; # This contains sortalphaothers instead of alphaothers, if defined
   # This is needed in cases where alphaothers is something like
@@ -635,7 +635,7 @@ sub _namestring {
   my $truncnames = dclone($names);
 
   # perform truncation according to options minnames, maxnames
-  if ( $names->count_elements > Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey) ) {
+  if ( $names->count_elements > Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), undef) ) {
     $truncated = 1;
     $truncnames = $truncnames->first_n_elements(Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey));
   }

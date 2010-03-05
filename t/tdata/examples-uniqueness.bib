@@ -1,38 +1,83 @@
+% [name, namelist], maxnames = * -> uniquename => 2 uniquelist => 1
+% [namelist, name], maxnames = * -> uniquename => 2 uniquelist => 1
 @ARTICLE{un1,
-  AUTHOR	    = {John Doe},
+  AUTHOR	    = {John AAA},
   YEAR		    = {1994},
 }
 
+% [name, namelist], maxnames = * -> uniquename => 2 uniquelist => 1
+% [namelist, name], maxnames = * -> uniquename => 2 uniquelist => 1
 @ARTICLE{un2,
-  AUTHOR	    = {Edward Doe},
-  YEAR		    = {1934},
+  AUTHOR	    = {J. AAA},
+  YEAR		    = {1999},
 }
 
+% [name, namelist], maxnames = * -> uniquename => 1 uniquelist => 1
+% [namelist, name], maxnames = * -> uniquename => 1 uniquelist => 1
 @ARTICLE{un3,
-  AUTHOR	    = {Jane Doe},
+  AUTHOR	    = {K. AAA},
+  YEAR		    = {1939},
+}
+
+% [name, namelist], maxnames = * -> uniquename => 1 uniquelist => 1
+% [namelist, name], maxnames = * -> uniquename => 1 uniquelist => 1
+@ARTICLE{un4,
+  AUTHOR	    = {Edward AAA},
+  YEAR		    = {1934},
+}
+% [name, namelist], maxnames = * -> uniquename => 2 uniquelist => 1
+% [namelist, name], maxnames = * -> uniquename => 2 uniquelist => 1
+@ARTICLE{un5,
+  AUTHOR	    = {Jane AAA},
   YEAR		    = {1983},
 }
 
-@ARTICLE{un4,
-  AUTHOR	    = {John Doe and Mike Mills},
+% [name, namelist], maxnames = 1 -> uniquename => 2,0 uniquelist => 1
+% [namelist, name], maxnames = 1 -> uniquename => 2,0 uniquelist => 1
+@ARTICLE{un6,
+  AUTHOR	    = {John AAA and Mike BBB},
   YEAR		    = {1921},
 }
 
-@ARTICLE{un5,
+% [name, namelist], maxnames = 1 -> uniquename => 2,0 uniquelist => 1
+% [namelist, name], maxnames = 1 -> uniquename => 2,0 uniquelist => 1
+@ARTICLE{un7,
   SHORTAUTHOR       = {Chaps},
-  AUTHOR	    = {John Doe and Mike Mills},
+  AUTHOR	    = {John AAA and Mike BBB},
   YEAR		    = {1921},
 }
 
-@ARTICLE{ul1,
-  AUTHOR	    = {John Smith and Mike Brown and Charles Jones},
+% [name, namelist], maxnames = 1 -> uniquename => 2,0,1 uniquelist => 3
+% [namelist, name], maxnames = 1 -> uniquename => 2,0,1 uniquelist => 3
+@ARTICLE{un8,
+  AUTHOR	    = {John AAA and Mike CCC and Mike MMM},
   YEAR		    = {1921},
 }
 
-@ARTICLE{ul2,
-  AUTHOR	    = {John Smith and Mike Brown and Charles Jones and Peter Frith},
+% [name, namelist], maxnames = 1 -> uniquename => 2,0,1,0 uniquelist => 4
+% [namelist, name], maxnames = 1 -> uniquename => 2,0,1,0 uniquelist => 4
+@ARTICLE{un9,
+  AUTHOR	    = {John AAA and Mike CCC and Mike MMM and Peter DDD},
   YEAR		    = {1923},
 }
 
+% [name, namelist], maxnames = 4 -> uniquename => 0,0,1,0 uniquelist => 1
+% [namelist, name], maxnames = 4 -> uniquename => 0,0,0,0 uniquelist => 1
+@ARTICLE{un10,
+  AUTHOR	    = {Jim EEE and Mike CCC and Fred NNN and Peter DDD},
+  YEAR		    = {1923},
+}
 
+% [name, namelist], maxnames = 1 -> uniquename => 1 uniquelist => 1
+% [namelist, name], maxnames = 1 -> uniquename => 1 uniquelist => 1
+@ARTICLE{un11,
+  AUTHOR	    = {Bill MMM},
+  YEAR		    = {1926},
+}
 
+% [name, namelist], maxnames = 1 -> uniquename => 1 uniquelist => 1
+% [namelist, name], maxnames = 1 -> uniquename => 1 uniquelist => 1
+@ARTICLE{un12,
+  AUTHOR	    = {Bill NNN},
+  YEAR		    = {1923},
+}

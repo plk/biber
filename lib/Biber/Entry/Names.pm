@@ -95,6 +95,7 @@ sub add_element {
   my $self = shift;
   my $name_obj = shift;
   push @{$self->{namelist}}, $name_obj;
+  $name_obj->set_index($#{$self->{namelist}} + 1);
   return;
 }
 

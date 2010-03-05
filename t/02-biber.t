@@ -69,6 +69,7 @@ my $stdmodel = {
                 'author' => {namelist =>
                              [
                               {
+                               index => 1,
                                uniquename   => 0,
                                firstname    => 'Sheldon',
                                firstname_i  => 'S.',
@@ -115,6 +116,7 @@ my $laufenberg = {
                  'month' => '09',
                  'holder' => {namelist => [
                               {
+                               index => 1,
                                firstname => undef,
                                firstname_i => undef,
                                firstname_it => undef,
@@ -132,6 +134,7 @@ my $laufenberg = {
                                strip => { firstname => undef, lastname => 1, prefix => undef, suffix => undef },
                               },
                               {
+                               index => 2,
                                firstname => undef,
                                firstname_i => undef,
                                firstname_it => undef,
@@ -149,6 +152,7 @@ my $laufenberg = {
                                strip => { firstname => undef, lastname => 1, prefix => undef, suffix => undef },
                                },
                                {
+                               index => 3,
                                firstname => undef,
                                firstname_i => undef,
                                firstname_it => undef,
@@ -170,6 +174,7 @@ my $laufenberg = {
                  'file' => 'http://v3.espacenet.com/textdoc?IDX=EP1700367',
                  'author' => {namelist => [
                                {
+                                 index => 1,
                                  uniquename   => 0,
                                  firstname      => "Xaver",
                                  firstname_i    => "X.",
@@ -188,6 +193,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 index => 2,
                                  uniquename   => 0,
                                  firstname      => "Dominique",
                                  firstname_i    => "D.",
@@ -206,6 +212,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 index => 3,
                                  uniquename   => 0,
                                  firstname      => "Helmut",
                                  firstname_i    => "H.",
@@ -224,6 +231,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 index => 4,
                                  uniquename   => 0,
                                  firstname      => "Stephan",
                                  firstname_i    => "S.",
@@ -242,6 +250,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 index => 5,
                                  uniquename   => 0,
                                  firstname      => "Matthias",
                                  firstname_i    => "M.",
@@ -260,6 +269,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 index => 6,
                                  uniquename   => 0,
                                  firstname      => "Miriam",
                                  firstname_i    => "M.",
@@ -278,6 +288,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 index => 7,
                                  uniquename   => 0,
                                  firstname      => "Christian",
                                  firstname_i    => "C.",
@@ -296,6 +307,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 index => 8,
                                  uniquename   => 0,
                                  firstname      => "Manfred",
                                  firstname_i    => "M.",
@@ -314,6 +326,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 index => 9,
                                  uniquename   => 0,
                                  firstname      => "Franz",
                                  firstname_i    => "F.",
@@ -332,6 +345,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 index => 10,
                                  uniquename   => 0,
                                  firstname      => "Alexander",
                                  firstname_i    => "A.",
@@ -350,6 +364,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 index => 11,
                                  uniquename   => 0,
                                  firstname      => "Harald",
                                  firstname_i    => "H.",
@@ -368,6 +383,7 @@ my $laufenberg = {
                                  suffix_it      => undef,
                                },
                                {
+                                 index => 12,
                                  uniquename   => 0,
                                  firstname      => "Norbert",
                                  firstname_i    => "N.",

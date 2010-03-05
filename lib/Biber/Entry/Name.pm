@@ -70,6 +70,29 @@ sub was_stripped {
 }
 
 
+=head2 set_index
+
+    Set a field telling what position in the name list the name is
+
+=cut
+
+sub set_index {
+  my ($self, $index) = @_;
+  $self->{index} = $index;
+  return;
+}
+
+=head2 get_index
+
+    Get the index of a Biber::Entry::Name object
+
+=cut
+
+sub get_index {
+  my $self = shift;
+  return $self->{index};
+}
+
 =head2 set_uniquename
 
     Set uniquename for a Biber::Entry::Name object
