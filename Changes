@@ -2,8 +2,9 @@ Revision history for Biber
 
 0.5.3 (unreleased)
        * Changed semantics of --outfile and --output-directory. --outfile
-       is now relative to --output-firectory. If --outfile is absolute, it
-       is stripped to the filename and the path discarded.
+       is now relative to --output-directory. If --outfile is absolute, it
+       is stripped to the filename and the path discarded. Absolute .aux
+       paths are stripped to filename for appending to --output-directory.
 0.5.2   04-03-2010
        * Locale fixes
        * Uniquename fixed to match BibLaTeX option values
