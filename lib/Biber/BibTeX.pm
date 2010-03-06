@@ -285,7 +285,6 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
 
       foreach my $f ( @flistnosplit ) {
 
-        #my $value = decode_utf8( $entry->get($f) );
         my $value = decode( $encoding, $entry->get($f) );
 
         my $af = $f;

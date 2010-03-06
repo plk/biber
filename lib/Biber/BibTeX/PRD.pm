@@ -12,6 +12,7 @@ use Parse::RecDescent;
 use Regexp::Common qw{ balanced };
 use Biber::BibTeX::Parser;
 use File::Spec;
+use Encode;
 use List::AllUtils qw(first);
 use Log::Log4perl qw(:no_extra_logdie_message);
 use base 'Exporter';
@@ -323,18 +324,20 @@ sub _bibtex_prd_parse {
 
   my @localkeys;
 
+  my $mode;
+
+  if ( Biber::Config->getoption('bibencoding') and
+    not Biber::Config->getoption('unicodebbl') ) {
+    $mode = ':encoding(' . Biber::Config->getoption('bibencoding') . ')';
+  } else {
+    $mode = ":utf8";
+  }
+
+
   ## TODO
   # $::RD_TRACE = 1 if Biber::Config->getoption('parserdebug');
 
   undef $/;
-
-  my $mode = "";
-
-  if ( Biber::Config->getoption('inputencoding') && ! Biber::Config->getoption('unicodebbl') ) {
-    $mode = ':encoding(' . Biber::Config->getoption('inputencoding') . ')';
-  } else {
-    $mode = ":utf8";
-  };
 
   my $bib = IO::File->new( $filename, "<$mode" )
     or $logger->logcroak("Failed to open $filename : $!");
