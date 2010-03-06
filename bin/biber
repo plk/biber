@@ -164,10 +164,11 @@ else {
     $bblfile = $auxfile;
     $bblfile =~ s/aux$/bbl/;
   }
-  if (defined $opts->{'output-directory'}) {
-    $bblfile = File::Spec->catfile($outdir, $bblfile)
-  }
 
+  if (defined($opts->{'output-directory'})) {
+    my ($volume, $directories, $file) = File::Spec->splitpath($bblfile);
+    $bblfile = File::Spec->catfile($outdir, $file)
+  }
   $biber->parse_auxfile($auxfile);
 }
 
