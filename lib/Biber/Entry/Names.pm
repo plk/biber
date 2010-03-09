@@ -1,6 +1,7 @@
 package Biber::Entry::Names;
 
 use Data::Dump;
+use Biber::Config;
 
 =encoding utf-8
 
@@ -44,16 +45,31 @@ sub names {
   return $self->{namelist};
 }
 
+=head2 reset_uniquelist
+
+    Reset uniquelist to undef for a Biber::Entry::Name object
+
+=cut
+
+sub reset_uniquelist {
+  my $self = shift;
+  delete $self->{uniquelist};
+  return;
+}
+
+
 =head2 set_uniquelist
 
-    Add a uniquelist count to the Biber::Entry::Names
-    object
+    Add a uniquelist count to the Biber::Entry::Names object
+    Sets global flag to say that some uniquelist value has changed
 
 =cut
 
 sub set_uniquelist {
   my $self = shift;
   my $uniquelist = shift;
+  my $currval = $self->{uniquelist};
+  Biber::Config->set_unul_changed((not defined($currval) or $currval != $uniquelist) ? 1 : 0);
   $self->{uniquelist} = $uniquelist;
   return;
 }
@@ -163,7 +179,7 @@ sub last_element {
 
 =head2 dump
 
-    Dump a Biber::Entry::Name object for debugging purposes
+    Dump a Biber::Entry::Names object for debugging purposes
 
 =cut
 

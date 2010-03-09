@@ -1292,29 +1292,47 @@ sub generate_final_sortinfo {
 sub uniqueness {
   my $self = shift;
   my $bibentries = $self->bib;
-  # Generate uniqueness information according to global uniqueness option order
-  foreach my $uscheme (@{Biber::Config->getblxoption('uniqueness', undef, undef)}) {
-    # Generate uniquename information, if required
-    if ($uscheme eq 'name') {
-      # uniquename is global
+  # Generate uniqueness information according to this algorithm:
+  # 1. Generate uniquename if requested
+  # 2. if (uniquelist has never run before OR step 1 changed any uniquename values) {
+  #      goto step 3
+  #    } else { goto step 5 }
+  # 3. Generate uniquelist if requested
+  # 4. if (step 3 changed any uniquelist values) {
+  #      goto step 1
+  #    } else { goto step 5 }
+  # 5. Run extrayear generation if requested based on data as it stands after step 4
+  # 6. Run singletitle generation if requested based on data as it stands after step 4
+
+  # Set a flag for first uniquelist pass. This is a special case as we always want to run
+  # at least one uniquelist pass if requested, regardless of unul_done global flag.
+  my $first_ul_pass = 1;
+
+  # Generate uniquename information, if requested
+  while ('true') {
+    unless (Biber::Config->get_unul_done) {
+      Biber::Config->set_unul_changed(0); # reset state for global unul changed flag
       if (Biber::Config->getblxoption('uniquename', undef, undef)) {
+
         $self->create_uniquename_info;
         $self->generate_uniquename;
       }
     }
-    # Generate uniquelist information, if required
-    elsif ($uscheme eq 'namelist') {
+    else { last; }
+    # Generate uniquelist information, if requested
+    # Always run uniquelist at least once, if requested
+    if ($first_ul_pass or not Biber::Config->get_unul_done) {
+      Biber::Config->set_unul_changed(0); # reset state for global unul changed flag
       if (Biber::Config->getblxoption('uniquelist', undef, undef)) {
+        $first_ul_pass = 0; # Ignore special case when uniquelist has run once
         $self->create_uniquelist_info;
         $self->generate_uniquelist;
       }
     }
-    elsif ($uscheme eq 'year') {
-      $self->generate_extras;
-    }
-    elsif ($uscheme eq 'title') {
-    }
+    else { last; }
   }
+  $self->generate_extras;
+#  $self->generate_singletitle;
 }
 
 
@@ -1329,6 +1347,7 @@ sub create_uniquename_info {
   my $self = shift;
   my $bibentries = $self->bib;
 
+  Biber::Config->reset_uniquenamecount;
   foreach my $citekey ( $self->citekeys ) {
     $logger->debug("Generating uniquename information for '$citekey'");
     my $be = $bibentries->entry($citekey);
@@ -1337,14 +1356,13 @@ sub create_uniquename_info {
     if (my $lname = $be->get_field('labelnamename')) {
 
       # First find out the maxnames setting for this namelist.
-      my $maxnames;
       my $ul = -1; # Not set
       if (defined($be->get_field($lname)->get_uniquelist)) {
         $ul = $be->get_field($lname)->get_uniquelist;
       }
       my $mn = Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), undef );
       # Set the index limit beyond which we don't look for disambiguating information
-      $maxnames = $ul > $mn ? $ul : $mn;
+      my $localmaxnames = $ul > $mn ? $ul : $mn;
 
       # Note that we don't determine if a name is unique here -
       # we can't, were still processing entries at this point.
@@ -1361,8 +1379,7 @@ sub create_uniquename_info {
       foreach my $name (@{$be->get_field($lname)->names}) {
         # We don't want to record disambiguation information for any names
         # that are hidden by a maxnames/uniquelist limit
-        unless ($name->get_index > $maxnames) {
-          # In here, could be uniqueness NAMELIST->NAME flow (unless it's just because of maxnames)
+        unless ($name->get_index > $localmaxnames) {
           my $lastname   = $name->get_lastname;
           my $nameinitstring = $name->get_nameinitstring;
           my $namestring = $name->get_namestring;
@@ -1447,6 +1464,7 @@ sub create_uniquelist_info {
   my $self = shift;
   my $bibentries = $self->bib;
 
+  Biber::Config->reset_uniquelistcount;
   foreach my $citekey ( $self->citekeys ) {
     $logger->debug("Generating uniquelist information for '$citekey'");
     my $be = $bibentries->entry($citekey);
@@ -1465,17 +1483,14 @@ sub create_uniquelist_info {
         }
         # uniquename indicates unique with just lastname
         elsif ($name->get_uniquename eq '0') {
-          # uniqueness NAME->NAMELIST flow
           $liststring .= $lastname . '|';
         }
         # uniquename indicates unique with lastname with initials
         elsif ($name->get_uniquename eq '1') {
-          # uniqueness NAME->NAMELIST flow
           $liststring .= $nameinitstring . '|';
         }
         # uniquename indicates unique with full name
         elsif ($name->get_uniquename eq '2') {
-          # uniqueness NAME->NAMELIST flow
           $liststring .= $namestring . '|';
         }
         Biber::Config->add_uniquelistcount($liststring);
@@ -1504,6 +1519,7 @@ sub generate_uniquelist {
     if (my $lname = $be->get_field('labelnamename')) {
       my $liststring = '';
       my $namefield = $be->get_field($lname);
+      $namefield->reset_uniquelist;
       foreach my $name (@{$namefield->names}) {
         my $lastname   = $name->get_lastname;
         my $nameinitstring = $name->get_nameinitstring;

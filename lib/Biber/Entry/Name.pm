@@ -1,6 +1,8 @@
 package Biber::Entry::Name;
 
+use Data::Dump;
 use Regexp::Common qw( balanced );
+use Biber::Config;
 
 =encoding utf-8
 
@@ -93,15 +95,32 @@ sub get_index {
   return $self->{index};
 }
 
+=head2 reset_uniquename
+
+    Reset uniquename to undef for a Biber::Entry::Name object
+
+=cut
+
+sub reset_uniquename {
+  my $self = shift;
+  delete $self->{uniquename};
+  return;
+}
+
+
 =head2 set_uniquename
 
     Set uniquename for a Biber::Entry::Name object
+    Sets global flag to say that some uniquename value has changed
 
 =cut
 
 sub set_uniquename {
-  my ($self, $val) = @_;
-  $self->{uniquename} = $val;
+  my $self = shift;
+  my $uniquename = shift;
+  my $currval = $self->{uniquename};
+  Biber::Config->set_unul_changed((not defined($currval) or $currval != $uniquename) ? 1 : 0);
+  $self->{uniquename} = $uniquename;
   return;
 }
 
@@ -437,6 +456,18 @@ sub name_to_bbl {
   $pno = join(',', @pno);
 
   return "    {{$pno}{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
+}
+
+=head2 dump
+
+    Dump a Biber::Entry::Name object for debugging purposes
+
+=cut
+
+sub dump {
+  my $self = shift;
+  dd($self);
+  return;
 }
 
 =head1 AUTHORS

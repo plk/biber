@@ -34,6 +34,10 @@ $CONFIG->{state}{inset_entries} = {};
 $CONFIG->{state}{seennamehash} = {};
 $CONFIG->{state}{keycase} = {};
 
+# Boolean to say whether uniquename/uniquelist information has changed
+# Default is true so that uniquename/uniquelist processing starts
+$CONFIG->{state}{unulchanged} = 1;
+
 # namehashcount holds a hash of namehashes and 
 # occurences of unique names that generate the hash. For example:
 # {AA => { Adams_A => 1, Allport_A => 2 }}
@@ -58,6 +62,7 @@ $CONFIG->{state}{seenkeys} = {};
 =cut
 
 sub _init {
+  $CONFIG->{state}{unulchanged} = 1;
   $CONFIG->{state}{seennamehash} = {};
   $CONFIG->{state}{namehashcount} = {};
   $CONFIG->{state}{uniquenamecount} = {};
@@ -159,6 +164,30 @@ sub config_file {
 ##############################
 # Biber options static methods
 ##############################
+
+=head2 get_unul_done
+
+    Return a boolean saying whether uniquenename+uniquelist processing is finished
+
+=cut
+
+sub get_unul_done {
+  shift; # class method so don't care about class name
+  return $CONFIG->{state}{unulchanged} ? 0 : 1;
+}
+
+=head2 set_unul_changed
+
+    Set a boolean saying whether uniquename+uniquelist has changed
+
+=cut
+
+sub set_unul_changed {
+  shift; # class method so don't care about class name
+  my $val = shift;
+  $CONFIG->{state}{unulchanged} = $val;
+  return;
+}
 
 =head2 setoption
 
@@ -449,7 +478,7 @@ sub get_uniquelistcount {
 
     Incremenent the count for a list part to the data for a namehash
 
-    Biber::Config->add_uniquelistcount($hash, $liststring);
+    Biber::Config->add_uniquelistcount($liststring);
 
 =cut
 
@@ -459,6 +488,21 @@ sub add_uniquelistcount {
   $CONFIG->{state}{uniquelistcount}{$liststring}++;
   return;
 }
+
+=head2 reset_uniquelistcount
+
+    Reset the count for a list part to the data for a namehash
+
+    Biber::Config->reset_uniquelistcount;
+
+=cut
+
+sub reset_uniquelistcount {
+  shift; # class method so don't care about class name
+  $CONFIG->{state}{uniquelistcount} = {};
+  return;
+}
+
 
 
 
@@ -501,6 +545,20 @@ sub add_uniquenamecount {
   else {
     push @{$CONFIG->{state}{uniquenamecount}{$namestring}}, $hash;
   }
+  return;
+}
+
+=head2 reset_uniquenamecount
+
+    Reset the list of name(hashes) which have the name part in it
+
+    Biber::Config->reset_uniquenamecount;
+
+=cut
+
+sub reset_uniquenamecount {
+  shift; # class method so don't care about class name
+  $CONFIG->{state}{uniquenamecount} = {};
   return;
 }
 
