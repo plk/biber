@@ -775,17 +775,14 @@ sub postprocess {
     # generate namehash,fullhash
     $self->postprocess_hashes($citekey);
 
-    # track labelname/year combinations
-    $self->postprocess_labelnameyear($citekey);
-
     # generate labelalpha information
     $self->postprocess_labelalpha($citekey);
 
     # track shorthands
     $self->postprocess_shorthands($citekey);
 
-    # Set default type for patens entries
-    $self->postprocess_patents($citekey);
+    # Misc things to do as we process keys
+    $self->postprocess_misc($citekey);
 
     # first-pass sorting to generate basic labels
     $self->postprocess_sorting_firstpass($citekey);
@@ -1103,45 +1100,6 @@ sub postprocess_hashes {
 }
 
 
-=head2 postprocess_labelnameyear
-
-    Track labelname/year combination
-
-=cut
-
-sub postprocess_labelnameyear {
-  my $self = shift;
-  my $citekey = shift;
-  my $bibentries = $self->bib;
-  my $be = $bibentries->entry($citekey);
-  # This is all used to generate extrayear/extralpha and the rules for this are:
-  # * Generate labelname/year combination for tracking extrayear
-  # * If there is no labelname to use, use empty string
-  # * If there is no labelyear to use, use empty string
-  # * Don't increment the seennameyear count if either name or year string is empty
-  #   (see code in incr_nameyear method).
-  my $name_string;
-  if ($be->get_field('labelnamename')) {
-    $name_string = $self->_namestring($citekey, $be->get_field('labelnamename'));
-  }
-  else {
-    $name_string = '';
-  }
-  my $year_string;
-  if ($be->get_field('labelyearname')) {
-    $year_string = $be->get_field($be->get_field('labelyearname'));
-  }
-  elsif ($be->get_field('year')) {
-    $year_string = $be->get_field('year');
-  }
-  else {
-    $year_string = '';
-  }
-  my $nameyear_string = $name_string . '0' . $year_string;
-  Biber::Config->incr_seennameyear($name_string, $year_string);
-  $be->set_field('nameyear', $nameyear_string);
-}
-
 =head2 postprocess_labelalpha
 
     Generate the labelalpha and also the variant for sorting
@@ -1207,17 +1165,18 @@ sub postprocess_shorthands {
   }
 }
 
-=head2 postprocess_patents
+=head2 postprocess_misc
 
-    Deal with patent entry defaults
+    Deal with some misc things
 
 =cut
 
-sub postprocess_patents {
+sub postprocess_misc {
   my $self = shift;
   my $citekey = shift;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
+  # Deal with patent entry defaults
   if ( ( $be->get_field('entrytype') eq 'patent' ) and ( not $be->get_field('type') ) ) {
     $be->set_field('type', 'patent');
   }
@@ -1237,34 +1196,6 @@ sub postprocess_sorting_firstpass {
   $self->_generatesortstring( $citekey, Biber::Config->getblxoption('sorting_label', $be->get_field('entrytype'), $citekey));
 }
 
-=head2 generate_extras
-
-    Generate extrayear and extraalpha
-
-=cut
-
-sub generate_extras {
-  my $self = shift;
-  my $bibentries = $self->bib;
-  foreach my $citekey ($self->citekeys) {
-    my $be = $bibentries->entry($citekey);
-    my $nameyear = $be->get_field('nameyear');
-    # Only generate extrayear if skiplab is not set.
-    # Don't forget that skiplab is implied for set members
-    unless (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
-      if (Biber::Config->get_seennameyear($nameyear) > 1) {
-        Biber::Config->incr_seenlabelyear($nameyear);
-        if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
-          $be->set_field('extrayear', Biber::Config->get_seenlabelyear($nameyear));
-        }
-        if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
-          $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($nameyear));
-        }
-      }
-    }
-  }
-  return;
-}
 
 =head2 generate_final_sortinfo
 
@@ -1334,6 +1265,7 @@ sub uniqueness {
       last; # uniquename/uniquelist disambiguation is finished as nothing changed
     }
   }
+  $self->create_extras_info;
   $self->generate_extras;
 #  $self->generate_singletitle;
 }
@@ -1559,6 +1491,79 @@ sub generate_uniquelist {
     }
   }
 }
+
+
+=head2 create_extras_info
+
+    Track labelname/year combination for generate of extra* fields
+
+=cut
+
+sub create_extras_info {
+  my $self = shift;
+  my $bibentries = $self->bib;
+
+  foreach my $citekey ( $self->citekeys ) {
+    $logger->debug("Creating uniquelist for '$citekey'");
+
+    my $be = $bibentries->entry($citekey);
+    # This is all used to generate extrayear/extralpha and the rules for this are:
+    # * Generate labelname/year combination for tracking extrayear
+    # * If there is no labelname to use, use empty string
+    # * If there is no labelyear to use, use empty string
+    # * Don't increment the seennameyear count if either name or year string is empty
+    #   (see code in incr_nameyear method).
+    my $name_string;
+    if ($be->get_field('labelnamename')) {
+      $name_string = $self->_extranamestring($citekey, $be->get_field('labelnamename'));
+    } else {
+      $name_string = '';
+    }
+    my $year_string;
+    if ($be->get_field('labelyearname')) {
+      $year_string = $be->get_field($be->get_field('labelyearname'));
+    } elsif ($be->get_field('year')) {
+      $year_string = $be->get_field('year');
+    } else {
+      $year_string = '';
+    }
+    my $nameyear_string = $name_string . '0' . $year_string;
+    Biber::Config->incr_seennameyear($name_string, $year_string);
+    $be->set_field('nameyear', $nameyear_string);
+  }
+}
+
+
+=head2 generate_extras
+
+    Generate extrayear and extraalpha using information created by
+    create_extras_info()
+
+=cut
+
+sub generate_extras {
+  my $self = shift;
+  my $bibentries = $self->bib;
+  foreach my $citekey ($self->citekeys) {
+    my $be = $bibentries->entry($citekey);
+    my $nameyear = $be->get_field('nameyear');
+    # Only generate extrayear if skiplab is not set.
+    # Don't forget that skiplab is implied for set members
+    unless (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
+      if (Biber::Config->get_seennameyear($nameyear) > 1) {
+        Biber::Config->incr_seenlabelyear($nameyear);
+        if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
+          $be->set_field('extrayear', Biber::Config->get_seenlabelyear($nameyear));
+        }
+        if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
+          $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($nameyear));
+        }
+      }
+    }
+  }
+  return;
+}
+
 
 =head2 sortentries
 
