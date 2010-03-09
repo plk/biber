@@ -703,11 +703,11 @@ sub _extranamestring {
     # Append first name only if it's needed to get a unique name ...
     if ($n->get_firstname and $n->get_uniquename) {
       # ... and then only the initials if uniquename=1
-      if ($n->get_uniquename eq 1) {
+      if ($n->get_uniquename == 1) {
         $str .= strip_nosort($n->get_firstname_it) . '2'
       }
       # ... or full first name if uniquename=2
-      elsif ($n->get_uniquename eq 2) {
+      elsif ($n->get_uniquename == 2) {
         $str .= strip_nosort($n->get_firstname) . '2'
       }
     }

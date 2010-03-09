@@ -1470,15 +1470,15 @@ sub generate_uniquelist {
           $liststring .= $lastname . '|';
         }
         # uniquename indicates unique with just lastname
-        elsif ($name->get_uniquename eq '0') {
+        elsif ($name->get_uniquename == 0) {
           $liststring .= $lastname . '|';
         }
         # uniquename indicates unique with lastname with initials
-        elsif ($name->get_uniquename eq '1') {
+        elsif ($name->get_uniquename == 1) {
           $liststring .= $nameinitstring . '|';
         }
         # uniquename indicates unique with full name
-        elsif ($name->get_uniquename eq '2') {
+        elsif ($name->get_uniquename == 2) {
           $liststring .= $namestring . '|';
         }
         # list is unique
