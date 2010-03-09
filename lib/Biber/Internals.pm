@@ -628,6 +628,8 @@ sub _nodecode {
 # index name/year combinations for extrayear and extraalpha
 sub _namestring {
   my $self = shift;
+  # $extraflag is set if we are calling this to generate strings for extra*
+  # processing and therefore need to use uniquename
   my ($citekey, $field, $extraflag) = @_;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
@@ -636,7 +638,8 @@ sub _namestring {
   my $truncated = 0;
   my $truncnames = dclone($names);
 
-  # perform truncation according to options minnames, maxnames, uniquelist
+  # perform truncation according to options minnames, maxnames and uniquelist (if
+  # requested)
   my $ul = -1;
   if (defined($names->get_uniquelist)) {
     $ul = $names->get_uniquelist;
