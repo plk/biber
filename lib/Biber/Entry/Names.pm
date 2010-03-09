@@ -69,7 +69,10 @@ sub set_uniquelist {
   my $self = shift;
   my $uniquelist = shift;
   my $currval = $self->{uniquelist};
-  Biber::Config->set_unul_changed((not defined($currval) or $currval != $uniquelist) ? 1 : 0);
+  # Set modified flag to positive if we changes something
+  if (not defined($currval) or $currval != $uniquelist) {
+    Biber::Config->set_unul_changed(1);
+  }
   $self->{uniquelist} = $uniquelist;
   return;
 }

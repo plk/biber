@@ -119,7 +119,10 @@ sub set_uniquename {
   my $self = shift;
   my $uniquename = shift;
   my $currval = $self->{uniquename};
-  Biber::Config->set_unul_changed((not defined($currval) or $currval != $uniquename) ? 1 : 0);
+  # Set modified flag to positive if we changes something
+  if (not defined($currval) or $currval != $uniquename) {
+    Biber::Config->set_unul_changed(1);
+  }
   $self->{uniquename} = $uniquename;
   return;
 }

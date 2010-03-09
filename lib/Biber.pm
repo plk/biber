@@ -1293,11 +1293,11 @@ sub uniqueness {
   my $self = shift;
   my $bibentries = $self->bib;
   # Generate uniqueness information according to this algorithm:
-  # 1. Generate uniquename if requested
+  # 1. Generate uniquename if uniquename option is set
   # 2. if (uniquelist has never run before OR step 1 changed any uniquename values) {
   #      goto step 3
   #    } else { goto step 5 }
-  # 3. Generate uniquelist if requested
+  # 3. Completely regenerate uniquelist if uniquelist option is set
   # 4. if (step 3 changed any uniquelist values) {
   #      goto step 1
   #    } else { goto step 5 }
@@ -1313,12 +1313,13 @@ sub uniqueness {
     unless (Biber::Config->get_unul_done) {
       Biber::Config->set_unul_changed(0); # reset state for global unul changed flag
       if (Biber::Config->getblxoption('uniquename', undef, undef)) {
-
         $self->create_uniquename_info;
         $self->generate_uniquename;
       }
     }
-    else { last; }
+    else {
+      last; # uniquename/uniquelist disambiguation is finished as nothing changed
+    }
     # Generate uniquelist information, if requested
     # Always run uniquelist at least once, if requested
     if ($first_ul_pass or not Biber::Config->get_unul_done) {
@@ -1329,7 +1330,9 @@ sub uniqueness {
         $self->generate_uniquelist;
       }
     }
-    else { last; }
+    else {
+      last; # uniquename/uniquelist disambiguation is finished as nothing changed
+    }
   }
   $self->generate_extras;
 #  $self->generate_singletitle;
@@ -1347,7 +1350,10 @@ sub create_uniquename_info {
   my $self = shift;
   my $bibentries = $self->bib;
 
+  # Reset uniquename information as we have to generate it again because uniquelist
+  # information might have changed
   Biber::Config->reset_uniquenamecount;
+
   foreach my $citekey ( $self->citekeys ) {
     $logger->debug("Generating uniquename information for '$citekey'");
     my $be = $bibentries->entry($citekey);
@@ -1464,7 +1470,10 @@ sub create_uniquelist_info {
   my $self = shift;
   my $bibentries = $self->bib;
 
+  # Reset uniquelist information as we have to generate it again because uniquename
+  # information might have changed
   Biber::Config->reset_uniquelistcount;
+
   foreach my $citekey ( $self->citekeys ) {
     $logger->debug("Generating uniquelist information for '$citekey'");
     my $be = $bibentries->entry($citekey);
@@ -1519,7 +1528,7 @@ sub generate_uniquelist {
     if (my $lname = $be->get_field('labelnamename')) {
       my $liststring = '';
       my $namefield = $be->get_field($lname);
-      $namefield->reset_uniquelist;
+
       foreach my $name (@{$namefield->names}) {
         my $lastname   = $name->get_lastname;
         my $nameinitstring = $name->get_nameinitstring;
