@@ -1243,7 +1243,7 @@ sub uniqueness {
   while ('true') {
     unless (Biber::Config->get_unul_done) {
       Biber::Config->set_unul_changed(0); # reset state for global unul changed flag
-      if (Biber::Config->getblxoption('uniquename', undef, undef)) {
+      if (Biber::Config->getblxoption('uniquename')) {
         $self->create_uniquename_info;
         $self->generate_uniquename;
       }
@@ -1255,7 +1255,7 @@ sub uniqueness {
     # Always run uniquelist at least once, if requested
     if ($first_ul_pass or not Biber::Config->get_unul_done) {
       Biber::Config->set_unul_changed(0); # reset state for global unul changed flag
-      if (Biber::Config->getblxoption('uniquelist', undef, undef)) {
+      if (Biber::Config->getblxoption('uniquelist')) {
         $first_ul_pass = 0; # Ignore special case when uniquelist has run once
         $self->create_uniquelist_info;
         $self->generate_uniquelist;
@@ -1298,7 +1298,7 @@ sub create_uniquename_info {
       if (defined($be->get_field($lname)->get_uniquelist)) {
         $ul = $be->get_field($lname)->get_uniquelist;
       }
-      my $mn = Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), undef );
+      my $mn = Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'));
       # Set the index limit beyond which we don't look for disambiguating information
       my $localmaxnames = $ul > $mn ? $ul : $mn;
 
@@ -1349,7 +1349,7 @@ sub create_uniquename_info {
 sub generate_uniquename {
   my $self = shift;
   my $bibentries = $self->bib;
-  my $un = Biber::Config->getblxoption('uniquename', undef, undef);
+  my $un = Biber::Config->getblxoption('uniquename');
 
   # Now use the information to set the actual uniquename information
   foreach my $citekey ( $self->citekeys ) {
@@ -1495,7 +1495,7 @@ sub generate_uniquelist {
 
 =head2 create_extras_info
 
-    Track labelname/year combination for generate of extra* fields
+    Track labelname/year combination for generation of extra* fields
 
 =cut
 
@@ -1515,7 +1515,7 @@ sub create_extras_info {
     #   (see code in incr_nameyear method).
     my $name_string;
     if ($be->get_field('labelnamename')) {
-      $name_string = $self->_extranamestring($citekey, $be->get_field('labelnamename'));
+      $name_string = $self->_namestring($citekey, $be->get_field('labelnamename'), 1);
     } else {
       $name_string = '';
     }
@@ -1529,6 +1529,7 @@ sub create_extras_info {
     }
     my $nameyear_string = $name_string . '0' . $year_string;
     Biber::Config->incr_seennameyear($name_string, $year_string);
+    $logger->trace("Setting nameyear for '$citekey' to '$nameyear_string'");
     $be->set_field('nameyear', $nameyear_string);
   }
 }

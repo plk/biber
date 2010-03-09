@@ -624,45 +624,11 @@ sub _nodecode {
   return $no_decode;
 }
 
+# This is used for two things - to generate sorting strings and to
+# index name/year combinations for extrayear and extraalpha
 sub _namestring {
   my $self = shift;
-  my ($citekey, $field) = @_;
-  my $bibentries = $self->bib;
-  my $be = $bibentries->entry($citekey);
-  my $names = $be->get_field($field);
-  my $str = '';
-  my $truncated = 0;
-  my $truncnames = dclone($names);
-
-  # perform truncation according to options minnames, maxnames
-  if ( $names->count_elements > Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), undef) ) {
-    $truncated = 1;
-    $truncnames = $truncnames->first_n_elements(Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey));
-  }
-
-  foreach my $n ( @{$truncnames->names} ) {
-    $str .= $n->get_prefix . '2'
-      if ( $n->get_prefix and
-           Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) );
-    $str .= strip_nosort($n->get_lastname) . '2';
-    $str .= strip_nosort($n->get_firstname) . '2' if $n->get_firstname;
-    $str .= $n->get_suffix if $n->get_suffix;
-    $str =~ s/2\z//xms;
-    $str .= '1';
-  }
-
-  $str =~ s/\s+1/1/gxms;
-  $str =~ s/1\z//xms;
-  $str = normalize_string($str, $self->_nodecode($citekey));
-  $str .= '1zzzz' if $truncated;
-  return $str;
-}
-
-# This is like _namestring but allows for uniquename/uniquelist
-# It is used for tracking extrayear and extraalpha
-sub _extranamestring {
-  my $self = shift;
-  my ($citekey, $field) = @_;
+  my ($citekey, $field, $extraflag) = @_;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
   my $names = $be->get_field($field);
@@ -675,14 +641,14 @@ sub _extranamestring {
   if (defined($names->get_uniquelist)) {
     $ul = $names->get_uniquelist;
   }
-  my $mn = Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), undef );
+  my $mn = Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'));
   my $minn = Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey);
   my $localmaxnames = $ul > $mn ? $ul : $mn;
 
   if ( $names->count_elements > $localmaxnames ) {
     $truncated = 1;
     # truncate to the uniquelist point if uniquelist is requested
-    if (Biber::Config->getblxoption('uniquelist', undef, undef)) {
+    if (Biber::Config->getblxoption('uniquelist')) {
       $truncnames = $truncnames->first_n_elements($localmaxnames);
     }
     # otherwise truncate to minnames
@@ -694,22 +660,30 @@ sub _extranamestring {
   my $prefix_opt = Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey);
 
   foreach my $n ( @{$truncnames->names} ) {
-    # Append prefix, if requestes
+    # Append prefix, if requested
     if ($n->get_prefix and $prefix_opt) {
       $str .= $n->get_prefix . '2';
     }
     # Append last name
     $str .= strip_nosort($n->get_lastname) . '2';
-    # Append first name only if it's needed to get a unique name ...
-    if ($n->get_firstname and $n->get_uniquename) {
-      # ... and then only the initials if uniquename=1
-      if ($n->get_uniquename == 1) {
-        $str .= strip_nosort($n->get_firstname_it) . '2'
+    # If we're generating information for extra* processing, use uniquename
+    if ($extraflag) {
+      # Append first name only if it's needed to get a unique name ...
+      if ($n->get_firstname and $n->get_uniquename) {
+        # ... and then only the initials if uniquename=1
+        if ($n->get_uniquename == 1) {
+          $str .= strip_nosort($n->get_firstname_it) . '2';
+        }
+        # ... or full first name if uniquename=2
+        elsif ($n->get_uniquename == 2) {
+          $str .= strip_nosort($n->get_firstname) . '2';
+        }
       }
-      # ... or full first name if uniquename=2
-      elsif ($n->get_uniquename == 2) {
-        $str .= strip_nosort($n->get_firstname) . '2'
-      }
+    }
+    # We're generating sorting strings and so always use the full name
+    else {
+      # Append last name
+      $str .= strip_nosort($n->get_firstname) . '2' if $n->get_firstname;
     }
     # Append suffix
     $str .= $n->get_suffix if $n->get_suffix;
