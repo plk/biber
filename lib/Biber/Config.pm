@@ -50,6 +50,7 @@ $CONFIG->{state}{uniquenamecount} = {};
 # uniquelistcount holds a hash of hashes to list part counts
 $CONFIG->{state}{uniquelistcount} = {};
 
+$CONFIG->{state}{seenname} = {};
 $CONFIG->{state}{seennameyear} = {};
 $CONFIG->{state}{seenlabelyear} = {};
 $CONFIG->{state}{seenkeys} = {};
@@ -67,6 +68,7 @@ sub _init {
   $CONFIG->{state}{namehashcount} = {};
   $CONFIG->{state}{uniquenamecount} = {};
   $CONFIG->{state}{uniquelistcount} = {};
+  $CONFIG->{state}{seenname} = {};
   $CONFIG->{state}{seennameyear} = {};
   $CONFIG->{state}{seenlabelyear} = {};
   $CONFIG->{state}{seenkeys} = {};
@@ -407,6 +409,44 @@ sub incr_seenlabelyear {
 }
 
 #============================
+#       seenname
+#============================
+
+=head2 get_seenname
+
+    Get the count of occurences of a labelname which
+    takes into account all of maxnames, uniquelist,
+    uniquename, useprefix
+
+    Biber::Config->get_seenname($name);
+
+=cut
+
+sub get_seenname {
+  shift; # class method so don't care about class name
+  my $name = shift;
+  return $CONFIG->{state}{seenname}{$name};
+}
+
+=head2 incr_seenname
+
+    Increment the count of occurences of a labelname which
+    takes into account all of maxnames, uniquelist,
+    uniquename, useprefix
+
+    Biber::Config->incr_seename($name);
+
+=cut
+
+sub incr_seenname {
+  shift; # class method so don't care about class name
+  my $name = shift;
+  $CONFIG->{state}{seenname}{$name}++;
+  return;
+}
+
+
+#============================
 #       seennameyear
 #============================
 
@@ -442,7 +482,7 @@ sub incr_seennameyear {
   my ($ns, $ys) = @_;
   $tmp = $ns . '0' . $ys;
   # We can always increment this to 1
-  unless  ($CONFIG->{state}{seennameyear}{$tmp}) {
+  unless ($CONFIG->{state}{seennameyear}{$tmp}) {
     $CONFIG->{state}{seennameyear}{$tmp}++;
   }
   # But beyond that only if we have a labelname and labelyear in the entry since

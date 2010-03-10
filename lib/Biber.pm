@@ -1265,9 +1265,12 @@ sub uniqueness {
       last; # uniquename/uniquelist disambiguation is finished as nothing changed
     }
   }
-  $self->create_extras_info;
+  # Generate singltitle/extras* information if requested
+  $self->create_extras_st_info;
+  # Generate extra* fields if requested
   $self->generate_extras;
-#  $self->generate_singletitle;
+  # Generate singletitle field if requested
+  $self->generate_singletitle;
 }
 
 
@@ -1287,7 +1290,7 @@ sub create_uniquename_info {
   Biber::Config->reset_uniquenamecount;
 
   foreach my $citekey ( $self->citekeys ) {
-    $logger->debug("Generating uniquename information for '$citekey'");
+    $logger->trace("Generating uniquename information for '$citekey'");
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
     my $namehash = $be->get_field('namehash');
@@ -1337,6 +1340,7 @@ sub create_uniquename_info {
       }
     }
   }
+  return;
 }
 
 =head2 generate_uniquename
@@ -1353,7 +1357,7 @@ sub generate_uniquename {
 
   # Now use the information to set the actual uniquename information
   foreach my $citekey ( $self->citekeys ) {
-    $logger->debug("Setting uniquename for '$citekey'");
+    $logger->trace("Setting uniquename for '$citekey'");
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
     my $namehash = $be->get_field('namehash');
@@ -1390,6 +1394,7 @@ sub generate_uniquename {
       }
     }
   }
+  return;
 }
 
 =head2 create_uniquelist_info
@@ -1407,7 +1412,7 @@ sub create_uniquelist_info {
   Biber::Config->reset_uniquelistcount;
 
   foreach my $citekey ( $self->citekeys ) {
-    $logger->debug("Generating uniquelist information for '$citekey'");
+    $logger->trace("Generating uniquelist information for '$citekey'");
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
     my $namehash = $be->get_field('namehash');
@@ -1438,6 +1443,7 @@ sub create_uniquelist_info {
       }
     }
   }
+  return;
 }
 
 =head2 generate_uniquelist
@@ -1452,7 +1458,7 @@ sub generate_uniquelist {
   my $bibentries = $self->bib;
 
   foreach my $citekey ( $self->citekeys ) {
-    $logger->debug("Creating uniquelist for '$citekey'");
+    $logger->trace("Creating uniquelist for '$citekey'");
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
     my $namehash = $be->get_field('namehash');
@@ -1490,50 +1496,72 @@ sub generate_uniquelist {
       $namefield->set_uniquelist($namefield->count_uniquelist($liststring));
     }
   }
+  return;
 }
 
 
-=head2 create_extras_info
+=head2 create_extras_st_info
 
+    Track labelname for generation of singletitle
     Track labelname/year combination for generation of extra* fields
 
 =cut
 
-sub create_extras_info {
+sub create_extras_st_info {
   my $self = shift;
   my $bibentries = $self->bib;
 
   foreach my $citekey ( $self->citekeys ) {
-    $logger->debug("Creating uniquelist for '$citekey'");
-
     my $be = $bibentries->entry($citekey);
-    # This is all used to generate extrayear/extralpha and the rules for this are:
-    # * Generate labelname/year combination for tracking extrayear
-    # * If there is no labelname to use, use empty string
-    # * If there is no labelyear to use, use empty string
-    # * Don't increment the seennameyear count if either name or year string is empty
-    #   (see code in incr_nameyear method).
-    my $name_string;
-    if ($be->get_field('labelnamename')) {
-      $name_string = $self->_namestring($citekey, $be->get_field('labelnamename'), 1);
-    } else {
-      $name_string = '';
-    }
-    my $year_string;
-    if ($be->get_field('labelyearname')) {
-      $year_string = $be->get_field($be->get_field('labelyearname'));
-    } elsif ($be->get_field('year')) {
-      $year_string = $be->get_field('year');
-    } else {
-      $year_string = '';
-    }
-    my $nameyear_string = $name_string . '0' . $year_string;
-    Biber::Config->incr_seennameyear($name_string, $year_string);
-    $logger->trace("Setting nameyear for '$citekey' to '$nameyear_string'");
-    $be->set_field('nameyear', $nameyear_string);
-  }
-}
+    # Only generate this information if labelyear, labelalpha or singletitle is requested
+    if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) or
+        Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) or
+        Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'), $citekey)) {
+      $logger->trace("Creating extra*/singletitle information for '$citekey'");
 
+
+      # This is all used to generate extrayear/extralpha and the rules for this are:
+      # * Generate labelname/year combination for tracking extrayear
+      # * If there is no labelname to use, use empty string
+      # * If there is no labelyear to use, use empty string
+      # * Don't increment the seennameyear count if either name or year string is empty
+      #   (see code in incr_nameyear method).
+      my $name_string;
+      if ($be->get_field('labelnamename')) {
+        $name_string = $self->_namestring($citekey, $be->get_field('labelnamename'), 1);
+      } else {
+        $name_string = '';
+      }
+
+      # Only generate this information if singletitle option is requested and there is a
+      # labelname
+      if ($name_string and
+          Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'), $citekey)) {
+        Biber::Config->incr_seenname($name_string);
+        $logger->trace("Setting seenname for '$citekey' to '$name_string'");
+        $be->set_field('seenname', $name_string);
+      }
+
+      # Only generate this information if one of the extra* fields is requested
+      if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) or
+          Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey)) {
+        my $year_string;
+        if ($be->get_field('labelyearname')) {
+          $year_string = $be->get_field($be->get_field('labelyearname'));
+        } elsif ($be->get_field('year')) {
+          $year_string = $be->get_field('year');
+        } else {
+          $year_string = '';
+        }
+        my $nameyear_string = $name_string . '0' . $year_string;
+        Biber::Config->incr_seennameyear($name_string, $year_string);
+        $logger->trace("Setting nameyear for '$citekey' to '$nameyear_string'");
+        $be->set_field('nameyear', $nameyear_string);
+      }
+    }
+  }
+  return;
+}
 
 =head2 generate_extras
 
@@ -1547,17 +1575,20 @@ sub generate_extras {
   my $bibentries = $self->bib;
   foreach my $citekey ($self->citekeys) {
     my $be = $bibentries->entry($citekey);
-    my $nameyear = $be->get_field('nameyear');
-    # Only generate extrayear if skiplab is not set.
-    # Don't forget that skiplab is implied for set members
-    unless (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
-      if (Biber::Config->get_seennameyear($nameyear) > 1) {
-        Biber::Config->incr_seenlabelyear($nameyear);
-        if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
-          $be->set_field('extrayear', Biber::Config->get_seenlabelyear($nameyear));
-        }
-        if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
-          $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($nameyear));
+    if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) or
+        Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey)) {
+      my $nameyear = $be->get_field('nameyear');
+      # Only generate extrayear if skiplab is not set.
+      # Don't forget that skiplab is implied for set members
+      unless (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
+        if (Biber::Config->get_seennameyear($nameyear) > 1) {
+          Biber::Config->incr_seenlabelyear($nameyear);
+          if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
+            $be->set_field('extrayear', Biber::Config->get_seenlabelyear($nameyear));
+          }
+          if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
+            $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($nameyear));
+          }
         }
       }
     }
@@ -1565,6 +1596,33 @@ sub generate_extras {
   return;
 }
 
+=head2 generate_singletitle
+
+    Generate the singletitle field, if requested. The information for generating
+    this is gathered in create_extras_st_info()
+
+=cut
+
+sub generate_singletitle {
+  my $self = shift;
+  my $bibentries = $self->bib;
+  foreach my $citekey ( $self->citekeys ) {
+    my $be = $bibentries->entry($citekey);
+    if (Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'), $citekey)) {
+      $logger->trace("Generating singletitle information for '$citekey'");
+      if ($be->get_field('seenname') and
+          Biber::Config->get_seenname($be->get_field('seenname')) < 2 ) {
+        $be->set_field('singletitle', 1);
+      }
+    }
+  }
+  return;
+}
+
+
+#===========================
+# SORTING
+#===========================
 
 =head2 sortentries
 
@@ -1572,10 +1630,6 @@ sub generate_extras {
     This method is automatically called by C<prepare>.
 
 =cut
-
-#===========================
-# SORTING
-#===========================
 
 sub sortentries {
   my $self = shift;

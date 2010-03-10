@@ -49,7 +49,7 @@ sub notnull {
 sub set_field {
   my $self = shift;
   my ($key, $val) = @_;
-  # Only set fields which are either not null or are ok to be null
+  # Only set fields if $val is not null, unless it's ok for the field to be null
   if ( first { $key eq $_ } @NULL_OK or is_notnull($val)) {
     $self->{$key} = $val;
   }

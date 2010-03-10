@@ -972,9 +972,7 @@ sub _print_biblatex_entry {
     }
   }
 
-  if ( Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'), $citekey)
-    and Biber::Config->get_seennamehash($be->get_field('fullhash')) < 2 )
-  {
+  if (defined($be->get_field('singletitle'))) {
     $str .= "  \\true{singletitle}\n";
   }
 
