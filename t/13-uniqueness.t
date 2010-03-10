@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 38;
+use Test::More tests => 46;
 
 use Biber;
 use Biber::Utils;
@@ -66,6 +66,7 @@ $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 0);
+Biber::Config->setblxoption('singletitle', 1);
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 $biber->parse_bibtex($bibfile);
 $biber->prepare;
@@ -76,6 +77,10 @@ is($bibentries->entry('ey3')->get_field('extrayear'), '1', 'Extrayear - 3');
 is($bibentries->entry('ey4')->get_field('extrayear'), '2', 'Extrayear - 4');
 is($bibentries->entry('ey5')->get_field('extrayear'), '1', 'Extrayear - 5');
 is($bibentries->entry('ey6')->get_field('extrayear'), '2', 'Extrayear - 6');
+ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'Singletitle - 1');
+ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'Singletitle - 2');
+ok(is_undef($bibentries->entry('ey5')->get_field('singletitle')), 'Singletitle - 3');
+
 
 $biber = Biber->new( unicodebbl => 1, fastsort => 1, noconf => 1 );
 $biber->parse_auxfile('uniqueness3.aux');
@@ -83,6 +88,7 @@ $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('uniquename', 1);
 Biber::Config->setblxoption('uniquelist', 1);
+Biber::Config->setblxoption('singletitle', 1);
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 $biber->parse_bibtex($bibfile);
 $biber->prepare;
@@ -94,6 +100,9 @@ is($bibentries->entry('ey3')->get_field('extrayear'), '1', 'Extrayear - 9');
 is($bibentries->entry('ey4')->get_field('extrayear'), '2', 'Extrayear - 10');
 ok(is_undef($bibentries->entry('ey5')->get_field('extrayear')), 'Extrayear - 11');
 ok(is_undef($bibentries->entry('ey6')->get_field('extrayear')), 'Extrayear - 12');
+is($bibentries->entry('ey1')->get_field('singletitle'), '1', 'Singletitle - 4');
+is($bibentries->entry('ey2')->get_field('singletitle'), '1', 'Singletitle - 5');
+is($bibentries->entry('ey5')->get_field('singletitle'), '1', 'Singletitle - 6');
 
 $biber = Biber->new( unicodebbl => 1, fastsort => 1, noconf => 1 );
 $biber->parse_auxfile('uniqueness3.aux');
@@ -101,6 +110,7 @@ $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('uniquename', 0);
 Biber::Config->setblxoption('uniquelist', 0);
+Biber::Config->setblxoption('singletitle', 1);
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 $biber->parse_bibtex($bibfile);
 $biber->prepare;
@@ -112,6 +122,7 @@ is($bibentries->entry('ey3')->get_field('extrayear'), '1', 'Extrayear - 15');
 is($bibentries->entry('ey4')->get_field('extrayear'), '2', 'Extrayear - 16');
 is($bibentries->entry('ey5')->get_field('extrayear'), '1', 'Extrayear - 17');
 is($bibentries->entry('ey6')->get_field('extrayear'), '2', 'Extrayear - 18');
-
+ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'Singletitle - 7');
+ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'Singletitle - 8');
 
 unlink "$bibfile.utf8";
