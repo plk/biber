@@ -113,6 +113,7 @@ t/tdata/examples-sort.bib
 t/tdata/examples-sort-order.bib
 t/tdata/examples-uniqueness1.bib
 t/tdata/examples-uniqueness2.bib
+t/tdata/examples-uniqueness3.bib
 t/tdata/examples.bib
 t/tdata/biber2.conf
 t/tdata/examples-set.bib
@@ -122,3 +123,5 @@ t/tdata/uniqueness1.aux
 t/tdata/uniqueness1.bcf
 t/tdata/uniqueness2.aux
 t/tdata/uniqueness2.bcf
+t/tdata/uniqueness3.aux
+t/tdata/uniqueness3.bcf
