@@ -847,10 +847,7 @@ sub _print_biblatex_entry {
     }
   }
 
-  # make labelname a copy of the right thing before output of name lists
-  if (is_def_and_notnull($be->get_field('labelnamename'))) { # avoid unitialised variable warnings
-    my $lnf = $be->get_field($be->get_field('labelnamename'));
-    $be->set_field('labelname', $lnf);
+  if (my $lnf = $be->get_field('labelname')) {
 
     # Output a copy of the labelname information to avoid having to do real coding in biblatex
     # Otherwise, you'd have to search to find the labelname name information using TeX and that
@@ -927,19 +924,8 @@ sub _print_biblatex_entry {
         $str .= "  \\field{extrayear}{$ey}\n";
       }
     }
-    # Construct labelyear
-    # Might not have been set due to skiplab/dataonly
-    if (my $yf = $be->get_field('labelyearname')) {
-      $be->set_field('labelyear', $be->get_field($yf));
-
-      # ignore endyear if it's the same as year
-      my ($ytype) = $yf =~ /\A(.*)year\z/xms;
-      if (is_def_and_notnull($be->get_field($ytype . 'endyear'))
-        and ($be->get_field($yf) ne $be->get_field($ytype . 'endyear'))) {
-        $be->set_field('labelyear',
-          $be->get_field('labelyear') . '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
-      }
-      $str .= "  \\field{labelyear}{" . $be->get_field('labelyear') . "}\n";
+    if (my $ly = $be->get_field('labelyear')) {
+      $str .= "  \\field{labelyear}{$ly}\n";
     }
   }
 
