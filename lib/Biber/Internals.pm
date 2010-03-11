@@ -633,6 +633,7 @@ sub _namestring {
   my ($citekey, $field, $extraflag) = @_;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
+  my $bee = $be->get_field('entrytype');
   my $names = $be->get_field($field);
   my $str = '';
   my $truncated = 0;
@@ -651,7 +652,7 @@ sub _namestring {
   if ( $names->count_elements > $localmaxnames ) {
     $truncated = 1;
     # truncate to the uniquelist point if uniquelist is requested
-    if (Biber::Config->getblxoption('uniquelist')) {
+    if (Biber::Config->getblxoption('uniquelist'), $bee) {
       $truncnames = $truncnames->first_n_elements($localmaxnames);
     }
     # otherwise truncate to minnames
