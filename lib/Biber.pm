@@ -994,6 +994,11 @@ sub postprocess_labelname {
     }
   }
 
+  # Generate the actual labelname
+  if (is_def_and_notnull($be->get_field('labelnamename'))) {
+    $be->set_field('labelname', $be->get_field($be->get_field('labelnamename')));
+  }
+
   unless ( $be->get_field('labelnamename') ) {
     $logger->debug("Could not determine the labelname of entry $citekey");
   }
@@ -1028,7 +1033,20 @@ sub postprocess_labelyear {
       }
     }
 
-    unless ( $be->get_field('labelyearname') ) {
+    # Construct labelyear
+    # Might not have been set due to skiplab/dataonly
+    if (my $yf = $be->get_field('labelyearname')) {
+      $be->set_field('labelyear', $be->get_field($yf));
+
+      # ignore endyear if it's the same as year
+      my ($ytype) = $yf =~ /\A(.*)year\z/xms;
+      if (is_def_and_notnull($be->get_field($ytype . 'endyear'))
+        and ($be->get_field($yf) ne $be->get_field($ytype . 'endyear'))) {
+        $be->set_field('labelyear',
+          $be->get_field('labelyear') . '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
+      }
+    }
+    else {
       $logger->debug("Could not determine the labelyearname of entry $citekey");
     }
   }
