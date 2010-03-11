@@ -22,6 +22,7 @@ our @EXPORT = qw{
   %SKIPFIELDS
   %CONFIG_DEFAULT_BIBER
   %CONFIG_DEFAULT_BIBLATEX
+  %CONFIG_SCOPE_BIBLATEX
   $BIBER_CONF_NAME
   $BIBLATEX_VERSION
   $BCF_VERSION
@@ -94,6 +95,7 @@ our %CONFIG_DEFAULT_BIBLATEX = (
   useeditor => '1',
   usetranslator => '0',
   labelalpha => '0',
+  labelnumber => '0',
   singletitle => '0',
   uniquename => '0',
   uniquelist => '0',
@@ -114,12 +116,48 @@ our %CONFIG_DEFAULT_BIBLATEX = (
       {'0000'       => []}  ]
     ],
   sortlos => '1',
+  maxitems => '3',
+  minitems => '1',
   maxnames => '3',
   minnames => '1',
   maxline => '79',
   alphaothers  => '+',
+  labelyear => [ 'year' ],
   labelname => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
   );
+
+# Defines the scope of each of the BibLaTeX configuration options
+our %CONFIG_SCOPE_BIBLATEX = (
+  alphaothers       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  controlversion    => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  debug             => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  sortalphaothers   => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  dataonly          => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
+  labelalpha        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  labelname         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  labelnumber       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  labelyear         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  maxline           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  maxitems          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  minitems          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  maxnames          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  minnames          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  singletitle       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  skipbib           => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
+  skiplos           => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
+  skiplab           => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
+  sorting           => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  sorting_label     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  sorting_final     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  sortlos           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  terseinits        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  useauthor         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  useeditor         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  useprefix         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  usetranslator     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  uniquelist        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  uniquename        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+);
 
 ### biblatex fields
 

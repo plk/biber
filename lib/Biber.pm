@@ -957,7 +957,8 @@ sub postprocess_labelname {
   my $citekey = shift;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
-  my $lnamescheme = Biber::Config->getblxoption('labelname', $be->get_field('entrytype'), $citekey);
+  my $bee = $be->get_field('entrytype');
+  my $lnamescheme = Biber::Config->getblxoption('labelname', $bee);
 
   # First we set the normal labelname name
   foreach my $ln ( @{$lnamescheme} ) {
@@ -968,7 +969,7 @@ sub postprocess_labelname {
       $lnameopt = $ln;
     }
     if ($be->get_field($ln) and
-      Biber::Config->getblxoption("use$lnameopt", $be->get_field('entrytype'), $citekey ) ) {
+      Biber::Config->getblxoption("use$lnameopt", $bee, $citekey) ) {
       $be->set_field('labelnamename', $ln);
       last;
     }
@@ -982,7 +983,7 @@ sub postprocess_labelname {
       next;
     }
     if ($be->get_field($ln) and
-      Biber::Config->getblxoption("use$ln", $be->get_field('entrytype'), $citekey ) ) {
+      Biber::Config->getblxoption("use$ln", $bee, $citekey ) ) {
       $be->set_field('labelnamenamefullhash', $ln);
       last;
     }
@@ -1006,7 +1007,7 @@ sub postprocess_labelyear {
   my $citekey = shift;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
-  my $lyearscheme = Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey);
+  my $lyearscheme = Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'));
 
   if ($lyearscheme) {
     if (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
@@ -1115,7 +1116,7 @@ sub postprocess_labelalpha {
   if (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
     return;
   }
-  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
+  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
     my $label;
     my $sortlabel;
 
@@ -1193,7 +1194,7 @@ sub postprocess_sorting_firstpass {
   my $citekey = shift;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
-  $self->_generatesortstring( $citekey, Biber::Config->getblxoption('sorting_label', $be->get_field('entrytype'), $citekey));
+  $self->_generatesortstring( $citekey, Biber::Config->getblxoption('sorting_label', $be->get_field('entrytype')));
 }
 
 
@@ -1208,7 +1209,7 @@ sub generate_final_sortinfo {
   my $bibentries = $self->bib;
   foreach my $citekey ($self->citekeys) {
     my $be = $bibentries->entry($citekey);
-    $self->_generatesortstring($citekey, Biber::Config->getblxoption('sorting_final', $be->get_field('entrytype'), $citekey));
+    $self->_generatesortstring($citekey, Biber::Config->getblxoption('sorting_final', $be->get_field('entrytype')));
   }
   return;
 }
@@ -1298,7 +1299,7 @@ sub create_uniquename_info {
         if (defined($be->get_field($lname)->get_uniquelist)) {
           $ul = $be->get_field($lname)->get_uniquelist;
         }
-        my $mn = Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'));
+        my $mn = Biber::Config->getblxoption('maxnames');
         # Set the index limit beyond which we don't look for disambiguating information
         my $localmaxnames = $ul > $mn ? $ul : $mn;
 
@@ -1351,13 +1352,12 @@ sub create_uniquename_info {
 sub generate_uniquename {
   my $self = shift;
   my $bibentries = $self->bib;
-  my $un = Biber::Config->getblxoption('uniquename');
 
   # Now use the information to set the actual uniquename information
   foreach my $citekey ( $self->citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
-    if (Biber::Config->getblxoption('uniquename', $bee)) {
+    if (my $un = Biber::Config->getblxoption('uniquename', $bee)) {
       $logger->trace("Setting uniquename for '$citekey'");
       my $namehash = $be->get_field('namehash');
 
@@ -1517,10 +1517,11 @@ sub create_extras_st_info {
 
   foreach my $citekey ( $self->citekeys ) {
     my $be = $bibentries->entry($citekey);
+    my $bee = $be->get_field('entrytype');
     # Only generate this information if labelyear, labelalpha or singletitle is requested
-    if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) or
-        Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) or
-        Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'), $citekey)) {
+    if (Biber::Config->getblxoption('labelyear', $bee) or
+        Biber::Config->getblxoption('labelalpha', $bee) or
+        Biber::Config->getblxoption('singletitle', $bee)) {
       $logger->trace("Creating extra*/singletitle information for '$citekey'");
 
 
@@ -1540,15 +1541,15 @@ sub create_extras_st_info {
       # Only generate this information if singletitle option is requested and there is a
       # labelname
       if ($name_string and
-          Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'), $citekey)) {
+          Biber::Config->getblxoption('singletitle', $bee)) {
         Biber::Config->incr_seenname($name_string);
         $logger->trace("Setting seenname for '$citekey' to '$name_string'");
         $be->set_field('seenname', $name_string);
       }
 
       # Only generate this information if one of the extra* fields is requested
-      if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) or
-          Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey)) {
+      if (Biber::Config->getblxoption('labelyear', $bee) or
+          Biber::Config->getblxoption('labelalpha', $bee)) {
         my $year_string;
         if ($be->get_field('labelyearname')) {
           $year_string = $be->get_field($be->get_field('labelyearname'));
@@ -1579,18 +1580,19 @@ sub generate_extras {
   my $bibentries = $self->bib;
   foreach my $citekey ($self->citekeys) {
     my $be = $bibentries->entry($citekey);
-    if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) or
-        Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey)) {
+    my $bee = $be->get_field('entrytype');
+    if (Biber::Config->getblxoption('labelyear', $bee) or
+        Biber::Config->getblxoption('labelalpha', $bee)) {
       my $nameyear = $be->get_field('nameyear');
       # Only generate extrayear if skiplab is not set.
       # Don't forget that skiplab is implied for set members
       unless (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
         if (Biber::Config->get_seennameyear($nameyear) > 1) {
           Biber::Config->incr_seenlabelyear($nameyear);
-          if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
+          if (Biber::Config->getblxoption('labelyear', $bee) ) {
             $be->set_field('extrayear', Biber::Config->get_seenlabelyear($nameyear));
           }
-          if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
+          if (Biber::Config->getblxoption('labelalpha', $bee) ) {
             $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($nameyear));
           }
         }
@@ -1612,7 +1614,7 @@ sub generate_singletitle {
   my $bibentries = $self->bib;
   foreach my $citekey ( $self->citekeys ) {
     my $be = $bibentries->entry($citekey);
-    if (Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'), $citekey)) {
+    if (Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'))) {
       $logger->trace("Generating singletitle information for '$citekey'");
       if ($be->get_field('seenname') and
           Biber::Config->get_seenname($be->get_field('seenname')) < 2 ) {
@@ -1681,7 +1683,8 @@ sub sortentries {
 =head2 sortshorthands
 
     Sort the shorthands according to a certain sorting scheme.
-    This is only called if "sortlos" is true
+    If sortlos = 1 (los), sort by shorthand
+    If sortlos = 0 (bib), sort by bibliography order
 
 =cut
 
@@ -1689,6 +1692,8 @@ sub sortshorthands {
   my $self = shift;
   my $bibentries = $self->bib;
   my @auxshorthands = $self->shorthands;
+  # What we sort on depends on the 'sortlos' BibLaTeX option
+  my $sortlos = Biber::Config->getblxoption('sortlos') ? 'shorthand' : 'sortstring';
 
   if ( Biber::Config->getoption('fastsort') ) {
     if (Biber::Config->getoption('locale')) {
@@ -1699,7 +1704,7 @@ sub sortshorthands {
     } else {
       $logger->debug("Sorting shorthands with built-in sort (with locale ", $ENV{LC_COLLATE}, ") ...");
     }
-    @auxshorthands = sort { $bibentries->entry($a)->get_field('shorthand') cmp $bibentries->entry($b)->get_field('shorthand') } @auxshorthands;
+    @auxshorthands = sort { $bibentries->entry($a)->get_field($sortlos) cmp $bibentries->entry($b)->get_field($sortlos) } @auxshorthands;
   } else {
     require Unicode::Collate;
     my $opts = Biber::Config->getoption('collate_options');
@@ -1716,8 +1721,8 @@ sub sortshorthands {
     $logger->info("Sorting with Unicode::Collate (" .
 		  stringify_hash($collopts) . ", UCA version: $UCAversion)");
     @auxshorthands = sort {
-      $Collator->cmp($bibentries->entry($a)->get_field('shorthand'),
-        $bibentries->entry($b)->get_field('shorthand'))
+      $Collator->cmp($bibentries->entry($a)->get_field($sortlos),
+        $bibentries->entry($b)->get_field($sortlos))
       } @auxshorthands;
   }
   $self->{shorthands} = [ @auxshorthands ];
@@ -1826,7 +1831,7 @@ sub create_bbl_string_body {
       not Biber::Config->get_setparentkey($k) );
     $BBL .= $self->_print_biblatex_entry($k);
   }
-  if ( Biber::Config->getoption('sortlos') and $self->shorthands ) {
+  if ( $self->shorthands ) {
     $self->sortshorthands;
     $BBL .= "\\lossort\n";
     foreach my $sh ($self->shorthands) {

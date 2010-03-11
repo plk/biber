@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 10 ;
+use Test::More tests => 7;
 
 use Biber;
 use Log::Log4perl qw(:easy);
@@ -31,9 +31,5 @@ is_deeply(Biber::Config->getblxoption('labelname', 'book'), [ 'author', 'editor'
 is($bibentries->entry('l1')->get_field('labelyearname'), 'year', 'Global labelyear setting' ) ;
 ok($bibentries->entry('l1')->get_field($bibentries->entry('l1')->get_field('labelyearname')) eq
    $bibentries->entry('l1')->get_field('year'), 'Global labelyear setting - labelyear should be YEAR') ;
-is($bibentries->entry('l2')->get_field('labelyearname'), 'origyear', 'Entry-specific labelyear setting' ) ;
-ok($bibentries->entry('l2')->get_field($bibentries->entry('l2')->get_field('labelyearname')) eq
-   $bibentries->entry('l2')->get_field('origyear'), 'Entry-specific labelyear setting - labelyear should be ORIGYEAR') ;
-is($bibentries->entry('l2')->get_field('labelnamename'), 'translator', 'Entry-specific labelname setting' ) ;
 
 unlink "$bibfile.utf8";
