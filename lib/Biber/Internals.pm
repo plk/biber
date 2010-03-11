@@ -30,7 +30,7 @@ sub _getnameinitials {
   my $be = $bibentries->entry($citekey);
   ## my $nodecodeflag = $self->_decode_or_not($citekey);
 
-  if ( $names->count_elements <= Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey ) ) {    # 1 to maxname names
+  if ( $names->count_elements <= Biber::Config->getblxoption('maxnames') ) {    # 1 to maxname names
     foreach my $n (@{$names->names}) {
       if ( $n->get_prefix and
         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
@@ -49,7 +49,7 @@ sub _getnameinitials {
   }
   # > maxname names: only take initials of first getblxoption('minnames', $citekey)
   else {
-    foreach my $i ( 1 .. Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey ) ) {
+    foreach my $i ( 1 .. Biber::Config->getblxoption('minnames') ) {
       if ( $names->nth_element($i)->get_prefix and
         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey) ) {
         $initstr .= $names->nth_element($i)->get_prefix_it;
@@ -98,11 +98,11 @@ sub _getlabel {
   my $be = $bibentries->entry($citekey);
   my $dt = $be->get_field('datatype');
   my $names = $be->get_field($namefield);
-  my $alphaothers = Biber::Config->getblxoption('alphaothers', $be->get_field('entrytype'), $citekey);
-  my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->get_field('entrytype'), $citekey);
+  my $alphaothers = Biber::Config->getblxoption('alphaothers', $be->get_field('entrytype'));
+  my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->get_field('entrytype'));
   my $useprefix = Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey);
-  my $maxnames = Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey);
-  my $minnames = Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey);
+  my $maxnames = Biber::Config->getblxoption('maxnames');
+  my $minnames = Biber::Config->getblxoption('minnames');
   my $label = '';
   my $sortlabel = ''; # This contains sortalphaothers instead of alphaothers, if defined
   # This is needed in cases where alphaothers is something like
@@ -396,7 +396,7 @@ sub _sort_extraalpha {
   my $default_pad_width = 4;
   my $default_pad_side = 'left';
   my $default_pad_char = '0';
-  if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) and
+  if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) and
     $be->get_field('extraalpha')) {
     my $pad_width = ($sortelementattributes->{pad_width} or $default_pad_width);
     my $pad_side = ($sortelementattributes->{pad_side} or $default_pad_side);
@@ -635,9 +635,9 @@ sub _namestring {
   my $truncnames = dclone($names);
 
   # perform truncation according to options minnames, maxnames
-  if ( $names->count_elements > Biber::Config->getblxoption('maxnames', $be->get_field('entrytype'), $citekey) ) {
+  if ( $names->count_elements > Biber::Config->getblxoption('maxnames') ) {
     $truncated = 1;
-    $truncnames = $truncnames->first_n_elements(Biber::Config->getblxoption('minnames', $be->get_field('entrytype'), $citekey));
+    $truncnames = $truncnames->first_n_elements(Biber::Config->getblxoption('minnames'));
   }
 
   foreach my $n ( @{$truncnames->names} ) {
@@ -667,9 +667,9 @@ sub _liststring {
   my $truncated = 0;
 
   # perform truncation according to options minitems, maxitems
-  if ( $#items + 1 > Biber::Config->getblxoption('maxitems', $be->get_field('entrytype'), $citekey) ) {
+  if ( $#items + 1 > Biber::Config->getblxoption('maxitems') ) {
     $truncated = 1;
-    @items = splice(@items, 0, Biber::Config->getblxoption('minitems', $be->get_field('entrytype'), $citekey) );
+    @items = splice(@items, 0, Biber::Config->getblxoption('minitems') );
   }
 
   # separate the items by a string to give some structure
@@ -725,13 +725,6 @@ sub process_entry_options {
         else {
           Biber::Config->setblxoption($1, 1, 'PER_ENTRY', $citekey);
         }
-      }
-      # labelname and labelyear are special and need to be array refs
-      # They would not be specified as a list in an individual entry
-      # since this would make no sense - in an individual entry,
-      # you would want to force them to a specific field
-      elsif (($1 eq 'labelyear') or ($1 eq 'labelname')) {
-        Biber::Config->setblxoption($1, [ $2 ], 'PER_ENTRY', $citekey);
       }
       elsif ($2) {
         if (lc($1) eq 'dataonly') {
@@ -853,7 +846,7 @@ sub _print_biblatex_entry {
   my $fullhash = $be->get_field('fullhash');
   $str .= "  \\strng{fullhash}{$fullhash}\n";
 
-  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
+  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
     # Might not have been set due to skiplab/dataonly
     if (my $label = $be->get_field('labelalpha')) {
       $str .= "  \\field{labelalpha}{$label}\n";
@@ -863,7 +856,7 @@ sub _print_biblatex_entry {
 
   # The labelyear option determines whether "extrayear" is output
   # Skip generating extrayear for entries with "skiplab" set
-  if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey)) {
+  if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
     if (my $ey = $be->get_field('extrayear')) {
       my $nameyear = $be->get_field('nameyear');
@@ -889,7 +882,7 @@ sub _print_biblatex_entry {
 
   # The labelalpha option determines whether "extraalpha" is output
   # Skip generating extraalpha for entries with "skiplab" set
-  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey)) {
+  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
     if (my $ea = $be->get_field('extraalpha')) {
       my $nameyear = $be->get_field('nameyear');
@@ -899,7 +892,7 @@ sub _print_biblatex_entry {
     }
   }
 
-  if ( Biber::Config->getblxoption('labelnumber', $be->get_field('entrytype'), $citekey) ) {
+  if ( Biber::Config->getblxoption('labelnumber', $be->get_field('entrytype')) ) {
     if ($be->get_field('shorthand')) {
       $str .= "  \\field{labelnumber}{"
         . $be->get_field('shorthand') . "}\n";
@@ -910,7 +903,7 @@ sub _print_biblatex_entry {
     }
   }
 
-  if (my $unopt = Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey)) {
+  if (my $unopt = Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'))) {
     my $lname = $be->get_field('labelnamename');
     my $name;
     my $lastname;
@@ -945,7 +938,7 @@ sub _print_biblatex_entry {
     $str .= "  \\count{uniquename}{$un}\n";
   }
 
-  if ( Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'), $citekey)
+  if ( Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'))
     and Biber::Config->get_seennamehash($be->get_field('fullhash')) < 2 )
   {
     $str .= "  \\true{singletitle}\n";

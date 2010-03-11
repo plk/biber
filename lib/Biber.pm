@@ -963,7 +963,7 @@ sub postprocess_labelname {
   my $citekey = shift;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
-  my $lnamescheme = Biber::Config->getblxoption('labelname', $be->get_field('entrytype'), $citekey);
+  my $lnamescheme = Biber::Config->getblxoption('labelname', $be->get_field('entrytype'));
 
   # First we set the normal labelname name
   foreach my $ln ( @{$lnamescheme} ) {
@@ -1012,7 +1012,7 @@ sub postprocess_labelyear {
   my $citekey = shift;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
-  my $lyearscheme = Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey);
+  my $lyearscheme = Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'));
 
   if ($lyearscheme) {
     if (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
@@ -1132,7 +1132,7 @@ sub postprocess_unique {
   #
   # See the logic in Internals.pm for generating the actual uniquename count
   # from the information collected here
-  if (Biber::Config->getblxoption('uniquename', $bee, $citekey)) {
+  if (Biber::Config->getblxoption('uniquename'), $bee) {
     my $lname = $be->get_field('labelnamename');
     my $lastname;
     my $namestring;
@@ -1216,7 +1216,7 @@ sub postprocess_labelalpha {
   if (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
     return;
   }
-  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
+  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
     my $label;
     my $sortlabel;
 
@@ -1293,7 +1293,7 @@ sub postprocess_sorting_firstpass {
   my $citekey = shift;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
-  $self->_generatesortstring( $citekey, Biber::Config->getblxoption('sorting_label', $be->get_field('entrytype'), $citekey));
+  $self->_generatesortstring( $citekey, Biber::Config->getblxoption('sorting_label', $be->get_field('entrytype')));
 }
 
 =head2 generate_final_sortinfo
@@ -1318,15 +1318,15 @@ sub generate_final_sortinfo {
     unless (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
       if (Biber::Config->get_seennameyear($nameyear) > 1) {
         Biber::Config->incr_seenlabelyear($nameyear);
-        if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'), $citekey) ) {
+        if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype')) ) {
           $be->set_field('extrayear', Biber::Config->get_seenlabelyear($nameyear));
         }
-        if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'), $citekey) ) {
+        if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
           $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($nameyear));
         }
       }
     }
-    $self->_generatesortstring($citekey, Biber::Config->getblxoption('sorting_final', $be->get_field('entrytype'), $citekey));
+    $self->_generatesortstring($citekey, Biber::Config->getblxoption('sorting_final', $be->get_field('entrytype')));
   }
   return;
 }
@@ -1388,7 +1388,8 @@ sub sortentries {
 =head2 sortshorthands
 
     Sort the shorthands according to a certain sorting scheme.
-    This is only called if "sortlos" is true
+    If sortlos = 1 (los), sort by shorthand
+    If sortlos = 0 (bib), sort by bibliography order
 
 =cut
 
@@ -1396,6 +1397,8 @@ sub sortshorthands {
   my $self = shift;
   my $bibentries = $self->bib;
   my @auxshorthands = $self->shorthands;
+  # What we sort on depends on the 'sortlos' BibLaTeX option
+  my $sortlos = Biber::Config->getblxoption('sortlos') ? 'shorthand' : 'sortstring';
 
   if ( Biber::Config->getoption('fastsort') ) {
     if (Biber::Config->getoption('locale')) {
@@ -1406,7 +1409,7 @@ sub sortshorthands {
     } else {
       $logger->debug("Sorting shorthands with built-in sort (with locale ", $ENV{LC_COLLATE}, ") ...");
     }
-    @auxshorthands = sort { $bibentries->entry($a)->get_field('shorthand') cmp $bibentries->entry($b)->get_field('shorthand') } @auxshorthands;
+    @auxshorthands = sort { $bibentries->entry($a)->get_field($sortlos) cmp $bibentries->entry($b)->get_field($sortlos) } @auxshorthands;
   } else {
     require Unicode::Collate;
     my $opts = Biber::Config->getoption('collate_options');
@@ -1423,8 +1426,8 @@ sub sortshorthands {
     $logger->info("Sorting with Unicode::Collate (" .
 		  stringify_hash($collopts) . ", UCA version: $UCAversion)");
     @auxshorthands = sort {
-      $Collator->cmp($bibentries->entry($a)->get_field('shorthand'),
-        $bibentries->entry($b)->get_field('shorthand'))
+      $Collator->cmp($bibentries->entry($a)->get_field($sortlos),
+        $bibentries->entry($b)->get_field($sortlos))
       } @auxshorthands;
   }
   $self->{shorthands} = [ @auxshorthands ];
@@ -1531,7 +1534,7 @@ sub create_bbl_string_body {
       not Biber::Config->get_setparentkey($k) );
     $BBL .= $self->_print_biblatex_entry($k);
   }
-  if ( Biber::Config->getoption('sortlos') and $self->shorthands ) {
+  if ( $self->shorthands ) {
     $self->sortshorthands;
     $BBL .= "\\lossort\n";
     foreach my $sh ($self->shorthands) {

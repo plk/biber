@@ -10,6 +10,7 @@ use List::AllUtils qw(first);
 
 =encoding utf-8
 
+
 =head1 NAME
 
 Biber::Config - Configuration items which need to be saved across the
@@ -221,11 +222,15 @@ sub setblxoption {
   shift; # class method so don't care about class name
   my ($opt, $val, $scope, $scopeval) = @_;
   if (not defined($scope)) { # global is the default
-    $CONFIG->{options}{biblatex}{GLOBAL}{$opt} = $val;
+    if ($CONFIG_SCOPE_BIBLATEX{$opt}->{GLOBAL}) {
+      $CONFIG->{options}{biblatex}{GLOBAL}{$opt} = $val;
+    }
   }
   else { # Per-type/entry options need to specify type/entry too
     $scopeval = lc($scopeval) if $scope eq 'PER_ENTRY';
-    $CONFIG->{options}{biblatex}{$scope}{$scopeval}{$opt} = $val;
+    if ($CONFIG_SCOPE_BIBLATEX{$opt}->{$scope}) {
+      $CONFIG->{options}{biblatex}{$scope}{$scopeval}{$opt} = $val;
+    }
   }
   return;
 }
@@ -247,16 +252,18 @@ sub getblxoption {
   shift; # class method so don't care about class name
   my ($opt, $entrytype, $citekey) = @_;
   if ( defined($citekey) and
-    defined $CONFIG->{options}{biblatex}{PER_ENTRY}{lc($citekey)} and
-    defined $CONFIG->{options}{biblatex}{PER_ENTRY}{lc($citekey)}{$opt}) {
+       $CONFIG_SCOPE_BIBLATEX{$opt}->{PER_ENTRY} and
+       defined $CONFIG->{options}{biblatex}{PER_ENTRY}{lc($citekey)} and
+       defined $CONFIG->{options}{biblatex}{PER_ENTRY}{lc($citekey)}{$opt}) {
     return $CONFIG->{options}{biblatex}{PER_ENTRY}{lc($citekey)}{$opt};
   }
   elsif (defined($entrytype) and
-    defined $CONFIG->{options}{biblatex}{PER_TYPE}{$entrytype} and
-    defined $CONFIG->{options}{biblatex}{PER_TYPE}{$entrytype}{$opt}) {
+         $CONFIG_SCOPE_BIBLATEX{$opt}->{PER_TYPE} and
+         defined $CONFIG->{options}{biblatex}{PER_TYPE}{$entrytype} and
+         defined $CONFIG->{options}{biblatex}{PER_TYPE}{$entrytype}{$opt}) {
     return $CONFIG->{options}{biblatex}{PER_TYPE}{$entrytype}{$opt};
   }
-  else {
+  elsif ($CONFIG_SCOPE_BIBLATEX{$opt}->{GLOBAL}) {
     return $CONFIG->{options}{biblatex}{GLOBAL}{$opt};
   }
 }

@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 10 ;
+use Test::More tests => 7;
 
 use Biber;
 use Log::Log4perl qw(:easy);
@@ -78,33 +78,6 @@ my $l1 = q|\entry{L1}{book}{}
 
 |;
 
-my $l2 = q|\entry{L2}{book}{usetranslator=true,labelyear=origyear,labelname=translator,labelalpha=true}
-  \name{author}{1}{%
-    {{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \name{translator}{1}{%
-    {{Smith}{S.}{Bill}{B.}{}{}{}{}}%
-  }
-  \list{publisher}{1}{%
-    {Oxford}%
-  }
-  \strng{namehash}{SB1}
-  \strng{fullhash}{SB1}
-  \field{labelalpha}{Smi98}
-  \field{sortinit}{D}
-  \field{labelyear}{1985}
-  \count{uniquename}{0}
-  \field{year}{1998}
-  \field{origyear}{1985}
-  \field{month}{04}
-  \field{origmonth}{10}
-  \field{day}{05}
-  \field{origday}{30}
-  \field{title}{Title 1}
-\endentry
-
-|;
-
 ok(Biber::Config->getblxoption('uniquename') == 1, "Single-valued option") ;
 is_deeply(Biber::Config->getblxoption('labelname'), [ 'author' ], "Multi-valued options");
 ok(Biber::Config->getoption('mincrossrefs') == 88, "Setting Biber options via control file");
@@ -112,8 +85,5 @@ ok(Biber::Config->getblxoption('useprefix', 'book') == 1 , "Per-type single-valu
 is_deeply(Biber::Config->getblxoption('labelname', 'book'), $bln, "Per-type multi-valued options");
 is($bibentries->entry('l1')->get_field('labelyearname'), 'year', 'Global labelyear setting' ) ;
 is( $biber->_print_biblatex_entry('l1'), $l1, 'Global labelyear setting - labelyear should be YEAR') ;
-is($biber->{bib}{l2}{labelyearname}, 'origyear', 'Entry-specific labelyear setting' ) ;
-is( $biber->_print_biblatex_entry('l2'), $l2, 'Entry-specific labelyear setting - labelyear should be ORIGYEAR') ;
-is($bibentries->entry('l2')->get_field('labelnamename'), 'translator', 'Entry-specific labelname setting' ) ;
 
 
