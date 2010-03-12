@@ -103,6 +103,19 @@ t/tdata/sort-complex.bcf
 t/tdata/sort-order.aux
 t/tdata/sort-order.bcf
 t/tdata/biber3.conf
+<<<<<<< HEAD
+t/tdata/examples-dateformats.bib
+t/tdata/examples-extrayear.bib
+t/tdata/examples-labelalpha.bib
+t/tdata/examples-names.bib
+t/tdata/examples-options.bib
+t/tdata/examples-skips.bib
+t/tdata/examples-sort.bib
+t/tdata/examples-sort-order.bib
+t/tdata/examples-uniqueness1.bib
+t/tdata/examples-uniqueness2.bib
+t/tdata/examples-uniqueness3.bib
+=======
 t/tdata/dateformats.bib
 t/tdata/extrayear.bib
 t/tdata/labelalpha.bib
@@ -111,17 +124,8 @@ t/tdata/options.bib
 t/tdata/skips.bib
 t/tdata/sort.bib
 t/tdata/sort-order.bib
-t/tdata/dateformats.bib
-t/tdata/extrayear.bib
-t/tdata/labelalpha.bib
-t/tdata/names.bib
-t/tdata/options.bib
-t/tdata/skips.bib
-t/tdata/sort.bib
-t/tdata/sort-order.bib
-t/tdata/uniqueness1.bib
-t/tdata/uniqueness2.bib
-t/tdata/uniqueness3.bib
+t/tdata/uniquename.bib
+>>>>>>> master
 t/tdata/examples.bib
 t/tdata/biber2.conf
 t/tdata/set.bib

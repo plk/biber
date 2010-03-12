@@ -6,6 +6,7 @@ Revision history for Biber
          is stripped to the filename and the path discarded. Absolute .aux
          paths are stripped to filename for appending to --output-directory.
        * Updated PRD to use new encoding option names. Now works with -e.
+       * sortlos was not settable to use bib sort order
 0.5.2   04-03-2010
        * Locale fixes
        * Uniquename fixed to match BibLaTeX option values
