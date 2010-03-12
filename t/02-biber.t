@@ -15,7 +15,7 @@ my $bibentries = $biber->bib;
 isa_ok($biber, "Biber");
 
 chdir("t/tdata") ;
-$biber->parse_auxfile("style-authoryear.aux") ;
+$biber->parse_auxfile("general1.aux") ;
 
 
 my @keys = sort $biber->citekeys;

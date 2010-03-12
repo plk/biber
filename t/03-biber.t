@@ -22,7 +22,7 @@ use_ok( 'Biber::BibTeX' );
 isa_ok($biber, "Biber");
 
 chdir("t/tdata");
-$biber->parse_auxfile("annotations.aux");
+$biber->parse_auxfile("general2.aux");
 
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
