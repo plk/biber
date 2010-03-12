@@ -304,7 +304,12 @@ is($bibentries->entry('l24')->get_field($bibentries->entry('l24')->get_field('la
 is($bibentries->entry('l25')->get_field($bibentries->entry('l25')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{{Sci-Art Publishers}}{S.}{}{}{}{}{}{}}%' . "\n", 'Hyphen at brace level <> 0');
 is($biber->has_citekey('l26'), '0', 'Bad name with 3 commas');
 is($biber->has_citekey('l27'), '0', 'Bad name with consecutive commas');
-is($bibentries->entry('l28')->get_field($bibentries->entry('l28')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart  Lung and Blood Institute}}{U.}{}{}{}{}{}{}}%' . "\n",  'Escaped name with 3 commas');
+SKIP: {
+  skip "Text::BibTeX < 0.41", 1, if $Text::BibTeX::VERSION !~ m/\A0\.4\d/xms;
+  is($bibentries->entry('l28')->get_field($bibentries->entry('l28')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}}{U.}{}{}{}{}{}{}}%' . "\n",  'Escaped name with 3 commas');
+
+
+}
 
 
 unlink "$bibfile.utf8";
