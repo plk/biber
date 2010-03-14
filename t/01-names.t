@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 42;
+use Test::More tests => 44;
 
 use Biber;
 use Biber::BibTeX;
@@ -300,6 +300,8 @@ is($bibentries->entry('l20')->get_field($bibentries->entry('l20')->get_field('la
 is($bibentries->entry('l21')->get_field($bibentries->entry('l21')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Smith}{S.}{{\v S}omeone}{{\v S}.}{}{}{}{}}%' . "\n", 'LaTeX encoded unicode');
 is($bibentries->entry('l22')->get_field($bibentries->entry('l22')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Smith}{S.}{Šomeone}{Š.}{}{}{}{}}%' . "\n", 'Unicode firstname');
 is($bibentries->entry('l23')->get_field($bibentries->entry('l23')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{{\v S}mith}{{\v S}.}{Someone}{S.}{}{}{}{}}%' . "\n", 'Unicode lastname');
+is($bibentries->entry('l21')->get_field($bibentries->entry('l21')->get_field('labelnamename'))->nth_element(1)->get_firstname_it, '{\v S}', 'Terseinitials 1');
+is($bibentries->entry('l21')->get_field('namehash'), 'SS1', 'Namehash check 1');
 is($bibentries->entry('l24')->get_field($bibentries->entry('l24')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{{American Psychological Association, Task Force on the Sexualization of Girls}}{A.}{}{}{}{}{}{}}%' . "\n", 'Single string name');
 is($bibentries->entry('l25')->get_field($bibentries->entry('l25')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{{Sci-Art Publishers}}{S.}{}{}{}{}{}{}}%' . "\n", 'Hyphen at brace level <> 0');
 is($biber->has_citekey('l26'), '0', 'Bad name with 3 commas');
