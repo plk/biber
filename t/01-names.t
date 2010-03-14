@@ -162,7 +162,7 @@ my $name8 =
       nameinitstring => 'Vallée_Poussin_J' } ;
 my $name9 =
    {  firstname     => 'Jean Charles Gabriel {de la}~Vallée',
-      firstname_i   => 'J.~C.~G.~d.~V.',
+      firstname_i   => 'J.~C. G. d.~V.',
       firstname_it  => 'JCGdV',
       lastname      => 'Poussin',
       lastname_i    => 'P.',
@@ -288,7 +288,7 @@ is($bibentries->entry('l8')->get_field($bibentries->entry('l8')->get_field('labe
 is($bibentries->entry('l9')->get_field($bibentries->entry('l9')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{{Iliad Ipswich}}{I.}{Ian}{I.}{}{}{}{}}%' . "\n", 'First {Last Last}');
 is($bibentries->entry('l10')->get_field($bibentries->entry('l10')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Jolly}{J.}{James}{J.}{}{}{III}{I.}}%' . "\n", 'Last, Suffix, First') ;
 is($bibentries->entry('l11')->get_field($bibentries->entry('l11')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Kluster}{K.}{Kevin}{K.}{van}{v.}{Jr.}{J.}}%' . "\n", 'prefix Last, Suffix, First');
-is($bibentries->entry('l12')->get_field($bibentries->entry('l12')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, "    {{}{Vall{\\'e}e~Poussin}{V.~P.}{Charles Louis Xavier~Joseph}{C.~L.~X.~J.}{de~la}{d.~l.}{}{}}%" . "\n", 'First First First First prefix prefix Last Last');
+is($bibentries->entry('l12')->get_field($bibentries->entry('l12')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, "    {{}{Vall{\\'e}e~Poussin}{V.~P.}{Charles Louis Xavier~Joseph}{C.~L. X.~J.}{de~la}{d.~l.}{}{}}%" . "\n", 'First First First First prefix prefix Last Last');
 is($bibentries->entry('l13')->get_field($bibentries->entry('l13')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Van de~Graaff}{V.~d.~G.}{R.~J.}{R.~J.}{}{}{}{}}%' . "\n", 'Last Last Last, Initial. Initial.');
 is($bibentries->entry('l14')->get_field($bibentries->entry('l14')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{St~John-Mollusc}{S.~J.-M.}{Oliver}{O.}{}{}{}{}}%' . "\n", 'Last Last-Last, First');
 is($bibentries->entry('l15')->get_field($bibentries->entry('l15')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '    {{}{Gompel}{G.}{Roger~P.{\,}G.}{R.~P.}{van}{v.}{}{}}%' . "\n", 'First F.{\,}F. Last');
