@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 42;
+use Test::More tests => 43;
 
 use Biber;
 use Biber::BibTeX;
@@ -19,6 +19,7 @@ Biber::Config->setoption('locale', 'C');
 $biber->parse_auxfile('names.aux');
 $bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
+my $bibentries = $biber->bib;
 $biber->prepare;
 
 
@@ -562,6 +563,7 @@ is_deeply(parsename('Jean Charles Gabriel Poussin'), $name12, 'parsename 12');
 is_deeply(parsename('Jean Charles {Poussin Lecoq}'), $name13, 'parsename 13');
 is_deeply(parsename('J. C. G. de la Vallée Poussin', {useprefix => 1}), $name14, 'parsename 14');
 
+is($bibentries->entry('l21')->get_field($bibentries->entry('l21')->get_field('labelnamename'))->nth_element(1)->get_firstname_it, '{\v S}', 'Terseinitials 1');
 is( $biber->_print_biblatex_entry('l1'), $l1, 'First Last') ;
 is( $biber->_print_biblatex_entry('l2'), $l2, 'First Initial. Last') ;
 is( $biber->_print_biblatex_entry('l3'), $l3, 'Initial. Initial. Last') ;
