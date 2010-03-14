@@ -347,57 +347,72 @@ sub add_outer {
 
 sub getinitials {
   my $str = shift;
-  my $rstr;
+  my @rstr;
   return '' unless $str; # Sanitise missing data
   while (my $atom = get_atom(\$str)) {
     # We have to look inside braces to see what we have
     # Just normal protected names:
-
     # hyphens in names are special atoms
     if ($atom =~ m/\A-\z/xms) {
-      $rstr =~ s/~\z//xms; # If we're appending a hypehn, don't want nbsp too
-      $rstr .= '-';
+      push @rstr, '-';
     }
     # Initials - P. or {P.\,G.}
     elsif ($atom =~ m/\A{?(\p{L}+)?\./xms) {
-      $rstr .= substr($1, 0, 1) . '.~';
+      push @rstr, substr($1, 0, 1);
     }
     # John
     elsif ($atom =~ m/\A\p{L}+\z/xms) {
-      $rstr .= substr($atom, 0, 1) . '.~';
+      push @rstr, substr($atom, 0, 1);
     }
     # {John Henry} or {American Automobile Association, Canada}
     elsif ($atom =~ m/\A{([^\\\{\}]+)}\z/xms) {
-      $rstr .= substr($1, 0, 1) . '.~';
+      push @rstr, substr($1, 0, 1);
     }
     # {\OE}illet
     elsif ($atom =~ m/\A({\\\p{L}+}).+\z/xms) {
-      $rstr .= $1 . '.~';
+      push @rstr, $1;
     }
     # {\v S}omeone or {\v Someone}
     elsif ($atom =~ m/\A({\\\S+\s+\p{L}+}).+\z/xms) {
-      $rstr .= $1 . '.~';
+      push @rstr, $1;
     }
     # {\v{S}}omeone
     elsif ($atom =~ m/\A({\\\S+{\p{L}}}).+\z/xms) {
-      $rstr .= $1 . '.~';
+      push @rstr, $1;
     }
     # \v{S}omeone
     elsif ($atom =~ m/\A(\\\S+{\p{L}}).+\z/xms) {
-      $rstr .= $1 . '.~';
+      push @rstr, $1;
     }
     # {\"O}zt{\"u}rk
     elsif ($atom =~ m/\A({\\[^\p{L}]\p{L}}).+\z/xms) {
-      $rstr .= $1 . '.~';
+      push @rstr, $1;
     }
     # Default
     else {
-      $rstr .= substr($atom, 0, 1) . '.~';
+      push @rstr, substr($atom, 0, 1);
     }
   }
-  # remove trailing nbsp
-  $rstr =~ s/~\z//xms;
-  return $rstr;
+
+  # Use BibTeX's algorithm for inserting ties.
+  my $retstring;
+  for (my $i = 0; $i <= $#rstr; $i++) {
+    if ($rstr[$i] eq '-') {
+      $retstring =~ s/~\z//xms;
+      $retstring =~ s/\s\z//xms;
+      $retstring .= $rstr[$i];
+    }
+    elsif ($i == 0 or $i == $#rstr - 1) {
+      $retstring .= $rstr[$i] . '.~';
+    }
+    else {
+      $retstring .= $rstr[$i] . '. ';
+    }
+  }
+  # remove trailing nbsp or space
+  $retstring =~ s/~\z//xms;
+  $retstring =~ s/\s\z//xms;
+  return $retstring;
 }
 
 =head2 get_atom

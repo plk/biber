@@ -109,8 +109,7 @@ sub parsename {
   my $gen_suffix_i;
   my $gen_suffix_it;
 
-# if ($Text::BibTeX::VERSION >= 0.41) {
-  if ($Text::BibTeX::VERSION eq '0.41_1DIS') {
+ if ($Text::BibTeX::VERSION >= 0.41) {
     # Use a copy of $name so that when we generate the
     # initials, we do so without diacritics. This is easier than trying
     # hack the diacritics code into btparse ...
