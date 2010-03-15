@@ -32,7 +32,7 @@ my $murray1 = q|\entry{murray}{article}{}
   \name{labelname}{14}{}{%
     {{uniquename=0}{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
     {{uniquename=0}{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
-    {{uniquename=0}{Zhong}{Z}{Chuan-Jian}{C-J}{}{}{}{}}%
+    {{uniquename=0}{Zhong}{Z}{Chuan-Jian}{CJ}{}{}{}{}}%
     {{uniquename=0}{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
     {{uniquename=0}{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
     {{uniquename=0}{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
@@ -48,7 +48,7 @@ my $murray1 = q|\entry{murray}{article}{}
   \name{author}{14}{}{%
     {{}{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
     {{}{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
-    {{}{Zhong}{Z}{Chuan-Jian}{C-J}{}{}{}{}}%
+    {{}{Zhong}{Z}{Chuan-Jian}{CJ}{}{}{}{}}%
     {{}{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
     {{}{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
     {{}{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
@@ -86,7 +86,7 @@ my $murray2 = q|\entry{murray}{article}{}
   \name{labelname}{14}{}{%
     {{uniquename=0}{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
     {{uniquename=0}{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
-    {{uniquename=0}{Zhong}{Z}{Chuan-Jian}{C-J}{}{}{}{}}%
+    {{uniquename=0}{Zhong}{Z}{Chuan-Jian}{CJ}{}{}{}{}}%
     {{uniquename=0}{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
     {{uniquename=0}{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
     {{uniquename=0}{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
@@ -102,7 +102,7 @@ my $murray2 = q|\entry{murray}{article}{}
   \name{author}{14}{}{%
     {{}{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
     {{}{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
-    {{}{Zhong}{Z}{Chuan-Jian}{C-J}{}{}{}{}}%
+    {{}{Zhong}{Z}{Chuan-Jian}{CJ}{}{}{}{}}%
     {{}{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
     {{}{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
     {{}{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%

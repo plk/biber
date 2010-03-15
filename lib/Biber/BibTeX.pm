@@ -109,7 +109,9 @@ sub parsename {
   my $gen_suffix_i;
   my $gen_suffix_it;
 
- if ($Text::BibTeX::VERSION >= 0.42) {
+  # Use T::B::NameFormat if we have a decent version of T::B
+  # Otherwise we'll use our own emulation which is a little slower
+  if ($Text::BibTeX::VERSION >= 0.42) {
     # Use a copy of $name so that when we generate the
     # initials, we do so without diacritics. This is easier than trying
     # hack the diacritics code into btparse ...

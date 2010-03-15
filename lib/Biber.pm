@@ -1066,7 +1066,7 @@ sub postprocess_hashes {
   # namehash is generated from the labelname
   if (my $lname = $be->get_field('labelnamename')) {
     if ($be->get_field($lname)) {
-      $namehash .= $self->_getnameinitials($citekey, $be->get_field($lname));
+      $namehash .= $self->_getnamehash($citekey, $be->get_field($lname));
       $nameid .= makenameid($be->get_field($lname));
     }
   }
@@ -1074,7 +1074,7 @@ sub postprocess_hashes {
   # maxnames/minnames settings
   if (my $lnamefh = $be->get_field('labelnamenamefullhash')) {
     if ($be->get_field($lnamefh)) {
-      $fullhash .= $self->_getallnameinitials($citekey, $be->get_field($lnamefh));
+      $fullhash .= $self->_getfullhash($citekey, $be->get_field($lnamefh));
     }
   }
 
