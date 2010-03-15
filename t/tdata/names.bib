@@ -83,32 +83,37 @@
 }
 
 @BOOK{L22,
-  AUTHOR = {Šomeone Smith},
-}
-@BOOK{L23,
   AUTHOR = {Someone {\v S}mith},
 }
 
+@BOOK{L23,
+  AUTHOR = {Šomeone Smith},
+}
+
 @BOOK{L24,
+  AUTHOR = {Someone Šmith},
+}
+
+@BOOK{L25,
   AUTHOR = {{American Psychological Association, Task Force on the Sexualization of Girls}},
 }
-@BOOK{L25,
+@BOOK{L26,
   AUTHOR = {{Sci-Art Publishers}}
 }
 
 % Should skip the first name as it has too many commas
-@BOOK{L26,
+@BOOK{L27,
   AUTHOR = {Smith, Jr., Bill, Lee and James Smith}
 }
 
 % This causes Text::BibTeX <=0.4 to segfault
-@BOOK{L27,
+@BOOK{L28,
   AUTHOR = {Deux et al.,, O.}
 }
 
 % Should be ok as escaped. Text::BibTeX < 0.41 has a bug however and replaces
 % the third comma with a space.
-@BOOK{L28,
+@BOOK{L29,
   AUTHOR = {{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}}
 }
 
