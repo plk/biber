@@ -36,7 +36,7 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ bibfind tersify terseinitials makenameid stringify_hash
+our @EXPORT = qw{ bibfind terseinitials makenameid stringify_hash
   normalize_string normalize_string_lite normalize_string_underscore latexescape reduce_array
   remove_outer add_outer getinitials ucinit strip_nosort strip_nosortdiacritics
   strip_nosortprefix is_def is_undef is_def_and_notnull is_def_and_null is_undef_or_null
@@ -284,25 +284,6 @@ sub terseinitials {
   $str =~ s/-//g;
   return $str;
 }
-
-=head2 tersify
-
-tersify($str) sanitises the initials string passed in $str to a format
-required by the "terseinits" option of biblatex
-
-   tersify('L.~P.~D.) => 'LPD'
-   tersify('{\v S}~P.~D.) => '{\v S}PD'
-   tersify('J.-M.) => 'J-M'
-
-=cut
-
-# sub tersify {
-#   my $str = shift;
-#   return '' unless $str; # Sanitise missing data
-#   $str =~ s/~//g;
-#   $str =~ s/\.//g;
-#   return $str;
-# }
 
 =head2 reduce_array
 
