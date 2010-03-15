@@ -592,7 +592,7 @@ is( $biber->_print_biblatex_entry('l25'), $l25, 'Hyphen at brace level <> 0');
 is($biber->has_citekey('l26'), '0', 'Bad name with 3 commas');
 is($biber->has_citekey('l27'), '0', 'Bad name with consecutive commas');
 SKIP: {
-  skip "Text::BibTeX < 0.41", 1, if $Text::BibTeX::VERSION !~ m/\A0\.4\d/xms;
+  skip "Text::BibTeX < 0.41", 1, if $Text::BibTeX::VERSION < 0.41;
   is( $biber->_print_biblatex_entry('l28'), $l28, 'Escaped name with 3 commas');
 }
 
