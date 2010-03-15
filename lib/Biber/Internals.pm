@@ -66,7 +66,7 @@ sub _getnamehash {
       $initstr .= "+";
     }
   }
-  return normalize_string_lite($initstr, 1);
+  return normalize_string_lite($initstr);
 }
 
 sub _getfullhash {
@@ -89,7 +89,7 @@ sub _getfullhash {
       $initstr .= $n->get_firstname_it;
     }
   }
-  return normalize_string_lite($initstr, 1);
+  return normalize_string_lite($initstr);
 }
 
 sub _getlabel {
