@@ -37,7 +37,7 @@ All functions are exported by default.
 =cut
 
 our @EXPORT = qw{ bibfind tersify terseinitials makenameid stringify_hash
-  normalize_string normalize_string_underscore latexescape reduce_array
+  normalize_string normalize_string_lite normalize_string_underscore latexescape reduce_array
   remove_outer add_outer getinitials ucinit strip_nosort strip_nosortdiacritics
   strip_nosortprefix is_def is_undef is_def_and_notnull is_def_and_null is_undef_or_null
   is_notnull is_name_field is_null};
@@ -192,6 +192,25 @@ sub normalize_string {
   return $str;
 }
 
+=head2 normalize_string_lite
+
+  Removes LaTeX macros
+
+=cut
+
+sub normalize_string_lite {
+  my $str = shift;
+  return '' unless $str; # Sanitise missing data
+  # First replace ties with spaces or they will be lost
+  $str =~ s/\\\p{L}+\s*//g; # remove tex macros
+  $str =~ s/\\[^\p{L}]+\s*//g; # remove accent macros like \"a
+  $str =~ s/[{}]//g; # Remove any brackets left
+  $str =~ s/~//g;
+  $str =~ s/\.//g;
+  $str =~ s/\s+//g;
+  return $str;
+}
+
 =head2 normalize_string_underscore
 
 Like normalize_string, but also substitutes ~ and whitespace with underscore.
@@ -247,25 +266,22 @@ sub latexescape {
 
 =head2 terseinitials
 
-terseinitials($str) returns the contatenated initials of the raw initials list
-passed in $str. It removes LaTeX formatting. This is used to create hashes.
+   terseinitials($str) returns the terse format initials of the raw initials list
+   passed in $str. It tries to emulate the btparse terse format for initials.
 
    terseinitials('L.~P.~D.) => 'LPD'
    terseinitials('{\v S}~P.~D.) => '{\v S}PD'
-   terseinitials('J.-M.) => 'J-M'
+   terseinitials('J.-M.) => 'JM'
 
 =cut
 
 sub terseinitials {
   my $str = shift;
   return '' unless $str; # Sanitise missing data
-  $str =~ s/\\[\p{L}]+\s*//g; # remove tex macros
-  $str =~ s/^{(\p{L}).+}$/$1/g; # {Aaaa Bbbbb Ccccc} -> A
-  # get rid of Punctuation, Symbol and Other characters
-  $str =~ s/[\p{Lm}\p{Pd}\p{Po}\p{Pc}\p{Ps}\p{Pe}\p{S}\p{C}]+//g;
-  $str =~ s/\s+//g;
   $str =~ s/~//g;
-  $str =~ s/\.//g;
+  $str =~ s/\.\s/./g; # initials lists can have spaces instead of ties so collapse them ...
+  $str =~ s/\.//g;    # ... then remove the remainder
+  $str =~ s/-//g;
   return $str;
 }
 
@@ -280,13 +296,13 @@ required by the "terseinits" option of biblatex
 
 =cut
 
-sub tersify {
-  my $str = shift;
-  return '' unless $str; # Sanitise missing data
-  $str =~ s/~//g;
-  $str =~ s/\.//g;
-  return $str;
-}
+# sub tersify {
+#   my $str = shift;
+#   return '' unless $str; # Sanitise missing data
+#   $str =~ s/~//g;
+#   $str =~ s/\.//g;
+#   return $str;
+# }
 
 =head2 reduce_array
 

@@ -58,7 +58,7 @@ is( getinitials('{\"O}zt{\"u}rk'), '{\"O}.', 'getinitials 1' ) ;
 is( getinitials('{\c{C}}ok {\OE}illet'), '{\c{C}}.~{\OE}.', 'getinitials 2' ) ;
 is( getinitials('Ḥusayn ʿĪsā'), 'Ḥ.~Ī.', 'getinitials 3' ) ;
 
-is( tersify('Ä.~{\c{C}}.~{\c S}.'), 'Ä{\c{C}}{\c S}', 'terseinitials' ) ;
+is( normalize_string_lite('Ä.~{\c{C}}.~{\c S}.'), 'ÄCS', 'normalize_string_lite' ) ;
 
 
 # vim: set tabstop=4 shiftwidth=4:

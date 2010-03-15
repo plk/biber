@@ -23,7 +23,7 @@ Biber::Internals - Internal methods for processing the bibliographic data
 
 my $logger = Log::Log4perl::get_logger('main');
 
-sub _getnameinitials {
+sub _getnamehash {
   my ($self, $citekey, $names) = @_;
   my $initstr = '';
   my $bibentries = $self->bib;
@@ -66,10 +66,10 @@ sub _getnameinitials {
       $initstr .= "+";
     }
   }
-  return $initstr;
+  return normalize_string_lite($initstr, 1);
 }
 
-sub _getallnameinitials {
+sub _getfullhash {
   my ($self, $citekey, $names) = @_;
   my $initstr = '';
   my $bibentries = $self->bib;
@@ -89,7 +89,7 @@ sub _getallnameinitials {
       $initstr .= $n->get_firstname_it;
     }
   }
-  return $initstr;
+  return normalize_string_lite($initstr, 1);
 }
 
 sub _getlabel {

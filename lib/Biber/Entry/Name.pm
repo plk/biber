@@ -314,7 +314,7 @@ sub name_to_bbl {
   if ($self->was_stripped('lastname')) {
     $ln = Biber::Utils::add_outer($ln);
   }
-  my $lni = $self->get_lastname_i;
+    my $lni = Biber::Config->getblxoption('terseinits') ? $self->get_lastname_it : $self->get_lastname_i;
 
   # firstname
   my $fn;
@@ -323,7 +323,7 @@ sub name_to_bbl {
     if ($self->was_stripped('firstname')) {
       $fn = Biber::Utils::add_outer($fn);
     }
-    $fni = $self->get_firstname_i;
+    $fni = Biber::Config->getblxoption('terseinits') ? $self->get_firstname_it : $self->get_firstname_i;
   }
   else {
     $fn = '';
@@ -337,7 +337,7 @@ sub name_to_bbl {
     if ($self->was_stripped('prefix')) {
       $pre = Biber::Utils::add_outer($pre);
     }
-    $prei = $self->get_prefix_i;
+    $prei = Biber::Config->getblxoption('terseinits') ? $self->get_prefix_it : $self->get_prefix_i;
   }
   else {
     $pre = '';
@@ -351,7 +351,7 @@ sub name_to_bbl {
     if ($self->was_stripped('suffix')) {
       $suf = Biber::Utils::add_outer($suf);
     }
-    $sufi = $self->get_suffix_i;
+    $sufi = Biber::Config->getblxoption('terseinits') ? $self->get_suffix_it : $self->get_suffix_i;
   }
   else {
     $suf = '';
@@ -368,12 +368,6 @@ sub name_to_bbl {
   # Bernard {H.\,P.} -> Bernard~{H.\,P.}
   $fn =~ s/\s+(\p{Lu}\.|$RE{balanced}{-parens=>'{}'})/~$1/g;
   $pre =~ s/\s/~/g if $pre;       # van der -> van~der
-  if (Biber::Config->getblxoption('terseinits')) {
-    $lni  = Biber::Utils::tersify($lni);
-    $fni  = Biber::Utils::tersify($fni);
-    $prei = Biber::Utils::tersify($prei);
-    $sufi = Biber::Utils::tersify($sufi);
-  }
   return "    {{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
 }
 
