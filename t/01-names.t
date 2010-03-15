@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 43;
+use Test::More tests => 44;
 
 use Biber;
 use Biber::BibTeX;
@@ -493,17 +493,6 @@ my $l21 = q|\entry{L21}{book}{}
 
 my $l22 = q|\entry{L22}{book}{}
   \name{author}{1}{%
-    {{Smith}{S.}{Šomeone}{Š.}{}{}{}{}}%
-  }
-  \strng{namehash}{SŠ1}
-  \strng{fullhash}{SŠ1}
-  \field{sortinit}{S}
-\endentry
-
-|;
-
-my $l23 = q|\entry{L23}{book}{}
-  \name{author}{1}{%
     {{{\v S}mith}{{\v S}.}{Someone}{S.}{}{}{}{}}%
   }
   \strng{namehash}{SS1}
@@ -513,7 +502,30 @@ my $l23 = q|\entry{L23}{book}{}
 
 |;
 
+
+my $l23 = q|\entry{L23}{book}{}
+  \name{author}{1}{%
+    {{Smith}{S.}{Šomeone}{Š.}{}{}{}{}}%
+  }
+  \strng{namehash}{SŠ1}
+  \strng{fullhash}{SŠ1}
+  \field{sortinit}{S}
+\endentry
+
+|;
+
 my $l24 = q|\entry{L24}{book}{}
+  \name{author}{1}{%
+    {{Šmith}{Š.}{Someone}{S.}{}{}{}{}}%
+  }
+  \strng{namehash}{ŠS1}
+  \strng{fullhash}{ŠS1}
+  \field{sortinit}{Š}
+\endentry
+
+|;
+
+my $l25 = q|\entry{L25}{book}{}
   \name{author}{1}{%
     {{{American Psychological Association, Task Force on the Sexualization of Girls}}{A.}{}{}{}{}{}{}}%
   }
@@ -524,7 +536,7 @@ my $l24 = q|\entry{L24}{book}{}
 
 |;
 
-my $l25 = q|\entry{L25}{book}{}
+my $l26 = q|\entry{L26}{book}{}
   \name{author}{1}{%
     {{{Sci-Art Publishers}}{S.}{}{}{}{}{}{}}%
   }
@@ -535,7 +547,7 @@ my $l25 = q|\entry{L25}{book}{}
 
 |;
 
-my $l28 = q|\entry{L28}{book}{}
+my $l29 = q|\entry{L29}{book}{}
   \name{author}{1}{%
     {{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}}{U.}{}{}{}{}{}{}}%
   }
@@ -584,16 +596,17 @@ is( $biber->_print_biblatex_entry('l17'), $l17, 'Last, First {F.\,F.}');
 is( $biber->_print_biblatex_entry('l18'), $l18, 'Last, First F.{\,}F.');
 is( $biber->_print_biblatex_entry('l19'), $l19, 'Firstname with hyphen');
 is( $biber->_print_biblatex_entry('l20'), $l20, 'Protected dual first name');
-is( $biber->_print_biblatex_entry('l21'), $l21, 'LaTeX encoded unicode');
-is( $biber->_print_biblatex_entry('l22'), $l22, 'Unicode firstname');
-is( $biber->_print_biblatex_entry('l23'), $l23, 'Unicode lastname');
-is( $biber->_print_biblatex_entry('l24'), $l24, 'Single string name');
-is( $biber->_print_biblatex_entry('l25'), $l25, 'Hyphen at brace level <> 0');
-is($biber->has_citekey('l26'), '0', 'Bad name with 3 commas');
-is($biber->has_citekey('l27'), '0', 'Bad name with consecutive commas');
+is( $biber->_print_biblatex_entry('l21'), $l21, 'LaTeX encoded unicode firstname');
+is( $biber->_print_biblatex_entry('l22'), $l22, 'LaTeX encoded unicode lastname');
+is( $biber->_print_biblatex_entry('l23'), $l23, 'Unicode firstname');
+is( $biber->_print_biblatex_entry('l24'), $l24, 'Unicode lastname');
+is( $biber->_print_biblatex_entry('l25'), $l25, 'Single string name');
+is( $biber->_print_biblatex_entry('l26'), $l26, 'Hyphen at brace level <> 0');
+is($biber->has_citekey('l27'), '0', 'Bad name with 3 commas');
+is($biber->has_citekey('l28'), '0', 'Bad name with consecutive commas');
 SKIP: {
   skip "Text::BibTeX < 0.41", 1, if $Text::BibTeX::VERSION < 0.41;
-  is( $biber->_print_biblatex_entry('l28'), $l28, 'Escaped name with 3 commas');
+  is( $biber->_print_biblatex_entry('l29'), $l29, 'Escaped name with 3 commas');
 }
 
 
