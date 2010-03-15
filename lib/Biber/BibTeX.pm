@@ -267,7 +267,6 @@ sub parsename {
     );
 }
 
-
 sub _text_bibtex_parse {
 
   my ($self, $filename) = @_;
