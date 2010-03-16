@@ -80,9 +80,6 @@ if ( defined $opts->{'output-directory'} ) {
 
 my $biber = Biber->new(%$opts);
 
-# Set the output class. Should be a subclass of Biber::Output::Base
-$biber->set_output_obj(Biber::Output::BBL->new());
-
 # Setting the logging level of Log::Log4perl
 my $LOGLEVEL;
 if (Biber::Config->getoption('trace')) {
@@ -185,6 +182,9 @@ if (Biber::Config->getoption('trace')) {
     "\n###########################################################")
 }
 
+# Set the output class. Should be a subclass of Biber::Output::Base
+$biber->set_output_obj(Biber::Output::BBL->new());
+
 #=====================================================
 # Parse/query database
 #=====================================================
@@ -229,11 +229,10 @@ if (Biber::Config->getoption('trace')) {
     $biber->_stringdump,
     "\n###########################################################")
 }
-
 # Get reference to output object, set the output target and output .bbl file
 my $bbloutput = $biber->get_output_obj;
 
-$bbloutput->set_output_data(${$biber->create_bbl_string});
+$bbloutput->add_output_data(${$biber->create_bbl_string_body});
 $bbloutput->set_output_target_file($bblfile);
 $bbloutput->output;
 

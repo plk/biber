@@ -51,7 +51,7 @@ sub set_output_target_file {
 sub set_output_target {
   my $self = shift;
   my $target = shift;
-  $logger->croak('Output target must be a File::IO object!') unless $target->isa('IO::Handle');
+  $logger->croak('Output target must be a IO::Handle object!') unless $target->isa('IO::Handle');
   $self->{output_target} = $target;
   return;
 }
@@ -67,6 +67,20 @@ sub set_output_data {
   my $self = shift;
   my $data = shift;
   $self->{output_data} = $data;
+  return;
+}
+
+=head2 add_output_data
+
+    Add to the output data of a Biber::Output::Base object
+    The base class method just does a string append
+
+=cut
+
+sub add_output_data {
+  my $self = shift;
+  my $data = shift;
+  $self->{output_data} .= $data;
   return;
 }
 
