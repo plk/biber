@@ -2,41 +2,33 @@ package Biber::Output::BBL;
 use base 'Biber::Output::Base';
 
 use Biber::Utils;
+use Biber::Config;
 use Biber::Constants;
 use IO::File;
 use Log::Log4perl qw( :no_extra_logdie_message );
 my $logger = Log::Log4perl::get_logger('main');
 
 
+=head2 set_output_target_file
 
-=head2 output
-
-    output($ref_to_bbl_string, $file_name.bbl);
-
-    Write the bbl file for biblatex.
+    Set the output target file of a Biber::Output::Base object
+    A convenience around set_output_target so we can keep track of the
+    filename
 
 =cut
 
-sub output {
+sub set_output_target_file {
   my $self = shift;
-  my $bblstring = shift;
   my $bblfile = shift;
-
-  $logger->debug("Preparing final output using class __PACKAGE__ ...");
+  $self->{output_target_file} = $bblfile;
 
   my $mode;
-
   if ( Biber::Config->getoption('bibencoding') and ! Biber::Config->getoption('unicodebbl') ) {
     $mode = ':encoding(' . Biber::Config->getoption('bibencoding') . ')';
   } else {
     $mode = ":utf8";
   }
-
-  my $BBLFILE = IO::File->new($bblfile, ">$mode")
-    or $logger->logcroak("Failed to open $bblfile : $!");
-
-  print $BBLFILE $$bblstring or $logger->logcroak("Failure to write to $bblfile: $!");
-  $logger->info("Output to $bblfile");
-  close $BBLFILE or $logger->logcroak("Failure to close $bblfile: $!");
-  return;
+  my $BBLFILE = IO::File->new($bblfile, ">$mode") or $logger->croak("Failed to open $bblfile : $!");
+  $self->set_output_target($BBLFILE);
 }
+

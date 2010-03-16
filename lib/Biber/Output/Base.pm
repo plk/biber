@@ -25,6 +25,52 @@ sub new {
   return $self;
 }
 
+=head2 set_output_target_file
+
+    Set the output target file of a Biber::Output::Base object
+    A convenience around set_output_target so we can keep track of the
+    filename
+
+=cut
+
+sub set_output_target_file {
+  my $self = shift;
+  my $file = shift;
+  $self->{output_target_file} = $file;
+  my $TARGET = IO::File->new($file, '>') or $logger->croak("Failed to open $file : $!");
+  $self->set_output_target($TARGET);
+}
+
+
+=head2 set_output_target
+
+    Set the output target of a Biber::Output::Base object
+
+=cut
+
+sub set_output_target {
+  my $self = shift;
+  my $target = shift;
+  $logger->croak('Output target must be a File::IO object!') unless $target->isa('IO::Handle');
+  $self->{output_target} = $target;
+  return;
+}
+
+=head2 set_output_data
+
+    Set the output data of a Biber::Output::Base object
+    $data could be anything - the caller is expected to know.
+
+=cut
+
+sub set_output_data {
+  my $self = shift;
+  my $data = shift;
+  $self->{output_data} = $data;
+  return;
+}
+
+
 =head2 output
 
     Generic base output method
@@ -33,19 +79,18 @@ sub new {
 
 sub output {
   my $self = shift;
-  my $string = shift;
-  my $file = shift;
+  my $data = $self->{output_data};
+  my $target = $self->{output_target};
+  my $target_string = "Target"; # Default
+  if ($self->{output_target_file}) {
+    $target_string = $self->{output_target_file};
+  }
 
   $logger->debug("Preparing final output using class __PACKAGE__ ...");
 
-  my $mode;
-
-  my $FILE = IO::File->new($file, '>')
-    or $logger->logcroak("Failed to open $file : $!");
-
-  print $FILE $$string or $logger->logcroak("Failure to write to $file: $!");
-  $logger->info("Output to $file");
-  close $FILE or $logger->logcroak("Failure to close $file: $!");
+  print $target $data or $logger->logcroak("Failure to write to $target_string: $!");
+  $logger->info("Output to $target_string");
+  close $target or $logger->logcroak("Failure to close $target_string: $!");
   return;
 }
 

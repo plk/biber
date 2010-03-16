@@ -83,8 +83,6 @@ my $biber = Biber->new(%$opts);
 # Set the output class. Should be a subclass of Biber::Output::Base
 $biber->set_output_obj(Biber::Output::BBL->new());
 
-
-
 # Setting the logging level of Log::Log4perl
 my $LOGLEVEL;
 if (Biber::Config->getoption('trace')) {
@@ -232,9 +230,12 @@ if (Biber::Config->getoption('trace')) {
     "\n###########################################################")
 }
 
-
+# Get reference to output object, set the output target and output .bbl file
 my $bbloutput = $biber->get_output_obj;
-$bbloutput->output($biber->create_bbl_string, $bblfile);
+
+$bbloutput->set_output_data(${$biber->create_bbl_string});
+$bbloutput->set_output_target_file($bblfile);
+$bbloutput->output;
 
 # display warnings/errors summary, like BibTeX's format
 # unless in quiet mode
