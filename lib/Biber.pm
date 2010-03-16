@@ -116,6 +116,33 @@ sub orig_order_citekeys {
   }
 }
 
+=head2 set_output_obj
+
+    Sets the object used to output final results
+    Must be a subclass of Biber::Output::Base
+
+=cut
+
+sub set_output_obj {
+  my $self = shift;
+  my $obj = shift;
+  croak('Output object must be subclass of Biber::Output::Base!') unless $obj->isa('Biber::Output::Base');
+  $self->{output_obj} = $obj;
+  return;
+}
+
+
+=head2 get_output_obj
+
+    Returns the object used to output final results
+
+=cut
+
+sub get_output_obj {
+  my $self = shift;
+  return $self->{output_obj};
+}
+
 
 =head2 has_citekey
 
@@ -1567,40 +1594,6 @@ sub create_bbl_string_body {
 #    };
 
   return \$BBL;
-}
-
-=head2 output_to_bbl
-
-    $biber->output_to_bbl($ref_to_bbl_string, $file_name.bbl);
-
-    Write the bbl file for biblatex.
-
-=cut
-
-sub output_to_bbl {
-  my $self = shift;
-  my $bblstring = shift;
-  my $bblfile = shift;
-
-  $logger->debug("Preparing final output...");
-
-  my $mode;
-
-  if ( Biber::Config->getoption('bibencoding') and ! Biber::Config->getoption('unicodebbl') ) {
-    $mode = ':encoding(' . Biber::Config->getoption('bibencoding') . ')';
-  } else {
-    $mode = ":utf8";
-  }
-
-  my $BBLFILE = IO::File->new($bblfile, ">$mode")
-    or $logger->logcroak("Failed to open $bblfile : $!");
-
-  # $BBLFILE->binmode(':utf8') if Biber::Config->getoption('unicodebbl');
-
-  print $BBLFILE $$bblstring or $logger->logcroak("Failure to write to $bblfile: $!");
-  $logger->info("Output to $bblfile");
-  close $BBLFILE or $logger->logcroak("Failure to close $bblfile: $!");
-  return;
 }
 
 =head2 _filedump and _stringdump
