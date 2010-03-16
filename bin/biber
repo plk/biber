@@ -182,8 +182,8 @@ if (Biber::Config->getoption('trace')) {
     "\n###########################################################")
 }
 
-# Set the output class. Should be a subclass of Biber::Output::Base
-$biber->set_output_obj(Biber::Output::BBL->new());
+  # Set the output class. Should be a subclass of Biber::Output::Base
+  $biber->set_output_obj(Biber::Output::BBL->new());
 
 #=====================================================
 # Parse/query database
@@ -229,11 +229,12 @@ if (Biber::Config->getoption('trace')) {
     $biber->_stringdump,
     "\n###########################################################")
 }
-# Get reference to output object, set the output target and output .bbl file
-my $bbloutput = $biber->get_output_obj;
 
-$bbloutput->add_output_data(${$biber->create_bbl_string_body});
+# Get reference to output object
+my $bbloutput = $biber->get_output_obj;
+# Set the output target
 $bbloutput->set_output_target_file($bblfile);
+# Write the output to the target
 $bbloutput->output;
 
 # display warnings/errors summary, like BibTeX's format

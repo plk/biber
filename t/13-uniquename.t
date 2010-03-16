@@ -6,6 +6,7 @@ no warnings 'utf8';
 use Test::More tests => 5;
 
 use Biber;
+use Biber::Output::BBL;
 use Biber::Utils;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
@@ -14,11 +15,13 @@ my $biber = Biber->new( unicodebbl => 1, fastsort => 1, noconf => 1 );
 
 chdir("t/tdata") ;
 $biber->parse_auxfile('uniquename.aux');
+$biber->set_output_obj(Biber::Output::BBL->new());
 
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
 
 $biber->prepare;
+my $out = $biber->get_output_obj;
 my $bibentries = $biber->bib;
 
 my $un1 = q|\entry{un1}{article}{}
@@ -137,11 +140,11 @@ my $un5 = q|\entry{un5}{article}{}
 |;
 
 
-is($biber->_print_biblatex_entry('un1'), $un1, 'Uniquename requiring full name expansion - 1');
-is($biber->_print_biblatex_entry('un3'), $un3, 'Uniquename requiring full name expansion - 2');
-is($biber->_print_biblatex_entry('un2'), $un2, 'Uniquename requiring initials name expansion');
-is($biber->_print_biblatex_entry('un4'), $un4, 'Namehash and fullhash different due to maxnames setting');
-is($biber->_print_biblatex_entry('un5'), $un5, 'Fullnamshash ignores SHORT* names');
+is($out->get_output_entry('un1'), $un1, 'Uniquename requiring full name expansion - 1');
+is($out->get_output_entry('un3'), $un3, 'Uniquename requiring full name expansion - 2');
+is($out->get_output_entry('un2'), $un2, 'Uniquename requiring initials name expansion');
+is($out->get_output_entry('un4'), $un4, 'Namehash and fullhash different due to maxnames setting');
+is($out->get_output_entry('un5'), $un5, 'Fullnamshash ignores SHORT* names');
 
 
 

@@ -6,17 +6,19 @@ no warnings 'utf8' ;
 use Test::More tests => 7 ;
 
 use Biber;
+use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
 my $biber = Biber->new( fastsort => 1, noconf => 1 );
+
 my $bibentries = $biber->bib;
 
 isa_ok($biber, "Biber");
 
 chdir("t/tdata") ;
 $biber->parse_auxfile("general1.aux") ;
-
+$biber->set_output_obj(Biber::Output::BBL->new());
 
 my @keys = sort $biber->citekeys;
 my @citedkeys = sort qw{
@@ -58,6 +60,8 @@ my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 Biber::Config->setoption('allentries',1);
 $biber->parse_bibtex($bibfile) ;
 $biber->prepare ;
+my $out = $biber->get_output_obj;
+
 @keys = sort $biber->citekeys;
 
 is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
@@ -654,7 +658,7 @@ my $kastenholz = q|\entry{kastenholz}{article}{}
 | ;
 
 
-is( $biber->_print_biblatex_entry('kastenholz'), $kastenholz, 'bbl entry' ) ;
+is( $out->get_output_entry('kastenholz'), $kastenholz, 'bbl entry' ) ;
 
 my $t1 = q|\entry{t1}{misc}{}
   \name{author}{1}{%
@@ -671,4 +675,4 @@ my $t1 = q|\entry{t1}{misc}{}
 
 |;
 
-is( $biber->_print_biblatex_entry('t1'), $t1, 'bbl entry with maths in title' ) ;
+is( $out->get_output_entry('t1'), $t1, 'bbl entry with maths in title' ) ;

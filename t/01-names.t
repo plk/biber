@@ -7,6 +7,7 @@ use Test::More tests => 44;
 
 use Biber;
 use Biber::BibTeX;
+use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
@@ -14,13 +15,16 @@ chdir("t/tdata");
 
 my $bibfile;
 my $biber = Biber->new(noconf => 1);
+
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
 $biber->parse_auxfile('names.aux');
+$biber->set_output_obj(Biber::Output::BBL->new());
 $bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 my $bibentries = $biber->bib;
 $biber->prepare;
+my $out = $biber->get_output_obj;
 
 
 my $name1 =
@@ -576,37 +580,37 @@ is_deeply(parsename('Jean Charles {Poussin Lecoq}'), $name13, 'parsename 13');
 is_deeply(parsename('J. C. G. de la Vallée Poussin', {useprefix => 1}), $name14, 'parsename 14');
 
 is($bibentries->entry('l21')->get_field($bibentries->entry('l21')->get_field('labelnamename'))->nth_element(1)->get_firstname_it, '{\v S}', 'Terseinitials 1');
-is( $biber->_print_biblatex_entry('l1'), $l1, 'First Last') ;
-is( $biber->_print_biblatex_entry('l2'), $l2, 'First Initial. Last') ;
-is( $biber->_print_biblatex_entry('l3'), $l3, 'Initial. Initial. Last') ;
-is( $biber->_print_biblatex_entry('l4'), $l4, 'First Initial Last') ;
-is( $biber->_print_biblatex_entry('l5'), $l5, 'First prefix Last') ;
-is( $biber->_print_biblatex_entry('l6'), $l6, 'First prefix prefix Last') ;
-is( $biber->_print_biblatex_entry('l7'), $l7, 'First Initial. prefix Last') ;
-is( $biber->_print_biblatex_entry('l8'), $l8, 'First Initial prefix Last') ;
-is( $biber->_print_biblatex_entry('l9'), $l9, 'First {Last Last}') ;
-is( $biber->_print_biblatex_entry('l10'), $l10, 'Last, Suffix, First') ;
-is( $biber->_print_biblatex_entry('l11'), $l11, 'prefix Last, Suffix, First') ;
-is( $biber->_print_biblatex_entry('l12'), $l12, 'First First First First prefix prefix Last Last') ;
-is( $biber->_print_biblatex_entry('l13'), $l13, 'Last Last Last, Initial. Initial.');
-is( $biber->_print_biblatex_entry('l14'), $l14, 'Last Last-Last, First');
-is( $biber->_print_biblatex_entry('l15'), $l15, 'First F.{\,}F. Last');
-is( $biber->_print_biblatex_entry('l16'), $l16, 'First {F.\,F.} Last');
-is( $biber->_print_biblatex_entry('l17'), $l17, 'Last, First {F.\,F.}');
-is( $biber->_print_biblatex_entry('l18'), $l18, 'Last, First F.{\,}F.');
-is( $biber->_print_biblatex_entry('l19'), $l19, 'Firstname with hyphen');
-is( $biber->_print_biblatex_entry('l20'), $l20, 'Protected dual first name');
-is( $biber->_print_biblatex_entry('l21'), $l21, 'LaTeX encoded unicode firstname');
-is( $biber->_print_biblatex_entry('l22'), $l22, 'LaTeX encoded unicode lastname');
-is( $biber->_print_biblatex_entry('l23'), $l23, 'Unicode firstname');
-is( $biber->_print_biblatex_entry('l24'), $l24, 'Unicode lastname');
-is( $biber->_print_biblatex_entry('l25'), $l25, 'Single string name');
-is( $biber->_print_biblatex_entry('l26'), $l26, 'Hyphen at brace level <> 0');
+is( $out->get_output_entry('l1'), $l1, 'First Last') ;
+is( $out->get_output_entry('l2'), $l2, 'First Initial. Last') ;
+is( $out->get_output_entry('l3'), $l3, 'Initial. Initial. Last') ;
+is( $out->get_output_entry('l4'), $l4, 'First Initial Last') ;
+is( $out->get_output_entry('l5'), $l5, 'First prefix Last') ;
+is( $out->get_output_entry('l6'), $l6, 'First prefix prefix Last') ;
+is( $out->get_output_entry('l7'), $l7, 'First Initial. prefix Last') ;
+is( $out->get_output_entry('l8'), $l8, 'First Initial prefix Last') ;
+is( $out->get_output_entry('l9'), $l9, 'First {Last Last}') ;
+is( $out->get_output_entry('l10'), $l10, 'Last, Suffix, First') ;
+is( $out->get_output_entry('l11'), $l11, 'prefix Last, Suffix, First') ;
+is( $out->get_output_entry('l12'), $l12, 'First First First First prefix prefix Last Last') ;
+is( $out->get_output_entry('l13'), $l13, 'Last Last Last, Initial. Initial.');
+is( $out->get_output_entry('l14'), $l14, 'Last Last-Last, First');
+is( $out->get_output_entry('l15'), $l15, 'First F.{\,}F. Last');
+is( $out->get_output_entry('l16'), $l16, 'First {F.\,F.} Last');
+is( $out->get_output_entry('l17'), $l17, 'Last, First {F.\,F.}');
+is( $out->get_output_entry('l18'), $l18, 'Last, First F.{\,}F.');
+is( $out->get_output_entry('l19'), $l19, 'Firstname with hyphen');
+is( $out->get_output_entry('l20'), $l20, 'Protected dual first name');
+is( $out->get_output_entry('l21'), $l21, 'LaTeX encoded unicode firstname');
+is( $out->get_output_entry('l22'), $l22, 'LaTeX encoded unicode lastname');
+is( $out->get_output_entry('l23'), $l23, 'Unicode firstname');
+is( $out->get_output_entry('l24'), $l24, 'Unicode lastname');
+is( $out->get_output_entry('l25'), $l25, 'Single string name');
+is( $out->get_output_entry('l26'), $l26, 'Hyphen at brace level <> 0');
 is($biber->has_citekey('l27'), '0', 'Bad name with 3 commas');
 is($biber->has_citekey('l28'), '0', 'Bad name with consecutive commas');
 SKIP: {
   skip "Text::BibTeX < 0.41", 1, if $Text::BibTeX::VERSION < 0.41;
-  is( $biber->_print_biblatex_entry('l29'), $l29, 'Escaped name with 3 commas');
+  is( $out->get_output_entry('l29'), $l29, 'Escaped name with 3 commas');
 }
 
 

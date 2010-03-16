@@ -6,6 +6,7 @@ no warnings 'utf8';
 use Test::More tests => 32;
 
 use Biber;
+use Biber::Output::BBL;
 use Biber::Utils;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
@@ -14,14 +15,17 @@ chdir("t/tdata");
 
 my $bibfile;
 my $biber = Biber->new(noconf => 1);
+
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
 $biber->parse_auxfile('dateformats.aux');
+$biber->set_output_obj(Biber::Output::BBL->new());
 $bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 $biber->prepare;
+my $out = $biber->get_output_obj;
 my $bibentries = $biber->bib;
 
 my $l1 = [ "Invalid format of field 'origdate' - ignoring field",
@@ -249,36 +253,39 @@ is($bibentries->entry('l12')->get_field('month'), '01', 'Date format test 12a - 
 ok(is_def_and_null($bibentries->entry('l13')->get_field('endyear')), 'Date format test 13 - range with no end' ) ;
 ok(is_undef($bibentries->entry('l13')->get_field('endmonth')), 'Date format test 13a - ENDMONTH undef for open-ended range' ) ;
 ok(is_undef($bibentries->entry('l13')->get_field('endday')), 'Date format test 13b - ENDDAY undef for open-ended range' ) ;
-is( $biber->_print_biblatex_entry('l13'), $l13c, 'Date format test 13c - labelyear open-ended range' ) ;
-is( $biber->_print_biblatex_entry('l14'), $l14, 'Date format test 14 - labelyear same as YEAR when ENDYEAR == YEAR') ;
-is( $biber->_print_biblatex_entry('l15'), $l15, 'Date format test 15 - labelyear should be undef, no DATE or YEAR') ;
+is( $out->get_output_entry('l13'), $l13c, 'Date format test 13c - labelyear open-ended range' ) ;
+is( $out->get_output_entry('l14'), $l14, 'Date format test 14 - labelyear same as YEAR when ENDYEAR == YEAR') ;
+is( $out->get_output_entry('l15'), $l15, 'Date format test 15 - labelyear should be undef, no DATE or YEAR') ;
 
 Biber::Config->setblxoption('labelyear', [ 'year', 'eventyear', 'origyear' ]);
 $bibentries->entry('l17')->del_field('year');
 $bibentries->entry('l17')->del_field('month');
 $biber->prepare;
+$out = $biber->get_output_obj;
 
 is($bibentries->entry('l16')->get_field('labelyearname'), 'eventyear', 'Date format test 16 - labelyearname = eventyear' ) ;
-is($biber->_print_biblatex_entry('l16'), $l16, 'Date format test 16a - labelyear = eventyear value' ) ;
+is($out->get_output_entry('l16'), $l16, 'Date format test 16a - labelyear = eventyear value' ) ;
 is($bibentries->entry('l17')->get_field('labelyearname'), 'year', 'Date format test 17 - labelyearname = YEAR' ) ;
-is($biber->_print_biblatex_entry('l17'), $l17, 'Date format test 17a - labelyear = YEAR value when ENDYEAR is the same and ORIGYEAR is also present' ) ;
+is($out->get_output_entry('l17'), $l17, 'Date format test 17a - labelyear = YEAR value when ENDYEAR is the same and ORIGYEAR is also present' ) ;
 
 
 Biber::Config->setblxoption('labelyear', [ 'origyear', 'year', 'eventyear' ]);
 $bibentries->entry('l17')->del_field('year');
 $bibentries->entry('l17')->del_field('month');
 $biber->prepare;
+$out = $biber->get_output_obj;
 
 is($bibentries->entry('l17')->get_field('labelyearname'), 'origyear', 'Date format test 17b - labelyearname = ORIGYEAR' ) ;
-is($biber->_print_biblatex_entry('l17'), $l17c, 'Date format test 17c - labelyear = ORIGYEAR value when ENDORIGYEAR is the same and YEAR is also present' ) ;
+is($out->get_output_entry('l17'), $l17c, 'Date format test 17c - labelyear = ORIGYEAR value when ENDORIGYEAR is the same and YEAR is also present' ) ;
 
 Biber::Config->setblxoption('labelyear', [ 'eventyear', 'year', 'origyear' ], 'PER_TYPE', 'book');
 $bibentries->entry('l17')->del_field('year');
 $bibentries->entry('l17')->del_field('month');
 $biber->prepare;
+$out = $biber->get_output_obj;
 
 is($bibentries->entry('l17')->get_field('labelyearname'), 'eventyear', 'Date format test 17d - labelyearname = EVENTYEAR' ) ;
-is($biber->_print_biblatex_entry('l17'), $l17e, 'Date format test 17e - labelyear = ORIGYEAR-ORIGENDYEAR' ) ;
+is($out->get_output_entry('l17'), $l17e, 'Date format test 17e - labelyear = ORIGYEAR-ORIGENDYEAR' ) ;
 
 
 unlink "$bibfile.utf8";

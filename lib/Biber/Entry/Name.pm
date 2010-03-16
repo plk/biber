@@ -1,6 +1,7 @@
 package Biber::Entry::Name;
 
 use Regexp::Common qw( balanced );
+use Data::Dump;
 
 =encoding utf-8
 
@@ -370,6 +371,19 @@ sub name_to_bbl {
   $pre =~ s/\s/~/g if $pre;       # van der -> van~der
   return "    {{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
 }
+
+
+=head2 dump
+
+    Dump Biber::Entry::Name object
+
+=cut
+
+sub dump {
+  my $self = shift;
+  dd($self);
+}
+
 
 =head1 AUTHORS
 

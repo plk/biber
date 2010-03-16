@@ -3,9 +3,10 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 2;
+use Test::More tests => 4;
 
 use Biber;
+use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
@@ -14,15 +15,16 @@ my $biber = Biber->new( unicodebbl => 1, fastsort => 1, noconf => 1 );
 isa_ok($biber, "Biber");
 chdir("t/tdata") ;
 $biber->parse_auxfile('set.aux');
+$biber->set_output_obj(Biber::Output::BBL->new());
 
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
 
 
 $biber->prepare;
-my $bibentries = $biber->bib;
-my $string1 = $biber->create_bbl_string_body;
-my $string1p = q|\entry{Elias1955}{set}{}
+my $out = $biber->get_output_obj;
+
+my $string1 = q|\entry{Elias1955}{set}{}
   \set{Elias1955a,Elias1955b}
   \name{author}{1}{%
     {{Elias}{E.}{P.}{P.}{}{}{}{}}%
@@ -47,7 +49,9 @@ my $string1p = q|\entry{Elias1955}{set}{}
   \endverb
 \endentry
 
-\entry{Elias1955a}{article}{}
+|;
+
+my $string2 = q|\entry{Elias1955a}{article}{}
   \inset{Elias1955}
   \name{author}{1}{%
     {{Elias}{E.}{P.}{P.}{}{}{}{}}%
@@ -69,7 +73,9 @@ my $string1p = q|\entry{Elias1955}{set}{}
   \endverb
 \endentry
 
-\entry{Elias1955b}{article}{}
+|;
+
+my $string3 = q|\entry{Elias1955b}{article}{}
   \inset{Elias1955}
   \name{author}{1}{%
     {{Elias}{E.}{P.}{P.}{}{}{}{}}%
@@ -91,10 +97,10 @@ my $string1p = q|\entry{Elias1955}{set}{}
   \endverb
 \endentry
 
-\endinput
-
 |;
 
-is($$string1 , $string1p, 'Set test 1');
+is($out->get_output_entry('elias1955'), $string1, 'Set test 1');
+is($out->get_output_entry('elias1955a'), $string2, 'Set test 2');
+is($out->get_output_entry('elias1955b'), $string3, 'Set test 3');
 
 unlink "$bibfile.utf8";

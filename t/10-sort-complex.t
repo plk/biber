@@ -6,6 +6,7 @@ no warnings 'utf8';
 use Test::More tests => 7;
 
 use Biber;
+use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
@@ -15,13 +16,13 @@ isa_ok($biber, "Biber");
 
 chdir("t/tdata") ;
 $biber->parse_auxfile('sort-complex.aux');
-
+$biber->set_output_obj(Biber::Output::BBL->new());
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
 Biber::Config->setblxoption('labelalpha', 1);
 Biber::Config->setblxoption('labelyear', undef);
 $biber->prepare;
-
+my $out = $biber->get_output_obj;
 my $sc1 = [
            [
             {'labelalpha'    => {}},
@@ -185,10 +186,10 @@ my $sc6 = q|\entry{L3}{article}{}
 
 is_deeply( Biber::Config->getblxoption('sorting_label') , $sc1, 'first pass scheme');
 is_deeply( Biber::Config->getblxoption('sorting_final') , $sc2, 'second pass scheme');
-is( $biber->_print_biblatex_entry('l4'), $sc3, '\alphaothers set by "and others"');
-is( $biber->_print_biblatex_entry('l1'), $sc4, '2-pass - labelalpha after title');
-is( $biber->_print_biblatex_entry('l2'), $sc5, '2-pass - labelalpha after title');
-is( $biber->_print_biblatex_entry('l3'), $sc6, '2-pass - labelalpha after title');
+is( $out->get_output_entry('l4'), $sc3, '\alphaothers set by "and others"');
+is( $out->get_output_entry('l1'), $sc4, '2-pass - labelalpha after title');
+is( $out->get_output_entry('l2'), $sc5, '2-pass - labelalpha after title');
+is( $out->get_output_entry('l3'), $sc6, '2-pass - labelalpha after title');
 
 
 unlink "$bibfile.utf8";
