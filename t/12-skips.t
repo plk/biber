@@ -7,18 +7,22 @@ use Test::More tests => 14;
 
 use Biber;
 use Biber::Utils;
+use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
 my $biber = Biber->new( unicodebbl => 1, fastsort => 1, noconf => 1 );
 
+
 chdir("t/tdata") ;
 $biber->parse_auxfile('skips.aux');
+$biber->set_output_obj(Biber::Output::BBL->new());
 
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
 
 $biber->prepare;
+my $out = $biber->get_output_obj;
 my $bibentries = $biber->bib;
 
 my $set1 = q|\entry{seta}{set}{}
@@ -162,13 +166,13 @@ ok(is_undef($bibentries->entry('skip3')->get_field('labelalpha')), 'skiplab - no
 ok(is_undef($bibentries->entry('skip3')->get_field('labelyearname')), 'skiplab - no labelyear');
 ok(is_undef($bibentries->entry('skip4')->get_field('labelalpha')), 'dataonly - no labelalpha');
 ok(is_undef($bibentries->entry('skip4')->get_field('labelyearname')), 'dataonly - no labelyear');
-is($biber->_print_biblatex_entry('seta'), $set1, 'Set parent - with labels');
-is($biber->_print_biblatex_entry('set:membera'), $set2, 'Set member - no labels 1');
-is($biber->_print_biblatex_entry('set:memberb'), $set3, 'Set member - no labels 2');
-is($biber->_print_biblatex_entry('set:memberc'), $set4, 'Set member - no labels 3');
-is($biber->_print_biblatex_entry('noseta'), $noset1, 'Not a set member - extrayear continues from set 1');
-is($biber->_print_biblatex_entry('nosetb'), $noset2, 'Not a set member - extrayear continues from set 2');
-is($biber->_print_biblatex_entry('nosetc'), $noset3, 'Not a set member - extrayear continues from set 3');
+is($out->get_output_entry('seta'), $set1, 'Set parent - with labels');
+is($out->get_output_entry('set:membera'), $set2, 'Set member - no labels 1');
+is($out->get_output_entry('set:memberb'), $set3, 'Set member - no labels 2');
+is($out->get_output_entry('set:memberc'), $set4, 'Set member - no labels 3');
+is($out->get_output_entry('noseta'), $noset1, 'Not a set member - extrayear continues from set 1');
+is($out->get_output_entry('nosetb'), $noset2, 'Not a set member - extrayear continues from set 2');
+is($out->get_output_entry('nosetc'), $noset3, 'Not a set member - extrayear continues from set 3');
 
 
 unlink "$bibfile.utf8";

@@ -2,6 +2,7 @@ package Biber::Entry;
 use List::Util qw( first );
 use Biber::Utils;
 use Biber::Constants;
+use Data::Dump qw( pp );
 
 =encoding utf-8
 
@@ -17,7 +18,7 @@ Biber::Entry
 
 sub new {
   my $class = shift;
-  my ($obj) = @_;
+  my $obj = shift;
   my $self;
   if (defined($obj) and ref($obj) eq 'HASH') {
     $self = bless $obj, $class;
@@ -163,6 +164,18 @@ sub inherit_from {
     }
   }
 }
+
+=head2 dump
+
+    Dump Biber::Entry object
+
+=cut
+
+sub dump {
+  my $self = shift;
+  return pp($self);
+}
+
 
 =head1 AUTHORS
 

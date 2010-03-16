@@ -8,6 +8,7 @@ use IPC::Cmd qw( can_run run );
 use Log::Log4perl qw(:no_extra_logdie_message);
 use POSIX qw(strftime);
 use Biber;
+use Biber::Output::BBL;
 use Biber::Utils;
 use File::Spec;
 
@@ -181,6 +182,9 @@ if (Biber::Config->getoption('trace')) {
     "\n###########################################################")
 }
 
+  # Set the output class. Should be a subclass of Biber::Output::Base
+  $biber->set_output_obj(Biber::Output::BBL->new());
+
 #=====================================================
 # Parse/query database
 #=====================================================
@@ -226,7 +230,12 @@ if (Biber::Config->getoption('trace')) {
     "\n###########################################################")
 }
 
-$biber->output_to_bbl($biber->create_bbl_string, $bblfile);
+# Get reference to output object
+my $bbloutput = $biber->get_output_obj;
+# Set the output target
+$bbloutput->set_output_target_file($bblfile);
+# Write the output to the target
+$bbloutput->output;
 
 # display warnings/errors summary, like BibTeX's format
 # unless in quiet mode

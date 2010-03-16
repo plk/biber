@@ -1,8 +1,8 @@
 package Biber::Entry::Name;
 
-use Data::Dump;
 use Regexp::Common qw( balanced );
 use Biber::Config;
+use Data::Dump qw( pp );
 
 =encoding utf-8
 
@@ -455,17 +455,18 @@ sub name_to_bbl {
   return "    {{$pno}{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
 }
 
+
 =head2 dump
 
-    Dump a Biber::Entry::Name object for debugging purposes
+    Dump Biber::Entry::Name object
 
 =cut
 
 sub dump {
   my $self = shift;
-  dd($self);
-  return;
+  return pp($self);
 }
+
 
 =head1 AUTHORS
 

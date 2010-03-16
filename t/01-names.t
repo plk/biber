@@ -7,6 +7,7 @@ use Test::More tests => 45;
 
 use Biber;
 use Biber::BibTeX;
+use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
@@ -14,13 +15,16 @@ chdir("t/tdata");
 
 my $bibfile;
 my $biber = Biber->new(noconf => 1);
+
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
 $biber->parse_auxfile('names.aux');
+$biber->set_output_obj(Biber::Output::BBL->new());
 $bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 $biber->prepare;
 my $bibentries = $biber->bib;
+my $out = $biber->get_output_obj;
 
 my $name1 =
     { firstname      => "John",

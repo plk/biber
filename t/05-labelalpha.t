@@ -8,6 +8,7 @@ use Test::More tests => 64;
 
 use Biber;
 use Biber::Utils;
+use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
@@ -15,9 +16,11 @@ chdir("t/tdata");
 
 my $bibfile;
 my $biber = Biber->new(noconf => 1);
+
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
 $biber->parse_auxfile('labelalpha.aux');
+$biber->set_output_obj(Biber::Output::BBL->new());
 $bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 

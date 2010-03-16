@@ -6,6 +6,7 @@ no warnings 'utf8';
 use Test::More tests => 32;
 
 use Biber;
+use Biber::Output::BBL;
 use Biber::Utils;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
@@ -14,14 +15,17 @@ chdir("t/tdata");
 
 my $bibfile;
 my $biber = Biber->new(noconf => 1);
+
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
 $biber->parse_auxfile('dateformats.aux');
+$biber->set_output_obj(Biber::Output::BBL->new());
 $bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 $biber->prepare;
+my $out = $biber->get_output_obj;
 my $bibentries = $biber->bib;
 
 my $l1 = [ "Invalid format of field 'origdate' - ignoring field",
@@ -74,6 +78,7 @@ Biber::Config->setblxoption('labelyear', [ 'year', 'eventyear', 'origyear' ]);
 $bibentries->entry('l17')->del_field('year');
 $bibentries->entry('l17')->del_field('month');
 $biber->prepare;
+$out = $biber->get_output_obj;
 
 is($bibentries->entry('l16')->get_field('labelyearname'), 'eventyear', 'Date format test 16 - labelyearname = eventyear' ) ;
 
@@ -92,6 +97,7 @@ Biber::Config->setblxoption('labelyear', [ 'origyear', 'year', 'eventyear' ]);
 $bibentries->entry('l17')->del_field('year');
 $bibentries->entry('l17')->del_field('month');
 $biber->prepare;
+$out = $biber->get_output_obj;
 
 is($bibentries->entry('l17')->get_field('labelyearname'), 'origyear', 'Date format test 17b - labelyearname = ORIGYEAR' ) ;
 
@@ -104,11 +110,12 @@ Biber::Config->setblxoption('labelyear', [ 'eventyear', 'year', 'origyear' ], 'P
 $bibentries->entry('l17')->del_field('year');
 $bibentries->entry('l17')->del_field('month');
 $biber->prepare;
+$out = $biber->get_output_obj;
 
 is($bibentries->entry('l17')->get_field('labelyearname'), 'eventyear', 'Date format test 17d - labelyearname = EVENTYEAR' ) ;
 
 
-my $l17bbl = $biber->_print_biblatex_entry('l17');
+my $l17bbl = $out->get_output_entry('l17');
 my $l17ly = qr/\\field\{labelyear\}\{1998\\bibdatedash 2004\}/ms;
 ok(($l17bbl =~ m/$l17ly/), 'Date format test 17e - labelyear = EVENTYEAR-EVENTENDYEAR');
 

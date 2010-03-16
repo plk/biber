@@ -7,6 +7,7 @@ use Test::More tests => 46;
 
 use Biber;
 use Biber::Utils;
+use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 my $biber;
@@ -17,6 +18,7 @@ chdir("t/tdata") ;
 # Set up Biber
 $biber = Biber->new( unicodebbl => 1, fastsort => 1, noconf => 1 );
 $biber->parse_auxfile('uniqueness1.aux');
+$biber->set_output_obj(Biber::Output::BBL->new());
 $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 Biber::Config->setblxoption('maxnames', 1);
 Biber::Config->setblxoption('uniquename', 1);
@@ -38,6 +40,7 @@ is($bibentries->entry('un7')->get_field('fullhash'), 'AJBM1', 'Fullnamshash igno
 
 $biber = Biber->new( unicodebbl => 1, fastsort => 1, noconf => 1 );
 $biber->parse_auxfile('uniqueness2.aux');
+$biber->set_output_obj(Biber::Output::BBL->new());
 $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 Biber::Config->setblxoption('maxnames', 2);
 Biber::Config->setblxoption('uniquename', 2);
@@ -45,7 +48,6 @@ Biber::Config->setblxoption('uniquelist', 1);
 $biber->parse_bibtex($bibfile);
 $biber->prepare;
 $bibentries = $biber->bib;
-
 is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename - 1');
 is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename - 2');
 is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '1', 'Uniquename - 3');
@@ -62,6 +64,7 @@ is($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_field('
 
 $biber = Biber->new( unicodebbl => 1, fastsort => 1, noconf => 1 );
 $biber->parse_auxfile('uniqueness3.aux');
+$biber->set_output_obj(Biber::Output::BBL->new());
 $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('uniquename', 2);
@@ -84,6 +87,7 @@ ok(is_undef($bibentries->entry('ey5')->get_field('singletitle')), 'Singletitle -
 
 $biber = Biber->new( unicodebbl => 1, fastsort => 1, noconf => 1 );
 $biber->parse_auxfile('uniqueness3.aux');
+$biber->set_output_obj(Biber::Output::BBL->new());
 $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('uniquename', 1);
@@ -106,6 +110,7 @@ is($bibentries->entry('ey5')->get_field('singletitle'), '1', 'Singletitle - 6');
 
 $biber = Biber->new( unicodebbl => 1, fastsort => 1, noconf => 1 );
 $biber->parse_auxfile('uniqueness3.aux');
+$biber->set_output_obj(Biber::Output::BBL->new());
 $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('uniquename', 0);

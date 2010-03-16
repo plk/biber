@@ -45,7 +45,6 @@ our $VERSION = '0.5.2';
     my $biber = Biber->new();
     $biber->parse_auxfile("example.aux");
     $biber->prepare;
-    $biber->print_to_bbl("example.bbl");
 
 =cut
 
@@ -114,6 +113,33 @@ sub orig_order_citekeys {
   } else {
     return ();
   }
+}
+
+=head2 set_output_obj
+
+    Sets the object used to output final results
+    Must be a subclass of Biber::Output::Base
+
+=cut
+
+sub set_output_obj {
+  my $self = shift;
+  my $obj = shift;
+  croak('Output object must be subclass of Biber::Output::Base!') unless $obj->isa('Biber::Output::Base');
+  $self->{output_obj} = $obj;
+  return;
+}
+
+
+=head2 get_output_obj
+
+    Returns the object used to output final results
+
+=cut
+
+sub get_output_obj {
+  my $self = shift;
+  return $self->{output_obj};
 }
 
 
@@ -727,6 +753,9 @@ sub process_sets_and_crossrefs {
     }
     if ($be->get_field('crossref')) {
       my $crossrefkey = $be->get_field('crossref');
+      if ($self->has_citekey($crossrefkey)) {
+        Biber::Config->add_cited_crossref($crossrefkey);
+      }
       my $parent = $self->bibentry($crossrefkey);
       $logger->debug("  Entry $citekey inheriting fields from parent $crossrefkey");
       $be->inherit_from($parent);
@@ -1767,76 +1796,26 @@ sub prepare {
   $self->uniqueness; # Here we generate uniqueness information (extra*, unique* etc.)
   $self->generate_final_sortinfo; # in here we generate the final sort string
   $self->sortentries; # and then we do a final sort pass
-
+  $self->create_output; # Generate and push the output into the output object ready for writing
   return;
 }
 
-=head2 create_bbl_string
+=head2 create_output
 
-    $biber->create_bbl_string()
+    $biber->create_output()
 
-    Create the .bbl file contents in a string ref
-    This is separate from the output to file so that
-    the string can be used for debugging and tests.
-
-=cut
-
-sub create_bbl_string {
-  my $self = shift;
-  my $BBL = ${$self->create_bbl_string_head} . ${$self->create_bbl_string_body};
-  return \$BBL;
-}
-
-=head2 create_bbl_string_head
-
-    $biber->create_bbl_string_head()
-
-    Create the .bbl file contents header
+    Create the output from the data and push it into the
+    output object. You can subclass Biber and
+    override this method to output things other than .bbl
 
 =cut
 
-sub create_bbl_string_head {
-  my $self = shift;
-  my $ctrlver = Biber::Config->getblxoption('controlversion');
-  my $BBL = <<"EOF";
-% \$ biblatex auxiliary file \$
-% \$ biblatex version $ctrlver \$
-% \$ biber version $VERSION \$
-% Do not modify the above lines!
-%
-% This is an auxiliary file used by the 'biblatex' package.
-% This file may safely be deleted. It will be recreated by
-% biber or bibtex as required.
-%
-\\begingroup
-\\makeatletter
-\\\@ifundefined{ver\@biblatex.sty}
-  {\\\@latex\@error
-     {Missing 'biblatex' package}
-     {The bibliography requires the 'biblatex' package.}
-      \\aftergroup\\endinput}
-  {}
-\\endgroup
-
-EOF
-  return \$BBL;
-}
-
-=head2 create_bbl_string_body
-
-    $biber->create_bbl_string_body()
-
-    Create the .bbl file body contents in a string ref
-    the string can be used for debugging and tests.
-
-=cut
-
-sub create_bbl_string_body {
+sub create_output {
   my $self = shift;
   my @auxcitekeys = $self->citekeys;
-  my $BBL = '';
+  my $output_obj = $self->get_output_obj;
 
-  $BBL .= "\\preamble{%\n" . $self->{preamble} . "%\n}\n"
+  $output_obj->add_output_head("\\preamble{%\n" . $self->{preamble} . "%\n}\n")
     if $self->{preamble};
 
   # We rely on the order of this array for the order of the .bbl
@@ -1847,56 +1826,18 @@ sub create_bbl_string_body {
     #  EXCEPT those that are also in a set
     next if ( Biber::Config->get_crossrefkey($k) and
       not Biber::Config->get_setparentkey($k) );
-    $BBL .= $self->_print_biblatex_entry($k);
+    my $be = $self->bibentry($k) or $logger->logcroak("Cannot find $k");
+    $output_obj->set_output_entry($be);
   }
   if ( $self->shorthands ) {
     $self->sortshorthands;
-    $BBL .= "\\lossort\n";
+    $output_obj->add_output_tail("\\lossort\n");
     foreach my $sh ($self->shorthands) {
-      $BBL .= "  \\key{$sh}\n";
+      $output_obj->add_output_tail("  \\key{$sh}\n");
     }
-    $BBL .= "\\endlossort\n";
+    $output_obj->add_output_tail("\\endlossort\n");
   }
-  $BBL .= "\\endinput\n\n";
-
-#    if ( Biber::Config->getoption('bibencoding') and ! Biber::Config->getoption('unicodebbl') ) {
-#        $BBL = encode(Biber::Config->getoption('bibencoding'), $BBL)
-#    };
-
-  return \$BBL;
-}
-
-=head2 output_to_bbl
-
-    $biber->output_to_bbl($ref_to_bbl_string, $file_name.bbl);
-
-    Write the bbl file for biblatex.
-
-=cut
-
-sub output_to_bbl {
-  my $self = shift;
-  my $bblstring = shift;
-  my $bblfile = shift;
-
-  $logger->debug("Preparing final output...");
-
-  my $mode;
-
-  if ( Biber::Config->getoption('bibencoding') and ! Biber::Config->getoption('unicodebbl') ) {
-    $mode = ':encoding(' . Biber::Config->getoption('bibencoding') . ')';
-  } else {
-    $mode = ":utf8";
-  }
-
-  my $BBLFILE = IO::File->new($bblfile, ">$mode")
-    or $logger->logcroak("Failed to open $bblfile : $!");
-
-  # $BBLFILE->binmode(':utf8') if Biber::Config->getoption('unicodebbl');
-
-  print $BBLFILE $$bblstring or $logger->logcroak("Failure to write to $bblfile: $!");
-  $logger->info("Output to $bblfile");
-  close $BBLFILE or $logger->logcroak("Failure to close $bblfile: $!");
+  $output_obj->add_output_tail("\\endinput\n\n");
   return;
 }
 

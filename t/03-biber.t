@@ -5,6 +5,8 @@ no warnings 'utf8';
 
 use Test::More;
 use Biber;
+use Biber::Output::BBL;
+
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
@@ -23,10 +25,12 @@ isa_ok($biber, "Biber");
 
 chdir("t/tdata");
 $biber->parse_auxfile("general2.aux");
+$biber->set_output_obj(Biber::Output::BBL->new());
 
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
 $biber->prepare;
+my $out = $biber->get_output_obj;
 
 my $murray1 = q|\entry{murray}{article}{}
   \name{labelname}{14}{}{%
@@ -270,10 +274,10 @@ my $pimentel1 = q|\entry{Pimentel00}{thesis}{}
 
 |;
 
-is( $biber->_print_biblatex_entry('set:aksin'), $setaksin, 'bbl entry 1' ) ;
-is( $biber->_print_biblatex_entry('markey'), $markey, 'bbl entry 2' ) ;
-is( $biber->_print_biblatex_entry('jaffe'), $jaffe, 'bbl entry 3' ) ;
-is( $biber->_print_biblatex_entry('pimentel00'), $pimentel1, 'bbl entry 4 - Suffix test 1' ) ;
+is( $out->get_output_entry('set:aksin'), $setaksin, 'bbl entry 1' ) ;
+is( $out->get_output_entry('markey'), $markey, 'bbl entry 2' ) ;
+is( $out->get_output_entry('jaffe'), $jaffe, 'bbl entry 3' ) ;
+is( $out->get_output_entry('pimentel00'), $pimentel1, 'bbl entry 4 - Suffix test 1' ) ;
 
 my $Worman_N = [ 'Worman, Nana', 'Worman, Nancy' ] ;
 
@@ -285,12 +289,14 @@ is_deeply( Biber::Config->_get_uniquename('Gennep'), $Gennep, 'uniquename count 
 
 is_deeply( [ $biber->shorthands ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
 
-is( $biber->_print_biblatex_entry('murray'), $murray1, 'bbl with > maxnames' ) ;
+is( $out->get_output_entry('murray'), $murray1, 'bbl with > maxnames' ) ;
 
 Biber::Config->setblxoption('alphaothers', '');
 Biber::Config->setblxoption('sortalphaothers', '');
 $biber->prepare ;
-is( $biber->_print_biblatex_entry('murray'), $murray2, 'bbl with > maxnames, empty alphaothers' ) ;
+$out = $biber->get_output_obj;
+
+is( $out->get_output_entry('murray'), $murray2, 'bbl with > maxnames, empty alphaothers' ) ;
 
 unlink "$bibfile.utf8" ;
 

@@ -6,6 +6,7 @@ no warnings 'utf8' ;
 use Test::More tests => 7;
 
 use Biber;
+use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
@@ -16,11 +17,13 @@ my $bibfile;
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
 $biber->parse_auxfile('options.aux');
+$biber->set_output_obj(Biber::Output::BBL->new());
 $bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);
 
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 $biber->prepare;
+my $out = $biber->get_output_obj;
 my $bibentries = $biber->bib;
 
 ok(Biber::Config->getblxoption('uniquename') == 1, "Single-valued option") ;

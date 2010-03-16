@@ -6,6 +6,7 @@ no warnings 'utf8';
 use Test::More tests => 10;
 
 use Biber;
+use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
@@ -15,7 +16,7 @@ isa_ok($biber, "Biber");
 
 chdir("t/tdata") ;
 $biber->parse_auxfile('sort-complex.aux');
-
+$biber->set_output_obj(Biber::Output::BBL->new());
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
 Biber::Config->setblxoption('labelalpha', 1);
@@ -23,6 +24,7 @@ Biber::Config->setblxoption('labelyear', undef);
 $biber->prepare;
 my $bibentries = $biber->bib;
 
+my $out = $biber->get_output_obj;
 my $sc1 = [
            [
             {'labelalpha'    => {}},

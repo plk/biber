@@ -7,15 +7,17 @@ use Test::More tests => 11;
 use Storable qw (dclone);
 
 use Biber;
+use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 
 my $biber = Biber->new( unicodebbl => 1, fastsort => 1, noconf => 1 );
 
+
 isa_ok($biber, "Biber");
 chdir("t/tdata") ;
 $biber->parse_auxfile('sort-order.aux');
-
+$biber->set_output_obj(Biber::Output::BBL->new());
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);
 
