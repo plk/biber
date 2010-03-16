@@ -2,7 +2,7 @@ package Biber::Entry;
 use List::Util qw( first );
 use Biber::Utils;
 use Biber::Constants;
-use Data::Dump;
+use Data::Dump qw( pp );
 
 =encoding utf-8
 
@@ -173,7 +173,7 @@ sub inherit_from {
 
 sub dump {
   my $self = shift;
-  dd($self);
+  return pp($self);
 }
 
 

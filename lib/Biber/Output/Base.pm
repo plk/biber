@@ -191,11 +191,11 @@ sub output {
 
   $logger->debug("Preparing final output using class __PACKAGE__ ...");
 
-  print $target $data->{HEAD} or $logger->logcroak("Failure to write to $target_string: $!");
+  print $target $data->{HEAD} or $logger->logcroak("Failure to write head to $target_string: $!");
   while (my ($entry, $data) = each %{$data->{PER_ENTRY}}) {
-    print $target $data or $logger->logcroak("Failure to write to $target_string: $!");
+    print $target $data or $logger->logcroak("Failure to write entry '$entry' to $target_string: $!");
   }
-  print $target $data->{TAIL} or $logger->logcroak("Failure to write to $target_string: $!");
+  print $target $data->{TAIL} or $logger->logcroak("Failure to write tail to $target_string: $!");
 
   $logger->info("Output to $target_string");
   close $target or $logger->logcroak("Failure to close $target_string: $!");

@@ -1,7 +1,7 @@
 package Biber::Entry::Name;
 
 use Regexp::Common qw( balanced );
-use Data::Dump;
+use Data::Dump qw( pp );
 
 =encoding utf-8
 
@@ -381,7 +381,7 @@ sub name_to_bbl {
 
 sub dump {
   my $self = shift;
-  dd($self);
+  return pp($self);
 }
 
 
