@@ -1424,10 +1424,10 @@ sub generate_uniquename {
             $name->set_uniquename(1);
           }
           # Otherwise the name needs to be full to make it unique
-          # However, if uniquename biblatex option is "init" (2), then restrict to
-          # value 1. Confusing.
+          # but restrict to uniquename bibaltex option maximum
+
           elsif (Biber::Config->get_numofuniquenames($namestring) == 1) {
-            $un == 2 ? $name->set_uniquename(1) : $name->set_uniquename(2);
+            $name->set_uniquename($un);
           }
           # Otherwise, if there is more than one entry (hash) for the full name,
           # then set to 0 since nothing will uniqueify this name and it's just
