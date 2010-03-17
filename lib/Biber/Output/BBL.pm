@@ -252,10 +252,10 @@ sub set_output_entry {
       $un = '1';
     }
     # Otherwise the name needs to be full to make it unique
-    # However, if uniquename biblatex option is "init" (2), then restrict to
-    # value 1. Confusing.
+    # but restricted to uniquename biblatex option value just in case
+    # this is inits only (1);
     else {
-      $un = $unopt == 2 ? 1 : 2;
+      $un = $unopt;
     }
     $acc .= "  \\count{uniquename}{$un}\n";
   }
