@@ -11,6 +11,7 @@ Revision history for Biber
          library.
        * Abstracted BBL output into Biber::Output class for better re-use and potential
          for output formats other than .bbl.
+       * Synced uniquename .bcf values with change in biblatex 0.9a
 0.5.2   04-03-2010
        * Locale fixes
        * Uniquename fixed to match BibLaTeX option values
