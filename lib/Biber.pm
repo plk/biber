@@ -237,9 +237,9 @@ sub shorthands {
 }
 
 sub _addshorthand {
-  my ($self, $key) = @_;
+  my ($self, $bee, $key) = @_;
   # Don't add to los if skiplos is set for entry
-  if (Biber::Config->getblxoption('skiplos', undef, $key)) {
+  if (Biber::Config->getblxoption('skiplos', $bee, $key)) {
     return;
   }
   my @los;
@@ -1041,10 +1041,11 @@ sub postprocess_labelyear {
   my $citekey = shift;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
+  my $bee = $be->get_field('entrytype');
   my $lyearscheme = Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'));
 
   if ($lyearscheme) {
-    if (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
+    if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
       return;
     }
     # make sure we gave the correct data type:
@@ -1159,8 +1160,9 @@ sub postprocess_labelalpha {
   my $citekey = shift;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
+  my $bee = $be->get_field('entrytype');
   # Don't add a label if skiplab is set for entry
-  if (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
+  if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
     return;
   }
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
@@ -1208,8 +1210,9 @@ sub postprocess_shorthands {
   my $citekey = shift;
   my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
+  my $bee = $be->get_field('entrytype');
   if ( $be->get_field('shorthand') ) {
-    $self->_addshorthand($citekey);
+    $self->_addshorthand($bee, $citekey);
   }
 }
 
@@ -1633,7 +1636,7 @@ sub generate_extras {
       my $nameyear = $be->get_field('nameyear');
       # Only generate extrayear if skiplab is not set.
       # Don't forget that skiplab is implied for set members
-      unless (Biber::Config->getblxoption('skiplab', undef, $citekey)) {
+      unless (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
         if (Biber::Config->get_seennameyear($nameyear) > 1) {
           Biber::Config->incr_seenlabelyear($nameyear);
           if (Biber::Config->getblxoption('labelyear', $bee) ) {
