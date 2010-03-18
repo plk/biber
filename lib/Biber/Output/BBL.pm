@@ -26,7 +26,6 @@ Biber::Output::BBL - class for Biber output of .bbl
 sub new {
   my $class = shift;
   my $self = $class->SUPER::new($obj);
-
   my $ctrlver = Biber::Config->getblxoption('controlversion');
 
   my $BBLHEAD = <<EOF;
@@ -54,7 +53,6 @@ EOF
   $self->set_output_head($BBLHEAD);
   return $self;
 }
-
 
 =head2 set_output_target_file
 
@@ -322,10 +320,56 @@ sub set_output_entry {
 
   $acc .= "\\endentry\n\n";
 
-  $self->{output_data}{PER_ENTRY}{lc($citecasekey)} = $acc;
+  # Use an array to preserve sort order of entries already generated
+  # Also create an index by keyname for easy retrieval
+  push @{$self->{output_data}{PER_ENTRY}{strings}}, \$acc;
+  $self->{output_data}{PER_ENTRY}{index}{lc($citecasekey)} = \$acc;
 
   return;
 }
+
+=head2 get_output_entry
+
+    Get the output data for a specific entry
+
+=cut
+
+sub get_output_entry {
+  my $self = shift;
+  my $key = shift;
+  return ${$self->{output_data}{PER_ENTRY}{index}{lc($key)}};
+}
+
+
+=head2 output
+
+    BBL output method - this takes care to output entries in the explicit order
+    derived from the virtual order of the auxcitekeys after sortkey sorting.
+
+=cut
+
+sub output {
+  my $self = shift;
+  my $data = $self->{output_data};
+  my $target = $self->{output_target};
+  my $target_string = "Target"; # Default
+  if ($self->{output_target_file}) {
+    $target_string = $self->{output_target_file};
+  }
+
+  $logger->debug("Preparing final output using class __PACKAGE__ ...");
+
+  print $target $data->{HEAD} or $logger->logcroak("Failure to write head to $target_string: $!");
+  foreach my $entry (@{$data->{PER_ENTRY}{strings}}) {
+    print $target $$entry or $logger->logcroak("Failure to write entry to $target_string: $!");
+  }
+  print $target $data->{TAIL} or $logger->logcroak("Failure to write tail to $target_string: $!");
+
+  $logger->info("Output to $target_string");
+  close $target or $logger->logcroak("Failure to close $target_string: $!");
+  return;
+}
+
 
 =head1 AUTHORS
 
