@@ -131,7 +131,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
   controlversion    => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   debug             => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   sortalphaothers   => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  dataonly          => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
+  dataonly          => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
   labelalpha        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelname         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelnumber       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
