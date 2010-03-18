@@ -324,6 +324,17 @@ sub get_output_entry {
   return ${$self->{output_data}{PER_ENTRY}{index}{lc($key)}};
 }
 
+=head2 get_output_entries
+
+    Get the output data for a all entries in an array ref
+
+=cut
+
+sub get_output_entries {
+  my $self = shift;
+  return [ map {$$_} @{$self->{output_data}{PER_ENTRY}{strings}} ];
+}
+
 
 =head2 output
 
