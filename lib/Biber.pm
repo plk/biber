@@ -32,11 +32,11 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =head1 VERSION
 
-Version 0.5.2
+Version 0.5.3
 
 =cut
 
-our $VERSION = '0.5.2';
+our $VERSION = '0.5.3';
 
 =head1 SYNOPSIS
 
