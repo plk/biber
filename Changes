@@ -1,6 +1,6 @@
 Revision history for Biber
 
-0.5.3 (unreleased)
+0.5.3  19-03-2010
        * Changed semantics of --outfile and --output-directory. --outfile
          is now relative to --output-directory. If --outfile is absolute, it
          is stripped to the filename and the path discarded. Absolute .aux
