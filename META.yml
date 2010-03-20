@@ -13,7 +13,7 @@ name: biblatex-biber
 provides:
   Biber:
     file: lib/Biber.pm
-    version: v0.5.2
+    version: v0.5.3
   Biber::BibTeX:
     file: lib/Biber/BibTeX.pm
   Biber::BibTeX::PRD:
@@ -34,6 +34,10 @@ provides:
     file: lib/Biber/Entry/Names.pm
   Biber::Internals:
     file: lib/Biber/Internals.pm
+  Biber::Output::BBL:
+    file: lib/Biber/Output/BBL.pm
+  Biber::Output::Base:
+    file: lib/Biber/Output/Base.pm
   Biber::Utils:
     file: lib/Biber/Utils.pm
   LaTeX::Decode:
@@ -56,4 +60,4 @@ requires:
   XML::LibXML::Simple: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: v0.5.2
+version: v0.5.3
