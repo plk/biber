@@ -15,6 +15,7 @@ my $biber = Biber->new( unicodebbl => 1, fastsort => 1, noconf => 1 );
 isa_ok($biber, "Biber");
 chdir("t/tdata") ;
 $biber->parse_auxfile('set.aux');
+$biber->parse_ctrlfile('set.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";

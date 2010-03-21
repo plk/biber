@@ -20,6 +20,7 @@ my $biber = Biber->new(noconf => 1);
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
 $biber->parse_auxfile('labelalpha.aux');
+$biber->parse_ctrlfile('labelalpha.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 $bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
 $biber->parse_bibtex($bibfile);

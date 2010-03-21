@@ -85,7 +85,7 @@ our %CONFIG_DEFAULT_BIBER = (
 # in practice these will be obtained from the control file,
 # but we need this as a fallback, just in case,
 # or when using the command-line options "-a -d <datafile>"
-# without an aux file
+# without an aux/bcf file
 our %CONFIG_DEFAULT_BIBLATEX = (
   controlversion => undef,
   debug => '0',

@@ -25,6 +25,7 @@ isa_ok($biber, "Biber");
 
 chdir("t/tdata");
 $biber->parse_auxfile("general2.aux");
+$biber->parse_ctrlfile("general2.bcf");
 $biber->set_output_obj(Biber::Output::BBL->new());
 
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
