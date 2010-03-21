@@ -574,9 +574,9 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
 
   # BIB SECTIONS
   foreach my $section (@{$bcfxml->{section}}) {
-    my @current = Biber::Config->getblxsection($section->{number});
-    push @current, @{$section->{citekey}};
-    Biber::Config->setblxsection($section->{number}, \@current);
+    my $sections = Biber::Config->getblxsection($section->{number});
+    push @$sections, @{$section->{citekey}};
+    Biber::Config->setblxsection($section->{number}, $sections);
   }
   return;
 }
