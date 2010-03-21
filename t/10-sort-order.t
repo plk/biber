@@ -17,6 +17,7 @@ my $biber = Biber->new( unicodebbl => 1, fastsort => 1, noconf => 1 );
 isa_ok($biber, "Biber");
 chdir("t/tdata") ;
 $biber->parse_auxfile('sort-order.aux');
+$biber->parse_ctrlfile('sort-order.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);

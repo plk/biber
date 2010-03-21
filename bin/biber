@@ -137,11 +137,8 @@ my $logger  = Log::Log4perl::get_logger('main') ;
 my $screen  = Log::Log4perl::get_logger('screen');
 my $logfile = Log::Log4perl::get_logger('logfile');
 
-#=====================================================
-# Parse aux file
-#=====================================================
-
 my $auxfile;
+my $ctrlfile;
 my $bblfile;
 
 my $time_string = strftime "%a %b %e, %Y, %H:%M:%S", localtime;
@@ -159,6 +156,9 @@ if ( $opts->{allentries} && $opts->{bibdata} ) {
 else {
   $auxfile = $ARGV[0] or croak usage();
   $auxfile .= '.aux' unless $auxfile =~ m/\.aux$/;
+  $ctrlfile = $auxfile;
+  $ctrlfile =~ s/\.aux\z/.bcf/xms;
+
   if (Biber::Config->getoption('outfile')) {
     $bblfile = Biber::Config->getoption('outfile')
   } else {
@@ -170,7 +170,11 @@ else {
     my ($volume, $directories, $file) = File::Spec->splitpath($bblfile);
     $bblfile = File::Spec->catfile($outdir, $file)
   }
+  # parse the .aux file
   $biber->parse_auxfile($auxfile);
+
+  # parse the .bcf control file
+  $biber->parse_ctrlfile($ctrlfile);
 }
 
 if (Biber::Config->getoption('trace')) {
@@ -181,9 +185,6 @@ if (Biber::Config->getoption('trace')) {
     $biber->_stringdump,
     "\n###########################################################")
 }
-
-  # Set the output class. Should be a subclass of Biber::Output::Base
-  $biber->set_output_obj(Biber::Output::BBL->new());
 
 #=====================================================
 # Parse/query database
@@ -210,6 +211,9 @@ foreach my $bib (@{ Biber::Config->getoption('bibdata') }) {
   }
 }
 
+# Set the output class. Should be a subclass of Biber::Output::Base
+$biber->set_output_obj(Biber::Output::BBL->new());
+
 if (Biber::Config->getoption('trace')) {
   $logger->trace("\n###########################################################\n",
     "############# Dump of post-parse config object: ###########\n",
@@ -219,6 +223,7 @@ if (Biber::Config->getoption('trace')) {
     "\n###########################################################")
 }
 
+# Do all the real work
 $biber->prepare;
 
 if (Biber::Config->getoption('trace')) {
@@ -236,6 +241,8 @@ my $bbloutput = $biber->get_output_obj;
 $bbloutput->set_output_target_file($bblfile);
 # Write the output to the target
 $bbloutput->output;
+
+###
 
 # display warnings/errors summary, like BibTeX's format
 # unless in quiet mode

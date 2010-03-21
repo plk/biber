@@ -16,6 +16,7 @@ isa_ok($biber, "Biber");
 
 chdir("t/tdata") ;
 $biber->parse_auxfile('sort-complex.aux');
+$biber->parse_ctrlfile('sort-complex.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
 $biber->parse_bibtex($bibfile);

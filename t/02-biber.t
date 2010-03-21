@@ -18,6 +18,7 @@ isa_ok($biber, "Biber");
 
 chdir("t/tdata") ;
 $biber->parse_auxfile("general1.aux") ;
+$biber->parse_ctrlfile("general1.bcf") ;
 $biber->set_output_obj(Biber::Output::BBL->new());
 
 my @keys = sort $biber->citekeys;

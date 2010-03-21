@@ -354,7 +354,7 @@ sub setblxsection {
 
 =head2 getblxsection
 
-    Get biblatex bibsections information
+    Get a biblatex bibsection
 
 =cut
 
@@ -363,6 +363,18 @@ sub getblxsection {
   my ($num) = @_;
   return $CONFIG->{options}{biblatex}{GLOBAL}{bibsections}{$num};
 }
+
+=head2 getblxsections
+
+    Get a list of all biblatex bibsections
+
+=cut
+
+sub getblxsections {
+  shift; # class method so don't care about class name
+  return $CONFIG->{options}{biblatex}{GLOBAL}{bibsections};
+}
+
 
 ##############################
 # Biber state static methods
