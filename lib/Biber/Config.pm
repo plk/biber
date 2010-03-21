@@ -312,7 +312,7 @@ sub getblxoption {
 sub setblxsection {
   shift; # class method so don't care about class name
   my ($num, $val) = @_;
-  $CONFIG->{options}{biblatex}{GLOBAL}{bibsections}{$num} = @$val;
+  $CONFIG->{options}{biblatex}{GLOBAL}{bibsections}{$num} = $val;
   return;
 }
 
