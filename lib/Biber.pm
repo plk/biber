@@ -589,19 +589,10 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
     }
   }
 
-  # BIB SECTIONS
-  # NOTE: This conditional clause can be removed when aux files are no longer
-  # used in biblatex 2.x. It's only here to maintain backwards compatibility for
-  # pre 2.x behaviour
-  unless (exists $bcfxml->{section}) {
-    Biber::Config->setblxsection('0',  $self->{orig_order_citekeys});
-  }
-  else {
-    foreach my $section (@{$bcfxml->{section}}) {
-      my $sections = Biber::Config->getblxsection($section->{number});
-      push @$sections, @{$section->{citekey}};
-      Biber::Config->setblxsection($section->{number}, $sections);
-    }
+  foreach my $section (@{$bcfxml->{section}}) {
+    my $sections = Biber::Config->getblxsection($section->{number});
+    push @$sections, @{$section->{citekey}};
+    Biber::Config->setblxsection($section->{number}, $sections);
   }
   return;
 }
