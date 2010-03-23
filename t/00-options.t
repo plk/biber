@@ -16,10 +16,9 @@ chdir("t/tdata") ;
 my $bibfile;
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
-$biber->parse_auxfile('options.aux');
 $biber->parse_ctrlfile('options.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
-$bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
+$bibfile = Biber::Config->getoption('bibdata')->[0];
 $biber->parse_bibtex($bibfile);
 
 Biber::Config->setblxoption('labelyear', [ 'year' ]);

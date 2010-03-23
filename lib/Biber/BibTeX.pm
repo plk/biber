@@ -12,6 +12,8 @@ use Biber::Entries;
 use Biber::Entry;
 use Biber::Entry::Names;
 use Biber::Entry::Name;
+use Biber::Sections;
+use Biber::Section;
 use Biber::Utils;
 use Encode;
 use File::Spec;
@@ -268,9 +270,10 @@ sub parsename {
 }
 
 sub _text_bibtex_parse {
-
   my ($self, $filename) = @_;
-
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  use Data::Dump;dd($self);
 # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
   if (Biber::Config->getoption('quiet')) {
     open OLDERR, '>&', \*STDERR;
@@ -325,7 +328,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     # Want a version of the key that is the same case as any citations which
     # reference it, in case they are different. We use this as the .bbl
     # entry key
-    my $citecasekey = first {lc($origkey) eq lc($_)} $self->citekeys;
+    my $citecasekey = first {lc($origkey) eq lc($_)} $section->get_citekeys;
     $citecasekey = $origkey unless $citecasekey;
     my $lc_key = lc($origkey);
 
