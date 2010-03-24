@@ -88,17 +88,17 @@ sub _printfield {
   if (Biber::Config->getoption('wraplines')) {
     ## 12 is the length of '  \field{}{}'
     if ( 12 + length($field) + length($str) > 2*$Text::Wrap::columns ) {
-      return "  \\field{$field}{%\n" . wrap('  ', '  ', $str) . "%\n  }\n";
+      return "    \\field{$field}{%\n" . wrap('  ', '  ', $str) . "%\n  }\n";
     }
     elsif ( 12 + length($field) + length($str) > $Text::Wrap::columns ) {
-      return wrap('  ', '  ', "\\field{$field}{$str}" ) . "\n";
+      return wrap('    ', '    ', "\\field{$field}{$str}" ) . "\n";
     }
     else {
-      return "  \\field{$field}{$str}\n";
+      return "    \\field{$field}{$str}\n";
     }
   }
   else {
-    return "  \\field{$field}{$str}\n";
+    return "    \\field{$field}{$str}\n";
   }
   return;
 }
@@ -113,6 +113,7 @@ sub _printfield {
 sub set_output_entry {
   my $self = shift;
   my $be = shift; # Biber::Entry object
+  my $section = shift ; # Section the entry occurs in
   my $acc = '';
   my $opts    = '';
   my $citecasekey; # entry key forced to case of any citations(s) which reference it
@@ -127,15 +128,15 @@ sub set_output_entry {
   $acc .= "% sortstring = " . $be->get_field('sortstring') . "\n"
     if (Biber::Config->getoption('debug') || Biber::Config->getblxoption('debug'));
 
-  $acc .= "\\entry{$citecasekey}{" . $be->get_field('entrytype') . "}{$opts}\n";
+  $acc .= "  \\entry{$citecasekey}{" . $be->get_field('entrytype') . "}{$opts}\n";
 
   # Generate set information
   if ( $be->get_field('entrytype') eq 'set' ) {   # Set parents get \set entry ...
-    $acc .= "  \\set{" . $be->get_field('entryset') . "}\n";
+    $acc .= "    \\set{" . $be->get_field('entryset') . "}\n";
   }
   else { # Everything else that isn't a set parent ...
     if (my $es = $be->get_field('entryset')) { # ... gets a \inset if it's a set member
-      $acc .= "  \\inset{$es}\n";
+      $acc .= "    \\inset{$es}\n";
     }
   }
 
@@ -143,15 +144,15 @@ sub set_output_entry {
     next if $SKIPFIELDS{$namefield};
     if ( my $nf = $be->get_field($namefield) ) {
       if ( $nf->last_element->get_namestring eq 'others' ) {
-        $acc .= "  \\true{more$namefield}\n";
+        $acc .= "    \\true{more$namefield}\n";
         $nf->del_last_element;
       }
       my $total = $nf->count_elements;
-      $acc .= "  \\name{$namefield}{$total}{%\n";
+      $acc .= "    \\name{$namefield}{$total}{%\n";
       foreach my $n (@{$nf->names}) {
         $acc .= $n->name_to_bbl;
       }
-      $acc .= "  }\n";
+      $acc .= "    }\n";
     }
   }
 
@@ -160,30 +161,30 @@ sub set_output_entry {
     if ( is_def_and_notnull($be->get_field($listfield)) ) {
       my @lf = @{ $be->get_field($listfield) };
       if ( $be->get_field($listfield)->[-1] eq 'others' ) {
-        $acc .= "  \\true{more$listfield}\n";
+        $acc .= "    \\true{more$listfield}\n";
         pop @lf; # remove the last element in the array
       };
       my $total = $#lf + 1;
-      $acc .= "  \\list{$listfield}{$total}{%\n";
+      $acc .= "    \\list{$listfield}{$total}{%\n";
       foreach my $f (@lf) {
-        $acc .= "    {$f}%\n";
+        $acc .= "      {$f}%\n";
       }
-      $acc .= "  }\n";
+      $acc .= "    }\n";
     }
   }
 
   my $namehash = $be->get_field('namehash');
-  $acc .= "  \\strng{namehash}{$namehash}\n";
+  $acc .= "    \\strng{namehash}{$namehash}\n";
   my $fullhash = $be->get_field('fullhash');
-  $acc .= "  \\strng{fullhash}{$fullhash}\n";
+  $acc .= "    \\strng{fullhash}{$fullhash}\n";
 
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
     # Might not have been set due to skiplab/dataonly
     if (my $label = $be->get_field('labelalpha')) {
-      $acc .= "  \\field{labelalpha}{$label}\n";
+      $acc .= "    \\field{labelalpha}{$label}\n";
     }
   }
-  $acc .= "  \\field{sortinit}{" . $be->get_field('sortinit') . "}\n";
+  $acc .= "    \\field{sortinit}{" . $be->get_field('sortinit') . "}\n";
 
   # The labelyear option determines whether "extrayear" is output
   # Skip generating extrayear for entries with "skiplab" set
@@ -192,11 +193,11 @@ sub set_output_entry {
     if (my $ey = $be->get_field('extrayear')) {
       my $nameyear = $be->get_field('nameyear');
       if ( Biber::Config->get_seennameyear($nameyear) > 1) {
-        $acc .= "  \\field{extrayear}{$ey}\n";
+        $acc .= "    \\field{extrayear}{$ey}\n";
       }
     }
     if (my $ly = $be->get_field('labelyear')) {
-      $acc .= "  \\field{labelyear}{$ly}\n";
+      $acc .= "    \\field{labelyear}{$ly}\n";
     }
   }
 
@@ -207,18 +208,18 @@ sub set_output_entry {
     if (my $ea = $be->get_field('extraalpha')) {
       my $nameyear = $be->get_field('nameyear');
       if ( Biber::Config->get_seennameyear($nameyear) > 1) {
-        $acc .= "  \\field{extraalpha}{$ea}\n";
+        $acc .= "    \\field{extraalpha}{$ea}\n";
       }
     }
   }
 
   if ( Biber::Config->getblxoption('labelnumber', $be->get_field('entrytype')) ) {
     if ($be->get_field('shorthand')) {
-      $acc .= "  \\field{labelnumber}{"
+      $acc .= "    \\field{labelnumber}{"
         . $be->get_field('shorthand') . "}\n";
     }
     elsif ($be->get_field('labelnumber')) {
-      $acc .= "  \\field{labelnumber}{"
+      $acc .= "    \\field{labelnumber}{"
         . $be->get_field('labelnumber') . "}\n";
     }
   }
@@ -255,13 +256,13 @@ sub set_output_entry {
     else {
       $un = $unopt;
     }
-    $acc .= "  \\count{uniquename}{$un}\n";
+    $acc .= "    \\count{uniquename}{$un}\n";
   }
 
   if ( Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'))
     and Biber::Config->get_seennamehash($be->get_field('fullhash')) < 2 )
   {
-    $acc .= "  \\true{singletitle}\n";
+    $acc .= "    \\true{singletitle}\n";
   }
 
   foreach my $ifield (@DATECOMPONENTFIELDS) {
@@ -295,7 +296,7 @@ sub set_output_entry {
     if ( is_def_and_notnull($be->get_field($rfield)) ) {
       my $rf = $be->get_field($rfield);
       $rf =~ s/[-–]+/\\bibrangedash /g;
-      $acc .= "  \\field{$rfield}{$rf}\n";
+      $acc .= "    \\field{$rfield}{$rf}\n";
     }
   }
 
@@ -303,27 +304,27 @@ sub set_output_entry {
     next if $SKIPFIELDS{$vfield};
     if ( is_def_and_notnull($be->get_field($vfield)) ) {
       my $rf = $be->get_field($vfield);
-      $acc .= "  \\verb{$vfield}\n";
-      $acc .= "  \\verb $rf\n  \\endverb\n";
+      $acc .= "    \\verb{$vfield}\n";
+      $acc .= "    \\verb $rf\n  \\endverb\n";
     }
   }
   if ( is_def_and_notnull($be->get_field('keywords')) ) {
-    $acc .= "  \\keyw{" . $be->get_field('keywords') . "}\n";
+    $acc .= "    \\keyw{" . $be->get_field('keywords') . "}\n";
   }
 
   # Append any warnings to the entry, if any
   if ($be->get_field('warnings')) {
     foreach my $warning (@{$be->get_field('warnings')}) {
-      $acc .= "  \\warn{\\item $warning}\n";
+      $acc .= "    \\warn{\\item $warning}\n";
     }
   }
 
-  $acc .= "\\endentry\n\n";
+  $acc .= "  \\endentry\n\n";
 
   # Use an array to preserve sort order of entries already generated
   # Also create an index by keyname for easy retrieval
-  push @{$self->{output_data}{PER_ENTRY}{strings}}, \$acc;
-  $self->{output_data}{PER_ENTRY}{index}{lc($citecasekey)} = \$acc;
+  push @{$self->{output_data}{$section}{strings}}, \$acc;
+  $self->{output_data}{$section}{index}{lc($citecasekey)} = \$acc;
 
   return;
 }
@@ -337,7 +338,10 @@ sub set_output_entry {
 sub get_output_entry {
   my $self = shift;
   my $key = shift;
-  return ${$self->{output_data}{PER_ENTRY}{index}{lc($key)}};
+  my $section = shift;
+  $section = '0' if not defined($section); # default - mainly for tests
+
+  return ${$self->{output_data}{$section}{index}{lc($key)}};
 }
 
 =head2 get_output_entries
@@ -348,7 +352,8 @@ sub get_output_entry {
 
 sub get_output_entries {
   my $self = shift;
-  return [ map {$$_} @{$self->{output_data}{PER_ENTRY}{strings}} ];
+  my $section = shift;
+  return [ map {$$_} @{$self->{output_data}{$section}{strings}} ];
 }
 
 
@@ -371,9 +376,15 @@ sub output {
   $logger->debug("Preparing final output using class __PACKAGE__ ...");
 
   print $target $data->{HEAD} or $logger->logcroak("Failure to write head to $target_string: $!");
-  foreach my $entry (@{$data->{PER_ENTRY}{strings}}) {
-    print $target $$entry or $logger->logcroak("Failure to write entry to $target_string: $!");
+
+  foreach my $secnum (sort keys %{$data}) {
+    print $target "\\refsection{$secnum}\n";
+      foreach my $entry (@{$data->{$secnum}{strings}}) {
+        print $target $$entry or $logger->logcroak("Failure to write entry to $target_string: $!");
+      }
+    print $target "\\endrefsection\n"
   }
+
   print $target $data->{TAIL} or $logger->logcroak("Failure to write tail to $target_string: $!");
 
   $logger->info("Output to $target_string");

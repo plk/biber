@@ -78,7 +78,6 @@ sub new {
       Biber::Config->setcmdlineoption($_, $opts{$_});
     }
   }
-  $self->{bib} = new Biber::Entries;
   return $self;
 }
 
@@ -144,37 +143,6 @@ sub set_current_section {
 sub get_current_section {
   my $self = shift;
   return $self->{current_section};
-}
-
-
-=head2 bibentry
-
-    my $bibentry = $biber->bibentry($citekey);
-
-    Returns a Biber::Entry object for the given citation key
-
-=cut
-
-sub bibentry {
-  my ($self, $key) = @_;
-  $key = lc($key);
-  return $self->bib->entry($key);
-}
-
-=head2 bib
-
-    Return a Biber::Entries object which encapsulates all bibliographic data
-
-=cut
-
-sub bib {
-  my $self = shift;
-  if ( $self->{bib} ) {
-    return $self->{bib};
-  }
-  else {
-    return;
-  }
 }
 
 =head2 shorthands
@@ -284,28 +252,6 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
     unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION;
 
   # Look at control file and populate our main data structure with its information
-
-  # Data files
-  my @bibdatafiles = ();
-  # --bibdata was passed on command-line
-  if (Biber::Config->getoption('bibdata')) {
-    @bibdatafiles = split /,/, @{ Biber::Config->getoption('bibdata') }
-  }
-
-  foreach my $data (@{$bcfxml->{bibdata}}) {
-    foreach my $datasource (@{$data->{datasource}}) {
-      if ($datasource->{type} eq 'file') {
-        push @bibdatafiles, $datasource->{content};
-      }
-    }
-  }
-
-  unless (@bibdatafiles) {
-    $logger->logcroak("No database is provided in the file '$ctrl_file'! Exiting")
-  }
-  else {
-    Biber::Config->setoption('bibdata', [ @bibdatafiles ]);
-  }
 
   # OPTIONS
   foreach my $bcfopts (@{$bcfxml->{options}}) {
@@ -432,10 +378,30 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
   }
 
   # SECTIONS
+  # This is also where we set data files as these are associated with a bib section
+
+  # Datafiles
+  my %bibdatafiles = ();
+  foreach my $data (@{$bcfxml->{bibdata}}) {
+    foreach my $datasource (@{$data->{datasource}}) {
+      if ($datasource->{type} eq 'file') {
+        push @{$bibdatafiles{$data->{section}}}, $datasource->{content};
+      }
+    }
+  }
+
+  unless (%bibdatafiles or Biber::Config->getoption('bibdata')) {
+    $logger->logcroak("No data files on command line or provided in the file '$ctrl_file'! Exiting")
+  }
+
   my $key_flag = 0;
   my $bib_sections = new Biber::Sections;
 SECTION: foreach my $section (@{$bcfxml->{section}}) {
     my $bib_section = new Biber::Section('number' => $section->{number});
+
+    # Set the data files for the section
+    $bib_section->set_datafiles($bibdatafiles{$section->{number}});
+
     # Stop reading citekeys if we encounter "*" as a citation as this means
     # "all keys"
     my @keys = ();
@@ -478,6 +444,13 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     $bib_section->set_orig_order_citekeys([ @keys ]);
     $bib_sections->add_section($bib_section);
   }
+
+  # --bibdata was passed on command-line
+  # Add these data files to section 0
+  if (Biber::Config->getoption('bibdata')) {
+    $bib_sections->get_section(0)->set_datafiles([ split /,/, @{ Biber::Config->getoption('bibdata') } ]);
+  }
+
   # Add the Biber::Sections object to the Biber object
   $self->{sections} = $bib_sections;
   return;
@@ -492,8 +465,6 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     This is a wrapper method to parse a bibtex database. If available it will
     pass the job to Text::BibTeX via Biber::BibTeX, otherwise it relies on a
     slower pure Perl parser implemented in Biber::BibTeX::PRD.
-
-    $biber->parse_bibtex("data.bib");
 
 =cut
 
@@ -576,7 +547,7 @@ sub parse_bibtex {
     map { Biber::Config->incr_seenkey($_) } @localkeys
   }
 
-  my $bibentries = $self->bib;
+  my $bibentries = $section->bib;
 
 # if allentries, push all bibdata keys into citekeys (if they are not already there)
 # Can't just make citekeys = bibdata keys as this loses information about citekeys
@@ -617,9 +588,9 @@ sub parse_biblatexml {
 
 sub process_missing {
   my $self = shift;
-  my $bibentries = $self->bib;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   $logger->debug("Checking for missing citekeys in section $secnum");
   foreach my $citekey ($section->get_citekeys) {
     unless ( $bibentries->entry_exists($citekey) ) {
@@ -649,7 +620,7 @@ sub process_sets_and_crossrefs {
   my $section = $self->sections->get_section($secnum);
   $logger->debug("Processing entry sets and crossrefs for section $secnum");
   foreach my $citekey ($section->get_citekeys) {
-    my $be = $self->bibentry($citekey);
+    my $be = $section->bibentry($citekey);
     if (lc($be->get_field('entrytype')) eq 'set') {
       my @inset_keys = split /\s*,\s*/, $be->get_field('entryset');
       foreach my $inset_key (@inset_keys) {
@@ -662,7 +633,7 @@ sub process_sets_and_crossrefs {
       if ($section->has_citekey($crossrefkey)) {
         Biber::Config->add_cited_crossref($crossrefkey);
       }
-      my $parent = $self->bibentry($crossrefkey);
+      my $parent = $section->bibentry($crossrefkey);
       $logger->debug("  Entry $citekey inheriting fields from parent $crossrefkey");
       $be->inherit_from($parent);
     }
@@ -691,10 +662,10 @@ sub process_sets_and_crossrefs {
 
 sub postprocess {
   my $self = shift;
-  my $bibentries = $self->bib;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  foreach my $citekey ( $section->citekeys ) {
+  my $bibentries = $section->bib;
+  foreach my $citekey ( $section->get_citekeys ) {
     $logger->debug("Postprocessing entry '$citekey' from section $secnum");
 
     # Postprocess dates
@@ -751,7 +722,9 @@ sub postprocess {
 sub postprocess_dates {
   my $self = shift;
   my $citekey = shift;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
 
   # Both DATE and YEAR specified
@@ -844,7 +817,9 @@ sub postprocess_dates {
 sub postprocess_sets {
   my $self = shift;
   my $citekey = shift;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if ( $be->get_field('entrytype') eq 'set' ) {
     my @entrysetkeys = split /\s*,\s*/, $be->get_field('entryset');
@@ -898,7 +873,9 @@ sub postprocess_sets {
 sub postprocess_labelname {
   my $self = shift;
   my $citekey = shift;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   my $lnamescheme = Biber::Config->getblxoption('labelname', $be->get_field('entrytype'));
 
@@ -952,7 +929,9 @@ sub postprocess_labelname {
 sub postprocess_labelyear {
   my $self = shift;
   my $citekey = shift;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   my $lyearscheme = Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'));
 
@@ -998,7 +977,9 @@ sub postprocess_labelyear {
 sub postprocess_hashes {
   my $self = shift;
   my $citekey = shift;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   my $bee = $be->get_field('entrytype');
   my $namehash = ''; # biblatex namehash field (manual, section 4.2.4.1)
@@ -1069,7 +1050,9 @@ sub postprocess_hashes {
 sub postprocess_unique {
   my $self = shift;
   my $citekey = shift;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   my $bee = $be->get_field('entrytype');
   my $namehash = $be->get_field('namehash');
@@ -1126,7 +1109,9 @@ sub postprocess_unique {
 sub postprocess_labelnameyear {
   my $self = shift;
   my $citekey = shift;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   # This is all used to generate extrayear and the rules for this are:
   # * Generate labelname/year combination for tracking extrayear
@@ -1165,7 +1150,9 @@ sub postprocess_labelnameyear {
 sub postprocess_labelalpha {
   my $self = shift;
   my $citekey = shift;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   my $bee = $be->get_field('entrytype');
   # Don't add a label if skiplab is set for entry
@@ -1215,7 +1202,9 @@ sub postprocess_labelalpha {
 sub postprocess_shorthands {
   my $self = shift;
   my $citekey = shift;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   my $bee = $be->get_field('entrytype');
   if ( $be->get_field('shorthand') ) {
@@ -1232,7 +1221,9 @@ sub postprocess_shorthands {
 sub postprocess_patents {
   my $self = shift;
   my $citekey = shift;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if ( ( $be->get_field('entrytype') eq 'patent' ) and ( not $be->get_field('type') ) ) {
     $be->set_field('type', 'patent');
@@ -1248,7 +1239,9 @@ sub postprocess_patents {
 sub postprocess_sorting_firstpass {
   my $self = shift;
   my $citekey = shift;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   $self->_generatesortstring( $citekey, Biber::Config->getblxoption('sorting_label', $be->get_field('entrytype')));
 }
@@ -1266,9 +1259,9 @@ sub postprocess_sorting_firstpass {
 
 sub generate_final_sortinfo {
   my $self = shift;
-  my $bibentries = $self->bib;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   foreach my $citekey ($section->get_citekeys) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
@@ -1310,9 +1303,9 @@ sub generate_final_sortinfo {
 
 sub sortentries {
   my $self = shift;
-  my $bibentries = $self->bib;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my @citekeys = $section->get_citekeys;
 
   if ( Biber::Config->getoption('fastsort') ) {
@@ -1363,7 +1356,9 @@ sub sortentries {
 
 sub sortshorthands {
   my $self = shift;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my @shorthands = $self->shorthands;
   # What we sort on depends on the 'sortlos' BibLaTeX option
   my $sortlos = Biber::Config->getblxoption('sortlos') ? 'shorthand' : 'sortstring';
@@ -1411,19 +1406,52 @@ sub sortshorthands {
 
 sub prepare {
   my $self = shift;
-  foreach my $section ($self->sections) {
+  foreach my $section (@{$self->sections->get_sections}) {
     my $secnum = $section->number;
     $logger->info("Processing bib section $secnum");
     Biber::Config->_init; # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
 
+    $self->process_data; # Parse data into section objects
     $self->process_missing; # Check for missing citekeys before anything else
     $self->process_sets_and_crossrefs; # Process sets and crossrefs
     $self->postprocess; # in here we generate the label sort string
     $self->sortentries; # then we do a label sort pass
     $self->generate_final_sortinfo; # in here we generate the final sort string
     $self->sortentries; # and then we do a final sort pass
-    $self->create_output; # Generate and push the output into the output object ready for writing
+  }
+  $self->create_output; # Generate and push the output into the output object ready for writing
+  return;
+}
+
+=head2 process_data
+
+    Read the data file(s) for the section and store it in the section object
+
+=cut
+
+sub process_data {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+
+  foreach my $datafile ($section->get_datafiles) {
+
+    # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
+    $datafile = bibfind($datafile);
+
+    if ($datafile =~ /\.(?:db)?xml$/) {
+      $logger->logcroak("File $datafile does not exist!") unless -f $datafile;
+      ##DISABLED: $biber->parse_biblatexml( $bib )
+      $logger->logcroak("Support for the BibLaTeXML format is not included in this version of Biber.\n",
+                        "You can try (at your own risk) to pull the \"biblatexml\" branch of our git repo.")
+    } elsif ($datafile =~ /\.bib$/) {
+      $logger->logcroak("File $datafile does not exist!") unless -f $datafile;
+      $self->parse_bibtex($datafile)
+    } else {
+      $logger->logcroak("File $datafile.bib does not exist!") unless -f "$datafile.bib";
+      $self->parse_bibtex("$datafile.bib");
+    }
   }
   return;
 }
@@ -1440,25 +1468,28 @@ sub prepare {
 
 sub create_output {
   my $self = shift;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my @citekeys = $section-get->citekeys;
   my $output_obj = $self->get_output_obj;
 
   $output_obj->add_output_head("\\preamble{%\n" . $self->{preamble} . "%\n}\n")
     if $self->{preamble};
 
-  # We rely on the order of this array for the order of the .bbl
-  # and therefore the .bib
-  foreach my $k (@citekeys) {
-    ## skip crossrefkeys (those that are directly cited or
-    #  crossref'd >= mincrossrefs were previously removed)
-    #  EXCEPT those that are also in a set
-    next if ( Biber::Config->get_crossrefkey($k) and
-      not Biber::Config->get_setparentkey($k) );
-    my $be = $self->bibentry($k) or $logger->logcroak("Cannot find $k");
-    $output_obj->set_output_entry($be);
+  foreach my $section (@{$self->sections->get_sections}) {
+    my $secnum = $section->number;
+
+    my @citekeys = $section->get_citekeys;
+    # We rely on the order of this array for the order of the .bbl
+    # and therefore the .bib
+    foreach my $k (@citekeys) {
+      ## skip crossrefkeys (those that are directly cited or
+      #  crossref'd >= mincrossrefs were previously removed)
+      #  EXCEPT those that are also in a set
+      next if ( Biber::Config->get_crossrefkey($k) and
+                not Biber::Config->get_setparentkey($k) );
+      my $be = $section->bibentry($k) or $logger->logcroak("Cannot find $k");
+      $output_obj->set_output_entry($be, $secnum);
+    }
   }
+
   if ( $self->shorthands ) {
     $self->sortshorthands;
     $output_obj->add_output_tail("\\lossort\n");

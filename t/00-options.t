@@ -18,13 +18,11 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
 $biber->parse_ctrlfile('options.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
-$bibfile = Biber::Config->getoption('bibdata')->[0];
-$biber->parse_bibtex($bibfile);
 
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $bibentries = $biber->bib;
+my $bibentries = $biber->sections->get_section('0')->bib;
 
 my $dmv =  [
               [
@@ -58,26 +56,26 @@ my $dmv =  [
 
 my $bln = [ 'author', 'editor' ];
 
-my $l1 = q|\entry{L1}{book}{}
-  \name{author}{1}{%
-    {{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \list{publisher}{1}{%
-    {Oxford}%
-  }
-  \strng{namehash}{DJ1}
-  \strng{fullhash}{DJ1}
-  \field{sortinit}{D}
-  \field{labelyear}{1998}
-  \count{uniquename}{0}
-  \field{year}{1998}
-  \field{origyear}{1985}
-  \field{month}{04}
-  \field{origmonth}{10}
-  \field{day}{05}
-  \field{origday}{30}
-  \field{title}{Title 1}
-\endentry
+my $l1 = q|  \entry{L1}{book}{}
+    \name{author}{1}{%
+      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \list{publisher}{1}{%
+      {Oxford}%
+    }
+    \strng{namehash}{DJ1}
+    \strng{fullhash}{DJ1}
+    \field{sortinit}{D}
+    \field{labelyear}{1998}
+    \count{uniquename}{0}
+    \field{year}{1998}
+    \field{origyear}{1985}
+    \field{month}{04}
+    \field{origmonth}{10}
+    \field{day}{05}
+    \field{origday}{30}
+    \field{title}{Title 1}
+  \endentry
 
 |;
 

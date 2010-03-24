@@ -369,7 +369,7 @@ sub name_to_bbl {
   # Bernard {H.\,P.} -> Bernard~{H.\,P.}
   $fn =~ s/\s+(\p{Lu}\.|$RE{balanced}{-parens=>'{}'})/~$1/g;
   $pre =~ s/\s/~/g if $pre;       # van der -> van~der
-  return "    {{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
+  return "      {{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
 }
 
 

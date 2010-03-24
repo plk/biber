@@ -18,6 +18,19 @@ sub new {
   return $self;
 }
 
+=head2 get_num_sections
+
+    Gets the number of Biber::Section objects
+
+=cut
+
+sub get_num_sections {
+  my $self = shift;
+  my @keys = keys %$self;
+ return $#keys + 1;
+}
+
+
 =head2 get_section
 
     Gets a Biber::Section by number from the Biber::Sections object
@@ -28,6 +41,17 @@ sub get_section {
   my $self = shift;
   my $number = shift;
   return $self->{$number};
+}
+
+=head2 get_sections
+
+    Gets an sorted array ref of all Biber::Section objects
+
+=cut
+
+sub get_sections {
+  my $self = shift;
+  return [ sort {$a->number <=> $b->number} values %$self ];
 }
 
 =head2 add_section

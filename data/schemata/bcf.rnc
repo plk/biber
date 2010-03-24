@@ -4,6 +4,7 @@ start =
   element bcf:controlfile {
     attribute version { xsd:decimal },
     element bcf:bibdata {
+      attribute section { xsd:integer },
       element bcf:datasource {
         
         ## only type="file" is supported at this stage

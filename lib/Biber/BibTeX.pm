@@ -273,14 +273,13 @@ sub _text_bibtex_parse {
   my ($self, $filename) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  use Data::Dump;dd($self);
 # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
   if (Biber::Config->getoption('quiet')) {
     open OLDERR, '>&', \*STDERR;
     open STDERR, '>', '/dev/null';
   }
 
-  my $bibentries = $self->bib;
+  my $bibentries = $section->bib;
 
   my @localkeys;
 
@@ -293,7 +292,7 @@ sub _text_bibtex_parse {
     $encoding = "utf8";
   }
 
-  my $bib = Text::BibTeX::File->new( $filename, "<" )
+  my $bib = Text::BibTeX::File->new( $filename, '<' )
     or $logger->logcroak("Cannot create Text::BibTeX::File object from $filename: $!");
 
   #TODO validate with Text::BibTeX::Structure ?

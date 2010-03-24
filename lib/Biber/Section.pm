@@ -1,5 +1,8 @@
 package Biber::Section;
 
+use Biber::Entries;
+use List::Util qw( first );
+
 =encoding utf-8
 
 =head1 NAME
@@ -15,7 +18,38 @@ Biber::Section
 sub new {
   my ($class, %params) = @_;
   my $self = bless {%params}, $class;
+  $self->{bib} = new Biber::Entries;
   return $self;
+}
+
+=head2 bibentry
+
+    Returns a Biber::Entry object for the given citation key
+
+=cut
+
+sub bibentry {
+  my $self = shift;
+  my $key = shift;
+  $key = lc($key);
+  return $self->bib->entry($key);
+}
+
+=head2 bib
+
+    Return a Biber::Entries object which encapsulates all bibliographic data
+    For this section
+
+=cut
+
+sub bib {
+  my $self = shift;
+  if ( $self->{bib} ) {
+    return $self->{bib};
+  }
+  else {
+    return;
+  }
 }
 
 =head2 set_citekeys
@@ -84,6 +118,7 @@ sub has_citekey {
 }
 
 
+
 =head2 del_citekey
 
     Deletes a citekey from a Biber::Section object
@@ -109,11 +144,49 @@ sub add_citekey {
   my $self = shift;
   my $key = shift;
   return if $self->has_citekey($key);
-  my @citekeys = $self->citekeys;
-  my @orig_order_citekeys = $self->orig_order_citekeys;
+  my @citekeys = $self->get_citekeys;
+  my @orig_order_citekeys = $self->get_orig_order_citekeys;
   $self->{citekeys} = [@citekeys, $key];
   $self->{orig_order_citekeys} = [@orig_order_citekeys, $key];
   return;
+}
+
+=head2 add_datafile
+
+    Adds a data file to a section
+
+=cut
+
+sub add_datafile {
+  my $self = shift;
+  my $file = shift;
+  push @{$self->{datafiles}}, $file;
+  return;
+}
+
+=head2 set_datafiles
+
+    Sets the datafiles for a section, passed as arrayref
+
+=cut
+
+sub set_datafiles {
+  my $self = shift;
+  my $files = shift;
+  $self->{datafiles} = $files;
+  return;
+}
+
+
+=head2 get_datafiles
+
+    Gets an array of data files for this section
+
+=cut
+
+sub get_datafiles {
+  my $self = shift;
+  return @{$self->{datafiles}};
 }
 
 
