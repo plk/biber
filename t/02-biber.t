@@ -9,19 +9,22 @@ use Biber;
 use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
+chdir("t/tdata") ;
 
-my $biber = Biber->new( fastsort => 1, noconf => 1 );
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('allentries',1);
 
-my $bibentries = $biber->bib;
+my $biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile("general1.bcf") ;
+$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->prepare ;
+my $out = $biber->get_output_obj;
+my $bibentries = $biber->sections->get_section('0')->bib;
+my $section = $biber->sections->get_section('0');;
 
 isa_ok($biber, "Biber");
 
-chdir("t/tdata") ;
-$biber->parse_auxfile("general1.aux") ;
-$biber->parse_ctrlfile("general1.bcf") ;
-$biber->set_output_obj(Biber::Output::BBL->new());
-
-my @keys = sort $biber->citekeys;
+my @keys = sort $section->get_citekeys;
 my @citedkeys = sort qw{
 t1
 stdmodel
@@ -55,15 +58,11 @@ angenendt angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ks
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
 set:yoon maron coleridge } ;
 
+print join("\n", @keys), "\n\n";
+print join("\n", @citedkeys), "\n\n";
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 
-my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
-Biber::Config->setoption('allentries',1);
-$biber->parse_bibtex($bibfile) ;
-$biber->prepare ;
-my $out = $biber->get_output_obj;
-
-@keys = sort $biber->citekeys;
+@keys = sort $section->citekeys;
 
 is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
@@ -631,48 +630,48 @@ my $laufenberg = {
 
 is_deeply($bibentries->entry('laufenberg'), $laufenberg, 'entry laufenberg') ;
 
-my $kastenholz = q|\entry{kastenholz}{article}{}
-  \name{author}{2}{%
-    {{Kastenholz}{K.}{M.~A.}{M.~A.}{}{}{}{}}%
-    {{H{\"u}nenberger}{H.}{Philippe~H.}{P.~H.}{}{}{}{}}%
-  }
-  \strng{namehash}{KMAHPH1}
-  \strng{fullhash}{KMAHPH1}
-  \field{sortinit}{K}
-  \field{labelyear}{2006}
-  \count{uniquename}{0}
-  \field{year}{2006}
-  \field{title}{Computation of methodology\hyphen independent ionic solvation free energies from molecular simulations}
-  \field{subtitle}{I. The electrostatic potential in molecular liquids}
-  \field{indextitle}{Computation of ionic solvation free energies}
-  \field{journaltitle}{J.~Chem. Phys.}
-  \field{abstract}{The computation of ionic solvation free energies from atomistic simulations is a surprisingly difficult problem that has found no satisfactory solution for more than 15 years. The reason is that the charging free energies evaluated from such simulations are affected by very large errors. One of these is related to the choice of a specific convention for summing up the contributions of solvent charges to the electrostatic potential in the ionic cavity, namely, on the basis of point charges within entire solvent molecules (M scheme) or on the basis of individual point charges (P scheme). The use of an inappropriate convention may lead to a charge-independent offset in the calculated potential, which depends on the details of the summation scheme, on the quadrupole-moment trace of the solvent molecule, and on the approximate form used to represent electrostatic interactions in the system. However, whether the M or P scheme (if any) represents the appropriate convention is still a matter of on-going debate. The goal of the present article is to settle this long-standing controversy by carefully analyzing (both analytically and numerically) the properties of the electrostatic potential in molecular liquids (and inside cavities within them).}
-  \field{annotation}{An \texttt{article} entry with an \texttt{eid} and a \texttt{doi} field. Note that the \textsc{doi} is transformed into a clickable link if \texttt{hyperref} support has been enabled}
-  \field{eid}{124106}
-  \field{volume}{124}
-  \field{hyphenation}{american}
-  \verb{doi}
-  \verb 10.1063/1.2172593
-  \endverb
-\endentry
+my $kastenholz = q|  \entry{kastenholz}{article}{}
+    \name{author}{2}{%
+      {{Kastenholz}{K.}{M.~A.}{M.~A.}{}{}{}{}}%
+      {{H{\"u}nenberger}{H.}{Philippe~H.}{P.~H.}{}{}{}{}}%
+    }
+    \strng{namehash}{KMAHPH1}
+    \strng{fullhash}{KMAHPH1}
+    \field{sortinit}{K}
+    \field{labelyear}{2006}
+    \count{uniquename}{0}
+    \field{year}{2006}
+    \field{title}{Computation of methodology\hyphen independent ionic solvation free energies from molecular simulations}
+    \field{subtitle}{I. The electrostatic potential in molecular liquids}
+    \field{indextitle}{Computation of ionic solvation free energies}
+    \field{journaltitle}{J.~Chem. Phys.}
+    \field{abstract}{The computation of ionic solvation free energies from atomistic simulations is a surprisingly difficult problem that has found no satisfactory solution for more than 15 years. The reason is that the charging free energies evaluated from such simulations are affected by very large errors. One of these is related to the choice of a specific convention for summing up the contributions of solvent charges to the electrostatic potential in the ionic cavity, namely, on the basis of point charges within entire solvent molecules (M scheme) or on the basis of individual point charges (P scheme). The use of an inappropriate convention may lead to a charge-independent offset in the calculated potential, which depends on the details of the summation scheme, on the quadrupole-moment trace of the solvent molecule, and on the approximate form used to represent electrostatic interactions in the system. However, whether the M or P scheme (if any) represents the appropriate convention is still a matter of on-going debate. The goal of the present article is to settle this long-standing controversy by carefully analyzing (both analytically and numerically) the properties of the electrostatic potential in molecular liquids (and inside cavities within them).}
+    \field{annotation}{An \texttt{article} entry with an \texttt{eid} and a \texttt{doi} field. Note that the \textsc{doi} is transformed into a clickable link if \texttt{hyperref} support has been enabled}
+    \field{eid}{124106}
+    \field{volume}{124}
+    \field{hyphenation}{american}
+    \verb{doi}
+    \verb 10.1063/1.2172593
+    \endverb
+  \endentry
 
 | ;
 
 
 is( $out->get_output_entry('kastenholz'), $kastenholz, 'bbl entry' ) ;
 
-my $t1 = q|\entry{t1}{misc}{}
-  \name{author}{1}{%
-    {{Brown}{B.}{Bill}{B.}{}{}{}{}}%
-  }
-  \strng{namehash}{BB1}
-  \strng{fullhash}{BB1}
-  \field{sortinit}{B}
-  \field{labelyear}{1992}
-  \count{uniquename}{0}
-  \field{year}{1992}
-  \field{title}{Normal things {$^{3}$}}
-\endentry
+my $t1 = q|  \entry{t1}{misc}{}
+    \name{author}{1}{%
+      {{Brown}{B.}{Bill}{B.}{}{}{}{}}%
+    }
+    \strng{namehash}{BB1}
+    \strng{fullhash}{BB1}
+    \field{sortinit}{B}
+    \field{labelyear}{1992}
+    \count{uniquename}{0}
+    \field{year}{1992}
+    \field{title}{Normal things {$^{3}$}}
+  \endentry
 
 |;
 

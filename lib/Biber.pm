@@ -222,6 +222,7 @@ sub parse_ctrlfile {
                                                            qr/\Abibdata\z/,
                                                            qr/\Adatasource\z/,
                                                            qr/\Asection\z/,
+                                                           qr/\Asort\z/,
                                                           ],
                                           'NsStrip' => 1,
                                           'KeyAttr' => []);

@@ -345,7 +345,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     unless ($entry->parse_ok) {
       $self->{errors}++;
       $logger->warn("Entry $origkey does not parse correctly: skipping");
-      $self->del_citekey($origkey);
+      $section->del_citekey($origkey);
       next;
     }
 
@@ -434,7 +434,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
               if ($#commas > 1) {
                 $logger->warn("Name \"$name\" has too many commas: skipping entry $origkey");
                 $self->{errors}++;
-                $self->del_citekey($origkey);
+                $section->del_citekey($origkey);
                 next BIBLOOP;
               }
 
@@ -442,7 +442,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
               if ($name =~ /,,/) {
                 $logger->warn("Name \"$name\" is malformed (consecutive commas): skipping entry $origkey");
                 $self->{errors}++;
-                $self->del_citekey($origkey);
+                $section->del_citekey($origkey);
                 next BIBLOOP;
               }
             }

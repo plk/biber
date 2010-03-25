@@ -168,7 +168,7 @@ sub get_orig_order_citekeys {
 sub has_citekey {
   my $self = shift;
   my $key = shift;
-  return defined ( first { lc($_) eq lc($key) } @{$self->get_citekeys} ) ? 1 : 0;
+  return defined ( first { lc($_) eq lc($key) } $self->get_citekeys ) ? 1 : 0;
 }
 
 

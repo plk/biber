@@ -10,23 +10,19 @@ use Biber::BibTeX;
 use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
-
 chdir("t/tdata");
-
-my $bibfile;
-my $biber = Biber->new(noconf => 1);
 
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
-$biber->parse_auxfile('names.aux');
+
+my $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('names.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
-$bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
-$biber->parse_bibtex($bibfile);
-my $bibentries = $biber->bib;
 $biber->prepare;
 my $out = $biber->get_output_obj;
+my $bibentries = $biber->sections->get_section('0')->bib;
 
+my $section = $biber->sections->get_section('0');
 
 my $name1 =
     { firstname      => "John",
@@ -265,301 +261,301 @@ my $name14 =
       nameinitstring => 'dl_Vallée_Poussin_JCG' } ;
 
 
-my $l1 = q|\entry{L1}{book}{}
-  \name{author}{1}{%
-    {{Adler}{A.}{Alfred}{A.}{}{}{}{}}%
-  }
-  \strng{namehash}{AA1}
-  \strng{fullhash}{AA1}
-  \field{sortinit}{A}
-\endentry
+my $l1 = q|  \entry{L1}{book}{}
+    \name{author}{1}{%
+      {{Adler}{A.}{Alfred}{A.}{}{}{}{}}%
+    }
+    \strng{namehash}{AA1}
+    \strng{fullhash}{AA1}
+    \field{sortinit}{A}
+  \endentry
 
 |;
 
-my $l2 = q|\entry{L2}{book}{}
-  \name{author}{1}{%
-    {{Bull}{B.}{Bertie~B.}{B.~B.}{}{}{}{}}%
-  }
-  \strng{namehash}{BBB1}
-  \strng{fullhash}{BBB1}
-  \field{sortinit}{B}
-\endentry
+my $l2 = q|  \entry{L2}{book}{}
+    \name{author}{1}{%
+      {{Bull}{B.}{Bertie~B.}{B.~B.}{}{}{}{}}%
+    }
+    \strng{namehash}{BBB1}
+    \strng{fullhash}{BBB1}
+    \field{sortinit}{B}
+  \endentry
 
 |;
 
-my $l3 = q|\entry{L3}{book}{}
-  \name{author}{1}{%
-    {{Crop}{C.}{C.~Z.}{C.~Z.}{}{}{}{}}%
-  }
-  \strng{namehash}{CCZ1}
-  \strng{fullhash}{CCZ1}
-  \field{sortinit}{C}
-\endentry
+my $l3 = q|  \entry{L3}{book}{}
+    \name{author}{1}{%
+      {{Crop}{C.}{C.~Z.}{C.~Z.}{}{}{}{}}%
+    }
+    \strng{namehash}{CCZ1}
+    \strng{fullhash}{CCZ1}
+    \field{sortinit}{C}
+  \endentry
 
 |;
 
-my $l4 = q|\entry{L4}{book}{}
-  \name{author}{1}{%
-    {{Decket}{D.}{Derek~D}{D.~D.}{}{}{}{}}%
-  }
-  \strng{namehash}{DDD1}
-  \strng{fullhash}{DDD1}
-  \field{sortinit}{D}
-\endentry
+my $l4 = q|  \entry{L4}{book}{}
+    \name{author}{1}{%
+      {{Decket}{D.}{Derek~D}{D.~D.}{}{}{}{}}%
+    }
+    \strng{namehash}{DDD1}
+    \strng{fullhash}{DDD1}
+    \field{sortinit}{D}
+  \endentry
 
 |;
 
-my $l5 = q|\entry{L5}{book}{}
-  \name{author}{1}{%
-    {{Eel}{E.}{Egbert}{E.}{von}{v.}{}{}}%
-  }
-  \strng{namehash}{vEE1}
-  \strng{fullhash}{vEE1}
-  \field{sortinit}{v}
-\endentry
+my $l5 = q|  \entry{L5}{book}{}
+    \name{author}{1}{%
+      {{Eel}{E.}{Egbert}{E.}{von}{v.}{}{}}%
+    }
+    \strng{namehash}{vEE1}
+    \strng{fullhash}{vEE1}
+    \field{sortinit}{v}
+  \endentry
 
 |;
 
-my $l6 = q|\entry{L6}{book}{}
-  \name{author}{1}{%
-    {{Frome}{F.}{Francis}{F.}{van~der~valt}{v.~d.~v.}{}{}}%
-  }
-  \strng{namehash}{vdvFF1}
-  \strng{fullhash}{vdvFF1}
-  \field{sortinit}{v}
-\endentry
+my $l6 = q|  \entry{L6}{book}{}
+    \name{author}{1}{%
+      {{Frome}{F.}{Francis}{F.}{van~der~valt}{v.~d.~v.}{}{}}%
+    }
+    \strng{namehash}{vdvFF1}
+    \strng{fullhash}{vdvFF1}
+    \field{sortinit}{v}
+  \endentry
 
 |;
 
-my $l7 = q|\entry{L7}{book}{}
-  \name{author}{1}{%
-    {{Gloom}{G.}{Gregory~R.}{G.~R.}{van}{v.}{}{}}%
-  }
-  \strng{namehash}{vGGR1}
-  \strng{fullhash}{vGGR1}
-  \field{sortinit}{v}
-\endentry
+my $l7 = q|  \entry{L7}{book}{}
+    \name{author}{1}{%
+      {{Gloom}{G.}{Gregory~R.}{G.~R.}{van}{v.}{}{}}%
+    }
+    \strng{namehash}{vGGR1}
+    \strng{fullhash}{vGGR1}
+    \field{sortinit}{v}
+  \endentry
 
 |;
 
-my $l8 = q|\entry{L8}{book}{}
-  \name{author}{1}{%
-    {{Henkel}{H.}{Henry~F.}{H.~F.}{van}{v.}{}{}}%
-  }
-  \strng{namehash}{vHHF1}
-  \strng{fullhash}{vHHF1}
-  \field{sortinit}{v}
-\endentry
+my $l8 = q|  \entry{L8}{book}{}
+    \name{author}{1}{%
+      {{Henkel}{H.}{Henry~F.}{H.~F.}{van}{v.}{}{}}%
+    }
+    \strng{namehash}{vHHF1}
+    \strng{fullhash}{vHHF1}
+    \field{sortinit}{v}
+  \endentry
 
 |;
 
-my $l9 = q|\entry{L9}{book}{}
-  \name{author}{1}{%
-    {{{Iliad Ipswich}}{I.}{Ian}{I.}{}{}{}{}}%
-  }
-  \strng{namehash}{II1}
-  \strng{fullhash}{II1}
-  \field{sortinit}{I}
-\endentry
+my $l9 = q|  \entry{L9}{book}{}
+    \name{author}{1}{%
+      {{{Iliad Ipswich}}{I.}{Ian}{I.}{}{}{}{}}%
+    }
+    \strng{namehash}{II1}
+    \strng{fullhash}{II1}
+    \field{sortinit}{I}
+  \endentry
 
 |;
 
-my $l10 = q|\entry{L10}{book}{}
-  \name{author}{1}{%
-    {{Jolly}{J.}{James}{J.}{}{}{III}{I.}}%
-  }
-  \strng{namehash}{JIJ1}
-  \strng{fullhash}{JIJ1}
-  \field{sortinit}{J}
-\endentry
+my $l10 = q|  \entry{L10}{book}{}
+    \name{author}{1}{%
+      {{Jolly}{J.}{James}{J.}{}{}{III}{I.}}%
+    }
+    \strng{namehash}{JIJ1}
+    \strng{fullhash}{JIJ1}
+    \field{sortinit}{J}
+  \endentry
 
 |;
 
-my $l11 = q|\entry{L11}{book}{}
-  \name{author}{1}{%
-    {{Kluster}{K.}{Kevin}{K.}{van}{v.}{Jr.}{J.}}%
-  }
-  \strng{namehash}{vKJK1}
-  \strng{fullhash}{vKJK1}
-  \field{sortinit}{v}
-\endentry
+my $l11 = q|  \entry{L11}{book}{}
+    \name{author}{1}{%
+      {{Kluster}{K.}{Kevin}{K.}{van}{v.}{Jr.}{J.}}%
+    }
+    \strng{namehash}{vKJK1}
+    \strng{fullhash}{vKJK1}
+    \field{sortinit}{v}
+  \endentry
 
 |;
 
-my $l12 = q|\entry{L12}{book}{}
-  \name{author}{1}{%
-    {{Vall{\'e}e~Poussin}{V.~P.}{Charles Louis Xavier~Joseph}{C.~L. X.~J.}{de~la}{d.~l.}{}{}}%
-  }
-  \strng{namehash}{dlVPCLXJ1}
-  \strng{fullhash}{dlVPCLXJ1}
-  \field{sortinit}{d}
-\endentry
+my $l12 = q|  \entry{L12}{book}{}
+    \name{author}{1}{%
+      {{Vall{\'e}e~Poussin}{V.~P.}{Charles Louis Xavier~Joseph}{C.~L. X.~J.}{de~la}{d.~l.}{}{}}%
+    }
+    \strng{namehash}{dlVPCLXJ1}
+    \strng{fullhash}{dlVPCLXJ1}
+    \field{sortinit}{d}
+  \endentry
 
 |;
 
-my $l13 = q|\entry{L13}{book}{}
-  \name{author}{1}{%
-    {{Van de~Graaff}{V.~d.~G.}{R.~J.}{R.~J.}{}{}{}{}}%
-  }
-  \strng{namehash}{VdGRJ1}
-  \strng{fullhash}{VdGRJ1}
-  \field{sortinit}{V}
-\endentry
+my $l13 = q|  \entry{L13}{book}{}
+    \name{author}{1}{%
+      {{Van de~Graaff}{V.~d.~G.}{R.~J.}{R.~J.}{}{}{}{}}%
+    }
+    \strng{namehash}{VdGRJ1}
+    \strng{fullhash}{VdGRJ1}
+    \field{sortinit}{V}
+  \endentry
 
 |;
 
-my $l14 = q|\entry{L14}{book}{}
-  \name{author}{1}{%
-    {{St~John-Mollusc}{S.~J.-M.}{Oliver}{O.}{}{}{}{}}%
-  }
-  \strng{namehash}{SJMO1}
-  \strng{fullhash}{SJMO1}
-  \field{sortinit}{S}
-\endentry
+my $l14 = q|  \entry{L14}{book}{}
+    \name{author}{1}{%
+      {{St~John-Mollusc}{S.~J.-M.}{Oliver}{O.}{}{}{}{}}%
+    }
+    \strng{namehash}{SJMO1}
+    \strng{fullhash}{SJMO1}
+    \field{sortinit}{S}
+  \endentry
 
 |;
 
-my $l15 = q|\entry{L15}{book}{}
-  \name{author}{1}{%
-    {{Gompel}{G.}{Roger~P.{\,}G.}{R.~P.}{van}{v.}{}{}}%
-  }
-  \strng{namehash}{vGRP1}
-  \strng{fullhash}{vGRP1}
-  \field{sortinit}{v}
-\endentry
+my $l15 = q|  \entry{L15}{book}{}
+    \name{author}{1}{%
+      {{Gompel}{G.}{Roger~P.{\,}G.}{R.~P.}{van}{v.}{}{}}%
+    }
+    \strng{namehash}{vGRP1}
+    \strng{fullhash}{vGRP1}
+    \field{sortinit}{v}
+  \endentry
 
 |;
 
-my $l16 = q|\entry{L16}{book}{}
-  \name{author}{1}{%
-    {{Gompel}{G.}{Roger~{P.\,G.}}{R.~P.}{van}{v.}{}{}}%
-  }
-  \strng{namehash}{vGRP1}
-  \strng{fullhash}{vGRP1}
-  \field{sortinit}{v}
-\endentry
+my $l16 = q|  \entry{L16}{book}{}
+    \name{author}{1}{%
+      {{Gompel}{G.}{Roger~{P.\,G.}}{R.~P.}{van}{v.}{}{}}%
+    }
+    \strng{namehash}{vGRP1}
+    \strng{fullhash}{vGRP1}
+    \field{sortinit}{v}
+  \endentry
 
 |;
 
-my $l17 = q|\entry{L17}{book}{}
-  \name{author}{1}{%
-    {{Lovecraft}{L.}{Bill~H.{\,}P.}{B.~H.}{}{}{}{}}%
-  }
-  \strng{namehash}{LBH1}
-  \strng{fullhash}{LBH1}
-  \field{sortinit}{L}
-\endentry
+my $l17 = q|  \entry{L17}{book}{}
+    \name{author}{1}{%
+      {{Lovecraft}{L.}{Bill~H.{\,}P.}{B.~H.}{}{}{}{}}%
+    }
+    \strng{namehash}{LBH1}
+    \strng{fullhash}{LBH1}
+    \field{sortinit}{L}
+  \endentry
 
 |;
 
-my $l18 = q|\entry{L18}{book}{}
-  \name{author}{1}{%
-    {{Lovecraft}{L.}{Bill~{H.\,P.}}{B.~H.}{}{}{}{}}%
-  }
-  \strng{namehash}{LBH1}
-  \strng{fullhash}{LBH1}
-  \field{sortinit}{L}
-\endentry
+my $l18 = q|  \entry{L18}{book}{}
+    \name{author}{1}{%
+      {{Lovecraft}{L.}{Bill~{H.\,P.}}{B.~H.}{}{}{}{}}%
+    }
+    \strng{namehash}{LBH1}
+    \strng{fullhash}{LBH1}
+    \field{sortinit}{L}
+  \endentry
 
 |;
 
-my $l19 = q|\entry{L19}{book}{}
-  \name{author}{1}{%
-    {{Mustermann}{M.}{Klaus-Peter}{K.-P.}{}{}{}{}}%
-  }
-  \strng{namehash}{MKP1}
-  \strng{fullhash}{MKP1}
-  \field{sortinit}{M}
-\endentry
+my $l19 = q|  \entry{L19}{book}{}
+    \name{author}{1}{%
+      {{Mustermann}{M.}{Klaus-Peter}{K.-P.}{}{}{}{}}%
+    }
+    \strng{namehash}{MKP1}
+    \strng{fullhash}{MKP1}
+    \field{sortinit}{M}
+  \endentry
 
 |;
 
-my $l20 = q|\entry{L20}{book}{}
-  \name{author}{1}{%
-    {{Ford}{F.}{{John Henry}}{J.}{}{}{}{}}%
-  }
-  \strng{namehash}{FJ1}
-  \strng{fullhash}{FJ1}
-  \field{sortinit}{F}
-\endentry
+my $l20 = q|  \entry{L20}{book}{}
+    \name{author}{1}{%
+      {{Ford}{F.}{{John Henry}}{J.}{}{}{}{}}%
+    }
+    \strng{namehash}{FJ1}
+    \strng{fullhash}{FJ1}
+    \field{sortinit}{F}
+  \endentry
 
 |;
 
-my $l21 = q|\entry{L21}{book}{}
-  \name{author}{1}{%
-    {{Smith}{S.}{{\v S}omeone}{{\v S}.}{}{}{}{}}%
-  }
-  \strng{namehash}{SS1}
-  \strng{fullhash}{SS1}
-  \field{sortinit}{S}
-\endentry
+my $l21 = q|  \entry{L21}{book}{}
+    \name{author}{1}{%
+      {{Smith}{S.}{{\v S}omeone}{{\v S}.}{}{}{}{}}%
+    }
+    \strng{namehash}{SS1}
+    \strng{fullhash}{SS1}
+    \field{sortinit}{S}
+  \endentry
 
 |;
 
-my $l22 = q|\entry{L22}{book}{}
-  \name{author}{1}{%
-    {{{\v S}mith}{{\v S}.}{Someone}{S.}{}{}{}{}}%
-  }
-  \strng{namehash}{SS1}
-  \strng{fullhash}{SS1}
-  \field{sortinit}{S}
-\endentry
+my $l22 = q|  \entry{L22}{book}{}
+    \name{author}{1}{%
+      {{{\v S}mith}{{\v S}.}{Someone}{S.}{}{}{}{}}%
+    }
+    \strng{namehash}{SS1}
+    \strng{fullhash}{SS1}
+    \field{sortinit}{S}
+  \endentry
 
 |;
 
 
-my $l23 = q|\entry{L23}{book}{}
-  \name{author}{1}{%
-    {{Smith}{S.}{Šomeone}{Š.}{}{}{}{}}%
-  }
-  \strng{namehash}{SŠ1}
-  \strng{fullhash}{SŠ1}
-  \field{sortinit}{S}
-\endentry
+my $l23 = q|  \entry{L23}{book}{}
+    \name{author}{1}{%
+      {{Smith}{S.}{Šomeone}{Š.}{}{}{}{}}%
+    }
+    \strng{namehash}{SŠ1}
+    \strng{fullhash}{SŠ1}
+    \field{sortinit}{S}
+  \endentry
 
 |;
 
-my $l24 = q|\entry{L24}{book}{}
-  \name{author}{1}{%
-    {{Šmith}{Š.}{Someone}{S.}{}{}{}{}}%
-  }
-  \strng{namehash}{ŠS1}
-  \strng{fullhash}{ŠS1}
-  \field{sortinit}{Š}
-\endentry
+my $l24 = q|  \entry{L24}{book}{}
+    \name{author}{1}{%
+      {{Šmith}{Š.}{Someone}{S.}{}{}{}{}}%
+    }
+    \strng{namehash}{ŠS1}
+    \strng{fullhash}{ŠS1}
+    \field{sortinit}{Š}
+  \endentry
 
 |;
 
-my $l25 = q|\entry{L25}{book}{}
-  \name{author}{1}{%
-    {{{American Psychological Association, Task Force on the Sexualization of Girls}}{A.}{}{}{}{}{}{}}%
-  }
-  \strng{namehash}{A1}
-  \strng{fullhash}{A1}
-  \field{sortinit}{A}
-\endentry
+my $l25 = q|  \entry{L25}{book}{}
+    \name{author}{1}{%
+      {{{American Psychological Association, Task Force on the Sexualization of Girls}}{A.}{}{}{}{}{}{}}%
+    }
+    \strng{namehash}{A1}
+    \strng{fullhash}{A1}
+    \field{sortinit}{A}
+  \endentry
 
 |;
 
-my $l26 = q|\entry{L26}{book}{}
-  \name{author}{1}{%
-    {{{Sci-Art Publishers}}{S.}{}{}{}{}{}{}}%
-  }
-  \strng{namehash}{S1}
-  \strng{fullhash}{S1}
-  \field{sortinit}{S}
-\endentry
+my $l26 = q|  \entry{L26}{book}{}
+    \name{author}{1}{%
+      {{{Sci-Art Publishers}}{S.}{}{}{}{}{}{}}%
+    }
+    \strng{namehash}{S1}
+    \strng{fullhash}{S1}
+    \field{sortinit}{S}
+  \endentry
 
 |;
 
-my $l29 = q|\entry{L29}{book}{}
-  \name{author}{1}{%
-    {{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}}{U.}{}{}{}{}{}{}}%
-  }
-  \strng{namehash}{U1}
-  \strng{fullhash}{U1}
-  \field{sortinit}{U}
-\endentry
+my $l29 = q|  \entry{L29}{book}{}
+    \name{author}{1}{%
+      {{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}}{U.}{}{}{}{}{}{}}%
+    }
+    \strng{namehash}{U1}
+    \strng{fullhash}{U1}
+    \field{sortinit}{U}
+  \endentry
 
 |;
 
@@ -607,13 +603,11 @@ is( $out->get_output_entry('l23'), $l23, 'Unicode firstname');
 is( $out->get_output_entry('l24'), $l24, 'Unicode lastname');
 is( $out->get_output_entry('l25'), $l25, 'Single string name');
 is( $out->get_output_entry('l26'), $l26, 'Hyphen at brace level <> 0');
-is($biber->has_citekey('l27'), '0', 'Bad name with 3 commas');
-is($biber->has_citekey('l28'), '0', 'Bad name with consecutive commas');
+is($section->has_citekey('l27'), '0', 'Bad name with 3 commas');
+is($section->has_citekey('l28'), '0', 'Bad name with consecutive commas');
 SKIP: {
   skip "Text::BibTeX < 0.41", 1, if $Text::BibTeX::VERSION < 0.41;
   is( $out->get_output_entry('l29'), $l29, 'Escaped name with 3 commas');
 }
 
-
-
-unlink "$bibfile.utf8";
+unlink "*.utf8";

@@ -2,10 +2,8 @@
 <?oxygen RNGSchema="../data/schemata/bcf.rnc" type="compact"?>
 <bcf:controlfile version="0.9" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- BIB DATA -->
-  <bcf:bibdata>
-    <bcf:datasource type="file">file1.bib</bcf:datasource>
-    <bcf:datasource type="file">file2.bib</bcf:datasource>
-    <bcf:datasource type="file">file3.xml</bcf:datasource>    
+  <bcf:bibdata section="0">
+    <bcf:datasource type="file">names.bib</bcf:datasource>
   </bcf:bibdata>
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
@@ -170,23 +168,7 @@
   </bcf:sorting>
   <!-- BIB SECTIONS -->
   <bcf:section number="0">
-    <bcf:citekey>key29</bcf:citekey>
-    <bcf:citekey>key13</bcf:citekey>
-    <bcf:citekey>key5</bcf:citekey>
-  </bcf:section>
-  <bcf:section number="1">
-    <bcf:citekey>key41</bcf:citekey>
-    <bcf:citekey>key9</bcf:citekey>
-    <bcf:citekey>key5</bcf:citekey>
-  </bcf:section>
-  <bcf:section number="2">
-    <bcf:citekey>key21</bcf:citekey>
-    <bcf:citekey>key92</bcf:citekey>
-  </bcf:section>
-  <bcf:section number="0">
-    <bcf:citekey>key29</bcf:citekey>
-    <bcf:citekey>key42</bcf:citekey>
-    <bcf:citekey>key5</bcf:citekey>
+    <bcf:citekey>*</bcf:citekey>
   </bcf:section>
 </bcf:controlfile>
 
