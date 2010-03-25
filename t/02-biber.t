@@ -10,11 +10,10 @@ use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata") ;
+my $biber = Biber->new(noconf => 1);
 
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('allentries',1);
 
-my $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile("general1.bcf") ;
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare ;
@@ -33,6 +32,8 @@ angenendtsk
 angenendtsa
 stdmodel:glashow
 stdmodel:ps_sc
+stdmodel:salam
+stdmodel:weinberg
 hasan
 jaffe
 luzzatto
@@ -58,11 +59,16 @@ angenendt angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ks
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
 set:yoon maron coleridge } ;
 
-print join("\n", @keys), "\n\n";
-print join("\n", @citedkeys), "\n\n";
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 
-@keys = sort $section->citekeys;
+Biber::Config->setoption('allentries', 1);
+Biber::Config->setoption('quiet', 1);
+$biber->prepare;
+$section = $biber->sections->get_section('0');;
+$bibentries = $biber->sections->get_section('0')->bib;
+$out = $biber->get_output_obj;
+
+@keys = sort $section->get_citekeys;
 
 is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 

@@ -98,12 +98,7 @@ sub bibentry {
 
 sub bib {
   my $self = shift;
-  if ( $self->{bib} ) {
-    return $self->{bib};
-  }
-  else {
-    return;
-  }
+  return $self->{bib};
 }
 
 =head2 set_citekeys
@@ -156,7 +151,7 @@ sub get_citekeys {
 
 sub get_orig_order_citekeys {
   my $self = shift;
-  return $self->{orig_order_citekeys};
+  return @{$self->{orig_order_citekeys}};
 }
 
 =head2 has_citekey

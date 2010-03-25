@@ -66,8 +66,7 @@ sub new {
   my ($class, %opts) = @_;
   my $self = bless {}, $class;
 
-  # Set up config object. There is only one per Biber object instance so
-  # it is all class methods
+  # Set up config object.
   if (defined $opts{configfile}) {
     Biber::Config->_initopts( $opts{configfile} );
   } else {
@@ -216,6 +215,7 @@ sub parse_ctrlfile {
                                           'ForceArray' => [
                                                            qr/\Acitekey\z/,
                                                            qr/\Aoption\z/,
+                                                           qr/\Aoptions\z/,
                                                            qr/\Avalue\z/,
                                                            qr/\Asorting\z/,
                                                            qr/\Asortitem\z/,
@@ -455,7 +455,7 @@ sub parse_bibtex {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
-  $logger->info("Processing bibtex file $filename");
+  $logger->info("Processing bibtex file '$filename' for section $secnum");
 
   my @localkeys = ();
 
@@ -484,7 +484,7 @@ sub parse_bibtex {
 
     if ( Biber::Config->getoption('bibencoding') ) {
       $buf = decode(Biber::Config->getoption('bibencoding'), $buf)
-    };
+    }
 
     print $ubib LaTeX::Decode::latex_decode($buf)
       or $logger->logcroak("Can't write to $ufilename : $!");
@@ -505,7 +505,6 @@ sub parse_bibtex {
     push @ISA, 'Biber::BibTeX';
 
     @localkeys = $self->_text_bibtex_parse($filename);
-
   }
   else {
 
@@ -1393,11 +1392,10 @@ sub prepare {
     $logger->info("Processing bib section $secnum");
     Biber::Config->_init; # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
-
     $self->process_data; # Parse data into section objects
     $self->process_missing; # Check for missing citekeys before anything else
     $self->process_sets_and_crossrefs; # Process sets and crossrefs
-    $self->postprocess; # in here we generate the label sort string
+    $self->postprocess; # in here we generate lots of information
     $self->sortentries; # then we do a label sort pass
     $self->generate_final_sortinfo; # in here we generate the final sort string
     $self->sortentries; # and then we do a final sort pass
@@ -1418,7 +1416,6 @@ sub process_data {
   my $section = $self->sections->get_section($secnum);
 
   foreach my $datafile ($section->get_datafiles) {
-
     # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
     $datafile = bibfind($datafile);
 

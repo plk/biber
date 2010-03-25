@@ -11,11 +11,12 @@ use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata") ;
 
+my $biber = Biber->new(noconf => 1);
+
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 
-my $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('options.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;

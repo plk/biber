@@ -273,7 +273,8 @@ sub _text_bibtex_parse {
   my ($self, $filename) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-# Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
+
+  # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
   if (Biber::Config->getoption('quiet')) {
     open OLDERR, '>&', \*STDERR;
     open STDERR, '>', '/dev/null';
@@ -301,7 +302,6 @@ sub _text_bibtex_parse {
   my $count = 0;
 
 BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
-
     $count++;
 
     if ( $entry->metatype == BTE_PREAMBLE ) {
@@ -310,7 +310,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     }
 
     next if ( $entry->metatype == BTE_MACRODEF or $entry->metatype == BTE_UNKNOWN
-      or $entry->metatype == BTE_COMMENT ); #or $entry->type =~ m/^comment$/i
+      or $entry->metatype == BTE_COMMENT );
 
     unless ( $entry->key ) {
       $logger->warn("Cannot get the key of entry no $count : Skipping");
@@ -461,6 +461,8 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
       $bibentries->add_entry($lc_key, $bibentry);
     }
   }
+
+  $bib->close;
 
   $self->{preamble} = join( "%\n", @preamble ) if @preamble;
 

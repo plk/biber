@@ -305,7 +305,7 @@ sub set_output_entry {
     if ( is_def_and_notnull($be->get_field($vfield)) ) {
       my $rf = $be->get_field($vfield);
       $acc .= "    \\verb{$vfield}\n";
-      $acc .= "    \\verb $rf\n  \\endverb\n";
+      $acc .= "    \\verb $rf\n    \\endverb\n";
     }
   }
   if ( is_def_and_notnull($be->get_field('keywords')) ) {
