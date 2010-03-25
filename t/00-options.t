@@ -9,17 +9,15 @@ use Biber;
 use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
-
-my $biber = Biber->new(noconf => 1);
 chdir("t/tdata") ;
 
-my $bibfile;
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
+Biber::Config->setblxoption('labelyear', [ 'year' ]);
+
+my $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('options.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
-
-Biber::Config->setblxoption('labelyear', [ 'year' ]);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $bibentries = $biber->sections->get_section('0')->bib;
