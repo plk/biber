@@ -145,38 +145,6 @@ sub get_current_section {
   return $self->{current_section};
 }
 
-=head2 shorthands
-
-    Returns the list of all shorthands.
-
-=cut
-
-sub shorthands {
-  my $self = shift;
-  if ( $self->{shorthands} ) {
-    return @{ $self->{shorthands} }
-  } else {
-    return;
-  }
-}
-
-sub _addshorthand {
-  my ($self, $bee, $key) = @_;
-  # Don't add to los if skiplos is set for entry
-  if (Biber::Config->getblxoption('skiplos', $bee, $key)) {
-    return;
-  }
-  my @los;
-  if ( $self->shorthands ) {
-    @los = $self->shorthands;
-  }
-  else {
-    @los = ();
-  }
-  push @los, $key;
-  $self->{shorthands} = [ @los ];
-  return;
-}
 
 =head2 parse_ctrlfile
 
@@ -243,7 +211,20 @@ sub parse_ctrlfile {
 
   # Read control file
   require XML::LibXML::Simple;
-  my $bcfxml = XML::LibXML::Simple::XMLin($ctrl, 'ForceArray' => 1, ForceContent => 1,'NsStrip' => 1, KeyAttr => []);
+  my $bcfxml = XML::LibXML::Simple::XMLin($ctrl,
+                                          'ForceContent' => 1,
+                                          'ForceArray' => [
+                                                           qr/\Acitekey\z/,
+                                                           qr/\Aoption\z/,
+                                                           qr/\Avalue\z/,
+                                                           qr/\Asorting\z/,
+                                                           qr/\Asortitem\z/,
+                                                           qr/\Abibdata\z/,
+                                                           qr/\Adatasource\z/,
+                                                           qr/\Asection\z/,
+                                                          ],
+                                          'NsStrip' => 1,
+                                          'KeyAttr' => []);
 
   my $controlversion = $bcfxml->{version};
   Biber::Config->setblxoption('controlversion', $controlversion);
@@ -264,9 +245,9 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
         foreach my $bcfopt (@{$bcfopts->{option}}) {
           unless (Biber::Config->getcmdlineoption($bcfopt->{key})) { # already set on cmd line
             if (lc($bcfopt->{type}) eq 'singlevalued') {
-              Biber::Config->setoption($bcfopt->{key}, $bcfopt->{value});
+              Biber::Config->setoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content});
             } elsif (lc($bcfopt->{type}) eq 'multivalued') {
-              Biber::Config->setoption($bcfopt->{key},
+              Biber::Config->setoption($bcfopt->{key}{content},
                 [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ]);
             }
           }
@@ -281,9 +262,9 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
       if (lc($bcfopts->{type}) eq 'global') {
         foreach my $bcfopt (@{$bcfopts->{option}}) {
           if (lc($bcfopt->{type}) eq 'singlevalued') {
-            Biber::Config->setblxoption($bcfopt->{key}, $bcfopt->{value});
+            Biber::Config->setblxoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content});
           } elsif (lc($bcfopt->{type}) eq 'multivalued') {
-            Biber::Config->setblxoption($bcfopt->{key},
+            Biber::Config->setblxoption($bcfopt->{key}{content},
               [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ]);
           }
         }
@@ -294,9 +275,9 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
         my $entrytype = $bcfopts->{type};
         foreach my $bcfopt (@{$bcfopts->{option}}) {
           if (lc($bcfopt->{type}) eq 'singlevalued') {
-            Biber::Config->setblxoption($bcfopt->{key}, $bcfopt->{value}, 'PER_TYPE', $entrytype);
+            Biber::Config->setblxoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content}, 'PER_TYPE', $entrytype);
           } elsif (lc($bcfopt->{type}) eq 'multivalued') {
-            Biber::Config->setblxoption($bcfopt->{key},
+            Biber::Config->setblxoption($bcfopt->{key}{content},
               [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ],
               'PER_TYPE',
               $entrytype);
@@ -385,7 +366,7 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
   foreach my $data (@{$bcfxml->{bibdata}}) {
     foreach my $datasource (@{$data->{datasource}}) {
       if ($datasource->{type} eq 'file') {
-        push @{$bibdatafiles{$data->{section}}}, $datasource->{content};
+        push @{$bibdatafiles{$data->{section}[0]}}, $datasource->{content};
       }
     }
   }
@@ -1207,8 +1188,8 @@ sub postprocess_shorthands {
   my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   my $bee = $be->get_field('entrytype');
-  if ( $be->get_field('shorthand') ) {
-    $self->_addshorthand($bee, $citekey);
+  if ( my $sh = $be->get_field('shorthand') ) {
+    $section->add_shorthand($bee, $citekey);
   }
 }
 
@@ -1359,7 +1340,7 @@ sub sortshorthands {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bib;
-  my @shorthands = $self->shorthands;
+  my @shorthands = $section->get_shorthands;
   # What we sort on depends on the 'sortlos' BibLaTeX option
   my $sortlos = Biber::Config->getblxoption('sortlos') ? 'shorthand' : 'sortstring';
 
@@ -1393,7 +1374,7 @@ sub sortshorthands {
         $bibentries->entry($b)->get_field($sortlos))
       } @shorthands;
   }
-  $self->{shorthands} = [ @shorthands ];
+  $section->set_shorthands([ @shorthands ]);
 
   return;
 }
@@ -1468,6 +1449,9 @@ sub process_data {
 
 sub create_output {
   my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+
   my $output_obj = $self->get_output_obj;
 
   $output_obj->add_output_head("\\preamble{%\n" . $self->{preamble} . "%\n}\n")
@@ -1490,14 +1474,12 @@ sub create_output {
     }
   }
 
-  if ( $self->shorthands ) {
+  # Push the sorted shorthands for each section into the output object
+  if ( $section->get_shorthands ) {
     $self->sortshorthands;
-    $output_obj->add_output_tail("\\lossort\n");
-    foreach my $sh ($self->shorthands) {
-      $output_obj->add_output_tail("  \\key{$sh}\n");
-    }
-    $output_obj->add_output_tail("\\endlossort\n");
+    $output_obj->set_los([ $section->get_shorthands ], $secnum);
   }
+
   $output_obj->add_output_tail("\\endinput\n\n");
   return;
 }

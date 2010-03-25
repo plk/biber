@@ -323,11 +323,39 @@ sub set_output_entry {
 
   # Use an array to preserve sort order of entries already generated
   # Also create an index by keyname for easy retrieval
-  push @{$self->{output_data}{$section}{strings}}, \$acc;
-  $self->{output_data}{$section}{index}{lc($citecasekey)} = \$acc;
+  push @{$self->{output_data}{ENTRIES}{$section}{strings}}, \$acc;
+  $self->{output_data}{ENTRIES}{$section}{index}{lc($citecasekey)} = \$acc;
 
   return;
 }
+
+=head2 set_los
+
+    Set the output list of shorthands for a section
+
+=cut
+
+sub set_los {
+  my $self = shift;
+  my $shs = shift;
+  my $section = shift;
+  $self->{output_data}{LOS}{$section} = $shs;
+  return;
+}
+
+=head2 get_los
+
+    Get the output list of shorthands for a section as an array
+
+=cut
+
+sub get_los {
+  my $self = shift;
+  my $section = shift;
+  return @{$self->{output_data}{LOS}{$section}}
+}
+
+
 
 =head2 get_output_entry
 
@@ -341,7 +369,7 @@ sub get_output_entry {
   my $section = shift;
   $section = '0' if not defined($section); # default - mainly for tests
 
-  return ${$self->{output_data}{$section}{index}{lc($key)}};
+  return ${$self->{output_data}{ENTRIES}{$section}{index}{lc($key)}};
 }
 
 =head2 get_output_entries
@@ -353,7 +381,7 @@ sub get_output_entry {
 sub get_output_entries {
   my $self = shift;
   my $section = shift;
-  return [ map {$$_} @{$self->{output_data}{$section}{strings}} ];
+  return [ map {$$_} @{$self->{output_data}{ENTRIES}{$section}{strings}} ];
 }
 
 
@@ -377,11 +405,21 @@ sub output {
 
   print $target $data->{HEAD} or $logger->logcroak("Failure to write head to $target_string: $!");
 
-  foreach my $secnum (sort keys %{$data}) {
+  foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     print $target "\\refsection{$secnum}\n";
-      foreach my $entry (@{$data->{$secnum}{strings}}) {
-        print $target $$entry or $logger->logcroak("Failure to write entry to $target_string: $!");
+    foreach my $entry (@{$data->{ENTRIES}{$secnum}{strings}}) {
+      print $target $$entry or $logger->logcroak("Failure to write entry to $target_string: $!");
+    }
+
+    # Output section list of shorthands if there is one
+    if ( my $sec_los = $data->{LOS}{$secnum} ) {
+      print $target "  \\lossort\n";
+      foreach my $sh (@$sec_los) {
+        print $target "    \\key{$sh}\n";
       }
+      print $target "  \\endlossort\n\n";
+    }
+
     print $target "\\endrefsection\n"
   }
 

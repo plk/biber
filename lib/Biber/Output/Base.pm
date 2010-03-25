@@ -159,7 +159,7 @@ sub set_output_entry {
   my $self = shift;
   my $entry = shift;
   my $section = shift;
-  $self->{output_data}{$section}{lc($entry->get_field('citecasekey'))} = $entry->dump;
+  $self->{output_data}{ENTRIES}{$section}{lc($entry->get_field('citecasekey'))} = $entry->dump;
   return;
 }
 
@@ -174,7 +174,7 @@ sub get_output_entry {
   my $key = shift;
   my $section = shift;
   $section = '0' if not defined($section); # default - mainly for tests
-  return $self->{output_data}{$section}{lc($key)};
+  return $self->{output_data}{ENTRIES}{$section}{lc($key)};
 }
 
 =head2 output
