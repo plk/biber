@@ -46,13 +46,10 @@ $text = decode_utf8($text);
 print latex_decode($text);
 
 sub version {
-  my $me = "latex2utf8"; #basename($0);
+  my $me = "latex2utf8";
 
   qq[
 $me Version: $VERSION
-    Warning: This is still alpha quality. 
-    You are advised to wait for a stable release before definitively 
-    switching to the BibLaTeXML format!
       \n]
 }
 
