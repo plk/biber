@@ -268,9 +268,10 @@ sub parse_auxfile {
   my $self = shift;
   my $auxfile = shift;
   my @bibdatafiles = ();
+  # --bibdata set on command-line
   if (Biber::Config->getoption('bibdata')) {
-    @bibdatafiles = @{ Biber::Config->getoption('bibdata') }
-  };
+    @bibdatafiles = split /,/, @{ Biber::Config->getoption('bibdata') }
+  }
 
   my @auxcitekeys = $self->citekeys;
 
@@ -434,13 +435,35 @@ sub parse_ctrlfile {
   require XML::LibXML::Simple;
   my $bcfxml = XML::LibXML::Simple::XMLin($ctrl, 'ForceArray' => 1, 'NsStrip' => 1, KeyAttr => []);
 
-  my $controlversion = $bcfxml->{'version'};
+  my $controlversion = $bcfxml->{version};
   Biber::Config->setblxoption('controlversion', $controlversion);
   $logger->warn("Warning: You are using biblatex version $controlversion :
 biber is more likely to work with version $BIBLATEX_VERSION.")
     unless substr($controlversion, 0, 3) eq $BIBLATEX_VERSION;
 
-# Look at control file and populate our main data structure with its information
+  # Look at control file and populate our main data structure with its information
+
+  # NOTE: currently not used - data file names are passed in .aux
+  #       Will be active for biblatex 2.x
+  # Data files
+  # my @bibdatafiles = ();
+  # # --bibdata was passed on command-line
+  # if (Biber::Config->getoption('bibdata')) {
+  #   @bibdatafiles = split /,/, @{ Biber::Config->getoption('bibdata') }
+  # }
+
+  # foreach my $datasource (@{$bcfxml->{bibdata}{datasource}}) {
+  #   if ($datasource->{type} eq 'file') {
+  #     push @bibdatafiles, $datasource->{content};
+  #   }
+  # }
+
+  # unless (@bibdatafiles) {
+  #   $logger->logcroak("No database is provided in the file '$ctrl_file'! Exiting")
+  # }
+  # else {
+  #   Biber::Config->setoption('bibdata', [ @bibdatafiles ]);
+  # }
 
   # OPTIONS
   foreach my $bcfopts (@{$bcfxml->{options}}) {
@@ -566,19 +589,10 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
     }
   }
 
-  # BIB SECTIONS
-  # NOTE: This conditional clause can be removed when aux files are no longer
-  # used in biblatex 2.x. It's only here to maintain backwards compatibility for
-  # pre 2.x behaviour
-  unless (exists $bcfxml->{section}) {
-    Biber::Config->setblxsection('0',  $self->{orig_order_citekeys});
-  }
-  else {
-    foreach my $section (@{$bcfxml->{section}}) {
-      my $sections = Biber::Config->getblxsection($section->{number});
-      push @$sections, @{$section->{citekey}};
-      Biber::Config->setblxsection($section->{number}, $sections);
-    }
+  foreach my $section (@{$bcfxml->{section}}) {
+    my $sections = Biber::Config->getblxsection($section->{number});
+    push @$sections, @{$section->{citekey}};
+    Biber::Config->setblxsection($section->{number}, $sections);
   }
   return;
 }
