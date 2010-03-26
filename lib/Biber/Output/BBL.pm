@@ -401,12 +401,17 @@ sub output {
     $target_string = $self->{output_target_file};
   }
 
+  # for debugging mainly
+  unless ($target) {
+    $target = new IO::File '>-';
+  }
+
   $logger->debug("Preparing final output using class __PACKAGE__ ...");
 
   print $target $data->{HEAD} or $logger->logcroak("Failure to write head to $target_string: $!");
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
-    print $target "\\refsection{$secnum}\n";
+    print $target "\n\\refsection{$secnum}\n";
     foreach my $entry (@{$data->{ENTRIES}{$secnum}{strings}}) {
       print $target $$entry or $logger->logcroak("Failure to write entry to $target_string: $!");
     }

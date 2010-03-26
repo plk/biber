@@ -23,7 +23,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labelalpha</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="multivalued">
       <bcf:key>labelname</bcf:key>
@@ -160,14 +160,29 @@
   </bcf:sorting>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file">sort</bcf:datasource>
+    <bcf:datasource type="file">sections1</bcf:datasource>
+    <bcf:datasource type="file">sections2</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>L1</bcf:citekey>
-    <bcf:citekey>L2</bcf:citekey>
-    <bcf:citekey>L3</bcf:citekey>
-    <bcf:citekey>L4</bcf:citekey>
-    <bcf:citekey>L5</bcf:citekey>
+    <bcf:citekey>sect1</bcf:citekey>
+    <bcf:citekey>sect2</bcf:citekey>
+    <bcf:citekey>sect3</bcf:citekey>
+  </bcf:section>
+  <!-- SECTION 1 -->
+  <bcf:bibdata section="1">
+    <bcf:datasource type="file">sections3</bcf:datasource>
+  </bcf:bibdata>
+  <bcf:section number="1">
+    <bcf:citekey>sect4</bcf:citekey>
+    <bcf:citekey>sect5</bcf:citekey>
+  </bcf:section>
+  <!-- SECTION 2 -->
+  <bcf:bibdata section="2">
+    <bcf:datasource type="file">sections4</bcf:datasource>
+  </bcf:bibdata>
+  <bcf:section number="2">
+    <bcf:citekey>sect6</bcf:citekey>
+    <bcf:citekey>sect7</bcf:citekey>
   </bcf:section>
 </bcf:controlfile>
 

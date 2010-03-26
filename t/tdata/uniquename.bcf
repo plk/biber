@@ -105,7 +105,7 @@
       <bcf:sortitem order="2">0000</bcf:sortitem>
     </bcf:sort>
   </bcf:sorting>
-  <!-- BIBDATA -->
+  <!-- SECTION 0 -->
   <bcf:bibdata section="0">
     <bcf:datasource type="file">uniquename</bcf:datasource>
   </bcf:bibdata>

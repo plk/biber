@@ -158,7 +158,7 @@
       <bcf:sortitem order="2">year</bcf:sortitem>
     </bcf:sort>
   </bcf:sorting>
-  <!-- BIB DATA -->
+  <!-- SECTION 0 -->
   <bcf:bibdata section="0">
     <bcf:datasource type="file">skips</bcf:datasource>
   </bcf:bibdata>
