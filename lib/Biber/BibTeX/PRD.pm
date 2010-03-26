@@ -315,12 +315,13 @@ $/x;
 }
 
 sub _bibtex_prd_parse {
-
   my ($self, $filename) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
 
-  my @auxcitekeys = $self->citekeys;
+  my @auxcitekeys = $section->get_citekeys;
 
-  my $bibentries = $self->bib;
+  my $bibentries = $section->bib;
 
   my @localkeys;
 
@@ -372,7 +373,7 @@ sub _bibtex_prd_parse {
         my @tmpa   = keys %{ $entries[$i] };
         my $origkey = $tmpa[0];
 
-        my $citecasekey = first {lc($origkey) eq lc($_)} $self->citekeys;
+        my $citecasekey = first {lc($origkey) eq lc($_)} $section->get_citekeys;
         $citecasekey = $origkey unless $citecasekey;
         my $key = lc($origkey);
 

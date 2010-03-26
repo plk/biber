@@ -328,11 +328,15 @@ sub _sort_author {
 
 sub _sort_citeorder {
   my ($self, $citekey, $sortelementattributes) = @_;
-  return (first_index {$_ eq $citekey} @{$self->{orig_order_citekeys}}) + 1; # +1 just to make it easier to debug
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  return (first_index {$_ eq $citekey} $section->get_orig_order_citekeys) + 1; # +1 just to make it easier to debug
 }
 
 sub _sort_debug {
   my ($self, $citekey, $sortelementattributes) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
   return $citekey;
 }
 

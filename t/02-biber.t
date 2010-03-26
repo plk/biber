@@ -10,16 +10,26 @@ use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata") ;
+
+# Set up Biber object
 my $biber = Biber->new(noconf => 1);
-
-Biber::Config->setoption('fastsort', 1);
-
 $biber->parse_ctrlfile("general1.bcf") ;
 $biber->set_output_obj(Biber::Output::BBL->new());
-$biber->prepare ;
+
+# Options - we could set these in the control file but it's nice to see what we're
+# relying on here for tests
+
+# Biber options
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('quiet', 1); # because we are reading the same .bib twice and
+                                      # btparse caches it in memory somewhere we can't
+                                      # release so it complains about redefining macros
+
+# Now generate the information
+$biber->prepare;
 my $out = $biber->get_output_obj;
 my $bibentries = $biber->sections->get_section('0')->bib;
-my $section = $biber->sections->get_section('0');;
+my $section = $biber->sections->get_section('0');
 
 isa_ok($biber, "Biber");
 
@@ -61,8 +71,8 @@ set:yoon maron coleridge } ;
 
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 
+# reset some options and re-generate information
 Biber::Config->setoption('allentries', 1);
-Biber::Config->setoption('quiet', 1);
 $biber->prepare;
 $section = $biber->sections->get_section('0');;
 $bibentries = $biber->sections->get_section('0')->bib;

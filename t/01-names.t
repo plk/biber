@@ -12,13 +12,19 @@ use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata");
 
+# Set up Biber object
 my $biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile('names.bcf');
+$biber->set_output_obj(Biber::Output::BBL->new());
 
+# Options - we could set these in the control file but it's nice to see what we're
+# relying on here for tests
+
+# Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
 
-$biber->parse_ctrlfile('names.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+# Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $bibentries = $biber->sections->get_section('0')->bib;

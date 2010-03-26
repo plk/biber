@@ -11,12 +11,20 @@ use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata");
 
+# Set up Biber object
 my $biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile("general2.bcf");
+$biber->set_output_obj(Biber::Output::BBL->new());
+
+# Options - we could set these in the control file but it's nice to see what we're
+# relying on here for tests
+
+# Biber options
+Biber::Config->setoption('quiet', 1);
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('unicodebbl', 1);
 
-$biber->parse_ctrlfile("general2.bcf");
-$biber->set_output_obj(Biber::Output::BBL->new());
+# Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section('0');
@@ -241,6 +249,7 @@ is( $out->get_output_entry('murray'), $murray1, 'bbl with > maxnames' ) ;
 
 Biber::Config->setblxoption('alphaothers', '');
 Biber::Config->setblxoption('sortalphaothers', '');
+
 $biber->prepare ;
 $out = $biber->get_output_obj;
 

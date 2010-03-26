@@ -11,25 +11,29 @@ use Biber::Utils;
 use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
-
 chdir("t/tdata");
 
-my $bibfile;
+# Set up Biber object
 my $biber = Biber->new(noconf => 1);
-
-Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('locale', 'C');
-$biber->parse_auxfile('labelalpha.aux');
 $biber->parse_ctrlfile('labelalpha.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
-$bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
-$biber->parse_bibtex($bibfile);
 
+# Options - we could set these in the control file but it's nice to see what we're
+# relying on here for tests
+
+# Biber options
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('locale', 'C');
+
+# Biblatex options
 Biber::Config->setblxoption('labelalpha', 1);
 Biber::Config->setblxoption('maxnames', 1);
 Biber::Config->setblxoption('labelyear', undef);
+
+# Now generate the information
 $biber->prepare;
-my $bibentries = $biber->bib;
+my $bibentries = $biber->sections->get_section('0')->bib;
+my $section = $biber->sections->get_section('0');
 
 is($bibentries->entry('l1')->get_field('sortlabelalpha'), 'Doe95', 'maxnames=1 minnames=1 entry L1 labelalpha');
 ok(is_undef($bibentries->entry('l1')->get_field('extraalpha')), 'maxnames=1 minnames=1 entry L1 extraalpha');
@@ -48,6 +52,7 @@ is($bibentries->entry('l7')->get_field('extraalpha'), '6', 'maxnames=1 minnames=
 is($bibentries->entry('l8')->get_field('sortlabelalpha'), 'Sha85', 'maxnames=1 minnames=1 entry L8 labelalpha');
 ok(is_undef($bibentries->entry('l8')->get_field('extraalpha')), 'maxnames=1 minnames=1 entry L8 extraalpha');
 
+# reset options and regenerate information
 Biber::Config->setblxoption('maxnames', 2);
 Biber::Config->setblxoption('minnames', 1);
 
@@ -75,7 +80,7 @@ is($bibentries->entry('l7')->get_field('extraalpha'), '4', 'maxnames=2 minnames=
 is($bibentries->entry('l8')->get_field('sortlabelalpha'), 'Sha85', 'maxnames=2 minnames=1 entry L8 labelalpha');
 ok(is_undef($bibentries->entry('l8')->get_field('extraalpha')), 'maxnames=2 minnames=1 entry L8 extraalpha');
 
-
+# reset options and regenerate information
 Biber::Config->setblxoption('maxnames', 2);
 Biber::Config->setblxoption('minnames', 2);
 
@@ -103,6 +108,7 @@ is($bibentries->entry('l7')->get_field('extraalpha'), '2', 'maxnames=2 minnames=
 is($bibentries->entry('l8')->get_field('sortlabelalpha'), 'Sha85', 'maxnames=2 minnames=2 entry L8 labelalpha');
 ok(is_undef($bibentries->entry('l8')->get_field('extraalpha')), 'maxnames=2 minnames=2 entry L8 extraalpha');
 
+# reset options and regenerate information
 Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('minnames', 1);
 
@@ -130,4 +136,4 @@ ok(is_undef($bibentries->entry('l7')->get_field('extraalpha')), 'maxnames=3 minn
 is($bibentries->entry('l8')->get_field('sortlabelalpha'), 'Sha85', 'maxnames=3 minnames=1 entry L8 labelalpha');
 ok(is_undef($bibentries->entry('l8')->get_field('extraalpha')), 'maxnames=3 minnames=1 entry L8 extraalpha');
 
-unlink "$bibfile.utf8";
+unlink "*.utf8";

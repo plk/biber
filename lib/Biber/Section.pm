@@ -19,6 +19,8 @@ sub new {
   my ($class, %params) = @_;
   my $self = bless {%params}, $class;
   $self->{bib} = new Biber::Entries;
+  $self->{citekeys} = [];
+  $self->{orig_order_citekeys} = [];
   return $self;
 }
 
