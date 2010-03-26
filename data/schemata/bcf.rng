@@ -5,22 +5,6 @@
       <attribute name="version">
         <data type="decimal"/>
       </attribute>
-      <element name="bcf:bibdata">
-        <attribute name="section">
-          <data type="integer"/>
-        </attribute>
-        <oneOrMore>
-          <element name="bcf:datasource">
-            <optional>
-              <attribute name="type">
-                <a:documentation>only type="file" is supported at this stage</a:documentation>
-                <data type="NCName"/>
-              </attribute>
-            </optional>
-            <data type="NCName"/>
-          </element>
-        </oneOrMore>
-      </element>
       <optional>
         <element name="bcf:options">
           <attribute name="component">
@@ -297,19 +281,38 @@
         </element>
       </zeroOrMore>
       <oneOrMore>
-        <element name="bcf:section">
-          <attribute name="number">
-            <data type="integer"/>
-          </attribute>
-          <oneOrMore>
-            <element name="bcf:citekey">
-              <data type="string"/>
-            </element>
-          </oneOrMore>
-        </element>
+        <ref name="secspec"/>
       </oneOrMore>
     </element>
   </start>
+  <define name="secspec">
+    <element name="bcf:bibdata">
+      <attribute name="section">
+        <data type="integer"/>
+      </attribute>
+      <oneOrMore>
+        <element name="bcf:datasource">
+          <optional>
+            <attribute name="type">
+              <a:documentation>only type="file" is supported at this stage</a:documentation>
+              <data type="NCName"/>
+            </attribute>
+          </optional>
+          <data type="NCName"/>
+        </element>
+      </oneOrMore>
+    </element>
+    <element name="bcf:section">
+      <attribute name="number">
+        <data type="integer"/>
+      </attribute>
+      <oneOrMore>
+        <element name="bcf:citekey">
+          <data type="string"/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
   <define name="biblatex.entrytypes">
     <choice>
       <value>book</value>

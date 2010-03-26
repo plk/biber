@@ -3,15 +3,7 @@ namespace bcf = "https://sourceforge.net/projects/biblatex"
 start =
   element bcf:controlfile {
     attribute version { xsd:decimal },
-    element bcf:bibdata {
-      attribute section { xsd:integer },
-      element bcf:datasource {
-        
-        ## only type="file" is supported at this stage
-        attribute type { xsd:NCName }?,
-        xsd:NCName
-      }+
-    },
+
     element bcf:options {
       attribute component { "biber" },
       attribute type { "global" },
@@ -25,6 +17,7 @@ start =
       nonsortprefixes?,
       wrapline?
     }?,
+    
     element bcf:options {
       attribute component { "biblatex" },
       attribute type { "global" },
@@ -46,6 +39,7 @@ start =
       useprefix,
       usetranslator
     },
+    
     element bcf:options {
       attribute component { "biblatex" },
       attribute type { biblatex.entrytypes },
@@ -67,6 +61,7 @@ start =
       useprefix?,
       usetranslator?
     }*,
+    
     element bcf:sorting {
       attribute type { "global" },
       element bcf:sort {
@@ -85,6 +80,7 @@ start =
         }+
       }+
     },
+    
     element bcf:sorting {
       attribute type { biblatex.entrytypes },
       element bcf:sort {
@@ -103,11 +99,28 @@ start =
         }+
       }+
     }*,
-    element bcf:section {
+    
+    secspec+
+
+  }
+  
+  
+  
+  secspec =
+    element bcf:bibdata {
+      attribute section { xsd:integer },
+      element bcf:datasource {
+        
+        ## only type="file" is supported at this stage
+        attribute type { xsd:NCName }?,
+        xsd:NCName
+      }+
+    },
+        element bcf:section {
       attribute number { xsd:integer },
       element bcf:citekey { xsd:string }+
-    }+
-  }
+    }
+  
 biblatex.entrytypes =
   "book"
   | "article"

@@ -1452,8 +1452,9 @@ sub create_output {
 
   my $output_obj = $self->get_output_obj;
 
-  $output_obj->add_output_head("\\preamble{%\n" . $self->{preamble} . "%\n}\n")
-    if $self->{preamble};
+  if ($self->{preamble}) {
+    $output_obj->add_output_head("\\preamble{%\n" . $self->{preamble} . "%\n}\n\n");
+  }
 
   foreach my $section (@{$self->sections->get_sections}) {
     my $secnum = $section->number;

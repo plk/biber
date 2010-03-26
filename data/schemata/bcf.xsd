@@ -3,7 +3,6 @@
   <xs:element name="controlfile">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="bcf:bibdata"/>
         <xs:element minOccurs="0" name="options">
           <xs:complexType>
             <xs:sequence>
@@ -123,30 +122,9 @@
             <xs:attribute name="type" use="required" type="bcf:biblatex.entrytypes"/>
           </xs:complexType>
         </xs:element>
-        <xs:element maxOccurs="unbounded" ref="bcf:section"/>
+        <xs:group maxOccurs="unbounded" ref="bcf:secspec"/>
       </xs:sequence>
       <xs:attribute name="version" use="required" type="xs:decimal"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="bibdata">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="bcf:datasource"/>
-      </xs:sequence>
-      <xs:attribute name="section" use="required" type="xs:integer"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="datasource">
-    <xs:complexType>
-      <xs:simpleContent>
-        <xs:extension base="xs:NCName">
-          <xs:attribute name="type" type="xs:NCName">
-            <xs:annotation>
-              <xs:documentation>only type="file" is supported at this stage</xs:documentation>
-            </xs:annotation>
-          </xs:attribute>
-        </xs:extension>
-      </xs:simpleContent>
     </xs:complexType>
   </xs:element>
   <xs:element name="sort">
@@ -203,6 +181,33 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="secspec">
+    <xs:sequence>
+      <xs:element ref="bcf:bibdata"/>
+      <xs:element ref="bcf:section"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="bibdata">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="bcf:datasource"/>
+      </xs:sequence>
+      <xs:attribute name="section" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="datasource">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:NCName">
+          <xs:attribute name="type" type="xs:NCName">
+            <xs:annotation>
+              <xs:documentation>only type="file" is supported at this stage</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:simpleContent>
     </xs:complexType>
   </xs:element>
   <xs:element name="section">

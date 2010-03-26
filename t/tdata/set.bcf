@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../../data/schemata/bcf.rnc" type="compact"?>
 <bcf:controlfile version="0.8" xmlns:bcf="https://sourceforge.net/projects/biblatex">
-  <!-- BIB DATA -->
-  <bcf:bibdata section="0">
-    <bcf:datasource type="file">set.bib</bcf:datasource>
-  </bcf:bibdata>
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -100,7 +96,10 @@
       <bcf:sortitem order="1">citeorder</bcf:sortitem>
     </bcf:sort>
   </bcf:sorting>
-  <!-- BIB SECTIONS -->
+  <!-- BIB DATA -->
+  <bcf:bibdata section="0">
+    <bcf:datasource type="file">set</bcf:datasource>
+  </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey>Elias1955</bcf:citekey>
   </bcf:section>
