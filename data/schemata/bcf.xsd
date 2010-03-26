@@ -10,10 +10,12 @@
               <xs:group minOccurs="0" ref="bcf:bibencoding"/>
               <xs:group minOccurs="0" ref="bcf:debug"/>
               <xs:group minOccurs="0" ref="bcf:displaymode"/>
+              <xs:group minOccurs="0" ref="bcf:locale"/>
               <xs:group minOccurs="0" ref="bcf:inputenc"/>
               <xs:group minOccurs="0" ref="bcf:mincrossrefs"/>
               <xs:element minOccurs="0" ref="bcf:nonsortdiacritics"/>
               <xs:element minOccurs="0" ref="bcf:nonsortprefixes"/>
+              <xs:group minOccurs="0" ref="bcf:wrapline"/>
             </xs:sequence>
             <xs:attribute name="component" use="required">
               <xs:simpleType>
@@ -38,8 +40,6 @@
               <xs:group ref="bcf:labelalpha"/>
               <xs:group ref="bcf:labelname"/>
               <xs:group ref="bcf:labelyear"/>
-              <xs:group ref="bcf:locale"/>
-              <xs:group ref="bcf:maxline"/>
               <xs:group ref="bcf:maxitems"/>
               <xs:group ref="bcf:maxnames"/>
               <xs:group ref="bcf:minitems"/>
@@ -77,10 +77,9 @@
               <xs:group minOccurs="0" ref="bcf:labelalpha"/>
               <xs:group minOccurs="0" ref="bcf:labelname"/>
               <xs:group minOccurs="0" ref="bcf:labelyear"/>
-              <xs:group minOccurs="0" ref="bcf:maxline"/>
-              <xs:group ref="bcf:maxitems"/>
+              <xs:group minOccurs="0" ref="bcf:maxitems"/>
               <xs:group minOccurs="0" ref="bcf:maxnames"/>
-              <xs:group ref="bcf:minitems"/>
+              <xs:group minOccurs="0" ref="bcf:minitems"/>
               <xs:group minOccurs="0" ref="bcf:minnames"/>
               <xs:group minOccurs="0" ref="bcf:singletitle"/>
               <xs:group minOccurs="0" ref="bcf:sortalphaothers"/>
@@ -124,7 +123,7 @@
             <xs:attribute name="type" use="required" type="bcf:biblatex.entrytypes"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="bcf:section"/>
+        <xs:element maxOccurs="unbounded" ref="bcf:section"/>
       </xs:sequence>
       <xs:attribute name="version" use="required" type="xs:decimal"/>
     </xs:complexType>
@@ -156,11 +155,6 @@
         <xs:element maxOccurs="unbounded" ref="bcf:sortitem"/>
       </xs:sequence>
       <xs:attribute name="order" use="required" type="xs:integer"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="sortitem">
-    <xs:complexType mixed="true">
-      <xs:attribute name="order" use="required" type="xs:integer"/>
       <xs:attribute name="pass">
         <xs:simpleType>
           <xs:restriction base="xs:token">
@@ -169,6 +163,11 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sortitem">
+    <xs:complexType mixed="true">
+      <xs:attribute name="order" use="required" type="xs:integer"/>
       <xs:attribute name="final" type="xs:integer"/>
       <xs:attribute name="substring_side">
         <xs:simpleType>
@@ -214,7 +213,7 @@
       <xs:attribute name="number" use="required" type="xs:integer"/>
     </xs:complexType>
   </xs:element>
-  <xs:element name="citekey" type="xs:NCName"/>
+  <xs:element name="citekey" type="xs:string"/>
   <xs:simpleType name="biblatex.entrytypes">
     <xs:restriction base="xs:token">
       <xs:enumeration value="book"/>
@@ -510,6 +509,7 @@
                 <xs:restriction base="xs:token">
                   <xs:enumeration value="0"/>
                   <xs:enumeration value="1"/>
+                  <xs:enumeration value="2"/>
                 </xs:restriction>
               </xs:simpleType>
             </xs:element>
@@ -690,31 +690,6 @@
       </xs:element>
     </xs:sequence>
   </xs:group>
-  <xs:group name="maxline">
-    <xs:sequence>
-      <xs:element name="option">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="key">
-              <xs:simpleType>
-                <xs:restriction base="xs:token">
-                  <xs:enumeration value="maxline"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:element>
-            <xs:element name="value" type="xs:integer"/>
-          </xs:sequence>
-          <xs:attribute name="type" use="required">
-            <xs:simpleType>
-              <xs:restriction base="xs:token">
-                <xs:enumeration value="singlevalued"/>
-              </xs:restriction>
-            </xs:simpleType>
-          </xs:attribute>
-        </xs:complexType>
-      </xs:element>
-    </xs:sequence>
-  </xs:group>
   <xs:simpleType name="name.list">
     <xs:restriction base="xs:token">
       <xs:enumeration value="shortauthor"/>
@@ -777,6 +752,31 @@
                 </xs:restriction>
               </xs:simpleType>
             </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="wrapline">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="wrapline"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value" type="xs:integer"/>
           </xs:sequence>
           <xs:attribute name="type" use="required">
             <xs:simpleType>

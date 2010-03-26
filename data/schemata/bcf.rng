@@ -39,6 +39,9 @@
             <ref name="displaymode"/>
           </optional>
           <optional>
+            <ref name="locale"/>
+          </optional>
+          <optional>
             <ref name="inputenc"/>
           </optional>
           <optional>
@@ -49,6 +52,9 @@
           </optional>
           <optional>
             <ref name="nonsortprefixes"/>
+          </optional>
+          <optional>
+            <ref name="wrapline"/>
           </optional>
         </element>
       </optional>
@@ -63,8 +69,6 @@
         <ref name="labelalpha"/>
         <ref name="labelname"/>
         <ref name="labelyear"/>
-        <ref name="locale"/>
-        <ref name="maxline"/>
         <ref name="maxitems"/>
         <ref name="maxnames"/>
         <ref name="minitems"/>
@@ -100,13 +104,14 @@
             <ref name="labelyear"/>
           </optional>
           <optional>
-            <ref name="maxline"/>
+            <ref name="maxitems"/>
           </optional>
-          <ref name="maxitems"/>
           <optional>
             <ref name="maxnames"/>
           </optional>
-          <ref name="minitems"/>
+          <optional>
+            <ref name="minitems"/>
+          </optional>
           <optional>
             <ref name="minnames"/>
           </optional>
@@ -148,19 +153,19 @@
             <attribute name="order">
               <data type="integer"/>
             </attribute>
+            <optional>
+              <attribute name="pass">
+                <choice>
+                  <value>label</value>
+                  <value>final</value>
+                </choice>
+              </attribute>
+            </optional>
             <oneOrMore>
               <element name="bcf:sortitem">
                 <attribute name="order">
                   <data type="integer"/>
                 </attribute>
-                <optional>
-                  <attribute name="pass">
-                    <choice>
-                      <value>label</value>
-                      <value>final</value>
-                    </choice>
-                  </attribute>
-                </optional>
                 <optional>
                   <attribute name="final">
                     <data type="integer"/>
@@ -224,19 +229,19 @@
               <attribute name="order">
                 <data type="integer"/>
               </attribute>
+              <optional>
+                <attribute name="pass">
+                  <choice>
+                    <value>label</value>
+                    <value>final</value>
+                  </choice>
+                </attribute>
+              </optional>
               <oneOrMore>
                 <element name="bcf:sortitem">
                   <attribute name="order">
                     <data type="integer"/>
                   </attribute>
-                  <optional>
-                    <attribute name="pass">
-                      <choice>
-                        <value>label</value>
-                        <value>final</value>
-                      </choice>
-                    </attribute>
-                  </optional>
                   <optional>
                     <attribute name="final">
                       <data type="integer"/>
@@ -291,18 +296,18 @@
           </oneOrMore>
         </element>
       </zeroOrMore>
-      <zeroOrMore>
+      <oneOrMore>
         <element name="bcf:section">
           <attribute name="number">
             <data type="integer"/>
           </attribute>
           <oneOrMore>
             <element name="bcf:citekey">
-              <data type="NCName"/>
+              <data type="string"/>
             </element>
           </oneOrMore>
         </element>
-      </zeroOrMore>
+      </oneOrMore>
     </element>
   </start>
   <define name="biblatex.entrytypes">
@@ -468,6 +473,7 @@
         <choice>
           <value>0</value>
           <value>1</value>
+          <value>2</value>
         </choice>
       </element>
     </element>
@@ -558,19 +564,6 @@
       </oneOrMore>
     </element>
   </define>
-  <define name="maxline">
-    <element name="bcf:option">
-      <attribute name="type">
-        <value>singlevalued</value>
-      </attribute>
-      <element name="bcf:key">
-        <value>maxline</value>
-      </element>
-      <element name="bcf:value">
-        <data type="integer"/>
-      </element>
-    </element>
-  </define>
   <define name="name.list">
     <choice>
       <value>shortauthor</value>
@@ -614,6 +607,19 @@
           <value>0</value>
           <value>1</value>
         </choice>
+      </element>
+    </element>
+  </define>
+  <define name="wrapline">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>wrapline</value>
+      </element>
+      <element name="bcf:value">
+        <data type="integer"/>
       </element>
     </element>
   </define>
