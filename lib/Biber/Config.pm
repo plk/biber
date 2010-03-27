@@ -426,7 +426,7 @@ sub incr_seennameyear {
   my ($ns, $ys) = @_;
   $tmp = $ns . '0' . $ys;
   # We can always increment this to 1
-  unless  ($CONFIG->{state}{seennameyear}{$tmp}) {
+  unless ($CONFIG->{state}{seennameyear}{$tmp}) {
     $CONFIG->{state}{seennameyear}{$tmp}++;
   }
   # But beyond that only if we have a labelname and labelyear in the entry since

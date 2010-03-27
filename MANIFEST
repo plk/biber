@@ -85,10 +85,12 @@ t/11-set.t
 t/12-skips.t
 t/13-uniquename.t
 t/14-sections.t
+t/15-sections-complex.t
 t/pod-coverage.t
 t/pod.t
 t/tdata/options.bcf
 t/tdata/sections.bcf
+t/tdata/sections-complex.bcf
 t/tdata/sections1.bib
 t/tdata/sections2.bib
 t/tdata/sections3.bib

@@ -1417,8 +1417,11 @@ sub prepare {
     $self->sortentries; # then we do a label sort pass
     $self->generate_final_sortinfo; # in here we generate the final sort string
     $self->sortentries; # and then we do a final sort pass
+    $self->create_output_section; # Generate and push the section output into the
+                                  # output object ready for writing
   }
-  $self->create_output; # Generate and push the output into the output object ready for writing
+  $self->create_output_misc; # Generate and push the final misc bits of output
+                             # into the output object ready for writing
   return;
 }
 
@@ -1453,21 +1456,51 @@ sub process_data {
   return;
 }
 
-=head2 create_output
+=head2 create_output_section
 
-    $biber->create_output()
-
-    Create the output from the data and push it into the
+    Create the output from the sections data and push it into the
     output object. You can subclass Biber and
     override this method to output things other than .bbl
 
 =cut
 
-sub create_output {
+sub create_output_section {
   my $self = shift;
+  my $output_obj = $self->get_output_obj;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
+  my @citekeys = $section->get_citekeys;
+  # We rely on the order of this array for the order of the .bbl
+  # and therefore the .bib
+  foreach my $k (@citekeys) {
+    ## skip crossrefkeys (those that are directly cited or
+    #  crossref'd >= mincrossrefs were previously removed)
+    #  EXCEPT those that are also in a set
+    next if ( Biber::Config->get_crossrefkey($k) and
+              not Biber::Config->get_setparentkey($k) );
+    my $be = $section->bibentry($k) or $logger->logcroak("Cannot find $k");
+    $output_obj->set_output_entry($be, $secnum);
+  }
+  # Push the sorted shorthands for each section into the output object
+  if ( $section->get_shorthands ) {
+    $self->sortshorthands;
+    $output_obj->set_los([ $section->get_shorthands ], $secnum);
+  }
+
+  return;
+}
+
+=head2 create_output_misc
+
+    Create the output for misc bits and pieces like preamble and closing
+    macro call and add to output object. You can subclass Biber and
+    override this method to output things other than .bbl
+
+=cut
+
+sub create_output_misc {
+  my $self = shift;
   my $output_obj = $self->get_output_obj;
 
   if ($self->{preamble}) {
@@ -1476,31 +1509,10 @@ sub create_output {
                                  "%\n}\n\n");
   }
 
-  foreach my $section (@{$self->sections->get_sections}) {
-    my $secnum = $section->number;
-
-    my @citekeys = $section->get_citekeys;
-    # We rely on the order of this array for the order of the .bbl
-    # and therefore the .bib
-    foreach my $k (@citekeys) {
-      ## skip crossrefkeys (those that are directly cited or
-      #  crossref'd >= mincrossrefs were previously removed)
-      #  EXCEPT those that are also in a set
-      next if ( Biber::Config->get_crossrefkey($k) and
-                not Biber::Config->get_setparentkey($k) );
-      my $be = $section->bibentry($k) or $logger->logcroak("Cannot find $k");
-      $output_obj->set_output_entry($be, $secnum);
-    }
-    # Push the sorted shorthands for each section into the output object
-    if ( $section->get_shorthands ) {
-      $self->sortshorthands;
-      $output_obj->set_los([ $section->get_shorthands ], $secnum);
-    }
-  }
-
   $output_obj->add_output_tail("\\endinput\n\n");
   return;
 }
+
 
 =head2 _filedump and _stringdump
 
