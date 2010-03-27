@@ -464,7 +464,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
 
   $bib->close;
 
-  $self->{preamble} = join( "%\n", @preamble ) if @preamble;
+  push @{$self->{preamble}}, @preamble if @preamble;
 
   if (Biber::Config->getoption('quiet')) {
     open STDERR, '>&', \*OLDERR;

@@ -362,7 +362,7 @@ sub _bibtex_prd_parse {
 
     if ( $tmpkey eq 'preamble' ) {
 
-      $preamble = join("%\n", @{ $tmp[$n]->{preamble} });
+      $preamble = $tmp[$n]->{preamble};
     }
     elsif ( $tmpkey eq 'entries' ) {
 
@@ -473,7 +473,7 @@ sub _bibtex_prd_parse {
     };
   }
 
-  $self->{preamble} .= $preamble if $preamble;
+  $self->{preamble} = $preamble if $preamble;
 
   return @localkeys;
 

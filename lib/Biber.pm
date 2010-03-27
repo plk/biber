@@ -378,8 +378,16 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
 
   my $key_flag = 0;
   my $bib_sections = new Biber::Sections;
+
 SECTION: foreach my $section (@{$bcfxml->{section}}) {
-    my $bib_section = new Biber::Section('number' => $section->{number});
+    my $bib_section;
+    # Can be multiple section 0 entries and so re-use that section object if it exists
+    if (my $existing_section = $bib_sections->get_section($section->{number})) {
+      $bib_section = $existing_section;
+    }
+    else {
+      $bib_section = new Biber::Section('number' => $section->{number});
+    }
 
     # Set the data files for the section
     $bib_section->set_datafiles($bibdatafiles{$section->{number}});
@@ -421,9 +429,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         $logger->debug("The citekeys for section " . $section->{number} . " are:\n", "@debug_keys", "\n");
       }
     }
-    $bib_section->set_citekeys([ @keys ]);
-    # Need to preserve the original order for possible citeorder sorting
-    $bib_section->set_orig_order_citekeys([ @keys ]);
+    $bib_section->add_citekeys(@keys);
     $bib_sections->add_section($bib_section);
   }
 
@@ -535,7 +541,7 @@ sub parse_bibtex {
 # that are missing data entries.
   if (Biber::Config->getoption('allentries')) {
     foreach my $bibkey ($bibentries->sorted_keys) {
-      $section->add_citekey($bibkey) unless $section->has_citekey($bibkey);
+      $section->add_citekeys($bibkey);
     }
   }
 
@@ -606,7 +612,7 @@ sub process_sets_and_crossrefs {
       my @inset_keys = split /\s*,\s*/, $be->get_field('entryset');
       foreach my $inset_key (@inset_keys) {
         $logger->debug("  Adding inset entry '$inset_key' to the citekeys (section $secnum)");
-        $section->add_citekey($inset_key);
+        $section->add_citekeys($inset_key);
       }
     }
     if ($be->get_field('crossref')) {
@@ -1381,7 +1387,8 @@ sub sortshorthands {
 
 =head2 prepare
 
-    Post-process and sort all entries before writing the bbl output.
+    Do the main work.
+    Process and sort all entries before writing the bbl output.
 
 =cut
 
@@ -1453,7 +1460,9 @@ sub create_output {
   my $output_obj = $self->get_output_obj;
 
   if ($self->{preamble}) {
-    $output_obj->add_output_head("\\preamble{%\n" . $self->{preamble} . "%\n}\n\n");
+    $output_obj->add_output_head("\\preamble{%\n" .
+                                 join("%\n", @{$self->{preamble}}) .
+                                 "%\n}\n\n");
   }
 
   foreach my $section (@{$self->sections->get_sections}) {
@@ -1471,12 +1480,11 @@ sub create_output {
       my $be = $section->bibentry($k) or $logger->logcroak("Cannot find $k");
       $output_obj->set_output_entry($be, $secnum);
     }
-  }
-
-  # Push the sorted shorthands for each section into the output object
-  if ( $section->get_shorthands ) {
-    $self->sortshorthands;
-    $output_obj->set_los([ $section->get_shorthands ], $secnum);
+    # Push the sorted shorthands for each section into the output object
+    if ( $section->get_shorthands ) {
+      $self->sortshorthands;
+      $output_obj->set_los([ $section->get_shorthands ], $secnum);
+    }
   }
 
   $output_obj->add_output_tail("\\endinput\n\n");

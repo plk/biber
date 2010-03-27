@@ -103,9 +103,7 @@ start =
     secspec+
 
   }
-  
-  
-  
+
   secspec =
     element bcf:bibdata {
       attribute section { xsd:integer },
@@ -115,8 +113,8 @@ start =
         attribute type { xsd:NCName }?,
         xsd:NCName
       }+
-    },
-        element bcf:section {
+    }?,
+    element bcf:section {
       attribute number { xsd:integer },
       element bcf:citekey { xsd:string }+
     }

@@ -33,10 +33,8 @@ my $section2 = $biber->sections->get_section('2');
 
 #is_deeply([$section->get_shorthands], ['skip1'], 'skiplos - not in LOS');
 #is($bibentries->entry('skip2')->get_field('labelalpha'), 'SA', 'Normal labelalpha');
-is_deeply([$section0->get_citekeys], ['sect1', 'sect2', 'sect3'], 'Section 0 citekeys');
+is_deeply([$section0->get_citekeys], ['sect1', 'sect2', 'sect3', 'sect8'], 'Section 0 citekeys');
 is_deeply([$section1->get_citekeys], ['sect4', 'sect5'], 'Section 1 citekeys');
 is_deeply([$section2->get_citekeys], ['sect6', 'sect7'], 'Section 2 citekeys');
-
-
 
 unlink "*.utf8";

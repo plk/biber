@@ -185,7 +185,7 @@
   </xs:element>
   <xs:group name="secspec">
     <xs:sequence>
-      <xs:element ref="bcf:bibdata"/>
+      <xs:element minOccurs="0" ref="bcf:bibdata"/>
       <xs:element ref="bcf:section"/>
     </xs:sequence>
   </xs:group>

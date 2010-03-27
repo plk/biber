@@ -184,5 +184,9 @@
     <bcf:citekey>sect6</bcf:citekey>
     <bcf:citekey>sect7</bcf:citekey>
   </bcf:section>
+  <!-- SECTION 0 -->
+  <bcf:section number="0">
+    <bcf:citekey>sect8</bcf:citekey>
+  </bcf:section>
 </bcf:controlfile>
 

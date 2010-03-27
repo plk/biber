@@ -93,7 +93,7 @@ sub bibentry {
 
 =head2 bib
 
-    Return a Biber::Entries object which encapsulates all bibliographic data
+
     For this section
 
 =cut
@@ -180,25 +180,25 @@ sub del_citekey {
   my $self = shift;
   my $key = shift;
   return unless $self->has_citekey($key);
-  $self->{citekeys}            = [ map {$_ ne $key} @{$self->{citekeys}} ];
-  $self->{orig_order_citekeys} = [ map {$_ ne $key} @{$self->{orig_order_citekeys}} ];
+  $self->{citekeys}            = [ grep {$_ ne $key} @{$self->{citekeys}} ];
+  $self->{orig_order_citekeys} = [ grep {$_ ne $key} @{$self->{orig_order_citekeys}} ];
   return;
 }
 
-=head2 add_citekey
+=head2 add_citekeys
 
-    Adds citekey $key to the Biber::Section object
+    Adds citekeys to the Biber::Section object
 
 =cut
 
-sub add_citekey {
+sub add_citekeys {
   my $self = shift;
-  my $key = shift;
-  return if $self->has_citekey($key);
-  my @citekeys = $self->get_citekeys;
-  my @orig_order_citekeys = $self->get_orig_order_citekeys;
-  $self->{citekeys} = [@citekeys, $key];
-  $self->{orig_order_citekeys} = [@orig_order_citekeys, $key];
+  my @keys = @_;
+  foreach my $key (@keys) {
+    next if $self->has_citekey($key);
+    push @{$self->{citekeys}}, $key;
+    push @{$self->{orig_order_citekeys}}, $key;
+  }
   return;
 }
 
