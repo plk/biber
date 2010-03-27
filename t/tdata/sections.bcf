@@ -183,6 +183,8 @@
   <bcf:section number="2">
     <bcf:citekey>sect6</bcf:citekey>
     <bcf:citekey>sect7</bcf:citekey>
+    <bcf:citekey>sect3</bcf:citekey> <!-- Bad key for section 2, should be dropped in tests -->
+    <bcf:citekey>sectx</bcf:citekey> <!-- Bad key for section 2, should be dropped in tests -->
   </bcf:section>
   <!-- SECTION 0 -->
   <bcf:section number="0">

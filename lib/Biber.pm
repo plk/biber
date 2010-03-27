@@ -108,6 +108,17 @@ sub set_output_obj {
   return;
 }
 
+=head2 get_preamble
+
+    Returns the current preamble as an array ref
+
+=cut
+
+sub get_preamble {
+  my $self = shift;
+  return $self->{preamble};
+}
+
 
 =head2 get_output_obj
 
