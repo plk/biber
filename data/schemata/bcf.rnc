@@ -3,25 +3,21 @@ namespace bcf = "https://sourceforge.net/projects/biblatex"
 start =
   element bcf:controlfile {
     attribute version { xsd:decimal },
-    element bcf:bibdata {
-      element bcf:datasource {
-        
-        ## only type="file" is supported at this stage
-        attribute type { xsd:NCName }?,
-        xsd:NCName
-      }+
-    },
+
     element bcf:options {
       attribute component { "biber" },
       attribute type { "global" },
       bibencoding?,
       debug?,
       displaymode?,
+      locale?,
       inputenc?,
       mincrossrefs?,
       nonsortdiacritics?,
-      nonsortprefixes?
+      nonsortprefixes?,
+      wrapline?
     }?,
+    
     element bcf:options {
       attribute component { "biblatex" },
       attribute type { "global" },
@@ -29,8 +25,6 @@ start =
       labelalpha,
       labelname,
       labelyear,
-      locale,
-      maxline,
       maxitems,
       maxnames,
       minitems,
@@ -45,6 +39,7 @@ start =
       useprefix,
       usetranslator
     },
+    
     element bcf:options {
       attribute component { "biblatex" },
       attribute type { biblatex.entrytypes },
@@ -52,10 +47,9 @@ start =
       labelalpha?,
       labelname?,
       labelyear?,
-      maxline?,
-      maxitems,
+      maxitems?,
       maxnames?,
-      minitems,
+      minitems?,
       minnames?,
       singletitle?,
       sortalphaothers?,
@@ -67,13 +61,14 @@ start =
       useprefix?,
       usetranslator?
     }*,
+    
     element bcf:sorting {
       attribute type { "global" },
       element bcf:sort {
         attribute order { xsd:integer },
+        attribute pass { "label" | "final" }?,
         element bcf:sortitem {
           attribute order { xsd:integer },
-          attribute pass { "label" | "final" }?,
           attribute final { xsd:integer }?,
           attribute substring_side { "left" | "right" }?,
           attribute substring_width { xsd:integer }?,
@@ -85,13 +80,14 @@ start =
         }+
       }+
     },
+    
     element bcf:sorting {
       attribute type { biblatex.entrytypes },
       element bcf:sort {
         attribute order { xsd:integer },
+        attribute pass { "label" | "final" }?,        
         element bcf:sortitem {
           attribute order { xsd:integer },
-          attribute pass { "label" | "final" }?,
           attribute final { xsd:integer }?,
           attribute substring_side { "left" | "right" }?,
           attribute substring_width { xsd:integer }?,
@@ -103,11 +99,26 @@ start =
         }+
       }+
     }*,
+    
+    secspec+
+
+  }
+
+  secspec =
+    element bcf:bibdata {
+      attribute section { xsd:integer },
+      element bcf:datasource {
+        
+        ## only type="file" is supported at this stage
+        attribute type { xsd:NCName }?,
+        xsd:NCName
+      }+
+    }?,
     element bcf:section {
       attribute number { xsd:integer },
-      element bcf:citekey { xsd:NCName }+
-    }*
-  }
+      element bcf:citekey { xsd:string }+
+    }
+  
 biblatex.entrytypes =
   "book"
   | "article"
@@ -126,6 +137,7 @@ biblatex.entrytypes =
   | "report"
   | "thesis"
   | "unpublished"
+
 terseinits =
   element bcf:option {
     attribute type { "singlevalued" },
@@ -181,7 +193,7 @@ uniquename =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "uniquename" },
-    element bcf:value { "0" | "1" }
+    element bcf:value { "0" | "1" | "2" }
   }
 maxitems =
   element bcf:option {
@@ -222,12 +234,7 @@ labelname =
       name.list
     }+
   }
-maxline =
-  element bcf:option {
-    attribute type { "singlevalued" },
-    element bcf:key { "maxline" },
-    element bcf:value { xsd:integer }
-  }
+
 name.list = "shortauthor" | "shorteditor" | "author" | "editor" | "translator"
 year.list = "year" | "origyear" | "eventyear" | "urlyear"
 mincrossrefs =
@@ -242,6 +249,12 @@ debug =
     element bcf:key { "debug" },
     element bcf:value { "0" | "1" }
   }
+wrapline =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "wrapline" },
+    element bcf:value { xsd:integer }
+  }  
 inputenc =
   element bcf:option {
     attribute type { "singlevalued" },

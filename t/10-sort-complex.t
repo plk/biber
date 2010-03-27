@@ -9,23 +9,32 @@ use Biber;
 use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
+chdir("t/tdata") ;
 
-my $biber = Biber->new( unicodebbl => 1, fastsort => 1, noconf => 1 );
+# Set up Biber object
+my $biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile('sort-complex.bcf');
+$biber->set_output_obj(Biber::Output::BBL->new());
+
+# Options - we could set these in the control file but it's nice to see what we're
+# relying on here for tests
+
+# Biber options
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('unicodebbl', 1);
+
+# Biblatex options
+Biber::Config->setblxoption('labelalpha', 1);
+Biber::Config->setblxoption('labelyear', undef);
+
+# Now generate the information
+$biber->prepare;
+my $bibentries = $biber->sections->get_section('0')->bib;
+
+my $out = $biber->get_output_obj;
 
 isa_ok($biber, "Biber");
 
-chdir("t/tdata") ;
-$biber->parse_auxfile('sort-complex.aux');
-$biber->parse_ctrlfile('sort-complex.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
-my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
-$biber->parse_bibtex($bibfile);
-Biber::Config->setblxoption('labelalpha', 1);
-Biber::Config->setblxoption('labelyear', undef);
-$biber->prepare;
-my $bibentries = $biber->bib;
-
-my $out = $biber->get_output_obj;
 my $sc1 = [
            [
             {'labelalpha'    => {}},
@@ -112,5 +121,5 @@ is ($bibentries->entry('l2')->get_field('extraalpha'), '3', '2-pass - labelalpha
 is ($bibentries->entry('l3')->get_field('labelalpha'), 'Doe95', '2-pass - labelalpha after title - 5');
 is ($bibentries->entry('l3')->get_field('extraalpha'), '2', '2-pass - labelalpha after title - 6');
 
-unlink "$bibfile.utf8";
+unlink "*.utf8";
 

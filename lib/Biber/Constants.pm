@@ -137,7 +137,6 @@ our %CONFIG_SCOPE_BIBLATEX = (
   labelname         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelnumber       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelyear         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  maxline           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   maxitems          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   minitems          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   maxnames          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},

@@ -10,157 +10,160 @@ use Biber::Utils;
 use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
-
-my $biber = Biber->new( unicodebbl => 1, fastsort => 1, noconf => 1 );
-
-
 chdir("t/tdata") ;
-$biber->parse_auxfile('skips.aux');
+
+my $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('skips.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 
-my $bibfile = Biber::Config->getoption('bibdata')->[0] . ".bib";
-$biber->parse_bibtex($bibfile);
+# Options - we could set these in the control file but it's nice to see what we're
+# relying on here for tests
 
+# Biber options
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('unicodebbl', 1);
+
+# Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $bibentries = $biber->bib;
+my $bibentries = $biber->sections->get_section('0')->bib;
+my $section = $biber->sections->get_section('0');
 
-my $set1 = q|\entry{seta}{set}{}
-  \set{set:membera,set:memberb,set:memberc}
-  \name{labelname}{1}{}{%
-    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \name{author}{1}{}{%
-    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \strng{namehash}{DJ1}
-  \strng{fullhash}{DJ1}
-  \field{labelalpha}{Doe10}
-  \field{sortinit}{D}
-  \field{extrayear}{1}
-  \field{labelyear}{2010}
-  \field{extraalpha}{1}
-  \field{year}{2010}
-  \field{title}{Set Member A}
-  \field{crossref}{set:membera}
-\endentry
-
-|;
-
-my $set2 = q|\entry{set:membera}{book}{}
-  \inset{set}
-  \name{labelname}{1}{}{%
-    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \name{author}{1}{}{%
-    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \strng{namehash}{DJ1}
-  \strng{fullhash}{DJ1}
-  \field{sortinit}{D}
-  \field{year}{2010}
-  \field{title}{Set Member A}
-\endentry
+my $set1 = q|  \entry{seta}{set}{}
+    \set{set:membera,set:memberb,set:memberc}
+    \name{labelname}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \strng{namehash}{DJ1}
+    \strng{fullhash}{DJ1}
+    \field{labelalpha}{Doe10}
+    \field{sortinit}{D}
+    \field{extrayear}{1}
+    \field{labelyear}{2010}
+    \field{extraalpha}{1}
+    \field{year}{2010}
+    \field{title}{Set Member A}
+    \field{crossref}{set:membera}
+  \endentry
 
 |;
 
-my $set3 = q|\entry{set:memberb}{book}{}
-  \inset{set}
-  \name{labelname}{1}{}{%
-    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \name{author}{1}{}{%
-    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \strng{namehash}{DJ1}
-  \strng{fullhash}{DJ1}
-  \field{sortinit}{D}
-  \field{year}{2010}
-  \field{title}{Set Member B}
-\endentry
+my $set2 = q|  \entry{set:membera}{book}{}
+    \inset{set}
+    \name{labelname}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \strng{namehash}{DJ1}
+    \strng{fullhash}{DJ1}
+    \field{sortinit}{D}
+    \field{year}{2010}
+    \field{title}{Set Member A}
+  \endentry
 
 |;
 
-my $set4 = q|\entry{set:memberc}{book}{}
-  \inset{set}
-  \name{labelname}{1}{}{%
-    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \name{author}{1}{}{%
-    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \strng{namehash}{DJ1}
-  \strng{fullhash}{DJ1}
-  \field{sortinit}{D}
-  \field{year}{2010}
-  \field{title}{Set Member C}
-\endentry
+my $set3 = q|  \entry{set:memberb}{book}{}
+    \inset{set}
+    \name{labelname}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \strng{namehash}{DJ1}
+    \strng{fullhash}{DJ1}
+    \field{sortinit}{D}
+    \field{year}{2010}
+    \field{title}{Set Member B}
+  \endentry
 
 |;
 
-my $noset1 = q|\entry{noseta}{book}{}
-  \name{labelname}{1}{}{%
-    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \name{author}{1}{}{%
-    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \strng{namehash}{DJ1}
-  \strng{fullhash}{DJ1}
-  \field{labelalpha}{Doe10}
-  \field{sortinit}{D}
-  \field{extrayear}{2}
-  \field{labelyear}{2010}
-  \field{extraalpha}{2}
-  \field{year}{2010}
-  \field{title}{Stand-Alone A}
-\endentry
+my $set4 = q|  \entry{set:memberc}{book}{}
+    \inset{set}
+    \name{labelname}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \strng{namehash}{DJ1}
+    \strng{fullhash}{DJ1}
+    \field{sortinit}{D}
+    \field{year}{2010}
+    \field{title}{Set Member C}
+  \endentry
 
 |;
 
-my $noset2 = q|\entry{nosetb}{book}{}
-  \name{labelname}{1}{}{%
-    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \name{author}{1}{}{%
-    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \strng{namehash}{DJ1}
-  \strng{fullhash}{DJ1}
-  \field{labelalpha}{Doe10}
-  \field{sortinit}{D}
-  \field{extrayear}{3}
-  \field{labelyear}{2010}
-  \field{extraalpha}{3}
-  \field{year}{2010}
-  \field{title}{Stand-Alone B}
-\endentry
+my $noset1 = q|  \entry{noseta}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \strng{namehash}{DJ1}
+    \strng{fullhash}{DJ1}
+    \field{labelalpha}{Doe10}
+    \field{sortinit}{D}
+    \field{extrayear}{2}
+    \field{labelyear}{2010}
+    \field{extraalpha}{2}
+    \field{year}{2010}
+    \field{title}{Stand-Alone A}
+  \endentry
 
 |;
 
-my $noset3 = q|\entry{nosetc}{book}{}
-  \name{labelname}{1}{}{%
-    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \name{author}{1}{}{%
-    {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
-  }
-  \strng{namehash}{DJ1}
-  \strng{fullhash}{DJ1}
-  \field{labelalpha}{Doe10}
-  \field{sortinit}{D}
-  \field{extrayear}{4}
-  \field{labelyear}{2010}
-  \field{extraalpha}{4}
-  \field{year}{2010}
-  \field{title}{Stand-Alone C}
-\endentry
+my $noset2 = q|  \entry{nosetb}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \strng{namehash}{DJ1}
+    \strng{fullhash}{DJ1}
+    \field{labelalpha}{Doe10}
+    \field{sortinit}{D}
+    \field{extrayear}{3}
+    \field{labelyear}{2010}
+    \field{extraalpha}{3}
+    \field{year}{2010}
+    \field{title}{Stand-Alone B}
+  \endentry
+
+|;
+
+my $noset3 = q|  \entry{nosetc}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \strng{namehash}{DJ1}
+    \strng{fullhash}{DJ1}
+    \field{labelalpha}{Doe10}
+    \field{sortinit}{D}
+    \field{extrayear}{4}
+    \field{labelyear}{2010}
+    \field{extraalpha}{4}
+    \field{year}{2010}
+    \field{title}{Stand-Alone C}
+  \endentry
 
 |;
 
 
-is_deeply([$biber->shorthands], ['skip1'], 'skiplos - not in LOS');
+is_deeply([$section->get_shorthands], ['skip1'], 'skiplos - not in LOS');
 is($bibentries->entry('skip2')->get_field('labelalpha'), 'SA', 'Normal labelalpha');
 is($bibentries->entry('skip2')->get_field($bibentries->entry('skip2')->get_field('labelyearname')), '1995', 'Normal labelyear');
 ok(is_undef($bibentries->entry('skip3')->get_field('labelalpha')), 'skiplab - no labelalpha');
@@ -176,4 +179,4 @@ is($out->get_output_entry('nosetb'), $noset2, 'Not a set member - extrayear cont
 is($out->get_output_entry('nosetc'), $noset3, 'Not a set member - extrayear continues from set 3');
 
 
-unlink "$bibfile.utf8";
+unlink "*.utf8";

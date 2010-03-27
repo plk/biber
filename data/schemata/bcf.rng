@@ -5,19 +5,6 @@
       <attribute name="version">
         <data type="decimal"/>
       </attribute>
-      <element name="bcf:bibdata">
-        <oneOrMore>
-          <element name="bcf:datasource">
-            <optional>
-              <attribute name="type">
-                <a:documentation>only type="file" is supported at this stage</a:documentation>
-                <data type="NCName"/>
-              </attribute>
-            </optional>
-            <data type="NCName"/>
-          </element>
-        </oneOrMore>
-      </element>
       <optional>
         <element name="bcf:options">
           <attribute name="component">
@@ -33,10 +20,12 @@
             <ref name="debug"/>
           </optional>
           <optional>
-            <!--
-              this is for a future version
-              displaymode?,
-            -->
+            <ref name="displaymode"/>
+          </optional>
+          <optional>
+            <ref name="locale"/>
+          </optional>
+          <optional>
             <ref name="inputenc"/>
           </optional>
           <optional>
@@ -47,6 +36,9 @@
           </optional>
           <optional>
             <ref name="nonsortprefixes"/>
+          </optional>
+          <optional>
+            <ref name="wrapline"/>
           </optional>
         </element>
       </optional>
@@ -61,7 +53,6 @@
         <ref name="labelalpha"/>
         <ref name="labelname"/>
         <ref name="labelyear"/>
-        <ref name="maxline"/>
         <ref name="maxitems"/>
         <ref name="maxnames"/>
         <ref name="minitems"/>
@@ -97,13 +88,14 @@
             <ref name="labelyear"/>
           </optional>
           <optional>
-            <ref name="maxline"/>
+            <ref name="maxitems"/>
           </optional>
-          <ref name="maxitems"/>
           <optional>
             <ref name="maxnames"/>
           </optional>
-          <ref name="minitems"/>
+          <optional>
+            <ref name="minitems"/>
+          </optional>
           <optional>
             <ref name="minnames"/>
           </optional>
@@ -145,19 +137,19 @@
             <attribute name="order">
               <data type="integer"/>
             </attribute>
+            <optional>
+              <attribute name="pass">
+                <choice>
+                  <value>label</value>
+                  <value>final</value>
+                </choice>
+              </attribute>
+            </optional>
             <oneOrMore>
               <element name="bcf:sortitem">
                 <attribute name="order">
                   <data type="integer"/>
                 </attribute>
-                <optional>
-                  <attribute name="pass">
-                    <choice>
-                      <value>label</value>
-                      <value>final</value>
-                    </choice>
-                  </attribute>
-                </optional>
                 <optional>
                   <attribute name="final">
                     <data type="integer"/>
@@ -221,19 +213,19 @@
               <attribute name="order">
                 <data type="integer"/>
               </attribute>
+              <optional>
+                <attribute name="pass">
+                  <choice>
+                    <value>label</value>
+                    <value>final</value>
+                  </choice>
+                </attribute>
+              </optional>
               <oneOrMore>
                 <element name="bcf:sortitem">
                   <attribute name="order">
                     <data type="integer"/>
                   </attribute>
-                  <optional>
-                    <attribute name="pass">
-                      <choice>
-                        <value>label</value>
-                        <value>final</value>
-                      </choice>
-                    </attribute>
-                  </optional>
                   <optional>
                     <attribute name="final">
                       <data type="integer"/>
@@ -288,20 +280,41 @@
           </oneOrMore>
         </element>
       </zeroOrMore>
-      <zeroOrMore>
-        <element name="bcf:section">
-          <attribute name="number">
-            <data type="integer"/>
-          </attribute>
-          <oneOrMore>
-            <element name="bcf:citekey">
-              <data type="NCName"/>
-            </element>
-          </oneOrMore>
-        </element>
-      </zeroOrMore>
+      <oneOrMore>
+        <ref name="secspec"/>
+      </oneOrMore>
     </element>
   </start>
+  <define name="secspec">
+    <optional>
+      <element name="bcf:bibdata">
+        <attribute name="section">
+          <data type="integer"/>
+        </attribute>
+        <oneOrMore>
+          <element name="bcf:datasource">
+            <optional>
+              <attribute name="type">
+                <a:documentation>only type="file" is supported at this stage</a:documentation>
+                <data type="NCName"/>
+              </attribute>
+            </optional>
+            <data type="NCName"/>
+          </element>
+        </oneOrMore>
+      </element>
+    </optional>
+    <element name="bcf:section">
+      <attribute name="number">
+        <data type="integer"/>
+      </attribute>
+      <oneOrMore>
+        <element name="bcf:citekey">
+          <data type="string"/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
   <define name="biblatex.entrytypes">
     <choice>
       <value>book</value>
@@ -465,6 +478,7 @@
         <choice>
           <value>0</value>
           <value>1</value>
+          <value>2</value>
         </choice>
       </element>
     </element>
@@ -555,19 +569,6 @@
       </oneOrMore>
     </element>
   </define>
-  <define name="maxline">
-    <element name="bcf:option">
-      <attribute name="type">
-        <value>singlevalued</value>
-      </attribute>
-      <element name="bcf:key">
-        <value>maxline</value>
-      </element>
-      <element name="bcf:value">
-        <data type="integer"/>
-      </element>
-    </element>
-  </define>
   <define name="name.list">
     <choice>
       <value>shortauthor</value>
@@ -614,6 +615,19 @@
       </element>
     </element>
   </define>
+  <define name="wrapline">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>wrapline</value>
+      </element>
+      <element name="bcf:value">
+        <data type="integer"/>
+      </element>
+    </element>
+  </define>
   <define name="inputenc">
     <element name="bcf:option">
       <attribute name="type">
@@ -655,6 +669,19 @@
       </element>
     </element>
   </define>
+  <define name="locale">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>locale</value>
+      </element>
+      <element name="bcf:value">
+        <data type="language"/>
+      </element>
+    </element>
+  </define>
   <define name="sortalphaothers">
     <element name="bcf:option">
       <attribute name="type">
@@ -689,33 +716,15 @@
       </oneOrMore>
     </element>
   </define>
+  <!-- This is for setting the display mode of non-roman scripts -->
+  <define name="displaymode">
+    <element name="displaymode">
+      <choice>
+        <value>original</value>
+        <value>romanized</value>
+        <value>translated</value>
+        <value>uniform</value>
+      </choice>
+    </element>
+  </define>
 </grammar>
-<!--
-  This is for when biber/biblatex become truly multilingual:
-  displaymode = ( displaymode.textual, displaymode.persons, displaymode.locations )
-  
-  displaymode.textual = element bcf:displaymode {
-  type = global | titles | persons | locations
-   attribute type { "textual" }, 
-   element bcf:mode { 
-     attribute precedence { xsd:integer }, display.mode.textual
-   }+,
-  }
-  displaymode.persons = element displaymode {
-  type = global | titles | persons | locations
-   attribute type { "persons" }, 
-   element bcf:mode { 
-     attribute precedence { xsd:integer }, display.mode.proper
-   }+,
-  }
-  displaymode.locations = element displaymode {
-  type = global | titles | persons | locations
-   attribute type { "location" }, 
-   element bcf:mode { 
-     attribute precedence { xsd:integer }, display.mode.proper
-   }+,
-  }
-  
-  display.mode.textual = { "original" | "romanized" | "translated" }
-  display.mode.proper  = { "original" | "romanized" | "uniform" }
--->

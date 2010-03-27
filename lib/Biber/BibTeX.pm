@@ -12,6 +12,8 @@ use Biber::Entries;
 use Biber::Entry;
 use Biber::Entry::Names;
 use Biber::Entry::Name;
+use Biber::Sections;
+use Biber::Section;
 use Biber::Utils;
 use Encode;
 use File::Spec;
@@ -268,16 +270,17 @@ sub parsename {
 }
 
 sub _text_bibtex_parse {
-
   my ($self, $filename) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
 
-# Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
+  # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
   if (Biber::Config->getoption('quiet')) {
     open OLDERR, '>&', \*STDERR;
     open STDERR, '>', '/dev/null';
   }
 
-  my $bibentries = $self->bib;
+  my $bibentries = $section->bib;
 
   my @localkeys;
 
@@ -290,7 +293,7 @@ sub _text_bibtex_parse {
     $encoding = "utf8";
   }
 
-  my $bib = Text::BibTeX::File->new( $filename, "<" )
+  my $bib = Text::BibTeX::File->new( $filename, '<' )
     or $logger->logcroak("Cannot create Text::BibTeX::File object from $filename: $!");
 
   #TODO validate with Text::BibTeX::Structure ?
@@ -299,7 +302,6 @@ sub _text_bibtex_parse {
   my $count = 0;
 
 BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
-
     $count++;
 
     if ( $entry->metatype == BTE_PREAMBLE ) {
@@ -308,7 +310,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     }
 
     next if ( $entry->metatype == BTE_MACRODEF or $entry->metatype == BTE_UNKNOWN
-      or $entry->metatype == BTE_COMMENT ); #or $entry->type =~ m/^comment$/i
+      or $entry->metatype == BTE_COMMENT );
 
     unless ( $entry->key ) {
       $logger->warn("Cannot get the key of entry no $count : Skipping");
@@ -325,7 +327,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     # Want a version of the key that is the same case as any citations which
     # reference it, in case they are different. We use this as the .bbl
     # entry key
-    my $citecasekey = first {lc($origkey) eq lc($_)} $self->citekeys;
+    my $citecasekey = first {lc($origkey) eq lc($_)} $section->get_citekeys;
     $citecasekey = $origkey unless $citecasekey;
     my $lc_key = lc($origkey);
 
@@ -343,7 +345,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     unless ($entry->parse_ok) {
       $self->{errors}++;
       $logger->warn("Entry $origkey does not parse correctly: skipping");
-      $self->del_citekey($origkey);
+      $section->del_citekey($origkey);
       next;
     }
 
@@ -432,7 +434,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
               if ($#commas > 1) {
                 $logger->warn("Name \"$name\" has too many commas: skipping entry $origkey");
                 $self->{errors}++;
-                $self->del_citekey($origkey);
+                $section->del_citekey($origkey);
                 next BIBLOOP;
               }
 
@@ -440,7 +442,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
               if ($name =~ /,,/) {
                 $logger->warn("Name \"$name\" is malformed (consecutive commas): skipping entry $origkey");
                 $self->{errors}++;
-                $self->del_citekey($origkey);
+                $section->del_citekey($origkey);
                 next BIBLOOP;
               }
             }
@@ -460,7 +462,9 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     }
   }
 
-  $self->{preamble} = join( "%\n", @preamble ) if @preamble;
+  $bib->close;
+
+  push @{$self->{preamble}}, @preamble if @preamble;
 
   if (Biber::Config->getoption('quiet')) {
     open STDERR, '>&', \*OLDERR;

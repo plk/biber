@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?oxygen RNGSchema="../data/schemata/bcf.rnc" type="compact"?>
+<?oxygen RNGSchema="../../data/schemata/bcf.rnc" type="compact"?>
 <bcf:controlfile version="0.9" xmlns:bcf="https://sourceforge.net/projects/biblatex">
-  <!-- BIB DATA -->
-  <bcf:bibdata>
-    <bcf:datasource type="file">file1.bib</bcf:datasource>
-    <bcf:datasource type="file">file2.bib</bcf:datasource>
-    <bcf:datasource type="file">file3.xml</bcf:datasource>    
-  </bcf:bibdata>
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -42,10 +36,6 @@
     <bcf:option type="multivalued">
       <bcf:key>labelyear</bcf:key>
       <bcf:value order="1">year</bcf:value>
-    </bcf:option>
-    <bcf:option type="singlevalued">
-      <bcf:key>maxline</bcf:key>
-      <bcf:value>79</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxitems</bcf:key>
@@ -168,25 +158,19 @@
       <bcf:sortitem order="2">year</bcf:sortitem>
     </bcf:sort>
   </bcf:sorting>
-  <!-- BIB SECTIONS -->
+  <!-- SECTION 0 -->
+  <bcf:bibdata section="0">
+    <bcf:datasource type="file">skips</bcf:datasource>
+  </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>key29</bcf:citekey>
-    <bcf:citekey>key13</bcf:citekey>
-    <bcf:citekey>key5</bcf:citekey>
-  </bcf:section>
-  <bcf:section number="1">
-    <bcf:citekey>key41</bcf:citekey>
-    <bcf:citekey>key9</bcf:citekey>
-    <bcf:citekey>key5</bcf:citekey>
-  </bcf:section>
-  <bcf:section number="2">
-    <bcf:citekey>key21</bcf:citekey>
-    <bcf:citekey>key92</bcf:citekey>
-  </bcf:section>
-  <bcf:section number="0">
-    <bcf:citekey>key29</bcf:citekey>
-    <bcf:citekey>key42</bcf:citekey>
-    <bcf:citekey>key5</bcf:citekey>
+    <bcf:citekey>skip1</bcf:citekey>
+    <bcf:citekey>skip2</bcf:citekey>
+    <bcf:citekey>skip3</bcf:citekey>
+    <bcf:citekey>skip4</bcf:citekey>
+    <bcf:citekey>seta</bcf:citekey>
+    <bcf:citekey>noseta</bcf:citekey>
+    <bcf:citekey>nosetb</bcf:citekey>
+    <bcf:citekey>nosetc</bcf:citekey>
   </bcf:section>
 </bcf:controlfile>
 

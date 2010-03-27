@@ -11,25 +11,29 @@ use Biber::Utils;
 use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
-
 chdir("t/tdata");
 
-my $bibfile;
+# Set up Biber object
 my $biber = Biber->new(noconf => 1);
-
-
-Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('locale', 'C');
-$biber->parse_auxfile('extrayear.aux');
 $biber->parse_ctrlfile('extrayear.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
-$bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
-$biber->parse_bibtex($bibfile);
 
+# Options - we could set these in the control file but it's nice to see what we're
+# relying on here for tests
+
+# Biber options
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('locale', 'C');
+
+# Biblatex options
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 Biber::Config->setblxoption('maxnames', 1);
+
+# Now generate the information
 $biber->prepare;
-my $bibentries = $biber->bib;
+my $bibentries = $biber->sections->get_section('0')->bib;
+my $section = $biber->sections->get_section('0');
+
 
 is($bibentries->entry('l1')->get_field('extrayear'), '1', 'Entry L1 - one name, first in 1995');
 is($bibentries->entry('l2')->get_field('extrayear'), '2', 'Entry L2 - one name, second in 1995');
@@ -48,4 +52,4 @@ ok(is_undef($bibentries->entry('vangennep')->get_field('extrayear')), 'Entry van
 ok(is_undef($bibentries->entry('gennep')->get_field('extrayear')), 'Entry gennep - different from prefix name');
 
 
-unlink "$bibfile.utf8";
+unlink "*.utf8";

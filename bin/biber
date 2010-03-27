@@ -170,8 +170,6 @@ else {
     my ($volume, $directories, $file) = File::Spec->splitpath($bblfile);
     $bblfile = File::Spec->catfile($outdir, $file)
   }
-  # parse the .aux file
-  $biber->parse_auxfile($auxfile);
 
   # parse the .bcf control file
   $biber->parse_ctrlfile($ctrlfile);
@@ -184,31 +182,6 @@ if (Biber::Config->getoption('trace')) {
     "############# Dump of initial biber object: ###############\n",
     $biber->_stringdump,
     "\n###########################################################")
-}
-
-#=====================================================
-# Parse/query database
-#=====================================================
-
-foreach my $bib (@{ Biber::Config->getoption('bibdata') }) {
-
-  # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
-  $bib = bibfind($bib);
-
-  if ($bib =~ /\.(?:db)?xml$/) {
-    $logger->logcroak("File $bib does not exist!") unless -f $bib;
-    ##DISABLED: $biber->parse_biblatexml( $bib )
-    $logger->logcroak("Support for the BibLaTeXML format is not included in this version of Biber.\n",
-                      "You can try (at your own risk) to pull the \"biblatexml\" branch of our git repo.")
-  }
-  elsif ($bib =~ /\.bib$/) {
-    $logger->logcroak("File $bib does not exist!") unless -f $bib;
-    $biber->parse_bibtex($bib)
-  }
-  else {
-    $logger->logcroak("File $bib.bib does not exist!") unless -f "$bib.bib";
-    $biber->parse_bibtex("$bib.bib");
-  }
 }
 
 # Set the output class. Should be a subclass of Biber::Output::Base

@@ -10,24 +10,28 @@ use Biber::Output::BBL;
 use Biber::Utils;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
-
 chdir("t/tdata");
 
-my $bibfile;
+# Set up Biber object
 my $biber = Biber->new(noconf => 1);
-
-Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('locale', 'C');
-$biber->parse_auxfile('dateformats.aux');
 $biber->parse_ctrlfile('dateformats.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
-$bibfile = Biber::Config->getoption('bibdata')->[0] . '.bib';
-$biber->parse_bibtex($bibfile);
 
+# Options - we could set these in the control file but it's nice to see what we're
+# relying on here for tests
+
+# Biber options
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('locale', 'C');
+
+# Biblatex options
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
+
+# Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $bibentries = $biber->bib;
+my $bibentries = $biber->sections->get_section('0')->bib;
+my $section = $biber->sections->get_section('0');
 
 my $l1 = [ "Invalid format of field 'origdate' - ignoring field",
            "Invalid format of field 'urldate' - ignoring field",
@@ -75,6 +79,7 @@ ok((($l14e->get_field('endyear') eq $l14e->get_field('year')) and
 
 ok(is_undef($bibentries->entry('l15')->get_field('labelyearname')), 'Date format test 15 - labelyear should be undef, no DATE or YEAR');
 
+# reset options and regenerate information
 Biber::Config->setblxoption('labelyear', [ 'year', 'eventyear', 'origyear' ]);
 $bibentries->entry('l17')->del_field('year');
 $bibentries->entry('l17')->del_field('month');
@@ -94,6 +99,7 @@ ok((is_def($l17e->get_field('origyear')) and
     ($l17e->get_field($l17e->get_field('labelyearname')) eq $l17e->get_field('year'))), 'Date format test 17a - labelyear = YEAR value when ENDYEAR is the same and ORIGYEAR is also present' );
 
 
+# reset options and regenerate information
 Biber::Config->setblxoption('labelyear', [ 'origyear', 'year', 'eventyear' ]);
 $bibentries->entry('l17')->del_field('year');
 $bibentries->entry('l17')->del_field('month');
@@ -107,6 +113,7 @@ ok((is_def($l17e->get_field('year')) and
     ($l17e->get_field('origendyear') eq $l17e->get_field('origyear')) and
     ($l17e->get_field($l17e->get_field('labelyearname')) eq $l17e->get_field('origyear'))), 'Date format test 17c - labelyear = ORIGYEAR value when ENDORIGYEAR is the same and YEAR is also present' );
 
+# reset options and regenerate information
 Biber::Config->setblxoption('labelyear', [ 'eventyear', 'year', 'origyear' ], 'PER_TYPE', 'book');
 $bibentries->entry('l17')->del_field('year');
 $bibentries->entry('l17')->del_field('month');
@@ -115,9 +122,8 @@ $out = $biber->get_output_obj;
 
 is($bibentries->entry('l17')->get_field('labelyearname'), 'eventyear', 'Date format test 17d - labelyearname = EVENTYEAR' ) ;
 
-
 my $l17bbl = $out->get_output_entry('l17');
 my $l17ly = qr/\\field\{labelyear\}\{1998\\bibdatedash 2004\}/ms;
 ok(($l17bbl =~ m/$l17ly/), 'Date format test 17e - labelyear = EVENTYEAR-EVENTENDYEAR');
 
-unlink "$bibfile.utf8";
+unlink "*.utf8";

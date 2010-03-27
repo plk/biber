@@ -25,8 +25,10 @@ my $logger = Log::Log4perl::get_logger('main');
 
 sub _getnamehash {
   my ($self, $citekey, $names) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $initstr = '';
-  my $bibentries = $self->bib;
   my $be = $bibentries->entry($citekey);
   ## my $nodecodeflag = $self->_decode_or_not($citekey);
 
@@ -72,7 +74,9 @@ sub _getnamehash {
 sub _getfullhash {
   my ($self, $citekey, $names) = @_;
   my $initstr = '';
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   foreach my $n (@{$names->names}) {
     if ( $n->get_prefix and
@@ -94,7 +98,9 @@ sub _getfullhash {
 
 sub _getlabel {
   my ($self, $citekey, $namefield) = @_;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   my $dt = $be->get_field('datatype');
   my $names = $be->get_field($namefield);
@@ -234,7 +240,9 @@ sub _dispatch_sorting {
 # Conjunctive set of sorting sets
 sub _generatesortstring {
   my ($self, $citekey, $sortscheme) = @_;
-  my $be = $self->bibentry($citekey);
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
   my $sortstring;
   foreach my $sortset (@{$sortscheme}) {
     $BIBER_SORT_FINAL = 0; # reset sorting short-circuit
@@ -305,7 +313,9 @@ sub _sort_9999 {
 
 sub _sort_author {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if (Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey) and
     $be->get_field('author')) {
@@ -318,11 +328,15 @@ sub _sort_author {
 
 sub _sort_citeorder {
   my ($self, $citekey, $sortelementattributes) = @_;
-  return (first_index {$_ eq $citekey} @{$self->{orig_order_citekeys}}) + 1; # +1 just to make it easier to debug
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  return (first_index {$_ eq $citekey} $section->get_orig_order_citekeys) + 1; # +1 just to make it easier to debug
 }
 
 sub _sort_debug {
   my ($self, $citekey, $sortelementattributes) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
   return $citekey;
 }
 
@@ -333,7 +347,9 @@ sub _sort_debug {
 sub _sort_dm {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $dmtype = (@{$args})[0]; # get day/month field type
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   my $default_pad_width = 2;
   my $default_pad_side = 'left';
@@ -361,7 +377,9 @@ sub _sort_dm {
 sub _sort_editor {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $ed = (@{$args})[0]; # get editor field
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if (Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) and
     $be->get_field($ed)) {
@@ -378,7 +396,9 @@ sub _sort_editor {
 sub _sort_editortc {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $edtypeclass = (@{$args})[0]; # get editor type/class field
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if (Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) and
     $be->get_field($edtypeclass)) {
@@ -391,7 +411,9 @@ sub _sort_editortc {
 
 sub _sort_extraalpha {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   my $default_pad_width = 4;
   my $default_pad_side = 'left';
@@ -415,7 +437,9 @@ sub _sort_extraalpha {
 
 sub _sort_issuetitle {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('issuetitle')) {
     return normalize_string( $be->get_field('issuetitle'), $self->_nodecode($citekey) );
@@ -427,7 +451,9 @@ sub _sort_issuetitle {
 
 sub _sort_journal {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('journal')) {
     return normalize_string( $be->get_field('journal'), $self->_nodecode($citekey) );
@@ -443,7 +469,9 @@ sub _sort_mm {
 
 sub _sort_labelalpha {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('sortlabelalpha')) {
     return $be->get_field('sortlabelalpha');
@@ -459,7 +487,9 @@ sub _sort_labelalpha {
 sub _sort_place {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $pltype = (@{$args})[0]; # get place field type
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field($pltype)) {
     return $self->_liststring($citekey, $pltype);
@@ -471,14 +501,18 @@ sub _sort_place {
 
 sub _sort_presort {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   return $be->get_field('presort') ? $be->get_field('presort') : '';
 }
 
 sub _sort_publisher {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('publisher')) {
     return $self->_liststring($citekey, 'publisher');
@@ -490,14 +524,18 @@ sub _sort_publisher {
 
 sub _sort_pubstate {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   return $be->get_field('pubstate') ? $be->get_field('pubstate') : '';
 }
 
 sub _sort_sortkey {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('sortkey')) {
     my $sortkey = lc($be->get_field('sortkey'));
@@ -511,7 +549,9 @@ sub _sort_sortkey {
 
 sub _sort_sortname {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
 
 # see biblatex manual §3.4 - sortname is ignored if no use<name> option is defined
@@ -532,7 +572,9 @@ sub _sort_sortname {
 sub _sort_title {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $ttype = (@{$args})[0]; # get year field type
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field($ttype)) {
     return normalize_string( $be->get_field($ttype), $self->_nodecode($citekey));
@@ -544,7 +586,9 @@ sub _sort_title {
 
 sub _sort_translator {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if (Biber::Config->getblxoption('usetranslator', $be->get_field('entrytype'), $citekey) and
     $be->get_field('translator')) {
@@ -557,7 +601,9 @@ sub _sort_translator {
 
 sub _sort_volume {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   my $default_pad_width = 4;
   my $default_pad_side = 'left';
@@ -586,7 +632,9 @@ sub _sort_volume {
 sub _sort_year {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $ytype = (@{$args})[0]; # get year field type
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   my $default_substring_width = 4;
   my $default_substring_side = 'left';
@@ -617,7 +665,9 @@ sub _sort_year {
 
 sub _nodecode {
   my ($self, $citekey) = @_;
-  my $be = $self->bibentry($citekey);
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
   my $no_decode = (Biber::Config->getoption('unicodebib') or
       Biber::Config->getoption('fastsort') or
       $be->get_field('datatype') eq 'xml');
@@ -631,7 +681,9 @@ sub _namestring {
   # $extraflag is set if we are calling this to generate strings for extra*
   # processing and therefore need to use uniquename
   my ($citekey, $field, $extraflag) = @_;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   my $bee = $be->get_field('entrytype');
   my $names = $be->get_field($field);
@@ -704,7 +756,9 @@ sub _namestring {
 
 sub _liststring {
   my ( $self, $citekey, $field ) = @_;
-  my $bibentries = $self->bib;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   my @items = @{$be->get_field($field)};
   my $str = '';

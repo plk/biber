@@ -452,7 +452,7 @@ sub name_to_bbl {
 
   $pno = join(',', @pno);
 
-  return "    {{$pno}{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
+  return "      {{$pno}{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
 }
 
 

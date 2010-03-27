@@ -158,7 +158,8 @@ sub add_output_tail {
 sub set_output_entry {
   my $self = shift;
   my $entry = shift;
-  $self->{output_data}{PER_ENTRY}{lc($entry->get_field('citecasekey'))} = $entry->dump;
+  my $section = shift;
+  $self->{output_data}{ENTRIES}{$section}{lc($entry->get_field('citecasekey'))} = $entry->dump;
   return;
 }
 
@@ -171,7 +172,9 @@ sub set_output_entry {
 sub get_output_entry {
   my $self = shift;
   my $key = shift;
-  return $self->{output_data}{PER_ENTRY}{lc($key)};
+  my $section = shift;
+  $section = '0' if not defined($section); # default - mainly for tests
+  return $self->{output_data}{ENTRIES}{$section}{lc($key)};
 }
 
 =head2 output
@@ -192,8 +195,12 @@ sub output {
   $logger->debug("Preparing final output using class __PACKAGE__ ...");
 
   print $target $data->{HEAD} or $logger->logcroak("Failure to write head to $target_string: $!");
-  while (my ($entry, $data) = each %{$data->{PER_ENTRY}}) {
-    print $target $data or $logger->logcroak("Failure to write entry '$entry' to $target_string: $!");
+
+  foreach my $secnum (sort keys %{$data}) {
+    print $target "SECTION: $secnum\n\n";
+    while (my ($entry, $data) = each %{$data->{$secnum}}) {
+      print $target $data or $logger->logcroak("Failure to write entry '$entry' to $target_string: $!");
+    }
   }
   print $target $data->{TAIL} or $logger->logcroak("Failure to write tail to $target_string: $!");
 
