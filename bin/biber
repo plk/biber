@@ -137,7 +137,6 @@ my $logger  = Log::Log4perl::get_logger('main') ;
 my $screen  = Log::Log4perl::get_logger('screen');
 my $logfile = Log::Log4perl::get_logger('logfile');
 
-my $auxfile;
 my $ctrlfile;
 my $bblfile;
 
@@ -154,20 +153,18 @@ if ( $opts->{allentries} && $opts->{bibdata} ) {
   $bblfile =~ s/(?:\.(bib|xml|dbxml))?$/\.bbl/;
 }
 else {
-  $auxfile = $ARGV[0] or croak usage();
-  $auxfile .= '.aux' unless $auxfile =~ m/\.aux$/;
-  $ctrlfile = $auxfile;
-  $ctrlfile =~ s/\.aux\z/.bcf/xms;
+  $ctrlfile = $ARGV[0] or croak usage();
+  $ctrlfile .= '.bcf' unless $ctrlfile =~ m/\.bcf$/;
 
   if (Biber::Config->getoption('outfile')) {
     $bblfile = Biber::Config->getoption('outfile')
   } else {
-    $bblfile = $auxfile;
-    $bblfile =~ s/aux$/bbl/;
+    $bblfile = $ctrlfile;
+    $bblfile =~ s/bcf$/bbl/;
   }
 
   if (defined($opts->{'output-directory'})) {
-    my ($volume, $directories, $file) = File::Spec->splitpath($bblfile);
+    my (undef, undef, $file) = File::Spec->splitpath($bblfile);
     $bblfile = File::Spec->catfile($outdir, $file)
   }
 
@@ -245,12 +242,12 @@ biber version: $VERSION
 
 sub usage {
   qq{
-Usage:  biber file.aux
+Usage:  biber file.bcf
         Creates file.bbl
 
-        biber -d foo.bib file.aux
+        biber -d foo.bib file.bcf
         Creates file.bbl from entries in foo.bib and the datafiles
-        listed in file.aux
+        listed in file.bcf
 
         biber -d foo.bib,bar.bib -a
         Creates foo.bbl from all entries in foo.bib and bar.bib
@@ -280,7 +277,7 @@ Options:
                          or else the output of "kpsewhich biber.conf".
   --noconf               Don't look for a configfile
   --allentries|-a        Output all entries in the database.
-                         (NB: this ignores the .aux file.)
+                         (NB: this ignores the .bcf file.)
   --unicodebib|-u        Assume bib file is UTF-8 and skip latex_decode.
   --unicodebbl|-U        Encode the bbl output in UTF-8.
   --bibencoding|-e [encoding]
@@ -312,7 +309,7 @@ C<biber> - A bibtex replacement for users of biblatex
 biber [ { --bibdata | -d } database.{bib|xml|dbxml} ] [ --useprd | -p ]
       [ --mincrossrefs | -m ] [ [--collate|-C] | [ --fastsort | -f ] ]
       [ --unicodebib | -u ] [ --unicodebbl | -U ] [ --debug | -D ]
-      [ { --outfile | -O } filename ] file.aux
+      [ { --outfile | -O } filename ] file.bcf
 
 biber --bibdata database --allentries [ --outfile filename ] [ ... ]
 
