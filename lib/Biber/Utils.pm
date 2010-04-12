@@ -56,45 +56,33 @@ our @EXPORT = qw{ bibfind terseinitials makenameid stringify_hash
 =cut
 
 sub bibfind {
-  ## since these variables are used in the _wanted sub, they need to be made global
-  ## FIXME there must be a way to avoid this
-  our $_filename = shift;
-  our @_found = ();
+  my $_filename = shift;
 
   $_filename .= '.bib' unless $_filename =~ /\.(bib|xml|dbxml)$/;
 
-  if ( can_run("kpsepath") ) {
-    my $kpsepath;
-    scalar run( command => [ 'kpsepath', 'bib' ],
-      verbose => 0,
-      buffer => \$kpsepath );
-    my @paths = split ( /:!*/, $kpsepath );
-    sub _removetrailingslashes {
-      my $str = shift;
-      $str =~ s|/+\s*$||;
-      return $str
-    };
-
-    @paths = map { _removetrailingslashes( $_ ) } @paths;
-
-    no warnings 'File::Find';
-    find (\&_wanted, @paths);
-
-    sub _wanted {
-      $_ =~ /^$_filename($|\.bib$)/ && push @_found, $File::Find::name;
+  if (can_run("kpsewhich")) {
+    my $found;
+    if ( $^O =~ /\AMSWin/xms ) {
+      scalar run( command => [ 'kpsewhich', '-file-type=bib', $_filename ],
+                  verbose => 0,
+                  buffer => \$found );
     }
-
-    if (@_found) {
-      my $found = shift @_found;
-      $logger->debug("Found bib file $found");
-      return $found ;
-    } else {
-      $logger->debug("Found bib file $_filename");
-      return $_filename ;
+    else {
+      scalar run( command => [ 'kpsewhich', $_filename ],
+                  verbose => 0,
+                  buffer => \$found );
     }
-
-  } else {
-    return $_filename
+    if ($found) {
+      chomp $found;
+      $logger->debug("Found .bib file at '$found'");
+      return $found;
+    }
+    else {
+      return $_filename;
+    }
+  }
+  else {
+    return $_filename;
   }
 }
 
