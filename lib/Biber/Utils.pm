@@ -63,7 +63,7 @@ sub bibfind {
   if (can_run("kpsewhich")) {
     my $found;
     if ( $^O =~ /\AMSWin/xms ) {
-      scalar run( command => [ 'kpsewhich', '-file-type=bib', $_filename ],
+      scalar run( command => [ 'kpsewhich', '-format=bib', $_filename ],
                   verbose => 0,
                   buffer => \$found );
     }
