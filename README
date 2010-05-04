@@ -1,6 +1,6 @@
 ==========================
 
-    BIBER Version 0.5.2
+    BIBER Version 0.5.3
 
 ==========================
 
@@ -28,18 +28,6 @@ REQUIREMENTS
     * File::Slurp (for latex2utf8 or if converting bib files to UTF-8 with biber).
     * Text::BibTeX (strongly recommended) OR
       Parse::RecDescent AND Regexp::Common
-
-  ==> IMPORTANT NOTE FOR WINDOWS USERS <==
-  Because the CPAN distribution of Text::BibTeX cannot be straightforwardly
-  installed on Windows yet, users are urged to download and install a
-  pre-compiled package for Text::BibTeX available on our sourceforge download
-  page. Choose the link that corresponds to your version of Perl (5.8.x or
-  5.10.x):
-      http://sourceforge.net/projects/biblatex-biber/files/Text-BibTeX%20for%20windows/0.38/Text-BibTeX-0.38-perl-5.8.zip/download
-      http://sourceforge.net/projects/biblatex-biber/files/Text-BibTeX%20for%20windows/0.38/Text-BibTeX-0.38-perl-5.10.zip/download
-  Unzip the file, and follow the instructions in the file README.txt. (Note
-  that versions for 64-bit Windows are not available at present.)
-
 
 INSTALLATION
 
