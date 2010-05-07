@@ -392,16 +392,32 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
         }
       }
 
-      if (lc($entry->type) eq 'phdthesis') {
+      # Entry type aliases - biblatex manual Section 2.1.2
+      if (lc($entry->type) eq 'conference') {
+        $bibentry->set_field('entrytype', 'inproceedings');
+      }
+      elsif (lc($entry->type) eq 'electronic') {
+        $bibentry->set_field('entrytype', 'online');
+      }
+      elsif (lc($entry->type) eq 'mastersthesis') {
         $bibentry->set_field('entrytype', 'thesis');
-        $bibentry->set_field('type', $bibentry->get_field('type') ? $bibentry->get_field('type') : 'phdthesis');
-      } elsif (lc($entry->type) eq 'mathesis') {
+        $bibentry->set_field('type', $bibentry->get_field('type') ?
+                             $bibentry->get_field('type') : 'mathesis');
+      }
+      elsif (lc($entry->type) eq 'phdthesis') {
         $bibentry->set_field('entrytype', 'thesis');
-        $bibentry->set_field('type', $bibentry->get_field('type') ? $bibentry->get_field('type') : 'mathesis');
-      } elsif (lc($entry->type) eq 'techreport') {
+        $bibentry->set_field('type', $bibentry->get_field('type') ?
+                             $bibentry->get_field('type') : 'phdthesis');
+      }
+      elsif (lc($entry->type) eq 'techreport') {
         $bibentry->set_field('entrytype', 'report');
-        $bibentry->set_field('type', $bibentry->get_field('type') ? $bibentry->get_field('type') : 'techreport');
-      } else {
+        $bibentry->set_field('type', $bibentry->get_field('type') ?
+                             $bibentry->get_field('type') : 'techreport');
+      }
+      elsif (lc($entry->type) eq 'www') {
+        $bibentry->set_field('entrytype', 'online');
+      }
+      else {
         $bibentry->set_field('entrytype', $entry->type);
       }
 
