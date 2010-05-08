@@ -21,7 +21,6 @@ our @EXPORT = qw{
   @NULL_OK
   @ENTRYTYPES
   @UENTRYTYPES
-  %ENTRYTYPEALIAS
   %SKIPFIELDS
   %CONFIG_DEFAULT_BIBER
   %CONFIG_DEFAULT_BIBLATEX
@@ -165,9 +164,10 @@ our %CONFIG_SCOPE_BIBLATEX = (
 
 # Default types
 Readonly::Array our @ENTRYTYPES  => qw {
-  article book inbook booklet collection incollection manual misc online patent
-  periodical proceedings  inproceedings report set thesis unpublished customa
-  customb customc customd custome customf
+  article book inbook bookinbook suppbook booklet collection incollection suppcollection
+  manual misc online patent periodical suppperiodical proceedings  inproceedings
+  reference inreference report set thesis unpublished customa customb customc customd
+  custome customf
  };
 
 # Unsupported default entry types which don't default to "misc"
@@ -175,16 +175,6 @@ Readonly::Array our @UENTRYTYPES  =>   qw {
   artwork audio commentary image jurisdiction legislation legal letter
   movie music performance review software standard video
  };
-
-# Default types aliases
-Readonly::Hash our %ENTRYTYPEALIAS => (
-                                       bookinbook       => 'inbook',
-                                       suppbook         => 'inbook',
-                                       suppcollection   => 'incollection',
-                                       suppperiodical   => 'article',
-                                       reference        => 'collection',
-                                       inreference      => 'incollection',
-                                      );
 
 ### biblatex fields
 
