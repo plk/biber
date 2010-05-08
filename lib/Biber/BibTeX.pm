@@ -419,8 +419,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
       }
       # default to MISC type if not a known type
       elsif (not first { lc($entry->type) eq $_ } (@ENTRYTYPES,
-                                                   @UENTRYTYPES,
-                                                   keys %ENTRYTYPEALIAS) ) {
+                                                   @UENTRYTYPES) ) {
         $logger->warn("Entry type \"" . $entry->type . "\" for entry \"$origkey\" isn't a known biblatex type - defaulting to \"misc\"");
         $self->{warnings}++;
         $bibentry->set_field('entrytype', 'misc');
