@@ -377,7 +377,7 @@ sub parse_auxfile {
 sub parse_ctrlfile {
   my ($self, $ctrl_file) = @_;
 
-  $logger->warn("Cannot find control file '$ctrl_file'! - did you pass the \"backend=biber\" option to BibLaTeX?") unless -f "$ctrl_file";
+  $logger->logcroak("Cannot find control file '$ctrl_file'! - did you pass the \"backend=biber\" option to BibLaTeX?") unless -f "$ctrl_file";
 
   # Validate if asked to
   if (Biber::Config->getoption('validate')) {
@@ -392,14 +392,15 @@ sub parse_ctrlfile {
 
     # we assume that the schema files are in the same dir as Biber.pm:
     (undef, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
-    ## NB the following also works, but the above approach is better
-   #my $bcfpath = first { -f File::Spec->catfile($_, 'Biber', 'bcf.rng') } @INC;
+    # NB the following also works, but the above approach is better
+    # my $bcfpath = first { -f File::Spec->catfile($_, 'Biber', 'bcf.rng') } @INC;
     my $bcf_rng = File::Spec->catfile($biber_path, 'Biber', 'bcf.rng');
 
     if (-f $bcf_rng) {
       $CFxmlschema = XML::LibXML::RelaxNG->new( location => $bcf_rng )
     } else {
       $logger->warn("Cannot find XML::LibXML::RelaxNG schema. Skipping validation : $!");
+      $self->{warnings}++;
     }
 
     # basic parse and XInclude processing
@@ -677,6 +678,7 @@ sub parse_bibtex {
     if (-s $filename > 20000 ) {
       $logger->warn("Note that it can be very slow with large bib files!\n",
         "You are advised to install Text::BibTeX for faster processing!");
+      $self->{warnings}++;
     };
 
     @localkeys = $self->_bibtex_prd_parse($filename);
@@ -981,6 +983,7 @@ sub postprocess_sets {
     }
     elsif ( not $be->get_field('crossref') ) {
       $logger->warn("Adding missing field 'crossref' to entry $citekey");
+      $self->{warnings}++;
       $be->set_field('crossref', $entrysetkeys[0]);
     }
   }
@@ -1418,8 +1421,10 @@ sub sortentries {
     if (Biber::Config->getoption('locale')) {
       my $thislocale = Biber::Config->getoption('locale');
       $logger->debug("Sorting entries with built-in sort (with locale $thislocale) ...");
-      setlocale( LC_ALL, $thislocale )
-        or $logger->warn("Unavailable locale $thislocale")
+      unless (setlocale( LC_ALL, $thislocale )) {
+        $logger->warn("Unavailable locale $thislocale");
+        $self->{warnings}++;
+      }
     } else {
       $logger->debug("Sorting entries with built-in sort (with locale ", $ENV{LC_COLLATE}, ") ...");
     }
@@ -1470,8 +1475,10 @@ sub sortshorthands {
     if (Biber::Config->getoption('locale')) {
       my $thislocale = Biber::Config->getoption('locale');
       $logger->debug("Sorting shorthands with built-in sort (with locale $thislocale) ...");
-      setlocale( LC_ALL, $thislocale )
-        or $logger->warn("Unavailable locale $thislocale")
+      unless (setlocale( LC_ALL, $thislocale )) {
+        $logger->warn("Unavailable locale $thislocale");
+        $self->{warnings}++;
+      }
     } else {
       $logger->debug("Sorting shorthands with built-in sort (with locale ", $ENV{LC_COLLATE}, ") ...");
     }
