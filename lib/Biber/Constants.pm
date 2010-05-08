@@ -129,7 +129,7 @@ our %CONFIG_DEFAULT_BIBLATEX = (
   );
 
 # Defines the scope of each of the BibLaTeX configuration options
-Readonly::Hash our %CONFIG_SCOPE_BIBLATEX => (
+our %CONFIG_SCOPE_BIBLATEX = (
   alphaothers       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   controlversion    => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   debug             => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
