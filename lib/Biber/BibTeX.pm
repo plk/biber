@@ -296,8 +296,6 @@ sub _text_bibtex_parse {
   my $bib = Text::BibTeX::File->new( $filename, '<' )
     or $logger->logcroak("Cannot create Text::BibTeX::File object from $filename: $!");
 
-  #TODO validate with Text::BibTeX::Structure ?
-
   my @preamble = ();
   my $count = 0;
 
@@ -314,6 +312,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
 
     unless ( $entry->key ) {
       $logger->warn("Cannot get the key of entry no $count : Skipping");
+      $self->{warnings}++;
       next;
     }
 
@@ -321,6 +320,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
 
     if (!defined $origkey or $origkey =~ /\s/ or $origkey eq '') {
       $logger->warn("Invalid BibTeX key! Skipping...");
+      $self->{warnings}++;
       next;
     }
 
@@ -337,6 +337,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
       $self->{errors}++;
       my (undef,undef,$f) = File::Spec->splitpath( $filename );
       $logger->warn("Repeated entry---key $origkey in file $f\nI'm skipping whatever remains of this entry");
+      $self->{warnings}++;
       next;
     }
 
@@ -345,7 +346,8 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     unless ($entry->parse_ok) {
       $self->{errors}++;
       $logger->warn("Entry $origkey does not parse correctly: skipping");
-      $section->del_citekey($origkey);
+      $self->{warnings}++;
+      $self->del_citekey($origkey);
       next;
     }
 
@@ -416,6 +418,14 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
       }
       elsif (lc($entry->type) eq 'www') {
         $bibentry->set_field('entrytype', 'online');
+      }
+      # default to MISC type if not a known type
+      elsif (not first { lc($entry->type) eq $_ } (@ENTRYTYPES,
+                                                   @UENTRYTYPES,
+                                                   keys %ENTRYTYPEALIAS) ) {
+        $logger->warn("Entry type \"" . $entry->type . "\" for entry \"$origkey\" isn't a known biblatex type - defaulting to \"misc\"");
+        $self->{warnings}++;
+        $bibentry->set_field('entrytype', 'misc');
       }
       else {
         $bibentry->set_field('entrytype', $entry->type);

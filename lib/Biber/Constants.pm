@@ -19,6 +19,9 @@ our @EXPORT = qw{
   @DATERANGEFIELDS
   @DATECOMPONENTFIELDS
   @NULL_OK
+  @ENTRYTYPES
+  @UENTRYTYPES
+  %ENTRYTYPEALIAS
   %SKIPFIELDS
   %CONFIG_DEFAULT_BIBER
   %CONFIG_DEFAULT_BIBLATEX
@@ -86,7 +89,7 @@ our %CONFIG_DEFAULT_BIBER = (
 # but we need this as a fallback, just in case,
 # or when using the command-line options "-a -d <datafile>"
 # without an aux/bcf file
-our %CONFIG_DEFAULT_BIBLATEX = (
+Readonly::Hash our %CONFIG_DEFAULT_BIBLATEX => (
   controlversion => undef,
   debug => '0',
   terseinits => '0',
@@ -126,7 +129,7 @@ our %CONFIG_DEFAULT_BIBLATEX = (
   );
 
 # Defines the scope of each of the BibLaTeX configuration options
-our %CONFIG_SCOPE_BIBLATEX = (
+Readonly::Hash our %CONFIG_SCOPE_BIBLATEX => (
   alphaothers       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   controlversion    => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   debug             => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
@@ -155,6 +158,31 @@ our %CONFIG_SCOPE_BIBLATEX = (
   usetranslator     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   uniquename        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
 );
+
+### entry types
+
+# Default types
+Readonly::Array our @ENTRYTYPES  => qw {
+  article book inbook booklet collection incollection manual misc online patent
+  periodical proceedings  inproceedings report set thesis unpublished customa
+  customb customc customd custome customf
+ };
+
+# Unsupported default entry types which don't default to "misc"
+Readonly::Array our @UENTRYTYPES  =>   qw {
+  artwork audio commentary image jurisdiction legislation legal letter
+  movie music performance review software standard video
+ };
+
+# Default types aliases
+Readonly::Hash our %ENTRYTYPEALIAS => (
+                                       bookinbook       => 'inbook',
+                                       suppbook         => 'inbook',
+                                       suppcollection   => 'incollection',
+                                       suppperiodical   => 'article',
+                                       reference        => 'collection',
+                                       inreference      => 'incollection',
+                                      );
 
 ### biblatex fields
 
