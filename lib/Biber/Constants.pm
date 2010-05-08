@@ -89,7 +89,7 @@ our %CONFIG_DEFAULT_BIBER = (
 # but we need this as a fallback, just in case,
 # or when using the command-line options "-a -d <datafile>"
 # without an aux/bcf file
-Readonly::Hash our %CONFIG_DEFAULT_BIBLATEX => (
+our %CONFIG_DEFAULT_BIBLATEX = (
   controlversion => undef,
   debug => '0',
   terseinits => '0',
