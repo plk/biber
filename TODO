@@ -2,24 +2,15 @@ ROADMAP / TODO
 
 in decreasing order of priority:
 
-   ----- version 0.5 ----- FIRST OFFICIAL RELEASE, in sync with biblatex 0.9
-   * ==> make Biber::BibLaTeXML also take the nosort options into account
+   * for version 0.5.4, merge "bcfonly" branch into master for release. This
+     implements the use of only .bcf and the one-pass, multi-section refs code.
+   * add validation mechanism for options and config (untaint data),
+     probably with Params::Validate
+   * validate bibtex data with Text::Bibtex::Structure (optional) needs
+     biblatex interface for defining structure of custom styles (biblatex 1.0)
+   * merge in the "unique" branch to implement full uniquename/list
+     automation. Needs new .bbl format and biblatex support (biblatex 2.0)
+   * make Biber::BibLaTeXML also take the nosort options into account
    * Implement options in LaTeX::Decode?
      ALTERNATIVELY: Upload an enhanced version of LaTeX::Decode to CPAN,
      and remove it from the Biber distribution.
-   * Improve bib2biblatexml:
-     - add print_biblatexml method to Biber::Internals and use it ?
-     - add support for latest features in biblatexml-ml schema / DONE
-   ----------
-   * add validation mechanism for options and config (untaint data),
-     probably with Params::Validate
-   * validate bibtex data with Text::Bibtex::Structure (optional)?
-   * plugin facility
-   * provide good documentation of the BibLaTeXML schema
-   * refactor OO structure: add Biber::Conf and Biber::Entry classes ?
-   * fix crossref handling of reviews
-   * "D[onald] E. Knuth" prints as D. E. Knuth but is sorted with Donald E. Knuth ??
-   * prototype of bbx style for handling multiscript bibliographies (will probably
-        require xelatex+polyglossia or lualatex+(some-babel-equivalent)?)
-   * PerlTeX integration ?
-   * ...

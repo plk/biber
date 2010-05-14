@@ -2,6 +2,7 @@ Things to remember when releasing new version:
 
 * Change version string in and content, if necessary, of "README"
 * Change version string in and content of "Changes" file
+* Update "TODO" file
 * Change version string in "Biber.pm"
 * perl Build.PL to create YAML files
 * Commit and tag with version number
