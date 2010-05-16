@@ -1,6 +1,7 @@
 Revision history for Biber
 
-0.54   Unreleased
+0.5.   Unreleased
+       * Case-sensitive sorting option
        * Multi-section support. Only one biber pass needed to process all
          bib sections using extended biblatex 0.9b .bbl format.
        * .aux file is no longer used by biber - all information is passed
