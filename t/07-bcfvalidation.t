@@ -14,7 +14,7 @@ my $CFxmlparser = XML::LibXML->new();
 my $CFxmlschema = XML::LibXML::RelaxNG->new(location => '../data/schemata/bcf.rng');
 
 # basic parse and XInclude processing
-my $CFxp = $CFxmlparser->parse_file('tdata/general1.bcf');
+my $CFxp = $CFxmlparser->parse_file('tdata/extrayear.bcf');
 
 # XPath context
 my $CFxpc = XML::LibXML::XPathContext->new($CFxp);

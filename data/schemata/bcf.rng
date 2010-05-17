@@ -102,13 +102,17 @@
             <ref name="labelyear"/>
           </optional>
           <optional>
+            <ref name="maxitems"/>
+          </optional>
+          <optional>
             <ref name="maxline"/>
           </optional>
-          <ref name="maxitems"/>
           <optional>
             <ref name="maxnames"/>
           </optional>
-          <ref name="minitems"/>
+          <optional>
+            <ref name="minitems"/>
+          </optional>
           <optional>
             <ref name="minnames"/>
           </optional>
@@ -150,19 +154,19 @@
             <attribute name="order">
               <data type="integer"/>
             </attribute>
+            <optional>
+              <attribute name="pass">
+                <choice>
+                  <value>label</value>
+                  <value>final</value>
+                </choice>
+              </attribute>
+            </optional>
             <oneOrMore>
               <element name="bcf:sortitem">
                 <attribute name="order">
                   <data type="integer"/>
                 </attribute>
-                <optional>
-                  <attribute name="pass">
-                    <choice>
-                      <value>label</value>
-                      <value>final</value>
-                    </choice>
-                  </attribute>
-                </optional>
                 <optional>
                   <attribute name="final">
                     <data type="integer"/>
@@ -226,19 +230,19 @@
               <attribute name="order">
                 <data type="integer"/>
               </attribute>
+              <optional>
+                <attribute name="pass">
+                  <choice>
+                    <value>label</value>
+                    <value>final</value>
+                  </choice>
+                </attribute>
+              </optional>
               <oneOrMore>
                 <element name="bcf:sortitem">
                   <attribute name="order">
                     <data type="integer"/>
                   </attribute>
-                  <optional>
-                    <attribute name="pass">
-                      <choice>
-                        <value>label</value>
-                        <value>final</value>
-                      </choice>
-                    </attribute>
-                  </optional>
                   <optional>
                     <attribute name="final">
                       <data type="integer"/>

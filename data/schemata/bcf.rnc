@@ -31,7 +31,7 @@ start =
       labelalpha,
       labelname,
       labelyear,
-      maxitems,      
+      maxitems,
       maxline,
       maxnames,
       minitems,
@@ -53,10 +53,10 @@ start =
       labelalpha?,
       labelname?,
       labelyear?,
+      maxitems?,
       maxline?,
-      maxitems,
       maxnames?,
-      minitems,
+      minitems?,
       minnames?,
       singletitle?,
       sortalphaothers?,
@@ -72,9 +72,9 @@ start =
       attribute type { "global" },
       element bcf:sort {
         attribute order { xsd:integer },
+        attribute pass { "label" | "final" }?,
         element bcf:sortitem {
           attribute order { xsd:integer },
-          attribute pass { "label" | "final" }?,
           attribute final { xsd:integer }?,
           attribute substring_side { "left" | "right" }?,
           attribute substring_width { xsd:integer }?,
@@ -90,9 +90,9 @@ start =
       attribute type { biblatex.entrytypes },
       element bcf:sort {
         attribute order { xsd:integer },
+        attribute pass { "label" | "final" }?,
         element bcf:sortitem {
           attribute order { xsd:integer },
-          attribute pass { "label" | "final" }?,
           attribute final { xsd:integer }?,
           attribute substring_side { "left" | "right" }?,
           attribute substring_width { xsd:integer }?,
