@@ -191,7 +191,7 @@ sub parse_ctrlfile {
       $self->{warnings}++;
     }
 
-    # basic parse and XInclude processing
+    # Parse file
     my $CFxp = $CFxmlparser->parse_file("$ctrl_file");
 
     # XPath context

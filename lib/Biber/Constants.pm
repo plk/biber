@@ -56,6 +56,7 @@ my $locale = $ENV{LANG} || $ENV{LC_ALL} || "en_US.utf8" ;
 
 our %CONFIG_DEFAULT_BIBER = (
   validate => 0,
+  cssort => 1,
   fastsort => 1,
   mincrossrefs =>  2,
   unicodebbl =>  0,

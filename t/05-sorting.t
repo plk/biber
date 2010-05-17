@@ -62,8 +62,8 @@ my $lists4      = 'ibm2hp1zzzz';
 my $lists5      = 'ibm2hp2sun2sony';
 my $dates1      = '1979001002000000198000400808075006007019240070090192400002005019200200308020003004079003003';
 my $edtypeclass1 = 'vol0redactor0jaffe2philipp0loewenfeld2samuel1kaltenbrunner2ferdinand1ewald2paul';
-my $prefix1     = 'mm0luzzatto2moshe ḥayyim0lashon laramḥal uvo sheloshah ḥiburim0200000000';
-my $diacritic1  = 'mm0hasan2alī0some title0200000000';
+my $prefix1     = 'mm0Luzzatto2Moshe Ḥayyim0Lashon laRamḥal uvo sheloshah ḥiburim0200000000';
+my $diacritic1  = 'mm0Hasan2Alī0Some title0200000000';
 
 # Testing nosortprefix and nosortdiacritics
 Biber::Config->setblxoption('sorting_label', [
@@ -95,6 +95,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 ]
                                                ]);
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+Biber::Config->setoption('cssort', '1');
 
 # regenerate information
 $biber->prepare;
@@ -119,6 +120,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 ],
                                                ]);
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+Biber::Config->setoption('cssort', '0');
 
 # regenerate information
 $biber->prepare;
