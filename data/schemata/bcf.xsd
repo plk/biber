@@ -7,10 +7,11 @@
           <xs:complexType>
             <xs:sequence>
               <xs:group minOccurs="0" ref="bcf:bibencoding"/>
+              <xs:group minOccurs="0" ref="bcf:cssort"/>
               <xs:group minOccurs="0" ref="bcf:debug"/>
               <xs:group minOccurs="0" ref="bcf:displaymode"/>
-              <xs:group minOccurs="0" ref="bcf:locale"/>
               <xs:group minOccurs="0" ref="bcf:inputenc"/>
+              <xs:group minOccurs="0" ref="bcf:locale"/>
               <xs:group minOccurs="0" ref="bcf:mincrossrefs"/>
               <xs:element minOccurs="0" ref="bcf:nonsortdiacritics"/>
               <xs:element minOccurs="0" ref="bcf:nonsortprefixes"/>
@@ -832,6 +833,38 @@
               </xs:simpleType>
             </xs:element>
             <xs:element name="value" type="xs:NCName"/>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="cssort">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="cssort"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
           </xs:sequence>
           <xs:attribute name="type" use="required">
             <xs:simpleType>

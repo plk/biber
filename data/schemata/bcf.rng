@@ -17,16 +17,19 @@
             <ref name="bibencoding"/>
           </optional>
           <optional>
+            <ref name="cssort"/>
+          </optional>
+          <optional>
             <ref name="debug"/>
           </optional>
           <optional>
             <ref name="displaymode"/>
           </optional>
           <optional>
-            <ref name="locale"/>
+            <ref name="inputenc"/>
           </optional>
           <optional>
-            <ref name="inputenc"/>
+            <ref name="locale"/>
           </optional>
           <optional>
             <ref name="mincrossrefs"/>
@@ -651,6 +654,22 @@
       </element>
       <element name="bcf:value">
         <data type="NCName"/>
+      </element>
+    </element>
+  </define>
+  <define name="cssort">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>cssort</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
       </element>
     </element>
   </define>

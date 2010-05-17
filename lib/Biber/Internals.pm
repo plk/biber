@@ -261,7 +261,16 @@ sub _generatesortstring {
     }
   }
   $sortstring =~ s/0\z//xms; # strip off the last '0' added by _sortset()
-  $be->set_field('sortstring', lc($sortstring));
+
+  # Decide if we are doing case-sensitive sorting or not
+  my $casesort;
+  if (Biber::Config->getoption('cssort')) {
+    $casesort = $sortstring;
+  }
+  else {
+    $casesort = lc($sortstring);
+  }
+  $be->set_field('sortstring', $casesort);
 
   # Generate sortinit - the initial letter of the sortstring. This must ignore
   # presort characters, naturally

@@ -2,6 +2,12 @@
 <?oxygen RNGSchema="../../data/schemata/bcf.rnc" type="compact"?>
 <bcf:controlfile version="0.9" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- OPTIONS -->
+  <bcf:options component="biber" type="global">
+    <bcf:option type="singlevalued">
+      <bcf:key>cssort</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+  </bcf:options>
   <bcf:options component="biblatex" type="global">
     <bcf:option type="singlevalued">
       <bcf:key>alphaothers</bcf:key>

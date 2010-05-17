@@ -8,10 +8,11 @@ start =
       attribute component { "biber" },
       attribute type { "global" },
       bibencoding?,
+      cssort?,
       debug?,
       displaymode?,
-      locale?,
       inputenc?,
+      locale?,
       mincrossrefs?,
       nonsortdiacritics?,
       nonsortprefixes?,
@@ -85,7 +86,7 @@ start =
       attribute type { biblatex.entrytypes },
       element bcf:sort {
         attribute order { xsd:integer },
-        attribute pass { "label" | "final" }?,        
+        attribute pass { "label" | "final" }?,
         element bcf:sortitem {
           attribute order { xsd:integer },
           attribute final { xsd:integer }?,
@@ -234,7 +235,6 @@ labelname =
       name.list
     }+
   }
-
 name.list = "shortauthor" | "shorteditor" | "author" | "editor" | "translator"
 year.list = "year" | "origyear" | "eventyear" | "urlyear"
 mincrossrefs =
@@ -266,6 +266,12 @@ bibencoding =
     attribute type { "singlevalued" },
     element bcf:key { "bibencoding" },
     element bcf:value { xsd:NCName }
+  }
+cssort =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "cssort" },
+    element bcf:value { "0" | "1" }
   }
 alphaothers =
   element bcf:option {

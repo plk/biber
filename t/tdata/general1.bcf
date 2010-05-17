@@ -4,6 +4,10 @@
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
+      <bcf:key>cssort</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
       <bcf:key>mincrossrefs</bcf:key>
       <bcf:value>88</bcf:value>
     </bcf:option>
@@ -28,7 +32,7 @@
     <bcf:option type="singlevalued">
       <bcf:key>maxitems</bcf:key>
       <bcf:value>3</bcf:value>
-    </bcf:option>
+    </bcf:option>    
     <bcf:option type="singlevalued">
       <bcf:key>maxnames</bcf:key>
       <bcf:value>3</bcf:value>

@@ -21,6 +21,7 @@ GetOptions(
   $opts,
   'fastsort|f!', ## now the default
   'locale|l=s',
+  'cssort', # case-sensitive sorting
   'collate|C!', ## to sort with Unicode::Collate
   'collate_options|c=s',
   'mincrossrefs|m=s',
@@ -258,6 +259,7 @@ Options:
   --mincrossrefs|-m <n>  Set threshold for crossrefs.
   --fastsort|-f          Use Perl’s sort instead of Unicode::Collate for sorting (TRUE).
   --locale|-l [locale]   Set the locale to be used for sorting with built-in sort function.
+  --cssort               Use case-sensitive sorting. Default is case-insensitive
   --collate|-C           Sort with Unicode::Collate instead of the built-in sort function.
   --collate_options|-c [options]
                          Options to pass to the Unicode::Collate object used for sorting
