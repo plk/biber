@@ -19,6 +19,7 @@ start =
       debug?,
       displaymode?,
       inputenc?,
+      locale?,
       mincrossrefs?,
       nonsortdiacritics?,
       nonsortprefixes?

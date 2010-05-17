@@ -42,6 +42,9 @@
             <ref name="inputenc"/>
           </optional>
           <optional>
+            <ref name="locale"/>
+          </optional>
+          <optional>
             <ref name="mincrossrefs"/>
           </optional>
           <optional>
