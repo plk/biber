@@ -232,8 +232,8 @@ our $dispatch_sorting = {
 # Main sorting dispatch method
 sub _dispatch_sorting {
   my ($self, $sortfield, $citekey, $sortelementattributes) = @_;
-  my $code_ref = @{$dispatch_sorting->{$sortfield}}[0];
-  my $code_args_ref = @{$dispatch_sorting->{$sortfield}}[1];
+  my $code_ref = ${$dispatch_sorting->{$sortfield}}[0];
+  my $code_args_ref = ${$dispatch_sorting->{$sortfield}}[1];
   return &{$code_ref}($self, $citekey, $sortelementattributes, $code_args_ref);
 }
 
