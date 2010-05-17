@@ -63,7 +63,7 @@ module which relies on the
 <a href="http://search.cpan.org/dist/btparse/">btparse C library</a>. 
 The objective of the first development phase is to have a robust
 and reliable emulation of the BibTeX processor with the biblatex.bst style
-file. In other words, given the same .aux file as input, biber should
+file. In other words, given the same data file as input, biber should
 output a functionally identical .bbl file as BibTeX.</p>
 
 <p>In a future version, Biber will also support a new XML format
@@ -87,11 +87,19 @@ or remote resources via network protocols (such as SRU) might also be
 implemented.</p>
 
 <br/>
-<p><strong>Biber v0.5.1 is now
+<p><strong>Biber v0.5.3 is now
 <a href="http://sourceforge.net/project/platformdownload.php?group_id=228270">released</a></strong>.
-It should be used in conjunction with biblatex 0.9 with the option "backend=biber".
+It should be used in conjunction with biblatex 0.9a with the option "backend=biber".
 For version 0.8 please use Biber v0.4.4 instead!
 </p> 
+
+<p><strong>Next release: v0.5.4</strong> - featuring:</p>
+<ul>
+<li>biblatex 0.9b and above only</li>
+<li>Case sensitive sorting option</li>
+<li>No more .aux file use - uses only its own .bcf format data file</li>
+<li>Only one biber run required for all bibliography sections due to enhanced .bcf format</li>
+</ul>
 
 <p>You are also welcome to fetch the current development version:</p>
 <pre class="small">git clone git://biblatex-biber.git.sourceforge.net/gitroot/biblatex-biber/biblatex-biber</pre>
