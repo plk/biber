@@ -41,7 +41,6 @@
               <xs:group ref="bcf:labelname"/>
               <xs:group ref="bcf:labelyear"/>
               <xs:group ref="bcf:maxitems"/>
-              <xs:group ref="bcf:maxline"/>
               <xs:group ref="bcf:maxnames"/>
               <xs:group ref="bcf:minitems"/>
               <xs:group ref="bcf:minnames"/>
@@ -79,7 +78,6 @@
               <xs:group minOccurs="0" ref="bcf:labelname"/>
               <xs:group minOccurs="0" ref="bcf:labelyear"/>
               <xs:group minOccurs="0" ref="bcf:maxitems"/>
-              <xs:group minOccurs="0" ref="bcf:maxline"/>
               <xs:group minOccurs="0" ref="bcf:maxnames"/>
               <xs:group minOccurs="0" ref="bcf:minitems"/>
               <xs:group minOccurs="0" ref="bcf:minnames"/>
@@ -683,31 +681,6 @@
             <xs:simpleType>
               <xs:restriction base="xs:token">
                 <xs:enumeration value="multivalued"/>
-              </xs:restriction>
-            </xs:simpleType>
-          </xs:attribute>
-        </xs:complexType>
-      </xs:element>
-    </xs:sequence>
-  </xs:group>
-  <xs:group name="maxline">
-    <xs:sequence>
-      <xs:element name="option">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="key">
-              <xs:simpleType>
-                <xs:restriction base="xs:token">
-                  <xs:enumeration value="maxline"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:element>
-            <xs:element name="value" type="xs:integer"/>
-          </xs:sequence>
-          <xs:attribute name="type" use="required">
-            <xs:simpleType>
-              <xs:restriction base="xs:token">
-                <xs:enumeration value="singlevalued"/>
               </xs:restriction>
             </xs:simpleType>
           </xs:attribute>
