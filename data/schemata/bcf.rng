@@ -30,13 +30,15 @@
             <ref name="bibencoding"/>
           </optional>
           <optional>
+            <ref name="cssort"/>
+          </optional>
+          <optional>
             <ref name="debug"/>
           </optional>
           <optional>
-            <!--
-              this is for a future version
-              displaymode?,
-            -->
+            <ref name="displaymode"/>
+          </optional>
+          <optional>
             <ref name="inputenc"/>
           </optional>
           <optional>
@@ -61,8 +63,8 @@
         <ref name="labelalpha"/>
         <ref name="labelname"/>
         <ref name="labelyear"/>
-        <ref name="maxline"/>
         <ref name="maxitems"/>
+        <ref name="maxline"/>
         <ref name="maxnames"/>
         <ref name="minitems"/>
         <ref name="minnames"/>
@@ -640,6 +642,22 @@
       </element>
     </element>
   </define>
+  <define name="cssort">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>cssort</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
   <define name="alphaothers">
     <element name="bcf:option">
       <attribute name="type">
@@ -652,6 +670,19 @@
         <data type="normalizedString">
           <param name="pattern">\S+</param>
         </data>
+      </element>
+    </element>
+  </define>
+  <define name="locale">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>locale</value>
+      </element>
+      <element name="bcf:value">
+        <data type="language"/>
       </element>
     </element>
   </define>
@@ -689,33 +720,15 @@
       </oneOrMore>
     </element>
   </define>
+  <!-- This is for setting the display mode of non-roman scripts -->
+  <define name="displaymode">
+    <element name="displaymode">
+      <choice>
+        <value>original</value>
+        <value>romanized</value>
+        <value>translated</value>
+        <value>uniform</value>
+      </choice>
+    </element>
+  </define>
 </grammar>
-<!--
-  This is for when biber/biblatex become truly multilingual:
-  displaymode = ( displaymode.textual, displaymode.persons, displaymode.locations )
-  
-  displaymode.textual = element bcf:displaymode {
-  type = global | titles | persons | locations
-   attribute type { "textual" }, 
-   element bcf:mode { 
-     attribute precedence { xsd:integer }, display.mode.textual
-   }+,
-  }
-  displaymode.persons = element displaymode {
-  type = global | titles | persons | locations
-   attribute type { "persons" }, 
-   element bcf:mode { 
-     attribute precedence { xsd:integer }, display.mode.proper
-   }+,
-  }
-  displaymode.locations = element displaymode {
-  type = global | titles | persons | locations
-   attribute type { "location" }, 
-   element bcf:mode { 
-     attribute precedence { xsd:integer }, display.mode.proper
-   }+,
-  }
-  
-  display.mode.textual = { "original" | "romanized" | "translated" }
-  display.mode.proper  = { "original" | "romanized" | "uniform" }
--->

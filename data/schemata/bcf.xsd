@@ -8,7 +8,9 @@
           <xs:complexType>
             <xs:sequence>
               <xs:group minOccurs="0" ref="bcf:bibencoding"/>
+              <xs:group minOccurs="0" ref="bcf:cssort"/>
               <xs:group minOccurs="0" ref="bcf:debug"/>
+              <xs:group minOccurs="0" ref="bcf:displaymode"/>
               <xs:group minOccurs="0" ref="bcf:inputenc"/>
               <xs:group minOccurs="0" ref="bcf:mincrossrefs"/>
               <xs:element minOccurs="0" ref="bcf:nonsortdiacritics"/>
@@ -37,8 +39,8 @@
               <xs:group ref="bcf:labelalpha"/>
               <xs:group ref="bcf:labelname"/>
               <xs:group ref="bcf:labelyear"/>
-              <xs:group ref="bcf:maxline"/>
               <xs:group ref="bcf:maxitems"/>
+              <xs:group ref="bcf:maxline"/>
               <xs:group ref="bcf:maxnames"/>
               <xs:group ref="bcf:minitems"/>
               <xs:group ref="bcf:minnames"/>
@@ -836,6 +838,38 @@
       </xs:element>
     </xs:sequence>
   </xs:group>
+  <xs:group name="cssort">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="cssort"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
   <xs:group name="alphaothers">
     <xs:sequence>
       <xs:element name="option">
@@ -855,6 +889,31 @@
                 </xs:restriction>
               </xs:simpleType>
             </xs:element>
+          </xs:sequence>
+          <xs:attribute name="type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="singlevalued"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="locale">
+    <xs:sequence>
+      <xs:element name="option">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="key">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="locale"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="value" type="xs:language"/>
           </xs:sequence>
           <xs:attribute name="type" use="required">
             <xs:simpleType>
@@ -913,33 +972,19 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <!-- This is for setting the display mode of non-roman scripts -->
+  <xs:group name="displaymode">
+    <xs:sequence>
+      <xs:element name="displaymode" form="unqualified">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="original"/>
+            <xs:enumeration value="romanized"/>
+            <xs:enumeration value="translated"/>
+            <xs:enumeration value="uniform"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
 </xs:schema>
-<!--
-  This is for when biber/biblatex become truly multilingual:
-  displaymode = ( displaymode.textual, displaymode.persons, displaymode.locations )
-  
-  displaymode.textual = element bcf:displaymode {
-  type = global | titles | persons | locations
-   attribute type { "textual" }, 
-   element bcf:mode { 
-     attribute precedence { xsd:integer }, display.mode.textual
-   }+,
-  }
-  displaymode.persons = element displaymode {
-  type = global | titles | persons | locations
-   attribute type { "persons" }, 
-   element bcf:mode { 
-     attribute precedence { xsd:integer }, display.mode.proper
-   }+,
-  }
-  displaymode.locations = element displaymode {
-  type = global | titles | persons | locations
-   attribute type { "location" }, 
-   element bcf:mode { 
-     attribute precedence { xsd:integer }, display.mode.proper
-   }+,
-  }
-  
-  display.mode.textual = { "original" | "romanized" | "translated" }
-  display.mode.proper  = { "original" | "romanized" | "uniform" }
--->

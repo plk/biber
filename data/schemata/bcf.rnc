@@ -15,6 +15,7 @@ start =
       attribute component { "biber" },
       attribute type { "global" },
       bibencoding?,
+      cssort?,
       debug?,
       displaymode?,
       inputenc?,
@@ -29,9 +30,8 @@ start =
       labelalpha,
       labelname,
       labelyear,
-      locale,
+      maxitems,      
       maxline,
-      maxitems,
       maxnames,
       minitems,
       minnames,
@@ -253,6 +253,12 @@ bibencoding =
     attribute type { "singlevalued" },
     element bcf:key { "bibencoding" },
     element bcf:value { xsd:NCName }
+  }
+cssort =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "cssort" },
+    element bcf:value { "0" | "1" }
   }
 alphaothers =
   element bcf:option {
