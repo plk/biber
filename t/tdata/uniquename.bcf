@@ -6,14 +6,16 @@
     <bcf:datasource type="file">examples.bib</bcf:datasource>
   </bcf:bibdata>
   <!-- OPTIONS -->
+  <bcf:options component="biber" type="global"> 
+    <bcf:option type="singlevalued">
+      <bcf:key>cssort</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+  </bcf:options>
   <bcf:options component="biblatex" type="global">
     <bcf:option type="singlevalued">
       <bcf:key>alphaothers</bcf:key>
       <bcf:value>\textbf{+}</bcf:value>
-    </bcf:option>
-    <bcf:option type="singlevalued">
-      <bcf:key>cssort</bcf:key>
-      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labelalpha</bcf:key>
