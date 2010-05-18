@@ -77,14 +77,8 @@
               <xs:group minOccurs="0" ref="bcf:labelalpha"/>
               <xs:group minOccurs="0" ref="bcf:labelname"/>
               <xs:group minOccurs="0" ref="bcf:labelyear"/>
-              <xs:group minOccurs="0" ref="bcf:maxitems"/>
-              <xs:group minOccurs="0" ref="bcf:maxnames"/>
-              <xs:group minOccurs="0" ref="bcf:minitems"/>
-              <xs:group minOccurs="0" ref="bcf:minnames"/>
               <xs:group minOccurs="0" ref="bcf:singletitle"/>
               <xs:group minOccurs="0" ref="bcf:sortalphaothers"/>
-              <xs:group minOccurs="0" ref="bcf:sortlos"/>
-              <xs:group minOccurs="0" ref="bcf:terseinits"/>
               <xs:group minOccurs="0" ref="bcf:uniquename"/>
               <xs:group minOccurs="0" ref="bcf:useauthor"/>
               <xs:group minOccurs="0" ref="bcf:useeditor"/>

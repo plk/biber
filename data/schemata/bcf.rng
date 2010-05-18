@@ -101,28 +101,10 @@
             <ref name="labelyear"/>
           </optional>
           <optional>
-            <ref name="maxitems"/>
-          </optional>
-          <optional>
-            <ref name="maxnames"/>
-          </optional>
-          <optional>
-            <ref name="minitems"/>
-          </optional>
-          <optional>
-            <ref name="minnames"/>
-          </optional>
-          <optional>
             <ref name="singletitle"/>
           </optional>
           <optional>
             <ref name="sortalphaothers"/>
-          </optional>
-          <optional>
-            <ref name="sortlos"/>
-          </optional>
-          <optional>
-            <ref name="terseinits"/>
           </optional>
           <optional>
             <ref name="uniquename"/>
