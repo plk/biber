@@ -64,7 +64,6 @@ data/schemata/bcf.xsd
 data/latinkeys.txt
 etc/AUCTeX.txt
 etc/biber-auctex.png
-etc/example.bcf
 t/00-load.t
 t/00-options.t
 t/01-names.t
