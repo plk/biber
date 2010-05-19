@@ -52,7 +52,7 @@ our $BIBER_CONF_NAME = 'biber.conf';
 Readonly::Scalar our $DISPLAYMODE_DEFAULT => 'uniform';
 
 ## Biber CONFIGURATION DEFAULTS
-my $locale = $ENV{LANG} || $ENV{LC_ALL} || "en_US.utf8" ;
+my $locale = $ENV{LANG} || $ENV{LC_ALL} || "en_US.UTF-8" ;
 
 our %CONFIG_DEFAULT_BIBER = (
   validate => 0,
