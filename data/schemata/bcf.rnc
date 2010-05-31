@@ -107,11 +107,11 @@ start =
         ## only type="file" is supported at this stage
         attribute type { xsd:NCName }?,
         xsd:NCName
-      }+
+      }*
     }?,
     element bcf:section {
       attribute number { xsd:integer },
-      element bcf:citekey { xsd:string }+
+      element bcf:citekey { xsd:string }*
     }
   
 biblatex.entrytypes =

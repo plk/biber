@@ -187,7 +187,7 @@
   <xs:element name="bibdata">
     <xs:complexType>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="bcf:datasource"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="bcf:datasource"/>
       </xs:sequence>
       <xs:attribute name="section" use="required" type="xs:integer"/>
     </xs:complexType>
@@ -208,7 +208,7 @@
   <xs:element name="section">
     <xs:complexType>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="bcf:citekey"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="bcf:citekey"/>
       </xs:sequence>
       <xs:attribute name="number" use="required" type="xs:integer"/>
     </xs:complexType>
