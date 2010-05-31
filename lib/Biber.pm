@@ -409,9 +409,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     my @keys = ();
     foreach my $keyc (@{$section->{citekey}}) {
       my $key = $keyc->{content};
+      Biber::Config->setoption('allentries', 0); # reset for each section
       if ($key eq '*') {
         Biber::Config->setoption('allentries', 1);
-        $logger->info("Processing all citekeys");
+        $key_flag = 1; # There is at least one key, used for error reporting below
+        $logger->info("Using all citekeys in bib section " . $section->{number});
         $bib_sections->add_section($bib_section);
         last SECTION;
       }
@@ -427,13 +429,10 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         next;
       }
     }
-    # Die if there are no citations
-    unless (Biber::Config->getoption('allentries') or $key_flag) {
-      $logger->logcroak("The file '$ctrl_file' does not contain any citations!")
+
+    unless (Biber::Config->getoption('allentries')) {
+      $logger->info("Found ", $#keys+1 , " citekeys in bib section " . $section->{number})
     }
-    # Report on number of citations found
-    $logger->info("Found ", $#keys+1 , " citekeys in bib section " . $section->{number})
-      unless Biber::Config->getoption('allentries') ;
 
     if (Biber::Config->getoption('debug')) {
       my @debug_keys = sort @keys;
@@ -443,6 +442,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     }
     $bib_section->add_citekeys(@keys);
     $bib_sections->add_section($bib_section);
+  }
+
+  # Die if there are no citations in any section
+  unless ($key_flag) {
+    $logger->logcroak("The file '$ctrl_file' does not contain any citations!")
   }
 
   # --bibdata was passed on command-line

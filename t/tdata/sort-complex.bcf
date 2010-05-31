@@ -173,5 +173,8 @@
     <bcf:citekey>L4</bcf:citekey>
     <bcf:citekey>L5</bcf:citekey>
   </bcf:section>
+  <!-- section 0 (cont.) -->
+  <bcf:section number="0">
+  </bcf:section>
 </bcf:controlfile>
 

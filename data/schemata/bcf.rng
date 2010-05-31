@@ -276,7 +276,7 @@
         <attribute name="section">
           <data type="integer"/>
         </attribute>
-        <oneOrMore>
+        <zeroOrMore>
           <element name="bcf:datasource">
             <optional>
               <attribute name="type">
@@ -286,18 +286,18 @@
             </optional>
             <data type="NCName"/>
           </element>
-        </oneOrMore>
+        </zeroOrMore>
       </element>
     </optional>
     <element name="bcf:section">
       <attribute name="number">
         <data type="integer"/>
       </attribute>
-      <oneOrMore>
+      <zeroOrMore>
         <element name="bcf:citekey">
           <data type="string"/>
         </element>
-      </oneOrMore>
+      </zeroOrMore>
     </element>
   </define>
   <define name="biblatex.entrytypes">
