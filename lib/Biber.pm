@@ -393,6 +393,8 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
 
 SECTION: foreach my $section (@{$bcfxml->{section}}) {
     my $bib_section;
+    Biber::Config->setoption('allentries', 0); # reset for each section
+
     # Can be multiple section 0 entries and so re-use that section object if it exists
     if (my $existing_section = $bib_sections->get_section($section->{number})) {
       $bib_section = $existing_section;
@@ -409,7 +411,6 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     my @keys = ();
     foreach my $keyc (@{$section->{citekey}}) {
       my $key = $keyc->{content};
-      Biber::Config->setoption('allentries', 0); # reset for each section
       if ($key eq '*') {
         Biber::Config->setoption('allentries', 1);
         $key_flag = 1; # There is at least one key, used for error reporting below
