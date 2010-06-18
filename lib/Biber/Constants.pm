@@ -27,7 +27,6 @@ our @EXPORT = qw{
   %CONFIG_SCOPE_BIBLATEX
   $BIBER_CONF_NAME
   $BIBLATEX_VERSION
-  $BCF_VERSION
   $BIBER_SORT_FINAL
   $BIBER_SORT_NULL
   %ALIASES
@@ -36,11 +35,9 @@ our @EXPORT = qw{
   $DISPLAYMODE_DEFAULT
   } ;
 
-# this is the latest <major.minor> version of biblatex.sty
-Readonly::Scalar our $BIBLATEX_VERSION => '0.9';
-
-# this is the latest version of the BCF xml format
-Readonly::Scalar our $BCF_VERSION => '0.9';
+# Version of biblatex which this release works with. Matched against version
+# passed in control file
+Readonly::Scalar our $BIBLATEX_VERSION => '0.9b';
 
 our $BIBER_SORT_FINAL = 0;
 our $BIBER_SORT_NULL  = 0;
