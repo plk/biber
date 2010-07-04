@@ -406,7 +406,7 @@ sub output {
     $target = new IO::File '>-';
   }
 
-  $logger->debug("Preparing final output using class __PACKAGE__ ...");
+  $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
 
   print $target $data->{HEAD} or $logger->logcroak("Failure to write head to $target_string: $!");
 
