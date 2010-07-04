@@ -547,7 +547,7 @@ sub _sort_sortkey {
   my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('sortkey')) {
-    my $sortkey = lc($be->get_field('sortkey'));
+    my $sortkey = $be->get_field('sortkey');
     $sortkey = LaTeX::Decode::latex_decode($sortkey) unless $self->_nodecode($citekey);
     return $sortkey;
   }
