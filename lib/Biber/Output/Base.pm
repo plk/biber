@@ -189,7 +189,7 @@ sub output {
     $target_string = $self->{output_target_file};
   }
 
-  $logger->debug("Preparing final output using class __PACKAGE__ ...");
+  $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
 
   print $target $data->{HEAD} or $logger->logcroak("Failure to write head to $target_string: $!");
   while (my ($entry, $data) = each %{$data->{PER_ENTRY}}) {
