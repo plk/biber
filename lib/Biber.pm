@@ -1313,6 +1313,10 @@ sub sortentries {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bib;
   my @citekeys = $section->get_citekeys;
+  $logger->debug("Citekeys before sort:\n");
+  foreach my $ck (@citekeys) {
+    $logger->debug("$ck => " . $bibentries->entry($ck)->get_field('sortstring') . "\n");
+  }
 
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
@@ -1348,6 +1352,10 @@ sub sortentries {
       $Collator->cmp( $bibentries->entry($a)->get_field('sortstring'),
         $bibentries->entry($b)->get_field('sortstring') )
       } @citekeys;
+  }
+  $logger->debug("Citekeys after sort:\n");
+  foreach my $ck (@citekeys) {
+    $logger->debug("$ck => " . $bibentries->entry($ck)->get_field('sortstring') . "\n");
   }
   $section->set_citekeys([ @citekeys ]);
 
