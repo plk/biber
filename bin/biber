@@ -293,7 +293,7 @@ Options:
   --collate|-C           Sort with Unicode::Collate instead of the built-in sort function.
   --collate_options|-c [options]
                          Options to pass to the Unicode::Collate object used for sorting
-                         (default is 'level => 2, table => latinkeys.txt').
+                         (default is 'level => "2", table => "latinkeys.txt"').
                          See "perldoc Unicode::Collate" for details.
   --useprd|-p            Parse with Parse::RecDescent instead of Text::BibTeX.
   --bibdata|-d <files>   Use <files> as bibliography databases (comma separated list).
