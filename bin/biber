@@ -16,12 +16,12 @@ use File::Spec;
 #<wrapper_snippet>---------------------------------
 
 use Getopt::Long qw/:config no_ignore_case/;
-my $opts = {'cssort' => 1 }; # Initialise opts hash and set any defaults
+my $opts = {};
 GetOptions(
   $opts,
   'fastsort|f!',         ## default
   'locale|l=s',
-  'cssort!',             ## case-[in]sensitive sorting. cssort is default
+  'cssort',              ## case-sensitive sorting
   'collate|C!',          ## sort with Unicode::Collate
   'collate_options|c=s', ## Unicode::Collate->new() options
   'mincrossrefs|m=s',
@@ -293,8 +293,7 @@ Options:
                          Unicode::Collate (--collate flag), this adds CLDR tailoring to
                          the sort. This tailoring only happens if you have a CLDR-enabled
                          version of Unicode::Collate otherwise there is no special tailoring.
-  --cssort               Use case-sensitive sorting. This is the default. Use --nocssort to
-                         do case-insensitive sorting.
+  --cssort               Use case-sensitive sorting. Case insensitive is the default.
   --collate|-C           Sort with Unicode::Collate instead of the built-in sort function.
   --collate_options|-c [options]
                          Options to pass to the Unicode::Collate object used for sorting
