@@ -1415,27 +1415,41 @@ sub sortentries {
   my $self = shift;
   my $bibentries = $self->bib;
   my @auxcitekeys = $self->citekeys;
+  if (Biber::Config->getoption('cssort')) {
+    $logger->debug("Sorting is case-SENSITIVE");
+  }
+  else {
+    $logger->debug("Sorting is case-INSENSITIVE");
+  }
   $logger->debug("Citekeys before sort:\n");
   foreach my $ck (@auxcitekeys) {
     $logger->debug("$ck => " . $bibentries->entry($ck)->get_field('sortstring') . "\n");
   }
 
+  # Set up locale. Order of priority is:
+  # 1. locale value passed to Unicode::Collate->new() (Unicode::Collate sorts only)
+  # 2. Biber locale option
+  # 3. LC_COLLATE env variable
+
+  my $thislocale = Biber::Config->getoption('locale');
+
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
-    if (Biber::Config->getoption('locale')) {
-      my $thislocale = Biber::Config->getoption('locale');
+    if ($thislocale) {
       $logger->debug("Sorting entries with built-in sort (with locale $thislocale) ...");
       unless (setlocale( LC_ALL, $thislocale )) {
         $logger->warn("Unavailable locale $thislocale");
         $self->{warnings}++;
       }
-    } else {
+    }
+    else {
       $logger->debug("Sorting entries with built-in sort (with locale ", $ENV{LC_COLLATE}, ") ...");
     }
     @auxcitekeys = sort {
       $bibentries->entry($a)->get_field('sortstring') cmp $bibentries->entry($b)->get_field('sortstring')
       } @auxcitekeys;
-  } else {
+  }
+  else {
     require Unicode::Collate;
     my $opts = Biber::Config->getoption('collate_options');
     my $collopts;
@@ -1444,6 +1458,13 @@ sub sortentries {
     }
     else {
       $collopts = $opts;
+    }
+    # Set locale option for U::C->new() if we are using a CLDR-enabled U::C
+    if (Unicode::Collate->can('CLDR_Version')) {
+      my $uclocale = $thislocale ? $thislocale : $ENV{LC_COLLATE};
+      unless ($collopts->{locale}) {
+        $collopts->{locale} = $uclocale;
+      }
     }
     my $Collator = Unicode::Collate->new( %{$collopts} )
       or $logger->logcarp("Problem with Unicode::Collate options: $@");
