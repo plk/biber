@@ -9,6 +9,7 @@ $Text::Wrap::columns = 80;
 use Storable qw( dclone );
 use List::AllUtils qw( :all );
 use Log::Log4perl qw(:no_extra_logdie_message);
+use POSIX qw( locale_h ); # for lc() of sorting strings
 
 =encoding utf-8
 
@@ -262,12 +263,17 @@ sub _generatesortstring {
   }
   $sortstring =~ s/0\z//xms; # strip off the last '0' added by _sortset()
 
-  # Decide if we are doing case-sensitive sorting or not
+  # Decide if we are doing case-insensitive sorting or not
+  # If so, lowercase according to locale
   my $casesort;
   if (Biber::Config->getoption('cssort')) {
     $casesort = $sortstring;
   }
   else {
+    if (my $thislocale = Biber::Config->getoption('locale')) {
+      use locale;
+      setlocale( LC_CTYPE, $thislocale );
+    }
     $casesort = lc($sortstring);
   }
   $be->set_field('sortstring', $casesort);
