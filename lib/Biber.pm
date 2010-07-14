@@ -475,7 +475,7 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
       # Global options
       if (lc($bcfopts->{type}) eq 'global') {
         foreach my $bcfopt (@{$bcfopts->{option}}) {
-          unless (Biber::Config->getcmdlineoption($bcfopt->{key})) { # already set on cmd line
+          unless (defined(Biber::Config->getcmdlineoption($bcfopt->{key}))) { # already set on cmd line
             if (lc($bcfopt->{type}) eq 'singlevalued') {
               Biber::Config->setoption($bcfopt->{key}, $bcfopt->{value});
             } elsif (lc($bcfopt->{type}) eq 'multivalued') {
