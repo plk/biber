@@ -274,6 +274,9 @@ sub _text_bibtex_parse {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
+  my $basefilename = $filename;
+  $basefilename =~ s/\.utf8$//;
+
   # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
   if (Biber::Config->getoption('quiet')) {
     open OLDERR, '>&', \*STDERR;
@@ -303,7 +306,10 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     $count++;
 
     if ( $entry->metatype == BTE_PREAMBLE ) {
-      push @preamble, $entry->value;
+      # Only push the preambles from the file if we haven't seen this data file before
+      unless ($BIBER_DATAFILE_REFS{$basefilename} > 1) {
+        push @preamble, $entry->value;
+      }
       next;
     }
 

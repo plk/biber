@@ -237,7 +237,12 @@ sub set_datafiles {
 
 sub get_datafiles {
   my $self = shift;
-  return @{$self->{datafiles}};
+  if (exists($self->{datafiles})) {
+    return @{$self->{datafiles}};
+  }
+  else {
+    return ();
+  }
 }
 
 
