@@ -42,7 +42,7 @@ is_deeply([$section0->get_citekeys], ['sect1', 'sect2', 'sect3', 'sect8'], 'Sect
 is_deeply([$section0->get_shorthands], ['sect1', 'sect2', 'sect8'], 'Section 0 shorthands');
 is_deeply([$section1->get_citekeys], ['sect4', 'sect5'], 'Section 1 citekeys');
 is_deeply([$section1->get_shorthands], ['sect4', 'sect5'], 'Section 1 shorthands');
-is_deeply([$section2->get_citekeys], ['sect6', 'sect7'], 'Section 2 citekeys');
-is_deeply([$section2->get_shorthands], ['sect6', 'sect7'], 'Section 2 shorthands');
+is_deeply([$section2->get_citekeys], ['sect1', 'sect6', 'sect7'], 'Section 2 citekeys');
+is_deeply([$section2->get_shorthands], ['sect1', 'sect6', 'sect7'], 'Section 2 shorthands');
 
 unlink "*.utf8";

@@ -403,8 +403,10 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
       $bib_section = new Biber::Section('number' => $section->{number});
     }
 
-    # Set the data files for the section
-    $bib_section->set_datafiles($bibdatafiles{$section->{number}});
+    # Set the data files for the section unless we've already done so
+    # (for example, for multiple section 0 entries)
+    $bib_section->set_datafiles($bibdatafiles{$section->{number}}) unless
+      $bib_section->get_datafiles;
 
     # Stop reading citekeys if we encounter "*" as a citation as this means
     # "all keys"
@@ -418,10 +420,10 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         $bib_sections->add_section($bib_section);
         last SECTION;
       }
-      elsif (not Biber::Config->get_seenkey($key)) {
+      elsif (not Biber::Config->get_seenkey($key, $section->{number})) {
         push @keys, decode_utf8($key);
         $key_flag = 1; # There is at least one key, used for error reporting below
-        Biber::Config->incr_seenkey($key);
+        Biber::Config->incr_seenkey($key, $section->{number});
       }
       elsif (Biber::Config->get_keycase($key) ne $key) {
         $logger->warn("Case mismatch error between cite keys $key and " . Biber::Config->get_keycase($key));
@@ -518,6 +520,15 @@ sub parse_bibtex {
     Biber::Config->setoption('unicodebib', 1);
   }
 
+  # Increment the number of times each datafile has been referenced
+  # allowing for the possible ".utf8" extra intermediate extension.
+  # For example, a datafile might be referenced in more than one section.
+  # Some things find this information useful, for example, setting preambles is global
+  # and so we need to know if we've already saved the preamble for a datafile.
+  my $basefilename = $filename;
+  $basefilename =~ s/\.utf8$//;
+  $BIBER_DATAFILE_REFS{$basefilename}++;
+
   unless ( eval "require Text::BibTeX; 1" ) {
     Biber::Config->setoption('useprd', 1);
   }
@@ -549,14 +560,14 @@ sub parse_bibtex {
   unlink $ufilename if -f $ufilename;
 
   if (Biber::Config->getoption('allentries')) {
-    map { Biber::Config->incr_seenkey($_) } @localkeys
+    map { Biber::Config->incr_seenkey($_, $section->number) } @localkeys
   }
 
   my $bibentries = $section->bib;
 
-# if allentries, push all bibdata keys into citekeys (if they are not already there)
-# Can't just make citekeys = bibdata keys as this loses information about citekeys
-# that are missing data entries.
+  # if allentries, push all bibdata keys into citekeys (if they are not already there)
+  # Can't just make citekeys = bibdata keys as this loses information about citekeys
+  # that are missing data entries.
   if (Biber::Config->getoption('allentries')) {
     foreach my $bibkey ($bibentries->sorted_keys) {
       $section->add_citekeys($bibkey);
@@ -1485,13 +1496,12 @@ sub process_data {
       ##DISABLED: $biber->parse_biblatexml( $bib )
       $logger->logcroak("Support for the BibLaTeXML format is not included in this version of Biber.\n",
                         "You can try (at your own risk) to pull the \"biblatexml\" branch of our git repo.")
-    } elsif ($datafile =~ /\.bib$/) {
-      $logger->logcroak("File $datafile does not exist!") unless -f $datafile;
-      $self->parse_bibtex($datafile)
-    } else {
-      $logger->logcroak("File $datafile.bib does not exist!") unless -f "$datafile.bib";
-      $self->parse_bibtex("$datafile.bib");
     }
+    elsif ($datafile !~ /\.bib$/) {
+      $datafile = "$datafile.bib";
+    }
+    $logger->logcroak("File '$datafile' does not exist!") unless -f $datafile;
+    $self->parse_bibtex($datafile)
   }
   return;
 }

@@ -323,7 +323,17 @@ sub getblxoption {
 sub get_seenkey {
   shift; # class method so don't care about class name
   my $key = shift;
-  return $CONFIG->{state}{seenkeys}{lc($key)};
+  my $section = shift; # If passed, return count for just this section
+  if (defined($section)) {
+    return $CONFIG->{state}{seenkeys}{$section}{lc($key)};
+  }
+  else {
+    my $count;
+    foreach my $section (keys %{$CONFIG->{state}{seenkeys}}) {
+      $count += $CONFIG->{state}{seenkeys}{$section}{lc($key)};
+    }
+    return $count;
+  }
 }
 
 =head2 get_keycase
@@ -352,8 +362,9 @@ sub get_keycase {
 sub incr_seenkey {
   shift; # class method so don't care about class name
   my $key = shift;
+  my $section = shift;
   $CONFIG->{state}{keycase}{lc($key)} = $key;
-  $CONFIG->{state}{seenkeys}{lc($key)}++;
+  $CONFIG->{state}{seenkeys}{$section}{lc($key)}++;
   return;
 }
 
