@@ -5,6 +5,8 @@ Things to remember when releasing new version:
 * Update "TODO" file
 * Update main html page and sync
 * Change version string in "Biber.pm"
+* Change $BIBLATEX_VERSION in Constants.pm to match appropriate biblatex
+  version, if necessary.
 * perl Build.PL to create YAML files
 * Commit and tag with version number
 * Build dist
