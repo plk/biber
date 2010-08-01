@@ -1,8 +1,10 @@
 #!/bin/sh
 cd ../blib
-_ver=$(grep -e "^our \$VERSION" lib/Biber.pm | cut -d'=' | sed -e "s/.\+'\(.\+\)'.\+/\1/")
+_ver=$(grep -e "^our \$VERSION" lib/Biber.pm | cut -d'=' -f2 | sed -e "s/.\+'\(.\+\)'.\+/\1/") || exit 1
 _OS=$(uname -s)
 _arch=$(uname -m)
-pp -cd=../dist/.cachedeps -M Readonly::XS -p -o ..dist/biber-${_ver}-${_OS}_${_arch}.par script/*
-cd ../dist
+echo "Creating biber-${_ver}-${_OS}_${_arch}.par ..."
+#pp -cd=../dist/.cachedeps -M Readonly::XS -p -o ../dist/biber-${_ver}-${_OS}_${_arch}.par script/*
+pp -M Readonly::XS -p -o ../dist/biber-${_ver}-${_OS}_${_arch}.par script/* || exit 1
+cd ../dist || exit 1
 par.pl -O./biber biber-${_ver}-${_OS}_${_arch}.par

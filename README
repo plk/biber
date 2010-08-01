@@ -1,14 +1,11 @@
 ==========================
 
-    BIBER Version 0.5.3
+    BIBER Version 0.5.4
 
 ==========================
 
 Biber is a BibTeX replacement for users of biblatex, with full Unicode
-support.  This release coincides with the release of biblatex 0.9, the
-first one that is likely to be integrated within the most popular TeX
-distributions (TeX Live, MikTeX, etc.)
-
+support.  This release coincides with the release of biblatex 0.9b.
 
 REQUIREMENTS
 
@@ -27,7 +24,8 @@ REQUIREMENTS
     * XML::LibXML::Simple (XML::LibXML clone of XML::Simple)
     * File::Slurp (for latex2utf8 or if converting bib files to UTF-8 with biber).
     * Text::BibTeX (strongly recommended) OR
-      Parse::RecDescent AND Regexp::Common
+      Parse::RecDescent AND Regexp::Common. Text::BibTeX requires
+      Config::AutoConf when installing - please install this first. 
 
 INSTALLATION
 
@@ -51,7 +49,7 @@ SUPPORT AND DOCUMENTATION
       perldoc LaTeX::Decode
       etc.
 
-  More information is available at:
+  More information, bugfix releases, forums and bug tracker are available at:
 
       http://biblatex-biber.sourceforge.net
 

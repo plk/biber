@@ -2,8 +2,6 @@ ROADMAP / TODO
 
 in decreasing order of priority:
 
-   * for version 0.5.4, merge "bcfonly" branch into master for release. This
-     implements the use of only .bcf and the one-pass, multi-section refs code.
    * add validation mechanism for options and config (untaint data),
      probably with Params::Validate
    * validate bibtex data with Text::Bibtex::Structure (optional) needs

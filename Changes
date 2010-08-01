@@ -1,6 +1,6 @@
 Revision history for Biber
 
-0.5.   Unreleased
+0.5.4   04-08-2010
        * Case-sensitive sorting option
        * Multi-section support. Only one biber pass needed to process all
          bib sections using extended biblatex 0.9b .bbl format.
