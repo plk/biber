@@ -24,7 +24,6 @@ lib/Biber/Internals.pm
 lib/Biber/Sections.pm
 lib/Biber/Section.pm
 lib/Biber/Utils.pm
-lib/LaTeX/Decode.pm
 inc/Module-Build/bin/config_data
 inc/Module-Build/lib/perl5/inc/latest.pm
 inc/Module-Build/lib/perl5/inc/latest/private.pm
