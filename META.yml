@@ -40,9 +40,6 @@ provides:
     file: lib/Biber/Output/Base.pm
   Biber::Utils:
     file: lib/Biber/Utils.pm
-  LaTeX::Decode:
-    file: lib/LaTeX/Decode.pm
-    version: 0.1
   Parse::RecDescent::Biber::BibTeX::Parser:
     file: lib/Biber/BibTeX/Parser.pm
 recommends:
