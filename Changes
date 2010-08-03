@@ -7,6 +7,7 @@ Revision history for Biber
        * .aux file is no longer used by biber - all information is passed
          in .bcf file.
        * Misc bug fixes
+       * LaTeX::Decode is now a separate CPAN module and is no longer included
 
 0.5.3  19-03-2010
        * Changed semantics of --outfile and --output-directory. --outfile
