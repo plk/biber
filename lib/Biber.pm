@@ -511,7 +511,7 @@ sub parse_bibtex {
       $buf = decode(Biber::Config->getoption('bibencoding'), $buf)
     }
 
-    print $ubib LaTeX::Decode::latex_decode($buf)
+    print $ubib LaTeX::Decode::latex_decode($buf, strip_outer_braces=>1)
       or $logger->logcroak("Can't write to $ufilename : $!");
     $ubib->close or $logger->logcroak("Can't close filehandle to $ufilename: $!");
 
