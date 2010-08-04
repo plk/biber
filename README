@@ -11,7 +11,7 @@ REQUIREMENTS
 
   Biber is written in Perl. Version 5.8.x or higher is recommended. Be aware
   that if your version of Perl is older than that, Biber may work, but we
-  won't be offering support.
+  won't be offering support. We strongly recommend version 5.10 or higher.
 
   In addition Biber requires a number of CPAN modules, which if missing
   should be automatically installed during the install process described
@@ -19,6 +19,7 @@ REQUIREMENTS
 
     * IPC::Cmd (included in Perl 5.9.5 or higher)
     * Readonly (but Readonly::XS is highly recommended for performance reasons)
+    * LaTeX::Decode (no longer bundled with Biber as it's on CPAN)
     * List::AllUtils (a wrapper for List::Util and List::MoreUtils)
     * Log::Log4perl
     * XML::LibXML::Simple (XML::LibXML clone of XML::Simple)
