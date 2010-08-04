@@ -13,7 +13,7 @@ name: biblatex-biber
 provides:
   Biber:
     file: lib/Biber.pm
-    version: v0.5.3
+    version: v0.5.4
   Biber::BibTeX:
     file: lib/Biber/BibTeX.pm
   Biber::BibTeX::PRD:
@@ -38,6 +38,10 @@ provides:
     file: lib/Biber/Output/BBL.pm
   Biber::Output::Base:
     file: lib/Biber/Output/Base.pm
+  Biber::Section:
+    file: lib/Biber/Section.pm
+  Biber::Sections:
+    file: lib/Biber/Sections.pm
   Biber::Utils:
     file: lib/Biber/Utils.pm
   Parse::RecDescent::Biber::BibTeX::Parser:
@@ -49,6 +53,7 @@ requires:
   Data::Dump: 0
   File::Slurp: 0
   IPC::Cmd: 0
+  LaTeX::Decode: 0
   List::AllUtils: 0
   Log::Log4perl: 0
   Readonly: 0
@@ -57,4 +62,4 @@ requires:
   XML::LibXML::Simple: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: v0.5.3
+version: v0.5.4
