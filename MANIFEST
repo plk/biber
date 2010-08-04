@@ -7,7 +7,6 @@ README
 THANKS
 TODO
 bin/biber
-bin/latex2utf8
 lib/Biber.pm
 lib/Biber/Output/Base.pm
 lib/Biber/Output/BBL.pm
