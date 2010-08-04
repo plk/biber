@@ -3,7 +3,7 @@ Things to remember when releasing new version:
 * Change version string in and content, if necessary, of "README"
 * Change version string in and content of "Changes" file
 * Update "TODO" file
-* Update main html page and sync
+* Update main html and doc page and sync
 * Change version string in "Biber.pm"
 * Change $BIBLATEX_VERSION in Constants.pm to match appropriate biblatex
   version, if necessary.
