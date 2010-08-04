@@ -7,7 +7,6 @@ Things to remember when releasing new version:
 * Change version string in "Biber.pm"
 * Change $BIBLATEX_VERSION in Constants.pm to match appropriate biblatex
   version, if necessary.
-* perl Build.PL to create YAML files
+* "perl Build.PL" and "Build dist" to update YAML
 * Commit and tag with version number
-* Build dist
 * Upload to SF
