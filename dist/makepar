@@ -5,6 +5,7 @@ _OS=$(uname -s)
 _arch=$(uname -m)
 echo "Creating biber-${_ver}-${_OS}_${_arch}.par ..."
 #pp -cd=../dist/.cachedeps -M Readonly::XS -p -o ../dist/biber-${_ver}-${_OS}_${_arch}.par script/*
-pp -M Readonly::XS -p -o ../dist/biber-${_ver}-${_OS}_${_arch}.par script/* || exit 1
+pp -M Readonly::XS -X Archive::Zip -X DBI -X URI -X LWP -X Module::Build -p -o ../dist/biber-${_ver}-${_OS}_${_arch}.par script/* || exit 1
 cd ../dist || exit 1
-par.pl -O./biber biber-${_ver}-${_OS}_${_arch}.par
+#par.pl -O./biber biber-${_ver}-${_OS}_${_arch}.par
+

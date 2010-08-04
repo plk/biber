@@ -170,7 +170,7 @@ sub normalize_string {
   return '' unless $str; # Sanitise missing data
   # First replace ties with spaces or they will be lost
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
-  $str = latex_decode($str) unless $no_decode;
+  $str = latex_decode($str, strip_outer_braces=>1) unless $no_decode;
   $str = strip_nosort($str); # strip nosort elements
   $str =~ s/\\[A-Za-z]+//g; # remove latex macros (assuming they have only ASCII letters)
   $str =~ s/[\p{P}\p{S}\p{C}]+//g; ### remove punctuation, symbols, separator and control

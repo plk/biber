@@ -554,7 +554,8 @@ sub _sort_sortkey {
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('sortkey')) {
     my $sortkey = $be->get_field('sortkey');
-    $sortkey = LaTeX::Decode::latex_decode($sortkey) unless $self->_nodecode($citekey);
+    $sortkey = LaTeX::Decode::latex_decode($sortkey, strip_outer_braces=>1)
+      unless $self->_nodecode($citekey);
     return $sortkey;
   }
   else {
