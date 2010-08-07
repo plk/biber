@@ -455,7 +455,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
   # --bibdata was passed on command-line
   # Add these data files to section 0
   if (Biber::Config->getoption('bibdata')) {
-    $bib_sections->get_section(0)->set_datafiles([ split /,/, @{ Biber::Config->getoption('bibdata') } ]);
+    $bib_sections->get_section(0)->set_datafiles(Biber::Config->getoption('bibdata'));
   }
 
   # Add the Biber::Sections object to the Biber object
