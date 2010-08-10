@@ -10,6 +10,7 @@ bin/biber
 lib/Biber.pm
 lib/Biber/Output/Base.pm
 lib/Biber/Output/BBL.pm
+lib/Biber/Output/Test.pm
 lib/Biber/BibTeX.pm
 lib/Biber/BibTeX/PRD.pm
 lib/Biber/BibTeX/Parser.pm
@@ -87,6 +88,14 @@ t/15-sections-complex.t
 t/pod-coverage.t
 t/pod.t
 t/tdata/options.bcf
+t/tdata/encoding1.bcf
+t/tdata/encoding2.bcf
+t/tdata/encoding3.bcf
+t/tdata/encoding4.bcf
+t/tdata/encoding1.bib
+t/tdata/encoding2.bib
+t/tdata/encoding3.bib
+t/tdata/encoding4.bib
 t/tdata/sections.bcf
 t/tdata/sections-complex.bcf
 t/tdata/sections1.bib

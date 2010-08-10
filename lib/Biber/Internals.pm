@@ -684,7 +684,7 @@ sub _nodecode {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $no_decode = (Biber::Config->getoption('unicodebib') or
+  my $no_decode = ((Biber::Config->getoption('bibencoding') and Biber::Config->getoption('bibencoding') eq 'UTF-8') or
       Biber::Config->getoption('fastsort') or
       $be->get_field('datatype') eq 'xml');
   return $no_decode;
