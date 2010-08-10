@@ -6,7 +6,7 @@ to add a Biber command. See the screenshot in "biber-auctex.png" in this directo
 how mine looks. Or you can add it directly with lisp in your .emacs like
 this:
 
-(add-to-list 'TeX-command-list (quote ("Biber" "biber -u -U %s" TeX-run-Biber nil t :help "Run Biber")))
+(add-to-list 'TeX-command-list (quote ("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber")))
 
 However you add the command to TeX-command-list, Customise the actual Biber
 command parameters as you want them, using "%s" as the LaTeX file name
