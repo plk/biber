@@ -302,7 +302,8 @@ Options:
                          Specify the encoding of the bib file(s). The bbl file
                          will also have this encoding when --unicodebbl is false.
                          See "perldoc Encode::Supported" for a list of supported encodings.
-  --inputenc|-E          Specify the encoding of the output .bbl file. Normally it's not
+  --inputenc|-E [encoding]
+                         Specify the encoding of the output .bbl file. Normally it's not
                          necessary to set this as it's passed via biblatex from the
                          inputenc package setting.
   -u                     Alias for --bibencoding=UTF-8
