@@ -480,44 +480,44 @@ sub parse_bibtex {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
-  $logger->info("Processing bibtex file '$filename' for section $secnum");
+  $logger->info("Processing file '$filename' for section $secnum");
 
   my @localkeys = ();
 
   my $ufilename = "$filename.utf8";
 
-  if ( not Biber::Config->getoption('unicodebib') and
-    Biber::Config->getoption('unicodebbl') ) {
-    require LaTeX::Decode;
+  # bib encoding is not defined or it is and it's not utf8
+  if (not defined(Biber::Config->getoption('bibencoding')) or
+      (defined(Biber::Config->getoption('bibencoding')) and
+       Biber::Config->getoption('bibencoding') ne 'UTF-8')) {
+
+    # File::Slurp::Unicode would be nicer but fails install tests
+    # on Windows and has 5.10 only code in it. Grr.
     require File::Slurp;
-    my $ubib = IO::File->new( $ufilename, ">:utf8" );
-
-    # $ubib->binmode(':utf8');
-
-    my $mode = "";
-
-#        if ( Biber::Config->getoption('bibencoding') ) {
-#            $mode = ':encoding(' . Biber::Config->getoption('bibencoding') . ')';
-#        } else {
-#            $mode = "";
-#        };
-
-    my $infile = IO::File->new( $filename, "<$mode" );
-
-    my $buf    = File::Slurp::read_file($infile)
+    my $buf = File::Slurp::read_file($filename)
       or $logger->logcroak("Can't read $filename");
 
-    if ( Biber::Config->getoption('bibencoding') ) {
-      $buf = decode(Biber::Config->getoption('bibencoding'), $buf)
+    if (my $enc_in = Biber::Config->getoption('bibencoding')) {
+      $logger->info("Converting '$filename' with encoding '$enc_in' to UTF8 internally");
+      $buf = decode($enc_in, $buf);
+    }
+    my $outbib = IO::File->new( $ufilename, ">:encoding(UTF-8)" );
+
+    # Decode LaTeX if output is unicode
+    if (defined(Biber::Config->getoption('inputenc')) and
+        Biber::Config->getoption('inputenc') eq 'UTF-8') {
+      require LaTeX::Decode;
+      $logger->info('Decoding LaTeX character macros into UTF8');
+      $buf = LaTeX::Decode::latex_decode($buf, strip_outer_braces => 1);
     }
 
-    print $ubib LaTeX::Decode::latex_decode($buf, strip_outer_braces=>1)
+    print $outbib $buf
       or $logger->logcroak("Can't write to $ufilename : $!");
-    $ubib->close or $logger->logcroak("Can't close filehandle to $ufilename: $!");
+    $outbib->close or $logger->logcroak("Can't close filehandle to $ufilename: $!");
 
-    $filename  = $ufilename;
-
-    Biber::Config->setoption('unicodebib', 1);
+    # Now .bib is unicode
+    $filename = $ufilename;
+    Biber::Config->setoption('bibencoding', 'UTF-8')
   }
 
   # Increment the number of times each datafile has been referenced

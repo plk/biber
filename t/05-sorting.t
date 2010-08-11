@@ -24,6 +24,7 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
 Biber::Config->setoption('quiet', 1);
+Biber::Config->setoption('bibencoding', 'utf8');
 
 my $yearoff1    = 'mm0knuth2donald e0computers typesetting0198400000';
 my $yearoff2    = 'mm0knuth2donald e0computers typesetting019800000';

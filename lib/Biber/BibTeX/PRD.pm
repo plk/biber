@@ -325,18 +325,7 @@ sub _bibtex_prd_parse {
 
   my @localkeys;
 
-  my $mode;
-
-  if ( Biber::Config->getoption('bibencoding') and
-    not Biber::Config->getoption('unicodebbl') ) {
-    $mode = ':encoding(' . Biber::Config->getoption('bibencoding') . ')';
-  } else {
-    $mode = ":utf8";
-  }
-
-
-  ## TODO
-  # $::RD_TRACE = 1 if Biber::Config->getoption('parserdebug');
+  my $mode = ':encoding(' . Biber::Config->getoption('bibencoding') . ')';
 
   undef $/;
 

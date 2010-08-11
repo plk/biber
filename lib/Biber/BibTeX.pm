@@ -287,14 +287,8 @@ sub _text_bibtex_parse {
 
   my @localkeys;
 
-  my $encoding;
-
-  if ( Biber::Config->getoption('bibencoding') and
-    not Biber::Config->getoption('unicodebbl') ) {
-    $encoding = Biber::Config->getoption('bibencoding');
-  } else {
-    $encoding = "utf8";
-  }
+  # Get encoding
+  my $encoding = Biber::Config->getoption('bibencoding');
 
   my $bib = Text::BibTeX::File->new( $filename, '<' )
     or $logger->logcroak("Cannot create Text::BibTeX::File object from $filename: $!");
