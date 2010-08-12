@@ -22,7 +22,7 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('quiet', 1);
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('inputenc', 'utf8');
+Biber::Config->setoption('inputenc', 'UTF-8');
 
 # Now generate the information
 $biber->prepare;
