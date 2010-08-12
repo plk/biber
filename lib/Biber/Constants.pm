@@ -1,6 +1,7 @@
 package Biber::Constants;
 use strict;
 use warnings;
+use Encode::Alias;
 use Readonly;
 
 use base 'Exporter';
@@ -134,6 +135,17 @@ our %CONFIG_DEFAULT_BIBLATEX = (
   labelyear => [ 'year' ],
   labelname => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
   );
+
+# Set up some encoding aliases to map \inputen{c,x} encoding names to Encode
+# It seems that inputen{c,x} has a different idea of nextstep than Encode
+# so we push it to MacRoman
+define_alias( 'applemac'       => 'MacRoman');
+define_alias( 'applemacce'     => 'MacCentralEurRoman');
+define_alias( 'next'           => 'MacRoman');
+define_alias( 'x-mac-roman'    => 'MacRoman');
+define_alias( 'x-mac-centeuro' => 'MacCentralEurRoman');
+define_alias( 'x-mac-cyrillic' => 'MacCyrillic');
+define_alias( 'x-nextstep'     => 'MacRoman');
 
 # Defines the scope of each of the BibLaTeX configuration options
 our %CONFIG_SCOPE_BIBLATEX = (
