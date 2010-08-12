@@ -462,14 +462,15 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
   $self->{sections} = $bib_sections;
 
   # Normalise any utf8 encoding string immediately to exactly what we want
-  # We want "strict" perl utf8 using the exact "UTF-8" string
+  # We want "lax" perl utf8 using the "utf8" string as otherwise, \inputenc[utf8]{}
+  # can die as it doesn't like such strictness
   if (defined(Biber::Config->getoption('bibencoding')) and
       Biber::Config->getoption('bibencoding') =~ m/\Autf-?8\z/xmsi) {
-    Biber::Config->setoption('bibencoding', 'UTF-8');
+    Biber::Config->setoption('bibencoding', 'utf8');
   }
   if (defined(Biber::Config->getoption('inputenc')) and
       Biber::Config->getoption('inputenc') =~ m/\Autf-?8\z/xmsi) {
-    Biber::Config->setoption('inputenc', 'UTF-8');
+    Biber::Config->setoption('inputenc', 'utf8');
   }
 
   return;
@@ -501,7 +502,7 @@ sub parse_bibtex {
   # bib encoding is not defined or it is and it's not utf8
   if (not defined(Biber::Config->getoption('bibencoding')) or
       (defined(Biber::Config->getoption('bibencoding')) and
-       Biber::Config->getoption('bibencoding') ne 'UTF-8')) {
+       Biber::Config->getoption('bibencoding') ne 'utf8')) {
 
     # File::Slurp::Unicode would be nicer but fails install tests
     # on Windows and has 5.10 only code in it. Grr.
@@ -510,16 +511,16 @@ sub parse_bibtex {
       or $logger->logcroak("Can't read $filename");
 
     if (my $enc_in = Biber::Config->getoption('bibencoding')) {
-      $logger->info("Converting '$filename' with encoding '$enc_in' to UTF-8 internally");
+      $logger->info("Converting '$filename' with encoding '$enc_in' to utf8 internally");
       $buf = decode($enc_in, $buf);
     }
-    my $outbib = IO::File->new( $ufilename, ">:encoding(UTF-8)" );
+    my $outbib = IO::File->new( $ufilename, ">:encoding(utf8)" );
 
     # Decode LaTeX if output is unicode
     if (defined(Biber::Config->getoption('inputenc')) and
-        Biber::Config->getoption('inputenc') eq 'UTF-8') {
+        Biber::Config->getoption('inputenc') eq 'utf8') {
       require LaTeX::Decode;
-      $logger->info('Decoding LaTeX character macros into UTF-8');
+      $logger->info('Decoding LaTeX character macros into utf8');
       $buf = LaTeX::Decode::latex_decode($buf, strip_outer_braces => 1);
     }
 
@@ -529,7 +530,7 @@ sub parse_bibtex {
 
     # Now .bib is unicode
     $filename = $ufilename;
-    Biber::Config->setoption('bibencoding', 'UTF-8')
+    Biber::Config->setoption('bibencoding', 'utf8')
   }
 
   # Increment the number of times each datafile has been referenced
