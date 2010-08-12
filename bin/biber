@@ -25,8 +25,8 @@ GetOptions(
            'collate|C!',
            'collate_options|c=s',
            'mincrossrefs|m=s',
-           'u',                   # alias for bibencoding=utf8
-           'U',                   # alias for bblencoding=utf8
+           'u',                   # alias for bibencoding=UTF-8
+           'U',                   # alias for bblencoding=UTF-8
            'bibencoding|e=s',
            'inputenc|E=s',
            'useprd|p!',
@@ -69,13 +69,13 @@ if ($opts->{collate}) {
   $opts->{fastsort} = 0
 }
 
-# Resolve shortcut aliases for utf8ness
+# Resolve shortcut aliases for UTF-8ness
 if ($opts->{u}) {
-  $opts->{bibencoding} = 'utf8';
+  $opts->{bibencoding} = 'UTF-8';
   delete $opts->{u};
 }
 if ($opts->{U}) {
-  $opts->{inputenc} = 'utf8';
+  $opts->{inputenc} = 'UTF-8';
   delete $opts->{U};
 }
 
@@ -300,8 +300,8 @@ Options:
                          Specify the encoding of the output .bbl file. Normally it's not
                          necessary to set this as it's passed via biblatex from the
                          inputenc package setting.
-  -u                     Alias for --bibencoding=utf8
-  -U                     Alias for --inputenc=utf8
+  -u                     Alias for --bibencoding=UTF-8
+  -U                     Alias for --inputenc=UTF-8
   --validate|-V          Schema validate both the <basename>.bcf biblatex control file
                          and the BibLateXML files (if used). Dies on validation error.
   --debug|-D             Turn on debugging for biber.

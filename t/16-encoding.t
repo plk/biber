@@ -83,12 +83,12 @@ my $encode3 = q|  \entry{test1}{book}{}
 my $outvar;
 my $output;
 
-# Latin9 .bib -> utf8 .bbl
+# Latin9 .bib -> UTF-8 .bbl
 $biber->parse_ctrlfile('encoding1.bcf');
 $biber->set_output_obj(Biber::Output::Test->new());
 # Biber options
 Biber::Config->setoption('bibencoding', 'latin9');
-Biber::Config->setoption('inputenc', 'utf8');
+Biber::Config->setoption('inputenc', 'UTF-8');
 # Now generate the information
 $biber->prepare;
 # Get reference to output object
@@ -96,14 +96,14 @@ $output = $biber->get_output_obj;
 $output->set_output_target_file(\$outvar);
 # Write the output to the target
 $output->output;
-is($outvar, encode(Biber::Config->getoption('inputenc'), $encode1), 'latin9 .bib -> utf8 .bbl');
+is($outvar, encode(Biber::Config->getoption('inputenc'), $encode1), 'latin9 .bib -> UTF-8 .bbl');
 
-# utf8 .bib -> utf8 .bbl
+# UTF-8 .bib -> UTF-8 .bbl
 $biber->parse_ctrlfile('encoding2.bcf');
 $biber->set_output_obj(Biber::Output::Test->new());
 # Biber options
-Biber::Config->setoption('bibencoding', 'utf8');
-Biber::Config->setoption('inputenc', 'utf8');
+Biber::Config->setoption('bibencoding', 'UTF-8');
+Biber::Config->setoption('inputenc', 'UTF-8');
 # Now generate the information
 $biber->prepare;
 # Get reference to output object
@@ -111,13 +111,13 @@ $output = $biber->get_output_obj;
 $output->set_output_target_file(\$outvar);
 # Write the output to the target
 $output->output;
-is($outvar, encode(Biber::Config->getoption('inputenc'), $encode1), 'utf8 .bib -> utf8 .bbl');
+is($outvar, encode(Biber::Config->getoption('inputenc'), $encode1), 'UTF-8 .bib -> UTF-8 .bbl');
 
-# utf8 .bib -> Latin9 .bbl
+# UTF-8 .bib -> Latin9 .bbl
 $biber->parse_ctrlfile('encoding2.bcf');
 $biber->set_output_obj(Biber::Output::Test->new());
 # Biber options
-Biber::Config->setoption('bibencoding', 'utf8');
+Biber::Config->setoption('bibencoding', 'UTF-8');
 Biber::Config->setoption('inputenc', 'latin9');
 # Now generate the information
 $biber->prepare;
@@ -126,7 +126,7 @@ $output = $biber->get_output_obj;
 $output->set_output_target_file(\$outvar);
 # Write the output to the target
 $output->output;
-is($outvar, encode(Biber::Config->getoption('inputenc'), $encode1), 'utf8 .bib -> latin9 .bbl');
+is($outvar, encode(Biber::Config->getoption('inputenc'), $encode1), 'UTF-8 .bib -> latin9 .bbl');
 
 # latin1 .bib -> cp1252 .bbl
 $biber->parse_ctrlfile('encoding3.bcf');
