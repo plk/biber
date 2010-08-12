@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 6;
+use Test::More tests => 7;
 
 use Biber;
 use Biber::Utils;
@@ -128,7 +128,7 @@ $output->set_output_target_file(\$outvar);
 $output->output;
 is($outvar, encode(Biber::Config->getoption('inputenc'), $encode1), 'UTF-8 .bib -> latin9 .bbl');
 
-# latin1 .bib -> CP1252(winlatin1) .bbl
+# latin1 .bib -> cp1252 .bbl
 $biber->parse_ctrlfile('encoding3.bcf');
 $biber->set_output_obj(Biber::Output::Test->new());
 # Biber options
@@ -176,5 +176,21 @@ open STDERR, '>', '/dev/null';
 $output->output;
 open STDERR, '>&', \*OLDERR;
 isnt($outvar, encode(Biber::Config->getoption('inputenc'), $encode3), 'latin2 .bib -> latin1 .bbl failure');
+
+# Custom encoding alias
+# latin1 .bib -> applemacce (MacRoman) .bbl
+$biber->parse_ctrlfile('encoding3.bcf');
+$biber->set_output_obj(Biber::Output::Test->new());
+# Biber options
+Biber::Config->setoption('bibencoding', 'latin1');
+Biber::Config->setoption('inputenc', 'applemacce');
+# Now generate the information
+$biber->prepare;
+# Get reference to output object
+$output = $biber->get_output_obj;
+$output->set_output_target_file(\$outvar);
+# Write the output to the target
+$output->output;
+is($outvar, encode(Biber::Config->getoption('inputenc'), $encode2), 'latin1 .bib -> applemacce (custom alias) .bbl');
 
 unlink "*.utf8";

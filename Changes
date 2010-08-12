@@ -1,5 +1,10 @@
 Revision history for Biber
-
+0.5.5   -08-2010
+       * Stricter version dependency for Text::BibTeX. Older than 0.42 is
+         rather useless for complex names.
+       * Re-factored and enhanced auto-re-encoding of .bib/.bbl. With biblatex
+         0.9c, Biber handles all reencoding.
+       * Misc bug fixes
 0.5.4   04-08-2010
        * Case-sensitive sorting option
        * Multi-section support. Only one biber pass needed to process all
