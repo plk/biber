@@ -147,6 +147,8 @@ define_alias( 'x-mac-roman'    => 'MacRoman');
 define_alias( 'x-mac-centeuro' => 'MacCentralEurRoman');
 define_alias( 'x-mac-cyrillic' => 'MacCyrillic');
 define_alias( 'x-nextstep'     => 'MacRoman');
+define_alias( 'lutf8'          => 'UTF-8'); # Luatex
+define_alias( 'utf8x'          => 'UTF-8'); # UCS (old)
 
 # Defines the scope of each of the BibLaTeX configuration options
 our %CONFIG_SCOPE_BIBLATEX = (
