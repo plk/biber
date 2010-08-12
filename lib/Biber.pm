@@ -421,7 +421,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         last SECTION;
       }
       elsif (not Biber::Config->get_seenkey($key, $section->{number})) {
-        push @keys, decode_utf8($key);
+        push @keys, $key;
         $key_flag = 1; # There is at least one key, used for error reporting below
         Biber::Config->incr_seenkey($key, $section->{number});
       }
