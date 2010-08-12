@@ -37,7 +37,7 @@ my $builder = Module::Build->new(
         'Regexp::Common' => 0,
         'Log::Log4perl' => 0,
         'Readonly' => 0,
-        'Text::BibTeX' => 0,
+        'Text::BibTeX' => '>= 0.42',
         'XML::LibXML::Simple' => 0,
     },
     recommends => {
