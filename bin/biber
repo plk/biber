@@ -79,12 +79,6 @@ if ($opts->{U}) {
   delete $opts->{U};
 }
 
-# Normalise any utf8 encoding string in case someone explicitly sets this
-# with some annoying OS variant string
-# We want "strict" perl utf8 using the exact "UTF-8" string
-$opts->{bibencoding} =~ s/\Autf-?8\z/UTF-8/xmsi if $opts->{bibencoding};
-$opts->{inputenc} =~ s/\Autf-?8\z/UTF-8/xmsi if $opts->{inputenc};
-
 my $outdir;
 my $biberlog = 'biber.log';
 

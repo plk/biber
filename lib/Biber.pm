@@ -460,6 +460,18 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
   # Add the Biber::Sections object to the Biber object
   $self->{sections} = $bib_sections;
+
+  # Normalise any utf8 encoding string immediately to exactly what we want
+  # We want "strict" perl utf8 using the exact "UTF-8" string
+  if (defined(Biber::Config->getoption('bibencoding')) and
+      Biber::Config->getoption('bibencoding') =~ m/\Autf-?8\z/xmsi) {
+    Biber::Config->setoption('bibencoding', 'UTF-8');
+  }
+  if (defined(Biber::Config->getoption('inputenc')) and
+      Biber::Config->getoption('inputenc') =~ m/\Autf-?8\z/xmsi) {
+    Biber::Config->setoption('inputenc', 'UTF-8');
+  }
+
   return;
 }
 
@@ -498,7 +510,7 @@ sub parse_bibtex {
       or $logger->logcroak("Can't read $filename");
 
     if (my $enc_in = Biber::Config->getoption('bibencoding')) {
-      $logger->info("Converting '$filename' with encoding '$enc_in' to UTF8 internally");
+      $logger->info("Converting '$filename' with encoding '$enc_in' to UTF-8 internally");
       $buf = decode($enc_in, $buf);
     }
     my $outbib = IO::File->new( $ufilename, ">:encoding(UTF-8)" );
@@ -507,7 +519,7 @@ sub parse_bibtex {
     if (defined(Biber::Config->getoption('inputenc')) and
         Biber::Config->getoption('inputenc') eq 'UTF-8') {
       require LaTeX::Decode;
-      $logger->info('Decoding LaTeX character macros into UTF8');
+      $logger->info('Decoding LaTeX character macros into UTF-8');
       $buf = LaTeX::Decode::latex_decode($buf, strip_outer_braces => 1);
     }
 
@@ -575,7 +587,6 @@ sub parse_bibtex {
   }
 
   return;
-
 }
 
 =head2 parse_biblatexml
