@@ -25,8 +25,8 @@ GetOptions(
            'collate|C!',
            'collate_options|c=s',
            'mincrossrefs|m=s',
-           'u',                   # alias for bibencoding=UTF-8
-           'U',                   # alias for bblencoding=UTF-8
+           'u',                   # alias for bibencoding=utf8
+           'U',                   # alias for bblencoding=utf8
            'bibencoding|e=s',
            'inputenc|E=s',
            'useprd|p!',
@@ -71,19 +71,13 @@ if ($opts->{collate}) {
 
 # Resolve shortcut aliases for utf8ness
 if ($opts->{u}) {
-  $opts->{bibencoding} = 'UTF-8';
+  $opts->{bibencoding} = 'utf8';
   delete $opts->{u};
 }
 if ($opts->{U}) {
-  $opts->{inputenc} = 'UTF-8';
+  $opts->{inputenc} = 'utf8';
   delete $opts->{U};
 }
-
-# Normalise any utf8 encoding string in case someone explicitly sets this
-# with some annoying OS variant string
-# We want "strict" perl utf8 using the exact "UTF-8" string
-$opts->{bibencoding} =~ s/\Autf-?8\z/UTF-8/xmsi if $opts->{bibencoding};
-$opts->{inputenc} =~ s/\Autf-?8\z/UTF-8/xmsi if $opts->{inputenc};
 
 my $outdir;
 my $biberlog = 'biber.log';
@@ -306,8 +300,8 @@ Options:
                          Specify the encoding of the output .bbl file. Normally it's not
                          necessary to set this as it's passed via biblatex from the
                          inputenc package setting.
-  -u                     Alias for --bibencoding=UTF-8
-  -U                     Alias for --inputenc=UTF-8
+  -u                     Alias for --bibencoding=utf8
+  -U                     Alias for --inputenc=utf8
   --validate|-V          Schema validate both the <basename>.bcf biblatex control file
                          and the BibLateXML files (if used). Dies on validation error.
   --debug|-D             Turn on debugging for biber.
