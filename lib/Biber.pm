@@ -515,12 +515,14 @@ sub parse_bibtex {
     }
     my $outbib = IO::File->new( $ufilename, ">:encoding(UTF-8)" );
 
-    # Decode LaTeX if output is unicode
-    if (defined(Biber::Config->getoption('inputenc')) and
-        Biber::Config->getoption('inputenc') eq 'UTF-8') {
-      require LaTeX::Decode;
-      $logger->info('Decoding LaTeX character macros into UTF-8');
-      $buf = LaTeX::Decode::latex_decode($buf, strip_outer_braces => 1);
+    # Decode LaTeX if output is unicode unless --nolatexdecode is set
+    unless (Biber::Config->getoption('nolatexdecode')) {
+      if (defined(Biber::Config->getoption('inputenc')) and
+          Biber::Config->getoption('inputenc') eq 'UTF-8') {
+        require LaTeX::Decode;
+        $logger->info('Decoding LaTeX character macros into UTF-8');
+        $buf = LaTeX::Decode::latex_decode($buf, strip_outer_braces => 1);
+      }
     }
 
     print $outbib $buf

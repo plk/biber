@@ -26,9 +26,10 @@ GetOptions(
            'collate_options|c=s',
            'mincrossrefs|m=s',
            'u',                   # alias for bibencoding=UTF-8
-           'U',                   # alias for bblencoding=UTF-8
+           'U',                   # alias for inputenc=UTF-8
            'bibencoding|e=s',
            'inputenc|E=s',
+           'nolatexdecode|n',
            'useprd|p!',
            'bibdata|d=s',
            'outfile|O=s',
@@ -157,8 +158,8 @@ if (Biber::Config->getoption('debug')) {
   $screen->info("DEBUG mode: all messages are logged to '$biberlog'")
 }
 
-if ( $opts->{allentries} && $opts->{bibdata} ) {
-  $bblfile = $opts->{bibdata}->[0];
+if ( $opts->{allentries} and $opts->{bibdata} ) {
+  $bblfile = $opts->{bibdata}[0];
   $bblfile =~ s/(?:\.(bib|xml|dbxml))?$/\.bbl/;
 }
 else {
@@ -267,9 +268,9 @@ Options:
   --mincrossrefs|-m <n>  Set threshold for crossrefs.
   --fastsort|-f          Use Perl’s sort instead of Unicode::Collate for sorting (TRUE).
   --locale|-l [locale]   Set the locale to be used for sorting. With built-in sorting
-                         (--collate is not set), this sets the OS locale for sorting. With
-                         Unicode::Collate (--collate flag), this adds CLDR tailoring to
-                         the sort. This tailoring only happens if you have a CLDR-enabled
+                         (i.e. --collate is not set), this sets the OS locale for sorting. With
+                         Unicode::Collate (--collate flag), the locale is used to add CLDR
+                         tailoring to the sort if you have a CLDR-enabled
                          version of Unicode::Collate otherwise there is no special tailoring.
   --cssort               Use case-sensitive sorting. Case insensitive is the default.
   --collate|-C           Sort with Unicode::Collate instead of the built-in sort function.
@@ -283,7 +284,7 @@ Options:
                          <file> is relative to --output-directory, if set (absolute
                          paths in this case are stripped to filename only). <file> can
                          be absolute if --output-directory is not set.
-  --output-directory <d> Files (bbl and log) are output to directory <d> instead
+  --output-directory <d> Files (.bbl and .log) are output to directory <d> instead
                          of the current directory.
   --configfile|-g <file> Use <file> as configuration file for Biber.
                          The default is the first file found among
@@ -302,13 +303,20 @@ Options:
                          inputenc package setting.
   -u                     Alias for --bibencoding=UTF-8
   -U                     Alias for --inputenc=UTF-8
+  --nolatexdecode|-n     Do not decode LaTeX character macros into utf8. Normally, when
+                         the .bib is not utf8 but inputenc is set to utf8, this automatically
+                         happens. However, LaTeX's inputenc package's [utf8] encoding is not
+                         at all a complete utf8 encoding and so decoding LaTeX character
+                         macros can lead to utf8 characters which inputenc cannot recognise.
+                         Use this option to prevent utf8 conversion of characters which
+                         inputenc would not recognise.
   --validate|-V          Schema validate both the <basename>.bcf biblatex control file
                          and the BibLateXML files (if used). Dies on validation error.
   --debug|-D             Turn on debugging for biber.
   --quiet|-q             Turn infos and warnings off.
   --nolog                Do not write any logfile.
   --onlylog              Do not write any message to screen.
-  --wraplines|-w         Wrap lines in the bbl file.
+  --wraplines|-w         Wrap lines in the .bbl file.
     \n}
 }
 
