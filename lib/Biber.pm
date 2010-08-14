@@ -664,7 +664,14 @@ sub process_sets_and_crossrefs {
       }
       my $parent = $section->bibentry($crossrefkey);
       $logger->debug("  Entry $citekey inheriting fields from parent $crossrefkey");
-      $be->inherit_from($parent);
+      unless ($parent) {
+        $logger->warn("Cannot inherit from crossref key '$crossrefkey' - does it exist?");
+        $self->{warnings}++;
+        $be->add_warning("Cannot inherit from crossref key '$crossrefkey' - does it exist?");
+      }
+      else {
+        $be->inherit_from($parent);
+      }
     }
   }
   # We make sure that crossrefs that are directly cited or cross-referenced
