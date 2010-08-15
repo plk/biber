@@ -32,7 +32,7 @@ my $builder = Module::Build->new(
         'Data::Dump' => 0,
         'File::Slurp'  => 0,
         'IPC::Cmd' => 0,
-        'LaTeX::Decode' => 0,
+        'LaTeX::Decode' => '>= 0.3',
         'List::AllUtils' => 0,
         'Regexp::Common' => 0,
         'Log::Log4perl' => 0,
