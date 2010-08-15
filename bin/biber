@@ -134,6 +134,7 @@ my $l4pconf = qq(
     log4perl.appender.Screen                           = Log::Log4perl::Appender::Screen
     ## the following option sets a max level of INFO for the console:
     ## i.e. debug messages can only go to the log file
+    log4perl.appender.Screen.utf8                      = 1
     log4perl.appender.Screen.Threshold                 = INFO
     log4perl.appender.Screen.stderr                    = 0
     log4perl.appender.Screen.layout                    = Log::Log4perl::Layout::SimpleLayout
