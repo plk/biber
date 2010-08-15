@@ -42,6 +42,7 @@ my $builder = Module::Build->new(
     },
     recommends => {
         'Readonly::XS' => 0,
+        'Text::BibTeX' => '>= 0.46'
     },
     script_files => [ glob( "bin/*" ) ],
     data_files => { 'data/schemata/bcf.xsd' => 'lib/Biber/bcf.xsd',
