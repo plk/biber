@@ -1,5 +1,6 @@
 Revision history for Biber
 0.5.5   -08-2010
+       * Allows UTF-8 citekeys (requires Text::BibTeX >= 0.46)
        * RecDescent parser is no longer supported or included
        * Now requires LaTeX::Decode >= 0.3
        * Stricter version dependency for Text::BibTeX. Older than 0.42 is
