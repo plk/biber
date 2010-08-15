@@ -16,10 +16,6 @@ provides:
     version: v0.5.4
   Biber::BibTeX:
     file: lib/Biber/BibTeX.pm
-  Biber::BibTeX::PRD:
-    file: lib/Biber/BibTeX/PRD.pm
-  Biber::BibTeX::Parser:
-    file: lib/Biber/BibTeX/Parser.pm
   Biber::Config:
     file: lib/Biber/Config.pm
   Biber::Constants:
@@ -38,14 +34,14 @@ provides:
     file: lib/Biber/Output/BBL.pm
   Biber::Output::Base:
     file: lib/Biber/Output/Base.pm
+  Biber::Output::Test:
+    file: lib/Biber/Output/Test.pm
   Biber::Section:
     file: lib/Biber/Section.pm
   Biber::Sections:
     file: lib/Biber/Sections.pm
   Biber::Utils:
     file: lib/Biber/Utils.pm
-  Parse::RecDescent::Biber::BibTeX::Parser:
-    file: lib/Biber/BibTeX/Parser.pm
 recommends:
   Readonly::XS: 0
 requires:
@@ -53,12 +49,12 @@ requires:
   Data::Dump: 0
   File::Slurp: 0
   IPC::Cmd: 0
-  LaTeX::Decode: 0
+  LaTeX::Decode: '>= 0.3'
   List::AllUtils: 0
   Log::Log4perl: 0
   Readonly: 0
   Regexp::Common: 0
-  Text::BibTeX: 0
+  Text::BibTeX: '>= 0.42'
   XML::LibXML::Simple: 0
 resources:
   license: http://dev.perl.org/licenses/

@@ -1,5 +1,7 @@
 Revision history for Biber
 0.5.5   -08-2010
+       * RecDescent parser is no longer supported or included
+       * Now requires LaTeX::Decode >= 0.3
        * Stricter version dependency for Text::BibTeX. Older than 0.42 is
          rather useless for complex names.
        * Re-factored and enhanced auto-re-encoding of .bib/.bbl. With biblatex

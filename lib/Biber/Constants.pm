@@ -72,7 +72,6 @@ our %CONFIG_DEFAULT_BIBER = (
   mincrossrefs =>  2,
   bibdata =>  undef,
   allentries =>  0,
-  useprd =>  0,
   debug =>  0,
   trace =>  0,
   quiet => 0,

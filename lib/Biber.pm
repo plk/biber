@@ -482,8 +482,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 =head2 parse_bibtex
 
     This is a wrapper method to parse a bibtex database. If available it will
-    pass the job to Text::BibTeX via Biber::BibTeX, otherwise it relies on a
-    slower pure Perl parser implemented in Biber::BibTeX::PRD.
+    pass the job to Text::BibTeX via Biber::BibTeX
 
 =cut
 
@@ -543,33 +542,10 @@ sub parse_bibtex {
   $basefilename =~ s/\.utf8$//;
   $BIBER_DATAFILE_REFS{$basefilename}++;
 
-  unless ( eval "require Text::BibTeX; 1" ) {
-    Biber::Config->setoption('useprd', 1);
-  }
+  require Biber::BibTeX;
+  push @ISA, 'Biber::BibTeX';
 
-  unless ( Biber::Config->getoption('useprd') ) {
-
-    require Biber::BibTeX;
-    push @ISA, 'Biber::BibTeX';
-
-    @localkeys = $self->_text_bibtex_parse($filename);
-  }
-  else {
-
-    require Biber::BibTeX::PRD;
-    push @ISA, 'Biber::BibTeX::PRD';
-
-    $logger->info("Using a Parse::RecDescent parser...");
-
-    # we only add this warning if the bib file is larger than 20KB
-    if (-s $filename > 20000 ) {
-      $logger->warn("Note that it can be very slow with large bib files!\n",
-        "You are advised to install Text::BibTeX for faster processing!");
-      $self->{warnings}++;
-    };
-
-    @localkeys = $self->_bibtex_prd_parse($filename);
-  }
+  @localkeys = $self->_text_bibtex_parse($filename);
 
   unlink $ufilename if -f $ufilename;
 

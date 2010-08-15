@@ -12,8 +12,6 @@ lib/Biber/Output/Base.pm
 lib/Biber/Output/BBL.pm
 lib/Biber/Output/Test.pm
 lib/Biber/BibTeX.pm
-lib/Biber/BibTeX/PRD.pm
-lib/Biber/BibTeX/Parser.pm
 lib/Biber/Config.pm
 lib/Biber/Constants.pm
 lib/Biber/Entries.pm
@@ -70,7 +68,6 @@ t/01-names.t
 t/01-utils.t
 t/02-biber.t
 t/03-biber.t
-t/04-biber.t
 t/05-dateformats.t
 t/05-extrayear.t
 t/05-labelalpha.t
