@@ -316,7 +316,8 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
       next;
     }
 
-    my $origkey = $entry->key;
+    # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing utf8 keys
+    my $origkey = decode_utf8($entry->key);
 
     if (!defined $origkey or $origkey =~ /\s/ or $origkey eq '') {
       $logger->warn("Invalid BibTeX key! Skipping...");

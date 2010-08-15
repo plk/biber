@@ -18,7 +18,7 @@ my $biber = Biber->new(noconf => 1);
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
 
-my $encode1 = q|  \entry{test1}{book}{}
+my $encode1 = q|  \entry{testŠ}{book}{}
     \name{author}{1}{%
       {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
     }
