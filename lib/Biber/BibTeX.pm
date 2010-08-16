@@ -70,6 +70,7 @@ sub TBSIG {
 
 sub parsename {
   my ($namestr, $opts) = @_;
+  $namestr = decode_utf8($namestr);
   $logger->debug("   Parsing namestring '$namestr'");
   my $usepre = $opts->{useprefix};
   # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
