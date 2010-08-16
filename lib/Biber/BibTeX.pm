@@ -448,6 +448,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
           my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
           my $names = new Biber::Entry::Names;
           foreach my $name (@tmp) {
+            $name = decode_utf8($name);
 
             # Check for malformed names in names which aren't completely escaped
 

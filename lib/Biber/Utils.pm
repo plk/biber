@@ -74,6 +74,8 @@ sub bibfind {
     }
     if ($found) {
       chomp $found;
+      # filename can be UTF-8 and run() isn't clever with UTF-8
+      $found = decode_utf8($found);
       $logger->debug("Found .bib file at '$found'");
       return $found;
     }
