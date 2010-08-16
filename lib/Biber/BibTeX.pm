@@ -329,7 +329,6 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     $citecasekey = $origkey unless $citecasekey;
     my $lc_key = lc($origkey);
 
-    $logger->warn("Processing entry '$origkey'");
     $logger->debug("Processing entry '$origkey'");
 
     if ( $bibentries->entry_exists($origkey) ) {
