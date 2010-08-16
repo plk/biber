@@ -82,8 +82,6 @@ sub parsename {
   my $name = new Text::BibTeX::Name($namestr);
   open STDERR, '>&', \*OLDERR;
 
-  my $encoding = Biber::Config->getoption('bibencoding');
-
   # Formats so we can get BibTeX compatible nbsp inserted
   # We can't use formats to get initials as Text::BibTeX < 0.42 as it
   # has a problem dealing with braced names when extracting initials
@@ -97,10 +95,10 @@ sub parsename {
   $s_f->set_options(BTN_JR,    0, BTJ_MAYTIE, BTJ_NOTHING);
 
   # Generate name parts
-  my $lastname  = decode($encoding, $name->format($l_f));
-  my $firstname = decode($encoding, $name->format($f_f));
-  my $prefix    = decode($encoding, $name->format($p_f));
-  my $suffix    = decode($encoding, $name->format($s_f));
+  my $lastname  = decode_utf8($name->format($l_f));
+  my $firstname = decode_utf8($name->format($f_f));
+  my $prefix    = decode_utf8($name->format($p_f));
+  my $suffix    = decode_utf8($name->format($s_f));
 
   # Variables to hold either the Text::BibTeX::NameFormat generated initials
   # or our own generated ones in case we are using a broken version of Text::BibTeX
@@ -156,14 +154,14 @@ sub parsename {
     $pit_f->set_options(BTN_VON,   1, BTJ_NOTHING, BTJ_NOTHING);
     $sit_f->set_options(BTN_JR,    1, BTJ_NOTHING, BTJ_NOTHING);
 
-    $gen_lastname_i    = decode($encoding, $nd_name->format($li_f));
-    $gen_lastname_it   = decode($encoding, $nd_name->format($lit_f));
-    $gen_firstname_i   = decode($encoding, $nd_name->format($fi_f));
-    $gen_firstname_it  = decode($encoding, $nd_name->format($fit_f));
-    $gen_prefix_i      = decode($encoding, $nd_name->format($pi_f));
-    $gen_prefix_it     = decode($encoding, $nd_name->format($pit_f));
-    $gen_suffix_i      = decode($encoding, $nd_name->format($si_f));
-    $gen_suffix_it     = decode($encoding, $nd_name->format($sit_f));
+    $gen_lastname_i    = decode_utf8($nd_name->format($li_f));
+    $gen_lastname_it   = decode_utf8($nd_name->format($lit_f));
+    $gen_firstname_i   = decode_utf8($nd_name->format($fi_f));
+    $gen_firstname_it  = decode_utf8($nd_name->format($fit_f));
+    $gen_prefix_i      = decode_utf8($nd_name->format($pi_f));
+    $gen_prefix_it     = decode_utf8($nd_name->format($pit_f));
+    $gen_suffix_i      = decode_utf8($nd_name->format($si_f));
+    $gen_suffix_it     = decode_utf8($nd_name->format($sit_f));
 
   }
   else {
@@ -289,9 +287,6 @@ sub _text_bibtex_parse {
 
   my @localkeys;
 
-  # Get encoding
-  my $encoding = Biber::Config->getoption('bibencoding');
-
   my $bib = Text::BibTeX::File->new( $filename, '<' )
     or $logger->logcroak("Cannot create Text::BibTeX::File object from $filename: $!");
 
@@ -319,7 +314,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     }
 
     # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing utf8 keys
-    my $origkey = decode($encoding, $entry->key);
+    my $origkey = decode_utf8($entry->key);
 
     if (!defined $origkey or $origkey =~ /\s/ or $origkey eq '') {
       $logger->warn("Invalid BibTeX key! Skipping...");
@@ -362,14 +357,14 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     # all fields used for this entry
     my @flist = $entry->fieldlist;
 
-    #here we only keep those that do not require splitting
+    # here we only keep those that do not require splitting
     my @flistnosplit = reduce_array(\@flist, \@ENTRIESTOSPLIT);
 
     if ( $entry->metatype == BTE_REGULAR ) {
 
       foreach my $f ( @flistnosplit ) {
 
-        my $value = decode( $encoding, $entry->get($f) );
+        my $value = decode_utf8($entry->get($f));
 
         my $af = $f;
 
@@ -393,7 +388,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
             Biber::Config->set_setparentkey($setkey, $lc_key);
           }
         }
-        elsif ($f eq 'crossref') { ### $entry->type ne 'set' and
+        elsif ($f eq 'crossref') {
           Biber::Config->incr_crossrefkey($value);
         }
       }
@@ -482,7 +477,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
 
         } else {
           # Name fields are decoded during parsing, others here
-          @tmp = map { decode($encoding, $_) } @tmp;
+          @tmp = map { decode_utf8($_) } @tmp;
           @tmp = map { remove_outer($_) } @tmp;
           $bibentry->set_field($af, [ @tmp ]);
         }
