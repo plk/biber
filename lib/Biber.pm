@@ -18,7 +18,7 @@ use Biber::Entry::Name;
 use Biber::Sections;
 use Biber::Section;
 use Biber::Utils;
-use LaTeX::Decode;
+use LaTeX::Decode 0.03;
 use Storable qw( dclone );
 use Log::Log4perl qw( :no_extra_logdie_message );
 use base 'Biber::Internals';

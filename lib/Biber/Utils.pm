@@ -6,7 +6,7 @@ use Encode;
 use File::Find;
 use IPC::Cmd qw( can_run run );
 use List::Util qw( first );
-use LaTeX::Decode;
+use LaTeX::Decode 0.03;
 use Biber::Constants;
 use Biber::Entry::Name;
 use Regexp::Common qw( balanced );
