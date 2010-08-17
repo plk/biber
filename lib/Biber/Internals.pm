@@ -833,18 +833,12 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 Copyright 2009-2010 François Charette and Philip Kime, all rights reserved.
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of either:
+This module is free software.  You can redistribute it and/or
+modify it under the terms of the Artistic License 2.0.
 
-=over 4
-
-=item * the GNU General Public License as published by the Free
-Software Foundation; either version 1, or (at your option) any
-later version, or
-
-=item * the Artistic License version 2.0.
-
-=back
+This program is distributed in the hope that it will be useful,
+but without any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.
 
 =cut
 
