@@ -32,17 +32,18 @@ my $builder = Module::Build->new(
         'Data::Dump' => 0,
         'File::Slurp'  => 0,
         'IPC::Cmd' => 0,
-        'LaTeX::Decode' => '>= 0.03',
+        'LaTeX::Decode' => '0.03',
         'List::AllUtils' => 0,
         'Regexp::Common' => 0,
         'Log::Log4perl' => 0,
         'Readonly' => 0,
-        'Text::BibTeX' => '>= 0.42',
+        'Text::BibTeX' => '0.42',
         'XML::LibXML::Simple' => 0,
+        'perl' => '5.8.8'
     },
     recommends => {
         'Readonly::XS' => 0,
-        'Text::BibTeX' => '>= 0.46'
+        'Text::BibTeX' => '0.46'
     },
     script_files => [ glob( "bin/*" ) ],
     data_files => { 'data/schemata/bcf.xsd' => 'lib/Biber/bcf.xsd',
