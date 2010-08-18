@@ -219,10 +219,16 @@ sub set_output_entry {
   foreach my $lfield (@LITERALFIELDS) {
     next if $SKIPFIELDS{$lfield};
     if ( is_def_and_notnull($be->get_field($lfield)) ) {
-      next if ( $lfield eq 'crossref' and
-        ($be->get_field('entrytype') ne 'set') and
-                Biber::Config->is_cited_crossref($be->get_field('crossref'))
-        ); # we skip crossref when it belongs to @auxcitekeys
+      # we skip outputting the crossref or xref when the parent is not cited
+      # (biblatex manual, section 2.23)
+      # sets are a special case so always output crossref/xref for them since their
+      # children will always be in the .bbl otherwise they make no sense.
+      unless ( $be->get_field('entrytype') eq 'set') {
+        next if ($lfield eq 'crossref' and
+                 not $section->has_citekey($be->get_field('crossref')));
+        next if ($lfield eq 'xref' and
+                 not $section->has_citekey($be->get_field('xref')));
+      }
 
       my $lfieldprint = $lfield;
       if ($lfield eq 'journal') {

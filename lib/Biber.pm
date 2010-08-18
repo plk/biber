@@ -646,18 +646,9 @@ sub process_crossrefs {
         $section->add_citekeys($inset_key);
       }
     }
-    # record which xrefs have cited parents
-    if (my $xrefkey = $be->get_field('xref')) {
-      if ($section->has_citekey($xrefkey)) {
-        Biber::Config->add_cited_crossref($xrefkey); # controls output of \strng{xref}
-      }
-    }
-    # record which crossrefs have cited parents
+    # Do crossrefs inheritance
     # and do inheritance
     if (my $crossrefkey = $be->get_field('crossref')) {
-      if ($section->has_citekey($crossrefkey)) {
-        Biber::Config->add_cited_crossref($crossrefkey); # controls output of \strng{crossref}
-      }
       my $parent = $section->bibentry($crossrefkey);
       $logger->debug("  Entry $citekey inheriting fields from parent $crossrefkey");
       unless ($parent) {
@@ -678,15 +669,7 @@ sub process_crossrefs {
     # to cited crossref status and add it to the citekeys list
     if (Biber::Config->get_crossrefkey($k) >= Biber::Config->getoption('mincrossrefs')) {
       $logger->debug("cross/xref key '$k' is cross/xref'ed >= mincrossrefs, adding to citekeys");
-      Biber::Config->add_cited_crossref($k);
       $section->add_citekeys($k);
-    }
-    # Remove all cited crossrefs from the array which determines which ones to exclude
-    # when outputting
-    if ( $section->has_citekey($k) or
-      Biber::Config->get_crossrefkey($k) >= Biber::Config->getoption('mincrossrefs') ) {
-      $logger->debug("Removing unneeded crossrefkey $k");
-      Biber::Config->del_crossrefkey($k);
     }
   }
 }
@@ -1851,13 +1834,8 @@ sub create_output_section {
   # We rely on the order of this array for the order of the .bbl
   # and therefore the .bib
   foreach my $k (@citekeys) {
-    ## skip crossrefkeys (those that are directly cited or
-    #  crossref'd >= mincrossrefs were previously removed)
-    #  EXCEPT those that are also in a set
-    next if ( Biber::Config->get_crossrefkey($k) and
-              not Biber::Config->get_setparentkey($k) );
-    my $be = $section->bibentry($k) or $logger->logcroak("Cannot find $k");
-    $output_obj->set_output_entry($be, $secnum);
+    my $be = $section->bibentry($k) or $logger->logcroak("Cannot find entry with key '$k' to output");
+    $output_obj->set_output_entry($be, $section);
   }
   # Push the sorted shorthands for each section into the output object
   if ( $section->get_shorthands ) {

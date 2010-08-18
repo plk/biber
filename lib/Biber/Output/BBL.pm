@@ -116,10 +116,11 @@ sub _printfield {
 sub set_output_entry {
   my $self = shift;
   my $be = shift; # Biber::Entry object
-  my $section = shift ; # Section the entry occurs in
+  my $section = shift ; # Section object the entry occurs in
   my $acc = '';
   my $opts    = '';
   my $citecasekey; # entry key forced to case of any citations(s) which reference it
+  my $secnum = $section->number;
   if ( $be->get_field('citecasekey') ) {
     $citecasekey = $be->get_field('citecasekey');
   }
@@ -270,9 +271,9 @@ sub set_output_entry {
       # children will always be in the .bbl otherwise they make no sense.
       unless ( $be->get_field('entrytype') eq 'set') {
         next if ($lfield eq 'crossref' and
-                 not Biber::Config->is_cited_crossref($be->get_field('crossref')));
+                 not $section->has_citekey($be->get_field('crossref')));
         next if ($lfield eq 'xref' and
-                 not Biber::Config->is_cited_crossref($be->get_field('xref')));
+                 not $section->has_citekey($be->get_field('xref')));
       }
 
       my $lfieldprint = $lfield;
@@ -316,8 +317,8 @@ sub set_output_entry {
 
   # Use an array to preserve sort order of entries already generated
   # Also create an index by keyname for easy retrieval
-  push @{$self->{output_data}{ENTRIES}{$section}{strings}}, \$acc;
-  $self->{output_data}{ENTRIES}{$section}{index}{lc($citecasekey)} = \$acc;
+  push @{$self->{output_data}{ENTRIES}{$secnum}{strings}}, \$acc;
+  $self->{output_data}{ENTRIES}{$secnum}{index}{lc($citecasekey)} = \$acc;
 
   return;
 }
