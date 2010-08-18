@@ -360,18 +360,29 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     my @flistnosplit = reduce_array(\@flist, \@ENTRIESTOSPLIT);
 
     if ( $entry->metatype == BTE_REGULAR ) {
-
       foreach my $f ( @flistnosplit ) {
-
+        next unless $entry->exists($f);
         my $value = decode_utf8($entry->get($f));
-
         my $af = $f;
 
-        if ( $ALIASES{$f} ) {
-          $af = $ALIASES{$f};
+        # If alias target exists as well as alias source, warn and skip source
+        # otherwise set alias target to alias source value
+        if ($ALIASES{$f}) { # Is there an alias for this field?
+          $af = $ALIASES{$f}; # Then get the alias name
+          if ($entry->exists($af)) { # Does the alias also have a value?
+            $logger->warn("Field '$f' is an alias for field '$af' but both are defined in entry with key '$origkey' - skipping field '$f'"); # Warn as that's wrong
+            $self->{warnings}++;
+            next;
+          }
         }
 
-        $bibentry->set_field($af, $value);
+        # Special case for "archiveprefix" - need to lowercase the value
+        if ($f eq 'archiveprefix') {
+          $bibentry->set_field($af, lc($value));
+        }
+        else {
+          $bibentry->set_field($af, $value);
+        }
 
         # We have to process local options as early as possible in order
         # to make them available for things that need them like parsename()
@@ -379,10 +390,8 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
           $self->process_entry_options($bibentry);
         }
 
-        if ($entry->type eq 'set' and $f eq 'entryset') {
-
+        if ($entry->type eq 'set' and $af eq 'entryset') {
           my @entrysetkeys = split /\s*,\s*/, $value;
-
           foreach my $setkey (@entrysetkeys) {
             Biber::Config->set_setparentkey($setkey, $lc_key);
           }
@@ -426,22 +435,22 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
       }
 
       foreach my $f ( @ENTRIESTOSPLIT ) {
-
         next unless $entry->exists($f);
-
+        my @tmp = $entry->split($f);
         my $af = $f;
 
-        # support for legacy BibTeX field names as aliases
-        if ( $ALIASES{$f} ) {
-          $af = $ALIASES{$f};
-
-          # ignore field e.g. "address" if "location" also exists
-          next if $entry->exists($af);
+        # If alias target exists as well as alias source, warn and skip source
+        # otherwise set alias target to alias source value
+        if ($ALIASES{$f}) { # Is there an alias for this field?
+          $af = $ALIASES{$f}; # Then get the alias name
+          if ($entry->exists($af)) { # Does the alias also have a value?
+            $logger->warn("Field '$f' is an alias for field '$af' but both are defined in entry with key '$origkey' - skipping field '$f'"); # Warn as that's wrong
+            $self->{warnings}++;
+            next;
+          }
         }
 
-        my @tmp = $entry->split($f);
-
-        if (is_name_field($f)) {
+        if (is_name_field($af)) {
           my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
           my $names = new Biber::Entry::Names;
           foreach my $name (@tmp) {
@@ -472,7 +481,8 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
           }
           $bibentry->set_field($af, $names);
 
-        } else {
+        }
+        else {
           # Name fields are decoded during parsing, others here
           @tmp = map { decode_utf8($_) } @tmp;
           @tmp = map { remove_outer($_) } @tmp;
