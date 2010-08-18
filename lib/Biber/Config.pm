@@ -210,14 +210,14 @@ sub add_cited_crossref {
 
 =head2 is_cited_crossref
 
-    Checks whether a crossref has been cited
+    Checks whether a crossref/xref has been cited
 
 =cut
 
 sub is_cited_crossref {
   shift; # class method so don't care about class name
   my $cr = shift;
-  if (first {$cr eq $_} @{$CONFIG->{state}{citedcrossrefs}}) {
+  if (first {lc($cr) eq lc($_)} @{$CONFIG->{state}{citedcrossrefs}}) {
     return 1;
   }
   else {

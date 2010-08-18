@@ -1,0 +1,121 @@
+% Testing mincrossrefs. cr1 and cr2 crossrefs should trigger inclusion of crm and also
+% the crossref fields in both of them
+@INBOOK{cr1,
+  AUTHOR    = {Graham Gullam},
+  TITLE     = {Great and Good Graphs},
+  ORIGYEAR  = {1955},
+  CROSSREF  = {crm}
+}
+
+@INBOOK{cr2,
+  AUTHOR    = {Frederick Fumble},
+  TITLE     = {Fabulous Fourier Forms},
+  ORIGYEAR  = {1943},
+  CROSSREF  = {crm}
+}
+
+@BOOK{crm,
+  EDITOR    = {Edgar Erbriss},
+  TITLE     = {Graphs of the Continent},
+  PUBLISHER = {Grimble},
+  YEAR      = {1974}
+}
+
+% Testing explicit cite of crossref parent. Should trigger inclusion of child crossref field
+@INBOOK{cr3,
+  AUTHOR    = {Arthur Aptitude},
+  TITLE     = {Arrangements of All Articles},
+  ORIGYEAR  = {1934},
+  CROSSREF  = {crt}
+}
+
+@BOOK{crt,
+  EDITOR    = {Mark Monkley},
+  TITLE     = {Beasts of the Burbling Burns},
+  PUBLISHER = {Rancour},
+  YEAR      = {1996}
+}
+
+% Testing mincrossrefs not reached. cr4 is cited, cr5 isn't, therefore mincrossrefs (2) for
+% crn not reached
+@INBOOK{cr4,
+  AUTHOR    = {Morris Mumble},
+  TITLE     = {Enterprising Entities},
+  ORIGYEAR  = {1911},
+  CROSSREF  = {crn}
+}
+
+@INBOOK{cr5,
+  AUTHOR    = {Oliver Ordinary},
+  TITLE     = {Questionable Quidities},
+  ORIGYEAR  = {1919},
+  CROSSREF  = {crn}
+}
+
+@BOOK{crn,
+  EDITOR    = {Jeremy Jermain},
+  TITLE     = {Vanquished, Victor, Vandal},
+  PUBLISHER = {Pillsbury},
+  YEAR      = {1945}
+}
+
+% Testing mincrossrefs. xr1 and xr2 xrefs should trigger inclusion of xrm and also
+% the xreffields in both of them
+@INBOOK{xr1,
+  AUTHOR    = {Zoe Zentrum},
+  TITLE     = {Moods Mildly Modified},
+  ORIGYEAR  = {1921},
+  XREF      = {xrm}
+}
+
+@INBOOK{xr2,
+  AUTHOR    = {Ian Instant},
+  TITLE     = {Migraines Multiplying Madly},
+  ORIGYEAR  = {1926},
+  XREF      = {xrm}
+}
+
+@BOOK{xrm,
+  EDITOR    = {Peter Prendergast},
+  TITLE     = {Calligraphy, Calisthenics, Culture},
+  PUBLISHER = {Mainstream},
+  YEAR      = {1970}
+}
+
+% Testing explicit cite of xref parent. Should trigger inclusion of child xref field
+@INBOOK{xr3,
+  AUTHOR    = {Norman Normal},
+  TITLE     = {Russion Regalia Revisited},
+  ORIGYEAR  = {1923},
+  XREF      = {xrt}
+}
+
+@BOOK{xrt,
+  EDITOR    = {Lucy Lunders},
+  TITLE     = {Kings, Cork and Calculation},
+  PUBLISHER = {Middling},
+  YEAR      = {1977}
+}
+
+% Testing mincrossrefs not reached. cr4 is cited, cr5 isn't, therefore mincrossrefs (2) for
+% crn not reached
+@INBOOK{xr4,
+  AUTHOR    = {Megan Mistrel},
+  TITLE     = {Lumbering Lunatics},
+  ORIGYEAR  = {1933},
+  XREF      = {xrn}
+}
+
+@INBOOK{xr5,
+  AUTHOR    = {Kenneth Kunrath},
+  TITLE     = {Dreadful Dreary Days},
+  ORIGYEAR  = {1900},
+  XREF      = {xrn}
+}
+
+@BOOK{xrn,
+  EDITOR    = {Victor Vivacious},
+  TITLE     = {Examples of Excellent Exaggerations},
+  PUBLISHER = {Oxford},
+  YEAR      = {1935}
+}

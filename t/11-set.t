@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 4;
+use Test::More tests => 3;
 
 use Biber;
 use Biber::Output::BBL;
@@ -27,8 +27,6 @@ Biber::Config->setoption('unicodebbl', 1);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 
-isa_ok($biber, "Biber");
-
 my $string1 = q|  \entry{Elias1955}{set}{}
     \set{Elias1955a,Elias1955b}
     \name{labelname}{1}{}{%
@@ -50,7 +48,7 @@ my $string1 = q|  \entry{Elias1955}{set}{}
     \field{issn}{0096-1000}
     \field{number}{1}
     \field{volume}{1}
-    \field{crossref}{Elias1955a}
+    \strng{crossref}{Elias1955a}
     \field{pages}{16\bibrangedash 24}
     \verb{doi}
     \verb 10.1109/TIT.1955.1055126
