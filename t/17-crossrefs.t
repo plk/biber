@@ -51,6 +51,8 @@ my $cr1 = q|  \entry{cr1}{inbook}{}
     \field{origyear}{1955}
     \field{title}{Great and Good Graphs}
     \field{booktitle}{Graphs of the Continent}
+    \field{eprinttype}{someprfix}
+    \field{eprintclass}{SOMECLASS}
     \strng{crossref}{crm}
   \endentry
 
@@ -69,6 +71,9 @@ my $cr2 = q|  \entry{cr2}{inbook}{}
     }
     \list{publisher}{1}{%
       {Grimble}%
+    }
+    \list{institution}{1}{%
+      {Institution}%
     }
     \strng{namehash}{FF1}
     \strng{fullhash}{FF1}
@@ -123,6 +128,7 @@ my $cr3 = q|  \entry{cr3}{inbook}{}
     \field{origyear}{1934}
     \field{title}{Arrangements of All Articles}
     \field{booktitle}{Beasts of the Burbling Burns}
+    \field{eprinttype}{sometype}
     \strng{crossref}{crt}
   \endentry
 
