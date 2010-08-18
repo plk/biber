@@ -387,9 +387,6 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
             Biber::Config->set_setparentkey($setkey, $lc_key);
           }
         }
-        elsif ($f eq 'crossref') {
-          Biber::Config->incr_crossrefkey($value);
-        }
       }
 
       # Entry type aliases - biblatex manual Section 2.1.2

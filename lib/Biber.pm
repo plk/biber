@@ -607,22 +607,34 @@ sub process_missing {
   }
 }
 
-=head2 process_sets_and_crossrefs
+=head2 process_crossrefs
 
-    $biber->process_sets_and_crossrefs
+    $biber->process_crossrefs
 
     This does three things:
     1. Ensures that all citekeys that are within entry sets will be output in the bbl.
     2. Ensures proper inheritance of data from cross-references.
-    3. Ensures that crossrefs that are directly cited or cross-referenced
+    3. Ensures that crossrefs/xrefs that are directly cited or cross-referenced
        at least $mincrossrefs times are included in the bibliography.
 
 =cut
 
-sub process_sets_and_crossrefs {
+sub process_crossrefs {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+
+  # first, loop over cited keys and count the cross/xrefs
+  # Can't do this when parsing .bib as this would count them for potentially uncited children
+  foreach my $citekey ($section->get_citekeys) {
+    my $be = $section->bibentry($citekey);
+    my $refkey;
+    if ($refkey = $be->get_field('xref') or $refkey = $be->get_field('crossref')) {
+      $logger->debug("Incrementing cross/xrefkey count for entry '$refkey' via entry '$citekey'");
+      Biber::Config->incr_crossrefkey($refkey);
+    }
+  }
+
   $logger->debug("Processing entry sets and crossrefs for section $secnum");
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
@@ -633,10 +645,17 @@ sub process_sets_and_crossrefs {
         $section->add_citekeys($inset_key);
       }
     }
-    if ($be->get_field('crossref')) {
-      my $crossrefkey = $be->get_field('crossref');
+    # record which xrefs have cited parents
+    if (my $xrefkey = $be->get_field('xref')) {
+      if ($section->has_citekey($xrefkey)) {
+        Biber::Config->add_cited_crossref($xrefkey); # controls output of \strng{xref}
+      }
+    }
+    # record which crossrefs have cited parents
+    # and do inheritance
+    if (my $crossrefkey = $be->get_field('crossref')) {
       if ($section->has_citekey($crossrefkey)) {
-        Biber::Config->add_cited_crossref($crossrefkey);
+        Biber::Config->add_cited_crossref($crossrefkey); # controls output of \strng{crossref}
       }
       my $parent = $section->bibentry($crossrefkey);
       $logger->debug("  Entry $citekey inheriting fields from parent $crossrefkey");
@@ -650,11 +669,19 @@ sub process_sets_and_crossrefs {
       }
     }
   }
+
   # We make sure that crossrefs that are directly cited or cross-referenced
   # at least $mincrossrefs times are included in the bibliography.
-  # All crossrefs that are kept in "crossrefkeys" will be skipped
-  # when writing the bbl output.
   foreach my $k ( @{Biber::Config->get_crossrefkeys} ) {
+    # If parent has been crossref'ed more than mincrossref times, upgrade it
+    # to cited crossref status and add it to the citekeys list
+    if (Biber::Config->get_crossrefkey($k) >= Biber::Config->getoption('mincrossrefs')) {
+      $logger->debug("cross/xref key '$k' is cross/xref'ed >= mincrossrefs, adding to citekeys");
+      Biber::Config->add_cited_crossref($k);
+      $section->add_citekeys($k);
+    }
+    # Remove all cited crossrefs from the array which determines which ones to exclude
+    # when outputting
     if ( $section->has_citekey($k) or
       Biber::Config->get_crossrefkey($k) >= Biber::Config->getoption('mincrossrefs') ) {
       $logger->debug("Removing unneeded crossrefkey $k");
@@ -1459,7 +1486,7 @@ sub prepare {
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->process_data; # Parse data into section objects
     $self->process_missing; # Check for missing citekeys before anything else
-    $self->process_sets_and_crossrefs; # Process sets and crossrefs
+    $self->process_crossrefs; # Process crossrefs
     $self->postprocess; # in here we generate lots of information
     $self->sortentries; # then we do a label sort pass
     $self->generate_final_sortinfo; # in here we generate the final sort string

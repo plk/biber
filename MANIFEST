@@ -82,6 +82,8 @@ t/12-skips.t
 t/13-uniquename.t
 t/14-sections.t
 t/15-sections-complex.t
+t/16-encoding.t
+t/17-crossrefs.t
 t/pod-coverage.t
 t/pod.t
 t/tdata/options.bcf
@@ -93,6 +95,7 @@ t/tdata/encoding1.bib
 t/tdata/encoding2.bib
 t/tdata/encoding3.bib
 t/tdata/encoding4.bib
+t/tdata/crossrefs.bib
 t/tdata/sections.bcf
 t/tdata/sections-complex.bcf
 t/tdata/sections1.bib

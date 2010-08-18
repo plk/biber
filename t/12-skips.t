@@ -43,7 +43,7 @@ my $set1 = q|  \entry{seta}{set}{}
     \field{extraalpha}{1}
     \field{year}{2010}
     \field{title}{Set Member A}
-    \field{crossref}{set:membera}
+    \strng{crossref}{set:membera}
   \endentry
 
 |;
