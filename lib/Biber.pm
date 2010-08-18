@@ -611,11 +611,11 @@ sub process_missing {
 
     $biber->process_crossrefs
 
-    This does three things:
+    This does several things:
     1. Ensures that all citekeys that are within entry sets will be output in the bbl.
     2. Ensures proper inheritance of data from cross-references.
     3. Ensures that crossrefs/xrefs that are directly cited or cross-referenced
-       at least $mincrossrefs times are included in the bibliography.
+       at least mincrossrefs times are included in the bibliography.
 
 =cut
 
@@ -624,6 +624,7 @@ sub process_crossrefs {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
+  $logger->debug("Processing entry sets and crossrefs for section $secnum");
   # first, loop over cited keys and count the cross/xrefs
   # Can't do this when parsing .bib as this would count them for potentially uncited children
   foreach my $citekey ($section->get_citekeys) {
@@ -635,7 +636,7 @@ sub process_crossrefs {
     }
   }
 
-  $logger->debug("Processing entry sets and crossrefs for section $secnum");
+  # promote indirectly cited inset set members to fully cited entries
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
     if (lc($be->get_field('entrytype')) eq 'set') {

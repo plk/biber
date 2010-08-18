@@ -282,7 +282,8 @@ sub set_output_entry {
     if ( is_def_and_notnull($be->get_field($lfield)) ) {
       # we skip outputting the crossref or xref when the parent is not cited
       # (biblatex manual, section 2.23)
-      # sets are a special case so always output crossref/xref for them
+      # sets are a special case so always output crossref/xref for them since their
+      # children will always be in the .bbl otherwise they make no sense.
       unless ( $be->get_field('entrytype') eq 'set') {
         next if ($lfield eq 'crossref' and
                  not Biber::Config->is_cited_crossref($be->get_field('crossref')));
