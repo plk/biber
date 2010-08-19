@@ -70,6 +70,7 @@ our %CONFIG_DEFAULT_BIBER = (
   cssort => 1,
   fastsort => 1,
   mincrossrefs =>  2,
+  bibdatatype => 'bibtex',
   bibdata =>  undef,
   allentries =>  0,
   debug =>  0,
