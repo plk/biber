@@ -33,18 +33,18 @@ my $out = $biber->get_output_obj;
 my $bibentries = $biber->sections->get_section('0')->bib;
 my $section = $biber->sections->get_section('0');
 
-my $l1 = [ "Invalid format of field 'origdate' - ignoring field",
-           "Invalid format of field 'urldate' - ignoring field",
-           "Value out of bounds for field/date component 'month' - ignoring" ];
-my $l2 = [ "Invalid format of field 'origdate' - ignoring field" ];
-my $l3 = [ "Invalid format of field 'urldate' - ignoring field" ];
-my $l4 = [ "Invalid format of field 'date' - ignoring field" ];
-my $l5 = [ "Invalid format of field 'date' - ignoring field" ];
-my $l6 = [ "Value out of bounds for field/date component 'month' - ignoring" ];
-my $l7 = [ "Value out of bounds for field/date component 'eventday' - ignoring" ];
-my $l8 = [ "Invalid format of field 'month' - ignoring field" ];
-my $l11 = [ "Field conflict - both 'date' and 'year' used - ignoring field 'year'" ];
-my $l12 = [ "Field conflict - both 'date' and 'month' used - ignoring field 'month'" ];
+my $l1 = [ "Invalid format of field 'origdate' - ignoring field in entry 'L1'",
+           "Invalid format of field 'urldate' - ignoring field in entry 'L1'",
+           "Value out of bounds for field/date component 'month' - ignoring in entry 'L1'" ];
+my $l2 = [ "Invalid format of field 'origdate' - ignoring field in entry 'L2'" ];
+my $l3 = [ "Invalid format of field 'urldate' - ignoring field in entry 'L3'" ];
+my $l4 = [ "Invalid format of field 'date' - ignoring field in entry 'L4'" ];
+my $l5 = [ "Invalid format of field 'date' - ignoring field in entry 'L5'" ];
+my $l6 = [ "Value out of bounds for field/date component 'month' - ignoring in entry 'L6'" ];
+my $l7 = [ "Value out of bounds for field/date component 'eventday' - ignoring in entry 'L7'" ];
+my $l8 = [ "Invalid format of field 'month' - ignoring field in entry 'L8'" ];
+my $l11 = [ "Field conflict - both 'date' and 'year' used - ignoring field 'year' in entry 'L11'" ];
+my $l12 = [ "Field conflict - both 'date' and 'month' used - ignoring field 'month' in entry 'L12'" ];
 
 
 

@@ -80,6 +80,25 @@ sub new {
   return $self;
 }
 
+=head2 biber_warn
+
+    Wrapper around various warnings bits and pieces
+    Logs a warning, increments warning count in Biber object and add warning to
+    the list of .bbl warnings to add
+
+=cut
+
+sub biber_warn {
+  my $self = shift;
+  my $entry = shift;
+  my $warning = shift;
+  $logger->warn($warning);
+  $entry->add_warning($warning);
+  $self->{warnings}++;
+  return;
+}
+
+
 =head2 sections
 
     my $sections= $biber->sections
@@ -426,8 +445,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         Biber::Config->incr_seenkey($key, $section->{number});
       }
       elsif (Biber::Config->get_keycase($key) ne $key) {
-        $logger->warn("Case mismatch error between cite keys $key and " . Biber::Config->get_keycase($key));
-        $logger->warn("I'm skipping whatever remains of this command");
+        $logger->warn("Case mismatch error between cite keys '$key' and '" . Biber::Config->get_keycase($key) . "'");
         $self->{warnings}++;
         next;
       }
@@ -482,7 +500,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 =head2 parse_bibtex
 
     This is a wrapper method to parse a bibtex database. If available it will
-    pass the job to Text::BibTeX via Biber::BibTeX
+    pass the job to Text::BibTeX via Biber::Input::BibTeX
 
 =cut
 
@@ -542,8 +560,8 @@ sub parse_bibtex {
   $basefilename =~ s/\.utf8$//;
   $BIBER_DATAFILE_REFS{$basefilename}++;
 
-  require Biber::BibTeX;
-  push @ISA, 'Biber::BibTeX';
+  require Biber::Input::BibTeX;
+  push @ISA, 'Biber::Input::BibTeX';
 
   @localkeys = $self->_text_bibtex_parse($filename);
 
@@ -652,9 +670,7 @@ sub process_crossrefs {
       my $parent = $section->bibentry($crossrefkey);
       $logger->debug("  Entry $citekey inheriting fields from parent $crossrefkey");
       unless ($parent) {
-        $logger->warn("Cannot inherit from crossref key '$crossrefkey' - does it exist?");
-        $self->{warnings}++;
-        $be->add_warning("Cannot inherit from crossref key '$crossrefkey' - does it exist?");
+        $self->biber_warn($be, "Cannot inherit from crossref key '$crossrefkey' - does it exist?");
       }
       else {
         $be->inherit_from($parent);
@@ -746,26 +762,20 @@ sub postprocess_dates {
 
   # Both DATE and YEAR specified
   if ($be->get_field('date') and $be->get_field('year')) {
-    $logger->warn("Field conflict - both 'date' and 'year' used - ignoring field 'year' in '$citekey'");
-    $self->{warnings}++;
-    $be->add_warning("Field conflict - both 'date' and 'year' used - ignoring field 'year'");
+    $self->biber_warn($be, "Field conflict - both 'date' and 'year' used - ignoring field 'year' in entry '$citekey'");
     $be->del_field('year');
   }
 
   # Both DATE and MONTH specified
   if ($be->get_field('date') and $be->get_field('month')) {
-    $logger->warn("Field conflict - both 'date' and 'month' used - ignoring field 'month' in '$citekey'");
-    $self->{warnings}++;
-    $be->add_warning("Field conflict - both 'date' and 'month' used - ignoring field 'month'");
+    $self->biber_warn($be, "Field conflict - both 'date' and 'month' used - ignoring field 'month' in entry '$citekey'");
     $be->del_field('month');
   }
 
   # MONTH must be an integer - YEAR doesn't have to be to allow for things like
   # "in press" which sometimes need an extrayear disambiguator (in APA styles for example)
   if ($be->get_field('month') and $be->get_field('month') !~ /\A\d+\z/xms) {
-    $logger->warn("Invalid format of field 'month' - ignoring field in entry '$citekey'");
-    $self->{warnings}++;
-    $be->add_warning("Invalid format of field 'month' - ignoring field");
+    $self->biber_warn($be, "Invalid format of field 'month' - ignoring field in entry '$citekey'");
     $be->del_field('month');
   }
 
@@ -785,9 +795,7 @@ sub postprocess_dates {
           $be->set_field($datetype . 'endyear', '');
         }
       } else {
-        $logger->warn("Invalid format of field '" . $datetype . 'date' . "' - ignoring field in entry '$citekey'");
-        $self->{warnings}++;
-        $be->add_warning("Invalid format of field '" . $datetype . 'date' . "' - ignoring field");
+        $self->biber_warn($be, "Invalid format of field '" . $datetype . 'date' . "' - ignoring field in entry '$citekey'");
         $be->del_field($datetype . 'date');
       }
     }
@@ -813,9 +821,7 @@ sub postprocess_dates {
         }
       }
       if ($bad_format) {
-        $logger->warn("Value out bounds for field/date component '$dcf' - ignoring in entry '$citekey'");
-        $self->{warnings}++;
-        $be->add_warning("Value out of bounds for field/date component '$dcf' - ignoring");
+        $self->biber_warn($be, "Value out of bounds for field/date component '$dcf' - ignoring in entry '$citekey'");
         $be->del_field($dcf);
       }
     }
@@ -853,7 +859,6 @@ sub postprocess_sets {
     }
     if ( $be->get_field('crossref')
       and ( $be->get_field('crossref') ne $entrysetkeys[0] ) ) {
-
       $logger->warn( "Problem with entry $citekey :\n"
           . "\tcrossref ("
           . $be->get_field('crossref')
@@ -861,7 +866,6 @@ sub postprocess_sets {
         );
       $self->{warnings}++;
       $be->set_field('crossref', $entrysetkeys[0]);
-
     }
     elsif ( not $be->get_field('crossref') ) {
       $logger->warn("Adding missing field 'crossref' to entry $citekey");

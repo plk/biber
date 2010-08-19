@@ -15,7 +15,7 @@ provides:
     file: lib/Biber.pm
     version: v0.5.4
   Biber::BibTeX:
-    file: lib/Biber/BibTeX.pm
+    file: lib/Biber/Input/BibTeX.pm
   Biber::Config:
     file: lib/Biber/Config.pm
   Biber::Constants:

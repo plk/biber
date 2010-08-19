@@ -1,7 +1,14 @@
 Revision history for Biber
 0.5.5   -08-2010
-       * Allows UTF-8 citekeys (requires Text::BibTeX >= 0.46)
-       * RecDescent parser is no longer supported or included
+       * Biber::BibTeX moved to Biber::Input::BibTeX. If upgrading, please remove
+         your installed <perl lib>/Biber/BibTeX.pm, just to be tidy
+       * New aliases for EPRINT classes and types implemented (see BibLaTeX docs).
+       * Biber now resolves XREFs as well as CROSSREFs so one less LaTeX pass is needed
+       * Allows UTF-8 citekeys. Requires Text::BibTeX >= 0.46 and a fully UTF-8
+         aware TeX macro package (e.g. XeTeX or LuaLaTeX). Normal LaTeX with \inputenc
+         will not work because the UTF-8 it uses is incomplete, macro based and not native.
+       * RecDescent parser is no longer supported or included. If upgrading, please remove
+         your installed <perl lib>/Biber/BibTeX directory, just to be tidy
        * Now requires LaTeX::Decode >= 0.03
        * Stricter version dependency for Text::BibTeX. Older than 0.42 is
          rather useless for complex names.

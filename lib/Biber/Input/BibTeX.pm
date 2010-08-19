@@ -1,4 +1,4 @@
-package Biber::BibTeX;
+package Biber::Input::BibTeX;
 use sigtrap qw(handler TBSIG SEGV);
 use strict;
 use warnings;
@@ -517,7 +517,7 @@ __END__
 
 =head1 NAME
 
-Biber::BibTeX - parse a bib database with Text::BibTeX
+Biber::Input::BibTeX - parse a bib database with Text::BibTeX
 
 =head1 DESCRIPTION
 

@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 11;
+use Test::More tests => 9;
 
 use Biber;
 use Biber::Output::BBL;
@@ -28,9 +28,6 @@ Biber::Config->setoption('inputenc', 'UTF-8');
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section('0');
-
-use_ok( 'Biber::BibTeX' );
-isa_ok($biber, "Biber");
 
 my $murray1 = q|  \entry{murray}{article}{}
     \name{labelname}{14}{}{%
