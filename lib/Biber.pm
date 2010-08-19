@@ -665,7 +665,6 @@ sub process_crossrefs {
       }
     }
     # Do crossrefs inheritance
-    # and do inheritance
     if (my $crossrefkey = $be->get_field('crossref')) {
       my $parent = $section->bibentry($crossrefkey);
       $logger->debug("  Entry $citekey inheriting fields from parent $crossrefkey");
@@ -1497,22 +1496,28 @@ sub process_data {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+  my $datatype = Biber::Config->getoption('bibdatatype');
 
-  foreach my $datafile ($section->get_datafiles) {
-    # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
-    $datafile = bibfind($datafile);
-
-    if ($datafile =~ /\.(?:db)?xml$/) {
-      $logger->logcroak("File $datafile does not exist!") unless -f $datafile;
-      ##DISABLED: $biber->parse_biblatexml( $bib )
-      $logger->logcroak("Support for the BibLaTeXML format is not included in this version of Biber.\n",
-                        "You can try (at your own risk) to pull the \"biblatexml\" branch of our git repo.")
+  if ($datatype eq 'bibtex') {
+    foreach my $datafile ($section->get_datafiles) {
+      # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
+      $datafile = bibfind($datafile);
+      if ($datafile !~ /\.bib$/) {
+        $datafile = "$datafile.bib";
+      }
+      $logger->logcroak("File '$datafile' does not exist!") unless -f $datafile;
+      $self->parse_bibtex($datafile)
     }
-    elsif ($datafile !~ /\.bib$/) {
-      $datafile = "$datafile.bib";
-    }
-    $logger->logcroak("File '$datafile' does not exist!") unless -f $datafile;
-    $self->parse_bibtex($datafile)
+  }
+  elsif ($datatype eq 'biblatexml') {
+    $logger->logcroak("Support for the BibLaTeXML format is not included in this version of Biber.\n",
+                      "You can try (at your own risk) to pull the \"biblatexml\" branch of our git repo.");
+      foreach my $datafile ($section->get_datafiles) {
+        # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
+        $datafile = bibfind($datafile);
+        $logger->logcroak("File '$datafile' does not exist!") unless -f $datafile;
+        $self->parse_biblatexml($datafile);
+      }
   }
   return;
 }
