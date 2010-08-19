@@ -6,7 +6,7 @@ no warnings 'utf8';
 use Test::More tests => 44;
 
 use Biber;
-use Biber::BibTeX;
+use Biber::Input::BibTeX;
 use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);

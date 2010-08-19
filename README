@@ -30,6 +30,15 @@ REQUIREMENTS
 
 INSTALLATION
 
+    ******************************************************************
+    * THIS IS BETA SOFTWARE AND SO PATHS ARE VOLATILE, SO:
+   
+    First, delete your current biber installation perl tree by removing
+    <perl site lib install path>/Biber
+
+    *
+    **************************************************************
+
   To install this module, run the following commands:
 
     perl Build.PL
