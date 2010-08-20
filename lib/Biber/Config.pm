@@ -31,7 +31,6 @@ Biber::Config - Configuration items which need to be saved across the
 # Static (class) data
 our $CONFIG;
 $CONFIG->{state}{crossrefkeys} = {};
-$CONFIG->{state}{citedcrossrefs} = [];
 $CONFIG->{state}{inset_entries} = {};
 $CONFIG->{state}{seennamehash} = {};
 $CONFIG->{state}{keycase} = {};
@@ -56,7 +55,6 @@ $CONFIG->{state}{seenkeys} = {};
 =cut
 
 sub _init {
-  $CONFIG->{state}{citedcrossrefs} = [];
   $CONFIG->{state}{seennamehash} = {};
   $CONFIG->{state}{namehashcount} = {};
   $CONFIG->{state}{uniquenamecount} = {};
@@ -157,39 +155,6 @@ sub config_file {
 ##############################
 # Biber options static methods
 ##############################
-
-=head2 add_cited_crossref
-
-    Add a cited crossref to a list so we know it's been cited
-
-=cut
-
-sub add_cited_crossref {
-  shift; # class method so don't care about class name
-  my $cr = shift;
-  push @{$CONFIG->{state}{citedcrossrefs}}, $cr;
-  return;
-}
-
-
-=head2 is_cited_crossref
-
-    Checks whether a crossref has been cited
-
-=cut
-
-sub is_cited_crossref {
-  shift; # class method so don't care about class name
-  my $cr = shift;
-  if (first {$cr eq $_} @{$CONFIG->{state}{citedcrossrefs}}) {
-    return 1;
-  }
-  else {
-    return 0;
-  }
-}
-
-
 
 =head2 setoption
 

@@ -80,6 +80,25 @@ sub new {
   return $self;
 }
 
+=head2 biber_warn
+
+    Wrapper around various warnings bits and pieces
+    Logs a warning, increments warning count in Biber object and add warning to
+    the list of .bbl warnings to add
+
+=cut
+
+sub biber_warn {
+  my $self = shift;
+  my $entry = shift;
+  my $warning = shift;
+  $logger->warn($warning);
+  $entry->add_warning($warning);
+  $self->{warnings}++;
+  return;
+}
+
+
 =head2 sections
 
     my $sections= $biber->sections
@@ -426,8 +445,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         Biber::Config->incr_seenkey($key, $section->{number});
       }
       elsif (Biber::Config->get_keycase($key) ne $key) {
-        $logger->warn("Case mismatch error between cite keys $key and " . Biber::Config->get_keycase($key));
-        $logger->warn("I'm skipping whatever remains of this command");
+        $logger->warn("Case mismatch error between cite keys '$key' and '" . Biber::Config->get_keycase($key) . "'");
         $self->{warnings}++;
         next;
       }
@@ -482,7 +500,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 =head2 parse_bibtex
 
     This is a wrapper method to parse a bibtex database. If available it will
-    pass the job to Text::BibTeX via Biber::BibTeX
+    pass the job to Text::BibTeX via Biber::Input::BibTeX
 
 =cut
 
@@ -542,8 +560,8 @@ sub parse_bibtex {
   $basefilename =~ s/\.utf8$//;
   $BIBER_DATAFILE_REFS{$basefilename}++;
 
-  require Biber::BibTeX;
-  push @ISA, 'Biber::BibTeX';
+  require Biber::Input::BibTeX;
+  push @ISA, 'Biber::Input::BibTeX';
 
   @localkeys = $self->_text_bibtex_parse($filename);
 
@@ -607,23 +625,36 @@ sub process_missing {
   }
 }
 
-=head2 process_sets_and_crossrefs
+=head2 process_crossrefs
 
-    $biber->process_sets_and_crossrefs
+    $biber->process_crossrefs
 
-    This does three things:
+    This does several things:
     1. Ensures that all citekeys that are within entry sets will be output in the bbl.
     2. Ensures proper inheritance of data from cross-references.
-    3. Ensures that crossrefs that are directly cited or cross-referenced
-       at least $mincrossrefs times are included in the bibliography.
+    3. Ensures that crossrefs/xrefs that are directly cited or cross-referenced
+       at least mincrossrefs times are included in the bibliography.
 
 =cut
 
-sub process_sets_and_crossrefs {
+sub process_crossrefs {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+
   $logger->debug("Processing entry sets and crossrefs for section $secnum");
+  # first, loop over cited keys and count the cross/xrefs
+  # Can't do this when parsing .bib as this would count them for potentially uncited children
+  foreach my $citekey ($section->get_citekeys) {
+    my $be = $section->bibentry($citekey);
+    my $refkey;
+    if ($refkey = $be->get_field('xref') or $refkey = $be->get_field('crossref')) {
+      $logger->debug("Incrementing cross/xrefkey count for entry '$refkey' via entry '$citekey'");
+      Biber::Config->incr_crossrefkey($refkey);
+    }
+  }
+
+  # promote indirectly cited inset set members to fully cited entries
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
     if (lc($be->get_field('entrytype')) eq 'set') {
@@ -633,32 +664,27 @@ sub process_sets_and_crossrefs {
         $section->add_citekeys($inset_key);
       }
     }
-    if ($be->get_field('crossref')) {
-      my $crossrefkey = $be->get_field('crossref');
-      if ($section->has_citekey($crossrefkey)) {
-        Biber::Config->add_cited_crossref($crossrefkey);
-      }
+    # Do crossrefs inheritance
+    if (my $crossrefkey = $be->get_field('crossref')) {
       my $parent = $section->bibentry($crossrefkey);
       $logger->debug("  Entry $citekey inheriting fields from parent $crossrefkey");
       unless ($parent) {
-        $logger->warn("Cannot inherit from crossref key '$crossrefkey' - does it exist?");
-        $self->{warnings}++;
-        $be->add_warning("Cannot inherit from crossref key '$crossrefkey' - does it exist?");
+        $self->biber_warn($be, "Cannot inherit from crossref key '$crossrefkey' - does it exist?");
       }
       else {
         $be->inherit_from($parent);
       }
     }
   }
+
   # We make sure that crossrefs that are directly cited or cross-referenced
   # at least $mincrossrefs times are included in the bibliography.
-  # All crossrefs that are kept in "crossrefkeys" will be skipped
-  # when writing the bbl output.
   foreach my $k ( @{Biber::Config->get_crossrefkeys} ) {
-    if ( $section->has_citekey($k) or
-      Biber::Config->get_crossrefkey($k) >= Biber::Config->getoption('mincrossrefs') ) {
-      $logger->debug("Removing unneeded crossrefkey $k");
-      Biber::Config->del_crossrefkey($k);
+    # If parent has been crossref'ed more than mincrossref times, upgrade it
+    # to cited crossref status and add it to the citekeys list
+    if (Biber::Config->get_crossrefkey($k) >= Biber::Config->getoption('mincrossrefs')) {
+      $logger->debug("cross/xref key '$k' is cross/xref'ed >= mincrossrefs, adding to citekeys");
+      $section->add_citekeys($k);
     }
   }
 }
@@ -741,26 +767,20 @@ sub postprocess_dates {
 
   # Both DATE and YEAR specified
   if ($be->get_field('date') and $be->get_field('year')) {
-    $logger->warn("Field conflict - both 'date' and 'year' used - ignoring field 'year' in '$citekey'");
-    $self->{warnings}++;
-    $be->add_warning("Field conflict - both 'date' and 'year' used - ignoring field 'year'");
+    $self->biber_warn($be, "Field conflict - both 'date' and 'year' used - ignoring field 'year' in entry '$citekey'");
     $be->del_field('year');
   }
 
   # Both DATE and MONTH specified
   if ($be->get_field('date') and $be->get_field('month')) {
-    $logger->warn("Field conflict - both 'date' and 'month' used - ignoring field 'month' in '$citekey'");
-    $self->{warnings}++;
-    $be->add_warning("Field conflict - both 'date' and 'month' used - ignoring field 'month'");
+    $self->biber_warn($be, "Field conflict - both 'date' and 'month' used - ignoring field 'month' in entry '$citekey'");
     $be->del_field('month');
   }
 
   # MONTH must be an integer - YEAR doesn't have to be to allow for things like
   # "in press" which sometimes need an extrayear disambiguator (in APA styles for example)
   if ($be->get_field('month') and $be->get_field('month') !~ /\A\d+\z/xms) {
-    $logger->warn("Invalid format of field 'month' - ignoring field in entry '$citekey'");
-    $self->{warnings}++;
-    $be->add_warning("Invalid format of field 'month' - ignoring field");
+    $self->biber_warn($be, "Invalid format of field 'month' - ignoring field in entry '$citekey'");
     $be->del_field('month');
   }
 
@@ -780,9 +800,7 @@ sub postprocess_dates {
           $be->set_field($datetype . 'endyear', '');
         }
       } else {
-        $logger->warn("Invalid format of field '" . $datetype . 'date' . "' - ignoring field in entry '$citekey'");
-        $self->{warnings}++;
-        $be->add_warning("Invalid format of field '" . $datetype . 'date' . "' - ignoring field");
+        $self->biber_warn($be, "Invalid format of field '" . $datetype . 'date' . "' - ignoring field in entry '$citekey'");
         $be->del_field($datetype . 'date');
       }
     }
@@ -808,9 +826,7 @@ sub postprocess_dates {
         }
       }
       if ($bad_format) {
-        $logger->warn("Value out bounds for field/date component '$dcf' - ignoring in entry '$citekey'");
-        $self->{warnings}++;
-        $be->add_warning("Value out of bounds for field/date component '$dcf' - ignoring");
+        $self->biber_warn($be, "Value out of bounds for field/date component '$dcf' - ignoring in entry '$citekey'");
         $be->del_field($dcf);
       }
     }
@@ -848,7 +864,6 @@ sub postprocess_sets {
     }
     if ( $be->get_field('crossref')
       and ( $be->get_field('crossref') ne $entrysetkeys[0] ) ) {
-
       $logger->warn( "Problem with entry $citekey :\n"
           . "\tcrossref ("
           . $be->get_field('crossref')
@@ -856,7 +871,6 @@ sub postprocess_sets {
         );
       $self->{warnings}++;
       $be->set_field('crossref', $entrysetkeys[0]);
-
     }
     elsif ( not $be->get_field('crossref') ) {
       $logger->warn("Adding missing field 'crossref' to entry $citekey");
@@ -1459,7 +1473,7 @@ sub prepare {
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->process_data; # Parse data into section objects
     $self->process_missing; # Check for missing citekeys before anything else
-    $self->process_sets_and_crossrefs; # Process sets and crossrefs
+    $self->process_crossrefs; # Process crossrefs
     $self->postprocess; # in here we generate lots of information
     $self->sortentries; # then we do a label sort pass
     $self->generate_final_sortinfo; # in here we generate the final sort string
@@ -1482,22 +1496,28 @@ sub process_data {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+  my $datatype = Biber::Config->getoption('bibdatatype');
 
-  foreach my $datafile ($section->get_datafiles) {
-    # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
-    $datafile = bibfind($datafile);
-
-    if ($datafile =~ /\.(?:db)?xml$/) {
-      $logger->logcroak("File $datafile does not exist!") unless -f $datafile;
-      ##DISABLED: $biber->parse_biblatexml( $bib )
-      $logger->logcroak("Support for the BibLaTeXML format is not included in this version of Biber.\n",
-                        "You can try (at your own risk) to pull the \"biblatexml\" branch of our git repo.")
+  if ($datatype eq 'bibtex') {
+    foreach my $datafile ($section->get_datafiles) {
+      # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
+      $datafile = bibfind($datafile);
+      if ($datafile !~ /\.bib$/) {
+        $datafile = "$datafile.bib";
+      }
+      $logger->logcroak("File '$datafile' does not exist!") unless -f $datafile;
+      $self->parse_bibtex($datafile)
     }
-    elsif ($datafile !~ /\.bib$/) {
-      $datafile = "$datafile.bib";
-    }
-    $logger->logcroak("File '$datafile' does not exist!") unless -f $datafile;
-    $self->parse_bibtex($datafile)
+  }
+  elsif ($datatype eq 'biblatexml') {
+    $logger->logcroak("Support for the BibLaTeXML format is not included in this version of Biber.\n",
+                      "You can try (at your own risk) to pull the \"biblatexml\" branch of our git repo.");
+      foreach my $datafile ($section->get_datafiles) {
+        # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
+        $datafile = bibfind($datafile);
+        $logger->logcroak("File '$datafile' does not exist!") unless -f $datafile;
+        $self->parse_biblatexml($datafile);
+      }
   }
   return;
 }
@@ -1520,13 +1540,8 @@ sub create_output_section {
   # We rely on the order of this array for the order of the .bbl
   # and therefore the .bib
   foreach my $k (@citekeys) {
-    ## skip crossrefkeys (those that are directly cited or
-    #  crossref'd >= mincrossrefs were previously removed)
-    #  EXCEPT those that are also in a set
-    next if ( Biber::Config->get_crossrefkey($k) and
-              not Biber::Config->get_setparentkey($k) );
-    my $be = $section->bibentry($k) or $logger->logcroak("Cannot find $k");
-    $output_obj->set_output_entry($be, $secnum);
+    my $be = $section->bibentry($k) or $logger->logcroak("Cannot find entry with key '$k' to output");
+    $output_obj->set_output_entry($be, $section);
   }
   # Push the sorted shorthands for each section into the output object
   if ( $section->get_shorthands ) {

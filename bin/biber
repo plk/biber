@@ -31,6 +31,7 @@ GetOptions(
            'inputenc|E=s',
            'nolatexdecode|n',
            'bibdata|d=s',
+           'bibdatatype=s',       # not exposed in usage output currently
            'outfile|O=s',
            'output-directory=s',
            'configfile|g=s',

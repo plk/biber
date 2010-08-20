@@ -82,20 +82,26 @@ sub set_output_target_file {
 
 sub _printfield {
   my ($self, $field, $str) = @_;
+  my $field_type = 'field';
+  # crossref and xref are of type 'strng' in the .bbl
+  if (lc($field) eq 'crossref' or
+      lc($field) eq 'xref') {
+    $field_type = 'strng';
+  }
   if (Biber::Config->getoption('wraplines')) {
-    ## 12 is the length of '  \field{}{}'
+    ## 12 is the length of '  \field{}{}' or '  \strng{}{}'
     if ( 12 + length($field) + length($str) > 2*$Text::Wrap::columns ) {
-      return "    \\field{$field}{%\n" . wrap('  ', '  ', $str) . "%\n  }\n";
+      return "    \\${field_type}{$field}{%\n" . wrap('  ', '  ', $str) . "%\n  }\n";
     }
     elsif ( 12 + length($field) + length($str) > $Text::Wrap::columns ) {
-      return wrap('    ', '    ', "\\field{$field}{$str}" ) . "\n";
+      return wrap('    ', '    ', "\\${field_type}{$field}{$str}" ) . "\n";
     }
     else {
-      return "    \\field{$field}{$str}\n";
+      return "    \\${field_type}{$field}{$str}\n";
     }
   }
   else {
-    return "    \\field{$field}{$str}\n";
+    return "    \\${field_type}{$field}{$str}\n";
   }
   return;
 }
@@ -110,10 +116,11 @@ sub _printfield {
 sub set_output_entry {
   my $self = shift;
   my $be = shift; # Biber::Entry object
-  my $section = shift ; # Section the entry occurs in
+  my $section = shift ; # Section object the entry occurs in
   my $acc = '';
   my $opts    = '';
   my $citecasekey; # entry key forced to case of any citations(s) which reference it
+  my $secnum = $section->number;
   if ( $be->get_field('citecasekey') ) {
     $citecasekey = $be->get_field('citecasekey');
   }
@@ -274,10 +281,16 @@ sub set_output_entry {
   foreach my $lfield (@LITERALFIELDS) {
     next if $SKIPFIELDS{$lfield};
     if ( is_def_and_notnull($be->get_field($lfield)) ) {
-      next if ( $lfield eq 'crossref' and
-        ($be->get_field('entrytype') ne 'set') and
-                Biber::Config->is_cited_crossref($be->get_field('crossref'))
-        ); # we skip crossref when it belongs to @auxcitekeys
+      # we skip outputting the crossref or xref when the parent is not cited
+      # (biblatex manual, section 2.23)
+      # sets are a special case so always output crossref/xref for them since their
+      # children will always be in the .bbl otherwise they make no sense.
+      unless ( $be->get_field('entrytype') eq 'set') {
+        next if ($lfield eq 'crossref' and
+                 not $section->has_citekey($be->get_field('crossref')));
+        next if ($lfield eq 'xref' and
+                 not $section->has_citekey($be->get_field('xref')));
+      }
 
       my $lfieldprint = $lfield;
       if ($lfield eq 'journal') {
@@ -320,8 +333,8 @@ sub set_output_entry {
 
   # Use an array to preserve sort order of entries already generated
   # Also create an index by keyname for easy retrieval
-  push @{$self->{output_data}{ENTRIES}{$section}{strings}}, \$acc;
-  $self->{output_data}{ENTRIES}{$section}{index}{lc($citecasekey)} = \$acc;
+  push @{$self->{output_data}{ENTRIES}{$secnum}{strings}}, \$acc;
+  $self->{output_data}{ENTRIES}{$secnum}{index}{lc($citecasekey)} = \$acc;
 
   return;
 }

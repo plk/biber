@@ -70,6 +70,7 @@ our %CONFIG_DEFAULT_BIBER = (
   cssort => 1,
   fastsort => 1,
   mincrossrefs =>  2,
+  bibdatatype => 'bibtex',
   bibdata =>  undef,
   allentries =>  0,
   debug =>  0,
@@ -209,7 +210,7 @@ Readonly::Array our @LISTFIELDS  =>   qw{
 Readonly::Array our @LITERALFIELDS_BASE  =>   qw{
   abstract addendum annotation chapter edition eid howpublished isan isbn
   ismn isrn issn issue iswc label labelnameaddon nameaddon note number pagetotal part pubstate
-  series shorthand shorthandintro shortjournal shortseries eprinttype
+  series shorthand shorthandintro shortjournal shortseries eprinttype eprintclass
   venue version volume volumes usera userb userc userd
   usere userf hyphenation crossref entrysubtype execute gender sortkey sortyear
   xref
@@ -235,7 +236,6 @@ our %SKIPFIELDS = map { $_ => 1 } @SKIPFIELDS;
 
 Readonly::Array our @RANGEFIELDS     =>  qw{ pages };
 Readonly::Array our @DATERANGEFIELDS =>  qw{ date origdate eventdate urldate };
-## Readonly::Array our @TIMEFIELDS      =>  qw{ year month };
 Readonly::Array our @VERBATIMFIELDS  =>  qw{ doi eprint file pdf url verba verbb verbc };
 Readonly::Array our @KEYFIELDS       =>  qw{
   authortype bookpagination editortype origlanguage pagination
@@ -256,10 +256,12 @@ Readonly::Array our @NULL_OK  => qw{ endyear origendyear eventendyear urlendyear
 Readonly::Array our @LITERALFIELDS => ( @TITLEFIELDS, @LITERALFIELDS_BASE, @KEYFIELDS );
 
 Readonly::Hash our %ALIASES => (
-  'address' => 'location',
-  'school'  => 'institution',
-  'annote'  => 'annotation',
-  'key'     => 'sortkey'
+  'address'       => 'location',
+  'archiveprefix' => 'eprinttype',
+  'primaryclass'  => 'eprintclass',
+  'school'        => 'institution',
+  'annote'        => 'annotation',
+  'key'           => 'sortkey'
   );
 
 Readonly::Hash our %NUMERICALMONTH => (
