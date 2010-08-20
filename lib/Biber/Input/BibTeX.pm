@@ -376,13 +376,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
           }
         }
 
-        # Special case for "archiveprefix" - need to lowercase the value
-        if ($f eq 'archiveprefix') {
-          $bibentry->set_field($af, lc($value));
-        }
-        else {
-          $bibentry->set_field($af, $value);
-        }
+        $bibentry->set_field($af, $value);
 
         # We have to process local options as early as possible in order
         # to make them available for things that need them like parsename()
