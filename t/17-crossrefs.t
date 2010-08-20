@@ -48,7 +48,7 @@ my $cr1 = q|  \entry{cr1}{inbook}{}
     \field{origyear}{1955}
     \field{title}{Great and Good Graphs}
     \field{booktitle}{Graphs of the Continent}
-    \field{eprinttype}{someprfix}
+    \field{eprinttype}{SomEPrFiX}
     \field{eprintclass}{SOMECLASS}
     \strng{crossref}{crm}
   \endentry
