@@ -1,5 +1,5 @@
 Revision history for Biber
-0.5.5   -08-2010
+0.5.5   29-08-2010
        * Biber::BibTeX moved to Biber::Input::BibTeX. If upgrading, please remove
          your installed <perl lib>/Biber/BibTeX.pm, just to be tidy
        * New aliases for EPRINT classes and types implemented (see BibLaTeX docs).

@@ -9,6 +9,3 @@ in decreasing order of priority:
    * merge in the "unique" branch to implement full uniquename/list
      automation. Needs new .bbl format and biblatex support (biblatex 2.0)
    * make Biber::BibLaTeXML also take the nosort options into account
-   * Implement options in LaTeX::Decode?
-     ALTERNATIVELY: Upload an enhanced version of LaTeX::Decode to CPAN,
-     and remove it from the Biber distribution.
