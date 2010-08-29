@@ -2,6 +2,8 @@
 abstract: 'main module for biber, a bibtex replacement for users of biblatex'
 author:
   - 'François Charette <firmicus@gmx.net>'
+build_requires:
+  Config::AutoConf: 0.15
 configure_requires:
   Module::Build: 0.36
 generated_by: 'Module::Build version 0.3603'
@@ -13,9 +15,7 @@ name: biblatex-biber
 provides:
   Biber:
     file: lib/Biber.pm
-    version: v0.5.4
-  Biber::BibTeX:
-    file: lib/Biber/Input/BibTeX.pm
+    version: v0.5.5
   Biber::Config:
     file: lib/Biber/Config.pm
   Biber::Constants:
@@ -28,6 +28,8 @@ provides:
     file: lib/Biber/Entry/Name.pm
   Biber::Entry::Names:
     file: lib/Biber/Entry/Names.pm
+  Biber::Input::BibTeX:
+    file: lib/Biber/Input/BibTeX.pm
   Biber::Internals:
     file: lib/Biber/Internals.pm
   Biber::Output::BBL:
@@ -44,18 +46,20 @@ provides:
     file: lib/Biber/Utils.pm
 recommends:
   Readonly::XS: 0
+  Text::BibTeX: 0.46
 requires:
   Config::General: 0
   Data::Dump: 0
   File::Slurp: 0
   IPC::Cmd: 0
-  LaTeX::Decode: '>= 0.3'
+  LaTeX::Decode: 0.03
   List::AllUtils: 0
   Log::Log4perl: 0
   Readonly: 0
   Regexp::Common: 0
-  Text::BibTeX: '>= 0.42'
+  Text::BibTeX: 0.42
   XML::LibXML::Simple: 0
+  perl: v5.8.8
 resources:
   license: http://dev.perl.org/licenses/
-version: v0.5.4
+version: v0.5.5

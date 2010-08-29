@@ -18,7 +18,7 @@ use Biber::Entry::Name;
 use Biber::Sections;
 use Biber::Section;
 use Biber::Utils;
-use LaTeX::Decode;
+use LaTeX::Decode 0.03;
 use Storable qw( dclone );
 use Log::Log4perl qw( :no_extra_logdie_message );
 use base 'Biber::Internals';
@@ -34,11 +34,11 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =head1 VERSION
 
-Version 0.5.4
+Version 0.5.5
 
 =cut
 
-our $VERSION = '0.5.4';
+our $VERSION = '0.5.5';
 
 =head1 SYNOPSIS
 

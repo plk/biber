@@ -27,6 +27,9 @@ my $builder = Module::Build->new(
        'Test::More'   => 0,
     },
     add_to_cleanup      => [ 'biber-*' ],
+    build_requires => {
+        'Config::AutoConf' => '0.15'
+    },
     requires => {
         'Config::General' => 0,
         'Data::Dump' => 0,
