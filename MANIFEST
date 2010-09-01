@@ -96,6 +96,7 @@ t/tdata/encoding2.bib
 t/tdata/encoding3.bib
 t/tdata/encoding4.bib
 t/tdata/crossrefs.bib
+t/tdata/crossrefs.bcf
 t/tdata/sections.bcf
 t/tdata/sections-complex.bcf
 t/tdata/sections1.bib
