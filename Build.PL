@@ -17,8 +17,19 @@ $Installed_MB = 0 if $?;
 unshift @INC, "inc/Module-Build/lib/perl5" if $Bundled_MB > $Installed_MB;
 
 require Module::Build;
+my $class = Module::Build->subclass
+  (
+   class => 'My::Builder',
+   code => q{
+       sub ACTION_test {
+         my $self = shift;
+         $ENV{'LANG'} = 'C'; # set LANG to something known for tests
+         $self->SUPER::ACTION_test;
+       }
+     },
+  );
 
-my $builder = Module::Build->new(
+my $builder = $class->new(
     dist_name           => 'biblatex-biber',
     license             => 'perl',
     dist_author         => 'François Charette <firmicus@gmx.net>',
