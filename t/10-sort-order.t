@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 21;
+use Test::More tests => 20;
 use Storable qw (dclone);
 
 use Biber;
@@ -51,10 +51,9 @@ Biber::Config->setblxoption('labelyear', undef);
 $biber->prepare;
 my $section = $biber->sections->get_section('0');
 my $out = $biber->get_output_obj;
-isa_ok($biber, "Biber");
 
-is_deeply([$section->get_citekeys], ['L2','L1B','L1','L4','L3','L5','L1A'], 'citeorder');
-check_output_string_order($out, ['L2','L1B','L1','L4','L3','L5','L1A']);
+is_deeply([$section->get_citekeys], ['L2','L1B','L1','L4','L3','L5','L1A','L7','L8','L6'], 'citeorder');
+check_output_string_order($out, ['L2','L1B','L1','L4','L3','L5','L1A','L7','L8','L6']);
 
 # nty
 Biber::Config->setblxoption('sorting_label', [
@@ -93,8 +92,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section('0');
-is_deeply([$section->get_citekeys], ['L5','L1A','L1','L1B','L2','L3','L4'], 'nty');
-check_output_string_order($out, ['L5','L1A','L1','L1B','L2','L3','L4']);
+is_deeply([$section->get_citekeys], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6'], 'nty');
+check_output_string_order($out, ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6']);
 
 # nyt
 Biber::Config->setblxoption('sorting_label', [
@@ -133,8 +132,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section('0');
-is_deeply([$section->get_citekeys], ['L5','L1A','L1','L1B','L2','L3','L4'], 'nyt');
-check_output_string_order($out, ['L5','L1A','L1','L1B','L2','L3','L4']);
+is_deeply([$section->get_citekeys], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6'], 'nyt');
+check_output_string_order($out, ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6']);
 
 # nyvt
 Biber::Config->setblxoption('sorting_label', [
@@ -174,8 +173,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section('0');
-is_deeply([$section->get_citekeys], ['L5','L1','L1A','L1B','L2','L3','L4'], 'nyvt');
-check_output_string_order($out, ['L5','L1','L1A','L1B','L2','L3','L4']);
+is_deeply([$section->get_citekeys], ['L5','L1','L1A','L1B','L2','L3','L4','L8','L7','L6'], 'nyvt');
+check_output_string_order($out, ['L5','L1','L1A','L1B','L2','L3','L4','L8','L7','L6']);
 
 # nyvt with volume padding
 Biber::Config->setblxoption('sorting_label', [
@@ -215,8 +214,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section('0');
-is_deeply([$section->get_citekeys], ['L5','L1A','L1','L1B','L2','L3','L4'], 'nyvt with volume padding');
-check_output_string_order($out, ['L5','L1A','L1','L1B','L2','L3','L4']);
+is_deeply([$section->get_citekeys], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6'], 'nyvt with volume padding');
+check_output_string_order($out, ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6']);
 
 # ynt
 Biber::Config->setblxoption('sorting_label', [
@@ -252,8 +251,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section('0');
-is_deeply([$section->get_citekeys], ['L3','L1B','L1A','L1','L4','L2','L5'], 'ynt');
-check_output_string_order($out, ['L3','L1B','L1A','L1','L4','L2','L5']);
+is_deeply([$section->get_citekeys], ['L3','L1B','L1A','L1','L4','L2','L8','L7','L6','L5'], 'ynt');
+check_output_string_order($out, ['L3','L1B','L1A','L1','L4','L2','L8','L7','L6','L5']);
 
 # ynt with year substring
 Biber::Config->setblxoption('sorting_label', [
@@ -290,8 +289,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section('0');
-is_deeply([$section->get_citekeys], ['L3','L1B','L1A','L1','L2','L4','L5'], 'ynt with year substring');
-check_output_string_order($out, ['L3','L1B','L1A','L1','L2','L4','L5']);
+is_deeply([$section->get_citekeys], ['L3','L1B','L1A','L1','L2','L4','L8','L7','L6','L5'], 'ynt with year substring');
+check_output_string_order($out, ['L3','L1B','L1A','L1','L2','L4','L8','L7','L6','L5']);
 
 # ydnt
 Biber::Config->setblxoption('sorting_label', [
@@ -327,8 +326,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section('0');
-is_deeply([$section->get_citekeys], ['L2','L4','L1A','L1','L1B','L3','L5'], 'ydnt');
-check_output_string_order($out, ['L2','L4','L1A','L1','L1B','L3','L5']);
+is_deeply([$section->get_citekeys], ['L6','L7','L8','L2','L4','L1A','L1','L1B','L3','L5'], 'ydnt');
+check_output_string_order($out, ['L6','L7','L8','L2','L4','L1A','L1','L1B','L3','L5']);
 
 # anyt
 Biber::Config->setblxoption('sorting_label', [
@@ -371,8 +370,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section('0');
-is_deeply([$section->get_citekeys], ['L1B','L1A','L1','L2','L3','L4','L5'], 'anyt');
-check_output_string_order($out, ['L1B','L1A','L1','L2','L3','L4','L5']);
+is_deeply([$section->get_citekeys], ['L1B','L1A','L1','L2','L3','L4','L5','L8','L7','L6'], 'anyt');
+check_output_string_order($out, ['L1B','L1A','L1','L2','L3','L4','L5','L8','L7','L6']);
 
 Biber::Config->setblxoption('labelalpha', 0);
 
@@ -417,8 +416,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section('0');
-is_deeply([$section->get_citekeys], ['L1B','L1','L1A','L2','L3','L4','L5'], 'anyvt');
-check_output_string_order($out, ['L1B','L1','L1A','L2','L3','L4','L5']);
+is_deeply([$section->get_citekeys], ['L1B','L1','L1A','L2','L3','L4','L5','L8','L7','L6'], 'anyvt');
+check_output_string_order($out, ['L1B','L1','L1A','L2','L3','L4','L5','L8','L7','L6']);
 
 unlink "*.utf8";
 
