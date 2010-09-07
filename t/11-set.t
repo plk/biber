@@ -37,7 +37,7 @@ my $string1 = q|  \entry{Elias1955}{set}{}
     }
     \strng{namehash}{EP1}
     \strng{fullhash}{EP1}
-    \field{sortinit}{1}
+    \field{sortinit}{0}
     \field{extrayear}{1}
     \field{labelyear}{1955}
     \field{year}{1955}
@@ -67,7 +67,7 @@ my $string2 = q|  \entry{Elias1955a}{article}{}
     }
     \strng{namehash}{EP1}
     \strng{fullhash}{EP1}
-    \field{sortinit}{2}
+    \field{sortinit}{0}
     \field{year}{1955}
     \field{month}{3}
     \field{title}{Predictive coding--I}
@@ -94,7 +94,7 @@ my $string3 = q|  \entry{Elias1955b}{article}{}
     }
     \strng{namehash}{EP1}
     \strng{fullhash}{EP1}
-    \field{sortinit}{3}
+    \field{sortinit}{0}
     \field{year}{1955}
     \field{month}{3}
     \field{title}{Predictive coding--II}
