@@ -345,7 +345,9 @@ sub _sort_citeorder {
   my ($self, $citekey, $sortelementattributes) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  return (first_index {$_ eq $citekey} $section->get_orig_order_citekeys) + 1; # +1 just to make it easier to debug
+  # Pad the numbers so that they sort with "cmp" properly. Assume here max of
+  # a million bib entries. Probably enough ...
+  return sprintf('%.7d', (first_index {$_ eq $citekey} $section->get_orig_order_citekeys) + 1);
 }
 
 sub _sort_debug {
