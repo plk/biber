@@ -1,0 +1,1 @@
+CALL pp --link=C:\strawberry\c\bin\libz_.dll --link=C:\strawberry\c\bin\libxml2-2_.dll --link=C:\strawberry\c\bin\libiconv-2_.dll --addlist=biber.files --cachedeps=scancache -o biber.exe ..\..\bin\biber
