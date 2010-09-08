@@ -2,7 +2,7 @@ namespace bcf = "https://sourceforge.net/projects/biblatex"
 
 start =
   element bcf:controlfile {
-    attribute version { xsd:decimal },
+    attribute version { xsd:string },
 
     element bcf:options {
       attribute component { "biber" },
