@@ -1,1 +1,1 @@
-CALL pp --link=C:\strawberry\c\bin\libz_.dll --link=C:\strawberry\c\bin\libxml2-2_.dll --link=C:\strawberry\c\bin\libiconv-2_.dll --addlist=biber.files --cachedeps=scancache -o biber.exe ..\..\bin\biber
+CALL pp --compress=0 --link=C:\strawberry\c\bin\libz_.dll --link=C:\strawberry\c\bin\libxml2-2_.dll --link=C:\strawberry\c\bin\libiconv-2_.dll --addlist=biber.files --cachedeps=scancache --info=ProductName=biber --icon=biber.ico --output=biber.exe ..\..\bin\biber

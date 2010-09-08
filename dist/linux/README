@@ -1,0 +1,3 @@
+Install perl, Par, Par::Packer
+Install Biber and all dependencies
+Run the "build.sh" build script

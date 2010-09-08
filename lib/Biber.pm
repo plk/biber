@@ -201,7 +201,18 @@ sub parse_ctrlfile {
 
     # we assume that the schema files are in the same dir as Biber.pm:
     (undef, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
-    my $bcf_rng = File::Spec->catfile($biber_path, 'Biber', 'bcf.rng');
+
+    # Deal with the strange world of Par::Packer paths
+    # We might be running inside a PAR executable and @INC is a bit odd in this case
+    # Specifically, "Biber.pm" in @INC might resolve to an internal jumbled name
+    # nowhere near to these files. You know what I mean if you've dealt with pp
+    my $bcf_rng;
+    if ($biber_path =~ m|/par\-| and $biber_path !~ m|/inc|) { # a mangled PAR @INC path
+      $bcf_rng = File::Spec->catfile($biber_path, 'inc', 'lib', 'Biber', 'bcf.rng');
+    }
+    else {
+      $bcf_rng = File::Spec->catfile($biber_path, 'Biber', 'bcf.rng');
+    }
 
     if (-f $bcf_rng) {
       $CFxmlschema = XML::LibXML::RelaxNG->new( location => $bcf_rng )
