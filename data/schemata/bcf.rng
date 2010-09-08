@@ -3,7 +3,7 @@
   <start>
     <element name="bcf:controlfile">
       <attribute name="version">
-        <data type="decimal"/>
+        <data type="string"/>
       </attribute>
       <optional>
         <element name="bcf:options">

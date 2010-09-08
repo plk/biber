@@ -119,7 +119,7 @@
         </xs:element>
         <xs:group maxOccurs="unbounded" ref="bcf:secspec"/>
       </xs:sequence>
-      <xs:attribute name="version" use="required" type="xs:decimal"/>
+      <xs:attribute name="version" use="required" type="xs:string"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="sort">
