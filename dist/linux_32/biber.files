@@ -2,8 +2,8 @@
 ../../data/schemata/bcf.rnc;lib/Biber/bcf.rnc
 ../../data/schemata/bcf.rng;lib/Biber/bcf.rng
 ../../data/latinkeys.txt;lib/Unicode/Collate/latinkeys.txt
-/usr/share/perl/5.10.1/Unicode/Collate/Locale;lib/Unicode/Collate/Locale
-/usr/share/perl/5.10.1/Unicode/Collate/allkeys.db;lib/Unicode/Collate/allkeys.db
-/usr/share/perl/5.10.1/Unicode/Collate/allkeys.txt;lib/Unicode/Collate/allkeys.txt
-/usr/share/perl/5.10.1/Unicode/Collate/keys.txt;lib/Unicode/Collate/keys.txt
+/usr/local/lib/perl/5.10.1/Unicode/Collate/Locale;lib/Unicode/Collate/Locale
+/usr/local/lib/perl/5.10.1/Unicode/Collate/allkeys.db;lib/Unicode/Collate/allkeys.db
+/usr/local/lib/perl/5.10.1/Unicode/Collate/allkeys.txt;lib/Unicode/Collate/allkeys.txt
+/usr/local/lib/perl/5.10.1/Unicode/Collate/keys.txt;lib/Unicode/Collate/keys.txt
 
