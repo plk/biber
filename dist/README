@@ -2,6 +2,9 @@ The binary distributions of biber are made using the perl PAR::Packer "pp"
 utility. They can be used as a normal binary but have some behaviour which
 is worth noting:
 
+* Don't be worried by the size of the binaries. PAR::Packer essentially
+  constructs a self-extracting archive which unpacks the needed files first
+  and so the binaries look larger than what actually runs in memory.
 * On the first run of a new version (that is, with a specific checksum),
   they actually unpack themselves to a temporary location. This varies by
   operating system but is usually something like /var/tmp or /tmp on
