@@ -1,0 +1,18 @@
+The binary distributions of biber are made using the perl PAR::Packer "pp"
+utility. They can be used as a normal binary but have some behaviour which
+is worth noting:
+
+* On the first run of a new version (that is, with a specific checksum),
+  they actually unpack themselves to a temporary location. This varies by
+  operating system but is usually something like /var/tmp or /tmp on
+  UNIX-based OSes and C:\Documents and Settings\<username>\Local
+  Settings\Temp on Windows. This unpacking can take a little while and only
+  happens on the first run of a new version.
+* The initial unpacking (first run) can give odd warnings/errors about
+  permissions which can be ignored. Simply run biber once to unpack it and
+  after the first run, you will see no warnings/errors and startup time
+  will dramatically improve.
+
+
+Please rename the appropriate OS/arch version to just "biber" after
+download.
