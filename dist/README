@@ -24,5 +24,5 @@ Distributions
 -------------
 linux_x86_32     - Linux x86 32-bit (built on Ubuntu 10.04)
 linux_x86_64     - Linux x86 64-bit (built on Ubuntu 10.04)
-MSWin32          - Windows. Should work on 32 or 64 bit (built on XP)
+MSWin            - Windows. Should work on 32 or 64 bit (built on XP)
 darwin_x86_64    - OSX Intel 64-bit (built on OSX 10.6)
