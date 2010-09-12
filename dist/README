@@ -15,10 +15,8 @@ is worth noting:
   permissions which can be ignored. Simply run biber once to unpack it and
   after the first run, you will see no warnings/errors and startup time
   will dramatically improve.
-
-
-Please rename the appropriate OS/arch version to just "biber" after
-download.
+* This is a command-line program, as biber always was and so you run it
+  from the command-line just as you do with the perl-based biber.
 
 Distributions
 -------------
@@ -26,3 +24,58 @@ linux_x86_32     - Linux x86 32-bit (built on Ubuntu 10.04)
 linux_x86_64     - Linux x86 64-bit (built on Ubuntu 10.04)
 MSWin            - Windows. Should work on 32 or 64 bit (built on XP)
 darwin_x86_64    - OSX Intel 64-bit (built on OSX 10.6)
+
+
+Installing
+-----------
+Download the binary appropriate to you OS/arch. Below I assume it's on your desktop.
+Rename the binary to just "biber".
+
+You have to move the binary to somewhere in you command-line or TeX utility
+path so that it can be found. If you know how to do this, just ignore the
+section which contains some instructions for users who are not sure about this.
+
+
+OSX
+---
+If you are using the TexLive MacTeX distribution:
+
+sudo mv ~/Desktop/biber /usr/texbin/
+sudo chmod +x /usr/texbin/biber
+
+If you are using the macports TexLive distribution:
+
+sudo mv ~/Desktop/biber /opt/local/bin/
+sudo chmod +x /opt/local/bin/biber
+
+The "sudo" commands will prompt you for you password.
+
+Windows
+-------
+The easiest way is to just move the executable in your c:\Windows directory since
+that is always in your path.
+
+A more elegant solution if you are using Strawberry perl, assumed below to
+be in c:\strawberry, move the biber executable into c:\strawberry\perl\site\bin\biber
+
+You may have to create the folder c:\strawberry\perl\site\bin if it does
+not exist. You should also add c:\strawberry\perl\site\bin to your PATH if
+it is not already in there. If you don't know how to set the PATH
+environment variable, search Google for "set PATH Windows" - there are many
+pages about this. Here's one that describes Windows 7 but it's the same for
+XP, 2000 and Vista:
+
+http://geekswithblogs.net/renso/archive/2009/10/21/how-to-set-the-windows-path-in-windows-7.aspx
+
+
+Unix
+----
+sudo mv ~/Desktop/biber /usr/local/bin/biber
+sudo chmod +x /usr/local/bin/biber
+
+Make sure /usr/local/bin is in your PATH. Search Google for "set PATH
+linux" if unsure about this. There are many pages about this, for example:
+
+http://www.cyberciti.biz/faq/unix-linux-adding-path/
+
+
