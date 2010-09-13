@@ -29,12 +29,13 @@ darwin_x86_64    - OSX Intel 64-bit (built on OSX 10.6)
 Installing
 -----------
 Download the binary appropriate to you OS/arch. Below I assume it's on your desktop.
-Rename the binary to just "biber".
+Rename the binary to just "biber" ("biber.exe" on Windows).
 
 You have to move the binary to somewhere in you command-line or TeX utility
 path so that it can be found. If you know how to do this, just ignore the
-section which contains some instructions for users who are not sure about this.
-
+rest of this document which contains some instructions for users who are
+not sure about this. In the future, we will integrate this binary into the
+TeXLive distribution and so it will be available by default when installing TeXLive.
 
 OSX
 ---
@@ -48,18 +49,18 @@ If you are using the macports TexLive distribution:
 sudo mv ~/Desktop/biber /opt/local/bin/
 sudo chmod +x /opt/local/bin/biber
 
-The "sudo" commands will prompt you for you password.
+The "sudo" commands will prompt you for your password.
 
 Windows
 -------
-The easiest way is to just move the executable in your c:\Windows directory since
+The easiest way is to just move the executable into your C:\Windows directory since
 that is always in your path.
 
 A more elegant solution if you are using Strawberry perl, assumed below to
-be in c:\strawberry, move the biber executable into c:\strawberry\perl\site\bin\biber
+be in C:\strawberry, move the biber executable into C:\strawberry\perl\site\bin\biber
 
-You may have to create the folder c:\strawberry\perl\site\bin if it does
-not exist. You should also add c:\strawberry\perl\site\bin to your PATH if
+You may have to create the folder C:\strawberry\perl\site\bin if it does
+not exist. You should also add C:\strawberry\perl\site\bin to your PATH if
 it is not already in there. If you don't know how to set the PATH
 environment variable, search Google for "set PATH Windows" - there are many
 pages about this. Here's one that describes Windows 7 but it's the same for
@@ -68,8 +69,8 @@ XP, 2000 and Vista:
 http://geekswithblogs.net/renso/archive/2009/10/21/how-to-set-the-windows-path-in-windows-7.aspx
 
 
-Unix
-----
+Unix/Linux
+----------
 sudo mv ~/Desktop/biber /usr/local/bin/biber
 sudo chmod +x /usr/local/bin/biber
 
