@@ -1357,7 +1357,7 @@ sub sortentries {
   }
 
   # Set up locale. Order of priority is:
-  # 1. locale value passed to Unicode::Collate->new() (Unicode::Collate sorts only)
+  # 1. locale value passed to Unicode::Collate::Locale->new() (Unicode::Collate sorts only)
   # 2. Biber locale option
   # 3. LC_COLLATE env variable
 
@@ -1379,7 +1379,7 @@ sub sortentries {
       $bibentries->entry($a)->get_field('sortstring') cmp $bibentries->entry($b)->get_field('sortstring')
       } @citekeys;
   } else {
-    require Unicode::Collate;
+    require Unicode::Collate::Locale;
     my $opts = Biber::Config->getoption('collate_options');
     my $collopts;
     unless (ref($opts) eq "HASH") { # opts for this can come in a string from cmd line
@@ -1388,18 +1388,31 @@ sub sortentries {
     else {
       $collopts = $opts;
     }
-    # Set locale option for U::C->new() if we are using a CLDR-enabled U::C
-    if (Unicode::Collate->can('CLDR_Version')) {
-      my $uclocale = $thislocale ? $thislocale : $ENV{LC_COLLATE};
-      unless ($collopts->{locale}) {
-        $collopts->{locale} = $uclocale;
+
+    # Add tailoring locale for Unicode::Collate
+    my $uclocale = $thislocale ? $thislocale : $ENV{LC_COLLATE};
+    if ($uclocale and not $collopts->{locale}) {
+      $collopts->{locale} = $uclocale;
+      if ($collopts->{table}) {
+        my $t = delete $collopts->{table};
+        $logger->info("Ignoring collation table '$t' as locale is set ($uclocale)");
       }
     }
-    my $Collator = Unicode::Collate->new( %{$collopts} )
+
+    # If no locale, use reduced DUCET by default
+    unless ($collopts->{locale} or $collopts->{table}) {
+      $collopts->{table} = 'latinkeys.txt';
+    }
+
+    my $Collator = Unicode::Collate::Locale->new( %{$collopts} )
       or $logger->logcarp("Problem with Unicode::Collate options: $@");
     my $UCAversion = $Collator->version();
     $logger->info("Sorting with Unicode::Collate (" .
 		  stringify_hash($collopts) . ", UCA version: $UCAversion)");
+    # Log if U::C::L currently has no tailoring for used locale
+    if ($Collator->getlocale eq 'default') {
+      $logger->info("No sort tailoring available for locale '$uclocale'");
+    }
     @citekeys = sort {
       $Collator->cmp( $bibentries->entry($a)->get_field('sortstring'),
         $bibentries->entry($b)->get_field('sortstring') )

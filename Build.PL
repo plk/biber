@@ -38,6 +38,7 @@ my $builder = $class->new(
         'Log::Log4perl' => 0,
         'Readonly' => 0,
         'Text::BibTeX' => '0.42',
+        'Unicode::Collate' => '0.55',
         'XML::LibXML::Simple' => 0,
         'perl' => '5.8.8'
     },
