@@ -1,5 +1,4 @@
 Install strawberry perl, Par, Par::Packer (must be >=1.007)
-Install IPC::Run
 Update Unicode::Collate to latest version
 Install Biber and all dependencies
 Run the "build.bat" build script
