@@ -1,5 +1,6 @@
 Install macports and libxml2
 Install perl, Par, Par::Packer (must be >=1.007)
-Install Biber and all dependencies
+Install IPC::Run
 Update Unicode::Collate to latest version
+Install Biber and all dependencies
 Run the "build.sh" build script
