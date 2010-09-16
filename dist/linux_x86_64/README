@@ -2,7 +2,7 @@ Install Par, Par::Packer (must be >=1.007)
   Make sure that when Par::Packer is installed that the right libperl gets picked up
   If there is a default linux install of perl where libperl is in a
   standard place like /usr/lib, it'll likely get used and hard-coded into
-  pp on compile.
+  pp on compile - "mv /usr/lib/libperl.so* /tmp/" temporarily when building
 Update Unicode::Collate to latest version
 Install Biber and all dependencies
 Run the "build.sh" build script
