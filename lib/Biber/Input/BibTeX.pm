@@ -186,7 +186,7 @@ sub parsename {
   my $prefix_stripped;
   my $prefix_i;
   my $prefix_it;
-  if ($prefix and $usepre) {
+  if ($prefix) {
     $prefix_i        = $gen_prefix_i;
     $prefix_it       = $gen_prefix_it;
     $prefix_stripped = remove_outer($prefix);
