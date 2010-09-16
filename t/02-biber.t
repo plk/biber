@@ -54,6 +54,7 @@ aristotle:anima
 augustine
 cotton
 chiu
+tvonb
 };
 
 my @allkeys = sort qw{ stdmodel aristotle:poetics vazques-de-parga shore t1
@@ -67,7 +68,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge } ;
+set:yoon maron coleridge tvonb} ;
 
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 

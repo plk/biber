@@ -4,7 +4,7 @@ use utf8;
 use Storable qw (dclone);
 no warnings 'utf8';
 
-use Test::More tests => 39;
+use Test::More tests => 41;
 
 use Biber;
 use Biber::Output::BBL;
@@ -66,6 +66,28 @@ my $edtypeclass1 = 'vol0redactor0jaffe2philipp0loewenfeld2samuel1kaltenbrunner2f
 my $prefix1     = 'mm0Luzzatto2Moshe Ḥayyim0Lashon laRamḥal uvo sheloshah ḥiburim0200000000';
 my $diacritic1  = 'mm0Hasan2Alī0Some title0200000000';
 
+my $useprefix1  = 'mm0von2bobble2terrence019970things00000';
+my $useprefix2  = 'mm0bobble2terrence2von019970things00000';
+
+my $bibentries;
+
+Biber::Config->setblxoption('useprefix', 1);
+
+# regenerate information
+$biber->prepare;
+
+$bibentries = $biber->sections->get_section('0')->bib;
+is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix1, 'von with useprefix=true' );
+
+Biber::Config->setblxoption('useprefix', 0);
+
+# regenerate information
+$biber->prepare;
+$bibentries = $biber->sections->get_section('0')->bib;
+is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix2, 'von with useprefix=false' );
+
+
+
 # Testing nosortprefix and nosortdiacritics
 Biber::Config->setblxoption('sorting_label', [
                                                 [
@@ -100,7 +122,7 @@ Biber::Config->setoption('cssort', '1');
 
 # regenerate information
 $biber->prepare;
-my $bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bib;
 
 is($bibentries->entry('luzzatto')->get_field('sortstring'), $prefix1, 'Title with nosortprefix' );
 is($bibentries->entry('hasan')->get_field('sortstring'), $diacritic1, 'Title with nosortdiacritic' );

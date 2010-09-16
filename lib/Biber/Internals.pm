@@ -48,6 +48,12 @@ sub _getnamehash {
       if ( $n->get_firstname ) {
         $initstr .= $n->get_firstname_it;
       }
+     # without useprefix, prefix is not first in the hash
+     if ( $n->get_prefix and not
+       Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+       $initstr .= $n->get_prefix_it;
+     }
+
     }
   }
   # > maxname names: only take initials of first getblxoption('minnames', $citekey)
@@ -65,6 +71,12 @@ sub _getnamehash {
       $initstr .= $names->nth_element($i)->get_lastname_it;
       if ( $names->nth_element($i)->get_firstname ) {
         $initstr .= $names->nth_element($i)->get_firstname_it;
+      }
+
+      # without useprefix, prefix is not first in the hash
+      if ( $names->nth_element($i)->get_prefix and not
+           Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey) ) {
+        $initstr .= $names->nth_element($i)->get_prefix_it;
       }
       $initstr .= "+";
     }
@@ -93,6 +105,13 @@ sub _getfullhash {
     if ( $n->get_firstname ) {
       $initstr .= $n->get_firstname_it;
     }
+
+    # without useprefix, prefix is not first in the hash
+    if ( $n->get_prefix and not
+         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+      $initstr .= $n->get_prefix_it;
+    }
+
   }
   return normalize_string_lite($initstr);
 }
@@ -711,12 +730,19 @@ sub _namestring {
   }
 
   foreach my $n ( @{$truncnames->names} ) {
-    $str .= $n->get_prefix . '2'
-      if ( $n->get_prefix and
-           Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) );
+    if ( $n->get_prefix and
+         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+      $str .= $n->get_prefix . '2';
+    }
     $str .= strip_nosort($n->get_lastname) . '2';
     $str .= strip_nosort($n->get_firstname) . '2' if $n->get_firstname;
-    $str .= $n->get_suffix if $n->get_suffix;
+    $str .= $n->get_suffix . '2' if $n->get_suffix;
+
+    if ( $n->get_prefix and not
+         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+      $str .= $n->get_prefix . '2';
+    }
+
     $str =~ s/2\z//xms;
     $str .= '1';
   }
