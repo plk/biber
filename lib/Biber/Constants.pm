@@ -80,7 +80,7 @@ our %CONFIG_DEFAULT_BIBER = (
   wraplines => 0,
   #
   # these options are passed to the Unicode::Collate object
-  collate_options => { level=>2 },
+  collate_options => { level => 2, upper_before_lower => 1 },
   #
   # eventually this shall be moved to biblatex options:
   displaymode => $DISPLAYMODE_DEFAULT,
