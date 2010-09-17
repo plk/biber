@@ -1389,6 +1389,11 @@ sub sortentries {
       $collopts = $opts;
     }
 
+    # Add case ordering level if case sensitive sorting is requested
+    if (Biber::Config->getoption('cssort')) {
+      $collopts->{level} = 3;
+    }
+
     # Add tailoring locale for Unicode::Collate
     my $uclocale = $thislocale ? $thislocale : $ENV{LC_COLLATE};
     if ($uclocale and not $collopts->{locale}) {
