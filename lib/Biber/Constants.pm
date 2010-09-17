@@ -139,6 +139,7 @@ our %CONFIG_DEFAULT_BIBLATEX = (
 # Set up some encoding aliases to map \inputen{c,x} encoding names to Encode
 # It seems that inputen{c,x} has a different idea of nextstep than Encode
 # so we push it to MacRoman
+define_alias( 'ansinew'        => 'cp1252'); # inputenc alias for cp1252
 define_alias( 'applemac'       => 'MacRoman');
 define_alias( 'applemacce'     => 'MacCentralEurRoman');
 define_alias( 'next'           => 'MacRoman');
