@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 7;
+use Test::More tests => 8;
 
 use Biber;
 use Biber::Utils;
@@ -78,6 +78,26 @@ my $encode3 = q|  \entry{test1}{book}{}
 
 |;
 
+my $encode5 = q|  \entry{test}{book}{}
+    \name{author}{1}{%
+      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+    }
+    \list{publisher}{1}{%
+      {A press}%
+    }
+    \strng{namehash}{EE1}
+    \strng{fullhash}{EE1}
+    \field{labelalpha}{Enc99}
+    \field{sortinit}{E}
+    \field{labelyear}{1999}
+    \count{uniquename}{0}
+    \true{singletitle}
+    \field{year}{1999}
+    \field{title}{à titlé}
+  \endentry
+
+|;
+
 
 
 my $outvar;
@@ -112,6 +132,21 @@ $output->set_output_target_file(\$outvar);
 # Write the output to the target
 $output->output;
 is($outvar, encode(Biber::Config->getoption('inputenc'), $encode1), 'UTF-8 .bib -> UTF-8 .bbl');
+
+# UTF-8 .bib -> latin1 .bbl
+$biber->parse_ctrlfile('encoding5.bcf');
+$biber->set_output_obj(Biber::Output::Test->new());
+# Biber options
+Biber::Config->setoption('bibencoding', 'UTF-8');
+Biber::Config->setoption('inputenc', 'latin1');
+# Now generate the information
+$biber->prepare;
+# Get reference to output object
+$output = $biber->get_output_obj;
+$output->set_output_target_file(\$outvar);
+# Write the output to the target
+$output->output;
+is($outvar, encode(Biber::Config->getoption('inputenc'), $encode5), 'UTF-8 .bib -> latin1 .bbl');
 
 # UTF-8 .bib -> Latin9 .bbl
 $biber->parse_ctrlfile('encoding2.bcf');
