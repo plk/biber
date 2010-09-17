@@ -58,10 +58,12 @@ t/tdata/encoding1.bcf
 t/tdata/encoding2.bcf
 t/tdata/encoding3.bcf
 t/tdata/encoding4.bcf
+t/tdata/encoding5.bcf
 t/tdata/encoding1.bib
 t/tdata/encoding2.bib
 t/tdata/encoding3.bib
 t/tdata/encoding4.bib
+t/tdata/encoding5.bib
 t/tdata/crossrefs.bib
 t/tdata/crossrefs.bcf
 t/tdata/sections.bcf
