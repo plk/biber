@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# The cp/rm steps as so that the packed biber main script is not
+# called "biber" as on case-insensitive file systems, this clashes with
+# the Biber lib directory and generates a (harmless) warning on first run
+
+cp /opt/local/bin/biber /tmp/biber-darwin
+
 pp --compress=6 \
   --module=Encode::Byte \
   --module=Encode::CN \
@@ -22,5 +28,6 @@ pp --compress=6 \
   --addlist=biber.files \
   --cachedeps=scancache \
   --output=biber-darwin_x86_64 \
-  /opt/local/bin/biber
+  /tmp/biber-darwin
 
+\rm -f /tmp/biber-darwin

@@ -1,3 +1,7 @@
+REM The COPY/DEL steps as so that the packed biber main script is not
+REM called "biber" as on case-insensitive file systems, this clashes with
+REM the Biber lib directory and generates a (harmless) warning on first run
+
 COPY C:\strawberry\perl\site\bin\biber C:\WINDOWS\Temp\biber-MSWIN
 
 CALL pp ^
