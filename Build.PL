@@ -41,11 +41,11 @@ my $builder = $class->new(
         'Text::BibTeX' => '0.42',
         'Unicode::Collate' => '0.55',
         'XML::LibXML::Simple' => 0,
+        'Text::BibTeX' => '0.47',
         'perl' => '5.8.8'
     },
     recommends => {
-        'Readonly::XS' => 0,
-        'Text::BibTeX' => '0.46'
+        'Readonly::XS' => 0
     },
     script_files => [ glob( "bin/*" ) ],
     data_files => { 'data/schemata/bcf.xsd' => 'lib/Biber/bcf.xsd',
