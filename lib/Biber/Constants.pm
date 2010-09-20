@@ -68,7 +68,7 @@ unless ($locale) {
 our %CONFIG_DEFAULT_BIBER = (
   validate => 0,
   cssort => 1,
-  fastsort => 1,
+  collate => 1,
   mincrossrefs =>  2,
   bibdatatype => 'bibtex',
   bibdata =>  undef,

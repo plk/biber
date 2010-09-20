@@ -66,8 +66,9 @@ if ($opts->{bibdata}) {
   $opts->{bibdata} = [ split /\s*,\s*/, $opts->{bibdata} ]
 }
 
-if ($opts->{collate}) {
-  $opts->{fastsort} = 0
+# Sanitise collate option if fasssort if specified
+if ($opts->{fastsort}) {
+  delete $opts->{collate};
 }
 
 # Resolve shortcut aliases for UTF-8ness
@@ -287,7 +288,8 @@ Options:
       Set threshold for crossrefs.
 
   --fastsort|-f
-      Use Perl’s sort instead of Unicode::Collate for sorting
+      Use Perl’s sort instead of Unicode::Collate for sorting. Also uses
+      OS locale definitions (which may be broken for some languages ...)
 
   --locale|-l [locale]
       Set the locale to be used for sorting. With built-in sorting
@@ -301,6 +303,7 @@ Options:
 
   --collate|-C
       Sort with Unicode::Collate instead of the built-in sort function.
+      This is the default.
 
   --collate_options|-c [options]
       Options to pass to the Unicode::Collate object used for sorting
