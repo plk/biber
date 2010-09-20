@@ -42,7 +42,7 @@ my $builder = $class->new(
         'Unicode::Collate' => '0.55',
         'XML::LibXML::Simple' => 0,
         'Text::BibTeX' => '0.47',
-        'perl' => '5.10'
+        'perl' => '5.10.0'
     },
     recommends => {
         'Readonly::XS' => 0
