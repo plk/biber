@@ -21,7 +21,6 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('unicodebbl', 1);
 
 # Now generate the information
 $biber->prepare;

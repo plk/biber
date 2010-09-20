@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 20;
+use Test::More tests => 21;
 use XML::LibXML;
 use Biber;
 chdir('t');
