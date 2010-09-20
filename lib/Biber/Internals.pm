@@ -194,7 +194,6 @@ our $dispatch_sorting = {
   'author'        =>  [\&_sort_author,        []],
   'citeorder'     =>  [\&_sort_citeorder,     []],
   'day'           =>  [\&_sort_dm,            ['day']],
-  'debug'         =>  [\&_sort_debug,         []],
   'editor'        =>  [\&_sort_editor,        ['editor']],
   'editora'       =>  [\&_sort_editor,        ['editora']],
   'editoraclass'  =>  [\&_sort_editortc,      ['editoraclass']],
@@ -208,6 +207,7 @@ our $dispatch_sorting = {
   'endday'        =>  [\&_sort_dm,            ['endday']],
   'endmonth'      =>  [\&_sort_dm,            ['endmonth']],
   'endyear'       =>  [\&_sort_year,          ['endyear']],
+  'entrykey'      =>  [\&_sort_entrykey,      []],
   'eventday'      =>  [\&_sort_dm,            ['eventday']],
   'eventendday'   =>  [\&_sort_dm,            ['eventendday']],
   'eventendmonth' =>  [\&_sort_dm,            ['eventendmonth']],
@@ -369,13 +369,6 @@ sub _sort_citeorder {
   return sprintf('%.7d', (first_index {$_ eq $citekey} $section->get_orig_order_citekeys) + 1);
 }
 
-sub _sort_debug {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  return $citekey;
-}
-
 # This is a meta-sub which uses the optional arguments to the dispatch code
 # It's done to avoid having many repetitions of almost identical sorting code
 # for the many date sorting options
@@ -443,6 +436,14 @@ sub _sort_editortc {
   else {
     return '';
   }
+}
+
+# debug sorting
+sub _sort_entrykey {
+  my ($self, $citekey, $sortelementattributes) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  return $citekey;
 }
 
 sub _sort_extraalpha {

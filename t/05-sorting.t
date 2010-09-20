@@ -1099,7 +1099,7 @@ Biber::Config->setblxoption('labelalpha', 0);
 # debug
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {'debug'    => {}},
+                                                 {'entrykey'    => {}},
                                                 ],
                                                ]);
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
