@@ -30,7 +30,7 @@ my $builder = $class->new(
     requires => {
         'Config::General' => 0,
         'Data::Dump' => 0,
-        'File::Slurp'  => 0,
+        'File::Slurp::Unicode'  => 0,
         'IPC::Cmd' => 0,
         'IPC::Run' => 0,
         'LaTeX::Decode' => '0.03',
@@ -42,7 +42,7 @@ my $builder = $class->new(
         'Unicode::Collate' => '0.55',
         'XML::LibXML::Simple' => 0,
         'Text::BibTeX' => '0.47',
-        'perl' => '5.8.8'
+        'perl' => '5.10'
     },
     recommends => {
         'Readonly::XS' => 0
