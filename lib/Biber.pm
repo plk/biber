@@ -520,10 +520,8 @@ sub parse_bibtex {
 
   my $ufilename = "$filename.utf8";
 
-  # bib encoding is not defined or it is and it's not UTF-8
-  if (not defined(Biber::Config->getoption('bibencoding')) or
-      (defined(Biber::Config->getoption('bibencoding')) and
-       Biber::Config->getoption('bibencoding') ne 'UTF-8')) {
+  # bib encoding is not UTF-8
+  if (Biber::Config->getoption('bibencoding') ne 'UTF-8') {
     require File::Slurp::Unicode;
     my $buf = File::Slurp::Unicode::read_file($filename, encoding => Biber::Config->getoption('bibencoding'))
       or $logger->logcroak("Can't read $filename");
@@ -538,10 +536,9 @@ sub parse_bibtex {
     File::Copy::copy($filename, $ufilename);
   }
 
-  # Decode LaTeX unless --nolatexdecode is set
+  # Decode LaTeX to UTF8 if output is UTF-8 and --nolatexdecode is not set
   unless (Biber::Config->getoption('nolatexdecode')) {
-    if (defined(Biber::Config->getoption('inputenc')) and
-        Biber::Config->getoption('inputenc') eq 'UTF-8') {
+    if (Biber::Config->getoption('inputenc') eq 'UTF-8') {
       require File::Slurp::Unicode;
       my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
         or $logger->logcroak("Can't read $ufilename");
