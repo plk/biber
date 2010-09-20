@@ -2,11 +2,12 @@ package Biber;
 use strict;
 use warnings;
 use Carp;
-use IO::File;
-use File::Spec;
 use Encode;
-use POSIX qw( locale_h ); # for sorting with built-in "sort"
+use File::Copy;
+use File::Spec;
+use IO::File;
 use IPC::Cmd qw( can_run run );
+use POSIX qw( locale_h ); # for sorting with built-in "sort"
 use Cwd qw( abs_path );
 use Biber::Config;
 use Biber::Constants;
@@ -492,14 +493,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
   # Normalise any UTF-8 encoding string immediately to exactly what we want
   # We want the strict perl utf8 "UTF-8"
-  if (defined(Biber::Config->getoption('bibencoding')) and
-      Biber::Config->getoption('bibencoding') =~ m/\Autf-?8\z/xmsi) {
-    Biber::Config->setoption('bibencoding', 'UTF-8');
-  }
-  if (defined(Biber::Config->getoption('inputenc')) and
-      Biber::Config->getoption('inputenc') =~ m/\Autf-?8\z/xmsi) {
-    Biber::Config->setoption('inputenc', 'UTF-8');
-  }
+  normalise_utf8();
 
   return;
 }
@@ -530,37 +524,37 @@ sub parse_bibtex {
   if (not defined(Biber::Config->getoption('bibencoding')) or
       (defined(Biber::Config->getoption('bibencoding')) and
        Biber::Config->getoption('bibencoding') ne 'UTF-8')) {
-
-    # File::Slurp::Unicode would be nicer but fails install tests
-    # on Windows and has 5.10 only code in it. Grr.
-    require File::Slurp;
-    my $buf = File::Slurp::read_file($filename)
+    require File::Slurp::Unicode;
+    my $buf = File::Slurp::Unicode::read_file($filename, encoding => Biber::Config->getoption('bibencoding'))
       or $logger->logcroak("Can't read $filename");
 
-    if (my $enc_in = Biber::Config->getoption('bibencoding')) {
-      $logger->info("Converting '$filename' with encoding '$enc_in' to UTF-8 internally");
-      $buf = decode($enc_in, $buf);
-    }
-    my $outbib = IO::File->new( $ufilename, ">:encoding(UTF-8)" );
-
-    # Decode LaTeX if output is unicode unless --nolatexdecode is set
-    unless (Biber::Config->getoption('nolatexdecode')) {
-      if (defined(Biber::Config->getoption('inputenc')) and
-          Biber::Config->getoption('inputenc') eq 'UTF-8') {
-        require LaTeX::Decode;
-        $logger->info('Decoding LaTeX character macros into UTF-8');
-        $buf = LaTeX::Decode::latex_decode($buf, strip_outer_braces => 1);
-      }
-    }
-
-    print $outbib $buf
-      or $logger->logcroak("Can't write to $ufilename : $!");
-    $outbib->close or $logger->logcroak("Can't close filehandle to $ufilename: $!");
+    File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
+      or $logger->logcroak("Can't write $ufilename");
 
     # Now .bib is unicode
-    $filename = $ufilename;
     Biber::Config->setoption('bibencoding', 'UTF-8')
   }
+  else {
+    File::Copy::copy($filename, $ufilename);
+  }
+
+  # Decode LaTeX unless --nolatexdecode is set
+  unless (Biber::Config->getoption('nolatexdecode')) {
+    if (defined(Biber::Config->getoption('inputenc')) and
+        Biber::Config->getoption('inputenc') eq 'UTF-8') {
+      require File::Slurp::Unicode;
+      my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
+        or $logger->logcroak("Can't read $ufilename");
+      require LaTeX::Decode;
+      $logger->info('Decoding LaTeX character macros into UTF-8');
+      $buf = LaTeX::Decode::latex_decode($buf, strip_outer_braces => 1);
+
+      File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
+          or $logger->logcroak("Can't write $ufilename");
+    }
+  }
+
+  $filename = $ufilename;
 
   # Increment the number of times each datafile has been referenced
   # allowing for the possible ".utf8" extra intermediate extension.

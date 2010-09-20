@@ -40,7 +40,7 @@ our @EXPORT = qw{ bibfind terseinitials makenameid stringify_hash
   normalize_string normalize_string_lite normalize_string_underscore latexescape reduce_array
   remove_outer add_outer getinitials ucinit strip_nosort strip_nosortdiacritics
   strip_nosortprefix is_def is_undef is_def_and_notnull is_def_and_null is_undef_or_null
-  is_notnull is_name_field is_null};
+  is_notnull is_name_field is_null normalise_utf8};
 
 
 ######
@@ -653,6 +653,24 @@ sub stringify_hash {
   chop $string;
   chop $string;
   return $string;
+}
+
+=head2 normalise_utf8
+
+  Normalise any UTF-8 encoding string immediately to exactly what we want
+  We want the strict perl utf8 "UTF-8"
+
+=cut
+
+sub normalise_utf8 {
+  if (defined(Biber::Config->getoption('bibencoding')) and
+      Biber::Config->getoption('bibencoding') =~ m/\Autf-?8\z/xmsi) {
+    Biber::Config->setoption('bibencoding', 'UTF-8');
+  }
+  if (defined(Biber::Config->getoption('inputenc')) and
+      Biber::Config->getoption('inputenc') =~ m/\Autf-?8\z/xmsi) {
+    Biber::Config->setoption('inputenc', 'UTF-8');
+  }
 }
 
 =head1 AUTHOR

@@ -78,6 +78,9 @@ our %CONFIG_DEFAULT_BIBER = (
   quiet => 0,
   nolog => 0,
   wraplines => 0,
+  nolatexdecode => 0,
+  bibencoding => 'UTF-8',
+  inputenc => 'UTF-8',
   #
   # these options are passed to the Unicode::Collate object
   collate_options => { level => 2, upper_before_lower => 1 },
@@ -98,43 +101,73 @@ our %CONFIG_DEFAULT_BIBER = (
 # but we need this as a fallback, just in case,
 # or when using the command-line options "-a -d <datafile>"
 # without an aux/bcf file
-our %CONFIG_DEFAULT_BIBLATEX = (
-  controlversion => undef,
-  debug => '0',
-  terseinits => '0',
-  useprefix => '0',
-  useauthor => '1',
-  useeditor => '1',
-  usetranslator => '0',
-  labelalpha => '0',
-  labelnumber => '0',
-  singletitle => '0',
-  uniquename => '0',
-  sorting => [  [  {'presort'    => []},
-      {'mm'         => []} ],
-    [  {'sortkey'    => ['final']}  ],
-    [  {'sortname'   => []},
-      {'author'     => []},
-      {'editor'     => []},
-      {'translator' => []},
-      {'sorttitle'  => []},
-      {'title'      => []}  ],
-    [  {'sorttitle'  => []},
-      {'title'      => []}  ],
-    [  {'sortyear'   => []},
-      {'year'       => []}  ],
-    [  {'volume'     => []},
-      {'0000'       => []}  ]
-    ],
-  sortlos => '1',
-  maxitems => '3',
-  minitems => '1',
-  maxnames => '3',
-  minnames => '1',
-  alphaothers  => '+',
-  labelyear => [ 'year' ],
-  labelname => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
+our %CONFIG_DEFAULT_BIBLATEX =
+  (
+   controlversion => undef,
+   debug => '0',
+   terseinits => '0',
+   useprefix => '0',
+   useauthor => '1',
+   useeditor => '1',
+   usetranslator => '0',
+   labelalpha => '0',
+   labelnumber => '0',
+   singletitle => '0',
+   uniquename => '0',
+   sorting_label =>  [
+                [
+                 {
+                  'presort'    => {}},
+                 {
+                  'mm'         => {}},
+                ],
+                [
+                 {
+                  'sortkey'    => {'final' => 1}}
+                ],
+                [
+                 {
+                  'sortname'   => {}},
+                 {
+                  'author'     => {}},
+                 {
+                  'editor'     => {}},
+                 {
+                  'translator' => {}},
+                 {
+                  'sorttitle'  => {}},
+                 {
+                  'title'      => {}}
+                ],
+                [
+                 {
+                  'sortyear'   => {}},
+                 {
+                  'year'       => {}}
+                ],
+                [
+                 {
+                  'sorttitle'  => {}},
+                 {
+                  'title'      => {}}
+                ],
+                [
+                 {
+                  'volume'     => {}},
+                 {
+                  '0000'       => {}}
+                ]
+               ],
+   sortlos => '1',
+   maxitems => '3',
+   minitems => '1',
+   maxnames => '3',
+   minnames => '1',
+   alphaothers  => '+',
+   labelyear => [ 'year' ],
+   labelname => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
   );
+$CONFIG_DEFAULT_BIBLATEX{sorting_final} = $CONFIG_DEFAULT_BIBLATEX{sorting_label};
 
 # Set up some encoding aliases to map \inputen{c,x} encoding names to Encode
 # It seems that inputen{c,x} has a different idea of nextstep than Encode

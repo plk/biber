@@ -4,7 +4,6 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 20;
-use Storable qw (dclone);
 
 use Biber;
 use Biber::Output::BBL;

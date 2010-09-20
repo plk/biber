@@ -56,7 +56,7 @@ die usage() if exists $opts->{'help'};
 
 die version() if exists $opts->{'version'};
 
-die usage() unless @ARGV;
+die usage() unless @ARGV or $opts->{'allentries'};
 
 #--------------------------------------------------
 
@@ -160,8 +160,21 @@ if (Biber::Config->getoption('debug')) {
 }
 
 if ( $opts->{allentries} and $opts->{bibdata} ) {
+  # Special case as we have no .bcf to parse.
+  # Use .bcf defaults from Constants.pm plus any cmd line args and constructs our
+  # sections object here
   $bblfile = $opts->{bibdata}[0];
   $bblfile =~ s/(?:\.(bib|xml|dbxml))?$/\.bbl/;
+
+  my $bib_sections = new Biber::Sections;
+  my $bib_section = new Biber::Section('number' => 0); # Only one section in "allentries"
+  $bib_section->set_datafiles($opts->{bibdata});
+  $logger->info("Using all citekeys in files " . join(',', @{$opts->{bibdata}}));
+  $bib_sections->add_section($bib_section);
+  $biber->{sections} = $bib_sections;
+
+  # We want the strict perl utf8 "UTF-8"
+  normalise_utf8();
 }
 else {
   $ctrlfile = $ARGV[0] or croak usage();

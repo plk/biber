@@ -1,7 +1,6 @@
 use strict;
 use warnings;
 use utf8;
-use Storable qw (dclone);
 no warnings 'utf8';
 
 use Test::More tests => 64;
