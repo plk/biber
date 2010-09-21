@@ -131,6 +131,7 @@
   <bcf:section number="0">
     <bcf:citekey>LS1</bcf:citekey>
     <bcf:citekey>LS2</bcf:citekey>
+    <bcf:citekey>LS3</bcf:citekey>
   </bcf:section>
 </bcf:controlfile>
 

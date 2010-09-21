@@ -1369,7 +1369,8 @@ sub sortentries {
     @citekeys = sort {
       $bibentries->entry($a)->get_field('sortstring') cmp $bibentries->entry($b)->get_field('sortstring')
       } @citekeys;
-  } else {
+  }
+  else {
     require Unicode::Collate::Locale;
     my $opts = Biber::Config->getoption('collate_options');
     my $collopts;
@@ -1403,7 +1404,7 @@ sub sortentries {
     my $Collator = Unicode::Collate::Locale->new( %{$collopts} )
       or $logger->logcarp("Problem with Unicode::Collate options: $@");
     my $UCAversion = $Collator->version();
-    $logger->info("Sorting with Unicode::Collate (" .
+    $logger->info("Sorting entries with Unicode::Collate (" .
 		  stringify_hash($collopts) . ", UCA version: $UCAversion)");
     # Log if U::C::L currently has no tailoring for used locale
     if ($Collator->getlocale eq 'default') {
@@ -1439,6 +1440,9 @@ sub sortshorthands {
   my @shorthands = $section->get_shorthands;
   # What we sort on depends on the 'sortlos' BibLaTeX option
   my $sortlos = Biber::Config->getblxoption('sortlos') ? 'shorthand' : 'sortstring';
+  my $thislocale = Biber::Config->getoption('locale');
+
+  $logger->debug("Sorting shorthands by '$sortlos'");
 
   if ( Biber::Config->getoption('fastsort') ) {
     if (Biber::Config->getoption('locale')) {
@@ -1452,8 +1456,10 @@ sub sortshorthands {
       $logger->debug("Sorting shorthands with built-in sort (with locale ", $ENV{LC_COLLATE}, ") ...");
     }
     @shorthands = sort { $bibentries->entry($a)->get_field($sortlos) cmp $bibentries->entry($b)->get_field($sortlos) } @shorthands;
-  } else {
-    require Unicode::Collate;
+  }
+  else {
+
+    require Unicode::Collate::Locale;
     my $opts = Biber::Config->getoption('collate_options');
     my $collopts;
     unless (ref($opts) eq "HASH") { # opts for this can come in a string from cmd line
@@ -1462,18 +1468,43 @@ sub sortshorthands {
     else {
       $collopts = $opts;
     }
-    my $Collator = Unicode::Collate->new( %{$collopts} )
+
+    # Add case ordering level if case sensitive sorting is requested
+    if (Biber::Config->getoption('cssort')) {
+      $collopts->{level} = 3;
+    }
+
+    # Add tailoring locale for Unicode::Collate
+    my $uclocale = $thislocale ? $thislocale : $ENV{LC_COLLATE};
+    if ($uclocale and not $collopts->{locale}) {
+      $collopts->{locale} = $uclocale;
+      if ($collopts->{table}) {
+        my $t = delete $collopts->{table};
+        $logger->info("Ignoring collation table '$t' as locale is set ($uclocale)");
+      }
+    }
+
+    # If no locale, use reduced DUCET by default
+    # U::C::L sort uses allkeys.txt plus tailoring
+    unless ($collopts->{locale} or $collopts->{table}) {
+      $collopts->{table} = 'latinkeys.txt';
+    }
+
+    my $Collator = Unicode::Collate::Locale->new( %{$collopts} )
       or $logger->logcarp("Problem with Unicode::Collate options: $@");
     my $UCAversion = $Collator->version();
-    $logger->info("Sorting with Unicode::Collate (" .
+    $logger->info("Sorting shorthands with Unicode::Collate (" .
 		  stringify_hash($collopts) . ", UCA version: $UCAversion)");
+    # Log if U::C::L currently has no tailoring for used locale
+    if ($Collator->getlocale eq 'default') {
+      $logger->info("No sort tailoring available for locale '$uclocale'");
+    }
     @shorthands = sort {
-      $Collator->cmp($bibentries->entry($a)->get_field($sortlos),
-        $bibentries->entry($b)->get_field($sortlos))
+      $Collator->cmp( $bibentries->entry($a)->get_field($sortlos),
+        $bibentries->entry($b)->get_field($sortlos) )
       } @shorthands;
   }
   $section->set_shorthands([ @shorthands ]);
-
   return;
 }
 
