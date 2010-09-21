@@ -1348,20 +1348,18 @@ sub sortentries {
   # 1. locale value passed to Unicode::Collate::Locale->new() (Unicode::Collate sorts only)
   # 2. Biber locale option
   # 3. LC_COLLATE env variable
+  # 4. LANG env variable
+  # 5. LC_ALL env variable
+  # 6. Built-in defaults
 
   my $thislocale = Biber::Config->getoption('locale');
 
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
-    if ($thislocale) {
-      $logger->debug("Sorting entries with built-in sort (with locale $thislocale) ...");
-      unless (setlocale( LC_ALL, $thislocale )) {
-        $logger->warn("Unavailable locale $thislocale");
-        $self->{warnings}++;
-      }
-    }
-    else {
-      $logger->debug("Sorting entries with built-in sort (with locale ", $ENV{LC_COLLATE}, ") ...");
+    $logger->debug("Sorting entries with built-in sort (with locale $thislocale) ...");
+    unless (setlocale( LC_ALL, $thislocale )) {
+      $logger->warn("Unavailable locale $thislocale");
+      $self->{warnings}++;
     }
     @citekeys = sort {
       $bibentries->entry($a)->get_field('sortstring') cmp $bibentries->entry($b)->get_field('sortstring')
@@ -1384,12 +1382,11 @@ sub sortentries {
     }
 
     # Add tailoring locale for Unicode::Collate
-    my $uclocale = $thislocale ? $thislocale : $ENV{LC_COLLATE};
-    if ($uclocale and not $collopts->{locale}) {
-      $collopts->{locale} = $uclocale;
+    if ($thislocale and not $collopts->{locale}) {
+      $collopts->{locale} = $thislocale;
       if ($collopts->{table}) {
         my $t = delete $collopts->{table};
-        $logger->info("Ignoring collation table '$t' as locale is set ($uclocale)");
+        $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)");
       }
     }
 
@@ -1405,7 +1402,7 @@ sub sortentries {
 		  stringify_hash($collopts) . ", UCA version: $UCAversion)");
     # Log if U::C::L currently has no tailoring for used locale
     if ($Collator->getlocale eq 'default') {
-      $logger->info("No sort tailoring available for locale '$uclocale'");
+      $logger->info("No sort tailoring available for locale '$thislocale'");
     }
     @citekeys = sort {
       $Collator->cmp( $bibentries->entry($a)->get_field('sortstring'),
@@ -1442,15 +1439,10 @@ sub sortshorthands {
   $logger->debug("Sorting shorthands by '$sortlos'");
 
   if ( Biber::Config->getoption('fastsort') ) {
-    if (Biber::Config->getoption('locale')) {
-      my $thislocale = Biber::Config->getoption('locale');
-      $logger->debug("Sorting shorthands with built-in sort (with locale $thislocale) ...");
-      unless (setlocale( LC_ALL, $thislocale )) {
-        $logger->warn("Unavailable locale $thislocale");
-        $self->{warnings}++;
-      }
-    } else {
-      $logger->debug("Sorting shorthands with built-in sort (with locale ", $ENV{LC_COLLATE}, ") ...");
+    $logger->debug("Sorting shorthands with built-in sort (with locale $thislocale) ...");
+    unless (setlocale( LC_ALL, $thislocale )) {
+      $logger->warn("Unavailable locale $thislocale");
+      $self->{warnings}++;
     }
     @shorthands = sort { $bibentries->entry($a)->get_field($sortlos) cmp $bibentries->entry($b)->get_field($sortlos) } @shorthands;
   }
@@ -1472,12 +1464,11 @@ sub sortshorthands {
     }
 
     # Add tailoring locale for Unicode::Collate
-    my $uclocale = $thislocale ? $thislocale : $ENV{LC_COLLATE};
-    if ($uclocale and not $collopts->{locale}) {
-      $collopts->{locale} = $uclocale;
+    if ($thislocale and not $collopts->{locale}) {
+      $collopts->{locale} = $thislocale;
       if ($collopts->{table}) {
         my $t = delete $collopts->{table};
-        $logger->info("Ignoring collation table '$t' as locale is set ($uclocale)");
+        $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)");
       }
     }
 
@@ -1494,7 +1485,7 @@ sub sortshorthands {
 		  stringify_hash($collopts) . ", UCA version: $UCAversion)");
     # Log if U::C::L currently has no tailoring for used locale
     if ($Collator->getlocale eq 'default') {
-      $logger->info("No sort tailoring available for locale '$uclocale'");
+      $logger->info("No sort tailoring available for locale '$thislocale'");
     }
     @shorthands = sort {
       $Collator->cmp( $bibentries->entry($a)->get_field($sortlos),

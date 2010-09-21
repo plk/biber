@@ -41,6 +41,7 @@ our @EXPORT = qw{
 # passed in control file
 Readonly::Scalar our $BIBLATEX_VERSION => '0.9c';
 
+# Global flags needed for sorting
 our $BIBER_SORT_FINAL = 0;
 our $BIBER_SORT_NULL  = 0;
 
@@ -53,7 +54,16 @@ Readonly::Scalar our $DISPLAYMODE_DEFAULT => 'uniform';
 ## Biber CONFIGURATION DEFAULTS
 
 # Locale - first try environment ...
-my $locale = $ENV{LANG} || $ENV{LC_ALL};
+my $locale;
+if ($ENV{LC_COLLATE}) {
+  $locale = $ENV{LC_COLLATE};
+}
+elsif ($ENV{LANG}) {
+  $locale = $ENV{LANG};
+}
+elsif ($ENV{LC_ALL}) {
+  $locale = $ENV{LC_ALL};
+}
 
 # ... if nothing, set a default
 unless ($locale) {

@@ -296,8 +296,7 @@ Options:
       Set the locale to be used for sorting. With built-in sorting
       (i.e. --collate is not set), this sets the OS locale for sorting. With
       Unicode::Collate (--collate flag), the locale is used to add CLDR
-      tailoring to the sort if you have a CLDR-enabled
-      version of Unicode::Collate otherwise there is no special tailoring.
+      tailoring to the sort (if available for the locale)
 
   --cssort
       Use case-sensitive sorting. Case insensitive is the default.
