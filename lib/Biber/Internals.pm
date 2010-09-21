@@ -706,7 +706,7 @@ sub _nodecode {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $no_decode = ((Biber::Config->getoption('bibencoding') and Biber::Config->getoption('bibencoding') eq 'UTF-8') or
+  my $no_decode = ((Biber::Config->getoption('bibencoding') eq 'UTF-8') or
       Biber::Config->getoption('fastsort') or
       $be->get_field('datatype') eq 'xml');
   return $no_decode;
@@ -731,6 +731,7 @@ sub _namestring {
   }
 
   foreach my $n ( @{$truncnames->names} ) {
+    # If useprefix is true, use prefix at start of name for sorting
     if ( $n->get_prefix and
          Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
       $str .= $n->get_prefix . '2';
@@ -739,6 +740,7 @@ sub _namestring {
     $str .= strip_nosort($n->get_firstname) . '2' if $n->get_firstname;
     $str .= $n->get_suffix . '2' if $n->get_suffix;
 
+    # If useprefix is false, use prefix at end of name
     if ( $n->get_prefix and not
          Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
       $str .= $n->get_prefix . '2';
