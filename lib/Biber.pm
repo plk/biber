@@ -33,13 +33,10 @@ our @ISA;
 
 Biber - main module for biber, a bibtex replacement for users of biblatex
 
-=head1 VERSION
-
-Version 0.5.5
-
 =cut
 
-our $VERSION = '0.5.5';
+our $VERSION = '0.5.6';
+our $BETA_VERSION = 1; # Is this a beta version?
 
 =head1 SYNOPSIS
 

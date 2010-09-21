@@ -51,6 +51,7 @@ GetOptions(
 #--------------------------------------------------
 
 our $VERSION = $Biber::VERSION;
+our $BETA_VERSION = $Biber::BETA_VERSION;
 
 die usage() if exists $opts->{'help'};
 
@@ -260,9 +261,9 @@ unless (Biber::Config->getoption('quiet')) {
 #======================================================
 
 sub version {
-  qq{
-biber version: $VERSION
-      \n}
+  my $v = "biber version: $VERSION";
+  $v .= ' (beta)' if $BETA_VERSION;
+  return "$v\n";
 }
 
 sub usage {
@@ -380,7 +381,10 @@ Options:
 
   --wraplines|-w
       Wrap lines in the .bbl file.
-    \n}
+
+Bug reports, forum and downloads at:
+  https://sourceforge.net/projects/biblatex-biber
+\n}
 }
 
 __END__

@@ -1,5 +1,7 @@
 Revision history for Biber
-0.5.6  
+0.5.6  unreleased beta build
+       * Unicode::Collate sorting is now default as version 0.59 of this
+         has XS module and CLDR tailoring.
        * Added binary dist build scripts
        * Removed bundled Module::Build as there are some conflicts with
          later versions. This is less of a problem anyway because the

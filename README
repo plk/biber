@@ -1,11 +1,11 @@
 ==========================
 
-    BIBER Version 0.5.5
+    BIBER Version 0.5.6beta
 
 ==========================
 
 Biber is a BibTeX replacement for users of biblatex, with full Unicode
-support.  This release coincides with the release of biblatex 0.9b.
+support.  This release coincides with the release of biblatex 0.9d.
 
 REQUIREMENTS
 
@@ -20,6 +20,7 @@ REQUIREMENTS
   should be automatically installed during the install process described
   below.
 
+    * Unicode::Collate 0.59 or higher
     * IPC::Cmd and IPC::Run (included in Perl 5.9.5 or higher)
     * File::Slurp::Unicode
     * Readonly (but Readonly::XS is highly recommended for performance reasons)
