@@ -134,12 +134,13 @@ Options:
 
   --nolatexdecode|-n
       Do not decode LaTeX character macros into utf8. Normally, when
-      the .bib is not utf8 but inputenc is set to utf8, this automatically
+      the .bib is not utf8 but bblencoding is set to utf8, this automatically
       happens. However, LaTeX's inputenc package's [utf8] encoding is not
       at all a complete utf8 encoding and so decoding LaTeX character
       macros can lead to utf8 characters which inputenc cannot recognise.
       Use this option to prevent utf8 conversion of characters which
-      inputenc would not recognise.
+      inputenc would not recognise. Or use a TeX engine and macro package
+      with real utf8 support like XeLaTeX or LuaLaTeX.
 
   --validate|-V
       Schema validate both the &lt;basename&gt;.bcf biblatex control file

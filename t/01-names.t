@@ -499,13 +499,14 @@ my $l21 = q|  \entry{L21}{book}{}
 
 |;
 
+# No sortinit as the Unicode equivalent of the latex char macro which is the
+# initial sort character is not in "latin1" (see test below)
 my $l22 = q|  \entry{L22}{book}{}
     \name{author}{1}{%
       {{{\v S}mith}{{\v S}.}{Someone}{S.}{}{}{}{}}%
     }
     \strng{namehash}{SS1}
     \strng{fullhash}{SS1}
-    \field{sortinit}{S}
   \endentry
 
 |;
@@ -618,7 +619,6 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 
 # Biber options
 Biber::Config->setoption('bblencoding', 'latin1');
-Biber::Config->setoption('nolatexdecode', 1); # supress latex_decode implicitly
 
 # Now generate the information
 $biber->prepare;

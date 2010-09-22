@@ -10,6 +10,7 @@ use Storable qw( dclone );
 use List::AllUtils qw( :all );
 use Log::Log4perl qw(:no_extra_logdie_message);
 use POSIX qw( locale_h ); # for lc() of sorting strings
+use Encode;
 
 =encoding utf-8
 
@@ -309,7 +310,21 @@ sub _generatesortstring {
   }
   # Strip off the prefix
   $ss =~ s/\A$pre//;
-  $be->set_field('sortinit', substr $ss, 0, 1);
+  my $init = substr $ss, 0, 1;
+
+  # Now check if this sortinit is valid in the bblencoding. If not, warn
+  # and replace with a default value
+  my $bblenc = Biber::Config->getoption('bblencoding');
+  if ($bblenc ne 'UTF-8') {
+    # Can this init be represented in the BBL encoding?
+    if (encode($bblenc, $init) eq '?') { # Malformed data encoding char
+      $logger->warn("The character '$init' cannot be encoded in '$bblenc'. Skipping sortinit generation for entry '$citekey'");
+      $self->{warnings}++;
+      return;
+    }
+  }
+
+  $be->set_field('sortinit', $init);
   return;
 }
 

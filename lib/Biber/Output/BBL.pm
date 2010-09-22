@@ -189,7 +189,11 @@ sub set_output_entry {
       $acc .= "    \\field{labelalpha}{$label}\n";
     }
   }
-  $acc .= "    \\field{sortinit}{" . $be->get_field('sortinit') . "}\n";
+
+  # Skip sortinit if it's undefined from being skipped due to encoding issues
+  if ($be->field_exists('sortinit')) {
+    $acc .= "    \\field{sortinit}{" . $be->get_field('sortinit') . "}\n";
+  }
 
   # The labelyear option determines whether "extrayear" is output
   # Skip generating extrayear for entries with "skiplab" set

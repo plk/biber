@@ -360,7 +360,8 @@ Options:
       at all a complete utf8 encoding and so decoding LaTeX character
       macros can lead to utf8 characters which inputenc cannot recognise.
       Use this option to prevent utf8 conversion of characters which
-      inputenc would not recognise.
+      inputenc would not recognise. Or use a TeX engine and macro package
+      with real utf8 support like XeLaTeX or LuaLaTeX.
 
   --validate|-V
       Schema validate both the <basename>.bcf biblatex control file

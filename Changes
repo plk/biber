@@ -1,5 +1,8 @@
 Revision history for Biber
 0.5.6  unreleased beta build
+       * Latex character macro decoding is now better defined in the whole
+         (re)encoding workflow.
+       * "inputenc" option is now "bblencoding"
        * Unicode::Collate sorting is now default as version 0.59 of this
          has XS module and CLDR tailoring.
        * Added binary dist build scripts
