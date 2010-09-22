@@ -30,9 +30,9 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ bibfind terseinitials makenameid stringify_hash
+our @EXPORT = qw{ bibfind makenameid stringify_hash
   normalise_string normalise_string_lite normalise_string_underscore normalise_string_sort
-  latexescape reduce_array remove_outer add_outer getinitials ucinit strip_nosort
+  latexescape reduce_array remove_outer add_outer ucinit strip_nosort
   strip_nosortdiacritics strip_nosortprefix is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_name_field is_null normalise_utf8};
 
@@ -288,27 +288,6 @@ sub latexescape {
  return $rstr;
 }
 
-=head2 terseinitials
-
-   terseinitials($str) returns the terse format initials of the raw initials list
-   passed in $str. It tries to emulate the btparse terse format for initials.
-
-   terseinitials('L.~P.~D.) => 'LPD'
-   terseinitials('{\v S}~P.~D.) => '{\v S}PD'
-   terseinitials('J.-M.) => 'JM'
-
-=cut
-
-sub terseinitials {
-  my $str = shift;
-  return '' unless $str; # Sanitise missing data
-  $str =~ s/~//g;
-  $str =~ s/\.\s/./g; # initials lists can have spaces instead of ties so collapse them ...
-  $str =~ s/\.//g;    # ... then remove the remainder
-  $str =~ s/-//g;
-  return $str;
-}
-
 =head2 reduce_array
 
 reduce_array(\@a, \@b) returns all elements in @a that are not in @b
@@ -353,141 +332,6 @@ sub add_outer {
   return '{' . $str . '}';
 }
 
-=head2 getinitials
-
-    Returns the initials of a name, preserving LaTeX code.
-    This has to be a token parser as we need to take account of
-    brace groupings:
-
-    e.g. getting firstname initials:
-
-    "{John Henry} Ford" -> "J."
-    "John Henry Ford" -> "J.H."
-
-=cut
-
-sub getinitials {
-  my $str = shift;
-  my @rstr;
-  return '' unless $str; # Sanitise missing data
-  while (my $atom = get_atom(\$str)) {
-    # We have to look inside braces to see what we have
-    # Just normal protected names:
-    # hyphens in names are special atoms
-    if ($atom =~ m/\A-\z/xms) {
-      push @rstr, '-';
-    }
-    # Initials - P. or {P.\,G.}
-    elsif ($atom =~ m/\A{?(\p{L}+)?\./xms) {
-      push @rstr, substr($1, 0, 1);
-    }
-    # John
-    elsif ($atom =~ m/\A\p{L}+\z/xms) {
-      push @rstr, substr($atom, 0, 1);
-    }
-    # {John Henry} or {American Automobile Association, Canada}
-    elsif ($atom =~ m/\A{([^\\\{\}]+)}\z/xms) {
-      push @rstr, substr($1, 0, 1);
-    }
-    # {\OE}illet
-    elsif ($atom =~ m/\A({\\\p{L}+}).+\z/xms) {
-      push @rstr, $1;
-    }
-    # {\v S}omeone or {\v Someone}
-    elsif ($atom =~ m/\A({\\\S+\s+\p{L}+}).+\z/xms) {
-      push @rstr, $1;
-    }
-    # {\v{S}}omeone
-    elsif ($atom =~ m/\A({\\\S+{\p{L}}}).+\z/xms) {
-      push @rstr, $1;
-    }
-    # \v{S}omeone
-    elsif ($atom =~ m/\A(\\\S+{\p{L}}).+\z/xms) {
-      push @rstr, $1;
-    }
-    # {\"O}zt{\"u}rk
-    elsif ($atom =~ m/\A({\\[^\p{L}]\p{L}}).+\z/xms) {
-      push @rstr, $1;
-    }
-    # Default
-    else {
-      push @rstr, substr($atom, 0, 1);
-    }
-  }
-
-  # Use BibTeX's algorithm for inserting ties.
-  my $retstring;
-  for (my $i = 0; $i <= $#rstr; $i++) {
-    if ($rstr[$i] eq '-') {
-      $retstring =~ s/~\z//xms;
-      $retstring =~ s/\s\z//xms;
-      $retstring .= $rstr[$i];
-    }
-    elsif ($i == 0 or $i == $#rstr - 1) {
-      $retstring .= $rstr[$i] . '.~';
-    }
-    else {
-      $retstring .= $rstr[$i] . '. ';
-    }
-  }
-  # remove trailing nbsp or space
-  $retstring =~ s/~\z//xms;
-  $retstring =~ s/\s\z//xms;
-  return $retstring;
-}
-
-=head2 get_atom
-
-     Pull an "atom" from a name list. An "atom" is the first chunk
-     of a name that will have a separate initial created for it.
-     This has to be a token parser with a "brace level 0" concept
-     It cannot be done with regexps due to BibTeX's parsing semantics
-     which we are emulating.
-
-=cut
-
-sub get_atom {
-  my $str = shift;
-  unless ($$str) {
-    return undef;
-  }
-  # strip nosort elements as they shouldn't be initials either
-  $$str = strip_nosort($$str);
-  my $bl = 0;
-  my $atom;
-  for (my $i=0;$i<length($$str);$i++) {
-    my $prea = substr($$str,$i-1,1);
-    my $a = substr($$str,$i,1);
-    if ($a =~ m/[\s~]/ and $bl == 0)  {
-      $$str = substr($$str, $i+1);
-      return $atom;
-    }
-    elsif ($a eq '{' and $prea ne "\\") {
-      $bl++;
-    }
-    # Hyphens are special atoms at brace level zero
-    elsif ($a eq '-' and $bl == 0) {
-      # If the hyphen is at the beginning of the string, return it as an atom
-      # Since we left it there to be so consumed
-      if ($i == 0) {
-        $$str = substr($$str, $i+1);
-        return '-';
-      }
-      # Leave the hyphen on the string so it can be consumed as a separate atom
-      # and return the current token
-      else {
-        $$str = substr($$str, $i);
-        return $atom;
-      }
-    }
-    elsif ($a eq '}') {
-      $bl--;
-    }
-    $atom .= $a;
-  }
-  $$str = '';
-  return $atom;
-}
 
 =head2 ucinit
 

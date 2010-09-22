@@ -111,75 +111,58 @@ sub parsename {
   my $gen_suffix_i;
   my $gen_suffix_it;
 
-  # Use T::B::NameFormat if we have a decent version of T::B
-  # Otherwise we'll use our own emulation which is a little slower
-  if ($Text::BibTeX::VERSION >= 0.42) {
     # Use a copy of $name so that when we generate the
     # initials, we do so without diacritics. This is easier than trying
     # hack the diacritics code into btparse ...
 
     # Initials formats
-    my $li_f = new Text::BibTeX::NameFormat('l', 1);
-    my $fi_f = new Text::BibTeX::NameFormat('f', 1);
-    my $pi_f = new Text::BibTeX::NameFormat('v', 1);
-    my $si_f = new Text::BibTeX::NameFormat('j', 1);
+  my $li_f = new Text::BibTeX::NameFormat('l', 1);
+  my $fi_f = new Text::BibTeX::NameFormat('f', 1);
+  my $pi_f = new Text::BibTeX::NameFormat('v', 1);
+  my $si_f = new Text::BibTeX::NameFormat('j', 1);
 
-    # Truncated initials formats
-    my $lit_f = new Text::BibTeX::NameFormat('l', 1);
-    my $fit_f = new Text::BibTeX::NameFormat('f', 1);
-    my $pit_f = new Text::BibTeX::NameFormat('v', 1);
-    my $sit_f = new Text::BibTeX::NameFormat('j', 1);
+  # Truncated initials formats
+  my $lit_f = new Text::BibTeX::NameFormat('l', 1);
+  my $fit_f = new Text::BibTeX::NameFormat('f', 1);
+  my $pit_f = new Text::BibTeX::NameFormat('v', 1);
+  my $sit_f = new Text::BibTeX::NameFormat('j', 1);
 
-    # first name doesn't need this customisation as it's automatic for
-    # an abbreviated first name format but we'll do it anyway for consistency
-    my $nd_name = new Text::BibTeX::Name(strip_nosort($namestr));
+  # first name doesn't need this customisation as it's automatic for
+  # an abbreviated first name format but we'll do it anyway for consistency
+  my $nd_name = new Text::BibTeX::Name(strip_nosort($namestr));
 
-    # Period following normal initials
-    $li_f->set_text(BTN_LAST,  undef, undef, undef, '.');
-    $fi_f->set_text(BTN_FIRST, undef, undef, undef, '.');
-    $pi_f->set_text(BTN_VON,   undef, undef, undef, '.');
-    $si_f->set_text(BTN_JR,    undef, undef, undef, '.');
-    $li_f->set_options(BTN_LAST,  1, BTJ_MAYTIE, BTJ_NOTHING);
-    $fi_f->set_options(BTN_FIRST, 1, BTJ_MAYTIE, BTJ_NOTHING);
-    $pi_f->set_options(BTN_VON,   1, BTJ_MAYTIE, BTJ_NOTHING);
-    $si_f->set_options(BTN_JR,    1, BTJ_MAYTIE, BTJ_NOTHING);
+  # Period following normal initials
+  $li_f->set_text(BTN_LAST,  undef, undef, undef, '.');
+  $fi_f->set_text(BTN_FIRST, undef, undef, undef, '.');
+  $pi_f->set_text(BTN_VON,   undef, undef, undef, '.');
+  $si_f->set_text(BTN_JR,    undef, undef, undef, '.');
+  $li_f->set_options(BTN_LAST,  1, BTJ_MAYTIE, BTJ_NOTHING);
+  $fi_f->set_options(BTN_FIRST, 1, BTJ_MAYTIE, BTJ_NOTHING);
+  $pi_f->set_options(BTN_VON,   1, BTJ_MAYTIE, BTJ_NOTHING);
+  $si_f->set_options(BTN_JR,    1, BTJ_MAYTIE, BTJ_NOTHING);
 
-    # Nothing following truncated initials
-    $lit_f->set_text(BTN_LAST,  undef, undef, undef, '');
-    $fit_f->set_text(BTN_FIRST, undef, undef, undef, '');
-    $pit_f->set_text(BTN_VON,   undef, undef, undef, '');
-    $sit_f->set_text(BTN_JR,    undef, undef, undef, '');
-    $lit_f->set_options(BTN_LAST,  1, BTJ_NOTHING, BTJ_NOTHING);
-    $fit_f->set_options(BTN_FIRST, 1, BTJ_NOTHING, BTJ_NOTHING);
-    $pit_f->set_options(BTN_VON,   1, BTJ_NOTHING, BTJ_NOTHING);
-    $sit_f->set_options(BTN_JR,    1, BTJ_NOTHING, BTJ_NOTHING);
+  # Nothing following truncated initials
+  $lit_f->set_text(BTN_LAST,  undef, undef, undef, '');
+  $fit_f->set_text(BTN_FIRST, undef, undef, undef, '');
+  $pit_f->set_text(BTN_VON,   undef, undef, undef, '');
+  $sit_f->set_text(BTN_JR,    undef, undef, undef, '');
+  $lit_f->set_options(BTN_LAST,  1, BTJ_NOTHING, BTJ_NOTHING);
+  $fit_f->set_options(BTN_FIRST, 1, BTJ_NOTHING, BTJ_NOTHING);
+  $pit_f->set_options(BTN_VON,   1, BTJ_NOTHING, BTJ_NOTHING);
+  $sit_f->set_options(BTN_JR,    1, BTJ_NOTHING, BTJ_NOTHING);
 
-    $gen_lastname_i    = decode_utf8($nd_name->format($li_f));
-    $gen_lastname_it   = decode_utf8($nd_name->format($lit_f));
-    $gen_firstname_i   = decode_utf8($nd_name->format($fi_f));
-    $gen_firstname_it  = decode_utf8($nd_name->format($fit_f));
-    $gen_prefix_i      = decode_utf8($nd_name->format($pi_f));
-    $gen_prefix_it     = decode_utf8($nd_name->format($pit_f));
-    $gen_suffix_i      = decode_utf8($nd_name->format($si_f));
-    $gen_suffix_it     = decode_utf8($nd_name->format($sit_f));
-
-  }
-  else {
-    $gen_lastname_i    = getinitials($lastname);
-    $gen_lastname_it   = terseinitials($gen_lastname_i);
-    $gen_firstname_i   = getinitials($firstname);
-    $gen_firstname_it  = terseinitials($gen_firstname_i);
-    $gen_prefix_i      = getinitials($prefix);
-    $gen_prefix_it     = terseinitials($gen_prefix_i);
-    $gen_suffix_i      = getinitials($suffix);
-    $gen_suffix_it     = terseinitials($gen_suffix_i);
-  }
-
+  $gen_lastname_i    = decode_utf8($nd_name->format($li_f));
+  $gen_lastname_it   = decode_utf8($nd_name->format($lit_f));
+  $gen_firstname_i   = decode_utf8($nd_name->format($fi_f));
+  $gen_firstname_it  = decode_utf8($nd_name->format($fit_f));
+  $gen_prefix_i      = decode_utf8($nd_name->format($pi_f));
+  $gen_prefix_it     = decode_utf8($nd_name->format($pit_f));
+  $gen_suffix_i      = decode_utf8($nd_name->format($si_f));
+  $gen_suffix_it     = decode_utf8($nd_name->format($sit_f));
 
   # Only warn about lastnames since there should always be one
   $logger->warn("Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
 
-  # Construct $namestring, initials and terseinitials
   my $namestring = '';
   # prefix
   my $ps;

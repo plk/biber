@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 14;
+use Test::More tests => 10;
 use Biber;
 use Biber::Entry::Name;
 use Biber::Entry::Names;
@@ -38,8 +38,6 @@ is( latexescape('Joe & Sons: $3.01 + 5% of some_function()'),
                'Joe \& Sons: \$3.01 + 5\% of some\_function()',
                'latexescape'); 
 
-is( terseinitials('G.-S.'),  'GS', 'terseinitials');
-
 my @arrayA = qw/ a b c d e f c /;
 my @arrayB = qw/ c e /;
 my @AminusB = reduce_array(\@arrayA, \@arrayB);
@@ -56,9 +54,6 @@ my $pstring_processed = '{$}Some string \& with \% some specials and then {some 
 protected specials} and then some more things \% \$\$ \_\^';
 
 is( latexescape($pstring), $pstring_processed, 'latexescape test');
-is( getinitials('{\"O}zt{\"u}rk'), '{\"O}.', 'getinitials 1' ) ;
-is( getinitials('{\c{C}}ok {\OE}illet'), '{\c{C}}.~{\OE}.', 'getinitials 2' ) ;
-is( getinitials('Ḥusayn ʿĪsā'), 'Ḥ.~Ī.', 'getinitials 3' ) ;
 
 is( normalise_string_lite('Ä.~{\c{C}}.~{\c S}.'), 'ÄCS', 'normalise_string_lite' ) ;
 
