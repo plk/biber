@@ -291,7 +291,7 @@ sub output {
   my $data = $self->{output_data};
   my $target = $self->{output_target};
 
-  $logger->info("Writing output with encoding '" . Biber::Config->getoption('inputenc') . "'");
+  $logger->info("Writing output with encoding '" . Biber::Config->getoption('bblencoding') . "'");
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     foreach my $entry (@{$data->{ENTRIES}{$secnum}{strings}}) {

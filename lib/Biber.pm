@@ -539,7 +539,7 @@ sub parse_bibtex {
 
   # Decode LaTeX to UTF8 if output is UTF-8 and --nolatexdecode is not set
   unless (Biber::Config->getoption('nolatexdecode')) {
-    if (Biber::Config->getoption('inputenc') eq 'UTF-8') {
+    if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
       require File::Slurp::Unicode;
       my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
         or $logger->logcroak("Can't read $ufilename");

@@ -90,7 +90,7 @@ our %CONFIG_DEFAULT_BIBER = (
   wraplines => 0,
   nolatexdecode => 0,
   bibencoding => 'UTF-8',
-  inputenc => 'UTF-8',
+  bblencoding => 'UTF-8',
   #
   # these options are passed to the Unicode::Collate object
   collate_options => { level => 2, upper_before_lower => 1 },

@@ -14,11 +14,11 @@ my $biber = Biber->new(noconf => 1);
 
 is( normalise_string('"a, b–c: d" ', 1),  'a bc d', 'normalise_string' );
 
-Biber::Config->setoption('inputenc', 'latin1');
+Biber::Config->setoption('bblencoding', 'latin1');
 is( normalise_string_underscore('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
     $§+ :-)   ', 1), 'Secoka_Nino', 'normalise_string_underscore 1' );
 
-Biber::Config->setoption('inputenc', 'UTF-8');
+Biber::Config->setoption('bblencoding', 'UTF-8');
 is( normalise_string_underscore('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
     $§+ :-)   ', 0), 'Şecöka_Nìño', 'normalise_string_underscore 2' );
 

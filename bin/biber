@@ -26,9 +26,9 @@ GetOptions(
            'collate_options|c=s',
            'mincrossrefs|m=s',
            'u',                   # alias for bibencoding=UTF-8
-           'U',                   # alias for inputenc=UTF-8
+           'U',                   # alias for bblencoding=UTF-8
            'bibencoding|e=s',
-           'inputenc|E=s',
+           'bblencoding|E=s',
            'nolatexdecode|n',
            'bibdata|d=s',
            'bibdatatype=s',       # not exposed in usage output currently
@@ -78,7 +78,7 @@ if ($opts->{u}) {
   delete $opts->{u};
 }
 if ($opts->{U}) {
-  $opts->{inputenc} = 'UTF-8';
+  $opts->{bblencoding} = 'UTF-8';
   delete $opts->{U};
 }
 
@@ -341,7 +341,7 @@ Options:
       .bcf file from biblatex's setting of the same name.
       See "perldoc Encode::Supported" for a list of supported encodings.
 
-  --inputenc|-E [encoding]
+  --bblencoding|-E [encoding]
       Specify the encoding of the output .bbl file. Default is "UTF-8".
       Normally it's not necessary to set this as it's passed via biblatex
       from the inputenc package setting.
@@ -351,11 +351,11 @@ Options:
       Alias for --bibencoding=UTF-8.
 
   -U
-      Alias for --inputenc=UTF-8.
+      Alias for --bblencoding=UTF-8.
 
   --nolatexdecode|-n
       Do not decode LaTeX character macros into utf8. Normally, when
-      the .bib is not utf8 but inputenc is set to utf8, this automatically
+      the .bib is not utf8 but bblencoding is set to utf8, this automatically
       happens. However, LaTeX's inputenc package's [utf8] encoding is not
       at all a complete utf8 encoding and so decoding LaTeX character
       macros can lead to utf8 characters which inputenc cannot recognise.
@@ -400,7 +400,7 @@ C<biber> - A bibtex replacement for users of biblatex
 
 biber [ { --bibdata | -d } database.{bib|xml|dbxml} ]
       [ --mincrossrefs | -m ] [ [--collate|-C] | [ --fastsort | -f ] ]
-      [ -u ] [ -U ] [ --bibencoding | -e ] [ --inputenc | -E ] [ --nolatexdecode ]
+      [ -u ] [ -U ] [ --bibencoding | -e ] [ --bblencoding | -E ] [ --nolatexdecode ]
       [ --debug | -D ] [ { --outfile | -O } filename ] file.bcf
 
 biber --bibdata database --allentries [ --outfile filename ] [ ... ]

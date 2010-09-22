@@ -45,8 +45,8 @@ sub set_output_target_file {
   my $file = shift;
   $self->{output_target_file} = $file;
   my $enc_out;
-  if (Biber::Config->getoption('inputenc')) {
-    $enc_out = ':encoding(' . Biber::Config->getoption('inputenc') . ')';
+  if (Biber::Config->getoption('bblencoding')) {
+    $enc_out = ':encoding(' . Biber::Config->getoption('bblencoding') . ')';
   }
   my $TARGET = IO::File->new($file, ">$enc_out") or $logger->croak("Failed to open $file : $!");
   $self->set_output_target($TARGET);
@@ -198,7 +198,7 @@ sub output {
 
   $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
 
-  $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('inputenc') . "'");
+  $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('bblencoding') . "'");
 
   print $target $data->{HEAD} or $logger->logcroak("Failure to write head to $target_string: $!");
 

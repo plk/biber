@@ -10,7 +10,7 @@
               <xs:group minOccurs="0" ref="bcf:cssort"/>
               <xs:group minOccurs="0" ref="bcf:debug"/>
               <xs:group minOccurs="0" ref="bcf:displaymode"/>
-              <xs:group minOccurs="0" ref="bcf:inputenc"/>
+              <xs:group minOccurs="0" ref="bcf:bblencoding"/>
               <xs:group minOccurs="0" ref="bcf:locale"/>
               <xs:group minOccurs="0" ref="bcf:mincrossrefs"/>
               <xs:element minOccurs="0" ref="bcf:nonsortdiacritics"/>
@@ -789,7 +789,7 @@
       </xs:element>
     </xs:sequence>
   </xs:group>
-  <xs:group name="inputenc">
+  <xs:group name="bblencoding">
     <xs:sequence>
       <xs:element name="option">
         <xs:complexType>
@@ -797,7 +797,7 @@
             <xs:element name="key">
               <xs:simpleType>
                 <xs:restriction base="xs:token">
-                  <xs:enumeration value="inputenc"/>
+                  <xs:enumeration value="bblencoding"/>
                 </xs:restriction>
               </xs:simpleType>
             </xs:element>

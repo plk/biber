@@ -11,7 +11,7 @@ start =
       cssort?,
       debug?,
       displaymode?,
-      inputenc?,
+      bblencoding?,
       locale?,
       mincrossrefs?,
       nonsortdiacritics?,
@@ -249,10 +249,10 @@ wrapline =
     element bcf:key { "wrapline" },
     element bcf:value { xsd:integer }
   }  
-inputenc =
+bblencoding =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "inputenc" },
+    element bcf:key { "bblencoding" },
     element bcf:value { xsd:NCName }
   }
 bibencoding =

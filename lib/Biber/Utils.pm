@@ -169,7 +169,7 @@ sub normalise_string_sort {
   # Don't bother if output is UTF-8 as in this case, we've already decoded everthing
   # before we read the file (see Biber.pm)
   unless (Biber::Config->getoption('nolatexdecode')) {
-    unless (Biber::Config->getoption('inputenc') eq 'UTF-8') {
+    unless (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
       $str = latex_decode($str, strip_outer_braces => 1);
     }
   }
@@ -190,7 +190,7 @@ sub normalise_string {
   # First replace ties with spaces or they will be lost
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
   unless (Biber::Config->getoption('nolatexdecode')) {
-    if (Biber::Config->getoption('inputenc') eq 'UTF-8') {
+    if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
       $str = latex_decode($str, strip_outer_braces => 1);
     }
   }
@@ -545,9 +545,9 @@ sub normalise_utf8 {
       Biber::Config->getoption('bibencoding') =~ m/\Autf-?8\z/xmsi) {
     Biber::Config->setoption('bibencoding', 'UTF-8');
   }
-  if (defined(Biber::Config->getoption('inputenc')) and
-      Biber::Config->getoption('inputenc') =~ m/\Autf-?8\z/xmsi) {
-    Biber::Config->setoption('inputenc', 'UTF-8');
+  if (defined(Biber::Config->getoption('bblencoding')) and
+      Biber::Config->getoption('bblencoding') =~ m/\Autf-?8\z/xmsi) {
+    Biber::Config->setoption('bblencoding', 'UTF-8');
   }
 }
 

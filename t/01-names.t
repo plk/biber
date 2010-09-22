@@ -613,12 +613,11 @@ is( $out->get_output_entry('l29'), $l29, 'Escaped name with 3 commas');
 # A few tests depend set to non UTF-8 output
 # Have to use a new biber object when trying to change encoding as this isn't
 # dealt with in ->prepare
-$biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('names.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 
 # Biber options
-Biber::Config->setoption('inputenc', 'latin1');
+Biber::Config->setoption('bblencoding', 'latin1');
 Biber::Config->setoption('nolatexdecode', 1); # supress latex_decode implicitly
 
 # Now generate the information
