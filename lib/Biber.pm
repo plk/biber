@@ -286,8 +286,12 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
         foreach my $bcfopt (@{$bcfopts->{option}}) {
           unless (defined(Biber::Config->getcmdlineoption($bcfopt->{key}{content}))) { # already set on cmd line
             if (lc($bcfopt->{type}) eq 'singlevalued') {
-              Biber::Config->setoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content});
-            } elsif (lc($bcfopt->{type}) eq 'multivalued') {
+              # TODO: compat code for biblatex pre 1.0. Remove when biblatex passes 'bblencoding'
+              my $key = $bcfopt->{key}{content};
+              $key = 'bblencoding' if $key eq 'inputenc';
+              Biber::Config->setoption($key, $bcfopt->{value}[0]{content});
+            }
+            elsif (lc($bcfopt->{type}) eq 'multivalued') {
               Biber::Config->setoption($bcfopt->{key}{content},
                 [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ]);
             }
