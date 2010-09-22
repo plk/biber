@@ -31,7 +31,6 @@ sub _getnamehash {
   my $bibentries = $section->bib;
   my $initstr = '';
   my $be = $bibentries->entry($citekey);
-  ## my $nodecodeflag = $self->_decode_or_not($citekey);
 
   if ( $names->count_elements <= Biber::Config->getblxoption('maxnames') ) {    # 1 to maxname names
     foreach my $n (@{$names->names}) {
@@ -81,7 +80,7 @@ sub _getnamehash {
       $initstr .= "+";
     }
   }
-  return normalize_string_lite($initstr);
+  return normalise_string_lite($initstr);
 }
 
 sub _getfullhash {
@@ -113,7 +112,7 @@ sub _getfullhash {
     }
 
   }
-  return normalize_string_lite($initstr);
+  return normalise_string_lite($initstr);
 }
 
 sub _getlabel {
@@ -122,7 +121,6 @@ sub _getlabel {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
-  my $dt = $be->get_field('datatype');
   my $names = $be->get_field($namefield);
   my $alphaothers = Biber::Config->getblxoption('alphaothers', $be->get_field('entrytype'));
   my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->get_field('entrytype'));
@@ -134,7 +132,7 @@ sub _getlabel {
   # This is needed in cases where alphaothers is something like
   # '\textasteriskcentered' which would mess up sorting.
 
-  my @lastnames = map { normalize_string( $_->get_lastname, $dt ) } @{$names->names};
+  my @lastnames = map { normalise_string($_->get_lastname) } @{$names->names};
   my @prefices  = map { $_->get_prefix } @{$names->names};
   my $numnames  = $names->count_elements;
 
@@ -143,7 +141,7 @@ sub _getlabel {
   my $nametrunc;
   my $loopnames;
 
-# loopnames is the number of names to loop over in the name list when constructing the label
+  # loopnames is the number of names to loop over in the name list when constructing the label
   if ($morenames or ($numnames > $maxnames)) {
     $nametrunc = 1;
     $loopnames = $minnames; # Only look at $minnames names if we are truncating ...
@@ -151,16 +149,16 @@ sub _getlabel {
     $loopnames = $numnames; # ... otherwise look at all names
   }
 
-# Now loop over the name list, grabbing a substring of each surname
-# The substring length depends on whether we are using prefices and also whether
-# we have truncated to one name:
-#   1. If there is only one name
-#      1. label string is first 3 chars of surname if there is no prefix
-#      2. label string is first char of prefix plus first 2 chars of surname if there is a prefix
-#   2. If there is more than one name
-#      1.  label string is first char of each surname (up to minnames) if there is no prefix
-#      2.  label string is first char of prefix plus first char of each surname (up to minnames)
-#          if there is a prefix
+  # Now loop over the name list, grabbing a substring of each surname
+  # The substring length depends on whether we are using prefices and also whether
+  # we have truncated to one name:
+  #   1. If there is only one name
+  #      1. label string is first 3 chars of surname if there is no prefix
+  #      2. label string is first char of prefix plus first 2 chars of surname if there is a prefix
+  #   2. If there is more than one name
+  #      1.  label string is first char of each surname (up to minnames) if there is no prefix
+  #      2.  label string is first char of prefix plus first char of each surname (up to minnames)
+  #          if there is a prefix
   for (my $i=0; $i<$loopnames; $i++) {
     $label .= substr($prefices[$i] , 0, 1) if ($useprefix and $prefices[$i]);
     $label .= substr($lastnames[$i], 0, $loopnames == 1 ? (($useprefix and $prefices[$i]) ? 2 : 3) : 1);
@@ -479,7 +477,7 @@ sub _sort_issuetitle {
   my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('issuetitle')) {
-    return normalize_string( $be->get_field('issuetitle'), $self->_nodecode($citekey) );
+    return normalise_string_sort($be->get_field('issuetitle'));
   }
   else {
     return '';
@@ -493,7 +491,7 @@ sub _sort_journal {
   my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('journal')) {
-    return normalize_string( $be->get_field('journal'), $self->_nodecode($citekey) );
+    return normalise_string_sort($be->get_field('journal'));
   }
   else {
     return '';
@@ -574,15 +572,7 @@ sub _sort_sortkey {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
-  if ($be->get_field('sortkey')) {
-    my $sortkey = $be->get_field('sortkey');
-    $sortkey = LaTeX::Decode::latex_decode($sortkey, strip_outer_braces=>1)
-      unless $self->_nodecode($citekey);
-    return $sortkey;
-  }
-  else {
-    return '';
-  }
+  return $be->get_field('sortkey') ? $be->get_field('sortkey') : '';
 }
 
 sub _sort_sortname {
@@ -615,7 +605,7 @@ sub _sort_title {
   my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field($ttype)) {
-    return normalize_string( $be->get_field($ttype), $self->_nodecode($citekey));
+    return normalise_string_sort($be->get_field($ttype));
   }
   else {
     return '';
@@ -701,17 +691,6 @@ sub _sort_year {
 # Utility subs used elsewhere but relying on sorting code
 #========================================================
 
-sub _nodecode {
-  my ($self, $citekey) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  my $no_decode = ((Biber::Config->getoption('bibencoding') eq 'UTF-8') or
-      Biber::Config->getoption('fastsort') or
-      $be->get_field('datatype') eq 'xml');
-  return $no_decode;
-}
-
 sub _namestring {
   my $self = shift;
   my ($citekey, $field) = @_;
@@ -752,7 +731,7 @@ sub _namestring {
 
   $str =~ s/\s+1/1/gxms;
   $str =~ s/1\z//xms;
-  $str = normalize_string($str, $self->_nodecode($citekey));
+  $str = normalise_string_sort($str);
   $str .= '1zzzz' if $truncated;
   return $str;
 }
@@ -779,7 +758,7 @@ sub _liststring {
 
   $str =~ s/\s+1/1/gxms;
   $str =~ s/1\z//xms;
-  $str = normalize_string($str, $self->_nodecode($citekey));
+  $str = normalise_string_sort($str);
   $str .= '1zzzz' if $truncated;
   return $str;
 }

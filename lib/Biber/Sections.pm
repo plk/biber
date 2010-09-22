@@ -54,6 +54,20 @@ sub get_sections {
   return [ sort {$a->number <=> $b->number} values %$self ];
 }
 
+=head2 delete_sections
+
+    Deletes all sections
+    Mainly used in test scripts
+
+=cut
+
+sub delete_sections {
+  my $self = shift;
+  $self = {};
+  return;
+}
+
+
 =head2 add_section
 
     Adds a Biber::Section to the Biber::Sections object
@@ -67,6 +81,22 @@ sub add_section {
   $self->{$number} = $section;
   return;
 }
+
+=head2 delete_section
+
+    Deletes a section
+    Mainly used in test scripts
+
+=cut
+
+sub delete_section {
+  my $self = shift;
+  my $section = shift;
+  my $number = $section->number;
+  delete $self->{$number};
+  return;
+}
+
 
 =head1 AUTHORS
 

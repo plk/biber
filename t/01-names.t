@@ -23,7 +23,6 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
-Biber::Config->setoption('nolatexdecode', 1);
 
 # Now generate the information
 $biber->prepare;
@@ -584,7 +583,6 @@ is_deeply(parsename('Jean Charles Gabriel Poussin'), $name12, 'parsename 12');
 is_deeply(parsename('Jean Charles {Poussin Lecoq}'), $name13, 'parsename 13');
 is_deeply(parsename('J. C. G. de la Vallée Poussin', {useprefix => 1}), $name14, 'parsename 14');
 
-is($bibentries->entry('l21')->get_field($bibentries->entry('l21')->get_field('labelnamename'))->nth_element(1)->get_firstname_it, '{\v S}', 'Terseinitials 1');
 is( $out->get_output_entry('l1'), $l1, 'First Last') ;
 is( $out->get_output_entry('l2'), $l2, 'First Initial. Last') ;
 is( $out->get_output_entry('l3'), $l3, 'Initial. Initial. Last') ;
@@ -596,7 +594,6 @@ is( $out->get_output_entry('l8'), $l8, 'First Initial prefix Last') ;
 is( $out->get_output_entry('l9'), $l9, 'First {Last Last}') ;
 is( $out->get_output_entry('l10'), $l10, 'Last, Suffix, First') ;
 is( $out->get_output_entry('l11'), $l11, 'prefix Last, Suffix, First') ;
-is( $out->get_output_entry('l12'), $l12, 'First First First First prefix prefix Last Last') ;
 is( $out->get_output_entry('l13'), $l13, 'Last Last Last, Initial. Initial.');
 is( $out->get_output_entry('l14'), $l14, 'Last Last-Last, First');
 is( $out->get_output_entry('l15'), $l15, 'First F.{\,}F. Last');
@@ -605,17 +602,34 @@ is( $out->get_output_entry('l17'), $l17, 'Last, First {F.\,F.}');
 is( $out->get_output_entry('l18'), $l18, 'Last, First F.{\,}F.');
 is( $out->get_output_entry('l19'), $l19, 'Firstname with hyphen');
 is( $out->get_output_entry('l20'), $l20, 'Protected dual first name');
-is( $out->get_output_entry('l21'), $l21, 'LaTeX encoded unicode firstname');
-is( $out->get_output_entry('l22'), $l22, 'LaTeX encoded unicode lastname');
 is( $out->get_output_entry('l23'), $l23, 'Unicode firstname');
 is( $out->get_output_entry('l24'), $l24, 'Unicode lastname');
 is( $out->get_output_entry('l25'), $l25, 'Single string name');
 is( $out->get_output_entry('l26'), $l26, 'Hyphen at brace level <> 0');
 is($section->has_citekey('l27'), '0', 'Bad name with 3 commas');
 is($section->has_citekey('l28'), '0', 'Bad name with consecutive commas');
-SKIP: {
-  skip "Text::BibTeX < 0.41", 1, if $Text::BibTeX::VERSION < 0.41;
-  is( $out->get_output_entry('l29'), $l29, 'Escaped name with 3 commas');
-}
+is( $out->get_output_entry('l29'), $l29, 'Escaped name with 3 commas');
+
+# A few tests depend set to non UTF-8 output
+# Have to use a new biber object when trying to change encoding as this isn't
+# dealt with in ->prepare
+$biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile('names.bcf');
+$biber->set_output_obj(Biber::Output::BBL->new());
+
+# Biber options
+Biber::Config->setoption('inputenc', 'latin1');
+Biber::Config->setoption('nolatexdecode', 1); # supress latex_decode implicitly
+
+# Now generate the information
+$biber->prepare;
+$out = $biber->get_output_obj;
+$bibentries = $biber->sections->get_section('0')->bib;
+$section = $biber->sections->get_section('0');
+
+is($bibentries->entry('l21')->get_field($bibentries->entry('l21')->get_field('labelnamename'))->nth_element(1)->get_firstname_it, '{\v S}', 'Terseinitials 1');
+is( $out->get_output_entry('l12'), $l12, 'First First First First prefix prefix Last Last') ;
+is( $out->get_output_entry('l21'), $l21, 'LaTeX encoded unicode firstname');
+is( $out->get_output_entry('l22'), $l22, 'LaTeX encoded unicode lastname');
 
 unlink "*.utf8";

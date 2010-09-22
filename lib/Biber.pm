@@ -1014,9 +1014,9 @@ sub postprocess_hashes {
 
   # namehash is generated from the labelname
   if (my $lname = $be->get_field('labelnamename')) {
-    if ($be->get_field($lname)) {
-      $namehash .= $self->_getnamehash($citekey, $be->get_field($lname));
-      $nameid .= makenameid($be->get_field($lname));
+    if (my $ln = $be->get_field($lname)) {
+      $namehash .= $self->_getnamehash($citekey, $ln);
+      $nameid .= makenameid($ln);
     }
   }
   # fullhash is generated from the labelname but ignores SHORT* fields and
