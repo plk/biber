@@ -1292,6 +1292,8 @@ sub generate_final_sortinfo {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bib;
+  # This loop critically depends on the order of the citekeys which
+  # is why we have to do a first sorting pass before this one
   foreach my $citekey ($section->get_citekeys) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
@@ -1328,6 +1330,7 @@ sub generate_final_sortinfo {
 =head2 sortentries
 
     Sort the entries according to a certain sorting scheme.
+    Use a flag to skip info messages on first pass
 
 =cut
 
@@ -1360,8 +1363,8 @@ sub sortentries {
 
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
-    $logger->debug("Sorting entries with built-in sort (with locale $thislocale) ...");
-    unless (setlocale( LC_ALL, $thislocale )) {
+    $logger->info("Sorting entries with built-in sort (with locale $thislocale) ...") if $BIBER_SORT_FIRSTPASSDONE;
+    unless (setlocale(LC_ALL, $thislocale) and $BIBER_SORT_FIRSTPASSDONE) {
       $logger->warn("Unavailable locale $thislocale");
       $self->{warnings}++;
     }
@@ -1390,7 +1393,7 @@ sub sortentries {
       $collopts->{locale} = $thislocale;
       if ($collopts->{table}) {
         my $t = delete $collopts->{table};
-        $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)");
+        $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)")if $BIBER_SORT_FIRSTPASSDONE;
       }
     }
 
@@ -1403,10 +1406,10 @@ sub sortentries {
       or $logger->logcarp("Problem with Unicode::Collate options: $@");
     my $UCAversion = $Collator->version();
     $logger->info("Sorting entries with Unicode::Collate (" .
-		  stringify_hash($collopts) . ", UCA version: $UCAversion)");
+		  stringify_hash($collopts) . ", UCA version: $UCAversion)") if $BIBER_SORT_FIRSTPASSDONE;
     # Log if U::C::L currently has no tailoring for used locale
     if ($Collator->getlocale eq 'default') {
-      $logger->info("No sort tailoring available for locale '$thislocale'");
+      $logger->info("No sort tailoring available for locale '$thislocale'") if $BIBER_SORT_FIRSTPASSDONE;
     }
     @citekeys = sort {
       $Collator->cmp( $bibentries->entry($a)->get_field('sortstring'),
@@ -1443,7 +1446,7 @@ sub sortshorthands {
   $logger->debug("Sorting shorthands by '$sortlos'");
 
   if ( Biber::Config->getoption('fastsort') ) {
-    $logger->debug("Sorting shorthands with built-in sort (with locale $thislocale) ...");
+    $logger->info("Sorting shorthands with built-in sort (with locale $thislocale) ...");
     unless (setlocale( LC_ALL, $thislocale )) {
       $logger->warn("Unavailable locale $thislocale");
       $self->{warnings}++;
@@ -1512,20 +1515,21 @@ sub prepare {
   foreach my $section (@{$self->sections->get_sections}) {
     my $secnum = $section->number;
     $logger->info("Processing bib section $secnum");
-    Biber::Config->_init; # (re)initialise Config object
+    Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
-    $self->process_data; # Parse data into section objects
-    $self->process_missing; # Check for missing citekeys before anything else
-    $self->process_crossrefs; # Process crossrefs
-    $self->postprocess; # in here we generate lots of information
-    $self->sortentries; # then we do a label sort pass
-    $self->generate_final_sortinfo; # in here we generate the final sort string
-    $self->sortentries; # and then we do a final sort pass
-    $self->create_output_section; # Generate and push the section output into the
-                                  # output object ready for writing
+    $self->process_data;                 # Parse data into section objects
+    $self->process_missing;              # Check for missing citekeys before anything else
+    $self->process_crossrefs;            # Process crossrefs
+    $self->postprocess;                  # in here we generate lots of information
+    $self->sortentries;                  # then we do a label sort pass and set a flag
+    $BIBER_SORT_FIRSTPASSDONE = 1;
+    $self->generate_final_sortinfo;      # in here we generate the final sort string
+    $self->sortentries;                  # and then we do a final sort pass
+    $self->create_output_section;        # Generate and push the section output into the
+                                         # output object ready for writing
   }
-  $self->create_output_misc; # Generate and push the final misc bits of output
-                             # into the output object ready for writing
+  $self->create_output_misc;             # Generate and push the final misc bits of output
+                                         # into the output object ready for writing
   return;
 }
 
