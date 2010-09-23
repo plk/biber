@@ -1,0 +1,125 @@
+\documentclass{ltxdockit}
+\usepackage[british]{babel}
+\usepackage[strict=true,autostyle=true]{csquotes}
+\usepackage{ifthen}
+\usepackage{fontspec}
+\setmainfont[Ligatures=TeX]{TeXGyrePagella}
+\setsansfont{Arial}
+\setmonofont{Courier New}
+
+\MakeAutoQuote{«}{»}
+
+\titlepage{%
+  title={biber},
+  subtitle={A backend bibliography processor for biblatex},
+  url={http://biblatex-biber.sourceforge.net},
+  author={François Charette, Philip Kime},
+  email={firmicus@ankabut.net, Philip@kime.org.uk},
+  revision={0.5.5},
+  date={\today}}
+
+\hypersetup{%
+  pdftitle={biber},
+  pdfsubject={A backend bibliography processor for biblatex},
+  pdfauthor={Philip Kime},
+  pdfkeywords={biblatex, bibliography}}
+
+
+
+\def\biberex#1{\hbox{\hspace{-4em}\texttt{\small \detokenize{#1}}}}
+
+\begin{document}
+
+\printtitlepage
+\tableofcontents
+
+\section{Introduction}
+\label{int}
+
+\subsection{About}
+
+All about \verb=biber=
+
+\subsection{Requirements}\label{ref:req}
+
+Raw perl vs binaries. List binary compatibilities.
+
+\subsection{License}
+
+
+\subsection{History}
+
+bibtex, Unicode, .bib format etc.
+
+\subsection{Acknowledgments}
+
+
+\section{Use}\label{ref:use}
+\label{use}
+
+.bcf interface etc.
+
+\subsection{Sorting and Localisation}
+
+\verb=biber= takes care of sorting the bibliography for \verb=biblatex=. It writes
+entries to the \verb=.bbl= file sorted by a completely customisable set of rules
+which are passed in the \verb=.bcf= file by \verb=biblatex=. \verb=biber='s collation code
+can run in two different ways\\[2ex]
+
+\biberex{--collate|-C} The default. This option makes \verb=biber= use the
+  \verb=Unicode::Collate= module for collation which implements the full UCA (Unicode
+  Collation Algorithm). It also has CLDR (Common Locale Data
+  Repository) tailoring to deal with cases which are not covered in the
+  UCA. See below.\\[1ex]
+
+\biberex{--fastsort|-f} Biber will sort using
+  the OS locale collation tables. The drawback for this method is that special
+  collation tailoring for various languages are not implemented in the
+  collation tables for many OSes. For example, few OSes correctly sort 'å'
+  before 'ä' in the Swedish (\verb=sv_SE=) locale. If you are using a more
+  common latin alphabet then this is probably not a problem for you.\\[2ex]
+
+\noindent The locale for sorting is determined by the following resource
+chain in decreasing precedence order:\\[2ex]
+
+\noindent\verb=--collate_options|-c= $\rightarrow$\\
+\hspace*{2em}\verb=--locale|-c= $\rightarrow$\\
+\hspace*{4em}\verb=LC_COLLATE= environment variable $\rightarrow$\\
+\hspace*{6em}\verb=LANG= environment variable $\rightarrow$\\
+\hspace*{8em}\verb=LC_ALL= environment variable\\[2ex]
+
+\noindent The locale will be used with the default \verb=--collate|-C= option
+to look for a collation tailoring for that locale. It will generate an
+information warning if it finds none. This is not a problem as the vast
+majority of collation cases are covered by the basic standard UCA and many
+locales neither have nor need any special collation tailoring. The
+option \verb=--collate_options|-c= allows users to specify
+options to \verb=Unicode::Collate= which tailor the collation in various ways in
+addition to the locale tailoring which is automatically performed.
+Users should see the the documentation to the module for the various
+options, most of which the vast majority of users will never need. The
+documentation of the current version is here:\\[2ex]
+
+\noindent\url{http://search.cpan.org/~sadahiro/Unicode-Collate-0.59-withoutworldwriteables/Collate.pm}\\[2ex]
+
+\noindent The most generally useful option is to force sorting of lowercase
+before uppercase (with \verb=--collate|-C= \verb=biber= sorts upper case before lower
+as this is more common). See the examples below.
+
+\subsubsection{Examples}
+
+\biberex{biber}
+
+\noindent Call biber using all settings from the \verb=.bcf= generated from the
+*TeX run. UCA sorting is performed using the \verb=LC_COLLATE= environment
+variable for the sorting locale.
+
+
+
+\subsection{Limitations}
+\label{use:limit}
+
+Custom entry types/fields. List uniqueness etc.
+
+
+\end{document}
