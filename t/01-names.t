@@ -499,14 +499,15 @@ my $l21 = q|  \entry{L21}{book}{}
 
 |;
 
-# No sortinit as the Unicode equivalent of the latex char macro which is the
-# initial sort character is not in "latin1" (see test below)
+# sortinit is set to a diacritic-stripped fallback since the Unicode equivalent
+# of the sortinit latex character macro is not valid in the bbl encoding
 my $l22 = q|  \entry{L22}{book}{}
     \name{author}{1}{%
       {{{\v S}mith}{{\v S}.}{Someone}{S.}{}{}{}{}}%
     }
     \strng{namehash}{SS1}
     \strng{fullhash}{SS1}
+    \field{sortinit}{S}
   \endentry
 
 |;

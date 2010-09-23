@@ -328,7 +328,6 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
       $self->{errors}++;
       $logger->warn("Entry $origkey does not parse correctly: skipping");
       $self->{warnings}++;
-      $self->del_citekey($origkey);
       next;
     }
 

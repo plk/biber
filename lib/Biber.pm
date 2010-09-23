@@ -1514,6 +1514,7 @@ sub prepare {
   my $self = shift;
   foreach my $section (@{$self->sections->get_sections}) {
     my $secnum = $section->number;
+    $BIBER_SORT_FIRSTPASSDONE = 0;       # sanitise sortpass flag
     $logger->info("Processing bib section $secnum");
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
