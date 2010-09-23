@@ -325,8 +325,11 @@ sub _generatesortstring {
       my $name = charnames::viacode(ord($initd));
       $name =~ s/\s WITH \s .+ \z//xms;
       $initd = chr(charnames::vianame($name));
-      $logger->warn("The character '$init' cannot be encoded in '$bblenc'. sortinit will be set to '$initd' for entry '$citekey'") if $BIBER_SORT_FIRSTPASSDONE;
-      $self->{warnings}++;
+      # warn only on second sorting pass to avoid user confusion
+      if ($BIBER_SORT_FIRSTPASSDONE) {
+        $logger->warn("The character '$init' cannot be encoded in '$bblenc'. sortinit will be set to '$initd' for entry '$citekey'");
+        $self->{warnings}++;
+      }
       $init = $initd;
     }
   }
