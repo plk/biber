@@ -30,6 +30,7 @@ our @EXPORT = qw{
   $BIBLATEX_VERSION
   $BIBER_SORT_FINAL
   $BIBER_SORT_NULL
+  $BIBER_SORT_FIRSTPASSDONE
   %BIBER_DATAFILE_REFS
   %ALIASES
   %NUMERICALMONTH
@@ -41,8 +42,10 @@ our @EXPORT = qw{
 # passed in control file
 Readonly::Scalar our $BIBLATEX_VERSION => '0.9c';
 
+# Global flags needed for sorting
 our $BIBER_SORT_FINAL = 0;
 our $BIBER_SORT_NULL  = 0;
+our $BIBER_SORT_FIRSTPASSDONE = 0;
 
 # the name of the Biber configuration file, which should be
 # either returned by kpsewhich or located at "$HOME/.$BIBER_CONF_NAME"
@@ -53,7 +56,16 @@ Readonly::Scalar our $DISPLAYMODE_DEFAULT => 'uniform';
 ## Biber CONFIGURATION DEFAULTS
 
 # Locale - first try environment ...
-my $locale = $ENV{LANG} || $ENV{LC_ALL};
+my $locale;
+if ($ENV{LC_COLLATE}) {
+  $locale = $ENV{LC_COLLATE};
+}
+elsif ($ENV{LANG}) {
+  $locale = $ENV{LANG};
+}
+elsif ($ENV{LC_ALL}) {
+  $locale = $ENV{LC_ALL};
+}
 
 # ... if nothing, set a default
 unless ($locale) {
@@ -68,7 +80,7 @@ unless ($locale) {
 our %CONFIG_DEFAULT_BIBER = (
   validate => 0,
   cssort => 1,
-  fastsort => 1,
+  collate => 1,
   mincrossrefs =>  2,
   bibdatatype => 'bibtex',
   bibdata =>  undef,
@@ -78,9 +90,12 @@ our %CONFIG_DEFAULT_BIBER = (
   quiet => 0,
   nolog => 0,
   wraplines => 0,
+  nolatexdecode => 0,
+  bibencoding => 'UTF-8',
+  bblencoding => 'UTF-8',
   #
   # these options are passed to the Unicode::Collate object
-  collate_options => { level=>2, table=>"latinkeys.txt" },
+  collate_options => { level => 2, upper_before_lower => 1 },
   #
   # eventually this shall be moved to biblatex options:
   displaymode => $DISPLAYMODE_DEFAULT,
@@ -98,48 +113,79 @@ our %CONFIG_DEFAULT_BIBER = (
 # but we need this as a fallback, just in case,
 # or when using the command-line options "-a -d <datafile>"
 # without an aux/bcf file
-our %CONFIG_DEFAULT_BIBLATEX = (
-  controlversion => undef,
-  debug => '0',
-  terseinits => '0',
-  useprefix => '0',
-  useauthor => '1',
-  useeditor => '1',
-  usetranslator => '0',
-  labelalpha => '0',
-  labelnumber => '0',
-  singletitle => '0',
-  uniquename => '0',
-  uniquelist => '0',
-  sorting => [  [  {'presort'    => []},
-      {'mm'         => []} ],
-    [  {'sortkey'    => ['final']}  ],
-    [  {'sortname'   => []},
-      {'author'     => []},
-      {'editor'     => []},
-      {'translator' => []},
-      {'sorttitle'  => []},
-      {'title'      => []}  ],
-    [  {'sorttitle'  => []},
-      {'title'      => []}  ],
-    [  {'sortyear'   => []},
-      {'year'       => []}  ],
-    [  {'volume'     => []},
-      {'0000'       => []}  ]
-    ],
-  sortlos => '1',
-  maxitems => '3',
-  minitems => '1',
-  maxnames => '3',
-  minnames => '1',
-  alphaothers  => '+',
-  labelyear => [ 'year' ],
-  labelname => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
+our %CONFIG_DEFAULT_BIBLATEX =
+  (
+   controlversion => undef,
+   debug => '0',
+   terseinits => '0',
+   useprefix => '0',
+   useauthor => '1',
+   useeditor => '1',
+   usetranslator => '0',
+   labelalpha => '0',
+   labelnumber => '0',
+   singletitle => '0',
+   uniquename => '0',
+   uniquelist => '0',
+   sorting_label =>  [
+                [
+                 {
+                  'presort'    => {}},
+                 {
+                  'mm'         => {}},
+                ],
+                [
+                 {
+                  'sortkey'    => {'final' => 1}}
+                ],
+                [
+                 {
+                  'sortname'   => {}},
+                 {
+                  'author'     => {}},
+                 {
+                  'editor'     => {}},
+                 {
+                  'translator' => {}},
+                 {
+                  'sorttitle'  => {}},
+                 {
+                  'title'      => {}}
+                ],
+                [
+                 {
+                  'sortyear'   => {}},
+                 {
+                  'year'       => {}}
+                ],
+                [
+                 {
+                  'sorttitle'  => {}},
+                 {
+                  'title'      => {}}
+                ],
+                [
+                 {
+                  'volume'     => {}},
+                 {
+                  '0000'       => {}}
+                ]
+               ],
+   sortlos => '1',
+   maxitems => '3',
+   minitems => '1',
+   maxnames => '3',
+   minnames => '1',
+   alphaothers  => '+',
+   labelyear => [ 'year' ],
+   labelname => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
   );
+$CONFIG_DEFAULT_BIBLATEX{sorting_final} = $CONFIG_DEFAULT_BIBLATEX{sorting_label};
 
 # Set up some encoding aliases to map \inputen{c,x} encoding names to Encode
 # It seems that inputen{c,x} has a different idea of nextstep than Encode
 # so we push it to MacRoman
+define_alias( 'ansinew'        => 'cp1252'); # inputenc alias for cp1252
 define_alias( 'applemac'       => 'MacRoman');
 define_alias( 'applemacce'     => 'MacCentralEurRoman');
 define_alias( 'next'           => 'MacRoman');

@@ -10,6 +10,9 @@ use Storable qw( dclone );
 use List::AllUtils qw( :all );
 use Log::Log4perl qw(:no_extra_logdie_message);
 use POSIX qw( locale_h ); # for lc() of sorting strings
+use Encode;
+use charnames ':full';
+use Unicode::Normalize;
 
 =encoding utf-8
 
@@ -31,7 +34,6 @@ sub _getnamehash {
   my $bibentries = $section->bib;
   my $initstr = '';
   my $be = $bibentries->entry($citekey);
-  ## my $nodecodeflag = $self->_decode_or_not($citekey);
 
   if ( $names->count_elements <= Biber::Config->getblxoption('maxnames') ) {    # 1 to maxname names
     foreach my $n (@{$names->names}) {
@@ -48,6 +50,12 @@ sub _getnamehash {
       if ( $n->get_firstname ) {
         $initstr .= $n->get_firstname_it;
       }
+     # without useprefix, prefix is not first in the hash
+     if ( $n->get_prefix and not
+       Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+       $initstr .= $n->get_prefix_it;
+     }
+
     }
   }
   # > maxname names: only take initials of first getblxoption('minnames', $citekey)
@@ -66,10 +74,16 @@ sub _getnamehash {
       if ( $names->nth_element($i)->get_firstname ) {
         $initstr .= $names->nth_element($i)->get_firstname_it;
       }
+
+      # without useprefix, prefix is not first in the hash
+      if ( $names->nth_element($i)->get_prefix and not
+           Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey) ) {
+        $initstr .= $names->nth_element($i)->get_prefix_it;
+      }
       $initstr .= "+";
     }
   }
-  return normalize_string_lite($initstr);
+  return normalise_string_lite($initstr);
 }
 
 sub _getfullhash {
@@ -93,8 +107,15 @@ sub _getfullhash {
     if ( $n->get_firstname ) {
       $initstr .= $n->get_firstname_it;
     }
+
+    # without useprefix, prefix is not first in the hash
+    if ( $n->get_prefix and not
+         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+      $initstr .= $n->get_prefix_it;
+    }
+
   }
-  return normalize_string_lite($initstr);
+  return normalise_string_lite($initstr);
 }
 
 sub _getlabel {
@@ -103,7 +124,6 @@ sub _getlabel {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
-  my $dt = $be->get_field('datatype');
   my $names = $be->get_field($namefield);
   my $alphaothers = Biber::Config->getblxoption('alphaothers', $be->get_field('entrytype'));
   my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->get_field('entrytype'));
@@ -115,7 +135,7 @@ sub _getlabel {
   # This is needed in cases where alphaothers is something like
   # '\textasteriskcentered' which would mess up sorting.
 
-  my @lastnames = map { normalize_string( $_->get_lastname, $dt ) } @{$names->names};
+  my @lastnames = map { normalise_string($_->get_lastname) } @{$names->names};
   my @prefices  = map { $_->get_prefix } @{$names->names};
   my $numnames  = $names->count_elements;
 
@@ -124,7 +144,7 @@ sub _getlabel {
   my $nametrunc;
   my $loopnames;
 
-# loopnames is the number of names to loop over in the name list when constructing the label
+  # loopnames is the number of names to loop over in the name list when constructing the label
   if ($morenames or ($numnames > $maxnames)) {
     $nametrunc = 1;
     $loopnames = $minnames; # Only look at $minnames names if we are truncating ...
@@ -132,16 +152,16 @@ sub _getlabel {
     $loopnames = $numnames; # ... otherwise look at all names
   }
 
-# Now loop over the name list, grabbing a substring of each surname
-# The substring length depends on whether we are using prefices and also whether
-# we have truncated to one name:
-#   1. If there is only one name
-#      1. label string is first 3 chars of surname if there is no prefix
-#      2. label string is first char of prefix plus first 2 chars of surname if there is a prefix
-#   2. If there is more than one name
-#      1.  label string is first char of each surname (up to minnames) if there is no prefix
-#      2.  label string is first char of prefix plus first char of each surname (up to minnames)
-#          if there is a prefix
+  # Now loop over the name list, grabbing a substring of each surname
+  # The substring length depends on whether we are using prefices and also whether
+  # we have truncated to one name:
+  #   1. If there is only one name
+  #      1. label string is first 3 chars of surname if there is no prefix
+  #      2. label string is first char of prefix plus first 2 chars of surname if there is a prefix
+  #   2. If there is more than one name
+  #      1.  label string is first char of each surname (up to minnames) if there is no prefix
+  #      2.  label string is first char of prefix plus first char of each surname (up to minnames)
+  #          if there is a prefix
   for (my $i=0; $i<$loopnames; $i++) {
     $label .= substr($prefices[$i] , 0, 1) if ($useprefix and $prefices[$i]);
     $label .= substr($lastnames[$i], 0, $loopnames == 1 ? (($useprefix and $prefices[$i]) ? 2 : 3) : 1);
@@ -175,7 +195,6 @@ our $dispatch_sorting = {
   'author'        =>  [\&_sort_author,        []],
   'citeorder'     =>  [\&_sort_citeorder,     []],
   'day'           =>  [\&_sort_dm,            ['day']],
-  'debug'         =>  [\&_sort_debug,         []],
   'editor'        =>  [\&_sort_editor,        ['editor']],
   'editora'       =>  [\&_sort_editor,        ['editora']],
   'editoraclass'  =>  [\&_sort_editortc,      ['editoraclass']],
@@ -189,6 +208,7 @@ our $dispatch_sorting = {
   'endday'        =>  [\&_sort_dm,            ['endday']],
   'endmonth'      =>  [\&_sort_dm,            ['endmonth']],
   'endyear'       =>  [\&_sort_year,          ['endyear']],
+  'entrykey'      =>  [\&_sort_entrykey,      []],
   'eventday'      =>  [\&_sort_dm,            ['eventday']],
   'eventendday'   =>  [\&_sort_dm,            ['eventendday']],
   'eventendmonth' =>  [\&_sort_dm,            ['eventendmonth']],
@@ -292,7 +312,26 @@ sub _generatesortstring {
   }
   # Strip off the prefix
   $ss =~ s/\A$pre//;
-  $be->set_field('sortinit', substr $ss, 0, 1);
+  my $init = substr $ss, 0, 1;
+
+  # Now check if this sortinit is valid in the bblencoding. If not, warn
+  # and replace with a suitable value
+  my $bblenc = Biber::Config->getoption('bblencoding');
+  if ($bblenc ne 'UTF-8') {
+    # Can this init be represented in the BBL encoding?
+    if (encode($bblenc, $init) eq '?') { # Malformed data encoding char
+      my $initd = NFKD($init);
+      $initd =~ s/\p{NonspacingMark}//gxms;
+      my $name = charnames::viacode(ord($initd));
+      $name =~ s/\s WITH \s .+ \z//xms;
+      $initd = chr(charnames::vianame($name));
+      $logger->warn("The character '$init' cannot be encoded in '$bblenc'. sortinit will be set to '$initd' for entry '$citekey'") if $BIBER_SORT_FIRSTPASSDONE;
+      $self->{warnings}++;
+      $init = $initd;
+    }
+  }
+
+  $be->set_field('sortinit', $init);
   return;
 }
 
@@ -348,13 +387,6 @@ sub _sort_citeorder {
   # Pad the numbers so that they sort with "cmp" properly. Assume here max of
   # a million bib entries. Probably enough ...
   return sprintf('%.7d', (first_index {$_ eq $citekey} $section->get_orig_order_citekeys) + 1);
-}
-
-sub _sort_debug {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  return $citekey;
 }
 
 # This is a meta-sub which uses the optional arguments to the dispatch code
@@ -426,6 +458,14 @@ sub _sort_editortc {
   }
 }
 
+# debug sorting
+sub _sort_entrykey {
+  my ($self, $citekey, $sortelementattributes) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  return $citekey;
+}
+
 sub _sort_extraalpha {
   my ($self, $citekey, $sortelementattributes) = @_;
   my $secnum = $self->get_current_section;
@@ -459,7 +499,7 @@ sub _sort_issuetitle {
   my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('issuetitle')) {
-    return normalize_string( $be->get_field('issuetitle'), $self->_nodecode($citekey) );
+    return normalise_string_sort($be->get_field('issuetitle'));
   }
   else {
     return '';
@@ -473,7 +513,7 @@ sub _sort_journal {
   my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('journal')) {
-    return normalize_string( $be->get_field('journal'), $self->_nodecode($citekey) );
+    return normalise_string_sort($be->get_field('journal'));
   }
   else {
     return '';
@@ -554,15 +594,7 @@ sub _sort_sortkey {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
-  if ($be->get_field('sortkey')) {
-    my $sortkey = $be->get_field('sortkey');
-    $sortkey = LaTeX::Decode::latex_decode($sortkey, strip_outer_braces=>1)
-      unless $self->_nodecode($citekey);
-    return $sortkey;
-  }
-  else {
-    return '';
-  }
+  return $be->get_field('sortkey') ? $be->get_field('sortkey') : '';
 }
 
 sub _sort_sortname {
@@ -595,7 +627,7 @@ sub _sort_title {
   my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field($ttype)) {
-    return normalize_string( $be->get_field($ttype), $self->_nodecode($citekey));
+    return normalise_string_sort($be->get_field($ttype));
   }
   else {
     return '';
@@ -681,17 +713,6 @@ sub _sort_year {
 # Utility subs used elsewhere but relying on sorting code
 #========================================================
 
-sub _nodecode {
-  my ($self, $citekey) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  my $no_decode = ((Biber::Config->getoption('bibencoding') and Biber::Config->getoption('bibencoding') eq 'UTF-8') or
-      Biber::Config->getoption('fastsort') or
-      $be->get_field('datatype') eq 'xml');
-  return $no_decode;
-}
-
 # This is used for two things - to generate sorting strings and to
 # index name/year combinations for extrayear and extraalpha
 sub _namestring {
@@ -734,8 +755,9 @@ sub _namestring {
   my $prefix_opt = Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey);
 
   foreach my $n ( @{$truncnames->names} ) {
-    # Append prefix, if requested
-    if ($n->get_prefix and $prefix_opt) {
+    # If useprefix is true, use prefix at start of name for sorting
+    if ( $n->get_prefix and
+         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
       $str .= $n->get_prefix . '2';
     }
     # Append last name
@@ -760,14 +782,21 @@ sub _namestring {
       $str .= strip_nosort($n->get_firstname) . '2' if $n->get_firstname;
     }
     # Append suffix
-    $str .= $n->get_suffix if $n->get_suffix;
+    $str .= $n->get_suffix . '2' if $n->get_suffix;
+
+    # If useprefix is false, use prefix at end of name
+    if ( $n->get_prefix and not
+         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+      $str .= $n->get_prefix . '2';
+    }
+
     $str =~ s/2\z//xms;
     $str .= '1';
   }
 
   $str =~ s/\s+1/1/gxms;
   $str =~ s/1\z//xms;
-  $str = normalize_string($str, $self->_nodecode($citekey));
+  $str = normalise_string_sort($str);
   $str .= '1zzzz' if $truncated;
   return $str;
 }
@@ -794,7 +823,7 @@ sub _liststring {
 
   $str =~ s/\s+1/1/gxms;
   $str =~ s/1\z//xms;
-  $str = normalize_string($str, $self->_nodecode($citekey));
+  $str = normalise_string_sort($str);
   $str .= '1zzzz' if $truncated;
   return $str;
 }

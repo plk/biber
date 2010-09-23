@@ -1,20 +1,6 @@
 use strict;
 use warnings;
 use utf8;
-my $Bundled_MB = 0.3603;
-
-# Find out what version of Module::Build is installed or fail quietly.
-# This should be cross-platform.
-my $Installed_MB =
-    `$^X -e "eval q{require Module::Build; print Module::Build->VERSION} or exit 1"`;
-
-# some operating systems put a newline at the end of every print.
-chomp $Installed_MB;
-
-$Installed_MB = 0 if $?;
-
-# Use our bundled copy of Module::Build if it's newer than the installed.
-unshift @INC, "inc/Module-Build/lib/perl5" if $Bundled_MB > $Installed_MB;
 
 require Module::Build;
 my $class = Module::Build->subclass
@@ -44,20 +30,22 @@ my $builder = $class->new(
     requires => {
         'Config::General' => 0,
         'Data::Dump' => 0,
-        'File::Slurp'  => 0,
+        'File::Slurp::Unicode'  => 0,
         'IPC::Cmd' => 0,
+        'IPC::Run' => 0,
         'LaTeX::Decode' => '0.03',
         'List::AllUtils' => 0,
         'Regexp::Common' => 0,
         'Log::Log4perl' => 0,
         'Readonly' => 0,
         'Text::BibTeX' => '0.42',
+        'Unicode::Collate' => '0.55',
         'XML::LibXML::Simple' => 0,
-        'perl' => '5.8.8'
+        'Text::BibTeX' => '0.47',
+        'perl' => '5.10.0'
     },
     recommends => {
-        'Readonly::XS' => 0,
-        'Text::BibTeX' => '0.46'
+        'Readonly::XS' => 0
     },
     script_files => [ glob( "bin/*" ) ],
     data_files => { 'data/schemata/bcf.xsd' => 'lib/Biber/bcf.xsd',

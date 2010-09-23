@@ -27,11 +27,12 @@ sub new {
   my $class = shift;
   my $self = $class->SUPER::new($obj);
   my $ctrlver = Biber::Config->getblxoption('controlversion');
+  my $beta = $Biber::BETA_VERSION ? '(beta)' : '';
 
   my $BBLHEAD = <<EOF;
 % \$ biblatex auxiliary file \$
 % \$ biblatex version $ctrlver \$
-% \$ biber version $Biber::VERSION \$
+% \$ biber version $Biber::VERSION $beta\$
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -67,8 +68,8 @@ sub set_output_target_file {
   my $bblfile = shift;
   $self->{output_target_file} = $bblfile;
   my $enc_out;
-  if (Biber::Config->getoption('inputenc')) {
-    $enc_out = ':encoding(' . Biber::Config->getoption('inputenc') . ')';
+  if (Biber::Config->getoption('bblencoding')) {
+    $enc_out = ':encoding(' . Biber::Config->getoption('bblencoding') . ')';
   }
   my $BBLFILE = IO::File->new($bblfile, ">$enc_out") or $logger->croak("Failed to open $bblfile : $!");
   $self->set_output_target($BBLFILE);
@@ -209,7 +210,11 @@ sub set_output_entry {
       $acc .= "    \\field{labelalpha}{$label}\n";
     }
   }
-  $acc .= "    \\field{sortinit}{" . $be->get_field('sortinit') . "}\n";
+
+  # Skip sortinit if it's undefined from being skipped due to encoding issues
+  if ($be->field_exists('sortinit')) {
+    $acc .= "    \\field{sortinit}{" . $be->get_field('sortinit') . "}\n";
+  }
 
   # The labelyear option determines whether "extrayear" is output
   # Skip generating extrayear for entries with "skiplab" set
@@ -402,7 +407,7 @@ sub output {
 
   $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
 
-  $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('inputenc') . "'");
+  $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('bblencoding') . "'");
 
   print $target $data->{HEAD} or $logger->logcroak("Failure to write head to $target_string: $!");
 

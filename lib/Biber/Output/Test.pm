@@ -82,6 +82,27 @@ sub set_output_entry {
     }
   }
 
+  if (my $lnf = $be->get_field('labelname')) {
+
+    # Output a copy of the labelname information to avoid having to do real coding in biblatex
+    # Otherwise, you'd have to search to find the labelname name information using TeX and that
+    # isn't nice.
+    my $total = $lnf->count_elements;
+    my @plo; # per-list options
+
+    # Add uniquelist, if defined
+    if (defined($lnf->get_uniquelist)){
+      push @plo, 'uniquelist=' . $lnf->get_uniquelist;
+    }
+
+    my $plo =join(',', @plo);
+    $acc .= "    \\name{labelname}{$total}{$plo}{%\n";
+    foreach my $ln (@{$lnf->names}) {
+      $acc .= $ln->name_to_bbl('labelname_special');
+    }
+    $acc .= "    }\n";
+  }
+
   foreach my $namefield (@NAMEFIELDS) {
     next if $SKIPFIELDS{$namefield};
     if ( my $nf = $be->get_field($namefield) ) {
@@ -90,7 +111,7 @@ sub set_output_entry {
         $nf->del_last_element;
       }
       my $total = $nf->count_elements;
-      $acc .= "    \\name{$namefield}{$total}{%\n";
+      $acc .= "    \\name{$namefield}{$total}{}{%\n";
       foreach my $n (@{$nf->names}) {
         $acc .= $n->name_to_bbl;
       }
@@ -291,7 +312,7 @@ sub output {
   my $data = $self->{output_data};
   my $target = $self->{output_target};
 
-  $logger->info("Writing output with encoding '" . Biber::Config->getoption('inputenc') . "'");
+  $logger->info("Writing output with encoding '" . Biber::Config->getoption('bblencoding') . "'");
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     foreach my $entry (@{$data->{ENTRIES}{$secnum}{strings}}) {

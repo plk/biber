@@ -1,0 +1,82 @@
+The binary distributions of biber are made using the perl PAR::Packer "pp"
+utility. They can be used as a normal binary but have some behaviour which
+is worth noting:
+
+* Don't be worried by the size of the binaries. PAR::Packer essentially
+  constructs a self-extracting archive which unpacks the needed files first
+  and so the binaries look larger than what actually runs in memory.
+* On the first run of a new version (that is, with a specific checksum),
+  they actually unpack themselves to a temporary location. This varies by
+  operating system but is usually something like /var/tmp or /tmp on
+  UNIX-based OSes and C:\Documents and Settings\<username>\Local
+  Settings\Temp on Windows. This unpacking can take a little while and only
+  happens on the first run of a new version.
+* The initial unpacking (first run) can give odd warnings/errors about
+  permissions which can be ignored. Simply run biber once to unpack it and
+  after the first run, you will see no warnings/errors and startup time
+  will dramatically improve.
+* This is a command-line program, as biber always was and so you run it
+  from the command-line just as you do with the perl-based biber.
+
+Distributions
+-------------
+linux_x86_32     - Linux x86 32-bit (built on Ubuntu 10.04)
+linux_x86_64     - Linux x86 64-bit (built on Ubuntu 10.04)
+MSWin            - Windows. Should work on 32 or 64 bit (built on XP)
+darwin_x86_64    - OSX Intel 64-bit (built on OSX 10.6)
+
+
+Installing
+-----------
+Download the binary appropriate to you OS/arch. Below I assume it's on your desktop.
+Rename the binary to just "biber" ("biber.exe" on Windows).
+
+You have to move the binary to somewhere in you command-line or TeX utility
+path so that it can be found. If you know how to do this, just ignore the
+rest of this document which contains some instructions for users who are
+not sure about this. In the future, we will integrate this binary into the
+TeXLive distribution and so it will be available by default when installing TeXLive.
+
+OSX
+---
+If you are using the TexLive MacTeX distribution:
+
+sudo mv ~/Desktop/biber /usr/texbin/
+sudo chmod +x /usr/texbin/biber
+
+If you are using the macports TexLive distribution:
+
+sudo mv ~/Desktop/biber /opt/local/bin/
+sudo chmod +x /opt/local/bin/biber
+
+The "sudo" commands will prompt you for your password.
+
+Windows
+-------
+The easiest way is to just move the executable into your C:\Windows directory since
+that is always in your path.
+
+A more elegant solution if you are using Strawberry perl, assumed below to
+be in C:\strawberry, move the biber executable into C:\strawberry\perl\site\bin\biber
+
+You may have to create the folder C:\strawberry\perl\site\bin if it does
+not exist. You should also add C:\strawberry\perl\site\bin to your PATH if
+it is not already in there. If you don't know how to set the PATH
+environment variable, search Google for "set PATH Windows" - there are many
+pages about this. Here's one that describes Windows 7 but it's the same for
+XP, 2000 and Vista:
+
+http://geekswithblogs.net/renso/archive/2009/10/21/how-to-set-the-windows-path-in-windows-7.aspx
+
+
+Unix/Linux
+----------
+sudo mv ~/Desktop/biber /usr/local/bin/biber
+sudo chmod +x /usr/local/bin/biber
+
+Make sure /usr/local/bin is in your PATH. Search Google for "set PATH
+linux" if unsure about this. There are many pages about this, for example:
+
+http://www.cyberciti.biz/faq/unix-linux-adding-path/
+
+

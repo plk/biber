@@ -24,26 +24,17 @@ Biber::Utils - Various utility subs used in Biber
 
 =cut
 
-=head1 VERSION
-
-Version 0.4
-
-=head1 SYNOPSIS
-
 =head1 EXPORT
 
 All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ bibfind terseinitials makenameid stringify_hash
-  normalize_string normalize_string_lite normalize_string_underscore latexescape reduce_array
-  remove_outer add_outer getinitials ucinit strip_nosort strip_nosortdiacritics
-  strip_nosortprefix is_def is_undef is_def_and_notnull is_def_and_null is_undef_or_null
-  is_notnull is_name_field is_null};
-
-
-######
+our @EXPORT = qw{ bibfind makenameid stringify_hash
+  normalise_string normalise_string_lite normalise_string_underscore normalise_string_sort
+  latexescape reduce_array remove_outer add_outer ucinit strip_nosort
+  strip_nosortdiacritics strip_nosortprefix is_def is_undef is_def_and_notnull is_def_and_null
+  is_undef_or_null is_notnull is_name_field is_null normalise_utf8};
 
 =head1 FUNCTIONS
 
@@ -115,7 +106,7 @@ sub makenameid {
     push @namestrings, $name->get_namestring;
   }
   my $tmp = join ' ', @namestrings;
-  return normalize_string_underscore($tmp, 1);
+  return normalise_string_underscore($tmp);
 }
 
 =head2 strip_nosort
@@ -160,35 +151,78 @@ sub strip_nosortprefix {
   return $string;
 }
 
-=head2 normalize_string
+=head2 normalise_string_sort
 
 Removes LaTeX macros, and all punctuation, symbols, separators and control characters,
-as well as leading and trailing whitespace.
+as well as leading and trailing whitespace for sorting strings.
+It also decodes LaTeX character macros into Unicode as this is always safe when
+normalising strings for sorting since they don't appear in the output.
 
 =cut
 
-sub normalize_string {
-  my ($str, $no_decode) = @_;
+sub normalise_string_sort {
+  my $str = shift;
   return '' unless $str; # Sanitise missing data
   # First replace ties with spaces or they will be lost
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
-  $str = latex_decode($str, strip_outer_braces=>1) unless $no_decode;
+  # Replace LaTeX chars by Unicode for sorting
+  # Don't bother if output is UTF-8 as in this case, we've already decoded everthing
+  # before we read the file (see Biber.pm)
+  unless (Biber::Config->getoption('nolatexdecode')) {
+    unless (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
+      $str = latex_decode($str, strip_outer_braces => 1);
+    }
+  }
+  return normalise_string_common($str);
+}
+
+=head2 normalise_string
+
+Removes LaTeX macros, and all punctuation, symbols, separators and control characters,
+as well as leading and trailing whitespace for sorting strings.
+Only decodes LaTeX character macros into Unicode if output is UTF-8
+
+=cut
+
+sub normalise_string {
+  my $str = shift;
+  return '' unless $str; # Sanitise missing data
+  # First replace ties with spaces or they will be lost
+  $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
+  unless (Biber::Config->getoption('nolatexdecode')) {
+    if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
+      $str = latex_decode($str, strip_outer_braces => 1);
+    }
+  }
+  return normalise_string_common($str);
+}
+
+=head2 normalise_string_common
+
+  Common bit for normalisation
+
+=cut
+
+sub normalise_string_common {
+  my $str = shift;
   $str = strip_nosort($str); # strip nosort elements
+#  $str =~ s/\\\p{L}+\s*//g; # remove tex macros
+#  $str =~ s/\\[^\p{L}]+\s*//g; # remove accent macros like \"a
   $str =~ s/\\[A-Za-z]+//g; # remove latex macros (assuming they have only ASCII letters)
-  $str =~ s/[\p{P}\p{S}\p{C}]+//g; ### remove punctuation, symbols, separator and control
+  $str =~ s/[\p{P}\p{S}\p{C}]+//g; # remove punctuation, symbols, separator and control
   $str =~ s/^\s+//;
   $str =~ s/\s+$//;
   $str =~ s/\s+/ /g;
   return $str;
 }
 
-=head2 normalize_string_lite
+=head2 normalise_string_lite
 
   Removes LaTeX macros
 
 =cut
 
-sub normalize_string_lite {
+sub normalise_string_lite {
   my $str = shift;
   return '' unless $str; # Sanitise missing data
   # First replace ties with spaces or they will be lost
@@ -201,17 +235,17 @@ sub normalize_string_lite {
   return $str;
 }
 
-=head2 normalize_string_underscore
+=head2 normalise_string_underscore
 
-Like normalize_string, but also substitutes ~ and whitespace with underscore.
+Like normalise_string, but also substitutes ~ and whitespace with underscore.
 
 =cut
 
-sub normalize_string_underscore {
-  my ($str, $no_decode) = @_;
+sub normalise_string_underscore {
+  my $str = shift;
   return '' unless $str; # Sanitise missing data
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
-  $str = normalize_string($str, $no_decode);
+  $str = normalise_string($str);
   $str =~ s/\s+/_/g;
   return $str;
 }
@@ -252,27 +286,6 @@ sub latexescape {
   $logger->warn("Found unbalanced escape sequence in braces for string \"$str\"");
  }
  return $rstr;
-}
-
-=head2 terseinitials
-
-   terseinitials($str) returns the terse format initials of the raw initials list
-   passed in $str. It tries to emulate the btparse terse format for initials.
-
-   terseinitials('L.~P.~D.) => 'LPD'
-   terseinitials('{\v S}~P.~D.) => '{\v S}PD'
-   terseinitials('J.-M.) => 'JM'
-
-=cut
-
-sub terseinitials {
-  my $str = shift;
-  return '' unless $str; # Sanitise missing data
-  $str =~ s/~//g;
-  $str =~ s/\.\s/./g; # initials lists can have spaces instead of ties so collapse them ...
-  $str =~ s/\.//g;    # ... then remove the remainder
-  $str =~ s/-//g;
-  return $str;
 }
 
 =head2 reduce_array
@@ -319,141 +332,6 @@ sub add_outer {
   return '{' . $str . '}';
 }
 
-=head2 getinitials
-
-    Returns the initials of a name, preserving LaTeX code.
-    This has to be a token parser as we need to take account of
-    brace groupings:
-
-    e.g. getting firstname initials:
-
-    "{John Henry} Ford" -> "J."
-    "John Henry Ford" -> "J.H."
-
-=cut
-
-sub getinitials {
-  my $str = shift;
-  my @rstr;
-  return '' unless $str; # Sanitise missing data
-  while (my $atom = get_atom(\$str)) {
-    # We have to look inside braces to see what we have
-    # Just normal protected names:
-    # hyphens in names are special atoms
-    if ($atom =~ m/\A-\z/xms) {
-      push @rstr, '-';
-    }
-    # Initials - P. or {P.\,G.}
-    elsif ($atom =~ m/\A{?(\p{L}+)?\./xms) {
-      push @rstr, substr($1, 0, 1);
-    }
-    # John
-    elsif ($atom =~ m/\A\p{L}+\z/xms) {
-      push @rstr, substr($atom, 0, 1);
-    }
-    # {John Henry} or {American Automobile Association, Canada}
-    elsif ($atom =~ m/\A{([^\\\{\}]+)}\z/xms) {
-      push @rstr, substr($1, 0, 1);
-    }
-    # {\OE}illet
-    elsif ($atom =~ m/\A({\\\p{L}+}).+\z/xms) {
-      push @rstr, $1;
-    }
-    # {\v S}omeone or {\v Someone}
-    elsif ($atom =~ m/\A({\\\S+\s+\p{L}+}).+\z/xms) {
-      push @rstr, $1;
-    }
-    # {\v{S}}omeone
-    elsif ($atom =~ m/\A({\\\S+{\p{L}}}).+\z/xms) {
-      push @rstr, $1;
-    }
-    # \v{S}omeone
-    elsif ($atom =~ m/\A(\\\S+{\p{L}}).+\z/xms) {
-      push @rstr, $1;
-    }
-    # {\"O}zt{\"u}rk
-    elsif ($atom =~ m/\A({\\[^\p{L}]\p{L}}).+\z/xms) {
-      push @rstr, $1;
-    }
-    # Default
-    else {
-      push @rstr, substr($atom, 0, 1);
-    }
-  }
-
-  # Use BibTeX's algorithm for inserting ties.
-  my $retstring;
-  for (my $i = 0; $i <= $#rstr; $i++) {
-    if ($rstr[$i] eq '-') {
-      $retstring =~ s/~\z//xms;
-      $retstring =~ s/\s\z//xms;
-      $retstring .= $rstr[$i];
-    }
-    elsif ($i == 0 or $i == $#rstr - 1) {
-      $retstring .= $rstr[$i] . '.~';
-    }
-    else {
-      $retstring .= $rstr[$i] . '. ';
-    }
-  }
-  # remove trailing nbsp or space
-  $retstring =~ s/~\z//xms;
-  $retstring =~ s/\s\z//xms;
-  return $retstring;
-}
-
-=head2 get_atom
-
-     Pull an "atom" from a name list. An "atom" is the first chunk
-     of a name that will have a separate initial created for it.
-     This has to be a token parser with a "brace level 0" concept
-     It cannot be done with regexps due to BibTeX's parsing semantics
-     which we are emulating.
-
-=cut
-
-sub get_atom {
-  my $str = shift;
-  unless ($$str) {
-    return undef;
-  }
-  # strip nosort elements as they shouldn't be initials either
-  $$str = strip_nosort($$str);
-  my $bl = 0;
-  my $atom;
-  for (my $i=0;$i<length($$str);$i++) {
-    my $prea = substr($$str,$i-1,1);
-    my $a = substr($$str,$i,1);
-    if ($a =~ m/[\s~]/ and $bl == 0)  {
-      $$str = substr($$str, $i+1);
-      return $atom;
-    }
-    elsif ($a eq '{' and $prea ne "\\") {
-      $bl++;
-    }
-    # Hyphens are special atoms at brace level zero
-    elsif ($a eq '-' and $bl == 0) {
-      # If the hyphen is at the beginning of the string, return it as an atom
-      # Since we left it there to be so consumed
-      if ($i == 0) {
-        $$str = substr($$str, $i+1);
-        return '-';
-      }
-      # Leave the hyphen on the string so it can be consumed as a separate atom
-      # and return the current token
-      else {
-        $$str = substr($$str, $i);
-        return $atom;
-      }
-    }
-    elsif ($a eq '}') {
-      $bl--;
-    }
-    $atom .= $a;
-  }
-  $$str = '';
-  return $atom;
-}
 
 =head2 ucinit
 
@@ -653,6 +531,24 @@ sub stringify_hash {
   chop $string;
   chop $string;
   return $string;
+}
+
+=head2 normalise_utf8
+
+  Normalise any UTF-8 encoding string immediately to exactly what we want
+  We want the strict perl utf8 "UTF-8"
+
+=cut
+
+sub normalise_utf8 {
+  if (defined(Biber::Config->getoption('bibencoding')) and
+      Biber::Config->getoption('bibencoding') =~ m/\Autf-?8\z/xmsi) {
+    Biber::Config->setoption('bibencoding', 'UTF-8');
+  }
+  if (defined(Biber::Config->getoption('bblencoding')) and
+      Biber::Config->getoption('bblencoding') =~ m/\Autf-?8\z/xmsi) {
+    Biber::Config->setoption('bblencoding', 'UTF-8');
+  }
 }
 
 =head1 AUTHOR

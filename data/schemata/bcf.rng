@@ -26,7 +26,7 @@
             <ref name="displaymode"/>
           </optional>
           <optional>
-            <ref name="inputenc"/>
+            <ref name="bblencoding"/>
           </optional>
           <optional>
             <ref name="locale"/>
@@ -613,13 +613,13 @@
       </element>
     </element>
   </define>
-  <define name="inputenc">
+  <define name="bblencoding">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>inputenc</value>
+        <value>bblencoding</value>
       </element>
       <element name="bcf:value">
         <data type="NCName"/>

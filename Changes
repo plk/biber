@@ -1,4 +1,15 @@
 Revision history for Biber
+0.5.6  unreleased beta build
+       * Latex character macro decoding is now better defined in the whole
+         (re)encoding workflow.
+       * "inputenc" option is now "bblencoding"
+       * Unicode::Collate sorting is now default as version 0.59 of this
+         has XS module and CLDR tailoring.
+       * Added binary dist build scripts
+       * Removed bundled Module::Build as there are some conflicts with
+         later versions. This is less of a problem anyway because the
+         binary build make it less necessary to make builds easy on perl<5.10
+       * Misc bug fixes
 0.5.5   29-08-2010
        * Biber::BibTeX moved to Biber::Input::BibTeX. If upgrading, please remove
          your installed <perl lib>/Biber/BibTeX.pm, just to be tidy
@@ -23,7 +34,6 @@ Revision history for Biber
          in .bcf file.
        * Misc bug fixes
        * LaTeX::Decode is now a separate CPAN module and is no longer included
-
 0.5.3  19-03-2010
        * Changed semantics of --outfile and --output-directory. --outfile
          is now relative to --output-directory. If --outfile is absolute, it

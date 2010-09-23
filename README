@@ -1,15 +1,18 @@
 ==========================
 
-    BIBER Version 0.5.5
+    BIBER Version 0.5.6beta
 
 ==========================
 
 Biber is a BibTeX replacement for users of biblatex, with full Unicode
-support.  This release coincides with the release of biblatex 0.9b.
+support.  This release coincides with the release of biblatex 0.9d.
 
 REQUIREMENTS
 
-  Biber is written in Perl. Version 5.8.x or higher is recommended. Be aware
+  These requirements only apply if you are installing the perl version.
+  We also provide PAR::Packer generated binaries for many current OSes.
+
+  Biber is written in Perl. Version 5.10 or higher is recommended. Be aware
   that if your version of Perl is older than that, Biber may work, but we
   won't be offering support. We strongly recommend version 5.10 or higher.
 
@@ -17,16 +20,15 @@ REQUIREMENTS
   should be automatically installed during the install process described
   below.
 
-    * IPC::Cmd (included in Perl 5.9.5 or higher)
+    * Unicode::Collate 0.59 or higher
+    * IPC::Cmd and IPC::Run (included in Perl 5.9.5 or higher)
+    * File::Slurp::Unicode
     * Readonly (but Readonly::XS is highly recommended for performance reasons)
     * LaTeX::Decode (no longer bundled with Biber as it's on CPAN)
     * List::AllUtils (a wrapper for List::Util and List::MoreUtils)
     * Log::Log4perl
     * XML::LibXML::Simple (XML::LibXML clone of XML::Simple)
-    * File::Slurp (for latex2utf8 or if converting bib files to UTF-8 with biber).
-    * Text::BibTeX (strongly recommended) OR
-      Parse::RecDescent AND Regexp::Common. Text::BibTeX requires
-      Config::AutoConf when installing - please install this first. 
+    * Text::BibTeX (requires Config::AutoConf when installing - please install this first.)
 
 INSTALLATION
 

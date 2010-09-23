@@ -26,9 +26,9 @@ GetOptions(
            'collate_options|c=s',
            'mincrossrefs|m=s',
            'u',                   # alias for bibencoding=UTF-8
-           'U',                   # alias for inputenc=UTF-8
+           'U',                   # alias for bblencoding=UTF-8
            'bibencoding|e=s',
-           'inputenc|E=s',
+           'bblencoding|E=s',
            'nolatexdecode|n',
            'bibdata|d=s',
            'bibdatatype=s',       # not exposed in usage output currently
@@ -51,12 +51,13 @@ GetOptions(
 #--------------------------------------------------
 
 our $VERSION = $Biber::VERSION;
+our $BETA_VERSION = $Biber::BETA_VERSION;
 
 die usage() if exists $opts->{'help'};
 
 die version() if exists $opts->{'version'};
 
-die usage() unless @ARGV;
+die usage() unless @ARGV or $opts->{'allentries'};
 
 #--------------------------------------------------
 
@@ -66,8 +67,9 @@ if ($opts->{bibdata}) {
   $opts->{bibdata} = [ split /\s*,\s*/, $opts->{bibdata} ]
 }
 
-if ($opts->{collate}) {
-  $opts->{fastsort} = 0
+# Sanitise collate option if fasssort if specified
+if ($opts->{fastsort}) {
+  delete $opts->{collate};
 }
 
 # Resolve shortcut aliases for UTF-8ness
@@ -76,7 +78,7 @@ if ($opts->{u}) {
   delete $opts->{u};
 }
 if ($opts->{U}) {
-  $opts->{inputenc} = 'UTF-8';
+  $opts->{bblencoding} = 'UTF-8';
   delete $opts->{U};
 }
 
@@ -160,8 +162,21 @@ if (Biber::Config->getoption('debug')) {
 }
 
 if ( $opts->{allentries} and $opts->{bibdata} ) {
+  # Special case as we have no .bcf to parse.
+  # Use .bcf defaults from Constants.pm plus any cmd line args and constructs our
+  # sections object here
   $bblfile = $opts->{bibdata}[0];
   $bblfile =~ s/(?:\.(bib|xml|dbxml))?$/\.bbl/;
+
+  my $bib_sections = new Biber::Sections;
+  my $bib_section = new Biber::Section('number' => 0); # Only one section in "allentries"
+  $bib_section->set_datafiles($opts->{bibdata});
+  $logger->info("Using all citekeys in files " . join(',', @{$opts->{bibdata}}));
+  $bib_sections->add_section($bib_section);
+  $biber->{sections} = $bib_sections;
+
+  # We want the strict perl utf8 "UTF-8"
+  normalise_utf8();
 }
 else {
   $ctrlfile = $ARGV[0] or croak usage();
@@ -246,78 +261,130 @@ unless (Biber::Config->getoption('quiet')) {
 #======================================================
 
 sub version {
-  qq{
-biber version: $VERSION
-      \n}
+  my $v = "biber version: $VERSION";
+  $v .= ' (beta)' if $BETA_VERSION;
+  return "$v\n";
 }
 
 sub usage {
   qq{
 Usage:  biber file.bcf
-        Creates file.bbl
+        Creates file.bbl using control file file.bcf (.bcf extension is optional)
 
         biber -d foo.bib file.bcf
         Creates file.bbl from entries in foo.bib and the datafiles
         listed in file.bcf
 
         biber -d foo.bib,bar.bib -a
-        Creates foo.bbl from all entries in foo.bib and bar.bib
+        Creates foo.bbl from all entries in foo.bib and bar.bib. No .bcf used
 
 Options:
-  --help|-h              Show this help message.
-  --version|-v           Display version number.
-  --mincrossrefs|-m <n>  Set threshold for crossrefs.
-  --fastsort|-f          Use Perl’s sort instead of Unicode::Collate for sorting (TRUE).
-  --locale|-l [locale]   Set the locale to be used for sorting. With built-in sorting
-                         (i.e. --collate is not set), this sets the OS locale for sorting. With
-                         Unicode::Collate (--collate flag), the locale is used to add CLDR
-                         tailoring to the sort if you have a CLDR-enabled
-                         version of Unicode::Collate otherwise there is no special tailoring.
-  --cssort               Use case-sensitive sorting. Case insensitive is the default.
-  --collate|-C           Sort with Unicode::Collate instead of the built-in sort function.
+  --help|-h
+      Show this help message.
+
+  --version|-v
+      Display version number.
+
+  --mincrossrefs|-m <n>
+      Set threshold for crossrefs.
+
+  --fastsort|-f
+      Use Perl’s sort instead of Unicode::Collate for sorting. Also uses
+      OS locale definitions (which may be broken for some languages ...)
+
+  --locale|-l [locale]
+      Set the locale to be used for sorting. With built-in sorting
+      (i.e. --collate is not set), this sets the OS locale for sorting. With
+      Unicode::Collate (--collate flag), the locale is used to add CLDR
+      tailoring to the sort (if available for the locale)
+
+  --cssort
+      Use case-sensitive sorting. Case insensitive is the default.
+
+  --collate|-C
+      Sort with Unicode::Collate instead of the built-in sort function.
+      This is the default.
+
   --collate_options|-c [options]
-                         Options to pass to the Unicode::Collate object used for sorting
-                         (default is 'level => "2", table => "latinkeys.txt"').
-                         See "perldoc Unicode::Collate" for details.
-  --bibdata|-d <files>   Use <files> as bibliography databases (comma separated list).
-  --outfile|-O <file>    Output to <file> instead of <basename>.bbl
-                         <file> is relative to --output-directory, if set (absolute
-                         paths in this case are stripped to filename only). <file> can
-                         be absolute if --output-directory is not set.
-  --output-directory <d> Files (.bbl and .log) are output to directory <d> instead
-                         of the current directory.
-  --configfile|-g <file> Use <file> as configuration file for Biber.
-                         The default is the first file found among
-                         "biber.conf" in the current directory, "\$HOME/.biber.conf",
-                         or else the output of "kpsewhich biber.conf".
-  --noconf               Don't look for a configfile
-  --allentries|-a        Output all entries in the database.
-                         (NB: this ignores the .bcf file.)
+      Options to pass to the Unicode::Collate object used for sorting
+      (default is 'level => "2", table => "latinkeys.txt"').
+      See "perldoc Unicode::Collate" for details.
+
+  --bibdata|-d <files>
+      Use <files> as bibliography databases (comma separated list).
+
+  --outfile|-O <file>
+      Output to <file> instead of <basename>.bbl
+      <file> is relative to --output-directory, if set (absolute
+      paths in this case are stripped to filename only). <file> can
+      be absolute if --output-directory is not set.
+
+  --output-directory <d>
+      Files (.bbl and .log) are output to directory <d> instead
+      of the current directory.
+
+  --configfile|-g <file>
+      Use <file> as configuration file for Biber.
+      The default is the first file found among
+      "biber.conf" in the current directory, "\$HOME/.biber.conf",
+      or else the output of "kpsewhich biber.conf".
+
+  --noconf
+      Don't look for a configfile
+
+  --allentries|-a
+      Output all entries in the database. (NB: this ignores the .bcf file.)
+
   --bibencoding|-e [encoding]
-                         Specify the encoding of the bib file(s). The bbl file
-                         will also have this encoding when --unicodebbl is false.
-                         See "perldoc Encode::Supported" for a list of supported encodings.
-  --inputenc|-E [encoding]
-                         Specify the encoding of the output .bbl file. Normally it's not
-                         necessary to set this as it's passed via biblatex from the
-                         inputenc package setting.
-  -u                     Alias for --bibencoding=UTF-8
-  -U                     Alias for --inputenc=UTF-8
-  --nolatexdecode|-n     Do not decode LaTeX character macros into utf8. Normally, when
-                         the .bib is not utf8 but inputenc is set to utf8, this automatically
-                         happens. However, LaTeX's inputenc package's [utf8] encoding is not
-                         at all a complete utf8 encoding and so decoding LaTeX character
-                         macros can lead to utf8 characters which inputenc cannot recognise.
-                         Use this option to prevent utf8 conversion of characters which
-                         inputenc would not recognise.
-  --validate|-V          Schema validate both the <basename>.bcf biblatex control file
-                         and the BibLateXML files (if used). Dies on validation error.
-  --debug|-D             Turn on debugging for biber.
-  --quiet|-q             Turn infos and warnings off.
-  --nolog                Do not write any logfile.
-  --onlylog              Do not write any message to screen.
-  --wraplines|-w         Wrap lines in the .bbl file.
-    \n}
+      Specify the encoding of the bib file(s). Default is "UTF-8"
+      Normally it's not necessary to set this as it's passed via the
+      .bcf file from biblatex's setting of the same name.
+      See "perldoc Encode::Supported" for a list of supported encodings.
+
+  --bblencoding|-E [encoding]
+      Specify the encoding of the output .bbl file. Default is "UTF-8".
+      Normally it's not necessary to set this as it's passed via biblatex
+      from the inputenc package setting.
+      See "perldoc Encode::Supported" for a list of supported encodings.
+
+  -u
+      Alias for --bibencoding=UTF-8.
+
+  -U
+      Alias for --bblencoding=UTF-8.
+
+  --nolatexdecode|-n
+      Do not decode LaTeX character macros into utf8. Normally, when
+      the .bib is not utf8 but bblencoding is set to utf8, this automatically
+      happens. However, LaTeX's inputenc package's [utf8] encoding is not
+      at all a complete utf8 encoding and so decoding LaTeX character
+      macros can lead to utf8 characters which inputenc cannot recognise.
+      Use this option to prevent utf8 conversion of characters which
+      inputenc would not recognise. Or use a TeX engine and macro package
+      with real utf8 support like XeLaTeX or LuaLaTeX.
+
+  --validate|-V
+      Schema validate both the <basename>.bcf biblatex control file
+      and the BibLateXML files (if used). Dies on validation error.
+
+  --debug|-D
+      Turn on debugging for biber.
+
+  --quiet|-q
+      Turn infos and warnings off.
+
+  --nolog
+      Do not write any logfile.
+
+  --onlylog
+      Do not write any message to screen.
+
+  --wraplines|-w
+      Wrap lines in the .bbl file.
+
+Bug reports, forum and downloads at:
+  https://sourceforge.net/projects/biblatex-biber
+\n}
 }
 
 __END__
@@ -334,7 +401,7 @@ C<biber> - A bibtex replacement for users of biblatex
 
 biber [ { --bibdata | -d } database.{bib|xml|dbxml} ]
       [ --mincrossrefs | -m ] [ [--collate|-C] | [ --fastsort | -f ] ]
-      [ -u ] [ -U ] [ --bibencoding | -e ] [ --inputenc | -E ] [ --nolatexdecode ]
+      [ -u ] [ -U ] [ --bibencoding | -e ] [ --bblencoding | -E ] [ --nolatexdecode ]
       [ --debug | -D ] [ { --outfile | -O } filename ] file.bcf
 
 biber --bibdata database --allentries [ --outfile filename ] [ ... ]

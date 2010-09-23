@@ -1,0 +1,8 @@
+Install macports and libxml2
+Install perl, Par, Par::Packer (must be >=1.007)
+Update Unicode::Collate to latest version
+Install Biber and all dependencies
+Run the "build.sh" build script
+
+The paths in the biber.files and build.sh are completely dependant on the particular machines used
+to build the binaries.

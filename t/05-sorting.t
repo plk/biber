@@ -1,10 +1,9 @@
 use strict;
 use warnings;
 use utf8;
-use Storable qw (dclone);
 no warnings 'utf8';
 
-use Test::More tests => 39;
+use Test::More tests => 41;
 
 use Biber;
 use Biber::Output::BBL;
@@ -24,7 +23,6 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('locale', 'C');
 Biber::Config->setoption('quiet', 1);
-Biber::Config->setoption('bibencoding', 'utf8');
 
 my $yearoff1    = 'mm0knuth2donald e0computers typesetting0198400000';
 my $yearoff2    = 'mm0knuth2donald e0computers typesetting019800000';
@@ -62,9 +60,31 @@ my $lists3      = 'ibm1zzzz';
 my $lists4      = 'ibm2hp1zzzz';
 my $lists5      = 'ibm2hp2sun2sony';
 my $dates1      = '1979001002000000198000400808075006007019240070090192400002005019200200308020003004079003003';
-my $edtypeclass1 = 'vol0redactor0jaffe2philipp0loewenfeld2samuel1kaltenbrunner2ferdinand1ewald2paul';
+my $edtypeclass1 = 'vol0redactor0jaffé2philipp0loewenfeld2samuel1kaltenbrunner2ferdinand1ewald2paul';
 my $prefix1     = 'mm0Luzzatto2Moshe Ḥayyim0Lashon laRamḥal uvo sheloshah ḥiburim0200000000';
 my $diacritic1  = 'mm0Hasan2Alī0Some title0200000000';
+
+my $useprefix1  = 'mm0von2bobble2terrence019970things00000';
+my $useprefix2  = 'mm0bobble2terrence2von019970things00000';
+
+my $bibentries;
+
+Biber::Config->setblxoption('useprefix', 1);
+
+# regenerate information
+$biber->prepare;
+
+$bibentries = $biber->sections->get_section('0')->bib;
+is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix1, 'von with useprefix=true' );
+
+Biber::Config->setblxoption('useprefix', 0);
+
+# regenerate information
+$biber->prepare;
+$bibentries = $biber->sections->get_section('0')->bib;
+is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix2, 'von with useprefix=false' );
+
+
 
 # Testing nosortprefix and nosortdiacritics
 Biber::Config->setblxoption('sorting_label', [
@@ -100,7 +120,7 @@ Biber::Config->setoption('cssort', '1');
 
 # regenerate information
 $biber->prepare;
-my $bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bib;
 
 is($bibentries->entry('luzzatto')->get_field('sortstring'), $prefix1, 'Title with nosortprefix' );
 is($bibentries->entry('hasan')->get_field('sortstring'), $diacritic1, 'Title with nosortdiacritic' );
@@ -1078,7 +1098,7 @@ Biber::Config->setblxoption('labelalpha', 0);
 # debug
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {'debug'    => {}},
+                                                 {'entrykey'    => {}},
                                                 ],
                                                ]);
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));

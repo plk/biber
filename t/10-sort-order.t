@@ -4,7 +4,6 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 20;
-use Storable qw (dclone);
 
 use Biber;
 use Biber::Output::BBL;
@@ -19,10 +18,7 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
-
-# Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('unicodebbl', 1);
 
 my $i = 1;
 
