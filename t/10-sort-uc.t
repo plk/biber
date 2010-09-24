@@ -18,7 +18,7 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
-Biber::Config->setoption('locale', 'sv_SE');
+Biber::Config->setoption('sortlocale', 'sv_SE');
 Biber::Config->setblxoption('sortlos', 1);
 
 my $i = 1;

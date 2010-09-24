@@ -1355,13 +1355,13 @@ sub sortentries {
 
   # Set up locale. Order of priority is:
   # 1. locale value passed to Unicode::Collate::Locale->new() (Unicode::Collate sorts only)
-  # 2. Biber locale option
+  # 2. Biber sortlocale option
   # 3. LC_COLLATE env variable
   # 4. LANG env variable
   # 5. LC_ALL env variable
   # 6. Built-in defaults
 
-  my $thislocale = Biber::Config->getoption('locale');
+  my $thislocale = Biber::Config->getoption('sortlocale');
 
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
@@ -1448,7 +1448,7 @@ sub sortshorthands {
   my @shorthands = $section->get_shorthands;
   # What we sort on depends on the 'sortlos' BibLaTeX option
   my $sortlos = Biber::Config->getblxoption('sortlos') ? 'shorthand' : 'sortstring';
-  my $thislocale = Biber::Config->getoption('locale');
+  my $thislocale = Biber::Config->getoption('sortlocale');
 
   $logger->debug("Sorting shorthands by '$sortlos'");
 

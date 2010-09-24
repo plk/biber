@@ -80,6 +80,7 @@ unless ($locale) {
 our %CONFIG_DEFAULT_BIBER = (
   validate => 0,
   sortcase => 1,
+  sortlocale => $locale,
   sortupper => 1,
   collate => 1,
   mincrossrefs =>  2,
@@ -100,7 +101,6 @@ our %CONFIG_DEFAULT_BIBER = (
   #
   # eventually this shall be moved to biblatex options:
   displaymode => $DISPLAYMODE_DEFAULT,
-  locale => $locale,
   #
   # Semitic (or eventually other) last names may begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
   nosortdiacritics => qr/[\x{2bf}\x{2018}]/,

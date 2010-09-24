@@ -31,7 +31,6 @@ GetOptions(
            'fastsort|f',
            'help|h|?',
            'latexdecode',
-           'locale|l=s',
            'mincrossrefs|m=s',
            'noconf',
            'nolog',
@@ -40,6 +39,7 @@ GetOptions(
            'output-directory=s',
            'quiet|q',
            'sortcase=i',
+           'sortlocale|l=s',
            'sortupper=i',
            'trace|T!',
            'u',                   # alias for bibencoding=UTF-8
@@ -334,12 +334,6 @@ Options:
       inputenc would not recognise. Or use a TeX engine and macro package
       with real utf8 support like XeLaTeX or LuaLaTeX.
 
-  --locale|-l [locale]
-      Set the locale to be used for sorting. With built-in sorting
-      (i.e. --collate is not set), this sets the OS locale for sorting. With
-      Unicode::Collate (--collate flag), the locale is used to add CLDR
-      tailoring to the sort (if available for the locale)
-
   --mincrossrefs|-m <n>
       Set threshold for crossrefs.
 
@@ -367,6 +361,12 @@ Options:
 
   --sortcase=1|0
       Case-sensitive sorting (default is true)
+
+  --sortlocale|-l [locale]
+      Set the locale to be used for sorting.  With default sorting
+      (--collate), the locale is used to add CLDR 
+      tailoring to the sort (if available for the locale). With
+      --fastsort this sets the OS locale for sorting.
 
   --sortupper=1|0
       Sort uppercase before lower (default is true)

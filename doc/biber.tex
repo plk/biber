@@ -128,17 +128,28 @@ for tailoring from the environment
 
 \biberex{\verb+biber --locale=de_DE+}
 
-\noindent As first example but override locale.
+\noindent Override the environment locale.
 
 \biberex{\verb+biber --fastsort+}
 
-\noindent As first example but use fastsort. This uses the OS locale
+\noindent Use slightly quicker internal sorting routine. This uses the OS locale
 files which may or may not be accurate.
+
+\biberex{\verb+biber --sortcase=0+}
+
+\noindent Case insensitive sorting.
 
 \biberex{\verb+biber --sortupper=0 --collate_options="backwards => 2"+}
 
-\noindent As first example but collate lowercase before upper and
-collate French accents in reverse order at UCA level 2.
+\noindent Collate lowercase before upper and collate French accents in
+reverse order at UCA level 2.
+
+\subsection{Encoding of \verb+.bib+ and \verb+.bbl+ files}
+
+\verb+biber+ takes care of reencoding the \verb+.bib+ data 
+
+\subsubsection{Examples}
+
 
 \subsection{Limitations}
 \label{use:limit}

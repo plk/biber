@@ -290,7 +290,7 @@ sub _generatesortstring {
     $casesort = $sortstring;
   }
   else {
-    if (my $thislocale = Biber::Config->getoption('locale')) {
+    if (my $thislocale = Biber::Config->getoption('sortlocale')) {
       use locale;
       setlocale( LC_CTYPE, $thislocale );
     }

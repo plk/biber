@@ -16,7 +16,7 @@ chdir("t/tdata");
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('locale', 'C');
+Biber::Config->setoption('sortlocale', 'C');
 
 my $encode1 = q|  \entry{testŠ}{book}{}
     \name{author}{1}{%

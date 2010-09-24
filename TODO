@@ -1,11 +1,13 @@
-ROADMAP / TODO
+TODO in decreasing order of priority:
 
-in decreasing order of priority:
-
+   * Before 1.0 biblatex, remove option compat code from Biber.pm and change
+     bcf schema: inputenc -> bblencoding
+                 cssort -> sortcase
+                 add sortupper
+                 add sortlocale
    * add validation mechanism for options and config (untaint data),
      probably with Params::Validate
    * validate bibtex data with Text::Bibtex::Structure (optional) needs
-     biblatex interface for defining structure of custom styles (biblatex 1.0)
+     biblatex interface for defining structure of custom styles (biblatex 1.x)
    * merge in the "unique" branch to implement full uniquename/list
      automation. Needs new .bbl format and biblatex support (biblatex 2.0)
-   * make Biber::BibLaTeXML also take the nosort options into account
