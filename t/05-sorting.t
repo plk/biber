@@ -116,7 +116,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 ]
                                                ]);
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
-Biber::Config->setoption('cssort', '1');
+Biber::Config->setoption('sortcase', '1');
 
 # regenerate information
 $biber->prepare;
@@ -141,7 +141,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 ],
                                                ]);
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
-Biber::Config->setoption('cssort', '0');
+Biber::Config->setoption('sortcase', '0');
 
 # regenerate information
 $biber->prepare;

@@ -286,7 +286,7 @@ sub _generatesortstring {
   # Decide if we are doing case-insensitive sorting or not
   # If so, lowercase according to locale
   my $casesort;
-  if (Biber::Config->getoption('cssort')) {
+  if (Biber::Config->getoption('sortcase')) {
     $casesort = $sortstring;
   }
   else {

@@ -38,7 +38,7 @@
 
 \subsection{About}
 
-All about \verb=biber=
+All about \verb+biber+
 
 \subsection{Requirements}\label{ref:req}
 
@@ -59,62 +59,86 @@ bibtex, Unicode, .bib format etc.
 
 .bcf interface etc.
 
-\subsection{Sorting and Localisation}
+\subsection{Collation and Localisation}
 
-\verb=biber= takes care of sorting the bibliography for \verb=biblatex=. It writes
-entries to the \verb=.bbl= file sorted by a completely customisable set of rules
-which are passed in the \verb=.bcf= file by \verb=biblatex=. \verb=biber='s collation code
-can run in two different ways\\[2ex]
+\verb+biber+ takes care of collating (sorting) the bibliography for
+\verb+biblatex+. It writes entries to the \verb+.bbl+ file sorted by a
+completely customisable set of rules which are passed in the
+\verb+.bcf+ file by \verb+biblatex+. \verb+biber+ has two ways of performing
+collation\\[2ex]
 
-\biberex{--collate|-C} The default. This option makes \verb=biber= use the
-  \verb=Unicode::Collate= module for collation which implements the full UCA (Unicode
+\biberex{--collate|-C} The default. This option makes \verb+biber+ use the
+  \verb+Unicode::Collate+ module for collation which implements the full UCA (Unicode
   Collation Algorithm). It also has CLDR (Common Locale Data
-  Repository) tailoring to deal with cases which are not covered in the
-  UCA. See below.\\[1ex]
+  Repository) tailoring to deal with cases which are not covered by the
+  UCA. It is a little slower than \verb+--fastsort|-f+ but the
+  advantages are such that it's rarely worth using \verb+--fastsort|-f+\\[1ex]
 
 \biberex{--fastsort|-f} Biber will sort using
   the OS locale collation tables. The drawback for this method is that special
   collation tailoring for various languages are not implemented in the
   collation tables for many OSes. For example, few OSes correctly sort 'å'
-  before 'ä' in the Swedish (\verb=sv_SE=) locale. If you are using a more
-  common latin alphabet then this is probably not a problem for you.\\[2ex]
+  before 'ä' in the Swedish (\verb+sv_SE+) locale. If you are using a
+  common latin alphabet, then this is probably not a problem for you.\\[2ex]
 
-\noindent The locale for sorting is determined by the following resource
+\noindent The locale used for sorting is determined by the following resource
 chain in decreasing precedence order:\\[2ex]
 
-\noindent\verb=--collate_options|-c= $\rightarrow$\\
-\hspace*{2em}\verb=--locale|-c= $\rightarrow$\\
-\hspace*{4em}\verb=LC_COLLATE= environment variable $\rightarrow$\\
-\hspace*{6em}\verb=LANG= environment variable $\rightarrow$\\
-\hspace*{8em}\verb=LC_ALL= environment variable\\[2ex]
+\noindent\verb+--collate_options|-c+ $\rightarrow$\\
+\hspace*{1em}\verb+--locale|-c+ $\rightarrow$\\
+\hspace*{2em}\verb+LC_COLLATE+ environment variable $\rightarrow$\\
+\hspace*{3em}\verb+LANG+ environment variable $\rightarrow$\\
+\hspace*{4em}\verb+LC_ALL+ environment variable\\[2ex]
 
-\noindent The locale will be used with the default \verb=--collate|-C= option
-to look for a collation tailoring for that locale. It will generate an
+\noindent With the default \verb+--collate|-C+ option, the locale will
+be used to look for a collation tailoring for that locale. It will generate an
 information warning if it finds none. This is not a problem as the vast
 majority of collation cases are covered by the basic standard UCA and many
-locales neither have nor need any special collation tailoring. The
-option \verb=--collate_options|-c= allows users to specify
-options to \verb=Unicode::Collate= which tailor the collation in various ways in
+locales neither have nor need any special collation tailoring.
+
+\noindent With the \verb+--fastsort|-f+ option, the locale will be
+used to locate an OS locale definition to use for the collation. This
+may or may not be correctly tailored, depending on the locale and the OS.
+
+\noindent Collation is by default case sensitive. You can turn this
+off using the \verb+biber+ option \verb+--sortcase=0+ or set the
+\verb+biblatex+ option \verb+sortcase=false+.
+
+\noindent \verb+--collate|-C+ by default collates uppercase before
+lower. You can reverse this using the \verb+biber+ option \verb+--sortupper=0+
+or set the \verb+biblatex+ option \verb+sortupper=false+.
+
+\noindent There are in fact many options to \verb+Unicode::Collate+
+which can tailor the collation in various ways in
 addition to the locale tailoring which is automatically performed.
 Users should see the the documentation to the module for the various
-options, most of which the vast majority of users will never need. The
-documentation of the current version is here:\\[2ex]
-
-\noindent\url{http://search.cpan.org/~sadahiro/Unicode-Collate-0.59-withoutworldwriteables/Collate.pm}\\[2ex]
-
-\noindent The most generally useful option is to force sorting of lowercase
-before uppercase (with \verb=--collate|-C= \verb=biber= sorts upper case before lower
-as this is more common). See the examples below.
+options, most of which the vast majority of users will never
+need\footnote{For details on the various options, see
+  \url{http://search.cpan.org/~sadahiro/Unicode-Collate-0.59-withoutworldwriteables/Collate.pm}}.
+Options are passed as a single quoted string, each option separated by
+comma, each option and value separated by \verb+=>+. See examples.
 
 \subsubsection{Examples}
 
-\biberex{biber}
+\biberex{\verb+biber+}
 
-\noindent Call biber using all settings from the \verb=.bcf= generated from the
-*TeX run. UCA sorting is performed using the \verb=LC_COLLATE= environment
-variable for the sorting locale.
+\noindent Call biber using all settings from the \verb+.bcf+ generated from the
+LaTeX run. Case sensitive UCA sorting is performed taking the locale
+for tailoring from the environment
 
+\biberex{\verb+biber --locale=de_DE+}
 
+\noindent As first example but override locale.
+
+\biberex{\verb+biber --fastsort+}
+
+\noindent As first example but use fastsort. This uses the OS locale
+files which may or may not be accurate.
+
+\biberex{\verb+biber --sortupper=0 --collate_options="backwards => 2"+}
+
+\noindent As first example but collate lowercase before upper and
+collate French accents in reverse order at UCA level 2.
 
 \subsection{Limitations}
 \label{use:limit}

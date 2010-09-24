@@ -286,9 +286,11 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
         foreach my $bcfopt (@{$bcfopts->{option}}) {
           unless (defined(Biber::Config->getcmdlineoption($bcfopt->{key}{content}))) { # already set on cmd line
             if (lc($bcfopt->{type}) eq 'singlevalued') {
-              # TODO: compat code for biblatex pre 1.0. Remove when biblatex passes 'bblencoding'
               my $key = $bcfopt->{key}{content};
+              # TODO: compat code for biblatex pre 1.0. Remove when biblatex passes 'bblencoding'
               $key = 'bblencoding' if $key eq 'inputenc';
+              # TODO: compat code for biblatex pre 1.0. Remove when biblatex passes 'sortcase'
+              $key = 'sortcase' if $key eq 'cssort';
               Biber::Config->setoption($key, $bcfopt->{value}[0]{content});
             }
             elsif (lc($bcfopt->{type}) eq 'multivalued') {
@@ -537,8 +539,8 @@ sub parse_bibtex {
     File::Copy::copy($filename, $ufilename);
   }
 
-  # Decode LaTeX to UTF8 if output is UTF-8 and --nolatexdecode is not set
-  unless (Biber::Config->getoption('nolatexdecode')) {
+  # Decode LaTeX to UTF8 if output is UTF-8 and --latexdecode is true
+  if (Biber::Config->getoption('latexdecode')) {
     if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
       require File::Slurp::Unicode;
       my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
@@ -1340,7 +1342,7 @@ sub sortentries {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bib;
   my @citekeys = $section->get_citekeys;
-  if (Biber::Config->getoption('cssort')) {
+  if (Biber::Config->getoption('sortcase')) {
     $logger->debug("Sorting is case-SENSITIVE");
   }
   else {
@@ -1384,8 +1386,13 @@ sub sortentries {
     }
 
     # Add case ordering level if case sensitive sorting is requested
-    if (Biber::Config->getoption('cssort')) {
+    if (Biber::Config->getoption('sortcase')) {
       $collopts->{level} = 3;
+    }
+
+    # Add upper_before_lower option
+    if (Biber::Config->getoption('sortupper')) {
+      $collopts->{upper_before_lower} = 1;
     }
 
     # Add tailoring locale for Unicode::Collate
@@ -1466,8 +1473,13 @@ sub sortshorthands {
     }
 
     # Add case ordering level if case sensitive sorting is requested
-    if (Biber::Config->getoption('cssort')) {
+    if (Biber::Config->getoption('sortcase')) {
       $collopts->{level} = 3;
+    }
+
+    # Add upper_before_lower option
+    if (Biber::Config->getoption('sortupper')) {
+      $collopts->{upper_before_lower} = 1;
     }
 
     # Add tailoring locale for Unicode::Collate
