@@ -168,10 +168,8 @@ sub normalise_string_sort {
   # Replace LaTeX chars by Unicode for sorting
   # Don't bother if output is UTF-8 as in this case, we've already decoded everthing
   # before we read the file (see Biber.pm)
-  if (Biber::Config->getoption('latexdecode')) {
-    unless (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
-      $str = latex_decode($str, strip_outer_braces => 1);
-    }
+  unless (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
+    $str = latex_decode($str, strip_outer_braces => 1);
   }
   return normalise_string_common($str);
 }
@@ -189,10 +187,8 @@ sub normalise_string {
   return '' unless $str; # Sanitise missing data
   # First replace ties with spaces or they will be lost
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
-  if (Biber::Config->getoption('latexdecode')) {
-    if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
-      $str = latex_decode($str, strip_outer_braces => 1);
-    }
+  if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
+    $str = latex_decode($str, strip_outer_braces => 1);
   }
   return normalise_string_common($str);
 }

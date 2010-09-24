@@ -539,19 +539,17 @@ sub parse_bibtex {
     File::Copy::copy($filename, $ufilename);
   }
 
-  # Decode LaTeX to UTF8 if output is UTF-8 and --latexdecode is true
-  if (Biber::Config->getoption('latexdecode')) {
-    if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
-      require File::Slurp::Unicode;
-      my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
-        or $logger->logcroak("Can't read $ufilename");
-      require LaTeX::Decode;
-      $logger->info('Decoding LaTeX character macros into UTF-8');
-      $buf = LaTeX::Decode::latex_decode($buf, strip_outer_braces => 1);
+  # Decode LaTeX to UTF8 if output is UTF-8
+  if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
+    require File::Slurp::Unicode;
+    my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
+      or $logger->logcroak("Can't read $ufilename");
+    require LaTeX::Decode;
+    $logger->info('Decoding LaTeX character macros into UTF-8');
+    $buf = LaTeX::Decode::latex_decode($buf, strip_outer_braces => 1);
 
-      File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
-          or $logger->logcroak("Can't write $ufilename");
-    }
+    File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
+        or $logger->logcroak("Can't write $ufilename");
   }
 
   $filename = $ufilename;

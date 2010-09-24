@@ -30,7 +30,6 @@ GetOptions(
            'debug|D',
            'fastsort|f',
            'help|h|?',
-           'latexdecode',
            'mincrossrefs|m=s',
            'noconf',
            'nolog',
@@ -324,16 +323,6 @@ Options:
   --help|-h
       Show this help message.
 
-  --latexdecode=1|0 (default is true)
-      Decode LaTeX character macros into utf8 when
-      the .bib is not utf8 but bblencoding is set to utf8
-      However, LaTeX's inputenc package's [utf8] encoding is not
-      at all a complete utf8 encoding and so decoding LaTeX character
-      macros can lead to utf8 characters which inputenc cannot recognise.
-      Turn this option off to prevent utf8 conversion of characters which
-      inputenc would not recognise. Or use a TeX engine and macro package
-      with real utf8 support like XeLaTeX or LuaLaTeX.
-
   --mincrossrefs|-m <n>
       Set threshold for crossrefs.
 
@@ -404,14 +393,7 @@ C<biber> - A bibtex replacement for users of biblatex
 
 =head1 SYNOPSIS
 
-biber [ { --bibdata | -d } database.{bib|xml|dbxml} ]
-      [ --mincrossrefs | -m ] [ [--collate|-C] | [ --fastsort | -f ] ]
-      [ -u ] [ -U ] [ --bibencoding | -e ] [ --bblencoding | -E ] [ --nolatexdecode ]
-      [ --debug | -D ] [ { --outfile | -O } filename ] file.bcf
-
-biber --bibdata database --allentries [ --outfile filename ] [ ... ]
-
-biber { --help | --version }
+Please run "biber --help" for usage
 
 =head1 DESCRIPTION
 

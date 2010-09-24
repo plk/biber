@@ -92,7 +92,6 @@ our %CONFIG_DEFAULT_BIBER = (
   quiet => 0,
   nolog => 0,
   wraplines => 0,
-  latexdecode => 1,
   bibencoding => 'UTF-8',
   bblencoding => 'UTF-8',
   #
