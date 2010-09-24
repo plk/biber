@@ -21,7 +21,7 @@ GetOptions(
            $opts,
            'fastsort|f!',
            'locale|l=s',
-           'cssort',
+           'cssort=i',
            'collate|C!',
            'collate_options|c=s',
            'mincrossrefs|m=s',
@@ -298,8 +298,8 @@ Options:
       Unicode::Collate (--collate flag), the locale is used to add CLDR
       tailoring to the sort (if available for the locale)
 
-  --cssort
-      Use case-sensitive sorting. Case insensitive is the default.
+  --cssort=1|0
+      Case-sensitive sorting (default is true)
 
   --collate|-C
       Sort with Unicode::Collate instead of the built-in sort function.
