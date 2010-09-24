@@ -79,7 +79,9 @@ unless ($locale) {
 
 our %CONFIG_DEFAULT_BIBER = (
   validate => 0,
-  cssort => 1,
+  sortcase => 1,
+  sortlocale => $locale,
+  sortupper => 1,
   collate => 1,
   mincrossrefs =>  2,
   bibdatatype => 'bibtex',
@@ -90,16 +92,15 @@ our %CONFIG_DEFAULT_BIBER = (
   quiet => 0,
   nolog => 0,
   wraplines => 0,
-  nolatexdecode => 0,
+  latexdecode => 1,
   bibencoding => 'UTF-8',
   bblencoding => 'UTF-8',
   #
   # these options are passed to the Unicode::Collate object
-  collate_options => { level => 2, upper_before_lower => 1 },
+  collate_options => { level => 2 },
   #
   # eventually this shall be moved to biblatex options:
   displaymode => $DISPLAYMODE_DEFAULT,
-  locale => $locale,
   #
   # Semitic (or eventually other) last names may begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
   nosortdiacritics => qr/[\x{2bf}\x{2018}]/,

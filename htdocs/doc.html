@@ -58,27 +58,24 @@ Usage:  biber file.bcf
         Creates foo.bbl from all entries in foo.bib and bar.bib. No .bcf used
 
 Options:
-  --help|-h
-      Show this help message.
 
-  --version|-v
-      Display version number.
+  --allentries|-a
+      Output all entries in the database. (NB: this ignores the .bcf file.)
 
-  --mincrossrefs|-m &lt;n&gt;
-      Set threshold for crossrefs.
+  --bblencoding|-E [encoding]
+      Specify the encoding of the output .bbl file. Default is "UTF-8".
+      Normally it's not necessary to set this as it's passed via biblatex
+      from the inputenc package setting.
+      See "perldoc Encode::Supported" for a list of supported encodings.
 
-  --fastsort|-f
-      Use Perl’s sort instead of Unicode::Collate for sorting. Also uses
-      OS locale definitions (which may be broken for some languages ...)
+  --bibdata|-d &lt;files&gt;
+      Use &lt;files&gt; as bibliography databases (comma separated list).
 
-  --locale|-l [locale]
-      Set the locale to be used for sorting. With built-in sorting
-      (i.e. --collate is not set), this sets the OS locale for sorting. With
-      Unicode::Collate (--collate flag), the locale is used to add CLDR
-      tailoring to the sort (if available for the locale)
-
-  --cssort
-      Use case-sensitive sorting. Case insensitive is the default.
+  --bibencoding|-e [encoding]
+      Specify the encoding of the bib file(s). Default is "UTF-8"
+      Normally it's not necessary to set this as it's passed via the
+      .bcf file from biblatex's setting of the same name.
+      See "perldoc Encode::Supported" for a list of supported encodings.
 
   --collate|-C
       Sort with Unicode::Collate instead of the built-in sort function.
@@ -89,8 +86,43 @@ Options:
       (default is 'level =&gt; "2", table =&gt; "latinkeys.txt"').
       See "perldoc Unicode::Collate" for details.
 
-  --bibdata|-d &lt;files&gt;
-      Use &lt;files&gt; as bibliography databases (comma separated list).
+  --configfile|-g &lt;file&gt;
+      Use &lt;file&gt; as configuration file for Biber.
+      The default is the first file found among
+      "biber.conf" in the current directory, "\$HOME/.biber.conf",
+      or else the output of "kpsewhich biber.conf".
+
+  --debug|-D
+      Turn on debugging for biber.
+
+  --fastsort|-f
+      Use Perl’s sort instead of Unicode::Collate for sorting. Also uses
+      OS locale definitions (which may be broken for some languages ...)
+
+  --help|-h
+      Show this help message.
+
+  --latexdecode=1|0 (default is true)
+      Decode LaTeX character macros into utf8 when
+      the .bib is not utf8 but bblencoding is set to utf8
+      However, LaTeX's inputenc package's [utf8] encoding is not
+      at all a complete utf8 encoding and so decoding LaTeX character
+      macros can lead to utf8 characters which inputenc cannot recognise.
+      Turn this option off to prevent utf8 conversion of characters which
+      inputenc would not recognise. Or use a TeX engine and macro package
+      with real utf8 support like XeLaTeX or LuaLaTeX.
+
+  --mincrossrefs|-m &lt;n&gt;
+      Set threshold for crossrefs.
+
+  --noconf
+      Don't look for a configfile
+
+  --nolog
+      Do not write any logfile.
+
+  --onlylog
+      Do not write any message to screen.
 
   --outfile|-O &lt;file&gt;
       Output to &lt;file&gt; instead of &lt;basename&gt;.bbl
@@ -102,61 +134,33 @@ Options:
       Files (.bbl and .log) are output to directory &lt;d&gt; instead
       of the current directory.
 
-  --configfile|-g &lt;file&gt;
-      Use &lt;file&gt; as configuration file for Biber.
-      The default is the first file found among
-      "biber.conf" in the current directory, "\$HOME/.biber.conf",
-      or else the output of "kpsewhich biber.conf".
+  --quiet|-q
+      Turn infos and warnings off.
 
-  --noconf
-      Don't look for a configfile
+  --sortcase=1|0
+      Case-sensitive sorting (default is true)
 
-  --allentries|-a
-      Output all entries in the database. (NB: this ignores the .bcf file.)
+  --sortlocale|-l [locale]
+      Set the locale to be used for sorting.  With default sorting
+      (--collate), the locale is used to add CLDR 
+      tailoring to the sort (if available for the locale). With
+      --fastsort this sets the OS locale for sorting.
 
-  --bibencoding|-e [encoding]
-      Specify the encoding of the bib file(s). Default is "UTF-8"
-      Normally it's not necessary to set this as it's passed via the
-      .bcf file from biblatex's setting of the same name.
-      See "perldoc Encode::Supported" for a list of supported encodings.
-
-  --bblencoding|-E [encoding]
-      Specify the encoding of the output .bbl file. Default is "UTF-8".
-      Normally it's not necessary to set this as it's passed via biblatex
-      from the inputenc package setting.
-      See "perldoc Encode::Supported" for a list of supported encodings.
+  --sortupper=1|0
+      Sort uppercase before lower (default is true)
 
   -u
-      Alias for --bibencoding=UTF-8
+      Alias for --bibencoding=UTF-8.
 
   -U
-      Alias for --bblencoding=UTF-8
-
-  --nolatexdecode|-n
-      Do not decode LaTeX character macros into utf8. Normally, when
-      the .bib is not utf8 but bblencoding is set to utf8, this automatically
-      happens. However, LaTeX's inputenc package's [utf8] encoding is not
-      at all a complete utf8 encoding and so decoding LaTeX character
-      macros can lead to utf8 characters which inputenc cannot recognise.
-      Use this option to prevent utf8 conversion of characters which
-      inputenc would not recognise. Or use a TeX engine and macro package
-      with real utf8 support like XeLaTeX or LuaLaTeX.
+      Alias for --bblencoding=UTF-8.
 
   --validate|-V
       Schema validate both the &lt;basename&gt;.bcf biblatex control file
       and the BibLateXML files (if used). Dies on validation error.
 
-  --debug|-D
-      Turn on debugging for biber.
-
-  --quiet|-q
-      Turn infos and warnings off.
-
-  --nolog
-      Do not write any logfile.
-
-  --onlylog
-      Do not write any message to screen.
+  --version|-v
+      Display version number.
 
   --wraplines|-w
       Wrap lines in the .bbl file.

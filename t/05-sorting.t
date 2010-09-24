@@ -21,7 +21,7 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('locale', 'C');
+Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('quiet', 1);
 
 my $yearoff1    = 'mm0knuth2donald e0computers typesetting0198400000';
@@ -116,7 +116,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 ]
                                                ]);
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
-Biber::Config->setoption('cssort', '1');
+Biber::Config->setoption('sortcase', '1');
 
 # regenerate information
 $biber->prepare;
@@ -141,7 +141,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 ],
                                                ]);
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
-Biber::Config->setoption('cssort', '0');
+Biber::Config->setoption('sortcase', '0');
 
 # regenerate information
 $biber->prepare;
