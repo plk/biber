@@ -42,22 +42,75 @@ All about \verb+biber+
 
 \subsection{Requirements}\label{ref:req}
 
-Raw perl vs binaries. List binary compatibilities.
+\verb+biber+ is distributed in two ways. There is a perl source
+version which requires you to have a working perl installation
+(preferably version 5.12 but no less than 5.10) and the ability to
+install the pre-requisite modules. Also provided are binaries for
+major OSes built with the perl \verb+PAR::Packer+ module and utilities.
+
+Currently there are binaries available for:
+
+\begin{itemize}
+\item OSX Intel 64-bit
+\item Windows
+\item Linux 32-bit
+\item Linux 64-bit
+\end{itemize}
+
+These should work on any fairly recent OS version. Both binaries and
+perl source are available on SourceForge (\url{http://sourceforge.net/projects/biblatex-biber/}).
 
 \subsection{License}
 
+\verb+biber+ is released under the free sortware Artistic License 2.0\footnote{\url{http://www.opensource.org/licenses/artistic-license-2.0.php}}
 
 \subsection{History}
 
-bibtex, Unicode, .bib format etc.
+\verb+bibtex+ has been the default (only \ldots) integrated choice for
+bibliography processing in TeX for a long time. It has well known
+limitations which stem from its data format, data model and lack of
+UTF-8 support\footnote{In fact, there is now a UTF-8 compliant version
+of \verb+bibtex+}. The \verb+.bst+ language for writing bibliography
+styles is painful to learn and use. It is not a general programming
+language and this make it really very hard to do sophisticated
+automated processing of bibliographies.
+
+\verb+biblatex+ was a major advance for LaTeX users as it moved much
+of the bibliography processing into LaTeX macros. However,
+\verb+biblatex+ still used \verb+bibtex+ as a sorting engine for the
+bibliography and also to generate various labels for
+entries. \verb+bibtex+'s capabilities even for this reduced set of
+tasks was still quite restricted due to the lack of UTF-8 support and
+the more and more complex programming issues involved in label
+preparation and file encoding.
+
+\verb+biber+ was designed specifically for \verb+biblatex+ in order to
+provide a powerful backend engine which could deal with any required
+tasks to do with \verb+.bbl+ preparation. It can
+
+\begin{itemize}
+\item Deal with the full range of UTF-8
+\item Sort in a completely customisable manner, using when available
+  CLDR collation tailorings
+\item Automatically encode the \verb+.bbl+ into any support encoding
+  format
+\item Process all bibliography sections in one pass of the tool
+\item Handle UTF-8 citekeys and filenames (given a suitable fully
+  UTF-8 compliant TeX engine)
+\item Handle very complex auto-expansion and contraction of names and
+  namelists.
+\item Lots of other things.
+\end{itemize}
 
 \subsection{Acknowledgments}
 
+François Charette originally wrote \verb+biber+. Philip Kime joined in
+the development in 2009.
 
 \section{Use}\label{ref:use}
 \label{use}
 
-.bcf interface etc.
+.bcf interface etc. conf file. command-line precedence
 
 \subsection{Collation and Localisation}
 
@@ -85,7 +138,7 @@ collation\\[2ex]
 chain in decreasing precedence order:\\[2ex]
 
 \noindent\verb+--collate_options|-c+ $\rightarrow$\\
-\hspace*{1em}\verb+--locale|-c+ $\rightarrow$\\
+\hspace*{1em}\verb+--sortlocale|-c+ $\rightarrow$\\
 \hspace*{2em}\verb+LC_COLLATE+ environment variable $\rightarrow$\\
 \hspace*{3em}\verb+LANG+ environment variable $\rightarrow$\\
 \hspace*{4em}\verb+LC_ALL+ environment variable\\[2ex]
@@ -114,7 +167,7 @@ addition to the locale tailoring which is automatically performed.
 Users should see the the documentation to the module for the various
 options, most of which the vast majority of users will never
 need\footnote{For details on the various options, see
-  \url{http://search.cpan.org/~sadahiro/Unicode-Collate-0.59-withoutworldwriteables/Collate.pm}}.
+  \url{http://search.cpan.org/search?query=Unicode%3A%3ACollate&mode=all}}.
 Options are passed as a single quoted string, each option separated by
 comma, each option and value separated by \verb+=>+. See examples.
 
@@ -126,9 +179,10 @@ comma, each option and value separated by \verb+=>+. See examples.
 LaTeX run. Case sensitive UCA sorting is performed taking the locale
 for tailoring from the environment
 
-\biberex{\verb+biber --locale=de_DE+}
+\biberex{\verb+biber --sortlocale=de_DE+}
 
-\noindent Override the environment locale.
+\noindent Override the locale setting possibly in the \verb+.bcf+ or
+in the environment.
 
 \biberex{\verb+biber --fastsort+}
 
@@ -146,10 +200,115 @@ reverse order at UCA level 2.
 
 \subsection{Encoding of \verb+.bib+ and \verb+.bbl+ files}
 
-\verb+biber+ takes care of reencoding the \verb+.bib+ data 
+\verb+biber+ takes care of reencoding the \verb+.bib+ data as
+necessary. In normal use, \verb+biblatex+ passes its
+\verb+bibencoding+ option value to \verb+biber+ via the \verb+.bcf+
+file. It also passes an option \verb+bblencoding+ the value of which
+is derived from the \verb+inputenc+ package setting (if the user is
+using this), otherwise «utf8» (for XeTeX or LuaTeX) or «ascii» (any
+other TeX engine).
+
+\noindent \verb+biber+ performs the following tasks:
+
+\begin{enumerate}
+\item Decodes the \verb+.bib+ into UTF-8 if it is not UTF-8 already
+\item Decodes LaTeX character macros into UTF-8 unless \verb+--latexdecode=0+
+\item Encodes the output so that the \verb+.bbl+ is in
+  the encoding that \verb+bblencoding+ specifies.
+\item Warns if it is asked to output to the \verb+.bbl+ any UTF-8
+  decoded LaTeX character macros which are not in the
+  \verb+bblencoding+ encoding. Replaces with a diacritic-stripped substitute.
+\end{enumerate}
+
+\noindent As you can see from item 2 above, by default, \verb+biber+
+converts LaTeX character macros into UTF-8 internally. This is very
+useful as it means that things are sorted correctly but has two
+potential (but rare) problems which you should be aware of:
+
+\begin{itemize}
+\item If you are using LaTeX and \verb+\usepackage[utf8]{inputenc}+, it is possible
+  that the UTF-8 characters resulting from \verb+biber+'s
+  internal LaTeX character macro decoding break \verb+inputenc+. This
+  is because \verb+inputenc+ does not implement all of UTF-8, only a
+  commonly used subset. The solution is to either use the \verb+biber+
+  option \verb+--latexdecode=0+ in which case the sorting might not be
+  nice because then all \verb+biber+ can do is strip away the LaTeX
+  markup in order to internally generate sorting data.
+
+  So if you had perhaps \verb+\DJ+ in your \verb+.bib+,
+  \verb+biber+ decodes this correctly to «Đ» and this breaks \verb+inputenc+
+  because it doesn't understand that UTF-8 character. You could set
+  \verb+--latexdecode=0+ but then \verb+biber+ would strip this
+  internally for generating sorting data to «» which is a different
+  character entirely and sorts in a completely different place.
+
+  The best solution here is to switch to a TeX engine with full
+  UTF-8 suport like XeTeX or LuaTeX as these don't use or need
+  \verb+inputenc+.
+\item If your \verb+bblencoding+ is not UTF-8, and you are using some
+  UTF-8 equivalent LaTeX character macros in your \verb+.bib+, then
+  some \verb+.bbl+ fields (currently only \verb+\sortinit{}+) might
+  end up with invalid character in them, according to the \verb+.bbl+
+  encoding. This is because some fields must be generated from the
+  final sorting data which is only available after the LaTeX character
+  macro decoding step.
+
+  For example, suppose you were using PDFLaTeX with
+  \verb+\usepackage[latin1]{inputenc}+ and the following
+  \verb+.bib entry+
+
+  \begin{verbatim}
+    @BOOK{citekey1,
+      AUTHOR = {{\v S}imple, Simon},
+    }
+  \end{verbatim}
+
+  \noindent With normal LaTeX character macro decoding, the
+  \verb+{\v S}+ is decoded into «Š» and so with name-first sorting,
+  \verb+\sortinit{}+ would be «Š». This is an invalid character in
+  latin1 encoding and so the \verb+.bbl+ would be broken. In such
+  cases when \verb+\sortinit{}+ is a char not valid in the
+  \verb+bblencoding+, \verb+biber+ strips off any diacritics which in
+  this case results in «S». This is not ideal as this is not the
+  initial character of the string used for sorting any more but it's a
+  decent replacement in such cases. You could also turn off decoding
+  of LaTeX character macros with \verb+--latexdecod=0+ but then the
+  comments about sorting in the case above apply.
+
+  Really, you should use UTF-8 \verb+bblencoding+ wherever possible
+  and again, this might mean switching TeX engines to one that
+  supports full UTF-8.
+\end{itemize}
+
+\noindent Normally, you do not need to set the encoding options on the
+\verb+biber+ command line as they are passed in the \verb+.bcf+ via
+the information in your \verb+biblatex+ environment. However, you can
+override the \verb+.bcf+ settings with the command line.
 
 \subsubsection{Examples}
 
+\biberex{\verb+biber+}
+
+\noindent Read \verb+bibencoding+ and \verb+bblencoding+ from the
+\verb+.bcf+.
+
+\biberex{\verb+biber --bblencoding=latin2+}
+
+\noindent Encode the \verb+.bbl+ as latin2, overriding the
+\verb+.bcf+.
+
+\biberex{\verb+biber --bblencoding=latin1 --latexdecode=0+}
+
+\noindent Encode the \verb+.bbl+ as latin1, overriding the
+\verb+.bcf+. Don't decode any LaTeX character macros into UTF-8 internally.
+
+\biberex{\verb+biber -u+}
+
+\noindent Shortcut alias for \verb+biber --bibencoding=UTF-8+
+
+\biberex{\verb+biber -U+}
+
+\noindent Shortcut alias for \verb+biber --bblencoding=UTF-8+
 
 \subsection{Limitations}
 \label{use:limit}
