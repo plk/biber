@@ -64,12 +64,13 @@ sub new {
   my ($class, %opts) = @_;
   my $self = bless {}, $class;
 
-  # Set up config object.
+  # Set up config object from config file and defaults
   if (defined $opts{configfile}) {
     Biber::Config->_initopts( $opts{configfile} );
   } else {
     Biber::Config->_initopts(undef, $opts{noconf});
   }
+  # Command-line overrides everything else
   if (%opts) {
     foreach (keys %opts) {
       Biber::Config->setcmdlineoption($_, $opts{$_});
@@ -1379,7 +1380,7 @@ sub sortentries {
     unless (ref($opts) eq "HASH") { # opts for this can come in a string from cmd line
       $collopts = eval "{ $opts }" or $logger->logcarp("Incorrect collate_options: $@");
     }
-    else {
+    else { # options from config file as hash ref
       $collopts = $opts;
     }
 
