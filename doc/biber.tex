@@ -125,6 +125,7 @@ LaTeX uses to pass information to \verb+bibtex+. The \verb+.bcf+ file is
 XML and contains many options and settings which configure how \verb+biber+
 is to process the bibliography and generate the \verb+.bbl+ file.
 
+\subsection{Options and config file}
 \verb+biber+ sets its options using the following resource 
 chain which is given in decreasing precedence order:\\[2ex]
 
@@ -209,6 +210,55 @@ place and are designed to deal with cases like
 
 \noindent where the prefix «al-» and the diacritic «ʿ» should not be
 considered when sorting.
+
+\subsection{Input/Output File Locations}
+
+\subsubsection{Control file}\label{loc:cf}
+
+The control file is normally passed as the only argument to biber
+(unless using \verb+--allentries|a+ and \verb+--bibdata|-d+). It is
+searched for using the following rule, in descending order of
+priority:\\[2ex]
+
+\noindent Absolute filename $\rightarrow$\\
+\hspace*{1em}In the \verb+--output-directory+, if specified$\rightarrow$\\
+\hspace*{2em}Relative to current directory$\rightarrow$\\
+\hspace*{3em}Using \verb+kpsewhich+, if available
+system)
+
+\subsubsection{Database files}
+
+Bibliography database files are searched for using the same rules as
+control files (see section \ref{loc:cf} above).
+
+\subsection{Logfile}
+
+By default, the logfile for biber will be name \verb+\jobname.blg+,
+so, if you run
+
+\begin{verbatim}
+  biber <options> test.bcf
+\end{verbatim}
+
+\noindent or
+
+\begin{verbatim}
+  biber <options> test
+\end{verbatim}
+
+\noindent then the logfile will be called «\verb+test.blg+». Like the
+\verb+.bbl+ output file, it will be created in the
+\verb+--output-directory|-c+, if this option is defined. If there is
+no \verb+.bcf+ file on the command line (for example, when using the
+\verb+--allentries|-a+ and \verb+--bibdata|-d+ options), then the
+logfile will default to «\verb+biber.blg+». You can
+override the logfile name by using the \verb+--logfile+ option:
+
+\begin{verbatim}
+  biber --logfile=lfname test
+\end{verbatim}
+
+\noindent results in a logfile called «\verb+lfname.blg+».
 
 \subsection{Collation and Localisation}\label{coll}
 
