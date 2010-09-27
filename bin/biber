@@ -31,6 +31,7 @@ GetOptions(
            'fastsort|f',
            'help|h|?',
            'mincrossrefs|m=s',
+           'logfile=s',
            'noconf',
            'nolog',
            'onlylog',
@@ -82,11 +83,27 @@ if ($opts->{U}) {
   delete $opts->{U};
 }
 
+# Sanitise user-specified log name
+$opts->{logfile} =~ s/\.blg\z//xms if $opts->{logfile};
+
 # Create Biber object, passing command-line options
 my $biber = Biber->new(%$opts);
 
-# Set output directory variable and log location
-my $biberlog = 'biber.log'; # default
+# Set log file name
+my $biberlog;
+if (my $log = Biber::Config->getoption('logfile')) { # user specified logfile name
+  $biberlog = $log . '.blg';
+}
+elsif (not @ARGV) {
+  $biberlog = 'biber.blg'; # default if no .bcf file specified
+}
+else { # set log to jobname.blg
+  my $bcf = $ARGV[0];
+  $bcf =~ s/\.bcf\z//xms;
+  $biberlog = $bcf . '.blg';
+}
+
+# prepend output directory for log, if specified
 if (my $outdir = Biber::Config->getoption('output-directory')) {
   $biberlog = File::Spec->catfile($outdir, $biberlog);
 }
@@ -148,6 +165,8 @@ Log::Log4perl::init(\$l4pconf) ;
 my $logger  = Log::Log4perl::get_logger('main') ;
 my $screen  = Log::Log4perl::get_logger('screen');
 my $logfile = Log::Log4perl::get_logger('logfile');
+
+$logger->info("Logfile is '$biberlog'");
 
 my $ctrlfile;
 my $bblfile;
@@ -323,6 +342,9 @@ Options:
 
   --help|-h
       Show this help message.
+
+  --logfile <file>
+      Use <file>.blg as the name of the logfile
 
   --mincrossrefs|-m <n>
       Set threshold for crossrefs.

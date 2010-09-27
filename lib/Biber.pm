@@ -909,7 +909,6 @@ sub postprocess_labelname {
   my $bibentries = $section->bib;
   my $be = $bibentries->entry($citekey);
   my $lnamescheme = Biber::Config->getblxoption('labelname', $be->get_field('entrytype'));
-
   # First we set the normal labelname name
   foreach my $ln ( @{$lnamescheme} ) {
     my $lnameopt;

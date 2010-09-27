@@ -108,6 +108,11 @@ sub _initopts {
     Biber::Config->setoption($_, $BIBER_CONFIG{$_});
   }
 
+  # Set options internally from config for biblatex options
+  foreach (keys %CONFIG_DEFAULT_BIBLATEX) {
+    Biber::Config->setblxoption($_, $CONFIG_DEFAULT_BIBLATEX{$_});
+  }
+
   return;
 }
 
