@@ -102,15 +102,8 @@ Options:
   --help|-h
       Show this help message.
 
-  --latexdecode=1|0 (default is true)
-      Decode LaTeX character macros into utf8 when
-      the .bib is not utf8 but bblencoding is set to utf8
-      However, LaTeX's inputenc package's [utf8] encoding is not
-      at all a complete utf8 encoding and so decoding LaTeX character
-      macros can lead to utf8 characters which inputenc cannot recognise.
-      Turn this option off to prevent utf8 conversion of characters which
-      inputenc would not recognise. Or use a TeX engine and macro package
-      with real utf8 support like XeLaTeX or LuaLaTeX.
+ --logfile &lt;file&gt;
+      Use &lt;file&gt;.blg as the name of the logfile
 
   --mincrossrefs|-m &lt;n&gt;
       Set threshold for crossrefs.
@@ -132,7 +125,8 @@ Options:
 
   --output-directory &lt;d&gt;
       Files (.bbl and .log) are output to directory &lt;d&gt; instead
-      of the current directory.
+      of the current directory. Input files are also looked for in &lt;d&gt;
+      before current directory.
 
   --quiet|-q
       Turn infos and warnings off.

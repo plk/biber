@@ -92,7 +92,8 @@ sub _initopts {
   # For testing, need to be able to force ignore of conf file in case user
   # already has one which interferes with test settings.
   unless ($noconf) {
-    # if a config file was given as cmd-line arg, it overrides everything else
+    # if a config file was given as cmd-line arg, it overrides all other
+    # config file locations
     unless ( defined $conffile and -f $conffile ) {
       $conffile = config_file();
     }
@@ -102,14 +103,28 @@ sub _initopts {
 	$logger->logcarp("Failure to read config file " . $conffile . "\n $@");
     }
   }
-  my %CONFIG = (%CONFIG_DEFAULT_BIBER, %LOCALCONF);
 
-  foreach (keys %CONFIG) {
-    Biber::Config->setoption($_, $CONFIG{$_});
+  # nsort* options are special
+  if (my $nsp = $LOCALCONF{nosortprefix}) {
+    $LOCALCONF{nosortprefix} = qr/$nsp/;
   }
+  if (my $nsd = $LOCALCONF{nosortdiacritics}) {
+    $LOCALCONF{nosortdiacritics} = qr/$nsd/;
+  }
+
+  # Config file overrides defaults for biber
+  my %BIBER_CONFIG = (%CONFIG_DEFAULT_BIBER, %LOCALCONF);
+
+  # Set options internally from config for biber options
+  foreach (keys %BIBER_CONFIG) {
+    Biber::Config->setoption($_, $BIBER_CONFIG{$_});
+  }
+
+  # Set options internally from config for biblatex options
   foreach (keys %CONFIG_DEFAULT_BIBLATEX) {
     Biber::Config->setblxoption($_, $CONFIG_DEFAULT_BIBLATEX{$_});
   }
+
   return;
 }
 
@@ -154,7 +169,7 @@ sub config_file {
     defined $ENV{APPDATA} and
     -f File::Spec->catfile($ENV{APPDATA}, "biber", $BIBER_CONF_NAME) ) {
     $biberconf = File::Spec->catfile($ENV{APPDATA}, "biber", $BIBER_CONF_NAME);
-  } elsif ( can_run("kpsewhich") ) {
+  } elsif ( can_run('kpsewhich') ) {
     scalar run( command => [ 'kpsewhich', $BIBER_CONF_NAME ],
       verbose => 0,
       buffer => \$biberconf );

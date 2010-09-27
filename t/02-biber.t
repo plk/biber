@@ -24,7 +24,8 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('quiet', 1); # because we are reading the same .bib twice and
                                       # btparse caches it in memory somewhere we can't
                                       # release so it complains about redefining macros
-Biber::Config->setoption('latexdecode', 0);
+Biber::Config->setoption('bblencoding', 'latin1');
+
 
 # Now generate the information
 $biber->prepare;

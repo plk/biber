@@ -23,6 +23,7 @@ lib/Biber/Sections.pm
 lib/Biber/Section.pm
 lib/Biber/Utils.pm
 doc/biber.tex
+doc/biber.pdf
 data/schemata/bcf.rnc
 data/schemata/bcf.rng
 data/schemata/bcf.xsd

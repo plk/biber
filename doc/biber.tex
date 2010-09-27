@@ -15,7 +15,7 @@
   url={http://biblatex-biber.sourceforge.net},
   author={François Charette, Philip Kime},
   email={firmicus@ankabut.net, Philip@kime.org.uk},
-  revision={0.5.5},
+  revision={1},
   date={\today}}
 
 \hypersetup{%
@@ -38,7 +38,12 @@
 
 \subsection{About}
 
-All about \verb+biber+
+\verb+biber+ is conceptually a \verb+bibtex+ replacement for
+\verb+biblatex+. It is written in Perl with the aim of providing a
+customised and sophisticated data preparation backend for \verb+biblatex+
+Functionally, it offers a superset of \verb+bibtex+'s capabilities but is
+tightly coupled with \verb+biblatex+ and cannot be used as a stand-alone tool
+with standard \verb+.bst+ styles.
 
 \subsection{Requirements}\label{ref:req}
 
@@ -58,7 +63,7 @@ Currently there are binaries available for:
 \end{itemize}
 
 These should work on any fairly recent OS version. Both binaries and
-perl source are available on SourceForge (\url{http://sourceforge.net/projects/biblatex-biber/}).
+perl source are available on SourceForge\footnote{\url{http://sourceforge.net/projects/biblatex-biber/}}.
 
 \subsection{License}
 
@@ -68,12 +73,11 @@ perl source are available on SourceForge (\url{http://sourceforge.net/projects/b
 
 \verb+bibtex+ has been the default (only \ldots) integrated choice for
 bibliography processing in TeX for a long time. It has well known
-limitations which stem from its data format, data model and lack of
-UTF-8 support\footnote{In fact, there is now a UTF-8 compliant version
-of \verb+bibtex+}. The \verb+.bst+ language for writing bibliography
-styles is painful to learn and use. It is not a general programming
-language and this make it really very hard to do sophisticated
-automated processing of bibliographies.
+limitations which stem from its data format, data model and lack of UTF-8
+support\footnote{In fact, there is now a UTF-8 compliant version}. The
+\verb+.bst+ language for writing bibliography styles is painful to learn
+and use. It is not a general programming language and this make it really
+very hard to do sophisticated automated processing of bibliographies.
 
 \verb+biblatex+ was a major advance for LaTeX users as it moved much
 of the bibliography processing into LaTeX macros. However,
@@ -90,16 +94,16 @@ tasks to do with \verb+.bbl+ preparation. It can
 
 \begin{itemize}
 \item Deal with the full range of UTF-8
-\item Sort in a completely customisable manner, using when available
+\item Sort in a completely customisable manner, using when available,
   CLDR collation tailorings
-\item Automatically encode the \verb+.bbl+ into any support encoding
+\item Automatically encode the \verb+.bbl+ into any supported encoding
   format
 \item Process all bibliography sections in one pass of the tool
 \item Handle UTF-8 citekeys and filenames (given a suitable fully
   UTF-8 compliant TeX engine)
 \item Handle very complex auto-expansion and contraction of names and
   namelists.
-\item Lots of other things.
+\item Lots of other things
 \end{itemize}
 
 \subsection{Acknowledgments}
@@ -107,18 +111,112 @@ tasks to do with \verb+.bbl+ preparation. It can
 François Charette originally wrote \verb+biber+. Philip Kime joined in
 the development in 2009.
 
-\section{Use}\label{ref:use}
-\label{use}
+\section{Use}
 
-.bcf interface etc. conf file. command-line precedence
+Firstly, running \verb+biber --help+ will display all options and a brief
+description of each. This is the most useful brief source of usage
+information.
 
-\subsection{Collation and Localisation}
+With the \verb+backend=biber+ option \verb+biblatex+ switches its backend
+interface and passes all options and information relevant to \verb+biber+'s
+operation in a file with extension \verb+.bcf+\footnote{BibLaTeX Control
+  File}. This is conceptually equivalent to the \verb+.aux+ file which
+LaTeX uses to pass information to \verb+bibtex+. The \verb+.bcf+ file is
+XML and contains many options and settings which configure how \verb+biber+
+is to process the bibliography and generate the \verb+.bbl+ file.
+
+\verb+biber+ sets its options using the following resource 
+chain which is given in decreasing precedence order:\\[2ex]
+
+\noindent command line options $\rightarrow$\\
+\hspace*{1em}\verb+biber.conf+ file $\rightarrow$\\
+\hspace*{2em}\verb+.bcf+ file$\rightarrow$\\
+\hspace*{3em}\verb+biber+ hard-coded defaults\\[2ex]
+
+Users do not need to care directly about the contents or format of the
+\verb+.bcf+ file as this is generated from the options which they specify
+for \verb+biblatex+. To override the \verb+.bcf+ options or to provide
+option settings when no \verb+.bcf+ file is used (see for example the
+\verb+--allentries|-a+ and \verb+--bibdata|-d+ options), users
+may use either a configuration file or the command line to set options.
+
+The configuration file is by default called \verb+biber.conf+ but this can
+be changed using the \verb+--configfile|-g+ option. Unless
+\verb+--configfile|-g+ is used, the config file is
+looked for in the following places, in decreasing order of preference:\\[2ex]
+
+\noindent \verb+biber.conf+ in the current directory $\rightarrow$\\
+\hspace*{1em}\verb+$HOME/.biber.conf+ $\rightarrow$\\
+\hspace*{2em}\verb+$ENV{XDG_CONFIG_HOME}/biber/biber.conf+ $\rightarrow$\\
+\hspace*{3em}\verb+$HOME/Library/biber/biber.conf+ (Mac OSX only)
+$\rightarrow$\\
+\hspace*{3em}\verb+$ENV{APPDATA}/biber.conf+ (Windows only) $\rightarrow$\\
+\hspace*{4em}the output of \verb+kpsewhich biber.conf+ (if available on the
+system)\\[2ex]
+
+The config file format is a very flexible one which allows users to specify
+options in most common formats, even mixed in the same file. It's easier to
+see an example. Here is a config file which displays the \verb+biber+
+hard-coded defaults for both global \verb+biber+ and global \verb+biblatex+
+options.
+
+\begin{verbatim}
+allentries          0
+bblencoding         UTF-8
+bibdata             undef 
+bibending           UTF-8
+collate             1
+<collate_options>
+    level           2
+</collate_options>
+debug               0
+fastsort            0
+mincrossrefs        2
+nolog               0
+nosortdiacritics    [\x{2bf}\x{2018}]
+nosortprefix        \p{L}{2}\p{Pd}
+quiet               0
+sortcase            1
+sortlocale          en_US.utf8
+sortupper           1
+trace               0
+validate            0
+wraplines           0
+\end{verbatim}
+
+You can see here that options with multiple key/value pairs of their own
+like \verb+--collate_options|-c+ can be specified in
+Apache config format. Please see the documentation
+for the \verb+Config::General+ Perl
+module\footnote{\url{http://search.cpan.org/search?query=Config::General&mode=all}}
+if you really need details. In practise, if you use a config file at all
+for \verb+biber+, it will contain very little as you will usually set all
+options by setting options in \verb+biblatex+ which will pass them to
+\verb+biber+ via the \verb+.bcf+ file.
+
+The \verb+--collate_options|-c+ option takes a number of key/value pairs as
+value. See section \ref{coll} for details. The value of the \verb+nosort*+
+options can only be set in the config file and not on the command line.
+This is because the values are Perl regular expressions and would need special
+quoting to set on the command line. This can get a bit tricky on some OSes
+(like Windows) so it's safer to set then in the config file. They specify
+stand-alone diacritic marks and name prefices to strip before sorting takes
+place and are designed to deal with cases like
+
+\begin{verbatim}
+  author	   = {{al-Hasan}, ʿAlī},
+\end{verbatim}
+
+\noindent where the prefix «al-» and the diacritic «ʿ» should not be
+considered when sorting.
+
+\subsection{Collation and Localisation}\label{coll}
 
 \verb+biber+ takes care of collating (sorting) the bibliography for
 \verb+biblatex+. It writes entries to the \verb+.bbl+ file sorted by a
 completely customisable set of rules which are passed in the
 \verb+.bcf+ file by \verb+biblatex+. \verb+biber+ has two ways of performing
-collation\\[2ex]
+collation:\\[2ex]
 
 \biberex{--collate|-C} The default. This option makes \verb+biber+ use the
   \verb+Unicode::Collate+ module for collation which implements the full UCA (Unicode
@@ -134,11 +232,11 @@ collation\\[2ex]
   before 'ä' in the Swedish (\verb+sv_SE+) locale. If you are using a
   common latin alphabet, then this is probably not a problem for you.\\[2ex]
 
-\noindent The locale used for sorting is determined by the following resource
-chain in decreasing precedence order:\\[2ex]
+\noindent The locale used for collation is determined by the following resource
+chain which is given in decreasing precedence order:\\[2ex]
 
-\noindent\verb+--collate_options|-c+ $\rightarrow$\\
-\hspace*{1em}\verb+--sortlocale|-c+ $\rightarrow$\\
+\noindent\verb+--collate_options|-c+ (e.g. \verb+-c 'locale => "de_DE"'+) $\rightarrow$\\
+\hspace*{1em}\verb+--sortlocale|-l+ $\rightarrow$\\
 \hspace*{2em}\verb+LC_COLLATE+ environment variable $\rightarrow$\\
 \hspace*{3em}\verb+LANG+ environment variable $\rightarrow$\\
 \hspace*{4em}\verb+LC_ALL+ environment variable\\[2ex]
@@ -149,56 +247,57 @@ information warning if it finds none. This is not a problem as the vast
 majority of collation cases are covered by the basic standard UCA and many
 locales neither have nor need any special collation tailoring.
 
-\noindent With the \verb+--fastsort|-f+ option, the locale will be
+With the \verb+--fastsort|-f+ option, the locale will be
 used to locate an OS locale definition to use for the collation. This
-may or may not be correctly tailored, depending on the locale and the OS.
+may or may not be correctly tailored, depending on the locale and the OS.\\[1ex]
 
 \noindent Collation is by default case sensitive. You can turn this
-off using the \verb+biber+ option \verb+--sortcase=0+ or set the
-\verb+biblatex+ option \verb+sortcase=false+.
+off using the \verb+biber+ option \verb+--sortcase=0+ or from
+\verb+biblatex+ using its option \verb+sortcase=false+.\\[1ex]
 
-\noindent \verb+--collate|-C+ by default collates uppercase before
+\noindent\verb+--collate|-C+ by default collates uppercase before
 lower. You can reverse this using the \verb+biber+ option \verb+--sortupper=0+
-or set the \verb+biblatex+ option \verb+sortupper=false+.
+or from \verb+biblatex+ by using its option \verb+sortupper=false+.\\[1ex]
 
-\noindent There are in fact many options to \verb+Unicode::Collate+
+There are in fact many options to \verb+Unicode::Collate+
 which can tailor the collation in various ways in
 addition to the locale tailoring which is automatically performed.
 Users should see the the documentation to the module for the various
 options, most of which the vast majority of users will never
 need\footnote{For details on the various options, see
-  \url{http://search.cpan.org/search?query=Unicode%3A%3ACollate&mode=all}}.
+  \url{http://search.cpan.org/search?query=Unicode\%3A\%3ACollate&mode=all}}.
 Options are passed as a single quoted string, each option separated by
-comma, each option and value separated by \verb+=>+. See examples.
+comma, each option and value separated by «\verb+=>+». See examples.
 
 \subsubsection{Examples}
 
-\biberex{\verb+biber+}
+\biberex{biber}
 
 \noindent Call biber using all settings from the \verb+.bcf+ generated from the
 LaTeX run. Case sensitive UCA sorting is performed taking the locale
-for tailoring from the environment
+for tailoring from the environment if no \verb+sortlocale+ is defined in
+the \verb+.bcf+
 
-\biberex{\verb+biber --sortlocale=de_DE+}
+\biberex{biber --sortlocale=de_DE}
 
-\noindent Override the locale setting possibly in the \verb+.bcf+ or
-in the environment.
+\noindent Override any locale setting in the \verb+.bcf+ or
+the environment.
 
-\biberex{\verb+biber --fastsort+}
+\biberex{biber --fastsort}
 
 \noindent Use slightly quicker internal sorting routine. This uses the OS locale
 files which may or may not be accurate.
 
-\biberex{\verb+biber --sortcase=0+}
+\biberex{biber --sortcase=0}
 
 \noindent Case insensitive sorting.
 
-\biberex{\verb+biber --sortupper=0 --collate_options="backwards => 2"+}
+\biberex{biber --sortupper=0 --collate_options="backwards => 2"}
 
 \noindent Collate lowercase before upper and collate French accents in
 reverse order at UCA level 2.
 
-\subsection{Encoding of \verb+.bib+ and \verb+.bbl+ files}
+\subsection{Encoding of files}
 
 \verb+biber+ takes care of reencoding the \verb+.bib+ data as
 necessary. In normal use, \verb+biblatex+ passes its
@@ -226,25 +325,17 @@ useful as it means that things are sorted correctly but has two
 potential (but rare) problems which you should be aware of:
 
 \begin{itemize}
-\item If you are using LaTeX and \verb+\usepackage[utf8]{inputenc}+, it is possible
-  that the UTF-8 characters resulting from \verb+biber+'s
+\item If you are using PDFLaTeX and \verb+\usepackage[utf8]{inputenc}+, it
+  is possible that the UTF-8 characters resulting from \verb+biber+'s
   internal LaTeX character macro decoding break \verb+inputenc+. This
   is because \verb+inputenc+ does not implement all of UTF-8, only a
-  commonly used subset. The solution is to either use the \verb+biber+
-  option \verb+--latexdecode=0+ in which case the sorting might not be
-  nice because then all \verb+biber+ can do is strip away the LaTeX
-  markup in order to internally generate sorting data.
+  commonly used subset. 
 
-  So if you had perhaps \verb+\DJ+ in your \verb+.bib+,
+  An example--if you had \verb+\DJ+ in your \verb+.bib+,
   \verb+biber+ decodes this correctly to «Đ» and this breaks \verb+inputenc+
-  because it doesn't understand that UTF-8 character. You could set
-  \verb+--latexdecode=0+ but then \verb+biber+ would strip this
-  internally for generating sorting data to «» which is a different
-  character entirely and sorts in a completely different place.
-
-  The best solution here is to switch to a TeX engine with full
-  UTF-8 suport like XeTeX or LuaTeX as these don't use or need
-  \verb+inputenc+.
+  because it doesn't understand that UTF-8 character. The solution
+  here is to switch to a TeX engine with full UTF-8 support like XeTeX or
+  LuaTeX as these don't use or need \verb+inputenc+.
 \item If your \verb+bblencoding+ is not UTF-8, and you are using some
   UTF-8 equivalent LaTeX character macros in your \verb+.bib+, then
   some \verb+.bbl+ fields (currently only \verb+\sortinit{}+) might
@@ -253,7 +344,7 @@ potential (but rare) problems which you should be aware of:
   final sorting data which is only available after the LaTeX character
   macro decoding step.
 
-  For example, suppose you were using PDFLaTeX with
+  For example, suppose you were using PDFLaTeX with\\
   \verb+\usepackage[latin1]{inputenc}+ and the following
   \verb+.bib entry+
 
@@ -271,12 +362,9 @@ potential (but rare) problems which you should be aware of:
   \verb+bblencoding+, \verb+biber+ strips off any diacritics which in
   this case results in «S». This is not ideal as this is not the
   initial character of the string used for sorting any more but it's a
-  decent replacement in such cases. You could also turn off decoding
-  of LaTeX character macros with \verb+--latexdecod=0+ but then the
-  comments about sorting in the case above apply.
-
-  Really, you should use UTF-8 \verb+bblencoding+ wherever possible
-  and again, this might mean switching TeX engines to one that
+  decent replacement in such cases. The solution is really
+  to use UTF-8 \verb+bblencoding+ wherever possible. In extreme cases like
+  the one above, this might also mean switching TeX engines to one that
   supports full UTF-8.
 \end{itemize}
 
@@ -287,33 +375,43 @@ override the \verb+.bcf+ settings with the command line.
 
 \subsubsection{Examples}
 
-\biberex{\verb+biber+}
+\biberex{biber}
 
 \noindent Read \verb+bibencoding+ and \verb+bblencoding+ from the
 \verb+.bcf+.
 
-\biberex{\verb+biber --bblencoding=latin2+}
+\biberex{biber --bblencoding=latin2}
 
 \noindent Encode the \verb+.bbl+ as latin2, overriding the
 \verb+.bcf+.
 
-\biberex{\verb+biber --bblencoding=latin1 --latexdecode=0+}
-
-\noindent Encode the \verb+.bbl+ as latin1, overriding the
-\verb+.bcf+. Don't decode any LaTeX character macros into UTF-8 internally.
-
-\biberex{\verb+biber -u+}
+\biberex{biber -u}
 
 \noindent Shortcut alias for \verb+biber --bibencoding=UTF-8+
 
-\biberex{\verb+biber -U+}
+\biberex{biber -U}
 
 \noindent Shortcut alias for \verb+biber --bblencoding=UTF-8+
 
 \subsection{Limitations}
-\label{use:limit}
 
-Custom entry types/fields. List uniqueness etc.
+Currently, users are restricted to the bibliography entry types hard-coded
+into \verb+biblatex+. This is mitigated a little by the custom fields
+listed in section 2.2.4 of the \verb+bibatex+ manual but these are not
+portable or semantically obvious in their meaning. It is planned to have a
+customisable interface in \verb+biblatex+ which will allow users to define
+entry types an fields and have these passed through to \verb+biber+ which
+will validate the structure of the bibliography against these definitions.
+This would allow a fully customisable data model interface. Currently this
+is impossible due to a reliance on the \verb+.bib+ format which is quite
+restricted in scope and extensibility. It is likely that \verb+biblatex+
+and \verb+biber+ will move to a modular data layer with an XML format as
+the default. \verb+.bib+ support will be maintained as a legacy format.
 
-
+Currently it is not possible to automatically expand name lists to their
+minimally unique truncation which is required by some styles (APA for
+example). This is quite a hard problem which is implemented in an
+experimental \verb+biber+ branch but need \verb+biblatex+ support,
+envisaged for version 2.x. It requires an enhanced \verb+.bbl+ format,
+among other things.
 \end{document}

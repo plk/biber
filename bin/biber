@@ -30,8 +30,8 @@ GetOptions(
            'debug|D',
            'fastsort|f',
            'help|h|?',
-           'latexdecode',
            'mincrossrefs|m=s',
+           'logfile=s',
            'noconf',
            'nolog',
            'onlylog',
@@ -68,7 +68,7 @@ if ($opts->{bibdata}) {
   $opts->{bibdata} = [ split /\s*,\s*/, $opts->{bibdata} ]
 }
 
-# Sanitise collate option if fasssort if specified
+# Sanitise collate option if fastsort if specified
 if ($opts->{fastsort}) {
   delete $opts->{collate};
 }
@@ -83,15 +83,30 @@ if ($opts->{U}) {
   delete $opts->{U};
 }
 
-my $outdir;
-my $biberlog = 'biber.log';
+# Sanitise user-specified log name
+$opts->{logfile} =~ s/\.blg\z//xms if $opts->{logfile};
 
-if ( defined $opts->{'output-directory'} ) {
-  $outdir = $opts->{'output-directory'};
-  $biberlog = File::Spec->catfile($outdir, $biberlog);
+# Create Biber object, passing command-line options
+my $biber = Biber->new(%$opts);
+
+# Set log file name
+my $biberlog;
+if (my $log = Biber::Config->getoption('logfile')) { # user specified logfile name
+  $biberlog = $log . '.blg';
+}
+elsif (not @ARGV) {
+  $biberlog = 'biber.blg'; # default if no .bcf file specified
+}
+else { # set log to jobname.blg
+  my $bcf = $ARGV[0];
+  $bcf =~ s/\.bcf\z//xms;
+  $biberlog = $bcf . '.blg';
 }
 
-my $biber = Biber->new(%$opts);
+# prepend output directory for log, if specified
+if (my $outdir = Biber::Config->getoption('output-directory')) {
+  $biberlog = File::Spec->catfile($outdir, $biberlog);
+}
 
 # Setting the logging level of Log::Log4perl
 my $LOGLEVEL;
@@ -151,6 +166,8 @@ my $logger  = Log::Log4perl::get_logger('main') ;
 my $screen  = Log::Log4perl::get_logger('screen');
 my $logfile = Log::Log4perl::get_logger('logfile');
 
+$logger->info("Logfile is '$biberlog'");
+
 my $ctrlfile;
 my $bblfile;
 
@@ -185,18 +202,20 @@ else {
 
   if (Biber::Config->getoption('outfile')) {
     $bblfile = Biber::Config->getoption('outfile')
-  } else {
+  }
+  else {
     $bblfile = $ctrlfile;
     $bblfile =~ s/bcf$/bbl/;
   }
 
-  if (defined($opts->{'output-directory'})) {
+  # Set the .bbl path to the output dir, if specified
+  if (my $outdir = Biber::Config->getoption('output-directory')) {
     my (undef, undef, $file) = File::Spec->splitpath($bblfile);
     $bblfile = File::Spec->catfile($outdir, $file)
   }
 
-  # parse the .bcf control file
-  $biber->parse_ctrlfile($ctrlfile);
+  # find and parse the .bcf control file
+  $biber->parse_ctrlfile(locate_biber_file($ctrlfile));
 }
 
 if (Biber::Config->getoption('trace')) {
@@ -324,15 +343,8 @@ Options:
   --help|-h
       Show this help message.
 
-  --latexdecode=1|0 (default is true)
-      Decode LaTeX character macros into utf8 when
-      the .bib is not utf8 but bblencoding is set to utf8
-      However, LaTeX's inputenc package's [utf8] encoding is not
-      at all a complete utf8 encoding and so decoding LaTeX character
-      macros can lead to utf8 characters which inputenc cannot recognise.
-      Turn this option off to prevent utf8 conversion of characters which
-      inputenc would not recognise. Or use a TeX engine and macro package
-      with real utf8 support like XeLaTeX or LuaLaTeX.
+  --logfile <file>
+      Use <file>.blg as the name of the logfile
 
   --mincrossrefs|-m <n>
       Set threshold for crossrefs.
@@ -354,7 +366,8 @@ Options:
 
   --output-directory <d>
       Files (.bbl and .log) are output to directory <d> instead
-      of the current directory.
+      of the current directory. Input files are also looked for in <d>
+      before current directory.
 
   --quiet|-q
       Turn infos and warnings off.
@@ -404,14 +417,7 @@ C<biber> - A bibtex replacement for users of biblatex
 
 =head1 SYNOPSIS
 
-biber [ { --bibdata | -d } database.{bib|xml|dbxml} ]
-      [ --mincrossrefs | -m ] [ [--collate|-C] | [ --fastsort | -f ] ]
-      [ -u ] [ -U ] [ --bibencoding | -e ] [ --bblencoding | -E ] [ --nolatexdecode ]
-      [ --debug | -D ] [ { --outfile | -O } filename ] file.bcf
-
-biber --bibdata database --allentries [ --outfile filename ] [ ... ]
-
-biber { --help | --version }
+Please run "biber --help" for usage
 
 =head1 DESCRIPTION
 

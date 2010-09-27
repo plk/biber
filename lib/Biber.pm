@@ -64,12 +64,13 @@ sub new {
   my ($class, %opts) = @_;
   my $self = bless {}, $class;
 
-  # Set up config object.
+  # Set up config object from config file and defaults
   if (defined $opts{configfile}) {
     Biber::Config->_initopts( $opts{configfile} );
   } else {
     Biber::Config->_initopts(undef, $opts{noconf});
   }
+  # Command-line overrides everything else
   if (%opts) {
     foreach (keys %opts) {
       Biber::Config->setcmdlineoption($_, $opts{$_});
@@ -539,19 +540,17 @@ sub parse_bibtex {
     File::Copy::copy($filename, $ufilename);
   }
 
-  # Decode LaTeX to UTF8 if output is UTF-8 and --latexdecode is true
-  if (Biber::Config->getoption('latexdecode')) {
-    if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
-      require File::Slurp::Unicode;
-      my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
-        or $logger->logcroak("Can't read $ufilename");
-      require LaTeX::Decode;
-      $logger->info('Decoding LaTeX character macros into UTF-8');
-      $buf = LaTeX::Decode::latex_decode($buf, strip_outer_braces => 1);
+  # Decode LaTeX to UTF8 if output is UTF-8
+  if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
+    require File::Slurp::Unicode;
+    my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
+      or $logger->logcroak("Can't read $ufilename");
+    require LaTeX::Decode;
+    $logger->info('Decoding LaTeX character macros into UTF-8');
+    $buf = LaTeX::Decode::latex_decode($buf, strip_outer_braces => 1);
 
-      File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
-          or $logger->logcroak("Can't write $ufilename");
-    }
+    File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
+        or $logger->logcroak("Can't write $ufilename");
   }
 
   $filename = $ufilename;
@@ -1683,7 +1682,7 @@ sub sortentries {
     unless (ref($opts) eq "HASH") { # opts for this can come in a string from cmd line
       $collopts = eval "{ $opts }" or $logger->logcarp("Incorrect collate_options: $@");
     }
-    else {
+    else { # options from config file as hash ref
       $collopts = $opts;
     }
 
@@ -1864,24 +1863,11 @@ sub process_data {
 
   if ($datatype eq 'bibtex') {
     foreach my $datafile ($section->get_datafiles) {
-      # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
-      $datafile = bibfind($datafile);
-      if ($datafile !~ /\.bib$/) {
-        $datafile = "$datafile.bib";
-      }
+      $datafile .= '.bib' unless $datafile =~ /\.(?:bib|xml|dbxml)\z/xms;
+      $datafile = locate_biber_file($datafile);
       $logger->logcroak("File '$datafile' does not exist!") unless -f $datafile;
       $self->parse_bibtex($datafile)
     }
-  }
-  elsif ($datatype eq 'biblatexml') {
-    $logger->logcroak("Support for the BibLaTeXML format is not included in this version of Biber.\n",
-                      "You can try (at your own risk) to pull the \"biblatexml\" branch of our git repo.");
-      foreach my $datafile ($section->get_datafiles) {
-        # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
-        $datafile = bibfind($datafile);
-        $logger->logcroak("File '$datafile' does not exist!") unless -f $datafile;
-        $self->parse_biblatexml($datafile);
-      }
   }
   return;
 }
