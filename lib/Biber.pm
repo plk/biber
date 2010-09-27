@@ -1559,24 +1559,11 @@ sub process_data {
 
   if ($datatype eq 'bibtex') {
     foreach my $datafile ($section->get_datafiles) {
-      # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
-      $datafile = bibfind($datafile);
-      if ($datafile !~ /\.bib$/) {
-        $datafile = "$datafile.bib";
-      }
+      $datafile .= '.bib' unless $datafile =~ /\.(?:bib|xml|dbxml)\z/xms;
+      $datafile = locate_biber_file($datafile);
       $logger->logcroak("File '$datafile' does not exist!") unless -f $datafile;
       $self->parse_bibtex($datafile)
     }
-  }
-  elsif ($datatype eq 'biblatexml') {
-    $logger->logcroak("Support for the BibLaTeXML format is not included in this version of Biber.\n",
-                      "You can try (at your own risk) to pull the \"biblatexml\" branch of our git repo.");
-      foreach my $datafile ($section->get_datafiles) {
-        # this uses "kpsepath bib" and File::Find to find $bib in $BIBINPUTS paths:
-        $datafile = bibfind($datafile);
-        $logger->logcroak("File '$datafile' does not exist!") unless -f $datafile;
-        $self->parse_biblatexml($datafile);
-      }
   }
   return;
 }

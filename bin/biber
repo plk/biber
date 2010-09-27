@@ -67,7 +67,7 @@ if ($opts->{bibdata}) {
   $opts->{bibdata} = [ split /\s*,\s*/, $opts->{bibdata} ]
 }
 
-# Sanitise collate option if fasssort if specified
+# Sanitise collate option if fastsort if specified
 if ($opts->{fastsort}) {
   delete $opts->{collate};
 }
@@ -82,15 +82,14 @@ if ($opts->{U}) {
   delete $opts->{U};
 }
 
-my $outdir;
-my $biberlog = 'biber.log';
+# Create Biber object, passing command-line options
+my $biber = Biber->new(%$opts);
 
-if ( defined $opts->{'output-directory'} ) {
-  $outdir = $opts->{'output-directory'};
+# Set output directory variable and log location
+my $biberlog = 'biber.log'; # default
+if (my $outdir = Biber::Config->getoption('output-directory')) {
   $biberlog = File::Spec->catfile($outdir, $biberlog);
 }
-
-my $biber = Biber->new(%$opts);
 
 # Setting the logging level of Log::Log4perl
 my $LOGLEVEL;
@@ -184,18 +183,20 @@ else {
 
   if (Biber::Config->getoption('outfile')) {
     $bblfile = Biber::Config->getoption('outfile')
-  } else {
+  }
+  else {
     $bblfile = $ctrlfile;
     $bblfile =~ s/bcf$/bbl/;
   }
 
-  if (defined($opts->{'output-directory'})) {
+  # Set the .bbl path to the output dir, if specified
+  if (my $outdir = Biber::Config->getoption('output-directory')) {
     my (undef, undef, $file) = File::Spec->splitpath($bblfile);
     $bblfile = File::Spec->catfile($outdir, $file)
   }
 
-  # parse the .bcf control file
-  $biber->parse_ctrlfile($ctrlfile);
+  # find and parse the .bcf control file
+  $biber->parse_ctrlfile(locate_biber_file($ctrlfile));
 }
 
 if (Biber::Config->getoption('trace')) {
@@ -343,7 +344,8 @@ Options:
 
   --output-directory <d>
       Files (.bbl and .log) are output to directory <d> instead
-      of the current directory.
+      of the current directory. Input files are also looked for in <d>
+      before current directory.
 
   --quiet|-q
       Turn infos and warnings off.

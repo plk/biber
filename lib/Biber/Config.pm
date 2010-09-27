@@ -152,7 +152,7 @@ sub config_file {
     defined $ENV{APPDATA} and
     -f File::Spec->catfile($ENV{APPDATA}, "biber", $BIBER_CONF_NAME) ) {
     $biberconf = File::Spec->catfile($ENV{APPDATA}, "biber", $BIBER_CONF_NAME);
-  } elsif ( can_run("kpsewhich") ) {
+  } elsif ( can_run('kpsewhich') ) {
     scalar run( command => [ 'kpsewhich', $BIBER_CONF_NAME ],
       verbose => 0,
       buffer => \$biberconf );

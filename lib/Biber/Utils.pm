@@ -4,6 +4,7 @@ use warnings;
 use Carp;
 use Encode;
 use File::Find;
+use File::Spec;
 use IPC::Cmd qw( can_run run );
 use List::Util qw( first );
 use LaTeX::Decode 0.03;
@@ -30,7 +31,7 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ bibfind makenameid stringify_hash
+our @EXPORT = qw{ locate_biber_file makenameid stringify_hash
   normalise_string normalise_string_lite normalise_string_underscore normalise_string_sort
   latexescape reduce_array remove_outer add_outer ucinit strip_nosort
   strip_nosortdiacritics strip_nosortprefix is_def is_undef is_def_and_notnull is_def_and_null
@@ -38,47 +39,45 @@ our @EXPORT = qw{ bibfind makenameid stringify_hash
 
 =head1 FUNCTIONS
 
-=head2 bibfind
+=head2 locate_biber_file
 
-    Searches a bib file in the BIBINPUTS paths using kpsepath (which should be
-    available on most modern TeX installations). Otherwise it just returns
-    the argument.
+  Searches for a file by
+
+  For the exact path if the filename is absolute
+  In the output-directory, if defined
+  Relative to the current directory
+  Using kpsewhich, if available
 
 =cut
 
-sub bibfind {
-  my $_filename = shift;
+sub locate_biber_file {
+  my $filename = shift;
+  my $filenamepath = $filename; # default if nothing else below applies
+  my $outdir = Biber::Config->getoption('output-directory');
 
-  $_filename .= '.bib' unless $_filename =~ /\.(bib|xml|dbxml)$/;
-
-  if (can_run("kpsewhich")) {
+  if (File::Spec->file_name_is_absolute($filename)) {
+    $filenamepath = $filename;
+  }
+  elsif ($outdir) {
+    $filenamepath = File::Spec->catfile($outdir, $filename);
+  }
+  elsif (-f $filename) {
+    $filenamepath = $filename;
+  }
+  elsif (can_run('kpsewhich')) {
     my $found;
-    if ( $^O =~ /\AMSWin/xms ) {
-      scalar run( command => [ 'kpsewhich', '-format=bib', $_filename ],
-                  verbose => 0,
-                  buffer => \$found );
-    }
-    else {
-      scalar run( command => [ 'kpsewhich', $_filename ],
-                  verbose => 0,
-                  buffer => \$found );
-    }
+    scalar run( command => [ 'kpsewhich', $filename ],
+                verbose => 0,
+                buffer => \$found );
     if ($found) {
       chomp $found;
       # filename can be UTF-8 and run() isn't clever with UTF-8
-      $found = decode_utf8($found);
-      $logger->debug("Found .bib file at '$found'");
-      return $found;
-    }
-    else {
-      return $_filename;
+      $filenamepath = decode_utf8($found);
     }
   }
-  else {
-    return $_filename;
-  }
+  $logger->info("Found '$filenamepath'");
+  return $filenamepath;
 }
-
 
 =head2 is_name_field
 
