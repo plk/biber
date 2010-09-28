@@ -15,7 +15,7 @@
   url={http://biblatex-biber.sourceforge.net},
   author={François Charette, Philip Kime},
   email={firmicus@ankabut.net, Philip@kime.org.uk},
-  revision={1},
+  revision={1.1},
   date={\today}}
 
 \hypersetup{%
@@ -216,7 +216,7 @@ considered when sorting.
 \subsubsection{Control file}\label{loc:cf}
 
 The control file is normally passed as the only argument to biber
-(unless using \verb+--allentries|a+ and \verb+--bibdata|-d+). It is
+(unless using \verb+--allentries|-a+ and \verb+--bibdata|-d+). It is
 searched for using the following rule, in descending order of
 priority:\\[2ex]
 
@@ -224,12 +224,15 @@ priority:\\[2ex]
 \hspace*{1em}In the \verb+--output-directory+, if specified$\rightarrow$\\
 \hspace*{2em}Relative to current directory$\rightarrow$\\
 \hspace*{3em}Using \verb+kpsewhich+, if available
-system)
 
 \subsubsection{Database files}
 
 Bibliography database files are searched for using the same rules as
-control files (see section \ref{loc:cf} above).
+control files (see section \ref{loc:cf} above). Unless using the
+\verb+--bibdata|-d+ option, users usually do not specify explicitly the
+bibliography database files; they are normally passed in the \verb+.bcf+
+control file, taken from the \verb+biblatex + \verb+\bibliography{}+
+command arguments.
 
 \subsection{Logfile}
 
@@ -251,7 +254,7 @@ so, if you run
 \verb+--output-directory|-c+, if this option is defined. If there is
 no \verb+.bcf+ file on the command line (for example, when using the
 \verb+--allentries|-a+ and \verb+--bibdata|-d+ options), then the
-logfile will default to «\verb+biber.blg+». You can
+logfile name will default to «\verb+biber.blg+». You can
 override the logfile name by using the \verb+--logfile+ option:
 
 \begin{verbatim}
