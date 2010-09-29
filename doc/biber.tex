@@ -501,9 +501,13 @@ is worth noting:
 \item On the first run of a new version (that is, with a specific checksum),
   they actually unpack themselves to a temporary location. This varies by
   operating system but is usually something like \verb+/var/tmp+ or \verb+/tmp+ on
-  UNIX-based OSes and\\
-  \verb+C:\Documents and Settings\<username>\Local Settings\Temp+ on
-  Windows. This unpacking can take a little while and only happens on
+  UNIX-based OSes or
+
+  \begin{verbatim}
+  C:\Documents and Settings\<username>\Local Settings\Temp
+  \end{verbatim}
+
+  \noindent on Windows. This unpacking can take a little while and only happens on
   the first run of a new version.
 \end{itemize}
 
@@ -542,14 +546,14 @@ sudo mv ~/Desktop/biber /usr/texbin/
 sudo chmod +x /usr/texbin/biber
 \end{verbatim}
 
-If you are using the macports TexLive distribution:
+\noindent If you are using the macports TexLive distribution:
 
 \begin{verbatim}
 sudo mv ~/Desktop/biber /opt/local/bin/
 sudo chmod +x /opt/local/bin/biber
 \end{verbatim}
 
-The "\verb+sudo+" commands will prompt you for your password.
+\noindent The "\verb+sudo+" commands will prompt you for your password.
 
 \subsubsection{Windows}
 
@@ -586,7 +590,7 @@ preferably 5.12 at least with the following modules:
 \item All \verb+biber+ pre-requisites
 \end{itemize}
 
-You must have the latest CPAN versions of all modules as \verb+biber+
+\noindent You must have the latest CPAN versions of all modules as \verb+biber+
 is very specific in some cases about module versions and depends on
 recent fixes in many cases. You can see if you have the \verb+biber+
 Perl dependencies by the usual
@@ -614,26 +618,27 @@ follows\footnote{On UNIXequse systems, you may need to specify a full
 \end{itemize}
 
 \noindent This leaves a binary called «\verb+biber-<arch>+» (also with
-a «\verb+.exe+ extension on Windows» in your current directory.
+a «\verb+.exe+ extension on Windows) in your current directory.
 The tricky part is constructing the information for the build
 script. There are two things that need to be configured, both of
 which are required by the \verb+PAR::Packer+ module:
 
 \begin{enumerate}
 \item A list of modules/libraries to include in the binary which are not
-  automatically detected by the \verb+PAR::Packer+ depenendency
+  automatically detected by the \verb+PAR::Packer+ dependency
   scanner
 \item A list of extra files to include in the binary which are not
-  automatically detected by the \verb+PAR::Packer+ depenendency
+  automatically detected by the \verb+PAR::Packer+ dependency
   scanner
 \end{enumerate}
 
-\noindent To build \verb+biber+ for a new architecture, you should:
+\noindent To build \verb+biber+ for a new architecture you need to
+define these two things as part of constructing new build scripts:
 
 \begin{itemize}
-\item Make a new subfolder in \verb+dist+ directory named after the
+\item Make a new subfolder in the \verb+dist+ directory named after the
   architecture you are building for. This name is arbitrary but should
-  be fairly obvious like «solaris-sparc-64», for example.
+  be fairly obvious like «\verb+solaris-sparc-64+», for example.
 \item Copy the \verb+biber.files+ file from an existing build
   architecture into this directory.
 \item For all of the files with absolute pathnames in there (that is,
@@ -647,6 +652,7 @@ which are required by the \verb+PAR::Packer+ module:
   libraries reside on your system.
 \item Change the \verb+--output+ option to name the resulting binary
   for your architecture.
+\item Run the build script
 \end{itemize}
 
 \noindent The \verb+--link+ options can be a little tricky
