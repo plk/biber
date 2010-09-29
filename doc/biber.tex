@@ -15,7 +15,7 @@
   url={http://biblatex-biber.sourceforge.net},
   author={François Charette, Philip Kime},
   email={firmicus@ankabut.net, Philip@kime.org.uk},
-  revision={1.1},
+  revision={1.3},
   date={\today}}
 
 \hypersetup{%
@@ -25,6 +25,11 @@
   pdfkeywords={biblatex, bibliography}}
 
 
+% Control list spacing
+\usepackage{enumitem}
+\setdescription{noitemsep}
+\setenumerate{noitemsep}
+\setitemize{noitemsep}
 
 \def\biberex#1{\hbox{\hspace{-4em}\texttt{\small \detokenize{#1}}}}
 
@@ -40,7 +45,7 @@
 
 \verb+biber+ is conceptually a \verb+bibtex+ replacement for
 \verb+biblatex+. It is written in Perl with the aim of providing a
-customised and sophisticated data preparation backend for \verb+biblatex+
+customised and sophisticated data preparation backend for \verb+biblatex+.
 Functionally, it offers a superset of \verb+bibtex+'s capabilities but is
 tightly coupled with \verb+biblatex+ and cannot be used as a stand-alone tool
 with standard \verb+.bst+ styles.
@@ -67,7 +72,7 @@ perl source are available on SourceForge\footnote{\url{http://sourceforge.net/pr
 
 \subsection{License}
 
-\verb+biber+ is released under the free sortware Artistic License 2.0\footnote{\url{http://www.opensource.org/licenses/artistic-license-2.0.php}}
+\verb+biber+ is released under the free software Artistic License 2.0\footnote{\url{http://www.opensource.org/licenses/artistic-license-2.0.php}}
 
 \subsection{History}
 
@@ -97,7 +102,8 @@ tasks to do with \verb+.bbl+ preparation. It can
 \item Sort in a completely customisable manner, using when available,
   CLDR collation tailorings
 \item Automatically encode the \verb+.bbl+ into any supported encoding
-  format
+  format\footnote{«Supported» here means encodings supported by the
+    Perl \texttt{Encode} module}
 \item Process all bibliography sections in one pass of the tool
 \item Handle UTF-8 citekeys and filenames (given a suitable fully
   UTF-8 compliant TeX engine)
@@ -117,13 +123,25 @@ Firstly, running \verb+biber --help+ will display all options and a brief
 description of each. This is the most useful brief source of usage
 information.
 
-With the \verb+backend=biber+ option \verb+biblatex+ switches its backend
+With the \verb+backend=biber+ option, \verb+biblatex+ switches its backend
 interface and passes all options and information relevant to \verb+biber+'s
-operation in a file with extension \verb+.bcf+\footnote{BibLaTeX Control
+operation in a control file with extension \verb+.bcf+\footnote{BibLaTeX Control
   File}. This is conceptually equivalent to the \verb+.aux+ file which
 LaTeX uses to pass information to \verb+bibtex+. The \verb+.bcf+ file is
 XML and contains many options and settings which configure how \verb+biber+
 is to process the bibliography and generate the \verb+.bbl+ file.
+
+The usual way to call \verb+biber+ is simply with the \verb+.bcf+ file
+as the only argument. The «\verb+.bcf+» extension of the control file
+is not optional. \verb+biblatex+ always outputs a control file with
+the \verb+.bcf extension+. Specifying the «\verb+.bcf+» extension to
+\verb+biber+ \emph{is} optional. Assuming a control file called
+\verb+test.bcf+, the following two commands are equivalent:
+
+\begin{verbatim}
+biber test.bcf
+biber test
+\end{verbatim}
 
 \subsection{Options and config file}
 \verb+biber+ sets its options using the following resource 
@@ -134,7 +152,7 @@ chain which is given in decreasing precedence order:\\[2ex]
 \hspace*{2em}\verb+.bcf+ file$\rightarrow$\\
 \hspace*{3em}\verb+biber+ hard-coded defaults\\[2ex]
 
-Users do not need to care directly about the contents or format of the
+\noindent Users do not need to care directly about the contents or format of the
 \verb+.bcf+ file as this is generated from the options which they specify
 for \verb+biblatex+. To override the \verb+.bcf+ options or to provide
 option settings when no \verb+.bcf+ file is used (see for example the
@@ -155,11 +173,10 @@ $\rightarrow$\\
 \hspace*{4em}the output of \verb+kpsewhich biber.conf+ (if available on the
 system)\\[2ex]
 
-The config file format is a very flexible one which allows users to specify
+\noindent The config file format is a very flexible one which allows users to specify
 options in most common formats, even mixed in the same file. It's easier to
 see an example. Here is a config file which displays the \verb+biber+
-hard-coded defaults for both global \verb+biber+ and global \verb+biblatex+
-options.
+hard-coded defaults:
 
 \begin{verbatim}
 allentries          0
@@ -185,7 +202,7 @@ validate            0
 wraplines           0
 \end{verbatim}
 
-You can see here that options with multiple key/value pairs of their own
+\noindent You can see here that options with multiple key/value pairs of their own
 like \verb+--collate_options|-c+ can be specified in
 Apache config format. Please see the documentation
 for the \verb+Config::General+ Perl
@@ -217,7 +234,7 @@ considered when sorting.
 
 The control file is normally passed as the only argument to biber
 (unless using \verb+--allentries|-a+ and \verb+--bibdata|-d+). It is
-searched for using the following rule, in descending order of
+searched for using the following locations, in decreasing order of
 priority:\\[2ex]
 
 \noindent Absolute filename $\rightarrow$\\
@@ -227,7 +244,7 @@ priority:\\[2ex]
 
 \subsubsection{Database files}
 
-Bibliography database files are searched for using the same rules as
+Bibliography database files are searched for using the same rule as for
 control files (see section \ref{loc:cf} above). Unless using the
 \verb+--bibdata|-d+ option, users usually do not specify explicitly the
 bibliography database files; they are normally passed in the \verb+.bcf+
@@ -243,12 +260,6 @@ so, if you run
   biber <options> test.bcf
 \end{verbatim}
 
-\noindent or
-
-\begin{verbatim}
-  biber <options> test
-\end{verbatim}
-
 \noindent then the logfile will be called «\verb+test.blg+». Like the
 \verb+.bbl+ output file, it will be created in the
 \verb+--output-directory|-c+, if this option is defined. If there is
@@ -258,27 +269,29 @@ logfile name will default to «\verb+biber.blg+». You can
 override the logfile name by using the \verb+--logfile+ option:
 
 \begin{verbatim}
-  biber --logfile=lfname test
+  biber --logfile=lfname test.bcf
 \end{verbatim}
 
 \noindent results in a logfile called «\verb+lfname.blg+».
 
 \subsection{Collation and Localisation}\label{coll}
 
-\verb+biber+ takes care of collating (sorting) the bibliography for
+\verb+biber+ takes care of collating the bibliography for
 \verb+biblatex+. It writes entries to the \verb+.bbl+ file sorted by a
 completely customisable set of rules which are passed in the
 \verb+.bcf+ file by \verb+biblatex+. \verb+biber+ has two ways of performing
 collation:\\[2ex]
 
-\biberex{--collate|-C} The default. This option makes \verb+biber+ use the
+\biberex{--collate|-C}
+  \noindent The default. This option makes \verb+biber+ use the
   \verb+Unicode::Collate+ module for collation which implements the full UCA (Unicode
   Collation Algorithm). It also has CLDR (Common Locale Data
   Repository) tailoring to deal with cases which are not covered by the
   UCA. It is a little slower than \verb+--fastsort|-f+ but the
   advantages are such that it's rarely worth using \verb+--fastsort|-f+\\[1ex]
 
-\biberex{--fastsort|-f} Biber will sort using
+\biberex{--fastsort|-f}
+  \noindent Biber will sort using
   the OS locale collation tables. The drawback for this method is that special
   collation tailoring for various languages are not implemented in the
   collation tables for many OSes. For example, few OSes correctly sort 'å'
@@ -319,8 +332,9 @@ Users should see the the documentation to the module for the various
 options, most of which the vast majority of users will never
 need\footnote{For details on the various options, see
   \url{http://search.cpan.org/search?query=Unicode\%3A\%3ACollate&mode=all}}.
-Options are passed as a single quoted string, each option separated by
-comma, each option and value separated by «\verb+=>+». See examples.
+Options are passed using the \verb+--collate_options|-c+ option as a
+single quoted string, each option separated by comma, each key and
+value separated by «\verb+=>+». See examples.
 
 \subsubsection{Examples}
 
@@ -364,12 +378,12 @@ other TeX engine).
 
 \begin{enumerate}
 \item Decodes the \verb+.bib+ into UTF-8 if it is not UTF-8 already
-\item Decodes LaTeX character macros into UTF-8 unless \verb+--latexdecode=0+
+\item Decodes LaTeX character macros into UTF-8
 \item Encodes the output so that the \verb+.bbl+ is in
-  the encoding that \verb+bblencoding+ specifies.
+  the encoding that \verb+bblencoding+ specifies
 \item Warns if it is asked to output to the \verb+.bbl+ any UTF-8
   decoded LaTeX character macros which are not in the
-  \verb+bblencoding+ encoding. Replaces with a diacritic-stripped substitute.
+  \verb+bblencoding+ encoding. Replaces with a diacritic-stripped substitute
 \end{enumerate}
 
 \noindent As you can see from item 2 above, by default, \verb+biber+
@@ -392,7 +406,7 @@ potential (but rare) problems which you should be aware of:
 \item If your \verb+bblencoding+ is not UTF-8, and you are using some
   UTF-8 equivalent LaTeX character macros in your \verb+.bib+, then
   some \verb+.bbl+ fields (currently only \verb+\sortinit{}+) might
-  end up with invalid character in them, according to the \verb+.bbl+
+  end up with invalid characters in them, according to the \verb+.bbl+
   encoding. This is because some fields must be generated from the
   final sorting data which is only available after the LaTeX character
   macro decoding step.
@@ -424,14 +438,20 @@ potential (but rare) problems which you should be aware of:
 \noindent Normally, you do not need to set the encoding options on the
 \verb+biber+ command line as they are passed in the \verb+.bcf+ via
 the information in your \verb+biblatex+ environment. However, you can
-override the \verb+.bcf+ settings with the command line.
+override the \verb+.bcf+ settings with the command line or config
+file. The resource chain for encoding settings is, in decreasing order
+of preference:\\[2ex]
+
+\noindent\verb+--bibencoding|-e+ and \verb+--bblencoding|-E+ $\rightarrow$\\
+\hspace*{1em}\verb+biber+ config file $\rightarrow$\\
+\hspace*{2em}\verb+.bcf+ control file
 
 \subsubsection{Examples}
 
 \biberex{biber}
 
 \noindent Read \verb+bibencoding+ and \verb+bblencoding+ from the
-\verb+.bcf+.
+config file or \verb+.bcf+.
 
 \biberex{biber --bblencoding=latin2}
 
@@ -467,4 +487,180 @@ example). This is quite a hard problem which is implemented in an
 experimental \verb+biber+ branch but need \verb+biblatex+ support,
 envisaged for version 2.x. It requires an enhanced \verb+.bbl+ format,
 among other things.
+
+\section{Binaries}
+
+The binary distributions of biber are made using the perl \verb+PAR::Packer+
+module. They can be used as a normal binary but have some behaviour which
+is worth noting:
+
+\begin{itemize}
+\item Don't be worried by the size of the binaries. \verb+PAR::Packer+ essentially
+  constructs a self-extracting archive which unpacks the needed files first
+  and so the binaries look larger than what actually runs in memory.
+\item On the first run of a new version (that is, with a specific checksum),
+  they actually unpack themselves to a temporary location which varies by
+  operating system. This unpacking can take a little while and only happens on
+  the first run of a new version.
+\end{itemize}
+
+\subsection{Binary Architectures}
+
+Binaries are available for the following architectures:
+
+\begin{itemize}
+\item \verb+linux_x86_32+ --- Linux x86 32-bit (built on Ubuntu 9.04)
+\item \verb+linux_x86_64+ --- Linux x86 64-bit (built on Ubuntu 9.04)
+\item \verb+MSWin+ --- Windows. Should work on 32 or 64 bit (built on XP)
+\item \verb+darwin_x86_64+ --- OSX Intel 64-bit (built on OSX 10.6)
+\end{itemize}
+
+
+\subsection{Installing}
+
+These instructions only apply to manually downloaded binaries. If
+\verb+biber+ came with your TeX distribution just use it as normal.
+
+Download the binary appropriate to you
+OS/arch\footnote{\url{https://sourceforge.net/projects/biblatex-biber}}. Below
+I assume it's on your desktop.
+
+You have to move the binary to somewhere in you command-line or TeX utility
+path so that it can be found. If you know how to do this, just ignore the
+rest of this document which contains some instructions for users who are
+not sure about this.
+
+\subsubsection{OSX}
+
+If you are using the TexLive MacTeX distribution:
+
+\begin{verbatim}
+sudo mv ~/Desktop/biber /usr/texbin/
+sudo chmod +x /usr/texbin/biber
+\end{verbatim}
+
+\noindent If you are using the macports TexLive distribution:
+
+\begin{verbatim}
+sudo mv ~/Desktop/biber /opt/local/bin/
+sudo chmod +x /opt/local/bin/biber
+\end{verbatim}
+
+\noindent The «\verb+sudo+» commands will prompt you for your password.
+
+\subsubsection{Windows}
+
+The easiest way is to just move the executable into your \verb+C:\Windows+ directory since
+that is always in your path. A more elegant is to put it somewhere in
+your TeX distribution that is already in your path. For example if you
+are using MiKTeX:
+
+\begin{verbatim}
+C:\Program Files\MiKTeX 2.8\miktex\bin\
+\end{verbatim}
+
+\subsubsection{Unix/Linux}
+
+\begin{verbatim}
+sudo mv ~/Desktop/biber /usr/local/bin/biber
+sudo chmod +x /usr/local/bin/biber
+\end{verbatim}
+
+\noindent Make sure \verb+/usr/local/bin+ is in your PATH. Search Google for «set PATH
+linux» if unsure about this. There are many pages about this, for example:
+\url{http://www.cyberciti.biz/faq/unix-linux-adding-path/}
+
+
+\subsection{Building}
+
+Instructions for those who want/need to build an executable from the
+perl version. For this, you will need to have a recent Perl,
+preferably 5.12 at least with the following modules:
+
+\begin{itemize}
+\item \verb+PAR+
+\item \verb+PAR::Packer+
+\item All \verb+biber+ pre-requisites
+\end{itemize}
+
+\noindent You must have the latest CPAN versions of all modules as \verb+biber+
+is very specific in some cases about module versions and depends on
+recent fixes in many cases. You can see if you have the \verb+biber+
+Perl dependencies by the usual
+
+\begin{verbatim}
+perl ./Build.PL
+\end{verbatim}
+
+\noindent invocation in the biber perl distribution tree
+directory. Normally, the build procedure for the binaries is as
+follows\footnote{On UNIXequse systems, you may need to specify a full
+  path to the scripts e.g. \texttt{./Build}}:
+
+\begin{itemize}
+\item Get the biber source tree from SF and put it on the architecture
+  you are building for
+\item cd to the root of the source tree
+\item \verb+perl Build.PL+ (this will check your module
+  dependencies)
+\item \verb+Build test+
+\item \verb+Build install+ (may need to run this as sudo on
+  UNIXesque systems)
+\item \verb+cd dist/<arch>+
+\item \verb+build.sh+ (\verb+build.bat+ on Windows)
+\end{itemize}
+
+\noindent This leaves a binary called «\verb+biber-<arch>+» (also with
+a «\verb+.exe+» extension on Windows) in your current directory.
+The tricky part is constructing the information for the build
+script. There are two things that need to be configured, both of
+which are required by the \verb+PAR::Packer+ module:
+
+\begin{enumerate}
+\item A list of modules/libraries to include in the binary which are not
+  automatically detected by the \verb+PAR::Packer+ dependency
+  scanner
+\item A list of extra files to include in the binary which are not
+  automatically detected by the \verb+PAR::Packer+ dependency
+  scanner
+\end{enumerate}
+
+\noindent To build \verb+biber+ for a new architecture you need to
+define these two things as part of constructing new build scripts:
+
+\begin{itemize}
+\item Make a new subfolder in the \verb+dist+ directory named after the
+  architecture you are building for. This name is arbitrary but should
+  be fairly obvious like «\verb+solaris-sparc-64+», for example.
+\item Copy the \verb+biber.files+ file from an existing build
+  architecture into this directory.
+\item For all of the files with absolute pathnames in there (that is,
+  ones we are not pulling from the biber tree itself), locate these
+  files in your Perl installation tree and put the correct path in the
+  file.
+\item Copy the build script from a vaguely similar architecture
+  (i.e. Windows/non-Windows \ldots) to your new architecture
+  directory. 
+\item Change the \verb+--link+ options to point to where the required
+  libraries reside on your system.
+\item Change the \verb+--output+ option to name the resulting binary
+  for your architecture.
+\item Run the build script
+\end{itemize}
+
+\noindent The \verb+--link+ options can be a little tricky
+sometimes. It is usually best to build without them once and then run
+\verb+ldd+ (or Windows equivalent) on the binary to see which
+version/location of a library you should link to. You can also try
+just running the binary and it should complain about missing libraries
+and where it expected to find them. Put this path into the
+\verb+--link+ option. The \verb+--module+ options are the same for all
+architectures and do not need to be modified.
+On architectures which have or can have case-insensitive file systems,
+you should use the build script from either Windows or OSX as a reference
+as these include a step to copy the main \verb+biber+ script to a new name
+before packing the binary. This is required as otherwise a spurious
+error is reported to the user on first run of the binary due to a name
+collision when it unpacks itself.
+
 \end{document}
