@@ -7,6 +7,8 @@ use Config::General qw( ParseConfig );
 use Data::Dump;
 use Carp;
 use List::AllUtils qw(first);
+use Log::Log4perl qw( :no_extra_logdie_message );
+my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
 
@@ -88,7 +90,7 @@ sub _initopts {
 
     if (defined $conffile) {
       %LOCALCONF = ParseConfig(-ConfigFile => $conffile, -UTF8 => 1) or
-	$logger->logcarp("Failure to read config file " . $conffile . "\n $@");
+        $logger->logcarp("Failure to read config file " . $conffile . "\n $@");
     }
   }
 
