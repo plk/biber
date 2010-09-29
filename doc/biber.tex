@@ -499,15 +499,8 @@ is worth noting:
   constructs a self-extracting archive which unpacks the needed files first
   and so the binaries look larger than what actually runs in memory.
 \item On the first run of a new version (that is, with a specific checksum),
-  they actually unpack themselves to a temporary location. This varies by
-  operating system but is usually something like \verb+/var/tmp+ or \verb+/tmp+ on
-  UNIX-based OSes or
-
-  \begin{verbatim}
-  C:\Documents and Settings\<username>\Local Settings\Temp
-  \end{verbatim}
-
-  \noindent on Windows. This unpacking can take a little while and only happens on
+  they actually unpack themselves to a temporary location which varies by
+  operating system. This unpacking can take a little while and only happens on
   the first run of a new version.
 \end{itemize}
 
