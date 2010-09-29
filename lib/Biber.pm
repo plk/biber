@@ -1383,9 +1383,9 @@ sub sortentries {
       $collopts = $opts;
     }
 
-    # Add case ordering level if case sensitive sorting is requested
-    if (Biber::Config->getoption('sortcase')) {
-      $collopts->{level} = 3;
+    # UCA level 2 if case insensitive sorting is requested
+    unless (Biber::Config->getoption('sortcase')) {
+      $collopts->{level} = 2;
     }
 
     # Add upper_before_lower option
@@ -1470,9 +1470,9 @@ sub sortshorthands {
       $collopts = $opts;
     }
 
-    # Add case ordering level if case sensitive sorting is requested
-    if (Biber::Config->getoption('sortcase')) {
-      $collopts->{level} = 3;
+    # UCA level 2 if case insensitive sorting is requested
+    unless (Biber::Config->getoption('sortcase')) {
+      $collopts->{level} = 2;
     }
 
     # Add upper_before_lower option
