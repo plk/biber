@@ -487,4 +487,181 @@ example). This is quite a hard problem which is implemented in an
 experimental \verb+biber+ branch but need \verb+biblatex+ support,
 envisaged for version 2.x. It requires an enhanced \verb+.bbl+ format,
 among other things.
+
+\section{Binaries}
+
+The binary distributions of biber are made using the perl \verb+PAR::Packer+
+module. They can be used as a normal binary but have some behaviour which
+is worth noting:
+
+\begin{itemize}
+\item Don't be worried by the size of the binaries. \verb+PAR::Packer+ essentially
+  constructs a self-extracting archive which unpacks the needed files first
+  and so the binaries look larger than what actually runs in memory.
+\item On the first run of a new version (that is, with a specific checksum),
+  they actually unpack themselves to a temporary location. This varies by
+  operating system but is usually something like \verb+/var/tmp+ or \verb+/tmp+ on
+  UNIX-based OSes and\\
+  \verb+C:\Documents and Settings\<username>\Local Settings\Temp+ on
+  Windows. This unpacking can take a little while and only happens on
+  the first run of a new version.
+\end{itemize}
+
+\subsection{Binary Architectures}
+
+Binaries are available for the following architectures:
+
+\begin{itemize}
+\item \verb+linux_x86_32+ --- Linux x86 32-bit (built on Ubuntu 9.04)
+\item \verb+linux_x86_64+ --- Linux x86 64-bit (built on Ubuntu 9.04)
+\item \verb+MSWin+ --- Windows. Should work on 32 or 64 bit (built on XP)
+\item \verb+darwin_x86_64+ --- OSX Intel 64-bit (built on OSX 10.6)
+\end{itemize}
+
+
+\subsection{Installing}
+
+These instructions only apply to manually downloaded binaries. If
+\verb+biber+ came with your TeX distribution just use it as normal.
+
+Download the binary appropriate to you
+OS/arch\footnote{\url{https://sourceforge.net/projects/biblatex-biber}}. Below
+I assume it's on your desktop.
+
+You have to move the binary to somewhere in you command-line or TeX utility
+path so that it can be found. If you know how to do this, just ignore the
+rest of this document which contains some instructions for users who are
+not sure about this.
+
+\subsubsection{OSX}
+
+If you are using the TexLive MacTeX distribution:
+
+\begin{verbatim}
+sudo mv ~/Desktop/biber /usr/texbin/
+sudo chmod +x /usr/texbin/biber
+\end{verbatim}
+
+If you are using the macports TexLive distribution:
+
+\begin{verbatim}
+sudo mv ~/Desktop/biber /opt/local/bin/
+sudo chmod +x /opt/local/bin/biber
+\end{verbatim}
+
+The "\verb+sudo+" commands will prompt you for your password.
+
+\subsubsection{Windows}
+
+The easiest way is to just move the executable into your \verb+C:\Windows+ directory since
+that is always in your path. A more elegant is to put it somewhere in
+your TeX distribution that is already in your path. For example if you
+are using MiKTeX:
+
+\begin{verbatim}
+C:\Program Files\MiKTeX 2.8\miktex\bin\
+\end{verbatim}
+
+\subsubsection{Unix/Linux}
+
+\begin{verbatim}
+sudo mv ~/Desktop/biber /usr/local/bin/biber
+sudo chmod +x /usr/local/bin/biber
+\end{verbatim}
+
+\noindent Make sure \verb+/usr/local/bin+ is in your PATH. Search Google for "\verb+set PATH
+linux+" if unsure about this. There are many pages about this, for example:
+\url{http://www.cyberciti.biz/faq/unix-linux-adding-path/}
+
+
+\subsection{Building}
+
+Instructions for those who want/need to build an executable from the
+perl version. For this, you will need to have a recent Perl,
+preferably 5.12 at least with the following modules:
+
+\begin{itemize}
+\item \verb+PAR+
+\item \verb+PAR::Packer+
+\item All \verb+biber+ pre-requisites
+\end{itemize}
+
+You must have the latest CPAN versions of all modules as \verb+biber+
+is very specific in some cases about module versions and depends on
+recent fixes in many cases. You can see if you have the \verb+biber+
+Perl dependencies by the usual
+
+\begin{verbatim}
+perl ./Build.PL
+\end{verbatim}
+
+\noindent invocation in the biber perl distribution tree
+directory. Normally, the build procedure for the binaries is as
+follows\footnote{On UNIXequse systems, you may need to specify a full
+  path to the scripts e.g. \verb+./Build+}:
+
+\begin{itemize}
+\item Get the biber source tree from SF and put it on the architecture
+  you are building for
+\item cd to the root of the source tree
+\item \verb+perl Build.PL+ (this will check your module
+  dependencies)
+\item \verb+Build test+
+\item \verb+Build install+ (may need to run this as sudo on
+  UNIXesque systems)
+\item \verb+cd dist/<arch>+
+\item \verb+build.sh+ (\verb+build.bat+ on Windows)
+\end{itemize}
+
+\noindent This leaves a binary called «\verb+biber-<arch>+» (also with
+a «\verb+.exe+ extension on Windows» in your current directory.
+The tricky part is constructing the information for the build
+script. There are two things that need to be configured, both of
+which are required by the \verb+PAR::Packer+ module:
+
+\begin{enumerate}
+\item A list of modules/libraries to include in the binary which are not
+  automatically detected by the \verb+PAR::Packer+ depenendency
+  scanner
+\item A list of extra files to include in the binary which are not
+  automatically detected by the \verb+PAR::Packer+ depenendency
+  scanner
+\end{enumerate}
+
+\noindent To build \verb+biber+ for a new architecture, you should:
+
+\begin{itemize}
+\item Make a new subfolder in \verb+dist+ directory named after the
+  architecture you are building for. This name is arbitrary but should
+  be fairly obvious like «solaris-sparc-64», for example.
+\item Copy the \verb+biber.files+ file from an existing build
+  architecture into this directory.
+\item For all of the files with absolute pathnames in there (that is,
+  ones we are not pulling from the biber tree itself), locate these
+  files in your Perl installation tree and put the correct path in the
+  file.
+\item Copy the build script from a vaguely similar architecture
+  (i.e. Windows/non-Windows \ldots) to your new architecture
+  directory. 
+\item Change the \verb+--link+ options to point to where the required
+  libraries reside on your system.
+\item Change the \verb+--output+ option to name the resulting binary
+  for your architecture.
+\end{itemize}
+
+\noindent The \verb+--link+ options can be a little tricky
+sometimes. It is usually best to build without them once and then run
+\verb+ldd+ (or Windows equivalent) on the binary to see which
+version/location of a library you should link to. You can also try
+just running the binary and it should complain about missing libraries
+and where it expected to find them. Put this path into the
+\verb+--link+ option. The \verb+--module+ options are the same for all
+architectures and do not need to be modified.
+On architectures which have or can have case-insensitive file systems,
+you should use the build script from either Windows or OSX as a reference
+as these include a step to copy the main \verb+biber+ script to a new name
+before packing the binary. This is required as otherwise a spurious
+error is reported to the user on first run of the binary due to a name
+collision when it unpacks itself.
+
 \end{document}
