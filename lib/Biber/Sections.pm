@@ -54,19 +54,6 @@ sub get_sections {
   return [ sort {$a->number <=> $b->number} values %$self ];
 }
 
-=head2 delete_sections
-
-    Deletes all sections
-    Mainly used in test scripts
-
-=cut
-
-sub delete_sections {
-  my $self = shift;
-  $self = {};
-  return;
-}
-
 
 =head2 add_section
 

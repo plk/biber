@@ -109,6 +109,7 @@ sub sections {
   return $self->{sections};
 }
 
+
 =head2 set_output_obj
 
     Sets the object used to output final results
@@ -283,14 +284,14 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
       # Global options
       if (lc($bcfopts->{type}) eq 'global') {
         foreach my $bcfopt (@{$bcfopts->{option}}) {
+          # TODO: compat code for biblatex pre 1.0. Remove when biblatex passes 'bblencoding'
+          $bcfopt->{key}{content} = 'bblencoding' if $bcfopt->{key}{content} eq 'inputenc';
+          # TODO: compat code for biblatex pre 1.0. Remove when biblatex passes 'sortcase'
+          $bcfopt->{key}{content} = 'sortcase' if $bcfopt->{key}{content} eq 'cssort';
+
           unless (defined(Biber::Config->getcmdlineoption($bcfopt->{key}{content}))) { # already set on cmd line
             if (lc($bcfopt->{type}) eq 'singlevalued') {
-              my $key = $bcfopt->{key}{content};
-              # TODO: compat code for biblatex pre 1.0. Remove when biblatex passes 'bblencoding'
-              $key = 'bblencoding' if $key eq 'inputenc';
-              # TODO: compat code for biblatex pre 1.0. Remove when biblatex passes 'sortcase'
-              $key = 'sortcase' if $key eq 'cssort';
-              Biber::Config->setoption($key, $bcfopt->{value}[0]{content});
+              Biber::Config->setoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content});
             }
             elsif (lc($bcfopt->{type}) eq 'multivalued') {
               Biber::Config->setoption($bcfopt->{key}{content},

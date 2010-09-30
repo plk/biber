@@ -207,7 +207,6 @@ sub getoption {
 sub setcmdlineoption {
   shift; # class method so don't care about class name
   my ($opt, $val) = @_;
-
   # Command line options are also options ...
   $CONFIG->{options}{biber}{$opt} = $CONFIG->{cmdlineoptions}{$opt} = $val;
   return;
