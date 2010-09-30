@@ -56,8 +56,6 @@ my $logger = Log::Log4perl::get_logger('main');
 
     Initialize the Biber object, optionally passing named options as arguments.
 
-    my $biber = Biber->new( fastsort => 1, datafile => 'biblatex.xml', outfile => 'test.bbl' );
-
 =cut
 
 sub new {

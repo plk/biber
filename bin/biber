@@ -377,7 +377,7 @@ Options:
 
   --sortlocale|-l [locale]
       Set the locale to be used for sorting.  With default sorting
-      (--collate), the locale is used to add CLDR 
+      (--collate), the locale is used to add CLDR
       tailoring to the sort (if available for the locale). With
       --fastsort this sets the OS locale for sorting.
 

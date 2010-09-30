@@ -4,8 +4,8 @@
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
-      <bcf:key>cssort</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:key>sortcase</bcf:key>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>mincrossrefs</bcf:key>

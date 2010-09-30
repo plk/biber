@@ -8,7 +8,7 @@
       <bcf:value>utf8</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>cssort</bcf:key>
+      <bcf:key>sortcase</bcf:key>
       <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">

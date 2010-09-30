@@ -8,7 +8,7 @@ start =
       attribute component { "biber" },
       attribute type { "global" },
       bibencoding?,
-      cssort?,
+      sortcase?,
       debug?,
       displaymode?,
       bblencoding?,
@@ -261,10 +261,10 @@ bibencoding =
     element bcf:key { "bibencoding" },
     element bcf:value { xsd:NCName }
   }
-cssort =
+sortcase =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "cssort" },
+    element bcf:key { "sortcase" },
     element bcf:value { "0" | "1" }
   }
 alphaothers =
