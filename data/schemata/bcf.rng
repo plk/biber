@@ -17,7 +17,7 @@
             <ref name="bibencoding"/>
           </optional>
           <optional>
-            <ref name="cssort"/>
+            <ref name="sortcase"/>
           </optional>
           <optional>
             <ref name="debug"/>
@@ -639,13 +639,13 @@
       </element>
     </element>
   </define>
-  <define name="cssort">
+  <define name="sortcase">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>cssort</value>
+        <value>sortcase</value>
       </element>
       <element name="bcf:value">
         <choice>

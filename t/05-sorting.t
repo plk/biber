@@ -25,8 +25,8 @@ Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('quiet', 1);
 
 my $yearoff1    = 'mm0knuth2donald e0computers typesetting0198400000';
-my $yearoff2    = 'mm0knuth2donald e0computers typesetting019800000';
-my $yearoff3    = 'mm0knuth2donald e0computers typesetting0198400000';
+my $yearoff2    = 'mm0Knuth2Donald E0Computers Typesetting019800000';
+my $yearoff3    = 'mm0Knuth2Donald E0Computers Typesetting0198400000';
 my $yearoff4    = 'mm0knuth2donald e0computers typesetting098400000';
 my $yearoff5    = 'mm0knuth2donald e0computers typesetting0198400000';
 my $yearoff6    = 'mm0knuth2donald e0computers typesetting0801500000';
@@ -351,7 +351,7 @@ $bibentries = $biber->sections->get_section('0')->bib;
 
 is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff1, 'nty with default left offset, 4 digit year' );
 
-# nty with left, 3-digit year sort
+# nty with left, 3-digit year sort, case sensitive
 Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
@@ -382,15 +382,15 @@ Biber::Config->setblxoption('sorting_label', [
                                                 ]
                                                ]);
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
-
+Biber::Config->setoption('sortcase', 1);
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section('0')->bib;
 
-is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff2, 'nty with left offset, 3 digit year' );
+is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff2, 'nty with left offset, 3 digit year, case sensitive' );
 
 
-# nty with left, 4-digit year sort
+# nty with left, 4-digit year sort, case sensitive
 Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
@@ -426,7 +426,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 $biber->prepare;
 $bibentries = $biber->sections->get_section('0')->bib;
 
-is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff3, 'nty with left offset, 4 digit year' );
+is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff3, 'nty with left offset, 4 digit year, case sensitive' );
 
 # nty with right, 3-digit year sort
 Biber::Config->setblxoption('sorting_label', [
@@ -459,7 +459,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 ]
                                                ]);
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
-
+Biber::Config->setoption('sortcase', 0);
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section('0')->bib;

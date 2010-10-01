@@ -7,7 +7,7 @@
           <xs:complexType>
             <xs:sequence>
               <xs:group minOccurs="0" ref="bcf:bibencoding"/>
-              <xs:group minOccurs="0" ref="bcf:cssort"/>
+              <xs:group minOccurs="0" ref="bcf:sortcase"/>
               <xs:group minOccurs="0" ref="bcf:debug"/>
               <xs:group minOccurs="0" ref="bcf:displaymode"/>
               <xs:group minOccurs="0" ref="bcf:bblencoding"/>
@@ -839,7 +839,7 @@
       </xs:element>
     </xs:sequence>
   </xs:group>
-  <xs:group name="cssort">
+  <xs:group name="sortcase">
     <xs:sequence>
       <xs:element name="option">
         <xs:complexType>
@@ -847,7 +847,7 @@
             <xs:element name="key">
               <xs:simpleType>
                 <xs:restriction base="xs:token">
-                  <xs:enumeration value="cssort"/>
+                  <xs:enumeration value="sortcase"/>
                 </xs:restriction>
               </xs:simpleType>
             </xs:element>

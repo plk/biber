@@ -46,6 +46,7 @@ t/07-bcfvalidation.t
 t/10-sort-complex.t
 t/10-sort-order.t
 t/10-sort-uc.t
+t/10-sort-case.t
 t/10-configfile.t
 t/11-set.t
 t/12-skips.t
@@ -85,6 +86,7 @@ t/tdata/skips.bcf
 t/tdata/sort-complex.bcf
 t/tdata/sort-order.bcf
 t/tdata/sort-uc.bcf
+t/tdata/sort-case.bcf
 t/tdata/biber3.conf
 t/tdata/dateformats.bib
 t/tdata/extrayear.bib
@@ -106,6 +108,7 @@ t/tdata/sort-uc.bib
 t/tdata/uniqueness1.bib
 t/tdata/uniqueness2.bib
 t/tdata/uniqueness3.bib
+t/tdata/sort-case.bib
 t/tdata/examples.bib
 t/tdata/biber2.conf
 t/tdata/set.bib

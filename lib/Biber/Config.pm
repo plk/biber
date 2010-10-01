@@ -7,6 +7,8 @@ use Config::General qw( ParseConfig );
 use Data::Dump;
 use Carp;
 use List::AllUtils qw(first);
+use Log::Log4perl qw( :no_extra_logdie_message );
+my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
 
@@ -100,7 +102,7 @@ sub _initopts {
 
     if (defined $conffile) {
       %LOCALCONF = ParseConfig(-ConfigFile => $conffile, -UTF8 => 1) or
-	$logger->logcarp("Failure to read config file " . $conffile . "\n $@");
+        $logger->logcarp("Failure to read config file " . $conffile . "\n $@");
     }
   }
 
@@ -242,7 +244,6 @@ sub getoption {
 sub setcmdlineoption {
   shift; # class method so don't care about class name
   my ($opt, $val) = @_;
-
   # Command line options are also options ...
   $CONFIG->{options}{biber}{$opt} = $CONFIG->{cmdlineoptions}{$opt} = $val;
   return;

@@ -53,13 +53,18 @@ our @EXPORT = qw{ locate_biber_file makenameid stringify_hash
 sub locate_biber_file {
   my $filename = shift;
   my $filenamepath = $filename; # default if nothing else below applies
-  my $outdir = Biber::Config->getoption('output-directory');
+  my $outfile;
+  # If output-directory is set, perhaps the file can be found there so
+  # construct a path to test later
+  if (my $outdir = Biber::Config->getoption('output-directory')) {
+    $outfile = File::Spec->catfile($outdir, $filename);
+  }
 
   if (File::Spec->file_name_is_absolute($filename)) {
     $filenamepath = $filename;
   }
-  elsif ($outdir) {
-    $filenamepath = File::Spec->catfile($outdir, $filename);
+  elsif (defined($outfile) and -f $outfile) {
+    $filenamepath = $outfile;
   }
   elsif (-f $filename) {
     $filenamepath = $filename;

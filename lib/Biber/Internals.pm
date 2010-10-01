@@ -284,24 +284,25 @@ sub _generatesortstring {
   $sortstring =~ s/0\z//xms; # strip off the last '0' added by _sortset()
 
   # Decide if we are doing case-insensitive sorting or not
-  # If so, lowercase according to locale
-  my $casesort;
-  if (Biber::Config->getoption('sortcase')) {
-    $casesort = $sortstring;
-  }
-  else {
+  # If so, lowercase according to locale but only if using fastsort
+  # since otherwise, we use the UCS level 2/3 distinction to deal with this
+
+  # Save a copy of the sortstring before we potentially lowercase it
+  # since we want to generate sortinit nicely below
+  my $ss = $sortstring;
+
+  if (not Biber::Config->getoption('sortcase') and Biber::Config->getoption('fastsort')) {
     if (my $thislocale = Biber::Config->getoption('sortlocale')) {
       use locale;
       setlocale( LC_CTYPE, $thislocale );
     }
-    $casesort = lc($sortstring);
+    $sortstring = lc($sortstring);
   }
-  $be->set_field('sortstring', $casesort);
+  $be->set_field('sortstring', $sortstring);
 
   # Generate sortinit - the initial letter of the sortstring. This must ignore
   # presort characters, naturally
   my $pre;
-  my $ss = $sortstring;
   # Prefix is either specified or 'mm' default plus the $sorting_sep
   if ($be->get_field('presort')) {
     $pre = $be->get_field('presort');
