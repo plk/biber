@@ -1,14 +1,16 @@
 Revision history for Biber
-0.5.6  unreleased beta build
+0.5.6  04-10-2010
        * Latex character macro decoding is now better defined in the whole
          (re)encoding workflow.
        * "inputenc" option is now "bblencoding"
-       * Unicode::Collate sorting is now default as version 0.59 of this
+       * "locale" option is now "sortlocale"
+       * New option "sortupper"
+       * Unicode::Collate sorting is now default as version 0.61 of this
          has XS module and CLDR tailoring.
        * Added binary dist build scripts
        * Removed bundled Module::Build as there are some conflicts with
          later versions. This is less of a problem anyway because the
-         binary build make it less necessary to make builds easy on perl<5.10
+         binary build makes it less necessary to make builds easy on perl<5.10
        * Misc bug fixes
 0.5.5   29-08-2010
        * Biber::BibTeX moved to Biber::Input::BibTeX. If upgrading, please remove

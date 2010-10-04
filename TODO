@@ -1,6 +1,6 @@
 TODO in decreasing order of priority:
 
-   * Before 1.0 biblatex, remove option compat code from Biber.pm and change
+   * Before biblatex 1.0, remove option compat code from Biber.pm and change
      bcf schema: inputenc -> bblencoding
                  cssort -> sortcase
                  add sortupper
