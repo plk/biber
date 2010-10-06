@@ -15,7 +15,7 @@ start =
       sortcase,
       sortlocale?,
       sortupper
-    }?,
+    },
     
     element bcf:options {
       attribute component { "biblatex" },
