@@ -7,16 +7,14 @@ start =
     element bcf:options {
       attribute component { "biber" },
       attribute type { "global" },
-      bibencoding?,
-      sortcase?,
-      debug?,
+      bblencoding,
+      bibencoding,
+      debug,
       displaymode?,
-      bblencoding?,
-      locale?,
-      mincrossrefs?,
-      nonsortdiacritics?,
-      nonsortprefixes?,
-      wrapline?
+      mincrossrefs,
+      sortcase,
+      sortlocale?,
+      sortupper
     }?,
     
     element bcf:options {
@@ -25,7 +23,7 @@ start =
       alphaothers,
       labelalpha,
       labelname,
-      labelyear,
+      labelyear?,
       maxitems,
       maxnames,
       minitems,
@@ -49,6 +47,9 @@ start =
       labelname?,
       labelyear?,
       singletitle?,
+      skipbib?,
+      skiplab?,
+      skiplos?,
       sortalphaothers?,
       uniquename?,
       useauthor?,
@@ -184,6 +185,24 @@ singletitle =
     element bcf:key { "singletitle" },
     element bcf:value { "0" | "1" }
   }
+skipbib =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "skipbib" },
+    element bcf:value { "0" | "1" }
+  }
+skiplab =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "skiplab" },
+    element bcf:value { "0" | "1" }
+  }
+skiplos =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "skiplos" },
+    element bcf:value { "0" | "1" }
+  }
 uniquename =
   element bcf:option {
     attribute type { "singlevalued" },
@@ -275,11 +294,21 @@ alphaothers =
       xsd:normalizedString { pattern = "\S+" }
     }
   }
-locale = 
+# This is xsd:language but also allows underscore separators
+sortlocale = 
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "locale" },
-    element bcf:value { xsd:language }
+    element bcf:key { "sortlocale" },
+    element bcf:value {
+      xsd:normalizedString { pattern = "([a-zA-Z]{2}|[iI][\-_][a-zA-Z]+|[xX][\-_][a-zA-Z]{1,8})([\-_][a-zA-Z]{1,8})*"
+}
+    }
+ }
+sortupper = 
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "sortupper" },
+    element bcf:value { "0" | "1" }
  }
 sortalphaothers =
   element bcf:option {

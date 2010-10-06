@@ -58,7 +58,7 @@ requires:
   Readonly: 0
   Regexp::Common: 0
   Text::BibTeX: 0.47
-  Unicode::Collate: 0.60
+  Unicode::Collate: 0.61
   XML::LibXML::Simple: 0
   perl: v5.10.0
 resources:

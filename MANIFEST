@@ -26,7 +26,6 @@ doc/biber.tex
 doc/biber.pdf
 data/schemata/bcf.rnc
 data/schemata/bcf.rng
-data/schemata/bcf.xsd
 data/latinkeys.txt
 etc/AUCTeX.txt
 etc/biber-auctex.png

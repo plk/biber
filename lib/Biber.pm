@@ -35,7 +35,7 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =cut
 
-our $VERSION = '0.5.6';
+our $VERSION = '0.5.7';
 our $BETA_VERSION = 1; # Is this a beta version?
 
 =head1 SYNOPSIS

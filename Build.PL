@@ -38,8 +38,7 @@ my $builder = $class->new(
         'Regexp::Common' => 0,
         'Log::Log4perl' => 0,
         'Readonly' => 0,
-        'Text::BibTeX' => '0.42',
-        'Unicode::Collate' => '0.60',
+        'Unicode::Collate' => '0.61',
         'XML::LibXML::Simple' => 0,
         'Text::BibTeX' => '0.47',
         'perl' => '5.10.0'
@@ -48,8 +47,7 @@ my $builder = $class->new(
         'Readonly::XS' => 0
     },
     script_files => [ glob( "bin/*" ) ],
-    data_files => { 'data/schemata/bcf.xsd' => 'lib/Biber/bcf.xsd',
-                    'data/schemata/bcf.rnc' => 'lib/Biber/bcf.rnc',
+    data_files => { 'data/schemata/bcf.rnc' => 'lib/Biber/bcf.rnc',
                     'data/schemata/bcf.rng' => 'lib/Biber/bcf.rng',
                     'data/latinkeys.txt' => 'lib/Unicode/Collate/latinkeys.txt' }
 );

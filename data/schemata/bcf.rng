@@ -13,36 +13,18 @@
           <attribute name="type">
             <value>global</value>
           </attribute>
-          <optional>
-            <ref name="bibencoding"/>
-          </optional>
-          <optional>
-            <ref name="sortcase"/>
-          </optional>
-          <optional>
-            <ref name="debug"/>
-          </optional>
+          <ref name="bblencoding"/>
+          <ref name="bibencoding"/>
+          <ref name="debug"/>
           <optional>
             <ref name="displaymode"/>
           </optional>
+          <ref name="mincrossrefs"/>
+          <ref name="sortcase"/>
           <optional>
-            <ref name="bblencoding"/>
+            <ref name="sortlocale"/>
           </optional>
-          <optional>
-            <ref name="locale"/>
-          </optional>
-          <optional>
-            <ref name="mincrossrefs"/>
-          </optional>
-          <optional>
-            <ref name="nonsortdiacritics"/>
-          </optional>
-          <optional>
-            <ref name="nonsortprefixes"/>
-          </optional>
-          <optional>
-            <ref name="wrapline"/>
-          </optional>
+          <ref name="sortupper"/>
         </element>
       </optional>
       <element name="bcf:options">
@@ -55,7 +37,9 @@
         <ref name="alphaothers"/>
         <ref name="labelalpha"/>
         <ref name="labelname"/>
-        <ref name="labelyear"/>
+        <optional>
+          <ref name="labelyear"/>
+        </optional>
         <ref name="maxitems"/>
         <ref name="maxnames"/>
         <ref name="minitems"/>
@@ -92,6 +76,15 @@
           </optional>
           <optional>
             <ref name="singletitle"/>
+          </optional>
+          <optional>
+            <ref name="skipbib"/>
+          </optional>
+          <optional>
+            <ref name="skiplab"/>
+          </optional>
+          <optional>
+            <ref name="skiplos"/>
           </optional>
           <optional>
             <ref name="sortalphaothers"/>
@@ -451,6 +444,54 @@
       </element>
     </element>
   </define>
+  <define name="skipbib">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>skipbib</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="skiplab">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>skiplab</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="skiplos">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>skiplos</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
   <define name="uniquename">
     <element name="bcf:option">
       <attribute name="type">
@@ -670,16 +711,35 @@
       </element>
     </element>
   </define>
-  <define name="locale">
+  <!-- This is xsd:language but also allows underscore separators -->
+  <define name="sortlocale">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>locale</value>
+        <value>sortlocale</value>
       </element>
       <element name="bcf:value">
-        <data type="language"/>
+        <data type="normalizedString">
+          <param name="pattern">([a-zA-Z]{2}|[iI][\-_][a-zA-Z]+|[xX][\-_][a-zA-Z]{1,8})([\-_][a-zA-Z]{1,8})*</param>
+        </data>
+      </element>
+    </element>
+  </define>
+  <define name="sortupper">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>sortupper</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
       </element>
     </element>
   </define>
