@@ -5,28 +5,26 @@
       <attribute name="version">
         <data type="string"/>
       </attribute>
-      <optional>
-        <element name="bcf:options">
-          <attribute name="component">
-            <value>biber</value>
-          </attribute>
-          <attribute name="type">
-            <value>global</value>
-          </attribute>
-          <ref name="bblencoding"/>
-          <ref name="bibencoding"/>
-          <ref name="debug"/>
-          <optional>
-            <ref name="displaymode"/>
-          </optional>
-          <ref name="mincrossrefs"/>
-          <ref name="sortcase"/>
-          <optional>
-            <ref name="sortlocale"/>
-          </optional>
-          <ref name="sortupper"/>
-        </element>
-      </optional>
+      <element name="bcf:options">
+        <attribute name="component">
+          <value>biber</value>
+        </attribute>
+        <attribute name="type">
+          <value>global</value>
+        </attribute>
+        <ref name="bblencoding"/>
+        <ref name="bibencoding"/>
+        <ref name="debug"/>
+        <optional>
+          <ref name="displaymode"/>
+        </optional>
+        <ref name="mincrossrefs"/>
+        <ref name="sortcase"/>
+        <optional>
+          <ref name="sortlocale"/>
+        </optional>
+        <ref name="sortupper"/>
+      </element>
       <element name="bcf:options">
         <attribute name="component">
           <value>biblatex</value>
