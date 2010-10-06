@@ -211,19 +211,19 @@ our %CONFIG_SCOPE_BIBLATEX = (
   minnames          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   singletitle       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   skipbib           => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
-  skiplos           => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
   skiplab           => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
+  skiplos           => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
   sortalphaothers   => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   sorting           => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   sorting_label     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   sorting_final     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   sortlos           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   terseinits        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  uniquename        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   useauthor         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   useeditor         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   useprefix         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   usetranslator     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  uniquename        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
 );
 
 ### entry types

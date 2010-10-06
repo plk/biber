@@ -47,8 +47,7 @@ my $builder = $class->new(
         'Readonly::XS' => 0
     },
     script_files => [ glob( "bin/*" ) ],
-    data_files => { 'data/schemata/bcf.xsd' => 'lib/Biber/bcf.xsd',
-                    'data/schemata/bcf.rnc' => 'lib/Biber/bcf.rnc',
+    data_files => { 'data/schemata/bcf.rnc' => 'lib/Biber/bcf.rnc',
                     'data/schemata/bcf.rng' => 'lib/Biber/bcf.rng',
                     'data/latinkeys.txt' => 'lib/Unicode/Collate/latinkeys.txt' }
 );

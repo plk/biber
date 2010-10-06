@@ -4,12 +4,12 @@
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
-      <bcf:key>bibencoding</bcf:key>
+      <bcf:key>bblencoding</bcf:key>
       <bcf:value>utf8</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>sortcase</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:key>bibencoding</bcf:key>
+      <bcf:value>utf8</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>debug</bcf:key>
@@ -18,6 +18,14 @@
     <bcf:option type="singlevalued">
       <bcf:key>mincrossrefs</bcf:key>
       <bcf:value>2</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortcase</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortupper</bcf:key>
+      <bcf:value>1</bcf:value>
     </bcf:option>
   </bcf:options>
   <bcf:options component="biblatex" type="global">

@@ -1,4 +1,6 @@
 Revision history for Biber
+0.5.7  (unreleased - dev version)
+       * Misc bug fixes
 0.5.6  04-10-2010
        * Latex character macro decoding is now better defined in the whole
          (re)encoding workflow.
