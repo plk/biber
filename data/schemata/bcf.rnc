@@ -20,7 +20,7 @@ start =
     element bcf:options {
       attribute component { "biblatex" },
       attribute type { "global" },
-      alphaothers,
+      alphaothers?,
       labelalpha,
       labelname,
       labelyear?,
@@ -29,7 +29,7 @@ start =
       minitems,
       minnames,
       singletitle,
-      sortalphaothers,
+      sortalphaothers?,
       sortlos,
       terseinits,
       uniquename,
