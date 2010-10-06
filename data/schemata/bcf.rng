@@ -32,7 +32,9 @@
         <attribute name="type">
           <value>global</value>
         </attribute>
-        <ref name="alphaothers"/>
+        <optional>
+          <ref name="alphaothers"/>
+        </optional>
         <ref name="labelalpha"/>
         <ref name="labelname"/>
         <optional>
@@ -43,7 +45,9 @@
         <ref name="minitems"/>
         <ref name="minnames"/>
         <ref name="singletitle"/>
-        <ref name="sortalphaothers"/>
+        <optional>
+          <ref name="sortalphaothers"/>
+        </optional>
         <ref name="sortlos"/>
         <ref name="terseinits"/>
         <ref name="uniquename"/>
