@@ -1,4 +1,3 @@
-../../data/schemata/bcf.xsd;lib/Biber/bcf.xsd
 ../../data/schemata/bcf.rnc;lib/Biber/bcf.rnc
 ../../data/schemata/bcf.rng;lib/Biber/bcf.rng
 ../../data/latinkeys.txt;lib/Unicode/Collate/latinkeys.txt
