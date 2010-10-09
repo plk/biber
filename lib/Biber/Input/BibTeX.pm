@@ -270,6 +270,9 @@ sub _text_bibtex_parse {
 
   my @localkeys;
 
+  # Clear all macro definitions. T::B never clears these between files
+  Text::BibTeX::delete_all_macros;
+
   my $bib = Text::BibTeX::File->new( $filename, '<' )
     or $logger->logcroak("Cannot create Text::BibTeX::File object from $filename: $!");
 
