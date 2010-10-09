@@ -200,6 +200,13 @@
     <bcf:citekey>sect3</bcf:citekey> <!-- Bad key for section 2, should be dropped in tests -->
     <bcf:citekey>sectx</bcf:citekey> <!-- Bad key for section 2, should be dropped in tests -->
   </bcf:section>
+  <!-- SECTION 3 -->
+  <bcf:bibdata section="3">
+    <bcf:datasource type="file">sections1</bcf:datasource>
+  </bcf:bibdata>
+  <bcf:section number="3">
+    <bcf:citekey>*</bcf:citekey>
+  </bcf:section>
   <!-- SECTION 0 -->
   <bcf:section number="0">
     <bcf:citekey>sect8</bcf:citekey>
