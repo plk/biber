@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 7;
+use Test::More tests => 8;
 
 use Biber;
 use Biber::Utils;
@@ -28,6 +28,7 @@ my $out = $biber->get_output_obj;
 my $section0 = $biber->sections->get_section('0');
 my $section1 = $biber->sections->get_section('1');
 my $section2 = $biber->sections->get_section('2');
+my $section3 = $biber->sections->get_section('3');
 
 my $preamble = [
                 'String for Preamble 1',
@@ -43,5 +44,6 @@ is_deeply([$section1->get_citekeys], ['sect4', 'sect5'], 'Section 1 citekeys');
 is_deeply([$section1->get_shorthands], ['sect4', 'sect5'], 'Section 1 shorthands');
 is_deeply([$section2->get_citekeys], ['sect1', 'sect6', 'sect7'], 'Section 2 citekeys');
 is_deeply([$section2->get_shorthands], ['sect1', 'sect6', 'sect7'], 'Section 2 shorthands');
+is_deeply([$section3->get_orig_order_citekeys], ['sect1', 'sect2', 'sectall1'], 'Section 3 citekeys');
 
 unlink "*.utf8";
