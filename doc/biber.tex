@@ -123,6 +123,17 @@ Firstly, running \verb+biber --help+ will display all options and a brief
 description of each. This is the most useful brief source of usage
 information.
 
+Most \verb+biber+ options can be specified in long or short format. As
+usual with such options, when the option requires an argument, the long
+form is followed by an equals sign «\verb+=+» and then the argument, the
+short form is followed by a space and then the argument. For example, the
+\verb+--bibdata|-d+ option can be given in two ways:
+
+\begin{verbatim}
+biber --bibdata=somefile.bib
+biber -d somefile.bib
+\end{verbatim}
+
 With the \verb+backend=biber+ option, \verb+biblatex+ switches its backend
 interface and passes all options and information relevant to \verb+biber+'s
 operation in a control file with extension \verb+.bcf+\footnote{BibLaTeX Control
