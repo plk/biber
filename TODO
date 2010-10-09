@@ -1,10 +1,5 @@
 TODO in decreasing order of priority:
 
-   * Before biblatex 1.0, remove option compat code from Biber.pm and change
-     bcf schema: inputenc -> bblencoding
-                 cssort -> sortcase
-                 add sortupper
-                 add sortlocale
    * add validation mechanism for options and config (untaint data),
      probably with Params::Validate
    * validate bibtex data with Text::Bibtex::Structure (optional) needs

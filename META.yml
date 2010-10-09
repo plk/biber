@@ -4,6 +4,7 @@ author:
   - 'François Charette <firmicus@gmx.net>'
 build_requires:
   Config::AutoConf: 0.15
+  ExtUtils::LibBuilder: 0.02
 configure_requires:
   Module::Build: 0.36
 generated_by: 'Module::Build version 0.3607'
@@ -15,7 +16,7 @@ name: biblatex-biber
 provides:
   Biber:
     file: lib/Biber.pm
-    version: v0.5.6
+    version: v0.5.7
   Biber::Config:
     file: lib/Biber/Config.pm
   Biber::Constants:
@@ -58,9 +59,9 @@ requires:
   Readonly: 0
   Regexp::Common: 0
   Text::BibTeX: 0.47
-  Unicode::Collate: 0.61
+  Unicode::Collate: 0.62
   XML::LibXML::Simple: 0
   perl: v5.10.0
 resources:
   license: http://dev.perl.org/licenses/
-version: v0.5.6
+version: v0.5.7

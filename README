@@ -1,6 +1,6 @@
 ==========================
 
-    BIBER Version 0.5.6
+    BIBER Version 0.5.7
 
 ==========================
 
@@ -20,7 +20,7 @@ REQUIREMENTS
   should be automatically installed during the install process described
   below.
 
-    * Unicode::Collate 0.61 or higher
+    * Unicode::Collate 0.62 or higher
     * IPC::Cmd and IPC::Run (included in Perl 5.9.5 or higher)
     * File::Slurp::Unicode
     * Readonly (but Readonly::XS is highly recommended for performance reasons)
