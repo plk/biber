@@ -19,10 +19,35 @@ sub new {
   my ($class, %params) = @_;
   my $self = bless {%params}, $class;
   $self->{bib} = new Biber::Entries;
+  $self->{allkeys} = 0;
   $self->{citekeys} = [];
   $self->{orig_order_citekeys} = [];
   return $self;
 }
+
+=head2 allkeys
+
+    Sets flag to say citekey '*' occurred in citekeys
+
+=cut
+
+sub allkeys {
+  my $self = shift;
+  $self->{allkeys} = 1;
+  return;
+}
+
+=head2 is_allkeys
+
+    Checks flag which says citekey '*' occurred in citekeys
+
+=cut
+
+sub is_allkeys {
+  my $self = shift;
+  return $self->{allkeys};
+}
+
 
 =head2 get_shorthands
 

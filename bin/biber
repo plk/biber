@@ -189,6 +189,7 @@ if ( $opts->{allentries} and $opts->{bibdata} ) {
   my $bib_sections = new Biber::Sections;
   my $bib_section = new Biber::Section('number' => 0); # Only one section in "allentries"
   $bib_section->set_datafiles($opts->{bibdata});
+  $bib_section->allkeys;
   $logger->info("Using all citekeys in files " . join(',', @{$opts->{bibdata}}));
   $bib_sections->add_section($bib_section);
   $biber->{sections} = $bib_sections;

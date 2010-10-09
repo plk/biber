@@ -427,7 +427,6 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
 
 SECTION: foreach my $section (@{$bcfxml->{section}}) {
     my $bib_section;
-    Biber::Config->setoption('allentries', 0); # reset for each section
 
     # Can be multiple section 0 entries and so re-use that section object if it exists
     if (my $existing_section = $bib_sections->get_section($section->{number})) {
@@ -448,11 +447,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     foreach my $keyc (@{$section->{citekey}}) {
       my $key = $keyc->{content};
       if ($key eq '*') {
-        Biber::Config->setoption('allentries', 1);
+        $bib_section->allkeys;
         $key_flag = 1; # There is at least one key, used for error reporting below
         $logger->info("Using all citekeys in bib section " . $section->{number});
         $bib_sections->add_section($bib_section);
-        last SECTION;
+        next SECTION;
       }
       elsif (not Biber::Config->get_seenkey($key, $section->{number})) {
         push @keys, $key;
@@ -466,13 +465,13 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
       }
     }
 
-    unless (Biber::Config->getoption('allentries')) {
+    unless ($bib_section->is_allkeys) {
       $logger->info("Found ", $#keys+1 , " citekeys in bib section " . $section->{number})
     }
 
     if (Biber::Config->getoption('debug')) {
       my @debug_keys = sort @keys;
-      unless (Biber::Config->getoption('allentries')) {
+      unless ($bib_section->is_allkeys) {
         $logger->debug("The citekeys for section " . $section->{number} . " are:\n", "@debug_keys", "\n");
       }
     }
@@ -570,16 +569,16 @@ sub parse_bibtex {
 
   unlink $ufilename if -f $ufilename;
 
-  if (Biber::Config->getoption('allentries')) {
+  if ($section->is_allkeys) {
     map { Biber::Config->incr_seenkey($_, $section->number) } @localkeys
   }
 
   my $bibentries = $section->bib;
 
-  # if allentries, push all bibdata keys into citekeys (if they are not already there)
+  # if allkeys, push all bibdata keys into citekeys (if they are not already there)
   # Can't just make citekeys = bibdata keys as this loses information about citekeys
   # that are missing data entries.
-  if (Biber::Config->getoption('allentries')) {
+  if ($section->is_allkeys) {
     foreach my $bibkey ($bibentries->sorted_keys) {
       $section->add_citekeys($bibkey);
     }

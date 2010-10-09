@@ -75,7 +75,7 @@ set:yoon maron coleridge tvonb} ;
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 
 # reset some options and re-generate information
-Biber::Config->setoption('allentries', 1);
+$section->allkeys;
 $biber->prepare;
 $section = $biber->sections->get_section('0');;
 $bibentries = $biber->sections->get_section('0')->bib;
