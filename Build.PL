@@ -25,7 +25,8 @@ my $builder = $class->new(
     },
     add_to_cleanup      => [ 'biber-*' ],
     build_requires => {
-        'Config::AutoConf' => '0.15'
+        'Config::AutoConf' => '0.15',
+        'ExtUtils::LibBuilder' => '0.02'
     },
     requires => {
         'Config::General' => 0,
