@@ -6,6 +6,7 @@ use warnings;
 use Carp;
 use IPC::Cmd qw( can_run run );
 use Log::Log4perl qw(:no_extra_logdie_message);
+use Log::Log4perl::Level;
 use POSIX qw(strftime);
 use Biber;
 use Biber::Output::BBL;
@@ -217,6 +218,12 @@ else {
 
   # find and parse the .bcf control file
   $biber->parse_ctrlfile(locate_biber_file($ctrlfile));
+}
+
+# Check to see if the .bcf set debug=1. If so, increase logging level
+# We couldn't set this on logger init as the .bcf hadn't been read then
+if (Biber::Config->getoption('debug')) {
+  $logger->level($DEBUG);
 }
 
 if (Biber::Config->getoption('trace')) {
