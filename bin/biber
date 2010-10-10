@@ -122,9 +122,12 @@ if (Biber::Config->getoption('trace')) {
 }
 
 my $LOGLEVEL_F;
+my $LOG_MAIN;
 if (Biber::Config->getoption('nolog')) {
+  $LOG_MAIN = 'Screen';
   $LOGLEVEL_F = 'OFF'
 } else {
+  $LOG_MAIN = 'Logfile, Screen';
   $LOGLEVEL_F = $LOGLEVEL
 }
 
@@ -132,33 +135,40 @@ my $LOGLEVEL_S;
 if (Biber::Config->getoption('onlylog')) {
   $LOGLEVEL_S = 'OFF'
 } else {
-  $LOGLEVEL_S = $LOGLEVEL
+  # Max screen loglevel is INFO
+  if (Biber::Config->getoption('quiet')) {
+    $LOGLEVEL_S = 'ERROR';
+  }
+  else {
+    $LOGLEVEL_S = 'INFO';
+  }
 }
-
-## TODO make Screen.Threshold optional: in some situations we'd like
-#  to have debug msgs on the screen too!
 
 # configuration "file" for Log::Log4perl
 my $l4pconf = qq(
-    log4perl.category.main                             = $LOGLEVEL, Logfile, Screen
+    log4perl.category.main                             = $LOGLEVEL, $LOG_MAIN
     log4perl.category.screen                           = $LOGLEVEL_S, Screen
-    log4perl.category.logfile                          = $LOGLEVEL_F, Logfile
-
-    log4perl.appender.Logfile                          = Log::Log4perl::Appender::File
-    log4perl.appender.Logfile.utf8                     = 1
-    log4perl.appender.Logfile.filename                 = $biberlog
-    log4perl.appender.Logfile.mode                     = write
-    log4perl.appender.Logfile.layout                   = Log::Log4perl::Layout::PatternLayout
-    log4perl.appender.Logfile.layout.ConversionPattern = [%r] %F{1}:%L> %p - %m%n
 
     log4perl.appender.Screen                           = Log::Log4perl::Appender::Screen
-    ## the following option sets a max level of INFO for the console:
-    ## i.e. debug messages can only go to the log file
     log4perl.appender.Screen.utf8                      = 1
-    log4perl.appender.Screen.Threshold                 = INFO
+    log4perl.appender.Screen.Threshold                 = $LOGLEVEL_S
     log4perl.appender.Screen.stderr                    = 0
     log4perl.appender.Screen.layout                    = Log::Log4perl::Layout::SimpleLayout
 );
+
+# Only want a logfile appender if --nolog isn't set
+if ($LOGLEVEL_F ne 'OFF') {
+  $l4pconf .= qq(
+    log4perl.category.logfile                          = $LOGLEVEL_F, Logfile
+    log4perl.appender.Logfile                          = Log::Log4perl::Appender::File
+    log4perl.appender.Logfile.utf8                     = 1
+    log4perl.appender.Logfile.Threshold                = $LOGLEVEL_F
+    log4perl.appender.Logfile.filename                 = $biberlog
+    log4perl.appender.Logfile.mode                     = clobber
+    log4perl.appender.Logfile.layout                   = Log::Log4perl::Layout::PatternLayout
+    log4perl.appender.Logfile.layout.ConversionPattern = [%r] %F{1}:%L> %p - %m%n
+);
+}
 
 Log::Log4perl::init(\$l4pconf) ;
 
@@ -167,7 +177,7 @@ my $logger  = Log::Log4perl::get_logger('main') ;
 my $screen  = Log::Log4perl::get_logger('screen');
 my $logfile = Log::Log4perl::get_logger('logfile');
 
-$logger->info("Logfile is '$biberlog'");
+$logger->info("Logfile is '$biberlog'") unless Biber::Config->getoption('nolog');
 
 my $ctrlfile;
 my $bblfile;
@@ -378,7 +388,7 @@ Options:
       before current directory.
 
   --quiet|-q
-      Turn infos and warnings off.
+      Log only errors
 
   --sortcase=1|0
       Case-sensitive sorting (default is true)
