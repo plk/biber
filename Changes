@@ -1,4 +1,7 @@
 Revision history for Biber
+0.6    (unreleased)
+       * U::C dependency to 0.63
+       * Misc bug fixes
 0.5.7  09-10-2010
        * Misc bug fixes
 0.5.6  04-10-2010
