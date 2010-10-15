@@ -1,6 +1,10 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+use constant {
+  EXIT_OK => 0,
+  EXIT_ERROR => 1
+};
 
 # no warnings 'utf8';
 use Carp;
@@ -55,11 +59,20 @@ GetOptions(
 our $VERSION = $Biber::VERSION;
 our $BETA_VERSION = $Biber::BETA_VERSION;
 
-die usage() if exists $opts->{'help'};
+if (exists $opts->{'help'}) {
+  print usage();
+  exit EXIT_OK;
+}
 
-die version() if exists $opts->{'version'};
+if (exists $opts->{'version'}) {
+  print version();
+  exit EXIT_OK;
+}
 
-die usage() unless @ARGV or $opts->{'allentries'};
+unless (@ARGV or $opts->{'allentries'}) {
+  print usage();
+  exit EXIT_ERROR;
+}
 
 #--------------------------------------------------
 
@@ -282,20 +295,24 @@ $bbloutput->output;
 ###
 
 # display warnings/errors summary, like BibTeX's format
-# unless in quiet mode
+# unless in quiet mode and exit
 unless (Biber::Config->getoption('quiet')) {
   if (defined($biber->{errors})) { # if errors, ignore warnings
     if ($biber->{errors} == 1) {
       print "(There was 1 error message)\n";
-    } elsif ($biber->{errors} > 1) {
+    }
+    elsif ($biber->{errors} > 1) {
       print "(There were ", $biber->{errors}, " error messages)\n";
     }
-  } elsif (defined($biber->{warnings})) {
+    exit EXIT_ERROR;
+  }
+  elsif (defined($biber->{warnings})) {
     if ($biber->{warnings} == 1) {
       print "(There was 1 warning)\n";
     } elsif ($biber->{warnings} > 1) {
       print "(There were ", $biber->{warnings}, " warnings)\n";
     }
+    exit EXIT_OK;
   }
 }
 
