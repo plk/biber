@@ -183,7 +183,10 @@ my $ctrlfile;
 my $bblfile;
 
 my $time_string = strftime "%a %b %e, %Y, %H:%M:%S", localtime;
-$logfile->info("=== Biber version $VERSION");
+my $vn = $VERSION;
+$vn .= ' (beta)' if $BETA_VERSION;
+
+$logfile->info("=== Biber version $vn");
 $logfile->info("=== $time_string");
 
 if (Biber::Config->getoption('debug')) {
