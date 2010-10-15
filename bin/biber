@@ -183,7 +183,10 @@ my $ctrlfile;
 my $bblfile;
 
 my $time_string = strftime "%a %b %e, %Y, %H:%M:%S", localtime;
-$logfile->info("=== Biber version $VERSION");
+my $vn = $VERSION;
+$vn .= ' (beta)' if $BETA_VERSION;
+
+$logfile->info("=== Biber version $vn");
 $logfile->info("=== $time_string");
 
 if (Biber::Config->getoption('debug')) {
@@ -192,7 +195,7 @@ if (Biber::Config->getoption('debug')) {
 
 if ( $opts->{allentries} and $opts->{bibdata} ) {
   # Special case as we have no .bcf to parse.
-  # Use .bcf defaults from Constants.pm plus any cmd line args and constructs our
+  # Use .bcf defaults from Constants.pm plus any cmd line args and construct our
   # sections object here
   $bblfile = $opts->{bibdata}[0];
   $bblfile =~ s/(?:\.(bib|xml|dbxml))?$/\.bbl/;
