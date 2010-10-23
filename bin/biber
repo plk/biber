@@ -16,6 +16,7 @@ use Biber;
 use Biber::Output::BBL;
 use Biber::Utils;
 use File::Spec;
+use Params::Validate;
 
 #Don't remove the next line!
 #<wrapper_snippet>---------------------------------
@@ -29,7 +30,7 @@ GetOptions(
            'bibdatatype=s',       # not exposed in usage output currently
            'bibencoding|e=s',
            'bblencoding|E=s',
-           'collate|C!',
+           'collate|C',
            'collate_options|c=s',
            'configfile|g=s',
            'debug|D',
@@ -46,7 +47,7 @@ GetOptions(
            'sortcase=i',
            'sortlocale|l=s',
            'sortupper=i',
-           'trace|T!',
+           'trace|T',
            'u',                   # alias for bibencoding=UTF-8
            'U',                   # alias for bblencoding=UTF-8
            'validate|V',
