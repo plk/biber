@@ -92,14 +92,34 @@ sub _initopts {
       %LOCALCONF = ParseConfig(-ConfigFile => $conffile, -UTF8 => 1) or
         $logger->logcarp("Failure to read config file " . $conffile . "\n $@");
     }
-  }
 
-  # nsort* options are special
-  if (my $nsp = $LOCALCONF{nosortprefix}) {
-    $LOCALCONF{nosortprefix} = qr/$nsp/;
-  }
-  if (my $nsd = $LOCALCONF{nosortdiacritics}) {
-    $LOCALCONF{nosortdiacritics} = qr/$nsd/;
+    # Turn sortcase and sortupper into booleans
+    # They are not booleans in the config file so that they
+    # mirror biblatex option syntax
+    if (exists($LOCALCONF{sortcase})) {
+      if ($LOCALCONF{sortcase} eq 'true') {
+        $LOCALCONF{sortcase} = 1;
+      }
+      elsif ($LOCALCONF{sortcase} eq 'false') {
+        $LOCALCONF{sortcase} = 0;
+      }
+    }
+    if (exists($LOCALCONF{sortupper})) {
+      if ($LOCALCONF{sortupper} eq 'true') {
+        $LOCALCONF{sortupper} = 1;
+      }
+      elsif ($LOCALCONF{sortupper} eq 'false') {
+        $LOCALCONF{sortupper} = 0;
+      }
+    }
+
+    # nsort* options are special
+    if (my $nsp = $LOCALCONF{nosortprefix}) {
+      $LOCALCONF{nosortprefix} = qr/$nsp/;
+    }
+    if (my $nsd = $LOCALCONF{nosortdiacritics}) {
+      $LOCALCONF{nosortdiacritics} = qr/$nsd/;
+    }
   }
 
   # Config file overrides defaults for biber

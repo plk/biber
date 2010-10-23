@@ -16,7 +16,6 @@ use Biber;
 use Biber::Output::BBL;
 use Biber::Utils;
 use File::Spec;
-use Params::Validate;
 
 #Don't remove the next line!
 #<wrapper_snippet>---------------------------------
@@ -44,9 +43,9 @@ GetOptions(
            'outfile|O=s',
            'output-directory=s',
            'quiet|q',
-           'sortcase=i',
+           'sortcase=s',
            'sortlocale|l=s',
-           'sortupper=i',
+           'sortupper=s',
            'trace|T',
            'u',                   # alias for bibencoding=UTF-8
            'U',                   # alias for bblencoding=UTF-8
@@ -86,6 +85,22 @@ if ($opts->{bibdata}) {
 # Sanitise collate option if fastsort if specified
 if ($opts->{fastsort}) {
   delete $opts->{collate};
+}
+
+# Turn sortcase and sortupper into booleans
+# They are not booleans on the command-line so that they
+# mirror biblatex option syntax
+if ($opts->{sortcase} eq 'true') {
+  $opts->{sortcase} = 1;
+}
+elsif ($opts->{sortcase} eq 'false') {
+  $opts->{sortcase} = 0;
+}
+if ($opts->{sortupper} eq 'true') {
+  $opts->{sortupper} = 1;
+}
+elsif ($opts->{sortupper} eq 'false') {
+  $opts->{sortupper} = 0;
 }
 
 # Resolve shortcut aliases for UTF-8ness
@@ -411,7 +426,7 @@ Options:
   --quiet|-q
       Log only errors
 
-  --sortcase=1|0
+  --sortcase=true|false
       Case-sensitive sorting (default is true)
 
   --sortlocale|-l [locale]
@@ -420,7 +435,7 @@ Options:
       tailoring to the sort (if available for the locale). With
       --fastsort this sets the OS locale for sorting.
 
-  --sortupper=1|0
+  --sortupper=true|false
       Sort uppercase before lower (default is true)
 
   -u
