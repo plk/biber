@@ -29,7 +29,7 @@ GetOptions(
            'bibdatatype=s',       # not exposed in usage output currently
            'bibencoding|e=s',
            'bblencoding|E=s',
-           'collate|C!',
+           'collate|C',
            'collate_options|c=s',
            'configfile|g=s',
            'debug|D',
@@ -43,10 +43,10 @@ GetOptions(
            'outfile|O=s',
            'output-directory=s',
            'quiet|q',
-           'sortcase=i',
+           'sortcase=s',
            'sortlocale|l=s',
-           'sortupper=i',
-           'trace|T!',
+           'sortupper=s',
+           'trace|T',
            'u',                   # alias for bibencoding=UTF-8
            'U',                   # alias for bblencoding=UTF-8
            'validate|V',
@@ -69,8 +69,9 @@ if (exists $opts->{'version'}) {
   exit EXIT_OK;
 }
 
+# Catch this situation early
 unless (@ARGV or $opts->{'allentries'}) {
-  print usage();
+  print STDERR usage();
   exit EXIT_ERROR;
 }
 
@@ -82,7 +83,7 @@ if ($opts->{bibdata}) {
   $opts->{bibdata} = [ split /\s*,\s*/, $opts->{bibdata} ]
 }
 
-# Sanitise collate option if fastsort if specified
+# Sanitise collate option if fastsort is specified
 if ($opts->{fastsort}) {
   delete $opts->{collate};
 }
@@ -245,6 +246,9 @@ else {
   # find and parse the .bcf control file
   $biber->parse_ctrlfile(locate_biber_file($ctrlfile));
 }
+
+# Postprocess biber options now that they are all read from the various places
+Biber::Config->postprocess_biber_opts;
 
 # Check to see if the .bcf set debug=1. If so, increase logging level
 # We couldn't set this on logger init as the .bcf hadn't been read then
@@ -410,7 +414,7 @@ Options:
   --quiet|-q
       Log only errors
 
-  --sortcase=1|0
+  --sortcase=true|false
       Case-sensitive sorting (default is true)
 
   --sortlocale|-l [locale]
@@ -419,7 +423,7 @@ Options:
       tailoring to the sort (if available for the locale). With
       --fastsort this sets the OS locale for sorting.
 
-  --sortupper=1|0
+  --sortupper=true|false
       Sort uppercase before lower (default is true)
 
   -u

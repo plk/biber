@@ -78,10 +78,10 @@ perl source are available on SourceForge\footnote{\url{http://sourceforge.net/pr
 
 \verb+bibtex+ has been the default (only \ldots) integrated choice for
 bibliography processing in TeX for a long time. It has well known
-limitations which stem from its data format, data model and lack of UTF-8
-support\footnote{In fact, there is now a UTF-8 compliant version}. The
+limitations which stem from its data format, data model and lack of Unicode
+support\footnote{In fact, there is now a Unicode version}. The
 \verb+.bst+ language for writing bibliography styles is painful to learn
-and use. It is not a general programming language and this make it really
+and use. It is not a general programming language and this makes it really
 very hard to do sophisticated automated processing of bibliographies.
 
 \verb+biblatex+ was a major advance for LaTeX users as it moved much
@@ -89,7 +89,7 @@ of the bibliography processing into LaTeX macros. However,
 \verb+biblatex+ still used \verb+bibtex+ as a sorting engine for the
 bibliography and also to generate various labels for
 entries. \verb+bibtex+'s capabilities even for this reduced set of
-tasks was still quite restricted due to the lack of UTF-8 support and
+tasks was still quite restricted due to the lack of Unicode support and
 the more and more complex programming issues involved in label
 preparation and file encoding.
 
@@ -124,11 +124,13 @@ description of each. This is the most useful brief source of usage
 information. \verb+biber+ returns an exit code of 0 on success or 1 if
 there was an error.
 
-Most \verb+biber+ options can be specified in long or short format. As
-usual with such options, when the option requires an argument, the long
-form is followed by an equals sign «\verb+=+» and then the argument, the
-short form is followed by a space and then the argument. For example, the
-\verb+--bibdata|-d+ option can be given in two ways:
+Most \verb+biber+ options can be specified in long or short format. When
+mentioning options below, they are referred to as
+«\verb+long form|short form+» when an option has both a long and short
+form. As usual with such options, when the option requires an argument, the
+long form is followed by an equals sign «\verb+=+» and then the argument,
+the short form is followed by a space and then the argument. For example,
+the \verb+--bibdata|-d+ option can be given in two ways:
 
 \begin{verbatim}
 biber --bibdata=somefile.bib
@@ -206,16 +208,16 @@ nosortdiacritics    [\x{2bf}\x{2018}]
 nosortprefix        \p{L}{2}\p{Pd}
 onlylog             0
 quiet               0
-sortcase            1
+sortcase            true
 sortlocale          en_US.utf8
-sortupper           1
+sortupper           true
 trace               0
 validate            0
 wraplines           0
 \end{verbatim}
 
-\noindent You can see here that options with multiple key/value pairs of their own
-like \verb+--collate_options|-c+ can be specified in
+\noindent You can see here that options with multiple key/value pairs of
+their own like\linebreak[4] \verb+--collate_options|-c+ can be specified in
 Apache config format. Please see the documentation
 for the \verb+Config::General+ Perl
 module\footnote{\url{http://search.cpan.org/search?query=Config::General&mode=all}}
@@ -333,11 +335,11 @@ used to locate an OS locale definition to use for the collation. This
 may or may not be correctly tailored, depending on the locale and the OS.\\[1ex]
 
 \noindent Collation is by default case sensitive. You can turn this
-off using the \verb+biber+ option \verb+--sortcase=0+ or from
+off using the \verb+biber+ option \verb+--sortcase=false+ or from
 \verb+biblatex+ using its option \verb+sortcase=false+.\\[1ex]
 
 \noindent\verb+--collate|-C+ by default collates uppercase before
-lower. You can reverse this using the \verb+biber+ option \verb+--sortupper=0+
+lower. You can reverse this using the \verb+biber+ option \verb+--sortupper=false+
 or from \verb+biblatex+ by using its option \verb+sortupper=false+.\\[1ex]
 
 There are in fact many options to \verb+Unicode::Collate+
@@ -370,11 +372,11 @@ the environment.
 \noindent Use slightly quicker internal sorting routine. This uses the OS locale
 files which may or may not be accurate.
 
-\biberex{biber --sortcase=0}
+\biberex{biber --sortcase=false}
 
 \noindent Case insensitive sorting.
 
-\biberex{biber --sortupper=0 --collate_options="backwards => 2"}
+\biberex{biber --sortupper=false --collate_options="backwards => 2"}
 
 \noindent Collate lowercase before upper and collate French accents in
 reverse order at UCA level 2.

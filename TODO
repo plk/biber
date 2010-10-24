@@ -1,7 +1,5 @@
 TODO in decreasing order of priority:
 
-   * add validation mechanism for options and config (untaint data),
-     probably with Params::Validate
    * validate bibtex data with Text::Bibtex::Structure (optional) needs
      biblatex interface for defining structure of custom styles (biblatex 1.x)
    * merge in the "unique" branch to implement full uniquename/list

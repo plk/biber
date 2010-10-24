@@ -104,14 +104,14 @@ sub _initopts {
       %LOCALCONF = ParseConfig(-ConfigFile => $conffile, -UTF8 => 1) or
         $logger->logcarp("Failure to read config file " . $conffile . "\n $@");
     }
-  }
 
-  # nsort* options are special
-  if (my $nsp = $LOCALCONF{nosortprefix}) {
-    $LOCALCONF{nosortprefix} = qr/$nsp/;
-  }
-  if (my $nsd = $LOCALCONF{nosortdiacritics}) {
-    $LOCALCONF{nosortdiacritics} = qr/$nsd/;
+    # nsort* options are special
+    if (my $nsp = $LOCALCONF{nosortprefix}) {
+      $LOCALCONF{nosortprefix} = qr/$nsp/;
+    }
+    if (my $nsd = $LOCALCONF{nosortdiacritics}) {
+      $LOCALCONF{nosortdiacritics} = qr/$nsd/;
+    }
   }
 
   # Config file overrides defaults for biber
@@ -209,6 +209,44 @@ sub set_unul_changed {
   return;
 }
 
+
+=head2 postprocess_biber_opts
+
+    Place to postprocess biber options when they have been
+    gathered from all the possible places that set them
+
+=cut
+
+sub postprocess_biber_opts {
+  shift; # class method so don't care about class name
+
+  # Turn sortcase and sortupper into booleans if they are not already
+  # They are not booleans on the command-line/config file so that they
+  # mirror biblatex option syntax for users
+  if (exists($CONFIG->{options}{biber}{sortcase})) {
+    if ($CONFIG->{options}{biber}{sortcase} eq 'true') {
+      $CONFIG->{options}{biber}{sortcase} = 1;
+    } elsif ($CONFIG->{options}{biber}{sortcase} eq 'false') {
+      $CONFIG->{options}{biber}{sortcase} = 0;
+    }
+    unless ($CONFIG->{options}{biber}{sortcase} eq '1' or
+            $CONFIG->{options}{biber}{sortcase} eq '0') {
+      $logger->logcroak("Invalid value for option 'sortcase'");
+    }
+  }
+
+  if (exists($CONFIG->{options}{biber}{sortupper})) {
+    if ($CONFIG->{options}{biber}{sortupper} eq 'true') {
+      $CONFIG->{options}{biber}{sortupper} = 1;
+    } elsif ($CONFIG->{options}{biber}{sortupper} eq 'false') {
+      $CONFIG->{options}{biber}{sortupper} = 0;
+    }
+    unless ($CONFIG->{options}{biber}{sortupper} eq '1' or
+            $CONFIG->{options}{biber}{sortupper} eq '0') {
+      $logger->logcroak("Invalid value for option 'sortupper'");
+    }
+  }
+}
 
 =head2 setoption
 
