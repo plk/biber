@@ -6,7 +6,7 @@
 # biber-linux_x86_32
 # biber-linux_x86_64
 
-DIR=${1:-"~/Desktop/b"}
+DIR=${1:-"/Users/philkime/Desktop/b"}
 RELEASE=${2:-"development"}
 
 
