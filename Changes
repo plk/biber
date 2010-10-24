@@ -1,6 +1,8 @@
 Revision history for Biber
 0.6    (unreleased)
+       * First non-beta release
        * U::C dependency to 0.63
+       * sortcase and sortupper options now take same argument forms as in biblatex
        * Misc bug fixes
 0.5.7  09-10-2010
        * Misc bug fixes

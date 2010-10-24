@@ -52,11 +52,11 @@ with standard \verb+.bst+ styles.
 
 \subsection{Requirements}\label{ref:req}
 
-\verb+biber+ is distributed in two ways. There is a perl source
-version which requires you to have a working perl installation
+\verb+biber+ is distributed in two ways. There is a Perl source
+version which requires you to have a working Perl installation
 (preferably version 5.12 but no less than 5.10) and the ability to
 install the pre-requisite modules. Also provided are binaries for
-major OSes built with the perl \verb+PAR::Packer+ module and utilities.
+major OSes built with the Perl \verb+PAR::Packer+ module and utilities.
 
 Currently there are binaries available for:
 
@@ -68,7 +68,7 @@ Currently there are binaries available for:
 \end{itemize}
 
 These should work on any fairly recent OS version. Both binaries and
-perl source are available on SourceForge\footnote{\url{http://sourceforge.net/projects/biblatex-biber/}}.
+Perl source are available on SourceForge\footnote{\url{http://sourceforge.net/projects/biblatex-biber/}}.
 
 \subsection{License}
 
@@ -507,7 +507,7 @@ format, amongst other things.
 
 \section{Binaries}
 
-The binary distributions of biber are made using the perl \verb+PAR::Packer+
+The binary distributions of biber are made using the Perl \verb+PAR::Packer+
 module. They can be used as a normal binary but have some behaviour which
 is worth noting:
 
@@ -591,7 +591,7 @@ linux» if unsure about this. There are many pages about this, for example:
 \subsection{Building}
 
 Instructions for those who want/need to build an executable from the
-perl version. For this, you will need to have a recent Perl,
+Perl version. For this, you will need to have a recent Perl,
 preferably 5.12 at least with the following modules:
 
 \begin{itemize}
@@ -609,7 +609,7 @@ depends on recent fixes in many cases. You can see if you have the
 perl ./Build.PL
 \end{verbatim}
 
-\noindent invocation in the biber perl distribution tree
+\noindent invocation in the biber Perl distribution tree
 directory. Normally, the build procedure for the binaries is as
 follows\footnote{On UNIXequse systems, you may need to specify a full
   path to the scripts e.g. \texttt{./Build}}:
@@ -652,7 +652,7 @@ define these two things as part of constructing new build scripts:
 \item Copy the \verb+biber.files+ file from an existing build
   architecture into this directory.
 \item For all of the files with absolute pathnames in there (that is,
-  ones we are not pulling from the biber tree itself), locate these
+  ones we are not pulling from the \verb+biber+ tree itself), locate these
   files in your Perl installation tree and put the correct path in the
   file.
 \item Copy the build script from a vaguely similar architecture
