@@ -78,34 +78,26 @@ unless ($locale) {
 }
 
 our %CONFIG_DEFAULT_BIBER = (
-  validate => 0,
+  allentries =>  0,
+  bblencoding => 'UTF-8',
+  bibdata =>  undef,
+  bibdatatype => 'bibtex',
+  bibencoding => 'UTF-8',
+  collate => 1,
+  collate_options => { level => 3 },
+  debug =>  0,
+  displaymode => $DISPLAYMODE_DEFAULT, # eventually, shall be moved to biblatex options
+  mincrossrefs =>  2,
+  nolog => 0,
+  nosortdiacritics => qr/[\x{2bf}\x{2018}]/,
+  nosortprefix => qr/\p{L}{2}\p{Pd}/,
+  quiet => 0,
   sortcase => 1,
   sortlocale => $locale,
   sortupper => 1,
-  collate => 1,
-  mincrossrefs =>  2,
-  bibdatatype => 'bibtex',
-  bibdata =>  undef,
-  allentries =>  0,
-  debug =>  0,
   trace =>  0,
-  quiet => 0,
-  nolog => 0,
   wraplines => 0,
-  bibencoding => 'UTF-8',
-  bblencoding => 'UTF-8',
-  #
-  # these options are passed to the Unicode::Collate object
-  collate_options => { level => 3 },
-  #
-  # eventually this shall be moved to biblatex options:
-  displaymode => $DISPLAYMODE_DEFAULT,
-  #
-  # Semitic (or eventually other) last names may begin with diacritics like ʿ or ‘ (e.g. ʿAlī)
-  nosortdiacritics => qr/[\x{2bf}\x{2018}]/,
-  #
-  # Semitic (or eventually other) names may be prefixed with an article (e.g. al-Hasan, as-Saleh)
-  nosortprefix => qr/\p{L}{2}\p{Pd}/,
+  validate => 0,
   );
 
 # default global options for biblatex
