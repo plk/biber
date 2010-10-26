@@ -20,7 +20,7 @@ mv biber-darwin_x86_64 biber
 tar cf biber.tar biber
 gzip biber.tar
 scp biber.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber.tar.gz
-\rm $DIR/biber.tar.gz biber
+\rm biber.tar.gz biber
 # Linux 32-bit
 mv biber-linux_x86_32 biber
 tar cf biber.tar biber
