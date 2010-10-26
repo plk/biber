@@ -11,11 +11,25 @@ RELEASE=${2:-"development"}
 
 
 # Windows
-scp $DIR/biber-MSWIN.exe philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber.exe
+mv $DIR/biber-MSWIN.exe $DIR/biber.exe
+/usr/bin/zip $DIR/biber.zip $DIR/biber.exe
+scp $DIR/biber.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber.zip
+\rm $DIR/biber.zip $DIR/biber.exe
 # OSX
-scp $DIR/biber-darwin_x86_64 philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber
+mv $DIR/biber-darwin_x86_64 $DIR/biber
+tar cf $DIR/biber.tar $DIR/biber
+gzip $DIR/biber.tar
+scp $DIR/biber.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber.tar.gz
+\rm $DIR/biber.tar.gz $DIR/biber
 # Linux 32-bit
-scp $DIR/biber-linux_x86_32 philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux_32bit/biber
+mv $DIR/biber-linux_x86_32 $DIR/biber
+tar cf $DIR/biber.tar $DIR/biber
+gzip $DIR/biber.tar
+scp $DIR/biber.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux_32bit/biber.tar.gz
+\rm $DIR/biber.tar.gz $DIR/biber
 # Linux 64-bit
-scp $DIR/biber-linux_x86_64 philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux_64bit/biber
-
+mv $DIR/biber-linux_x86_64 $DIR/biber
+tar cf $DIR/biber.tar $DIR/biber
+gzip $DIR/biber.tar
+scp $DIR/biber.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux_64bit/biber.tar.gz
+\rm $DIR/biber.tar.gz $DIR/biber
