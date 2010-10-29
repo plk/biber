@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 
 use Biber;
 use Biber::Output::BBL;
@@ -151,6 +151,41 @@ my $crt = q|  \entry{crt}{book}{}
 
 |;
 
+# various event fields inherited correctly
+my $cr6 = q|  \entry{cr6}{inproceedings}{}
+    \name{author}{2}{%
+      {{Author}{A.}{Firstname}{F.}{}{}{}{}}%
+      {{2ndAuthor}{2.}{Firstname}{F.}{}{}{}{}}%
+    }
+    \name{editor}{1}{%
+      {{Editor}{E.}{}{}{}{}{}{}}%
+    }
+    \list{publisher}{1}{%
+      {Publisher of proceeding}%
+    }
+    \list{location}{1}{%
+      {Address}%
+    }
+    \strng{namehash}{AF2F1}
+    \strng{fullhash}{AF2F1}
+    \field{sortinit}{A}
+    \field{labelyear}{2009}
+    \field{year}{2009}
+    \field{eventyear}{2009}
+    \field{eventendyear}{2009}
+    \field{eventmonth}{08}
+    \field{eventendmonth}{08}
+    \field{eventday}{21}
+    \field{eventendday}{24}
+    \field{title}{Title of inproceeding}
+    \field{booktitle}{Title of proceeding}
+    \field{eventtitle}{Title of the event}
+    \field{venue}{Location of event}
+    \field{pages}{123\bibrangedash 126}
+  \endentry
+
+|;
+
 # xref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $xr1 = q|  \entry{xr1}{inbook}{}
     \name{labelname}{1}{}{%
@@ -291,6 +326,7 @@ is($out->get_output_entry('cr3'), $cr3, 'crossref test 4');
 is($out->get_output_entry('crt'), $crt, 'crossref test 5');
 is($out->get_output_entry('cr4'), $cr4, 'crossref test 6');
 is($section->has_citekey('crn'), 0,'crossref test 7');
+is($out->get_output_entry('cr6'), $cr6, 'crossref test 8');
 is($out->get_output_entry('xr1'), $xr1, 'xref test 1');
 is($out->get_output_entry('xr2'), $xr2, 'xref test 2');
 is($out->get_output_entry('xrm'), $xrm, 'xref test 3');
