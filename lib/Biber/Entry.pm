@@ -136,9 +136,10 @@ sub inherit_from {
 
   if ($type =~ /\Ain(proceedings|collection|book)\z/xms) {
 
-    # inherit all that is undefined, except title etc
+    # Inherit all that is undefined,
+    # except title as that would be incorrect even if undefined in child
     foreach my $field ($parent->fields) {
-      next if $field =~ /title/;
+      next if $field =~ /\Atitle\z/xms;
       if (not $self->get_field($field)) {
         $self->set_field($field, $parent->get_field($field));
       }

@@ -66,6 +66,26 @@
   YEAR      = {1945}
 }
 
+% Testing inheritance of event information
+@PROCEEDINGS{cr6i,
+  ADDRESS    = {Address},
+  TITLE      = {Title of proceeding},
+  EDITOR     = {Editor},
+  PUBLISHER  = {Publisher of proceeding},
+  EVENTDATE  = {2009-08-21/2009-08-24},
+  EVENTTITLE = {Title of the event},
+  VENUE      = {Location of event},
+  YEAR       = {2009}
+}
+
+@INPROCEEDINGS{cr6,
+  AUTHOR     = {Author, Firstname and 2ndAuthor, Firstname},
+  CROSSREF   = {cr6i},
+  PAGES      = {123--126},
+  TITLE      = {Title of inproceeding},
+  YEAR       = {2009}
+}
+
 % Testing mincrossrefs. xr1 and xr2 xrefs should trigger inclusion of xrm and also
 % the xreffields in both of them
 @INBOOK{xr1,
@@ -126,3 +146,4 @@
   PUBLISHER = {Oxford},
   YEAR      = {1935}
 }
+
