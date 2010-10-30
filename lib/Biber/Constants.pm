@@ -170,6 +170,63 @@ our %CONFIG_DEFAULT_BIBLATEX =
    alphaothers  => '+',
    labelyear => [ 'year' ],
    labelname => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
+   inheritance => {
+                   defaults => {
+                                inherit_all     => 'yes',
+                                override_target => 'no',
+                                type_pair => []
+                               },
+                   inherit => [
+                               {
+                                type_pair => [
+                                               {
+                                                source => 'proceedings',
+                                                target => 'inproceedings'
+                                               },
+                                               {
+                                                source => 'collection',
+                                                target => 'incollection',
+                                               },
+                                               {
+                                                source => 'book',
+                                                target => 'inbook',
+                                               }
+                                              ],
+                                field => [
+                                           {
+                                            source => 'title',
+                                            target => 'booktitle',
+                                            override_target => 'yes',
+                                           },
+                                           {
+                                            source => 'subtitle',
+                                            target => 'booksubtitle',
+                                            override_target => 'yes',
+                                           },
+                                           {
+                                            source => 'titleaddon',
+                                            target => 'booktitleaddon',
+                                            override_target => 'yes',
+                                           },
+                                          ]
+                               },
+                               {
+                                type_pair => [
+                                               {
+                                                source => 'book',
+                                                target => 'inbook',
+                                               }
+                                              ],
+                                field => [
+                                           {
+                                            source => 'author',
+                                            target => 'bookauthor',
+                                            override_target => 'yes',
+                                           },
+                                          ]
+                               },
+                              ]
+                  }
   );
 $CONFIG_DEFAULT_BIBLATEX{sorting_final} = $CONFIG_DEFAULT_BIBLATEX{sorting_label};
 
@@ -193,6 +250,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
   controlversion    => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   debug             => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   dataonly          => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
+  inheritance       => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   labelalpha        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelname         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelnumber       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},

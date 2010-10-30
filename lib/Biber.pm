@@ -263,6 +263,9 @@ sub parse_ctrlfile {
                                                            qr/\Adatasource\z/,
                                                            qr/\Asection\z/,
                                                            qr/\Asort\z/,
+                                                           qr/\Atype_pair\z/,
+                                                           qr/\Ainherit\z/,
+                                                           qr/\Afield\z/,
                                                           ],
                                           'NsStrip' => 1,
                                           'KeyAttr' => []);
@@ -327,6 +330,13 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
         }
       }
     }
+  }
+
+  # INHERITANCE schemes for crossreferences (always global)
+  # This should not be optional any more when biblatex implements this so take
+  # out this conditional
+  if (exists($bcfxml->{inheritance})) {
+    Biber::Config->setblxoption('inheritance', $bcfxml->{inheritance});
   }
 
   # SORTING schemes

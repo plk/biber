@@ -68,6 +68,7 @@
 
 % Testing inheritance of event information
 @PROCEEDINGS{cr6i,
+  AUTHOR     = {Spurious Author},
   ADDRESS    = {Address},
   TITLE      = {Title of proceeding},
   EDITOR     = {Editor},
@@ -79,12 +80,50 @@
 }
 
 @INPROCEEDINGS{cr6,
-  AUTHOR     = {Author, Firstname and 2ndAuthor, Firstname},
+  AUTHOR     = {Author, Firstname},
   CROSSREF   = {cr6i},
   PAGES      = {123--126},
   TITLE      = {Title of inproceeding},
+  BOOKTITLE  = {Manual booktitle},
+  YEAR       = {2009},
+}
+
+% Testing inheritance of special fields (booktitle, bookauthor etc.)
+@BOOK{cr7i,
+  AUTHOR     = {Brian Bookauthor},
+  TITLE      = {Book Title},
+  SUBTITLE   = {Book Subtitle},
+  TITLEADDON = {Book Titleaddon},
+  PUBLISHER  = {Publisher of proceeding},
   YEAR       = {2009}
 }
+
+@INBOOK{cr7,
+  AUTHOR     = {Author, Firstname},
+  CROSSREF   = {cr7i},
+  PAGES      = {123--126},
+  TITLE      = {Title of Book bit},
+  YEAR       = {2010}
+}
+
+% Testing supression of default inheritance
+@COLLECTION{cr8i,
+  EDITOR     = {Brian Editor},
+  TITLE      = {Book Title},
+  SUBTITLE   = {Book Subtitle},
+  TITLEADDON = {Book Titleaddon},
+  PUBLISHER  = {Publisher of Collection},
+  YEAR       = {2009}
+}
+
+@INCOLLECTION{cr8,
+  AUTHOR     = {Smith, Firstname},
+  CROSSREF   = {cr8i},
+  PAGES      = {1--12},
+  TITLE      = {Title of Collection bit},
+  YEAR       = {2010}
+}
+
 
 % Testing mincrossrefs. xr1 and xr2 xrefs should trigger inclusion of xrm and also
 % the xreffields in both of them

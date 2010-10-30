@@ -58,6 +58,36 @@ start =
       usetranslator?
     }*,
     
+    element bcf:inheritance {
+      element bcf:defaults {
+        attribute inherit_all { "yes" | "no" },
+        attribute override_target { "yes" | "no" },
+        element bcf:type_pair {
+          attribute source { "all" | xsd:string },
+          attribute target { "all" | xsd:string },
+          attribute inherit_all { "yes" | "no" }?,
+          attribute override_target { "yes" | "no" }?,
+          empty
+        }*
+      },
+      element bcf:inherit {
+        element bcf:type_pair {
+          attribute source { "all" | xsd:string },
+          attribute target { "all" | xsd:string },
+          empty
+        }+,
+        element bcf:field {
+          ((attribute source { xsd:string },
+            attribute skip { "yes" | "no" }) |
+           (attribute source { xsd:string },
+            attribute target { xsd:string },
+            attribute override_target { "yes" | "no" }?)
+          ),
+          empty
+        }+
+      }*
+    }?,
+     
     element bcf:sorting {
       attribute type { "global" },
       element bcf:sort {
@@ -114,7 +144,7 @@ start =
       attribute number { xsd:integer },
       element bcf:citekey { xsd:string }*
     }
-  
+
 biblatex.entrytypes =
   "book"
   | "article"
