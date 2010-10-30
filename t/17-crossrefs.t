@@ -153,11 +153,14 @@ my $crt = q|  \entry{crt}{book}{}
 
 # various event fields inherited correctly
 my $cr6 = q|  \entry{cr6}{inproceedings}{}
-    \name{author}{1}{%
-      {{Author}{A.}{Firstname}{F.}{}{}{}{}}%
+    \name{labelname}{1}{}{%
+      {{}{Author}{A.}{Firstname}{F.}{}{}{}{}}%
     }
-    \name{editor}{1}{%
-      {{Editor}{E.}{}{}{}{}{}{}}%
+    \name{author}{1}{}{%
+      {{}{Author}{A.}{Firstname}{F.}{}{}{}{}}%
+    }
+    \name{editor}{1}{}{%
+      {{}{Editor}{E.}{}{}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Publisher of proceeding}%
@@ -187,11 +190,14 @@ my $cr6 = q|  \entry{cr6}{inproceedings}{}
 
 # Special fields inherited correctly
 my $cr7 = q|  \entry{cr7}{inbook}{}
-    \name{author}{1}{%
-      {{Author}{A.}{Firstname}{F.}{}{}{}{}}%
+    \name{labelname}{1}{}{%
+      {{}{Author}{A.}{Firstname}{F.}{}{}{}{}}%
     }
-    \name{bookauthor}{1}{%
-      {{Bookauthor}{B.}{Brian}{B.}{}{}{}{}}%
+    \name{author}{1}{}{%
+      {{}{Author}{A.}{Firstname}{F.}{}{}{}{}}%
+    }
+    \name{bookauthor}{1}{}{%
+      {{}{Bookauthor}{B.}{Brian}{B.}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Publisher of proceeding}%
@@ -212,8 +218,11 @@ my $cr7 = q|  \entry{cr7}{inbook}{}
 
 # Default inheritance supressed
 my $cr8 = q|  \entry{cr8}{incollection}{}
-    \name{author}{1}{%
-      {{Smith}{S.}{Firstname}{F.}{}{}{}{}}%
+    \name{labelname}{1}{}{%
+      {{}{Smith}{S.}{Firstname}{F.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Smith}{S.}{Firstname}{F.}{}{}{}{}}%
     }
     \strng{namehash}{SF1}
     \strng{fullhash}{SF1}
