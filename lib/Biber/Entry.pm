@@ -131,35 +131,56 @@ sub add_warning {
 
 sub inherit_from {
   my ($self, $parent) = @_;
+  my $type        = $self->get_field('entrytype');
+  my $parenttype  = $parent->get_field('entrytype');
+  my $inheritance = Biber::Config->getblxoption('inheritance');
+  my %processed;
+  # get defaults
+  my $defaults = $inheritance->{defaults};
+  # global defaults ...
+  my $inherit_all = $defaults->{inherit_all};
+  my $override_target = $defaults->{override_target};
+  # override with type_pair specific defaults if they exist ...
+  foreach my $type_pair (@{$defaults->{type_pair}}) {
+    if (($type_pair->{source} eq 'all' or $type_pair->{source} eq $parenttype) and
+        ($type_pair->{target} eq 'all' or $type_pair->{target} eq $type)) {
+      $inherit_all = $type_pair->{inherit_all} if $type_pair->{inherit_all};
+      $override_target = $type_pair->{override_target} if $type_pair->{override_target};
+    }
+  }
 
-  my $type = $self->get_field('entrytype');
-
-  if ($type =~ /\Ain(proceedings|collection|book)\z/xms) {
-
-    # Inherit all that is undefined,
-    # except title as that would be incorrect even if undefined in child
-    foreach my $field ($parent->fields) {
-      next if $field =~ /\Atitle\z/xms;
-      if (not $self->get_field($field)) {
-        $self->set_field($field, $parent->get_field($field));
+  # First process any fields that have special treatment
+  foreach my $inherit (@{$inheritance->{inherit}}) {
+    # Match for this combination of entry and crossref parent?
+    foreach my $type_pair (@{$inherit->{type_pair}}) {
+    if (($type_pair->{source} eq 'all' or $type_pair->{source} eq $parenttype) and
+        ($type_pair->{target} eq 'all' or $type_pair->{target} eq $type)) {
+        foreach my $field (@{$inherit->{field}}) {
+          next unless $parent->get_field($field->{source});
+          $processed{$field->{source}} = 1;
+          # localise defaults according to field, if specified
+          my $field_override_target = $field->{override_target}
+            if $field->{override_target};
+          # Skip this field if requested
+          if ($field->{skip}) {
+            $processed{$field->{source}} = 1;
+          }
+          # Set the field if null or override is requested
+          elsif (not $self->get_field($field->{target}) or
+                 $field_override_target eq 'yes') {
+            $self->set_field($field->{target}, $parent->get_field($field->{source}));
+          }
+        }
       }
     }
+  }
 
-    # inherit title etc as booktitle etc
-    $self->set_field('booktitle', $parent->get_field('title'));
-    if ($parent->get_field('titleaddon')) {
-      $self->get_field('booktitleaddon', $parent->get_field('titleaddon'));
-    }
-    if ($parent->get_field('subtitle')) {
-      $self->get_field('booksubtitle', $parent->get_field('subtitle'));
-    }
-  }
-  elsif ($type eq 'inbook') {
-    $self->get_field('bookauthor', $parent->get_field('author'));
-  }
-  else { # inherits all
+  # Now process the rest of the fields, if necessary
+  if ($inherit_all eq 'yes') {
     foreach my $field ($parent->fields) {
-      if (not $self->get_field($field)) {
+      next if $processed{$field}; # Skip if we already dealt with this field above
+      # Set the field if null or override is requested
+      if (not $self->get_field($field) or $override_target eq 'yes') {
         $self->set_field($field, $parent->get_field($field));
       }
     }

@@ -102,6 +102,23 @@
       <bcf:value>0</bcf:value>
     </bcf:option>
   </bcf:options>
+  <!-- INHERITANCE -->
+  <bcf:inheritance>
+    <bcf:defaults inherit_all="yes" override_target="no">
+      <bcf:type_pair source="all" target="incollection" inherit_all="no"/>
+    </bcf:defaults>
+    <bcf:inherit>
+      <bcf:type_pair source="book" target="inbook"/>
+      <bcf:field source="author" target="bookauthor" override_target="yes"/>
+      <bcf:field source="title" target="booktitle" override_target="yes"/>
+      <bcf:field source="titleaddon" target="booktitleaddon"  override_target="yes"/>
+      <bcf:field source="subtitle" target="booksubtitle" override_target="yes"/>
+    </bcf:inherit>
+    <bcf:inherit>
+      <bcf:type_pair source="proceedings" target="inproceedings"/>
+      <bcf:field source="title" target="booktitle" override_target="no"/>
+    </bcf:inherit>
+  </bcf:inheritance>
   <!-- SORTING -->
   <bcf:sorting type="global">
     <bcf:sort order="1">
@@ -142,6 +159,8 @@
     <bcf:citekey>cr3</bcf:citekey>
     <bcf:citekey>cr4</bcf:citekey>
     <bcf:citekey>cr6</bcf:citekey>
+    <bcf:citekey>cr7</bcf:citekey>
+    <bcf:citekey>cr8</bcf:citekey>
     <bcf:citekey>crt</bcf:citekey>
     <bcf:citekey>xr1</bcf:citekey>
     <bcf:citekey>xr2</bcf:citekey>
@@ -150,4 +169,3 @@
     <bcf:citekey>xrt</bcf:citekey>
   </bcf:section>
 </bcf:controlfile>
-

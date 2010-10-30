@@ -1,6 +1,9 @@
 TODO in decreasing order of priority:
 
+   * When biblatex implements interface and bcf for crossref inheritance,
+     take out conditional in control file read and also change schema
    * validate bibtex data with Text::Bibtex::Structure (optional) needs
      biblatex interface for defining structure of custom styles (biblatex 1.x)
    * merge in the "unique" branch to implement full uniquename/list
      automation. Needs new .bbl format and biblatex support (biblatex 2.0)
+

@@ -108,6 +108,112 @@
           </optional>
         </element>
       </zeroOrMore>
+      <optional>
+        <element name="bcf:inheritance">
+          <element name="bcf:defaults">
+            <attribute name="inherit_all">
+              <choice>
+                <value>yes</value>
+                <value>no</value>
+              </choice>
+            </attribute>
+            <attribute name="override_target">
+              <choice>
+                <value>yes</value>
+                <value>no</value>
+              </choice>
+            </attribute>
+            <zeroOrMore>
+              <element name="bcf:type_pair">
+                <attribute name="source">
+                  <choice>
+                    <value>all</value>
+                    <data type="string"/>
+                  </choice>
+                </attribute>
+                <attribute name="target">
+                  <choice>
+                    <value>all</value>
+                    <data type="string"/>
+                  </choice>
+                </attribute>
+                <optional>
+                  <attribute name="inherit_all">
+                    <choice>
+                      <value>yes</value>
+                      <value>no</value>
+                    </choice>
+                  </attribute>
+                </optional>
+                <optional>
+                  <attribute name="override_target">
+                    <choice>
+                      <value>yes</value>
+                      <value>no</value>
+                    </choice>
+                  </attribute>
+                </optional>
+                <empty/>
+              </element>
+            </zeroOrMore>
+          </element>
+          <zeroOrMore>
+            <element name="bcf:inherit">
+              <oneOrMore>
+                <element name="bcf:type_pair">
+                  <attribute name="source">
+                    <choice>
+                      <value>all</value>
+                      <data type="string"/>
+                    </choice>
+                  </attribute>
+                  <attribute name="target">
+                    <choice>
+                      <value>all</value>
+                      <data type="string"/>
+                    </choice>
+                  </attribute>
+                  <empty/>
+                </element>
+              </oneOrMore>
+              <oneOrMore>
+                <element name="bcf:field">
+                  <choice>
+                    <group>
+                      <attribute name="source">
+                        <data type="string"/>
+                      </attribute>
+                      <attribute name="skip">
+                        <choice>
+                          <value>yes</value>
+                          <value>no</value>
+                        </choice>
+                      </attribute>
+                    </group>
+                    <group>
+                      <attribute name="source">
+                        <data type="string"/>
+                      </attribute>
+                      <attribute name="target">
+                        <data type="string"/>
+                      </attribute>
+                      <optional>
+                        <attribute name="override_target">
+                          <choice>
+                            <value>yes</value>
+                            <value>no</value>
+                          </choice>
+                        </attribute>
+                      </optional>
+                    </group>
+                  </choice>
+                  <empty/>
+                </element>
+              </oneOrMore>
+            </element>
+          </zeroOrMore>
+        </element>
+      </optional>
       <element name="bcf:sorting">
         <attribute name="type">
           <value>global</value>
