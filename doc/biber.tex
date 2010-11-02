@@ -3,6 +3,7 @@
 \usepackage[strict=true,autostyle=true]{csquotes}
 \usepackage{ifthen}
 \usepackage{fontspec}
+\usepackage{graphicx}
 \setmainfont[Ligatures=TeX]{TeXGyrePagella}
 \setsansfont{Arial}
 \setmonofont{Courier New}
@@ -504,6 +505,95 @@ example). This is quite a hard problem, a solution to which is implemented
 in an experimental \verb+biber+ branch but which also needs \verb+biblatex+
 support, envisaged for version 2.x. It requires an enhanced \verb+.bbl+
 format, amongst other things.
+
+\subsection{Editor Integration}
+
+Here is some information on how to integrate \verb+biber+ into some of the
+more common editors
+
+\subsubsection{Emacs}
+
+Emacs has the very powerful AUcTeX mode for editing TeX and running
+compilations. BibTeX is already integrated into AUCTeX and it is quite
+simple to add support for\verb+biber+. Use the Emacs Customise interface to
+modify the \verb+TeX-command-list+ variable and add a \verb+Biber+ command.
+
+\begin{verbatim}
+M-x customise-variable
+TeX-command-list
+\end{verbatim}
+
+\noindent and then \verb+Ins+ somewhere a new command that looks like
+Figure \ref{fig:biber-auctex}.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=4in,keepaspectratio=true]{biber-auctex.png}
+  \caption{Screenshot of AUCTeX command setup for Biber}
+  \label{fig:biber-auctex}
+\end{figure}
+
+\noindent Alternatively, you can add it directly in lisp to your \verb+.emacs+ like
+this:
+
+\begin{verbatim}
+(add-to-list 'TeX-command-list
+  (quote
+    ("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber")))
+\end{verbatim}
+
+\noindent However you add the command to \verb+TeX-command-list+, customise the
+actual \verb+Biber+ command parameters as you want them, using ``\verb+%s+" as
+the LaTeX file name place holder. Then define the following two functions
+in your \verb+.emacs+.
+
+\begin{verbatim}
+; Biber under AUCTeX
+(defun TeX-run-Biber (name command file)
+  "Create a process for NAME using COMMAND to format FILE with Biber." 
+ (let ((process (TeX-run-command name command file)))
+    (setq TeX-sentinel-function 'TeX-Biber-sentinel)
+    (if TeX-process-asynchronous
+	process
+      (TeX-synchronous-sentinel name file process))))
+
+(defun TeX-Biber-sentinel (process name)
+  "Cleanup TeX output buffer after running Biber."
+  (goto-char (point-max))
+  (cond
+   ;; Check whether Biber reports any warnings or errors.
+   ((re-search-backward (concat
+			 "^(There \\(?:was\\|were\\) \\([0-9]+\\) "
+			 "\\(warnings?\\|error messages?\\))") nil t)
+    ;; Tell the user their number so that she sees whether the
+    ;; situation is getting better or worse.
+    (message (concat "Biber finished with %s %s. "
+		     "Type `%s' to display output.")
+	     (match-string 1) (match-string 2)
+	     (substitute-command-keys
+	      "\\<TeX-mode-map>\\[TeX-recenter-output-buffer]")))
+   (t
+    (message (concat "Biber finished successfully. "
+		     "Run LaTeX again to get citations right."))))
+  (setq TeX-command-next TeX-command-default))
+\end{verbatim}
+
+\noindent You'll then see a \verb+Biber+ option in your AUCTeX command menu or
+you can just \verb+C-c C-c+ and type \verb+Biber+.
+
+\subsubsection{TeXworks}
+
+It's very easy to add \verb+biber+ support to TeXworks. In the Preferences,
+select the Typesetting tab and then add a new Processing Tool as in Figure
+\ref{fig:biber-texworks}.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=4in,keepaspectratio=true]{biber-texworks.png}
+  \caption{Screenshot of TeXworks processing tool setup for Biber}
+  \label{fig:biber-texworks}
+\end{figure}
+
 
 \section{Binaries}
 
