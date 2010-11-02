@@ -78,100 +78,58 @@ unless ($locale) {
 }
 
 our %CONFIG_DEFAULT_BIBER = (
-  allentries =>  0,
-  bblencoding => 'UTF-8',
-  bibdata =>  undef,
-  bibdatatype => 'bibtex',
-  bibencoding => 'UTF-8',
-  collate => 1,
-  collate_options => { level => 3 },
-  debug =>  0,
-  displaymode => $DISPLAYMODE_DEFAULT, # eventually, shall be moved to biblatex options
-  mincrossrefs =>  2,
-  nolog => 0,
+  allentries       => 0,
+  bblencoding      => 'UTF-8',
+  bibdata          =>  undef,
+  bibdatatype      => 'bibtex',
+  bibencoding      => 'UTF-8',
+  collate          => 1,
+  collate_options  => { level => 3 },
+  debug            => 0,
+  displaymode      => $DISPLAYMODE_DEFAULT, # eventually, shall be moved to biblatex options
+  mincrossrefs     => 2,
+  nolog            => 0,
   nosortdiacritics => qr/[\x{2bf}\x{2018}]/,
-  nosortprefix => qr/\p{L}{2}\p{Pd}/,
-  quiet => 0,
-  sortcase => 1,
-  sortlocale => $locale,
-  sortupper => 1,
-  trace =>  0,
-  wraplines => 0,
-  validate => 0,
+  nosortprefix     => qr/\p{L}{2}\p{Pd}/,
+  quiet            => 0,
+  sortcase         => 1,
+  sortlocale       => $locale,
+  sortupper        => 1,
+  trace            => 0,
+  wraplines        => 0,
+  validate         => 0
   );
 
 # default global options for biblatex
 # in practice these will be obtained from the control file,
 # but we need this as a fallback, just in case,
 # or when using the command-line options "-a -d <datafile>"
-# without an aux/bcf file
+# without a bcf file
 our %CONFIG_DEFAULT_BIBLATEX =
   (
-   controlversion => undef,
-   debug => '0',
-   terseinits => '0',
-   useprefix => '0',
-   useauthor => '1',
-   useeditor => '1',
-   usetranslator => '0',
-   labelalpha => '0',
-   labelnumber => '0',
-   singletitle => '0',
-   uniquename => '0',
-   uniquelist => '0',
-   sorting_label =>  [
-                [
-                 {
-                  'presort'    => {}},
-                 {
-                  'mm'         => {}},
-                ],
-                [
-                 {
-                  'sortkey'    => {'final' => 1}}
-                ],
-                [
-                 {
-                  'sortname'   => {}},
-                 {
-                  'author'     => {}},
-                 {
-                  'editor'     => {}},
-                 {
-                  'translator' => {}},
-                 {
-                  'sorttitle'  => {}},
-                 {
-                  'title'      => {}}
-                ],
-                [
-                 {
-                  'sortyear'   => {}},
-                 {
-                  'year'       => {}}
-                ],
-                [
-                 {
-                  'sorttitle'  => {}},
-                 {
-                  'title'      => {}}
-                ],
-                [
-                 {
-                  'volume'     => {}},
-                 {
-                  '0000'       => {}}
-                ]
-               ],
-   sortlos => '1',
-   maxitems => '3',
-   minitems => '1',
-   maxnames => '3',
-   minnames => '1',
-   alphaothers  => '+',
-   labelyear => [ 'year' ],
-   labelname => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
-   inheritance => {
+   alphaothers     => '\textbf{+}',
+   controlversion  => undef,
+   debug           => '0',
+   labelalpha      => '0',
+   labelname       => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
+   labelnumber     => '0',
+   labelyear       => [ 'year' ],
+   maxitems        => '3',
+   maxnames        => '3',
+   minitems        => '1',
+   minnames        => '1',
+   singletitle     => '0',
+   sortalphaothers => '+',
+   sortlos         => '1',
+   terseinits      => '0',
+   uniquename      => '0',
+   uniquelist      => '0',
+   useauthor       => '1',
+   useeditor       => '1',
+   useprefix       => '0',
+   usetranslator   => '0',
+   # Now the defaults for special .bcf sections information
+   inheritance     => {
                    defaults => {
                                 inherit_all     => 'yes',
                                 override_target => 'no',
@@ -227,7 +185,51 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                           ]
                                },
                               ]
-                  }
+                  },
+   sorting_label   =>  [
+                [
+                 {
+                  'presort'    => {}},
+                 {
+                  'mm'         => {}},
+                ],
+                [
+                 {
+                  'sortkey'    => {'final' => 1}}
+                ],
+                [
+                 {
+                  'sortname'   => {}},
+                 {
+                  'author'     => {}},
+                 {
+                  'editor'     => {}},
+                 {
+                  'translator' => {}},
+                 {
+                  'sorttitle'  => {}},
+                 {
+                  'title'      => {}}
+                ],
+                [
+                 {
+                  'sortyear'   => {}},
+                 {
+                  'year'       => {}}
+                ],
+                [
+                 {
+                  'sorttitle'  => {}},
+                 {
+                  'title'      => {}}
+                ],
+                [
+                 {
+                  'volume'     => {}},
+                 {
+                  '0000'       => {}}
+                ]
+               ]
   );
 $CONFIG_DEFAULT_BIBLATEX{sorting_final} = $CONFIG_DEFAULT_BIBLATEX{sorting_label};
 

@@ -118,6 +118,10 @@
       <bcf:type_pair source="proceedings" target="inproceedings"/>
       <bcf:field source="title" target="booktitle" override_target="no"/>
     </bcf:inherit>
+    <bcf:inherit>
+      <bcf:type_pair source="collection" target="incollection"/>
+      <bcf:field source="title" target="booktitle" override_target="yes"/>
+    </bcf:inherit>
   </bcf:inheritance>
   <!-- SORTING -->
   <bcf:sorting type="global">

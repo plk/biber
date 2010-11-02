@@ -216,7 +216,7 @@ my $cr7 = q|  \entry{cr7}{inbook}{}
 
 |;
 
-# Default inheritance supressed
+# Default inheritance supressed except for specified
 my $cr8 = q|  \entry{cr8}{incollection}{}
     \name{labelname}{1}{}{%
       {{}{Smith}{S.}{Firstname}{F.}{}{}{}{}}%
@@ -230,6 +230,7 @@ my $cr8 = q|  \entry{cr8}{incollection}{}
     \field{labelyear}{2010}
     \field{year}{2010}
     \field{title}{Title of Collection bit}
+    \field{booktitle}{Book Title}
     \field{pages}{1\bibrangedash 12}
   \endentry
 
