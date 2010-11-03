@@ -25,6 +25,7 @@ use Log::Log4perl qw( :no_extra_logdie_message );
 use base 'Biber::Internals';
 use Config::General qw( ParseConfig );
 use Data::Dump;
+use Text::BibTeX; # Need this in here in order to reset @STRING macros per section
 our @ISA;
 
 =encoding utf-8
@@ -1558,6 +1559,10 @@ sub process_data {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $datatype = Biber::Config->getoption('bibdatatype');
+
+  # Clear all macro definitions between sections.
+  # T::B never clears these between files
+  Text::BibTeX::delete_all_macros;
 
   if ($datatype eq 'bibtex') {
     foreach my $datafile ($section->get_datafiles) {
