@@ -1527,6 +1527,9 @@ sub sortshorthands {
 sub prepare {
   my $self = shift;
   foreach my $section (@{$self->sections->get_sections}) {
+    # shortcut - skip sections that don't have any keys
+    next unless $section->get_citekeys or $section->is_allkeys;
+
     my $secnum = $section->number;
     $BIBER_SORT_FIRSTPASSDONE = 0;       # sanitise sortpass flag
     $logger->info("Processing bib section $secnum");
@@ -1561,7 +1564,7 @@ sub process_data {
   my $datatype = Biber::Config->getoption('bibdatatype');
 
   # Clear all macro definitions between sections.
-  # T::B never clears these between files
+  # T::B never clears these
   Text::BibTeX::delete_all_macros;
 
   if ($datatype eq 'bibtex') {

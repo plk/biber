@@ -403,7 +403,7 @@ sub get_output_entries {
 =head2 output
 
     BBL output method - this takes care to output entries in the explicit order
-    derived from the virtual order of the auxcitekeys after sortkey sorting.
+    derived from the virtual order of the citekeys after sortkey sorting.
 
 =cut
 
