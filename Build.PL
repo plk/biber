@@ -39,9 +39,9 @@ my $builder = $class->new(
         'Regexp::Common' => 0,
         'Log::Log4perl' => 0,
         'Readonly' => 0,
-        'Unicode::Collate' => '0.63',
+        'Unicode::Collate' => '0.66',
         'XML::LibXML::Simple' => 0,
-        'Text::BibTeX' => '0.47',
+        'Text::BibTeX' => '0.48',
         'perl' => '5.10.0'
     },
     recommends => {
