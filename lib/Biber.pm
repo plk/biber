@@ -418,11 +418,12 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
   my %bibdatafiles = ();
   foreach my $data (@{$bcfxml->{bibdata}}) {
     foreach my $datasource (@{$data->{datasource}}) {
-      # default format is bibtex
-      my $format = $datasource->{format} ? $datasource->{format} : 'bibtex';
+      # default datatype is bibtex
+      my $datatype = $datasource->{datatype} ? $datasource->{datatype} : 'bibtex';
+      # file data sources
       if ($datasource->{type} eq 'file') {
-        push @{$bibdatafiles{$data->{section}[0]}}, { name   => $datasource->{content},
-                                                      format => $format };
+        push @{$bibdatafiles{$data->{section}[0]}}, { name     => $datasource->{content},
+                                                      datatype => $datatype };
       }
     }
   }
@@ -493,12 +494,6 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     $logger->logcroak("The file '$ctrl_file' does not contain any citations!")
   }
 
-  # --bibdata was passed on command-line
-  # Add these data files to section 0
-  if (Biber::Config->getoption('bibdata')) {
-    $bib_sections->get_section(0)->set_datafiles(Biber::Config->getoption('bibdata'));
-  }
-
   # Add the Biber::Sections object to the Biber object
   $self->{sections} = $bib_sections;
 
@@ -521,11 +516,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 =cut
 
 sub parse_bibtex {
-  my ($self, $filename) = @_;
+  my ($self, $filename, $datatype) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
-  $logger->info("Processing file '$filename' for section $secnum");
+  $logger->info("Processing $datatype format file '$filename' for section $secnum");
 
   my @localkeys = ();
 
@@ -1571,13 +1566,13 @@ sub process_data {
 
   foreach my $datafile ($section->get_datafiles) {
     my $name = $datafile->{name};
-    my $format = $datafile->{format};
+    my $datatype = $datafile->{datatype};
     $name .= '.bib' unless $name =~ /\.(?:bib|xml|dbxml)\z/xms;
     $name = locate_biber_file($name);
     $logger->logcroak("File '$name' does not exist!") unless -f $name;
     # Here we decide which parser to use for the data file
-    if ($format eq 'bibtex') {
-      $self->parse_bibtex($name)
+    if ($datatype eq 'bibtex') {
+      $self->parse_bibtex($name, $datatype);
     }
   }
   return;
