@@ -134,9 +134,8 @@ start =
     element bcf:bibdata {
       attribute section { xsd:integer },
       element bcf:datasource {
-        
-        ## only type="file" is supported at this stage
-        attribute type { xsd:NCName }?,
+        attribute type { "file" },
+        attribute format { "bibtex" | "biblatexml" }?,
         xsd:NCName
       }*
     }?,

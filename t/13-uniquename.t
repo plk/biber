@@ -26,7 +26,7 @@ Biber::Config->setoption('fastsort', 1);
 # Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $bibentries = $biber->sections->get_section('0')->bib;
+my $bibentries = $biber->sections->get_section('0')->bibentries;
 
 my $un1 = q|  \entry{un1}{article}{}
     \name{author}{1}{%

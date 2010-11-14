@@ -74,14 +74,14 @@ Biber::Config->setblxoption('useprefix', 1);
 # regenerate information
 $biber->prepare;
 
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix1, 'von with useprefix=true' );
 
 Biber::Config->setblxoption('useprefix', 0);
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix2, 'von with useprefix=false' );
 
 
@@ -120,7 +120,7 @@ Biber::Config->setoption('sortcase', '1');
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('luzzatto')->get_field('sortstring'), $prefix1, 'Title with nosortprefix' );
 is($bibentries->entry('hasan')->get_field('sortstring'), $diacritic1, 'Title with nosortdiacritic' );
@@ -145,7 +145,7 @@ Biber::Config->setoption('sortcase', '0');
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('jaffe')->get_field('sortstring'), $edtypeclass1, 'Editor type/class' );
 
@@ -233,7 +233,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('moraux')->get_field('sortstring'), $dates1, 'Very contrived but thorough test of date sorting' );
 
@@ -248,7 +248,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('augustine')->get_field('sortstring'), $lists1, 'max/minitems test 1 (publisher)' );
 
@@ -262,7 +262,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('cotton')->get_field('sortstring'), $lists2, 'max/minitems test 2 (location)' );
 
@@ -277,7 +277,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('chiu')->get_field('sortstring'), $lists3, 'max/minitems test 3 (institution)' );
 
@@ -292,7 +292,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('chiu')->get_field('sortstring'), $lists4, 'max/minitems test 4 (institution - minitems=2)' );
 
@@ -308,7 +308,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('chiu')->get_field('sortstring'), $lists5, 'max/minitems test 5 (institution - maxitems=4/minitems=3)' );
 
@@ -347,7 +347,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff1, 'nty with default left offset, 4 digit year' );
 
@@ -385,7 +385,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 Biber::Config->setoption('sortcase', 1);
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff2, 'nty with left offset, 3 digit year, case sensitive' );
 
@@ -424,7 +424,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff3, 'nty with left offset, 4 digit year, case sensitive' );
 
@@ -462,7 +462,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 Biber::Config->setoption('sortcase', 0);
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff4, 'nty with right offset, 3 digit year' );
 
@@ -500,7 +500,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff5, 'nty with right offset, 4 digit year' );
 
@@ -539,7 +539,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff6, 'ntyd with left offset, 4 digit year' );
 
@@ -578,7 +578,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff7, 'ntyd with left offset, 3 digit year' );
 
@@ -617,7 +617,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff8, 'ntyd with right offset, 4 digit year' );
 
@@ -656,7 +656,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff9, 'ntyd with right offset, 3 digit year' );
 
@@ -694,7 +694,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $vol1, 'nty with right-padded vol' );
 
@@ -733,7 +733,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $vol2, 'nty with right-padded 7-char vol' );
 
@@ -773,7 +773,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $vol3, 'nty with left-padded 5-char "a" pad char vol' );
 
@@ -812,7 +812,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $nty, 'basic nty sort' );
 is($bibentries->entry('angenendtsk')->get_field('sortstring'), $sk1, 'basic sortkey sort' );
@@ -851,7 +851,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $nyt, 'basic nyt sort' );
 
@@ -889,7 +889,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $nyvt, 'basic nyvt sort' );
 
@@ -931,7 +931,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $anyt_la, 'anyt sort (with labelalpha)' );
 Biber::Config->setblxoption('labelalpha', 0);
@@ -943,7 +943,7 @@ $bibentries->entry('stdmodel:glashow')->del_field('sortlabelalpha');
 # anyt without labelalpha
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $anyt, 'anyt sort (without labelalpha)' );
 
@@ -985,7 +985,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $anyvt_la, 'anyvt sort (with labelalpha)' );
 is($bibentries->entry('murray')->get_field('sortstring'), $anyvt_la2, 'anyvt sort (> maxnames=3 minnames=1, with labelalpha and alphaothers)' );
@@ -995,7 +995,7 @@ Biber::Config->setblxoption('minnames', 2);
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('murray')->get_field('sortstring'), $anyvt_la4, 'anyvt sort (> maxnames=2 minnames=2, with labelalpha and alphaothers)' );
 
@@ -1004,7 +1004,7 @@ Biber::Config->setblxoption('sortalphaothers', '');
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('murray')->get_field('sortstring'), $anyvt_la3, 'anyvt sort (> maxnames=2 minnames=2,with labelalpha and without alphaothers)' );
 
@@ -1020,7 +1020,7 @@ $bibentries->entry('murray')->del_field('sortlabelalpha');
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $anyvt, 'anyvt sort (without labelalpha)' );
 
@@ -1055,7 +1055,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $ynt, 'basic ynt sort' );
 
@@ -1090,7 +1090,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $ydnt, 'basic ydnt sort' );
 Biber::Config->setblxoption('labelalpha', 0);
@@ -1105,7 +1105,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $debug, 'basic debug sort' );
 
@@ -1142,7 +1142,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('aristotle:rhetoric')->get_field('sortstring'), $pt1, 'book type ydnt sort' );
 
@@ -1180,7 +1180,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('stdmodel:ps_sc')->get_field('sortstring'), $ps_sc, 'nty with modified presort and short-circuit title' );
 
@@ -1221,7 +1221,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $noname, 'nty with use* all off' );
 
@@ -1236,7 +1236,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $citeorder, 'citeorder' );
 

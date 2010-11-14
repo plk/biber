@@ -30,7 +30,7 @@ Biber::Config->setblxoption('labelyear', [ 'year' ]);
 # Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $bibentries = $biber->sections->get_section('0')->bib;
+my $bibentries = $biber->sections->get_section('0')->bibentries;
 my $section = $biber->sections->get_section('0');
 
 my $l1 = [ "Invalid format of field 'origdate' - ignoring field in entry 'L1'",

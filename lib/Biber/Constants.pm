@@ -81,7 +81,6 @@ our %CONFIG_DEFAULT_BIBER = (
   allentries       => 0,
   bblencoding      => 'UTF-8',
   bibdata          =>  undef,
-  bibdatatype      => 'bibtex',
   bibencoding      => 'UTF-8',
   collate          => 1,
   collate_options  => { level => 3 },

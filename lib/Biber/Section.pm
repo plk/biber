@@ -18,7 +18,7 @@ Biber::Section
 sub new {
   my ($class, %params) = @_;
   my $self = bless {%params}, $class;
-  $self->{bib} = new Biber::Entries;
+  $self->{bibentries} = new Biber::Entries;
   $self->{allkeys} = 0;
   $self->{citekeys} = [];
   $self->{orig_order_citekeys} = [];
@@ -113,19 +113,18 @@ sub bibentry {
   my $self = shift;
   my $key = shift;
   $key = lc($key);
-  return $self->bib->entry($key);
+  return $self->bibentries->entry($key);
 }
 
-=head2 bib
+=head2 bibentries
 
-
-    For this section
+    Return Biber::Entries object for this section
 
 =cut
 
-sub bib {
+sub bibentries {
   my $self = shift;
-  return $self->{bib};
+  return $self->{bibentries};
 }
 
 =head2 set_citekeys
