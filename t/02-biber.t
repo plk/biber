@@ -30,7 +30,7 @@ Biber::Config->setoption('bblencoding', 'latin1');
 # Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $bibentries = $biber->sections->get_section('0')->bib;
+my $bibentries = $biber->sections->get_section('0')->bibentries;
 my $section = $biber->sections->get_section('0');
 
 isa_ok($biber, "Biber");
@@ -78,7 +78,7 @@ is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 $section->allkeys;
 $biber->prepare;
 $section = $biber->sections->get_section('0');;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 $out = $biber->get_output_obj;
 
 @keys = sort $section->get_citekeys;

@@ -28,7 +28,7 @@ Biber::Config->setblxoption('labelyear', undef);
 
 # Now generate the information
 $biber->prepare;
-my $bibentries = $biber->sections->get_section('0')->bib;
+my $bibentries = $biber->sections->get_section('0')->bibentries;
 
 my $out = $biber->get_output_obj;
 

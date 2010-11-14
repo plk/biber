@@ -31,7 +31,7 @@ Biber::Config->setblxoption('uniquelist', 0);
 
 # Now generate the information
 $biber->prepare;
-my $bibentries = $biber->sections->get_section('0')->bib;
+my $bibentries = $biber->sections->get_section('0')->bibentries;
 
 # Basic uniquename and hash testing
 is($bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename requiring full name expansion - 1');
@@ -56,7 +56,7 @@ Biber::Config->setblxoption('uniquename', 1);
 Biber::Config->setblxoption('uniquelist', 1);
 # Now generate the information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename - 1');
 is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename - 2');
@@ -85,7 +85,7 @@ Biber::Config->setblxoption('singletitle', 1);
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 # Now generate the information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('ey1')->get_field('extrayear'), '1', 'Extrayear - 1');
 is($bibentries->entry('ey2')->get_field('extrayear'), '2', 'Extrayear - 2');
@@ -111,7 +111,7 @@ Biber::Config->setblxoption('singletitle', 1);
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 # Now generate the information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 ok(is_undef($bibentries->entry('ey1')->get_field('extrayear')), 'Extrayear - 7');
 ok(is_undef($bibentries->entry('ey2')->get_field('extrayear')), 'Extrayear - 8');
@@ -137,7 +137,7 @@ Biber::Config->setblxoption('singletitle', 1);
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 # Now generate the information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('ey1')->get_field('extrayear'), '1', 'Extrayear - 13');
 is($bibentries->entry('ey2')->get_field('extrayear'), '2', 'Extrayear - 14');

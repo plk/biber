@@ -266,7 +266,7 @@ sub _text_bibtex_parse {
     open STDERR, '>', '/dev/null';
   }
 
-  my $bibentries = $section->bib;
+  my $bibentries = $section->bibentries;
 
   my @localkeys;
 

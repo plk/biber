@@ -27,7 +27,8 @@ Biber::Config->setoption('sortlocale', 'C');
 # Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $bibentries = $biber->sections->get_section('0')->bib;
+my $bibentries = $biber->sections->get_section('0')->bibentries;
+
 my $section = $biber->sections->get_section('0');
 
 my $name1 =
@@ -325,7 +326,7 @@ Biber::Config->setoption('bblencoding', 'latin1');
 # Now generate the information
 $biber->prepare;
 $out = $biber->get_output_obj;
-$bibentries = $biber->sections->get_section('0')->bib;
+$bibentries = $biber->sections->get_section('0')->bibentries;
 $section = $biber->sections->get_section('0');
 
 is($bibentries->entry('l21')->get_field('namehash'), 'SS1', 'Namehash check 1');

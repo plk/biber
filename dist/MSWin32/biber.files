@@ -1,6 +1,7 @@
 ../../data/schemata/bcf.rnc;lib/Biber/bcf.rnc
 ../../data/schemata/bcf.rng;lib/Biber/bcf.rng
 ../../data/latinkeys.txt;lib/Unicode/Collate/latinkeys.txt
-c:/strawberry/perl/lib/Unicode/Collate/Locale;lib/Unicode/Collate/Locale
-c:/strawberry/perl/lib/Unicode/Collate/allkeys.txt;lib/Unicode/Collate/allkeys.txt
-c:/strawberry/perl/lib/Unicode/Collate/keys.txt;lib/Unicode/Collate/keys.txt
+C:/strawberry/perl/lib/Unicode/Collate/Locale;lib/Unicode/Collate/Locale
+C:/strawberry/perl/lib/Unicode/Collate/CJK;lib/Unicode/Collate/CJK
+C:/strawberry/perl/lib/Unicode/Collate/allkeys.txt;lib/Unicode/Collate/allkeys.txt
+C:/strawberry/perl/lib/Unicode/Collate/keys.txt;lib/Unicode/Collate/keys.txt

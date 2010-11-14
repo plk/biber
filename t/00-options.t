@@ -29,7 +29,7 @@ Biber::Config->setblxoption('labelyear', [ 'year' ]);
 # Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $bibentries = $biber->sections->get_section('0')->bib;
+my $bibentries = $biber->sections->get_section('0')->bibentries;
 
 ok(Biber::Config->getblxoption('uniquename') == 1, "Single-valued option") ;
 is_deeply(Biber::Config->getblxoption('labelname'), [ 'author' ], "Multi-valued options");

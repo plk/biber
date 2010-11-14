@@ -150,7 +150,7 @@ is to process the bibliography and generate the \verb+.bbl+ file.
 The usual way to call \verb+biber+ is simply with the \verb+.bcf+ file
 as the only argument. The «\verb+.bcf+» extension of the control file
 is not optional. \verb+biblatex+ always outputs a control file with
-the \verb+.bcf extension+. Specifying the «\verb+.bcf+» extension to
+the \verb+.bcf+ extension. Specifying the «\verb+.bcf+» extension to
 \verb+biber+ \emph{is} optional. Assuming a control file called
 \verb+test.bcf+, the following two commands are equivalent:
 
@@ -328,7 +328,7 @@ chain which is given in decreasing precedence order:\\[2ex]
 
 \noindent With the default \verb+--collate|-C+ option, the locale will
 be used to look for a collation tailoring for that locale. It will generate an
-information warning if it finds none. This is not a problem as the vast
+informational warning if it finds none. This is not a problem as the vast
 majority of collation cases are covered by the standard UCA and many
 locales neither have nor need any special collation tailoring.
 
@@ -662,11 +662,41 @@ is worth noting:
 \item Don't be worried by the size of the binaries. \verb+PAR::Packer+ essentially
   constructs a self-extracting archive which unpacks the needed files first
   and so the binaries look larger than what actually runs in memory.
-\item On the first run of a new version (that is, with a specific checksum),
+\item On the first run of a new version (that is, with a specific hash),
   they actually unpack themselves to a temporary location which varies by
   operating system. This unpacking can take a little while and only happens on
   the first run of a new version.
 \end{itemize}
+
+\subsection{Binary Caches}
+
+\verb+PAR::Packer+ works by unpacking the required files to a cache
+location. It only does this on the first run of a binary 
+by computing a hash of the binary and comparing it with
+the cache directory name which contains the hash. So, if you run
+several versions of a binary, you will end up with several cached
+trees which are never used. This is particularly true if you are regularly
+testing new versions of the \verb+biber+ binary. It is a good idea to
+delete the caches for older binaries as they are not needed and can take up
+a fair bit of space. The caches are located in a temporary location which
+varies from OS to OS. The cache name is:\\[1ex]
+
+\noindent\verb+par-<username>/cache-<hash>+ (Linux/Unix/OSX)\\
+\verb+par-<username>\cache-<hash>+ (Windows)\\[1ex]
+
+\noindent The temp location is not always obvious but these are sensible
+places to look (where \verb+*+ can vary depending on user:
+
+\begin{itemize}
+\item \verb+/var/folders/*/*/-Tmp-/+ (OSX, local GUI login shell)
+\item \verb+/var/tmp/+ (OSX, remote ssh login shell)
+\item \verb+/tmp/+ (Linux)
+\item \verb+C:\Documents and Settings\<username>\Local Settings\Temp+ (Windows)
+\item \verb+C:\Windows\Temp+ (Windows)
+\end{itemize}
+
+\noindent To clean up, you can just remove the whole \verb+par-<username>+
+directory/folder and then run the current binary again.
 
 \subsection{Binary Architectures}
 
@@ -678,7 +708,6 @@ Binaries are available for the following architectures:
 \item \verb+MSWin+ --- Windows. Should work on 32 or 64 bit (built on XP)
 \item \verb+darwin_x86_64+ --- OSX Intel 64-bit (built on OSX 10.6)
 \end{itemize}
-
 
 \subsection{Installing}
 
