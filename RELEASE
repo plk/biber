@@ -13,3 +13,4 @@ Things to remember when releasing new version:
 * Commit and tag with version number
 * Upload to SF
 * Build binaries from release and upload to SF
+* Update TL contrib with new binaries
