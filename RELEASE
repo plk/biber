@@ -14,3 +14,4 @@ Things to remember when releasing new version:
 * Upload to SF
 * Build binaries from release and upload to SF
 * Update TL contrib with new binaries
+* Upload to CTAN

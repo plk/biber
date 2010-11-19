@@ -8,6 +8,7 @@
 
 DIR=${1:-"/Users/philkime/Desktop/b"}
 RELEASE=${2:-"development"}
+export COPYFILE_DISABLE=true # no resource forks - TL doesn't like them
 
 cd $DIR
 # Windows
