@@ -16,7 +16,7 @@ name: biblatex-biber
 provides:
   Biber:
     file: lib/Biber.pm
-    version: v0.5.7
+    version: 0.6
   Biber::Config:
     file: lib/Biber/Config.pm
   Biber::Constants:
@@ -58,10 +58,10 @@ requires:
   Log::Log4perl: 0
   Readonly: 0
   Regexp::Common: 0
-  Text::BibTeX: 0.47
-  Unicode::Collate: 0.62
+  Text::BibTeX: 0.48
+  Unicode::Collate: 0.67
   XML::LibXML::Simple: 0
   perl: v5.10.0
 resources:
   license: http://dev.perl.org/licenses/
-version: v0.5.7
+version: 0.6
