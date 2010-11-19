@@ -3,12 +3,12 @@ BIBER Version 0.6
 =================
 
 Biber is a BibTeX replacement for users of biblatex, with full Unicode
-support.  This release coincides with the release of biblatex 0.9d.
+support.  This release coincides with the release of biblatex 1.0
 
 REQUIREMENTS
 
   These requirements only apply if you are installing the perl version.
-  We also provide PAR::Packer generated binaries for many current OSes.
+  We also provide PAR::Packer generated binaries for most common OSes.
 
   Biber is written in Perl. Version 5.10 or higher is recommended. Be aware
   that if your version of Perl is older than that, Biber may work, but we
@@ -18,7 +18,7 @@ REQUIREMENTS
   should be automatically installed during the install process described
   below.
 
-    * Unicode::Collate 0.63 or higher
+    * Unicode::Collate 0.67 or higher
     * IPC::Cmd and IPC::Run (included in Perl 5.9.5 or higher)
     * File::Slurp::Unicode
     * Readonly (but Readonly::XS is highly recommended for performance reasons)
@@ -30,16 +30,8 @@ REQUIREMENTS
 
 INSTALLATION
 
-    ******************************************************************
-    * THIS IS BETA SOFTWARE AND SO PATHS ARE VOLATILE, SO:
-   
-    First, delete your current biber installation perl tree by removing
-    <perl site lib install path>/Biber
-
-    *
-    **************************************************************
-
-  To install this module, run the following commands:
+  Binaries are available for most common architectures but if you wish
+  to install the perl source version, run the following commands:
 
     perl Build.PL
     ./Build
@@ -49,6 +41,9 @@ INSTALLATION
 SUPPORT AND DOCUMENTATION
 
   After installing, biber --help will give you the basic documentation.
+  The latest PDF documentation can be found here:
+
+  https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/documentation/
 
   Biber also comes with the utility script latex2utf8 to convert files with
   LaTeX encoding to UTF-8.
@@ -62,22 +57,6 @@ SUPPORT AND DOCUMENTATION
   More information, bugfix releases, forums and bug tracker are available at:
 
       http://biblatex-biber.sourceforge.net
-
-
-CONFIG FILE
-
-  Biber options can now be set in a configuration file. Biber will load the
-  first file found among:
-    - biber.conf (in the current directory)
-    - $HOME/.biber.conf
-    - $ENV{XDG_CONFIG_HOME}/biber/biber.conf (Unix/Linux/BSD with Gnome, KDE, etc)
-    - $HOME/Library/biber/biber.conf" (Mac OSX only)
-    - $ENV{APPDATA}/biber.conf" (Windows only)
-    - the output of "kpsewhich biber.conf" (if available on the system).
-
-  A sample config file is included in the source tarball under
-    etc/biber.conf
-
 
 BUGS
 

@@ -1,8 +1,8 @@
 Revision history for Biber
-0.6    (unreleased)
+0.6    20-11-2010
        * First non-beta release
        * More abstracted and extensible crossref inheritance model
-       * U::C dependency to 0.63
+       * U::C dependency to 0.67
        * sortcase and sortupper options now take same argument forms as in biblatex
        * Misc bug fixes
 0.5.7  09-10-2010
