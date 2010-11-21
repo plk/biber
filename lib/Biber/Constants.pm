@@ -84,7 +84,7 @@ our %CONFIG_DEFAULT_BIBER = (
   bibdatatype      => 'bibtex',
   bibencoding      => 'UTF-8',
   collate          => 1,
-  collate_options  => { level => 3 },
+  collate_options  => { level => 4 },
   debug            => 0,
   displaymode      => $DISPLAYMODE_DEFAULT, # eventually, shall be moved to biblatex options
   mincrossrefs     => 2,
