@@ -17,7 +17,7 @@
   url={http://biblatex-biber.sourceforge.net},
   author={François Charette, Philip Kime},
   email={firmicus@ankabut.net, Philip@kime.org.uk},
-  revision={biber 0.6},
+  revision={biber 0.6.1},
   date={\today}}
 
 \hypersetup{%
@@ -343,7 +343,10 @@ off using the \verb+biber+ option \verb+--sortcase=false+ or from
 
 \noindent\verb+--collate|-C+ by default collates uppercase before
 lower. You can reverse this using the \verb+biber+ option \verb+--sortupper=false+
-or from \verb+biblatex+ by using its option \verb+sortupper=false+.\\[1ex]
+or from \verb+biblatex+ by using its option \verb+sortupper=false+. Be
+aware though that some locales rightly enforce a particular setting for
+this (for example, Danish). You will be able to override it but
+\verb+biber+ will warn you if you do.\\[1ex]
 
 There are in fact many options to \verb+Unicode::Collate+
 which can tailor the collation in various ways in
