@@ -366,6 +366,71 @@
           </oneOrMore>
         </element>
       </zeroOrMore>
+      <optional>
+        <element name="bcf:structure">
+          <oneOrMore>
+            <element name="bcf:constraints">
+              <element name="bcf:entrytypes">
+                <oneOrMore>
+                  <element name="bcf:entrytype">
+                    <data type="NCName"/>
+                  </element>
+                </oneOrMore>
+              </element>
+              <oneOrMore>
+                <element name="bcf:constraint">
+                  <choice>
+                    <group>
+                      <attribute name="type">
+                        <choice>
+                          <value>mandatory</value>
+                          <value>optional</value>
+                        </choice>
+                      </attribute>
+                      <oneOrMore>
+                        <element name="bcf:field">
+                          <data type="NCName"/>
+                        </element>
+                      </oneOrMore>
+                    </group>
+                    <group>
+                      <attribute name="type">
+                        <value>conditional</value>
+                      </attribute>
+                      <element name="bcf:antecedent">
+                        <attribute name="type">
+                          <choice>
+                            <value>all</value>
+                            <value>one</value>
+                          </choice>
+                        </attribute>
+                        <oneOrMore>
+                          <element name="bcf:field">
+                            <data type="NCName"/>
+                          </element>
+                        </oneOrMore>
+                      </element>
+                      <element name="bcf:consequent">
+                        <attribute name="type">
+                          <choice>
+                            <value>all</value>
+                            <value>one</value>
+                          </choice>
+                        </attribute>
+                        <oneOrMore>
+                          <element name="bcf:field">
+                            <data type="NCName"/>
+                          </element>
+                        </oneOrMore>
+                      </element>
+                    </group>
+                  </choice>
+                </element>
+              </oneOrMore>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
       <oneOrMore>
         <ref name="secspec"/>
       </oneOrMore>

@@ -125,24 +125,49 @@ start =
         }+
       }+
     }*,
+
+    element bcf:structure {
+      element bcf:constraints {
+        element bcf:entrytypes {
+          element bcf:entrytype { xsd:NCName }+
+        },
+        element bcf:constraint {
+          (
+            (
+              attribute type { "mandatory" | "optional" },
+              element bcf:field { xsd:NCName }+ ) |
+            (            
+              attribute type { "conditional" },
+              element bcf:antecedent {
+                attribute type { "all" | "one" },
+                element bcf:field { xsd:NCName }+
+              },
+              element bcf:consequent {
+                attribute type { "all" | "one" },
+                element bcf:field { xsd:NCName }+
+              }
+            )
+          )
+        }+
+      }+
+    }?,
     
     secspec+
-
   }
 
-  secspec =
-    element bcf:bibdata {
-      attribute section { xsd:integer },
-      element bcf:datasource {
-        attribute type { "file" },
-        attribute format { "bibtex" | "biblatexml" }?,
-        xsd:NCName
-      }*
-    }?,
-    element bcf:section {
-      attribute number { xsd:integer },
-      element bcf:citekey { xsd:string }*
-    }
+secspec =
+  element bcf:bibdata {
+    attribute section { xsd:integer },
+    element bcf:datasource {
+      attribute type { "file" },
+      attribute format { "bibtex" | "biblatexml" }?,
+      xsd:NCName
+    }*
+  }?,
+  element bcf:section {
+    attribute number { xsd:integer },
+    element bcf:citekey { xsd:string }*
+  }
 
 biblatex.entrytypes =
   "book"

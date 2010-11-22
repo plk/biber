@@ -1,0 +1,1621 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="../../data/schemata/bcf.rnc" type="compact"?>
+<bcf:controlfile version="1.0" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+  <!-- OPTIONS -->
+  <bcf:options component="biber" type="global">
+    <bcf:option type="singlevalued">
+      <bcf:key>bblencoding</bcf:key>
+      <bcf:value>utf8</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>bibencoding</bcf:key>
+      <bcf:value>utf8</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>debug</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>mincrossrefs</bcf:key>
+      <bcf:value>2</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortcase</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortupper</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+  </bcf:options>
+  <bcf:options component="biblatex" type="global">
+    <bcf:option type="singlevalued">
+      <bcf:key>alphaothers</bcf:key>
+      <bcf:value>\textbf{+}</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>labelalpha</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="multivalued">
+      <bcf:key>labelname</bcf:key>
+      <bcf:value order="1">author</bcf:value>
+    </bcf:option>
+    <bcf:option type="multivalued">
+      <bcf:key>labelyear</bcf:key>
+      <bcf:value order="1">year</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>maxitems</bcf:key>
+      <bcf:value>3</bcf:value>
+    </bcf:option>    
+    <bcf:option type="singlevalued">
+      <bcf:key>maxnames</bcf:key>
+      <bcf:value>3</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>minitems</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>minnames</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>singletitle</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortalphaothers</bcf:key>
+      <bcf:value>+</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortlos</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>terseinits</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>uniquename</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useauthor</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useeditor</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useprefix</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>usetranslator</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+  </bcf:options>
+  <bcf:sorting type="global"> 
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">presort</bcf:sortitem>
+      <bcf:sortitem order="2">mm</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="2">
+      <bcf:sortitem order="1" final="1">sortkey</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="3">
+      <bcf:sortitem order="1">sortname</bcf:sortitem>
+      <bcf:sortitem order="2">author</bcf:sortitem>
+      <bcf:sortitem order="3">editor</bcf:sortitem>
+      <bcf:sortitem order="4">translator</bcf:sortitem>
+      <bcf:sortitem order="5">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="6">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="4">
+      <bcf:sortitem order="1">sortyear</bcf:sortitem>
+      <bcf:sortitem order="2">year</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="5">
+      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="2">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="6">
+      <bcf:sortitem order="1">volume</bcf:sortitem>
+      <bcf:sortitem order="2">0000</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  <bcf:structure>
+    <bcf:constraints>
+      <!-- entrytypes these constraints apply to -->
+      <bcf:entrytypes>
+        <bcf:entrytype>article</bcf:entrytype>
+      </bcf:entrytypes>
+      <!-- Mandatory fields -->
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>journaltitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>title</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <!-- Optional fields -->
+      <bcf:constraint type="optional">
+        <bcf:field>addendum</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>annotator</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>commentator</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>doi</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editor</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editora</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editorb</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editorc</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eid</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprint</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprintclass</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprinttype</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>issn</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>issue</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>issuetitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>issuesubtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>journalsubtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>language</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>month</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>note</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>number</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>origlanguage</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pages</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pubstate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>series</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>subtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>titleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>translator</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>url</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>version</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>volume</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <!-- entrytypes these constraints apply to -->
+      <bcf:entrytypes>
+        <bcf:entrytype>book</bcf:entrytype>
+      </bcf:entrytypes>
+      <!-- Mandatory fields -->
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>title</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <!-- Optional fields -->
+      <bcf:constraint type="optional">
+        <bcf:field>addendum</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>afterword</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>annotator</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>chapter</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>commentator</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>doi</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>edition</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editor</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editora</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editorb</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editorc</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprint</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprintclass</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprinttype</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>foreword</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>introduction</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>isbn</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>language</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>location</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>maintitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>maintitleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>mainsubtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>note</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>number</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>origlanguage</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pages</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pagetotal</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>part</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>publisher</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pubstate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>series</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>subtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>titleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>translator</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>url</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>volume</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>volumes</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <!-- entrytypes these constraints apply to -->
+      <bcf:entrytypes>
+        <bcf:entrytype>inbook</bcf:entrytype>
+        <bcf:entrytype>bookinbook</bcf:entrytype>
+        <bcf:entrytype>suppbook</bcf:entrytype>
+      </bcf:entrytypes>
+      <!-- Mandatory fields -->
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>title</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>booktitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <!-- Optional fields -->
+      <bcf:constraint type="optional">
+        <bcf:field>addendum</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>afterword</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>annotator</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>bookauthor</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>booksubtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>booktitleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>chapter</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>commentator</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>doi</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>edition</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editor</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editora</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editorb</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editorc</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprint</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprintclass</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprinttype</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>foreword</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>introduction</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>isbn</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>language</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>location</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>mainsubtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>maintitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>maintitleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>note</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>number</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>origlanguage</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>part</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>publisher</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pages</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pubstate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>series</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>subtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>titleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>translator</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>url</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>volume</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>volumes</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <!-- entrytypes these constraints apply to -->
+      <bcf:entrytypes>
+        <bcf:entrytype>booklet</bcf:entrytype>
+      </bcf:entrytypes>
+      <!-- Mandatory fields -->
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+        <bcf:field>editor</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>title</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <!-- Optional fields -->
+      <bcf:constraint type="optional">
+        <bcf:field>addendum</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>chapter</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>doi</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprint</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprintclass</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprinttype</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>howpublished</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>language</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>location</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>note</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pages</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pagetotal</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pubstate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>subtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>titleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>type</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>url</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <!-- entrytypes these constraints apply to -->
+      <bcf:entrytypes>
+        <bcf:entrytype>collection</bcf:entrytype>
+        <bcf:entrytype>reference</bcf:entrytype>
+      </bcf:entrytypes>
+      <!-- Mandatory fields -->
+      <bcf:constraint type="mandatory">
+        <bcf:field>editor</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>title</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <!-- Optional fields -->
+      <bcf:constraint type="optional">
+        <bcf:field>addendum</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>afterword</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>annotator</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>chapter</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>commentator</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>doi</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>edition</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editora</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editorb</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editorc</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprint</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprintclass</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprinttype</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>foreword</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>introduction</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>isbn</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>language</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>location</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>mainsubtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>maintitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>maintitleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>note</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>number</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>origlanguage</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pages</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pagetotal</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>part</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>publisher</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pubstate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>series</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>subtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>titleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>translator</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>url</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>volume</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>volumes</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <!-- entrytypes these constraints apply to -->
+      <bcf:entrytypes>
+        <bcf:entrytype>incollection</bcf:entrytype>
+        <bcf:entrytype>suppcollection</bcf:entrytype>
+        <bcf:entrytype>inreference</bcf:entrytype>
+      </bcf:entrytypes>
+      <!-- Mandatory fields -->
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>editor</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>title</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>booktitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <!-- Optional fields -->
+      <bcf:constraint type="optional">
+        <bcf:field>addendum</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>afterword</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>annotator</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>booksubtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>booktitleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>chapter</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>commentator</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>doi</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>edition</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editora</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editorb</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editorc</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprint</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprintclass</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprinttype</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>foreword</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>introduction</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>isbn</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>language</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>location</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>mainsubtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>maintitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>maintitleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>note</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>number</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>origlanguage</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pages</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>part</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>publisher</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pubstate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>series</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>subtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>titleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>translator</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>url</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>volume</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>volumes</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <!-- entrytypes these constraints apply to -->
+      <bcf:entrytypes>
+        <bcf:entrytype>manual</bcf:entrytype>
+      </bcf:entrytypes>
+      <!-- Mandatory fields -->
+      <bcf:constraint type="mandatory">
+        <bcf:field>title</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <!-- Optional fields -->
+      <bcf:constraint type="optional">
+        <bcf:field>addendum</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>author</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>chapter</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>doi</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>edition</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editor</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprint</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprintclass</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprinttype</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>isbn</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>language</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>location</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>note</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>number</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>organization</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pages</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pagetotal</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>publisher</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pubstate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>series</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>subtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>titleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>type</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>url</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>version</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <!-- entrytypes these constraints apply to -->
+      <bcf:entrytypes>
+        <bcf:entrytype>misc</bcf:entrytype>
+      </bcf:entrytypes>
+      <!-- Mandatory fields -->
+      <bcf:constraint type="mandatory">
+        <bcf:field>title</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <!-- Optional fields -->
+      <bcf:constraint type="optional">
+        <bcf:field>addendum</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>author</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>doi</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editor</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprint</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprintclass</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprinttype</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>howpublished</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>language</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>location</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>month</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>note</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>organization</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pubstate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>subtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>titleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>type</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>url</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>version</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>year</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <!-- entrytypes these constraints apply to -->
+      <bcf:entrytypes>
+        <bcf:entrytype>online</bcf:entrytype>
+      </bcf:entrytypes>
+      <!-- Mandatory fields -->
+      <bcf:constraint type="mandatory">
+        <bcf:field>title</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>url</bcf:field>
+      </bcf:constraint>
+      <!-- Optional fields -->
+      <bcf:constraint type="optional">
+        <bcf:field>addendum</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>author</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editor</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>language</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>month</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>note</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>organization</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pubstate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>subtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>titleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>version</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <!-- entrytypes these constraints apply to -->
+      <bcf:entrytypes>
+        <bcf:entrytype>patent</bcf:entrytype>
+      </bcf:entrytypes>
+      <!-- Mandatory fields -->
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>title</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>number</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <!-- Optional fields -->
+      <bcf:constraint type="optional">
+        <bcf:field>addendum</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>doi</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprint</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprintclass</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprinttype</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>holder</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>location</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>month</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>note</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pubstate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>subtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>titleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>type</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>url</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>version</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>year</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <!-- entrytypes these constraints apply to -->
+      <bcf:entrytypes>
+        <bcf:entrytype>periodical</bcf:entrytype>
+      </bcf:entrytypes>
+      <!-- Mandatory fields -->
+      <bcf:constraint type="mandatory">
+        <bcf:field>editor</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>title</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <!-- Optional fields -->
+      <bcf:constraint type="optional">
+        <bcf:field>addendum</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>doi</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editora</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editorb</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>editorc</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprint</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprintclass</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprinttype</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>issn</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>issue</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>issuesubtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>issuetitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>language</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>month</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>note</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>number</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pubstate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>series</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>subtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>url</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>volume</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>year</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <!-- entrytypes these constraints apply to -->
+      <bcf:entrytypes>
+        <bcf:entrytype>inproceedings</bcf:entrytype>
+      </bcf:entrytypes>
+      <!-- Mandatory fields -->
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>editor</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>title</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>booktitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <!-- Optional fields -->
+      <bcf:constraint type="optional">
+        <bcf:field>addendum</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>booksubtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>booktitleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>chapter</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>doi</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprint</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprintclass</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprinttype</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eventdate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eventtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>isbn</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>language</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>location</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>mainsubtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>maintitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>maintitleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>month</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>note</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>number</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>organization</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pages</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>part</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>publisher</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pubstate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>series</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>subtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>titleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>url</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>venue</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>volume</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>volumes</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <!-- entrytypes these constraints apply to -->
+      <bcf:entrytypes>
+        <bcf:entrytype>report</bcf:entrytype>
+      </bcf:entrytypes>
+      <!-- Mandatory fields -->
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>title</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>type</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>institution</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <!-- Optional fields -->
+      <bcf:constraint type="optional">
+        <bcf:field>addendum</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>chapter</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>doi</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprint</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprintclass</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprinttype</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>isrn</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>language</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>location</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>month</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>note</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>number</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pages</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pagetotal</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pubstate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>subtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>titleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>url</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>version</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <!-- entrytypes these constraints apply to -->
+      <bcf:entrytypes>
+        <bcf:entrytype>thesis</bcf:entrytype>
+      </bcf:entrytypes>
+      <!-- Mandatory fields -->
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>title</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>type</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>institution</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <!-- Optional fields -->
+      <bcf:constraint type="optional">
+        <bcf:field>addendum</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>chapter</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>doi</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprint</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprintclass</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>eprinttype</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>language</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>location</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>month</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>note</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pages</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pagetotal</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pubstate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>subtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>titleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>url</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <!-- entrytypes these constraints apply to -->
+      <bcf:entrytypes>
+        <bcf:entrytype>unpublished</bcf:entrytype>
+      </bcf:entrytypes>
+      <!-- Mandatory fields -->
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>title</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="mandatory">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <!-- Optional fields -->
+      <bcf:constraint type="optional">
+        <bcf:field>addendum</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>date</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>howpublished</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>language</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>location</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>month</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>note</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>pubstate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>subtitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>titleaddon</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>url</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="optional">
+        <bcf:field>year</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>
+  </bcf:structure>
+  <!-- SECTION 0 -->
+  <bcf:bibdata section="0">
+    <bcf:datasource type="file">examples</bcf:datasource>
+  </bcf:bibdata>
+  <bcf:section number="0">
+    <bcf:citekey>stdmodel</bcf:citekey>
+    <bcf:citekey>knuth:ct</bcf:citekey>
+    <bcf:citekey>angenendtsk</bcf:citekey>
+    <bcf:citekey>angenendtsa</bcf:citekey>
+    <bcf:citekey>stdmodel:glashow</bcf:citekey>
+    <bcf:citekey>stdmodel:ps_sc</bcf:citekey>
+    <bcf:citekey>murray</bcf:citekey>
+    <bcf:citekey>aristotle:anima</bcf:citekey>
+    <bcf:citekey>aristotle:rhetoric</bcf:citekey>
+    <bcf:citekey>augustine</bcf:citekey>
+    <bcf:citekey>cotton</bcf:citekey>
+    <bcf:citekey>chiu</bcf:citekey>
+    <bcf:citekey>moraux</bcf:citekey>
+    <bcf:citekey>jaffe</bcf:citekey>
+    <bcf:citekey>luzzatto</bcf:citekey>
+    <bcf:citekey>hasan</bcf:citekey>
+    <bcf:citekey>t1</bcf:citekey>
+    <bcf:citekey>tvonb</bcf:citekey>
+  </bcf:section>
+</bcf:controlfile>
+

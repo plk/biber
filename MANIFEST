@@ -103,3 +103,4 @@ t/tdata/biber2.conf
 t/tdata/set.bib
 t/tdata/set.bcf
 t/tdata/uniquename.bcf
+t/tdata/structure.bcf
