@@ -10,7 +10,6 @@ TODO in decreasing order of priority:
      as schema validation.
      Date format checking in Biber.pm (postprocess_dates()) should be moved to any
      general structure validation routine.
-     postprocess_patents() needs to be done here too
      FIELD_ALIAS needs to be parameterised from structure
      process_structure entry types needs to be parameterised from structure
     

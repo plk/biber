@@ -718,7 +718,7 @@ sub process_structure {
   # and field names which can't be done until after these are canonicalised below
   foreach my $key ($bibentries->sorted_keys) {
     my $entry = $section->bibentry($key);
-    # Entry type aliases - biblatex manual Section 2.1.2
+    # Entry type aliases and special fields - biblatex manual Section 2.1.2
     if ($entry->get_field('entrytype') eq 'conference') {
       $entry->set_field('entrytype', 'inproceedings');
     }
@@ -739,6 +739,9 @@ sub process_structure {
       $entry->set_field('entrytype', 'report');
       $entry->set_field('type', $entry->get_field('type') ?
                         $entry->get_field('type') : 'techreport');
+    }
+    elsif ($entry->get_field('entrytype') eq 'patent') {
+      $entry->set_field('type', 'patent') unless $entry->get_field('type');
     }
     elsif ($entry->get_field('entrytype') eq 'www') {
       $entry->set_field('entrytype', 'online');
@@ -814,9 +817,6 @@ sub postprocess {
 
     # track shorthands
     $self->postprocess_shorthands($citekey);
-
-    # Set default type for patent entries
-    $self->postprocess_patents($citekey);
 
     # first-pass sorting to generate basic labels
     $self->postprocess_sorting_firstpass($citekey);
@@ -1318,24 +1318,6 @@ sub postprocess_shorthands {
   my $bee = $be->get_field('entrytype');
   if ( my $sh = $be->get_field('shorthand') ) {
     $section->add_shorthand($bee, $citekey);
-  }
-}
-
-=head2 postprocess_patents
-
-    Deal with patent entry defaults
-
-=cut
-
-sub postprocess_patents {
-  my $self = shift;
-  my $citekey = shift;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
-  if ( ( $be->get_field('entrytype') eq 'patent' ) and ( not $be->get_field('type') ) ) {
-    $be->set_field('type', 'patent');
   }
 }
 
