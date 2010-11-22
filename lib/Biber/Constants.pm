@@ -40,7 +40,7 @@ our @EXPORT = qw{
 
 # Version of biblatex which this release works with. Matched against version
 # passed in control file
-Readonly::Scalar our $BIBLATEX_VERSION => '0.9e';
+Readonly::Scalar our $BIBLATEX_VERSION => '1.0';
 
 # Global flags needed for sorting
 our $BIBER_SORT_FINAL = 0;
@@ -81,9 +81,10 @@ our %CONFIG_DEFAULT_BIBER = (
   allentries       => 0,
   bblencoding      => 'UTF-8',
   bibdata          =>  undef,
+  bibdatatype      => 'bibtex',
   bibencoding      => 'UTF-8',
   collate          => 1,
-  collate_options  => { level => 3 },
+  collate_options  => { level => 4 },
   debug            => 0,
   displaymode      => $DISPLAYMODE_DEFAULT, # eventually, shall be moved to biblatex options
   mincrossrefs     => 2,

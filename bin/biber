@@ -26,7 +26,7 @@ GetOptions(
            $opts,
            'allentries|a',
            'bibdata|d=s',
-           'bibdatatype=s',       # not exposed in usage output currently
+           'bibdatatype=s',
            'bibencoding|e=s',
            'bblencoding|E=s',
            'collate|C',
@@ -216,9 +216,13 @@ if ( $opts->{allentries} and $opts->{bibdata} ) {
 
   my $bib_sections = new Biber::Sections;
   my $bib_section = new Biber::Section('number' => 0); # Only one section in "allentries"
-  $bib_section->set_datafiles($opts->{bibdata});
+  # Convert bibdata into correct format for putting into section object
+  # If using command line, all data files must be of same type (e.g. bibtex)
+  foreach my $bibdatafile (@{$opts->{bibdata}}) {
+    $bib_section->add_datafile({ name => $bibdatafile, datatype => Biber::Config->getoption('bibdatatype')});
+  }
   $bib_section->allkeys;
-  $logger->info("Using all citekeys in files " . join(',', @{$opts->{bibdata}}));
+  $logger->info('Using all citekeys in ' . Biber::Config->getoption('bibdatatype') . ' format files: ' . join(',', @{$opts->{bibdata}}));
   $bib_sections->add_section($bib_section);
   $biber->{sections} = $bib_sections;
 
@@ -353,6 +357,10 @@ Options:
 
   --bibdata|-d <files>
       Use <files> as bibliography databases (comma separated list).
+
+  --bibdatatype <type>
+      Format type of files specified with --bibdata|-d. Only supported type
+      currently is 'bibtex' which is the default.
 
   --bibencoding|-e [encoding]
       Specify the encoding of the bib file(s). Default is "UTF-8"

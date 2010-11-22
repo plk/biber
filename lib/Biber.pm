@@ -36,7 +36,7 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =cut
 
-our $VERSION = '0.6';
+our $VERSION = '0.6.1';
 our $BETA_VERSION = 1; # Is this a beta version?
 
 =head1 SYNOPSIS
@@ -418,11 +418,12 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
   my %bibdatafiles = ();
   foreach my $data (@{$bcfxml->{bibdata}}) {
     foreach my $datasource (@{$data->{datasource}}) {
-      # default format is bibtex
-      my $format = $datasource->{format} ? $datasource->{format} : 'bibtex';
+      # default datatype is bibtex
+      my $datatype = $datasource->{datatype} ? $datasource->{datatype} : 'bibtex';
+      # file data sources
       if ($datasource->{type} eq 'file') {
-        push @{$bibdatafiles{$data->{section}[0]}}, { name   => $datasource->{content},
-                                                      format => $format };
+        push @{$bibdatafiles{$data->{section}[0]}}, { name     => $datasource->{content},
+                                                      datatype => $datatype };
       }
     }
   }
@@ -493,12 +494,6 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     $logger->logcroak("The file '$ctrl_file' does not contain any citations!")
   }
 
-  # --bibdata was passed on command-line
-  # Add these data files to section 0
-  if (Biber::Config->getoption('bibdata')) {
-    $bib_sections->get_section(0)->set_datafiles(Biber::Config->getoption('bibdata'));
-  }
-
   # Add the Biber::Sections object to the Biber object
   $self->{sections} = $bib_sections;
 
@@ -521,11 +516,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 =cut
 
 sub parse_bibtex {
-  my ($self, $filename) = @_;
+  my ($self, $filename, $datatype) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
-  $logger->info("Processing file '$filename' for section $secnum");
+  $logger->info("Processing $datatype format file '$filename' for section $secnum");
 
   my @localkeys = ();
 
@@ -1699,26 +1694,36 @@ sub sortentries {
     }
 
     # Add upper_before_lower option
-    if (Biber::Config->getoption('sortupper')) {
-      $collopts->{upper_before_lower} = 1;
-    }
+    $collopts->{upper_before_lower} = Biber::Config->getoption('sortupper');
 
     # Add tailoring locale for Unicode::Collate
     if ($thislocale and not $collopts->{locale}) {
       $collopts->{locale} = $thislocale;
       if ($collopts->{table}) {
         my $t = delete $collopts->{table};
-        $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)")if $BIBER_SORT_FIRSTPASSDONE;
+        $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)") if $BIBER_SORT_FIRSTPASSDONE;
       }
     }
 
-    # If no locale, use reduced DUCET by default
-    unless ($collopts->{locale} or $collopts->{table}) {
-      $collopts->{table} = 'latinkeys.txt';
+    # Remove locale from options as we need this to make the object
+    my $coll_locale = delete $collopts->{locale};
+    # Now create the collator object
+    my $Collator = Unicode::Collate::Locale->new( locale => $coll_locale )
+      or $logger->logcarp("Problem with Unicode::Collate options: $@");
+
+    # Tailor the collation object and report differences from defaults for locale
+    # Have to do this in ->change method a ->new can croak with conflicting tailoring
+    # for locales which enforce certain tailorings
+    my %coll_changed = $Collator->change( %{$collopts} );
+    while (my ($k, $v) = each %coll_changed) {
+      # If we changing something that has no override tailoring in the locale, it
+      # is undef in this hash and we don't care about such things
+      next unless defined($coll_changed{$k});
+      if ($coll_changed{$k} ne $collopts->{$k}) {
+        $logger->warn("Overriding locale '$coll_locale' default tailoring '$k = $v' with '$k = " . $collopts->{$k} . "'") if $BIBER_SORT_FIRSTPASSDONE;
+      }
     }
 
-    my $Collator = Unicode::Collate::Locale->new( %{$collopts} )
-      or $logger->logcarp("Problem with Unicode::Collate options: $@");
     my $UCAversion = $Collator->version();
     $logger->info("Sorting entries with Unicode::Collate (" .
 		  stringify_hash($collopts) . ", UCA version: $UCAversion)") if $BIBER_SORT_FIRSTPASSDONE;
@@ -1786,9 +1791,7 @@ sub sortshorthands {
     }
 
     # Add upper_before_lower option
-    if (Biber::Config->getoption('sortupper')) {
-      $collopts->{upper_before_lower} = 1;
-    }
+    $collopts->{upper_before_lower} = Biber::Config->getoption('sortupper');
 
     # Add tailoring locale for Unicode::Collate
     if ($thislocale and not $collopts->{locale}) {
@@ -1799,21 +1802,22 @@ sub sortshorthands {
       }
     }
 
-    # If no locale, use reduced DUCET by default
-    # U::C::L sort uses allkeys.txt plus tailoring
-    unless ($collopts->{locale} or $collopts->{table}) {
-      $collopts->{table} = 'latinkeys.txt';
-    }
-
-    my $Collator = Unicode::Collate::Locale->new( %{$collopts} )
+    # Remove locale from options as we need this to make the object
+    my $coll_locale = delete $collopts->{locale};
+    # Now create the collator object
+    my $Collator = Unicode::Collate::Locale->new( locale => $coll_locale )
       or $logger->logcarp("Problem with Unicode::Collate options: $@");
+
+    # Note reporting tailoring locale default overrides here since we already
+    # do that during main sorting and the tailoring can't change by the time
+    # we get here
+    # Still using ->change though so we don't die on tailoring option conflicts
+    $Collator->change( %{$collopts} );
+
     my $UCAversion = $Collator->version();
     $logger->info("Sorting shorthands with Unicode::Collate (" .
 		  stringify_hash($collopts) . ", UCA version: $UCAversion)");
-    # Log if U::C::L currently has no tailoring for used locale
-    if ($Collator->getlocale eq 'default') {
-      $logger->info("No sort tailoring available for locale '$thislocale'");
-    }
+
     @shorthands = sort {
       $Collator->cmp( $bibentries->entry($a)->get_field($sortlos),
         $bibentries->entry($b)->get_field($sortlos) )
@@ -1876,13 +1880,13 @@ sub process_data {
 
   foreach my $datafile ($section->get_datafiles) {
     my $name = $datafile->{name};
-    my $format = $datafile->{format};
+    my $datatype = $datafile->{datatype};
     $name .= '.bib' unless $name =~ /\.(?:bib|xml|dbxml)\z/xms;
     $name = locate_biber_file($name);
     $logger->logcroak("File '$name' does not exist!") unless -f $name;
     # Here we decide which parser to use for the data file
-    if ($format eq 'bibtex') {
-      $self->parse_bibtex($name)
+    if ($datatype eq 'bibtex') {
+      $self->parse_bibtex($name, $datatype);
     }
   }
   return;
