@@ -25,10 +25,10 @@ Biber::Config->setoption('fastsort', 1);
 # Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $section0 = $biber->sections->get_section('0');
-my $section1 = $biber->sections->get_section('1');
-my $section2 = $biber->sections->get_section('2');
-my $section3 = $biber->sections->get_section('3');
+my $section0 = $biber->sections->get_section(0);
+my $section1 = $biber->sections->get_section(1);
+my $section2 = $biber->sections->get_section(2);
+my $section3 = $biber->sections->get_section(3);
 
 my $preamble = [
                 'String for Preamble 1',

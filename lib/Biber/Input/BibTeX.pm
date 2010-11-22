@@ -345,28 +345,16 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
       foreach my $f ( @flistnosplit ) {
         next unless $entry->exists($f);
         my $value = decode_utf8($entry->get($f));
-        my $af = $f;
 
-        # If alias target exists as well as alias source, warn and skip source
-        # otherwise set alias target to alias source value
-        if ($ALIASES{$f}) { # Is there an alias for this field?
-          $af = $ALIASES{$f}; # Then get the alias name
-          if ($entry->exists($af)) { # Does the alias also have a value?
-            $logger->warn("Field '$f' is an alias for field '$af' but both are defined in entry with key '$origkey' - skipping field '$f'"); # Warn as that's wrong
-            $self->{warnings}++;
-            next;
-          }
-        }
-
-        $bibentry->set_field($af, $value);
+        $bibentry->set_field($f, $value);
 
         # We have to process local options as early as possible in order
         # to make them available for things that need them like parsename()
-        if (lc($af) eq 'options') {
+        if (lc($f) eq 'options') {
           $self->process_entry_options($bibentry);
         }
 
-        if ($entry->type eq 'set' and $af eq 'entryset') {
+        if ($entry->type eq 'set' and $f eq 'entryset') {
           my @entrysetkeys = split /\s*,\s*/, $value;
           foreach my $setkey (@entrysetkeys) {
             Biber::Config->set_setparentkey($setkey, $lc_key);
@@ -374,59 +362,14 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
         }
       }
 
-      # Entry type aliases - biblatex manual Section 2.1.2
-      if (lc($entry->type) eq 'conference') {
-        $bibentry->set_field('entrytype', 'inproceedings');
-      }
-      elsif (lc($entry->type) eq 'electronic') {
-        $bibentry->set_field('entrytype', 'online');
-      }
-      elsif (lc($entry->type) eq 'mastersthesis') {
-        $bibentry->set_field('entrytype', 'thesis');
-        $bibentry->set_field('type', $bibentry->get_field('type') ?
-                             $bibentry->get_field('type') : 'mathesis');
-      }
-      elsif (lc($entry->type) eq 'phdthesis') {
-        $bibentry->set_field('entrytype', 'thesis');
-        $bibentry->set_field('type', $bibentry->get_field('type') ?
-                             $bibentry->get_field('type') : 'phdthesis');
-      }
-      elsif (lc($entry->type) eq 'techreport') {
-        $bibentry->set_field('entrytype', 'report');
-        $bibentry->set_field('type', $bibentry->get_field('type') ?
-                             $bibentry->get_field('type') : 'techreport');
-      }
-      elsif (lc($entry->type) eq 'www') {
-        $bibentry->set_field('entrytype', 'online');
-      }
-      # default to MISC type if not a known type
-      elsif (not first { lc($entry->type) eq $_ } (@ENTRYTYPES,
-                                                   @UENTRYTYPES) ) {
-        $logger->warn("Entry type \"" . $entry->type . "\" for entry \"$origkey\" isn't a known biblatex type - defaulting to \"misc\"");
-        $self->{warnings}++;
-        $bibentry->set_field('entrytype', 'misc');
-      }
-      else {
-        $bibentry->set_field('entrytype', $entry->type);
-      }
+      # Set entrytype. This may be changed later in process_structure
+      $bibentry->set_field('entrytype', $entry->type);
 
       foreach my $f ( @ENTRIESTOSPLIT ) {
         next unless $entry->exists($f);
         my @tmp = $entry->split($f);
-        my $af = $f;
 
-        # If alias target exists as well as alias source, warn and skip source
-        # otherwise set alias target to alias source value
-        if ($ALIASES{$f}) { # Is there an alias for this field?
-          $af = $ALIASES{$f}; # Then get the alias name
-          if ($entry->exists($af)) { # Does the alias also have a value?
-            $logger->warn("Field '$f' is an alias for field '$af' but both are defined in entry with key '$origkey' - skipping field '$f'"); # Warn as that's wrong
-            $self->{warnings}++;
-            next;
-          }
-        }
-
-        if (is_name_field($af)) {
+        if (is_name_field($f)) {
           my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
           my $names = new Biber::Entry::Names;
           foreach my $name (@tmp) {
@@ -455,14 +398,14 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
 
             $names->add_element(parsename($name, {useprefix => $useprefix}));
           }
-          $bibentry->set_field($af, $names);
+          $bibentry->set_field($f, $names);
 
         }
         else {
           # Name fields are decoded during parsing, others here
           @tmp = map { decode_utf8($_) } @tmp;
           @tmp = map { remove_outer($_) } @tmp;
-          $bibentry->set_field($af, [ @tmp ]);
+          $bibentry->set_field($f, [ @tmp ]);
         }
       }
 

@@ -35,7 +35,7 @@ sub check_output_string_order {
 
 # U::C Swedish tailoring
 $biber->prepare;
-my $section = $biber->sections->get_section('0');
+my $section = $biber->sections->get_section(0);
 my $out = $biber->get_output_obj;
 
 is_deeply([$section->get_citekeys], ['LS2','LS1','LS3'], 'U::C tailoring - 1');
@@ -46,7 +46,7 @@ is_deeply([$section->get_shorthands], ['LS3', 'LS2','LS1'], 'U::C tailoring - 2'
 Biber::Config->setblxoption('sortlos', 0);
 $section->set_shorthands([]);
 $biber->prepare;
-$section = $biber->sections->get_section('0');
+$section = $biber->sections->get_section(0);
 $out = $biber->get_output_obj;
 is_deeply([$section->get_shorthands], ['LS2', 'LS1','LS3'], 'U::C tailoring - 3');
 

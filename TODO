@@ -4,12 +4,13 @@ TODO in decreasing order of priority:
      take out conditional in control file read and also change schema (biblatex 1.1)
    * merge in the "unique" branch to implement full uniquename/list
      automation. Needs new .bbl format and biblatex support (biblatex 1.2)
-   * validate bibtex data with Text::Bibtex::Structure (optional) needs
-     biblatex interface for defining structure of custom styles (biblatex 2.x)
-     Maybe not use Text::Bibtex::Structure as it's not so flexible. When there is
+   * Structure validation. Don't use Text::Bibtex::Structure as it's not so
+     flexible - should operate on internal Biber structures. When there is
      an XML data format to replace .bib, such structure checking will be implemented
      as schema validation.
      Date format checking in Biber.pm (postprocess_dates()) should be moved to any
      general structure validation routine.
      postprocess_patents() needs to be done here too
-     Aliases for entrytypes and fields in BibTeX.pm into validation too?
+     FIELD_ALIAS needs to be parameterised from structure
+     process_structure entry types needs to be parameterised from structure
+    

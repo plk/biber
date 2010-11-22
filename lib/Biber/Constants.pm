@@ -32,7 +32,7 @@ our @EXPORT = qw{
   $BIBER_SORT_NULL
   $BIBER_SORT_FIRSTPASSDONE
   %BIBER_DATAFILE_REFS
-  %ALIASES
+  %FIELD_ALIASES
   %NUMERICALMONTH
   %DISPLAYMODES
   $DISPLAYMODE_DEFAULT
@@ -347,13 +347,10 @@ Readonly::Array our @ENTRIESTOSPLIT  =>  ( @NAMEFIELDS, @LISTFIELDS );
 Readonly::Array our @NULL_OK  => qw{ endyear origendyear eventendyear urlendyear };
 
 # literal and integer fields
-# TODO add keys for selecting script, language, translation, transliteration.
-
-# TODO validate the keys in the @keyfields ?
 
 Readonly::Array our @LITERALFIELDS => ( @TITLEFIELDS, @LITERALFIELDS_BASE, @KEYFIELDS );
 
-Readonly::Hash our %ALIASES => (
+Readonly::Hash our %FIELD_ALIASES => (
   'address'       => 'location',
   'archiveprefix' => 'eprinttype',
   'primaryclass'  => 'eprintclass',

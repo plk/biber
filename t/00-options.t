@@ -29,7 +29,7 @@ Biber::Config->setblxoption('labelyear', [ 'year' ]);
 # Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $bibentries = $biber->sections->get_section('0')->bibentries;
+my $bibentries = $biber->sections->get_section(0)->bibentries;
 
 my $dmv =  [
               [

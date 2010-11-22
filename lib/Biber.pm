@@ -631,6 +631,7 @@ sub process_missing {
   }
 }
 
+
 =head2 process_crossrefs
 
     $biber->process_crossrefs
@@ -695,6 +696,81 @@ sub process_crossrefs {
   }
 }
 
+=head2 process_structure
+
+   Here we validate many aspects of the bib structure:
+
+   * Entrytype aliases
+   * Special entry/field treatments
+
+=cut
+
+sub process_structure {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bibentries;
+
+  # We are looping over all bibentries for the section, not just cited
+  # entries. We have to do this to process aliases in potential crossrefs
+  # which have not been processed yet. We can't process them them before this
+  # as this would by ugly - crossrefs should be resolved on canonical entrytype
+  # and field names which can't be done until after these are canonicalised below
+  foreach my $key ($bibentries->sorted_keys) {
+    my $entry = $section->bibentry($key);
+    # Entry type aliases - biblatex manual Section 2.1.2
+    if ($entry->get_field('entrytype') eq 'conference') {
+      $entry->set_field('entrytype', 'inproceedings');
+    }
+    elsif ($entry->get_field('entrytype') eq 'electronic') {
+      $entry->set_field('entrytype', 'online');
+    }
+    elsif ($entry->get_field('entrytype') eq 'mastersthesis') {
+      $entry->set_field('entrytype', 'thesis');
+      $entry->set_field('type', $entry->get_field('type') ?
+                        $entry->get_field('type') : 'mathesis');
+    }
+    elsif ($entry->get_field('entrytype') eq 'phdthesis') {
+      $entry->set_field('entrytype', 'thesis');
+      $entry->set_field('type', $entry->get_field('type') ?
+                        $entry->get_field('type') : 'phdthesis');
+    }
+    elsif ($entry->get_field('entrytype') eq 'techreport') {
+      $entry->set_field('entrytype', 'report');
+      $entry->set_field('type', $entry->get_field('type') ?
+                        $entry->get_field('type') : 'techreport');
+    }
+    elsif ($entry->get_field('entrytype') eq 'www') {
+      $entry->set_field('entrytype', 'online');
+    }
+    # default to MISC type if not a known type
+    elsif (not first { $entry->get_field('entrytype') eq $_ } (@ENTRYTYPES,
+                                                               @UENTRYTYPES) ) {
+      $logger->warn("Entry type \"" . $entry->get_field('entrytype') . "\" for entry \"$key\" isn't a known biblatex type - defaulting to \"misc\"");
+      $self->{warnings}++;
+      $entry->set_field('entrytype', 'misc');
+    }
+
+    # Field aliases
+    foreach my $falias (keys %FIELD_ALIASES) {
+      my $freal = $FIELD_ALIASES{$falias};
+      # If alias target exists as well as alias source, warn and skip source
+      # otherwise set alias target to alias source value
+      if (my $falias_value = $entry->get_field($falias)) {
+        if ($entry->get_field($freal)) {
+          $logger->warn("Field '$falias' is an alias for field '$freal' but both are defined in entry with key '$key' - skipping field '$falias'"); # Warn as that's wrong
+          $self->{warnings}++;
+          $entry->del_field($falias);
+        }
+        else {
+          $entry->set_field($freal, $falias_value);
+          $entry->del_field($falias);
+        }
+      }
+    }
+  }
+}
+
 =head2 postprocess
 
     Various postprocessing operations, mostly to generate special fields for
@@ -712,7 +788,7 @@ sub postprocess {
   foreach my $citekey ( $section->get_citekeys ) {
     $logger->debug("Postprocessing entry '$citekey' from section $secnum");
 
-    # Postprocess dates
+    # Expand dates into their components
     $self->postprocess_dates($citekey);
 
     # post process "set" entries:
@@ -739,7 +815,7 @@ sub postprocess {
     # track shorthands
     $self->postprocess_shorthands($citekey);
 
-    # Set default type for patens entries
+    # Set default type for patent entries
     $self->postprocess_patents($citekey);
 
     # first-pass sorting to generate basic labels
@@ -750,6 +826,7 @@ sub postprocess {
 
   return;
 }
+
 
 =head2 postprocess_dates
 
@@ -1544,8 +1621,9 @@ sub prepare {
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->process_data;                 # Parse data into section objects
     $self->process_missing;              # Check for missing citekeys before anything else
+    $self->process_structure;            # Validate bib structure
     $self->process_crossrefs;            # Process crossrefs
-    $self->postprocess;                  # in here we generate lots of information
+    $self->postprocess;                  # Main entry postprocessing
     $self->sortentries;                  # then we do a label sort pass and set a flag
     $BIBER_SORT_FIRSTPASSDONE = 1;
     $self->generate_final_sortinfo;      # in here we generate the final sort string

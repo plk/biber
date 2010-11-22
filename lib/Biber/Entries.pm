@@ -60,7 +60,7 @@ sub entry {
 
 =head2 sorted_keys
 
-    Returns a sorted array of Biber::Entry object citekeys
+    Returns a sorted array of Biber::Entry object keys
 
 =cut
 

@@ -26,7 +26,7 @@ Biber::Config->setoption('fastsort', 1);
 # Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $section = $biber->sections->get_section('0');
+my $section = $biber->sections->get_section(0);
 
 my $murray1 = q|  \entry{murray}{article}{}
     \name{author}{14}{%

@@ -31,8 +31,8 @@ Biber::Config->setblxoption('labelyear', undef);
 
 # Now generate the information
 $biber->prepare;
-my $bibentries = $biber->sections->get_section('0')->bibentries;
-my $section = $biber->sections->get_section('0');
+my $section = $biber->sections->get_section(0);
+my $bibentries = $section->bibentries;
 
 is($bibentries->entry('l1')->get_field('sortlabelalpha'), 'Doe95', 'maxnames=1 minnames=1 entry L1 labelalpha');
 ok(is_undef($bibentries->entry('l1')->get_field('extraalpha')), 'maxnames=1 minnames=1 entry L1 extraalpha');

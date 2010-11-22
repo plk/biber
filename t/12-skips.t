@@ -25,8 +25,8 @@ Biber::Config->setoption('fastsort', 1);
 # Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $bibentries = $biber->sections->get_section('0')->bibentries;
-my $section = $biber->sections->get_section('0');
+my $section = $biber->sections->get_section(0);
+my $bibentries = $section->bibentries;
 
 my $set1 = q|  \entry{seta}{set}{}
     \set{set:membera,set:memberb,set:memberc}
