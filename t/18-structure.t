@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 5;
+use Test::More tests => 7;
 
 use Biber;
 use Biber::Output::BBL;
@@ -28,12 +28,16 @@ $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 
+my $w1 = ["Entry type 'thing' for entry 'alias2' isn't a known biblatex type - defaulting to 'misc'",
+          "Field 'school' is an alias for field 'institution' but both are defined in entry with key 'alias2' - skipping field 'school'"];
+
 is($bibentries->entry('alias1')->get_field('entrytype'), 'thesis', 'Alias - 1' );
 is($bibentries->entry('alias1')->get_field('type'), 'phdthesis', 'Alias - 2' );
 is_deeply($bibentries->entry('alias1')->get_field('location'), ['Ivory Towers'], 'Alias - 3' );
 is($bibentries->entry('alias1')->get_field('address'), undef, 'Alias - 4' );
 is($bibentries->entry('alias2')->get_field('entrytype'), 'misc', 'Alias - 5' );
-
+is_deeply($bibentries->entry('alias2')->get_field('warnings'), $w1, 'Alias - 6' ) ;
+is($bibentries->entry('alias2')->get_field('school'), undef, 'Alias - 7' );
 
 #is($out->get_output_entry('cr1'), $cr1, 'crossref test 1');
 

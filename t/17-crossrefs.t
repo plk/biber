@@ -77,6 +77,7 @@ my $cr2 = q|  \entry{cr2}{inbook}{}
     \field{title}{Fabulous Fourier Forms}
     \field{booktitle}{Graphs of the Continent}
     \strng{crossref}{crm}
+    \warn{\item Field 'school' is an alias for field 'institution' but both are defined in entry with key 'cr2' - skipping field 'school'}
   \endentry
 
 |;
@@ -120,6 +121,7 @@ my $cr3 = q|  \entry{cr3}{inbook}{}
     \field{booktitle}{Beasts of the Burbling Burns}
     \field{eprinttype}{sometype}
     \strng{crossref}{crt}
+    \warn{\item Field 'archiveprefix' is an alias for field 'eprinttype' but both are defined in entry with key 'cr3' - skipping field 'archiveprefix'}
   \endentry
 
 |;

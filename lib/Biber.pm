@@ -666,48 +666,48 @@ sub process_aliases {
   # as this would be ugly - crossrefs should be resolved on canonical entrytype
   # and field names which can't be done until after these are canonicalised below
   foreach my $key ($bibentries->sorted_keys) {
-    my $entry = $section->bibentry($key);
+    my $be = $section->bibentry($key);
 
     # Entrytype aliases and special fields - biblatex manual Section 2.1.2
     foreach my $alias (@{Biber::Config->getblxoption('structure')->{aliases}{alias}}) {
       # entrytype aliases
-      if ($alias->{type} eq 'entrytype') {
-        # normalise field name according to alias
-        if ($entry->get_field('entrytype') eq $alias->{name}{content}) {
-          $entry->set_field('entrytype', $alias->{realname}{content});
-          # Set any other fields which normalising this alias requires if not already set
-          foreach my $f (@{$alias->{field}}) {
-            unless ($entry->field_exists('type')) {
-              $entry->set_field($f->{name}, $f->{content});
-            }
+      next unless $alias->{type} eq 'entrytype';
+      # normalise field name according to alias
+      if ($be->get_field('entrytype') eq $alias->{name}{content}) {
+        $be->set_field('entrytype', $alias->{realname}{content});
+        # Set any other fields which normalising this alias requires if not already set
+        foreach my $f (@{$alias->{field}}) {
+          unless ($be->field_exists('type')) {
+            $be->set_field($f->{name}, $f->{content});
           }
-          next; # only one alias is relevant, we don't do alias recursion
         }
+        next; # only one alias is relevant, we don't do alias recursion
       }
     }
 
     # default to MISC type if not a known type
-    if (not first { $entry->get_field('entrytype') eq $_ } (@ENTRYTYPES,
-                                                               @UENTRYTYPES) ) {
-      $logger->warn("Entry type \"" . $entry->get_field('entrytype') . "\" for entry \"$key\" isn't a known biblatex type - defaulting to \"misc\"");
+    if (not first { $be->get_field('entrytype') eq $_ } (@ENTRYTYPES,
+                                                            @UENTRYTYPES) ) {
+      $self->biber_warn($be, "Entry type '" . $be->get_field('entrytype') . "' for entry '$key' isn't a known biblatex type - defaulting to 'misc'");
       $self->{warnings}++;
-      $entry->set_field('entrytype', 'misc');
+      $be->set_field('entrytype', 'misc');
     }
 
     # Field aliases
-    foreach my $falias (keys %FIELD_ALIASES) {
-      my $freal = $FIELD_ALIASES{$falias};
-      # If alias target exists as well as alias source, warn and skip source
-      # otherwise set alias target to alias source value
-      if (my $falias_value = $entry->get_field($falias)) {
-        if ($entry->get_field($freal)) {
-          $logger->warn("Field '$falias' is an alias for field '$freal' but both are defined in entry with key '$key' - skipping field '$falias'"); # Warn as that's wrong
+    foreach my $alias (@{Biber::Config->getblxoption('structure')->{aliases}{alias}}) {
+      # entrytype aliases
+      next unless $alias->{type} eq 'field';
+      my $falias = $alias->{name}{content};
+      if (my $falias_value = $be->get_field($falias)) {
+        my $freal = $alias->{realname}{content};
+        if ($be->get_field($freal)) {
+          $self->biber_warn($be, "Field '$falias' is an alias for field '$freal' but both are defined in entry with key '$key' - skipping field '$falias'"); # Warn as that's wrong
           $self->{warnings}++;
-          $entry->del_field($falias);
+          $be->del_field($falias);
         }
         else {
-          $entry->set_field($freal, $falias_value);
-          $entry->del_field($falias);
+          $be->set_field($freal, $falias_value);
+          $be->del_field($falias);
         }
       }
     }
