@@ -421,19 +421,7 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
   # This should not be optional any more when biblatex implements this so take
   # out this conditional
   if (exists($bcfxml->{structure})) {
-    # Create internal aliases data format for easy use
-    my $aliases;
-    foreach my $alias (@{$bcfxml->{structure}{aliases}{alias}}) {
-      $aliases->{$alias->{type}}{$alias->{name}{content}}
-        = {
-           realname => $alias->{realname}{content}
-          };
-      if (exists($alias->{field})) {
-        $aliases->{$alias->{type}}{$alias->{name}{content}}{fields}
-          = { map {$_->{name} => $_->{content}} @{$alias->{field}}};
-      }
-    }
-    Biber::Config->setdata('aliases', $aliases);
+    Biber::Config->setblxoption('structure', $bcfxml->{structure});
   }
 
   # SECTIONS
@@ -670,6 +658,20 @@ sub process_setup {
     }
   }
   Biber::Config->setdata('legal_entrytypes', $leg_ents);
+
+  # Create internal aliases data format for easy use
+  my $aliases;
+  foreach my $alias (@{Biber::Config->getblxoption('structure')->{aliases}{alias}}) {
+    $aliases->{$alias->{type}}{$alias->{name}{content}}
+      = {
+         realname => $alias->{realname}{content}
+        };
+    if (exists($alias->{field})) {
+      $aliases->{$alias->{type}}{$alias->{name}{content}}{fields}
+        = { map {$_->{name} => $_->{content}} @{$alias->{field}}};
+    }
+  }
+  Biber::Config->setdata('aliases', $aliases);
 }
 
 =head2 process_aliases
@@ -1613,6 +1615,7 @@ sub sortshorthands {
 
 sub prepare {
   my $self = shift;
+  $self->process_setup;                # Place to put misc pre-processing things
   foreach my $section (@{$self->sections->get_sections}) {
     # shortcut - skip sections that don't have any keys
     next unless $section->get_citekeys or $section->is_allkeys;
@@ -1624,7 +1627,6 @@ sub prepare {
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->process_data;                 # Parse data into section objects
     $self->process_missing;              # Check for missing citekeys before anything else
-    $self->process_setup;                # Place to put misc pre-processing things
     $self->process_aliases;              # Process aliases to normalise entries
     $self->process_crossrefs;            # Process crossrefs
     $self->process_structure;            # Check bib structure

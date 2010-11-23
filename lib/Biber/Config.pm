@@ -116,13 +116,6 @@ sub _initopts {
     Biber::Config->setblxoption($_, $CONFIG_DEFAULT_BIBLATEX{$_});
   }
 
-  # Set default temp data options. This is usually transition code
-  # which is needed before biblatex fully implements a new feature in
-  # the .bcf
-  foreach (keys %CONFIG_DEFAULT_DATA) {
-    Biber::Config->setdata($_, $CONFIG_DEFAULT_DATA{$_});
-  }
-
   return;
 }
 

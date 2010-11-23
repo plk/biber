@@ -22,7 +22,6 @@ our @EXPORT = qw{
   @NULL_OK
   %SKIPFIELDS
   %CONFIG_DEFAULT_BIBER
-  %CONFIG_DEFAULT_DATA
   %CONFIG_DEFAULT_BIBLATEX
   %CONFIG_SCOPE_BIBLATEX
   $BIBER_CONF_NAME
@@ -75,26 +74,10 @@ unless ($locale) {
   }
 }
 
-our %CONFIG_DEFAULT_DATA = (
-  aliases => {
-    entrytype => {
-      conference => { realname => "inproceedings" },
-      electronic => { realname => "online" },
-      mastersthesis => { fields => { type => "mathesis" }, realname => "thesis" },
-      phdthesis => { fields => { type => "phdthesis" }, realname => "thesis" },
-      techreport => { fields => { type => "techreport" }, realname => "report" },
-      www => { realname => "online" },
-    },
-    field => {
-      address => { realname => "location" },
-      annote => { realname => "annotation" },
-      archiveprefix => { realname => "eprinttype" },
-      key => { realname => "sortkey" },
-      primaryclass => { realname => "eprintclass" },
-      school => { realname => "institution" },
-    },
-  }
-);
+# In general, these defaults are for two reasons:
+# * If there is no .bcf to set these options (-a and -d flags for example)
+# * New features which are not implemented in .bcf by biblatex yet and so we have
+#   provide defaults in case they are missing.
 
 our %CONFIG_DEFAULT_BIBER = (
   allentries       => 0,
