@@ -116,6 +116,13 @@ sub _initopts {
     Biber::Config->setblxoption($_, $CONFIG_DEFAULT_BIBLATEX{$_});
   }
 
+  # Set default temp data options. This is usually transition code
+  # which is needed before biblatex fully implements a new feature in
+  # the .bcf
+  foreach (keys %CONFIG_DEFAULT_DATA) {
+    Biber::Config->setdata($_, $CONFIG_DEFAULT_DATA{$_});
+  }
+
   return;
 }
 
@@ -211,6 +218,34 @@ sub postprocess_biber_opts {
     }
   }
 }
+
+=head2 setdata
+
+    Store some transient data needed for processing
+    Not a biber or biblatex option
+
+=cut
+
+sub setdata {
+  shift; # class method so don't care about class name
+  my ($opt, $val) = @_;
+  $CONFIG->{data}{biber}{$opt} = $val;
+  return;
+}
+
+=head2 getdata
+
+    Get some transient Biber data we stored earlier that
+    isn't a real biber or bibaltex option
+
+=cut
+
+sub getdata {
+  shift; # class method so don't care about class name
+  my $opt = shift;
+  return $CONFIG->{data}{biber}{$opt};
+}
+
 
 =head2 setoption
 

@@ -135,7 +135,7 @@ sub _getlabel {
   # This is needed in cases where alphaothers is something like
   # '\textasteriskcentered' which would mess up sorting.
 
-  my @lastnames = map { normalise_string($_->get_lastname) } @{$names->names};
+  my @lastnames = map { strip_nosort_name(normalise_string($_->get_lastname)) } @{$names->names};
   my @prefices  = map { $_->get_prefix } @{$names->names};
   my $numnames  = $names->count_elements;
 
@@ -741,8 +741,8 @@ sub _namestring {
          Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
       $str .= $n->get_prefix . '2';
     }
-    $str .= strip_nosort($n->get_lastname) . '2';
-    $str .= strip_nosort($n->get_firstname) . '2' if $n->get_firstname;
+    $str .= strip_nosort_name($n->get_lastname) . '2';
+    $str .= strip_nosort_name($n->get_firstname) . '2' if $n->get_firstname;
     $str .= $n->get_suffix . '2' if $n->get_suffix;
 
     # If useprefix is false, use prefix at end of name
@@ -758,6 +758,7 @@ sub _namestring {
   $str =~ s/\s+1/1/gxms;
   $str =~ s/1\z//xms;
   $str = normalise_string_sort($str);
+  $str = strip_nosort_name($str);
   $str .= '1zzzz' if $truncated;
   return $str;
 }

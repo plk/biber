@@ -421,7 +421,19 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
   # This should not be optional any more when biblatex implements this so take
   # out this conditional
   if (exists($bcfxml->{structure})) {
-    Biber::Config->setblxoption('structure', $bcfxml->{structure});
+    # Create internal aliases data format for easy use
+    my $aliases;
+    foreach my $alias (@{$bcfxml->{structure}{aliases}{alias}}) {
+      $aliases->{$alias->{type}}{$alias->{name}{content}}
+        = {
+           realname => $alias->{realname}{content}
+          };
+      if (exists($alias->{field})) {
+        $aliases->{$alias->{type}}{$alias->{name}{content}}{fields}
+          = { map {$_->{name} => $_->{content}} @{$alias->{field}}};
+      }
+    }
+    Biber::Config->setdata('aliases', $aliases);
   }
 
   # SECTIONS
@@ -657,9 +669,8 @@ sub process_setup {
       push @$leg_ents, $et->{content};
     }
   }
-  Biber::Config->setoption('legal_entrytypes', $leg_ents);
+  Biber::Config->setdata('legal_entrytypes', $leg_ents);
 }
-
 
 =head2 process_aliases
 
@@ -677,6 +688,8 @@ sub process_aliases {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
+  my $bcaliases = Biber::Config->getdata('aliases');
+  my $legents = Biber::Config->getdata('legal_entrytypes');
 
   # We are looping over all bibentries for the section, not just cited
   # entries. We have to do this to process aliases in potential crossrefs
@@ -687,43 +700,38 @@ sub process_aliases {
     my $be = $section->bibentry($key);
 
     # Entrytype aliases and special fields - biblatex manual Section 2.1.2
-    foreach my $alias (@{Biber::Config->getblxoption('structure')->{aliases}{alias}}) {
-      next unless $alias->{type} eq 'entrytype';
-      # normalise field name according to alias
-      if ($be->get_field('entrytype') eq $alias->{name}{content}) {
-        $be->set_field('entrytype', $alias->{realname}{content});
-        # Set any other fields which normalising this alias requires if not already set
-        foreach my $f (@{$alias->{field}}) {
-          unless ($be->field_exists('type')) {
-            $be->set_field($f->{name}, $f->{content});
-          }
+    # normalise field name according to alias
+    if (my $alias = $bcaliases->{entrytype}{$be->get_field('entrytype')}) {
+      $be->set_field('entrytype', $alias->{realname});
+      # Set any other fields which normalising this alias requires if not already set
+      foreach my $field (keys %{$alias->{fields}}) {
+        unless ($be->field_exists($field)) {
+          $be->set_field($field, $alias->{fields}{$field});
         }
-        next; # only one alias is relevant, we don't do alias recursion
       }
     }
 
     # default entrytype to MISC type if not a known type
-    if (not first { $be->get_field('entrytype') eq $_ } @{Biber::Config->getoption('legal_entrytypes')} ) {
+    if (not first { $be->get_field('entrytype') eq $_ } @$legents ) {
       $self->biber_warn($be, "Entry type '" . $be->get_field('entrytype') . "' for entry '$key' isn't a known biblatex type - defaulting to 'misc'");
       $self->{warnings}++;
       $be->set_field('entrytype', 'misc');
     }
 
     # Field aliases
-    foreach my $alias (@{Biber::Config->getblxoption('structure')->{aliases}{alias}}) {
-      next unless $alias->{type} eq 'field';
-      my $falias = $alias->{name}{content};
-      if (my $falias_value = $be->get_field($falias)) {
-        my $freal = $alias->{realname}{content};
+    while (my ($faliasn, $falias) = each %{$bcaliases->{field}}) {
+      # Field which is an alias and has a value?
+      if (my $falias_value = $be->get_field($faliasn)) {
+        my $freal = $falias->{realname};
         # If both a field and its alias is set, warn and delete alias field
         if ($be->get_field($freal)) {
-          $self->biber_warn($be, "Field '$falias' is an alias for field '$freal' but both are defined in entry with key '$key' - skipping field '$falias'"); # Warn as that's wrong
+          $self->biber_warn($be, "Field '$faliasn' is an alias for field '$freal' but both are defined in entry with key '$key' - skipping field '$faliasn'"); # Warn as that's wrong
           $self->{warnings}++;
-          $be->del_field($falias);
+          $be->del_field($faliasn);
         }
         else {
           $be->set_field($freal, $falias_value);
-          $be->del_field($falias);
+          $be->del_field($faliasn);
         }
       }
     }

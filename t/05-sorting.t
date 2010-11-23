@@ -61,7 +61,7 @@ my $lists4      = 'ibm2hp1zzzz';
 my $lists5      = 'ibm2hp2sun2sony';
 my $dates1      = '1979001002000000198000400808075006007019240070090192400002005019200200308020003004079003003';
 my $edtypeclass1 = 'vol0redactor0jaffé2philipp0loewenfeld2samuel1kaltenbrunner2ferdinand1ewald2paul';
-my $prefix1     = 'mm0Luzzatto2Moshe Ḥayyim0Lashon laRamḥal uvo sheloshah ḥiburim0200000000';
+my $prefix1     = 'mm0Luzzatto2Moshe Ḥayyim0haLashon laRamḥal uvo sheloshah ḥiburim0200000000';
 my $diacritic1  = 'mm0Hasan2Alī0Some title0200000000';
 
 my $useprefix1  = 'mm0von2bobble2terrence019970things00000';
@@ -123,7 +123,7 @@ $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($bibentries->entry('luzzatto')->get_field('sortstring'), $prefix1, 'Title with nosortprefix' );
-is($bibentries->entry('hasan')->get_field('sortstring'), $diacritic1, 'Title with nosortdiacritic' );
+is($bibentries->entry('hasan')->get_field('sortstring'), $diacritic1, 'Name with nosortdiacritic' );
 
 # Testing editor roles
 Biber::Config->setblxoption('sorting_label', [

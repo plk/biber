@@ -22,6 +22,7 @@ our @EXPORT = qw{
   @NULL_OK
   %SKIPFIELDS
   %CONFIG_DEFAULT_BIBER
+  %CONFIG_DEFAULT_DATA
   %CONFIG_DEFAULT_BIBLATEX
   %CONFIG_SCOPE_BIBLATEX
   $BIBER_CONF_NAME
@@ -73,6 +74,27 @@ unless ($locale) {
     $locale = 'en_US.UTF-8';
   }
 }
+
+our %CONFIG_DEFAULT_DATA = (
+  aliases => {
+    entrytype => {
+      conference => { realname => "inproceedings" },
+      electronic => { realname => "online" },
+      mastersthesis => { fields => { type => "mathesis" }, realname => "thesis" },
+      phdthesis => { fields => { type => "phdthesis" }, realname => "thesis" },
+      techreport => { fields => { type => "techreport" }, realname => "report" },
+      www => { realname => "online" },
+    },
+    field => {
+      address => { realname => "location" },
+      annote => { realname => "annotation" },
+      archiveprefix => { realname => "eprinttype" },
+      key => { realname => "sortkey" },
+      primaryclass => { realname => "eprintclass" },
+      school => { realname => "institution" },
+    },
+  }
+);
 
 our %CONFIG_DEFAULT_BIBER = (
   allentries       => 0,

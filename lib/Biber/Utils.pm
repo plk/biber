@@ -33,7 +33,7 @@ All functions are exported by default.
 
 our @EXPORT = qw{ locate_biber_file makenameid stringify_hash
   normalise_string normalise_string_lite normalise_string_underscore normalise_string_sort
-  latexescape reduce_array remove_outer add_outer ucinit strip_nosort
+  latexescape reduce_array remove_outer add_outer ucinit strip_nosort_name
   strip_nosortdiacritics strip_nosortprefix is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_name_field is_null normalise_utf8};
 
@@ -113,13 +113,13 @@ sub makenameid {
   return normalise_string_underscore($tmp);
 }
 
-=head2 strip_nosort
+=head2 strip_nosort_name
 
-Removes elements which are not to be used in sorting from a string
+Removes elements which are not to be used in sorting a name from a string
 
 =cut
 
-sub strip_nosort {
+sub strip_nosort_name {
   my ($string) = @_;
   return '' unless $string; # Sanitise missing data
   $string = strip_nosortprefix($string); # First remove prefix ...
@@ -205,9 +205,6 @@ sub normalise_string {
 
 sub normalise_string_common {
   my $str = shift;
-  $str = strip_nosort($str); # strip nosort elements
-#  $str =~ s/\\\p{L}+\s*//g; # remove tex macros
-#  $str =~ s/\\[^\p{L}]+\s*//g; # remove accent macros like \"a
   $str =~ s/\\[A-Za-z]+//g; # remove latex macros (assuming they have only ASCII letters)
   $str =~ s/[\p{P}\p{S}\p{C}]+//g; # remove punctuation, symbols, separator and control
   $str =~ s/^\s+//;
