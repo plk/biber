@@ -64,6 +64,7 @@ sub _init {
   $CONFIG->{state}{seenlabelyear} = {};
   $CONFIG->{state}{seenkeys} = {};
   $CONFIG->{state}{keycase} = {};
+
   return;
 }
 

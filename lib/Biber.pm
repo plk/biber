@@ -241,9 +241,10 @@ sub parse_ctrlfile {
         $logger->info("BibLaTeX control file \"$ctrl_file\" validates");
       }
     }
-
+    undef $CFxmlparser;
   }
 
+  # Open control file
   my $ctrl = new IO::File "<$ctrl_file"
     or $logger->logcroak("Cannot open $ctrl_file: $!");
 
@@ -251,6 +252,7 @@ sub parse_ctrlfile {
 
   # Read control file
   require XML::LibXML::Simple;
+
   my $bcfxml = XML::LibXML::Simple::XMLin($ctrl,
                                           'ForceContent' => 1,
                                           'ForceArray' => [
@@ -642,6 +644,24 @@ sub process_missing {
   }
 }
 
+=head2 process_setup
+
+   Place to put misc pre-processing things needed later
+
+=cut
+
+sub process_setup {
+
+  # Pull out legal entrytypes for error checking later
+  my $leg_ents;
+  foreach my $c (@{Biber::Config->getblxoption('structure')->{constraints}}) {
+    foreach my $et (@{$c->{entrytypes}{entrytype}}) {
+      push @$leg_ents, $et->{content};
+    }
+  }
+  Biber::Config->setoption('legal_entrytypes', $leg_ents);
+}
+
 
 =head2 process_aliases
 
@@ -685,9 +705,8 @@ sub process_aliases {
       }
     }
 
-    # default to MISC type if not a known type
-    if (not first { $be->get_field('entrytype') eq $_ } (@ENTRYTYPES,
-                                                            @UENTRYTYPES) ) {
+    # default entrytype to MISC type if not a known type
+    if (not first { $be->get_field('entrytype') eq $_ } @{Biber::Config->getoption('legal_entrytypes')} ) {
       $self->biber_warn($be, "Entry type '" . $be->get_field('entrytype') . "' for entry '$key' isn't a known biblatex type - defaulting to 'misc'");
       $self->{warnings}++;
       $be->set_field('entrytype', 'misc');
@@ -1600,6 +1619,7 @@ sub prepare {
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->process_data;                 # Parse data into section objects
     $self->process_missing;              # Check for missing citekeys before anything else
+    $self->process_setup;                # Place to put misc pre-processing things
     $self->process_aliases;              # Process aliases to normalise entries
     $self->process_crossrefs;            # Process crossrefs
     $self->process_structure;            # Check bib structure
