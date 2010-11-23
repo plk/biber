@@ -267,6 +267,10 @@ sub parse_ctrlfile {
                                                            qr/\Atype_pair\z/,
                                                            qr/\Ainherit\z/,
                                                            qr/\Afield\z/,
+                                                           qr/\Aalias\z/,
+                                                           qr/\Aconstraints\z/,
+                                                           qr/\Aconstraint\z/,
+                                                           qr/\Aentrytype\z/,
                                                           ],
                                           'NsStrip' => 1,
                                           'KeyAttr' => []);
@@ -409,6 +413,13 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
       Biber::Config->setblxoption('sorting_label', $sorting_label, 'PER_TYPE', $sortschemes->{type});
       Biber::Config->setblxoption('sorting_final', $sorting_final, 'PER_TYPE', $sortschemes->{type});
     }
+  }
+
+  # STRUCTURE schema (always global)
+  # This should not be optional any more when biblatex implements this so take
+  # out this conditional
+  if (exists($bcfxml->{structure})) {
+    Biber::Config->setblxoption('structure', $bcfxml->{structure});
   }
 
   # SECTIONS
@@ -632,6 +643,77 @@ sub process_missing {
 }
 
 
+=head2 process_aliases
+
+   Normalise entries by resolving any:
+
+   * Entrytype aliases
+   * Field aliases
+
+   Defined in the structure schema passed in the .bcf
+
+=cut
+
+sub process_aliases {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bibentries;
+
+  # We are looping over all bibentries for the section, not just cited
+  # entries. We have to do this to process aliases in potential crossrefs
+  # which have not been processed yet. We can't process them them before this
+  # as this would be ugly - crossrefs should be resolved on canonical entrytype
+  # and field names which can't be done until after these are canonicalised below
+  foreach my $key ($bibentries->sorted_keys) {
+    my $entry = $section->bibentry($key);
+
+    # Entrytype aliases and special fields - biblatex manual Section 2.1.2
+    foreach my $alias (@{Biber::Config->getblxoption('structure')->{aliases}{alias}}) {
+      # entrytype aliases
+      if ($alias->{type} eq 'entrytype') {
+        # normalise field name according to alias
+        if ($entry->get_field('entrytype') eq $alias->{name}{content}) {
+          $entry->set_field('entrytype', $alias->{realname}{content});
+          # Set any other fields which normalising this alias requires if not already set
+          foreach my $f (@{$alias->{field}}) {
+            unless ($entry->field_exists('type')) {
+              $entry->set_field($f->{name}, $f->{content});
+            }
+          }
+          next; # only one alias is relevant, we don't do alias recursion
+        }
+      }
+    }
+
+    # default to MISC type if not a known type
+    if (not first { $entry->get_field('entrytype') eq $_ } (@ENTRYTYPES,
+                                                               @UENTRYTYPES) ) {
+      $logger->warn("Entry type \"" . $entry->get_field('entrytype') . "\" for entry \"$key\" isn't a known biblatex type - defaulting to \"misc\"");
+      $self->{warnings}++;
+      $entry->set_field('entrytype', 'misc');
+    }
+
+    # Field aliases
+    foreach my $falias (keys %FIELD_ALIASES) {
+      my $freal = $FIELD_ALIASES{$falias};
+      # If alias target exists as well as alias source, warn and skip source
+      # otherwise set alias target to alias source value
+      if (my $falias_value = $entry->get_field($falias)) {
+        if ($entry->get_field($freal)) {
+          $logger->warn("Field '$falias' is an alias for field '$freal' but both are defined in entry with key '$key' - skipping field '$falias'"); # Warn as that's wrong
+          $self->{warnings}++;
+          $entry->del_field($falias);
+        }
+        else {
+          $entry->set_field($freal, $falias_value);
+          $entry->del_field($falias);
+        }
+      }
+    }
+  }
+}
+
 =head2 process_crossrefs
 
     $biber->process_crossrefs
@@ -698,10 +780,7 @@ sub process_crossrefs {
 
 =head2 process_structure
 
-   Here we validate many aspects of the bib structure:
-
-   * Entrytype aliases
-   * Special entry/field treatments
+  Validate bib structure according to a bib schema
 
 =cut
 
@@ -709,65 +788,76 @@ sub process_structure {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
 
-  # We are looping over all bibentries for the section, not just cited
-  # entries. We have to do this to process aliases in potential crossrefs
-  # which have not been processed yet. We can't process them them before this
-  # as this would by ugly - crossrefs should be resolved on canonical entrytype
-  # and field names which can't be done until after these are canonicalised below
-  foreach my $key ($bibentries->sorted_keys) {
-    my $entry = $section->bibentry($key);
-    # Entry type aliases and special fields - biblatex manual Section 2.1.2
-    if ($entry->get_field('entrytype') eq 'conference') {
-      $entry->set_field('entrytype', 'inproceedings');
-    }
-    elsif ($entry->get_field('entrytype') eq 'electronic') {
-      $entry->set_field('entrytype', 'online');
-    }
-    elsif ($entry->get_field('entrytype') eq 'mastersthesis') {
-      $entry->set_field('entrytype', 'thesis');
-      $entry->set_field('type', $entry->get_field('type') ?
-                        $entry->get_field('type') : 'mathesis');
-    }
-    elsif ($entry->get_field('entrytype') eq 'phdthesis') {
-      $entry->set_field('entrytype', 'thesis');
-      $entry->set_field('type', $entry->get_field('type') ?
-                        $entry->get_field('type') : 'phdthesis');
-    }
-    elsif ($entry->get_field('entrytype') eq 'techreport') {
-      $entry->set_field('entrytype', 'report');
-      $entry->set_field('type', $entry->get_field('type') ?
-                        $entry->get_field('type') : 'techreport');
-    }
-    elsif ($entry->get_field('entrytype') eq 'patent') {
-      $entry->set_field('type', 'patent') unless $entry->get_field('type');
-    }
-    elsif ($entry->get_field('entrytype') eq 'www') {
-      $entry->set_field('entrytype', 'online');
-    }
-    # default to MISC type if not a known type
-    elsif (not first { $entry->get_field('entrytype') eq $_ } (@ENTRYTYPES,
-                                                               @UENTRYTYPES) ) {
-      $logger->warn("Entry type \"" . $entry->get_field('entrytype') . "\" for entry \"$key\" isn't a known biblatex type - defaulting to \"misc\"");
-      $self->{warnings}++;
-      $entry->set_field('entrytype', 'misc');
+  foreach my $citekey ($section->get_citekeys) {
+    my $be = $section->bibentry($citekey);
+
+    # Both DATE and YEAR specified
+    if ($be->get_field('date') and $be->get_field('year')) {
+      $self->biber_warn($be, "Field conflict - both 'date' and 'year' used - ignoring field 'year' in entry '$citekey'");
+      $be->del_field('year');
     }
 
-    # Field aliases
-    foreach my $falias (keys %FIELD_ALIASES) {
-      my $freal = $FIELD_ALIASES{$falias};
-      # If alias target exists as well as alias source, warn and skip source
-      # otherwise set alias target to alias source value
-      if (my $falias_value = $entry->get_field($falias)) {
-        if ($entry->get_field($freal)) {
-          $logger->warn("Field '$falias' is an alias for field '$freal' but both are defined in entry with key '$key' - skipping field '$falias'"); # Warn as that's wrong
-          $self->{warnings}++;
-          $entry->del_field($falias);
+    # Both DATE and MONTH specified
+    if ($be->get_field('date') and $be->get_field('month')) {
+      $self->biber_warn($be, "Field conflict - both 'date' and 'month' used - ignoring field 'month' in entry '$citekey'");
+      $be->del_field('month');
+    }
+
+    # MONTH must be an integer - YEAR doesn't have to be to allow for things like
+    # "in press" which sometimes need an extrayear disambiguator (in APA styles for example)
+    if ($be->get_field('month') and $be->get_field('month') !~ /\A\d+\z/xms) {
+      $self->biber_warn($be, "Invalid format of field 'month' - ignoring field in entry '$citekey'");
+      $be->del_field('month');
+    }
+
+    # Generate date components from *DATE fields
+    foreach my $datetype ('', 'orig', 'event', 'url') {
+      if ($be->get_field($datetype . 'date')) {
+        my $date_re = qr|(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?|xms;
+        if ($be->get_field($datetype . 'date') =~ m|\A$date_re(/)?(?:$date_re)?\z|xms) {
+          $be->set_field($datetype . 'year', $1) if $1;
+          $be->set_field($datetype . 'month', $2) if $2;
+          $be->set_field($datetype . 'day', $3) if $3;
+          $be->set_field($datetype . 'endmonth', $6) if $6;
+          $be->set_field($datetype . 'endday', $7) if $7;
+          if ($4 and $5) {      # normal range
+            $be->set_field($datetype . 'endyear', $5);
+          }
+          elsif ($4 and not $5) { # open ended range - endyear is defined but empty
+            $be->set_field($datetype . 'endyear', '');
+          }
         }
         else {
-          $entry->set_field($freal, $falias_value);
-          $entry->del_field($falias);
+          $self->biber_warn($be, "Invalid format of field '" . $datetype . 'date' . "' - ignoring field in entry '$citekey'");
+          $be->del_field($datetype . 'date');
+        }
+      }
+    }
+
+    # Now more carefully check the individual date components
+    # Can validate iso8601 here (DateTime::Format::ISO8601)
+    my $opt_dm = qr/(?:event|orig|url)?(?:end)?/xms;
+    foreach my $dcf (@DATECOMPONENTFIELDS) {
+      my $bad_format = '';
+      if ($be->get_field($dcf)) {
+
+        # months must be in right range
+        if ($dcf =~ /\A$opt_dm month\z/xms) {
+          unless ($be->get_field($dcf) >= 1 and $be->get_field($dcf) <= 12) {
+            $bad_format = 1;
+          }
+        }
+
+        # days must be in right range
+        if ($dcf =~ /\A$opt_dm day\z/xms) {
+          unless ($be->get_field($dcf) >= 1 and $be->get_field($dcf) <= 31) {
+            $bad_format = 1;
+          }
+        }
+        if ($bad_format) {
+          $self->biber_warn($be, "Value out of bounds for field/date component '$dcf' - ignoring in entry '$citekey'");
+          $be->del_field($dcf);
         }
       }
     }
@@ -790,9 +880,6 @@ sub postprocess {
   my $bibentries = $section->bibentries;
   foreach my $citekey ( $section->get_citekeys ) {
     $logger->debug("Postprocessing entry '$citekey' from section $secnum");
-
-    # Expand dates into their components
-    $self->postprocess_dates($citekey);
 
     # post process "set" entries:
     $self->postprocess_sets($citekey);
@@ -826,96 +913,6 @@ sub postprocess {
 
   return;
 }
-
-
-=head2 postprocess_dates
-
-    Here we do some sanity checking on date fields and then parse the
-    *DATE fields into their components, collecting any warnings to put
-    into the .bbl later
-
-    Quick check on YEAR and MONTH fields which are the only date related
-    components which can be directly set and therefore don't go through
-    the date parsing below
-
-=cut
-
-sub postprocess_dates {
-  my $self = shift;
-  my $citekey = shift;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
-
-  # Both DATE and YEAR specified
-  if ($be->get_field('date') and $be->get_field('year')) {
-    $self->biber_warn($be, "Field conflict - both 'date' and 'year' used - ignoring field 'year' in entry '$citekey'");
-    $be->del_field('year');
-  }
-
-  # Both DATE and MONTH specified
-  if ($be->get_field('date') and $be->get_field('month')) {
-    $self->biber_warn($be, "Field conflict - both 'date' and 'month' used - ignoring field 'month' in entry '$citekey'");
-    $be->del_field('month');
-  }
-
-  # MONTH must be an integer - YEAR doesn't have to be to allow for things like
-  # "in press" which sometimes need an extrayear disambiguator (in APA styles for example)
-  if ($be->get_field('month') and $be->get_field('month') !~ /\A\d+\z/xms) {
-    $self->biber_warn($be, "Invalid format of field 'month' - ignoring field in entry '$citekey'");
-    $be->del_field('month');
-  }
-
-  # Generate date components from *DATE fields
-  foreach my $datetype ('', 'orig', 'event', 'url') {
-    if ($be->get_field($datetype . 'date')) {
-      my $date_re = qr|(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?|xms;
-      if ($be->get_field($datetype . 'date') =~ m|\A$date_re(/)?(?:$date_re)?\z|xms) {
-        $be->set_field($datetype . 'year', $1) if $1;
-        $be->set_field($datetype . 'month', $2) if $2;
-        $be->set_field($datetype . 'day', $3) if $3;
-        $be->set_field($datetype . 'endmonth', $6) if $6;
-        $be->set_field($datetype . 'endday', $7) if $7;
-        if ($4 and $5) {        # normal range
-          $be->set_field($datetype . 'endyear', $5);
-        } elsif ($4 and not $5) { # open ended range - endyear is defined but empty
-          $be->set_field($datetype . 'endyear', '');
-        }
-      } else {
-        $self->biber_warn($be, "Invalid format of field '" . $datetype . 'date' . "' - ignoring field in entry '$citekey'");
-        $be->del_field($datetype . 'date');
-      }
-    }
-  }
-
-  # Now more carefully check the individual date components
-  my $opt_dm = qr/(?:event|orig|url)?(?:end)?/xms;
-  foreach my $dcf (@DATECOMPONENTFIELDS) {
-    my $bad_format = '';
-    if ($be->get_field($dcf)) {
-
-      # months must be in right range
-      if ($dcf =~ /\A$opt_dm month\z/xms) {
-        unless ($be->get_field($dcf) >= 1 and $be->get_field($dcf) <= 12) {
-          $bad_format = 1;
-        }
-      }
-
-      # days must be in right range
-      if ($dcf =~ /\A$opt_dm day\z/xms) {
-        unless ($be->get_field($dcf) >= 1 and $be->get_field($dcf) <= 31) {
-          $bad_format = 1;
-        }
-      }
-      if ($bad_format) {
-        $self->biber_warn($be, "Value out of bounds for field/date component '$dcf' - ignoring in entry '$citekey'");
-        $be->del_field($dcf);
-      }
-    }
-  }
-}
-
 
 =head2 postprocess_sets
 
@@ -1179,7 +1176,7 @@ sub postprocess_unique {
   #
   # See the logic in Internals.pm for generating the actual uniquename count
   # from the information collected here
-  if (Biber::Config->getblxoption('uniquename'), $bee) {
+  if (Biber::Config->getblxoption('uniquename', $bee)) {
     my $lname = $be->get_field('labelnamename');
     my $lastname;
     my $namestring;
@@ -1603,8 +1600,9 @@ sub prepare {
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->process_data;                 # Parse data into section objects
     $self->process_missing;              # Check for missing citekeys before anything else
-    $self->process_structure;            # Validate bib structure
+    $self->process_aliases;              # Process aliases to normalise entries
     $self->process_crossrefs;            # Process crossrefs
+    $self->process_structure;            # Check bib structure
     $self->postprocess;                  # Main entry postprocessing
     $self->sortentries;                  # then we do a label sort pass and set a flag
     $BIBER_SORT_FIRSTPASSDONE = 1;

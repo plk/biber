@@ -90,43 +90,34 @@ start =
      
     element bcf:sorting {
       attribute type { "global" },
-      element bcf:sort {
-        attribute order { xsd:integer },
-        attribute pass { "label" | "final" }?,
-        element bcf:sortitem {
-          attribute order { xsd:integer },
-          attribute final { xsd:integer }?,
-          attribute substring_side { "left" | "right" }?,
-          attribute substring_width { xsd:integer }?,
-          attribute pad_side { "left" | "right" }?,
-          attribute pad_width { xsd:integer }?,
-          attribute pad_char { xsd:string { minLength = "1" maxLength = "1" } }?,
-          attribute sort_direction { "ascending" | "descending" }?,
-          text
-        }+
-      }+
+      sort+
     },
     
     element bcf:sorting {
       attribute type { biblatex.entrytypes },
-      element bcf:sort {
-        attribute order { xsd:integer },
-        attribute pass { "label" | "final" }?,
-        element bcf:sortitem {
-          attribute order { xsd:integer },
-          attribute final { xsd:integer }?,
-          attribute substring_side { "left" | "right" }?,
-          attribute substring_width { xsd:integer }?,
-          attribute pad_side { "left" | "right" }?,
-          attribute pad_width { xsd:integer }?,
-          attribute pad_char { xsd:string { minLength = "1" maxLength = "1" } }?,
-          attribute sort_direction { "ascending" | "descending" }?,
-          text
-        }+
-      }+
+      sort+
     }*,
 
     element bcf:structure {
+      element bcf:aliases {
+        element bcf:alias {
+          (
+            (
+              attribute type { "entrytype" },
+              element bcf:name { xsd:NCName },
+              element bcf:realname { xsd:NCName },
+              element bcf:field {
+                attribute name { xsd:NCName },
+                xsd:NCName
+              }* ) |
+            (
+              attribute type { "field" },
+              element bcf:name { xsd:NCName },
+              element bcf:realname { xsd:NCName }
+            )
+          )
+        }+
+      }?,
       element bcf:constraints {
         element bcf:entrytypes {
           element bcf:entrytype { xsd:NCName }+
@@ -135,16 +126,34 @@ start =
           (
             (
               attribute type { "mandatory" | "optional" },
-              element bcf:field { xsd:NCName }+ ) |
+              element bcf:field {
+                attribute datatype { "integer" | "iso8601" }?,
+                attribute rangemin { xsd:int }?,
+                attribute rangemax { xsd:int }?,                
+                attribute conflict { "suppress" }?,             
+                xsd:NCName
+              }+ ) |
             (            
               attribute type { "conditional" },
               element bcf:antecedent {
-                attribute type { "all" | "one" },
-                element bcf:field { xsd:NCName }+
+                attribute quant { "all" | "one" | "none"},
+                element bcf:field {
+                  attribute datatype { "integer" | "iso8601" }?,
+                  attribute rangemin { xsd:int }?,
+                  attribute rangemax { xsd:int }?,                    
+                  attribute conflict { "suppress" }?,                    
+                  xsd:NCName
+                }+
               },
               element bcf:consequent {
-                attribute type { "all" | "one" },
-                element bcf:field { xsd:NCName }+
+                attribute quant { "all" | "one" | "none"},
+                element bcf:field {
+                  attribute datatype { "integer" | "iso8601" }?,
+                  attribute rangemin { xsd:int }?,
+                  attribute rangemax { xsd:int }?,                   
+                  attribute conflict { "suppress" }?,                      
+                  xsd:NCName
+                }+
               }
             )
           )
@@ -155,19 +164,36 @@ start =
     secspec+
   }
 
+sort =
+element bcf:sort {
+  attribute order { xsd:integer },
+  attribute pass { "label" | "final" }?,
+  element bcf:sortitem {
+    attribute order { xsd:integer },
+    attribute final { xsd:integer }?,
+    attribute substring_side { "left" | "right" }?,
+    attribute substring_width { xsd:integer }?,
+    attribute pad_side { "left" | "right" }?,
+    attribute pad_width { xsd:integer }?,
+    attribute pad_char { xsd:string { minLength = "1" maxLength = "1" } }?,
+    attribute sort_direction { "ascending" | "descending" }?,
+    text
+  }+
+}+
+
 secspec =
-  element bcf:bibdata {
-    attribute section { xsd:integer },
-    element bcf:datasource {
-      attribute type { "file" },
-      attribute format { "bibtex" | "biblatexml" }?,
-      xsd:NCName
-    }*
-  }?,
-  element bcf:section {
-    attribute number { xsd:integer },
-    element bcf:citekey { xsd:string }*
-  }
+element bcf:bibdata {
+  attribute section { xsd:integer },
+  element bcf:datasource {
+    attribute type { "file" },
+    attribute format { "bibtex" | "biblatexml" }?,
+    xsd:NCName
+  }*
+}?,
+ element bcf:section {
+  attribute number { xsd:integer },
+  element bcf:citekey { xsd:string }*
+}
 
 biblatex.entrytypes =
   "book"

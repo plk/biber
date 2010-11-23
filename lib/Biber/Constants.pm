@@ -228,7 +228,1311 @@ our %CONFIG_DEFAULT_BIBLATEX =
                  {
                   '0000'       => {}}
                 ]
-               ]
+               ],
+   structure => {
+                 aliases => {
+                             alias => [
+                                       {
+                                        name => { content => "conference" },
+                                        realname => { content => "inproceedings" },
+                                        type => "entrytype",
+                                       },
+                                       {
+                                        name => { content => "electronic" },
+                                        realname => { content => "online" },
+                                        type => "entrytype",
+                                       },
+                                       {
+                                        field    => [{ content => "mathesis", name => "type" }],
+                                        name     => { content => "mastersthesis" },
+                                        realname => { content => "thesis" },
+                                        type     => "entrytype",
+                                       },
+                                       {
+                                        field    => [{ content => "phdthesis", name => "type" }],
+                                        name     => { content => "phdthesis" },
+                                        realname => { content => "thesis" },
+                                        type     => "entrytype",
+                                       },
+                                       {
+                                        field    => [{ content => "techreport", name => "type" }],
+                                        name     => { content => "techreport" },
+                                        realname => { content => "report" },
+                                        type     => "entrytype",
+                                       },
+                                       {
+                                        name => { content => "www" },
+                                        realname => { content => "online" },
+                                        type => "entrytype",
+                                       },
+                                       {
+                                        name => { content => "address" },
+                                        realname => { content => "location" },
+                                        type => "field",
+                                       },
+                                       {
+                                        name => { content => "archiveprefix" },
+                                        realname => { content => "eprinttype" },
+                                        type => "field",
+                                       },
+                                       {
+                                        name => { content => "primaryclass" },
+                                        realname => { content => "eprintclass" },
+                                        type => "field",
+                                       },
+                                       {
+                                        name => { content => "school" },
+                                        realname => { content => "institution" },
+                                        type => "field",
+                                       },
+                                       {
+                                        name => { content => "annote" },
+                                        realname => { content => "annotation" },
+                                        type => "field",
+                                       },
+                                       {
+                                        name => { content => "key" },
+                                        realname => { content => "sortkey" },
+                                        type => "field",
+                                       },
+                                      ],
+                            },
+                 constraints => [
+                                 {
+                                  constraint => [
+                                                 {
+                                                  field => [{ content => "author" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "journaltitle" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "title" }], type => "mandatory" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             conflict => "suppress", content => "year" },
+                                                            {
+                                                             content => "date" },
+                                                           ],
+                                                  type  => "mandatory",
+                                                 },
+                                                 {
+                                                  antecedent => { field => [{ content => "date" }], quant => "all" },
+                                                  consequent => {
+                                                                 field => [{ conflict => "suppress", content => "month" }],
+                                                                 quant => "none",
+                                                                },
+                                                  type => "conditional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "addendum" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "annotator" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "commentator" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "doi" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editor" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editora" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editorb" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editorc" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eid" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprint" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprintclass" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprinttype" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "issn" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "issue" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "issuetitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "issuesubtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "journalsubtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "language" }], type => "optional" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             content => "month", datatype => "integer", rangemax => 12, rangemin => 1 },
+                                                           ],
+                                                  type  => "optional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "note" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "number" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "origlanguage" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pages" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pubstate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "series" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "subtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "titleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "translator" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "url" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "urldate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "version" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "volume" }], type => "optional" },
+                                                ],
+                                  entrytypes => { entrytype => [{ content => "article" }] },
+                                 },
+                                 {
+                                  constraint => [
+                                                 {
+                                                  field => [{ content => "author" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "title" }], type => "mandatory" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             conflict => "suppress", content => "year" },
+                                                            {
+                                                             content => "date" },
+                                                           ],
+                                                  type  => "mandatory",
+                                                 },
+                                                 {
+                                                  antecedent => { field => [{ content => "date" }], quant => "all" },
+                                                  consequent => {
+                                                                 field => [{ conflict => "suppress", content => "month" }],
+                                                                 quant => "none",
+                                                                },
+                                                  type => "conditional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "addendum" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "afterword" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "annotator" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "chapter" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "commentator" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "doi" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "edition" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editor" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editora" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editorb" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editorc" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprint" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprintclass" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprinttype" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "foreword" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "introduction" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "isbn" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "language" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "location" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "maintitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "maintitleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "mainsubtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "note" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "number" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "origlanguage" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pages" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pagetotal" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "part" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "publisher" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pubstate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "series" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "subtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "titleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "translator" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "url" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "urldate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "volume" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "volumes" }], type => "optional" },
+                                                ],
+                                  entrytypes => { entrytype => [{ content => "book" }] },
+                                 },
+                                 {
+                                  constraint => [
+                                                 {
+                                                  field => [{ content => "author" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "title" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "booktitle" }], type => "mandatory" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             conflict => "suppress", content => "year" },
+                                                            {
+                                                             content => "date" },
+                                                           ],
+                                                  type  => "mandatory",
+                                                 },
+                                                 {
+                                                  antecedent => { field => [{ content => "date" }], quant => "all" },
+                                                  consequent => {
+                                                                 field => [{ conflict => "suppress", content => "month" }],
+                                                                 quant => "none",
+                                                                },
+                                                  type => "conditional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "addendum" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "afterword" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "annotator" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "bookauthor" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "booksubtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "booktitleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "chapter" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "commentator" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "doi" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "edition" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editor" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editora" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editorb" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editorc" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprint" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprintclass" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprinttype" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "foreword" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "introduction" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "isbn" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "language" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "location" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "mainsubtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "maintitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "maintitleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "note" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "number" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "origlanguage" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "part" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "publisher" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pages" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pubstate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "series" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "subtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "titleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "translator" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "url" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "urldate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "volume" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "volumes" }], type => "optional" },
+                                                ],
+                                  entrytypes => {
+                                                 entrytype => [
+                                                               {
+                                                                content => "inbook" },
+                                                               {
+                                                                content => "bookinbook" },
+                                                               {
+                                                                content => "suppbook" },
+                                                              ],
+                                                },
+                                 },
+                                 {
+                                  constraint => [
+                                                 {
+                                                  field => [{ content => "author" }, { content => "editor" }],
+                                                  type  => "mandatory",
+                                                 },
+                                                 {
+                                                  field => [{ content => "title" }], type => "mandatory" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             conflict => "suppress", content => "year" },
+                                                            {
+                                                             content => "date" },
+                                                           ],
+                                                  type  => "mandatory",
+                                                 },
+                                                 {
+                                                  antecedent => { field => [{ content => "date" }], quant => "all" },
+                                                  consequent => {
+                                                                 field => [{ conflict => "suppress", content => "month" }],
+                                                                 quant => "none",
+                                                                },
+                                                  type => "conditional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "addendum" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "chapter" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "doi" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprint" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprintclass" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprinttype" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "howpublished" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "language" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "location" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "note" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pages" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pagetotal" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pubstate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "subtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "titleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "type" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "url" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "urldate" }], type => "optional" },
+                                                ],
+                                  entrytypes => { entrytype => [{ content => "booklet" }] },
+                                 },
+                                 {
+                                  constraint => [
+                                                 {
+                                                  field => [{ content => "editor" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "title" }], type => "mandatory" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             conflict => "suppress", content => "year" },
+                                                            {
+                                                             content => "date" },
+                                                           ],
+                                                  type  => "mandatory",
+                                                 },
+                                                 {
+                                                  antecedent => { field => [{ content => "date" }], quant => "all" },
+                                                  consequent => {
+                                                                 field => [{ conflict => "suppress", content => "month" }],
+                                                                 quant => "none",
+                                                                },
+                                                  type => "conditional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "addendum" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "afterword" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "annotator" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "chapter" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "commentator" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "doi" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "edition" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editora" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editorb" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editorc" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprint" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprintclass" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprinttype" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "foreword" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "introduction" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "isbn" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "language" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "location" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "mainsubtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "maintitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "maintitleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "note" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "number" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "origlanguage" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pages" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pagetotal" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "part" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "publisher" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pubstate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "series" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "subtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "titleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "translator" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "url" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "urldate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "volume" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "volumes" }], type => "optional" },
+                                                ],
+                                  entrytypes => {
+                                                 entrytype => [{ content => "collection" }, { content => "reference" }],
+                                                },
+                                 },
+                                 {
+                                  constraint => [
+                                                 {
+                                                  field => [{ content => "author" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "editor" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "title" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "booktitle" }], type => "mandatory" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             conflict => "suppress", content => "year" },
+                                                            {
+                                                             content => "date" },
+                                                           ],
+                                                  type  => "mandatory",
+                                                 },
+                                                 {
+                                                  antecedent => { field => [{ content => "date" }], quant => "all" },
+                                                  consequent => {
+                                                                 field => [{ conflict => "suppress", content => "month" }],
+                                                                 quant => "none",
+                                                                },
+                                                  type => "conditional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "addendum" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "afterword" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "annotator" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "booksubtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "booktitleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "chapter" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "commentator" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "doi" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "edition" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editora" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editorb" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editorc" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprint" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprintclass" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprinttype" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "foreword" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "introduction" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "isbn" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "language" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "location" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "mainsubtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "maintitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "maintitleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "note" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "number" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "origlanguage" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pages" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "part" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "publisher" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pubstate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "series" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "subtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "titleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "translator" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "url" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "urldate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "volume" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "volumes" }], type => "optional" },
+                                                ],
+                                  entrytypes => {
+                                                 entrytype => [
+                                                               {
+                                                                content => "incollection" },
+                                                               {
+                                                                content => "suppcollection" },
+                                                               {
+                                                                content => "inreference" },
+                                                              ],
+                                                },
+                                 },
+                                 {
+                                  constraint => [
+                                                 {
+                                                  field => [{ content => "title" }], type => "mandatory" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             conflict => "suppress", content => "year" },
+                                                            {
+                                                             content => "date" },
+                                                           ],
+                                                  type  => "mandatory",
+                                                 },
+                                                 {
+                                                  antecedent => { field => [{ content => "date" }], quant => "all" },
+                                                  consequent => {
+                                                                 field => [{ conflict => "suppress", content => "month" }],
+                                                                 quant => "none",
+                                                                },
+                                                  type => "conditional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "addendum" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "author" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "chapter" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "doi" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "edition" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editor" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprint" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprintclass" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprinttype" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "isbn" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "language" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "location" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "note" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "number" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "organization" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pages" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pagetotal" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "publisher" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pubstate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "series" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "subtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "titleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "type" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "url" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "urldate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "version" }], type => "optional" },
+                                                ],
+                                  entrytypes => { entrytype => [{ content => "manual" }] },
+                                 },
+                                 {
+                                  constraint => [
+                                                 {
+                                                  field => [{ content => "title" }], type => "mandatory" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             conflict => "suppress", content => "year" },
+                                                            {
+                                                             content => "date" },
+                                                           ],
+                                                  type  => "mandatory",
+                                                 },
+                                                 {
+                                                  antecedent => { field => [{ content => "date" }], quant => "all" },
+                                                  consequent => {
+                                                                 field => [{ conflict => "suppress", content => "month" }],
+                                                                 quant => "none",
+                                                                },
+                                                  type => "conditional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "addendum" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "author" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "doi" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editor" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprint" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprintclass" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprinttype" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "howpublished" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "language" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "location" }], type => "optional" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             content => "month", datatype => "integer", rangemax => 12, rangemin => 1 },
+                                                           ],
+                                                  type  => "optional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "note" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "organization" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pubstate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "subtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "titleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "type" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "url" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "urldate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "version" }], type => "optional" },
+                                                ],
+                                  entrytypes => { entrytype => [{ content => "misc" }] },
+                                 },
+                                 {
+                                  constraint => [
+                                                 {
+                                                  field => [{ content => "title" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "url" }], type => "mandatory" },
+                                                 {
+                                                  antecedent => { field => [{ content => "date" }], quant => "all" },
+                                                  consequent => {
+                                                                 field => [{ conflict => "suppress", content => "month" }],
+                                                                 quant => "none",
+                                                                },
+                                                  type => "conditional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "addendum" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "author" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editor" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "language" }], type => "optional" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             content => "month", datatype => "integer", rangemax => 12, rangemin => 1 },
+                                                           ],
+                                                  type  => "optional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "note" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "organization" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pubstate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "subtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "titleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "urldate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "version" }], type => "optional" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             conflict => "suppress", content => "year" },
+                                                            {
+                                                             content => "date" },
+                                                           ],
+                                                  type  => "optional",
+                                                 },
+                                                ],
+                                  entrytypes => { entrytype => [{ content => "online" }] },
+                                 },
+                                 {
+                                  constraint => [
+                                                 {
+                                                  field => [{ content => "author" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "title" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "number" }], type => "mandatory" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             conflict => "suppress", content => "year" },
+                                                            {
+                                                             content => "date" },
+                                                           ],
+                                                  type  => "mandatory",
+                                                 },
+                                                 {
+                                                  antecedent => { field => [{ content => "date" }], quant => "all" },
+                                                  consequent => {
+                                                                 field => [{ conflict => "suppress", content => "month" }],
+                                                                 quant => "none",
+                                                                },
+                                                  type => "conditional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "addendum" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "doi" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprint" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprintclass" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprinttype" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "holder" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "location" }], type => "optional" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             content => "month", datatype => "integer", rangemax => 12, rangemin => 1 },
+                                                           ],
+                                                  type  => "optional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "note" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pubstate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "subtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "titleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "type" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "url" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "urldate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "version" }], type => "optional" },
+                                                ],
+                                  entrytypes => { entrytype => [{ content => "patent" }] },
+                                 },
+                                 {
+                                  constraint => [
+                                                 {
+                                                  field => [{ content => "editor" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "title" }], type => "mandatory" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             conflict => "suppress", content => "year" },
+                                                            {
+                                                             content => "date" },
+                                                           ],
+                                                  type  => "mandatory",
+                                                 },
+                                                 {
+                                                  antecedent => { field => [{ content => "date" }], quant => "all" },
+                                                  consequent => {
+                                                                 field => [{ conflict => "suppress", content => "month" }],
+                                                                 quant => "none",
+                                                                },
+                                                  type => "conditional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "addendum" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "doi" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editora" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editorb" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "editorc" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprint" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprintclass" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprinttype" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "issn" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "issue" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "issuesubtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "issuetitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "language" }], type => "optional" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             content => "month", datatype => "integer", rangemax => 12, rangemin => 1 },
+                                                           ],
+                                                  type  => "optional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "note" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "number" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pubstate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "series" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "subtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "url" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "urldate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "volume" }], type => "optional" },
+                                                ],
+                                  entrytypes => { entrytype => [{ content => "periodical" }] },
+                                 },
+                                 {
+                                  constraint => [
+                                                 {
+                                                  field => [{ content => "author" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "editor" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "title" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "booktitle" }], type => "mandatory" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             conflict => "suppress", content => "year" },
+                                                            {
+                                                             content => "date" },
+                                                           ],
+                                                  type  => "mandatory",
+                                                 },
+                                                 {
+                                                  antecedent => { field => [{ content => "date" }], quant => "all" },
+                                                  consequent => {
+                                                                 field => [{ conflict => "suppress", content => "month" }],
+                                                                 quant => "none",
+                                                                },
+                                                  type => "conditional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "addendum" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "booksubtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "booktitleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "chapter" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "doi" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprint" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprintclass" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprinttype" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eventdate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eventtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "isbn" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "language" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "location" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "mainsubtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "maintitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "maintitleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             content => "month", datatype => "integer", rangemax => 12, rangemin => 1 },
+                                                           ],
+                                                  type  => "optional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "note" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "number" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "organization" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pages" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "part" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "publisher" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pubstate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "series" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "subtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "titleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "url" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "urldate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "venue" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "volume" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "volumes" }], type => "optional" },
+                                                ],
+                                  entrytypes => { entrytype => [{ content => "inproceedings" }] },
+                                 },
+                                 {
+                                  constraint => [
+                                                 {
+                                                  field => [{ content => "author" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "title" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "type" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "institution" }], type => "mandatory" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             conflict => "suppress", content => "year" },
+                                                            {
+                                                             content => "date" },
+                                                           ],
+                                                  type  => "mandatory",
+                                                 },
+                                                 {
+                                                  antecedent => { field => [{ content => "date" }], quant => "all" },
+                                                  consequent => {
+                                                                 field => [{ conflict => "suppress", content => "month" }],
+                                                                 quant => "none",
+                                                                },
+                                                  type => "conditional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "addendum" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "chapter" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "doi" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprint" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprintclass" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprinttype" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "isrn" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "language" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "location" }], type => "optional" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             content => "month", datatype => "integer", rangemax => 12, rangemin => 1 },
+                                                           ],
+                                                  type  => "optional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "note" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "number" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pages" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pagetotal" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pubstate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "subtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "titleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "url" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "urldate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "version" }], type => "optional" },
+                                                ],
+                                  entrytypes => { entrytype => [{ content => "report" }] },
+                                 },
+                                 {
+                                  constraint => [
+                                                 {
+                                                  field => [{ content => "author" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "title" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "type" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "institution" }], type => "mandatory" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             conflict => "suppress", content => "year" },
+                                                            {
+                                                             content => "date" },
+                                                           ],
+                                                  type  => "mandatory",
+                                                 },
+                                                 {
+                                                  antecedent => { field => [{ content => "date" }], quant => "all" },
+                                                  consequent => {
+                                                                 field => [{ conflict => "suppress", content => "month" }],
+                                                                 quant => "none",
+                                                                },
+                                                  type => "conditional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "addendum" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "chapter" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "doi" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprint" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprintclass" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "eprinttype" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "language" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "location" }], type => "optional" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             content => "month", datatype => "integer", rangemax => 12, rangemin => 1 },
+                                                           ],
+                                                  type  => "optional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "note" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pages" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pagetotal" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pubstate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "subtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "titleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "url" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "urldate" }], type => "optional" },
+                                                ],
+                                  entrytypes => { entrytype => [{ content => "thesis" }] },
+                                 },
+                                 {
+                                  constraint => [
+                                                 {
+                                                  field => [{ content => "author" }], type => "mandatory" },
+                                                 {
+                                                  field => [{ content => "title" }], type => "mandatory" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             conflict => "suppress", content => "year" },
+                                                            {
+                                                             content => "date" },
+                                                           ],
+                                                  type  => "mandatory",
+                                                 },
+                                                 {
+                                                  antecedent => { field => [{ content => "date" }], quant => "all" },
+                                                  consequent => {
+                                                                 field => [{ conflict => "suppress", content => "month" }],
+                                                                 quant => "none",
+                                                                },
+                                                  type => "conditional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "addendum" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "howpublished" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "language" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "location" }], type => "optional" },
+                                                 {
+                                                  field => [
+                                                            {
+                                                             content => "month", datatype => "integer", rangemax => 12, rangemin => 1 },
+                                                           ],
+                                                  type  => "optional",
+                                                 },
+                                                 {
+                                                  field => [{ content => "note" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "pubstate" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "subtitle" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "titleaddon" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "url" }], type => "optional" },
+                                                 {
+                                                  field => [{ content => "urldate" }], type => "optional" },
+                                                ],
+                                  entrytypes => { entrytype => [{ content => "unpublished" }] },
+                                 },
+                                ],
+                }
   );
 $CONFIG_DEFAULT_BIBLATEX{sorting_final} = $CONFIG_DEFAULT_BIBLATEX{sorting_label};
 
@@ -270,6 +1574,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
   sorting_label     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   sorting_final     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   sortlos           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  structure         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   terseinits        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   uniquename        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   useauthor         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},

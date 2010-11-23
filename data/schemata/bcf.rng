@@ -219,74 +219,7 @@
           <value>global</value>
         </attribute>
         <oneOrMore>
-          <element name="bcf:sort">
-            <attribute name="order">
-              <data type="integer"/>
-            </attribute>
-            <optional>
-              <attribute name="pass">
-                <choice>
-                  <value>label</value>
-                  <value>final</value>
-                </choice>
-              </attribute>
-            </optional>
-            <oneOrMore>
-              <element name="bcf:sortitem">
-                <attribute name="order">
-                  <data type="integer"/>
-                </attribute>
-                <optional>
-                  <attribute name="final">
-                    <data type="integer"/>
-                  </attribute>
-                </optional>
-                <optional>
-                  <attribute name="substring_side">
-                    <choice>
-                      <value>left</value>
-                      <value>right</value>
-                    </choice>
-                  </attribute>
-                </optional>
-                <optional>
-                  <attribute name="substring_width">
-                    <data type="integer"/>
-                  </attribute>
-                </optional>
-                <optional>
-                  <attribute name="pad_side">
-                    <choice>
-                      <value>left</value>
-                      <value>right</value>
-                    </choice>
-                  </attribute>
-                </optional>
-                <optional>
-                  <attribute name="pad_width">
-                    <data type="integer"/>
-                  </attribute>
-                </optional>
-                <optional>
-                  <attribute name="pad_char">
-                    <data type="string">
-                      <param name="minLength">1</param>
-                      <param name="maxLength">1</param>
-                    </data>
-                  </attribute>
-                </optional>
-                <optional>
-                  <attribute name="sort_direction">
-                    <choice>
-                      <value>ascending</value>
-                      <value>descending</value>
-                    </choice>
-                  </attribute>
-                </optional>
-                <text/>
-              </element>
-            </oneOrMore>
-          </element>
+          <ref name="sort"/>
         </oneOrMore>
       </element>
       <zeroOrMore>
@@ -295,79 +228,52 @@
             <ref name="biblatex.entrytypes"/>
           </attribute>
           <oneOrMore>
-            <element name="bcf:sort">
-              <attribute name="order">
-                <data type="integer"/>
-              </attribute>
-              <optional>
-                <attribute name="pass">
-                  <choice>
-                    <value>label</value>
-                    <value>final</value>
-                  </choice>
-                </attribute>
-              </optional>
-              <oneOrMore>
-                <element name="bcf:sortitem">
-                  <attribute name="order">
-                    <data type="integer"/>
-                  </attribute>
-                  <optional>
-                    <attribute name="final">
-                      <data type="integer"/>
-                    </attribute>
-                  </optional>
-                  <optional>
-                    <attribute name="substring_side">
-                      <choice>
-                        <value>left</value>
-                        <value>right</value>
-                      </choice>
-                    </attribute>
-                  </optional>
-                  <optional>
-                    <attribute name="substring_width">
-                      <data type="integer"/>
-                    </attribute>
-                  </optional>
-                  <optional>
-                    <attribute name="pad_side">
-                      <choice>
-                        <value>left</value>
-                        <value>right</value>
-                      </choice>
-                    </attribute>
-                  </optional>
-                  <optional>
-                    <attribute name="pad_width">
-                      <data type="integer"/>
-                    </attribute>
-                  </optional>
-                  <optional>
-                    <attribute name="pad_char">
-                      <data type="string">
-                        <param name="minLength">1</param>
-                        <param name="maxLength">1</param>
-                      </data>
-                    </attribute>
-                  </optional>
-                  <optional>
-                    <attribute name="sort_direction">
-                      <choice>
-                        <value>ascending</value>
-                        <value>descending</value>
-                      </choice>
-                    </attribute>
-                  </optional>
-                  <text/>
-                </element>
-              </oneOrMore>
-            </element>
+            <ref name="sort"/>
           </oneOrMore>
         </element>
       </zeroOrMore>
       <optional>
         <element name="bcf:structure">
+          <optional>
+            <element name="bcf:aliases">
+              <oneOrMore>
+                <element name="bcf:alias">
+                  <choice>
+                    <group>
+                      <attribute name="type">
+                        <value>entrytype</value>
+                      </attribute>
+                      <element name="bcf:name">
+                        <data type="NCName"/>
+                      </element>
+                      <element name="bcf:realname">
+                        <data type="NCName"/>
+                      </element>
+                      <zeroOrMore>
+                        <element name="bcf:field">
+                          <attribute name="name">
+                            <data type="NCName"/>
+                          </attribute>
+                          <data type="NCName"/>
+                        </element>
+                      </zeroOrMore>
+                    </group>
+                    <group>
+                      <attribute name="type">
+                        <value>field</value>
+                      </attribute>
+                      <element name="bcf:name">
+                        <data type="NCName"/>
+                      </element>
+                      <element name="bcf:realname">
+                        <data type="NCName"/>
+                      </element>
+                    </group>
+                  </choice>
+                </element>
+              </oneOrMore>
+            </element>
+          </optional>
           <oneOrMore>
             <element name="bcf:constraints">
               <element name="bcf:entrytypes">
@@ -389,6 +295,29 @@
                       </attribute>
                       <oneOrMore>
                         <element name="bcf:field">
+                          <optional>
+                            <attribute name="datatype">
+                              <choice>
+                                <value>integer</value>
+                                <value>iso8601</value>
+                              </choice>
+                            </attribute>
+                          </optional>
+                          <optional>
+                            <attribute name="rangemin">
+                              <data type="int"/>
+                            </attribute>
+                          </optional>
+                          <optional>
+                            <attribute name="rangemax">
+                              <data type="int"/>
+                            </attribute>
+                          </optional>
+                          <optional>
+                            <attribute name="conflict">
+                              <value>suppress</value>
+                            </attribute>
+                          </optional>
                           <data type="NCName"/>
                         </element>
                       </oneOrMore>
@@ -398,27 +327,75 @@
                         <value>conditional</value>
                       </attribute>
                       <element name="bcf:antecedent">
-                        <attribute name="type">
+                        <attribute name="quant">
                           <choice>
                             <value>all</value>
                             <value>one</value>
+                            <value>none</value>
                           </choice>
                         </attribute>
                         <oneOrMore>
                           <element name="bcf:field">
+                            <optional>
+                              <attribute name="datatype">
+                                <choice>
+                                  <value>integer</value>
+                                  <value>iso8601</value>
+                                </choice>
+                              </attribute>
+                            </optional>
+                            <optional>
+                              <attribute name="rangemin">
+                                <data type="int"/>
+                              </attribute>
+                            </optional>
+                            <optional>
+                              <attribute name="rangemax">
+                                <data type="int"/>
+                              </attribute>
+                            </optional>
+                            <optional>
+                              <attribute name="conflict">
+                                <value>suppress</value>
+                              </attribute>
+                            </optional>
                             <data type="NCName"/>
                           </element>
                         </oneOrMore>
                       </element>
                       <element name="bcf:consequent">
-                        <attribute name="type">
+                        <attribute name="quant">
                           <choice>
                             <value>all</value>
                             <value>one</value>
+                            <value>none</value>
                           </choice>
                         </attribute>
                         <oneOrMore>
                           <element name="bcf:field">
+                            <optional>
+                              <attribute name="datatype">
+                                <choice>
+                                  <value>integer</value>
+                                  <value>iso8601</value>
+                                </choice>
+                              </attribute>
+                            </optional>
+                            <optional>
+                              <attribute name="rangemin">
+                                <data type="int"/>
+                              </attribute>
+                            </optional>
+                            <optional>
+                              <attribute name="rangemax">
+                                <data type="int"/>
+                              </attribute>
+                            </optional>
+                            <optional>
+                              <attribute name="conflict">
+                                <value>suppress</value>
+                              </attribute>
+                            </optional>
                             <data type="NCName"/>
                           </element>
                         </oneOrMore>
@@ -436,6 +413,78 @@
       </oneOrMore>
     </element>
   </start>
+  <define name="sort">
+    <oneOrMore>
+      <element name="bcf:sort">
+        <attribute name="order">
+          <data type="integer"/>
+        </attribute>
+        <optional>
+          <attribute name="pass">
+            <choice>
+              <value>label</value>
+              <value>final</value>
+            </choice>
+          </attribute>
+        </optional>
+        <oneOrMore>
+          <element name="bcf:sortitem">
+            <attribute name="order">
+              <data type="integer"/>
+            </attribute>
+            <optional>
+              <attribute name="final">
+                <data type="integer"/>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="substring_side">
+                <choice>
+                  <value>left</value>
+                  <value>right</value>
+                </choice>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="substring_width">
+                <data type="integer"/>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="pad_side">
+                <choice>
+                  <value>left</value>
+                  <value>right</value>
+                </choice>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="pad_width">
+                <data type="integer"/>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="pad_char">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">1</param>
+                </data>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="sort_direction">
+                <choice>
+                  <value>ascending</value>
+                  <value>descending</value>
+                </choice>
+              </attribute>
+            </optional>
+            <text/>
+          </element>
+        </oneOrMore>
+      </element>
+    </oneOrMore>
+  </define>
   <define name="secspec">
     <optional>
       <element name="bcf:bibdata">
