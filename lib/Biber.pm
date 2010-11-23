@@ -548,8 +548,6 @@ sub parse_bibtex {
     File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
       or $logger->logcroak("Can't write $ufilename");
 
-    # Now .bib is unicode
-    Biber::Config->setoption('bibencoding', 'UTF-8')
   }
   else {
     File::Copy::copy($filename, $ufilename);
