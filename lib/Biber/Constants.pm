@@ -20,8 +20,6 @@ our @EXPORT = qw{
   @DATERANGEFIELDS
   @DATECOMPONENTFIELDS
   @NULL_OK
-  @ENTRYTYPES
-  @UENTRYTYPES
   %SKIPFIELDS
   %CONFIG_DEFAULT_BIBER
   %CONFIG_DEFAULT_BIBLATEX
@@ -32,7 +30,6 @@ our @EXPORT = qw{
   $BIBER_SORT_NULL
   $BIBER_SORT_FIRSTPASSDONE
   %BIBER_DATAFILE_REFS
-  %FIELD_ALIASES
   %NUMERICALMONTH
   %DISPLAYMODES
   $DISPLAYMODE_DEFAULT
@@ -1274,15 +1271,6 @@ Readonly::Array our @NULL_OK  => qw{ endyear origendyear eventendyear urlendyear
 # literal and integer fields
 
 Readonly::Array our @LITERALFIELDS => ( @TITLEFIELDS, @LITERALFIELDS_BASE, @KEYFIELDS );
-
-Readonly::Hash our %FIELD_ALIASES => (
-  'address'       => 'location',
-  'archiveprefix' => 'eprinttype',
-  'primaryclass'  => 'eprintclass',
-  'school'        => 'institution',
-  'annote'        => 'annotation',
-  'key'           => 'sortkey'
-  );
 
 Readonly::Hash our %NUMERICALMONTH => (
   'January' => 1,

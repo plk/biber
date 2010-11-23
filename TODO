@@ -9,6 +9,5 @@ TODO in decreasing order of priority:
      an XML data format to replace .bib, such structure checking will be implemented
      as schema validation.
 
-     FIELD_ALIAS needs to be parameterised from structure
      process_structure entry types needs to be parameterised from structure
-     @ENTRYTYPES @UENTRYTYPES will go
+     Dates etc.
