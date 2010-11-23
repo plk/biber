@@ -690,7 +690,6 @@ sub process_aliases {
 
     # Entrytype aliases and special fields - biblatex manual Section 2.1.2
     foreach my $alias (@{Biber::Config->getblxoption('structure')->{aliases}{alias}}) {
-      # entrytype aliases
       next unless $alias->{type} eq 'entrytype';
       # normalise field name according to alias
       if ($be->get_field('entrytype') eq $alias->{name}{content}) {
@@ -714,11 +713,11 @@ sub process_aliases {
 
     # Field aliases
     foreach my $alias (@{Biber::Config->getblxoption('structure')->{aliases}{alias}}) {
-      # entrytype aliases
       next unless $alias->{type} eq 'field';
       my $falias = $alias->{name}{content};
       if (my $falias_value = $be->get_field($falias)) {
         my $freal = $alias->{realname}{content};
+        # If both a field and its alias is set, warn and delete alias field
         if ($be->get_field($freal)) {
           $self->biber_warn($be, "Field '$falias' is an alias for field '$freal' but both are defined in entry with key '$key' - skipping field '$falias'"); # Warn as that's wrong
           $self->{warnings}++;
