@@ -2027,7 +2027,7 @@
   </bcf:structure>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file">structure</bcf:datasource>
+    <bcf:datasource type="file">structure-aliases</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey>alias1</bcf:citekey>

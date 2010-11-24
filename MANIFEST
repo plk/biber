@@ -36,7 +36,6 @@ t/01-names.t
 t/01-utils.t
 t/02-biber.t
 t/03-biber.t
-t/05-dateformats.t
 t/05-extrayear.t
 t/05-labelalpha.t
 t/05-sorting.t
@@ -54,7 +53,8 @@ t/14-sections.t
 t/15-sections-complex.t
 t/16-encoding.t
 t/17-crossrefs.t
-t/18-structure.t
+t/18-structure-dateformats.t
+t/18-structure-aliases.t
 t/pod-coverage.t
 t/pod.t
 t/tdata/options.bcf
@@ -78,7 +78,7 @@ t/tdata/sections3.bib
 t/tdata/sections4.bib
 t/tdata/names.bcf
 t/tdata/general2.bcf
-t/tdata/dateformats.bcf
+t/tdata/structure-dateformats.bcf
 t/tdata/general1.bcf
 t/tdata/extrayear.bcf
 t/tdata/labelalpha.bcf
@@ -88,7 +88,7 @@ t/tdata/sort-order.bcf
 t/tdata/sort-uc.bcf
 t/tdata/sort-case.bcf
 t/tdata/biber3.conf
-t/tdata/dateformats.bib
+t/tdata/structure-dateformats.bib
 t/tdata/extrayear.bib
 t/tdata/labelalpha.bib
 t/tdata/names.bib
@@ -104,5 +104,5 @@ t/tdata/biber2.conf
 t/tdata/set.bib
 t/tdata/set.bcf
 t/tdata/uniquename.bcf
-t/tdata/structure.bcf
-t/tdata/structure.bib
+t/tdata/structure-aliases.bcf
+t/tdata/structure-aliases.bib
