@@ -9,6 +9,8 @@ TODO in decreasing order of priority:
      an XML data format to replace .bib, such structure checking will be implemented
      as schema validation.
 
+     datatype rangemin rangemax should be constraints, not in field specs
+     Need priority in XOR mandatory sets
      process_structure entry types needs to be parameterised from structure
      Dates etc.
      Doc .rnc
