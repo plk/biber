@@ -275,7 +275,7 @@
             </element>
           </optional>
           <oneOrMore>
-            <element name="bcf:constraints">
+            <element name="bcf:entryschema">
               <element name="bcf:entrytypes">
                 <oneOrMore>
                   <element name="bcf:entrytype">
@@ -284,44 +284,43 @@
                 </oneOrMore>
               </element>
               <zeroOrMore>
-                <element name="bcf:constraint">
+                <element name="bcf:fields">
                   <choice>
                     <group>
                       <attribute name="type">
+                        <value>mandatory</value>
+                      </attribute>
+                      <oneOrMore>
                         <choice>
-                          <value>mandatory</value>
-                          <value>optional</value>
+                          <element name="bcf:field">
+                            <data type="NCName"/>
+                          </element>
+                          <element name="bcf:fieldset">
+                            <oneOrMore>
+                              <element name="bcf:field">
+                                <data type="NCName"/>
+                              </element>
+                            </oneOrMore>
+                          </element>
                         </choice>
+                      </oneOrMore>
+                    </group>
+                    <group>
+                      <attribute name="type">
+                        <value>optional</value>
                       </attribute>
                       <oneOrMore>
                         <element name="bcf:field">
-                          <optional>
-                            <attribute name="datatype">
-                              <choice>
-                                <value>integer</value>
-                                <value>iso8601</value>
-                              </choice>
-                            </attribute>
-                          </optional>
-                          <optional>
-                            <attribute name="rangemin">
-                              <data type="int"/>
-                            </attribute>
-                          </optional>
-                          <optional>
-                            <attribute name="rangemax">
-                              <data type="int"/>
-                            </attribute>
-                          </optional>
-                          <optional>
-                            <attribute name="conflict">
-                              <value>suppress</value>
-                            </attribute>
-                          </optional>
                           <data type="NCName"/>
                         </element>
                       </oneOrMore>
                     </group>
+                  </choice>
+                </element>
+              </zeroOrMore>
+              <zeroOrMore>
+                <element name="bcf:constraint">
+                  <choice>
                     <group>
                       <attribute name="type">
                         <value>conditional</value>
@@ -336,29 +335,6 @@
                         </attribute>
                         <oneOrMore>
                           <element name="bcf:field">
-                            <optional>
-                              <attribute name="datatype">
-                                <choice>
-                                  <value>integer</value>
-                                  <value>iso8601</value>
-                                </choice>
-                              </attribute>
-                            </optional>
-                            <optional>
-                              <attribute name="rangemin">
-                                <data type="int"/>
-                              </attribute>
-                            </optional>
-                            <optional>
-                              <attribute name="rangemax">
-                                <data type="int"/>
-                              </attribute>
-                            </optional>
-                            <optional>
-                              <attribute name="conflict">
-                                <value>suppress</value>
-                              </attribute>
-                            </optional>
                             <data type="NCName"/>
                           </element>
                         </oneOrMore>
@@ -373,33 +349,38 @@
                         </attribute>
                         <oneOrMore>
                           <element name="bcf:field">
-                            <optional>
-                              <attribute name="datatype">
-                                <choice>
-                                  <value>integer</value>
-                                  <value>iso8601</value>
-                                </choice>
-                              </attribute>
-                            </optional>
-                            <optional>
-                              <attribute name="rangemin">
-                                <data type="int"/>
-                              </attribute>
-                            </optional>
-                            <optional>
-                              <attribute name="rangemax">
-                                <data type="int"/>
-                              </attribute>
-                            </optional>
-                            <optional>
-                              <attribute name="conflict">
-                                <value>suppress</value>
-                              </attribute>
-                            </optional>
                             <data type="NCName"/>
                           </element>
                         </oneOrMore>
                       </element>
+                    </group>
+                    <group>
+                      <attribute name="type">
+                        <value>assertoric</value>
+                      </attribute>
+                      <optional>
+                        <attribute name="datatype">
+                          <choice>
+                            <value>integer</value>
+                            <value>iso8601</value>
+                          </choice>
+                        </attribute>
+                      </optional>
+                      <optional>
+                        <attribute name="rangemin">
+                          <data type="int"/>
+                        </attribute>
+                      </optional>
+                      <optional>
+                        <attribute name="rangemax">
+                          <data type="int"/>
+                        </attribute>
+                      </optional>
+                      <oneOrMore>
+                        <element name="bcf:field">
+                          <data type="NCName"/>
+                        </element>
+                      </oneOrMore>
                     </group>
                   </choice>
                 </element>

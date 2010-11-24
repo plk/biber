@@ -652,8 +652,8 @@ sub process_setup {
 
   # Pull out legal entrytypes for error checking later
   my $leg_ents;
-  foreach my $c (@{Biber::Config->getblxoption('structure')->{constraints}}) {
-    foreach my $et (@{$c->{entrytypes}{entrytype}}) {
+  foreach my $es (@{Biber::Config->getblxoption('structure')->{entryschema}}) {
+    foreach my $et (@{$es->{entrytypes}{entrytype}}) {
       push @$leg_ents, $et->{content};
     }
   }
