@@ -272,14 +272,6 @@
       <bcf:fields type="optional">
         <bcf:field>ALL</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
@@ -331,14 +323,6 @@
         <bcf:field>version</bcf:field>
         <bcf:field>volume</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
       <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
@@ -398,14 +382,6 @@
         <bcf:field>volume</bcf:field>
         <bcf:field>volumes</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
@@ -467,14 +443,6 @@
         <bcf:field>volume</bcf:field>
         <bcf:field>volumes</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
@@ -511,14 +479,6 @@
         <bcf:field>url</bcf:field>
         <bcf:field>urldate</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
@@ -575,14 +535,6 @@
         <bcf:field>volume</bcf:field>
         <bcf:field>volumes</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
@@ -643,14 +595,6 @@
         <bcf:field>volume</bcf:field>
         <bcf:field>volumes</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
@@ -691,14 +635,6 @@
         <bcf:field>urldate</bcf:field>
         <bcf:field>version</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
@@ -733,14 +669,6 @@
         <bcf:field>urldate</bcf:field>
         <bcf:field>version</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
       <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
@@ -768,14 +696,6 @@
         <bcf:field>version</bcf:field>
         <bcf:field>year</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
       <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
@@ -811,14 +731,6 @@
         <bcf:field>urldate</bcf:field>
         <bcf:field>version</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
       <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
@@ -862,14 +774,6 @@
         <bcf:field>urldate</bcf:field>
         <bcf:field>volume</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
       <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
@@ -919,14 +823,6 @@
         <bcf:field>volume</bcf:field>
         <bcf:field>volumes</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
@@ -976,14 +872,6 @@
         <bcf:field>volume</bcf:field>
         <bcf:field>volumes</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
       <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
@@ -1024,14 +912,6 @@
         <bcf:field>urldate</bcf:field>
         <bcf:field>version</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
       <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
@@ -1069,14 +949,6 @@
         <bcf:field>url</bcf:field>
         <bcf:field>urldate</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
       <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
@@ -1106,14 +978,6 @@
         <bcf:field>url</bcf:field>
         <bcf:field>urldate</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
       <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
