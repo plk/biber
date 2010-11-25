@@ -217,6 +217,8 @@ our $dispatch_sorting = {
   'institution'   =>  [\&_sort_place,         ['institution']],
   'journal'       =>  [\&_sort_journal,       []],
   'labelalpha'    =>  [\&_sort_labelalpha,    []],
+  'labelname'     =>  [\&_sort_labelname,     []],
+  'labelyear'     =>  [\&_sort_labelyear,     []],
   'location'      =>  [\&_sort_place,         ['location']],
   'mm'            =>  [\&_sort_mm,            []],
   'month'         =>  [\&_sort_dm,            ['month']],
@@ -539,6 +541,36 @@ sub _sort_labelalpha {
   }
 }
 
+sub _sort_labelname {
+  my ($self, $citekey, $sortelementattributes) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bibentries;
+  my $be = $bibentries->entry($citekey);
+  # re-direct to the right sorting routine for the labelname
+  if (my $ln = $be->get_field('labelnamename')) {
+    return $self->_dispatch_sorting($ln, $citekey, $sortelementattributes);
+  }
+  else {
+    return '';
+  }
+}
+
+sub _sort_labelyear {
+  my ($self, $citekey, $sortelementattributes) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bibentries;
+  my $be = $bibentries->entry($citekey);
+  # re-direct to the right sorting routine for the labelyear
+  if (my $ly = $be->get_field('labelyearname')) {
+    return $self->_dispatch_sorting($ly, $citekey, $sortelementattributes);
+  }
+  else {
+    return '';
+  }
+}
+
 # This is a meta-sub which uses the optional arguments to the dispatch code
 # It's done to avoid having many repetitions of almost identical sorting code
 # for the place (address/location/institution etc.) sorting options
@@ -605,7 +637,7 @@ sub _sort_sortname {
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
 
-# see biblatex manual §3.4 - sortname is ignored if no use<name> option is defined
+  # see biblatex manual §3.4 - sortname is ignored if no use<name> option is defined
   if ($be->get_field('sortname') and
     (Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey) or
       Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) or

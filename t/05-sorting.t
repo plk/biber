@@ -108,7 +108,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {'year'       => {}}
+                                                 {'labelyear'       => {}}
                                                 ],
                                                 [
                                                  {'volume'     => {}},
@@ -826,6 +826,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 ],
                                                 [
                                                  {'sortname'   => {}},
+                                                 {'labelname'  => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
                                                  {'translator' => {}},
@@ -1033,7 +1034,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 ],
                                                 [
                                                  {'sortyear'   => {}},
-                                                 {'year'       => {}},
+                                                 {'labelyear'  => {}},
                                                  {'9999'       => {}}
                                                 ],
                                                 [
@@ -1118,7 +1119,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 ],
                                                 [
                                                  {'sortyear'  => {'sort_direction'  => 'descending'}},
-                                                 {'year'      => {'sort_direction'  => 'descending'}},
+                                                 {'labelyear'      => {'sort_direction'  => 'descending'}},
                                                  {'9999'       => {}}
                                                 ],
                                                 [
