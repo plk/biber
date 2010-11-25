@@ -652,28 +652,6 @@ sub process_missing {
 
 sub process_setup {
 
-  # Pull out legal entrytypes and fields and make lookup hash for quick tests later
-  my $leg_ents;
-  foreach my $es (@{Biber::Config->getblxoption('structure')->{entryschema}}) {
-    my $lfs;
-    foreach my $ft (@{$es->{fields}}) {
-      # Fields
-      foreach my $f (@{$ft->{field}}) {
-        $lfs->{$f->{content}} = 1;
-      }
-      # XOR of fields (fieldset)
-      foreach my $fs (@{$ft->{fieldset}}) {
-        foreach my $f (@{$fs->{field}}) {
-          $lfs->{$f->{content}} = 1;
-        }
-      }
-    }
-    foreach my $et (@{$es->{entrytypes}{entrytype}}) {
-      $leg_ents->{$et->{content}} = $lfs;
-    }
-  }
-  Biber::Config->setdata('legal_entrytypes', $leg_ents);
-
   # Create internal aliases data format for easy use
   my $aliases;
   foreach my $alias (@{Biber::Config->getblxoption('structure')->{aliases}{alias}}) {
@@ -687,6 +665,21 @@ sub process_setup {
     }
   }
   Biber::Config->setdata('aliases', $aliases);
+
+  # Pull out legal entrytypes and fields and make lookup hash for quick tests later
+  my $leg_ents;
+  foreach my $es (@{Biber::Config->getblxoption('structure')->{entryschema}}) {
+    my $lfs;
+    foreach my $ft (@{$es->{fields}}) {
+      foreach my $f (@{$ft->{field}}) {
+        $lfs->{$f->{content}} = 1;
+      }
+    }
+    foreach my $et (@{$es->{entrytypes}{entrytype}}) {
+      $leg_ents->{$et->{content}} = $lfs;
+    }
+  }
+  Biber::Config->setdata('legal_entrytypes', $leg_ents);
 }
 
 =head2 process_aliases

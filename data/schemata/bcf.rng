@@ -285,37 +285,14 @@
               </element>
               <zeroOrMore>
                 <element name="bcf:fields">
-                  <choice>
-                    <group>
-                      <attribute name="type">
-                        <value>mandatory</value>
-                      </attribute>
-                      <oneOrMore>
-                        <choice>
-                          <element name="bcf:field">
-                            <data type="NCName"/>
-                          </element>
-                          <element name="bcf:fieldset">
-                            <oneOrMore>
-                              <element name="bcf:field">
-                                <data type="NCName"/>
-                              </element>
-                            </oneOrMore>
-                          </element>
-                        </choice>
-                      </oneOrMore>
-                    </group>
-                    <group>
-                      <attribute name="type">
-                        <value>optional</value>
-                      </attribute>
-                      <oneOrMore>
-                        <element name="bcf:field">
-                          <data type="NCName"/>
-                        </element>
-                      </oneOrMore>
-                    </group>
-                  </choice>
+                  <oneOrMore>
+                    <element name="bcf:field">
+                      <choice>
+                        <value>ALL</value>
+                        <data type="NCName"/>
+                      </choice>
+                    </element>
+                  </oneOrMore>
                 </element>
               </zeroOrMore>
               <zeroOrMore>
@@ -356,7 +333,7 @@
                     </group>
                     <group>
                       <attribute name="type">
-                        <value>assertoric</value>
+                        <value>data</value>
                       </attribute>
                       <optional>
                         <attribute name="datatype">
@@ -380,6 +357,25 @@
                         <element name="bcf:field">
                           <data type="NCName"/>
                         </element>
+                      </oneOrMore>
+                    </group>
+                    <group>
+                      <attribute name="type">
+                        <value>mandatory</value>
+                      </attribute>
+                      <oneOrMore>
+                        <choice>
+                          <element name="bcf:field">
+                            <data type="NCName"/>
+                          </element>
+                          <element name="bcf:fieldset">
+                            <oneOrMore>
+                              <element name="bcf:field">
+                                <data type="NCName"/>
+                              </element>
+                            </oneOrMore>
+                          </element>
+                        </choice>
                       </oneOrMore>
                     </group>
                   </choice>

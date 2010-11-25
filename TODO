@@ -10,9 +10,7 @@ TODO in decreasing order of priority:
      as schema validation.
 
 
-     XOR mandatory tests - Just list all possible fields and then mandatory is a constraint
      Need priority in XOR mandatory sets
-     Weird $b ne $citekey with sets in process_structure
      constraints
        need a constraint on date+month as they won't both be listed as fields anyway?
        in general, get rid of any date contraints which are general field constraints

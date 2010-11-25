@@ -123,16 +123,7 @@ start =
           element bcf:entrytype { xsd:NCName }+
         },
         element bcf:fields {
-          (
-            (attribute type { "mandatory" },
-              (element bcf:field { xsd:NCName } |
-                element bcf:fieldset {
-                  element bcf:field { xsd:NCName }+
-                })+
-            ) |
-            (attribute type { "optional" },
-              element bcf:field { xsd:NCName }+ )
-          )
+          element bcf:field { "ALL" | xsd:NCName }+
         }*,
         element bcf:constraint {
           (
@@ -146,17 +137,24 @@ start =
                 element bcf:field { xsd:NCName }+
               }
             ) |
-            (attribute type { "assertoric" },
+            (attribute type { "data" },
               attribute datatype { "integer" | "iso8601" }?,
               attribute rangemin { xsd:int }?,
               attribute rangemax { xsd:int }?,                                      
               element bcf:field { xsd:NCName }+
+            ) |
+            (attribute type { "mandatory" },
+              (element bcf:field { xsd:NCName } |
+                element bcf:fieldset {
+                  element bcf:field { xsd:NCName }+
+                }
+              )+
             )
           )
         }*
       }+
     }?,
-    
+
     secspec+
   }
 

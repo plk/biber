@@ -193,7 +193,7 @@
       <bcf:entrytypes>
         <bcf:entrytype>ALL</bcf:entrytype>
       </bcf:entrytypes>
-      <bcf:fields type="optional">
+      <bcf:fields>
         <bcf:field>abstract</bcf:field>
         <bcf:field>annotation</bcf:field>
         <bcf:field>authortype</bcf:field>
@@ -265,28 +265,24 @@
       <bcf:entrytypes>
         <bcf:entrytype>set</bcf:entrytype>
       </bcf:entrytypes>
-      <bcf:fields type="mandatory">
-        <bcf:field>entryset</bcf:field>
-        <bcf:field>crossref</bcf:field>
-      </bcf:fields>
-      <bcf:fields type="optional">
+      <bcf:fields>
         <bcf:field>ALL</bcf:field>
       </bcf:fields>
+      <bcf:constraint type="mandatory">
+        <bcf:field>entryset</bcf:field>
+        <bcf:field>crossref</bcf:field>
+      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
         <bcf:entrytype>article</bcf:entrytype>
       </bcf:entrytypes>
-      <bcf:fields type="mandatory">
+      <bcf:fields>
         <bcf:field>author</bcf:field>
         <bcf:field>journaltitle</bcf:field>
         <bcf:field>title</bcf:field>
-        <bcf:fieldset>
-          <bcf:field>year</bcf:field>
-          <bcf:field>date</bcf:field>
-        </bcf:fieldset>
-      </bcf:fields>
-      <bcf:fields type="optional">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
         <bcf:field>addendum</bcf:field>
         <bcf:field>annotator</bcf:field>
         <bcf:field>commentator</bcf:field>
@@ -323,7 +319,16 @@
         <bcf:field>version</bcf:field>
         <bcf:field>volume</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+        <bcf:field>journaltitle</bcf:field>
+        <bcf:field>title</bcf:field>
+        <bcf:fieldset>
+          <bcf:field>year</bcf:field>
+          <bcf:field>date</bcf:field>
+        </bcf:fieldset>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
     </bcf:entryschema>
@@ -331,15 +336,11 @@
       <bcf:entrytypes>
         <bcf:entrytype>book</bcf:entrytype>
       </bcf:entrytypes>
-      <bcf:fields type="mandatory">
+      <bcf:fields>
         <bcf:field>author</bcf:field>
         <bcf:field>title</bcf:field>
-        <bcf:fieldset>
-          <bcf:field>year</bcf:field>
-          <bcf:field>date</bcf:field>
-        </bcf:fieldset>
-      </bcf:fields>
-      <bcf:fields type="optional">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
         <bcf:field>addendum</bcf:field>
         <bcf:field>afterword</bcf:field>
         <bcf:field>annotator</bcf:field>
@@ -382,6 +383,14 @@
         <bcf:field>volume</bcf:field>
         <bcf:field>volumes</bcf:field>
       </bcf:fields>
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+        <bcf:field>title</bcf:field>
+        <bcf:fieldset>
+          <bcf:field>year</bcf:field>
+          <bcf:field>date</bcf:field>
+        </bcf:fieldset>
+      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
@@ -389,16 +398,12 @@
         <bcf:entrytype>bookinbook</bcf:entrytype>
         <bcf:entrytype>suppbook</bcf:entrytype>
       </bcf:entrytypes>
-      <bcf:fields type="mandatory">
+      <bcf:fields>
         <bcf:field>author</bcf:field>
         <bcf:field>title</bcf:field>
         <bcf:field>booktitle</bcf:field>
-        <bcf:fieldset>
-          <bcf:field>year</bcf:field>
-          <bcf:field>date</bcf:field>
-        </bcf:fieldset>
-      </bcf:fields>
-      <bcf:fields type="optional">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
         <bcf:field>addendum</bcf:field>
         <bcf:field>afterword</bcf:field>
         <bcf:field>annotator</bcf:field>
@@ -443,23 +448,26 @@
         <bcf:field>volume</bcf:field>
         <bcf:field>volumes</bcf:field>
       </bcf:fields>
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+        <bcf:field>title</bcf:field>
+        <bcf:field>booktitle</bcf:field>
+        <bcf:fieldset>
+          <bcf:field>year</bcf:field>
+          <bcf:field>date</bcf:field>
+        </bcf:fieldset>
+      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
         <bcf:entrytype>booklet</bcf:entrytype>
       </bcf:entrytypes>
-      <bcf:fields type="mandatory">
-        <bcf:fieldset>
-          <bcf:field>author</bcf:field>
-          <bcf:field>editor</bcf:field>
-        </bcf:fieldset>
+      <bcf:fields>
+        <bcf:field>author</bcf:field>
+        <bcf:field>editor</bcf:field>
         <bcf:field>title</bcf:field>
-        <bcf:fieldset>
-          <bcf:field>year</bcf:field>
-          <bcf:field>date</bcf:field>
-        </bcf:fieldset>
-      </bcf:fields>
-      <bcf:fields type="optional">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
         <bcf:field>addendum</bcf:field>
         <bcf:field>chapter</bcf:field>
         <bcf:field>doi</bcf:field>
@@ -479,21 +487,28 @@
         <bcf:field>url</bcf:field>
         <bcf:field>urldate</bcf:field>
       </bcf:fields>
+      <bcf:constraint type="mandatory">
+        <bcf:fieldset>
+          <bcf:field>author</bcf:field>
+          <bcf:field>editor</bcf:field>
+        </bcf:fieldset>
+        <bcf:field>title</bcf:field>
+        <bcf:fieldset>
+          <bcf:field>year</bcf:field>
+          <bcf:field>date</bcf:field>
+        </bcf:fieldset>
+      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
         <bcf:entrytype>collection</bcf:entrytype>
         <bcf:entrytype>reference</bcf:entrytype>
       </bcf:entrytypes>
-      <bcf:fields type="mandatory">
+      <bcf:fields>
         <bcf:field>editor</bcf:field>
         <bcf:field>title</bcf:field>
-        <bcf:fieldset>
-          <bcf:field>year</bcf:field>
-          <bcf:field>date</bcf:field>
-        </bcf:fieldset>
-      </bcf:fields>
-      <bcf:fields type="optional">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
         <bcf:field>addendum</bcf:field>
         <bcf:field>afterword</bcf:field>
         <bcf:field>annotator</bcf:field>
@@ -535,6 +550,14 @@
         <bcf:field>volume</bcf:field>
         <bcf:field>volumes</bcf:field>
       </bcf:fields>
+      <bcf:constraint type="mandatory">
+        <bcf:field>editor</bcf:field>
+        <bcf:field>title</bcf:field>
+        <bcf:fieldset>
+          <bcf:field>year</bcf:field>
+          <bcf:field>date</bcf:field>
+        </bcf:fieldset>
+      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
@@ -542,17 +565,13 @@
         <bcf:entrytype>suppcollection</bcf:entrytype>
         <bcf:entrytype>inreference</bcf:entrytype>
       </bcf:entrytypes>
-      <bcf:fields type="mandatory">
+      <bcf:fields>
         <bcf:field>author</bcf:field>
         <bcf:field>editor</bcf:field>
         <bcf:field>title</bcf:field>
         <bcf:field>booktitle</bcf:field>
-        <bcf:fieldset>
-          <bcf:field>year</bcf:field>
-          <bcf:field>date</bcf:field>
-        </bcf:fieldset>
-      </bcf:fields>
-      <bcf:fields type="optional">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
         <bcf:field>addendum</bcf:field>
         <bcf:field>afterword</bcf:field>
         <bcf:field>annotator</bcf:field>
@@ -595,19 +614,25 @@
         <bcf:field>volume</bcf:field>
         <bcf:field>volumes</bcf:field>
       </bcf:fields>
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+        <bcf:field>editor</bcf:field>
+        <bcf:field>title</bcf:field>
+        <bcf:field>booktitle</bcf:field>
+        <bcf:fieldset>
+          <bcf:field>year</bcf:field>
+          <bcf:field>date</bcf:field>
+        </bcf:fieldset>
+      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
         <bcf:entrytype>manual</bcf:entrytype>
       </bcf:entrytypes>
-      <bcf:fields type="mandatory">
+      <bcf:fields>
         <bcf:field>title</bcf:field>
-        <bcf:fieldset>
-          <bcf:field>year</bcf:field>
-          <bcf:field>date</bcf:field>
-        </bcf:fieldset>
-      </bcf:fields>
-      <bcf:fields type="optional">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
         <bcf:field>addendum</bcf:field>
         <bcf:field>author</bcf:field>
         <bcf:field>chapter</bcf:field>
@@ -635,19 +660,22 @@
         <bcf:field>urldate</bcf:field>
         <bcf:field>version</bcf:field>
       </bcf:fields>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
-        <bcf:entrytype>misc</bcf:entrytype>
-      </bcf:entrytypes>
-      <bcf:fields type="mandatory">
+      <bcf:constraint type="mandatory">
         <bcf:field>title</bcf:field>
         <bcf:fieldset>
           <bcf:field>year</bcf:field>
           <bcf:field>date</bcf:field>
         </bcf:fieldset>
-      </bcf:fields>
-      <bcf:fields type="optional">
+      </bcf:constraint>
+    </bcf:entryschema>
+    <bcf:entryschema>
+      <bcf:entrytypes>
+        <bcf:entrytype>misc</bcf:entrytype>
+      </bcf:entrytypes>
+      <bcf:fields>
+        <bcf:field>title</bcf:field>
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
         <bcf:field>addendum</bcf:field>
         <bcf:field>author</bcf:field>
         <bcf:field>doi</bcf:field>
@@ -669,7 +697,14 @@
         <bcf:field>urldate</bcf:field>
         <bcf:field>version</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
+      <bcf:constraint type="mandatory">
+        <bcf:field>title</bcf:field>
+        <bcf:fieldset>
+          <bcf:field>year</bcf:field>
+          <bcf:field>date</bcf:field>
+        </bcf:fieldset>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
     </bcf:entryschema>
@@ -677,11 +712,9 @@
       <bcf:entrytypes>
         <bcf:entrytype>online</bcf:entrytype>
       </bcf:entrytypes>
-      <bcf:fields type="mandatory">
+      <bcf:fields>
         <bcf:field>title</bcf:field>
         <bcf:field>url</bcf:field>
-      </bcf:fields>
-      <bcf:fields type="optional">
         <bcf:field>addendum</bcf:field>
         <bcf:field>author</bcf:field>
         <bcf:field>editor</bcf:field>
@@ -696,7 +729,11 @@
         <bcf:field>version</bcf:field>
         <bcf:field>year</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
+      <bcf:constraint type="mandatory">
+        <bcf:field>title</bcf:field>
+        <bcf:field>url</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
     </bcf:entryschema>
@@ -704,16 +741,12 @@
       <bcf:entrytypes>
         <bcf:entrytype>patent</bcf:entrytype>
       </bcf:entrytypes>
-      <bcf:fields type="mandatory">
+      <bcf:fields>
         <bcf:field>author</bcf:field>
         <bcf:field>title</bcf:field>
         <bcf:field>number</bcf:field>
-        <bcf:fieldset>
-          <bcf:field>year</bcf:field>
-          <bcf:field>date</bcf:field>
-        </bcf:fieldset>
-      </bcf:fields>
-      <bcf:fields type="optional">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
         <bcf:field>addendum</bcf:field>
         <bcf:field>doi</bcf:field>
         <bcf:field>eprint</bcf:field>
@@ -731,7 +764,16 @@
         <bcf:field>urldate</bcf:field>
         <bcf:field>version</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+        <bcf:field>title</bcf:field>
+        <bcf:field>number</bcf:field>
+        <bcf:fieldset>
+          <bcf:field>year</bcf:field>
+          <bcf:field>date</bcf:field>
+        </bcf:fieldset>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
     </bcf:entryschema>
@@ -739,15 +781,11 @@
       <bcf:entrytypes>
         <bcf:entrytype>periodical</bcf:entrytype>
       </bcf:entrytypes>
-      <bcf:fields type="mandatory">
+      <bcf:fields>
         <bcf:field>editor</bcf:field>
         <bcf:field>title</bcf:field>
-        <bcf:fieldset>
-          <bcf:field>year</bcf:field>
-          <bcf:field>date</bcf:field>
-        </bcf:fieldset>
-      </bcf:fields>
-      <bcf:fields type="optional">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
         <bcf:field>addendum</bcf:field>
         <bcf:field>doi</bcf:field>
         <bcf:field>editora</bcf:field>
@@ -774,7 +812,15 @@
         <bcf:field>urldate</bcf:field>
         <bcf:field>volume</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
+      <bcf:constraint type="mandatory">
+        <bcf:field>editor</bcf:field>
+        <bcf:field>title</bcf:field>
+        <bcf:fieldset>
+          <bcf:field>year</bcf:field>
+          <bcf:field>date</bcf:field>
+        </bcf:fieldset>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
     </bcf:entryschema>
@@ -782,15 +828,11 @@
       <bcf:entrytypes>
         <bcf:entrytype>proceedings</bcf:entrytype>
       </bcf:entrytypes>
-      <bcf:fields type="mandatory">
+      <bcf:fields>
         <bcf:field>editor</bcf:field>
         <bcf:field>title</bcf:field>
-        <bcf:fieldset>
-          <bcf:field>year</bcf:field>
-          <bcf:field>date</bcf:field>
-        </bcf:fieldset>
-      </bcf:fields>
-      <bcf:fields type="optional">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
         <bcf:field>addendum</bcf:field>
         <bcf:field>chapter</bcf:field>
         <bcf:field>doi</bcf:field>
@@ -823,22 +865,26 @@
         <bcf:field>volume</bcf:field>
         <bcf:field>volumes</bcf:field>
       </bcf:fields>
+      <bcf:constraint type="mandatory">
+        <bcf:field>editor</bcf:field>
+        <bcf:field>title</bcf:field>
+        <bcf:fieldset>
+          <bcf:field>year</bcf:field>
+          <bcf:field>date</bcf:field>
+        </bcf:fieldset>
+      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
         <bcf:entrytype>inproceedings</bcf:entrytype>
       </bcf:entrytypes>
-      <bcf:fields type="mandatory">
+      <bcf:fields>
         <bcf:field>author</bcf:field>
         <bcf:field>editor</bcf:field>
         <bcf:field>title</bcf:field>
         <bcf:field>booktitle</bcf:field>
-        <bcf:fieldset>
-          <bcf:field>year</bcf:field>
-          <bcf:field>date</bcf:field>
-        </bcf:fieldset>
-      </bcf:fields>
-      <bcf:fields type="optional">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
         <bcf:field>addendum</bcf:field>
         <bcf:field>booksubtitle</bcf:field>
         <bcf:field>booktitleaddon</bcf:field>
@@ -872,7 +918,17 @@
         <bcf:field>volume</bcf:field>
         <bcf:field>volumes</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+        <bcf:field>editor</bcf:field>
+        <bcf:field>title</bcf:field>
+        <bcf:field>booktitle</bcf:field>
+        <bcf:fieldset>
+          <bcf:field>year</bcf:field>
+          <bcf:field>date</bcf:field>
+        </bcf:fieldset>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
     </bcf:entryschema>
@@ -880,17 +936,13 @@
       <bcf:entrytypes>
         <bcf:entrytype>report</bcf:entrytype>
       </bcf:entrytypes>
-      <bcf:fields type="mandatory">
+      <bcf:fields>
         <bcf:field>author</bcf:field>
         <bcf:field>title</bcf:field>
         <bcf:field>type</bcf:field>
         <bcf:field>institution</bcf:field>
-        <bcf:fieldset>
-          <bcf:field>year</bcf:field>
-          <bcf:field>date</bcf:field>
-        </bcf:fieldset>
-      </bcf:fields>
-      <bcf:fields type="optional">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
         <bcf:field>addendum</bcf:field>
         <bcf:field>chapter</bcf:field>
         <bcf:field>doi</bcf:field>
@@ -912,15 +964,7 @@
         <bcf:field>urldate</bcf:field>
         <bcf:field>version</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
-        <bcf:field>month</bcf:field>
-      </bcf:constraint>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
-        <bcf:entrytype>thesis</bcf:entrytype>
-      </bcf:entrytypes>
-      <bcf:fields type="mandatory">
+      <bcf:constraint type="mandatory">
         <bcf:field>author</bcf:field>
         <bcf:field>title</bcf:field>
         <bcf:field>type</bcf:field>
@@ -929,8 +973,22 @@
           <bcf:field>year</bcf:field>
           <bcf:field>date</bcf:field>
         </bcf:fieldset>
-      </bcf:fields>
-      <bcf:fields type="optional">
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
+        <bcf:field>month</bcf:field>
+      </bcf:constraint>
+    </bcf:entryschema>
+    <bcf:entryschema>
+      <bcf:entrytypes>
+        <bcf:entrytype>thesis</bcf:entrytype>
+      </bcf:entrytypes>
+      <bcf:fields>
+        <bcf:field>author</bcf:field>
+        <bcf:field>title</bcf:field>
+        <bcf:field>type</bcf:field>
+        <bcf:field>institution</bcf:field>
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
         <bcf:field>addendum</bcf:field>
         <bcf:field>chapter</bcf:field>
         <bcf:field>doi</bcf:field>
@@ -949,7 +1007,17 @@
         <bcf:field>url</bcf:field>
         <bcf:field>urldate</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+        <bcf:field>title</bcf:field>
+        <bcf:field>type</bcf:field>
+        <bcf:field>institution</bcf:field>
+        <bcf:fieldset>
+          <bcf:field>year</bcf:field>
+          <bcf:field>date</bcf:field>
+        </bcf:fieldset>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
     </bcf:entryschema>
@@ -957,15 +1025,11 @@
       <bcf:entrytypes>
         <bcf:entrytype>unpublished</bcf:entrytype>
       </bcf:entrytypes>
-      <bcf:fields type="mandatory">
+      <bcf:fields>
         <bcf:field>author</bcf:field>
         <bcf:field>title</bcf:field>
-        <bcf:fieldset>
-          <bcf:field>year</bcf:field>
-          <bcf:field>date</bcf:field>
-        </bcf:fieldset>
-      </bcf:fields>
-      <bcf:fields type="optional">
+        <bcf:field>year</bcf:field>
+        <bcf:field>date</bcf:field>
         <bcf:field>addendum</bcf:field>
         <bcf:field>howpublished</bcf:field>
         <bcf:field>language</bcf:field>
@@ -978,7 +1042,15 @@
         <bcf:field>url</bcf:field>
         <bcf:field>urldate</bcf:field>
       </bcf:fields>
-      <bcf:constraint type="assertoric" datatype="integer" rangemin="1" rangemax="12">
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+        <bcf:field>title</bcf:field>
+        <bcf:fieldset>
+          <bcf:field>year</bcf:field>
+          <bcf:field>date</bcf:field>
+        </bcf:fieldset>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
     </bcf:entryschema>
