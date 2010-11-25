@@ -232,10 +232,10 @@ sub parse_ctrlfile {
       eval { $CFxmlschema->validate($CFxp) };
       if (ref($@)) {
         $logger->debug( $@->dump() );
-        $logger->logcroak("BibLaTeX control file \"$ctrl_file\" FAILED TO VALIDATE\n$@");
+        $logger->logcroak("BibLaTeX control file \"$ctrl_file\" failed to validate\n$@");
       }
       elsif ($@) {
-        $logger->logcroak("BibLaTeX control file \"$ctrl_file\" FAILED TO VALIDATE\n$@");
+        $logger->logcroak("BibLaTeX control file \"$ctrl_file\" failed to validate\n$@");
       }
       else {
         $logger->info("BibLaTeX control file \"$ctrl_file\" validates");
@@ -268,9 +268,11 @@ sub parse_ctrlfile {
                                                            qr/\Asort\z/,
                                                            qr/\Atype_pair\z/,
                                                            qr/\Ainherit\z/,
+                                                           qr/\Afieldset\z/,
+                                                           qr/\Afields\z/,
                                                            qr/\Afield\z/,
                                                            qr/\Aalias\z/,
-                                                           qr/\Aconstraints\z/,
+                                                           qr/\Aentryschema\z/,
                                                            qr/\Aconstraint\z/,
                                                            qr/\Aentrytype\z/,
                                                           ],
@@ -650,11 +652,24 @@ sub process_missing {
 
 sub process_setup {
 
-  # Pull out legal entrytypes for error checking later
+  # Pull out legal entrytypes and fields and make lookup hash for quick tests later
   my $leg_ents;
   foreach my $es (@{Biber::Config->getblxoption('structure')->{entryschema}}) {
+    my $lfs;
+    foreach my $ft (@{$es->{fields}}) {
+      # Fields
+      foreach my $f (@{$ft->{field}}) {
+        $lfs->{$f->{content}} = 1;
+      }
+      # XOR of fields (fieldset)
+      foreach my $fs (@{$ft->{fieldset}}) {
+        foreach my $f (@{$fs->{field}}) {
+          $lfs->{$f->{content}} = 1;
+        }
+      }
+    }
     foreach my $et (@{$es->{entrytypes}{entrytype}}) {
-      push @$leg_ents, $et->{content};
+      $leg_ents->{$et->{content}} = $lfs;
     }
   }
   Biber::Config->setdata('legal_entrytypes', $leg_ents);
@@ -691,7 +706,6 @@ sub process_aliases {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $bcaliases = Biber::Config->getdata('aliases');
-  my $legents = Biber::Config->getdata('legal_entrytypes');
 
   # We are looping over all bibentries for the section, not just cited
   # entries. We have to do this to process aliases in potential crossrefs
@@ -713,13 +727,6 @@ sub process_aliases {
       }
     }
 
-    # default entrytype to MISC type if not a known type
-    if (not first { $be->get_field('entrytype') eq $_ } @$legents ) {
-      $self->biber_warn($be, "Entry type '" . $be->get_field('entrytype') . "' for entry '$key' isn't a known biblatex type - defaulting to 'misc'");
-      $self->{warnings}++;
-      $be->set_field('entrytype', 'misc');
-    }
-
     # Field aliases
     while (my ($faliasn, $falias) = each %{$bcaliases->{field}}) {
       # Field which is an alias and has a value?
@@ -728,11 +735,11 @@ sub process_aliases {
         # If both a field and its alias is set, warn and delete alias field
         if ($be->get_field($freal)) {
           $self->biber_warn($be, "Field '$faliasn' is an alias for field '$freal' but both are defined in entry with key '$key' - skipping field '$faliasn'"); # Warn as that's wrong
-          $self->{warnings}++;
           $be->del_field($faliasn);
         }
         else {
-          $be->set_field($freal, $falias_value);
+          # datafield since aliases only apply to actual data fields from the data file
+          $be->set_datafield($freal, $falias_value);
           $be->del_field($faliasn);
         }
       }
@@ -814,9 +821,25 @@ sub process_structure {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+  my $legents = Biber::Config->getdata('legal_entrytypes');
 
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
+    my $et = $be->get_field('entrytype');
+
+    # default entrytype to MISC type if not a known type
+    unless ($legents->{$et}) {
+      $self->biber_warn($be, "Entry type '" . $be->get_field('entrytype') . "' for entry '$citekey' isn't a known biblatex type - defaulting to 'misc'");
+      $be->set_field('entrytype', 'misc');
+      $et = 'misc'; # reset this too
+    }
+
+    # Are all fields valid fields?
+    foreach my $ef ($be->datafields) {
+      unless ($legents->{$et}{$ef} or $legents->{$et}{ALL} or $legents->{ALL}{$ef}) {
+        $self->biber_warn($be, "Entry '$citekey' - invalid field '$ef' for entrytype '$et'");
+      }
+    }
 
     # Both DATE and YEAR specified
     if ($be->get_field('date') and $be->get_field('year')) {
@@ -965,22 +988,19 @@ sub postprocess_sets {
     }
 
     unless (@entrysetkeys) {
-      $logger->warn("No entryset found for entry $citekey of type 'set'");
-      $self->{warnings}++;
+      $self->biber_warn($be, "No entryset found for entry $citekey of type 'set'");
     }
     if ( $be->get_field('crossref')
       and ( $be->get_field('crossref') ne $entrysetkeys[0] ) ) {
-      $logger->warn( "Problem with entry $citekey :\n"
+      $self->biber_warn($be, "Problem with entry $citekey :\n"
           . "\tcrossref ("
           . $be->get_field('crossref')
           . ") should be identical to the first element of the entryset"
         );
-      $self->{warnings}++;
       $be->set_field('crossref', $entrysetkeys[0]);
     }
     elsif ( not $be->get_field('crossref') ) {
-      $logger->warn("Adding missing field 'crossref' to entry $citekey");
-      $self->{warnings}++;
+      $self->biber_warn($be, "Adding missing field 'crossref' to entry '$entrysetkeys[0]' for entry '$citekey'");
       $be->set_field('crossref', $entrysetkeys[0]);
     }
   }

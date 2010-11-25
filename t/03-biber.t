@@ -141,25 +141,12 @@ my $markey = q|  \entry{markey}{online}{}
     }
     \strng{namehash}{MN1}
     \strng{fullhash}{MN1}
-    \field{labelalpha}{Mar05}
+    \field{labelalpha}{Mar}
     \field{sortinit}{M}
-    \field{labelyear}{2005\bibdatedash 2006}
     \count{uniquename}{0}
     \true{singletitle}
-    \field{year}{2005}
-    \field{endyear}{2006}
-    \field{origyear}{2004}
-    \field{origendyear}{2004}
     \field{urlyear}{2006}
-    \field{month}{10}
-    \field{endmonth}{12}
-    \field{origmonth}{02}
-    \field{origendmonth}{10}
     \field{urlmonth}{10}
-    \field{day}{16}
-    \field{endday}{14}
-    \field{origday}{13}
-    \field{origendday}{11}
     \field{urlday}{01}
     \field{title}{Tame the BeaST}
     \field{subtitle}{The B to X of BibTeX}
@@ -201,7 +188,6 @@ my $jaffe = q|  \entry{jaffe}{collection}{}
     \field{edition}{2}
     \field{volumes}{2}
     \field{editoratype}{redactor}
-    \field{editoraclass}{vol}
   \endentry
 
 |;

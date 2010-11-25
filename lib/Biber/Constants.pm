@@ -231,8 +231,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                   '0000'       => {}}
                 ]
                ],
-   structure => 
-{
+   structure => {
   aliases => {
     alias => [
       {
@@ -274,8 +273,28 @@ our %CONFIG_DEFAULT_BIBLATEX =
         type => "field",
       },
       {
+        name => { content => "annote" },
+        realname => { content => "annotation" },
+        type => "field",
+      },
+      {
         name => { content => "archiveprefix" },
         realname => { content => "eprinttype" },
+        type => "field",
+      },
+      {
+        name => { content => "journal" },
+        realname => { content => "journaltitle" },
+        type => "field",
+      },
+      {
+        name => { content => "key" },
+        realname => { content => "sortkey" },
+        type => "field",
+      },
+      {
+        name => { content => "pdf" },
+        realname => { content => "file" },
         type => "field",
       },
       {
@@ -288,40 +307,86 @@ our %CONFIG_DEFAULT_BIBLATEX =
         realname => { content => "institution" },
         type => "field",
       },
-      {
-        name => { content => "annote" },
-        realname => { content => "annotation" },
-        type => "field",
-      },
-      {
-        name => { content => "key" },
-        realname => { content => "sortkey" },
-        type => "field",
-      },
     ],
   },
   entryschema => [
-    { entrytypes => { entrytype => [{ content => "artwork" }] } },
-    { entrytypes => { entrytype => [{ content => "audio" }] } },
-    { entrytypes => { entrytype => [{ content => "commentary" }] } },
-    { entrytypes => { entrytype => [{ content => "image" }] } },
-    { entrytypes => { entrytype => [{ content => "jurisdiction" }] } },
-    { entrytypes => { entrytype => [{ content => "legislation" }] } },
-    { entrytypes => { entrytype => [{ content => "legal" }] } },
-    { entrytypes => { entrytype => [{ content => "letter" }] } },
-    { entrytypes => { entrytype => [{ content => "movie" }] } },
-    { entrytypes => { entrytype => [{ content => "music" }] } },
-    { entrytypes => { entrytype => [{ content => "performance" }] } },
-    { entrytypes => { entrytype => [{ content => "review" }] } },
-    { entrytypes => { entrytype => [{ content => "software" }] } },
-    { entrytypes => { entrytype => [{ content => "standard" }] } },
-    { entrytypes => { entrytype => [{ content => "video" }] } },
-    { entrytypes => { entrytype => [{ content => "customa" }] } },
-    { entrytypes => { entrytype => [{ content => "customb" }] } },
-    { entrytypes => { entrytype => [{ content => "customc" }] } },
-    { entrytypes => { entrytype => [{ content => "customd" }] } },
-    { entrytypes => { entrytype => [{ content => "custome" }] } },
-    { entrytypes => { entrytype => [{ content => "customf" }] } },
+    {
+      entrytypes => { entrytype => [{ content => "ALL" }] },
+      fields => [
+        {
+          field => [
+                     { content => "abstract" },
+                     { content => "annotation" },
+                     { content => "authortype" },
+                     { content => "bookpagination" },
+                     { content => "crossref" },
+                     { content => "entryset" },
+                     { content => "entrysubtype" },
+                     { content => "execute" },
+                     { content => "file" },
+                     { content => "gender" },
+                     { content => "hyphenation" },
+                     { content => "indextitle" },
+                     { content => "indexsorttitle" },
+                     { content => "isan" },
+                     { content => "ismn" },
+                     { content => "iswc" },
+                     { content => "keywords" },
+                     { content => "label" },
+                     { content => "library" },
+                     { content => "nameaddon" },
+                     { content => "options" },
+                     { content => "origdate" },
+                     { content => "origlocation" },
+                     { content => "origpublisher" },
+                     { content => "origtitle" },
+                     { content => "pagination" },
+                     { content => "presort" },
+                     { content => "reprinttitle" },
+                     { content => "shortauthor" },
+                     { content => "shorteditor" },
+                     { content => "shorthand" },
+                     { content => "shorthandintro" },
+                     { content => "shortjournal" },
+                     { content => "shortseries" },
+                     { content => "shorttitle" },
+                     { content => "sortkey" },
+                     { content => "sortname" },
+                     { content => "sorttitle" },
+                     { content => "sortyear" },
+                     { content => "xref" },
+                   ],
+          type  => "optional",
+        },
+      ],
+    },
+    {
+      entrytypes => {
+        entrytype => [
+          { content => "artwork" },
+          { content => "audio" },
+          { content => "commentary" },
+          { content => "image" },
+          { content => "jurisdiction" },
+          { content => "legislation" },
+          { content => "legal" },
+          { content => "letter" },
+          { content => "movie" },
+          { content => "music" },
+          { content => "performance" },
+          { content => "review" },
+          { content => "software" },
+          { content => "standard" },
+          { content => "video" },
+          { content => "customa" },
+          { content => "customb" },
+          { content => "customc" },
+          { content => "customd" },
+          { content => "custome" },
+          { content => "customf" },
+        ],
+      },
+    },
     {
       constraint => [
                       {
@@ -331,10 +396,16 @@ our %CONFIG_DEFAULT_BIBLATEX =
                       },
                     ],
       entrytypes => { entrytype => [{ content => "set" }] },
-      fields     => {
-                      field => [{ content => "entryset" }, { content => "crossref" }],
-                      type  => "mandatory",
-                    },
+      fields     => [
+                      {
+                        field => [{ content => "entryset" }, { content => "crossref" }],
+                        type  => "mandatory",
+                      },
+                      {
+                        field => [{ content => "ALL" } ],
+                        type  => "optional",
+                      },
+                    ],
     },
     {
       constraint => [
@@ -359,7 +430,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                           { content => "journaltitle" },
                           { content => "title" },
                         ],
-                        fieldset => { field => [{ content => "year" }, { content => "date" }] },
+                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
                         type => "mandatory",
                       },
                       {
@@ -372,6 +443,9 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                    { content => "editora" },
                                    { content => "editorb" },
                                    { content => "editorc" },
+                                   { content => "editoratype" },
+                                   { content => "editorbtype" },
+                                   { content => "editorctype" },
                                    { content => "eid" },
                                    { content => "eprint" },
                                    { content => "eprintclass" },
@@ -413,7 +487,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
       fields     => [
                       {
                         field => [{ content => "author" }, { content => "title" }],
-                        fieldset => { field => [{ content => "year" }, { content => "date" }] },
+                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
                         type => "mandatory",
                       },
                       {
@@ -429,6 +503,9 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                    { content => "editora" },
                                    { content => "editorb" },
                                    { content => "editorc" },
+                                   { content => "editoratype" },
+                                   { content => "editorbtype" },
+                                   { content => "editorctype" },
                                    { content => "eprint" },
                                    { content => "eprintclass" },
                                    { content => "eprinttype" },
@@ -483,7 +560,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                           { content => "title" },
                           { content => "booktitle" },
                         ],
-                        fieldset => { field => [{ content => "year" }, { content => "date" }] },
+                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
                         type => "mandatory",
                       },
                       {
@@ -502,6 +579,9 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                    { content => "editora" },
                                    { content => "editorb" },
                                    { content => "editorc" },
+                                   { content => "editoratype" },
+                                   { content => "editorbtype" },
+                                   { content => "editorctype" },
                                    { content => "eprint" },
                                    { content => "eprintclass" },
                                    { content => "eprinttype" },
@@ -590,7 +670,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
       fields     => [
                       {
                         field => [{ content => "editor" }, { content => "title" }],
-                        fieldset => { field => [{ content => "year" }, { content => "date" }] },
+                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
                         type => "mandatory",
                       },
                       {
@@ -605,6 +685,9 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                    { content => "editora" },
                                    { content => "editorb" },
                                    { content => "editorc" },
+                                   { content => "editoratype" },
+                                   { content => "editorbtype" },
+                                   { content => "editorctype" },
                                    { content => "eprint" },
                                    { content => "eprintclass" },
                                    { content => "eprinttype" },
@@ -660,7 +743,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                           { content => "title" },
                           { content => "booktitle" },
                         ],
-                        fieldset => { field => [{ content => "year" }, { content => "date" }] },
+                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
                         type => "mandatory",
                       },
                       {
@@ -677,6 +760,9 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                    { content => "editora" },
                                    { content => "editorb" },
                                    { content => "editorc" },
+                                   { content => "editoratype" },
+                                   { content => "editorbtype" },
+                                   { content => "editorctype" },
                                    { content => "eprint" },
                                    { content => "eprintclass" },
                                    { content => "eprinttype" },
@@ -720,7 +806,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
       fields     => [
                       {
                         field => [{ content => "title" }],
-                        fieldset => { field => [{ content => "year" }, { content => "date" }] },
+                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
                         type => "mandatory",
                       },
                       {
@@ -775,7 +861,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
       fields     => [
                       {
                         field => [{ content => "title" }],
-                        fieldset => { field => [{ content => "year" }, { content => "date" }] },
+                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
                         type => "mandatory",
                       },
                       {
@@ -869,7 +955,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                           { content => "title" },
                           { content => "number" },
                         ],
-                        fieldset => { field => [{ content => "year" }, { content => "date" }] },
+                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
                         type => "mandatory",
                       },
                       {
@@ -914,7 +1000,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
       fields     => [
                       {
                         field => [{ content => "editor" }, { content => "title" }],
-                        fieldset => { field => [{ content => "year" }, { content => "date" }] },
+                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
                         type => "mandatory",
                       },
                       {
@@ -924,6 +1010,9 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                    { content => "editora" },
                                    { content => "editorb" },
                                    { content => "editorc" },
+                                   { content => "editoratype" },
+                                   { content => "editorbtype" },
+                                   { content => "editorctype" },
                                    { content => "eprint" },
                                    { content => "eprintclass" },
                                    { content => "eprinttype" },
@@ -958,7 +1047,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
       fields     => [
                       {
                         field => [{ content => "editor" }, { content => "title" }],
-                        fieldset => { field => [{ content => "year" }, { content => "date" }] },
+                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
                         type => "mandatory",
                       },
                       {
@@ -1023,7 +1112,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                           { content => "title" },
                           { content => "booktitle" },
                         ],
-                        fieldset => { field => [{ content => "year" }, { content => "date" }] },
+                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
                         type => "mandatory",
                       },
                       {
@@ -1089,7 +1178,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                           { content => "type" },
                           { content => "institution" },
                         ],
-                        fieldset => { field => [{ content => "year" }, { content => "date" }] },
+                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
                         type => "mandatory",
                       },
                       {
@@ -1143,7 +1232,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                           { content => "type" },
                           { content => "institution" },
                         ],
-                        fieldset => { field => [{ content => "year" }, { content => "date" }] },
+                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
                         type => "mandatory",
                       },
                       {
@@ -1189,7 +1278,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
       fields     => [
                       {
                         field => [{ content => "author" }, { content => "title" }],
-                        fieldset => { field => [{ content => "year" }, { content => "date" }] },
+                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
                         type => "mandatory",
                       },
                       {

@@ -28,8 +28,10 @@ $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 
-my $w1 = ["Entry type 'thing' for entry 'alias2' isn't a known biblatex type - defaulting to 'misc'",
-          "Field 'school' is an alias for field 'institution' but both are defined in entry with key 'alias2' - skipping field 'school'"];
+my $w1 = ["Field 'school' is an alias for field 'institution' but both are defined in entry with key 'alias2' - skipping field 'school'",
+          "Entry type 'thing' for entry 'alias2' isn't a known biblatex type - defaulting to 'misc'",
+          "Entry 'alias2' - invalid field 'institution' for entrytype 'misc'"
+];
 
 is($bibentries->entry('alias1')->get_field('entrytype'), 'thesis', 'Alias - 1' );
 is($bibentries->entry('alias1')->get_field('type'), 'phdthesis', 'Alias - 2' );

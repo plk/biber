@@ -127,7 +127,7 @@ my $sc3 = q|  \entry{L4}{book}{}
 
 |;
 
-my $sc4 = q|  \entry{L1}{article}{}
+my $sc4 = q|  \entry{L1}{book}{}
     \name{author}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
@@ -148,7 +148,7 @@ my $sc4 = q|  \entry{L1}{article}{}
 
 |;
 
-my $sc5 = q|  \entry{L2}{article}{}
+my $sc5 = q|  \entry{L2}{book}{}
     \name{author}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
@@ -169,7 +169,7 @@ my $sc5 = q|  \entry{L2}{article}{}
 
 |;
 
-my $sc6 = q|  \entry{L3}{article}{}
+my $sc6 = q|  \entry{L3}{book}{}
     \name{author}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }

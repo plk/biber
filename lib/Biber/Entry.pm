@@ -41,6 +41,23 @@ sub notnull {
   return $#arr > -1 ? 1 : 0;
 }
 
+=head2 set_datafield
+
+    Set a field which is in the bib data file
+
+=cut
+
+sub set_datafield {
+  my $self = shift;
+  my ($key, $val) = @_;
+  # Only set fields which are either not null or are ok to be null
+  if ( first { $key eq $_ } @NULL_OK or is_notnull($val)) {
+    $self->{datakeys}{$key} = $val;
+  }
+  return;
+}
+
+
 =head2 set_field
 
     Set a field for a Biber::Entry object
@@ -52,7 +69,7 @@ sub set_field {
   my ($key, $val) = @_;
   # Only set fields which are either not null or are ok to be null
   if ( first { $key eq $_ } @NULL_OK or is_notnull($val)) {
-    $self->{$key} = $val;
+    $self->{extrakeys}{$key} = $val;
   }
   return;
 }
@@ -66,8 +83,22 @@ sub set_field {
 sub get_field {
   my $self = shift;
   my $key = shift;
-  return $self->{$key};
+  return $self->{datakeys}{$key} if $self->{datakeys}{$key};
+  return $self->{extrakeys}{$key} if $self->{extrakeys}{$key};
 }
+
+=head2 get_datafield
+
+    Get a field that was in the original data file
+
+=cut
+
+sub get_datafield {
+  my $self = shift;
+  my $key = shift;
+  return $self->{datakeys}{$key};
+}
+
 
 =head2 del_field
 
@@ -78,7 +109,8 @@ sub get_field {
 sub del_field {
   my $self = shift;
   my $key = shift;
-  delete $self->{$key};
+  delete $self->{datakeys}{$key};
+  delete $self->{extrakeys}{$key};
   return;
 }
 
@@ -91,19 +123,34 @@ sub del_field {
 sub field_exists {
   my $self = shift;
   my $key = shift;
-  return exists $self->{$key} ? 1 : 0;
+  return (exists($self->{datakeys}{$key}) or exists($self->{extrakeys}{$key})) ? 1 : 0;
+}
+
+=head2 datafields
+
+    Returns a sorted array of the fields which came from the bib data file
+
+=cut
+
+sub datafields {
+  my $self = shift;
+  use locale;
+  return sort keys %{$self->{datakeys}};
 }
 
 =head2 fields
 
-    Returns a sorted array of the Biber::Entry object fields
+    Returns a sorted array of all field names, including ones
+    added during processing which are not necessarily fields
+    which came from the data file
 
 =cut
 
 sub fields {
   my $self = shift;
   use locale;
-  return sort keys %$self;
+  my %keys = (%{$self->{extrakeys}}, %{$self->{datakeys}});
+  return sort keys %keys;
 }
 
 =head2 add_warning
@@ -115,7 +162,7 @@ sub fields {
 sub add_warning {
   my $self = shift;
   my $warning = shift;
-  push @{$self->{'warnings'}}, $warning;
+  push @{$self->{extrakeys}{'warnings'}}, $warning;
   return;
 }
 
@@ -168,7 +215,7 @@ sub inherit_from {
           # Set the field if null or override is requested
           elsif (not $self->get_field($field->{target}) or
                  $field_override_target eq 'yes') {
-            $self->set_field($field->{target}, $parent->get_field($field->{source}));
+            $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
           }
         }
       }
@@ -181,7 +228,7 @@ sub inherit_from {
       next if $processed{$field}; # Skip if we already dealt with this field above
       # Set the field if null or override is requested
       if (not $self->get_field($field) or $override_target eq 'yes') {
-        $self->set_field($field, $parent->get_field($field));
+        $self->set_datafield($field, $parent->get_field($field));
       }
     }
   }

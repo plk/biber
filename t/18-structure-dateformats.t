@@ -108,8 +108,8 @@ my $l15 = q|  \entry{L15}{book}{}
 
 |;
 
-my $l16 = q|  \entry{L16}{book}{}
-    \name{author}{2}{%
+my $l16 = q|  \entry{L16}{proceedings}{}
+    \name{editor}{2}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
       {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
     }
@@ -129,8 +129,8 @@ my $l16 = q|  \entry{L16}{book}{}
 
 |;
 
-my $l17 = q|  \entry{L17}{book}{}
-    \name{author}{2}{%
+my $l17 = q|  \entry{L17}{proceedings}{}
+    \name{editor}{2}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
       {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
     }
@@ -165,8 +165,8 @@ my $l17 = q|  \entry{L17}{book}{}
 
 |;
 
-my $l17c = q|  \entry{L17}{book}{}
-    \name{author}{2}{%
+my $l17c = q|  \entry{L17}{proceedings}{}
+    \name{editor}{2}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
       {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
     }
@@ -200,8 +200,8 @@ my $l17c = q|  \entry{L17}{book}{}
 
 |;
 
-my $l17e = q|  \entry{L17}{book}{}
-    \name{author}{2}{%
+my $l17e = q|  \entry{L17}{proceedings}{}
+    \name{editor}{2}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
       {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
     }
@@ -285,7 +285,7 @@ is($bibentries->entry('l17')->get_field('labelyearname'), 'origyear', 'Date form
 is($out->get_output_entry('l17'), $l17c, 'Date format test 17c - labelyear = ORIGYEAR value when ENDORIGYEAR is the same and YEAR is also present' ) ;
 
 # reset options and regenerate information
-Biber::Config->setblxoption('labelyear', [ 'eventyear', 'year', 'origyear' ], 'PER_TYPE', 'book');
+Biber::Config->setblxoption('labelyear', [ 'eventyear', 'year', 'origyear' ], 'PER_TYPE', 'proceedings');
 $bibentries->entry('l17')->del_field('year');
 $bibentries->entry('l17')->del_field('month');
 $biber->prepare;

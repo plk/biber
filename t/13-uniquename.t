@@ -28,7 +28,7 @@ $biber->prepare;
 my $out = $biber->get_output_obj;
 my $bibentries = $biber->sections->get_section(0)->bibentries;
 
-my $un1 = q|  \entry{un1}{article}{}
+my $un1 = q|  \entry{un1}{book}{}
     \name{author}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
@@ -50,7 +50,7 @@ my $un1 = q|  \entry{un1}{article}{}
 
 |;
 
-my $un2 = q|  \entry{un2}{article}{}
+my $un2 = q|  \entry{un2}{book}{}
     \name{author}{1}{%
       {{Doe}{D.}{Edward}{E.}{}{}{}{}}%
     }
@@ -72,7 +72,7 @@ my $un2 = q|  \entry{un2}{article}{}
 
 |;
 
-my $un3 = q|  \entry{un3}{article}{}
+my $un3 = q|  \entry{un3}{book}{}
     \name{author}{1}{%
       {{Doe}{D.}{Jane}{J.}{}{}{}{}}%
     }
@@ -94,7 +94,7 @@ my $un3 = q|  \entry{un3}{article}{}
 
 |;
 
-my $un4 = q|  \entry{un4}{article}{}
+my $un4 = q|  \entry{un4}{book}{}
     \name{author}{2}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
       {{Mills}{M.}{Mike}{M.}{}{}{}{}}%
@@ -117,7 +117,7 @@ my $un4 = q|  \entry{un4}{article}{}
 
 |;
 
-my $un5 = q|  \entry{un5}{article}{}
+my $un5 = q|  \entry{un5}{book}{}
     \name{author}{2}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
       {{Mills}{M.}{Mike}{M.}{}{}{}{}}%

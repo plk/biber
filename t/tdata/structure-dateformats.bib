@@ -1,9 +1,8 @@
 % WRONG - ORIGDATE is mistyped, URLDATE is just wrong
 % YEAR is messy and should be done by DATE but isn't wrong as such
-@BOOK{L1,
+@ARTICLE{L1,
   AUTHOR	    = {John Doe},
   TITLE		    = {Title 1},
-  PUBLISHER	  = {Oxford},
   YEAR		    = {1995--1996},
   MONTH       = {14},
   ORIGDATE    = {1985-1030},
@@ -52,33 +51,32 @@
 }
 
 % WRONG - day out of bounds
-@BOOK{L7,
-  AUTHOR	    = {John Doe and Albert Abrahams},
+@PROCEEDINGS{L7,
+  EDITOR	    = {John Doe and Albert Abrahams},
   TITLE		    = {Title 2},
   PUBLISHER	  = {Oxford},
   EVENTDATE	  = {1996-10-35},
 }
 
 % WRONG - MONTH not integer
-@BOOK{L8,
+@ARTICLE{L8,
   AUTHOR	    = {Bill Shakespeare},
   TITLE		    = {Works},
-  PUBLISHER	  = {Oxford},
   YEAR		    = {1985a},
   MONTH       = {january}
 }
 
 % OK
-@BOOK{L9,
-  AUTHOR	    = {John Doe and Albert Abrahams},
+@PROCEEDINGS{L9,
+  EDITOR	    = {John Doe and Albert Abrahams},
   TITLE		    = {Title 2},
   PUBLISHER	  = {Oxford},
   EVENTDATE	  = {1996-12-31},
 }
 
 % OK
-@BOOK{L10,
-  AUTHOR	    = {John Doe and Albert Abrahams},
+@PROCEEDINGS{L10,
+  EDITOR	    = {John Doe and Albert Abrahams},
   TITLE		    = {Title 2},
   PUBLISHER	  = {Oxford},
   EVENTDATE	  = {1996-01-01},
@@ -94,10 +92,9 @@
 }
 
 % WRONG - DATE and MONTH specified
-@BOOK{L12,
+@ARTICLE{L12,
   AUTHOR	    = {John Doe and Albert Abrahams},
   TITLE		    = {Title 2},
-  PUBLISHER	  = {Oxford},
   DATE   	    = {1996-01-01},
   MONTH       = {02},
 }
@@ -126,16 +123,16 @@
 }
 
 % OK
-@BOOK{L16,
-  AUTHOR	    = {John Doe and Albert Abrahams},
+@PROCEEDINGS{L16,
+  EDITOR	    = {John Doe and Albert Abrahams},
   TITLE		    = {Title 2},
   PUBLISHER	  = {Oxford},
   EVENTDATE	  = {1996-01-01},
 }
 
 % OK - YEAR same as ENDYEAR, labelyear should only have YEAR
-@BOOK{L17,
-  AUTHOR	    = {John Doe and Albert Abrahams},
+@PROCEEDINGS{L17,
+  EDITOR	    = {John Doe and Albert Abrahams},
   TITLE		    = {Title 2},
   PUBLISHER	  = {Oxford},
   DATE	      = {1996-12-10/1996-12-12},

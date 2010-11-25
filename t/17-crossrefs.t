@@ -78,6 +78,7 @@ my $cr2 = q|  \entry{cr2}{inbook}{}
     \field{booktitle}{Graphs of the Continent}
     \strng{crossref}{crm}
     \warn{\item Field 'school' is an alias for field 'institution' but both are defined in entry with key 'cr2' - skipping field 'school'}
+    \warn{\item Entry 'cr2' - invalid field 'institution' for entrytype 'inbook'}
   \endentry
 
 |;

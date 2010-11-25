@@ -346,7 +346,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
         next unless $entry->exists($f);
         my $value = decode_utf8($entry->get($f));
 
-        $bibentry->set_field($f, $value);
+        $bibentry->set_datafield($f, $value);
 
         # We have to process local options as early as possible in order
         # to make them available for things that need them like parsename()
@@ -362,7 +362,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
         }
       }
 
-      # Set entrytype. This may be changed later in process_structure
+      # Set entrytype. This may be changed later in process_aliases
       $bibentry->set_field('entrytype', $entry->type);
 
       foreach my $f ( @ENTRIESTOSPLIT ) {
@@ -398,14 +398,14 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
 
             $names->add_element(parsename($name, {useprefix => $useprefix}));
           }
-          $bibentry->set_field($f, $names);
+          $bibentry->set_datafield($f, $names);
 
         }
         else {
           # Name fields are decoded during parsing, others here
           @tmp = map { decode_utf8($_) } @tmp;
           @tmp = map { remove_outer($_) } @tmp;
-          $bibentry->set_field($f, [ @tmp ]);
+          $bibentry->set_datafield($f, [ @tmp ]);
         }
       }
 

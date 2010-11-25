@@ -161,8 +161,24 @@
         <bcf:realname>location</bcf:realname>
       </bcf:alias>
       <bcf:alias type="field">
+        <bcf:name>annote</bcf:name>
+        <bcf:realname>annotation</bcf:realname>
+      </bcf:alias>
+      <bcf:alias type="field">
         <bcf:name>archiveprefix</bcf:name>
         <bcf:realname>eprinttype</bcf:realname>
+      </bcf:alias>
+      <bcf:alias type="field">
+        <bcf:name>journal</bcf:name>
+        <bcf:realname>journaltitle</bcf:realname>
+      </bcf:alias>
+      <bcf:alias type="field">
+        <bcf:name>key</bcf:name>
+        <bcf:realname>sortkey</bcf:realname>
+      </bcf:alias>
+      <bcf:alias type="field">
+        <bcf:name>pdf</bcf:name>
+        <bcf:realname>file</bcf:realname>
       </bcf:alias>
       <bcf:alias type="field">
         <bcf:name>primaryclass</bcf:name>
@@ -172,117 +188,76 @@
         <bcf:name>school</bcf:name>
         <bcf:realname>institution</bcf:realname>
       </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>annote</bcf:name>
-        <bcf:realname>annotation</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>key</bcf:name>
-        <bcf:realname>sortkey</bcf:realname>
-      </bcf:alias>
     </bcf:aliases>
     <bcf:entryschema>
       <bcf:entrytypes>
+        <bcf:entrytype>ALL</bcf:entrytype>
+      </bcf:entrytypes>
+      <bcf:fields type="optional">
+        <bcf:field>abstract</bcf:field>
+        <bcf:field>annotation</bcf:field>
+        <bcf:field>authortype</bcf:field>
+        <bcf:field>bookpagination</bcf:field>
+        <bcf:field>crossref</bcf:field>
+        <bcf:field>entryset</bcf:field>
+        <bcf:field>entrysubtype</bcf:field>
+        <bcf:field>execute</bcf:field>
+        <bcf:field>file</bcf:field>
+        <bcf:field>gender</bcf:field>
+        <bcf:field>hyphenation</bcf:field>
+        <bcf:field>indextitle</bcf:field>
+        <bcf:field>indexsorttitle</bcf:field>
+        <bcf:field>isan</bcf:field>
+        <bcf:field>ismn</bcf:field>
+        <bcf:field>iswc</bcf:field>
+        <bcf:field>keywords</bcf:field>
+        <bcf:field>label</bcf:field>
+        <bcf:field>library</bcf:field>
+        <bcf:field>nameaddon</bcf:field>
+        <bcf:field>options</bcf:field>
+        <bcf:field>origdate</bcf:field>
+        <bcf:field>origlocation</bcf:field>
+        <bcf:field>origpublisher</bcf:field>
+        <bcf:field>origtitle</bcf:field>
+        <bcf:field>pagination</bcf:field>
+        <bcf:field>presort</bcf:field>
+        <bcf:field>reprinttitle</bcf:field>
+        <bcf:field>shortauthor</bcf:field>
+        <bcf:field>shorteditor</bcf:field>
+        <bcf:field>shorthand</bcf:field>
+        <bcf:field>shorthandintro</bcf:field>
+        <bcf:field>shortjournal</bcf:field>
+        <bcf:field>shortseries</bcf:field>
+        <bcf:field>shorttitle</bcf:field>
+        <bcf:field>sortkey</bcf:field>
+        <bcf:field>sortname</bcf:field>
+        <bcf:field>sorttitle</bcf:field>
+        <bcf:field>sortyear</bcf:field>
+        <bcf:field>xref</bcf:field>
+      </bcf:fields>
+    </bcf:entryschema>
+    <bcf:entryschema>
+      <bcf:entrytypes>
         <bcf:entrytype>artwork</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>audio</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>commentary</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>image</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>jurisdiction</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>legislation</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>legal</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>letter</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>movie</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>music</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>performance</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>review</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>software</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>standard</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>video</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>customa</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>customb</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>customc</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>customd</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>custome</bcf:entrytype>
-      </bcf:entrytypes>
-    </bcf:entryschema>
-    <bcf:entryschema>
-      <bcf:entrytypes>
         <bcf:entrytype>customf</bcf:entrytype>
       </bcf:entrytypes>
     </bcf:entryschema>
@@ -293,6 +268,9 @@
       <bcf:fields type="mandatory">
         <bcf:field>entryset</bcf:field>
         <bcf:field>crossref</bcf:field>
+      </bcf:fields>
+      <bcf:fields type="optional">
+        <bcf:field>ALL</bcf:field>
       </bcf:fields>
       <bcf:constraint type="conditional">
         <bcf:antecedent quant="all">
@@ -325,6 +303,9 @@
         <bcf:field>editora</bcf:field>
         <bcf:field>editorb</bcf:field>
         <bcf:field>editorc</bcf:field>
+        <bcf:field>editoratype</bcf:field>
+        <bcf:field>editorbtype</bcf:field>
+        <bcf:field>editorctype</bcf:field>
         <bcf:field>eid</bcf:field>
         <bcf:field>eprint</bcf:field>
         <bcf:field>eprintclass</bcf:field>
@@ -386,6 +367,9 @@
         <bcf:field>editora</bcf:field>
         <bcf:field>editorb</bcf:field>
         <bcf:field>editorc</bcf:field>
+        <bcf:field>editoratype</bcf:field>
+        <bcf:field>editorbtype</bcf:field>
+        <bcf:field>editorctype</bcf:field>
         <bcf:field>eprint</bcf:field>
         <bcf:field>eprintclass</bcf:field>
         <bcf:field>eprinttype</bcf:field>
@@ -453,6 +437,9 @@
         <bcf:field>editora</bcf:field>
         <bcf:field>editorb</bcf:field>
         <bcf:field>editorc</bcf:field>
+        <bcf:field>editoratype</bcf:field>
+        <bcf:field>editorbtype</bcf:field>
+        <bcf:field>editorctype</bcf:field>
         <bcf:field>eprint</bcf:field>
         <bcf:field>eprintclass</bcf:field>
         <bcf:field>eprinttype</bcf:field>
@@ -557,6 +544,9 @@
         <bcf:field>editora</bcf:field>
         <bcf:field>editorb</bcf:field>
         <bcf:field>editorc</bcf:field>
+        <bcf:field>editoratype</bcf:field>
+        <bcf:field>editorbtype</bcf:field>
+        <bcf:field>editorctype</bcf:field>
         <bcf:field>eprint</bcf:field>
         <bcf:field>eprintclass</bcf:field>
         <bcf:field>eprinttype</bcf:field>
@@ -623,6 +613,9 @@
         <bcf:field>editora</bcf:field>
         <bcf:field>editorb</bcf:field>
         <bcf:field>editorc</bcf:field>
+        <bcf:field>editoratype</bcf:field>
+        <bcf:field>editorbtype</bcf:field>
+        <bcf:field>editorctype</bcf:field>
         <bcf:field>eprint</bcf:field>
         <bcf:field>eprintclass</bcf:field>
         <bcf:field>eprinttype</bcf:field>
@@ -848,6 +841,9 @@
         <bcf:field>editora</bcf:field>
         <bcf:field>editorb</bcf:field>
         <bcf:field>editorc</bcf:field>
+        <bcf:field>editoratype</bcf:field>
+        <bcf:field>editorbtype</bcf:field>
+        <bcf:field>editorctype</bcf:field>
         <bcf:field>eprint</bcf:field>
         <bcf:field>eprintclass</bcf:field>
         <bcf:field>eprinttype</bcf:field>
