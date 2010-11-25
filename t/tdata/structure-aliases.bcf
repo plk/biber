@@ -323,10 +323,10 @@
         <bcf:field>author</bcf:field>
         <bcf:field>journaltitle</bcf:field>
         <bcf:field>title</bcf:field>
-        <bcf:fieldset>
+        <bcf:fieldxor coerce="date">
           <bcf:field>year</bcf:field>
           <bcf:field>date</bcf:field>
-        </bcf:fieldset>
+        </bcf:fieldxor>
       </bcf:constraint>
       <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
@@ -386,10 +386,10 @@
       <bcf:constraint type="mandatory">
         <bcf:field>author</bcf:field>
         <bcf:field>title</bcf:field>
-        <bcf:fieldset>
+        <bcf:fieldxor coerce="date">
           <bcf:field>year</bcf:field>
           <bcf:field>date</bcf:field>
-        </bcf:fieldset>
+        </bcf:fieldxor>
       </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
@@ -452,10 +452,10 @@
         <bcf:field>author</bcf:field>
         <bcf:field>title</bcf:field>
         <bcf:field>booktitle</bcf:field>
-        <bcf:fieldset>
+        <bcf:fieldxor coerce="date">
           <bcf:field>year</bcf:field>
           <bcf:field>date</bcf:field>
-        </bcf:fieldset>
+        </bcf:fieldxor>
       </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
@@ -488,15 +488,15 @@
         <bcf:field>urldate</bcf:field>
       </bcf:fields>
       <bcf:constraint type="mandatory">
-        <bcf:fieldset>
+        <bcf:fieldor>
           <bcf:field>author</bcf:field>
           <bcf:field>editor</bcf:field>
-        </bcf:fieldset>
+        </bcf:fieldor>
         <bcf:field>title</bcf:field>
-        <bcf:fieldset>
+        <bcf:fieldxor coerce="date">
           <bcf:field>year</bcf:field>
           <bcf:field>date</bcf:field>
-        </bcf:fieldset>
+        </bcf:fieldxor>
       </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
@@ -553,10 +553,10 @@
       <bcf:constraint type="mandatory">
         <bcf:field>editor</bcf:field>
         <bcf:field>title</bcf:field>
-        <bcf:fieldset>
+        <bcf:fieldxor coerce="date">
           <bcf:field>year</bcf:field>
           <bcf:field>date</bcf:field>
-        </bcf:fieldset>
+        </bcf:fieldxor>
       </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
@@ -619,10 +619,10 @@
         <bcf:field>editor</bcf:field>
         <bcf:field>title</bcf:field>
         <bcf:field>booktitle</bcf:field>
-        <bcf:fieldset>
+        <bcf:fieldxor coerce="date">
           <bcf:field>year</bcf:field>
           <bcf:field>date</bcf:field>
-        </bcf:fieldset>
+        </bcf:fieldxor>
       </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
@@ -662,10 +662,10 @@
       </bcf:fields>
       <bcf:constraint type="mandatory">
         <bcf:field>title</bcf:field>
-        <bcf:fieldset>
+        <bcf:fieldxor coerce="date">
           <bcf:field>year</bcf:field>
           <bcf:field>date</bcf:field>
-        </bcf:fieldset>
+        </bcf:fieldxor>
       </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
@@ -699,10 +699,10 @@
       </bcf:fields>
       <bcf:constraint type="mandatory">
         <bcf:field>title</bcf:field>
-        <bcf:fieldset>
+        <bcf:fieldxor coerce="date">
           <bcf:field>year</bcf:field>
           <bcf:field>date</bcf:field>
-        </bcf:fieldset>
+        </bcf:fieldxor>
       </bcf:constraint>
       <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
@@ -768,10 +768,10 @@
         <bcf:field>author</bcf:field>
         <bcf:field>title</bcf:field>
         <bcf:field>number</bcf:field>
-        <bcf:fieldset>
+        <bcf:fieldxor coerce="date">
           <bcf:field>year</bcf:field>
           <bcf:field>date</bcf:field>
-        </bcf:fieldset>
+        </bcf:fieldxor>
       </bcf:constraint>
       <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
@@ -815,10 +815,10 @@
       <bcf:constraint type="mandatory">
         <bcf:field>editor</bcf:field>
         <bcf:field>title</bcf:field>
-        <bcf:fieldset>
+        <bcf:fieldxor coerce="date">
           <bcf:field>year</bcf:field>
           <bcf:field>date</bcf:field>
-        </bcf:fieldset>
+        </bcf:fieldxor>
       </bcf:constraint>
       <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
@@ -868,10 +868,10 @@
       <bcf:constraint type="mandatory">
         <bcf:field>editor</bcf:field>
         <bcf:field>title</bcf:field>
-        <bcf:fieldset>
+        <bcf:fieldxor coerce="date">
           <bcf:field>year</bcf:field>
           <bcf:field>date</bcf:field>
-        </bcf:fieldset>
+        </bcf:fieldxor>
       </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
@@ -923,10 +923,10 @@
         <bcf:field>editor</bcf:field>
         <bcf:field>title</bcf:field>
         <bcf:field>booktitle</bcf:field>
-        <bcf:fieldset>
+        <bcf:fieldxor coerce="date">
           <bcf:field>year</bcf:field>
           <bcf:field>date</bcf:field>
-        </bcf:fieldset>
+        </bcf:fieldxor>
       </bcf:constraint>
       <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
@@ -969,10 +969,10 @@
         <bcf:field>title</bcf:field>
         <bcf:field>type</bcf:field>
         <bcf:field>institution</bcf:field>
-        <bcf:fieldset>
+        <bcf:fieldxor coerce="date">
           <bcf:field>year</bcf:field>
           <bcf:field>date</bcf:field>
-        </bcf:fieldset>
+        </bcf:fieldxor>
       </bcf:constraint>
       <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
@@ -1012,10 +1012,10 @@
         <bcf:field>title</bcf:field>
         <bcf:field>type</bcf:field>
         <bcf:field>institution</bcf:field>
-        <bcf:fieldset>
+        <bcf:fieldxor coerce="date">
           <bcf:field>year</bcf:field>
           <bcf:field>date</bcf:field>
-        </bcf:fieldset>
+        </bcf:fieldxor>
       </bcf:constraint>
       <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
@@ -1045,10 +1045,10 @@
       <bcf:constraint type="mandatory">
         <bcf:field>author</bcf:field>
         <bcf:field>title</bcf:field>
-        <bcf:fieldset>
+        <bcf:fieldxor coerce="date">
           <bcf:field>year</bcf:field>
           <bcf:field>date</bcf:field>
-        </bcf:fieldset>
+        </bcf:fieldxor>
       </bcf:constraint>
       <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>

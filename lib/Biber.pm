@@ -268,7 +268,7 @@ sub parse_ctrlfile {
                                                            qr/\Asort\z/,
                                                            qr/\Atype_pair\z/,
                                                            qr/\Ainherit\z/,
-                                                           qr/\Afieldset\z/,
+                                                           qr/\Afieldxor\z/,
                                                            qr/\Afields\z/,
                                                            qr/\Afield\z/,
                                                            qr/\Aalias\z/,
@@ -828,24 +828,31 @@ sub process_structure {
     }
 
     # Are all fields valid fields?
+    # Each field must be:
+    # * Valid because it's allowed for "ALL" entrytypes OR
+    # * Valid field for the specific entrytype OR
+    # * Valid because entrytype allows "ALL" fields
     foreach my $ef ($be->datafields) {
-      unless ($legents->{$et}{$ef} or $legents->{$et}{ALL} or $legents->{ALL}{$ef}) {
+      unless ($legents->{ALL}{$ef} or $legents->{$et}{$ef} or $legents->{$et}{ALL}) {
         $self->biber_warn($be, "Entry '$citekey' - invalid field '$ef' for entrytype '$et'");
       }
     }
 
+    # Mandatory XOR constraint
     # Both DATE and YEAR specified
     if ($be->get_field('date') and $be->get_field('year')) {
       $self->biber_warn($be, "Field conflict - both 'date' and 'year' used - ignoring field 'year' in entry '$citekey'");
       $be->del_field('year');
     }
 
+    # Optional XOR constraint
     # Both DATE and MONTH specified
     if ($be->get_field('date') and $be->get_field('month')) {
       $self->biber_warn($be, "Field conflict - both 'date' and 'month' used - ignoring field 'month' in entry '$citekey'");
       $be->del_field('month');
     }
 
+    # Data constraint
     # MONTH must be an integer - YEAR doesn't have to be to allow for things like
     # "in press" which sometimes need an extrayear disambiguator (in APA styles for example)
     if ($be->get_field('month') and $be->get_field('month') !~ /\A\d+\z/xms) {
@@ -853,6 +860,8 @@ sub process_structure {
       $be->del_field('month');
     }
 
+    # Data constraint
+    # Can validate iso8601 here (DateTime::Format::ISO8601)?
     # Generate date components from *DATE fields
     foreach my $datetype ('', 'orig', 'event', 'url') {
       if ($be->get_field($datetype . 'date')) {
@@ -877,8 +886,8 @@ sub process_structure {
       }
     }
 
+    # Data constraint
     # Now more carefully check the individual date components
-    # Can validate iso8601 here (DateTime::Format::ISO8601)
     my $opt_dm = qr/(?:event|orig|url)?(?:end)?/xms;
     foreach my $dcf (@DATECOMPONENTFIELDS) {
       my $bad_format = '';

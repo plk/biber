@@ -368,7 +368,17 @@
                           <element name="bcf:field">
                             <data type="NCName"/>
                           </element>
-                          <element name="bcf:fieldset">
+                          <element name="bcf:fieldxor">
+                            <attribute name="coerce">
+                              <data type="NCName"/>
+                            </attribute>
+                            <oneOrMore>
+                              <element name="bcf:field">
+                                <data type="NCName"/>
+                              </element>
+                            </oneOrMore>
+                          </element>
+                          <element name="bcf:fieldor">
                             <oneOrMore>
                               <element name="bcf:field">
                                 <data type="NCName"/>
