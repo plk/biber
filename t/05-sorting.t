@@ -35,7 +35,7 @@ my $yearoff8    = 'mm0knuth2donald e0computers typesetting0801500000';
 my $yearoff9    = 'mm0knuth2donald e0computers typesetting0901500000';
 my $vol1        = 'mm0glashow2sheldon0partial symmetries of weak interactions0196102200';
 my $vol2        = 'mm0glashow2sheldon0partial symmetries of weak interactions0196102200000';
-my $vol3        = 'mm0glashow2sheldon0partial symmetries of weak interactions019610aaa22';
+my $vol3        = 'mm0glashow2sheldon0partial symmetries of weak interactions019610đđđ22';
 my $nty         = 'mm0glashow2sheldon0partial symmetries of weak interactions0196100022';
 my $nyt         = 'mm0glashow2sheldon019610partial symmetries of weak interactions00022';
 my $nyvt        = 'mm0glashow2sheldon01961000220partial symmetries of weak interactions';
@@ -734,7 +734,8 @@ $bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $vol2, 'nty with right-padded 7-char vol' );
 
-# nty with left-padded 5-char using "a" as pad_char vol
+# nty with left-padded 5-char using Unicode "Đ" as pad_char vol
+# Unicode char will be lowercase "đ" in sortstring
 Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'presort'    => {}},
@@ -762,7 +763,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'volume'     => {pad_side => 'left',
                                                                   pad_width => 5,
-                                                                  pad_char => 'a'}},
+                                                                  pad_char => 'Đ'}},
                                                  {'0000'       => {}}
                                                 ]
                                                ]);
