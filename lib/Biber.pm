@@ -991,7 +991,7 @@ sub process_structure {
           if (@actual_cfs) { # ? -> NONE not satisfied
             $self->biber_warn($be, "Constraint violation - $cq of fields (" .
                               join(', ', @actual_cfs) .
-                              ") must exist when $aq of fields (" . join(', ', @$afs). ") exist");
+                              ") must exist when $aq of fields (" . join(', ', @$afs). ") exist. Ignoring them.");
             # delete the offending fields
             foreach my $f (@actual_cfs) {
               $be->del_field($f);
