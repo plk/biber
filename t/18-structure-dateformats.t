@@ -45,7 +45,7 @@ my $l6 = [ "Value out of bounds for field/date component 'month' - ignoring in e
 my $l7 = [ "Value out of bounds for field/date component 'eventday' - ignoring in entry 'L7'" ];
 my $l8 = [ "Invalid format of field 'month' - ignoring field in entry 'L8'" ];
 my $l11 = [ "Mandatory fields - only one of 'date, year' must be defined in entry 'L11' ignoring field 'year'"];
-my $l12 = [ "Field conflict - both 'date' and 'month' used - ignoring field 'month' in entry 'L12'" ];
+my $l12 = [ "Constraint violation - none of fields (month) must exist when all of fields (date) exist" ];
 
 my $l13c = q|  \entry{L13}{book}{}
     \name{author}{2}{%

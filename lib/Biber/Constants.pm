@@ -24,6 +24,7 @@ our @EXPORT = qw{
   %CONFIG_DEFAULT_BIBER
   %CONFIG_DEFAULT_BIBLATEX
   %CONFIG_SCOPE_BIBLATEX
+  %STRUCTURE_DATATYPES
   $BIBER_CONF_NAME
   $BIBLATEX_VERSION
   $BIBER_SORT_FINAL
@@ -73,6 +74,11 @@ unless ($locale) {
     $locale = 'en_US.UTF-8';
   }
 }
+
+# datatypes for structure validation
+our %STRUCTURE_DATATYPES = (
+                            integer => qr/\A\d+\z/xms
+);
 
 # In general, these defaults are for two reasons:
 # * If there is no .bcf to set these options (-a and -d flags for example)
@@ -324,6 +330,83 @@ our %CONFIG_DEFAULT_BIBLATEX =
                         ],
                         type => "mandatory",
                       },
+                      {
+                        antecedent => { field => [{ content => "date" }], quant => "all" },
+                        consequent => { field => [{ content => "month" }], quant => "none" },
+                        type => "conditional",
+                      },
+                      { datatype => "integer", field => [{ content => "year" }], type => "data" },
+                      {
+                        datatype => "integer",
+                        field => [{ content => "origyear" }],
+                        type => "data",
+                      },
+                      {
+                        datatype => "integer",
+                        field => [{ content => "eventyear" }],
+                        type => "data",
+                      },
+                      {
+                        datatype => "integer",
+                        field => [{ content => "urlyear" }],
+                        type => "data",
+                      },
+                      {
+                        datatype => "integer",
+                        field    => [{ content => "month" }],
+                        rangemax => 12,
+                        rangemin => 1,
+                        type     => "data",
+                      },
+                      {
+                        datatype => "integer",
+                        field    => [{ content => "origmonth" }],
+                        rangemax => 12,
+                        rangemin => 1,
+                        type     => "data",
+                      },
+                      {
+                        datatype => "integer",
+                        field    => [{ content => "eventmonth" }],
+                        rangemax => 12,
+                        rangemin => 1,
+                        type     => "data",
+                      },
+                      {
+                        datatype => "integer",
+                        field    => [{ content => "urlmonth" }],
+                        rangemax => 12,
+                        rangemin => 1,
+                        type     => "data",
+                      },
+                      {
+                        datatype => "integer",
+                        field    => [{ content => "day" }],
+                        rangemax => 31,
+                        rangemin => 1,
+                        type     => "data",
+                      },
+                      {
+                        datatype => "integer",
+                        field    => [{ content => "origday" }],
+                        rangemax => 31,
+                        rangemin => 1,
+                        type     => "data",
+                      },
+                      {
+                        datatype => "integer",
+                        field    => [{ content => "eventday" }],
+                        rangemax => 31,
+                        rangemin => 1,
+                        type     => "data",
+                      },
+                      {
+                        datatype => "integer",
+                        field    => [{ content => "urlday" }],
+                        rangemax => 31,
+                        rangemin => 1,
+                        type     => "data",
+                      },
                     ],
       entrytypes => { entrytype => [{ content => "ALL" }] },
       fields     => [
@@ -419,13 +502,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                    { content => "title" },
                                  ],
                         type  => "mandatory",
-                      },
-                      {
-                        datatype => "integer",
-                        field    => [{ content => "month" }],
-                        rangemax => 12,
-                        rangemin => 1,
-                        type     => "data",
                       },
                     ],
       entrytypes => { entrytype => [{ content => "article" }] },
@@ -824,16 +900,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                     ],
     },
     {
-      constraint => [
-                      { field => [{ content => "title" }], type => "mandatory" },
-                      {
-                        datatype => "integer",
-                        field    => [{ content => "month" }],
-                        rangemax => 12,
-                        rangemin => 1,
-                        type     => "data",
-                      },
-                    ],
+      constraint => [{ field => [{ content => "title" }], type => "mandatory" }],
       entrytypes => { entrytype => [{ content => "misc" }] },
       fields     => [
                       {
@@ -871,13 +938,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                         field => [{ content => "title" }, { content => "url" }],
                         type  => "mandatory",
                       },
-                      {
-                        datatype => "integer",
-                        field    => [{ content => "month" }],
-                        rangemax => 12,
-                        rangemin => 1,
-                        type     => "data",
-                      },
                     ],
       entrytypes => { entrytype => [{ content => "online" }] },
       fields     => [
@@ -911,13 +971,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                    { content => "number" },
                                  ],
                         type  => "mandatory",
-                      },
-                      {
-                        datatype => "integer",
-                        field    => [{ content => "month" }],
-                        rangemax => 12,
-                        rangemin => 1,
-                        type     => "data",
                       },
                     ],
       entrytypes => { entrytype => [{ content => "patent" }] },
@@ -954,13 +1007,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                       {
                         field => [{ content => "editor" }, { content => "title" }],
                         type  => "mandatory",
-                      },
-                      {
-                        datatype => "integer",
-                        field    => [{ content => "month" }],
-                        rangemax => 12,
-                        rangemin => 1,
-                        type     => "data",
                       },
                     ],
       entrytypes => { entrytype => [{ content => "periodical" }] },
@@ -1061,13 +1107,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                  ],
                         type  => "mandatory",
                       },
-                      {
-                        datatype => "integer",
-                        field    => [{ content => "month" }],
-                        rangemax => 12,
-                        rangemin => 1,
-                        type     => "data",
-                      },
                     ],
       entrytypes => { entrytype => [{ content => "inproceedings" }] },
       fields     => [
@@ -1126,13 +1165,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                  ],
                         type  => "mandatory",
                       },
-                      {
-                        datatype => "integer",
-                        field    => [{ content => "month" }],
-                        rangemax => 12,
-                        rangemin => 1,
-                        type     => "data",
-                      },
                     ],
       entrytypes => { entrytype => [{ content => "report" }] },
       fields     => [
@@ -1179,13 +1211,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                  ],
                         type  => "mandatory",
                       },
-                      {
-                        datatype => "integer",
-                        field    => [{ content => "month" }],
-                        rangemax => 12,
-                        rangemin => 1,
-                        type     => "data",
-                      },
                     ],
       entrytypes => { entrytype => [{ content => "thesis" }] },
       fields     => [
@@ -1223,13 +1248,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                       {
                         field => [{ content => "author" }, { content => "title" }],
                         type  => "mandatory",
-                      },
-                      {
-                        datatype => "integer",
-                        field    => [{ content => "month" }],
-                        rangemax => 12,
-                        rangemin => 1,
-                        type     => "data",
                       },
                     ],
       entrytypes => { entrytype => [{ content => "unpublished" }] },

@@ -241,6 +241,50 @@
           <bcf:field>year</bcf:field>
         </bcf:fieldxor>
       </bcf:constraint>
+      <bcf:constraint type="conditional">
+        <bcf:antecedent quant="all">
+          <bcf:field>date</bcf:field>
+        </bcf:antecedent>
+        <bcf:consequent quant="none">
+          <bcf:field>month</bcf:field>
+        </bcf:consequent>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer">
+        <bcf:field>year</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer">
+        <bcf:field>origyear</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer">
+        <bcf:field>eventyear</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer">
+        <bcf:field>urlyear</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
+        <bcf:field>month</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
+        <bcf:field>origmonth</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
+        <bcf:field>eventmonth</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
+        <bcf:field>urlmonth</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="31">
+        <bcf:field>day</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="31">
+        <bcf:field>origday</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="31">
+        <bcf:field>eventday</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="31">
+        <bcf:field>urlday</bcf:field>
+      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
@@ -329,9 +373,6 @@
         <bcf:field>author</bcf:field>
         <bcf:field>journaltitle</bcf:field>
         <bcf:field>title</bcf:field>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
-        <bcf:field>month</bcf:field>
       </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
@@ -678,9 +719,6 @@
       <bcf:constraint type="mandatory">
         <bcf:field>title</bcf:field>
       </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
-        <bcf:field>month</bcf:field>
-      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
@@ -706,9 +744,6 @@
       <bcf:constraint type="mandatory">
         <bcf:field>title</bcf:field>
         <bcf:field>url</bcf:field>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
-        <bcf:field>month</bcf:field>
       </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
@@ -742,9 +777,6 @@
         <bcf:field>author</bcf:field>
         <bcf:field>title</bcf:field>
         <bcf:field>number</bcf:field>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
-        <bcf:field>month</bcf:field>
       </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
@@ -785,9 +817,6 @@
       <bcf:constraint type="mandatory">
         <bcf:field>editor</bcf:field>
         <bcf:field>title</bcf:field>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
-        <bcf:field>month</bcf:field>
       </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
@@ -886,9 +915,6 @@
         <bcf:field>title</bcf:field>
         <bcf:field>booktitle</bcf:field>
       </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
-        <bcf:field>month</bcf:field>
-      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
@@ -928,9 +954,6 @@
         <bcf:field>type</bcf:field>
         <bcf:field>institution</bcf:field>
       </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
-        <bcf:field>month</bcf:field>
-      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
@@ -967,9 +990,6 @@
         <bcf:field>type</bcf:field>
         <bcf:field>institution</bcf:field>
       </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
-        <bcf:field>month</bcf:field>
-      </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>
       <bcf:entrytypes>
@@ -995,9 +1015,6 @@
       <bcf:constraint type="mandatory">
         <bcf:field>author</bcf:field>
         <bcf:field>title</bcf:field>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
-        <bcf:field>month</bcf:field>
       </bcf:constraint>
     </bcf:entryschema>
   </bcf:structure>

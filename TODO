@@ -4,16 +4,16 @@ TODO in decreasing order of priority:
      take out conditional in control file read and also change schema (biblatex 1.1)
    * merge in the "unique" branch to implement full uniquename/list
      automation. Needs new .bbl format and biblatex support (biblatex 1.2)
+   * xsl to pretty-print .bcf
    * Structure validation. Don't use Text::Bibtex::Structure as it's not so
      flexible - should operate on internal Biber structures. When there is
      an XML data format to replace .bib, such structure checking will be implemented
      as schema validation.
 
+
+     structure-constraints test
      constraints should be able to be defined more than once for a type and then merged
+     is DATE XOR YEAR really global?
      ALL fields need to be put into types where possible
      make entrytype and field processing optional?
      Doc .rnc
-
-validate => validate_control
-validate_structure
-output-directory => output_directory

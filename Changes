@@ -1,4 +1,12 @@
 Revision history for Biber
+0.6.1  (unreleased)
+       * More comprehensive structural checks on allowed entrytypes/fields
+         and field combinations/formats
+       * Added option validate_structure to turn on structural checks
+       * Renamed option validate -> validate_control
+       * Renamed option output-directory -> output_directory
+       * Added labelname and labelyear as possible sort specifications
+       * Misc bug fixes
 0.6    20-11-2010
        * First non-beta release
        * More abstracted and extensible crossref inheritance model

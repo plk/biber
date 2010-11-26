@@ -692,6 +692,7 @@ sub process_setup {
           push @{$constraints->{mandatory}}, $f->{content};
         }
         # xor set of fields
+        # [ XOR, field1, field2, ... , fieldn ]
         foreach my $fxor (@{$et->{fieldxor}}) {
           my $xorset;
           foreach my $f (@{$fxor->{field}}) {
@@ -707,6 +708,7 @@ sub process_setup {
           push @{$constraints->{mandatory}}, $xorset;
         }
         # or set of fields
+        # [ OR, field1, field2, ... , fieldn ]
         foreach my $for (@{$et->{fieldor}}) {
           my $orset;
           foreach my $f (@{$for->{field}}) {
@@ -715,6 +717,29 @@ sub process_setup {
           unshift @$orset, 'OR';
           push @{$constraints->{mandatory}}, $orset;
         }
+      }
+      # Conditional constraints
+      # [ ANTECEDENT_QUANTIFIER
+      #   [ ANTECEDENT LIST ]
+      #   CONSEQUENT_QUANTIFIER
+      #   [ CONSEQUENT LIST ]
+      # ]
+      elsif ($et->{type} eq 'conditional') {
+        my $cond;
+        $cond->[0] = $et->{antecedent}{quant};
+        $cond->[1] = [ map { $_->{content} } @{$et->{antecedent}{field}} ];
+        $cond->[2] = $et->{consequent}{quant};
+        $cond->[3] = [ map { $_->{content} } @{$et->{consequent}{field}} ];
+        push @{$constraints->{conditional}}, $cond;
+      }
+      # data constraints
+      elsif ($et->{type} eq 'data') {
+        my $data;
+        $data->{fields} = [ map { $_->{content} } @{$et->{field}} ];
+        $data->{datatype} = $STRUCTURE_DATATYPES{$et->{datatype}};
+        $data->{rangemin} = $et->{rangemin};
+        $data->{rangemax} = $et->{rangemax};
+        push @{$constraints->{data}}, $data;
       }
     }
 
@@ -897,7 +922,7 @@ sub process_structure {
             my $flag = 0;
             my $xorflag = 0;
             foreach my $of (@fs) {
-              if ($be->get_field($of)) {
+              if ($be->field_exists($of)) {
                 if ($xorflag) {
                   $self->biber_warn($be, "Mandatory fields - only one of '" . join(', ', @fs) . "' must be defined in entry '$citekey' ignoring field '$of'");
                   $be->del_field($of);
@@ -915,8 +940,7 @@ sub process_structure {
             my @fs = @$c[1,-1]; # Lose the first element which is the 'OR'
             my $flag = 0;
             foreach my $of (@fs) {
-              next if $of eq 'OR'; # Skip disjunction type indicator
-              if ($be->get_field($of)) {
+              if ($be->field_exists($of)) {
                 $flag = 1;
                 last;
               }
@@ -928,17 +952,61 @@ sub process_structure {
         }
         # Simple mandatory field
         else {
-          unless ($be->get_field($c)) {
+          unless ($be->field_exists($c)) {
             $self->biber_warn($be, "Missing mandatory field '$c' in entry '$citekey'");
           }
         }
       }
 
-      # Optional XOR constraint
-      # Both DATE and MONTH specified
-      if ($be->get_field('date') and $be->get_field('month')) {
-        $self->biber_warn($be, "Field conflict - both 'date' and 'month' used - ignoring field 'month' in entry '$citekey'");
-        $be->del_field('month');
+      # Conditional constraints
+      foreach my $c ((@{$legents->{ALL}{constraints}{conditional}},
+                      @{$legents->{$et}{constraints}{conditional}})) {
+        my $aq = $c->[0]; # Antecedent quantifier
+        my $afs = $c->[1]; # Antecedent fields
+        my $cq = $c->[2]; # Consequent quantifier
+        my $cfs = $c->[3]; # Consequent fields
+        my $afl = $#$afs; # Number of fields in antecedent list
+        my $cfl = $#$cfs; # Number of fields in consequent list
+        my @actual_afs = (grep {$be->field_exists($_)} @$afs); # antecedent fields in entry
+
+        # check antecedent
+        if ($aq eq 'all') {
+          next unless $afl == $#actual_afs; # ALL -> ? not satisfied
+        }
+        elsif ($aq eq 'none') {
+          next if @actual_afs; # NONE -> ? not satisfied
+        }
+        elsif ($aq eq 'one') {
+          next unless @actual_afs; # ONE -> ? not satisfied
+        }
+
+        # check consequent
+        my @actual_cfs = (grep {$be->field_exists($_)} @$cfs);
+        if ($cq eq 'all') {
+          unless ($cfl == $#actual_afs) { # ? -> ALL not satisfied
+            $self->biber_warn($be, "Constraint violation - $cq of fields (" .
+                              join(', ', @actual_cfs) .
+                              ") must exist when $aq of fields (" . join(', ', @$afs). ") exist");
+          }
+        }
+        elsif ($cq eq 'none') {
+          if (@actual_cfs) { # ? -> NONE not satisfied
+            $self->biber_warn($be, "Constraint violation - $cq of fields (" .
+                              join(', ', @actual_cfs) .
+                              ") must exist when $aq of fields (" . join(', ', @$afs). ") exist");
+            # delete the offending fields
+            foreach my $f (@actual_cfs) {
+              $be->del_field($f);
+            }
+          }
+        }
+        elsif ($cq eq 'one') {
+          unless (@actual_cfs) { # ? -> ONE not satisfied
+            $self->biber_warn($be, "Constraint violation - $cq of fields (" .
+                              join(', ', @$cfs) .
+                              ") must exist when $aq of fields (" . join(', ', @$afs). ") exist");
+          }
+        }
       }
 
       # Data constraint
@@ -950,10 +1018,12 @@ sub process_structure {
       }
     }
 
-    # We always want to expand dates so no conditionalised for validate_structure
+
     # Data constraint
     # Can validate iso8601 here (DateTime::Format::ISO8601)?
+
     # Generate date components from *DATE fields
+    # We always want to expand dates so not conditionalised for validate_structure
     foreach my $datetype ('', 'orig', 'event', 'url') {
       if ($be->get_field($datetype . 'date')) {
         my $date_re = qr|(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?|xms;
