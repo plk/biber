@@ -652,6 +652,9 @@ sub process_missing {
 
 sub process_setup {
 
+  # These have to be here so that they can pick up structure defaults in
+  # Constants.pm in case there is no .bcf
+
   # Create internal aliases data format for easy use
   my $aliases;
   foreach my $alias (@{Biber::Config->getblxoption('structure')->{aliases}{alias}}) {

@@ -52,7 +52,7 @@ sub set_datafield {
   my ($key, $val) = @_;
   # Only set fields which are either not null or are ok to be null
   if ( first { $key eq $_ } @NULL_OK or is_notnull($val)) {
-    $self->{datakeys}{$key} = $val;
+    $self->{datafields}{$key} = $val;
   }
   return;
 }
@@ -69,7 +69,7 @@ sub set_field {
   my ($key, $val) = @_;
   # Only set fields which are either not null or are ok to be null
   if ( first { $key eq $_ } @NULL_OK or is_notnull($val)) {
-    $self->{extrakeys}{$key} = $val;
+    $self->{derivedfields}{$key} = $val;
   }
   return;
 }
@@ -83,8 +83,8 @@ sub set_field {
 sub get_field {
   my $self = shift;
   my $key = shift;
-  return $self->{datakeys}{$key} if $self->{datakeys}{$key};
-  return $self->{extrakeys}{$key} if $self->{extrakeys}{$key};
+  return $self->{datafields}{$key} if $self->{datafields}{$key};
+  return $self->{derivedfields}{$key} if $self->{derivedfields}{$key};
 }
 
 =head2 get_datafield
@@ -96,7 +96,7 @@ sub get_field {
 sub get_datafield {
   my $self = shift;
   my $key = shift;
-  return $self->{datakeys}{$key};
+  return $self->{datafields}{$key};
 }
 
 
@@ -109,8 +109,8 @@ sub get_datafield {
 sub del_field {
   my $self = shift;
   my $key = shift;
-  delete $self->{datakeys}{$key};
-  delete $self->{extrakeys}{$key};
+  delete $self->{datafields}{$key};
+  delete $self->{derivedfields}{$key};
   return;
 }
 
@@ -123,7 +123,7 @@ sub del_field {
 sub field_exists {
   my $self = shift;
   my $key = shift;
-  return (exists($self->{datakeys}{$key}) or exists($self->{extrakeys}{$key})) ? 1 : 0;
+  return (exists($self->{datafields}{$key}) or exists($self->{derivedfields}{$key})) ? 1 : 0;
 }
 
 =head2 datafields
@@ -135,7 +135,7 @@ sub field_exists {
 sub datafields {
   my $self = shift;
   use locale;
-  return sort keys %{$self->{datakeys}};
+  return sort keys %{$self->{datafields}};
 }
 
 =head2 fields
@@ -149,7 +149,7 @@ sub datafields {
 sub fields {
   my $self = shift;
   use locale;
-  my %keys = (%{$self->{extrakeys}}, %{$self->{datakeys}});
+  my %keys = (%{$self->{derivedfields}}, %{$self->{datafields}});
   return sort keys %keys;
 }
 
@@ -162,7 +162,7 @@ sub fields {
 sub add_warning {
   my $self = shift;
   my $warning = shift;
-  push @{$self->{extrakeys}{'warnings'}}, $warning;
+  push @{$self->{derivedfields}{'warnings'}}, $warning;
   return;
 }
 

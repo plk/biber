@@ -10,4 +10,5 @@ TODO in decreasing order of priority:
      as schema validation.
 
      ALL fields need to be put into types where possible
+     make entrytype and field processing optional?
      Doc .rnc

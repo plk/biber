@@ -87,7 +87,7 @@ $out = $biber->get_output_obj;
 is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
 my $stdmodel = {
-                datakeys => {
+                datafields => {
                              'journaltitle' => 'Nucl.~Phys.',
                              'entryset' => 'stdmodel:glashow,stdmodel:weinberg,stdmodel:salam',
                              'author' => [
@@ -117,7 +117,7 @@ my $stdmodel = {
                              'year' => '1961',
                              'pages' => '579\\psqq',
                             },
-                extrakeys => {
+                derivedfields => {
                               'labelname' => [
                                               {
                                                firstname    => 'Sheldon',
@@ -158,7 +158,7 @@ my $stdmodel = {
 is_deeply($bibentries->entry('stdmodel'), $stdmodel, 'entry stdmodel') ;
 
 my $laufenberg = {
-                  datakeys => {
+                  datafields => {
                                'number' => '1700367',
                                'holder' => [
                                             {
@@ -432,7 +432,7 @@ my $laufenberg = {
                                'annotation' => 'This is a \\texttt{patent} entry with a \\texttt{holder} field. Note the format of the \\texttt{type} and \\texttt{location} fields in the database file. Compare \\texttt{almendro}, \\texttt{sorace}, and \\texttt{kowalik}',
                                 'hyphenation' => 'german',
                               },
-                  extrakeys => {
+                  derivedfields => {
                                 'nameyear' => 'Laufenberg2Xaver1zzzz02006',
                                 'citecasekey' => 'laufenberg',
                                 'datatype' => 'bibtex',
