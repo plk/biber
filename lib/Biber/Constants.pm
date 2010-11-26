@@ -80,26 +80,27 @@ unless ($locale) {
 #   provide defaults in case they are missing.
 
 our %CONFIG_DEFAULT_BIBER = (
-  allentries       => 0,
-  bblencoding      => 'UTF-8',
-  bibdata          =>  undef,
-  bibdatatype      => 'bibtex',
-  bibencoding      => 'UTF-8',
-  collate          => 1,
-  collate_options  => { level => 4 },
-  debug            => 0,
-  displaymode      => $DISPLAYMODE_DEFAULT, # eventually, shall be moved to biblatex options
-  mincrossrefs     => 2,
-  nolog            => 0,
-  nosortdiacritics => qr/[\x{2bf}\x{2018}]/,
-  nosortprefix     => qr/\p{L}{2}\p{Pd}/,
-  quiet            => 0,
-  sortcase         => 1,
-  sortlocale       => $locale,
-  sortupper        => 1,
-  trace            => 0,
-  wraplines        => 0,
-  validate         => 0
+  allentries         => 0,
+  bblencoding        => 'UTF-8',
+  bibdata            =>  undef,
+  bibdatatype        => 'bibtex',
+  bibencoding        => 'UTF-8',
+  collate            => 1,
+  collate_options    => { level => 4 },
+  debug              => 0,
+  displaymode        => $DISPLAYMODE_DEFAULT, # eventually, shall be moved to biblatex options
+  mincrossrefs       => 2,
+  nolog              => 0,
+  nosortdiacritics   => qr/[\x{2bf}\x{2018}]/,
+  nosortprefix       => qr/\p{L}{2}\p{Pd}/,
+  quiet              => 0,
+  sortcase           => 1,
+  sortlocale         => $locale,
+  sortupper          => 1,
+  trace              => 0,
+  wraplines          => 0,
+  validate_control   => 0,
+  validate_structure => 0
   );
 
 # default global options for biblatex
@@ -311,53 +312,66 @@ our %CONFIG_DEFAULT_BIBLATEX =
   },
   entryschema => [
     {
+      constraint => [
+                      {
+                        fieldxor => [
+                          {
+                            field => [
+                              { coerce => "true", content => "date" },
+                              { content => "year" },
+                            ],
+                          },
+                        ],
+                        type => "mandatory",
+                      },
+                    ],
       entrytypes => { entrytype => [{ content => "ALL" }] },
-      fields => [
-        {
-          field => [
-            { content => "abstract" },
-            { content => "annotation" },
-            { content => "authortype" },
-            { content => "bookpagination" },
-            { content => "crossref" },
-            { content => "entryset" },
-            { content => "entrysubtype" },
-            { content => "execute" },
-            { content => "file" },
-            { content => "gender" },
-            { content => "hyphenation" },
-            { content => "indextitle" },
-            { content => "indexsorttitle" },
-            { content => "isan" },
-            { content => "ismn" },
-            { content => "iswc" },
-            { content => "keywords" },
-            { content => "label" },
-            { content => "library" },
-            { content => "nameaddon" },
-            { content => "options" },
-            { content => "origdate" },
-            { content => "origlocation" },
-            { content => "origpublisher" },
-            { content => "origtitle" },
-            { content => "pagination" },
-            { content => "presort" },
-            { content => "reprinttitle" },
-            { content => "shortauthor" },
-            { content => "shorteditor" },
-            { content => "shorthand" },
-            { content => "shorthandintro" },
-            { content => "shortjournal" },
-            { content => "shortseries" },
-            { content => "shorttitle" },
-            { content => "sortkey" },
-            { content => "sortname" },
-            { content => "sorttitle" },
-            { content => "sortyear" },
-            { content => "xref" },
-          ],
-        },
-      ],
+      fields     => [
+                      {
+                        field => [
+                          { content => "abstract" },
+                          { content => "annotation" },
+                          { content => "authortype" },
+                          { content => "bookpagination" },
+                          { content => "crossref" },
+                          { content => "entryset" },
+                          { content => "entrysubtype" },
+                          { content => "execute" },
+                          { content => "file" },
+                          { content => "gender" },
+                          { content => "hyphenation" },
+                          { content => "indextitle" },
+                          { content => "indexsorttitle" },
+                          { content => "isan" },
+                          { content => "ismn" },
+                          { content => "iswc" },
+                          { content => "keywords" },
+                          { content => "label" },
+                          { content => "library" },
+                          { content => "nameaddon" },
+                          { content => "options" },
+                          { content => "origdate" },
+                          { content => "origlocation" },
+                          { content => "origpublisher" },
+                          { content => "origtitle" },
+                          { content => "pagination" },
+                          { content => "presort" },
+                          { content => "reprinttitle" },
+                          { content => "shortauthor" },
+                          { content => "shorteditor" },
+                          { content => "shorthand" },
+                          { content => "shorthandintro" },
+                          { content => "shortjournal" },
+                          { content => "shortseries" },
+                          { content => "shorttitle" },
+                          { content => "sortkey" },
+                          { content => "sortname" },
+                          { content => "sorttitle" },
+                          { content => "sortyear" },
+                          { content => "xref" },
+                        ],
+                      },
+                    ],
     },
     {
       entrytypes => {
@@ -400,12 +414,11 @@ our %CONFIG_DEFAULT_BIBLATEX =
       constraint => [
                       {
                         field => [
-                          { content => "author" },
-                          { content => "journaltitle" },
-                          { content => "title" },
-                        ],
-                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
-                        type => "mandatory",
+                                   { content => "author" },
+                                   { content => "journaltitle" },
+                                   { content => "title" },
+                                 ],
+                        type  => "mandatory",
                       },
                       {
                         datatype => "integer",
@@ -467,8 +480,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
       constraint => [
                       {
                         field => [{ content => "author" }, { content => "title" }],
-                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
-                        type => "mandatory",
+                        type  => "mandatory",
                       },
                     ],
       entrytypes => { entrytype => [{ content => "book" }] },
@@ -528,12 +540,11 @@ our %CONFIG_DEFAULT_BIBLATEX =
       constraint => [
                       {
                         field => [
-                          { content => "author" },
-                          { content => "title" },
-                          { content => "booktitle" },
-                        ],
-                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
-                        type => "mandatory",
+                                   { content => "author" },
+                                   { content => "title" },
+                                   { content => "booktitle" },
+                                 ],
+                        type  => "mandatory",
                       },
                     ],
       entrytypes => {
@@ -601,12 +612,11 @@ our %CONFIG_DEFAULT_BIBLATEX =
     {
       constraint => [
                       {
-                        field => [{ content => "title" }],
-                        fieldset => [
-                          { field => [{ content => "author" }, { content => "editor" }] },
-                          { field => [{ content => "year" }, { content => "date" }] },
-                        ],
-                        type => "mandatory",
+                        field   => [{ content => "title" }],
+                        fieldor => [
+                                     { field => [{ content => "author" }, { content => "editor" }] },
+                                   ],
+                        type    => "mandatory",
                       },
                     ],
       entrytypes => { entrytype => [{ content => "booklet" }] },
@@ -644,8 +654,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
       constraint => [
                       {
                         field => [{ content => "editor" }, { content => "title" }],
-                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
-                        type => "mandatory",
+                        type  => "mandatory",
                       },
                     ],
       entrytypes => {
@@ -706,13 +715,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
       constraint => [
                       {
                         field => [
-                          { content => "author" },
-                          { content => "editor" },
-                          { content => "title" },
-                          { content => "booktitle" },
-                        ],
-                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
-                        type => "mandatory",
+                                   { content => "author" },
+                                   { content => "editor" },
+                                   { content => "title" },
+                                   { content => "booktitle" },
+                                 ],
+                        type  => "mandatory",
                       },
                     ],
       entrytypes => {
@@ -777,13 +785,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                     ],
     },
     {
-      constraint => [
-                      {
-                        field => [{ content => "title" }],
-                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
-                        type => "mandatory",
-                      },
-                    ],
+      constraint => [{ field => [{ content => "title" }], type => "mandatory" }],
       entrytypes => { entrytype => [{ content => "manual" }] },
       fields     => [
                       {
@@ -823,11 +825,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
     },
     {
       constraint => [
-                      {
-                        field => [{ content => "title" }],
-                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
-                        type => "mandatory",
-                      },
+                      { field => [{ content => "title" }], type => "mandatory" },
                       {
                         datatype => "integer",
                         field    => [{ content => "month" }],
@@ -908,12 +906,11 @@ our %CONFIG_DEFAULT_BIBLATEX =
       constraint => [
                       {
                         field => [
-                          { content => "author" },
-                          { content => "title" },
-                          { content => "number" },
-                        ],
-                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
-                        type => "mandatory",
+                                   { content => "author" },
+                                   { content => "title" },
+                                   { content => "number" },
+                                 ],
+                        type  => "mandatory",
                       },
                       {
                         datatype => "integer",
@@ -956,8 +953,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
       constraint => [
                       {
                         field => [{ content => "editor" }, { content => "title" }],
-                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
-                        type => "mandatory",
+                        type  => "mandatory",
                       },
                       {
                         datatype => "integer",
@@ -1008,8 +1004,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
       constraint => [
                       {
                         field => [{ content => "editor" }, { content => "title" }],
-                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
-                        type => "mandatory",
+                        type  => "mandatory",
                       },
                     ],
       entrytypes => { entrytype => [{ content => "proceedings" }] },
@@ -1059,13 +1054,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
       constraint => [
                       {
                         field => [
-                          { content => "author" },
-                          { content => "editor" },
-                          { content => "title" },
-                          { content => "booktitle" },
-                        ],
-                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
-                        type => "mandatory",
+                                   { content => "author" },
+                                   { content => "editor" },
+                                   { content => "title" },
+                                   { content => "booktitle" },
+                                 ],
+                        type  => "mandatory",
                       },
                       {
                         datatype => "integer",
@@ -1125,13 +1119,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
       constraint => [
                       {
                         field => [
-                          { content => "author" },
-                          { content => "title" },
-                          { content => "type" },
-                          { content => "institution" },
-                        ],
-                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
-                        type => "mandatory",
+                                   { content => "author" },
+                                   { content => "title" },
+                                   { content => "type" },
+                                   { content => "institution" },
+                                 ],
+                        type  => "mandatory",
                       },
                       {
                         datatype => "integer",
@@ -1179,13 +1172,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
       constraint => [
                       {
                         field => [
-                          { content => "author" },
-                          { content => "title" },
-                          { content => "type" },
-                          { content => "institution" },
-                        ],
-                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
-                        type => "mandatory",
+                                   { content => "author" },
+                                   { content => "title" },
+                                   { content => "type" },
+                                   { content => "institution" },
+                                 ],
+                        type  => "mandatory",
                       },
                       {
                         datatype => "integer",
@@ -1230,8 +1222,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
       constraint => [
                       {
                         field => [{ content => "author" }, { content => "title" }],
-                        fieldset => [{ field => [{ content => "year" }, { content => "date" }] }],
-                        type => "mandatory",
+                        type  => "mandatory",
                       },
                       {
                         datatype => "integer",

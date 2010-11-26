@@ -23,6 +23,7 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('validate_structure', 1);
 
 # Biblatex options
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
@@ -43,7 +44,7 @@ my $l5 = [ "Invalid format of field 'date' - ignoring field in entry 'L5'" ];
 my $l6 = [ "Value out of bounds for field/date component 'month' - ignoring in entry 'L6'" ];
 my $l7 = [ "Value out of bounds for field/date component 'eventday' - ignoring in entry 'L7'" ];
 my $l8 = [ "Invalid format of field 'month' - ignoring field in entry 'L8'" ];
-my $l11 = [ "Field conflict - both 'date' and 'year' used - ignoring field 'year' in entry 'L11'" ];
+my $l11 = [ "Mandatory fields - only one of 'date, year' must be defined in entry 'L11' ignoring field 'year'"];
 my $l12 = [ "Field conflict - both 'date' and 'month' used - ignoring field 'month' in entry 'L12'" ];
 
 my $l13c = q|  \entry{L13}{book}{}
@@ -104,6 +105,7 @@ my $l15 = q|  \entry{L15}{book}{}
     \strng{fullhash}{DJAA1}
     \field{sortinit}{D}
     \field{title}{Title 2}
+    \warn{\item Missing mandatory field - one of 'date, year' must be defined in entry 'L15'}
   \endentry
 
 |;
@@ -119,12 +121,13 @@ my $l16 = q|  \entry{L16}{proceedings}{}
     \strng{namehash}{DJAA1}
     \strng{fullhash}{DJAA1}
     \field{sortinit}{D}
-    \field{extrayear}{4}
+    \field{extrayear}{1}
     \field{labelyear}{1996}
     \field{eventyear}{1996}
     \field{eventmonth}{01}
     \field{eventday}{01}
     \field{title}{Title 2}
+    \warn{\item Missing mandatory field - one of 'date, year' must be defined in entry 'L16'}
   \endentry
 
 |;
@@ -140,7 +143,7 @@ my $l17 = q|  \entry{L17}{proceedings}{}
     \strng{namehash}{DJAA1}
     \strng{fullhash}{DJAA1}
     \field{sortinit}{D}
-    \field{extrayear}{10}
+    \field{extrayear}{7}
     \field{labelyear}{1996}
     \field{year}{1996}
     \field{endyear}{1996}
@@ -266,11 +269,12 @@ is( $out->get_output_entry('l15'), $l15, 'Date format test 15 - labelyear should
 Biber::Config->setblxoption('labelyear', [ 'year', 'eventyear', 'origyear' ]);
 $bibentries->entry('l17')->del_field('year');
 $bibentries->entry('l17')->del_field('month');
+$bibentries->entry('l16')->del_field('warnings');
 $biber->prepare;
 $out = $biber->get_output_obj;
 
-is($bibentries->entry('l16')->get_field('labelyearname'), 'eventyear', 'Date format test 16 - labelyearname = eventyear' ) ;
-is($out->get_output_entry('l16'), $l16, 'Date format test 16a - labelyear = eventyear value' ) ;
+is($bibentries->entry('l16')->get_field('labelyearname'), 'eventyear', 'Date format test 16 - labelyearname = eventyear when YEAR is (mistakenly) missing' ) ;
+is($out->get_output_entry('l16'), $l16, 'Date format test 16a - labelyear = EVENTYEAR value when YEAR is (mistakenly) missing' );
 is($bibentries->entry('l17')->get_field('labelyearname'), 'year', 'Date format test 17 - labelyearname = YEAR' ) ;
 is($out->get_output_entry('l17'), $l17, 'Date format test 17a - labelyear = YEAR value when ENDYEAR is the same and ORIGYEAR is also present' ) ;
 

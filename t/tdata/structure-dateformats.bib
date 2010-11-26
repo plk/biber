@@ -2,6 +2,7 @@
 % YEAR is messy and should be done by DATE but isn't wrong as such
 @ARTICLE{L1,
   AUTHOR	    = {John Doe},
+  JOURNALTITLE      = {Journal},
   TITLE		    = {Title 1},
   YEAR		    = {1995--1996},
   MONTH       = {14},
@@ -15,6 +16,7 @@
   TITLE		    = {Title 2},
   PUBLISHER	  = {Oxford},
   ORIGDATE	  = {1995-1230},
+  YEAR            = {1991}
 }
 
 % WRONG - completely wrong date range format
@@ -24,6 +26,7 @@
   PUBLISHER	  = {Oxford},
   URL         = {http://a/b/c},
   URLDATE	    = {1.5.1988},
+  YEAR             = {1854}
 }
 
 % WRONG - 1 digit month
@@ -56,11 +59,13 @@
   TITLE		    = {Title 2},
   PUBLISHER	  = {Oxford},
   EVENTDATE	  = {1996-10-35},
+  YEAR            = {1934}
 }
 
 % WRONG - MONTH not integer
 @ARTICLE{L8,
   AUTHOR	    = {Bill Shakespeare},
+  JOURNALTITLE      = {Journal},
   TITLE		    = {Works},
   YEAR		    = {1985a},
   MONTH       = {january}
@@ -72,6 +77,7 @@
   TITLE		    = {Title 2},
   PUBLISHER	  = {Oxford},
   EVENTDATE	  = {1996-12-31},
+  YEAR            = {1234}
 }
 
 % OK
@@ -80,6 +86,7 @@
   TITLE		    = {Title 2},
   PUBLISHER	  = {Oxford},
   EVENTDATE	  = {1996-01-01},
+  YEAR            = {1239}
 }
 
 % WRONG - DATE and YEAR specified
@@ -94,6 +101,7 @@
 % WRONG - DATE and MONTH specified
 @ARTICLE{L12,
   AUTHOR	    = {John Doe and Albert Abrahams},
+  JOURNALTITLE      = {Journal},
   TITLE		    = {Title 2},
   DATE   	    = {1996-01-01},
   MONTH       = {02},
@@ -122,7 +130,7 @@
   PUBLISHER	  = {Oxford},
 }
 
-% OK
+% MISSING YEAR/DATE
 @PROCEEDINGS{L16,
   EDITOR	    = {John Doe and Albert Abrahams},
   TITLE		    = {Title 2},

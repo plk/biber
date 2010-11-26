@@ -268,6 +268,7 @@ sub parse_ctrlfile {
                                                            qr/\Asort\z/,
                                                            qr/\Atype_pair\z/,
                                                            qr/\Ainherit\z/,
+                                                           qr/\Afieldor\z/,
                                                            qr/\Afieldxor\z/,
                                                            qr/\Afields\z/,
                                                            qr/\Afield\z/,
@@ -651,13 +652,13 @@ sub process_missing {
 =cut
 
 sub process_setup {
-
+  my $struc = Biber::Config->getblxoption('structure');
   # These have to be here so that they can pick up structure defaults in
   # Constants.pm in case there is no .bcf
 
   # Create internal aliases data format for easy use
   my $aliases;
-  foreach my $alias (@{Biber::Config->getblxoption('structure')->{aliases}{alias}}) {
+  foreach my $alias (@{$struc->{aliases}{alias}}) {
     $aliases->{$alias->{type}}{$alias->{name}{content}}
       = {
          realname => $alias->{realname}{content}
@@ -669,18 +670,60 @@ sub process_setup {
   }
   Biber::Config->setdata('aliases', $aliases);
 
-  # Pull out legal entrytypes and fields and make lookup hash for quick tests later
+  # Pull out legal entrytypes, fields and constraints and make lookup hash
+  # for quick tests later
   my $leg_ents;
-  foreach my $es (@{Biber::Config->getblxoption('structure')->{entryschema}}) {
+  foreach my $es (@{$struc->{entryschema}}) {
+
+    # fields
     my $lfs;
     foreach my $ft (@{$es->{fields}}) {
       foreach my $f (@{$ft->{field}}) {
         $lfs->{$f->{content}} = 1;
       }
     }
-    foreach my $et (@{$es->{entrytypes}{entrytype}}) {
-      $leg_ents->{$et->{content}} = $lfs;
+
+    # constraints
+    my $constraints;
+    foreach my $et (@{$es->{constraint}}) {
+      if ($et->{type} eq 'mandatory') {
+        # field
+        foreach my $f (@{$et->{field}}) {
+          push @{$constraints->{mandatory}}, $f->{content};
+        }
+        # xor set of fields
+        foreach my $fxor (@{$et->{fieldxor}}) {
+          my $xorset;
+          foreach my $f (@{$fxor->{field}}) {
+            if ($f->{coerce}) {
+              # put the default override element at the front and flag it
+              unshift @$xorset, $f->{content};
+            }
+            else {
+              push @$xorset, $f->{content};
+            }
+          }
+          unshift @$xorset, 'XOR';
+          push @{$constraints->{mandatory}}, $xorset;
+        }
+        # or set of fields
+        foreach my $for (@{$et->{fieldor}}) {
+          my $orset;
+          foreach my $f (@{$for->{field}}) {
+            push @$orset, $f->{content};
+          }
+          unshift @$orset, 'OR';
+          push @{$constraints->{mandatory}}, $orset;
+        }
+      }
     }
+
+    # entrytypes
+    foreach my $et (@{$es->{entrytypes}{entrytype}}) {
+      $leg_ents->{$et->{content}}{legal_fields} = $lfs;
+      $leg_ents->{$et->{content}}{constraints} = $constraints;
+    }
+
   }
   Biber::Config->setdata('legal_entrytypes', $leg_ents);
 }
@@ -822,47 +865,92 @@ sub process_structure {
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
     my $et = $be->get_field('entrytype');
+    if (Biber::Config->getoption('validate_structure')) {
 
-    # default entrytype to MISC type if not a known type
-    unless ($legents->{$et}) {
-      $self->biber_warn($be, "Entry type '" . $be->get_field('entrytype') . "' for entry '$citekey' isn't a known biblatex type - defaulting to 'misc'");
-      $be->set_field('entrytype', 'misc');
-      $et = 'misc'; # reset this too
-    }
+      # default entrytype to MISC type if not a known type
+      unless ($legents->{$et}{legal_fields}) {
+        $self->biber_warn($be, "Entry type '" . $be->get_field('entrytype') . "' for entry '$citekey' isn't a known biblatex type - defaulting to 'misc'");
+        $be->set_field('entrytype', 'misc');
+        $et = 'misc';           # reset this too
+      }
 
-    # Are all fields valid fields?
-    # Each field must be:
-    # * Valid because it's allowed for "ALL" entrytypes OR
-    # * Valid field for the specific entrytype OR
-    # * Valid because entrytype allows "ALL" fields
-    foreach my $ef ($be->datafields) {
-      unless ($legents->{ALL}{$ef} or $legents->{$et}{$ef} or $legents->{$et}{ALL}) {
-        $self->biber_warn($be, "Entry '$citekey' - invalid field '$ef' for entrytype '$et'");
+      # Are all fields valid fields?
+      # Each field must be:
+      # * Valid because it's allowed for "ALL" entrytypes OR
+      # * Valid field for the specific entrytype OR
+      # * Valid because entrytype allows "ALL" fields
+      foreach my $ef ($be->datafields) {
+        unless ($legents->{ALL}{legal_fields}{$ef} or
+                $legents->{$et}{legal_fields}{$ef} or
+                $legents->{$et}{legal_fields}{ALL}) {
+          $self->biber_warn($be, "Entry '$citekey' - invalid field '$ef' for entrytype '$et'");
+        }
+      }
+
+      # Mandatory constraints
+      foreach my $c ((@{$legents->{ALL}{constraints}{mandatory}},
+                      @{$legents->{$et}{constraints}{mandatory}})) {
+        if (ref($c) eq 'ARRAY') {
+          # Exactly one of a set is mandatory
+          if ($c->[0] eq 'XOR') {
+            my @fs = @$c[1,-1]; # Lose the first element which is the 'XOR'
+            my $flag = 0;
+            my $xorflag = 0;
+            foreach my $of (@fs) {
+              if ($be->get_field($of)) {
+                if ($xorflag) {
+                  $self->biber_warn($be, "Mandatory fields - only one of '" . join(', ', @fs) . "' must be defined in entry '$citekey' ignoring field '$of'");
+                  $be->del_field($of);
+                }
+                $flag = 1;
+                $xorflag = 1;
+              }
+            }
+            unless ($flag) {
+              $self->biber_warn($be, "Missing mandatory field - one of '" . join(', ', @fs) . "' must be defined in entry '$citekey'");
+            }
+          }
+          # One or more of a set is mandatory
+          elsif ($c->[0] eq 'OR') {
+            my @fs = @$c[1,-1]; # Lose the first element which is the 'OR'
+            my $flag = 0;
+            foreach my $of (@fs) {
+              next if $of eq 'OR'; # Skip disjunction type indicator
+              if ($be->get_field($of)) {
+                $flag = 1;
+                last;
+              }
+            }
+            unless ($flag) {
+              $self->biber_warn($be, "Missing mandatory field - one of '" . join(', ', @fs) . "' must be defined in entry '$citekey'");
+            }
+          }
+        }
+        # Simple mandatory field
+        else {
+          unless ($be->get_field($c)) {
+            $self->biber_warn($be, "Missing mandatory field '$c' in entry '$citekey'");
+          }
+        }
+      }
+
+      # Optional XOR constraint
+      # Both DATE and MONTH specified
+      if ($be->get_field('date') and $be->get_field('month')) {
+        $self->biber_warn($be, "Field conflict - both 'date' and 'month' used - ignoring field 'month' in entry '$citekey'");
+        $be->del_field('month');
+      }
+
+      # Data constraint
+      # MONTH must be an integer - YEAR doesn't have to be to allow for things like
+      # "in press" which sometimes need an extrayear disambiguator (in APA styles for example)
+      if ($be->get_field('month') and $be->get_field('month') !~ /\A\d+\z/xms) {
+        $self->biber_warn($be, "Invalid format of field 'month' - ignoring field in entry '$citekey'");
+        $be->del_field('month');
       }
     }
 
-    # Mandatory XOR constraint
-    # Both DATE and YEAR specified
-    if ($be->get_field('date') and $be->get_field('year')) {
-      $self->biber_warn($be, "Field conflict - both 'date' and 'year' used - ignoring field 'year' in entry '$citekey'");
-      $be->del_field('year');
-    }
-
-    # Optional XOR constraint
-    # Both DATE and MONTH specified
-    if ($be->get_field('date') and $be->get_field('month')) {
-      $self->biber_warn($be, "Field conflict - both 'date' and 'month' used - ignoring field 'month' in entry '$citekey'");
-      $be->del_field('month');
-    }
-
-    # Data constraint
-    # MONTH must be an integer - YEAR doesn't have to be to allow for things like
-    # "in press" which sometimes need an extrayear disambiguator (in APA styles for example)
-    if ($be->get_field('month') and $be->get_field('month') !~ /\A\d+\z/xms) {
-      $self->biber_warn($be, "Invalid format of field 'month' - ignoring field in entry '$citekey'");
-      $be->del_field('month');
-    }
-
+    # We always want to expand dates so no conditionalised for validate_structure
     # Data constraint
     # Can validate iso8601 here (DateTime::Format::ISO8601)?
     # Generate date components from *DATE fields
@@ -870,6 +958,20 @@ sub process_structure {
       if ($be->get_field($datetype . 'date')) {
         my $date_re = qr|(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?|xms;
         if ($be->get_field($datetype . 'date') =~ m|\A$date_re(/)?(?:$date_re)?\z|xms) {
+
+          # Some warnings for overwriting YEAR and MONTH from DATE, just in case
+          # validate_structure is false and so YEAR and MONTH may still co-exist with DATE
+          if ($1 and
+              ($datetype . 'year' eq 'year') and
+              $be->get_field('year')) {
+            $self->biber_warn($be, "Overwriting field 'year' with year value from field 'date' for entry '$citekey'");
+          }
+          if ($2 and
+              ($datetype . 'month' eq 'month') and
+              $be->get_field('month')) {
+            $self->biber_warn($be, "Overwriting field 'month' with month value from field 'date' for entry '$citekey'");
+          }
+
           $be->set_field($datetype . 'year', $1) if $1;
           $be->set_field($datetype . 'month', $2) if $2;
           $be->set_field($datetype . 'day', $3) if $3;
@@ -889,29 +991,31 @@ sub process_structure {
       }
     }
 
-    # Data constraint
-    # Now more carefully check the individual date components
-    my $opt_dm = qr/(?:event|orig|url)?(?:end)?/xms;
-    foreach my $dcf (@DATECOMPONENTFIELDS) {
-      my $bad_format = '';
-      if ($be->get_field($dcf)) {
+    if (Biber::Config->getoption('validate_structure')) {
+      # Data constraint
+      # Now more carefully check the individual date components
+      my $opt_dm = qr/(?:event|orig|url)?(?:end)?/xms;
+      foreach my $dcf (@DATECOMPONENTFIELDS) {
+        my $bad_format = '';
+        if ($be->get_field($dcf)) {
 
-        # months must be in right range
-        if ($dcf =~ /\A$opt_dm month\z/xms) {
-          unless ($be->get_field($dcf) >= 1 and $be->get_field($dcf) <= 12) {
-            $bad_format = 1;
+          # months must be in right range
+          if ($dcf =~ /\A$opt_dm month\z/xms) {
+            unless ($be->get_field($dcf) >= 1 and $be->get_field($dcf) <= 12) {
+              $bad_format = 1;
+            }
           }
-        }
 
-        # days must be in right range
-        if ($dcf =~ /\A$opt_dm day\z/xms) {
-          unless ($be->get_field($dcf) >= 1 and $be->get_field($dcf) <= 31) {
-            $bad_format = 1;
+          # days must be in right range
+          if ($dcf =~ /\A$opt_dm day\z/xms) {
+            unless ($be->get_field($dcf) >= 1 and $be->get_field($dcf) <= 31) {
+              $bad_format = 1;
+            }
           }
-        }
-        if ($bad_format) {
-          $self->biber_warn($be, "Value out of bounds for field/date component '$dcf' - ignoring in entry '$citekey'");
-          $be->del_field($dcf);
+          if ($bad_format) {
+            $self->biber_warn($be, "Value out of bounds for field/date component '$dcf' - ignoring in entry '$citekey'");
+            $be->del_field($dcf);
+          }
         }
       }
     }

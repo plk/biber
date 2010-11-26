@@ -9,6 +9,11 @@ TODO in decreasing order of priority:
      an XML data format to replace .bib, such structure checking will be implemented
      as schema validation.
 
+     constraints should be able to be defined more than once for a type and then merged
      ALL fields need to be put into types where possible
      make entrytype and field processing optional?
      Doc .rnc
+
+validate => validate_control
+validate_structure
+output-directory => output_directory

@@ -146,8 +146,10 @@ start =
             (attribute type { "mandatory" },
               (element bcf:field { xsd:NCName } |
                 element bcf:fieldxor {
-                  attribute coerce { xsd:NCName },
-                  element bcf:field { xsd:NCName }+
+                  element bcf:field {
+                    attribute coerce { "true" }?,
+                    xsd:NCName
+                  }+
                 } |
                 element bcf:fieldor {
                   element bcf:field { xsd:NCName }+

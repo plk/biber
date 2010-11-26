@@ -369,11 +369,13 @@
                             <data type="NCName"/>
                           </element>
                           <element name="bcf:fieldxor">
-                            <attribute name="coerce">
-                              <data type="NCName"/>
-                            </attribute>
                             <oneOrMore>
                               <element name="bcf:field">
+                                <optional>
+                                  <attribute name="coerce">
+                                    <value>true</value>
+                                  </attribute>
+                                </optional>
                                 <data type="NCName"/>
                               </element>
                             </oneOrMore>
