@@ -11,6 +11,7 @@ TODO in decreasing order of priority:
      as schema validation.
 
 
+     decouple *DATE format test from splitting
      structure-constraints test
      constraints should be able to be defined more than once for a type and then merged
      is DATE XOR YEAR really global?

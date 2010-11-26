@@ -965,13 +965,11 @@ sub process_structure {
         my $afs = $c->[1]; # Antecedent fields
         my $cq = $c->[2]; # Consequent quantifier
         my $cfs = $c->[3]; # Consequent fields
-        my $afl = $#$afs; # Number of fields in antecedent list
-        my $cfl = $#$cfs; # Number of fields in consequent list
         my @actual_afs = (grep {$be->field_exists($_)} @$afs); # antecedent fields in entry
 
         # check antecedent
         if ($aq eq 'all') {
-          next unless $afl == $#actual_afs; # ALL -> ? not satisfied
+          next unless $#$afs == $#actual_afs; # ALL -> ? not satisfied
         }
         elsif ($aq eq 'none') {
           next if @actual_afs; # NONE -> ? not satisfied
@@ -983,7 +981,7 @@ sub process_structure {
         # check consequent
         my @actual_cfs = (grep {$be->field_exists($_)} @$cfs);
         if ($cq eq 'all') {
-          unless ($cfl == $#actual_afs) { # ? -> ALL not satisfied
+          unless ($#$cfs == $#actual_afs) { # ? -> ALL not satisfied
             $self->biber_warn($be, "Constraint violation - $cq of fields (" .
                               join(', ', @actual_cfs) .
                               ") must exist when $aq of fields (" . join(', ', @$afs). ") exist");
