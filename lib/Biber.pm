@@ -736,7 +736,7 @@ sub process_setup {
       elsif ($et->{type} eq 'data') {
         my $data;
         $data->{fields} = [ map { $_->{content} } @{$et->{field}} ];
-        $data->{datatype} = $STRUCTURE_DATATYPES{$et->{datatype}};
+        $data->{datatype} = $et->{datatype};
         $data->{rangemin} = $et->{rangemin};
         $data->{rangemax} = $et->{rangemax};
         push @{$constraints->{data}}, $data;
@@ -1007,82 +1007,90 @@ sub process_structure {
         }
       }
 
-      # Data constraint
-      # MONTH must be an integer - YEAR doesn't have to be to allow for things like
-      # "in press" which sometimes need an extrayear disambiguator (in APA styles for example)
-      if ($be->get_field('month') and $be->get_field('month') !~ /\A\d+\z/xms) {
-        $self->biber_warn($be, "Invalid format of field 'month' - ignoring field in entry '$citekey'");
-        $be->del_field('month');
-      }
-    }
-
-
-    # Data constraint
-    # Can validate iso8601 here (DateTime::Format::ISO8601)?
-
-    # Generate date components from *DATE fields
-    # We always want to expand dates so not conditionalised for validate_structure
-    foreach my $datetype ('', 'orig', 'event', 'url') {
-      if ($be->get_field($datetype . 'date')) {
-        my $date_re = qr|(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?|xms;
-        if ($be->get_field($datetype . 'date') =~ m|\A$date_re(/)?(?:$date_re)?\z|xms) {
-
-          # Some warnings for overwriting YEAR and MONTH from DATE, just in case
-          # validate_structure is false and so YEAR and MONTH may still co-exist with DATE
-          if ($1 and
-              ($datetype . 'year' eq 'year') and
-              $be->get_field('year')) {
-            $self->biber_warn($be, "Overwriting field 'year' with year value from field 'date' for entry '$citekey'");
+      # Data constraints
+      foreach my $c ((@{$legents->{ALL}{constraints}{data}},
+                      @{$legents->{$et}{constraints}{data}})) {
+        if ($c->{datatype} eq 'integer') {
+          my $dt = $STRUCTURE_DATATYPES{$c->{datatype}};
+          foreach my $f (@{$c->{fields}}) {
+            if (my $fv = $be->get_field($f)) {
+              unless ( $fv =~ /$dt/ ) {
+                $self->biber_warn($be, "Invalid format (integer) of field '$f' - ignoring field in entry '$citekey'");
+                $be->del_field($f);
+                next;
+              }
+              if (my $fmin = $c->{rangemin}) {
+                unless ($fv >= $fmin) {
+                  $self->biber_warn($be, "Invalid value of  field '$f' must be '>=$fmin' - ignoring field in entry '$citekey'");
+                  $be->del_field($f);
+                  next;
+                }
+              }
+              if (my $fmax = $c->{rangemax}) {
+                unless ($fv <= $fmax) {
+                  $self->biber_warn($be, "Invalid value of  field '$f' must be '<=$fmax' - ignoring field in entry '$citekey'");
+                  $be->del_field($f);
+                  next;
+                }
+              }
+            }
           }
-          if ($2 and
-              ($datetype . 'month' eq 'month') and
-              $be->get_field('month')) {
-            $self->biber_warn($be, "Overwriting field 'month' with month value from field 'date' for entry '$citekey'");
-          }
-
-          $be->set_field($datetype . 'year', $1) if $1;
-          $be->set_field($datetype . 'month', $2) if $2;
-          $be->set_field($datetype . 'day', $3) if $3;
-          $be->set_field($datetype . 'endmonth', $6) if $6;
-          $be->set_field($datetype . 'endday', $7) if $7;
-          if ($4 and $5) {      # normal range
-            $be->set_field($datetype . 'endyear', $5);
-          }
-          elsif ($4 and not $5) { # open ended range - endyear is defined but empty
-            $be->set_field($datetype . 'endyear', '');
-          }
-        }
-        else {
-          $self->biber_warn($be, "Invalid format of field '" . $datetype . 'date' . "' - ignoring field in entry '$citekey'");
-          $be->del_field($datetype . 'date');
         }
       }
     }
 
-    if (Biber::Config->getoption('validate_structure')) {
-      # Data constraint
-      # Now more carefully check the individual date components
-      my $opt_dm = qr/(?:event|orig|url)?(?:end)?/xms;
-      foreach my $dcf (@DATECOMPONENTFIELDS) {
-        my $bad_format = '';
-        if ($be->get_field($dcf)) {
+    # Split date into components and do some date field validation
+    # No date module I looked at would distinguish between an undefined month
+    # passed to ->new() and "01". Same for day. Pretty useless since a bare
+    # year is a valid ISO8601 format date. Regexp::Common::time doesn't validate
+    # month/day value either.
+    # This doesn't validate that the day is valid for the month but perhaps
+    # when some date module really implements 8601, I'll use it.
+    foreach my $c ((@{$legents->{ALL}{constraints}{data}},
+                    @{$legents->{$et}{constraints}{data}})) {
+      if ($c->{datatype} eq 'datespec') {
+        foreach my $f (@{$c->{fields}}) {
+          if (my $fv = $be->get_field($f)) {
+            my ($datetype) = $f =~ m/\A(.*)date\z/xms;
+            my $date_re = qr/(\d{4}) # year
+                             (?:-(0[1-9]|1[0-2]))? # month
+                             (?:-(0[1-9]|1[0-9]|2[0-9]|3[0-1]))? # day
+                            /xms;
+            if (my ($byear, $bmonth, $bday, $r, $eyear, $emonth, $eday) =
+                $be->get_field($datetype . 'date') =~
+                m|\A$date_re(/)?(?:$date_re)?\z|xms) {
 
-          # months must be in right range
-          if ($dcf =~ /\A$opt_dm month\z/xms) {
-            unless ($be->get_field($dcf) >= 1 and $be->get_field($dcf) <= 12) {
-              $bad_format = 1;
-            }
-          }
+              # Some warnings for overwriting YEAR and MONTH from DATE, just in case
+              # validate_structure is false and so YEAR and MONTH may still
+              # co-exist with DATE
+              if ($byear and
+                  ($datetype . 'year' eq 'year') and
+                  $be->get_field('year')) {
+                $self->biber_warn($be, "Overwriting field 'year' with year value from field 'date' for entry '$citekey'");
+              }
+              if ($bmonth and
+                  ($datetype . 'month' eq 'month') and
+                  $be->get_field('month')) {
+                $self->biber_warn($be, "Overwriting field 'month' with month value from field 'date' for entry '$citekey'");
+              }
 
-          # days must be in right range
-          if ($dcf =~ /\A$opt_dm day\z/xms) {
-            unless ($be->get_field($dcf) >= 1 and $be->get_field($dcf) <= 31) {
-              $bad_format = 1;
+              $be->set_field($datetype . 'year', $byear)      if $byear;
+              $be->set_field($datetype . 'month', $bmonth)    if $bmonth;
+              $be->set_field($datetype . 'day', $bday)        if $bday;
+              $be->set_field($datetype . 'endmonth', $emonth) if $emonth;
+              $be->set_field($datetype . 'endday', $eday)     if $eday;
+              if ($r and $eyear) { # normal range
+                $be->set_field($datetype . 'endyear', $eyear);
+              }
+              elsif ($r and not $eyear) { # open ended range - endyear is defined but empty
+                $be->set_field($datetype . 'endyear', '');
+              }
             }
-          }
-          if ($bad_format) {
-            $self->biber_warn($be, "Value out of bounds for field/date component '$dcf' - ignoring in entry '$citekey'");
-            $be->del_field($dcf);
+            else {
+              $self->biber_warn($be, "Invalid format of field '$f' in entry '$citekey' - ignoring");
+              $be->del_field($f);
+              next;
+            }
           }
         }
       }

@@ -34,18 +34,18 @@ my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 
-my $l1 = [ "Invalid format of field 'origdate' - ignoring field in entry 'L1'",
-           "Invalid format of field 'urldate' - ignoring field in entry 'L1'",
-           "Value out of bounds for field/date component 'month' - ignoring in entry 'L1'" ];
-my $l2 = [ "Invalid format of field 'origdate' - ignoring field in entry 'L2'" ];
-my $l3 = [ "Invalid format of field 'urldate' - ignoring field in entry 'L3'" ];
-my $l4 = [ "Invalid format of field 'date' - ignoring field in entry 'L4'" ];
-my $l5 = [ "Invalid format of field 'date' - ignoring field in entry 'L5'" ];
-my $l6 = [ "Value out of bounds for field/date component 'month' - ignoring in entry 'L6'" ];
-my $l7 = [ "Value out of bounds for field/date component 'eventday' - ignoring in entry 'L7'" ];
-my $l8 = [ "Invalid format of field 'month' - ignoring field in entry 'L8'" ];
+my $l1 = [ "Invalid value of  field 'month' must be '<=12' - ignoring field in entry 'L1'",
+           "Invalid format of field 'origdate' in entry 'L1' - ignoring",
+           "Invalid format of field 'urldate' in entry 'L1' - ignoring", ];
+my $l2 = [ "Invalid format of field 'origdate' in entry 'L2' - ignoring" ];
+my $l3 = [ "Invalid format of field 'urldate' in entry 'L3' - ignoring" ];
+my $l4 = [ "Invalid format of field 'date' in entry 'L4' - ignoring" ];
+my $l5 = [ "Invalid format of field 'date' in entry 'L5' - ignoring" ];
+my $l6 = [ "Invalid format of field 'date' in entry 'L6' - ignoring" ];
+my $l7 = [ "Invalid format of field 'eventdate' in entry 'L7' - ignoring" ];
+my $l8 = [ "Invalid format (integer) of field 'month' - ignoring field in entry 'L8'" ];
 my $l11 = [ "Mandatory fields - only one of 'date, year' must be defined in entry 'L11' ignoring field 'year'"];
-my $l12 = [ "Constraint violation - none of fields (month) must exist when all of fields (date) exist" ];
+my $l12 = [ "Constraint violation - none of fields (month) must exist when all of fields (date) exist. Ignoring them." ];
 
 my $l13c = q|  \entry{L13}{book}{}
     \name{author}{2}{%
@@ -58,7 +58,7 @@ my $l13c = q|  \entry{L13}{book}{}
     \strng{namehash}{DJAA1}
     \strng{fullhash}{DJAA1}
     \field{sortinit}{D}
-    \field{extrayear}{4}
+    \field{extrayear}{3}
     \field{labelyear}{1996}
     \field{year}{1996}
     \field{endyear}{}
@@ -80,7 +80,7 @@ my $l14 = q|  \entry{L14}{book}{}
     \strng{namehash}{DJAA1}
     \strng{fullhash}{DJAA1}
     \field{sortinit}{D}
-    \field{extrayear}{5}
+    \field{extrayear}{4}
     \field{labelyear}{1996}
     \field{year}{1996}
     \field{endyear}{1996}
@@ -143,7 +143,7 @@ my $l17 = q|  \entry{L17}{proceedings}{}
     \strng{namehash}{DJAA1}
     \strng{fullhash}{DJAA1}
     \field{sortinit}{D}
-    \field{extrayear}{7}
+    \field{extrayear}{6}
     \field{labelyear}{1996}
     \field{year}{1996}
     \field{endyear}{1996}
@@ -237,7 +237,6 @@ my $l17e = q|  \entry{L17}{proceedings}{}
   \endentry
 
 |;
-
 
 is_deeply($bibentries->entry('l1')->get_field('warnings'), $l1, 'Date format test 1' ) ;
 ok(is_undef($bibentries->entry('l1')->get_field('origyear')), 'Date format test 1a - ORIGYEAR undef since ORIGDATE is bad' ) ;

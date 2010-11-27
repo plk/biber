@@ -339,7 +339,7 @@
                         <attribute name="datatype">
                           <choice>
                             <value>integer</value>
-                            <value>iso8601</value>
+                            <value>datespec</value>
                           </choice>
                         </attribute>
                       </optional>

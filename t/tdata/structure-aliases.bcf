@@ -249,41 +249,14 @@
           <bcf:field>month</bcf:field>
         </bcf:consequent>
       </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer">
-        <bcf:field>year</bcf:field>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer">
-        <bcf:field>origyear</bcf:field>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer">
-        <bcf:field>eventyear</bcf:field>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer">
-        <bcf:field>urlyear</bcf:field>
-      </bcf:constraint>
       <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
-        <bcf:field>origmonth</bcf:field>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
-        <bcf:field>eventmonth</bcf:field>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
-        <bcf:field>urlmonth</bcf:field>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="31">
-        <bcf:field>day</bcf:field>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="31">
-        <bcf:field>origday</bcf:field>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="31">
-        <bcf:field>eventday</bcf:field>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="31">
-        <bcf:field>urlday</bcf:field>
+      <bcf:constraint type="data" datatype="datespec">
+        <bcf:field>date</bcf:field>
+        <bcf:field>origdate</bcf:field>
+        <bcf:field>eventdate</bcf:field>
+        <bcf:field>urldate</bcf:field>
       </bcf:constraint>
     </bcf:entryschema>
     <bcf:entryschema>

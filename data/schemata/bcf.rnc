@@ -138,7 +138,7 @@ start =
               }
             ) |
             (attribute type { "data" },
-              attribute datatype { "integer" | "iso8601" }?,
+              attribute datatype { "integer" | "datespec" }?,
               attribute rangemin { xsd:int }?,
               attribute rangemax { xsd:int }?,                                      
               element bcf:field { xsd:NCName }+
