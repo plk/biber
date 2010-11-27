@@ -837,12 +837,6 @@
     </bcf:entryfields>
     <bcf:constraints>
       <bcf:entrytype>ALL</bcf:entrytype>
-      <bcf:constraint type="mandatory">
-        <bcf:fieldxor>
-          <bcf:field coerce="true">date</bcf:field>
-          <bcf:field>year</bcf:field>
-        </bcf:fieldxor>
-      </bcf:constraint>
       <bcf:constraint type="conditional">
         <bcf:antecedent quant="all">
           <bcf:field>date</bcf:field>
@@ -859,6 +853,37 @@
         <bcf:field>origdate</bcf:field>
         <bcf:field>eventdate</bcf:field>
         <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>     
+    <bcf:constraints>
+      <bcf:entrytype>article</bcf:entrytype>
+      <bcf:entrytype>book</bcf:entrytype>
+      <bcf:entrytype>inbook</bcf:entrytype>
+      <bcf:entrytype>bookinbook</bcf:entrytype>
+      <bcf:entrytype>suppbook</bcf:entrytype>
+      <bcf:entrytype>booklet</bcf:entrytype>
+      <bcf:entrytype>collection</bcf:entrytype>
+      <bcf:entrytype>incollection</bcf:entrytype>
+      <bcf:entrytype>suppcollection</bcf:entrytype>
+      <bcf:entrytype>manual</bcf:entrytype>
+      <bcf:entrytype>misc</bcf:entrytype>
+      <bcf:entrytype>online</bcf:entrytype>
+      <bcf:entrytype>patent</bcf:entrytype>
+      <bcf:entrytype>periodical</bcf:entrytype>
+      <bcf:entrytype>suppperiodical</bcf:entrytype>
+      <bcf:entrytype>proceedings</bcf:entrytype>
+      <bcf:entrytype>inproceedings</bcf:entrytype>
+      <bcf:entrytype>reference</bcf:entrytype>
+      <bcf:entrytype>inreference</bcf:entrytype>
+      <bcf:entrytype>report</bcf:entrytype>
+      <bcf:entrytype>set</bcf:entrytype>
+      <bcf:entrytype>thesis</bcf:entrytype>
+      <bcf:entrytype>unpublished</bcf:entrytype>
+      <bcf:constraint type="mandatory">
+        <bcf:fieldxor>
+          <bcf:field coerce="true">date</bcf:field>
+          <bcf:field>year</bcf:field>
+        </bcf:fieldxor>
       </bcf:constraint>
     </bcf:constraints>     
     <bcf:constraints>

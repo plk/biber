@@ -901,7 +901,7 @@ sub process_structure {
 
       # default entrytype to MISC type if not a known type
       unless ($legents->{$et}{legal_fields}) {
-        $self->biber_warn($be, "Entry type '" . $be->get_field('entrytype') . "' for entry '$citekey' isn't a known biblatex type - defaulting to 'misc'");
+        $self->biber_warn($be, "Entry '$citekey' - invalid entry type '" . $be->get_field('entrytype') . "' - defaulting to 'misc'");
         $be->set_field('entrytype', 'misc');
         $et = 'misc';           # reset this too
       }
@@ -973,7 +973,6 @@ sub process_structure {
         my $cq = $c->[2]; # Consequent quantifier
         my $cfs = $c->[3]; # Consequent fields
         my @actual_afs = (grep {$be->field_exists($_)} @$afs); # antecedent fields in entry
-
         # check antecedent
         if ($aq eq 'all') {
           next unless $#$afs == $#actual_afs; # ALL -> ? not satisfied
@@ -988,9 +987,9 @@ sub process_structure {
         # check consequent
         my @actual_cfs = (grep {$be->field_exists($_)} @$cfs);
         if ($cq eq 'all') {
-          unless ($#$cfs == $#actual_afs) { # ? -> ALL not satisfied
+          unless ($#$cfs == $#actual_cfs) { # ? -> ALL not satisfied
             $self->biber_warn($be, "Constraint violation - $cq of fields (" .
-                              join(', ', @actual_cfs) .
+                              join(', ', @$cfs) .
                               ") must exist when $aq of fields (" . join(', ', @$afs). ") exist");
           }
         }
@@ -1028,14 +1027,14 @@ sub process_structure {
               }
               if (my $fmin = $c->{rangemin}) {
                 unless ($fv >= $fmin) {
-                  $self->biber_warn($be, "Invalid value of  field '$f' must be '>=$fmin' - ignoring field in entry '$citekey'");
+                  $self->biber_warn($be, "Invalid value of field '$f' must be '>=$fmin' - ignoring field in entry '$citekey'");
                   $be->del_field($f);
                   next;
                 }
               }
               if (my $fmax = $c->{rangemax}) {
                 unless ($fv <= $fmax) {
-                  $self->biber_warn($be, "Invalid value of  field '$f' must be '<=$fmax' - ignoring field in entry '$citekey'");
+                  $self->biber_warn($be, "Invalid value of field '$f' must be '<=$fmax' - ignoring field in entry '$citekey'");
                   $be->del_field($f);
                   next;
                 }
@@ -1827,7 +1826,7 @@ sub sortshorthands {
 
 sub prepare {
   my $self = shift;
-  $self->process_setup;                # Place to put misc pre-processing things
+  $self->process_setup;                # Place to put global pre-processing things
   foreach my $section (@{$self->sections->get_sections}) {
     # shortcut - skip sections that don't have any keys
     next unless $section->get_citekeys or $section->is_allkeys;

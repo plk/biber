@@ -34,7 +34,7 @@ my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 
-my $l1 = [ "Invalid value of  field 'month' must be '<=12' - ignoring field in entry 'L1'",
+my $l1 = [ "Invalid value of field 'month' must be '<=12' - ignoring field in entry 'L1'",
            "Invalid format of field 'origdate' in entry 'L1' - ignoring",
            "Invalid format of field 'urldate' in entry 'L1' - ignoring", ];
 my $l2 = [ "Invalid format of field 'origdate' in entry 'L2' - ignoring" ];

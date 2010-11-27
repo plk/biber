@@ -30,7 +30,7 @@ my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 
 my $w1 = ["Field 'school' is an alias for field 'institution' but both are defined in entry with key 'alias2' - skipping field 'school'",
-          "Entry type 'thing' for entry 'alias2' isn't a known biblatex type - defaulting to 'misc'",
+          "Entry 'alias2' - invalid entry type 'thing' - defaulting to 'misc'",
           "Entry 'alias2' - invalid field 'institution' for entrytype 'misc'"
 ];
 
@@ -41,7 +41,5 @@ is($bibentries->entry('alias1')->get_field('address'), undef, 'Alias - 4' );
 is($bibentries->entry('alias2')->get_field('entrytype'), 'misc', 'Alias - 5' );
 is_deeply($bibentries->entry('alias2')->get_field('warnings'), $w1, 'Alias - 6' ) ;
 is($bibentries->entry('alias2')->get_field('school'), undef, 'Alias - 7' );
-
-#is($out->get_output_entry('cr1'), $cr1, 'crossref test 1');
 
 unlink "*.utf8";

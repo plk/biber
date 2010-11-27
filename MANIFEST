@@ -55,6 +55,7 @@ t/16-encoding.t
 t/17-crossrefs.t
 t/18-structure-dateformats.t
 t/18-structure-aliases.t
+t/18-structure-constraints.t
 t/pod-coverage.t
 t/pod.t
 t/tdata/options.bcf
@@ -106,3 +107,5 @@ t/tdata/set.bcf
 t/tdata/uniquename.bcf
 t/tdata/structure-aliases.bcf
 t/tdata/structure-aliases.bib
+t/tdata/structure-constraints.bcf
+t/tdata/structure-constraints.bib

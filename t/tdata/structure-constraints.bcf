@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="../../data/schemata/bcf.rnc" type="compact"?>
+<bcf:controlfile version="1.0" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+  <!-- OPTIONS -->
+  <bcf:options component="biber" type="global">
+    <bcf:option type="singlevalued">
+      <bcf:key>bblencoding</bcf:key>
+      <bcf:value>utf8</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>bibencoding</bcf:key>
+      <bcf:value>utf8</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>debug</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>mincrossrefs</bcf:key>
+      <bcf:value>2</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortcase</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortupper</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+  </bcf:options>
+  <bcf:options component="biblatex" type="global">
+    <bcf:option type="singlevalued">
+      <bcf:key>alphaothers</bcf:key>
+      <bcf:value>\textbf{+}</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>labelalpha</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="multivalued">
+      <bcf:key>labelname</bcf:key>
+      <bcf:value order="1">author</bcf:value>
+    </bcf:option>
+    <bcf:option type="multivalued">
+      <bcf:key>labelyear</bcf:key>
+      <bcf:value order="1">year</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>maxitems</bcf:key>
+      <bcf:value>3</bcf:value>
+    </bcf:option>    
+    <bcf:option type="singlevalued">
+      <bcf:key>maxnames</bcf:key>
+      <bcf:value>3</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>minitems</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>minnames</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>singletitle</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortalphaothers</bcf:key>
+      <bcf:value>+</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortlos</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>terseinits</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>uniquename</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useauthor</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useeditor</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useprefix</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>usetranslator</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+  </bcf:options>
+  <bcf:sorting type="global">
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">presort</bcf:sortitem>
+      <bcf:sortitem order="2">mm</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="2">
+      <bcf:sortitem order="1" final="1">sortkey</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="3">
+      <bcf:sortitem order="1">sortname</bcf:sortitem>
+      <bcf:sortitem order="2">author</bcf:sortitem>
+      <bcf:sortitem order="3">editor</bcf:sortitem>
+      <bcf:sortitem order="4">translator</bcf:sortitem>
+      <bcf:sortitem order="5">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="6">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="4">
+      <bcf:sortitem order="1">sortyear</bcf:sortitem>
+      <bcf:sortitem order="2">year</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="5">
+      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="2">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="6">
+      <bcf:sortitem order="1">volume</bcf:sortitem>
+      <bcf:sortitem order="2">0000</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  <bcf:structure>
+    <bcf:entrytypes>
+      <bcf:entrytype>eta</bcf:entrytype>
+      <bcf:entrytype>etb</bcf:entrytype>
+      <bcf:entrytype>etc</bcf:entrytype>
+      <bcf:entrytype>etd</bcf:entrytype>
+      <bcf:entrytype>misc</bcf:entrytype>
+    </bcf:entrytypes>
+    <bcf:aliases>
+      <bcf:alias type="entrytype">
+        <bcf:name>conference</bcf:name>
+        <bcf:realname>inproceedings</bcf:realname>
+      </bcf:alias>
+      <bcf:alias type="entrytype">
+        <bcf:name>electronic</bcf:name>
+        <bcf:realname>online</bcf:realname>
+      </bcf:alias>
+      <bcf:alias type="entrytype">
+        <bcf:name>mastersthesis</bcf:name>
+        <bcf:realname>thesis</bcf:realname>
+        <bcf:field name="type">mathesis</bcf:field>
+      </bcf:alias>
+      <bcf:alias type="entrytype">
+        <bcf:name>phdthesis</bcf:name>
+        <bcf:realname>thesis</bcf:realname>
+        <bcf:field name="type">phdthesis</bcf:field>
+      </bcf:alias>
+      <bcf:alias type="entrytype">
+        <bcf:name>techreport</bcf:name>
+        <bcf:realname>report</bcf:realname>
+        <bcf:field name="type">techreport</bcf:field>
+      </bcf:alias>
+      <bcf:alias type="entrytype">
+        <bcf:name>www</bcf:name>
+        <bcf:realname>online</bcf:realname>
+      </bcf:alias>
+      <bcf:alias type="field">
+        <bcf:name>address</bcf:name>
+        <bcf:realname>location</bcf:realname>
+      </bcf:alias>
+      <bcf:alias type="field">
+        <bcf:name>annote</bcf:name>
+        <bcf:realname>annotation</bcf:realname>
+      </bcf:alias>
+      <bcf:alias type="field">
+        <bcf:name>archiveprefix</bcf:name>
+        <bcf:realname>eprinttype</bcf:realname>
+      </bcf:alias>
+      <bcf:alias type="field">
+        <bcf:name>journal</bcf:name>
+        <bcf:realname>journaltitle</bcf:realname>
+      </bcf:alias>
+      <bcf:alias type="field">
+        <bcf:name>key</bcf:name>
+        <bcf:realname>sortkey</bcf:realname>
+      </bcf:alias>
+      <bcf:alias type="field">
+        <bcf:name>pdf</bcf:name>
+        <bcf:realname>file</bcf:realname>
+      </bcf:alias>
+      <bcf:alias type="field">
+        <bcf:name>primaryclass</bcf:name>
+        <bcf:realname>eprintclass</bcf:realname>
+      </bcf:alias>
+      <bcf:alias type="field">
+        <bcf:name>school</bcf:name>
+        <bcf:realname>institution</bcf:realname>
+      </bcf:alias>
+    </bcf:aliases>
+    <bcf:entryfields>
+      <bcf:entrytype>ALL</bcf:entrytype>
+      <bcf:field>abstract</bcf:field>
+    </bcf:entryfields>
+    <bcf:entryfields>
+      <bcf:entrytype>set</bcf:entrytype>
+      <bcf:field>ALL</bcf:field>
+    </bcf:entryfields>
+    <bcf:entryfields>
+      <bcf:entrytype>eta</bcf:entrytype>
+      <bcf:field>author</bcf:field>
+      <bcf:field>title</bcf:field>
+      <bcf:field>year</bcf:field>
+      <bcf:field>date</bcf:field>
+    </bcf:entryfields>
+    <bcf:entryfields>
+      <bcf:entrytype>etb</bcf:entrytype>
+      <bcf:entrytype>etc</bcf:entrytype>
+      <bcf:entrytype>etd</bcf:entrytype>
+      <bcf:field>author</bcf:field>
+      <bcf:field>title</bcf:field>
+      <bcf:field>year</bcf:field>
+      <bcf:field>date</bcf:field>
+      <bcf:field>month</bcf:field>
+      <bcf:field>journaltitle</bcf:field>
+      <bcf:field>fielda</bcf:field>
+      <bcf:field>fieldb</bcf:field>
+      <bcf:field>field1</bcf:field>
+      <bcf:field>field2</bcf:field>
+      <bcf:field>field3</bcf:field>
+      <bcf:field>field4</bcf:field>
+      <bcf:field>field5</bcf:field>
+      <bcf:field>field6</bcf:field>
+      <bcf:field>field7</bcf:field>
+      <bcf:field>field8</bcf:field>
+      <bcf:field>field9</bcf:field>
+      <bcf:field>field10</bcf:field>
+      <bcf:field>field11</bcf:field>
+      <bcf:field>field12</bcf:field>
+      <bcf:field>field13</bcf:field>
+      <bcf:field>field14</bcf:field>
+    </bcf:entryfields>
+    <bcf:entryfields>
+      <bcf:entrytype>misc</bcf:entrytype>
+      <bcf:field>author</bcf:field>
+      <bcf:field>title</bcf:field>
+      <bcf:field>year</bcf:field>
+      <bcf:field>date</bcf:field>
+      <bcf:field>month</bcf:field>
+      <bcf:field>journaltitle</bcf:field>
+    </bcf:entryfields>
+    <bcf:constraints>
+      <bcf:entrytype>ALL</bcf:entrytype>
+      <bcf:constraint type="mandatory">
+        <bcf:fieldxor>
+          <bcf:field coerce="true">date</bcf:field>
+          <bcf:field>year</bcf:field>
+        </bcf:fieldxor>
+      </bcf:constraint>
+      <bcf:constraint type="conditional">
+        <bcf:antecedent quant="all">
+          <bcf:field>date</bcf:field>
+        </bcf:antecedent>
+        <bcf:consequent quant="none">
+          <bcf:field>month</bcf:field>
+        </bcf:consequent>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
+        <bcf:field>month</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="datespec">
+        <bcf:field>date</bcf:field>
+        <bcf:field>origdate</bcf:field>
+        <bcf:field>eventdate</bcf:field>
+        <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>     
+    <bcf:constraints>
+      <bcf:entrytype>eta</bcf:entrytype>
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+        <bcf:field>title</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <bcf:entrytype>etb</bcf:entrytype>
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+        <bcf:field>title</bcf:field>
+        <bcf:field>journaltitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="integer" rangemin="5" rangemax="12">
+        <bcf:field>field1</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="conditional">
+        <bcf:antecedent quant="all">
+          <bcf:field>field2</bcf:field>
+          <bcf:field>field3</bcf:field>
+          <bcf:field>field4</bcf:field>
+        </bcf:antecedent>
+        <bcf:consequent quant="none">
+          <bcf:field>field5</bcf:field>
+          <bcf:field>field6</bcf:field>
+        </bcf:consequent>
+      </bcf:constraint>
+      <bcf:constraint type="conditional">
+        <bcf:antecedent quant="all">
+          <bcf:field>field1</bcf:field>
+          <bcf:field>field2</bcf:field>
+        </bcf:antecedent>
+        <bcf:consequent quant="one">
+          <bcf:field>field7</bcf:field>
+          <bcf:field>field8</bcf:field>
+        </bcf:consequent>
+      </bcf:constraint>
+      <bcf:constraint type="conditional">
+        <bcf:antecedent quant="all">
+          <bcf:field>field5</bcf:field>
+          <bcf:field>field6</bcf:field>
+        </bcf:antecedent>
+        <bcf:consequent quant="all">
+          <bcf:field>field9</bcf:field>
+          <bcf:field>field10</bcf:field>
+        </bcf:consequent>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <bcf:entrytype>etc</bcf:entrytype>
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+        <bcf:field>title</bcf:field>
+        <bcf:field>journaltitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="conditional">
+        <bcf:antecedent quant="one">
+          <bcf:field>field2</bcf:field>
+          <bcf:field>field3</bcf:field>
+        </bcf:antecedent>
+        <bcf:consequent quant="none">
+          <bcf:field>field4</bcf:field>
+        </bcf:consequent>
+      </bcf:constraint>
+      <bcf:constraint type="conditional">
+        <bcf:antecedent quant="one">
+          <bcf:field>field5</bcf:field>
+          <bcf:field>field6</bcf:field>
+        </bcf:antecedent>
+        <bcf:consequent quant="none">
+          <bcf:field>field7</bcf:field>
+        </bcf:consequent>
+      </bcf:constraint>
+      <bcf:constraint type="conditional">
+        <bcf:antecedent quant="one">
+          <bcf:field>field2</bcf:field>
+          <bcf:field>field3</bcf:field>
+        </bcf:antecedent>
+        <bcf:consequent quant="all">
+          <bcf:field>field8</bcf:field>
+          <bcf:field>field9</bcf:field>
+        </bcf:consequent>
+      </bcf:constraint>
+      <bcf:constraint type="conditional">
+        <bcf:antecedent quant="one">
+          <bcf:field>field10</bcf:field>
+          <bcf:field>field11</bcf:field>
+        </bcf:antecedent>
+        <bcf:consequent quant="one">
+          <bcf:field>field5</bcf:field>
+        </bcf:consequent>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <bcf:entrytype>etd</bcf:entrytype>
+      <bcf:entrytype>etc</bcf:entrytype>
+      <bcf:constraint type="mandatory">
+        <bcf:fieldor>
+          <bcf:field>fielda</bcf:field>
+          <bcf:field>fieldb</bcf:field>
+        </bcf:fieldor>
+      </bcf:constraint>
+    </bcf:constraints>
+    <bcf:constraints>
+      <bcf:entrytype>etd</bcf:entrytype>
+      <bcf:constraint type="mandatory">
+        <bcf:field>author</bcf:field>
+        <bcf:field>title</bcf:field>
+        <bcf:field>journaltitle</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="conditional">
+        <bcf:antecedent quant="none">
+          <bcf:field>field2</bcf:field>
+          <bcf:field>field3</bcf:field>
+        </bcf:antecedent>
+        <bcf:consequent quant="none">
+          <bcf:field>field4</bcf:field>
+        </bcf:consequent>
+      </bcf:constraint>
+      <bcf:constraint type="conditional">
+        <bcf:antecedent quant="none">
+          <bcf:field>field7</bcf:field>
+        </bcf:antecedent>
+        <bcf:consequent quant="none">
+          <bcf:field>field5</bcf:field>
+        </bcf:consequent>
+      </bcf:constraint>
+      <bcf:constraint type="conditional">
+        <bcf:antecedent quant="none">
+          <bcf:field>field8</bcf:field>
+          <bcf:field>field9</bcf:field>
+        </bcf:antecedent>
+        <bcf:consequent quant="one">
+          <bcf:field>field10</bcf:field>
+          <bcf:field>field11</bcf:field>
+        </bcf:consequent>
+      </bcf:constraint>
+      <bcf:constraint type="conditional">
+        <bcf:antecedent quant="none">
+          <bcf:field>field6</bcf:field>
+        </bcf:antecedent>
+        <bcf:consequent quant="all">
+          <bcf:field>field12</bcf:field>
+          <bcf:field>field13</bcf:field>
+        </bcf:consequent>
+      </bcf:constraint>
+    </bcf:constraints>
+  </bcf:structure>
+  <!-- SECTION 0 -->
+  <bcf:bibdata section="0">
+    <bcf:datasource type="file">structure-constraints</bcf:datasource>
+  </bcf:bibdata>
+  <bcf:section number="0">
+    <bcf:citekey>c1</bcf:citekey>
+    <bcf:citekey>c2</bcf:citekey>
+    <bcf:citekey>c3</bcf:citekey>
+    <bcf:citekey>c4</bcf:citekey>
+    <bcf:citekey>c5</bcf:citekey>
+    <bcf:citekey>c6</bcf:citekey>
+    <bcf:citekey>c7</bcf:citekey>
+    <bcf:citekey>c8</bcf:citekey>
+  </bcf:section>
+</bcf:controlfile>
+

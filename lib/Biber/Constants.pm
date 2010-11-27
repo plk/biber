@@ -320,17 +320,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                    {
                      constraint => [
                                      {
-                                       fieldxor => [
-                                         {
-                                           field => [
-                                             { coerce => "true", content => "date" },
-                                             { content => "year" },
-                                           ],
-                                         },
-                                       ],
-                                       type => "mandatory",
-                                     },
-                                     {
                                        antecedent => { field => [{ content => "date" }], quant => "all" },
                                        consequent => { field => [{ content => "month" }], quant => "none" },
                                        type => "conditional",
@@ -354,6 +343,46 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                      },
                                    ],
                      entrytype  => [{ content => "ALL" }],
+                   },
+                   {
+                     constraint => [
+                                     {
+                                       fieldxor => [
+                                         {
+                                           field => [
+                                             { coerce => "true", content => "date" },
+                                             { content => "year" },
+                                           ],
+                                         },
+                                       ],
+                                       type => "mandatory",
+                                     },
+                                   ],
+                     entrytype  => [
+                                     { content => "article" },
+                                     { content => "book" },
+                                     { content => "inbook" },
+                                     { content => "bookinbook" },
+                                     { content => "suppbook" },
+                                     { content => "booklet" },
+                                     { content => "collection" },
+                                     { content => "incollection" },
+                                     { content => "suppcollection" },
+                                     { content => "manual" },
+                                     { content => "misc" },
+                                     { content => "online" },
+                                     { content => "patent" },
+                                     { content => "periodical" },
+                                     { content => "suppperiodical" },
+                                     { content => "proceedings" },
+                                     { content => "inproceedings" },
+                                     { content => "reference" },
+                                     { content => "inreference" },
+                                     { content => "report" },
+                                     { content => "set" },
+                                     { content => "thesis" },
+                                     { content => "unpublished" },
+                                   ],
                    },
                    {
                      constraint => [
@@ -1230,7 +1259,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                    ],
                  },
 }
-
   );
 $CONFIG_DEFAULT_BIBLATEX{sorting_final} = $CONFIG_DEFAULT_BIBLATEX{sorting_label};
 
