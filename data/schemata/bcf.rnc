@@ -99,6 +99,9 @@ start =
     }*,
 
     element bcf:structure {
+      element bcf:entrytypes {
+        element bcf:entrytype { xsd:NCName }+
+      },
       element bcf:aliases {
         element bcf:alias {
           (
@@ -118,13 +121,14 @@ start =
           )
         }+
       }?,
-      element bcf:entryschema {
-        element bcf:entrytypes {
-          element bcf:entrytype { xsd:NCName }+
-        },
-        element bcf:fields {
-          element bcf:field { "ALL" | xsd:NCName }+
-        }*,
+      element bcf:entryfields {
+        element bcf:entrytype { xsd:NCName }+,
+        (element bcf:field { "ALL" } |
+         element bcf:field { xsd:NCName }+)
+      }+,
+      element bcf:constraints {
+        (element bcf:entrytype { "ALL" } |
+         element bcf:entrytype { xsd:NCName }+),    
         element bcf:constraint {
           (
             (attribute type { "conditional" },

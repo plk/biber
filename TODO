@@ -5,16 +5,9 @@ TODO in decreasing order of priority:
    * merge in the "unique" branch to implement full uniquename/list
      automation. Needs new .bbl format and biblatex support (biblatex 1.2)
    * xsl to pretty-print .bcf
-   * Structure validation. Don't use Text::Bibtex::Structure as it's not so
-     flexible - should operate on internal Biber structures. When there is
-     an XML data format to replace .bib, such structure checking will be implemented
-     as schema validation.
 
-
-     decouple *DATE format test from splitting
-     structure-constraints test
      constraints should be able to be defined more than once for a type and then merged
      is DATE XOR YEAR really global?
+     structure-constraints test
      ALL fields need to be put into types where possible
-     make entrytype and field processing optional?
      Doc .rnc

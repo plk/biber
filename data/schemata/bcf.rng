@@ -234,6 +234,13 @@
       </zeroOrMore>
       <optional>
         <element name="bcf:structure">
+          <element name="bcf:entrytypes">
+            <oneOrMore>
+              <element name="bcf:entrytype">
+                <data type="NCName"/>
+              </element>
+            </oneOrMore>
+          </element>
           <optional>
             <element name="bcf:aliases">
               <oneOrMore>
@@ -275,26 +282,36 @@
             </element>
           </optional>
           <oneOrMore>
-            <element name="bcf:entryschema">
-              <element name="bcf:entrytypes">
+            <element name="bcf:entryfields">
+              <oneOrMore>
+                <element name="bcf:entrytype">
+                  <data type="NCName"/>
+                </element>
+              </oneOrMore>
+              <choice>
+                <element name="bcf:field">
+                  <value>ALL</value>
+                </element>
+                <oneOrMore>
+                  <element name="bcf:field">
+                    <data type="NCName"/>
+                  </element>
+                </oneOrMore>
+              </choice>
+            </element>
+          </oneOrMore>
+          <oneOrMore>
+            <element name="bcf:constraints">
+              <choice>
+                <element name="bcf:entrytype">
+                  <value>ALL</value>
+                </element>
                 <oneOrMore>
                   <element name="bcf:entrytype">
                     <data type="NCName"/>
                   </element>
                 </oneOrMore>
-              </element>
-              <zeroOrMore>
-                <element name="bcf:fields">
-                  <oneOrMore>
-                    <element name="bcf:field">
-                      <choice>
-                        <value>ALL</value>
-                        <data type="NCName"/>
-                      </choice>
-                    </element>
-                  </oneOrMore>
-                </element>
-              </zeroOrMore>
+              </choice>
               <zeroOrMore>
                 <element name="bcf:constraint">
                   <choice>

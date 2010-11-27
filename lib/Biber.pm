@@ -273,7 +273,7 @@ sub parse_ctrlfile {
                                                            qr/\Afields\z/,
                                                            qr/\Afield\z/,
                                                            qr/\Aalias\z/,
-                                                           qr/\Aentryschema\z/,
+                                                           qr/\Aconstraints\z/,
                                                            qr/\Aconstraint\z/,
                                                            qr/\Aentrytype\z/,
                                                           ],
@@ -652,9 +652,11 @@ sub process_missing {
 =cut
 
 sub process_setup {
+  # Break structure information up into more processing-friendly formats
+  # for use in verification checks later
+  # This has to be here as opposed to in parse_control() so that it can pick
+  # up structure defaults in Constants.pm in case there is no .bcf
   my $struc = Biber::Config->getblxoption('structure');
-  # These have to be here so that they can pick up structure defaults in
-  # Constants.pm in case there is no .bcf
 
   # Create internal aliases data format for easy use
   my $aliases;
@@ -673,82 +675,87 @@ sub process_setup {
   # Pull out legal entrytypes, fields and constraints and make lookup hash
   # for quick tests later
   my $leg_ents;
-  foreach my $es (@{$struc->{entryschema}}) {
+  my $ets = [ sort map {$_->{content}} @{$struc->{entrytypes}{entrytype}} ];
+
+  foreach my $es (@$ets) {
 
     # fields
     my $lfs;
-    foreach my $ft (@{$es->{fields}}) {
-      foreach my $f (@{$ft->{field}}) {
-        $lfs->{$f->{content}} = 1;
+    foreach my $ef (@{$struc->{entryfields}}) {
+      # Found a section describing legal fields for entrytype
+      if (grep {($_->{content} eq $es) or ($_->{content} eq 'ALL')} @{$ef->{entrytype}}) {
+        foreach my $f (@{$ef->{field}}) {
+          $lfs->{$f->{content}} = 1;
+        }
       }
     }
 
     # constraints
     my $constraints;
-    foreach my $et (@{$es->{constraint}}) {
-      if ($et->{type} eq 'mandatory') {
-        # field
-        foreach my $f (@{$et->{field}}) {
-          push @{$constraints->{mandatory}}, $f->{content};
-        }
-        # xor set of fields
-        # [ XOR, field1, field2, ... , fieldn ]
-        foreach my $fxor (@{$et->{fieldxor}}) {
-          my $xorset;
-          foreach my $f (@{$fxor->{field}}) {
-            if ($f->{coerce}) {
-              # put the default override element at the front and flag it
-              unshift @$xorset, $f->{content};
+    foreach my $cd (@{$struc->{constraints}}) {
+      # Found a section describing constraints for entrytype
+      if (grep {($_->{content} eq $es) or ($_->{content} eq 'ALL')} @{$cd->{entrytype}}) {
+        foreach my $c (@{$cd->{constraint}}) {
+          if ($c->{type} eq 'mandatory') {
+            # field
+            foreach my $f (@{$c->{field}}) {
+              push @{$constraints->{mandatory}}, $f->{content};
             }
-            else {
-              push @$xorset, $f->{content};
+            # xor set of fields
+            # [ XOR, field1, field2, ... , fieldn ]
+            foreach my $fxor (@{$c->{fieldxor}}) {
+              my $xorset;
+              foreach my $f (@{$fxor->{field}}) {
+                if ($f->{coerce}) {
+                  # put the default override element at the front and flag it
+                  unshift @$xorset, $f->{content};
+                }
+                else {
+                  push @$xorset, $f->{content};
+                }
+              }
+              unshift @$xorset, 'XOR';
+              push @{$constraints->{mandatory}}, $xorset;
+            }
+            # or set of fields
+            # [ OR, field1, field2, ... , fieldn ]
+            foreach my $for (@{$c->{fieldor}}) {
+              my $orset;
+              foreach my $f (@{$for->{field}}) {
+                push @$orset, $f->{content};
+              }
+              unshift @$orset, 'OR';
+              push @{$constraints->{mandatory}}, $orset;
             }
           }
-          unshift @$xorset, 'XOR';
-          push @{$constraints->{mandatory}}, $xorset;
-        }
-        # or set of fields
-        # [ OR, field1, field2, ... , fieldn ]
-        foreach my $for (@{$et->{fieldor}}) {
-          my $orset;
-          foreach my $f (@{$for->{field}}) {
-            push @$orset, $f->{content};
+          # Conditional constraints
+          # [ ANTECEDENT_QUANTIFIER
+          #   [ ANTECEDENT LIST ]
+          #   CONSEQUENT_QUANTIFIER
+          #   [ CONSEQUENT LIST ]
+          # ]
+          elsif ($c->{type} eq 'conditional') {
+            my $cond;
+            $cond->[0] = $c->{antecedent}{quant};
+            $cond->[1] = [ map { $_->{content} } @{$c->{antecedent}{field}} ];
+            $cond->[2] = $c->{consequent}{quant};
+            $cond->[3] = [ map { $_->{content} } @{$c->{consequent}{field}} ];
+            push @{$constraints->{conditional}}, $cond;
           }
-          unshift @$orset, 'OR';
-          push @{$constraints->{mandatory}}, $orset;
+          # data constraints
+          elsif ($c->{type} eq 'data') {
+            my $data;
+            $data->{fields} = [ map { $_->{content} } @{$c->{field}} ];
+            $data->{datatype} = $c->{datatype};
+            $data->{rangemin} = $c->{rangemin};
+            $data->{rangemax} = $c->{rangemax};
+            push @{$constraints->{data}}, $data;
+          }
         }
       }
-      # Conditional constraints
-      # [ ANTECEDENT_QUANTIFIER
-      #   [ ANTECEDENT LIST ]
-      #   CONSEQUENT_QUANTIFIER
-      #   [ CONSEQUENT LIST ]
-      # ]
-      elsif ($et->{type} eq 'conditional') {
-        my $cond;
-        $cond->[0] = $et->{antecedent}{quant};
-        $cond->[1] = [ map { $_->{content} } @{$et->{antecedent}{field}} ];
-        $cond->[2] = $et->{consequent}{quant};
-        $cond->[3] = [ map { $_->{content} } @{$et->{consequent}{field}} ];
-        push @{$constraints->{conditional}}, $cond;
-      }
-      # data constraints
-      elsif ($et->{type} eq 'data') {
-        my $data;
-        $data->{fields} = [ map { $_->{content} } @{$et->{field}} ];
-        $data->{datatype} = $et->{datatype};
-        $data->{rangemin} = $et->{rangemin};
-        $data->{rangemax} = $et->{rangemax};
-        push @{$constraints->{data}}, $data;
-      }
     }
-
-    # entrytypes
-    foreach my $et (@{$es->{entrytypes}{entrytype}}) {
-      $leg_ents->{$et->{content}}{legal_fields} = $lfs;
-      $leg_ents->{$et->{content}}{constraints} = $constraints;
-    }
-
+    $leg_ents->{$es}{legal_fields} = $lfs;
+    $leg_ents->{$es}{constraints} = $constraints;
   }
   Biber::Config->setdata('legal_entrytypes', $leg_ents);
 }
