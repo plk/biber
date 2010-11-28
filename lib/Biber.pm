@@ -926,7 +926,7 @@ sub process_crossrefs {
   # promote indirectly cited inset set members to fully cited entries
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
-    if (lc($be->get_field('entrytype')) eq 'set') {
+    if ($be->get_field('entrytype') eq 'set') {
       my @inset_keys = split /\s*,\s*/, $be->get_field('entryset');
       foreach my $inset_key (@inset_keys) {
         $logger->debug("  Adding inset entry '$inset_key' to the citekeys (section $secnum)");

@@ -2,9 +2,11 @@ TODO in decreasing order of priority:
 
    * When biblatex implements interface and bcf for crossref inheritance,
      take out conditional in control file read and also change schema (biblatex 1.1)
+   * Document .rnc for .bcf
+   * xsl to pretty-print .bcf
+   * ALL fields need to be put into types where possible
    * merge in the "unique" branch to implement full uniquename/list
      automation. Needs new .bbl format and biblatex support (biblatex 1.2)
-   * xsl to pretty-print .bcf
 
-     ALL fields need to be put into types where possible
-     Doc .rnc
+     Biber::Config->*data to Biber::Structure->methods?     
+
