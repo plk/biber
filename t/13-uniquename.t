@@ -32,11 +32,11 @@ my $un1 = q|  \entry{un1}{book}{}
     \name{author}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
-    \list{publisher}{1}{%
-      {A press}%
-    }
     \list{location}{1}{%
       {Cambridge}%
+    }
+    \list{publisher}{1}{%
+      {A press}%
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
@@ -44,8 +44,8 @@ my $un1 = q|  \entry{un1}{book}{}
     \field{sortinit}{D}
     \field{labelyear}{1994}
     \count{uniquename}{2}
-    \field{year}{1994}
     \field{title}{Unique 1}
+    \field{year}{1994}
   \endentry
 
 |;
@@ -54,11 +54,11 @@ my $un2 = q|  \entry{un2}{book}{}
     \name{author}{1}{%
       {{Doe}{D.}{Edward}{E.}{}{}{}{}}%
     }
-    \list{publisher}{1}{%
-      {A press}%
-    }
     \list{location}{1}{%
       {Cambridge}%
+    }
+    \list{publisher}{1}{%
+      {A press}%
     }
     \strng{namehash}{DE1}
     \strng{fullhash}{DE1}
@@ -66,8 +66,8 @@ my $un2 = q|  \entry{un2}{book}{}
     \field{sortinit}{D}
     \field{labelyear}{1934}
     \count{uniquename}{1}
-    \field{year}{1934}
     \field{title}{Unique 2}
+    \field{year}{1934}
   \endentry
 
 |;
@@ -76,11 +76,11 @@ my $un3 = q|  \entry{un3}{book}{}
     \name{author}{1}{%
       {{Doe}{D.}{Jane}{J.}{}{}{}{}}%
     }
-    \list{publisher}{1}{%
-      {A press}%
-    }
     \list{location}{1}{%
       {Cambridge}%
+    }
+    \list{publisher}{1}{%
+      {A press}%
     }
     \strng{namehash}{DJ2}
     \strng{fullhash}{DJ2}
@@ -88,8 +88,8 @@ my $un3 = q|  \entry{un3}{book}{}
     \field{sortinit}{D}
     \field{labelyear}{1983}
     \count{uniquename}{2}
-    \field{year}{1983}
     \field{title}{Unique 3}
+    \field{year}{1983}
   \endentry
 
 |;
@@ -99,11 +99,11 @@ my $un4 = q|  \entry{un4}{book}{}
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
       {{Mills}{M.}{Mike}{M.}{}{}{}{}}%
     }
-    \list{publisher}{1}{%
-      {A press}%
-    }
     \list{location}{1}{%
       {Cambridge}%
+    }
+    \list{publisher}{1}{%
+      {A press}%
     }
     \strng{namehash}{DJ+1}
     \strng{fullhash}{DJMM1}
@@ -111,8 +111,8 @@ my $un4 = q|  \entry{un4}{book}{}
     \field{sortinit}{D}
     \field{labelyear}{1921}
     \count{uniquename}{0}
-    \field{year}{1921}
     \field{title}{Unique 4}
+    \field{year}{1921}
   \endentry
 
 |;
@@ -125,11 +125,11 @@ my $un5 = q|  \entry{un5}{book}{}
     \name{shortauthor}{1}{%
       {{Chaps}{C.}{}{}{}{}{}{}}%
     }
-    \list{publisher}{1}{%
-      {A press}%
-    }
     \list{location}{1}{%
       {Cambridge}%
+    }
+    \list{publisher}{1}{%
+      {A press}%
     }
     \strng{namehash}{C1}
     \strng{fullhash}{DJMM1}
@@ -137,8 +137,8 @@ my $un5 = q|  \entry{un5}{book}{}
     \field{sortinit}{D}
     \field{labelyear}{1921}
     \count{uniquename}{0}
-    \field{year}{1921}
     \field{title}{Unique 5}
+    \field{year}{1921}
   \endentry
 
 |;

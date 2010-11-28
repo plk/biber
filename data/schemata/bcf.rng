@@ -281,6 +281,41 @@
               </oneOrMore>
             </element>
           </optional>
+          <element name="bcf:fields">
+            <oneOrMore>
+              <element name="bcf:field">
+                <attribute name="fieldtype">
+                  <choice>
+                    <value>field</value>
+                    <value>list</value>
+                  </choice>
+                </attribute>
+                <attribute name="datatype">
+                  <choice>
+                    <value>literal</value>
+                    <value>name</value>
+                    <value>key</value>
+                    <value>date</value>
+                    <value>verbatim</value>
+                    <value>integer</value>
+                    <value>range</value>
+                    <value>special</value>
+                  </choice>
+                </attribute>
+                <optional>
+                  <attribute name="nullok">
+                    <value>true</value>
+                  </attribute>
+                </optional>
+                <optional>
+                  <attribute name="skip_output">
+                    <value>true</value>
+                  </attribute>
+                </optional>
+                <data type="NCName"/>
+              </element>
+            </oneOrMore>
+          </element>
           <oneOrMore>
             <element name="bcf:entryfields">
               <oneOrMore>

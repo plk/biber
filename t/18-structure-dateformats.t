@@ -60,11 +60,11 @@ my $l13c = q|  \entry{L13}{book}{}
     \field{sortinit}{D}
     \field{extrayear}{3}
     \field{labelyear}{1996}
-    \field{year}{1996}
-    \field{endyear}{}
-    \field{month}{01}
     \field{day}{01}
+    \field{endyear}{}
     \field{title}{Title 2}
+    \field{year}{1996}
+    \field{month}{01}
   \endentry
 
 |;
@@ -82,13 +82,13 @@ my $l14 = q|  \entry{L14}{book}{}
     \field{sortinit}{D}
     \field{extrayear}{4}
     \field{labelyear}{1996}
-    \field{year}{1996}
-    \field{endyear}{1996}
-    \field{month}{12}
-    \field{endmonth}{12}
     \field{day}{10}
     \field{endday}{12}
+    \field{endmonth}{12}
+    \field{endyear}{1996}
     \field{title}{Title 2}
+    \field{year}{1996}
+    \field{month}{12}
   \endentry
 
 |;
@@ -123,9 +123,9 @@ my $l16 = q|  \entry{L16}{proceedings}{}
     \field{sortinit}{D}
     \field{extrayear}{1}
     \field{labelyear}{1996}
-    \field{eventyear}{1996}
-    \field{eventmonth}{01}
     \field{eventday}{01}
+    \field{eventmonth}{01}
+    \field{eventyear}{1996}
     \field{title}{Title 2}
     \warn{\item Missing mandatory field - one of 'date, year' must be defined in entry 'L16'}
   \endentry
@@ -145,25 +145,25 @@ my $l17 = q|  \entry{L17}{proceedings}{}
     \field{sortinit}{D}
     \field{extrayear}{6}
     \field{labelyear}{1996}
-    \field{year}{1996}
-    \field{endyear}{1996}
-    \field{origyear}{1998}
-    \field{origendyear}{1998}
-    \field{eventyear}{1998}
-    \field{eventendyear}{2004}
-    \field{month}{12}
-    \field{endmonth}{12}
-    \field{origmonth}{12}
-    \field{origendmonth}{12}
-    \field{eventmonth}{12}
-    \field{eventendmonth}{12}
     \field{day}{10}
     \field{endday}{12}
-    \field{origday}{10}
-    \field{origendday}{12}
+    \field{endmonth}{12}
+    \field{endyear}{1996}
     \field{eventday}{10}
     \field{eventendday}{12}
+    \field{eventendmonth}{12}
+    \field{eventendyear}{2004}
+    \field{eventmonth}{12}
+    \field{eventyear}{1998}
+    \field{origday}{10}
+    \field{origendday}{12}
+    \field{origendmonth}{12}
+    \field{origendyear}{1998}
+    \field{origmonth}{12}
+    \field{origyear}{1998}
     \field{title}{Title 2}
+    \field{year}{1996}
+    \field{month}{12}
   \endentry
 
 |;
@@ -180,25 +180,25 @@ my $l17c = q|  \entry{L17}{proceedings}{}
     \strng{fullhash}{DJAA1}
     \field{sortinit}{D}
     \field{labelyear}{1998}
-    \field{year}{1996}
-    \field{endyear}{1996}
-    \field{origyear}{1998}
-    \field{origendyear}{1998}
-    \field{eventyear}{1998}
-    \field{eventendyear}{2004}
-    \field{month}{12}
-    \field{endmonth}{12}
-    \field{origmonth}{12}
-    \field{origendmonth}{12}
-    \field{eventmonth}{12}
-    \field{eventendmonth}{12}
     \field{day}{10}
     \field{endday}{12}
-    \field{origday}{10}
-    \field{origendday}{12}
+    \field{endmonth}{12}
+    \field{endyear}{1996}
     \field{eventday}{10}
     \field{eventendday}{12}
+    \field{eventendmonth}{12}
+    \field{eventendyear}{2004}
+    \field{eventmonth}{12}
+    \field{eventyear}{1998}
+    \field{origday}{10}
+    \field{origendday}{12}
+    \field{origendmonth}{12}
+    \field{origendyear}{1998}
+    \field{origmonth}{12}
+    \field{origyear}{1998}
     \field{title}{Title 2}
+    \field{year}{1996}
+    \field{month}{12}
   \endentry
 
 |;
@@ -215,25 +215,25 @@ my $l17e = q|  \entry{L17}{proceedings}{}
     \strng{fullhash}{DJAA1}
     \field{sortinit}{D}
     \field{labelyear}{1998\bibdatedash 2004}
-    \field{year}{1996}
-    \field{endyear}{1996}
-    \field{origyear}{1998}
-    \field{origendyear}{1998}
-    \field{eventyear}{1998}
-    \field{eventendyear}{2004}
-    \field{month}{12}
-    \field{endmonth}{12}
-    \field{origmonth}{12}
-    \field{origendmonth}{12}
-    \field{eventmonth}{12}
-    \field{eventendmonth}{12}
     \field{day}{10}
     \field{endday}{12}
-    \field{origday}{10}
-    \field{origendday}{12}
+    \field{endmonth}{12}
+    \field{endyear}{1996}
     \field{eventday}{10}
     \field{eventendday}{12}
+    \field{eventendmonth}{12}
+    \field{eventendyear}{2004}
+    \field{eventmonth}{12}
+    \field{eventyear}{1998}
+    \field{origday}{10}
+    \field{origendday}{12}
+    \field{origendmonth}{12}
+    \field{origendyear}{1998}
+    \field{origmonth}{12}
+    \field{origyear}{1998}
     \field{title}{Title 2}
+    \field{year}{1996}
+    \field{month}{12}
   \endentry
 
 |;

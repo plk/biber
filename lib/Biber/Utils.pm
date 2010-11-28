@@ -93,7 +93,8 @@ sub locate_biber_file {
 
 sub is_name_field {
   my $fieldname = shift;
-  return defined(first {$fieldname eq $_} @NAMEFIELDS) ? 1 : 0;
+  my $nfs = Biber::Config->getdata('fields_name');
+  return defined(first {$fieldname eq $_} @$nfs) ? 1 : 0;
 }
 
 =head2 makenameid

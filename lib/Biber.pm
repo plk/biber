@@ -270,7 +270,6 @@ sub parse_ctrlfile {
                                                            qr/\Ainherit\z/,
                                                            qr/\Afieldor\z/,
                                                            qr/\Afieldxor\z/,
-                                                           qr/\Afields\z/,
                                                            qr/\Afield\z/,
                                                            qr/\Aalias\z/,
                                                            qr/\Aconstraints\z/,
@@ -660,11 +659,16 @@ sub process_setup {
 
   # Create internal aliases data format for easy use
   my $aliases;
+  my %reverse_aliases;
   foreach my $alias (@{$struc->{aliases}{alias}}) {
     $aliases->{$alias->{type}}{$alias->{name}{content}}
       = {
          realname => $alias->{realname}{content}
         };
+    # So we can automatically add aliases to the field definitions
+    # without having to maintain them there too.
+    $reverse_aliases{$alias->{realname}{content}} = $alias->{name}{content};
+
     if (exists($alias->{field})) {
       $aliases->{$alias->{type}}{$alias->{name}{content}}{fields}
         = { map {$_->{name} => $_->{content}} @{$alias->{field}}};
@@ -679,7 +683,7 @@ sub process_setup {
 
   foreach my $es (@$ets) {
 
-    # fields
+    # fields for entrytypes
     my $lfs;
     foreach my $ef (@{$struc->{entryfields}}) {
       # Found a section describing legal fields for entrytype
@@ -689,6 +693,78 @@ sub process_setup {
         }
       }
     }
+
+    # field datatypes
+    my ($nullok, $skipout, @name, @list, @literal, @date, @integer, @range, @verbatim, @key);
+
+    # Create date for field types, including any aliases which might be
+    # needed when reading the bib data.
+    foreach my $f (@{$struc->{fields}{field}}) {
+      if ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'name') {
+        push @name, $f->{content};
+        push @name, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
+      }
+      elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'literal') {
+        push @list, $f->{content};
+        push @list, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
+      }
+      elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'key') {
+        push @list, $f->{content};
+        push @list, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
+      }
+      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'literal') {
+        push @literal, $f->{content};
+        push @literal, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
+      }
+      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'date') {
+        push @date, $f->{content};
+        push @date, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
+      }
+      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'integer') {
+        push @integer, $f->{content};
+        push @integer, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
+      }
+      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'range') {
+        push @range, $f->{content};
+        push @range, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
+      }
+      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'verbatim') {
+        push @verbatim, $f->{content};
+        push @verbatim, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
+      }
+      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'key') {
+        push @key, $f->{content};
+        push @key, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
+      }
+
+      # check null_ok
+      if ($f->{nullok}) {
+        $nullok->{$f->{content}} = 1;
+      }
+      # check skips - fields we dont' want to output to BBL
+      if ($f->{skip_output}) {
+        $skipout->{$f->{content}} = 1;
+      }
+    }
+
+    # Sort them so that the order of field output in the BBL does not change
+    # in tests when changing .bcf
+    @literal =  sort @literal;
+    @key =      sort @key;
+    @integer =  sort @integer;
+    @name =     sort @name;
+    @list =     sort @list;
+    @verbatim = sort @verbatim;
+    @range =    sort @range;
+
+    Biber::Config->setdata('fields_nullok', $nullok );
+    Biber::Config->setdata('fields_skipout', $skipout);
+    Biber::Config->setdata('fields_literal', [ @literal, @key, @integer ] );
+    Biber::Config->setdata('fields_name', \@name );
+    Biber::Config->setdata('fields_list', \@list );
+    Biber::Config->setdata('fields_split', [ @name, @list ] );
+    Biber::Config->setdata('fields_verbatim', \@verbatim );
+    Biber::Config->setdata('fields_range', \@range );
 
     # constraints
     my $constraints;
@@ -1097,6 +1173,7 @@ sub process_structure {
               $be->del_field($f);
               next;
             }
+
           }
         }
       }

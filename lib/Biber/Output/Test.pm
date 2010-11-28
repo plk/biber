@@ -59,6 +59,7 @@ sub set_output_entry {
   my $acc = '';
   my $opts    = '';
   my $citecasekey; # entry key forced to case of any citations(s) which reference it
+  my $SKIPFIELDS = Biber::Config->getdata('fields_skipout');
   if ( $be->get_field('citecasekey') ) {
     $citecasekey = $be->get_field('citecasekey');
   }
@@ -82,8 +83,7 @@ sub set_output_entry {
     }
   }
 
-  foreach my $namefield (@NAMEFIELDS) {
-    next if $SKIPFIELDS{$namefield};
+  foreach my $namefield (@{Biber::Config->getdata('fields_name')}) {
     if ( my $nf = $be->get_field($namefield) ) {
       if ( $nf->last_element->get_namestring eq 'others' ) {
         $acc .= "    \\true{more$namefield}\n";
@@ -98,8 +98,7 @@ sub set_output_entry {
     }
   }
 
-  foreach my $listfield (@LISTFIELDS) {
-    next if $SKIPFIELDS{$listfield};
+  foreach my $listfield (@{Biber::Config->getdata('fields_list')}) {
     if ( is_def_and_notnull($be->get_field($listfield)) ) {
       my @lf = @{ $be->get_field($listfield) };
       if ( $be->get_field($listfield)->[-1] eq 'others' ) {
@@ -207,18 +206,11 @@ sub set_output_entry {
     $acc .= "    \\true{singletitle}\n";
   }
 
-  foreach my $ifield (@DATECOMPONENTFIELDS) {
-    next if $SKIPFIELDS{$ifield};
-    # Here we do want to output if the field is null as this means something
-    # for example in open-ended ranges
-    if ( $be->field_exists($ifield) ) {
-      $acc .= $self->_printfield( $ifield, $be->get_field($ifield) );
-    }
-  }
-
-  foreach my $lfield (@LITERALFIELDS) {
-    next if $SKIPFIELDS{$lfield};
-    if ( is_def_and_notnull($be->get_field($lfield)) ) {
+  foreach my $lfield (@{Biber::Config->getdata('fields_literal')}) {
+    next if $SKIPFIELDS->{$lfield};
+    if ( (Biber::Config->getdata('fields_nullok')->{$lfield} and
+          $be->field_exists($lfield)) or
+         is_def_and_notnull($be->get_field($lfield)) ) {
       # we skip outputting the crossref or xref when the parent is not cited
       # (biblatex manual, section 2.23)
       # sets are a special case so always output crossref/xref for them since their
@@ -230,17 +222,11 @@ sub set_output_entry {
                  not $section->has_citekey($be->get_field('xref')));
       }
 
-      my $lfieldprint = $lfield;
-      if ($lfield eq 'journal') {
-        $lfieldprint = 'journaltitle'
-      };
-      $acc .= $self->_printfield( $lfieldprint, $be->get_field($lfield) );
+      $acc .= $self->_printfield( $lfield, $be->get_field($lfield) );
     }
   }
 
-  # this is currently "pages" only
-  foreach my $rfield (@RANGEFIELDS) {
-    next if $SKIPFIELDS{$rfield};
+  foreach my $rfield (@{Biber::Config->getdata('fields_range')}) {
     if ( is_def_and_notnull($be->get_field($rfield)) ) {
       my $rf = $be->get_field($rfield);
       $rf =~ s/[-–]+/\\bibrangedash /g;
@@ -248,8 +234,7 @@ sub set_output_entry {
     }
   }
 
-  foreach my $vfield (@VERBATIMFIELDS) {
-    next if $SKIPFIELDS{$vfield};
+  foreach my $vfield (@{Biber::Config->getdata('fields_verbatim')}) {
     if ( is_def_and_notnull($be->get_field($vfield)) ) {
       my $rf = $be->get_field($vfield);
       $acc .= "    \\verb{$vfield}\n";

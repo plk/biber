@@ -75,13 +75,13 @@ my $l1 = q|  \entry{L1}{book}{}
     \field{sortinit}{D}
     \field{labelyear}{1998}
     \count{uniquename}{0}
-    \field{year}{1998}
-    \field{origyear}{1985}
-    \field{month}{04}
-    \field{origmonth}{10}
     \field{day}{05}
     \field{origday}{30}
+    \field{origmonth}{10}
+    \field{origyear}{1985}
     \field{title}{Title 1}
+    \field{year}{1998}
+    \field{month}{04}
   \endentry
 
 |;

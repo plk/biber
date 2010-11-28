@@ -40,9 +40,9 @@ my $set1 = q|  \entry{seta}{set}{}
     \field{extrayear}{1}
     \field{labelyear}{2010}
     \field{extraalpha}{1}
-    \field{year}{2010}
-    \field{title}{Set Member A}
     \strng{crossref}{set:membera}
+    \field{title}{Set Member A}
+    \field{year}{2010}
   \endentry
 
 |;
@@ -55,8 +55,8 @@ my $set2 = q|  \entry{set:membera}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{sortinit}{D}
-    \field{year}{2010}
     \field{title}{Set Member A}
+    \field{year}{2010}
   \endentry
 
 |;
@@ -69,8 +69,8 @@ my $set3 = q|  \entry{set:memberb}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{sortinit}{D}
-    \field{year}{2010}
     \field{title}{Set Member B}
+    \field{year}{2010}
   \endentry
 
 |;
@@ -83,8 +83,8 @@ my $set4 = q|  \entry{set:memberc}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{sortinit}{D}
-    \field{year}{2010}
     \field{title}{Set Member C}
+    \field{year}{2010}
   \endentry
 
 |;
@@ -100,8 +100,8 @@ my $noset1 = q|  \entry{noseta}{book}{}
     \field{extrayear}{2}
     \field{labelyear}{2010}
     \field{extraalpha}{2}
-    \field{year}{2010}
     \field{title}{Stand-Alone A}
+    \field{year}{2010}
   \endentry
 
 |;
@@ -117,8 +117,8 @@ my $noset2 = q|  \entry{nosetb}{book}{}
     \field{extrayear}{3}
     \field{labelyear}{2010}
     \field{extraalpha}{3}
-    \field{year}{2010}
     \field{title}{Stand-Alone B}
+    \field{year}{2010}
   \endentry
 
 |;
@@ -134,8 +134,8 @@ my $noset3 = q|  \entry{nosetc}{book}{}
     \field{extrayear}{4}
     \field{labelyear}{2010}
     \field{extraalpha}{4}
-    \field{year}{2010}
     \field{title}{Stand-Alone C}
+    \field{year}{2010}
   \endentry
 
 |;

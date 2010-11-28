@@ -15,6 +15,7 @@ use Biber::Entry::Name;
 use Biber::Sections;
 use Biber::Section;
 use Biber::Utils;
+use Biber::Config;
 use Encode;
 use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
@@ -339,7 +340,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     my @flist = $entry->fieldlist;
 
     # here we only keep those that do not require splitting
-    my @flistnosplit = reduce_array(\@flist, \@ENTRIESTOSPLIT);
+    my @flistnosplit = reduce_array(\@flist, Biber::Config->getdata('fields_split'));
 
     if ( $entry->metatype == BTE_REGULAR ) {
       foreach my $f ( @flistnosplit ) {
@@ -365,7 +366,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
       # Set entrytype. This may be changed later in process_aliases
       $bibentry->set_field('entrytype', $entry->type);
 
-      foreach my $f ( @ENTRIESTOSPLIT ) {
+      foreach my $f ( @{Biber::Config->getdata('fields_split')} ) {
         next unless $entry->exists($f);
         my @tmp = $entry->split($f);
 

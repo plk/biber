@@ -110,19 +110,19 @@ my $sc3 = q|  \entry{L4}{book}{}
     \name{author}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
-    \list{publisher}{1}{%
-      {Another press}%
-    }
     \list{location}{1}{%
       {Cambridge}%
+    }
+    \list{publisher}{1}{%
+      {Another press}%
     }
     \strng{namehash}{DJo1}
     \strng{fullhash}{DJo1}
     \field{labelalpha}{Doe\textbf{+}95}
     \field{sortinit}{D}
     \field{extraalpha}{2}
-    \field{year}{1995}
     \field{title}{Some title about sorting}
+    \field{year}{1995}
   \endentry
 
 |;
@@ -131,19 +131,19 @@ my $sc4 = q|  \entry{L1}{book}{}
     \name{author}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
-    \list{publisher}{1}{%
-      {A press}%
-    }
     \list{location}{1}{%
       {Cambridge}%
+    }
+    \list{publisher}{1}{%
+      {A press}%
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe95}
     \field{sortinit}{D}
     \field{extraalpha}{1}
-    \field{year}{1995}
     \field{title}{Algorithms For Sorting}
+    \field{year}{1995}
   \endentry
 
 |;
@@ -152,19 +152,19 @@ my $sc5 = q|  \entry{L2}{book}{}
     \name{author}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
-    \list{publisher}{1}{%
-      {A press}%
-    }
     \list{location}{1}{%
       {Cambridge}%
+    }
+    \list{publisher}{1}{%
+      {A press}%
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe95}
     \field{sortinit}{D}
     \field{extraalpha}{3}
-    \field{year}{1995}
     \field{title}{Sorting Algorithms}
+    \field{year}{1995}
   \endentry
 
 |;
@@ -173,19 +173,19 @@ my $sc6 = q|  \entry{L3}{book}{}
     \name{author}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
-    \list{publisher}{1}{%
-      {A press}%
-    }
     \list{location}{1}{%
       {Cambridge}%
+    }
+    \list{publisher}{1}{%
+      {A press}%
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe95}
     \field{sortinit}{D}
     \field{extraalpha}{2}
-    \field{year}{1995}
     \field{title}{More and More Algorithms}
+    \field{year}{1995}
   \endentry
 
 |;

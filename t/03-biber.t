@@ -52,16 +52,16 @@ my $murray1 = q|  \entry{murray}{article}{}
     \field{labelyear}{1998}
     \count{uniquename}{0}
     \true{singletitle}
-    \field{year}{1998}
-    \field{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
-    \field{subtitle}{Core and monolayer properties as a function of core size}
-    \field{shorttitle}{Alkanethiolate gold cluster molecules}
+    \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
+    \field{hyphenation}{american}
     \field{indextitle}{Alkanethiolate gold cluster molecules}
     \field{journaltitle}{Langmuir}
-    \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
     \field{number}{1}
+    \field{shorttitle}{Alkanethiolate gold cluster molecules}
+    \field{subtitle}{Core and monolayer properties as a function of core size}
+    \field{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
     \field{volume}{14}
-    \field{hyphenation}{american}
+    \field{year}{1998}
     \field{pages}{17\bibrangedash 30}
   \endentry
 
@@ -91,16 +91,16 @@ my $murray2 = q|  \entry{murray}{article}{}
     \field{labelyear}{1998}
     \count{uniquename}{0}
     \true{singletitle}
-    \field{year}{1998}
-    \field{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
-    \field{subtitle}{Core and monolayer properties as a function of core size}
-    \field{shorttitle}{Alkanethiolate gold cluster molecules}
+    \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
+    \field{hyphenation}{american}
     \field{indextitle}{Alkanethiolate gold cluster molecules}
     \field{journaltitle}{Langmuir}
-    \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
     \field{number}{1}
+    \field{shorttitle}{Alkanethiolate gold cluster molecules}
+    \field{subtitle}{Core and monolayer properties as a function of core size}
+    \field{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
     \field{volume}{14}
-    \field{hyphenation}{american}
+    \field{year}{1998}
     \field{pages}{17\bibrangedash 30}
   \endentry
 
@@ -123,13 +123,13 @@ my $setaksin = q|  \entry{set:aksin}{article}{}
     \field{sortinit}{A}
     \count{uniquename}{0}
     \true{singletitle}
-    \field{year}{2006}
-    \field{month}{02}
-    \field{title}{Effect of immobilization on catalytic characteristics of saturated Pd-N-heterocyclic carbenes in Mizoroki-Heck reactions}
     \field{indextitle}{Effect of immobilization on catalytic characteristics}
     \field{journaltitle}{J.~Organomet. Chem.}
     \field{number}{13}
+    \field{title}{Effect of immobilization on catalytic characteristics of saturated Pd-N-heterocyclic carbenes in Mizoroki-Heck reactions}
     \field{volume}{691}
+    \field{year}{2006}
+    \field{month}{02}
     \field{pages}{3027\bibrangedash 3036}
   \endentry
 
@@ -145,14 +145,14 @@ my $markey = q|  \entry{markey}{online}{}
     \field{sortinit}{M}
     \count{uniquename}{0}
     \true{singletitle}
-    \field{urlyear}{2006}
-    \field{urlmonth}{10}
-    \field{urlday}{01}
-    \field{title}{Tame the BeaST}
-    \field{subtitle}{The B to X of BibTeX}
     \field{annotation}{An \texttt{online} entry for a tutorial. Note the format of the \texttt{date} field (\texttt{yyyy-mm-dd}) in the database file. It is also possible to use the fields \texttt{day}\slash \texttt{month}\slash \texttt{year} instead.}
-    \field{version}{1.3}
     \field{hyphenation}{american}
+    \field{subtitle}{The B to X of BibTeX}
+    \field{title}{Tame the BeaST}
+    \field{urlday}{01}
+    \field{urlmonth}{10}
+    \field{urlyear}{2006}
+    \field{version}{1.3}
     \verb{url}
     \verb http://tug.ctan.org/tex-archive/info/bibtex/tamethebeast/ttb_en.pdf
     \endverb
@@ -179,14 +179,14 @@ my $jaffe = q|  \entry{jaffe}{collection}{}
     \field{labelyear}{1885\bibdatedash 1888}
     \count{uniquename}{0}
     \true{singletitle}
-    \field{year}{1885}
-    \field{endyear}{1888}
-    \field{title}{Regesta Pontificum Romanorum ab condita ecclesia ad annum post Christum natum \textsc{mcxcviii}}
-    \field{shorttitle}{Regesta Pontificum Romanorum}
-    \field{indextitle}{Regesta Pontificum Romanorum}
     \field{annotation}{A \texttt{collection} entry with \texttt{edition} and \texttt{volumes} fields. Note the \texttt{editortype} field handling the redactor}
     \field{edition}{2}
+    \field{endyear}{1888}
+    \field{indextitle}{Regesta Pontificum Romanorum}
+    \field{shorttitle}{Regesta Pontificum Romanorum}
+    \field{title}{Regesta Pontificum Romanorum ab condita ecclesia ad annum post Christum natum \textsc{mcxcviii}}
     \field{volumes}{2}
+    \field{year}{1885}
     \field{editoratype}{redactor}
   \endentry
 
@@ -206,8 +206,8 @@ my $pimentel1 = q|  \entry{Pimentel00}{thesis}{}
     \field{labelyear}{2000}
     \count{uniquename}{0}
     \true{singletitle}
-    \field{year}{2000}
     \field{title}{Sociolinguistic Reflections of Privatization and Globalization: The {Arabic} of {Egyptian} newspaper advertisements}
+    \field{year}{2000}
   \endentry
 
 |;

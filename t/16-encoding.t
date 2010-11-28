@@ -32,8 +32,8 @@ my $encode1 = q|  \entry{testŠ}{book}{}
     \field{labelyear}{1999}
     \count{uniquename}{0}
     \true{singletitle}
-    \field{year}{1999}
     \field{title}{Šome title}
+    \field{year}{1999}
   \endentry
 
 |;
@@ -52,8 +52,8 @@ my $encode2 = q|  \entry{test1}{book}{}
     \field{labelyear}{1999}
     \count{uniquename}{0}
     \true{singletitle}
-    \field{year}{1999}
     \field{title}{Söme title}
+    \field{year}{1999}
   \endentry
 
 |;
@@ -72,8 +72,8 @@ my $encode3 = q|  \entry{test1}{book}{}
     \field{labelyear}{1999}
     \count{uniquename}{0}
     \true{singletitle}
-    \field{year}{1999}
     \field{title}{Żome title}
+    \field{year}{1999}
   \endentry
 
 |;
@@ -92,8 +92,8 @@ my $encode5 = q|  \entry{test}{book}{}
     \field{labelyear}{1999}
     \count{uniquename}{0}
     \true{singletitle}
-    \field{year}{1999}
     \field{title}{à titlé}
+    \field{year}{1999}
   \endentry
 
 |;

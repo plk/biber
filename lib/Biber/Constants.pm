@@ -7,20 +7,6 @@ use Readonly;
 use base 'Exporter';
 
 our @EXPORT = qw{
-  @NAMEFIELDS
-  @LISTFIELDS
-  @LITERALFIELDS_BASE
-  @RANGEFIELDS
-  @VERBATIMFIELDS
-  @TITLEFIELDS
-  @KEYFIELDS
-  @COMMASEP_FIELDS
-  @ENTRIESTOSPLIT
-  @LITERALFIELDS
-  @DATERANGEFIELDS
-  @DATECOMPONENTFIELDS
-  @NULL_OK
-  %SKIPFIELDS
   %CONFIG_DEFAULT_BIBER
   %CONFIG_DEFAULT_BIBLATEX
   %CONFIG_SCOPE_BIBLATEX
@@ -594,6 +580,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "keywords" },
                        { content => "label" },
                        { content => "library" },
+                       { content => "lista" },
+                       { content => "listb" },
+                       { content => "listc" },
+                       { content => "listd" },
+                       { content => "liste" },
+                       { content => "listf" },
                        { content => "nameaddon" },
                        { content => "options" },
                        { content => "origdate" },
@@ -614,6 +606,15 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "sortname" },
                        { content => "sorttitle" },
                        { content => "sortyear" },
+                       { content => "usera" },
+                       { content => "userb" },
+                       { content => "userc" },
+                       { content => "userd" },
+                       { content => "usere" },
+                       { content => "userf" },
+                       { content => "verba" },
+                       { content => "verbb" },
+                       { content => "verbc" },
                        { content => "xref" },
                      ],
                    },
@@ -1258,6 +1259,246 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "video" },
                    ],
                  },
+  fields      => {
+                   field => [
+                     { content => "abstract", datatype => "literal", fieldtype => "field" },
+                     { content => "addendum", datatype => "literal", fieldtype => "field" },
+                     { content => "afterword", datatype => "name", fieldtype => "list" },
+                     { content => "annotation", datatype => "literal", fieldtype => "field" },
+                     { content => "annotator", datatype => "name", fieldtype => "list" },
+                     { content => "author", datatype => "name", fieldtype => "list" },
+                     { content => "authortype", datatype => "key", fieldtype => "field" },
+                     { content => "bookauthor", datatype => "name", fieldtype => "list" },
+                     { content => "bookpagination", datatype => "key", fieldtype => "field" },
+                     { content => "booksubtitle", datatype => "literal", fieldtype => "field" },
+                     { content => "booktitle", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "booktitleaddon",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                     },
+                     { content => "chapter", datatype => "literal", fieldtype => "field" },
+                     { content => "commentator", datatype => "name", fieldtype => "list" },
+                     { content => "crossref", datatype => "literal", fieldtype => "field" },
+                     {
+                       content     => "date",
+                       datatype    => "date",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     { content => "day", datatype => "literal", fieldtype => "field" },
+                     { content => "doi", datatype => "verbatim", fieldtype => "field" },
+                     { content => "edition", datatype => "literal", fieldtype => "field" },
+                     { content => "editor", datatype => "name", fieldtype => "list" },
+                     { content => "editora", datatype => "name", fieldtype => "list" },
+                     { content => "editoratype", datatype => "key", fieldtype => "field" },
+                     { content => "editorb", datatype => "name", fieldtype => "list" },
+                     { content => "editorbtype", datatype => "key", fieldtype => "field" },
+                     { content => "editorc", datatype => "name", fieldtype => "list" },
+                     { content => "editorctype", datatype => "key", fieldtype => "field" },
+                     { content => "editortype", datatype => "key", fieldtype => "field" },
+                     { content => "eid", datatype => "literal", fieldtype => "field" },
+                     { content => "endday", datatype => "literal", fieldtype => "field" },
+                     { content => "endmonth", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "endyear",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                       nullok    => "true",
+                     },
+                     { content => "entryset", datatype => "literal", fieldtype => "field", skip_output => "true"},
+                     { content => "entrysubtype", datatype => "literal", fieldtype => "field" },
+                     { content => "eprint", datatype => "verbatim", fieldtype => "field" },
+                     { content => "eprintclass", datatype => "literal", fieldtype => "field" },
+                     { content => "eprinttype", datatype => "literal", fieldtype => "field" },
+                     {
+                       content     => "eventdate",
+                       datatype    => "literal",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     { content => "eventday", datatype => "literal", fieldtype => "field" },
+                     { content => "eventendday", datatype => "literal", fieldtype => "field" },
+                     { content => "eventendmonth", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "eventendyear",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                       nullok    => "true",
+                     },
+                     { content => "eventmonth", datatype => "literal", fieldtype => "field" },
+                     { content => "eventtitle", datatype => "literal", fieldtype => "field" },
+                     { content => "eventyear", datatype => "literal", fieldtype => "field" },
+                     { content => "execute", datatype => "literal", fieldtype => "field" },
+                     { content => "file", datatype => "verbatim", fieldtype => "field" },
+                     { content => "foreword", datatype => "name", fieldtype => "list" },
+                     { content => "gender", datatype => "literal", fieldtype => "field" },
+                     { content => "holder", datatype => "name", fieldtype => "list" },
+                     { content => "howpublished", datatype => "literal", fieldtype => "field" },
+                     { content => "hyphenation", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "indexsorttitle",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                     },
+                     { content => "indextitle", datatype => "literal", fieldtype => "field" },
+                     { content => "institution", datatype => "literal", fieldtype => "list" },
+                     { content => "introduction", datatype => "name", fieldtype => "list" },
+                     { content => "isan", datatype => "literal", fieldtype => "field" },
+                     { content => "isbn", datatype => "literal", fieldtype => "field" },
+                     { content => "ismn", datatype => "literal", fieldtype => "field" },
+                     { content => "isrn", datatype => "literal", fieldtype => "field" },
+                     { content => "issn", datatype => "literal", fieldtype => "field" },
+                     { content => "issue", datatype => "literal", fieldtype => "field" },
+                     { content => "issuesubtitle", datatype => "literal", fieldtype => "field" },
+                     { content => "issuetitle", datatype => "literal", fieldtype => "field" },
+                     { content => "iswc", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "journalsubtitle",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                     },
+                     { content => "journaltitle", datatype => "literal", fieldtype => "field" },
+                     { content => "keywords", datatype => "literal", fieldtype => "field" },
+                     { content => "label", datatype => "literal", fieldtype => "field" },
+                     { content => "language", datatype => "key", fieldtype => "list" },
+                     { content => "library", datatype => "literal", fieldtype => "field" },
+                     { content => "lista", datatype => "literal", fieldtype => "list" },
+                     { content => "listb", datatype => "literal", fieldtype => "list" },
+                     { content => "listc", datatype => "literal", fieldtype => "list" },
+                     { content => "listd", datatype => "literal", fieldtype => "list" },
+                     { content => "liste", datatype => "literal", fieldtype => "list" },
+                     { content => "listf", datatype => "literal", fieldtype => "list" },
+                     { content => "location", datatype => "literal", fieldtype => "list" },
+                     { content => "mainsubtitle", datatype => "literal", fieldtype => "field" },
+                     { content => "maintitle", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "maintitleaddon",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                     },
+                     { content => "month", datatype => "integer", fieldtype => "field" },
+                     { content => "namea", datatype => "name", fieldtype => "list" },
+                     { content => "nameaddon", datatype => "literal", fieldtype => "field" },
+                     { content => "nameatype", datatype => "key", fieldtype => "field" },
+                     { content => "nameb", datatype => "name", fieldtype => "list" },
+                     { content => "namebtype", datatype => "key", fieldtype => "field" },
+                     { content => "namec", datatype => "name", fieldtype => "list" },
+                     { content => "namectype", datatype => "key", fieldtype => "field" },
+                     { content => "note", datatype => "literal", fieldtype => "field" },
+                     { content => "number", datatype => "literal", fieldtype => "field" },
+                     { content => "options", datatype => "literal", fieldtype => "field" },
+                     { content => "organization", datatype => "literal", fieldtype => "list" },
+                     {
+                       content     => "origdate",
+                       datatype    => "date",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     { content => "origday", datatype => "literal", fieldtype => "field" },
+                     { content => "origendday", datatype => "literal", fieldtype => "field" },
+                     { content => "origendmonth", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "origendyear",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                       nullok    => "true",
+                     },
+                     { content => "origlanguage", datatype => "key", fieldtype => "field" },
+                     { content => "origlocation", datatype => "literal", fieldtype => "list" },
+                     { content => "origmonth", datatype => "literal", fieldtype => "field" },
+                     { content => "origpublisher", datatype => "literal", fieldtype => "list" },
+                     { content => "origtitle", datatype => "literal", fieldtype => "field" },
+                     { content => "origyear", datatype => "literal", fieldtype => "field" },
+                     { content => "pages", datatype => "range", fieldtype => "field" },
+                     { content => "pagetotal", datatype => "literal", fieldtype => "field" },
+                     { content => "pagination", datatype => "key", fieldtype => "field" },
+                     { content => "part", datatype => "literal", fieldtype => "field" },
+                     {
+                       content     => "presort",
+                       datatype    => "literal",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     { content => "publisher", datatype => "literal", fieldtype => "list" },
+                     { content => "pubstate", datatype => "key", fieldtype => "field" },
+                     { content => "reprinttitle", datatype => "literal", fieldtype => "field" },
+                     { content => "series", datatype => "literal", fieldtype => "field" },
+                     { content => "shortauthor", datatype => "name", fieldtype => "list" },
+                     { content => "shorteditor", datatype => "name", fieldtype => "list" },
+                     { content => "shorthand", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "shorthandintro",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                     },
+                     { content => "shortjournal", datatype => "literal", fieldtype => "field" },
+                     { content => "shortseries", datatype => "literal", fieldtype => "field" },
+                     { content => "shorttitle", datatype => "literal", fieldtype => "field" },
+                     {
+                       content     => "sortkey",
+                       datatype    => "literal",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     {
+                       content     => "sortname",
+                       datatype    => "literal",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     {
+                       content     => "sorttitle",
+                       datatype    => "literal",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     {
+                       content     => "sortyear",
+                       datatype    => "literal",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     { content => "subtitle", datatype => "literal", fieldtype => "field" },
+                     { content => "title", datatype => "literal", fieldtype => "field" },
+                     { content => "titleaddon", datatype => "literal", fieldtype => "field" },
+                     { content => "translator", datatype => "name", fieldtype => "list" },
+                     { content => "type", datatype => "key", fieldtype => "field" },
+                     { content => "url", datatype => "verbatim", fieldtype => "field" },
+                     {
+                       content     => "urldate",
+                       datatype    => "date",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     { content => "usera", datatype => "literal", fieldtype => "field" },
+                     { content => "userb", datatype => "literal", fieldtype => "field" },
+                     { content => "userc", datatype => "literal", fieldtype => "field" },
+                     { content => "userd", datatype => "literal", fieldtype => "field" },
+                     { content => "usere", datatype => "literal", fieldtype => "field" },
+                     { content => "userf", datatype => "literal", fieldtype => "field" },
+                     { content => "urlday", datatype => "literal", fieldtype => "field" },
+                     { content => "urlendday", datatype => "literal", fieldtype => "field" },
+                     { content => "urlendmonth", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "urlendyear",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                       nullok    => "true",
+                     },
+                     { content => "urlmonth", datatype => "literal", fieldtype => "field" },
+                     { content => "urlyear", datatype => "literal", fieldtype => "field" },
+                     { content => "venue", datatype => "literal", fieldtype => "field" },
+                     { content => "verba", datatype => "verbatim", fieldtype => "field" },
+                     { content => "verbb", datatype => "verbatim", fieldtype => "field" },
+                     { content => "verbc", datatype => "verbatim", fieldtype => "field" },
+                     { content => "version", datatype => "literal", fieldtype => "field" },
+                     { content => "volume", datatype => "literal", fieldtype => "field" },
+                     { content => "volumes", datatype => "literal", fieldtype => "field" },
+                     { content => "xref", datatype => "literal", fieldtype => "field" },
+                     { content => "year", datatype => "literal", fieldtype => "field" },
+                   ],
+                 },
 }
   );
 $CONFIG_DEFAULT_BIBLATEX{sorting_final} = $CONFIG_DEFAULT_BIBLATEX{sorting_label};
@@ -1308,62 +1549,6 @@ our %CONFIG_SCOPE_BIBLATEX = (
   useprefix         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   usetranslator     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
 );
-
-### biblatex fields
-
-Readonly::Array our @NAMEFIELDS  =>   qw{
-  author editor editora editorb editorc shortauthor shorteditor commentator
-  translator annotator bookauthor introduction foreword afterword
-  holder sortname namea nameb namec };
-
-Readonly::Array our @LISTFIELDS  =>   qw{
-  publisher address location school institution organization language origlocation
-  origpublisher lista listb listc listd liste listf };
-
-Readonly::Array our @LITERALFIELDS_BASE  =>   qw{
-  abstract addendum annotation chapter edition eid howpublished isan isbn
-  ismn isrn issn issue iswc label labelnameaddon nameaddon note number pagetotal part pubstate
-  series shorthand shorthandintro shortjournal shortseries eprinttype eprintclass
-  venue version volume volumes usera userb userc userd
-  usere userf hyphenation crossref entrysubtype execute gender sortkey sortyear
-  xref
-  };
-
-Readonly::Array our @DATECOMPONENTFIELDS  =>   qw{
-  year  endyear  origyear  origendyear   eventyear   eventendyear  urlyear  urlendyear
-  month endmonth origmonth origendmonth  eventmonth  eventendmonth urlmonth urlendmonth
-  day   endday   origday   origendday    eventday    eventendday   urlday   urlendday
-  };
-
-Readonly::Array our @TITLEFIELDS => qw{
-  title subtitle titleaddon shorttitle sorttitle indextitle indexsorttitle
-  origtitle issuetitle issuesubtitle maintitle mainsubtitle maintitleaddon
-  booktitle booksubtitle booktitleaddon journal journaltitle journalsubtitle
-  reprinttitle eventtitle };
-
-# Fields that are used internally by biber but are not passed to the bbl output
-Readonly::Array our @SKIPFIELDS => qw{
-  sortname sorttitle presort sortkey sortyear library remarks date urldate
-  eventdate origdate };
-our %SKIPFIELDS = map { $_ => 1 } @SKIPFIELDS;
-
-Readonly::Array our @RANGEFIELDS     =>  qw{ pages };
-Readonly::Array our @DATERANGEFIELDS =>  qw{ date origdate eventdate urldate };
-Readonly::Array our @VERBATIMFIELDS  =>  qw{ doi eprint file pdf url verba verbb verbc };
-Readonly::Array our @KEYFIELDS       =>  qw{
-  authortype bookpagination editortype origlanguage pagination
-  type nameatype namebtype namectype editoratype editorbtype editorctype editorclass
-  editoraclass editorbclass editorcclass };
-Readonly::Array our @COMMASEP_FIELDS => qw{ options keywords entryset };
-
-Readonly::Array our @ENTRIESTOSPLIT  =>  ( @NAMEFIELDS, @LISTFIELDS );
-
-# These fields can be present when null. All others are not set if null
-Readonly::Array our @NULL_OK  => qw{ endyear origendyear eventendyear urlendyear };
-
-# literal and integer fields
-
-Readonly::Array our @LITERALFIELDS => ( @TITLEFIELDS, @LITERALFIELDS_BASE, @KEYFIELDS );
 
 Readonly::Hash our %NUMERICALMONTH => (
   'January' => 1,

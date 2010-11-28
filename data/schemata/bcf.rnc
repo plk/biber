@@ -121,6 +121,15 @@ start =
           )
         }+
       }?,
+      element bcf:fields {
+        element bcf:field {
+          attribute fieldtype { "field" | "list" },
+          attribute datatype { "literal" | "name" | "key" | "date" | "verbatim" | "integer" | "range" | "special" },
+          attribute nullok { "true" }?,
+          attribute skip_output { "true" }?,
+          xsd:NCName
+        }+
+      },
       element bcf:entryfields {
         element bcf:entrytype { xsd:NCName }+,
         (element bcf:field { "ALL" } |
