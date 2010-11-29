@@ -2,8 +2,12 @@ namespace bcf = "https://sourceforge.net/projects/biblatex"
 
 start =
   element bcf:controlfile {
+    # This is usually the same as the biblatex version string but not necessarily.
+    # Sometimes the BCF format version doesn't change between biblatex releases
     attribute version { xsd:string },
 
+    # "Global" Biber options. It's not clear what a non-global biber option
+    # would be but just in case, we have the option ...
     element bcf:options {
       attribute component { "biber" },
       attribute type { "global" },
@@ -16,7 +20,9 @@ start =
       sortlocale?,
       sortupper
     },
-    
+
+    # Global BibLaTeX options. That is, options that apply to all
+    # entrytypes (unless a more specifically scoped option is specified)
     element bcf:options {
       attribute component { "biblatex" },
       attribute type { "global" },
@@ -39,9 +45,10 @@ start =
       usetranslator
     },
     
+    # Per-entrytype BibLaTeX options
     element bcf:options {
       attribute component { "biblatex" },
-      attribute type { biblatex.entrytypes },
+      attribute type { xsd:NCName },
       alphaothers?,
       labelalpha?,
       labelname?,
@@ -58,10 +65,15 @@ start =
       usetranslator?
     }*,
     
+    # Cross-reference inheritance specifications
     element bcf:inheritance {
+      # Defaults
       element bcf:defaults {
+        # Whether to inherit all fields
         attribute inherit_all { "yes" | "no" },
+        # Should we overwrite the target field if it exists?
         attribute override_target { "yes" | "no" },
+        # Default inherit_all and override_target settings for entrytype source/target pairs
         element bcf:type_pair {
           attribute source { "all" | xsd:string },
           attribute target { "all" | xsd:string },
@@ -70,15 +82,22 @@ start =
           empty
         }*
       },
+      # An inheritance specification
       element bcf:inherit {
+        # applies to these pairs of source/target entrytypes
         element bcf:type_pair {
           attribute source { "all" | xsd:string },
           attribute target { "all" | xsd:string },
           empty
         }+,
+        # and here are the field specifications
         element bcf:field {
-          ((attribute source { xsd:string },
-            attribute skip { "yes" | "no" }) |
+          (
+            # either a "skip this field" specification
+            # so we can say inherit all except certain fields OR ...
+            (attribute source { xsd:string },
+              attribute skip { "yes" | "no" }) |
+            # ... a source and target field with an optional override attribute
             (attribute source { xsd:string },
               attribute target { xsd:string },
               attribute override_target { "yes" | "no" }?)
@@ -88,58 +107,95 @@ start =
       }*
     }?,
     
+    # Global sorting specification
     element bcf:sorting {
       attribute type { "global" },
       sort+
     },
     
+    # Optional entrytype specific sorting specifications
     element bcf:sorting {
-      attribute type { biblatex.entrytypes },
+      attribute type { xsd:NCName },
       sort+
     }*,
 
+    # Structure specification
     element bcf:structure {
+      # Valid entrytypes
       element bcf:entrytypes {
         element bcf:entrytype { xsd:NCName }+
       },
+      # Entrytype and field alias specifications
       element bcf:aliases {
         element bcf:alias {
           (
             (
+              # entrytype alias specification
               attribute type { "entrytype" },
+              # alias name
               element bcf:name { xsd:NCName },
+              # canonical name
               element bcf:realname { xsd:NCName },
+              # Any other fields that need setting when resolving the alias
+              # for example when "phdthesis" -> "thesis", we also need to set
+              # "type" = "phdthesis"
               element bcf:field {
                 attribute name { xsd:NCName },
                 xsd:NCName
               }* ) |
             (
+              # field alias specification
               attribute type { "field" },
+              # alias name
               element bcf:name { xsd:NCName },
+              # canonical name
               element bcf:realname { xsd:NCName }
             )
           )
         }+
       }?,
+      # BibLaTeX field types. Biber uses this to determine how to output various types
+      # to the .bbl
       element bcf:fields {
         element bcf:field {
+          # fieldtype is "field" or "list"
           attribute fieldtype { "field" | "list" },
+          # datatype of field content
           attribute datatype { "literal" | "name" | "key" | "date" | "verbatim" | "integer" | "range" | "special" },
+          # Are we allowed to output a null field value to the .bbl for this field?
           attribute nullok { "true" }?,
+          # Should this field be skipped and not output to the .bbl?
           attribute skip_output { "true" }?,
           xsd:NCName
         }+
       },
+      # Allowable fields for entrytypes
+      # Only one specification per entrytype: even though it might be nice to have several 
+      # so that one could share information, this would be hard to manage and confusing as it
+      # not be visible in one place which fields were valid for an entrytype.
       element bcf:entryfields {
         element bcf:entrytype { xsd:NCName }+,
         (element bcf:field { "ALL" } |
          element bcf:field { xsd:NCName }+)
       }+,
+      # Constraints on field (co-)existence and format
       element bcf:constraints {
+        # Set of entrytypes that this constraint applies to
+        # An entrytype can be specified in multiple constraints
+        #
+        # Special entrytype "ALL" can be used to cover, well, all entrytypes ...
         (element bcf:entrytype { "ALL" } |
          element bcf:entrytype { xsd:NCName }+),    
+        # A constraint specification
         element bcf:constraint {
           (
+            # Conditional constraints have an antecedent and consequent
+            # both of which have a quantifier. This allows you to enforce
+            # constraints like:
+            #
+            # if field a,b,c are all present then one of x,y,z must be
+            # if one of field a,b,c are present then none of x,y,z must be
+            # etc.
             (attribute type { "conditional" },
               element bcf:antecedent {
                 attribute quant { "all" | "one" | "none"},
@@ -150,52 +206,75 @@ start =
                 element bcf:field { xsd:NCName }+
               }
             ) |
+            # Datatype and format constraints
             (attribute type { "data" },
+              # datespec is a BibLaTeX date range specification
+              # range* attributes are for limiting integer type range
               attribute datatype { "integer" | "datespec" }?,
               attribute rangemin { xsd:int }?,
               attribute rangemax { xsd:int }?,                                      
               element bcf:field { xsd:NCName }+
             ) |
+            # Mandatoriness constraints which say which fields must appear
             (attribute type { "mandatory" },
               (element bcf:field { xsd:NCName } |
+                # An XOR set of fields so you can enforce:
+                #
+                # One (but not more) of fields a,b,c must exist
                 element bcf:fieldxor {
                   element bcf:field {
                     attribute coerce { "true" }?,
                     xsd:NCName
                   }+
                 } |
+                # An OR set of fields so you can enforce:
+                #
+                # One (possibly more of fields a,b,c must exist
                 element bcf:fieldor {
                   element bcf:field { xsd:NCName }+
                 }
-              )+
+                )+
+              )
             )
-          )
-        }*
-      }+
-    }?,
-
-    secspec+
-  }
+          }*
+        }+
+      }?,
+      # Section specifications
+      secspec+
+    }
 
 sort =
+  # sort specification
   element bcf:sort {
+    # order of this specification in the set of all sort specifications
     attribute order { xsd:integer },
+    # Is this sort specification applicable to the first (label generatio)
+    # sort pass or the second (final) pass?
     attribute pass { "label" | "final" }?,
+    # A sort item specification - a field or pseudo-field to get sort information from
     element bcf:sortitem {
+      # order of this item in the set of all other item specifications
       attribute order { xsd:integer },
+      # Should we stop generating sorting information after this item?
       attribute final { xsd:integer }?,
+      # Just use a part of the item information for sorting?
       attribute substring_side { "left" | "right" }?,
       attribute substring_width { xsd:integer }?,
+      # Pad the item information when sorting with it?
       attribute pad_side { "left" | "right" }?,
       attribute pad_width { xsd:integer }?,
       attribute pad_char { xsd:string { minLength = "1" maxLength = "1" } }?,
+      # Sort ascending or descending (when relevant)?
       attribute sort_direction { "ascending" | "descending" }?,
       text
     }+
   }+
 
+# Section specification
 secspec =
+  # data sources
   element bcf:bibdata {
+    # which sections the datafiles are for
     attribute section { xsd:integer },
     element bcf:datasource {
       attribute type { "file" },
@@ -203,30 +282,13 @@ secspec =
       xsd:NCName
     }*
   }?,
+  # citekeys in each section
   element bcf:section {
     attribute number { xsd:integer },
     element bcf:citekey { xsd:string }*
   }
 
-biblatex.entrytypes =
-  "book"
-| "article"
-| "booklet"
-| "collection"
-| "inbook"
-| "incollection"
-| "proceedings"
-| "inproceedings"
-| "manual"
-| "misc"
-| "online"
-| "patent"
-| "periodical"
-| "proceedings"
-| "report"
-| "thesis"
-| "unpublished"
-
+# option definitions
 terseinits =
   element bcf:option {
     attribute type { "singlevalued" },
@@ -269,7 +331,7 @@ labelyear =
     element bcf:key { "labelyear" },
     element bcf:value {
       attribute order { xsd:integer },
-      year.list
+      xsd:NCName
     }+
   }
 singletitle =
@@ -338,11 +400,9 @@ labelname =
     element bcf:key { "labelname" },
     element bcf:value {
       attribute order { xsd:integer },
-      name.list
+      xsd:NCName
     }+
   }
-name.list = "shortauthor" | "shorteditor" | "author" | "editor" | "translator"
-year.list = "year" | "origyear" | "eventyear" | "urlyear"
 mincrossrefs =
   element bcf:option {
     attribute type { "singlevalued" },

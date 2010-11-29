@@ -2,9 +2,17 @@
 <grammar xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:bcf="https://sourceforge.net/projects/biblatex" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <start>
     <element name="bcf:controlfile">
+      <!--
+        This is usually the same as the biblatex version string but not necessarily.
+        Sometimes the BCF format version doesn't change between biblatex releases
+      -->
       <attribute name="version">
         <data type="string"/>
       </attribute>
+      <!--
+        "Global" Biber options. It's not clear what a non-global biber option
+        would be but just in case, we have the option ...
+      -->
       <element name="bcf:options">
         <attribute name="component">
           <value>biber</value>
@@ -25,6 +33,10 @@
         </optional>
         <ref name="sortupper"/>
       </element>
+      <!--
+        Global BibLaTeX options. That is, options that apply to all
+        entrytypes (unless a more specifically scoped option is specified)
+      -->
       <element name="bcf:options">
         <attribute name="component">
           <value>biblatex</value>
@@ -57,12 +69,13 @@
         <ref name="usetranslator"/>
       </element>
       <zeroOrMore>
+        <!-- Per-entrytype BibLaTeX options -->
         <element name="bcf:options">
           <attribute name="component">
             <value>biblatex</value>
           </attribute>
           <attribute name="type">
-            <ref name="biblatex.entrytypes"/>
+            <data type="NCName"/>
           </attribute>
           <optional>
             <ref name="alphaothers"/>
@@ -109,14 +122,18 @@
         </element>
       </zeroOrMore>
       <optional>
+        <!-- Cross-reference inheritance specifications -->
         <element name="bcf:inheritance">
+          <!-- Defaults -->
           <element name="bcf:defaults">
+            <!-- Whether to inherit all fields -->
             <attribute name="inherit_all">
               <choice>
                 <value>yes</value>
                 <value>no</value>
               </choice>
             </attribute>
+            <!-- Should we overwrite the target field if it exists? -->
             <attribute name="override_target">
               <choice>
                 <value>yes</value>
@@ -124,6 +141,7 @@
               </choice>
             </attribute>
             <zeroOrMore>
+              <!-- Default inherit_all and override_target settings for entrytype source/target pairs -->
               <element name="bcf:type_pair">
                 <attribute name="source">
                   <choice>
@@ -158,8 +176,10 @@
             </zeroOrMore>
           </element>
           <zeroOrMore>
+            <!-- An inheritance specification -->
             <element name="bcf:inherit">
               <oneOrMore>
+                <!-- applies to these pairs of source/target entrytypes -->
                 <element name="bcf:type_pair">
                   <attribute name="source">
                     <choice>
@@ -177,8 +197,13 @@
                 </element>
               </oneOrMore>
               <oneOrMore>
+                <!-- and here are the field specifications -->
                 <element name="bcf:field">
                   <choice>
+                    <!--
+                      either a "skip this field" specification
+                      so we can say inherit all except certain fields OR ...
+                    -->
                     <group>
                       <attribute name="source">
                         <data type="string"/>
@@ -190,6 +215,7 @@
                         </choice>
                       </attribute>
                     </group>
+                    <!-- ... a source and target field with an optional override attribute -->
                     <group>
                       <attribute name="source">
                         <data type="string"/>
@@ -214,6 +240,7 @@
           </zeroOrMore>
         </element>
       </optional>
+      <!-- Global sorting specification -->
       <element name="bcf:sorting">
         <attribute name="type">
           <value>global</value>
@@ -223,9 +250,10 @@
         </oneOrMore>
       </element>
       <zeroOrMore>
+        <!-- Optional entrytype specific sorting specifications -->
         <element name="bcf:sorting">
           <attribute name="type">
-            <ref name="biblatex.entrytypes"/>
+            <data type="NCName"/>
           </attribute>
           <oneOrMore>
             <ref name="sort"/>
@@ -233,7 +261,9 @@
         </element>
       </zeroOrMore>
       <optional>
+        <!-- Structure specification -->
         <element name="bcf:structure">
+          <!-- Valid entrytypes -->
           <element name="bcf:entrytypes">
             <oneOrMore>
               <element name="bcf:entrytype">
@@ -242,21 +272,30 @@
             </oneOrMore>
           </element>
           <optional>
+            <!-- Entrytype and field alias specifications -->
             <element name="bcf:aliases">
               <oneOrMore>
                 <element name="bcf:alias">
                   <choice>
                     <group>
+                      <!-- entrytype alias specification -->
                       <attribute name="type">
                         <value>entrytype</value>
                       </attribute>
+                      <!-- alias name -->
                       <element name="bcf:name">
                         <data type="NCName"/>
                       </element>
+                      <!-- canonical name -->
                       <element name="bcf:realname">
                         <data type="NCName"/>
                       </element>
                       <zeroOrMore>
+                        <!--
+                          Any other fields that need setting when resolving the alias
+                          for example when "phdthesis" -> "thesis", we also need to set
+                          "type" = "phdthesis"
+                        -->
                         <element name="bcf:field">
                           <attribute name="name">
                             <data type="NCName"/>
@@ -266,12 +305,15 @@
                       </zeroOrMore>
                     </group>
                     <group>
+                      <!-- field alias specification -->
                       <attribute name="type">
                         <value>field</value>
                       </attribute>
+                      <!-- alias name -->
                       <element name="bcf:name">
                         <data type="NCName"/>
                       </element>
+                      <!-- canonical name -->
                       <element name="bcf:realname">
                         <data type="NCName"/>
                       </element>
@@ -281,15 +323,21 @@
               </oneOrMore>
             </element>
           </optional>
+          <!--
+            BibLaTeX field types. Biber uses this to determine how to output various types
+            to the .bbl
+          -->
           <element name="bcf:fields">
             <oneOrMore>
               <element name="bcf:field">
+                <!-- fieldtype is "field" or "list" -->
                 <attribute name="fieldtype">
                   <choice>
                     <value>field</value>
                     <value>list</value>
                   </choice>
                 </attribute>
+                <!-- datatype of field content -->
                 <attribute name="datatype">
                   <choice>
                     <value>literal</value>
@@ -303,11 +351,13 @@
                   </choice>
                 </attribute>
                 <optional>
+                  <!-- Are we allowed to output a null field value to the .bbl for this field? -->
                   <attribute name="nullok">
                     <value>true</value>
                   </attribute>
                 </optional>
                 <optional>
+                  <!-- Should this field be skipped and not output to the .bbl? -->
                   <attribute name="skip_output">
                     <value>true</value>
                   </attribute>
@@ -317,6 +367,12 @@
             </oneOrMore>
           </element>
           <oneOrMore>
+            <!--
+              Allowable fields for entrytypes
+              Only one specification per entrytype: even though it might be nice to have several 
+              so that one could share information, this would be hard to manage and confusing as it
+              not be visible in one place which fields were valid for an entrytype.
+            -->
             <element name="bcf:entryfields">
               <oneOrMore>
                 <element name="bcf:entrytype">
@@ -336,7 +392,14 @@
             </element>
           </oneOrMore>
           <oneOrMore>
+            <!-- Constraints on field (co-)existence and format -->
             <element name="bcf:constraints">
+              <!--
+                Set of entrytypes that this constraint applies to
+                An entrytype can be specified in multiple constraints
+                
+                Special entrytype "ALL" can be used to cover, well, all entrytypes ...
+              -->
               <choice>
                 <element name="bcf:entrytype">
                   <value>ALL</value>
@@ -348,8 +411,18 @@
                 </oneOrMore>
               </choice>
               <zeroOrMore>
+                <!-- A constraint specification -->
                 <element name="bcf:constraint">
                   <choice>
+                    <!--
+                      Conditional constraints have an antecedent and consequent
+                      both of which have a quantifier. This allows you to enforce
+                      constraints like:
+                      
+                      if field a,b,c are all present then one of x,y,z must be
+                      if one of field a,b,c are present then none of x,y,z must be
+                      etc.
+                    -->
                     <group>
                       <attribute name="type">
                         <value>conditional</value>
@@ -383,11 +456,16 @@
                         </oneOrMore>
                       </element>
                     </group>
+                    <!-- Datatype and format constraints -->
                     <group>
                       <attribute name="type">
                         <value>data</value>
                       </attribute>
                       <optional>
+                        <!--
+                          datespec is a BibLaTeX date range specification
+                          range* attributes are for limiting integer type range
+                        -->
                         <attribute name="datatype">
                           <choice>
                             <value>integer</value>
@@ -411,6 +489,7 @@
                         </element>
                       </oneOrMore>
                     </group>
+                    <!-- Mandatoriness constraints which say which fields must appear -->
                     <group>
                       <attribute name="type">
                         <value>mandatory</value>
@@ -420,6 +499,11 @@
                           <element name="bcf:field">
                             <data type="NCName"/>
                           </element>
+                          <!--
+                            An XOR set of fields so you can enforce:
+                            
+                            One (but not more) of fields a,b,c must exist
+                          -->
                           <element name="bcf:fieldxor">
                             <oneOrMore>
                               <element name="bcf:field">
@@ -432,6 +516,11 @@
                               </element>
                             </oneOrMore>
                           </element>
+                          <!--
+                            An OR set of fields so you can enforce:
+                            
+                            One (possibly more of fields a,b,c must exist
+                          -->
                           <element name="bcf:fieldor">
                             <oneOrMore>
                               <element name="bcf:field">
@@ -450,17 +539,24 @@
         </element>
       </optional>
       <oneOrMore>
+        <!-- Section specifications -->
         <ref name="secspec"/>
       </oneOrMore>
     </element>
   </start>
   <define name="sort">
     <oneOrMore>
+      <!-- sort specification -->
       <element name="bcf:sort">
+        <!-- order of this specification in the set of all sort specifications -->
         <attribute name="order">
           <data type="integer"/>
         </attribute>
         <optional>
+          <!--
+            Is this sort specification applicable to the first (label generatio)
+            sort pass or the second (final) pass?
+          -->
           <attribute name="pass">
             <choice>
               <value>label</value>
@@ -469,16 +565,20 @@
           </attribute>
         </optional>
         <oneOrMore>
+          <!-- A sort item specification - a field or pseudo-field to get sort information from -->
           <element name="bcf:sortitem">
+            <!-- order of this item in the set of all other item specifications -->
             <attribute name="order">
               <data type="integer"/>
             </attribute>
             <optional>
+              <!-- Should we stop generating sorting information after this item? -->
               <attribute name="final">
                 <data type="integer"/>
               </attribute>
             </optional>
             <optional>
+              <!-- Just use a part of the item information for sorting? -->
               <attribute name="substring_side">
                 <choice>
                   <value>left</value>
@@ -492,6 +592,7 @@
               </attribute>
             </optional>
             <optional>
+              <!-- Pad the item information when sorting with it? -->
               <attribute name="pad_side">
                 <choice>
                   <value>left</value>
@@ -513,6 +614,7 @@
               </attribute>
             </optional>
             <optional>
+              <!-- Sort ascending or descending (when relevant)? -->
               <attribute name="sort_direction">
                 <choice>
                   <value>ascending</value>
@@ -526,9 +628,12 @@
       </element>
     </oneOrMore>
   </define>
+  <!-- Section specification -->
   <define name="secspec">
     <optional>
+      <!-- data sources -->
       <element name="bcf:bibdata">
+        <!-- which sections the datafiles are for -->
         <attribute name="section">
           <data type="integer"/>
         </attribute>
@@ -550,6 +655,7 @@
         </zeroOrMore>
       </element>
     </optional>
+    <!-- citekeys in each section -->
     <element name="bcf:section">
       <attribute name="number">
         <data type="integer"/>
@@ -561,27 +667,7 @@
       </zeroOrMore>
     </element>
   </define>
-  <define name="biblatex.entrytypes">
-    <choice>
-      <value>book</value>
-      <value>article</value>
-      <value>booklet</value>
-      <value>collection</value>
-      <value>inbook</value>
-      <value>incollection</value>
-      <value>proceedings</value>
-      <value>inproceedings</value>
-      <value>manual</value>
-      <value>misc</value>
-      <value>online</value>
-      <value>patent</value>
-      <value>periodical</value>
-      <value>proceedings</value>
-      <value>report</value>
-      <value>thesis</value>
-      <value>unpublished</value>
-    </choice>
-  </define>
+  <!-- option definitions -->
   <define name="terseinits">
     <element name="bcf:option">
       <attribute name="type">
@@ -691,7 +777,7 @@
           <attribute name="order">
             <data type="integer"/>
           </attribute>
-          <ref name="year.list"/>
+          <data type="NCName"/>
         </element>
       </oneOrMore>
     </element>
@@ -858,27 +944,10 @@
           <attribute name="order">
             <data type="integer"/>
           </attribute>
-          <ref name="name.list"/>
+          <data type="NCName"/>
         </element>
       </oneOrMore>
     </element>
-  </define>
-  <define name="name.list">
-    <choice>
-      <value>shortauthor</value>
-      <value>shorteditor</value>
-      <value>author</value>
-      <value>editor</value>
-      <value>translator</value>
-    </choice>
-  </define>
-  <define name="year.list">
-    <choice>
-      <value>year</value>
-      <value>origyear</value>
-      <value>eventyear</value>
-      <value>urlyear</value>
-    </choice>
   </define>
   <define name="mincrossrefs">
     <element name="bcf:option">
