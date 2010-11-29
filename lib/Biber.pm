@@ -37,7 +37,7 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =cut
 
-our $VERSION = '0.6.1';
+our $VERSION = '0.6.2';
 our $BETA_VERSION = 1; # Is this a beta version?
 
 =head1 SYNOPSIS
@@ -283,7 +283,7 @@ sub parse_ctrlfile {
 
   my $controlversion = $bcfxml->{version};
   Biber::Config->setblxoption('controlversion', $controlversion);
-  $logger->warn("Warning: You are using biblatex version $controlversion :
+  $logger->warn("Warning: You are using biblatex version $controlversion:
 biber is more likely to work with version $BIBLATEX_VERSION.")
     unless $controlversion eq $BIBLATEX_VERSION;
 
@@ -736,8 +736,6 @@ sub process_crossrefs {
         $logger->debug("  Adding inset entry '$inset_key' to the citekeys (section $secnum)");
         $section->add_citekeys($inset_key);
       }
-      # automatically crossref for the first set member without crossref customisations
-#      $be->inherit_from_plain($section->bibentry(@inset_keys[0]));
     }
     # Do crossrefs inheritance
     if (my $crossrefkey = $be->get_field('crossref')) {

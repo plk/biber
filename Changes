@@ -1,5 +1,5 @@
 Revision history for Biber
-0.6.1  (unreleased)
+0.6.2  (dev beta)
        * More comprehensive structural checks on allowed entrytypes/fields
          and field combinations/formats
        * Added option validate_structure to turn on structural checks
