@@ -179,7 +179,8 @@ sub add_warning {
 =cut
 
 sub inherit_from {
-  my ($self, $parent) = @_;
+  my $self = shift;
+  my $parent = shift;
   my $type        = $self->get_field('entrytype');
   my $parenttype  = $parent->get_field('entrytype');
   my $inheritance = Biber::Config->getblxoption('inheritance');
