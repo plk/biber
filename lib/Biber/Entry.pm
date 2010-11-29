@@ -168,6 +168,28 @@ sub add_warning {
   return;
 }
 
+=head2 inherit_from_plain
+
+    Inherit fields from parent entry (as indicated by the crossref field)
+
+    $entry->inherit_from($parententry);
+
+    Takes a second Biber::Entry object as argument
+    Does not use any cross inheritance customisation from the .bcf
+
+=cut
+
+sub inherit_from_plain {
+  my $self = shift;
+  my $parent = shift;
+
+  # Simply copy over all parent fields
+  foreach my $field ($parent->fields) {
+    $self->set_datafield($field, $parent->get_datafield($field));
+  }
+  return;
+}
+
 =head2 inherit_from
 
     Inherit fields from parent entry (as indicated by the crossref field)
@@ -175,6 +197,7 @@ sub add_warning {
     $entry->inherit_from($parententry);
 
     Takes a second Biber::Entry object as argument
+    Uses the crossref inheritance specifications from the .bcf
 
 =cut
 
@@ -225,9 +248,9 @@ sub inherit_from {
     }
   }
 
-  # Now process the rest of the fields, if necessary
+  # Now process the rest of the (original data only) fields, if necessary
   if ($inherit_all eq 'yes') {
-    foreach my $field ($parent->fields) {
+    foreach my $field ($parent->datafields) {
       next if $processed{$field}; # Skip if we already dealt with this field above
       # Set the field if null or override is requested
       if (not $self->get_field($field) or $override_target eq 'yes') {

@@ -736,6 +736,8 @@ sub process_crossrefs {
         $logger->debug("  Adding inset entry '$inset_key' to the citekeys (section $secnum)");
         $section->add_citekeys($inset_key);
       }
+      # automatically crossref for the first set member without crossref customisations
+#      $be->inherit_from_plain($section->bibentry(@inset_keys[0]));
     }
     # Do crossrefs inheritance
     if (my $crossrefkey = $be->get_field('crossref')) {
