@@ -33,7 +33,7 @@ All functions are exported by default.
 
 our @EXPORT = qw{ locate_biber_file makenameid stringify_hash
   normalise_string normalise_string_lite normalise_string_underscore normalise_string_sort
-  latexescape reduce_array remove_outer add_outer ucinit strip_nosort_name
+  reduce_array remove_outer add_outer ucinit strip_nosort_name
   strip_nosortdiacritics strip_nosortprefix is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8};
 
@@ -233,44 +233,6 @@ sub normalise_string_underscore {
   $str = normalise_string($str);
   $str =~ s/\s+/_/g;
   return $str;
-}
-
-=head2 latexescape
-
-Escapes the LaTeX special characters & ^ _ $ and % but only when not inside
-top-level protecting brace pairs {}
-
-=cut
-
-# Why isn't this a simple regexp? Because it would either need some esoteric perl 5.10
-# only tricks or negative zero-width variable width look-behind which perl doesn't do.
-# All this is another good reason to move to BibLaTeXML ...
-sub latexescape {
- my $str = shift;
- my $latexspecials = qr/(\&|\_|\%|\$|\^)/;
- my $rstr;
- my $protected = 0;
- for (my $i=0;$i<length($str);$i++) {
-   my $prea = substr($str,$i-1,1);
-   my $a = substr($str,$i,1);
-   # Opening brace that isn't escaped
-   if ($a eq '{' and $prea ne "\\") {
-     $protected += 1;
-   }
-   # Closing brace that isn't escaped
-   elsif ($a eq '}' and $prea ne "\\") {
-     $protected -= 1;
-   }
-   # We escape non-escaped things which aren't in protecting braces
-   if ($prea ne "\\" and not $protected) {
-     $a =~ s/$latexspecials/\\$1/x;
-   }
-   $rstr .= $a;
- }
- unless ($protected == 0) {
-  $logger->warn("Found unbalanced escape sequence in braces for string \"$str\"");
- }
- return $rstr;
 }
 
 =head2 reduce_array
