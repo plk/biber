@@ -184,8 +184,8 @@ sub inherit_from_plain {
   my $parent = shift;
 
   # Simply copy over all parent fields
-  foreach my $field ($parent->fields) {
-    $self->set_datafield($field, $parent->get_datafield($field));
+  foreach my $field ($parent->datafields) {
+    $self->set_datafield($field, $parent->get_field($field));
   }
   return;
 }
