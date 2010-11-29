@@ -212,31 +212,29 @@ sub postprocess_biber_opts {
   }
 }
 
-=head2 setdata
 
-    Store some transient data needed for processing
-    Not a biber or biblatex option
+=head2 set_structure
+
+    Sets the structure information object
 
 =cut
 
-sub setdata {
-  shift; # class method so don't care about class name
-  my ($opt, $val) = @_;
-  $CONFIG->{data}{biber}{$opt} = $val;
+sub set_structure {
+  shift;
+  my $obj = shift;
+  $self->{structure} = $obj;
   return;
 }
 
-=head2 getdata
+=head2 get_structure
 
-    Get some transient Biber data we stored earlier that
-    isn't a real biber or bibaltex option
+    Gets the structure information object
 
 =cut
 
-sub getdata {
-  shift; # class method so don't care about class name
-  my $opt = shift;
-  return $CONFIG->{data}{biber}{$opt};
+sub get_structure {
+  shift;
+  return $self->{structure};
 }
 
 

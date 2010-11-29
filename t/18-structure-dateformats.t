@@ -62,9 +62,9 @@ my $l13c = q|  \entry{L13}{book}{}
     \field{labelyear}{1996}
     \field{day}{01}
     \field{endyear}{}
+    \field{month}{01}
     \field{title}{Title 2}
     \field{year}{1996}
-    \field{month}{01}
   \endentry
 
 |;
@@ -86,9 +86,9 @@ my $l14 = q|  \entry{L14}{book}{}
     \field{endday}{12}
     \field{endmonth}{12}
     \field{endyear}{1996}
+    \field{month}{12}
     \field{title}{Title 2}
     \field{year}{1996}
-    \field{month}{12}
   \endentry
 
 |;
@@ -155,6 +155,7 @@ my $l17 = q|  \entry{L17}{proceedings}{}
     \field{eventendyear}{2004}
     \field{eventmonth}{12}
     \field{eventyear}{1998}
+    \field{month}{12}
     \field{origday}{10}
     \field{origendday}{12}
     \field{origendmonth}{12}
@@ -163,7 +164,6 @@ my $l17 = q|  \entry{L17}{proceedings}{}
     \field{origyear}{1998}
     \field{title}{Title 2}
     \field{year}{1996}
-    \field{month}{12}
   \endentry
 
 |;
@@ -190,6 +190,7 @@ my $l17c = q|  \entry{L17}{proceedings}{}
     \field{eventendyear}{2004}
     \field{eventmonth}{12}
     \field{eventyear}{1998}
+    \field{month}{12}
     \field{origday}{10}
     \field{origendday}{12}
     \field{origendmonth}{12}
@@ -198,7 +199,6 @@ my $l17c = q|  \entry{L17}{proceedings}{}
     \field{origyear}{1998}
     \field{title}{Title 2}
     \field{year}{1996}
-    \field{month}{12}
   \endentry
 
 |;
@@ -225,6 +225,7 @@ my $l17e = q|  \entry{L17}{proceedings}{}
     \field{eventendyear}{2004}
     \field{eventmonth}{12}
     \field{eventyear}{1998}
+    \field{month}{12}
     \field{origday}{10}
     \field{origendday}{12}
     \field{origendmonth}{12}
@@ -233,7 +234,6 @@ my $l17e = q|  \entry{L17}{proceedings}{}
     \field{origyear}{1998}
     \field{title}{Title 2}
     \field{year}{1996}
-    \field{month}{12}
   \endentry
 
 |;

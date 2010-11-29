@@ -55,11 +55,11 @@ sub _printfield {
 sub set_output_entry {
   my $self = shift;
   my $be = shift; # Biber::Entry object
-  my $section = shift ; # Section the entry occurs in
+  my $section = shift; # Section the entry occurs in
+  my $struc = shift; # Structure object
   my $acc = '';
-  my $opts    = '';
+  my $opts = '';
   my $citecasekey; # entry key forced to case of any citations(s) which reference it
-  my $SKIPFIELDS = Biber::Config->getdata('fields_skipout');
   if ( $be->get_field('citecasekey') ) {
     $citecasekey = $be->get_field('citecasekey');
   }
@@ -83,7 +83,7 @@ sub set_output_entry {
     }
   }
 
-  foreach my $namefield (@{Biber::Config->getdata('fields_name')}) {
+  foreach my $namefield (@{$struc->get_field_type('name')}) {
     if ( my $nf = $be->get_field($namefield) ) {
       if ( $nf->last_element->get_namestring eq 'others' ) {
         $acc .= "    \\true{more$namefield}\n";
@@ -98,7 +98,7 @@ sub set_output_entry {
     }
   }
 
-  foreach my $listfield (@{Biber::Config->getdata('fields_list')}) {
+  foreach my $listfield (@{$struc->get_field_type('list')}) {
     if ( is_def_and_notnull($be->get_field($listfield)) ) {
       my @lf = @{ $be->get_field($listfield) };
       if ( $be->get_field($listfield)->[-1] eq 'others' ) {
@@ -206,9 +206,9 @@ sub set_output_entry {
     $acc .= "    \\true{singletitle}\n";
   }
 
-  foreach my $lfield (@{Biber::Config->getdata('fields_literal')}) {
-    next if $SKIPFIELDS->{$lfield};
-    if ( (Biber::Config->getdata('fields_nullok')->{$lfield} and
+  foreach my $lfield (@{$struc->get_field_type('literal')}) {
+    next if $struc->is_field_type('skipout', $lfield);
+    if ( ($struc->is_field_type('nullok', $lfield) and
           $be->field_exists($lfield)) or
          is_def_and_notnull($be->get_field($lfield)) ) {
       # we skip outputting the crossref or xref when the parent is not cited
@@ -226,7 +226,7 @@ sub set_output_entry {
     }
   }
 
-  foreach my $rfield (@{Biber::Config->getdata('fields_range')}) {
+  foreach my $rfield (@{$struc->get_field_type('range')}) {
     if ( is_def_and_notnull($be->get_field($rfield)) ) {
       my $rf = $be->get_field($rfield);
       $rf =~ s/[-–]+/\\bibrangedash /g;
@@ -234,7 +234,7 @@ sub set_output_entry {
     }
   }
 
-  foreach my $vfield (@{Biber::Config->getdata('fields_verbatim')}) {
+  foreach my $vfield (@{$struc->get_field_type('verbatim')}) {
     if ( is_def_and_notnull($be->get_field($vfield)) ) {
       my $rf = $be->get_field($vfield);
       $acc .= "    \\verb{$vfield}\n";

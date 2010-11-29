@@ -18,6 +18,7 @@ use Biber::Entry;
 use Biber::Entry::Name;
 use Biber::Sections;
 use Biber::Section;
+use Biber::Structure;
 use Biber::Utils;
 use LaTeX::Decode 0.03;
 use Storable qw( dclone );
@@ -125,6 +126,7 @@ sub set_output_obj {
   $self->{output_obj} = $obj;
   return;
 }
+
 
 =head2 get_preamble
 
@@ -655,185 +657,7 @@ sub process_setup {
   # for use in verification checks later
   # This has to be here as opposed to in parse_control() so that it can pick
   # up structure defaults in Constants.pm in case there is no .bcf
-  my $struc = Biber::Config->getblxoption('structure');
-
-  # Create internal aliases data format for easy use
-  my $aliases;
-  my %reverse_aliases;
-  foreach my $alias (@{$struc->{aliases}{alias}}) {
-    $aliases->{$alias->{type}}{$alias->{name}{content}}
-      = {
-         realname => $alias->{realname}{content}
-        };
-    # So we can automatically add aliases to the field definitions
-    # without having to maintain them there too.
-    $reverse_aliases{$alias->{realname}{content}} = $alias->{name}{content};
-
-    if (exists($alias->{field})) {
-      $aliases->{$alias->{type}}{$alias->{name}{content}}{fields}
-        = { map {$_->{name} => $_->{content}} @{$alias->{field}}};
-    }
-  }
-  Biber::Config->setdata('aliases', $aliases);
-
-  # Pull out legal entrytypes, fields and constraints and make lookup hash
-  # for quick tests later
-  my $leg_ents;
-  my $ets = [ sort map {$_->{content}} @{$struc->{entrytypes}{entrytype}} ];
-
-  foreach my $es (@$ets) {
-
-    # fields for entrytypes
-    my $lfs;
-    foreach my $ef (@{$struc->{entryfields}}) {
-      # Found a section describing legal fields for entrytype
-      if (grep {($_->{content} eq $es) or ($_->{content} eq 'ALL')} @{$ef->{entrytype}}) {
-        foreach my $f (@{$ef->{field}}) {
-          $lfs->{$f->{content}} = 1;
-        }
-      }
-    }
-
-    # field datatypes
-    my ($nullok, $skipout, @name, @list, @literal, @date, @integer, @range, @verbatim, @key);
-
-    # Create date for field types, including any aliases which might be
-    # needed when reading the bib data.
-    foreach my $f (@{$struc->{fields}{field}}) {
-      if ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'name') {
-        push @name, $f->{content};
-        push @name, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'literal') {
-        push @list, $f->{content};
-        push @list, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'key') {
-        push @list, $f->{content};
-        push @list, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'literal') {
-        push @literal, $f->{content};
-        push @literal, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'date') {
-        push @date, $f->{content};
-        push @date, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'integer') {
-        push @integer, $f->{content};
-        push @integer, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'range') {
-        push @range, $f->{content};
-        push @range, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'verbatim') {
-        push @verbatim, $f->{content};
-        push @verbatim, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'key') {
-        push @key, $f->{content};
-        push @key, $reverse_aliases{$f->{content}} if exists($reverse_aliases{$f->{content}});
-      }
-
-      # check null_ok
-      if ($f->{nullok}) {
-        $nullok->{$f->{content}} = 1;
-      }
-      # check skips - fields we dont' want to output to BBL
-      if ($f->{skip_output}) {
-        $skipout->{$f->{content}} = 1;
-      }
-    }
-
-    # Sort them so that the order of field output in the BBL does not change
-    # in tests when changing .bcf
-    @literal =  sort @literal;
-    @key =      sort @key;
-    @integer =  sort @integer;
-    @name =     sort @name;
-    @list =     sort @list;
-    @verbatim = sort @verbatim;
-    @range =    sort @range;
-
-    Biber::Config->setdata('fields_nullok', $nullok );
-    Biber::Config->setdata('fields_skipout', $skipout);
-    Biber::Config->setdata('fields_literal', [ @literal, @key, @integer ] );
-    Biber::Config->setdata('fields_name', \@name );
-    Biber::Config->setdata('fields_list', \@list );
-    Biber::Config->setdata('fields_split', [ @name, @list ] );
-    Biber::Config->setdata('fields_verbatim', \@verbatim );
-    Biber::Config->setdata('fields_range', \@range );
-
-    # constraints
-    my $constraints;
-    foreach my $cd (@{$struc->{constraints}}) {
-      # Found a section describing constraints for entrytype
-      if (grep {($_->{content} eq $es) or ($_->{content} eq 'ALL')} @{$cd->{entrytype}}) {
-        foreach my $c (@{$cd->{constraint}}) {
-          if ($c->{type} eq 'mandatory') {
-            # field
-            foreach my $f (@{$c->{field}}) {
-              push @{$constraints->{mandatory}}, $f->{content};
-            }
-            # xor set of fields
-            # [ XOR, field1, field2, ... , fieldn ]
-            foreach my $fxor (@{$c->{fieldxor}}) {
-              my $xorset;
-              foreach my $f (@{$fxor->{field}}) {
-                if ($f->{coerce}) {
-                  # put the default override element at the front and flag it
-                  unshift @$xorset, $f->{content};
-                }
-                else {
-                  push @$xorset, $f->{content};
-                }
-              }
-              unshift @$xorset, 'XOR';
-              push @{$constraints->{mandatory}}, $xorset;
-            }
-            # or set of fields
-            # [ OR, field1, field2, ... , fieldn ]
-            foreach my $for (@{$c->{fieldor}}) {
-              my $orset;
-              foreach my $f (@{$for->{field}}) {
-                push @$orset, $f->{content};
-              }
-              unshift @$orset, 'OR';
-              push @{$constraints->{mandatory}}, $orset;
-            }
-          }
-          # Conditional constraints
-          # [ ANTECEDENT_QUANTIFIER
-          #   [ ANTECEDENT LIST ]
-          #   CONSEQUENT_QUANTIFIER
-          #   [ CONSEQUENT LIST ]
-          # ]
-          elsif ($c->{type} eq 'conditional') {
-            my $cond;
-            $cond->[0] = $c->{antecedent}{quant};
-            $cond->[1] = [ map { $_->{content} } @{$c->{antecedent}{field}} ];
-            $cond->[2] = $c->{consequent}{quant};
-            $cond->[3] = [ map { $_->{content} } @{$c->{consequent}{field}} ];
-            push @{$constraints->{conditional}}, $cond;
-          }
-          # data constraints
-          elsif ($c->{type} eq 'data') {
-            my $data;
-            $data->{fields} = [ map { $_->{content} } @{$c->{field}} ];
-            $data->{datatype} = $c->{datatype};
-            $data->{rangemin} = $c->{rangemin};
-            $data->{rangemax} = $c->{rangemax};
-            push @{$constraints->{data}}, $data;
-          }
-        }
-      }
-    }
-    $leg_ents->{$es}{legal_fields} = $lfs;
-    $leg_ents->{$es}{constraints} = $constraints;
-  }
-  Biber::Config->setdata('legal_entrytypes', $leg_ents);
+  Biber::Config->set_structure(Biber::Structure->new(Biber::Config->getblxoption('structure')));
 }
 
 =head2 process_aliases
@@ -852,7 +676,7 @@ sub process_aliases {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
-  my $bcaliases = Biber::Config->getdata('aliases');
+  my $struc = Biber::Config->get_structure;
 
   # We are looping over all bibentries for the section, not just cited
   # entries. We have to do this to process aliases in potential crossrefs
@@ -863,33 +687,13 @@ sub process_aliases {
     my $be = $section->bibentry($key);
 
     # Entrytype aliases and special fields - biblatex manual Section 2.1.2
-    # normalise field name according to alias
-    if (my $alias = $bcaliases->{entrytype}{$be->get_field('entrytype')}) {
-      $be->set_field('entrytype', $alias->{realname});
-      # Set any other fields which normalising this alias requires if not already set
-      foreach my $field (keys %{$alias->{fields}}) {
-        unless ($be->field_exists($field)) {
-          $be->set_field($field, $alias->{fields}{$field});
-        }
-      }
+    foreach my $warning ($struc->resolve_entry_aliases($be)) {
+      $self->biber_warn($be, $warning);
     }
 
     # Field aliases
-    while (my ($faliasn, $falias) = each %{$bcaliases->{field}}) {
-      # Field which is an alias and has a value?
-      if (my $falias_value = $be->get_field($faliasn)) {
-        my $freal = $falias->{realname};
-        # If both a field and its alias is set, warn and delete alias field
-        if ($be->get_field($freal)) {
-          $self->biber_warn($be, "Field '$faliasn' is an alias for field '$freal' but both are defined in entry with key '$key' - skipping field '$faliasn'"); # Warn as that's wrong
-          $be->del_field($faliasn);
-        }
-        else {
-          # datafield since aliases only apply to actual data fields from the data file
-          $be->set_datafield($freal, $falias_value);
-          $be->del_field($faliasn);
-        }
-      }
+    foreach my $warning ($struc->resolve_field_aliases($be)) {
+      $self->biber_warn($be, $warning);
     }
   }
 }
@@ -968,7 +772,7 @@ sub process_structure {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $legents = Biber::Config->getdata('legal_entrytypes');
+  my $struc = Biber::Config->get_structure;
 
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
@@ -976,7 +780,7 @@ sub process_structure {
     if (Biber::Config->getoption('validate_structure')) {
 
       # default entrytype to MISC type if not a known type
-      unless ($legents->{$et}{legal_fields}) {
+      unless ($struc->is_entrytype($et)) {
         $self->biber_warn($be, "Entry '$citekey' - invalid entry type '" . $be->get_field('entrytype') . "' - defaulting to 'misc'");
         $be->set_field('entrytype', 'misc');
         $et = 'misc';           # reset this too
@@ -988,195 +792,32 @@ sub process_structure {
       # * Valid field for the specific entrytype OR
       # * Valid because entrytype allows "ALL" fields
       foreach my $ef ($be->datafields) {
-        unless ($legents->{ALL}{legal_fields}{$ef} or
-                $legents->{$et}{legal_fields}{$ef} or
-                $legents->{$et}{legal_fields}{ALL}) {
+        unless ($struc->is_field_for_entrytype($et, $ef)) {
           $self->biber_warn($be, "Entry '$citekey' - invalid field '$ef' for entrytype '$et'");
         }
       }
 
       # Mandatory constraints
-      foreach my $c ((@{$legents->{ALL}{constraints}{mandatory}},
-                      @{$legents->{$et}{constraints}{mandatory}})) {
-        if (ref($c) eq 'ARRAY') {
-          # Exactly one of a set is mandatory
-          if ($c->[0] eq 'XOR') {
-            my @fs = @$c[1,-1]; # Lose the first element which is the 'XOR'
-            my $flag = 0;
-            my $xorflag = 0;
-            foreach my $of (@fs) {
-              if ($be->field_exists($of)) {
-                if ($xorflag) {
-                  $self->biber_warn($be, "Mandatory fields - only one of '" . join(', ', @fs) . "' must be defined in entry '$citekey' ignoring field '$of'");
-                  $be->del_field($of);
-                }
-                $flag = 1;
-                $xorflag = 1;
-              }
-            }
-            unless ($flag) {
-              $self->biber_warn($be, "Missing mandatory field - one of '" . join(', ', @fs) . "' must be defined in entry '$citekey'");
-            }
-          }
-          # One or more of a set is mandatory
-          elsif ($c->[0] eq 'OR') {
-            my @fs = @$c[1,-1]; # Lose the first element which is the 'OR'
-            my $flag = 0;
-            foreach my $of (@fs) {
-              if ($be->field_exists($of)) {
-                $flag = 1;
-                last;
-              }
-            }
-            unless ($flag) {
-              $self->biber_warn($be, "Missing mandatory field - one of '" . join(', ', @fs) . "' must be defined in entry '$citekey'");
-            }
-          }
-        }
-        # Simple mandatory field
-        else {
-          unless ($be->field_exists($c)) {
-            $self->biber_warn($be, "Missing mandatory field '$c' in entry '$citekey'");
-          }
-        }
+      foreach my $warning ($struc->check_mandatory_constraints($be)) {
+        $self->biber_warn($be, $warning);
       }
 
       # Conditional constraints
-      foreach my $c ((@{$legents->{ALL}{constraints}{conditional}},
-                      @{$legents->{$et}{constraints}{conditional}})) {
-        my $aq = $c->[0]; # Antecedent quantifier
-        my $afs = $c->[1]; # Antecedent fields
-        my $cq = $c->[2]; # Consequent quantifier
-        my $cfs = $c->[3]; # Consequent fields
-        my @actual_afs = (grep {$be->field_exists($_)} @$afs); # antecedent fields in entry
-        # check antecedent
-        if ($aq eq 'all') {
-          next unless $#$afs == $#actual_afs; # ALL -> ? not satisfied
-        }
-        elsif ($aq eq 'none') {
-          next if @actual_afs; # NONE -> ? not satisfied
-        }
-        elsif ($aq eq 'one') {
-          next unless @actual_afs; # ONE -> ? not satisfied
-        }
-
-        # check consequent
-        my @actual_cfs = (grep {$be->field_exists($_)} @$cfs);
-        if ($cq eq 'all') {
-          unless ($#$cfs == $#actual_cfs) { # ? -> ALL not satisfied
-            $self->biber_warn($be, "Constraint violation - $cq of fields (" .
-                              join(', ', @$cfs) .
-                              ") must exist when $aq of fields (" . join(', ', @$afs). ") exist");
-          }
-        }
-        elsif ($cq eq 'none') {
-          if (@actual_cfs) { # ? -> NONE not satisfied
-            $self->biber_warn($be, "Constraint violation - $cq of fields (" .
-                              join(', ', @actual_cfs) .
-                              ") must exist when $aq of fields (" . join(', ', @$afs). ") exist. Ignoring them.");
-            # delete the offending fields
-            foreach my $f (@actual_cfs) {
-              $be->del_field($f);
-            }
-          }
-        }
-        elsif ($cq eq 'one') {
-          unless (@actual_cfs) { # ? -> ONE not satisfied
-            $self->biber_warn($be, "Constraint violation - $cq of fields (" .
-                              join(', ', @$cfs) .
-                              ") must exist when $aq of fields (" . join(', ', @$afs). ") exist");
-          }
-        }
+      foreach my $warning ($struc->check_conditional_constraints($be)) {
+        $self->biber_warn($be, $warning);
       }
 
       # Data constraints
-      foreach my $c ((@{$legents->{ALL}{constraints}{data}},
-                      @{$legents->{$et}{constraints}{data}})) {
-        if ($c->{datatype} eq 'integer') {
-          my $dt = $STRUCTURE_DATATYPES{$c->{datatype}};
-          foreach my $f (@{$c->{fields}}) {
-            if (my $fv = $be->get_field($f)) {
-              unless ( $fv =~ /$dt/ ) {
-                $self->biber_warn($be, "Invalid format (integer) of field '$f' - ignoring field in entry '$citekey'");
-                $be->del_field($f);
-                next;
-              }
-              if (my $fmin = $c->{rangemin}) {
-                unless ($fv >= $fmin) {
-                  $self->biber_warn($be, "Invalid value of field '$f' must be '>=$fmin' - ignoring field in entry '$citekey'");
-                  $be->del_field($f);
-                  next;
-                }
-              }
-              if (my $fmax = $c->{rangemax}) {
-                unless ($fv <= $fmax) {
-                  $self->biber_warn($be, "Invalid value of field '$f' must be '<=$fmax' - ignoring field in entry '$citekey'");
-                  $be->del_field($f);
-                  next;
-                }
-              }
-            }
-          }
-        }
+      foreach my $warning ($struc->check_data_constraints($be)) {
+        $self->biber_warn($be, $warning);
       }
     }
 
-    # Split date into components and do some date field validation
-    # No date module I looked at would distinguish between an undefined month
-    # passed to ->new() and "01". Same for day. Pretty useless since a bare
-    # year is a valid ISO8601 format date. Regexp::Common::time doesn't validate
-    # month/day value either.
-    # This doesn't validate that the day is valid for the month but perhaps
-    # when some date module really implements 8601, I'll use it.
-    foreach my $c ((@{$legents->{ALL}{constraints}{data}},
-                    @{$legents->{$et}{constraints}{data}})) {
-      if ($c->{datatype} eq 'datespec') {
-        foreach my $f (@{$c->{fields}}) {
-          if (my $fv = $be->get_field($f)) {
-            my ($datetype) = $f =~ m/\A(.*)date\z/xms;
-            my $date_re = qr/(\d{4}) # year
-                             (?:-(0[1-9]|1[0-2]))? # month
-                             (?:-(0[1-9]|1[0-9]|2[0-9]|3[0-1]))? # day
-                            /xms;
-            if (my ($byear, $bmonth, $bday, $r, $eyear, $emonth, $eday) =
-                $be->get_field($datetype . 'date') =~
-                m|\A$date_re(/)?(?:$date_re)?\z|xms) {
 
-              # Some warnings for overwriting YEAR and MONTH from DATE, just in case
-              # validate_structure is false and so YEAR and MONTH may still
-              # co-exist with DATE
-              if ($byear and
-                  ($datetype . 'year' eq 'year') and
-                  $be->get_field('year')) {
-                $self->biber_warn($be, "Overwriting field 'year' with year value from field 'date' for entry '$citekey'");
-              }
-              if ($bmonth and
-                  ($datetype . 'month' eq 'month') and
-                  $be->get_field('month')) {
-                $self->biber_warn($be, "Overwriting field 'month' with month value from field 'date' for entry '$citekey'");
-              }
-
-              $be->set_field($datetype . 'year', $byear)      if $byear;
-              $be->set_field($datetype . 'month', $bmonth)    if $bmonth;
-              $be->set_field($datetype . 'day', $bday)        if $bday;
-              $be->set_field($datetype . 'endmonth', $emonth) if $emonth;
-              $be->set_field($datetype . 'endday', $eday)     if $eday;
-              if ($r and $eyear) { # normal range
-                $be->set_field($datetype . 'endyear', $eyear);
-              }
-              elsif ($r and not $eyear) { # open ended range - endyear is defined but empty
-                $be->set_field($datetype . 'endyear', '');
-              }
-            }
-            else {
-              $self->biber_warn($be, "Invalid format of field '$f' in entry '$citekey' - ignoring");
-              $be->del_field($f);
-              next;
-            }
-
-          }
-        }
-      }
+    # Date components - we always check these, even if not validating structure
+    # as the validation is part of unpacking the *date fields
+    foreach my $warning ($struc->resolve_date_components($be)) {
+      $self->biber_warn($be, $warning);
     }
   }
 }
@@ -1979,7 +1620,7 @@ sub create_output_section {
   # and therefore the .bib
   foreach my $k (@citekeys) {
     my $be = $section->bibentry($k) or $logger->logcroak("Cannot find entry with key '$k' to output");
-    $output_obj->set_output_entry($be, $section);
+    $output_obj->set_output_entry($be, $section, Biber::Config->get_structure);
   }
   # Push the sorted shorthands for each section into the output object
   if ( $section->get_shorthands ) {

@@ -163,6 +163,7 @@ sub set_output_entry {
   my $self = shift;
   my $entry = shift;
   my $section = shift;
+  my $struc = shift;
   $self->{output_data}{ENTRIES}{$section}{lc($entry->get_field('citecasekey'))} = $entry->dump;
   return;
 }

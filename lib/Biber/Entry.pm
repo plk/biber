@@ -50,8 +50,9 @@ sub notnull {
 sub set_datafield {
   my $self = shift;
   my ($key, $val) = @_;
+  my $struc = Biber::Config->get_structure;
   # Only set fields which are either not null or are ok to be null
-  if ( Biber::Config->getdata('fields_nullok')->{$key} or is_notnull($val)) {
+  if ( $struc->is_field_type('nullok', $key) or is_notnull($val)) {
     $self->{datafields}{$key} = $val;
   }
   return;
@@ -67,8 +68,9 @@ sub set_datafield {
 sub set_field {
   my $self = shift;
   my ($key, $val) = @_;
+  my $struc = Biber::Config->get_structure;
   # Only set fields which are either not null or are ok to be null
-  if ( Biber::Config->getdata('fields_nullok')->{$key} or is_notnull($val)) {
+  if ( $struc->is_field_type('nullok', $key) or is_notnull($val)) {
     $self->{derivedfields}{$key} = $val;
   }
   return;

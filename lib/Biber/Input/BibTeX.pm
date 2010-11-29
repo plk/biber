@@ -14,6 +14,7 @@ use Biber::Entry::Names;
 use Biber::Entry::Name;
 use Biber::Sections;
 use Biber::Section;
+use Biber::Structure;
 use Biber::Utils;
 use Biber::Config;
 use Encode;
@@ -257,6 +258,7 @@ sub _text_bibtex_parse {
   my ($self, $filename) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+  my $struc = Biber::Config->get_structure;
 
   my $basefilename = $filename;
   $basefilename =~ s/\.utf8$//;
@@ -340,7 +342,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     my @flist = $entry->fieldlist;
 
     # here we only keep those that do not require splitting
-    my @flistnosplit = reduce_array(\@flist, Biber::Config->getdata('fields_split'));
+    my @flistnosplit = reduce_array(\@flist, $struc->get_field_type('split'));
 
     if ( $entry->metatype == BTE_REGULAR ) {
       foreach my $f ( @flistnosplit ) {
@@ -366,11 +368,11 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
       # Set entrytype. This may be changed later in process_aliases
       $bibentry->set_field('entrytype', $entry->type);
 
-      foreach my $f ( @{Biber::Config->getdata('fields_split')} ) {
+      foreach my $f ( @{$struc->get_field_type('split')} ) {
         next unless $entry->exists($f);
         my @tmp = $entry->split($f);
 
-        if (is_name_field($f)) {
+        if ($struc->is_field_type('name', $f)) {
           my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
           my $names = new Biber::Entry::Names;
           foreach my $name (@tmp) {

@@ -35,7 +35,7 @@ our @EXPORT = qw{ locate_biber_file makenameid stringify_hash
   normalise_string normalise_string_lite normalise_string_underscore normalise_string_sort
   latexescape reduce_array remove_outer add_outer ucinit strip_nosort_name
   strip_nosortdiacritics strip_nosortprefix is_def is_undef is_def_and_notnull is_def_and_null
-  is_undef_or_null is_notnull is_name_field is_null normalise_utf8};
+  is_undef_or_null is_notnull is_null normalise_utf8};
 
 =head1 FUNCTIONS
 
@@ -82,19 +82,6 @@ sub locate_biber_file {
   }
   $logger->info("Found '$filenamepath'");
   return $filenamepath;
-}
-
-=head2 is_name_field
-
-    Returns boolean depending on whether the passed field name
-    is a name field or not.
-
-=cut
-
-sub is_name_field {
-  my $fieldname = shift;
-  my $nfs = Biber::Config->getdata('fields_name');
-  return defined(first {$fieldname eq $_} @$nfs) ? 1 : 0;
 }
 
 =head2 makenameid

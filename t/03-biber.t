@@ -125,11 +125,11 @@ my $setaksin = q|  \entry{set:aksin}{article}{}
     \true{singletitle}
     \field{indextitle}{Effect of immobilization on catalytic characteristics}
     \field{journaltitle}{J.~Organomet. Chem.}
+    \field{month}{02}
     \field{number}{13}
     \field{title}{Effect of immobilization on catalytic characteristics of saturated Pd-N-heterocyclic carbenes in Mizoroki-Heck reactions}
     \field{volume}{691}
     \field{year}{2006}
-    \field{month}{02}
     \field{pages}{3027\bibrangedash 3036}
   \endentry
 
@@ -181,13 +181,13 @@ my $jaffe = q|  \entry{jaffe}{collection}{}
     \true{singletitle}
     \field{annotation}{A \texttt{collection} entry with \texttt{edition} and \texttt{volumes} fields. Note the \texttt{editortype} field handling the redactor}
     \field{edition}{2}
+    \field{editoratype}{redactor}
     \field{endyear}{1888}
     \field{indextitle}{Regesta Pontificum Romanorum}
     \field{shorttitle}{Regesta Pontificum Romanorum}
     \field{title}{Regesta Pontificum Romanorum ab condita ecclesia ad annum post Christum natum \textsc{mcxcviii}}
     \field{volumes}{2}
     \field{year}{1885}
-    \field{editoratype}{redactor}
   \endentry
 
 |;
