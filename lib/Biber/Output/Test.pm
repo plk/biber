@@ -87,12 +87,16 @@ sub set_output_entry {
 
   # first output copy in labelname
   # This is essentially doing the same thing twice but in the future,
-  # labelname will have different things attached to the raw name
+  # labelname will have different things attached than the raw name
+  my $lnn = $be->get_field('labelnamename'); # save name of labelname field
+  my $name_others_deleted = '';
   if (my $ln = $be->get_field('labelname')) {
-    my $lnn = $be->get_field('labelnamename');
     if ( $ln->last_element->get_namestring eq 'others' ) {
-      $acc .= "    \\true{more$lnn}\n";
+      $acc .= "    \\true{morelabelname}\n";
       $ln->del_last_element;
+      # record that we have deleted "others" from labelname field
+      # we will need this below
+      $name_others_deleted = $lnn;
     }
     my $total = $ln->count_elements;
     $acc .= "    \\name{labelname}{$total}{%\n";
@@ -105,7 +109,10 @@ sub set_output_entry {
   # then names themselves
   foreach my $namefield (@{$struc->get_field_type('name')}) {
     if ( my $nf = $be->get_field($namefield) ) {
-      if ( $nf->last_element->get_namestring eq 'others' ) {
+      # If this name is labelname, we've already deleted the "others"
+      # name so we need to check if that's the case
+      if ( $nf->last_element->get_namestring eq 'others' or
+         $name_others_deleted eq $namefield) {
         $acc .= "    \\true{more$namefield}\n";
         $nf->del_last_element;
       }
