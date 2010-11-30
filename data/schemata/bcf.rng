@@ -655,14 +655,25 @@
         </zeroOrMore>
       </element>
     </optional>
-    <!-- citekeys in each section -->
+    <!-- citekeys or citekey sets in each section -->
     <element name="bcf:section">
       <attribute name="number">
         <data type="integer"/>
       </attribute>
       <zeroOrMore>
         <element name="bcf:citekey">
-          <data type="string"/>
+          <choice>
+            <group>
+              <attribute name="type">
+                <value>set</value>
+              </attribute>
+              <attribute name="members">
+                <data type="string"/>
+              </attribute>
+              <empty/>
+            </group>
+            <data type="string"/>
+          </choice>
         </element>
       </zeroOrMore>
     </element>

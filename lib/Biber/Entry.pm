@@ -61,7 +61,8 @@ sub set_datafield {
 
 =head2 set_field
 
-    Set a field for a Biber::Entry object
+    Set a derived field for a Biber::Entry object, that is, a field which was not
+    an actual bibliography field
 
 =cut
 

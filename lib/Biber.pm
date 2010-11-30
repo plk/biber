@@ -2,6 +2,7 @@ package Biber;
 use strict;
 use warnings;
 use Carp;
+use Digest::MD5 qw(md5_hex);
 use Encode;
 use File::Copy;
 use File::Spec;
@@ -472,7 +473,17 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     # "all keys"
     my @keys = ();
     foreach my $keyc (@{$section->{citekey}}) {
-      my $key = $keyc->{content};
+      # Key is either a dynamically generated hash or a real key
+      my $key;
+      if (exists($keyc->{type}) and $keyc->{type} eq 'set') { # Dynamic set definition
+        $key = md5_hex($keyc->{members});
+        # Save dynamic key -> member keys mapping for set entry auto creation later
+        $bib_section->set_dynamic_set($key, split /\s*,\s*/, $keyc->{members});
+      }
+      else { # Normal citekey
+        $key = $keyc->{content};
+      }
+
       if ($key eq '*') {
         $bib_section->allkeys;
         $key_flag = 1; # There is at least one key, used for error reporting below
@@ -637,7 +648,9 @@ sub process_missing {
   my $bibentries = $section->bibentries;
   $logger->debug("Checking for missing citekeys in section $secnum");
   foreach my $citekey ($section->get_citekeys) {
-    unless ( $bibentries->entry_exists($citekey) ) {
+    # Either the key refers to a real bib entry or a dynamic set entry
+    unless ( $bibentries->entry_exists($citekey) or
+             $section->get_dynamic_set($citekey)) {
       $logger->warn("I didn't find a database entry for '$citekey' (section $secnum)");
       $self->{warnings}++;
       $section->del_citekey($citekey);
@@ -703,9 +716,10 @@ sub process_aliases {
     $biber->process_crossrefs
 
     This does several things:
-    1. Ensures that all citekeys that are within entry sets will be output in the bbl.
-    2. Ensures proper inheritance of data from cross-references.
-    3. Ensures that crossrefs/xrefs that are directly cited or cross-referenced
+    1. Instantiates the @SET entry for dynamic sets
+    2. Ensures that all entryset key members will be output in the bbl.
+    3. Ensures proper inheritance of data from cross-references.
+    4. Ensures that crossrefs/xrefs that are directly cited or cross-referenced
        at least mincrossrefs times are included in the bibliography.
 
 =cut
@@ -716,7 +730,20 @@ sub process_crossrefs {
   my $section = $self->sections->get_section($secnum);
 
   $logger->debug("Processing entry sets and crossrefs for section $secnum");
-  # first, loop over cited keys and count the cross/xrefs
+
+  # Instantiate any dynamic set entries before we do anything else
+  foreach my $dset ($section->dynamic_keys) {
+    my @members = $section->get_dynamic_set($dset);
+    my $be = new Biber::Entry;
+    $be->set_field('entrytype', 'set');
+    $be->set_field('entryset', join(',', @members));
+    $be->set_field('origkey', $dset);
+    $be->set_field('citecasekey', $dset);
+    $be->set_field('datatype', 'bibtex');
+    $section->bibentries->add_entry($dset, $be);
+  }
+
+  # Loop over cited keys and count the cross/xrefs
   # Can't do this when parsing .bib as this would count them for potentially uncited children
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);

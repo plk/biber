@@ -282,10 +282,15 @@ secspec =
       xsd:NCName
     }*
   }?,
-  # citekeys in each section
+  # citekeys or citekey sets in each section
   element bcf:section {
     attribute number { xsd:integer },
-    element bcf:citekey { xsd:string }*
+    element bcf:citekey {
+      ( attribute type { "set" },
+        attribute members { xsd:string },
+        empty ) |
+      xsd:string
+    }*
   }
 
 # option definitions

@@ -21,6 +21,7 @@ sub new {
   $self->{bibentries} = new Biber::Entries;
   $self->{allkeys} = 0;
   $self->{citekeys} = [];
+  $self->{dkeys} = {};
   $self->{orig_order_citekeys} = [];
   return $self;
 }
@@ -208,6 +209,51 @@ sub del_citekey {
   $self->{orig_order_citekeys} = [ grep {$_ ne $key} @{$self->{orig_order_citekeys}} ];
   return;
 }
+
+=head2 set_dynamic_set
+
+    Record a mapping of dynamic key (MD5 hash) to member keys
+
+=cut
+
+sub set_dynamic_set {
+  my $self = shift;
+  my $dkey = shift;
+  my @members = @_;
+  $self->{dkeys}{$dkey} = \@members;
+  return;
+}
+
+=head2 get_dynamic_set
+
+    Retrieve member keys for a dynamic set key (MD5 hash)
+    Check on has reference returning anything stop spurious warnings
+    about empty dereference in return.
+
+=cut
+
+sub get_dynamic_set {
+  my $self = shift;
+  my $dkey = shift;
+  if (my $set_members = $self->{dkeys}{$dkey}) {
+    return @$set_members;
+  }
+  else {
+    return undef;
+  }
+}
+
+=head2 dynamic_keys
+
+    Retrieve all dynamic keys (MD5 hash)
+
+=cut
+
+sub dynamic_keys {
+  my $self = shift;
+  return keys %{$self->{dkeys}};
+}
+
 
 =head2 add_citekeys
 
