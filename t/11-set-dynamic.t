@@ -26,7 +26,7 @@ Biber::Config->setoption('fastsort', 1);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 
-my $string1 = q|  \entry{66994b9320f1f0068219afd912125aed}{set}{}
+my $string1 = q|  \entry{DynSet}{set}{}
     \set{Dynamic1,Dynamic2,Dynamic3}
     \name{labelname}{1}{%
       {{Dynamism}{D.}{Derek}{D.}{}{}{}{}}%
@@ -47,7 +47,7 @@ my $string1 = q|  \entry{66994b9320f1f0068219afd912125aed}{set}{}
 |;
 
 my $string2 = q|  \entry{Dynamic1}{book}{}
-    \inset{66994b9320f1f0068219afd912125aed}
+    \inset{DynSet}
     \name{labelname}{1}{%
       {{Dynamism}{D.}{Derek}{D.}{}{}{}{}}%
     }
@@ -65,7 +65,7 @@ my $string2 = q|  \entry{Dynamic1}{book}{}
 |;
 
 my $string3 = q|  \entry{Dynamic2}{book}{}
-    \inset{66994b9320f1f0068219afd912125aed}
+    \inset{DynSet}
     \name{labelname}{1}{%
       {{Bunting}{B.}{Brian}{B.}{}{}{}{}}%
     }
@@ -82,7 +82,7 @@ my $string3 = q|  \entry{Dynamic2}{book}{}
 |;
 
 my $string4 = q|  \entry{Dynamic3}{book}{}
-    \inset{66994b9320f1f0068219afd912125aed}
+    \inset{DynSet}
     \name{labelname}{1}{%
       {{Regardless}{R.}{Roger}{R.}{}{}{}{}}%
     }
@@ -117,7 +117,7 @@ my $string5 = q|  \entry{Dynamic3}{book}{}
 
 |;
 
-is($out->get_output_entry('66994b9320f1f0068219afd912125aed'), $string1, 'Dynamic set test 1');
+is($out->get_output_entry('DynSet'), $string1, 'Dynamic set test 1');
 is($out->get_output_entry('Dynamic1'), $string2, 'Dynamic set test 2');
 is($out->get_output_entry('Dynamic2'), $string3, 'Dynamic set test 3');
 is($out->get_output_entry('Dynamic3'), $string4, 'Dynamic set test 4');

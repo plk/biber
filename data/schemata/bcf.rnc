@@ -288,7 +288,7 @@ secspec =
     element bcf:citekey {
       ( attribute type { "set" },
         attribute members { xsd:string },
-        empty ) |
+        xsd:string ) |
       xsd:string
     }*
   }

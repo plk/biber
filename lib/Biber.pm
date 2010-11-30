@@ -2,7 +2,6 @@ package Biber;
 use strict;
 use warnings;
 use Carp;
-use Digest::MD5 qw(md5_hex);
 use Encode;
 use File::Copy;
 use File::Spec;
@@ -473,15 +472,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     # "all keys"
     my @keys = ();
     foreach my $keyc (@{$section->{citekey}}) {
-      # Key is either a dynamically generated hash or a real key
-      my $key;
-      if (exists($keyc->{type}) and $keyc->{type} eq 'set') { # Dynamic set definition
-        $key = md5_hex($keyc->{members});
-        # Save dynamic key -> member keys mapping for set entry auto creation later
+      my $key = $keyc->{content};
+      # Dynamic set definition
+      # Save dynamic key -> member keys mapping for set entry auto creation later
+      if (exists($keyc->{type}) and $keyc->{type} eq 'set') {
         $bib_section->set_dynamic_set($key, split /\s*,\s*/, $keyc->{members});
-      }
-      else { # Normal citekey
-        $key = $keyc->{content};
       }
 
       if ($key eq '*') {

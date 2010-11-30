@@ -670,7 +670,7 @@
               <attribute name="members">
                 <data type="string"/>
               </attribute>
-              <empty/>
+              <data type="string"/>
             </group>
             <data type="string"/>
           </choice>
