@@ -1,5 +1,13 @@
 Revision history for Biber
+
+0.6.3  (dev beta)
+       * Outputs labelname name list to the .bbl
+       * Support for dynamic sets and simpler static set interface
+       * Misc bug fixes
 0.6.2  (dev beta)
+       * Internal cleanup of structure code
+       * Misc bug fixes
+0.6.1  (dev beta)
        * More comprehensive structural checks on allowed entrytypes/fields
          and field combinations/formats
        * Added option validate_structure to turn on structural checks
