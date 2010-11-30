@@ -736,6 +736,12 @@ sub process_crossrefs {
         $logger->debug("  Adding inset entry '$inset_key' to the citekeys (section $secnum)");
         $section->add_citekeys($inset_key);
       }
+      # automatically crossref for the first set member using plain set inheritance
+      $be->set_inherit_from($section->bibentry($inset_keys[0]));
+      if ($be->get_field('crossref')) {
+        $self->biber_warn($be, "Field 'crossref' is no longer needed in set entries in Biber - ignoring in entry '$citekey'");
+        $be->del_field('crossref');
+      }
     }
     # Do crossrefs inheritance
     if (my $crossrefkey = $be->get_field('crossref')) {
@@ -891,26 +897,20 @@ sub postprocess_sets {
     my @entrysetkeys = split /\s*,\s*/, $be->get_field('entryset');
 
     # Enforce Biber parts of virtual "dataonly" for set members
+    # Also automatically create an "entryset" field for the members
     foreach my $member (@entrysetkeys) {
       Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $member);
       Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $member);
+      my $me = $bibentries->entry($member);
+      if ($me->get_field('entryset')) {
+        $self->biber_warn($me, "Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry '$member'");
+        $me->del_field('entryset');
+      }
+      $me->set_field('entryset', $citekey);
     }
 
     unless (@entrysetkeys) {
       $self->biber_warn($be, "No entryset found for entry $citekey of type 'set'");
-    }
-    if ( $be->get_field('crossref')
-      and ( $be->get_field('crossref') ne $entrysetkeys[0] ) ) {
-      $self->biber_warn($be, "Problem with entry $citekey :\n"
-          . "\tcrossref ("
-          . $be->get_field('crossref')
-          . ") should be identical to the first element of the entryset"
-        );
-      $be->set_field('crossref', $entrysetkeys[0]);
-    }
-    elsif ( not $be->get_field('crossref') ) {
-      $self->biber_warn($be, "Adding missing field 'crossref' to entry '$entrysetkeys[0]' for entry '$citekey'");
-      $be->set_field('crossref', $entrysetkeys[0]);
     }
   }
 }
@@ -1550,6 +1550,10 @@ sub prepare {
     next unless $section->get_citekeys or $section->is_allkeys;
 
     my $secnum = $section->number;
+    # Remove any dynamically generated per-entry options which might have
+    # been set in previous sections (like skiplab, skiplos)
+    Biber::Config->reset_per_entry_options;
+
     $BIBER_SORT_FIRSTPASSDONE = 0;       # sanitise sortpass flag
     $logger->info("Processing bib section $secnum");
     Biber::Config->_init;                # (re)initialise Config object

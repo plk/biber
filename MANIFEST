@@ -35,8 +35,7 @@ t/00-load.t
 t/00-options.t
 t/01-names.t
 t/01-utils.t
-t/02-biber.t
-t/03-biber.t
+t/03-basic-misc.t
 t/05-extrayear.t
 t/05-labelalpha.t
 t/05-sorting.t
@@ -47,7 +46,9 @@ t/10-sort-order.t
 t/10-sort-uc.t
 t/10-sort-case.t
 t/10-configfile.t
-t/11-set.t
+t/11-set-legacy.t
+t/11-set-static.t
+t/11-set-dynamic.t
 t/12-skips.t
 t/13-uniquename.t
 t/14-sections.t
@@ -103,8 +104,10 @@ t/tdata/sort-case.bib
 t/tdata/uniquename.bib
 t/tdata/examples.bib
 t/tdata/biber2.conf
-t/tdata/set.bib
-t/tdata/set.bcf
+t/tdata/sets.bib
+t/tdata/set-legacy.bcf
+t/tdata/set-static.bcf
+t/tdata/set-dynamic.bcf
 t/tdata/uniquename.bcf
 t/tdata/structure-aliases.bcf
 t/tdata/structure-aliases.bib

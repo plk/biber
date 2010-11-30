@@ -110,10 +110,19 @@
   </bcf:sorting>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file">set</bcf:datasource>
+    <bcf:datasource type="file">sets</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>Elias1955</bcf:citekey>
+    <bcf:citekey>Static1</bcf:citekey>
+  </bcf:section>
+  <!-- SECTION 1 -->
+  <bcf:bibdata section="1">
+    <bcf:datasource type="file">sets</bcf:datasource>
+  </bcf:bibdata>
+  <bcf:section number="1">
+    <bcf:citekey>Static2</bcf:citekey>
+    <bcf:citekey>Static3</bcf:citekey>
+    <bcf:citekey>Static4</bcf:citekey>
   </bcf:section>
 </bcf:controlfile>
 

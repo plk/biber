@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 44;
+use Test::More tests => 45;
 
 use Biber;
 use Biber::Input::BibTeX;
@@ -366,6 +366,7 @@ my $l9 = q|  \entry{L9}{book}{}
 
 |;
 
+
 my $l10 = q|  \entry{L10}{book}{}
     \name{author}{1}{%
       {{Jolly}{J.}{James}{J.}{}{}{III}{I.}}%
@@ -376,6 +377,19 @@ my $l10 = q|  \entry{L10}{book}{}
   \endentry
 
 |;
+
+
+my $l10a = q|  \entry{L10a}{book}{}
+    \name{author}{1}{%
+      {{Pimentel}{P.}{Joseph~J.}{J.~J.}{}{}{Jr.}{J.}}%
+    }
+    \strng{namehash}{PJJJ1}
+    \strng{fullhash}{PJJJ1}
+    \field{sortinit}{P}
+  \endentry
+
+|;
+
 
 my $l11 = q|  \entry{L11}{book}{}
     \name{author}{1}{%
@@ -594,6 +608,7 @@ is( $out->get_output_entry('l7'), $l7, 'First Initial. prefix Last') ;
 is( $out->get_output_entry('l8'), $l8, 'First Initial prefix Last') ;
 is( $out->get_output_entry('l9'), $l9, 'First {Last Last}') ;
 is( $out->get_output_entry('l10'), $l10, 'Last, Suffix, First') ;
+is( $out->get_output_entry('l10a'), $l10a, 'Last, Suffix, First Initial.') ;
 is( $out->get_output_entry('l11'), $l11, 'prefix Last, Suffix, First') ;
 is( $out->get_output_entry('l13'), $l13, 'Last Last Last, Initial. Initial.');
 is( $out->get_output_entry('l14'), $l14, 'Last Last-Last, First');

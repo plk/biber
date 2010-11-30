@@ -40,7 +40,6 @@ my $set1 = q|  \entry{seta}{set}{}
     \field{extrayear}{1}
     \field{labelyear}{2010}
     \field{extraalpha}{1}
-    \strng{crossref}{set:membera}
     \field{title}{Set Member A}
     \field{year}{2010}
   \endentry
@@ -48,7 +47,7 @@ my $set1 = q|  \entry{seta}{set}{}
 |;
 
 my $set2 = q|  \entry{set:membera}{book}{}
-    \inset{set}
+    \inset{seta}
     \name{author}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
@@ -62,7 +61,7 @@ my $set2 = q|  \entry{set:membera}{book}{}
 |;
 
 my $set3 = q|  \entry{set:memberb}{book}{}
-    \inset{set}
+    \inset{seta}
     \name{author}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
@@ -76,7 +75,7 @@ my $set3 = q|  \entry{set:memberb}{book}{}
 |;
 
 my $set4 = q|  \entry{set:memberc}{book}{}
-    \inset{set}
+    \inset{seta}
     \name{author}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }

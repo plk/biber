@@ -168,23 +168,24 @@ sub add_warning {
   return;
 }
 
-=head2 inherit_from_plain
+=head2 set_inherit_from
 
-    Inherit fields from parent entry (as indicated by the crossref field)
+    Inherit fields from parent entry
 
     $entry->inherit_from($parententry);
 
     Takes a second Biber::Entry object as argument
-    Does not use any cross inheritance customisation from the .bcf
+    Tailored for set inheritance which is a straight 1:1 inheritance,
+    excluding certain fields for backwards compatibility
 
 =cut
 
-sub inherit_from_plain {
+sub set_inherit_from {
   my $self = shift;
   my $parent = shift;
 
-  # Simply copy over all parent fields
   foreach my $field ($parent->datafields) {
+    next if $self->field_exists($field); # Don't overwrite existing fields
     $self->set_datafield($field, $parent->get_field($field));
   }
   return;

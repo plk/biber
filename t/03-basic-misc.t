@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 9;
+use Test::More tests => 8;
 
 use Biber;
 use Biber::Output::BBL;
@@ -27,6 +27,38 @@ Biber::Config->setoption('fastsort', 1);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
+
+
+my @keys = sort $section->get_citekeys;
+my @citedkeys = sort qw{ murray t1 kant:ku kant:kpv };
+
+my @allkeys = sort qw{ stdmodel aristotle:poetics vazques-de-parga shore t1
+gonzalez averroes/bland laufenberg westfahl:frontier knuth:ct:a kastenholz
+averroes/hannes iliad luzzatto malinowski sorace knuth:ct:d britannica
+nietzsche:historie stdmodel:weinberg knuth:ct:b baez/article knuth:ct:e itzhaki
+jaffe padhye cicero stdmodel:salam reese averroes/hercz murray
+aristotle:physics massa aristotle:anima gillies set kowalik gaonkar springer
+geer hammond wormanx westfahl:space worman set:herrmann augustine gerhardt
+piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
+sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
+angenendt angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
+vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
+set:yoon maron coleridge tvonb} ;
+
+is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
+is_deeply( [ $section->get_shorthands ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
+
+# reset some options and re-generate information
+$section->allkeys;
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+my $bibentries = $section->bibentries;
+
+$out = $biber->get_output_obj;
+
+@keys = sort $section->get_citekeys;
+
+is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
 my $murray1 = q|  \entry{murray}{article}{}
     \name{author}{14}{%
@@ -106,127 +138,30 @@ my $murray2 = q|  \entry{murray}{article}{}
 
 |;
 
-
-my $setaksin = q|  \entry{set:aksin}{article}{}
-    \inset{set}
-    \name{author}{7}{%
-      {{Aksın}{A}{Özge}{Ö}{}{}{}{}}%
-      {{Türkmen}{T}{Hayati}{H}{}{}{}{}}%
-      {{Artok}{A}{Levent}{L}{}{}{}{}}%
-      {{C̨etinkaya}{C}{Bekir}{B}{}{}{}{}}%
-      {{Ni}{N}{Chaoying}{C}{}{}{}{}}%
-      {{Büyükgüngör}{B}{Orhan}{O}{}{}{}{}}%
-      {{Özkal}{Ö}{Erhan}{E}{}{}{}{}}%
-    }
-    \strng{namehash}{AÖ+1}
-    \strng{fullhash}{AÖTHALCBNCBOÖE1}
-    \field{sortinit}{A}
-    \count{uniquename}{0}
-    \true{singletitle}
-    \field{indextitle}{Effect of immobilization on catalytic characteristics}
-    \field{journaltitle}{J.~Organomet. Chem.}
-    \field{month}{02}
-    \field{number}{13}
-    \field{title}{Effect of immobilization on catalytic characteristics of saturated Pd-N-heterocyclic carbenes in Mizoroki-Heck reactions}
-    \field{volume}{691}
-    \field{year}{2006}
-    \field{pages}{3027\bibrangedash 3036}
-  \endentry
-
-| ;
-
-my $markey = q|  \entry{markey}{online}{}
+my $t1 = q|  \entry{t1}{misc}{}
     \name{author}{1}{%
-      {{Markey}{M}{Nicolas}{N}{}{}{}{}}%
+      {{Brown}{B}{Bill}{B}{}{}{}{}}%
     }
-    \strng{namehash}{MN1}
-    \strng{fullhash}{MN1}
-    \field{labelalpha}{Mar}
-    \field{sortinit}{M}
+    \strng{namehash}{BB1}
+    \strng{fullhash}{BB1}
+    \field{labelalpha}{Bro92}
+    \field{sortinit}{B}
+    \field{labelyear}{1992}
     \count{uniquename}{0}
     \true{singletitle}
-    \field{annotation}{An \texttt{online} entry for a tutorial. Note the format of the \texttt{date} field (\texttt{yyyy-mm-dd}) in the database file. It is also possible to use the fields \texttt{day}\slash \texttt{month}\slash \texttt{year} instead.}
-    \field{hyphenation}{american}
-    \field{subtitle}{The B to X of BibTeX}
-    \field{title}{Tame the BeaST}
-    \field{urlday}{01}
-    \field{urlmonth}{10}
-    \field{urlyear}{2006}
-    \field{version}{1.3}
-    \verb{url}
-    \verb http://tug.ctan.org/tex-archive/info/bibtex/tamethebeast/ttb_en.pdf
-    \endverb
-  \endentry
-
-| ;
-
-my $jaffe = q|  \entry{jaffe}{collection}{}
-    \name{editor}{1}{%
-      {{Jaffé}{J}{Philipp}{P}{}{}{}{}}%
-    }
-    \name{editora}{3}{%
-      {{Loewenfeld}{L}{Samuel}{S}{}{}{}{}}%
-      {{Kaltenbrunner}{K}{Ferdinand}{F}{}{}{}{}}%
-      {{Ewald}{E}{Paul}{P}{}{}{}{}}%
-    }
-    \list{location}{1}{%
-      {Leipzig}%
-    }
-    \strng{namehash}{JP1}
-    \strng{fullhash}{JP1}
-    \field{labelalpha}{Jaf85}
-    \field{sortinit}{J}
-    \field{labelyear}{1885\bibdatedash 1888}
-    \count{uniquename}{0}
-    \true{singletitle}
-    \field{annotation}{A \texttt{collection} entry with \texttt{edition} and \texttt{volumes} fields. Note the \texttt{editortype} field handling the redactor}
-    \field{edition}{2}
-    \field{editoratype}{redactor}
-    \field{endyear}{1888}
-    \field{indextitle}{Regesta Pontificum Romanorum}
-    \field{shorttitle}{Regesta Pontificum Romanorum}
-    \field{title}{Regesta Pontificum Romanorum ab condita ecclesia ad annum post Christum natum \textsc{mcxcviii}}
-    \field{volumes}{2}
-    \field{year}{1885}
+    \field{title}{Normal things {$^{3}$}}
+    \field{year}{1992}
   \endentry
 
 |;
 
-my $pimentel1 = q|  \entry{Pimentel00}{thesis}{}
-    \name{author}{1}{%
-      {{Pimentel}{P}{Joseph~J.}{JJ}{}{}{Jr.}{J}}%
-    }
-    \list{institution}{1}{%
-      {University of Michigan}%
-    }
-    \strng{namehash}{PJJJ1}
-    \strng{fullhash}{PJJJ1}
-    \field{labelalpha}{Pim00}
-    \field{sortinit}{P}
-    \field{labelyear}{2000}
-    \count{uniquename}{0}
-    \true{singletitle}
-    \field{title}{Sociolinguistic Reflections of Privatization and Globalization: The {Arabic} of {Egyptian} newspaper advertisements}
-    \field{year}{2000}
-  \endentry
-
-|;
-
-is( $out->get_output_entry('set:aksin'), $setaksin, 'bbl entry 1' ) ;
-is( $out->get_output_entry('markey'), $markey, 'bbl entry 2' ) ;
-is( $out->get_output_entry('jaffe'), $jaffe, 'bbl entry 3' ) ;
-is( $out->get_output_entry('pimentel00'), $pimentel1, 'bbl entry 4 - Suffix test 1' ) ;
 
 my $Worman_N = [ 'WN1', 'WN2' ] ;
-
 my $Gennep = [ 'vGA1', 'vGJ1' ] ;
 
+is( $out->get_output_entry('t1'), $t1, 'bbl entry with maths in title' ) ;
 is_deeply( Biber::Config->_get_uniquename('Worman_N'), $Worman_N, 'uniquename count 1') ;
-
 is_deeply( Biber::Config->_get_uniquename('Gennep'), $Gennep, 'uniquename count 2') ;
-
-is_deeply( [ $section->get_shorthands ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
-
 is( $out->get_output_entry('murray'), $murray1, 'bbl with > maxnames' ) ;
 
 Biber::Config->setblxoption('alphaothers', '');
