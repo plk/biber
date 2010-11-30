@@ -19,6 +19,9 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 
 my $encode1 = q|  \entry{testŠ}{book}{}
+    \name{labelname}{1}{%
+      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
     }
@@ -39,6 +42,9 @@ my $encode1 = q|  \entry{testŠ}{book}{}
 |;
 
 my $encode2 = q|  \entry{test1}{book}{}
+    \name{labelname}{1}{%
+      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
     }
@@ -59,6 +65,9 @@ my $encode2 = q|  \entry{test1}{book}{}
 |;
 
 my $encode3 = q|  \entry{test1}{book}{}
+    \name{labelname}{1}{%
+      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
     }
@@ -79,6 +88,9 @@ my $encode3 = q|  \entry{test1}{book}{}
 |;
 
 my $encode5 = q|  \entry{test}{book}{}
+    \name{labelname}{1}{%
+      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
     }

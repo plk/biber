@@ -30,6 +30,9 @@ my $out = $biber->get_output_obj;
 
 # crossref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $cr1 = q|  \entry{cr1}{inbook}{}
+    \name{labelname}{1}{%
+      {{Gullam}{G.}{Graham}{G.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Gullam}{G.}{Graham}{G.}{}{}{}{}}%
     }
@@ -56,6 +59,9 @@ my $cr1 = q|  \entry{cr1}{inbook}{}
 
 # crossref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $cr2 = q|  \entry{cr2}{inbook}{}
+    \name{labelname}{1}{%
+      {{Fumble}{F.}{Frederick}{F.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Fumble}{F.}{Frederick}{F.}{}{}{}{}}%
     }
@@ -102,6 +108,9 @@ my $crm = q|  \entry{crm}{book}{}
 
 # crossref field is included as the parent is cited
 my $cr3 = q|  \entry{cr3}{inbook}{}
+    \name{labelname}{1}{%
+      {{Aptitude}{A.}{Arthur}{A.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Aptitude}{A.}{Arthur}{A.}{}{}{}{}}%
     }
@@ -146,6 +155,9 @@ my $crt = q|  \entry{crt}{book}{}
 
 # various event fields inherited correctly
 my $cr6 = q|  \entry{cr6}{inproceedings}{}
+    \name{labelname}{1}{%
+      {{Author}{A.}{Firstname}{F.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Author}{A.}{Firstname}{F.}{}{}{}{}}%
     }
@@ -180,6 +192,9 @@ my $cr6 = q|  \entry{cr6}{inproceedings}{}
 
 # Special fields inherited correctly
 my $cr7 = q|  \entry{cr7}{inbook}{}
+    \name{labelname}{1}{%
+      {{Author}{A.}{Firstname}{F.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Author}{A.}{Firstname}{F.}{}{}{}{}}%
     }
@@ -205,6 +220,9 @@ my $cr7 = q|  \entry{cr7}{inbook}{}
 
 # Default inheritance supressed except for specified
 my $cr8 = q|  \entry{cr8}{incollection}{}
+    \name{labelname}{1}{%
+      {{Smith}{S.}{Firstname}{F.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Smith}{S.}{Firstname}{F.}{}{}{}{}}%
     }
@@ -222,6 +240,9 @@ my $cr8 = q|  \entry{cr8}{incollection}{}
 
 # xref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $xr1 = q|  \entry{xr1}{inbook}{}
+    \name{labelname}{1}{%
+      {{Zentrum}{Z.}{Zoe}{Z.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Zentrum}{Z.}{Zoe}{Z.}{}{}{}{}}%
     }
@@ -237,6 +258,9 @@ my $xr1 = q|  \entry{xr1}{inbook}{}
 
 # xref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $xr2 = q|  \entry{xr2}{inbook}{}
+    \name{labelname}{1}{%
+      {{Instant}{I.}{Ian}{I.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Instant}{I.}{Ian}{I.}{}{}{}{}}%
     }
@@ -270,6 +294,9 @@ my $xrm = q|  \entry{xrm}{book}{}
 
 # xref field is included as the parent is cited
 my $xr3 = q|  \entry{xr3}{inbook}{}
+    \name{labelname}{1}{%
+      {{Normal}{N.}{Norman}{N.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Normal}{N.}{Norman}{N.}{}{}{}{}}%
     }
@@ -303,6 +330,9 @@ my $xrt = q|  \entry{xrt}{book}{}
 
 # No crossref field as parent is not cited (mincrossrefs < 2)
 my $cr4 = q|  \entry{cr4}{inbook}{}
+    \name{labelname}{1}{%
+      {{Mumble}{M.}{Morris}{M.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Mumble}{M.}{Morris}{M.}{}{}{}{}}%
     }
@@ -326,6 +356,9 @@ my $cr4 = q|  \entry{cr4}{inbook}{}
 
 # No crossref field as parent is not cited (mincrossrefs < 2)
 my $xr4 = q|  \entry{xr4}{inbook}{}
+    \name{labelname}{1}{%
+      {{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
     }

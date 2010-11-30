@@ -1000,8 +1000,7 @@ sub postprocess_labelname {
   if (is_def_and_notnull($be->get_field('labelnamename'))) {
     $be->set_field('labelname', $be->get_field($be->get_field('labelnamename')));
   }
-
-  unless ( $be->get_field('labelnamename') ) {
+  else {
     $logger->debug("Could not determine the labelname of entry $citekey");
   }
 }

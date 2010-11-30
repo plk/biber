@@ -28,6 +28,9 @@ my $out = $biber->get_output_obj;
 
 my $string1 = q|  \entry{Static1}{set}{}
     \set{Static2, Static3, Static4}
+    \name{labelname}{1}{%
+      {{Bumble}{B.}{Brian}{B.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Bumble}{B.}{Brian}{B.}{}{}{}{}}%
     }
@@ -45,6 +48,9 @@ my $string1 = q|  \entry{Static1}{set}{}
 
 my $string2 = q|  \entry{Static2}{book}{}
     \inset{Static1}
+    \name{labelname}{1}{%
+      {{Bumble}{B.}{Brian}{B.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Bumble}{B.}{Brian}{B.}{}{}{}{}}%
     }
@@ -60,6 +66,9 @@ my $string2 = q|  \entry{Static2}{book}{}
 
 my $string3 = q|  \entry{Static3}{book}{}
     \inset{Static1}
+    \name{labelname}{1}{%
+      {{Crenellation}{C.}{Clive}{C.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Crenellation}{C.}{Clive}{C.}{}{}{}{}}%
     }
@@ -74,6 +83,9 @@ my $string3 = q|  \entry{Static3}{book}{}
 
 my $string4 = q|  \entry{Static4}{book}{}
     \inset{Static1}
+    \name{labelname}{1}{%
+      {{Dingle}{D.}{Derek}{D.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Dingle}{D.}{Derek}{D.}{}{}{}{}}%
     }
@@ -89,6 +101,9 @@ my $string4 = q|  \entry{Static4}{book}{}
 # Labelyear is now here as skiplab is not set for this entry when cited in section
 # without citation of a set it is a member of
 my $string5 = q|  \entry{Static2}{book}{}
+    \name{labelname}{1}{%
+      {{Bumble}{B.}{Brian}{B.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Bumble}{B.}{Brian}{B.}{}{}{}{}}%
     }

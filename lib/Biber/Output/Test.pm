@@ -83,6 +83,26 @@ sub set_output_entry {
     }
   }
 
+  # Output name fields
+
+  # first output copy in labelname
+  # This is essentially doing the same thing twice but in the future,
+  # labelname will have different things attached to the raw name
+  if (my $ln = $be->get_field('labelname')) {
+    my $lnn = $be->get_field('labelnamename');
+    if ( $ln->last_element->get_namestring eq 'others' ) {
+      $acc .= "    \\true{more$lnn}\n";
+      $ln->del_last_element;
+    }
+    my $total = $ln->count_elements;
+    $acc .= "    \\name{labelname}{$total}{%\n";
+    foreach my $n (@{$ln->names}) {
+      $acc .= $n->name_to_bbl;
+    }
+    $acc .= "    }\n";
+  }
+
+  # then names themselves
   foreach my $namefield (@{$struc->get_field_type('name')}) {
     if ( my $nf = $be->get_field($namefield) ) {
       if ( $nf->last_element->get_namestring eq 'others' ) {

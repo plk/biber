@@ -61,6 +61,22 @@ $out = $biber->get_output_obj;
 is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
 my $murray1 = q|  \entry{murray}{article}{}
+    \name{labelname}{14}{%
+      {{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
+      {{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
+      {{Zhong}{Z}{Chuan-Jian}{CJ}{}{}{}{}}%
+      {{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
+      {{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
+      {{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
+      {{Londono}{L}{J.~David}{JD}{}{}{}{}}%
+      {{Green}{G}{Stephen~J.}{SJ}{}{}{}{}}%
+      {{Stokes}{S}{Jennifer~J.}{JJ}{}{}{}{}}%
+      {{Wignall}{W}{George~D.}{GD}{}{}{}{}}%
+      {{Glish}{G}{Gary~L.}{GL}{}{}{}{}}%
+      {{Porter}{P}{Marc~D.}{MD}{}{}{}{}}%
+      {{Evans}{E}{Neal~D.}{ND}{}{}{}{}}%
+      {{Murray}{M}{Royce~W.}{RW}{}{}{}{}}%
+    }
     \name{author}{14}{%
       {{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
       {{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
@@ -100,6 +116,22 @@ my $murray1 = q|  \entry{murray}{article}{}
 |;
 
 my $murray2 = q|  \entry{murray}{article}{}
+    \name{labelname}{14}{%
+      {{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
+      {{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
+      {{Zhong}{Z}{Chuan-Jian}{CJ}{}{}{}{}}%
+      {{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
+      {{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
+      {{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
+      {{Londono}{L}{J.~David}{JD}{}{}{}{}}%
+      {{Green}{G}{Stephen~J.}{SJ}{}{}{}{}}%
+      {{Stokes}{S}{Jennifer~J.}{JJ}{}{}{}{}}%
+      {{Wignall}{W}{George~D.}{GD}{}{}{}{}}%
+      {{Glish}{G}{Gary~L.}{GL}{}{}{}{}}%
+      {{Porter}{P}{Marc~D.}{MD}{}{}{}{}}%
+      {{Evans}{E}{Neal~D.}{ND}{}{}{}{}}%
+      {{Murray}{M}{Royce~W.}{RW}{}{}{}{}}%
+    }
     \name{author}{14}{%
       {{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
       {{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
@@ -139,6 +171,9 @@ my $murray2 = q|  \entry{murray}{article}{}
 |;
 
 my $t1 = q|  \entry{t1}{misc}{}
+    \name{labelname}{1}{%
+      {{Brown}{B}{Bill}{B}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Brown}{B}{Bill}{B}{}{}{}{}}%
     }

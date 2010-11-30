@@ -107,6 +107,9 @@ my $sc2 = [
 
 my $sc3 = q|  \entry{L4}{book}{}
     \true{moreauthor}
+    \name{labelname}{1}{%
+      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
@@ -128,6 +131,9 @@ my $sc3 = q|  \entry{L4}{book}{}
 |;
 
 my $sc4 = q|  \entry{L1}{book}{}
+    \name{labelname}{1}{%
+      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
@@ -149,6 +155,9 @@ my $sc4 = q|  \entry{L1}{book}{}
 |;
 
 my $sc5 = q|  \entry{L2}{book}{}
+    \name{labelname}{1}{%
+      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
@@ -170,6 +179,9 @@ my $sc5 = q|  \entry{L2}{book}{}
 |;
 
 my $sc6 = q|  \entry{L3}{book}{}
+    \name{labelname}{1}{%
+      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }

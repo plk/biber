@@ -28,6 +28,9 @@ my $out = $biber->get_output_obj;
 
 my $string1 = q|  \entry{66994b9320f1f0068219afd912125aed}{set}{}
     \set{Dynamic1,Dynamic2,Dynamic3}
+    \name{labelname}{1}{%
+      {{Dynamism}{D.}{Derek}{D.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Dynamism}{D.}{Derek}{D.}{}{}{}{}}%
     }
@@ -45,6 +48,9 @@ my $string1 = q|  \entry{66994b9320f1f0068219afd912125aed}{set}{}
 
 my $string2 = q|  \entry{Dynamic1}{book}{}
     \inset{66994b9320f1f0068219afd912125aed}
+    \name{labelname}{1}{%
+      {{Dynamism}{D.}{Derek}{D.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Dynamism}{D.}{Derek}{D.}{}{}{}{}}%
     }
@@ -60,6 +66,9 @@ my $string2 = q|  \entry{Dynamic1}{book}{}
 
 my $string3 = q|  \entry{Dynamic2}{book}{}
     \inset{66994b9320f1f0068219afd912125aed}
+    \name{labelname}{1}{%
+      {{Bunting}{B.}{Brian}{B.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Bunting}{B.}{Brian}{B.}{}{}{}{}}%
     }
@@ -74,6 +83,9 @@ my $string3 = q|  \entry{Dynamic2}{book}{}
 
 my $string4 = q|  \entry{Dynamic3}{book}{}
     \inset{66994b9320f1f0068219afd912125aed}
+    \name{labelname}{1}{%
+      {{Regardless}{R.}{Roger}{R.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Regardless}{R.}{Roger}{R.}{}{}{}{}}%
     }
@@ -89,6 +101,9 @@ my $string4 = q|  \entry{Dynamic3}{book}{}
 # Labelyear is now here as skiplab is not set for this entry when cited in section
 # without citation of a set it is a member of
 my $string5 = q|  \entry{Dynamic3}{book}{}
+    \name{labelname}{1}{%
+      {{Regardless}{R.}{Roger}{R.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Regardless}{R.}{Roger}{R.}{}{}{}{}}%
     }

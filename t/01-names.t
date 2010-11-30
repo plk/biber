@@ -268,6 +268,9 @@ my $name14 =
 
 
 my $l1 = q|  \entry{L1}{book}{}
+    \name{labelname}{1}{%
+      {{Adler}{A.}{Alfred}{A.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Adler}{A.}{Alfred}{A.}{}{}{}{}}%
     }
@@ -279,6 +282,9 @@ my $l1 = q|  \entry{L1}{book}{}
 |;
 
 my $l2 = q|  \entry{L2}{book}{}
+    \name{labelname}{1}{%
+      {{Bull}{B.}{Bertie~B.}{B.~B.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Bull}{B.}{Bertie~B.}{B.~B.}{}{}{}{}}%
     }
@@ -290,6 +296,9 @@ my $l2 = q|  \entry{L2}{book}{}
 |;
 
 my $l3 = q|  \entry{L3}{book}{}
+    \name{labelname}{1}{%
+      {{Crop}{C.}{C.~Z.}{C.~Z.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Crop}{C.}{C.~Z.}{C.~Z.}{}{}{}{}}%
     }
@@ -301,6 +310,9 @@ my $l3 = q|  \entry{L3}{book}{}
 |;
 
 my $l4 = q|  \entry{L4}{book}{}
+    \name{labelname}{1}{%
+      {{Decket}{D.}{Derek~D}{D.~D.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Decket}{D.}{Derek~D}{D.~D.}{}{}{}{}}%
     }
@@ -312,6 +324,9 @@ my $l4 = q|  \entry{L4}{book}{}
 |;
 
 my $l5 = q|  \entry{L5}{book}{}
+    \name{labelname}{1}{%
+      {{Eel}{E.}{Egbert}{E.}{von}{v.}{}{}}%
+    }
     \name{author}{1}{%
       {{Eel}{E.}{Egbert}{E.}{von}{v.}{}{}}%
     }
@@ -323,6 +338,9 @@ my $l5 = q|  \entry{L5}{book}{}
 |;
 
 my $l6 = q|  \entry{L6}{book}{}
+    \name{labelname}{1}{%
+      {{Frome}{F.}{Francis}{F.}{van~der~valt}{v.~d.~v.}{}{}}%
+    }
     \name{author}{1}{%
       {{Frome}{F.}{Francis}{F.}{van~der~valt}{v.~d.~v.}{}{}}%
     }
@@ -334,6 +352,9 @@ my $l6 = q|  \entry{L6}{book}{}
 |;
 
 my $l7 = q|  \entry{L7}{book}{}
+    \name{labelname}{1}{%
+      {{Gloom}{G.}{Gregory~R.}{G.~R.}{van}{v.}{}{}}%
+    }
     \name{author}{1}{%
       {{Gloom}{G.}{Gregory~R.}{G.~R.}{van}{v.}{}{}}%
     }
@@ -345,6 +366,9 @@ my $l7 = q|  \entry{L7}{book}{}
 |;
 
 my $l8 = q|  \entry{L8}{book}{}
+    \name{labelname}{1}{%
+      {{Henkel}{H.}{Henry~F.}{H.~F.}{van}{v.}{}{}}%
+    }
     \name{author}{1}{%
       {{Henkel}{H.}{Henry~F.}{H.~F.}{van}{v.}{}{}}%
     }
@@ -356,6 +380,9 @@ my $l8 = q|  \entry{L8}{book}{}
 |;
 
 my $l9 = q|  \entry{L9}{book}{}
+    \name{labelname}{1}{%
+      {{{Iliad Ipswich}}{I.}{Ian}{I.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{{Iliad Ipswich}}{I.}{Ian}{I.}{}{}{}{}}%
     }
@@ -368,6 +395,9 @@ my $l9 = q|  \entry{L9}{book}{}
 
 
 my $l10 = q|  \entry{L10}{book}{}
+    \name{labelname}{1}{%
+      {{Jolly}{J.}{James}{J.}{}{}{III}{I.}}%
+    }
     \name{author}{1}{%
       {{Jolly}{J.}{James}{J.}{}{}{III}{I.}}%
     }
@@ -380,6 +410,9 @@ my $l10 = q|  \entry{L10}{book}{}
 
 
 my $l10a = q|  \entry{L10a}{book}{}
+    \name{labelname}{1}{%
+      {{Pimentel}{P.}{Joseph~J.}{J.~J.}{}{}{Jr.}{J.}}%
+    }
     \name{author}{1}{%
       {{Pimentel}{P.}{Joseph~J.}{J.~J.}{}{}{Jr.}{J.}}%
     }
@@ -392,6 +425,9 @@ my $l10a = q|  \entry{L10a}{book}{}
 
 
 my $l11 = q|  \entry{L11}{book}{}
+    \name{labelname}{1}{%
+      {{Kluster}{K.}{Kevin}{K.}{van}{v.}{Jr.}{J.}}%
+    }
     \name{author}{1}{%
       {{Kluster}{K.}{Kevin}{K.}{van}{v.}{Jr.}{J.}}%
     }
@@ -403,6 +439,9 @@ my $l11 = q|  \entry{L11}{book}{}
 |;
 
 my $l12 = q|  \entry{L12}{book}{}
+    \name{labelname}{1}{%
+      {{Vall{\'e}e~Poussin}{V.~P.}{Charles Louis Xavier~Joseph}{C.~L. X.~J.}{de~la}{d.~l.}{}{}}%
+    }
     \name{author}{1}{%
       {{Vall{\'e}e~Poussin}{V.~P.}{Charles Louis Xavier~Joseph}{C.~L. X.~J.}{de~la}{d.~l.}{}{}}%
     }
@@ -414,6 +453,9 @@ my $l12 = q|  \entry{L12}{book}{}
 |;
 
 my $l13 = q|  \entry{L13}{book}{}
+    \name{labelname}{1}{%
+      {{Van de~Graaff}{V.~d.~G.}{R.~J.}{R.~J.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Van de~Graaff}{V.~d.~G.}{R.~J.}{R.~J.}{}{}{}{}}%
     }
@@ -425,6 +467,9 @@ my $l13 = q|  \entry{L13}{book}{}
 |;
 
 my $l14 = q|  \entry{L14}{book}{}
+    \name{labelname}{1}{%
+      {{St~John-Mollusc}{S.~J.-M.}{Oliver}{O.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{St~John-Mollusc}{S.~J.-M.}{Oliver}{O.}{}{}{}{}}%
     }
@@ -436,6 +481,9 @@ my $l14 = q|  \entry{L14}{book}{}
 |;
 
 my $l15 = q|  \entry{L15}{book}{}
+    \name{labelname}{1}{%
+      {{Gompel}{G.}{Roger~P.{\,}G.}{R.~P.}{van}{v.}{}{}}%
+    }
     \name{author}{1}{%
       {{Gompel}{G.}{Roger~P.{\,}G.}{R.~P.}{van}{v.}{}{}}%
     }
@@ -447,6 +495,9 @@ my $l15 = q|  \entry{L15}{book}{}
 |;
 
 my $l16 = q|  \entry{L16}{book}{}
+    \name{labelname}{1}{%
+      {{Gompel}{G.}{Roger~{P.\,G.}}{R.~P.}{van}{v.}{}{}}%
+    }
     \name{author}{1}{%
       {{Gompel}{G.}{Roger~{P.\,G.}}{R.~P.}{van}{v.}{}{}}%
     }
@@ -458,6 +509,9 @@ my $l16 = q|  \entry{L16}{book}{}
 |;
 
 my $l17 = q|  \entry{L17}{book}{}
+    \name{labelname}{1}{%
+      {{Lovecraft}{L.}{Bill~H.{\,}P.}{B.~H.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Lovecraft}{L.}{Bill~H.{\,}P.}{B.~H.}{}{}{}{}}%
     }
@@ -469,6 +523,9 @@ my $l17 = q|  \entry{L17}{book}{}
 |;
 
 my $l18 = q|  \entry{L18}{book}{}
+    \name{labelname}{1}{%
+      {{Lovecraft}{L.}{Bill~{H.\,P.}}{B.~H.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Lovecraft}{L.}{Bill~{H.\,P.}}{B.~H.}{}{}{}{}}%
     }
@@ -480,6 +537,9 @@ my $l18 = q|  \entry{L18}{book}{}
 |;
 
 my $l19 = q|  \entry{L19}{book}{}
+    \name{labelname}{1}{%
+      {{Mustermann}{M.}{Klaus-Peter}{K.-P.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Mustermann}{M.}{Klaus-Peter}{K.-P.}{}{}{}{}}%
     }
@@ -491,6 +551,9 @@ my $l19 = q|  \entry{L19}{book}{}
 |;
 
 my $l20 = q|  \entry{L20}{book}{}
+    \name{labelname}{1}{%
+      {{Ford}{F.}{{John Henry}}{J.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Ford}{F.}{{John Henry}}{J.}{}{}{}{}}%
     }
@@ -502,6 +565,9 @@ my $l20 = q|  \entry{L20}{book}{}
 |;
 
 my $l21 = q|  \entry{L21}{book}{}
+    \name{labelname}{1}{%
+      {{Smith}{S.}{{\v S}omeone}{{\v S}.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Smith}{S.}{{\v S}omeone}{{\v S}.}{}{}{}{}}%
     }
@@ -515,6 +581,9 @@ my $l21 = q|  \entry{L21}{book}{}
 # sortinit is set to a diacritic-stripped fallback since the Unicode equivalent
 # of the sortinit latex character macro is not valid in the bbl encoding
 my $l22 = q|  \entry{L22}{book}{}
+    \name{labelname}{1}{%
+      {{{\v S}mith}{{\v S}.}{Someone}{S.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{{\v S}mith}{{\v S}.}{Someone}{S.}{}{}{}{}}%
     }
@@ -527,6 +596,9 @@ my $l22 = q|  \entry{L22}{book}{}
 
 
 my $l23 = q|  \entry{L23}{book}{}
+    \name{labelname}{1}{%
+      {{Smith}{S.}{Šomeone}{Š.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Smith}{S.}{Šomeone}{Š.}{}{}{}{}}%
     }
@@ -538,6 +610,9 @@ my $l23 = q|  \entry{L23}{book}{}
 |;
 
 my $l24 = q|  \entry{L24}{book}{}
+    \name{labelname}{1}{%
+      {{Šmith}{Š.}{Someone}{S.}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{Šmith}{Š.}{Someone}{S.}{}{}{}{}}%
     }
@@ -549,6 +624,9 @@ my $l24 = q|  \entry{L24}{book}{}
 |;
 
 my $l25 = q|  \entry{L25}{book}{}
+    \name{labelname}{1}{%
+      {{{American Psychological Association, Task Force on the Sexualization of Girls}}{A.}{}{}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{{American Psychological Association, Task Force on the Sexualization of Girls}}{A.}{}{}{}{}{}{}}%
     }
@@ -560,6 +638,9 @@ my $l25 = q|  \entry{L25}{book}{}
 |;
 
 my $l26 = q|  \entry{L26}{book}{}
+    \name{labelname}{1}{%
+      {{{Sci-Art Publishers}}{S.}{}{}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{{Sci-Art Publishers}}{S.}{}{}{}{}{}{}}%
     }
@@ -571,6 +652,9 @@ my $l26 = q|  \entry{L26}{book}{}
 |;
 
 my $l29 = q|  \entry{L29}{book}{}
+    \name{labelname}{1}{%
+      {{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}}{U.}{}{}{}{}{}{}}%
+    }
     \name{author}{1}{%
       {{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}}{U.}{}{}{}{}{}{}}%
     }

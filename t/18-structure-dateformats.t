@@ -48,6 +48,10 @@ my $l11 = [ "Mandatory fields - only one of 'date, year' must be defined in entr
 my $l12 = [ "Constraint violation - none of fields (month) must exist when all of fields (date) exist. Ignoring them." ];
 
 my $l13c = q|  \entry{L13}{book}{}
+    \name{labelname}{2}{%
+      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+    }
     \name{author}{2}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
       {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
@@ -70,6 +74,10 @@ my $l13c = q|  \entry{L13}{book}{}
 |;
 
 my $l14 = q|  \entry{L14}{book}{}
+    \name{labelname}{2}{%
+      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+    }
     \name{author}{2}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
       {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
@@ -94,6 +102,10 @@ my $l14 = q|  \entry{L14}{book}{}
 |;
 
 my $l15 = q|  \entry{L15}{book}{}
+    \name{labelname}{2}{%
+      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+    }
     \name{author}{2}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
       {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
@@ -111,6 +123,10 @@ my $l15 = q|  \entry{L15}{book}{}
 |;
 
 my $l16 = q|  \entry{L16}{proceedings}{}
+    \name{labelname}{2}{%
+      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+    }
     \name{editor}{2}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
       {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
@@ -133,6 +149,10 @@ my $l16 = q|  \entry{L16}{proceedings}{}
 |;
 
 my $l17 = q|  \entry{L17}{proceedings}{}
+    \name{labelname}{2}{%
+      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+    }
     \name{editor}{2}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
       {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
@@ -169,6 +189,10 @@ my $l17 = q|  \entry{L17}{proceedings}{}
 |;
 
 my $l17c = q|  \entry{L17}{proceedings}{}
+    \name{labelname}{2}{%
+      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+    }
     \name{editor}{2}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
       {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
@@ -204,6 +228,10 @@ my $l17c = q|  \entry{L17}{proceedings}{}
 |;
 
 my $l17e = q|  \entry{L17}{proceedings}{}
+    \name{labelname}{2}{%
+      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+    }
     \name{editor}{2}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
       {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
