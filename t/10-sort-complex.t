@@ -106,10 +106,11 @@ my $sc2 = [
           ];
 
 my $sc3 = q|  \entry{L4}{book}{}
-    \true{moreauthor}
+    \true{morelabelname}
     \name{labelname}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
+    \true{moreauthor}
     \name{author}{1}{%
       {{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
