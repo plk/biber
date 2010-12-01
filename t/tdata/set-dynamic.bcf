@@ -114,6 +114,7 @@
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey type="set" members="Dynamic1,Dynamic2,Dynamic3">DynSet</bcf:citekey>
+    <bcf:citekey>DynSet</bcf:citekey>
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">

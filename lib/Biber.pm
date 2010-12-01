@@ -474,12 +474,6 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     my @keys = ();
     foreach my $keyc (@{$section->{citekey}}) {
       my $key = $keyc->{content};
-      # Dynamic set definition
-      # Save dynamic key -> member keys mapping for set entry auto creation later
-      if (exists($keyc->{type}) and $keyc->{type} eq 'set') {
-        $bib_section->set_dynamic_set($key, split /\s*,\s*/, $keyc->{members});
-      }
-
       if ($key eq '*') {
         $bib_section->allkeys;
         $key_flag = 1; # There is at least one key, used for error reporting below
@@ -488,6 +482,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         next SECTION;
       }
       elsif (not Biber::Config->get_seenkey($key, $section->{number})) {
+        # Dynamic set definition
+        # Save dynamic key -> member keys mapping for set entry auto creation later
+        if (exists($keyc->{type}) and $keyc->{type} eq 'set') {
+          $bib_section->set_dynamic_set($key, split /\s*,\s*/, $keyc->{members});
+        }
         push @keys, $key;
         $key_flag = 1; # There is at least one key, used for error reporting below
         Biber::Config->incr_seenkey($key, $section->{number});
