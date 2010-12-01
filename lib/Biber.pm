@@ -734,13 +734,7 @@ sub instantiate_dynamic {
     $be->set_field('citecasekey', $dset);
     $be->set_field('datatype', 'bibtex');
     $section->bibentries->add_entry($dset, $be);
-    # Set biber part of dataonly on the members
-    # biblatex part of this is handled by the bbl entries for the members
-    # having \inset{}
-    foreach my $member (@members) {
-      Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $member);
-      Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $member);
-    }
+    # Setting dataonly for members is handled by postprocess_sets()
   }
 
   # Instantiate any related entry clones we need
@@ -750,7 +744,10 @@ sub instantiate_dynamic {
       foreach my $relkey (split /\s*,\s*/, $relkeys) {
         my $relentry = $section->bibentry($relkey);
         my $clonekey = md5_hex($relkey);
+        $be->set_datafield('related', $clonekey); # re-point entry to clone
         $section->bibentries->add_entry($clonekey, $relentry->clone($clonekey));
+        Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $clonekey);
+        Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $clonekey);
       }
     }
   }
@@ -1682,7 +1679,6 @@ sub create_output_section {
 
   my @citekeys = $section->get_citekeys;
   # We rely on the order of this array for the order of the .bbl
-  # and therefore the .bib
   foreach my $k (@citekeys) {
     my $be = $section->bibentry($k) or $logger->logcroak("Cannot find entry with key '$k' to output");
     $output_obj->set_output_entry($be, $section, Biber::Config->get_structure);
