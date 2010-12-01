@@ -39,7 +39,6 @@ my $string1 = q|  \entry{DynSet}{set}{}
     \strng{namehash}{DD1}
     \strng{fullhash}{DD1}
     \field{sortinit}{0}
-    \field{extrayear}{1}
     \field{labelyear}{2002}
     \field{annotation}{Some Dynamic Note}
     \field{shorthand}{d1}

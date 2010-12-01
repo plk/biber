@@ -37,7 +37,6 @@ my $string1 = q|  \entry{Elias1955}{set}{}
     \strng{namehash}{EP1}
     \strng{fullhash}{EP1}
     \field{sortinit}{0}
-    \field{extrayear}{1}
     \field{labelyear}{1955}
     \field{issn}{0096-1000}
     \field{journaltitle}{IRE Transactions on Information Theory}

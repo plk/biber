@@ -37,7 +37,6 @@ my $string1 = q|  \entry{Static1}{set}{}
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}
     \field{sortinit}{0}
-    \field{extrayear}{1}
     \field{labelyear}{2001}
     \field{annotation}{Some notes}
     \field{title}{Blessed Brains}
