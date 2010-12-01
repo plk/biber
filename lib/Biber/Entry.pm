@@ -29,6 +29,28 @@ sub new {
   return $self;
 }
 
+=head2 clone
+
+    Clone a Biber::Entry object and return a copy
+    Accepts optionally a key for the copy
+
+=cut
+
+sub clone {
+  my $self = shift;
+  my $newkey = shift;
+  my $new = new Biber::Entry;
+  while (my ($k, $v) = each(%{$self->{datafields}})) {
+    $new->{datafields}{$k} = $v;
+  }
+  # put in key if specified
+  if ($newkey) {
+    $new->{derivedfields}{origkey} = $newkey;
+    $new->{derivedfields}{citecasekey} = $newkey;
+  }
+  return $new;
+}
+
 =head2 notnull
 
     Test for an empty object
