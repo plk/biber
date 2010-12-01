@@ -43,6 +43,8 @@ sub clone {
   while (my ($k, $v) = each(%{$self->{datafields}})) {
     $new->{datafields}{$k} = $v;
   }
+  # Need to add entrytype
+  $new->{derivedfields}{entrytype} = $self->{derivedfields}{entrytype};
   # put in key if specified
   if ($newkey) {
     $new->{derivedfields}{origkey} = $newkey;

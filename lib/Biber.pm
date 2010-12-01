@@ -746,11 +746,16 @@ sub instantiate_dynamic {
         my $relentry = $section->bibentry($relkey);
         my $clonekey = md5_hex($relkey);
         push @clonekeys, $clonekey;
-        $section->bibentries->add_entry($clonekey, $relentry->clone($clonekey));
+        my $relclone = $relentry->clone($clonekey);
+        # clone doesn't need the related fields
+        $relclone->del_field('related');
+        $relclone->del_field('relatedtype');
+        $section->bibentries->add_entry($clonekey, $relclone);
         Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $clonekey);
         Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $clonekey);
       }
-      # point to clone keys
+      # point to clone keys and add to citekeys
+      $section->add_citekeys(@clonekeys);
       $be->set_datafield('related', join(',', @clonekeys));
     }
   }

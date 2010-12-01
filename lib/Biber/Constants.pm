@@ -1424,6 +1424,8 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      },
                      { content => "publisher", datatype => "literal", fieldtype => "list" },
                      { content => "pubstate", datatype => "key", fieldtype => "field" },
+                     { content => "related", datatype => "literal", fieldtype => "field" },
+                     { content => "relatedtype", datatype => "literal", fieldtype => "field" },
                      { content => "reprinttitle", datatype => "literal", fieldtype => "field" },
                      { content => "series", datatype => "literal", fieldtype => "field" },
                      { content => "shortauthor", datatype => "name", fieldtype => "list" },
