@@ -115,6 +115,7 @@
   <bcf:section number="0">
     <bcf:citekey>key1</bcf:citekey>
     <bcf:citekey>key2</bcf:citekey>
+    <bcf:citekey>key3</bcf:citekey>
   </bcf:section>
 </bcf:controlfile>
 

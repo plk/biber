@@ -38,7 +38,7 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =cut
 
-our $VERSION = '0.6.3';
+our $VERSION = '0.6.4';
 our $BETA_VERSION = 1; # Is this a beta version?
 
 =head1 SYNOPSIS
@@ -741,14 +741,18 @@ sub instantiate_dynamic {
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
     if (my $relkeys = $be->get_field('related')) {
+      $be->del_field('related'); # clear the related field
+      my @clonekeys;
       foreach my $relkey (split /\s*,\s*/, $relkeys) {
         my $relentry = $section->bibentry($relkey);
         my $clonekey = md5_hex($relkey);
-        $be->set_datafield('related', $clonekey); # re-point entry to clone
+        push @clonekeys, $clonekey;
         $section->bibentries->add_entry($clonekey, $relentry->clone($clonekey));
         Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $clonekey);
         Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $clonekey);
       }
+      # point to clone keys
+      $be->set_datafield('related', join(',', @clonekeys));
     }
   }
   return;
@@ -1156,7 +1160,10 @@ sub postprocess_hashes {
   $be->set_field('namehash', $namehash);
   $be->set_field('fullhash', $fullhash);
 
-  Biber::Config->incr_seennamehash($fullhash);
+  # Don't add to disambiguation data if skiplab is set
+  unless (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+    Biber::Config->incr_seennamehash($fullhash);
+  }
 }
 
 =head2 postprocess_unique
@@ -1237,6 +1244,7 @@ sub postprocess_labelnameyear {
   # * If there is no labelyear to use, use empty string
   # * Don't increment the seennameyear count if either name or year string is empty
   #   (see code in incr_nameyear method).
+  # * Don't increment if skiplab is set
   my $name_string;
   if ($be->get_field('labelnamename')) {
     $name_string = $self->_namestring($citekey, $be->get_field('labelnamename'));
@@ -1254,9 +1262,15 @@ sub postprocess_labelnameyear {
   else {
     $year_string = '';
   }
-  my $nameyear_string = $name_string . '0' . $year_string;
-  Biber::Config->incr_seennameyear($name_string, $year_string);
-  $be->set_field('nameyear', $nameyear_string);
+
+  # Don't create disambiguation data for skiplab entries
+  unless (Biber::Config->getblxoption('skiplab',
+                                      $be->get_field('entrytype'),
+                                      $be->get_field('origkey'))) {
+    my $nameyear_string = $name_string . '0' . $year_string;
+    $be->set_field('nameyear', $nameyear_string);
+    Biber::Config->incr_seennameyear($name_string, $year_string);
+  }
 }
 
 =head2 postprocess_labelalpha
@@ -1367,10 +1381,10 @@ sub generate_final_sortinfo {
   foreach my $citekey ($section->get_citekeys) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
-    my $nameyear = $be->get_field('nameyear');
     # Only generate extrayear and extraapha if skiplab is not set.
     # Don't forget that skiplab is implied for set members
     unless (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+      my $nameyear = $be->get_field('nameyear');
       if (Biber::Config->get_seennameyear($nameyear) > 1) {
         Biber::Config->incr_seenlabelyear($nameyear);
         if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype')) ) {
