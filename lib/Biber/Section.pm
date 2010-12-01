@@ -212,7 +212,7 @@ sub del_citekey {
 
 =head2 set_dynamic_set
 
-    Record a mapping of dynamic key (MD5 hash) to member keys
+    Record a mapping of dynamic key to member keys
 
 =cut
 
@@ -226,7 +226,7 @@ sub set_dynamic_set {
 
 =head2 get_dynamic_set
 
-    Retrieve member keys for a dynamic set key (MD5 hash)
+    Retrieve member keys for a dynamic set key
     Check on has reference returning anything stop spurious warnings
     about empty dereference in return.
 
@@ -243,13 +243,13 @@ sub get_dynamic_set {
   }
 }
 
-=head2 dynamic_keys
+=head2 dynamic_set_keys
 
-    Retrieve all dynamic keys (MD5 hash)
+    Retrieve all dynamic set keys
 
 =cut
 
-sub dynamic_keys {
+sub dynamic_set_keys {
   my $self = shift;
   return keys %{$self->{dkeys}};
 }

@@ -12,6 +12,7 @@ use Cwd qw( abs_path );
 use Biber::Config;
 use Biber::Constants;
 use List::Util qw( first );
+use Digest::MD5 qw( md5_hex );
 use Biber::Internals;
 use Biber::Entries;
 use Biber::Entry;
@@ -630,13 +631,13 @@ sub parse_biblatexml {
   $self->_parse_biblatexml($xml);
 }
 
-=head2 process_missing
+=head2 check_missing
 
    Check for missing citation keys
 
 =cut
 
-sub process_missing {
+sub check_missing {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -668,7 +669,7 @@ sub process_setup {
   Biber::Config->set_structure(Biber::Structure->new(Biber::Config->getblxoption('structure')));
 }
 
-=head2 process_aliases
+=head2 resolve_aliases
 
    Normalise entries by resolving any:
 
@@ -679,7 +680,7 @@ sub process_setup {
 
 =cut
 
-sub process_aliases {
+sub resolve_aliases {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -706,15 +707,65 @@ sub process_aliases {
   }
 }
 
+=head2 instantiate_dynamic
+
+    This instantiates any dynamic entries so that they are available
+    for processing later on. This has to be done before most all other
+    processing so that when we call $section->bibentry($key), as we
+    do many times in the code, we don't die because there is a key but
+    no Entry object.
+
+=cut
+
+sub instantiate_dynamic {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+
+  $logger->debug("Creating dynamic entries (sets/related) for section $secnum");
+
+  # Instantiate any dynamic set entries before we do anything else
+  foreach my $dset ($section->dynamic_set_keys) {
+    my @members = $section->get_dynamic_set($dset);
+    my $be = new Biber::Entry;
+    $be->set_field('entrytype', 'set');
+    $be->set_field('entryset', join(',', @members));
+    $be->set_field('origkey', $dset);
+    $be->set_field('citecasekey', $dset);
+    $be->set_field('datatype', 'bibtex');
+    $section->bibentries->add_entry($dset, $be);
+    # Set biber part of dataonly on the members
+    # biblatex part of this is handled by the bbl entries for the members
+    # having \inset{}
+    foreach my $member (@members) {
+      Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $member);
+      Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $member);
+    }
+  }
+
+  # Instantiate any related entry clones we need
+  foreach my $citekey ($section->get_citekeys) {
+    my $be = $section->bibentry($citekey);
+    if (my $relkeys = $be->get_field('related')) {
+      foreach my $relkey (split /\s*,\s*/, $relkeys) {
+        my $relentry = $section->bibentry($relkey);
+        my $clonekey = md5_hex($relkey);
+        $section->bibentries->add_entry($clonekey, $relentry->clone($clonekey));
+      }
+    }
+  }
+  return;
+}
+
+
 =head2 process_crossrefs
 
     $biber->process_crossrefs
 
     This does several things:
-    1. Instantiates the @SET entry for dynamic sets
-    2. Ensures that all entryset key members will be output in the bbl.
-    3. Ensures proper inheritance of data from cross-references.
-    4. Ensures that crossrefs/xrefs that are directly cited or cross-referenced
+    1. Ensures that all entryset key members will be output in the bbl.
+    2. Ensures proper inheritance of data from cross-references.
+    3. Ensures that crossrefs/xrefs that are directly cited or cross-referenced
        at least mincrossrefs times are included in the bibliography.
 
 =cut
@@ -724,19 +775,7 @@ sub process_crossrefs {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
-  $logger->debug("Processing entry sets and crossrefs for section $secnum");
-
-  # Instantiate any dynamic set entries before we do anything else
-  foreach my $dset ($section->dynamic_keys) {
-    my @members = $section->get_dynamic_set($dset);
-    my $be = new Biber::Entry;
-    $be->set_field('entrytype', 'set');
-    $be->set_field('entryset', join(',', @members));
-    $be->set_field('origkey', $dset);
-    $be->set_field('citecasekey', $dset);
-    $be->set_field('datatype', 'bibtex');
-    $section->bibentries->add_entry($dset, $be);
-  }
+  $logger->debug("Processing explicit and implicit crossrefs for section $secnum");
 
   # Loop over cited keys and count the cross/xrefs
   # Can't do this when parsing .bib as this would count them for potentially uncited children
@@ -790,13 +829,13 @@ sub process_crossrefs {
   }
 }
 
-=head2 process_structure
+=head2 validate_structure
 
   Validate bib structure according to a bib schema
 
 =cut
 
-sub process_structure {
+sub validate_structure {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -1579,11 +1618,12 @@ sub prepare {
     $logger->info("Processing bib section $secnum");
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
-    $self->process_data;                 # Parse data into section objects
-    $self->process_missing;              # Check for missing citekeys before anything else
-    $self->process_aliases;              # Process aliases to normalise entries
-    $self->process_crossrefs;            # Process crossrefs
-    $self->process_structure;            # Check bib structure
+    $self->parse_data;                   # Parse data into section objects
+    $self->check_missing;                # Check for missing citekeys before anything else
+    $self->resolve_aliases;              # Resolve entrytype/field aliases to normalise entries
+    $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
+    $self->process_crossrefs;            # Process crossrefs/sets
+    $self->validate_structure;           # Check bib structure
     $self->postprocess;                  # Main entry postprocessing
     $self->sortentries;                  # then we do a label sort pass and set a flag
     $BIBER_SORT_FIRSTPASSDONE = 1;
@@ -1597,13 +1637,13 @@ sub prepare {
   return;
 }
 
-=head2 process_data
+=head2 parse_data
 
     Read the data file(s) for the section and store it in the section object
 
 =cut
 
-sub process_data {
+sub parse_data {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
