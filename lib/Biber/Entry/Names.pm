@@ -165,7 +165,7 @@ sub first_n_elements {
 
 sub del_last_element {
   my $self = shift;
-  $self->{namelist} = [ pop(@{$self->{namelist}}) ];
+  pop(@{$self->{namelist}}); # Don't want the return value of this!
   return;
 }
 

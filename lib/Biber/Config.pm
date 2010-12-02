@@ -76,6 +76,7 @@ sub _init {
   $CONFIG->{state}{seenlabelyear} = {};
   $CONFIG->{state}{seenkeys} = {};
   $CONFIG->{state}{keycase} = {};
+
   return;
 }
 
@@ -248,6 +249,32 @@ sub postprocess_biber_opts {
   }
 }
 
+
+=head2 set_structure
+
+    Sets the structure information object
+
+=cut
+
+sub set_structure {
+  shift;
+  my $obj = shift;
+  $self->{structure} = $obj;
+  return;
+}
+
+=head2 get_structure
+
+    Gets the structure information object
+
+=cut
+
+sub get_structure {
+  shift;
+  return $self->{structure};
+}
+
+
 =head2 setoption
 
     Store a Biber config option
@@ -302,6 +329,20 @@ sub getcmdlineoption {
 #################################
 # BibLaTeX options static methods
 #################################
+
+=head2 reset_per_entry_options
+
+    Unset all per_entry_options. Sometimes these are dynamically generated
+    (skiplab, skiplos etc.) and we don't want these persisting over sections
+
+=cut
+
+sub reset_per_entry_options {
+  shift; # class method so don't care about class name
+  $CONFIG->{options}{biblatex}{PER_ENTRY} = {};
+  return;
+}
+
 
 =head2 setblxoption
 

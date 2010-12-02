@@ -6,6 +6,7 @@
 # biber-linux_x86_32
 # biber-linux_x86_64
 
+DOCDIR="/Users/philkime/data/code/biblatex-biber/doc"
 DIR=${1:-"/Users/philkime/Desktop/b"}
 RELEASE=${2:-"development"}
 export COPYFILE_DISABLE=true # no resource forks - TL doesn't like them
@@ -38,4 +39,5 @@ tar cf biber.tar biber
 gzip biber.tar
 scp biber.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux_64bit/biber.tar.gz
 \rm biber.tar.gz biber
-
+# Doc
+scp $DOCDIR/biber.pdf philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/documentation/biber.pdf

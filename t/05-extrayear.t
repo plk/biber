@@ -30,9 +30,8 @@ Biber::Config->setblxoption('maxnames', 1);
 
 # Now generate the information
 $biber->prepare;
-my $bibentries = $biber->sections->get_section('0')->bibentries;
-my $section = $biber->sections->get_section('0');
-
+my $section = $biber->sections->get_section(0);
+my $bibentries = $section->bibentries;
 
 is($bibentries->entry('l1')->get_field('extrayear'), '1', 'Entry L1 - one name, first in 1995');
 is($bibentries->entry('l2')->get_field('extrayear'), '2', 'Entry L2 - one name, second in 1995');

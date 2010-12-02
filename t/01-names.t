@@ -27,9 +27,8 @@ Biber::Config->setoption('sortlocale', 'C');
 # Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $bibentries = $biber->sections->get_section('0')->bibentries;
-
-my $section = $biber->sections->get_section('0');
+my $section = $biber->sections->get_section(0);
+my $bibentries = $section->bibentries;
 
 my $name1 =
     { firstname      => "John",
@@ -268,6 +267,404 @@ my $name14 =
       nameinitstring => 'dl_Vallée_Poussin_JCG' } ;
 
 
+my $l1 = q|  \entry{L1}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Adler}{A.}{Alfred}{A.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Adler}{A.}{Alfred}{A.}{}{}{}{}}%
+    }
+    \strng{namehash}{AA1}
+    \strng{fullhash}{AA1}
+    \field{sortinit}{A}
+  \endentry
+
+|;
+
+my $l2 = q|  \entry{L2}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Bull}{B.}{Bertie~B.}{B.~B.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Bull}{B.}{Bertie~B.}{B.~B.}{}{}{}{}}%
+    }
+    \strng{namehash}{BBB1}
+    \strng{fullhash}{BBB1}
+    \field{sortinit}{B}
+  \endentry
+
+|;
+
+my $l3 = q|  \entry{L3}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Crop}{C.}{C.~Z.}{C.~Z.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Crop}{C.}{C.~Z.}{C.~Z.}{}{}{}{}}%
+    }
+    \strng{namehash}{CCZ1}
+    \strng{fullhash}{CCZ1}
+    \field{sortinit}{C}
+  \endentry
+
+|;
+
+my $l4 = q|  \entry{L4}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Decket}{D.}{Derek~D}{D.~D.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Decket}{D.}{Derek~D}{D.~D.}{}{}{}{}}%
+    }
+    \strng{namehash}{DDD1}
+    \strng{fullhash}{DDD1}
+    \field{sortinit}{D}
+  \endentry
+
+|;
+
+my $l5 = q|  \entry{L5}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Eel}{E.}{Egbert}{E.}{von}{v.}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Eel}{E.}{Egbert}{E.}{von}{v.}{}{}}%
+    }
+    \strng{namehash}{vEE1}
+    \strng{fullhash}{vEE1}
+    \field{sortinit}{v}
+  \endentry
+
+|;
+
+my $l6 = q|  \entry{L6}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Frome}{F.}{Francis}{F.}{van~der~valt}{v.~d.~v.}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Frome}{F.}{Francis}{F.}{van~der~valt}{v.~d.~v.}{}{}}%
+    }
+    \strng{namehash}{vdvFF1}
+    \strng{fullhash}{vdvFF1}
+    \field{sortinit}{v}
+  \endentry
+
+|;
+
+my $l7 = q|  \entry{L7}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Gloom}{G.}{Gregory~R.}{G.~R.}{van}{v.}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Gloom}{G.}{Gregory~R.}{G.~R.}{van}{v.}{}{}}%
+    }
+    \strng{namehash}{vGGR1}
+    \strng{fullhash}{vGGR1}
+    \field{sortinit}{v}
+  \endentry
+
+|;
+
+my $l8 = q|  \entry{L8}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Henkel}{H.}{Henry~F.}{H.~F.}{van}{v.}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Henkel}{H.}{Henry~F.}{H.~F.}{van}{v.}{}{}}%
+    }
+    \strng{namehash}{vHHF1}
+    \strng{fullhash}{vHHF1}
+    \field{sortinit}{v}
+  \endentry
+
+|;
+
+my $l9 = q|  \entry{L9}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{{Iliad Ipswich}}{I.}{Ian}{I.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{{Iliad Ipswich}}{I.}{Ian}{I.}{}{}{}{}}%
+    }
+    \strng{namehash}{II1}
+    \strng{fullhash}{II1}
+    \field{sortinit}{I}
+  \endentry
+
+|;
+
+
+my $l10 = q|  \entry{L10}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Jolly}{J.}{James}{J.}{}{}{III}{I.}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Jolly}{J.}{James}{J.}{}{}{III}{I.}}%
+    }
+    \strng{namehash}{JIJ1}
+    \strng{fullhash}{JIJ1}
+    \field{sortinit}{J}
+  \endentry
+
+|;
+
+
+my $l10a = q|  \entry{L10a}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Pimentel}{P.}{Joseph~J.}{J.~J.}{}{}{Jr.}{J.}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Pimentel}{P.}{Joseph~J.}{J.~J.}{}{}{Jr.}{J.}}%
+    }
+    \strng{namehash}{PJJJ1}
+    \strng{fullhash}{PJJJ1}
+    \field{sortinit}{P}
+  \endentry
+
+|;
+
+
+my $l11 = q|  \entry{L11}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Kluster}{K.}{Kevin}{K.}{van}{v.}{Jr.}{J.}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Kluster}{K.}{Kevin}{K.}{van}{v.}{Jr.}{J.}}%
+    }
+    \strng{namehash}{vKJK1}
+    \strng{fullhash}{vKJK1}
+    \field{sortinit}{v}
+  \endentry
+
+|;
+
+my $l12 = q|  \entry{L12}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Vall{\'e}e~Poussin}{V.~P.}{Charles Louis Xavier~Joseph}{C.~L. X.~J.}{de~la}{d.~l.}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Vall{\'e}e~Poussin}{V.~P.}{Charles Louis Xavier~Joseph}{C.~L. X.~J.}{de~la}{d.~l.}{}{}}%
+    }
+    \strng{namehash}{dlVPCLXJ1}
+    \strng{fullhash}{dlVPCLXJ1}
+    \field{sortinit}{d}
+  \endentry
+
+|;
+
+my $l13 = q|  \entry{L13}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Van de~Graaff}{V.~d.~G.}{R.~J.}{R.~J.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Van de~Graaff}{V.~d.~G.}{R.~J.}{R.~J.}{}{}{}{}}%
+    }
+    \strng{namehash}{VdGRJ1}
+    \strng{fullhash}{VdGRJ1}
+    \field{sortinit}{V}
+  \endentry
+
+|;
+
+my $l14 = q|  \entry{L14}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{St~John-Mollusc}{S.~J.-M.}{Oliver}{O.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{St~John-Mollusc}{S.~J.-M.}{Oliver}{O.}{}{}{}{}}%
+    }
+    \strng{namehash}{SJMO1}
+    \strng{fullhash}{SJMO1}
+    \field{sortinit}{S}
+  \endentry
+
+|;
+
+my $l15 = q|  \entry{L15}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Gompel}{G.}{Roger~P.{\,}G.}{R.~P.}{van}{v.}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Gompel}{G.}{Roger~P.{\,}G.}{R.~P.}{van}{v.}{}{}}%
+    }
+    \strng{namehash}{vGRP1}
+    \strng{fullhash}{vGRP1}
+    \field{sortinit}{v}
+  \endentry
+
+|;
+
+my $l16 = q|  \entry{L16}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Gompel}{G.}{Roger~{P.\,G.}}{R.~P.}{van}{v.}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Gompel}{G.}{Roger~{P.\,G.}}{R.~P.}{van}{v.}{}{}}%
+    }
+    \strng{namehash}{vGRP1}
+    \strng{fullhash}{vGRP1}
+    \field{sortinit}{v}
+  \endentry
+
+|;
+
+my $l17 = q|  \entry{L17}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Lovecraft}{L.}{Bill~H.{\,}P.}{B.~H.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Lovecraft}{L.}{Bill~H.{\,}P.}{B.~H.}{}{}{}{}}%
+    }
+    \strng{namehash}{LBH1}
+    \strng{fullhash}{LBH1}
+    \field{sortinit}{L}
+  \endentry
+
+|;
+
+my $l18 = q|  \entry{L18}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Lovecraft}{L.}{Bill~{H.\,P.}}{B.~H.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Lovecraft}{L.}{Bill~{H.\,P.}}{B.~H.}{}{}{}{}}%
+    }
+    \strng{namehash}{LBH1}
+    \strng{fullhash}{LBH1}
+    \field{sortinit}{L}
+  \endentry
+
+|;
+
+my $l19 = q|  \entry{L19}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Mustermann}{M.}{Klaus-Peter}{K.-P.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Mustermann}{M.}{Klaus-Peter}{K.-P.}{}{}{}{}}%
+    }
+    \strng{namehash}{MKP1}
+    \strng{fullhash}{MKP1}
+    \field{sortinit}{M}
+  \endentry
+
+|;
+
+my $l20 = q|  \entry{L20}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Ford}{F.}{{John Henry}}{J.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Ford}{F.}{{John Henry}}{J.}{}{}{}{}}%
+    }
+    \strng{namehash}{FJ1}
+    \strng{fullhash}{FJ1}
+    \field{sortinit}{F}
+  \endentry
+
+|;
+
+my $l21 = q|  \entry{L21}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Smith}{S.}{{\v S}omeone}{{\v S}.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Smith}{S.}{{\v S}omeone}{{\v S}.}{}{}{}{}}%
+    }
+    \strng{namehash}{SS1}
+    \strng{fullhash}{SS1}
+    \field{sortinit}{S}
+  \endentry
+
+|;
+
+# sortinit is set to a diacritic-stripped fallback since the Unicode equivalent
+# of the sortinit latex character macro is not valid in the bbl encoding
+my $l22 = q|  \entry{L22}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{{\v S}mith}{{\v S}.}{Someone}{S.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{{\v S}mith}{{\v S}.}{Someone}{S.}{}{}{}{}}%
+    }
+    \strng{namehash}{SS1}
+    \strng{fullhash}{SS1}
+    \field{sortinit}{S}
+  \endentry
+
+|;
+
+
+my $l23 = q|  \entry{L23}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Smith}{S.}{Šomeone}{Š.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Smith}{S.}{Šomeone}{Š.}{}{}{}{}}%
+    }
+    \strng{namehash}{SŠ1}
+    \strng{fullhash}{SŠ1}
+    \field{sortinit}{S}
+  \endentry
+
+|;
+
+my $l24 = q|  \entry{L24}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Šmith}{Š.}{Someone}{S.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Šmith}{Š.}{Someone}{S.}{}{}{}{}}%
+    }
+    \strng{namehash}{ŠS1}
+    \strng{fullhash}{ŠS1}
+    \field{sortinit}{Š}
+  \endentry
+
+|;
+
+my $l25 = q|  \entry{L25}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{{American Psychological Association, Task Force on the Sexualization of Girls}}{A.}{}{}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{{American Psychological Association, Task Force on the Sexualization of Girls}}{A.}{}{}{}{}{}{}}%
+    }
+    \strng{namehash}{A1}
+    \strng{fullhash}{A1}
+    \field{sortinit}{A}
+  \endentry
+
+|;
+
+my $l26 = q|  \entry{L26}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{{Sci-Art Publishers}}{S.}{}{}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{{Sci-Art Publishers}}{S.}{}{}{}{}{}{}}%
+    }
+    \strng{namehash}{S1}
+    \strng{fullhash}{S1}
+    \field{sortinit}{S}
+  \endentry
+
+|;
+
+my $l29 = q|  \entry{L29}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}}{U.}{}{}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}}{U.}{}{}{}{}{}{}}%
+    }
+    \strng{namehash}{U1}
+    \strng{fullhash}{U1}
+    \field{sortinit}{U}
+  \endentry
+
+|;
+
 is_deeply(parsename('John Doe'), $name1, 'parsename 1');
 is_deeply(parsename('Doe, Jr, John'), $name2, 'parsename 2');
 is_deeply(parsename('von Berlichingen zu Hornberg, Johann Gottfried', {useprefix => 1}),
@@ -284,6 +681,7 @@ is_deeply(parsename('{Jean Charles Gabriel} de la {Vallée Poussin}'), $name11, 
 is_deeply(parsename('Jean Charles Gabriel Poussin'), $name12, 'parsename 12');
 is_deeply(parsename('Jean Charles {Poussin Lecoq}'), $name13, 'parsename 13');
 is_deeply(parsename('J. C. G. de la Vallée Poussin', {useprefix => 1}), $name14, 'parsename 14');
+
 
 is($bibentries->entry('l1')->get_field($bibentries->entry('l1')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '      {{}{Adler}{A.}{Alfred}{A.}{}{}{}{}}%' . "\n", 'First Last');
 is($bibentries->entry('l2')->get_field($bibentries->entry('l2')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '      {{}{Bull}{B.}{Bertie~B.}{B.~B.}{}{}{}{}}%' . "\n", 'First Initial. Last');
@@ -312,8 +710,6 @@ is($section->has_citekey('l27'), '0', 'Bad name with 3 commas');
 is($section->has_citekey('l28'), '0', 'Bad name with consecutive commas');
 is($bibentries->entry('l29')->get_field($bibentries->entry('l29')->get_field('labelnamename'))->nth_element(1)->name_to_bbl, '      {{}{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}}{U.}{}{}{}{}{}{}}%' . "\n",  'Escaped name with 3 commas');
 
-
-
 # A few tests depend set to non UTF-8 output
 # Have to use a new biber object when trying to change encoding as this isn't
 # dealt with in ->prepare
@@ -326,8 +722,8 @@ Biber::Config->setoption('bblencoding', 'latin1');
 # Now generate the information
 $biber->prepare;
 $out = $biber->get_output_obj;
-$bibentries = $biber->sections->get_section('0')->bibentries;
-$section = $biber->sections->get_section('0');
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
 
 is($bibentries->entry('l21')->get_field('namehash'), 'SS1', 'Namehash check 1');
 is($bibentries->entry('l21')->get_field($bibentries->entry('l21')->get_field('labelnamename'))->nth_element(1)->get_firstname_it, '{\v S}', 'Terseinitials 1');

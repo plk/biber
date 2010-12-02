@@ -7,32 +7,16 @@ use Readonly;
 use base 'Exporter';
 
 our @EXPORT = qw{
-  @NAMEFIELDS
-  @LISTFIELDS
-  @LITERALFIELDS_BASE
-  @RANGEFIELDS
-  @VERBATIMFIELDS
-  @TITLEFIELDS
-  @KEYFIELDS
-  @COMMASEP_FIELDS
-  @ENTRIESTOSPLIT
-  @LITERALFIELDS
-  @DATERANGEFIELDS
-  @DATECOMPONENTFIELDS
-  @NULL_OK
-  @ENTRYTYPES
-  @UENTRYTYPES
-  %SKIPFIELDS
   %CONFIG_DEFAULT_BIBER
   %CONFIG_DEFAULT_BIBLATEX
   %CONFIG_SCOPE_BIBLATEX
+  %STRUCTURE_DATATYPES
   $BIBER_CONF_NAME
   $BIBLATEX_VERSION
   $BIBER_SORT_FINAL
   $BIBER_SORT_NULL
   $BIBER_SORT_FIRSTPASSDONE
   %BIBER_DATAFILE_REFS
-  %ALIASES
   %NUMERICALMONTH
   %DISPLAYMODES
   $DISPLAYMODE_DEFAULT
@@ -77,27 +61,38 @@ unless ($locale) {
   }
 }
 
+# datatypes for structure validation
+our %STRUCTURE_DATATYPES = (
+                            integer => qr/\A\d+\z/xms
+);
+
+# In general, these defaults are for two reasons:
+# * If there is no .bcf to set these options (-a and -d flags for example)
+# * New features which are not implemented in .bcf by biblatex yet and so we have
+#   provide defaults in case they are missing.
+
 our %CONFIG_DEFAULT_BIBER = (
-  allentries       => 0,
-  bblencoding      => 'UTF-8',
-  bibdata          =>  undef,
-  bibdatatype      => 'bibtex',
-  bibencoding      => 'UTF-8',
-  collate          => 1,
-  collate_options  => { level => 4 },
-  debug            => 0,
-  displaymode      => $DISPLAYMODE_DEFAULT, # eventually, shall be moved to biblatex options
-  mincrossrefs     => 2,
-  nolog            => 0,
-  nosortdiacritics => qr/[\x{2bf}\x{2018}]/,
-  nosortprefix     => qr/\p{L}{2}\p{Pd}/,
-  quiet            => 0,
-  sortcase         => 1,
-  sortlocale       => $locale,
-  sortupper        => 1,
-  trace            => 0,
-  wraplines        => 0,
-  validate         => 0
+  allentries         => 0,
+  bblencoding        => 'UTF-8',
+  bibdata            =>  undef,
+  bibdatatype        => 'bibtex',
+  bibencoding        => 'UTF-8',
+  collate            => 1,
+  collate_options    => { level => 4 },
+  debug              => 0,
+  displaymode        => $DISPLAYMODE_DEFAULT, # eventually, shall be moved to biblatex options
+  mincrossrefs       => 2,
+  nolog              => 0,
+  nosortdiacritics   => qr/[\x{2bf}\x{2018}]/,
+  nosortprefix       => qr/\p{L}{2}\p{Pd}/,
+  quiet              => 0,
+  sortcase           => 1,
+  sortlocale         => $locale,
+  sortupper          => 1,
+  trace              => 0,
+  wraplines          => 0,
+  validate_control   => 0,
+  validate_structure => 0
   );
 
 # default global options for biblatex
@@ -229,7 +224,1287 @@ our %CONFIG_DEFAULT_BIBLATEX =
                  {
                   '0000'       => {}}
                 ]
-               ]
+               ],
+   structure => {
+  aliases     => {
+                   alias => [
+                     {
+                       name => { content => "conference" },
+                       realname => { content => "inproceedings" },
+                       type => "entrytype",
+                     },
+                     {
+                       name => { content => "electronic" },
+                       realname => { content => "online" },
+                       type => "entrytype",
+                     },
+                     {
+                       field    => [{ content => "mathesis", name => "type" }],
+                       name     => { content => "mastersthesis" },
+                       realname => { content => "thesis" },
+                       type     => "entrytype",
+                     },
+                     {
+                       field    => [{ content => "phdthesis", name => "type" }],
+                       name     => { content => "phdthesis" },
+                       realname => { content => "thesis" },
+                       type     => "entrytype",
+                     },
+                     {
+                       field    => [{ content => "techreport", name => "type" }],
+                       name     => { content => "techreport" },
+                       realname => { content => "report" },
+                       type     => "entrytype",
+                     },
+                     {
+                       name => { content => "www" },
+                       realname => { content => "online" },
+                       type => "entrytype",
+                     },
+                     {
+                       name => { content => "address" },
+                       realname => { content => "location" },
+                       type => "field",
+                     },
+                     {
+                       name => { content => "annote" },
+                       realname => { content => "annotation" },
+                       type => "field",
+                     },
+                     {
+                       name => { content => "archiveprefix" },
+                       realname => { content => "eprinttype" },
+                       type => "field",
+                     },
+                     {
+                       name => { content => "journal" },
+                       realname => { content => "journaltitle" },
+                       type => "field",
+                     },
+                     {
+                       name => { content => "key" },
+                       realname => { content => "sortkey" },
+                       type => "field",
+                     },
+                     {
+                       name => { content => "pdf" },
+                       realname => { content => "file" },
+                       type => "field",
+                     },
+                     {
+                       name => { content => "primaryclass" },
+                       realname => { content => "eprintclass" },
+                       type => "field",
+                     },
+                     {
+                       name => { content => "school" },
+                       realname => { content => "institution" },
+                       type => "field",
+                     },
+                   ],
+                 },
+  constraints => [
+                   {
+                     constraint => [
+                                     {
+                                       antecedent => { field => [{ content => "date" }], quant => "all" },
+                                       consequent => { field => [{ content => "month" }], quant => "none" },
+                                       type => "conditional",
+                                     },
+                                     {
+                                       datatype => "integer",
+                                       field    => [{ content => "month" }],
+                                       rangemax => 12,
+                                       rangemin => 1,
+                                       type     => "data",
+                                     },
+                                     {
+                                       datatype => "datespec",
+                                       field => [
+                                         { content => "date" },
+                                         { content => "origdate" },
+                                         { content => "eventdate" },
+                                         { content => "urldate" },
+                                       ],
+                                       type => "data",
+                                     },
+                                   ],
+                     entrytype  => [{ content => "ALL" }],
+                   },
+                   {
+                     constraint => [
+                                     {
+                                       fieldxor => [
+                                         {
+                                           field => [
+                                             { coerce => "true", content => "date" },
+                                             { content => "year" },
+                                           ],
+                                         },
+                                       ],
+                                       type => "mandatory",
+                                     },
+                                   ],
+                     entrytype  => [
+                                     { content => "article" },
+                                     { content => "book" },
+                                     { content => "inbook" },
+                                     { content => "bookinbook" },
+                                     { content => "suppbook" },
+                                     { content => "booklet" },
+                                     { content => "collection" },
+                                     { content => "incollection" },
+                                     { content => "suppcollection" },
+                                     { content => "manual" },
+                                     { content => "misc" },
+                                     { content => "online" },
+                                     { content => "patent" },
+                                     { content => "periodical" },
+                                     { content => "suppperiodical" },
+                                     { content => "proceedings" },
+                                     { content => "inproceedings" },
+                                     { content => "reference" },
+                                     { content => "inreference" },
+                                     { content => "report" },
+                                     { content => "set" },
+                                     { content => "thesis" },
+                                     { content => "unpublished" },
+                                   ],
+                   },
+                   {
+                     constraint => [
+                                     {
+                                       field => [{ content => "entryset" }, { content => "crossref" }],
+                                       type  => "mandatory",
+                                     },
+                                   ],
+                     entrytype  => [{ content => "set" }],
+                   },
+                   {
+                     constraint => [
+                                     {
+                                       field => [
+                                                  { content => "author" },
+                                                  { content => "journaltitle" },
+                                                  { content => "title" },
+                                                ],
+                                       type  => "mandatory",
+                                     },
+                                   ],
+                     entrytype  => [{ content => "article" }],
+                   },
+                   {
+                     constraint => [
+                                     {
+                                       field => [{ content => "author" }, { content => "title" }],
+                                       type  => "mandatory",
+                                     },
+                                   ],
+                     entrytype  => [{ content => "book" }],
+                   },
+                   {
+                     constraint => [
+                                     {
+                                       field => [
+                                                  { content => "author" },
+                                                  { content => "title" },
+                                                  { content => "booktitle" },
+                                                ],
+                                       type  => "mandatory",
+                                     },
+                                   ],
+                     entrytype  => [
+                                     { content => "inbook" },
+                                     { content => "bookinbook" },
+                                     { content => "suppbook" },
+                                   ],
+                   },
+                   {
+                     constraint => [
+                                     {
+                                       field   => [{ content => "title" }],
+                                       fieldor => [
+                                                    { field => [{ content => "author" }, { content => "editor" }] },
+                                                  ],
+                                       type    => "mandatory",
+                                     },
+                                   ],
+                     entrytype  => [{ content => "booklet" }],
+                   },
+                   {
+                     constraint => [
+                                     {
+                                       field => [{ content => "editor" }, { content => "title" }],
+                                       type  => "mandatory",
+                                     },
+                                   ],
+                     entrytype  => [{ content => "collection" }, { content => "reference" }],
+                   },
+                   {
+                     constraint => [
+                                     {
+                                       field => [
+                                                  { content => "author" },
+                                                  { content => "editor" },
+                                                  { content => "title" },
+                                                  { content => "booktitle" },
+                                                ],
+                                       type  => "mandatory",
+                                     },
+                                   ],
+                     entrytype  => [
+                                     { content => "incollection" },
+                                     { content => "suppcollection" },
+                                     { content => "inreference" },
+                                   ],
+                   },
+                   {
+                     constraint => [{ field => [{ content => "title" }], type => "mandatory" }],
+                     entrytype  => [{ content => "manual" }],
+                   },
+                   {
+                     constraint => [{ field => [{ content => "title" }], type => "mandatory" }],
+                     entrytype  => [{ content => "misc" }],
+                   },
+                   {
+                     constraint => [
+                                     {
+                                       field => [{ content => "title" }, { content => "url" }],
+                                       type  => "mandatory",
+                                     },
+                                   ],
+                     entrytype  => [{ content => "online" }],
+                   },
+                   {
+                     constraint => [
+                                     {
+                                       field => [
+                                                  { content => "author" },
+                                                  { content => "title" },
+                                                  { content => "number" },
+                                                ],
+                                       type  => "mandatory",
+                                     },
+                                   ],
+                     entrytype  => [{ content => "patent" }],
+                   },
+                   {
+                     constraint => [
+                                     {
+                                       field => [{ content => "editor" }, { content => "title" }],
+                                       type  => "mandatory",
+                                     },
+                                   ],
+                     entrytype  => [{ content => "periodical" }],
+                   },
+                   {
+                     constraint => [
+                                     {
+                                       field => [{ content => "editor" }, { content => "title" }],
+                                       type  => "mandatory",
+                                     },
+                                   ],
+                     entrytype  => [{ content => "proceedings" }],
+                   },
+                   {
+                     constraint => [
+                                     {
+                                       field => [
+                                                  { content => "author" },
+                                                  { content => "editor" },
+                                                  { content => "title" },
+                                                  { content => "booktitle" },
+                                                ],
+                                       type  => "mandatory",
+                                     },
+                                   ],
+                     entrytype  => [{ content => "inproceedings" }],
+                   },
+                   {
+                     constraint => [
+                                     {
+                                       field => [
+                                                  { content => "author" },
+                                                  { content => "title" },
+                                                  { content => "type" },
+                                                  { content => "institution" },
+                                                ],
+                                       type  => "mandatory",
+                                     },
+                                   ],
+                     entrytype  => [{ content => "report" }],
+                   },
+                   {
+                     constraint => [
+                                     {
+                                       field => [
+                                                  { content => "author" },
+                                                  { content => "title" },
+                                                  { content => "type" },
+                                                  { content => "institution" },
+                                                ],
+                                       type  => "mandatory",
+                                     },
+                                   ],
+                     entrytype  => [{ content => "thesis" }],
+                   },
+                   {
+                     constraint => [
+                                     {
+                                       field => [{ content => "author" }, { content => "title" }],
+                                       type  => "mandatory",
+                                     },
+                                   ],
+                     entrytype  => [{ content => "unpublished" }],
+                   },
+                 ],
+  entryfields => [
+                   {
+                     entrytype => [{ content => "ALL" }],
+                     field => [
+                       { content => "abstract" },
+                       { content => "annotation" },
+                       { content => "authortype" },
+                       { content => "bookpagination" },
+                       { content => "crossref" },
+                       { content => "entryset" },
+                       { content => "entrysubtype" },
+                       { content => "execute" },
+                       { content => "file" },
+                       { content => "gender" },
+                       { content => "hyphenation" },
+                       { content => "indextitle" },
+                       { content => "indexsorttitle" },
+                       { content => "isan" },
+                       { content => "ismn" },
+                       { content => "iswc" },
+                       { content => "keywords" },
+                       { content => "label" },
+                       { content => "library" },
+                       { content => "lista" },
+                       { content => "listb" },
+                       { content => "listc" },
+                       { content => "listd" },
+                       { content => "liste" },
+                       { content => "listf" },
+                       { content => "nameaddon" },
+                       { content => "options" },
+                       { content => "origdate" },
+                       { content => "origlocation" },
+                       { content => "origpublisher" },
+                       { content => "origtitle" },
+                       { content => "pagination" },
+                       { content => "presort" },
+                       { content => "related" },
+                       { content => "relatedtype" },
+                       { content => "reprinttitle" },
+                       { content => "shortauthor" },
+                       { content => "shorteditor" },
+                       { content => "shorthand" },
+                       { content => "shorthandintro" },
+                       { content => "shortjournal" },
+                       { content => "shortseries" },
+                       { content => "shorttitle" },
+                       { content => "sortkey" },
+                       { content => "sortname" },
+                       { content => "sorttitle" },
+                       { content => "sortyear" },
+                       { content => "usera" },
+                       { content => "userb" },
+                       { content => "userc" },
+                       { content => "userd" },
+                       { content => "usere" },
+                       { content => "userf" },
+                       { content => "verba" },
+                       { content => "verbb" },
+                       { content => "verbc" },
+                       { content => "xref" },
+                     ],
+                   },
+                   {
+                     entrytype => [{ content => "set" }],
+                     field => [{ content => "ALL" }],
+                   },
+                   {
+                     entrytype => [{ content => "article" }],
+                     field => [
+                       { content => "author" },
+                       { content => "journaltitle" },
+                       { content => "title" },
+                       { content => "year" },
+                       { content => "date" },
+                       { content => "addendum" },
+                       { content => "annotator" },
+                       { content => "commentator" },
+                       { content => "doi" },
+                       { content => "editor" },
+                       { content => "editora" },
+                       { content => "editorb" },
+                       { content => "editorc" },
+                       { content => "editoratype" },
+                       { content => "editorbtype" },
+                       { content => "editorctype" },
+                       { content => "eid" },
+                       { content => "eprint" },
+                       { content => "eprintclass" },
+                       { content => "eprinttype" },
+                       { content => "issn" },
+                       { content => "issue" },
+                       { content => "issuetitle" },
+                       { content => "issuesubtitle" },
+                       { content => "journalsubtitle" },
+                       { content => "language" },
+                       { content => "month" },
+                       { content => "note" },
+                       { content => "number" },
+                       { content => "origlanguage" },
+                       { content => "pages" },
+                       { content => "pubstate" },
+                       { content => "series" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "translator" },
+                       { content => "url" },
+                       { content => "urldate" },
+                       { content => "version" },
+                       { content => "volume" },
+                     ],
+                   },
+                   {
+                     entrytype => [{ content => "book" }],
+                     field => [
+                       { content => "author" },
+                       { content => "title" },
+                       { content => "year" },
+                       { content => "date" },
+                       { content => "addendum" },
+                       { content => "afterword" },
+                       { content => "annotator" },
+                       { content => "chapter" },
+                       { content => "commentator" },
+                       { content => "doi" },
+                       { content => "edition" },
+                       { content => "editor" },
+                       { content => "editora" },
+                       { content => "editorb" },
+                       { content => "editorc" },
+                       { content => "editoratype" },
+                       { content => "editorbtype" },
+                       { content => "editorctype" },
+                       { content => "eprint" },
+                       { content => "eprintclass" },
+                       { content => "eprinttype" },
+                       { content => "foreword" },
+                       { content => "introduction" },
+                       { content => "isbn" },
+                       { content => "language" },
+                       { content => "location" },
+                       { content => "maintitle" },
+                       { content => "maintitleaddon" },
+                       { content => "mainsubtitle" },
+                       { content => "note" },
+                       { content => "number" },
+                       { content => "origlanguage" },
+                       { content => "pages" },
+                       { content => "pagetotal" },
+                       { content => "part" },
+                       { content => "publisher" },
+                       { content => "pubstate" },
+                       { content => "series" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "translator" },
+                       { content => "url" },
+                       { content => "urldate" },
+                       { content => "volume" },
+                       { content => "volumes" },
+                     ],
+                   },
+                   {
+                     entrytype => [
+                       { content => "inbook" },
+                       { content => "bookinbook" },
+                       { content => "suppbook" },
+                     ],
+                     field => [
+                       { content => "author" },
+                       { content => "title" },
+                       { content => "booktitle" },
+                       { content => "year" },
+                       { content => "date" },
+                       { content => "addendum" },
+                       { content => "afterword" },
+                       { content => "annotator" },
+                       { content => "bookauthor" },
+                       { content => "booksubtitle" },
+                       { content => "booktitleaddon" },
+                       { content => "chapter" },
+                       { content => "commentator" },
+                       { content => "doi" },
+                       { content => "edition" },
+                       { content => "editor" },
+                       { content => "editora" },
+                       { content => "editorb" },
+                       { content => "editorc" },
+                       { content => "editoratype" },
+                       { content => "editorbtype" },
+                       { content => "editorctype" },
+                       { content => "eprint" },
+                       { content => "eprintclass" },
+                       { content => "eprinttype" },
+                       { content => "foreword" },
+                       { content => "introduction" },
+                       { content => "isbn" },
+                       { content => "language" },
+                       { content => "location" },
+                       { content => "mainsubtitle" },
+                       { content => "maintitle" },
+                       { content => "maintitleaddon" },
+                       { content => "note" },
+                       { content => "number" },
+                       { content => "origlanguage" },
+                       { content => "part" },
+                       { content => "publisher" },
+                       { content => "pages" },
+                       { content => "pubstate" },
+                       { content => "series" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "translator" },
+                       { content => "url" },
+                       { content => "urldate" },
+                       { content => "volume" },
+                       { content => "volumes" },
+                     ],
+                   },
+                   {
+                     entrytype => [{ content => "booklet" }],
+                     field => [
+                       { content => "author" },
+                       { content => "editor" },
+                       { content => "title" },
+                       { content => "year" },
+                       { content => "date" },
+                       { content => "addendum" },
+                       { content => "chapter" },
+                       { content => "doi" },
+                       { content => "eprint" },
+                       { content => "eprintclass" },
+                       { content => "eprinttype" },
+                       { content => "howpublished" },
+                       { content => "language" },
+                       { content => "location" },
+                       { content => "note" },
+                       { content => "pages" },
+                       { content => "pagetotal" },
+                       { content => "pubstate" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "type" },
+                       { content => "url" },
+                       { content => "urldate" },
+                     ],
+                   },
+                   {
+                     entrytype => [{ content => "collection" }, { content => "reference" }],
+                     field => [
+                       { content => "editor" },
+                       { content => "title" },
+                       { content => "year" },
+                       { content => "date" },
+                       { content => "addendum" },
+                       { content => "afterword" },
+                       { content => "annotator" },
+                       { content => "chapter" },
+                       { content => "commentator" },
+                       { content => "doi" },
+                       { content => "edition" },
+                       { content => "editora" },
+                       { content => "editorb" },
+                       { content => "editorc" },
+                       { content => "editoratype" },
+                       { content => "editorbtype" },
+                       { content => "editorctype" },
+                       { content => "eprint" },
+                       { content => "eprintclass" },
+                       { content => "eprinttype" },
+                       { content => "foreword" },
+                       { content => "introduction" },
+                       { content => "isbn" },
+                       { content => "language" },
+                       { content => "location" },
+                       { content => "mainsubtitle" },
+                       { content => "maintitle" },
+                       { content => "maintitleaddon" },
+                       { content => "note" },
+                       { content => "number" },
+                       { content => "origlanguage" },
+                       { content => "pages" },
+                       { content => "pagetotal" },
+                       { content => "part" },
+                       { content => "publisher" },
+                       { content => "pubstate" },
+                       { content => "series" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "translator" },
+                       { content => "url" },
+                       { content => "urldate" },
+                       { content => "volume" },
+                       { content => "volumes" },
+                     ],
+                   },
+                   {
+                     entrytype => [
+                       { content => "incollection" },
+                       { content => "suppcollection" },
+                       { content => "inreference" },
+                     ],
+                     field => [
+                       { content => "author" },
+                       { content => "editor" },
+                       { content => "title" },
+                       { content => "booktitle" },
+                       { content => "year" },
+                       { content => "date" },
+                       { content => "addendum" },
+                       { content => "afterword" },
+                       { content => "annotator" },
+                       { content => "booksubtitle" },
+                       { content => "booktitleaddon" },
+                       { content => "chapter" },
+                       { content => "commentator" },
+                       { content => "doi" },
+                       { content => "edition" },
+                       { content => "editora" },
+                       { content => "editorb" },
+                       { content => "editorc" },
+                       { content => "editoratype" },
+                       { content => "editorbtype" },
+                       { content => "editorctype" },
+                       { content => "eprint" },
+                       { content => "eprintclass" },
+                       { content => "eprinttype" },
+                       { content => "foreword" },
+                       { content => "introduction" },
+                       { content => "isbn" },
+                       { content => "language" },
+                       { content => "location" },
+                       { content => "mainsubtitle" },
+                       { content => "maintitle" },
+                       { content => "maintitleaddon" },
+                       { content => "note" },
+                       { content => "number" },
+                       { content => "origlanguage" },
+                       { content => "pages" },
+                       { content => "part" },
+                       { content => "publisher" },
+                       { content => "pubstate" },
+                       { content => "series" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "translator" },
+                       { content => "url" },
+                       { content => "urldate" },
+                       { content => "volume" },
+                       { content => "volumes" },
+                     ],
+                   },
+                   {
+                     entrytype => [{ content => "manual" }],
+                     field => [
+                       { content => "title" },
+                       { content => "year" },
+                       { content => "date" },
+                       { content => "addendum" },
+                       { content => "author" },
+                       { content => "chapter" },
+                       { content => "doi" },
+                       { content => "edition" },
+                       { content => "editor" },
+                       { content => "eprint" },
+                       { content => "eprintclass" },
+                       { content => "eprinttype" },
+                       { content => "isbn" },
+                       { content => "language" },
+                       { content => "location" },
+                       { content => "note" },
+                       { content => "number" },
+                       { content => "organization" },
+                       { content => "pages" },
+                       { content => "pagetotal" },
+                       { content => "publisher" },
+                       { content => "pubstate" },
+                       { content => "series" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "type" },
+                       { content => "url" },
+                       { content => "urldate" },
+                       { content => "version" },
+                     ],
+                   },
+                   {
+                     entrytype => [{ content => "misc" }],
+                     field => [
+                       { content => "title" },
+                       { content => "year" },
+                       { content => "date" },
+                       { content => "addendum" },
+                       { content => "author" },
+                       { content => "doi" },
+                       { content => "editor" },
+                       { content => "eprint" },
+                       { content => "eprintclass" },
+                       { content => "eprinttype" },
+                       { content => "howpublished" },
+                       { content => "language" },
+                       { content => "location" },
+                       { content => "month" },
+                       { content => "note" },
+                       { content => "organization" },
+                       { content => "pubstate" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "type" },
+                       { content => "url" },
+                       { content => "urldate" },
+                       { content => "version" },
+                     ],
+                   },
+                   {
+                     entrytype => [{ content => "online" }],
+                     field => [
+                       { content => "title" },
+                       { content => "url" },
+                       { content => "addendum" },
+                       { content => "author" },
+                       { content => "editor" },
+                       { content => "language" },
+                       { content => "month" },
+                       { content => "note" },
+                       { content => "organization" },
+                       { content => "pubstate" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "urldate" },
+                       { content => "version" },
+                       { content => "year" },
+                     ],
+                   },
+                   {
+                     entrytype => [{ content => "patent" }],
+                     field => [
+                       { content => "author" },
+                       { content => "title" },
+                       { content => "number" },
+                       { content => "year" },
+                       { content => "date" },
+                       { content => "addendum" },
+                       { content => "doi" },
+                       { content => "eprint" },
+                       { content => "eprintclass" },
+                       { content => "eprinttype" },
+                       { content => "holder" },
+                       { content => "location" },
+                       { content => "month" },
+                       { content => "note" },
+                       { content => "pubstate" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "type" },
+                       { content => "url" },
+                       { content => "urldate" },
+                       { content => "version" },
+                     ],
+                   },
+                   {
+                     entrytype => [{ content => "periodical" }],
+                     field => [
+                       { content => "editor" },
+                       { content => "title" },
+                       { content => "year" },
+                       { content => "date" },
+                       { content => "addendum" },
+                       { content => "doi" },
+                       { content => "editora" },
+                       { content => "editorb" },
+                       { content => "editorc" },
+                       { content => "editoratype" },
+                       { content => "editorbtype" },
+                       { content => "editorctype" },
+                       { content => "eprint" },
+                       { content => "eprintclass" },
+                       { content => "eprinttype" },
+                       { content => "issn" },
+                       { content => "issue" },
+                       { content => "issuesubtitle" },
+                       { content => "issuetitle" },
+                       { content => "language" },
+                       { content => "month" },
+                       { content => "note" },
+                       { content => "number" },
+                       { content => "pubstate" },
+                       { content => "series" },
+                       { content => "subtitle" },
+                       { content => "url" },
+                       { content => "urldate" },
+                       { content => "volume" },
+                     ],
+                   },
+                   {
+                     entrytype => [{ content => "proceedings" }],
+                     field => [
+                       { content => "editor" },
+                       { content => "title" },
+                       { content => "year" },
+                       { content => "date" },
+                       { content => "addendum" },
+                       { content => "chapter" },
+                       { content => "doi" },
+                       { content => "eprint" },
+                       { content => "eprintclass" },
+                       { content => "eprinttype" },
+                       { content => "eventdate" },
+                       { content => "eventtitle" },
+                       { content => "isbn" },
+                       { content => "language" },
+                       { content => "location" },
+                       { content => "mainsubtitle" },
+                       { content => "maintitle" },
+                       { content => "maintitleaddon" },
+                       { content => "month" },
+                       { content => "note" },
+                       { content => "number" },
+                       { content => "organization" },
+                       { content => "pages" },
+                       { content => "pagetotal" },
+                       { content => "part" },
+                       { content => "publisher" },
+                       { content => "pubstate" },
+                       { content => "series" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "url" },
+                       { content => "urldate" },
+                       { content => "venue" },
+                       { content => "volume" },
+                       { content => "volumes" },
+                     ],
+                   },
+                   {
+                     entrytype => [{ content => "inproceedings" }],
+                     field => [
+                       { content => "author" },
+                       { content => "editor" },
+                       { content => "title" },
+                       { content => "booktitle" },
+                       { content => "year" },
+                       { content => "date" },
+                       { content => "addendum" },
+                       { content => "booksubtitle" },
+                       { content => "booktitleaddon" },
+                       { content => "chapter" },
+                       { content => "doi" },
+                       { content => "eprint" },
+                       { content => "eprintclass" },
+                       { content => "eprinttype" },
+                       { content => "eventdate" },
+                       { content => "eventtitle" },
+                       { content => "isbn" },
+                       { content => "language" },
+                       { content => "location" },
+                       { content => "mainsubtitle" },
+                       { content => "maintitle" },
+                       { content => "maintitleaddon" },
+                       { content => "month" },
+                       { content => "note" },
+                       { content => "number" },
+                       { content => "organization" },
+                       { content => "pages" },
+                       { content => "part" },
+                       { content => "publisher" },
+                       { content => "pubstate" },
+                       { content => "series" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "url" },
+                       { content => "urldate" },
+                       { content => "venue" },
+                       { content => "volume" },
+                       { content => "volumes" },
+                     ],
+                   },
+                   {
+                     entrytype => [{ content => "report" }],
+                     field => [
+                       { content => "author" },
+                       { content => "title" },
+                       { content => "type" },
+                       { content => "institution" },
+                       { content => "year" },
+                       { content => "date" },
+                       { content => "addendum" },
+                       { content => "chapter" },
+                       { content => "doi" },
+                       { content => "eprint" },
+                       { content => "eprintclass" },
+                       { content => "eprinttype" },
+                       { content => "isrn" },
+                       { content => "language" },
+                       { content => "location" },
+                       { content => "month" },
+                       { content => "note" },
+                       { content => "number" },
+                       { content => "pages" },
+                       { content => "pagetotal" },
+                       { content => "pubstate" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "url" },
+                       { content => "urldate" },
+                       { content => "version" },
+                     ],
+                   },
+                   {
+                     entrytype => [{ content => "thesis" }],
+                     field => [
+                       { content => "author" },
+                       { content => "title" },
+                       { content => "type" },
+                       { content => "institution" },
+                       { content => "year" },
+                       { content => "date" },
+                       { content => "addendum" },
+                       { content => "chapter" },
+                       { content => "doi" },
+                       { content => "eprint" },
+                       { content => "eprintclass" },
+                       { content => "eprinttype" },
+                       { content => "language" },
+                       { content => "location" },
+                       { content => "month" },
+                       { content => "note" },
+                       { content => "pages" },
+                       { content => "pagetotal" },
+                       { content => "pubstate" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "url" },
+                       { content => "urldate" },
+                     ],
+                   },
+                   {
+                     entrytype => [{ content => "unpublished" }],
+                     field => [
+                       { content => "author" },
+                       { content => "title" },
+                       { content => "year" },
+                       { content => "date" },
+                       { content => "addendum" },
+                       { content => "howpublished" },
+                       { content => "language" },
+                       { content => "location" },
+                       { content => "month" },
+                       { content => "note" },
+                       { content => "pubstate" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "url" },
+                       { content => "urldate" },
+                     ],
+                   },
+                 ],
+  entrytypes  => {
+                   entrytype => [
+                     { content => "article" },
+                     { content => "artwork" },
+                     { content => "audio" },
+                     { content => "book" },
+                     { content => "bookinbook" },
+                     { content => "booklet" },
+                     { content => "collection" },
+                     { content => "commentary" },
+                     { content => "customa" },
+                     { content => "customb" },
+                     { content => "customc" },
+                     { content => "customd" },
+                     { content => "custome" },
+                     { content => "customf" },
+                     { content => "inbook" },
+                     { content => "incollection" },
+                     { content => "inproceedings" },
+                     { content => "inreference" },
+                     { content => "image" },
+                     { content => "jurisdiction" },
+                     { content => "legal" },
+                     { content => "legislation" },
+                     { content => "letter" },
+                     { content => "manual" },
+                     { content => "misc" },
+                     { content => "movie" },
+                     { content => "music" },
+                     { content => "online" },
+                     { content => "patent" },
+                     { content => "performance" },
+                     { content => "periodical" },
+                     { content => "proceedings" },
+                     { content => "reference" },
+                     { content => "report" },
+                     { content => "review" },
+                     { content => "set" },
+                     { content => "software" },
+                     { content => "standard" },
+                     { content => "suppbook" },
+                     { content => "suppcollection" },
+                     { content => "thesis" },
+                     { content => "unpublished" },
+                     { content => "video" },
+                   ],
+                 },
+  fields      => {
+                   field => [
+                     { content => "abstract", datatype => "literal", fieldtype => "field" },
+                     { content => "addendum", datatype => "literal", fieldtype => "field" },
+                     { content => "afterword", datatype => "name", fieldtype => "list" },
+                     { content => "annotation", datatype => "literal", fieldtype => "field" },
+                     { content => "annotator", datatype => "name", fieldtype => "list" },
+                     { content => "author", datatype => "name", fieldtype => "list" },
+                     { content => "authortype", datatype => "key", fieldtype => "field" },
+                     { content => "bookauthor", datatype => "name", fieldtype => "list" },
+                     { content => "bookpagination", datatype => "key", fieldtype => "field" },
+                     { content => "booksubtitle", datatype => "literal", fieldtype => "field" },
+                     { content => "booktitle", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "booktitleaddon",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                     },
+                     { content => "chapter", datatype => "literal", fieldtype => "field" },
+                     { content => "commentator", datatype => "name", fieldtype => "list" },
+                     { content => "crossref", datatype => "literal", fieldtype => "field" },
+                     {
+                       content     => "date",
+                       datatype    => "date",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     { content => "day", datatype => "literal", fieldtype => "field" },
+                     { content => "doi", datatype => "verbatim", fieldtype => "field" },
+                     { content => "edition", datatype => "literal", fieldtype => "field" },
+                     { content => "editor", datatype => "name", fieldtype => "list" },
+                     { content => "editora", datatype => "name", fieldtype => "list" },
+                     { content => "editoratype", datatype => "key", fieldtype => "field" },
+                     { content => "editorb", datatype => "name", fieldtype => "list" },
+                     { content => "editorbtype", datatype => "key", fieldtype => "field" },
+                     { content => "editorc", datatype => "name", fieldtype => "list" },
+                     { content => "editorctype", datatype => "key", fieldtype => "field" },
+                     { content => "editortype", datatype => "key", fieldtype => "field" },
+                     { content => "eid", datatype => "literal", fieldtype => "field" },
+                     { content => "endday", datatype => "literal", fieldtype => "field" },
+                     { content => "endmonth", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "endyear",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                       nullok    => "true",
+                     },
+                     { content => "entryset", datatype => "literal", fieldtype => "field", skip_output => "true"},
+                     { content => "entrysubtype", datatype => "literal", fieldtype => "field" },
+                     { content => "eprint", datatype => "verbatim", fieldtype => "field" },
+                     { content => "eprintclass", datatype => "literal", fieldtype => "field" },
+                     { content => "eprinttype", datatype => "literal", fieldtype => "field" },
+                     {
+                       content     => "eventdate",
+                       datatype    => "literal",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     { content => "eventday", datatype => "literal", fieldtype => "field" },
+                     { content => "eventendday", datatype => "literal", fieldtype => "field" },
+                     { content => "eventendmonth", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "eventendyear",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                       nullok    => "true",
+                     },
+                     { content => "eventmonth", datatype => "literal", fieldtype => "field" },
+                     { content => "eventtitle", datatype => "literal", fieldtype => "field" },
+                     { content => "eventyear", datatype => "literal", fieldtype => "field" },
+                     { content => "execute", datatype => "literal", fieldtype => "field" },
+                     { content => "file", datatype => "verbatim", fieldtype => "field" },
+                     { content => "foreword", datatype => "name", fieldtype => "list" },
+                     { content => "gender", datatype => "literal", fieldtype => "field" },
+                     { content => "holder", datatype => "name", fieldtype => "list" },
+                     { content => "howpublished", datatype => "literal", fieldtype => "field" },
+                     { content => "hyphenation", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "indexsorttitle",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                     },
+                     { content => "indextitle", datatype => "literal", fieldtype => "field" },
+                     { content => "institution", datatype => "literal", fieldtype => "list" },
+                     { content => "introduction", datatype => "name", fieldtype => "list" },
+                     { content => "isan", datatype => "literal", fieldtype => "field" },
+                     { content => "isbn", datatype => "literal", fieldtype => "field" },
+                     { content => "ismn", datatype => "literal", fieldtype => "field" },
+                     { content => "isrn", datatype => "literal", fieldtype => "field" },
+                     { content => "issn", datatype => "literal", fieldtype => "field" },
+                     { content => "issue", datatype => "literal", fieldtype => "field" },
+                     { content => "issuesubtitle", datatype => "literal", fieldtype => "field" },
+                     { content => "issuetitle", datatype => "literal", fieldtype => "field" },
+                     { content => "iswc", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "journalsubtitle",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                     },
+                     { content => "journaltitle", datatype => "literal", fieldtype => "field" },
+                     { content => "keywords", datatype => "literal", fieldtype => "field" },
+                     { content => "label", datatype => "literal", fieldtype => "field" },
+                     { content => "language", datatype => "key", fieldtype => "list" },
+                     { content => "library", datatype => "literal", fieldtype => "field" },
+                     { content => "lista", datatype => "literal", fieldtype => "list" },
+                     { content => "listb", datatype => "literal", fieldtype => "list" },
+                     { content => "listc", datatype => "literal", fieldtype => "list" },
+                     { content => "listd", datatype => "literal", fieldtype => "list" },
+                     { content => "liste", datatype => "literal", fieldtype => "list" },
+                     { content => "listf", datatype => "literal", fieldtype => "list" },
+                     { content => "location", datatype => "literal", fieldtype => "list" },
+                     { content => "mainsubtitle", datatype => "literal", fieldtype => "field" },
+                     { content => "maintitle", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "maintitleaddon",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                     },
+                     { content => "month", datatype => "integer", fieldtype => "field" },
+                     { content => "namea", datatype => "name", fieldtype => "list" },
+                     { content => "nameaddon", datatype => "literal", fieldtype => "field" },
+                     { content => "nameatype", datatype => "key", fieldtype => "field" },
+                     { content => "nameb", datatype => "name", fieldtype => "list" },
+                     { content => "namebtype", datatype => "key", fieldtype => "field" },
+                     { content => "namec", datatype => "name", fieldtype => "list" },
+                     { content => "namectype", datatype => "key", fieldtype => "field" },
+                     { content => "note", datatype => "literal", fieldtype => "field" },
+                     { content => "number", datatype => "literal", fieldtype => "field" },
+                     { content => "options", datatype => "literal", fieldtype => "field" },
+                     { content => "organization", datatype => "literal", fieldtype => "list" },
+                     {
+                       content     => "origdate",
+                       datatype    => "date",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     { content => "origday", datatype => "literal", fieldtype => "field" },
+                     { content => "origendday", datatype => "literal", fieldtype => "field" },
+                     { content => "origendmonth", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "origendyear",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                       nullok    => "true",
+                     },
+                     { content => "origlanguage", datatype => "key", fieldtype => "field" },
+                     { content => "origlocation", datatype => "literal", fieldtype => "list" },
+                     { content => "origmonth", datatype => "literal", fieldtype => "field" },
+                     { content => "origpublisher", datatype => "literal", fieldtype => "list" },
+                     { content => "origtitle", datatype => "literal", fieldtype => "field" },
+                     { content => "origyear", datatype => "literal", fieldtype => "field" },
+                     { content => "pages", datatype => "range", fieldtype => "field" },
+                     { content => "pagetotal", datatype => "literal", fieldtype => "field" },
+                     { content => "pagination", datatype => "key", fieldtype => "field" },
+                     { content => "part", datatype => "literal", fieldtype => "field" },
+                     {
+                       content     => "presort",
+                       datatype    => "literal",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     { content => "publisher", datatype => "literal", fieldtype => "list" },
+                     { content => "pubstate", datatype => "key", fieldtype => "field" },
+                     { content => "related", datatype => "literal", fieldtype => "field" },
+                     { content => "relatedtype", datatype => "literal", fieldtype => "field" },
+                     { content => "reprinttitle", datatype => "literal", fieldtype => "field" },
+                     { content => "series", datatype => "literal", fieldtype => "field" },
+                     { content => "shortauthor", datatype => "name", fieldtype => "list" },
+                     { content => "shorteditor", datatype => "name", fieldtype => "list" },
+                     { content => "shorthand", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "shorthandintro",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                     },
+                     { content => "shortjournal", datatype => "literal", fieldtype => "field" },
+                     { content => "shortseries", datatype => "literal", fieldtype => "field" },
+                     { content => "shorttitle", datatype => "literal", fieldtype => "field" },
+                     {
+                       content     => "sortkey",
+                       datatype    => "literal",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     {
+                       content     => "sortname",
+                       datatype    => "literal",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     {
+                       content     => "sorttitle",
+                       datatype    => "literal",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     {
+                       content     => "sortyear",
+                       datatype    => "literal",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     { content => "subtitle", datatype => "literal", fieldtype => "field" },
+                     { content => "title", datatype => "literal", fieldtype => "field" },
+                     { content => "titleaddon", datatype => "literal", fieldtype => "field" },
+                     { content => "translator", datatype => "name", fieldtype => "list" },
+                     { content => "type", datatype => "key", fieldtype => "field" },
+                     { content => "url", datatype => "verbatim", fieldtype => "field" },
+                     {
+                       content     => "urldate",
+                       datatype    => "date",
+                       fieldtype   => "field",
+                       skip_output => "true",
+                     },
+                     { content => "usera", datatype => "literal", fieldtype => "field" },
+                     { content => "userb", datatype => "literal", fieldtype => "field" },
+                     { content => "userc", datatype => "literal", fieldtype => "field" },
+                     { content => "userd", datatype => "literal", fieldtype => "field" },
+                     { content => "usere", datatype => "literal", fieldtype => "field" },
+                     { content => "userf", datatype => "literal", fieldtype => "field" },
+                     { content => "urlday", datatype => "literal", fieldtype => "field" },
+                     { content => "urlendday", datatype => "literal", fieldtype => "field" },
+                     { content => "urlendmonth", datatype => "literal", fieldtype => "field" },
+                     {
+                       content   => "urlendyear",
+                       datatype  => "literal",
+                       fieldtype => "field",
+                       nullok    => "true",
+                     },
+                     { content => "urlmonth", datatype => "literal", fieldtype => "field" },
+                     { content => "urlyear", datatype => "literal", fieldtype => "field" },
+                     { content => "venue", datatype => "literal", fieldtype => "field" },
+                     { content => "verba", datatype => "verbatim", fieldtype => "field" },
+                     { content => "verbb", datatype => "verbatim", fieldtype => "field" },
+                     { content => "verbc", datatype => "verbatim", fieldtype => "field" },
+                     { content => "version", datatype => "literal", fieldtype => "field" },
+                     { content => "volume", datatype => "literal", fieldtype => "field" },
+                     { content => "volumes", datatype => "literal", fieldtype => "field" },
+                     { content => "xref", datatype => "literal", fieldtype => "field" },
+                     { content => "year", datatype => "literal", fieldtype => "field" },
+                   ],
+                 },
+}
   );
 $CONFIG_DEFAULT_BIBLATEX{sorting_final} = $CONFIG_DEFAULT_BIBLATEX{sorting_label};
 
@@ -271,6 +1546,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
   sorting_label     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   sorting_final     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   sortlos           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  structure         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   terseinits        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   uniquelist        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   uniquename        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
@@ -279,90 +1555,6 @@ our %CONFIG_SCOPE_BIBLATEX = (
   useprefix         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   usetranslator     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
 );
-
-### entry types
-
-# Default types
-Readonly::Array our @ENTRYTYPES  => qw {
-  article book inbook bookinbook suppbook booklet collection incollection suppcollection
-  manual misc online patent periodical suppperiodical proceedings  inproceedings
-  reference inreference report set thesis unpublished customa customb customc customd
-  custome customf
- };
-
-# Unsupported default entry types which don't default to "misc"
-Readonly::Array our @UENTRYTYPES  =>   qw {
-  artwork audio commentary image jurisdiction legislation legal letter
-  movie music performance review software standard video
- };
-
-### biblatex fields
-
-Readonly::Array our @NAMEFIELDS  =>   qw{
-  author editor editora editorb editorc shortauthor shorteditor commentator
-  translator annotator bookauthor introduction foreword afterword
-  holder sortname namea nameb namec };
-
-Readonly::Array our @LISTFIELDS  =>   qw{
-  publisher address location school institution organization language origlocation
-  origpublisher lista listb listc listd liste listf };
-
-Readonly::Array our @LITERALFIELDS_BASE  =>   qw{
-  abstract addendum annotation chapter edition eid howpublished isan isbn
-  ismn isrn issn issue iswc label labelnameaddon nameaddon note number pagetotal part pubstate
-  series shorthand shorthandintro shortjournal shortseries eprinttype eprintclass
-  venue version volume volumes usera userb userc userd
-  usere userf hyphenation crossref entrysubtype execute gender sortkey sortyear
-  xref
-  };
-
-Readonly::Array our @DATECOMPONENTFIELDS  =>   qw{
-  year  endyear  origyear  origendyear   eventyear   eventendyear  urlyear  urlendyear
-  month endmonth origmonth origendmonth  eventmonth  eventendmonth urlmonth urlendmonth
-  day   endday   origday   origendday    eventday    eventendday   urlday   urlendday
-  };
-
-Readonly::Array our @TITLEFIELDS => qw{
-  title subtitle titleaddon shorttitle sorttitle indextitle indexsorttitle
-  origtitle issuetitle issuesubtitle maintitle mainsubtitle maintitleaddon
-  booktitle booksubtitle booktitleaddon journal journaltitle journalsubtitle
-  reprinttitle eventtitle };
-
-# Fields that are used internally by biber but are not passed to the bbl output
-Readonly::Array our @SKIPFIELDS => qw{
-  sortname sorttitle presort sortkey sortyear library remarks date urldate
-  eventdate origdate };
-our %SKIPFIELDS = map { $_ => 1 } @SKIPFIELDS;
-
-Readonly::Array our @RANGEFIELDS     =>  qw{ pages };
-Readonly::Array our @DATERANGEFIELDS =>  qw{ date origdate eventdate urldate };
-Readonly::Array our @VERBATIMFIELDS  =>  qw{ doi eprint file pdf url verba verbb verbc };
-Readonly::Array our @KEYFIELDS       =>  qw{
-  authortype bookpagination editortype origlanguage pagination
-  type nameatype namebtype namectype editoratype editorbtype editorctype editorclass
-  editoraclass editorbclass editorcclass };
-Readonly::Array our @COMMASEP_FIELDS => qw{ options keywords entryset };
-
-Readonly::Array our @ENTRIESTOSPLIT  =>  ( @NAMEFIELDS, @LISTFIELDS );
-
-# These fields can be present when null. All others are not set if null
-Readonly::Array our @NULL_OK  => qw{ endyear origendyear eventendyear urlendyear };
-
-# literal and integer fields
-# TODO add keys for selecting script, language, translation, transliteration.
-
-# TODO validate the keys in the @keyfields ?
-
-Readonly::Array our @LITERALFIELDS => ( @TITLEFIELDS, @LITERALFIELDS_BASE, @KEYFIELDS );
-
-Readonly::Hash our %ALIASES => (
-  'address'       => 'location',
-  'archiveprefix' => 'eprinttype',
-  'primaryclass'  => 'eprintclass',
-  'school'        => 'institution',
-  'annote'        => 'annotation',
-  'key'           => 'sortkey'
-  );
 
 Readonly::Hash our %NUMERICALMONTH => (
   'January' => 1,

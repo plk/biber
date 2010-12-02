@@ -30,7 +30,7 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 
 
 $biber->prepare;
-my $section = $biber->sections->get_section('0');
+my $section = $biber->sections->get_section(0);
 my $out = $biber->get_output_obj;
 
 is_deeply([$section->get_citekeys], ['CS1','CS3','CS2'], 'U::C case - 1');
@@ -42,7 +42,7 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('sortcase', 0);
 
 $biber->prepare;
-$section = $biber->sections->get_section('0');
+$section = $biber->sections->get_section(0);
 $out = $biber->get_output_obj;
 is_deeply([$section->get_citekeys], ['CS1','CS2','CS3'], 'U::C case - 2');
 

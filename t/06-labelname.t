@@ -25,7 +25,7 @@ Biber::Config->setblxoption('labelname', ['editor', 'translator'], 'PER_TYPE', '
 
 # Now generate the information
 $biber->prepare;
-my $bibentries = $biber->sections->get_section('0')->bibentries;
+my $bibentries = $biber->sections->get_section(0)->bibentries;
 
 my $sa  = 'shortauthor';
 my $a   = 'author';

@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 10;
+use Test::More tests => 11;
 
 use Biber;
 use Biber::Output::BBL;
@@ -108,10 +108,36 @@ my $sc2 = [
           ];
 
 
+my $sc4 = q|  \entry{L4}{book}{}
+    \true{morelabelname}
+    \name{labelname}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \true{moreauthor}
+    \name{author}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \list{location}{1}{%
+      {Cambridge}%
+    }
+    \list{publisher}{1}{%
+      {Another press}%
+    }
+    \strng{namehash}{DJo1}
+    \strng{fullhash}{DJo1}
+    \field{labelalpha}{Doe\textbf{+}95}
+    \field{sortinit}{D}
+    \field{extraalpha}{2}
+    \field{title}{Some title about sorting}
+    \field{year}{1995}
+  \endentry
+
+|;
 
 is_deeply( Biber::Config->getblxoption('sorting_label') , $sc1, 'first pass scheme');
 is_deeply( Biber::Config->getblxoption('sorting_final') , $sc2, 'second pass scheme');
 
+is( $out->get_output_entry('l4'), $sc4, 'Check more* fields"');
 is ($bibentries->entry('l4')->get_field('labelalpha'), 'Doe\textbf{+}95', '\alphaothers set by "and others"');
 is ($bibentries->entry('l1')->get_field('labelalpha'), 'Doe95', '2-pass - labelalpha after title - 1');
 is ($bibentries->entry('l1')->get_field('extraalpha'), '1', '2-pass - labelalpha after title - 2');

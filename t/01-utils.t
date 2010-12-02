@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 10;
+use Test::More tests => 8;
 use Biber;
 use Biber::Entry::Name;
 use Biber::Entry::Names;
@@ -33,11 +33,6 @@ my $names = bless {namelist => [
 
 is( makenameid($names), 'Äskdjksdj_Bsadk_Cklsjd_von_Üsakdjskd_Vsajd_Wàsdjh_Xaskldjdd_Yajsdajks_Z_Maksjdakj_Nsjahdajsdhj', 'makenameid' );
 
-
-is( latexescape('Joe & Sons: $3.01 + 5% of some_function()'),
-               'Joe \& Sons: \$3.01 + 5\% of some\_function()',
-               'latexescape'); 
-
 my @arrayA = qw/ a b c d e f c /;
 my @arrayB = qw/ c e /;
 my @AminusB = reduce_array(\@arrayA, \@arrayB);
@@ -47,15 +42,5 @@ is_deeply(\@AminusB, \@AminusBexpected, 'reduce_array') ;
 
 is(remove_outer('{Some string}'), 'Some string', 'remove_outer') ;
 
-my $pstring = '{$}Some string & with \% some specials and then {some \{ & % $^{3}$
-protected specials} and then some more things % $$ _^';
-
-my $pstring_processed = '{$}Some string \& with \% some specials and then {some \{ & % $^{3}$
-protected specials} and then some more things \% \$\$ \_\^';
-
-is( latexescape($pstring), $pstring_processed, 'latexescape test');
-
 is( normalise_string_lite('Ä.~{\c{C}}.~{\c S}.'), 'ÄCS', 'normalise_string_lite' ) ;
 
-
-# vim: set tabstop=4 shiftwidth=4:

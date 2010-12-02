@@ -117,16 +117,18 @@ sub _printfield {
 sub set_output_entry {
   my $self = shift;
   my $be = shift; # Biber::Entry object
-  my $section = shift ; # Section object the entry occurs in
+  my $section = shift; # Section object the entry occurs in
+  my $struc = shift; # Structure object
   my $acc = '';
-  my $opts    = '';
+  my $opts = '';
   my $citecasekey; # entry key forced to case of any citations(s) which reference it
   my $secnum = $section->number;
+
   if ( $be->get_field('citecasekey') ) {
     $citecasekey = $be->get_field('citecasekey');
   }
 
-  if ( is_def_and_notnull($be->get_field('options')) ) {
+  if ($be->field_exists('options')) {
     $opts = $be->get_field('options');
   }
 
@@ -145,31 +147,49 @@ sub set_output_entry {
     }
   }
 
-  if (my $lnf = $be->get_field('labelname')) {
+  # Output name fields
 
-    # Output a copy of the labelname information to avoid having to do real coding in biblatex
-    # Otherwise, you'd have to search to find the labelname name information using TeX and that
-    # isn't nice.
-    my $total = $lnf->count_elements;
+  # first output copy in labelname
+  # This is essentially doing the same thing twice but in the future,
+  # labelname will have different things attached than the raw name
+  my $lnn = $be->get_field('labelnamename'); # save name of labelname field
+  my $name_others_deleted = '';
+
+  if (my $ln = $be->get_field('labelname')) {
     my @plo; # per-list options
 
     # Add uniquelist, if defined
-    if (defined($lnf->get_uniquelist)){
-      push @plo, 'uniquelist=' . $lnf->get_uniquelist;
+    if (my $ul = $ln->get_uniquelist){
+      push @plo, "uniquelist=$ul";
     }
-
     my $plo =join(',', @plo);
+
+    if ( $ln->last_element->get_namestring eq 'others' ) {
+      $acc .= "    \\true{morelabelname}\n";
+      $ln->del_last_element;
+
+      # record that we have deleted "others" from labelname field
+      # we will need this below
+      $name_others_deleted = $lnn;
+    }
+    my $total = $ln->count_elements;
     $acc .= "    \\name{labelname}{$total}{$plo}{%\n";
-    foreach my $ln (@{$lnf->names}) {
-      $acc .= $ln->name_to_bbl('labelname_special');
+    foreach my $n (@{$ln->names}) {
+      $acc .= $n->name_to_bbl('labelname_special');
     }
     $acc .= "    }\n";
   }
 
-  foreach my $namefield (@NAMEFIELDS) {
-    next if $SKIPFIELDS{$namefield};
+  # then names themselves
+  foreach my $namefield (@{$struc->get_field_type('name')}) {
     if ( my $nf = $be->get_field($namefield) ) {
-      if ( $nf->last_element->get_namestring eq 'others' ) {
+      # If this name is labelname, we've already deleted the "others"
+      # so just add the boolean
+      if ($name_others_deleted eq $namefield) {
+        $acc .= "    \\true{more$namefield}\n";
+      }
+      # otherwise delete and add the boolean
+      elsif ($nf->last_element->get_namestring eq 'others') {
         $acc .= "    \\true{more$namefield}\n";
         $nf->del_last_element;
       }
@@ -182,17 +202,16 @@ sub set_output_entry {
     }
   }
 
-  foreach my $listfield (@LISTFIELDS) {
-    next if $SKIPFIELDS{$listfield};
-    if ( is_def_and_notnull($be->get_field($listfield)) ) {
-      my @lf = @{ $be->get_field($listfield) };
+  # Output list fields
+  foreach my $listfield (@{$struc->get_field_type('list')}) {
+    if (my $lf = $be->get_field($listfield)) {
       if ( $be->get_field($listfield)->[-1] eq 'others' ) {
         $acc .= "    \\true{more$listfield}\n";
-        pop @lf; # remove the last element in the array
+        pop @$lf; # remove the last element in the array
       };
-      my $total = $#lf + 1;
+      my $total = $#$lf + 1;
       $acc .= "    \\list{$listfield}{$total}{%\n";
-      foreach my $f (@lf) {
+      foreach my $f (@$lf) {
         $acc .= "      {$f}%\n";
       }
       $acc .= "    }\n";
@@ -244,13 +263,11 @@ sub set_output_entry {
   }
 
   if ( Biber::Config->getblxoption('labelnumber', $be->get_field('entrytype')) ) {
-    if ($be->get_field('shorthand')) {
-      $acc .= "    \\field{labelnumber}{"
-        . $be->get_field('shorthand') . "}\n";
+    if (my $sh = $be->get_field('shorthand')) {
+      $acc .= "    \\field{labelnumber}{$sh}\n";
     }
-    elsif ($be->get_field('labelnumber')) {
-      $acc .= "    \\field{labelnumber}{"
-        . $be->get_field('labelnumber') . "}\n";
+    elsif (my $lnum = $be->get_field('labelnumber')) {
+      $acc .= "    \\field{labelnumber}{$lnum}\n";
     }
   }
 
@@ -258,18 +275,11 @@ sub set_output_entry {
     $acc .= "    \\true{singletitle}\n";
   }
 
-  foreach my $ifield (@DATECOMPONENTFIELDS) {
-    next if $SKIPFIELDS{$ifield};
-    # Here we do want to output if the field is null as this means something
-    # for example in open-ended ranges
-    if ( $be->field_exists($ifield) ) {
-      $acc .= $self->_printfield( $ifield, $be->get_field($ifield) );
-    }
-  }
-
-  foreach my $lfield (@LITERALFIELDS) {
-    next if $SKIPFIELDS{$lfield};
-    if ( is_def_and_notnull($be->get_field($lfield)) ) {
+  foreach my $lfield (@{$struc->get_field_type('literal')}) {
+    next if $struc->is_field_type('skipout', $lfield);
+    if ( ($struc->is_field_type('nullok', $lfield) and
+          $be->field_exists($lfield)) or
+         $be->get_field($lfield) ) {
       # we skip outputting the crossref or xref when the parent is not cited
       # (biblatex manual, section 2.23)
       # sets are a special case so always output crossref/xref for them since their
@@ -280,40 +290,30 @@ sub set_output_entry {
         next if ($lfield eq 'xref' and
                  not $section->has_citekey($be->get_field('xref')));
       }
-
-      my $lfieldprint = $lfield;
-      if ($lfield eq 'journal') {
-        $lfieldprint = 'journaltitle'
-      };
-      $acc .= $self->_printfield( $lfieldprint, $be->get_field($lfield) );
+      $acc .= $self->_printfield( $lfield, $be->get_field($lfield) );
     }
   }
 
-  # this is currently "pages" only
-  foreach my $rfield (@RANGEFIELDS) {
-    next if $SKIPFIELDS{$rfield};
-    if ( is_def_and_notnull($be->get_field($rfield)) ) {
-      my $rf = $be->get_field($rfield);
+  foreach my $rfield (@{$struc->get_field_type('range')}) {
+    if ( $rf = $be->get_field($rfield) ) {
       $rf =~ s/[-–]+/\\bibrangedash /g;
       $acc .= "    \\field{$rfield}{$rf}\n";
     }
   }
 
-  foreach my $vfield (@VERBATIMFIELDS) {
-    next if $SKIPFIELDS{$vfield};
-    if ( is_def_and_notnull($be->get_field($vfield)) ) {
-      my $rf = $be->get_field($vfield);
+  foreach my $vfield (@{$struc->get_field_type('verbatim')}) {
+    if ( my $rf = $be->get_field($vfield) ) {
       $acc .= "    \\verb{$vfield}\n";
       $acc .= "    \\verb $rf\n    \\endverb\n";
     }
   }
-  if ( is_def_and_notnull($be->get_field('keywords')) ) {
-    $acc .= "    \\keyw{" . $be->get_field('keywords') . "}\n";
+  if ( my $k = $be->get_field('keywords') ) {
+    $acc .= "    \\keyw{$k}\n";
   }
 
   # Append any warnings to the entry, if any
-  if ($be->get_field('warnings')) {
-    foreach my $warning (@{$be->get_field('warnings')}) {
+  if ( my $w = $be->get_field('warnings')) {
+    foreach my $warning (@$w) {
       $acc .= "    \\warn{\\item $warning}\n";
     }
   }

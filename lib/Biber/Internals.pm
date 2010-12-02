@@ -135,7 +135,7 @@ sub _getlabel {
   # This is needed in cases where alphaothers is something like
   # '\textasteriskcentered' which would mess up sorting.
 
-  my @lastnames = map { normalise_string($_->get_lastname) } @{$names->names};
+  my @lastnames = map { strip_nosort_name(normalise_string($_->get_lastname)) } @{$names->names};
   my @prefices  = map { $_->get_prefix } @{$names->names};
   my $numnames  = $names->count_elements;
 
@@ -197,13 +197,10 @@ our $dispatch_sorting = {
   'day'           =>  [\&_sort_dm,            ['day']],
   'editor'        =>  [\&_sort_editor,        ['editor']],
   'editora'       =>  [\&_sort_editor,        ['editora']],
-  'editoraclass'  =>  [\&_sort_editortc,      ['editoraclass']],
   'editoratype'   =>  [\&_sort_editortc,      ['editoratype']],
   'editorb'       =>  [\&_sort_editor,        ['editorb']],
-  'editorbclass'  =>  [\&_sort_editortc,      ['editorbclass']],
   'editorbtype'   =>  [\&_sort_editortc,      ['editorbtype']],
   'editorc'       =>  [\&_sort_editor,        ['editorc']],
-  'editorcclass'  =>  [\&_sort_editortc,      ['editorcclass']],
   'editorctype'   =>  [\&_sort_editortc,      ['editorctype']],
   'endday'        =>  [\&_sort_dm,            ['endday']],
   'endmonth'      =>  [\&_sort_dm,            ['endmonth']],
@@ -220,6 +217,8 @@ our $dispatch_sorting = {
   'institution'   =>  [\&_sort_place,         ['institution']],
   'journal'       =>  [\&_sort_journal,       []],
   'labelalpha'    =>  [\&_sort_labelalpha,    []],
+  'labelname'     =>  [\&_sort_labelname,     []],
+  'labelyear'     =>  [\&_sort_labelyear,     []],
   'location'      =>  [\&_sort_place,         ['location']],
   'mm'            =>  [\&_sort_mm,            []],
   'month'         =>  [\&_sort_dm,            ['month']],
@@ -542,6 +541,36 @@ sub _sort_labelalpha {
   }
 }
 
+sub _sort_labelname {
+  my ($self, $citekey, $sortelementattributes) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bibentries;
+  my $be = $bibentries->entry($citekey);
+  # re-direct to the right sorting routine for the labelname
+  if (my $ln = $be->get_field('labelnamename')) {
+    return $self->_dispatch_sorting($ln, $citekey, $sortelementattributes);
+  }
+  else {
+    return '';
+  }
+}
+
+sub _sort_labelyear {
+  my ($self, $citekey, $sortelementattributes) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bibentries;
+  my $be = $bibentries->entry($citekey);
+  # re-direct to the right sorting routine for the labelyear
+  if (my $ly = $be->get_field('labelyearname')) {
+    return $self->_dispatch_sorting($ly, $citekey, $sortelementattributes);
+  }
+  else {
+    return '';
+  }
+}
+
 # This is a meta-sub which uses the optional arguments to the dispatch code
 # It's done to avoid having many repetitions of almost identical sorting code
 # for the place (address/location/institution etc.) sorting options
@@ -608,7 +637,7 @@ sub _sort_sortname {
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
 
-# see biblatex manual §3.4 - sortname is ignored if no use<name> option is defined
+  # see biblatex manual §3.4 - sortname is ignored if no use<name> option is defined
   if ($be->get_field('sortname') and
     (Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey) or
       Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) or
@@ -765,25 +794,25 @@ sub _namestring {
       $str .= $n->get_prefix . '2';
     }
     # Append last name
-    $str .= strip_nosort($n->get_lastname) . '2';
+    $str .= strip_nosort_name($n->get_lastname) . '2';
     # If we're generating information for extra* processing, use uniquename
     if ($extraflag) {
       # Append first name only if it's needed to get a unique name ...
       if ($n->get_firstname and $n->get_uniquename) {
         # ... and then only the initials if uniquename=1
         if ($n->get_uniquename == 1) {
-          $str .= strip_nosort($n->get_firstname_it) . '2';
+          $str .= strip_nosort_name($n->get_firstname_it) . '2';
         }
         # ... or full first name if uniquename=2
         elsif ($n->get_uniquename == 2) {
-          $str .= strip_nosort($n->get_firstname) . '2';
+          $str .= strip_nosort_name($n->get_firstname) . '2';
         }
       }
     }
     # We're generating sorting strings and so always use the full name
     else {
       # Append last name
-      $str .= strip_nosort($n->get_firstname) . '2' if $n->get_firstname;
+      $str .= strip_nosort_name($n->get_firstname) . '2' if $n->get_firstname;
     }
     # Append suffix
     $str .= $n->get_suffix . '2' if $n->get_suffix;
@@ -801,6 +830,7 @@ sub _namestring {
   $str =~ s/\s+1/1/gxms;
   $str =~ s/1\z//xms;
   $str = normalise_string_sort($str);
+  $str = strip_nosort_name($str);
   $str .= '1zzzz' if $truncated;
   return $str;
 }

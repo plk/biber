@@ -29,6 +29,30 @@ sub new {
   return $self;
 }
 
+=head2 clone
+
+    Clone a Biber::Entry object and return a copy
+    Accepts optionally a key for the copy
+
+=cut
+
+sub clone {
+  my $self = shift;
+  my $newkey = shift;
+  my $new = new Biber::Entry;
+  while (my ($k, $v) = each(%{$self->{datafields}})) {
+    $new->{datafields}{$k} = $v;
+  }
+  # Need to add entrytype
+  $new->{derivedfields}{entrytype} = $self->{derivedfields}{entrytype};
+  # put in key if specified
+  if ($newkey) {
+    $new->{derivedfields}{origkey} = $newkey;
+    $new->{derivedfields}{citecasekey} = $newkey;
+  }
+  return $new;
+}
+
 =head2 notnull
 
     Test for an empty object
@@ -41,18 +65,38 @@ sub notnull {
   return $#arr > -1 ? 1 : 0;
 }
 
+=head2 set_datafield
+
+    Set a field which is in the bib data file
+
+=cut
+
+sub set_datafield {
+  my $self = shift;
+  my ($key, $val) = @_;
+  my $struc = Biber::Config->get_structure;
+  # Only set fields which are either not null or are ok to be null
+  if ( $struc->is_field_type('nullok', $key) or is_notnull($val)) {
+    $self->{datafields}{$key} = $val;
+  }
+  return;
+}
+
+
 =head2 set_field
 
-    Set a field for a Biber::Entry object
+    Set a derived field for a Biber::Entry object, that is, a field which was not
+    an actual bibliography field
 
 =cut
 
 sub set_field {
   my $self = shift;
   my ($key, $val) = @_;
-  # Only set fields if $val is not null, unless it's ok for the field to be null
-  if ( first { $key eq $_ } @NULL_OK or is_notnull($val)) {
-    $self->{$key} = $val;
+  my $struc = Biber::Config->get_structure;
+  # Only set fields which are either not null or are ok to be null
+  if ( $struc->is_field_type('nullok', $key) or is_notnull($val)) {
+    $self->{derivedfields}{$key} = $val;
   }
   return;
 }
@@ -66,8 +110,22 @@ sub set_field {
 sub get_field {
   my $self = shift;
   my $key = shift;
-  return $self->{$key};
+  return $self->{datafields}{$key} if $self->{datafields}{$key};
+  return $self->{derivedfields}{$key} if $self->{derivedfields}{$key};
 }
+
+=head2 get_datafield
+
+    Get a field that was in the original data file
+
+=cut
+
+sub get_datafield {
+  my $self = shift;
+  my $key = shift;
+  return $self->{datafields}{$key};
+}
+
 
 =head2 del_field
 
@@ -78,7 +136,8 @@ sub get_field {
 sub del_field {
   my $self = shift;
   my $key = shift;
-  delete $self->{$key};
+  delete $self->{datafields}{$key};
+  delete $self->{derivedfields}{$key};
   return;
 }
 
@@ -91,19 +150,34 @@ sub del_field {
 sub field_exists {
   my $self = shift;
   my $key = shift;
-  return exists $self->{$key} ? 1 : 0;
+  return (exists($self->{datafields}{$key}) or exists($self->{derivedfields}{$key})) ? 1 : 0;
+}
+
+=head2 datafields
+
+    Returns a sorted array of the fields which came from the bib data file
+
+=cut
+
+sub datafields {
+  my $self = shift;
+  use locale;
+  return sort keys %{$self->{datafields}};
 }
 
 =head2 fields
 
-    Returns a sorted array of the Biber::Entry object fields
+    Returns a sorted array of all field names, including ones
+    added during processing which are not necessarily fields
+    which came from the data file
 
 =cut
 
 sub fields {
   my $self = shift;
   use locale;
-  return sort keys %$self;
+  my %keys = (%{$self->{derivedfields}}, %{$self->{datafields}});
+  return sort keys %keys;
 }
 
 =head2 add_warning
@@ -115,7 +189,30 @@ sub fields {
 sub add_warning {
   my $self = shift;
   my $warning = shift;
-  push @{$self->{'warnings'}}, $warning;
+  push @{$self->{derivedfields}{'warnings'}}, $warning;
+  return;
+}
+
+=head2 set_inherit_from
+
+    Inherit fields from parent entry
+
+    $entry->inherit_from($parententry);
+
+    Takes a second Biber::Entry object as argument
+    Tailored for set inheritance which is a straight 1:1 inheritance,
+    excluding certain fields for backwards compatibility
+
+=cut
+
+sub set_inherit_from {
+  my $self = shift;
+  my $parent = shift;
+
+  foreach my $field ($parent->datafields) {
+    next if $self->field_exists($field); # Don't overwrite existing fields
+    $self->set_datafield($field, $parent->get_field($field));
+  }
   return;
 }
 
@@ -126,11 +223,13 @@ sub add_warning {
     $entry->inherit_from($parententry);
 
     Takes a second Biber::Entry object as argument
+    Uses the crossref inheritance specifications from the .bcf
 
 =cut
 
 sub inherit_from {
-  my ($self, $parent) = @_;
+  my $self = shift;
+  my $parent = shift;
   my $type        = $self->get_field('entrytype');
   my $parenttype  = $parent->get_field('entrytype');
   my $inheritance = Biber::Config->getblxoption('inheritance');
@@ -168,20 +267,20 @@ sub inherit_from {
           # Set the field if null or override is requested
           elsif (not $self->get_field($field->{target}) or
                  $field_override_target eq 'yes') {
-            $self->set_field($field->{target}, $parent->get_field($field->{source}));
+            $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
           }
         }
       }
     }
   }
 
-  # Now process the rest of the fields, if necessary
+  # Now process the rest of the (original data only) fields, if necessary
   if ($inherit_all eq 'yes') {
-    foreach my $field ($parent->fields) {
+    foreach my $field ($parent->datafields) {
       next if $processed{$field}; # Skip if we already dealt with this field above
       # Set the field if null or override is requested
       if (not $self->get_field($field) or $override_target eq 'yes') {
-        $self->set_field($field, $parent->get_field($field));
+        $self->set_datafield($field, $parent->get_field($field));
       }
     }
   }

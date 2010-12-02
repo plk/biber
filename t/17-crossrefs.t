@@ -46,13 +46,13 @@ my $cr1 = q|  \entry{cr1}{inbook}{}
     \strng{fullhash}{GG1}
     \field{sortinit}{G}
     \field{labelyear}{1974}
-    \field{year}{1974}
+    \field{booktitle}{Graphs of the Continent}
+    \strng{crossref}{crm}
+    \field{eprintclass}{SOMECLASS}
+    \field{eprinttype}{SomEPrFiX}
     \field{origyear}{1955}
     \field{title}{Great and Good Graphs}
-    \field{booktitle}{Graphs of the Continent}
-    \field{eprinttype}{SomEPrFiX}
-    \field{eprintclass}{SOMECLASS}
-    \strng{crossref}{crm}
+    \field{year}{1974}
   \endentry
 
 |;
@@ -68,21 +68,22 @@ my $cr2 = q|  \entry{cr2}{inbook}{}
     \name{editor}{1}{}{%
       {{}{Erbriss}{E.}{Edgar}{E.}{}{}{}{}}%
     }
-    \list{publisher}{1}{%
-      {Grimble}%
-    }
     \list{institution}{1}{%
       {Institution}%
+    }
+    \list{publisher}{1}{%
+      {Grimble}%
     }
     \strng{namehash}{FF1}
     \strng{fullhash}{FF1}
     \field{sortinit}{F}
     \field{labelyear}{1974}
-    \field{year}{1974}
-    \field{origyear}{1943}
-    \field{title}{Fabulous Fourier Forms}
     \field{booktitle}{Graphs of the Continent}
     \strng{crossref}{crm}
+    \field{origyear}{1943}
+    \field{title}{Fabulous Fourier Forms}
+    \field{year}{1974}
+    \warn{\item Field 'school' is an alias for field 'institution' but both are defined in entry with key 'cr2' - skipping field 'school'}
   \endentry
 
 |;
@@ -99,8 +100,8 @@ my $crm = q|  \entry{crm}{book}{}
     \strng{fullhash}{1}
     \field{sortinit}{G}
     \field{labelyear}{1974}
-    \field{year}{1974}
     \field{title}{Graphs of the Continent}
+    \field{year}{1974}
   \endentry
 
 |;
@@ -123,12 +124,13 @@ my $cr3 = q|  \entry{cr3}{inbook}{}
     \strng{fullhash}{AA1}
     \field{sortinit}{A}
     \field{labelyear}{1996}
-    \field{year}{1996}
+    \field{booktitle}{Beasts of the Burbling Burns}
+    \strng{crossref}{crt}
+    \field{eprinttype}{sometype}
     \field{origyear}{1934}
     \field{title}{Arrangements of All Articles}
-    \field{booktitle}{Beasts of the Burbling Burns}
-    \field{eprinttype}{sometype}
-    \strng{crossref}{crt}
+    \field{year}{1996}
+    \warn{\item Field 'archiveprefix' is an alias for field 'eprinttype' but both are defined in entry with key 'cr3' - skipping field 'archiveprefix'}
   \endentry
 
 |;
@@ -145,8 +147,8 @@ my $crt = q|  \entry{crt}{book}{}
     \strng{fullhash}{1}
     \field{sortinit}{B}
     \field{labelyear}{1996}
-    \field{year}{1996}
     \field{title}{Beasts of the Burbling Burns}
+    \field{year}{1996}
   \endentry
 
 |;
@@ -162,27 +164,27 @@ my $cr6 = q|  \entry{cr6}{inproceedings}{}
     \name{editor}{1}{}{%
       {{}{Editor}{E.}{}{}{}{}{}{}}%
     }
-    \list{publisher}{1}{%
-      {Publisher of proceeding}%
-    }
     \list{location}{1}{%
       {Address}%
+    }
+    \list{publisher}{1}{%
+      {Publisher of proceeding}%
     }
     \strng{namehash}{AF1}
     \strng{fullhash}{AF1}
     \field{sortinit}{A}
     \field{labelyear}{2009}
-    \field{year}{2009}
-    \field{eventyear}{2009}
-    \field{eventendyear}{2009}
-    \field{eventmonth}{08}
-    \field{eventendmonth}{08}
+    \field{booktitle}{Manual booktitle}
     \field{eventday}{21}
     \field{eventendday}{24}
-    \field{title}{Title of inproceeding}
-    \field{booktitle}{Manual booktitle}
+    \field{eventendmonth}{08}
+    \field{eventendyear}{2009}
+    \field{eventmonth}{08}
     \field{eventtitle}{Title of the event}
+    \field{eventyear}{2009}
+    \field{title}{Title of inproceeding}
     \field{venue}{Location of event}
+    \field{year}{2009}
     \field{pages}{123\bibrangedash 126}
   \endentry
 
@@ -206,11 +208,11 @@ my $cr7 = q|  \entry{cr7}{inbook}{}
     \strng{fullhash}{AF1}
     \field{sortinit}{A}
     \field{labelyear}{2010}
-    \field{year}{2010}
-    \field{title}{Title of Book bit}
-    \field{booktitle}{Book Title}
     \field{booksubtitle}{Book Subtitle}
+    \field{booktitle}{Book Title}
     \field{booktitleaddon}{Book Titleaddon}
+    \field{title}{Title of Book bit}
+    \field{year}{2010}
     \field{pages}{123\bibrangedash 126}
   \endentry
 
@@ -228,9 +230,9 @@ my $cr8 = q|  \entry{cr8}{incollection}{}
     \strng{fullhash}{SF1}
     \field{sortinit}{S}
     \field{labelyear}{2010}
-    \field{year}{2010}
-    \field{title}{Title of Collection bit}
     \field{booktitle}{Book Title}
+    \field{title}{Title of Collection bit}
+    \field{year}{2010}
     \field{pages}{1\bibrangedash 12}
   \endentry
 
@@ -284,8 +286,8 @@ my $xrm = q|  \entry{xrm}{book}{}
     \strng{fullhash}{1}
     \field{sortinit}{C}
     \field{labelyear}{1970}
-    \field{year}{1970}
     \field{title}{Calligraphy, Calisthenics, Culture}
+    \field{year}{1970}
   \endentry
 
 |;
@@ -320,8 +322,8 @@ my $xrt = q|  \entry{xrt}{book}{}
     \strng{fullhash}{1}
     \field{sortinit}{K}
     \field{labelyear}{1977}
-    \field{year}{1977}
     \field{title}{Kings, Cork and Calculation}
+    \field{year}{1977}
   \endentry
 
 |;
@@ -344,10 +346,10 @@ my $cr4 = q|  \entry{cr4}{inbook}{}
     \strng{fullhash}{MM1}
     \field{sortinit}{M}
     \field{labelyear}{1945}
-    \field{year}{1945}
+    \field{booktitle}{Vanquished, Victor, Vandal}
     \field{origyear}{1911}
     \field{title}{Enterprising Entities}
-    \field{booktitle}{Vanquished, Victor, Vandal}
+    \field{year}{1945}
   \endentry
 
 |;

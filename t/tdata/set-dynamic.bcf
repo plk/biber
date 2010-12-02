@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../../data/schemata/bcf.rnc" type="compact"?>
-<bcf:controlfile version="0.8" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="1.0" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -110,10 +110,18 @@
   </bcf:sorting>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file">set</bcf:datasource>
+    <bcf:datasource type="file">sets</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>Elias1955</bcf:citekey>
+    <bcf:citekey type="set" members="Dynamic1,Dynamic2,Dynamic3">DynSet</bcf:citekey>
+    <bcf:citekey>DynSet</bcf:citekey>
+  </bcf:section>
+  <!-- SECTION 1 -->
+  <bcf:bibdata section="1">
+    <bcf:datasource type="file">sets</bcf:datasource>
+  </bcf:bibdata>
+  <bcf:section number="1">
+    <bcf:citekey>Dynamic3</bcf:citekey>
   </bcf:section>
 </bcf:controlfile>
 

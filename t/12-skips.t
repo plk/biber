@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 
 use Biber;
 use Biber::Utils;
@@ -25,8 +25,8 @@ Biber::Config->setoption('fastsort', 1);
 # Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $bibentries = $biber->sections->get_section('0')->bibentries;
-my $section = $biber->sections->get_section('0');
+my $section = $biber->sections->get_section(0);
+my $bibentries = $section->bibentries;
 
 my $set1 = q|  \entry{seta}{set}{}
     \set{set:membera,set:memberb,set:memberc}
@@ -43,15 +43,14 @@ my $set1 = q|  \entry{seta}{set}{}
     \field{extrayear}{1}
     \field{labelyear}{2010}
     \field{extraalpha}{1}
-    \field{year}{2010}
     \field{title}{Set Member A}
-    \strng{crossref}{set:membera}
+    \field{year}{2010}
   \endentry
 
 |;
 
 my $set2 = q|  \entry{set:membera}{book}{}
-    \inset{set}
+    \inset{seta}
     \name{labelname}{1}{}{%
       {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
@@ -61,14 +60,14 @@ my $set2 = q|  \entry{set:membera}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{sortinit}{D}
-    \field{year}{2010}
     \field{title}{Set Member A}
+    \field{year}{2010}
   \endentry
 
 |;
 
 my $set3 = q|  \entry{set:memberb}{book}{}
-    \inset{set}
+    \inset{seta}
     \name{labelname}{1}{}{%
       {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
@@ -78,14 +77,14 @@ my $set3 = q|  \entry{set:memberb}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{sortinit}{D}
-    \field{year}{2010}
     \field{title}{Set Member B}
+    \field{year}{2010}
   \endentry
 
 |;
 
 my $set4 = q|  \entry{set:memberc}{book}{}
-    \inset{set}
+    \inset{seta}
     \name{labelname}{1}{}{%
       {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
     }
@@ -95,8 +94,8 @@ my $set4 = q|  \entry{set:memberc}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{sortinit}{D}
-    \field{year}{2010}
     \field{title}{Set Member C}
+    \field{year}{2010}
   \endentry
 
 |;
@@ -115,8 +114,8 @@ my $noset1 = q|  \entry{noseta}{book}{}
     \field{extrayear}{2}
     \field{labelyear}{2010}
     \field{extraalpha}{2}
-    \field{year}{2010}
     \field{title}{Stand-Alone A}
+    \field{year}{2010}
   \endentry
 
 |;
@@ -135,8 +134,8 @@ my $noset2 = q|  \entry{nosetb}{book}{}
     \field{extrayear}{3}
     \field{labelyear}{2010}
     \field{extraalpha}{3}
-    \field{year}{2010}
     \field{title}{Stand-Alone B}
+    \field{year}{2010}
   \endentry
 
 |;
@@ -155,14 +154,15 @@ my $noset3 = q|  \entry{nosetc}{book}{}
     \field{extrayear}{4}
     \field{labelyear}{2010}
     \field{extraalpha}{4}
-    \field{year}{2010}
     \field{title}{Stand-Alone C}
+    \field{year}{2010}
   \endentry
 
 |;
 
 
 is_deeply([$section->get_shorthands], ['skip1'], 'skiplos - not in LOS');
+is($bibentries->entry('skip1')->get_field('options'), 'skipbib', 'Passing skipbib through');
 is($bibentries->entry('skip2')->get_field('labelalpha'), 'SA', 'Normal labelalpha');
 is($bibentries->entry('skip2')->get_field($bibentries->entry('skip2')->get_field('labelyearname')), '1995', 'Normal labelyear');
 ok(is_undef($bibentries->entry('skip3')->get_field('labelalpha')), 'skiplab - no labelalpha');

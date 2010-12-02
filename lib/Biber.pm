@@ -12,12 +12,14 @@ use Cwd qw( abs_path );
 use Biber::Config;
 use Biber::Constants;
 use List::Util qw( first );
+use Digest::MD5 qw( md5_hex );
 use Biber::Internals;
 use Biber::Entries;
 use Biber::Entry;
 use Biber::Entry::Name;
 use Biber::Sections;
 use Biber::Section;
+use Biber::Structure;
 use Biber::Utils;
 use LaTeX::Decode 0.03;
 use Storable qw( dclone );
@@ -36,7 +38,7 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =cut
 
-our $VERSION = '0.6.1';
+our $VERSION = '0.6.4';
 our $BETA_VERSION = 1; # Is this a beta version?
 
 =head1 SYNOPSIS
@@ -125,6 +127,7 @@ sub set_output_obj {
   $self->{output_obj} = $obj;
   return;
 }
+
 
 =head2 get_preamble
 
@@ -232,18 +235,19 @@ sub parse_ctrlfile {
       eval { $CFxmlschema->validate($CFxp) };
       if (ref($@)) {
         $logger->debug( $@->dump() );
-        $logger->logcroak("BibLaTeX control file \"$ctrl_file\" FAILED TO VALIDATE\n$@");
+        $logger->logcroak("BibLaTeX control file \"$ctrl_file\" failed to validate\n$@");
       }
       elsif ($@) {
-        $logger->logcroak("BibLaTeX control file \"$ctrl_file\" FAILED TO VALIDATE\n$@");
+        $logger->logcroak("BibLaTeX control file \"$ctrl_file\" failed to validate\n$@");
       }
       else {
         $logger->info("BibLaTeX control file \"$ctrl_file\" validates");
       }
     }
-
+    undef $CFxmlparser;
   }
 
+  # Open control file
   my $ctrl = new IO::File "<$ctrl_file"
     or $logger->logcroak("Cannot open $ctrl_file: $!");
 
@@ -251,6 +255,7 @@ sub parse_ctrlfile {
 
   # Read control file
   require XML::LibXML::Simple;
+
   my $bcfxml = XML::LibXML::Simple::XMLin($ctrl,
                                           'ForceContent' => 1,
                                           'ForceArray' => [
@@ -266,14 +271,20 @@ sub parse_ctrlfile {
                                                            qr/\Asort\z/,
                                                            qr/\Atype_pair\z/,
                                                            qr/\Ainherit\z/,
+                                                           qr/\Afieldor\z/,
+                                                           qr/\Afieldxor\z/,
                                                            qr/\Afield\z/,
+                                                           qr/\Aalias\z/,
+                                                           qr/\Aconstraints\z/,
+                                                           qr/\Aconstraint\z/,
+                                                           qr/\Aentrytype\z/,
                                                           ],
                                           'NsStrip' => 1,
                                           'KeyAttr' => []);
 
   my $controlversion = $bcfxml->{version};
   Biber::Config->setblxoption('controlversion', $controlversion);
-  $logger->warn("Warning: You are using biblatex version $controlversion :
+  $logger->warn("Warning: You are using biblatex version $controlversion:
 biber is more likely to work with version $BIBLATEX_VERSION.")
     unless $controlversion eq $BIBLATEX_VERSION;
 
@@ -411,6 +422,13 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
     }
   }
 
+  # STRUCTURE schema (always global)
+  # This should not be optional any more when biblatex implements this so take
+  # out this conditional
+  if (exists($bcfxml->{structure})) {
+    Biber::Config->setblxoption('structure', $bcfxml->{structure});
+  }
+
   # SECTIONS
   # This is also where we set data files as these are associated with a bib section
 
@@ -464,6 +482,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         next SECTION;
       }
       elsif (not Biber::Config->get_seenkey($key, $section->{number})) {
+        # Dynamic set definition
+        # Save dynamic key -> member keys mapping for set entry auto creation later
+        if (exists($keyc->{type}) and $keyc->{type} eq 'set') {
+          $bib_section->set_dynamic_set($key, split /\s*,\s*/, $keyc->{members});
+        }
         push @keys, $key;
         $key_flag = 1; # There is at least one key, used for error reporting below
         Biber::Config->incr_seenkey($key, $section->{number});
@@ -535,8 +558,6 @@ sub parse_bibtex {
     File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
       or $logger->logcroak("Can't write $ufilename");
 
-    # Now .bib is unicode
-    Biber::Config->setoption('bibencoding', 'UTF-8')
   }
   else {
     File::Copy::copy($filename, $ufilename);
@@ -609,20 +630,22 @@ sub parse_biblatexml {
   $self->_parse_biblatexml($xml);
 }
 
-=head2 process_missing
+=head2 check_missing
 
    Check for missing citation keys
 
 =cut
 
-sub process_missing {
+sub check_missing {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   $logger->debug("Checking for missing citekeys in section $secnum");
   foreach my $citekey ($section->get_citekeys) {
-    unless ( $bibentries->entry_exists($citekey) ) {
+    # Either the key refers to a real bib entry or a dynamic set entry
+    unless ( $bibentries->entry_exists($citekey) or
+             $section->get_dynamic_set($citekey)) {
       $logger->warn("I didn't find a database entry for '$citekey' (section $secnum)");
       $self->{warnings}++;
       $section->del_citekey($citekey);
@@ -631,12 +654,121 @@ sub process_missing {
   }
 }
 
+=head2 process_setup
+
+   Place to put misc pre-processing things needed later
+
+=cut
+
+sub process_setup {
+  # Break structure information up into more processing-friendly formats
+  # for use in verification checks later
+  # This has to be here as opposed to in parse_control() so that it can pick
+  # up structure defaults in Constants.pm in case there is no .bcf
+  Biber::Config->set_structure(Biber::Structure->new(Biber::Config->getblxoption('structure')));
+}
+
+=head2 resolve_aliases
+
+   Normalise entries by resolving any:
+
+   * Entrytype aliases
+   * Field aliases
+
+   Defined in the structure schema passed in the .bcf
+
+=cut
+
+sub resolve_aliases {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bibentries;
+  my $struc = Biber::Config->get_structure;
+
+  # We are looping over all bibentries for the section, not just cited
+  # entries. We have to do this to process aliases in potential crossrefs
+  # which have not been processed yet. We can't process them them before this
+  # as this would be ugly - crossrefs should be resolved on canonical entrytype
+  # and field names which can't be done until after these are canonicalised below
+  foreach my $key ($bibentries->sorted_keys) {
+    my $be = $section->bibentry($key);
+
+    # Entrytype aliases and special fields - biblatex manual Section 2.1.2
+    foreach my $warning ($struc->resolve_entry_aliases($be)) {
+      $self->biber_warn($be, $warning);
+    }
+
+    # Field aliases
+    foreach my $warning ($struc->resolve_field_aliases($be)) {
+      $self->biber_warn($be, $warning);
+    }
+  }
+}
+
+=head2 instantiate_dynamic
+
+    This instantiates any dynamic entries so that they are available
+    for processing later on. This has to be done before most all other
+    processing so that when we call $section->bibentry($key), as we
+    do many times in the code, we don't die because there is a key but
+    no Entry object.
+
+=cut
+
+sub instantiate_dynamic {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+
+  $logger->debug("Creating dynamic entries (sets/related) for section $secnum");
+
+  # Instantiate any dynamic set entries before we do anything else
+  foreach my $dset ($section->dynamic_set_keys) {
+    my @members = $section->get_dynamic_set($dset);
+    my $be = new Biber::Entry;
+    $be->set_field('entrytype', 'set');
+    $be->set_field('entryset', join(',', @members));
+    $be->set_field('origkey', $dset);
+    $be->set_field('citecasekey', $dset);
+    $be->set_field('datatype', 'bibtex');
+    $section->bibentries->add_entry($dset, $be);
+    # Setting dataonly for members is handled by postprocess_sets()
+  }
+
+  # Instantiate any related entry clones we need
+  foreach my $citekey ($section->get_citekeys) {
+    my $be = $section->bibentry($citekey);
+    if (my $relkeys = $be->get_field('related')) {
+      $be->del_field('related'); # clear the related field
+      my @clonekeys;
+      foreach my $relkey (split /\s*,\s*/, $relkeys) {
+        my $relentry = $section->bibentry($relkey);
+        my $clonekey = md5_hex($relkey);
+        push @clonekeys, $clonekey;
+        my $relclone = $relentry->clone($clonekey);
+        # clone doesn't need the related fields
+        $relclone->del_field('related');
+        $relclone->del_field('relatedtype');
+        $section->bibentries->add_entry($clonekey, $relclone);
+        Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $clonekey);
+        Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $clonekey);
+      }
+      # point to clone keys and add to citekeys
+      $section->add_citekeys(@clonekeys);
+      $be->set_datafield('related', join(',', @clonekeys));
+    }
+  }
+  return;
+}
+
+
 =head2 process_crossrefs
 
     $biber->process_crossrefs
 
     This does several things:
-    1. Ensures that all citekeys that are within entry sets will be output in the bbl.
+    1. Ensures that all entryset key members will be output in the bbl.
     2. Ensures proper inheritance of data from cross-references.
     3. Ensures that crossrefs/xrefs that are directly cited or cross-referenced
        at least mincrossrefs times are included in the bibliography.
@@ -648,8 +780,9 @@ sub process_crossrefs {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
-  $logger->debug("Processing entry sets and crossrefs for section $secnum");
-  # first, loop over cited keys and count the cross/xrefs
+  $logger->debug("Processing explicit and implicit crossrefs for section $secnum");
+
+  # Loop over cited keys and count the cross/xrefs
   # Can't do this when parsing .bib as this would count them for potentially uncited children
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
@@ -663,11 +796,17 @@ sub process_crossrefs {
   # promote indirectly cited inset set members to fully cited entries
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
-    if (lc($be->get_field('entrytype')) eq 'set') {
+    if ($be->get_field('entrytype') eq 'set') {
       my @inset_keys = split /\s*,\s*/, $be->get_field('entryset');
       foreach my $inset_key (@inset_keys) {
         $logger->debug("  Adding inset entry '$inset_key' to the citekeys (section $secnum)");
         $section->add_citekeys($inset_key);
+      }
+      # automatically crossref for the first set member using plain set inheritance
+      $be->set_inherit_from($section->bibentry($inset_keys[0]));
+      if ($be->get_field('crossref')) {
+        $self->biber_warn($be, "Field 'crossref' is no longer needed in set entries in Biber - ignoring in entry '$citekey'");
+        $be->del_field('crossref');
       }
     }
     # Do crossrefs inheritance
@@ -695,6 +834,66 @@ sub process_crossrefs {
   }
 }
 
+=head2 validate_structure
+
+  Validate bib structure according to a bib schema
+
+=cut
+
+sub validate_structure {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $struc = Biber::Config->get_structure;
+
+  foreach my $citekey ($section->get_citekeys) {
+    my $be = $section->bibentry($citekey);
+    my $et = $be->get_field('entrytype');
+    if (Biber::Config->getoption('validate_structure')) {
+
+      # default entrytype to MISC type if not a known type
+      unless ($struc->is_entrytype($et)) {
+        $self->biber_warn($be, "Entry '$citekey' - invalid entry type '" . $be->get_field('entrytype') . "' - defaulting to 'misc'");
+        $be->set_field('entrytype', 'misc');
+        $et = 'misc';           # reset this too
+      }
+
+      # Are all fields valid fields?
+      # Each field must be:
+      # * Valid because it's allowed for "ALL" entrytypes OR
+      # * Valid field for the specific entrytype OR
+      # * Valid because entrytype allows "ALL" fields
+      foreach my $ef ($be->datafields) {
+        unless ($struc->is_field_for_entrytype($et, $ef)) {
+          $self->biber_warn($be, "Entry '$citekey' - invalid field '$ef' for entrytype '$et'");
+        }
+      }
+
+      # Mandatory constraints
+      foreach my $warning ($struc->check_mandatory_constraints($be)) {
+        $self->biber_warn($be, $warning);
+      }
+
+      # Conditional constraints
+      foreach my $warning ($struc->check_conditional_constraints($be)) {
+        $self->biber_warn($be, $warning);
+      }
+
+      # Data constraints
+      foreach my $warning ($struc->check_data_constraints($be)) {
+        $self->biber_warn($be, $warning);
+      }
+    }
+
+
+    # Date components - we always check these, even if not validating structure
+    # as the validation is part of unpacking the *date fields
+    foreach my $warning ($struc->resolve_date_components($be)) {
+      $self->biber_warn($be, $warning);
+    }
+  }
+}
+
 =head2 postprocess
 
     Various postprocessing operations, mostly to generate special fields for
@@ -711,9 +910,6 @@ sub postprocess {
   my $bibentries = $section->bibentries;
   foreach my $citekey ( $section->get_citekeys ) {
     $logger->debug("Postprocessing entry '$citekey' from section $secnum");
-
-    # Postprocess dates
-    $self->postprocess_dates($citekey);
 
     # post process "set" entries:
     $self->postprocess_sets($citekey);
@@ -733,9 +929,6 @@ sub postprocess {
     # track shorthands
     $self->postprocess_shorthands($citekey);
 
-    # Misc things to do as we process keys
-    $self->postprocess_misc($citekey);
-
     # first-pass sorting to generate basic labels
     $self->postprocess_sorting_firstpass($citekey);
   }
@@ -744,95 +937,6 @@ sub postprocess {
 
   return;
 }
-
-=head2 postprocess_dates
-
-    Here we do some sanity checking on date fields and then parse the
-    *DATE fields into their components, collecting any warnings to put
-    into the .bbl later
-
-    Quick check on YEAR and MONTH fields which are the only date related
-    components which can be directly set and therefore don't go through
-    the date parsing below
-
-=cut
-
-sub postprocess_dates {
-  my $self = shift;
-  my $citekey = shift;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
-
-  # Both DATE and YEAR specified
-  if ($be->get_field('date') and $be->get_field('year')) {
-    $self->biber_warn($be, "Field conflict - both 'date' and 'year' used - ignoring field 'year' in entry '$citekey'");
-    $be->del_field('year');
-  }
-
-  # Both DATE and MONTH specified
-  if ($be->get_field('date') and $be->get_field('month')) {
-    $self->biber_warn($be, "Field conflict - both 'date' and 'month' used - ignoring field 'month' in entry '$citekey'");
-    $be->del_field('month');
-  }
-
-  # MONTH must be an integer - YEAR doesn't have to be to allow for things like
-  # "in press" which sometimes need an extrayear disambiguator (in APA styles for example)
-  if ($be->get_field('month') and $be->get_field('month') !~ /\A\d+\z/xms) {
-    $self->biber_warn($be, "Invalid format of field 'month' - ignoring field in entry '$citekey'");
-    $be->del_field('month');
-  }
-
-  # Generate date components from *DATE fields
-  foreach my $datetype ('', 'orig', 'event', 'url') {
-    if ($be->get_field($datetype . 'date')) {
-      my $date_re = qr|(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?|xms;
-      if ($be->get_field($datetype . 'date') =~ m|\A$date_re(/)?(?:$date_re)?\z|xms) {
-        $be->set_field($datetype . 'year', $1) if $1;
-        $be->set_field($datetype . 'month', $2) if $2;
-        $be->set_field($datetype . 'day', $3) if $3;
-        $be->set_field($datetype . 'endmonth', $6) if $6;
-        $be->set_field($datetype . 'endday', $7) if $7;
-        if ($4 and $5) {        # normal range
-          $be->set_field($datetype . 'endyear', $5);
-        } elsif ($4 and not $5) { # open ended range - endyear is defined but empty
-          $be->set_field($datetype . 'endyear', '');
-        }
-      } else {
-        $self->biber_warn($be, "Invalid format of field '" . $datetype . 'date' . "' - ignoring field in entry '$citekey'");
-        $be->del_field($datetype . 'date');
-      }
-    }
-  }
-
-  # Now more carefully check the individual date components
-  my $opt_dm = qr/(?:event|orig|url)?(?:end)?/xms;
-  foreach my $dcf (@DATECOMPONENTFIELDS) {
-    my $bad_format = '';
-    if ($be->get_field($dcf)) {
-
-      # months must be in right range
-      if ($dcf =~ /\A$opt_dm month\z/xms) {
-        unless ($be->get_field($dcf) >= 1 and $be->get_field($dcf) <= 12) {
-          $bad_format = 1;
-        }
-      }
-
-      # days must be in right range
-      if ($dcf =~ /\A$opt_dm day\z/xms) {
-        unless ($be->get_field($dcf) >= 1 and $be->get_field($dcf) <= 31) {
-          $bad_format = 1;
-        }
-      }
-      if ($bad_format) {
-        $self->biber_warn($be, "Value out of bounds for field/date component '$dcf' - ignoring in entry '$citekey'");
-        $be->del_field($dcf);
-      }
-    }
-  }
-}
-
 
 =head2 postprocess_sets
 
@@ -853,29 +957,20 @@ sub postprocess_sets {
     my @entrysetkeys = split /\s*,\s*/, $be->get_field('entryset');
 
     # Enforce Biber parts of virtual "dataonly" for set members
+    # Also automatically create an "entryset" field for the members
     foreach my $member (@entrysetkeys) {
       Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $member);
       Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $member);
+      my $me = $bibentries->entry($member);
+      if ($me->get_field('entryset')) {
+        $self->biber_warn($me, "Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry '$member'");
+        $me->del_field('entryset');
+      }
+      $me->set_field('entryset', $citekey);
     }
 
     unless (@entrysetkeys) {
-      $logger->warn("No entryset found for entry $citekey of type 'set'");
-      $self->{warnings}++;
-    }
-    if ( $be->get_field('crossref')
-      and ( $be->get_field('crossref') ne $entrysetkeys[0] ) ) {
-      $logger->warn( "Problem with entry $citekey :\n"
-          . "\tcrossref ("
-          . $be->get_field('crossref')
-          . ") should be identical to the first element of the entryset"
-        );
-      $self->{warnings}++;
-      $be->set_field('crossref', $entrysetkeys[0]);
-    }
-    elsif ( not $be->get_field('crossref') ) {
-      $logger->warn("Adding missing field 'crossref' to entry $citekey");
-      $self->{warnings}++;
-      $be->set_field('crossref', $entrysetkeys[0]);
+      $self->biber_warn($be, "No entryset found for entry $citekey of type 'set'");
     }
   }
 }
@@ -937,11 +1032,10 @@ sub postprocess_labelname {
   }
 
   # Generate the actual labelname
-  if (is_def_and_notnull($be->get_field('labelnamename'))) {
+  if ($be->get_field('labelnamename')) {
     $be->set_field('labelname', $be->get_field($be->get_field('labelnamename')));
   }
-
-  unless ( $be->get_field('labelnamename') ) {
+  else {
     $logger->debug("Could not determine the labelname of entry $citekey");
   }
 }
@@ -985,6 +1079,7 @@ sub postprocess_labelyear {
 
       # ignore endyear if it's the same as year
       my ($ytype) = $yf =~ /\A(.*)year\z/xms;
+      # endyear can be null
       if (is_def_and_notnull($be->get_field($ytype . 'endyear'))
         and ($be->get_field($yf) ne $be->get_field($ytype . 'endyear'))) {
         $be->set_field('labelyear',
@@ -1067,9 +1162,11 @@ sub postprocess_hashes {
   $be->set_field('namehash', $namehash);
   $be->set_field('fullhash', $fullhash);
 
-  Biber::Config->incr_seennamehash($fullhash);
+  # Don't add to disambiguation data if skiplab is set
+  unless (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+    Biber::Config->incr_seennamehash($fullhash);
+  }
 }
-
 
 =head2 postprocess_labelalpha
 
@@ -1139,25 +1236,6 @@ sub postprocess_shorthands {
   my $bee = $be->get_field('entrytype');
   if ( my $sh = $be->get_field('shorthand') ) {
     $section->add_shorthand($bee, $citekey);
-  }
-}
-
-=head2 postprocess_misc
-
-    Deal with some misc things
-
-=cut
-
-sub postprocess_misc {
-  my $self = shift;
-  my $citekey = shift;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
-  # Deal with patent entry defaults
-  if ( ( $be->get_field('entrytype') eq 'patent' ) and ( not $be->get_field('type') ) ) {
-    $be->set_field('type', 'patent');
   }
 }
 
@@ -1275,6 +1353,7 @@ sub create_uniquename_info {
   foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
+    next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
     if (Biber::Config->getblxoption('uniquename', $bee)) {
       $logger->trace("Generating uniquename information for '$citekey'");
       my $namehash = $be->get_field('namehash');
@@ -1345,6 +1424,7 @@ sub generate_uniquename {
   foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
+    next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
     if (my $un = Biber::Config->getblxoption('uniquename', $bee)) {
       $logger->trace("Setting uniquename for '$citekey'");
       my $namehash = $be->get_field('namehash');
@@ -1404,6 +1484,7 @@ sub create_uniquelist_info {
   foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
+    next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
     if (Biber::Config->getblxoption('uniquelist', $bee)) {
       $logger->trace("Generating uniquelist information for '$citekey'");
       my $namehash = $be->get_field('namehash');
@@ -1454,6 +1535,7 @@ sub generate_uniquelist {
   foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
+    next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
     if (Biber::Config->getblxoption('uniquelist', $bee)) {
       $logger->trace("Creating uniquelist for '$citekey'");
       my $namehash = $be->get_field('namehash');
@@ -1508,56 +1590,52 @@ sub create_extras_st_info {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
-
   foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
-    # Only generate this information if labelyear, labelalpha or singletitle is requested
-    if (Biber::Config->getblxoption('labelyear', $bee) or
-        Biber::Config->getblxoption('labelalpha', $bee) or
-        Biber::Config->getblxoption('singletitle', $bee)) {
-      $logger->trace("Creating extra*/singletitle information for '$citekey'");
+    # Only generate this information if skiplab is not set
+    next if Biber::Config->getblxoption('skiplab',
+                                        $be->get_field('entrytype'),
+                                        $be->get_field('origkey'));
+    $logger->trace("Creating extra*/singletitle information for '$citekey'");
 
-
-      # This is all used to generate extrayear/extralpha and the rules for this are:
-      # * Generate labelname/year combination for tracking extrayear
-      # * If there is no labelname to use, use empty string
-      # * If there is no labelyear to use, use empty string
-      # * Don't increment the seennameyear count if either name or year string is empty
-      #   (see code in incr_nameyear method).
-      my $name_string;
-      if ($be->get_field('labelnamename')) {
-        $name_string = $self->_namestring($citekey, $be->get_field('labelnamename'), 1);
-      } else {
-        $name_string = '';
-      }
-
-      # Only generate this information if singletitle option is requested and there is a
-      # labelname
-      if ($name_string and
-          Biber::Config->getblxoption('singletitle', $bee)) {
-        Biber::Config->incr_seenname($name_string);
-        $logger->trace("Setting seenname for '$citekey' to '$name_string'");
-        $be->set_field('seenname', $name_string);
-      }
-
-      # Only generate this information if one of the extra* fields is requested
-      if (Biber::Config->getblxoption('labelyear', $bee) or
-          Biber::Config->getblxoption('labelalpha', $bee)) {
-        my $year_string;
-        if ($be->get_field('labelyearname')) {
-          $year_string = $be->get_field($be->get_field('labelyearname'));
-        } elsif ($be->get_field('year')) {
-          $year_string = $be->get_field('year');
-        } else {
-          $year_string = '';
-        }
-        my $nameyear_string = $name_string . '0' . $year_string;
-        Biber::Config->incr_seennameyear($name_string, $year_string);
-        $logger->trace("Setting nameyear for '$citekey' to '$nameyear_string'");
-        $be->set_field('nameyear', $nameyear_string);
-      }
+    # This is all used to generate extrayear/extralpha and the rules for this are:
+    # * Generate labelname/year combination for tracking extrayear
+    # * If there is no labelname to use, use empty string
+    # * If there is no labelyear to use, use empty string
+    # * Don't increment the seennameyear count if either name or year string is empty
+    #   (see code in incr_nameyear method).
+    my $name_string;
+    if (my $lnn = $be->get_field('labelnamename')) {
+      $name_string = $self->_namestring($citekey, $lnn, 1);
     }
+    else {
+      $name_string = '';
+    }
+
+    # Only generate this information if singletitle option is requested and there is a
+    # labelname
+    if ($name_string and
+        Biber::Config->getblxoption('singletitle', $bee)) {
+      Biber::Config->incr_seenname($name_string);
+      $logger->trace("Setting seenname for '$citekey' to '$name_string'");
+      $be->set_field('seenname', $name_string);
+    }
+
+    my $year_string;
+    if (my $lyn = $be->get_field('labelyearname')) {
+      $year_string = $be->get_field($lyn);
+    }
+    elsif (my $y = $be->get_field('year')) { # last-ditch fallback
+      $year_string = $y;
+    }
+    else {
+      $year_string = '';
+    }
+    my $nameyear_string = $name_string . '0' . $year_string;
+    $be->set_field('nameyear', $nameyear_string);
+    Biber::Config->incr_seennameyear($name_string, $year_string);
+    $logger->trace("Setting nameyear for '$citekey' to '$nameyear_string'");
   }
   return;
 }
@@ -1565,7 +1643,7 @@ sub create_extras_st_info {
 =head2 generate_extras
 
     Generate extrayear and extraalpha using information created by
-    create_extras_info()
+    create_extras_st_info()
 
 =cut
 
@@ -1580,21 +1658,17 @@ sub generate_extras {
   foreach my $citekey ($section->get_citekeys) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
-    if (Biber::Config->getblxoption('labelyear', $bee) or
-        Biber::Config->getblxoption('labelalpha', $bee)) {
-      my $nameyear = $be->get_field('nameyear');
-      # Only generate extrayear if skiplab is not set.
-      # Don't forget that skiplab is implied for set members
-      unless (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
-        if (Biber::Config->get_seennameyear($nameyear) > 1) {
-          Biber::Config->incr_seenlabelyear($nameyear);
-          if (Biber::Config->getblxoption('labelyear', $bee) ) {
-            $be->set_field('extrayear', Biber::Config->get_seenlabelyear($nameyear));
-          }
-          if (Biber::Config->getblxoption('labelalpha', $bee) ) {
-            $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($nameyear));
-          }
-        }
+    # Only generate extrayear if skiplab is not set.
+    # Don't forget that skiplab is implied for set members
+    next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
+    my $nameyear = $be->get_field('nameyear');
+    if (Biber::Config->get_seennameyear($nameyear) > 1) {
+      Biber::Config->incr_seenlabelyear($nameyear);
+      if (Biber::Config->getblxoption('labelyear', $bee) ) {
+        $be->set_field('extrayear', Biber::Config->get_seenlabelyear($nameyear));
+      }
+      if (Biber::Config->getblxoption('labelalpha', $bee) ) {
+        $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($nameyear));
       }
     }
   }
@@ -1836,19 +1910,27 @@ sub sortshorthands {
 
 sub prepare {
   my $self = shift;
+  $self->process_setup;                # Place to put global pre-processing things
   foreach my $section (@{$self->sections->get_sections}) {
     # shortcut - skip sections that don't have any keys
     next unless $section->get_citekeys or $section->is_allkeys;
 
     my $secnum = $section->number;
+    # Remove any dynamically generated per-entry options which might have
+    # been set in previous sections (like skiplab, skiplos)
+    Biber::Config->reset_per_entry_options;
+
     $BIBER_SORT_FIRSTPASSDONE = 0;       # sanitise sortpass flag
     $logger->info("Processing bib section $secnum");
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
-    $self->process_data;                 # Parse data into section objects
-    $self->process_missing;              # Check for missing citekeys before anything else
-    $self->process_crossrefs;            # Process crossrefs
-    $self->postprocess;                  # in here we generate lots of information
+    $self->parse_data;                   # Parse data into section objects
+    $self->check_missing;                # Check for missing citekeys before anything else
+    $self->resolve_aliases;              # Resolve entrytype/field aliases to normalise entries
+    $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
+    $self->process_crossrefs;            # Process crossrefs/sets
+    $self->validate_structure;           # Check bib structure
+    $self->postprocess;                  # Main entry postprocessing
     $self->sortentries;                  # then we do a label sort pass and set a flag
     $self->uniqueness;                   # Here we generate uniqueness information
                                          # (extra*, unique* etc.)
@@ -1863,13 +1945,13 @@ sub prepare {
   return;
 }
 
-=head2 process_data
+=head2 parse_data
 
     Read the data file(s) for the section and store it in the section object
 
 =cut
 
-sub process_data {
+sub parse_data {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -1908,10 +1990,9 @@ sub create_output_section {
 
   my @citekeys = $section->get_citekeys;
   # We rely on the order of this array for the order of the .bbl
-  # and therefore the .bib
   foreach my $k (@citekeys) {
     my $be = $section->bibentry($k) or $logger->logcroak("Cannot find entry with key '$k' to output");
-    $output_obj->set_output_entry($be, $section);
+    $output_obj->set_output_entry($be, $section, Biber::Config->get_structure);
   }
   # Push the sorted shorthands for each section into the output object
   if ( $section->get_shorthands ) {
