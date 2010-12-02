@@ -128,7 +128,7 @@ sub set_output_entry {
     $citecasekey = $be->get_field('citecasekey');
   }
 
-  if ($be->get_field('options')) {
+  if ($be->field_exists('options')) {
     $opts = $be->get_field('options');
   }
 
