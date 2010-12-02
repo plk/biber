@@ -1,7 +1,9 @@
 Revision history for Biber
 
+0.6.5  (dev beta)
+       * Bug fixes
 0.6.4  (dev beta)
-       * Misc bug fixes
+       * Bug fixes
 0.6.3  (dev beta)
        * Outputs labelname name list to the .bbl
        * Support for dynamic sets and simpler static set interface
