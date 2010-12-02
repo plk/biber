@@ -128,7 +128,7 @@ sub set_output_entry {
     $citecasekey = $be->get_field('citecasekey');
   }
 
-  if ( is_def_and_notnull($be->get_field('options')) ) {
+  if ($be->get_field('options')) {
     $opts = $be->get_field('options');
   }
 
@@ -194,7 +194,7 @@ sub set_output_entry {
 
   # Output list fields
   foreach my $listfield (@{$struc->get_field_type('list')}) {
-    if ( is_def_and_notnull($be->get_field($listfield)) ) {
+    if ($be->get_field($listfield)) {
       my @lf = @{ $be->get_field($listfield) };
       if ( $be->get_field($listfield)->[-1] eq 'others' ) {
         $acc .= "    \\true{more$listfield}\n";
@@ -254,13 +254,11 @@ sub set_output_entry {
   }
 
   if ( Biber::Config->getblxoption('labelnumber', $be->get_field('entrytype')) ) {
-    if ($be->get_field('shorthand')) {
-      $acc .= "    \\field{labelnumber}{"
-        . $be->get_field('shorthand') . "}\n";
+    if (my $sh = $be->get_field('shorthand')) {
+      $acc .= "    \\field{labelnumber}{$sh}\n";
     }
-    elsif ($be->get_field('labelnumber')) {
-      $acc .= "    \\field{labelnumber}{"
-        . $be->get_field('labelnumber') . "}\n";
+    elsif (my $lnum = $be->get_field('labelnumber')) {
+      $acc .= "    \\field{labelnumber}{$lnum}\n";
     }
   }
 
@@ -309,7 +307,7 @@ sub set_output_entry {
     next if $struc->is_field_type('skipout', $lfield);
     if ( ($struc->is_field_type('nullok', $lfield) and
           $be->field_exists($lfield)) or
-         is_def_and_notnull($be->get_field($lfield)) ) {
+         $be->get_field($lfield) ) {
       # we skip outputting the crossref or xref when the parent is not cited
       # (biblatex manual, section 2.23)
       # sets are a special case so always output crossref/xref for them since their
@@ -325,27 +323,25 @@ sub set_output_entry {
   }
 
   foreach my $rfield (@{$struc->get_field_type('range')}) {
-    if ( is_def_and_notnull($be->get_field($rfield)) ) {
-      my $rf = $be->get_field($rfield);
+    if ( $rf = $be->get_field($rfield) ) {
       $rf =~ s/[-–]+/\\bibrangedash /g;
       $acc .= "    \\field{$rfield}{$rf}\n";
     }
   }
 
   foreach my $vfield (@{$struc->get_field_type('verbatim')}) {
-    if ( is_def_and_notnull($be->get_field($vfield)) ) {
-      my $rf = $be->get_field($vfield);
+    if ( my $rf = $be->get_field($vfield) ) {
       $acc .= "    \\verb{$vfield}\n";
       $acc .= "    \\verb $rf\n    \\endverb\n";
     }
   }
-  if ( is_def_and_notnull($be->get_field('keywords')) ) {
+  if ( $be->get_field('keywords') ) {
     $acc .= "    \\keyw{" . $be->get_field('keywords') . "}\n";
   }
 
   # Append any warnings to the entry, if any
-  if ($be->get_field('warnings')) {
-    foreach my $warning (@{$be->get_field('warnings')}) {
+  if ( my $w = $be->get_field('warnings')) {
+    foreach my $warning (@$w) {
       $acc .= "    \\warn{\\item $warning}\n";
     }
   }
