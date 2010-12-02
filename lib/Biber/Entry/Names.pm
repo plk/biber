@@ -102,7 +102,7 @@ sub first_n_elements {
 
 sub del_last_element {
   my $self = shift;
-  $self = [ pop(@$self) ];
+  pop(@$self); # Don't want the return value of this!
   return;
 }
 
