@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 14;
+use Test::More tests => 12;
 
 use Biber;
 use Biber::Utils;
@@ -162,6 +162,7 @@ my $noset3 = q|  \entry{nosetc}{book}{}
 
 
 is_deeply([$section->get_shorthands], ['skip1'], 'skiplos - not in LOS');
+is($bibentries->entry('skip1')->get_field('options'), 'skipbib', 'Passing skipbib through');
 is($bibentries->entry('skip2')->get_field('labelalpha'), 'SA', 'Normal labelalpha');
 is($bibentries->entry('skip2')->get_field($bibentries->entry('skip2')->get_field('labelyearname')), '1995', 'Normal labelyear');
 ok(is_undef($bibentries->entry('skip3')->get_field('labelalpha')), 'skiplab - no labelalpha');
