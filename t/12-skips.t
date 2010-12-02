@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 12;
+use Test::More tests => 15;
 
 use Biber;
 use Biber::Utils;

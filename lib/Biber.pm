@@ -1036,7 +1036,7 @@ sub postprocess_labelname {
   }
 
   # Generate the actual labelname
-  if (is_def_and_notnull($be->get_field('labelnamename'))) {
+  if ($be->get_field('labelnamename')) {
     $be->set_field('labelname', $be->get_field($be->get_field('labelnamename')));
   }
   else {
@@ -1082,6 +1082,7 @@ sub postprocess_labelyear {
 
       # ignore endyear if it's the same as year
       my ($ytype) = $yf =~ /\A(.*)year\z/xms;
+      # endyear can be null
       if (is_def_and_notnull($be->get_field($ytype . 'endyear'))
         and ($be->get_field($yf) ne $be->get_field($ytype . 'endyear'))) {
         $be->set_field('labelyear',
