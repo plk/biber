@@ -345,6 +345,8 @@
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">presort</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">publisher</bcf:field>
       <bcf:field fieldtype="field" datatype="key">pubstate</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">related</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">relatedtype</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">reprinttitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">series</bcf:field>
       <bcf:field fieldtype="list" datatype="name">shortauthor</bcf:field>
@@ -422,6 +424,8 @@
       <bcf:field>origtitle</bcf:field>
       <bcf:field>pagination</bcf:field>
       <bcf:field>presort</bcf:field>
+      <bcf:field>related</bcf:field>
+      <bcf:field>relatedtype</bcf:field>
       <bcf:field>reprinttitle</bcf:field>
       <bcf:field>shortauthor</bcf:field>
       <bcf:field>shorteditor</bcf:field>
