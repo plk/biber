@@ -14,6 +14,23 @@
               indent="yes"
               encoding="UTF-8"/>
 
+  <xsl:template name="generate-string">
+    <xsl:param name="text"/>
+    <xsl:param name="count"/>
+
+    <xsl:choose>
+      <xsl:when test="string-length($text) = 0 or $count &lt;= 0"/>
+      <xsl:otherwise>
+	<xsl:value-of select="$text"/>
+	<xsl:call-template name="generate-string">
+	  <xsl:with-param name="text" select="$text"/>
+	  <xsl:with-param name="count" select="$count - 1"/>
+	</xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+
   <xsl:template match="/">
     <html>
       <head>
@@ -24,9 +41,19 @@
             color: red;
           }
           .sort_label {
-            background-color: gray;
+            background-color: #D0D0D0;
+          }
+          .sort_padding {
+            color: #99CCFF;
+          }
+          .sort_substring {
+            color: #FF9933;
           }
         </style>
+        <script type="text/javascript">
+          <![CDATA[
+          ]]>
+        </script>
       </head>
       <body>
         <h2><tt>BibLaTeX</tt> Control File (format version: <xsl:value-of select="/bcf:controlfile/@version"/>)</h2>
@@ -75,8 +102,53 @@
                         <xsl:if test="./@final = '1'">
                           <xsl:attribute name="class">sortitem_final</xsl:attribute>
                         </xsl:if>
-                        <xsl:value-of select="./text()"/><br/>
+                        <!-- left padding -->
+                        <xsl:if test="./@pad_side = 'left'">
+                          <span class="sort_padding">
+                            <xsl:call-template name='generate-string'>
+                              <xsl:with-param name='text'><xsl:value-of select="./@pad_char"/></xsl:with-param>
+                              <xsl:with-param name='count' select='./@pad_width'/>
+                            </xsl:call-template>
+                          </span>
+                        </xsl:if>
+                        <!-- left substring -->
+                        <xsl:if test="./@substring_side = 'left'">
+                          <span class="sort_substring">
+                            <xsl:call-template name='generate-string'>
+                              <xsl:with-param name='text'>&gt;</xsl:with-param>
+                              <xsl:with-param name='count' select='./@substring_width'/>
+                            </xsl:call-template>
+                          </span>
+                        </xsl:if>
+                        <xsl:value-of select="./text()"/>
+                        <!-- right padding -->
+                        <xsl:if test="./@pad_side = 'right'">
+                          <span class="sort_padding">
+                            <xsl:call-template name='generate-string'>
+                              <xsl:with-param name='text'><xsl:value-of select="./@pad_char"/></xsl:with-param>
+                              <xsl:with-param name='count' select='./@pad_width'/>
+                            </xsl:call-template>
+                          </span>
+                        </xsl:if>
+                        <!-- right substring -->
+                        <xsl:if test="./@substring_side = 'right'">
+                          <span class="sort_substring">
+                            <xsl:call-template name='generate-string'>
+                              <xsl:with-param name='text'>&lt;</xsl:with-param>
+                              <xsl:with-param name='count' select='./@substring_width'/>
+                            </xsl:call-template>
+                          </span>
+                        </xsl:if>
                       </span>
+                      <xsl:choose>
+                        <xsl:when test="./@sort_direction = 'ascending'">
+                          <xsl:text disable-output-escaping="yes">&amp;uarr;</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="./@sort_direction = 'descending'">
+                          <xsl:text disable-output-escaping="yes">&amp;darr;</xsl:text>
+                        </xsl:when>
+                      </xsl:choose>
+                      <br/>
                     </xsl:for-each>
                   </td>
                 </xsl:for-each>
