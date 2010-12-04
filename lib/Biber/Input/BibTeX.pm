@@ -356,13 +356,6 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
         if (lc($f) eq 'options') {
           $self->process_entry_options($bibentry);
         }
-
-        if ($entry->type eq 'set' and $f eq 'entryset') {
-          my @entrysetkeys = split /\s*,\s*/, $value;
-          foreach my $setkey (@entrysetkeys) {
-            Biber::Config->set_setparentkey($setkey, $lc_key);
-          }
-        }
       }
 
       # Set entrytype. This may be changed later in process_aliases

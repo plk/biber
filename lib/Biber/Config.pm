@@ -33,7 +33,6 @@ Biber::Config - Configuration items which need to be saved across the
 # Static (class) data
 our $CONFIG;
 $CONFIG->{state}{crossrefkeys} = {};
-$CONFIG->{state}{inset_entries} = {};
 $CONFIG->{state}{seennamehash} = {};
 $CONFIG->{state}{keycase} = {};
 
@@ -687,40 +686,6 @@ sub incr_seennamehash {
   return;
 }
 
-#============================
-#       set entries
-#============================
-
-
-
-=head2 get_setparentkey
-
-    Return the key of the set parent of the passed key
-
-    Biber::Config->get_setparentkey($key);
-
-=cut
-
-sub get_setparentkey {
-  shift; # class method so don't care about class name
-  my $key = shift;
-  return $CONFIG->{state}{inset_entries}{lc($key)};
-}
-
-=head2 set_setparentkey
-
-    Set the set parent key of the passed key
-
-    Biber::Config->set_setparentkey($key, $parent);
-
-=cut
-
-sub set_setparentkey {
-  shift; # class method so don't care about class name
-  my ($key, $parent) = @_;
-  $CONFIG->{state}{inset_entries}{lc($key)} = lc($parent);
-  return;
-}
 
 #============================
 #       crossrefkeys
