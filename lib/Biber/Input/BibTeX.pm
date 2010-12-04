@@ -376,6 +376,15 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
           my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
           my $names = new Biber::Entry::Names;
           foreach my $name (@tmp) {
+
+            # Consecutive "and" causes Text::BibTeX::Name to segfault
+            unless ($name) {
+              $logger->warn("Name in key '$origkey' is empty (probably consecutive 'and'): skipping name");
+              $self->{errors}++;
+              $section->del_citekey($origkey);
+              next;
+            }
+
             $name = decode_utf8($name);
 
             # Check for malformed names in names which aren't completely escaped
