@@ -718,8 +718,8 @@ sub _process_sort_attributes {
   my ($field_string, $sortelementattributes) = @_;
   return $field_string unless $sortelementattributes;
   # process substring
-  if (exists($sortelementattributes->{substring_width}) or
-      exists($sortelementattributes->{substring_side})) {
+  if ($sortelementattributes->{substring_width} or
+      $sortelementattributes->{substring_side}) {
     my $subs_offset = 0;
     my $default_substring_width = 4;
     my $default_substring_side = 'left';
