@@ -191,7 +191,7 @@ sub parse_ctrlfile {
   $logger->logcroak("Cannot find control file '$ctrl_file'! - did you pass the \"backend=biber\" option to BibLaTeX?") unless -f "$ctrl_file";
 
   # Validate if asked to
-  if (Biber::Config->getoption('validate')) {
+  if (Biber::Config->getoption('validate_control')) {
     require XML::LibXML;
 
     # Set up XML parser

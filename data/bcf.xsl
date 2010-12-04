@@ -30,7 +30,6 @@
     </xsl:choose>
   </xsl:template>
 
-
   <xsl:template match="/">
     <html>
       <head>
@@ -44,10 +43,13 @@
             background-color: #D0D0D0;
           }
           .sort_padding {
-            color: #99CCFF;
+            color: #88BBEE;
           }
           .sort_substring {
             color: #FF9933;
+          }
+          .options_table_value {
+            font-family: "Courier New", Courier, monospace;
           }
         </style>
         <script type="text/javascript">
@@ -68,11 +70,14 @@
               <xsl:for-each select="./bcf:option">
                 <xsl:choose>
                   <xsl:when test="./@type='singlevalued'">
-                    <tr><td><xsl:value-of select="./bcf:key/text()"/></td><td><xsl:value-of select="./bcf:value/text()"/></td></tr>
+                    <tr>
+                    <td><xsl:value-of select="./bcf:key/text()"/></td>
+                    <td class="options_table_value"><xsl:value-of select="./bcf:value/text()"/></td>
+                    </tr>
                   </xsl:when>
                   <xsl:when test="./@type='multivalued'">
                     <tr>
-                      <td><xsl:value-of select="./bcf:key/text()"/></td>
+                      <td class="options_table_value"><xsl:value-of select="./bcf:key/text()"/></td>
                       <td><xsl:for-each select="./bcf:value">
                         <xsl:sort select="./@order"/>
                         <xsl:value-of select="./text()"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
@@ -156,6 +161,22 @@
             </tbody>
           </table>
         </xsl:for-each>
+        <xsl:if test="/bcf:controlfile/bcf:structure">
+          <div class="structure_header">Data structure</div>
+          <div>Legal entrytypes</div>
+          <table class="entrytype_table">
+            <tbody>
+              <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:entrytypes/bcf:entrytype">
+                <tr>
+                  <td><xsl:value-of select="./text()"/></td>
+                  <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:aliases/bcf:alias[@type = 'entrytype']/bcf:realname[./text() = current()/text()]">
+                    <td><xsl:value-of select="parent()/bcf:name/text()"/></td>
+                  </xsl:for-each>
+                </tr>
+              </xsl:for-each>
+            </tbody>
+          </table>
+        </xsl:if>
       </body>
     </html>
   </xsl:template>
