@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 20;
+use Test::More tests => 22;
 
 use Biber;
 use Biber::Output::BBL;
@@ -194,7 +194,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                      {'year'       => {}}
                                                     ],
                                                     [
-						     {'volume'     => {pad_side => 'right'}},
+                                                     {'volume'     => {pad_side => 'right'}},
                                                      {'0000'       => {}}
                                                     ],
                                                     [
@@ -414,6 +414,37 @@ $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
 is_deeply([$section->get_citekeys], ['L1B','L1','L1A','L2','L3','L4','L5','L8','L7','L6'], 'anyvt');
 check_output_string_order($out, ['L1B','L1','L1A','L2','L3','L4','L5','L8','L7','L6']);
+
+
+# nty with descending n
+Biber::Config->setblxoption('sorting_label', [
+                                                    [
+                                                     {'sortname'   => {}},
+                                                     {'author'     => {sort_direction => 'descending'}},
+                                                     {'editor'     => {}},
+                                                     {'translator' => {}},
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
+                                                    ],
+                                                    [
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
+                                                    ],
+                                                    [
+                                                     {'sortyear'   => {}},
+                                                     {'year'       => {}}
+                                                    ],
+                                                   ]);
+
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+
+$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->prepare;
+$out = $biber->get_output_obj;
+$section = $biber->sections->get_section(0);
+is_deeply([$section->get_citekeys], ['L6','L7','L8','L5','L4','L3','L2','L1B','L1A','L1'], 'nty with descending n');
+check_output_string_order($out, ['L6','L7','L8','L5','L4','L3','L2','L1B','L1A','L1']);
+
 
 unlink "*.utf8";
 

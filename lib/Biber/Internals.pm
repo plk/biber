@@ -751,9 +751,14 @@ sub _process_sort_attributes {
   # process sort direction
   my $sort_dir = $sortelementattributes->{sort_direction} // 'ascending';
   if ($sort_dir eq 'descending') { # descending sort
-    $field_string =  9999 - $field_string;
+    # Descending sorts are tricky - you need a concept of the "revert sorting order"
+    # of a string. I do this by creating the concatenation of the complement of
+    # the decimal value of the char with the max decimal Unicode code point value.
+    # This means that in general, a descending sort won't have a particularly nice
+    # looking sortstring since it will contain number strings. Ah well, it's an
+    # internal data structure anyway.
     # 1114111 is the maximum decimal Unicode code point
-#    $field_string = join('', map {1114111 - $_} unpack('U*', $field_string));
+    $field_string = join('', map {1114111 - $_} unpack('U*', $field_string));
   }
   return $field_string;
 }
