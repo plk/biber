@@ -13,6 +13,7 @@ use POSIX qw( locale_h ); # for lc() of sorting strings
 use Encode;
 use charnames ':full';
 use Unicode::Normalize;
+use utf8;
 
 =encoding utf-8
 
@@ -182,7 +183,7 @@ sub _getlabel {
 # Sorting
 #########
 
-our $sorting_sep = '0';
+our $sorting_sep = ',';
 
 # The keys are defined by BibLaTeX and passed in the control file
 # The value is an array pointer, first element is a code pointer, second is
@@ -280,7 +281,7 @@ sub _generatesortstring {
       last;
     }
   }
-  $sortstring =~ s/0\z//xms; # strip off the last '0' added by _sortset()
+  $sortstring =~ s/$sorting_sep\z//xms; # strip off the last '0' added by _sortset()
 
   # Decide if we are doing case-insensitive sorting or not
   # If so, lowercase according to locale but only if using fastsort
@@ -376,7 +377,8 @@ sub _sort_author {
   my $be = $bibentries->entry($citekey);
   if (Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey) and
     $be->get_field('author')) {
-    return $self->_namestring($citekey, 'author');
+  my $string = $self->_namestring($citekey, 'author');
+  return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -403,20 +405,8 @@ sub _sort_dm {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
-  my $default_pad_width = 2;
-  my $default_pad_side = 'left';
-  my $default_pad_char = '0';
-  if ($be->get_field($dmtype)) {
-    my $pad_width = ($sortelementattributes->{pad_width} or $default_pad_width);
-    my $pad_side = ($sortelementattributes->{pad_side} or $default_pad_side);
-    my $pad_char = ($sortelementattributes->{pad_char} or $default_pad_char);
-    my $pad_length = $pad_width - length($be->get_field($dmtype));
-    if ($pad_side eq 'left') {
-      return ($pad_char x $pad_length) . $be->get_field($dmtype);
-    }
-    elsif ($pad_side eq 'right') {
-      return $be->get_field($dmtype) . ($pad_char x $pad_length);
-    }
+  if (my $field = $be->get_field($dmtype)) {
+    return _process_sort_attributes($field, $sortelementattributes);
   }
   else {
     return '';
@@ -435,7 +425,8 @@ sub _sort_editor {
   my $be = $bibentries->entry($citekey);
   if (Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) and
     $be->get_field($ed)) {
-    return $self->_namestring($citekey, $ed);
+  my $string = $self->_namestring($citekey, $ed);
+  return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -454,7 +445,8 @@ sub _sort_editortc {
   my $be = $bibentries->entry($citekey);
   if (Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) and
     $be->get_field($edtypeclass)) {
-    return $be->get_field($edtypeclass);
+  my $string = $be->get_field($edtypeclass);
+  return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -475,20 +467,10 @@ sub _sort_extraalpha {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
-  my $default_pad_width = 4;
-  my $default_pad_side = 'left';
-  my $default_pad_char = '0';
   if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) and
     $be->get_field('extraalpha')) {
-    my $pad_width = ($sortelementattributes->{pad_width} or $default_pad_width);
-    my $pad_side = ($sortelementattributes->{pad_side} or $default_pad_side);
-    my $pad_char = ($sortelementattributes->{pad_char} or $default_pad_char);
-    my $pad_length = $pad_width - length($be->get_field('extraalpha'));
-    if ($pad_side eq 'left') {
-      return ($pad_char x $pad_length) . $be->get_field('extraalpha');
-    } elsif ($pad_side eq 'right') {
-      return $be->get_field('extraalpha') . ($pad_char x $pad_length);
-    }
+  my $string = $be->get_field('extraalpha');
+  return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -502,7 +484,8 @@ sub _sort_issuetitle {
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('issuetitle')) {
-    return normalise_string_sort($be->get_field('issuetitle'));
+  my $string = normalise_string_sort($be->get_field('issuetitle'));
+  return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -516,7 +499,8 @@ sub _sort_journal {
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('journal')) {
-    return normalise_string_sort($be->get_field('journal'));
+  my $string = normalise_string_sort($be->get_field('journal'));
+  return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -534,7 +518,8 @@ sub _sort_labelalpha {
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('sortlabelalpha')) {
-    return $be->get_field('sortlabelalpha');
+  my $string = $be->get_field('sortlabelalpha');
+  return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -549,6 +534,7 @@ sub _sort_labelname {
   my $be = $bibentries->entry($citekey);
   # re-direct to the right sorting routine for the labelname
   if (my $ln = $be->get_field('labelnamename')) {
+    # Don't process attributes as they wil be processing in the real sub
     return $self->_dispatch_sorting($ln, $citekey, $sortelementattributes);
   }
   else {
@@ -564,6 +550,7 @@ sub _sort_labelyear {
   my $be = $bibentries->entry($citekey);
   # re-direct to the right sorting routine for the labelyear
   if (my $ly = $be->get_field('labelyearname')) {
+    # Don't process attributes as they wil be processing in the real sub
     return $self->_dispatch_sorting($ly, $citekey, $sortelementattributes);
   }
   else {
@@ -582,7 +569,8 @@ sub _sort_place {
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field($pltype)) {
-    return $self->_liststring($citekey, $pltype);
+  my $string = $self->_liststring($citekey, $pltype);
+  return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -595,7 +583,8 @@ sub _sort_presort {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
-  return $be->get_field('presort') ? $be->get_field('presort') : '';
+  my $string = $be->get_field('presort') // '';
+  return _process_sort_attributes($string, $sortelementattributes);
 }
 
 sub _sort_publisher {
@@ -605,7 +594,8 @@ sub _sort_publisher {
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('publisher')) {
-    return $self->_liststring($citekey, 'publisher');
+    my $string = $self->_liststring($citekey, 'publisher');
+    return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -618,7 +608,8 @@ sub _sort_pubstate {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
-  return $be->get_field('pubstate') ? $be->get_field('pubstate') : '';
+  my $string = $be->get_field('pubstate') // '';
+  return _process_sort_attributes($string, $sortelementattributes);
 }
 
 sub _sort_sortkey {
@@ -627,7 +618,8 @@ sub _sort_sortkey {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
-  return $be->get_field('sortkey') ? $be->get_field('sortkey') : '';
+  my $string = $be->get_field('sortkey') // '';
+  return _process_sort_attributes($string, $sortelementattributes);
 }
 
 sub _sort_sortname {
@@ -642,7 +634,8 @@ sub _sort_sortname {
     (Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey) or
       Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) or
       Biber::Config->getblxoption('useetranslator', $be->get_field('entrytype'), $citekey))) {
-    return $self->_namestring($citekey, 'sortname');
+    my $string = $self->_namestring($citekey, 'sortname');
+    return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -660,7 +653,8 @@ sub _sort_title {
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field($ttype)) {
-    return normalise_string_sort($be->get_field($ttype));
+    my $string = normalise_string_sort($be->get_field($ttype));
+    return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -675,7 +669,8 @@ sub _sort_translator {
   my $be = $bibentries->entry($citekey);
   if (Biber::Config->getblxoption('usetranslator', $be->get_field('entrytype'), $citekey) and
     $be->get_field('translator')) {
-    return $self->_namestring($citekey, 'translator');
+    my $string = $self->_namestring($citekey, 'translator');
+    return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -688,20 +683,8 @@ sub _sort_volume {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
-  my $default_pad_width = 4;
-  my $default_pad_side = 'left';
-  my $default_pad_char = '0';
-  if ($be->get_field('volume')) {
-    my $pad_width = ($sortelementattributes->{pad_width} or $default_pad_width);
-    my $pad_side = ($sortelementattributes->{pad_side} or $default_pad_side);
-    my $pad_char = ($sortelementattributes->{pad_char} or $default_pad_char);
-    my $pad_length = $pad_width - length($be->get_field('volume'));
-    if ($pad_side eq 'left') {
-      return ($pad_char x $pad_length) . $be->get_field('volume');
-    }
-    elsif ($pad_side eq 'right') {
-      return $be->get_field('volume') . ($pad_char x $pad_length);
-    }
+  if (my $field = $be->get_field('volume')) {
+    return _process_sort_attributes($field, $sortelementattributes);
   }
   else {
     return '';
@@ -719,23 +702,8 @@ sub _sort_year {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
-  my $default_substring_width = 4;
-  my $default_substring_side = 'left';
-  my $default_direction = 'ascending';
-  my $subs_offset = 0;
-  if ($be->get_field($ytype)) {
-    my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
-    my $subs_side = ($sortelementattributes->{substring_side} or $default_substring_side);
-    my $sort_dir = ($sortelementattributes->{sort_direction} or $default_direction);
-    if ($subs_side eq 'right') {
-      $subs_offset = 0 - $subs_width;
-    }
-    if ($sort_dir eq 'ascending') { # default, ascending sort
-      return substr( $be->get_field($ytype), $subs_offset, $subs_width );
-    }
-    elsif ($sort_dir eq 'descending') { # descending sort
-      return 9999 - substr($be->get_field($ytype), $subs_offset, $subs_width );
-    }
+  if (my $field = $be->get_field($ytype)) {
+    return _process_sort_attributes($field, $sortelementattributes);
   }
   else {
     return '';
@@ -745,6 +713,50 @@ sub _sort_year {
 #========================================================
 # Utility subs used elsewhere but relying on sorting code
 #========================================================
+
+sub _process_sort_attributes {
+  my ($field_string, $sortelementattributes) = @_;
+  return $field_string unless $sortelementattributes;
+  # process substring
+  if (exists($sortelementattributes->{substring_width}) or
+      exists($sortelementattributes->{substring_side})) {
+    my $subs_offset = 0;
+    my $default_substring_width = 4;
+    my $default_substring_side = 'left';
+    my $subs_width = ($sortelementattributes->{substring_width} or $default_substring_width);
+    my $subs_side = ($sortelementattributes->{substring_side} or $default_substring_side);
+    if ($subs_side eq 'right') {
+      $subs_offset = 0 - $subs_width;
+    }
+    $field_string = substr( $field_string, $subs_offset, $subs_width );
+  }
+  # Process padding
+  if ($sortelementattributes->{pad_side} or
+      $sortelementattributes->{pad_width} or
+      $sortelementattributes->{pad_char}) {
+    my $default_pad_width = 4;
+    my $default_pad_side = 'left';
+    my $default_pad_char = '0';
+    my $pad_width = ($sortelementattributes->{pad_width} or $default_pad_width);
+    my $pad_side = ($sortelementattributes->{pad_side} or $default_pad_side);
+    my $pad_char = ($sortelementattributes->{pad_char} or $default_pad_char);
+    my $pad_length = $pad_width - length($field_string);
+    if ($pad_side eq 'left') {
+      $field_string = ($pad_char x $pad_length) . $field_string;
+    }
+    elsif ($pad_side eq 'right') {
+      $field_string = $field_string . ($pad_char x $pad_length);
+    }
+  }
+  # process sort direction
+  my $sort_dir = $sortelementattributes->{sort_direction} // 'ascending';
+  if ($sort_dir eq 'descending') { # descending sort
+    $field_string =  9999 - $field_string;
+    # 1114111 is the maximum decimal Unicode code point
+#    $field_string = join('', map {1114111 - $_} unpack('U*', $field_string));
+  }
+  return $field_string;
+}
 
 sub _namestring {
   my $self = shift;

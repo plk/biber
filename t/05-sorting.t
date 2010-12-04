@@ -24,48 +24,48 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('quiet', 1);
 
-my $yearoff1    = 'mm0knuth2donald e0computers typesetting0198400000';
-my $yearoff2    = 'mm0Knuth2Donald E0Computers Typesetting019800000';
-my $yearoff3    = 'mm0Knuth2Donald E0Computers Typesetting0198400000';
-my $yearoff4    = 'mm0knuth2donald e0computers typesetting098400000';
-my $yearoff5    = 'mm0knuth2donald e0computers typesetting0198400000';
-my $yearoff6    = 'mm0knuth2donald e0computers typesetting0801500000';
-my $yearoff7    = 'mm0knuth2donald e0computers typesetting0980100000';
-my $yearoff8    = 'mm0knuth2donald e0computers typesetting0801500000';
-my $yearoff9    = 'mm0knuth2donald e0computers typesetting0901500000';
-my $vol1        = 'mm0glashow2sheldon0partial symmetries of weak interactions0196102200';
-my $vol2        = 'mm0glashow2sheldon0partial symmetries of weak interactions0196102200000';
-my $vol3        = 'mm0glashow2sheldon0partial symmetries of weak interactions019610đđđ22';
-my $nty         = 'mm0glashow2sheldon0partial symmetries of weak interactions0196100022';
-my $nyt         = 'mm0glashow2sheldon019610partial symmetries of weak interactions00022';
-my $nyvt        = 'mm0glashow2sheldon01961000220partial symmetries of weak interactions';
-my $anyt_la     = 'mm0gla610glashow2sheldon019610partial symmetries of weak interactions00000';
-my $anyt        = 'mm0glashow2sheldon019610partial symmetries of weak interactions00000';
-my $anyvt_la    = 'mm0gla610glashow2sheldon01961000220partial symmetries of weak interactions';
-my $anyvt_la2   = 'mm0hos+980hostetler2michael j1zzzz01998000140alkanethiolate gold cluster molecules with core diameters from 15 to 52 nm';
-my $anyvt_la3   = 'mm0hw980hostetler2michael j1wingate2julia e1zzzz01998000140alkanethiolate gold cluster molecules with core diameters from 15 to 52 nm';
-my $anyvt_la4   = 'mm0hw+980hostetler2michael j1wingate2julia e1zzzz01998000140alkanethiolate gold cluster molecules with core diameters from 15 to 52 nm';
-my $anyvt       = 'mm0glashow2sheldon01961000220partial symmetries of weak interactions';
-my $ynt         = 'mm019610glashow2sheldon0partial symmetries of weak interactions';
-my $ydnt        = 'mm080380glashow2sheldon0partial symmetries of weak interactions';
+my $yearoff1    = 'mm,knuth2donald e,computers typesetting,1984,0000';
+my $yearoff2    = 'mm,Knuth2Donald E,Computers Typesetting,198,0000';
+my $yearoff3    = 'mm,Knuth2Donald E,Computers Typesetting,1984,0000';
+my $yearoff4    = 'mm,knuth2donald e,computers typesetting,984,0000';
+my $yearoff5    = 'mm,knuth2donald e,computers typesetting,1984,0000';
+my $yearoff6    = 'mm,knuth2donald e,computers typesetting,8015,0000';
+my $yearoff7    = 'mm,knuth2donald e,computers typesetting,9801,0000';
+my $yearoff8    = 'mm,knuth2donald e,computers typesetting,8015,0000';
+my $yearoff9    = 'mm,knuth2donald e,computers typesetting,9015,0000';
+my $vol1        = 'mm,glashow2sheldon,partial symmetries of weak interactions,1961,2200';
+my $vol2        = 'mm,glashow2sheldon,partial symmetries of weak interactions,1961,2200000';
+my $vol3        = 'mm,glashow2sheldon,partial symmetries of weak interactions,1961,đđđ22';
+my $nty         = 'mm,glashow2sheldon,partial symmetries of weak interactions,1961,22';
+my $nyt         = 'mm,glashow2sheldon,1961,partial symmetries of weak interactions,22';
+my $nyvt        = 'mm,glashow2sheldon,1961,22,partial symmetries of weak interactions';
+my $anyt_la     = 'mm,gla61,glashow2sheldon,1961,partial symmetries of weak interactions,0000';
+my $anyt        = 'mm,glashow2sheldon,1961,partial symmetries of weak interactions,0000';
+my $anyvt_la    = 'mm,gla61,glashow2sheldon,1961,0022,partial symmetries of weak interactions';
+my $anyvt_la2   = 'mm,hos+98,hostetler2michael j1zzzz,1998,0014,alkanethiolate gold cluster molecules with core diameters from 15 to 52 nm';
+my $anyvt_la3   = 'mm,hw98,hostetler2michael j1wingate2julia e1zzzz,1998,0014,alkanethiolate gold cluster molecules with core diameters from 15 to 52 nm';
+my $anyvt_la4   = 'mm,hw+98,hostetler2michael j1wingate2julia e1zzzz,1998,0014,alkanethiolate gold cluster molecules with core diameters from 15 to 52 nm';
+my $anyvt       = 'mm,glashow2sheldon,1961,0022,partial symmetries of weak interactions';
+my $ynt         = 'mm,1961,glashow2sheldon,partial symmetries of weak interactions';
+my $ydnt        = 'mm,8038,glashow2sheldon,partial symmetries of weak interactions';
 my $debug       = 'stdmodel';
-my $sk1         = 'mm0aatestkey';
-my $pt1         = 'mm081220aristotle0rhetoric of aristotle';
-my $ps_sc       = 'zs0glashow2sheldon0partial symmetries of weak interactions';
-my $noname      = 'mm0partial symmetries of weak interactions0partial symmetries of weak interactions0196100022';
+my $sk1         = 'mm,aatestkey';
+my $pt1         = 'mm,8122,aristotle,rhetoric of aristotle';
+my $ps_sc       = 'zs,glashow2sheldon,partial symmetries of weak interactions';
+my $noname      = 'mm,partial symmetries of weak interactions,partial symmetries of weak interactions,1961,22';
 my $citeorder   = '0000001';
 my $lists1      = 'marcel dekker';
 my $lists2      = 'chichester';
 my $lists3      = 'ibm1zzzz';
 my $lists4      = 'ibm2hp1zzzz';
 my $lists5      = 'ibm2hp2sun2sony';
-my $dates1      = '1979001002000000198000400808075006007019240070090192400002005019200200308020003004079003003';
-my $edtypeclass1 = 'redactor0jaffé2philipp0loewenfeld2samuel1kaltenbrunner2ferdinand1ewald2paul';
-my $prefix1     = 'mm0Luzzatto2Moshe Ḥayyim0haLashon laRamḥal uvo sheloshah ḥiburim0200000000';
-my $diacritic1  = 'mm0Hasan2Alī0Some title0200000000';
+my $dates1      = '1979,01,0200000,1980,04,08,8075,06,07,1924,07,09,1924,0002,05,192,02,03,8020,03,04,79,03,03';
+my $edtypeclass1 = 'redactor,jaffé2philipp,loewenfeld2samuel1kaltenbrunner2ferdinand1ewald2paul';
+my $prefix1     = 'mm,Luzzatto2Moshe Ḥayyim,haLashon laRamḥal uvo sheloshah ḥiburim,2000,0000';
+my $diacritic1  = 'mm,Hasan2Alī,Some title,2000,0000';
 
-my $useprefix1  = 'mm0von2bobble2terrence019970things00000';
-my $useprefix2  = 'mm0bobble2terrence2von019970things00000';
+my $useprefix1  = 'mm,von2bobble2terrence,1997,things,0000';
+my $useprefix2  = 'mm,bobble2terrence2von,1997,things,0000';
 
 my $bibentries;
 
@@ -972,7 +972,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'year'       => {}}
                                                 ],
                                                 [
-                                                 {'volume'     => {}},
+                                                 {'volume'     => {pad_width => 4}},
                                                  {'0000'       => {}}
                                                 ],
                                                 [
