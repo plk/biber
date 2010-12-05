@@ -564,19 +564,28 @@
             </choice>
           </attribute>
         </optional>
-        <oneOrMore>
+        <optional>
+          <!-- Should we stop generating sorting information after this item? -->
+          <attribute name="sort_direction">
+            <choice>
+              <value>ascending</value>
+              <value>descending</value>
+            </choice>
+          </attribute>
+        </optional>
+        <optional>
           <!-- A sort item specification - a field or pseudo-field to get sort information from -->
+          <attribute name="final">
+            <data type="integer"/>
+          </attribute>
+        </optional>
+        <oneOrMore>
+          <!-- Sort ascending or descending (when relevant)? -->
           <element name="bcf:sortitem">
             <!-- order of this item in the set of all other item specifications -->
             <attribute name="order">
               <data type="integer"/>
             </attribute>
-            <optional>
-              <!-- Should we stop generating sorting information after this item? -->
-              <attribute name="final">
-                <data type="integer"/>
-              </attribute>
-            </optional>
             <optional>
               <!-- Just use a part of the item information for sorting? -->
               <attribute name="substring_side">
@@ -611,15 +620,6 @@
                   <param name="minLength">1</param>
                   <param name="maxLength">1</param>
                 </data>
-              </attribute>
-            </optional>
-            <optional>
-              <!-- Sort ascending or descending (when relevant)? -->
-              <attribute name="sort_direction">
-                <choice>
-                  <value>ascending</value>
-                  <value>descending</value>
-                </choice>
               </attribute>
             </optional>
             <text/>

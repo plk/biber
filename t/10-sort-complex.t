@@ -53,7 +53,8 @@ my $sc1 = [
            ],
            [
             {'sortyear'  => {sort_direction => 'descending'}},
-            {'year'      => {substring_side => 'right',
+            {'year'      => {sort_direction => 'descending',
+                             substring_side => 'right',
                              substring_width => '4'}}
            ],
            [
@@ -92,7 +93,8 @@ my $sc2 = [
            ],
            [
             {'sortyear'  => {sort_direction => 'descending'}},
-            {'year'      => {substring_side => 'right',
+            {'year'      => {sort_direction => 'descending',
+                             substring_side => 'right',
                              substring_width => '4'}}
            ],
            [

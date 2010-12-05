@@ -365,7 +365,8 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
       # Generate sorting pass structures
       foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
         my $sortitemattributes = {};
-        if (defined($sortitem->{final})) { # Found a sorting short-circuit marker
+        # this attribute is defined on the sort group level but propogated to the items
+        if ($sort->{final}) { # Found a sorting short-circuit marker
           $sortitemattributes->{final} = 1;
         }
         if (defined($sortitem->{substring_side})) { # Found sorting substring side attribute
@@ -383,8 +384,9 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
         if (defined($sortitem->{pad_side})) { # Found sorting pad side attribute
           $sortitemattributes->{pad_side} = $sortitem->{pad_side};
         }
-        if (defined($sortitem->{sort_direction})) { # Found sorting direction attribute
-          $sortitemattributes->{sort_direction} = $sortitem->{sort_direction};
+        # this attribute is defined on the sort group level but propogated to the items
+        if (defined($sort->{sort_direction})) { # Found sorting direction attribute
+          $sortitemattributes->{sort_direction} = $sort->{sort_direction};
         }
 
         # No pass specified, sortitem is included in both sort passes
