@@ -112,6 +112,14 @@
                     </xsl:if>
                     <xsl:for-each select="./bcf:sortitem">
                       <xsl:sort select="./@order"/>
+                      <xsl:choose>
+                        <xsl:when test="../@sort_direction='descending'">
+                          <xsl:text disable-output-escaping="yes">&amp;darr;</xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:text disable-output-escaping="yes">&amp;uarr;</xsl:text>
+                        </xsl:otherwise>
+                      </xsl:choose>
                       <!-- left padding -->
                       <xsl:if test="./@pad_side = 'left'">
                         <span class="sort_padding">
@@ -149,15 +157,9 @@
                           </xsl:call-template>
                         </span>
                       </xsl:if>
-                      <xsl:choose>
-                        <xsl:when test="../@sort_direction='descending'">
-                          <xsl:text disable-output-escaping="yes">&amp;darr;</xsl:text>
-                        </xsl:when>
-                        <xsl:otherwise>
-                          <xsl:text disable-output-escaping="yes">&amp;uarr;</xsl:text>
-                        </xsl:otherwise>
-                      </xsl:choose>
+                      <xsl:if test="not(position()=last())">
                       <br/>
+                      </xsl:if>
                     </xsl:for-each>
                   </td>
                 </xsl:for-each>
@@ -178,12 +180,18 @@
                   <td valign="top"><xsl:value-of select="./text()"/></td>
                   <td valign="top">
                     <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:aliases/bcf:alias[@type='entrytype']/bcf:realname[./text()=current()/text()]">
-                      <xsl:value-of select="../bcf:name/text()"/><br/>
+                      <xsl:value-of select="../bcf:name/text()"/>
+                      <xsl:if test="not(position()=last())">
+                        <br/>
+                      </xsl:if>
                     </xsl:for-each>
                   </td>
                   <td valign="top">
                     <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:aliases/bcf:alias[@type='entrytype']/bcf:realname[./text()=current()/text()]/../bcf:field">
-                      <xsl:value-of select="./@name"/><xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text><xsl:value-of select="./text()"/><br/>
+                      <xsl:value-of select="./@name"/><xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text><xsl:value-of select="./text()"/>
+                      <xsl:if test="not(position()=last())">
+                        <br/>
+                      </xsl:if>
                     </xsl:for-each>                    
                   </td>
                 </tr>
@@ -207,7 +215,10 @@
                   <td valign="top"><xsl:value-of select="./text()"/></td>
                   <td valign="top">
                     <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:aliases/bcf:alias[@type='field']/bcf:realname[./text()=current()/text()]">
-                      <xsl:value-of select="../bcf:name/text()"/><br/>
+                      <xsl:value-of select="../bcf:name/text()"/>
+                      <xsl:if test="not(position()=last())">
+                        <br/>
+                      </xsl:if>
                     </xsl:for-each>
                   </td>
                   <td valign="top">
