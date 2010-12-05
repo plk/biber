@@ -114,6 +114,7 @@
     <bcf:datasource type="file">sets</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
+    <bcf:citekey>Static2</bcf:citekey>
     <bcf:citekey>Static1</bcf:citekey>
   </bcf:section>
   <!-- SECTION 1 -->

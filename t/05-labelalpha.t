@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 64;
+use Test::More tests => 66;
 
 use Biber;
 use Biber::Utils;
@@ -50,6 +50,8 @@ is($bibentries->entry('l7')->get_field('sortlabelalpha'), 'Doe+95', 'maxnames=1 
 is($bibentries->entry('l7')->get_field('extraalpha'), '6', 'maxnames=1 minnames=1 entry L7 extraalpha');
 is($bibentries->entry('l8')->get_field('sortlabelalpha'), 'Sha85', 'maxnames=1 minnames=1 entry L8 labelalpha');
 ok(is_undef($bibentries->entry('l8')->get_field('extraalpha')), 'maxnames=1 minnames=1 entry L8 extraalpha');
+ok(is_undef($bibentries->entry('l9')->get_field('extraalpha')), 'L9 extraalpha unset due to shorthand');
+ok(is_undef($bibentries->entry('l10')->get_field('extraalpha')), 'L10 extraalpha unset due to shorthand');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('maxnames', 2);

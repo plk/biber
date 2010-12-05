@@ -38,7 +38,7 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =cut
 
-our $VERSION = '0.6.8';
+our $VERSION = '0.6.9';
 our $BETA_VERSION = 1; # Is this a beta version?
 
 =head1 SYNOPSIS
@@ -801,7 +801,7 @@ sub process_crossrefs {
     if ($be->get_field('entrytype') eq 'set') {
       my @inset_keys = split /\s*,\s*/, $be->get_field('entryset');
       foreach my $inset_key (@inset_keys) {
-        $logger->debug("  Adding inset entry '$inset_key' to the citekeys (section $secnum)");
+        $logger->debug("  Adding set member '$inset_key' to the citekeys (section $secnum)");
         $section->add_citekeys($inset_key);
       }
       # automatically crossref for the first set member using plain set inheritance
@@ -961,7 +961,7 @@ sub postprocess_sets {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
-  if ( $be->get_field('entrytype') eq 'set' ) {
+  if ($be->get_field('entrytype') eq 'set') {
     my @entrysetkeys = split /\s*,\s*/, $be->get_field('entryset');
 
     # Enforce Biber parts of virtual "dataonly" for set members
@@ -974,11 +974,33 @@ sub postprocess_sets {
         $self->biber_warn($me, "Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry '$member'");
         $me->del_field('entryset');
       }
+      # This ends up setting \inset{} in the bib
       $me->set_field('entryset', $citekey);
     }
 
     unless (@entrysetkeys) {
       $self->biber_warn($be, "No entryset found for entry $citekey of type 'set'");
+    }
+  }
+  # check if this non-set entry is in a cited set and if so, we
+  # have enforced Biber parts of virtual "dataonly" otherwise
+  # this entry will spuriously generate disambiguation data for itself
+  # This would only happen if the non-set entry was cited before any set
+  # in which it occurred of course since otherwise it would have already had
+  # "dataonly" enforced by the code above
+  else {
+    foreach my $pset_key ($section->get_citekeys) {
+      my $pset_be = $bibentries->entry($pset_key);
+      if ($pset_be->get_field('entrytype') eq 'set') {
+        my @entrysetkeys = split /\s*,\s*/, $pset_be->get_field('entryset');
+        foreach my $member (@entrysetkeys) {
+          next unless $member eq $citekey;
+          # Posssible that this has already been set if this set entry member
+          # was dealt with above but in case we haven't seen the set it's in yet ...
+          Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $member);
+          Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $member);
+        }
+      }
     }
   }
 }
@@ -1252,13 +1274,21 @@ sub postprocess_labelnameyear {
   # * Don't increment the seennameyear count if either name or year string is empty
   #   (see code in incr_nameyear method).
   # * Don't increment if skiplab is set
+
   my $name_string;
-  if ($be->get_field('labelnamename')) {
+  # For tracking name/year combinations, use shorthand only if it exists and we
+  # are using labelyear
+  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) and
+       $be->get_field('shorthand')) {
+    $name_string = $be->get_field('shorthand');
+  }
+  elsif ($be->get_field('labelnamename')) {
     $name_string = $self->_namestring($citekey, $be->get_field('labelnamename'));
   }
   else {
     $name_string = '';
   }
+
   my $year_string;
   if ($be->get_field('labelyearname')) {
     $year_string = $be->get_field($be->get_field('labelyearname'));
