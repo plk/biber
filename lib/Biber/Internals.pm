@@ -190,8 +190,6 @@ our $sorting_sep = ',';
 # a pointer to extra arguments to the code. This is to make code re-use possible
 # so the sorting can share code for similar things.
 our $dispatch_sorting = {
-  '0000'          =>  [\&_sort_0000,          []],
-  '9999'          =>  [\&_sort_9999,          []],
   'address'       =>  [\&_sort_place,         ['place']],
   'author'        =>  [\&_sort_author,        []],
   'citeorder'     =>  [\&_sort_citeorder,     []],
@@ -221,7 +219,6 @@ our $dispatch_sorting = {
   'labelname'     =>  [\&_sort_labelname,     []],
   'labelyear'     =>  [\&_sort_labelyear,     []],
   'location'      =>  [\&_sort_place,         ['location']],
-  'mm'            =>  [\&_sort_mm,            []],
   'month'         =>  [\&_sort_dm,            ['month']],
   'origday'       =>  [\&_sort_dm,            ['origday']],
   'origendday'    =>  [\&_sort_dm,            ['origendday']],
@@ -253,8 +250,17 @@ our $dispatch_sorting = {
 # Main sorting dispatch method
 sub _dispatch_sorting {
   my ($self, $sortfield, $citekey, $sortelementattributes) = @_;
-  my $code_ref = ${$dispatch_sorting->{$sortfield}}[0];
-  my $code_args_ref = ${$dispatch_sorting->{$sortfield}}[1];
+  my $code_ref;
+  my $code_args_ref;
+  # if the field is not found in the dispatch table, assume it's a literal string
+  unless (exists($dispatch_sorting->{$sortfield})) {
+    $code_ref = \&_sort_literal;
+    $code_args_ref = [$sortfield];
+  }
+  else { # real sorting field
+    $code_ref = ${$dispatch_sorting->{$sortfield}}[0];
+    $code_args_ref = ${$dispatch_sorting->{$sortfield}}[1];
+  }
   return &{$code_ref}($self, $citekey, $sortelementattributes, $code_args_ref);
 }
 
@@ -360,14 +366,6 @@ sub _sortset {
 ##############################################
 # Sort dispatch routines
 ##############################################
-
-sub _sort_0000 {
-  return '0000';
-}
-
-sub _sort_9999 {
-  return '9999';
-}
 
 sub _sort_author {
   my ($self, $citekey, $sortelementattributes) = @_;
@@ -507,10 +505,6 @@ sub _sort_journal {
   }
 }
 
-sub _sort_mm {
-  return 'mm';
-}
-
 sub _sort_labelalpha {
   my ($self, $citekey, $sortelementattributes) = @_;
   my $secnum = $self->get_current_section;
@@ -556,6 +550,12 @@ sub _sort_labelyear {
   else {
     return '';
   }
+}
+
+sub _sort_literal {
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $string = (@{$args})[0]; # get literal string
+  return _process_sort_attributes($string, $sortelementattributes);
 }
 
 # This is a meta-sub which uses the optional arguments to the dispatch code

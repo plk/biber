@@ -369,6 +369,10 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
         if ($sort->{final}) { # Found a sorting short-circuit marker
           $sortitemattributes->{final} = 1;
         }
+        # this attribute is defined on the sort group level but propogated to the items
+        if (defined($sort->{sort_direction})) { # Found sorting direction attribute
+          $sortitemattributes->{sort_direction} = $sort->{sort_direction};
+        }
         if (defined($sortitem->{substring_side})) { # Found sorting substring side attribute
           $sortitemattributes->{substring_side} = $sortitem->{substring_side};
         }
@@ -383,10 +387,6 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
         }
         if (defined($sortitem->{pad_side})) { # Found sorting pad side attribute
           $sortitemattributes->{pad_side} = $sortitem->{pad_side};
-        }
-        # this attribute is defined on the sort group level but propogated to the items
-        if (defined($sort->{sort_direction})) { # Found sorting direction attribute
-          $sortitemattributes->{sort_direction} = $sort->{sort_direction};
         }
 
         # No pass specified, sortitem is included in both sort passes

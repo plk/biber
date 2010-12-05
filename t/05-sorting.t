@@ -1070,7 +1070,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'sortyear'   => {'sort_direction'  => 'descending'}},
                                                  {'year'      => {'sort_direction'  => 'descending'}},
-                                                 {'9999'       => {}}
+                                                 {'9999'       => {'sort_direction'  => 'descending'}}
                                                 ],
                                                 [
                                                  {'sortname'   => {}},
@@ -1120,7 +1120,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {'sortyear'  => {'sort_direction'  => 'descending'}},
                                                  {'labelyear'      => {'sort_direction'  => 'descending'}},
-                                                 {'9999'       => {}}
+                                                 {'9999'       => {'sort_direction'  => 'descending'}}
                                                 ],
                                                 [
                                                  {'sortname'   => {}},
