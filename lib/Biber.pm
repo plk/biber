@@ -938,7 +938,7 @@ sub postprocess {
     $self->postprocess_shorthands($citekey);
 
     # first-pass sorting to generate basic labels
-    $self->postprocess_sorting_firstpass($citekey);
+    $self->postprocess_generate_sortstring_label($citekey);
   }
 
   $logger->debug("Finished postprocessing entries in section $secnum");
@@ -1381,13 +1381,13 @@ sub postprocess_shorthands {
   }
 }
 
-=head2 postprocess_sorting_firstpass
+=head2 postprocess_generate_sortstring_label
 
-    First pass of sorting information generation
+    Generate label pass of sortstring
 
 =cut
 
-sub postprocess_sorting_firstpass {
+sub postprocess_generate_sortstring_label {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
