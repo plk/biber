@@ -775,6 +775,11 @@ sub _namestring {
   my $truncated = 0;
   my $truncnames = dclone($names);
 
+  # These should be symbols which can't appear in names
+  my $nsi    = '2';    # name separator, internal
+  my $nse    = '1';    # name separator, external
+  my $others = 'zzzz'; # sort string for "et al" truncated name
+
   # perform truncation according to options minnames, maxnames
   if ( $names->count_elements > Biber::Config->getblxoption('maxnames') ) {
     $truncated = 1;
@@ -785,27 +790,27 @@ sub _namestring {
     # If useprefix is true, use prefix at start of name for sorting
     if ( $n->get_prefix and
          Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-      $str .= $n->get_prefix . '2';
+      $str .= $n->get_prefix . $nsi;
     }
-    $str .= strip_nosort_name($n->get_lastname) . '2';
-    $str .= strip_nosort_name($n->get_firstname) . '2' if $n->get_firstname;
-    $str .= $n->get_suffix . '2' if $n->get_suffix;
+    $str .= strip_nosort_name($n->get_lastname) . $nsi;
+    $str .= strip_nosort_name($n->get_firstname) . $nsi if $n->get_firstname;
+    $str .= $n->get_suffix . $nsi if $n->get_suffix;
 
     # If useprefix is false, use prefix at end of name
     if ( $n->get_prefix and not
          Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-      $str .= $n->get_prefix . '2';
+      $str .= $n->get_prefix . $nsi;
     }
 
-    $str =~ s/2\z//xms;
-    $str .= '1';
+    $str =~ s/$nsi\z//xms;       # Remove any trailing internal separator
+    $str .= $nse;                # Add separator in between names
   }
 
-  $str =~ s/\s+1/1/gxms;
-  $str =~ s/1\z//xms;
+  $str =~ s/\s+$nse/$nse/gxms;   # Remove any whitespace before external separator
+  $str =~ s/$nse\z//xms;         # strip final external separator as we are finished
   $str = normalise_string_sort($str);
   $str = strip_nosort_name($str);
-  $str .= '1zzzz' if $truncated;
+  $str .= "$nse$others" if $truncated;
   return $str;
 }
 
