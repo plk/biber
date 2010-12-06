@@ -189,3 +189,4 @@ is( $out->get_output_entry('3631578538a2d6ba5879b31a9a42f290'), $kck3, 'Related 
 is_deeply([$section->get_shorthands], ['key1', 'key2', 'key3'], 'Related entry test 7');
 
 
+unlink "*.utf8";

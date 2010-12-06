@@ -52,3 +52,4 @@ ok(is_undef($bibentries->entry('ly1')->get_field('extrayear')), 'Date range mean
 ok(is_undef($bibentries->entry('ly2')->get_field('extrayear')), 'Date range means no extrayear - 2');
 
 
+unlink "*.utf8";

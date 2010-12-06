@@ -326,3 +326,4 @@ is($bibentries->entry('l17')->get_field('labelyearname'), 'eventyear', 'Date for
 is($out->get_output_entry('l17'), $l17e, 'Date format test 17e - labelyear = ORIGYEAR-ORIGENDYEAR' ) ;
 
 
+unlink "*.utf8";

@@ -61,4 +61,4 @@ sub check_output_string_order {
 }
 
 
-
+unlink "*.utf8";

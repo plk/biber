@@ -166,4 +166,4 @@ is($out->get_output_entry('un2'), $un2, 'Uniquename requiring initials name expa
 is($out->get_output_entry('un4'), $un4, 'Namehash and fullhash different due to maxnames setting');
 is($out->get_output_entry('un5'), $un5, 'Fullnamshash ignores SHORT* names');
 
-
+unlink "*.utf8";

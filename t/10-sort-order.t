@@ -453,4 +453,4 @@ is_deeply([$section->get_citekeys], ['L9','L6','L7','L8','L5','L4','L3','L2','L1
 check_output_string_order($out, ['L9','L6','L7','L8','L5','L4','L3','L2','L1B','L1A','L1']);
 
 
-
+unlink "*.utf8";

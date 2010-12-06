@@ -730,3 +730,4 @@ is( $out->get_output_entry('l12'), $l12, 'First First First First prefix prefix 
 is( $out->get_output_entry('l21'), $l21, 'LaTeX encoded unicode firstname');
 is( $out->get_output_entry('l22'), $l22, 'LaTeX encoded unicode lastname');
 
+unlink "*.utf8";

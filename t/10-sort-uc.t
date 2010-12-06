@@ -54,4 +54,4 @@ is_deeply([$section0->get_shorthands], ['LS2', 'LS1','LS3'], 'U::C tailoring - 3
 is_deeply([$section1->get_citekeys], ['LSD3','LSD1','LSD2'], 'U::C tailoring descending- 1');
 
 
-
+unlink "*.utf8";
