@@ -776,9 +776,11 @@ sub _namestring {
   my $truncnames = dclone($names);
 
   # These should be symbols which can't appear in names
-  my $nsi    = '2';    # name separator, internal
-  my $nse    = '1';    # name separator, external
-  my $others = 'zzzz'; # sort string for "et al" truncated name
+  # This means, symbols which normalise_string_sort strips out
+  my $nsi    = '_';          # name separator, internal
+  my $nse    = '+';          # name separator, external
+  # Guaranteed to sort after everything else as it's the last legal Unicode code point
+  my $trunc = "\x{10FFFD}";  # sort string for "et al" truncated name
 
   # perform truncation according to options minnames, maxnames
   if ( $names->count_elements > Biber::Config->getblxoption('maxnames') ) {
@@ -786,31 +788,33 @@ sub _namestring {
     $truncnames = $truncnames->first_n_elements(Biber::Config->getblxoption('minnames'));
   }
 
+  # We strip nosort first otherwise normalise_string_sort damages diacritics
+  # We strip each individual component instead of the whole thing so we can use
+  # as name separators things which would otherwise be stripped. This way we
+  # guarantee that the separators are never in names
   foreach my $n ( @{$truncnames->names} ) {
     # If useprefix is true, use prefix at start of name for sorting
     if ( $n->get_prefix and
          Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-      $str .= $n->get_prefix . $nsi;
+      $str .= normalise_string_sort(strip_nosort_name($n->get_prefix)) . $nsi;
     }
-    $str .= strip_nosort_name($n->get_lastname) . $nsi;
-    $str .= strip_nosort_name($n->get_firstname) . $nsi if $n->get_firstname;
-    $str .= $n->get_suffix . $nsi if $n->get_suffix;
+    $str .= normalise_string_sort(strip_nosort_name($n->get_lastname)) . $nsi;
+    $str .= normalise_string_sort(strip_nosort_name($n->get_firstname)) . $nsi if $n->get_firstname;
+    $str .= normalise_string_sort(strip_nosort_name($n->get_suffix)) . $nsi if $n->get_suffix;
 
     # If useprefix is false, use prefix at end of name
     if ( $n->get_prefix and not
          Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-      $str .= $n->get_prefix . $nsi;
+      $str .= normalise_string_sort(strip_nosort_name($n->get_prefix)) . $nsi;
     }
 
-    $str =~ s/$nsi\z//xms;       # Remove any trailing internal separator
-    $str .= $nse;                # Add separator in between names
+    $str =~ s/\Q$nsi\E\z//xms;       # Remove any trailing internal separator
+    $str .= $nse;                    # Add separator in between names
   }
 
-  $str =~ s/\s+$nse/$nse/gxms;   # Remove any whitespace before external separator
-  $str =~ s/$nse\z//xms;         # strip final external separator as we are finished
-  $str = normalise_string_sort($str);
-  $str = strip_nosort_name($str);
-  $str .= "$nse$others" if $truncated;
+  $str =~ s/\s+\Q$nse\E/$nse/gxms;   # Remove any whitespace before external separator
+  $str =~ s/\Q$nse\E\z//xms;         # strip final external separator as we are finished
+  $str .= "$nse$trunc" if $truncated;
   return $str;
 }
 
@@ -824,6 +828,13 @@ sub _liststring {
   my $str = '';
   my $truncated = 0;
 
+  # These should be symbols which can't appear in lists
+  # This means, symbols which normalise_string_sort strips out
+  my $lsi    = '_';          # list separator, internal
+  my $lse    = '+';          # list separator, external
+  # Guaranteed to sort after everything else as it's the last legal Unicode code point
+  my $trunc = "\x{10FFFD}";  # sort string for truncated list
+
   # perform truncation according to options minitems, maxitems
   if ( $#items + 1 > Biber::Config->getblxoption('maxitems') ) {
     $truncated = 1;
@@ -831,13 +842,12 @@ sub _liststring {
   }
 
   # separate the items by a string to give some structure
-  $str = join('2', @items);
-  $str .= '1';
+  $str = join($lsi, map { normalise_string_sort($_)} @items);
+  $str .= $lse;
 
-  $str =~ s/\s+1/1/gxms;
-  $str =~ s/1\z//xms;
-  $str = normalise_string_sort($str);
-  $str .= '1zzzz' if $truncated;
+  $str =~ s/\s+\Q$lse\E/$lse/gxms;
+  $str =~ s/\Q$lse\E\z//xms;
+  $str .= "$lse$trunc" if $truncated;
   return $str;
 }
 
