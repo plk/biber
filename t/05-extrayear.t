@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 15;
+use Test::More tests => 17;
 
 use Biber;
 use Biber::Utils;
@@ -48,5 +48,7 @@ is($bibentries->entry('companion2')->get_field('extrayear'), '2', 'Entry compani
 ok(is_undef($bibentries->entry('companion3')->get_field('extrayear')), 'Entry companion3 - one name, same year as truncated names');
 ok(is_undef($bibentries->entry('vangennep')->get_field('extrayear')), 'Entry vangennep - prefix makes it different');
 ok(is_undef($bibentries->entry('gennep')->get_field('extrayear')), 'Entry gennep - different from prefix name');
+ok(is_undef($bibentries->entry('ly1')->get_field('extrayear')), 'Date range means no extrayear - 1');
+ok(is_undef($bibentries->entry('ly2')->get_field('extrayear')), 'Date range means no extrayear - 2');
 
 

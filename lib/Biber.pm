@@ -1272,7 +1272,7 @@ sub postprocess_labelnameyear {
   # * If there is no labelname to use, use empty string
   # * If there is no labelyear to use, use empty string
   # * Don't increment the seennameyear count if either name or year string is empty
-  #   (see code in incr_nameyear method).
+  #   (see code in incr_seennameyear method).
   # * Don't increment if skiplab is set
 
   my $name_string;
@@ -1290,11 +1290,11 @@ sub postprocess_labelnameyear {
   }
 
   my $year_string;
-  if ($be->get_field('labelyearname')) {
-    $year_string = $be->get_field($be->get_field('labelyearname'));
+  if (my $ly = $be->get_field('labelyear')) {
+    $year_string = $ly;
   }
-  elsif ($be->get_field('year')) {
-    $year_string = $be->get_field('year');
+  elsif (my $y = $be->get_field('year')) {
+    $year_string = $y;
   }
   else {
     $year_string = '';
