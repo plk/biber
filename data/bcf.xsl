@@ -57,6 +57,9 @@
           .field_skip {
             background-color: #D0D0D0;
           }
+          .global_entrytype_fields {
+            color: #666666;
+          }
         </style>
         <script type="text/javascript">
           <![CDATA[
@@ -86,7 +89,10 @@
                       <td class="options_table_value"><xsl:value-of select="./bcf:key/text()"/></td>
                       <td><xsl:for-each select="./bcf:value">
                         <xsl:sort select="./@order"/>
-                        <xsl:value-of select="./text()"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                        <xsl:value-of select="./text()"/>
+                        <xsl:if test="not(position()=last())">
+                          <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                        </xsl:if>
                       </xsl:for-each></td>
                     </tr>
                   </xsl:when>
@@ -158,7 +164,7 @@
                         </span>
                       </xsl:if>
                       <xsl:if test="not(position()=last())">
-                      <br/>
+                        <br/>
                       </xsl:if>
                     </xsl:for-each>
                   </td>
@@ -172,7 +178,7 @@
           <div>Legal entrytypes</div>
           <table class="entrytype_table">
             <thead>
-              <tr><td>Entrytype</td><td>Aliases</td><td>Field changes when resolving alias</td></tr>
+              <tr><td>Entrytype</td><td>Aliases</td><td>Field changes when resolving alias</td><td>Legal fields for entrytype</td></tr>
             </thead>
             <tbody>
               <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:entrytypes/bcf:entrytype">
@@ -186,6 +192,7 @@
                       </xsl:if>
                     </xsl:for-each>
                   </td>
+                  <!-- Fields which need changing when resolving an alias -->
                   <td valign="top">
                     <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:aliases/bcf:alias[@type='entrytype']/bcf:realname[./text()=current()/text()]/../bcf:field">
                       <xsl:value-of select="./@name"/><xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text><xsl:value-of select="./text()"/>
@@ -194,6 +201,49 @@
                       </xsl:if>
                     </xsl:for-each>                    
                   </td>
+                  <!-- Save a varible pointing to the entrytype node -->
+                  <xsl:variable name="entrynode" select="current()"/> 
+                  <!-- Fields which are valid for this entrytype --> 
+                  <td valign="top">
+                    <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:entryfields">
+                      <!-- fields valid just for this entrytype -->
+                      <xsl:if test="./bcf:entrytype[text()=$entrynode/text()]">
+                        <xsl:choose>
+                          <!-- Value "ALL" lists every valid field which is a superset
+                               of the global fields -->
+                          <xsl:when test="./bcf:field[text()='ALL']">
+                            <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:fields/bcf:field">
+                              <xsl:sort select="./text()"/>
+                              <xsl:value-of select="./text()"/>
+                              <xsl:if test="not(position()=last())">
+                                <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                              </xsl:if>
+                            </xsl:for-each>
+                          </xsl:when>
+                          <!-- Normal type-specific fields -->
+                          <xsl:otherwise>
+                            <!-- List global fields for all entrytypes first -->
+                              <div class="global_entrytype_fields">
+                                <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:entryfields/bcf:entrytype[text()='ALL']/bcf:field">
+                                  <xsl:sort select="./text()"/>
+                                  <xsl:value-of select="./text()"/>
+                                  <xsl:if test="not(position()=last())">
+                                    <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                                  </xsl:if>
+                                </xsl:for-each>
+                              </div>
+                            <xsl:for-each select="./bcf:field">
+                              <xsl:sort select="./text()"/>
+                              <xsl:value-of select="./text()"/>
+                              <xsl:if test="not(position()=last())">
+                                <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                              </xsl:if>
+                            </xsl:for-each>
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </xsl:if>
+                    </xsl:for-each>
+                  </td>                  
                 </tr>
               </xsl:for-each>
             </tbody>
