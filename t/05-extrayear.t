@@ -50,4 +50,3 @@ ok(is_undef($bibentries->entry('vangennep')->get_field('extrayear')), 'Entry van
 ok(is_undef($bibentries->entry('gennep')->get_field('extrayear')), 'Entry gennep - different from prefix name');
 
 
-unlink "*.utf8";

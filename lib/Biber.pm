@@ -549,7 +549,7 @@ sub parse_bibtex {
 
   my @localkeys = ();
 
-  my $ufilename = "$filename.utf8";
+  my $ufilename = "${filename}_$$.utf8";
 
   # bib encoding is not UTF-8
   if (Biber::Config->getoption('bibencoding') ne 'UTF-8') {

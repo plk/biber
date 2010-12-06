@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 
 use Biber;
 use Biber::Output::BBL;
@@ -21,6 +21,7 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('sortlocale', 'sv_SE');
 Biber::Config->setblxoption('sortlos', 1);
 
+
 my $i = 1;
 
 # This makes sure the the sortorder of the output strings is still correct
@@ -35,20 +36,22 @@ sub check_output_string_order {
 
 # U::C Swedish tailoring
 $biber->prepare;
-my $section = $biber->sections->get_section(0);
+my $section0 = $biber->sections->get_section(0);
+my $section1 = $biber->sections->get_section(1);
 my $out = $biber->get_output_obj;
 
-is_deeply([$section->get_citekeys], ['LS2','LS1','LS3'], 'U::C tailoring - 1');
+is_deeply([$section0->get_citekeys], ['LS2','LS1','LS3'], 'U::C tailoring - 1');
 check_output_string_order($out, ['LS2','LS1','LS3']);
-is_deeply([$section->get_shorthands], ['LS3', 'LS2','LS1'], 'U::C tailoring - 2');
-
+is_deeply([$section0->get_shorthands], ['LS3', 'LS2','LS1'], 'U::C tailoring - 2');
 
 Biber::Config->setblxoption('sortlos', 0);
-$section->set_shorthands([]);
+$section0->set_shorthands([]);
 $biber->prepare;
-$section = $biber->sections->get_section(0);
+$section0 = $biber->sections->get_section(0);
 $out = $biber->get_output_obj;
-is_deeply([$section->get_shorthands], ['LS2', 'LS1','LS3'], 'U::C tailoring - 3');
+is_deeply([$section0->get_shorthands], ['LS2', 'LS1','LS3'], 'U::C tailoring - 3');
 
-unlink "*.utf8";
+is_deeply([$section1->get_citekeys], ['LSD3','LSD1','LSD2'], 'U::C tailoring descending- 1');
+
+
 

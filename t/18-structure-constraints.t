@@ -62,4 +62,4 @@ ok(is_undef($bibentries->entry('c7')->get_field('field7')), 'Constraints test 7b
 is_deeply($bibentries->entry('c8')->get_field('warnings'), $c8, 'Constraints test 8a' );
 ok(is_undef($bibentries->entry('c8')->get_field('field4')), 'Constraints test 8b' );
 
-unlink "*.utf8";
+
