@@ -271,16 +271,12 @@ sub _generatesortstring {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $sortstring;
+  my $sortobj;
   foreach my $sortset (@{$sortscheme}) {
     $BIBER_SORT_FINAL = 0; # reset sorting short-circuit
-    $sortstring .= $self->_sortset($sortset, $citekey);
-
-  # Only append sorting separator if this isn't a null sort string element
-  # Put another way, null elements should be completely ignored and no separator
-  # added
-    unless ($BIBER_SORT_NULL) {
-      $sortstring .= $sorting_sep;
-    }
+    my $s = $self->_sortset($sortset, $citekey);
+    $sortstring .= "$s$sorting_sep";
+    push @$sortobj, $s;
 
     # Stop here if this sort element is specified as "final" and it's non-null
     if ($BIBER_SORT_FINAL and not $BIBER_SORT_NULL) {
@@ -305,20 +301,15 @@ sub _generatesortstring {
     $sortstring = lc($sortstring);
   }
   $be->set_field('sortstring', $sortstring);
+  $be->set_field('sortobj', $sortobj);
 
   # Generate sortinit - the initial letter of the sortstring. This must ignore
   # presort characters, naturally
-  my $pre;
-  # Prefix is either specified or 'mm' default plus the $sorting_sep
-  if ($be->get_field('presort')) {
-    $pre = $be->get_field('presort');
-    $pre .= $sorting_sep;
-  }
-  else {
-    $pre = 'mm' . $sorting_sep;
-  }
+  my $pre = $be->get_field('presort') // 'mm';
+
   # Strip off the prefix
-  $ss =~ s/\A$pre//;
+  print "SS: $ss\nPRE: $pre\n" if $BIBER_SORT_FIRSTPASSDONE;
+  $ss =~ s/\A$pre$sorting_sep+//;
   my $init = substr $ss, 0, 1;
 
   # Now check if this sortinit is valid in the bblencoding. If not, warn
