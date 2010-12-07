@@ -308,7 +308,6 @@ sub _generatesortstring {
   my $pre = $be->get_field('presort') // 'mm';
 
   # Strip off the prefix
-  print "SS: $ss\nPRE: $pre\n" if $BIBER_SORT_FIRSTPASSDONE;
   $ss =~ s/\A$pre$sorting_sep+//;
   my $init = substr $ss, 0, 1;
 

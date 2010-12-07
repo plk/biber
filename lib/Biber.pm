@@ -1411,15 +1411,16 @@ sub generate_final_sortinfo {
     my $bee = $be->get_field('entrytype');
     # Only generate extrayear and extraapha if skiplab is not set.
     # Don't forget that skiplab is implied for set members
-    next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
-    my $nameyear = $be->get_field('nameyear');
-    if (Biber::Config->get_seennameyear($nameyear) > 1) {
-      Biber::Config->incr_seenlabelyear($nameyear);
-      if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype')) ) {
-        $be->set_field('extrayear', Biber::Config->get_seenlabelyear($nameyear));
-      }
-      if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
-        $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($nameyear));
+    unless (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+      my $nameyear = $be->get_field('nameyear');
+      if (Biber::Config->get_seennameyear($nameyear) > 1) {
+        Biber::Config->incr_seenlabelyear($nameyear);
+        if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype')) ) {
+          $be->set_field('extrayear', Biber::Config->get_seenlabelyear($nameyear));
+        }
+        if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
+          $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($nameyear));
+        }
       }
     }
     $self->_generatesortstring($citekey, Biber::Config->getblxoption('sorting_final', $be->get_field('entrytype')));
