@@ -1439,17 +1439,6 @@ sub generate_final_sortinfo {
 =head2 sortentries
 
     Sort the entries according to a certain sorting scheme.
-    This method is automatically called by C<prepare>.
-
-=cut
-
-#===========================
-# SORTING
-#===========================
-
-=head2 sortentries
-
-    Sort the entries according to a certain sorting scheme.
     Use a flag to skip info messages on first pass
 
 =cut

@@ -287,7 +287,7 @@ sub _generatesortstring {
       last;
     }
   }
-  $sortstring =~ s/$sorting_sep\z//xms; # strip off the last '0' added by _sortset()
+  $sortstring =~ s/$sorting_sep\z//xms; # strip off the last sortsep added by _sortset()
 
   # Decide if we are doing case-insensitive sorting or not
   # If so, lowercase according to locale but only if using fastsort
