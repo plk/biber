@@ -249,17 +249,6 @@
           <ref name="sort"/>
         </oneOrMore>
       </element>
-      <zeroOrMore>
-        <!-- Optional entrytype specific sorting specifications -->
-        <element name="bcf:sorting">
-          <attribute name="type">
-            <data type="NCName"/>
-          </attribute>
-          <oneOrMore>
-            <ref name="sort"/>
-          </oneOrMore>
-        </element>
-      </zeroOrMore>
       <optional>
         <!-- Structure specification -->
         <element name="bcf:structure">

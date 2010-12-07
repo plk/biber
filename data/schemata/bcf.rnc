@@ -112,12 +112,6 @@ start =
       attribute type { "global" },
       sort+
     },
-    
-    # Optional entrytype specific sorting specifications
-    element bcf:sorting {
-      attribute type { xsd:NCName },
-      sort+
-    }*,
 
     # Structure specification
     element bcf:structure {

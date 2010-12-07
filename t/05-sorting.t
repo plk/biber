@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 41;
+use Test::More tests => 40;
 
 use Biber;
 use Biber::Output::BBL;
@@ -50,7 +50,6 @@ my $ynt         = 'mm,1961,glashow_sheldon,partial symmetries of weak interactio
 my $ydnt        = 'mm,1114062111405411140571114062,glashow_sheldon,partial symmetries of weak interactions';
 my $debug       = 'stdmodel';
 my $sk1         = 'mm,aatestkey';
-my $pt1         = 'mm,1114062111405511140561114056,aristotle,rhetoric of aristotle';
 my $ps_sc       = 'zs,glashow_sheldon,partial symmetries of weak interactions';
 my $noname      = 'mm,partial symmetries of weak interactions,partial symmetries of weak interactions,1961,22';
 my $citeorder   = '0000001';
@@ -1107,43 +1106,6 @@ $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $debug, 'basic debug sort' );
-
-# per-type (book, ydnt)
-Biber::Config->setblxoption('sorting_label', [
-                                                [
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
-                                                ],
-                                                [
-                                                 {'sortkey'    => {'final' => 1}}
-                                                ],
-                                                [
-                                                 {'sortyear'  => {'sort_direction'  => 'descending'}},
-                                                 {'labelyear'      => {'sort_direction'  => 'descending'}},
-                                                 {'9999'       => {'sort_direction'  => 'descending'}}
-                                                ],
-                                                [
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                               ],
-			    'PER_TYPE',
-			    'book');
-Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label', 'book'), 'PER_TYPE', 'book');
-
-# regenerate information
-$biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
-
-is($bibentries->entry('aristotle:rhetoric')->get_field('sortstring'), $pt1, 'book type ydnt sort' );
 
 # nty with modified presort and short_circuit at title
 Biber::Config->setblxoption('sorting_label', [

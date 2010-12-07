@@ -153,23 +153,6 @@
      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
      <bcf:sortitem order="2">title</bcf:sortitem>
    </bcf:sort>
- </bcf:sorting>
-  <bcf:sorting type="collection">
-    <bcf:sort order="1">
-      <bcf:sortitem order="1">presort</bcf:sortitem>
-      <bcf:sortitem order="2">mm</bcf:sortitem>
-    </bcf:sort>
-    <bcf:sort order="1" final="1">
-      <bcf:sortitem order="1">sortkey</bcf:sortitem>
-    </bcf:sort>
-    <bcf:sort order="2">
-      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
-      <bcf:sortitem order="2">title</bcf:sortitem>
-    </bcf:sort>
-    <bcf:sort order="3">
-      <bcf:sortitem order="1">sortyear</bcf:sortitem>
-      <bcf:sortitem order="2">year</bcf:sortitem>
-    </bcf:sort>
   </bcf:sorting>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">

@@ -263,7 +263,6 @@ sub parse_ctrlfile {
                                                            qr/\Aoption\z/,
                                                            qr/\Aoptions\z/,
                                                            qr/\Avalue\z/,
-                                                           qr/\Asorting\z/,
                                                            qr/\Asortitem\z/,
                                                            qr/\Abibdata\z/,
                                                            qr/\Adatasource\z/,
@@ -351,78 +350,70 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
     Biber::Config->setblxoption('inheritance', $bcfxml->{inheritance});
   }
 
-  # SORTING schemes
-  foreach my $sortschemes (@{$bcfxml->{sorting}}) {
-    my $sorting_label = [];
-    my $sorting_final = [];
-    foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$sortschemes->{sort}}) {
-      my $sortingitems_label;
-      my $sortingitems_final;
+  # SORTING
+  my $sorting_label = [];
+  my $sorting_final = [];
+  foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$bcfxml->{sorting}{sort}}) {
+    my $sortingitems_label;
+    my $sortingitems_final;
 
-      # Determine which sorting pass(es) to include the item in
-      my $whichpass = ($sort->{pass} or 'both');
+    # Determine which sorting pass(es) to include the item in
+    my $whichpass = ($sort->{pass} or 'both');
 
-      # Generate sorting pass structures
-      foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
-        my $sortitemattributes = {};
-        # this attribute is defined on the sort group level but propogated to the items
-        if ($sort->{final}) { # Found a sorting short-circuit marker
-          $sortitemattributes->{final} = 1;
-        }
-        # this attribute is defined on the sort group level but propogated to the items
-        if (defined($sort->{sort_direction})) { # Found sorting direction attribute
-          $sortitemattributes->{sort_direction} = $sort->{sort_direction};
-        }
-        if (defined($sortitem->{substring_side})) { # Found sorting substring side attribute
-          $sortitemattributes->{substring_side} = $sortitem->{substring_side};
-        }
-        if (defined($sortitem->{substring_width})) { # Found sorting substring length attribute
-          $sortitemattributes->{substring_width} = $sortitem->{substring_width};
-        }
-        if (defined($sortitem->{pad_width})) { # Found sorting pad length attribute
-          $sortitemattributes->{pad_width} = $sortitem->{pad_width};
-        }
-        if (defined($sortitem->{pad_char})) { # Found sorting pad char attribute
-          $sortitemattributes->{pad_char} = $sortitem->{pad_char};
-        }
-        if (defined($sortitem->{pad_side})) { # Found sorting pad side attribute
-          $sortitemattributes->{pad_side} = $sortitem->{pad_side};
-        }
-
-        # No pass specified, sortitem is included in both sort passes
-        # Note that we're cloning the sortitemattributes object so as not to have pointers
-        # from one structure to the other
-        if (lc($whichpass) eq 'both') {
-          push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
-          push @{$sortingitems_final}, {$sortitem->{content} => dclone($sortitemattributes)};
-        }
-
-        # "label" specified, sortitem is included only on "label" sort pass
-        elsif (lc($whichpass) eq 'label') {
-          push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
-        }
-
-        # "final" specified, sortitem is included only on "final" sort pass
-        elsif (lc($whichpass) eq 'final') {
-          push @{$sortingitems_final}, {$sortitem->{content} => $sortitemattributes};
-        }
+    # Generate sorting pass structures
+    foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
+      my $sortitemattributes = {};
+      # this attribute is defined on the sort group level but propogated to the items
+      if ($sort->{final}) {     # Found a sorting short-circuit marker
+        $sortitemattributes->{final} = 1;
+      }
+      # this attribute is defined on the sort group level but propogated to the items
+      if (defined($sort->{sort_direction})) { # Found sorting direction attribute
+        $sortitemattributes->{sort_direction} = $sort->{sort_direction};
+      }
+      if (defined($sortitem->{substring_side})) { # Found sorting substring side attribute
+        $sortitemattributes->{substring_side} = $sortitem->{substring_side};
+      }
+      if (defined($sortitem->{substring_width})) { # Found sorting substring length attribute
+        $sortitemattributes->{substring_width} = $sortitem->{substring_width};
+      }
+      if (defined($sortitem->{pad_width})) { # Found sorting pad length attribute
+        $sortitemattributes->{pad_width} = $sortitem->{pad_width};
+      }
+      if (defined($sortitem->{pad_char})) { # Found sorting pad char attribute
+        $sortitemattributes->{pad_char} = $sortitem->{pad_char};
+      }
+      if (defined($sortitem->{pad_side})) { # Found sorting pad side attribute
+        $sortitemattributes->{pad_side} = $sortitem->{pad_side};
       }
 
-      # Only push a sortitem if defined. If the item has a conditional "pass"
-      # attribute, it may be ommitted in which case we don't want an empty array ref
-      # pushing
-      push @{$sorting_label}, $sortingitems_label if defined($sortingitems_label);
-      push @{$sorting_final}, $sortingitems_final if defined($sortingitems_final);
+      # No pass specified, sortitem is included in both sort passes
+      # Note that we're cloning the sortitemattributes object so as not to have pointers
+      # from one structure to the other
+      if (lc($whichpass) eq 'both') {
+        push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
+        push @{$sortingitems_final}, {$sortitem->{content} => dclone($sortitemattributes)};
+      }
+
+      # "label" specified, sortitem is included only on "label" sort pass
+      elsif (lc($whichpass) eq 'label') {
+        push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
+      }
+
+      # "final" specified, sortitem is included only on "final" sort pass
+      elsif (lc($whichpass) eq 'final') {
+        push @{$sortingitems_final}, {$sortitem->{content} => $sortitemattributes};
+      }
     }
-    if (lc($sortschemes->{type}) eq 'global') {
-      Biber::Config->setblxoption('sorting_label', $sorting_label);
-      Biber::Config->setblxoption('sorting_final', $sorting_final);
-    }
-    else {
-      Biber::Config->setblxoption('sorting_label', $sorting_label, 'PER_TYPE', $sortschemes->{type});
-      Biber::Config->setblxoption('sorting_final', $sorting_final, 'PER_TYPE', $sortschemes->{type});
-    }
+
+    # Only push a sortitem if defined. If the item has a conditional "pass"
+    # attribute, it may be ommitted in which case we don't want an empty array ref
+    # pushing
+    push @{$sorting_label}, $sortingitems_label if defined($sortingitems_label);
+    push @{$sorting_final}, $sortingitems_final if defined($sortingitems_final);
   }
+  Biber::Config->setblxoption('sorting_label', $sorting_label);
+  Biber::Config->setblxoption('sorting_final', $sorting_final);
 
   # STRUCTURE schema (always global)
   # This should not be optional any more when biblatex implements this so take
