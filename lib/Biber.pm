@@ -1467,19 +1467,24 @@ sub sortentries {
   my $sortfieldspecs;
   # Construct Sort::Maker sort sub using direction information in sorting spec
   # We deal with 
-  # foreach my $sortset (@{$sortscheme}) {
-  #   if ($sorset->[0]
+  my $num_sorts = 0;
+  foreach my $sortset (@{$sortscheme}) {
+    my $specs;
+    if (defined($sortset->[0]{sort_direction}) and
+        $sortset->[0]{sort_direction} eq 'descending') {
+      $specs->{descending} = 1;
+    }
+    $specs->{code} = '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts++ .']';
+    push @$sortfieldspecs, ('string' => $specs);
+  }
 
-  #   push @$sortfieldspecs, ('string' => {});
-  # }
-
-  # # Create a sorting sub
-  # my $sm = make_sorter( ST        => 1,
-  #                       ref_out   => 1,
-  #                       ref_in    => 1,
-  #                       ascending => 1,
-                        
-  #                     );
+  # Create a sorting sub
+  my $sm = make_sorter( orcish    => 1,
+                        ascending => 1,
+                        @$sortfieldspecs
+                      );
+print $@;
+print Sort::Maker::sorter_source($sm);
 
   # Set up locale. Order of priority is:
   # 1. locale value passed to Unicode::Collate::Locale->new() (Unicode::Collate sorts only)
