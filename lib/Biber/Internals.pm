@@ -338,13 +338,11 @@ sub _generatesortstring {
 # Disjunctive sorting set
 sub _sortset {
   my ($self, $sortset, $citekey) = @_;
-  foreach my $sortelement (@{$sortset}) {
+  foreach my $sortelement (@$sortset[1..$#$sortset]) {
     my ($sortelementname, $sortelementattributes) = %{$sortelement};
     my $string = $self->_dispatch_sorting($sortelementname, $citekey, $sortelementattributes);
-    $BIBER_SORT_NULL  = 0; # reset sorting null flag
-    if ($sortelementattributes->{final}) { # set short-circuit flag if specified
-      $BIBER_SORT_FINAL = 1;
-    }
+    $BIBER_SORT_NULL = 0; # reset sorting null flag
+    $BIBER_SORT_FINAL = $sortset->[0]{final};
     if ($string) { # sort returns something for this key
       return $string;
     }
@@ -739,17 +737,17 @@ sub _process_sort_attributes {
     }
   }
   # process sort direction
-  my $sort_dir = $sortelementattributes->{sort_direction} // 'ascending';
-  if ($sort_dir eq 'descending') { # descending sort
-    # Descending sorts are tricky - you need a concept of the "revert sorting order"
-    # of a string. I do this by creating the concatenation of the complement of
-    # the decimal value of the char with the max decimal Unicode code point value.
-    # This means that in general, a descending sort won't have a particularly nice
-    # looking sortstring since it will contain number strings. Ah well, it's an
-    # internal data structure anyway.
-    # 1114111 is the maximum decimal Unicode code point
-    $field_string = join('', map {1114111 - $_} unpack('U*', $field_string));
-  }
+  # my $sort_dir = $sortelementattributes->{sort_direction} // 'ascending';
+  # if ($sort_dir eq 'descending') { # descending sort
+  #   # Descending sorts are tricky - you need a concept of the "revert sorting order"
+  #   # of a string. I do this by creating the concatenation of the complement of
+  #   # the decimal value of the char with the max decimal Unicode code point value.
+  #   # This means that in general, a descending sort won't have a particularly nice
+  #   # looking sortstring since it will contain number strings. Ah well, it's an
+  #   # internal data structure anyway.
+  #   # 1114111 is the maximum decimal Unicode code point
+  #   $field_string = join('', map {1114111 - $_} unpack('U*', $field_string));
+  # }
   return $field_string;
 }
 

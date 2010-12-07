@@ -27,6 +27,7 @@ use Log::Log4perl qw( :no_extra_logdie_message );
 use base 'Biber::Internals';
 use Config::General qw( ParseConfig );
 use Data::Dump;
+use Sort::Maker;
 use Text::BibTeX; # Need this in here in order to reset @STRING macros per section
 our @ISA;
 
@@ -363,14 +364,6 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
     # Generate sorting pass structures
     foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
       my $sortitemattributes = {};
-      # this attribute is defined on the sort group level but propogated to the items
-      if ($sort->{final}) {     # Found a sorting short-circuit marker
-        $sortitemattributes->{final} = 1;
-      }
-      # this attribute is defined on the sort group level but propogated to the items
-      if (defined($sort->{sort_direction})) { # Found sorting direction attribute
-        $sortitemattributes->{sort_direction} = $sort->{sort_direction};
-      }
       if (defined($sortitem->{substring_side})) { # Found sorting substring side attribute
         $sortitemattributes->{substring_side} = $sortitem->{substring_side};
       }
@@ -409,8 +402,18 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
     # Only push a sortitem if defined. If the item has a conditional "pass"
     # attribute, it may be ommitted in which case we don't want an empty array ref
     # pushing
-    push @{$sorting_label}, $sortingitems_label if defined($sortingitems_label);
-    push @{$sorting_final}, $sortingitems_final if defined($sortingitems_final);
+    # Also, we only push the sort attributes if there are any sortitems otherwise
+    # we end up with a blank sort
+    if (defined($sortingitems_label)) {
+      unshift @{$sortingitems_label}, {final          => $sort->{final},
+                                       sort_direction => $sort->{sort_direction}};
+      push @{$sorting_label}, $sortingitems_label;
+    }
+    if (defined($sortingitems_final)) {
+      unshift @{$sortingitems_final}, {final          => $sort->{final},
+                                       sort_direction => $sort->{sort_direction}};
+      push @{$sorting_final}, $sortingitems_final;
+    }
   }
   Biber::Config->setblxoption('sorting_label', $sorting_label);
   Biber::Config->setblxoption('sorting_final', $sorting_final);
@@ -1452,6 +1455,32 @@ sub sortentries {
     $logger->debug("$ck => " . $bibentries->entry($ck)->get_field('sortstring') . "\n");
   }
 
+  # Get the right sortscheme
+  my $sortscheme;
+  if ($BIBER_SORT_FIRSTPASSDONE) {
+    $sortscheme = Biber::Config->getblxoption('sorting_final');
+  }
+  else {
+    $sortscheme = Biber::Config->getblxoption('sorting_label');
+  }
+
+  my $sortfieldspecs;
+  # Construct Sort::Maker sort sub using direction information in sorting spec
+  # We deal with 
+  # foreach my $sortset (@{$sortscheme}) {
+  #   if ($sorset->[0]
+
+  #   push @$sortfieldspecs, ('string' => {});
+  # }
+
+  # # Create a sorting sub
+  # my $sm = make_sorter( ST        => 1,
+  #                       ref_out   => 1,
+  #                       ref_in    => 1,
+  #                       ascending => 1,
+                        
+  #                     );
+
   # Set up locale. Order of priority is:
   # 1. locale value passed to Unicode::Collate::Locale->new() (Unicode::Collate sorts only)
   # 2. Biber sortlocale option
@@ -1461,7 +1490,6 @@ sub sortentries {
   # 6. Built-in defaults
 
   my $thislocale = Biber::Config->getoption('sortlocale');
-
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
     $logger->info("Sorting entries with built-in sort (with locale $thislocale) ...") if $BIBER_SORT_FIRSTPASSDONE;
