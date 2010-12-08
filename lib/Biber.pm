@@ -267,6 +267,8 @@ sub parse_ctrlfile {
                                                            qr/\Abibdata\z/,
                                                            qr/\Adatasource\z/,
                                                            qr/\Asection\z/,
+                                                           qr/\Asortexclusion\z/,
+                                                           qr/\Aexclusion\z/,
                                                            qr/\Asort\z/,
                                                            qr/\Apresort\z/,
                                                            qr/\Atype_pair\z/,
@@ -352,6 +354,17 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
   }
 
   # SORTING
+
+  # sorting excludes
+  foreach my $sex (@{$bcfxml->{sorting}{sortexclusion}}) {
+    foreach my $ex (@{$sex->{exclusion}}) {
+      Biber::Config->setblxoption('sortexclusion',
+                                 $ex->{content},
+                                 'PER_TYPE',
+                                 $sex->{type});
+    }
+  }
+
   # presort defaults
   foreach my $presort (@{$bcfxml->{sorting}{presort}}) {
     # Global presort default
