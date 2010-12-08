@@ -338,7 +338,7 @@ sub _generatesortstring {
   return;
 }
 
-# Disjunctive sorting set
+# Process sorting set
 sub _sortset {
   my ($self, $sortset, $citekey) = @_;
   foreach my $sortelement (@$sortset[1..$#$sortset]) {
