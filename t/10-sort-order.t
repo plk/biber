@@ -37,6 +37,8 @@ sub check_output_string_order {
 # citeorder (sorting=none)
 Biber::Config->setblxoption('sorting_label', [
                                                       [
+                                                       {final          => undef,
+                                                        sort_direction => undef},
                                                        {'citeorder'    => {}}
                                                       ]
                                                      ]);
@@ -375,10 +377,10 @@ Biber::Config->setblxoption('sorting_label', [
                                                     ],
                                                     [
                                                      {final          => undef,
-                                                      sort_direction => undef},
-                                                     {'sortyear'  => {'sort_direction'  => 'descending'}},
-                                                     {'year'      => {'sort_direction'  => 'descending'}},
-                                                     {'9999'       => {sort_direction => 'descending'}}
+                                                      sort_direction => 'descending'},
+                                                     {'sortyear'  => {}},
+                                                     {'year'      => {}},
+                                                     {'9999'       => {}}
                                                     ],
                                                     [
                                                      {final          => undef,

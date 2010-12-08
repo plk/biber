@@ -27,7 +27,6 @@ use Log::Log4perl qw( :no_extra_logdie_message );
 use base 'Biber::Internals';
 use Config::General qw( ParseConfig );
 use Data::Dump;
-use Sort::Maker;
 use Text::BibTeX; # Need this in here in order to reset @STRING macros per section
 our @ISA;
 
@@ -1464,27 +1463,37 @@ sub sortentries {
     $sortscheme = Biber::Config->getblxoption('sorting_label');
   }
 
-  my $sortfieldspecs;
-  # Construct Sort::Maker sort sub using direction information in sorting spec
-  # We deal with 
+  # Construct a multi-field Schwartzian Transform with the right number of
+  # extractions into a string representing an array ref as we musn't eval this yet
+
+  # Construct data extractor (step #1)
   my $num_sorts = 0;
+  my $data_extractor = '[';
+  my $sorter;
+  my $sort_extractor;
   foreach my $sortset (@{$sortscheme}) {
-    my $specs;
+    $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
+    $sorter .= ' || ' if $num_sorts; # don't add separator before first field
     if (defined($sortset->[0]{sort_direction}) and
         $sortset->[0]{sort_direction} eq 'descending') {
-      $specs->{descending} = 1;
+      # descending field
+      $sorter .= '$b->[' . $num_sorts. '] cmp $a->[' . $num_sorts . ']'
     }
-    $specs->{code} = '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts++ .']';
-    push @$sortfieldspecs, ('string' => $specs);
+    else {
+      # ascending field
+      $sorter .= '$a->[' . $num_sorts. '] cmp $b->[' . $num_sorts . ']'
+    }
+  $num_sorts++;
   }
+  $data_extractor .= '$_]';
+  # Handily, $Num_sorts is now one larger than the number of fields which is the
+  # correct index for the actual data in the sort array
+  $sort_extractor = '$_->[' . $num_sorts . ']';
 
-  # Create a sorting sub
-  my $sm = make_sorter( orcish    => 1,
-                        ascending => 1,
-                        @$sortfieldspecs
-                      );
-print $@;
-print Sort::Maker::sorter_source($sm);
+  if ($BIBER_SORT_FIRSTPASSDONE) {
+    my @temp1 = map  { eval $data_extractor } @citekeys;
+    use Data::Dump;dd(@temp1);dd($sorter);dd($sort_extractor);
+  }
 
   # Set up locale. Order of priority is:
   # 1. locale value passed to Unicode::Collate::Locale->new() (Unicode::Collate sorts only)
@@ -1502,9 +1511,16 @@ print Sort::Maker::sorter_source($sm);
       $logger->warn("Unavailable locale $thislocale");
       $self->{warnings}++;
     }
-    @citekeys = sort {
-      $bibentries->entry($a)->get_field('sortstring') cmp $bibentries->entry($b)->get_field('sortstring')
-      } @citekeys;
+
+    # Schwartzian transform multi-field sort
+    @citekeys = map  { eval $sort_extractor }
+                sort { eval $sorter }
+                map  { eval $data_extractor } @citekeys;
+
+    # @citekeys = sort {
+    #   $bibentries->entry($a)->get_field('sortstring') cmp $bibentries->entry($b)->get_field('sortstring')
+    #   } @citekeys;
+
   }
   else {
     require Unicode::Collate::Locale;
