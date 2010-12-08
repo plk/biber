@@ -7,19 +7,3 @@ TODO in decreasing order of priority:
      automation. Needs new .bbl format and biblatex support (biblatex 1.2)
 
 
-<bcf:presort>m</bcf:presort>
-<bcf:presort type="article">a</bcf:presort>
-<bcf:presort type="inbook">a</bcf:presort>
-<bcf:presort type="incollection">a</bcf:presort>
-<bcf:presort type="book">b</bcf:presort>
-<bcf:presort type="collection">b</bcf:presort>
-
-       <bcf:sortexclusion type="manual,book,etc">
-         <bcf:exclusion>field1</bcf:exclusion>
-         </bcf:exclusion>field2</bcf:exclusion>
-           .
-           .
-       </bcf:sortexclusion>
-
-lc to Sort::Maker - could be a per sortgroup option like direction?
-

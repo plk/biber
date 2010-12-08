@@ -110,6 +110,16 @@ start =
     # Global sorting specification
     element bcf:sorting {
       attribute type { "global" },
+      # presort default strings for different entry types
+      element bcf:presort {
+        attribute type { xsd:NCName }?,
+        text
+      }+,
+      # excludes of certain fields for sorting for specified types
+      element bcf:sortexclusion {
+        attribute type { text },
+        element bcf:exclusion { xsd:NCName }
+      }*,
       sort+
     },
 
@@ -246,10 +256,10 @@ sort =
     # sort pass or the second (final) pass?
     attribute pass { "label" | "final" }?,
     # Should we stop generating sorting information after this item?
+    attribute final { xsd:integer }?,
+    # Sort ascending or descending
     attribute sort_direction { "ascending" | "descending" }?,
     # A sort item specification - a field or pseudo-field to get sort information from
-    attribute final { xsd:integer }?,
-    # Sort ascending or descending (when relevant)?
     element bcf:sortitem {
       # order of this item in the set of all other item specifications
       attribute order { xsd:integer },

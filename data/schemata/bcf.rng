@@ -246,6 +246,26 @@
           <value>global</value>
         </attribute>
         <oneOrMore>
+          <!-- presort default strings for different entry types -->
+          <element name="bcf:presort">
+            <optional>
+              <attribute name="type">
+                <data type="NCName"/>
+              </attribute>
+            </optional>
+            <text/>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <!-- excludes of certain fields for sorting for specified types -->
+          <element name="bcf:sortexclusion">
+            <attribute name="type"/>
+            <element name="bcf:exclusion">
+              <data type="NCName"/>
+            </element>
+          </element>
+        </zeroOrMore>
+        <oneOrMore>
           <ref name="sort"/>
         </oneOrMore>
       </element>
@@ -555,6 +575,12 @@
         </optional>
         <optional>
           <!-- Should we stop generating sorting information after this item? -->
+          <attribute name="final">
+            <data type="integer"/>
+          </attribute>
+        </optional>
+        <optional>
+          <!-- Sort ascending or descending -->
           <attribute name="sort_direction">
             <choice>
               <value>ascending</value>
@@ -562,14 +588,8 @@
             </choice>
           </attribute>
         </optional>
-        <optional>
-          <!-- A sort item specification - a field or pseudo-field to get sort information from -->
-          <attribute name="final">
-            <data type="integer"/>
-          </attribute>
-        </optional>
         <oneOrMore>
-          <!-- Sort ascending or descending (when relevant)? -->
+          <!-- A sort item specification - a field or pseudo-field to get sort information from -->
           <element name="bcf:sortitem">
             <!-- order of this item in the set of all other item specifications -->
             <attribute name="order">

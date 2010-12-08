@@ -182,16 +182,20 @@ our %CONFIG_DEFAULT_BIBLATEX =
                   },
    sorting_label   =>  [
                 [
+                 {final          => undef,
+                  sort_direction => undef},
                  {
                   'presort'    => {}},
-                 {
-                  'mm'         => {}},
                 ],
                 [
+                 {final          => 1,
+                  sort_direction => undef},
                  {
-                  'sortkey'    => {'final' => 1}}
+                  'sortkey'    => {}}
                 ],
                 [
+                 {final          => undef,
+                  sort_direction => undef},
                  {
                   'sortname'   => {}},
                  {
@@ -206,18 +210,24 @@ our %CONFIG_DEFAULT_BIBLATEX =
                   'title'      => {}}
                 ],
                 [
+                 {final          => undef,
+                  sort_direction => undef},
                  {
                   'sortyear'   => {}},
                  {
                   'year'       => {}}
                 ],
                 [
+                 {final          => undef,
+                  sort_direction => undef},
                  {
                   'sorttitle'  => {}},
                  {
                   'title'      => {}}
                 ],
                 [
+                 {final          => undef,
+                  sort_direction => undef},
                  {
                   'volume'     => {}},
                  {
@@ -1536,6 +1546,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
   minitems          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   maxnames          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   minnames          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  presort           => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   singletitle       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   skipbib           => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
   skiplab           => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},

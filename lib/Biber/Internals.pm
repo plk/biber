@@ -265,7 +265,7 @@ sub _dispatch_sorting {
 }
 
 # Conjunctive set of sorting sets
-sub _generatesortstring {
+sub _generatesortinfo {
   my ($self, $citekey, $sortscheme) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -310,7 +310,7 @@ sub _generatesortstring {
 
   # Generate sortinit - the initial letter of the sortstring. This must ignore
   # presort characters, naturally
-  my $pre = $be->get_field('presort') // 'mm';
+  my $pre = Biber::Config->getblxoption('presort', $be->get_field('entrytype'), $citekey);
 
   # Strip off the prefix
   $ss =~ s/\A$pre$sorting_sep+//;
@@ -584,7 +584,7 @@ sub _sort_presort {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
-  my $string = $be->get_field('presort') // '';
+  my $string = Biber::Config->getblxoption('presort', $be->get_field('entrytype'), $citekey);
   return _process_sort_attributes($string, $sortelementattributes);
 }
 
@@ -847,13 +847,6 @@ sub _liststring {
     "dataonly" is a special case and expands to "skiplab,skiplos,skipbib"
     but only "skiplab" and "skiplos" are dealt with in Biber, "skipbib" is
     dealt with in biblatex.
-
-    The skip* local options are dealt with by not generating at all:
-
-    * labelyear
-    * extrayear
-    * labelalpha
-    * extraalpha
 
 =cut
 

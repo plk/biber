@@ -56,8 +56,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                     [
                                                      {final          => undef,
                                                       sort_direction => undef},
-                                                     {'presort'    => {}},
-                                                     {'mm'         => {}},
+                                                     {'presort'    => {}}
                                                     ],
                                                     [
                                                      {final          => 1,

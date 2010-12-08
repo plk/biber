@@ -41,8 +41,7 @@ my $sc1 = [
            [
             {final          => undef,
              sort_direction => undef},
-            {'presort'    => {}},
-            {'mm'         => {}},
+            {'presort'    => {}}
            ],
            [
             {final          => 1,
@@ -84,8 +83,7 @@ my $sc2 = [
            [
             {final          => undef,
              sort_direction => undef},
-            {'presort'    => {}},
-            {'mm'         => {}},
+            {'presort'    => {}}
            ],
            [
             {final          => undef,

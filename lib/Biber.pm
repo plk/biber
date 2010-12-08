@@ -268,6 +268,7 @@ sub parse_ctrlfile {
                                                            qr/\Adatasource\z/,
                                                            qr/\Asection\z/,
                                                            qr/\Asort\z/,
+                                                           qr/\Apresort\z/,
                                                            qr/\Atype_pair\z/,
                                                            qr/\Ainherit\z/,
                                                            qr/\Afieldor\z/,
@@ -351,6 +352,21 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
   }
 
   # SORTING
+  # presort defaults
+  foreach my $presort (@{$bcfxml->{sorting}{presort}}) {
+    # Global presort default
+    unless (exists($presort->{type})) {
+      Biber::Config->setblxoption('presort', $presort->{content});
+    }
+    # Per-type default
+    else {
+      Biber::Config->setblxoption('presort',
+                                  $presort->{content},
+                                  'PER_TYPE',
+                                  $presort->{type});
+    }
+  }
+
   my $sorting_label = [];
   my $sorting_final = [];
   foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$bcfxml->{sorting}{sort}}) {
@@ -930,8 +946,11 @@ sub postprocess {
     # track shorthands
     $self->postprocess_shorthands($citekey);
 
+    # push entry-specific presort fields into the presort state
+    $self->postprocess_presort($citekey);
+
     # first-pass sorting to generate basic labels
-    $self->postprocess_generate_sortstring_label($citekey);
+    $self->postprocess_generate_sortinfo_label($citekey);
   }
 
   $logger->debug("Finished postprocessing entries in section $secnum");
@@ -1375,20 +1394,41 @@ sub postprocess_shorthands {
   }
 }
 
-=head2 postprocess_generate_sortstring_label
+=head2 postprocess_presort
 
-    Generate label pass of sortstring
+    Put presort fields for an entry into the main Biber bltx state
+    so that it's all available in the same place since this can be
+    set per-type and globally too.
 
 =cut
 
-sub postprocess_generate_sortstring_label {
+sub postprocess_presort {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
-  $self->_generatesortstring( $citekey, Biber::Config->getblxoption('sorting_label', $be->get_field('entrytype')));
+  # We are treating presort as an option as it can be set per-type and globally too
+  if (my $ps = $be->get_field('presort')) {
+    Biber::Config->setblxoption('presort', $ps, 'PER_ENTRY', $citekey);
+  }
+}
+
+=head2 postprocess_generate_sortinfo_label
+
+    Generate label pass of sorting information
+
+=cut
+
+sub postprocess_generate_sortinfo_label {
+  my $self = shift;
+  my $citekey = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bibentries;
+  my $be = $bibentries->entry($citekey);
+  $self->_generatesortinfo( $citekey, Biber::Config->getblxoption('sorting_label', $be->get_field('entrytype')));
 }
 
 =head2 generate_final_sortinfo
@@ -1426,7 +1466,7 @@ sub generate_final_sortinfo {
         }
       }
     }
-    $self->_generatesortstring($citekey, Biber::Config->getblxoption('sorting_final', $be->get_field('entrytype')));
+    $self->_generatesortinfo($citekey, Biber::Config->getblxoption('sorting_final', $be->get_field('entrytype')));
   }
   return;
 }

@@ -63,8 +63,8 @@ my $edtypeclass1 = 'redactor,jaffé_philipp,loewenfeld_samuel+kaltenbrunner_ferd
 my $prefix1     = 'mm,,Luzzatto_Moshe Ḥayyim,haLashon laRamḥal uvo sheloshah ḥiburim,2000,0000';
 my $diacritic1  = 'mm,,Hasan_Alī,Some title,2000,0000';
 
-my $useprefix1  = 'mm,,von_bobble_terrence,1997,things,0000';
-my $useprefix2  = 'mm,,bobble_terrence_von,1997,things,0000';
+my $useprefix1  = 'ww,,von_bobble_terrence,1997,things,0000';
+my $useprefix2  = 'ww,,bobble_terrence_von,1997,things,0000';
 
 my $bibentries;
 
@@ -74,14 +74,14 @@ Biber::Config->setblxoption('useprefix', 1);
 $biber->prepare;
 
 $bibentries = $biber->sections->get_section(0)->bibentries;
-is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix1, 'von with useprefix=true' );
+is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix1, 'von with type-specific presort and useprefix=true' );
 
 Biber::Config->setblxoption('useprefix', 0);
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
-is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix2, 'von with useprefix=false' );
+is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix2, 'von with type-specific presort and useprefix=false' );
 
 
 
@@ -90,8 +90,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -391,8 +390,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -440,8 +438,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -491,8 +488,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -541,8 +537,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -591,8 +586,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -641,8 +635,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -692,8 +685,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -743,8 +735,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -794,8 +785,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -845,8 +835,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -895,8 +884,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -947,8 +935,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -1000,8 +987,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -1051,8 +1037,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -1102,8 +1087,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -1153,8 +1137,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => undef,
@@ -1221,8 +1204,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => undef,
@@ -1311,8 +1293,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -1356,8 +1337,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -1418,8 +1398,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
@@ -1460,7 +1439,6 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
-
 is($bibentries->entry('stdmodel:ps_sc')->get_field('sortstring'), $ps_sc, 'nty with modified presort and short-circuit title' );
 
 # nty with use* all off
@@ -1471,8 +1449,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {final          => undef,
                                                   sort_direction => undef},
-                                                 {'presort'    => {}},
-                                                 {'mm'         => {}},
+                                                 {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,

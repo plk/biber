@@ -58,8 +58,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                     [
                                                      {final          => undef,
                                                       sort_direction => undef},
-                                                     {'presort'    => {}},
-                                                     {'mm'         => {}},
+                                                     {'presort'    => {}}
                                                     ],
                                                     [
                                                      {final          => 1,
@@ -111,8 +110,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                     [
                                                      {final          => undef,
                                                       sort_direction => undef},
-                                                     {'presort'    => {}},
-                                                     {'mm'         => {}},
+                                                     {'presort'    => {}}
                                                     ],
                                                     [
                                                      {final          => 1,
@@ -164,8 +162,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                     [
                                                      {final          => undef,
                                                       sort_direction => undef},
-                                                     {'presort'    => {}},
-                                                     {'mm'         => {}},
+                                                     {'presort'    => {}}
                                                     ],
                                                     [
                                                      {final          => 1,
@@ -218,8 +215,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                     [
                                                      {final          => undef,
                                                       sort_direction => undef},
-                                                     {'presort'    => {}},
-                                                     {'mm'         => {}},
+                                                     {'presort'    => {}}
                                                     ],
                                                     [
                                                      {final          => 1,
@@ -272,8 +268,7 @@ Biber::Config->setblxoption('sorting_label', [
                                						      [
                                                      {final          => undef,
                                                       sort_direction => undef},
-                                                     {'presort'    => {}},
-                                                     {'mm'         => {}},
+                                                     {'presort'    => {}}
                                                     ],
                                                     [
                                                      {final          => 1,
@@ -319,8 +314,7 @@ Biber::Config->setblxoption('sorting_label', [
 						      [
                                                      {final          => undef,
                                                       sort_direction => undef},
-                                                     {'presort'    => {}},
-                                                     {'mm'         => {}},
+                                                     {'presort'    => {}}
                                                     ],
                                                     [
                                                      {final          => 1,
@@ -367,8 +361,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                     [
                                                      {final          => undef,
                                                       sort_direction => undef},
-                                                     {'presort'    => {}},
-                                                     {'mm'         => {}},
+                                                     {'presort'    => {}}
                                                     ],
                                                     [
                                                      {final          => 1,
@@ -415,8 +408,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                     [
                                                      {final          => undef,
                                                       sort_direction => undef},
-                                                     {'presort'    => {}},
-                                                     {'mm'         => {}},
+                                                     {'presort'    => {}}
                                                     ],
                                                     [
                                                      {final          => undef,
@@ -476,8 +468,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                     [
                                                      {final          => undef,
                                                       sort_direction => undef},
-                                                     {'presort'    => {}},
-                                                     {'mm'         => {}},
+                                                     {'presort'    => {}}
                                                     ],
                                                     [
                                                      {final          => undef,
