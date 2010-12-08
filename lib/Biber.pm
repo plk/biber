@@ -1475,11 +1475,13 @@ sub sortentries {
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
     $logger->info("Sorting entries with built-in sort (with locale $thislocale) ...") if $BIBER_SORT_FIRSTPASSDONE;
-    unless (setlocale(LC_ALL, $thislocale) and $BIBER_SORT_FIRSTPASSDONE) {
-      $logger->warn("Unavailable locale $thislocale");
-      $self->{warnings}++;
-    }
 
+    unless (setlocale(LC_ALL, $thislocale)) {
+      if ($BIBER_SORT_FIRSTPASSDONE) {
+        $logger->warn("Unavailable locale $thislocale");
+        $self->{warnings}++;
+      }
+    }
     # Construct a multi-field Schwartzian Transform with the right number of
     # extractions into a string representing an array ref as we musn't eval this yet
 
@@ -1494,11 +1496,11 @@ sub sortentries {
       if (defined($sortset->[0]{sort_direction}) and
           $sortset->[0]{sort_direction} eq 'descending') {
         # descending field
-        $sorter .= '$b->[' . $num_sorts . '] cmp $a->[' . $num_sorts . ']'
+        $sorter .= '$b->[' . $num_sorts . '] cmp $a->[' . $num_sorts . ']';
       }
       else {
         # ascending field
-        $sorter .= '$a->[' . $num_sorts . '] cmp $b->[' . $num_sorts . ']'
+        $sorter .= '$a->[' . $num_sorts . '] cmp $b->[' . $num_sorts . ']';
       }
       $num_sorts++;
     }

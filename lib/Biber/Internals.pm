@@ -303,6 +303,7 @@ sub _generatesortstring {
       setlocale( LC_CTYPE, $thislocale );
     }
     $sortstring = lc($sortstring);
+    @$sortobj = map { lc($_) } @$sortobj
   }
   $be->set_field('sortstring', $sortstring);
   $be->set_field('sortobj', $sortobj);

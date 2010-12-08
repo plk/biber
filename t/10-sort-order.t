@@ -19,7 +19,6 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C.UTF-8');
 
 my $i = 1;
 
@@ -30,7 +29,7 @@ sub check_output_string_order {
   my $out = shift;
   my $test_order = shift;
   is_deeply($out->get_output_entries(0),
-            [ map { $out->get_output_entry($_) }  @{$test_order} ], 'citeorder strings - ' . $i++);
+            [ map { $out->get_output_entry($_) }  @{$test_order} ], 'sort strings - ' . $i++);
 }
 
 
