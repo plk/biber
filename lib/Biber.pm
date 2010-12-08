@@ -1275,8 +1275,8 @@ sub postprocess_labelnameyear {
        $be->get_field('shorthand')) {
     $name_string = $be->get_field('shorthand');
   }
-  elsif ($be->get_field('labelnamename')) {
-    $name_string = $self->_namestring($citekey, $be->get_field('labelnamename'));
+  elsif (my $lnn = $be->get_field('labelnamename')) {
+    $name_string = $self->_namestring($citekey, $lnn);
   }
   else {
     $name_string = '';
@@ -1292,6 +1292,7 @@ sub postprocess_labelnameyear {
   else {
     $year_string = '';
   }
+
 
   # Don't create disambiguation data for skiplab entries
   unless (Biber::Config->getblxoption('skiplab',
@@ -1482,10 +1483,9 @@ sub sortentries {
         $self->{warnings}++;
       }
     }
+
     # Construct a multi-field Schwartzian Transform with the right number of
     # extractions into a string representing an array ref as we musn't eval this yet
-
-    # Construct data extractor (step #1)
     my $num_sorts = 0;
     my $data_extractor = '[';
     my $sorter;
@@ -1508,11 +1508,6 @@ sub sortentries {
     # Handily, $num_sorts is now one larger than the number of fields which is the
     # correct index for the actual data in the sort array
     $sort_extractor = '$_->[' . $num_sorts . ']';
-
-    # if ($BIBER_SORT_FIRSTPASSDONE) {
-    #   my @temp1 = map  { eval $data_extractor } @citekeys;
-    #   use Data::Dump;dd(@temp1);dd($sorter);dd($sort_extractor);
-    # }
 
     # Schwartzian transform multi-field sort
     @citekeys = map  { eval $sort_extractor }
@@ -1574,11 +1569,39 @@ sub sortentries {
     if ($Collator->getlocale eq 'default') {
       $logger->info("No sort tailoring available for locale '$thislocale'") if $BIBER_SORT_FIRSTPASSDONE;
     }
-    @citekeys = sort {
-      $Collator->cmp( $bibentries->entry($a)->get_field('sortstring'),
-        $bibentries->entry($b)->get_field('sortstring') )
-      } @citekeys;
+
+    # Construct a multi-field Schwartzian Transform with the right number of
+    # extractions into a string representing an array ref as we musn't eval this yet
+    my $num_sorts = 0;
+    my $data_extractor = '[';
+    my $sorter;
+    my $sort_extractor;
+    foreach my $sortset (@{$sortscheme}) {
+      $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
+      $sorter .= ' || ' if $num_sorts; # don't add separator before first field
+      if (defined($sortset->[0]{sort_direction}) and
+          $sortset->[0]{sort_direction} eq 'descending') {
+        # descending field
+        $sorter .= '$Collator->cmp($b->[' . $num_sorts . '],$a->[' . $num_sorts . '])';
+      }
+      else {
+        # ascending field
+        $sorter .= '$Collator->cmp($a->[' . $num_sorts . '],$b->[' . $num_sorts . '])';
+      }
+      $num_sorts++;
+    }
+    $data_extractor .= '$_]';
+    # Handily, $num_sorts is now one larger than the number of fields which is the
+    # correct index for the actual data in the sort array
+    $sort_extractor = '$_->[' . $num_sorts . ']';
+
+    # Schwartzian transform multi-field sort
+    @citekeys = map  { eval $sort_extractor }
+                sort { eval $sorter }
+                map  { eval $data_extractor } @citekeys;
+
   }
+
   $logger->debug("Citekeys after sort:\n");
   foreach my $ck (@citekeys) {
     $logger->debug("$ck => " . $bibentries->entry($ck)->get_field('sortstring') . "\n");

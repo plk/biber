@@ -36,22 +36,52 @@ sub check_output_string_order {
 
 # U::C Swedish tailoring
 $biber->prepare;
-my $section0 = $biber->sections->get_section(0);
-my $section1 = $biber->sections->get_section(1);
+my $section = $biber->sections->get_section(0);
 my $out = $biber->get_output_obj;
 
-is_deeply([$section0->get_citekeys], ['LS2','LS1','LS3'], 'U::C tailoring - 1');
+is_deeply([$section->get_citekeys], ['LS2','LS1','LS3'], 'U::C tailoring - 1');
 check_output_string_order($out, ['LS2','LS1','LS3']);
-is_deeply([$section0->get_shorthands], ['LS3', 'LS2','LS1'], 'U::C tailoring - 2');
+is_deeply([$section->get_shorthands], ['LS3', 'LS2','LS1'], 'U::C tailoring - 2');
 
 Biber::Config->setblxoption('sortlos', 0);
-$section0->set_shorthands([]);
+$section->set_shorthands([]);
 $biber->prepare;
-$section0 = $biber->sections->get_section(0);
+$section = $biber->sections->get_section(0);
 $out = $biber->get_output_obj;
-is_deeply([$section0->get_shorthands], ['LS2', 'LS1','LS3'], 'U::C tailoring - 3');
+is_deeply([$section->get_shorthands], ['LS2', 'LS1','LS3'], 'U::C tailoring - 3');
 
-is_deeply([$section1->get_citekeys], ['LSD3','LSD1','LSD2'], 'U::C tailoring descending- 1');
+
+# Descending name in Swedish collation
+Biber::Config->setblxoption('sorting_label', [
+                                                    [
+                                                     {final          => undef,
+                                                      sort_direction => undef},
+                                                     {'presort'    => {}},
+                                                     {'mm'         => {}},
+                                                    ],
+                                                    [
+                                                     {final          => 1,
+                                                      sort_direction => undef},
+                                                     {'sortkey'    => {}}
+                                                    ],
+                                                    [
+                                                     {final          => undef,
+                                                      sort_direction => 'descending'},
+                                                     {'sortname'   => {}},
+                                                     {'author'     => {}},
+                                                     {'editor'     => {}},
+                                                     {'translator' => {}},
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
+                                                    ]
+                                                   ]);
+
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+
+is_deeply([$section->get_citekeys], ['LS3','LS1','LS2'], 'U::C tailoring descending - 1');
 
 
 unlink "*.utf8";

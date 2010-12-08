@@ -142,14 +142,5 @@
     <bcf:citekey>LS2</bcf:citekey>
     <bcf:citekey>LS3</bcf:citekey>
   </bcf:section>
-  <!-- SECTION 1 -->
-  <bcf:bibdata section="1">
-    <bcf:datasource type="file">sort-uc</bcf:datasource>
-  </bcf:bibdata>
-  <bcf:section number="1">
-    <bcf:citekey>LSD1</bcf:citekey>
-    <bcf:citekey>LSD2</bcf:citekey>
-    <bcf:citekey>LSD3</bcf:citekey>
-  </bcf:section>
 </bcf:controlfile>
 
