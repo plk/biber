@@ -272,15 +272,19 @@ sub _generatesortstring {
   my $be = $section->bibentry($citekey);
   my $sortstring;
   my $sortobj;
+  $BIBER_SORT_FINAL = 0;
+  $BIBER_SORT_FINAL = '';
   foreach my $sortset (@{$sortscheme}) {
-    $BIBER_SORT_FINAL = 0; # reset sorting short-circuit
     my $s = $self->_sortset($sortset, $citekey);
-    $sortstring .= "$s$sorting_sep";
-    push @$sortobj, $s;
-
-    # Stop here if this sort element is specified as "final" and it's non-null
+    # We have already found a "final" item so if this item returns null,
+    # copy in the "final" item string as it's the master key for this entry now
     if ($BIBER_SORT_FINAL and not $BIBER_SORT_NULL) {
-      last;
+      $sortstring .= "${BIBER_SORT_FINAL}$sorting_sep";
+      push @$sortobj, $BIBER_SORT_FINAL;
+    }
+    else {
+      $sortstring .= "$s$sorting_sep";
+      push @$sortobj, $s;
     }
   }
   $sortstring =~ s/$sorting_sep\z//xms; # strip off the last sortsep added by _sortset()
@@ -330,7 +334,6 @@ sub _generatesortstring {
       $init = $initd;
     }
   }
-
   $be->set_field('sortinit', $init);
   return;
 }
@@ -340,10 +343,19 @@ sub _sortset {
   my ($self, $sortset, $citekey) = @_;
   foreach my $sortelement (@$sortset[1..$#$sortset]) {
     my ($sortelementname, $sortelementattributes) = %{$sortelement};
+    $BIBER_SORT_NULL = 0; # reset this per sortset
     my $string = $self->_dispatch_sorting($sortelementname, $citekey, $sortelementattributes);
-    $BIBER_SORT_NULL = 0; # reset sorting null flag
-    $BIBER_SORT_FINAL = $sortset->[0]{final};
     if ($string) { # sort returns something for this key
+      if ($sortset->[0]{final}) {
+        # If we encounter a "final" element, we return an empty sort
+        # string and save the string so it can be copied into all further
+        # fields as this is now the master sort key. We use an empty string
+        # where we found it in order to preserve sort field order and so
+        # that we sort correctly against all other entries without a value
+        # for this "final" field
+        $BIBER_SORT_FINAL = $string;
+        last;
+      }
       return $string;
     }
   }

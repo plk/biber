@@ -1490,10 +1490,10 @@ sub sortentries {
   # correct index for the actual data in the sort array
   $sort_extractor = '$_->[' . $num_sorts . ']';
 
-  if ($BIBER_SORT_FIRSTPASSDONE) {
-    my @temp1 = map  { eval $data_extractor } @citekeys;
-    use Data::Dump;dd(@temp1);dd($sorter);dd($sort_extractor);
-  }
+  # if ($BIBER_SORT_FIRSTPASSDONE) {
+  #   my @temp1 = map  { eval $data_extractor } @citekeys;
+  #   use Data::Dump;dd(@temp1);dd($sorter);dd($sort_extractor);
+  # }
 
   # Set up locale. Order of priority is:
   # 1. locale value passed to Unicode::Collate::Locale->new() (Unicode::Collate sorts only)

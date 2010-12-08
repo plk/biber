@@ -406,8 +406,9 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-is_deeply([$section->get_citekeys], ['L9','L6','L7','L8','L2','L4','L1A','L1','L1B','L3','L5'], 'ydnt');
-check_output_string_order($out, ['L9','L6','L7','L8','L2','L4','L1A','L1','L1B','L3','L5']);
+# This is correct as "aaaaaa" sorts before all years when descending
+is_deeply([$section->get_citekeys], ['L5','L9','L6','L7','L8','L2','L4','L1A','L1','L1B','L3'], 'ydnt');
+check_output_string_order($out, ['L5','L9','L6','L7','L8','L2','L4','L1A','L1','L1B','L3']);
 
 # anyt
 Biber::Config->setblxoption('sorting_label', [
