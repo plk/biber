@@ -1611,7 +1611,7 @@ sub sortentries {
   return;
 }
 
-=head2 sortshorthands
+=head2 sort_shorthands
 
     Sort the shorthands according to a certain sorting scheme.
     If sortlos = 1 (los), sort by shorthand
@@ -1619,17 +1619,24 @@ sub sortentries {
 
 =cut
 
-sub sortshorthands {
+sub sort_shorthands {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my @shorthands = $section->get_shorthands;
   # What we sort on depends on the 'sortlos' BibLaTeX option
-  my $sortlos = Biber::Config->getblxoption('sortlos') ? 'shorthand' : 'sortstring';
+#  my $sortlos = Biber::Config->getblxoption('sortlos') ? 'shorthand' : 'sortstring';
   my $thislocale = Biber::Config->getoption('sortlocale');
 
-  $logger->debug("Sorting shorthands by '$sortlos'");
+  # Get the right sortscheme
+  my $sortscheme;
+  if ($BIBER_SORT_FIRSTPASSDONE) {
+    $sortscheme = Biber::Config->getblxoption('sorting_final');
+  }
+  else {
+    $sortscheme = Biber::Config->getblxoption('sorting_label');
+  }
 
   if ( Biber::Config->getoption('fastsort') ) {
     $logger->info("Sorting shorthands with built-in sort (with locale $thislocale) ...");
@@ -1637,7 +1644,44 @@ sub sortshorthands {
       $logger->warn("Unavailable locale $thislocale");
       $self->{warnings}++;
     }
-    @shorthands = sort { $bibentries->entry($a)->get_field($sortlos) cmp $bibentries->entry($b)->get_field($sortlos) } @shorthands;
+
+    unless (Biber::Config->getblxoption('sortlos')) {
+      $logger->debug("Sorting shorthands by 'sortkey'");
+      # Construct a multi-field Schwartzian Transform with the right number of
+      # extractions into a string representing an array ref as we musn't eval this yet
+      my $num_sorts = 0;
+      my $data_extractor = '[';
+      my $sorter;
+      my $sort_extractor;
+      foreach my $sortset (@{$sortscheme}) {
+        $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
+        $sorter .= ' || ' if $num_sorts; # don't add separator before first field
+        if (defined($sortset->[0]{sort_direction}) and
+            $sortset->[0]{sort_direction} eq 'descending') {
+          # descending field
+          $sorter .= '$b->[' . $num_sorts . '] cmp $a->[' . $num_sorts . ']';
+        }
+        else {
+          # ascending field
+          $sorter .= '$a->[' . $num_sorts . '] cmp $b->[' . $num_sorts . ']';
+        }
+        $num_sorts++;
+      }
+      $data_extractor .= '$_]';
+      # Handily, $num_sorts is now one larger than the number of fields which is the
+      # correct index for the actual data in the sort array
+      $sort_extractor = '$_->[' . $num_sorts . ']';
+
+      # Schwartzian transform multi-field sort
+      @shorthands = map  { eval $sort_extractor }
+        sort { eval $sorter }
+          map  { eval $data_extractor } @shorthands;
+    }
+    else {
+      $logger->debug("Sorting shorthands by 'shorthand'");
+      @shorthands = sort { $bibentries->entry($a)->get_field('shorthand') cmp $bibentries->entry($b)->get_field('shorthand') } @shorthands;
+    }
+
   }
   else {
 
@@ -1684,10 +1728,46 @@ sub sortshorthands {
     $logger->info("Sorting shorthands with Unicode::Collate (" .
 		  stringify_hash($collopts) . ", UCA version: $UCAversion)");
 
-    @shorthands = sort {
-      $Collator->cmp( $bibentries->entry($a)->get_field($sortlos),
-        $bibentries->entry($b)->get_field($sortlos) )
+
+    unless (Biber::Config->getblxoption('sortlos')) {
+      $logger->debug("Sorting shorthands by 'sortkey'");
+      # Construct a multi-field Schwartzian Transform with the right number of
+      # extractions into a string representing an array ref as we musn't eval this yet
+      my $num_sorts = 0;
+      my $data_extractor = '[';
+      my $sorter;
+      my $sort_extractor;
+      foreach my $sortset (@{$sortscheme}) {
+        $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
+        $sorter .= ' || ' if $num_sorts; # don't add separator before first field
+        if (defined($sortset->[0]{sort_direction}) and
+            $sortset->[0]{sort_direction} eq 'descending') {
+          # descending field
+          $sorter .= '$Collator->cmp($b->[' . $num_sorts . '],$a->[' . $num_sorts . '])';
+        }
+        else {
+          # ascending field
+          $sorter .= '$Collator->cmp($a->[' . $num_sorts . '],$b->[' . $num_sorts . '])';
+        }
+        $num_sorts++;
+      }
+      $data_extractor .= '$_]';
+      # Handily, $num_sorts is now one larger than the number of fields which is the
+      # correct index for the actual data in the sort array
+      $sort_extractor = '$_->[' . $num_sorts . ']';
+
+      # Schwartzian transform multi-field sort
+      @shorthands = map  { eval $sort_extractor }
+                    sort { eval $sorter }
+                    map  { eval $data_extractor } @shorthands;
+    }
+    else {
+      $logger->debug("Sorting shorthands by 'shorthand'");
+      @shorthands = sort {
+        $Collator->cmp( $bibentries->entry($a)->get_field('shorthand'),
+                        $bibentries->entry($b)->get_field('shorthand') )
       } @shorthands;
+    }
   }
   $section->set_shorthands([ @shorthands ]);
   return;
@@ -1786,7 +1866,7 @@ sub create_output_section {
   }
   # Push the sorted shorthands for each section into the output object
   if ( $section->get_shorthands ) {
-    $self->sortshorthands;
+    $self->sort_shorthands;
     $output_obj->set_los([ $section->get_shorthands ], $secnum);
   }
 
