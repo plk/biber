@@ -434,14 +434,17 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
     # pushing
     # Also, we only push the sort attributes if there are any sortitems otherwise
     # we end up with a blank sort
+    my $sopts;
+    $sopts->{final}          = $sort->{final}          if $sort->{final};
+    $sopts->{sort_direction} = $sort->{sort_direction} if $sort->{sort_direction};
+    $sopts->{sortcase}       = $sort->{sortcase}       if $sort->{sortcase};
+    $sopts->{sortupper}      = $sort->{sortupper}      if $sort->{sortupper};
     if (defined($sortingitems_label)) {
-      unshift @{$sortingitems_label}, {final          => $sort->{final},
-                                       sort_direction => $sort->{sort_direction}};
+      unshift @{$sortingitems_label}, $sopts;
       push @{$sorting_label}, $sortingitems_label;
     }
     if (defined($sortingitems_final)) {
-      unshift @{$sortingitems_final}, {final          => $sort->{final},
-                                       sort_direction => $sort->{sort_direction}};
+      unshift @{$sortingitems_final}, $sopts;
       push @{$sorting_final}, $sortingitems_final;
     }
   }
@@ -1548,14 +1551,37 @@ sub sortentries {
     foreach my $sortset (@{$sortscheme}) {
       $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
       $sorter .= ' || ' if $num_sorts; # don't add separator before first field
-      if (defined($sortset->[0]{sort_direction}) and
+      my $lc = '';
+      if (exists($sortset->[0]{sortcase})) {
+        unless ($sortset->[0]{sortcase}) {
+          $lc = 'lc ';
+        }
+      }
+
+      if (exists($sortset->[0]{sort_direction}) and
           $sortset->[0]{sort_direction} eq 'descending') {
         # descending field
-        $sorter .= '$b->[' . $num_sorts . '] cmp $a->[' . $num_sorts . ']';
+        $sorter .=
+          $lc .
+            '$b->[' .
+              $num_sorts .
+                '] cmp ' .
+                  $lc .
+                    '$a->[' .
+                      $num_sorts .
+                        ']';
       }
       else {
         # ascending field
-        $sorter .= '$a->[' . $num_sorts . '] cmp $b->[' . $num_sorts . ']';
+        $sorter .=
+          $lc .
+            '$a->[' .
+              $num_sorts .
+                '] cmp ' .
+                  $lc .
+                    '$b->[' .
+                      $num_sorts .
+                        ']';
       }
       $num_sorts++;
     }
@@ -1632,16 +1658,63 @@ sub sortentries {
     my $sorter;
     my $sort_extractor;
     foreach my $sortset (@{$sortscheme}) {
+      my $fc = '';
+
+      # Reset collation object to global defaults for each sortset in case
+      # locally overriden by earlier loop
+      $Collator->change(level              => $collopts->{level},
+                        upper_before_lower => $collopts->{upper_before_lower});
+
+      # If the case or upper option on a field is not the global default
+      # set it locally on the $Collator by constructing a change() method call
+      if (exists($sortset->[0]{sortcase}) and
+          (my $sc = $sortset->[0]{sortcase} != Biber::Config->getoption('sortcase')) or
+          exists($sortset->[0]{sortupper}) and
+          (my $su = $sortset->[0]{sortupper} != Biber::Config->getoption('sortupper'))) {
+        $fc = '->change(';
+        if (defined($sc)) {
+          if ($sc) {
+            # if case-sensitive, UCA level needs to be what was explicitly set, if any
+            $fc .= 'level => '. $collopts->{level} . defined($su) ? ',' : '';
+          }
+          else {
+            $fc .= 'level => 2' . defined($su) ? ',' : '';
+          }
+        }
+        if (defined($su)) {
+          if ($su) {
+            $fc .= 'upper_before_lower => 1';
+          }
+          else {
+            $fc .= 'upper_before_lower => 0';
+          }
+        }
+        $fc .= ')';
+      }
+
       $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
       $sorter .= ' || ' if $num_sorts; # don't add separator before first field
-      if (defined($sortset->[0]{sort_direction}) and
+
+      if (exists($sortset->[0]{sort_direction}) and
           $sortset->[0]{sort_direction} eq 'descending') {
         # descending field
-        $sorter .= '$Collator->cmp($b->[' . $num_sorts . '],$a->[' . $num_sorts . '])';
+        $sorter .= '$Collator' .
+          $fc .
+          '->cmp($b->[' .
+          $num_sorts .
+            '],$a->[' .
+              $num_sorts .
+                '])';
       }
       else {
         # ascending field
-        $sorter .= '$Collator->cmp($a->[' . $num_sorts . '],$b->[' . $num_sorts . '])';
+        $sorter .= '$Collator' .
+          $fc .
+          '->cmp($a->[' .
+          $num_sorts .
+            '],$b->[' .
+              $num_sorts .
+                '])';
       }
       $num_sorts++;
     }

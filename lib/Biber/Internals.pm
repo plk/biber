@@ -256,7 +256,7 @@ sub _dispatch_sorting {
   my $code_ref;
   my $code_args_ref;
 
-  # Is this field excluded from sorting for this entrytype, then skip it and return
+  # If this field is excluded from sorting for this entrytype, then skip it and return
   if (my $se = Biber::Config->getblxoption('sortexclusion', $be->get_field('entrytype'))) {
     if ($se->{$sortfield}) {
       return '';

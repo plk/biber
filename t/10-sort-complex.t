@@ -34,23 +34,20 @@ isa_ok($biber, "Biber");
 
 my $sc1 = [
            [
-            {final          => undef,
-             sort_direction => undef},
+            {},
             {'labelalpha'    => {}},
            ],
            [
-            {final          => undef,
-             sort_direction => undef},
+            {},
             {'presort'    => {}}
            ],
            [
             {final          => 1,
-             sort_direction => undef},
+             },
             {'sortkey'    => {}}
            ],
            [
-            {final          => undef,
-             sort_direction => undef},
+            {},
             {'sortname'   => {}},
             {'author'     => {}},
             {'editor'     => {}},
@@ -59,21 +56,18 @@ my $sc1 = [
             {'title'      => {}}
            ],
            [
-            {final          => undef,
-             sort_direction => 'descending'},
+            {sort_direction => 'descending'},
             {'sortyear'  => {}},
             {'year'      => {substring_side => 'right',
                              substring_width => '4'}}
            ],
            [
-            {final          => undef,
-             sort_direction => undef},
+            {},
             {'volume'     => {pad_char => '0'}},
             {'0000'       => {}}
            ],
            [
-            {final          => undef,
-             sort_direction => undef},
+            {},
             {'sorttitle'       => {}},
             {'title'       => {}}
            ],
@@ -81,30 +75,26 @@ my $sc1 = [
 
 my $sc2 = [
            [
-            {final          => undef,
-             sort_direction => undef},
+            {},
             {'presort'    => {}}
            ],
            [
-            {final          => undef,
-             sort_direction => undef},
+            {},
             {'labelalpha'    => {}},
            ],
            [
-            {final          => undef,
-             sort_direction => undef},
+            {},
             {'extraalpha'     => {pad_side => 'left',
                                  pad_width => 4,
                                  pad_char => '0'}},
            ],
            [
             {final          => 1,
-             sort_direction => undef},
+             },
             {'sortkey'    => {}}
            ],
            [
-            {final          => undef,
-             sort_direction => undef},
+            {},
             {'sortname'   => {}},
             {'author'     => {}},
             {'editor'     => {}},
@@ -113,21 +103,18 @@ my $sc2 = [
             {'title'      => {}}
            ],
            [
-            {final          => undef,
-             sort_direction => 'descending'},
+            {sort_direction => 'descending'},
             {'sortyear'  => {}},
             {'year'      => {substring_side => 'right',
                              substring_width => '4'}}
            ],
            [
-            {final          => undef,
-             sort_direction => undef},
+            {},
             {'volume'     => {pad_char => '0'}},
             {'0000'       => {}}
            ],
            [
-            {final          => undef,
-             sort_direction => undef},
+            {},
             {'sorttitle'       => {}},
             {'title'       => {}}
            ],

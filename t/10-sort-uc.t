@@ -54,18 +54,15 @@ is_deeply([$section->get_shorthands], ['LS2', 'LS1','LS3'], 'U::C tailoring - 3'
 # Descending name in Swedish collation
 Biber::Config->setblxoption('sorting_label', [
                                                     [
-                                                     {final          => undef,
-                                                      sort_direction => undef},
+                                                     {},
                                                      {'presort'    => {}}
                                                     ],
                                                     [
-                                                     {final          => 1,
-                                                      sort_direction => undef},
+                                                     {final        => 1},
                                                      {'sortkey'    => {}}
                                                     ],
                                                     [
-                                                     {final          => undef,
-                                                      sort_direction => 'descending'},
+                                                     {sort_direction => 'descending'},
                                                      {'sortname'   => {}},
                                                      {'author'     => {}},
                                                      {'editor'     => {}},

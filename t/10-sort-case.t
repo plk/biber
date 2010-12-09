@@ -23,8 +23,7 @@ Biber::Config->setoption('sortcase', 1);
 Biber::Config->setoption('sortupper', 1);
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'author'     => {}},
                                                 ],
                                                ]);

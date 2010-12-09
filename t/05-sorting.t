@@ -89,18 +89,16 @@ is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix2, 'von with 
 # Testing nosortprefix and nosortdiacritics
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -109,19 +107,16 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'labelyear'       => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
@@ -139,18 +134,15 @@ is($bibentries->entry('hasan')->get_field('sortstring'), $diacritic1, 'Name with
 # Testing editor roles
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'editoratype'     => {}},
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'editor'     => {}},
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'editora'     => {}},
                                                 ],
                                                ]);
@@ -167,127 +159,103 @@ is($bibentries->entry('jaffe')->get_field('sortstring'), $edtypeclass1, 'Editor 
 # Testing sorting using various date fields
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'year'       => {}},
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'month'       => {}},
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'day'       => {pad_side => 'right',
                                                                   pad_width => 7}},
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'endyear'       => {}},
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'endmonth'       => {}},
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'endday'       => {}},
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'origyear'   => {'sort_direction'  => 'descending'}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'origmonth'   => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'origday'   => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'origendyear'   => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'origendmonth'   => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'origendday'   => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'eventendyear'   => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'eventendmonth'   => {pad_side => 'left',
                                                                   pad_width => 4}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'eventendday'   => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'eventyear'   => {'substring_side' => 'left',
                                                                    'substring_width' => 3}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'eventmonth'   => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'eventday'   => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => 'descending'},
+                                                 {sort_direction => 'descending'},
                                                  {'urlendyear'   => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'urlendmonth'   => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'urlendday'   => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'urlyear'   => {'substring_side' => 'right',
                                                                    'substring_width' => 2}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'urlmonth'   => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'urlday'   => {}}
                                                 ],
                                                ]);
@@ -303,8 +271,7 @@ is($bibentries->entry('moraux')->get_field('sortstring'), $dates1, 'Very contriv
 # publisher
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'publisher'    => {}}
                                                 ]
                                                ]);
@@ -319,8 +286,7 @@ is($bibentries->entry('augustine')->get_field('sortstring'), $lists1, 'max/minit
 # location
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'location'    => {}}
                                                 ]
                                                ]);
@@ -336,8 +302,7 @@ is($bibentries->entry('cotton')->get_field('sortstring'), $lists2, 'max/minitems
 # institution
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'institution'    => {}}
                                                 ]
                                                ]);
@@ -353,8 +318,7 @@ is($bibentries->entry('chiu')->get_field('sortstring'), $lists3, 'max/minitems t
 Biber::Config->setblxoption('minitems', 2);
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'institution'    => {}}
                                                 ]
                                                ]);
@@ -371,8 +335,7 @@ Biber::Config->setblxoption('maxitems', 4);
 Biber::Config->setblxoption('minitems', 3);
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'institution'    => {}}
                                                 ]
                                                ]);
@@ -389,18 +352,16 @@ is($bibentries->entry('chiu')->get_field('sortstring'), $lists5, 'max/minitems t
 # nty with implicit default left, 4-digit year sort
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -409,19 +370,16 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'year'       => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
@@ -437,18 +395,16 @@ is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff1, 'nty with
 # nty with left, 3-digit year sort, case sensitive
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -457,20 +413,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'year'       => {'substring_side' => 'left',
                                                                    'substring_width' => 3}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
@@ -487,18 +440,16 @@ is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff2, 'nty with
 # nty with left, 4-digit year sort, case sensitive
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -507,20 +458,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'year'       => {'substring_side' => 'left',
                                                                    'substring_width' => 4}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
@@ -536,18 +484,16 @@ is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff3, 'nty with
 # nty with right, 3-digit year sort
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -556,20 +502,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'year'       => {'substring_side' => 'right',
                                                                    'substring_width' => 3}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
@@ -585,18 +528,16 @@ is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff4, 'nty with
 # nty with right, 4-digit year sort
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -605,20 +546,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'year'       => {'substring_side' => 'right',
                                                                    'substring_width' => 4}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
@@ -634,18 +572,16 @@ is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff5, 'nty with
 # ntyd with left, 4-digit year sort
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -654,21 +590,18 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'year'       => {'substring_side'  => 'left',
                                                                    'substring_width' => 4,
                                                                    'sort_direction'  => 'descending'}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
@@ -684,18 +617,16 @@ is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff6, 'ntyd wit
 # ntyd with left, 3-digit year sort
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -704,21 +635,18 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'year'       => {'substring_side'  => 'left',
                                                                    'substring_width' => 3,
                                                                    'sort_direction'  => 'descending'}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
@@ -734,18 +662,16 @@ is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff7, 'ntyd wit
 # ntyd with right, 4-digit year sort
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -754,21 +680,18 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'year'       => {'substring_side'  => 'right',
                                                                    'substring_width' => 4,
                                                                    'sort_direction'  => 'descending'}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
@@ -784,18 +707,16 @@ is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff8, 'ntyd wit
 # ntyd with right, 3-digit year sort
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -804,21 +725,18 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'year'       => {'substring_side' => 'right',
                                                                    'substring_width' => 3,
                                                                    'sort_direction'  => 'descending'}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
@@ -834,18 +752,16 @@ is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff9, 'ntyd wit
 # nty with right-padded vol
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -854,20 +770,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortyear'   => {}},
                                                  {'year'       => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {pad_side => 'right'}},
                                                  {'0000'       => {}}
                                                 ]
@@ -883,18 +796,16 @@ is($bibentries->entry('stdmodel')->get_field('sortstring'), $vol1, 'nty with rig
 # nty with right-padded 7-char vol
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -903,20 +814,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortyear'   => {}},
                                                  {'year'       => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {pad_side => 'right',
                                                                   pad_width => 7}},
                                                  {'0000'       => {}}
@@ -934,18 +842,16 @@ is($bibentries->entry('stdmodel')->get_field('sortstring'), $vol2, 'nty with rig
 # Unicode char will be lowercase "đ" in sortstring
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -954,20 +860,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortyear'   => {}},
                                                  {'year'       => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {pad_side => 'left',
                                                                   pad_width => 5,
                                                                   pad_char => 'Đ'}},
@@ -986,18 +889,16 @@ is($bibentries->entry('stdmodel')->get_field('sortstring'), $vol3, 'nty with lef
 # nty
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -1006,20 +907,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortyear'   => {}},
                                                  {'year'       => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
@@ -1036,18 +934,16 @@ is($bibentries->entry('angenendtsk')->get_field('sortstring'), $sk1, 'basic sort
 # nyt
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'labelname'  => {}},
                                                  {'author'     => {}},
@@ -1057,20 +953,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortyear'   => {}},
                                                  {'year'       => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
@@ -1086,18 +979,16 @@ is($bibentries->entry('stdmodel')->get_field('sortstring'), $nyt, 'basic nyt sor
 # nyvt
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -1106,20 +997,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortyear'   => {}},
                                                  {'year'       => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ]
@@ -1136,23 +1024,20 @@ is($bibentries->entry('stdmodel')->get_field('sortstring'), $nyvt, 'basic nyvt s
 Biber::Config->setblxoption('labelalpha', 1);
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'labelalpha' => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -1161,20 +1046,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortyear'   => {}},
                                                  {'year'       => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'0000'       => {}}
                                                 ]
@@ -1203,23 +1085,20 @@ is($bibentries->entry('stdmodel')->get_field('sortstring'), $anyt, 'anyt sort (w
 Biber::Config->setblxoption('labelalpha',1);
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'labelalpha' => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -1228,20 +1107,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortyear'   => {}},
                                                  {'year'       => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {pad_width => 4}},
                                                  {'0000'       => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ]
@@ -1292,25 +1168,22 @@ is($bibentries->entry('stdmodel')->get_field('sortstring'), $anyvt, 'anyvt sort 
 # ynt
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortyear'   => {}},
                                                  {'labelyear'  => {}},
                                                  {'9999'       => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -1319,8 +1192,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
@@ -1336,25 +1208,22 @@ is($bibentries->entry('stdmodel')->get_field('sortstring'), $ynt, 'basic ynt sor
 # ydnt
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => 'descending'},
+                                                 {sort_direction => 'descending'},
                                                  {'sortyear'   => {}},
                                                  {'year'      => {}},
                                                  {'9999'       => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -1363,8 +1232,7 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
@@ -1381,8 +1249,7 @@ Biber::Config->setblxoption('labelalpha', 0);
 # debug
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'entrykey'    => {}},
                                                 ],
                                                ]);
@@ -1397,18 +1264,16 @@ is($bibentries->entry('stdmodel')->get_field('sortstring'), $debug, 'basic debug
 # nty with modified presort and short_circuit at title
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -1418,19 +1283,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortyear'   => {}},
                                                  {'year'       => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
@@ -1448,18 +1311,16 @@ Biber::Config->setblxoption('useeditor', 0);
 Biber::Config->setblxoption('usetranslator', 0);
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'presort'    => {}}
                                                 ],
                                                 [
                                                  {final          => 1,
-                                                  sort_direction => undef},
+                                                  },
                                                  {'sortkey'    => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortname'   => {}},
                                                  {'author'     => {}},
                                                  {'editor'     => {}},
@@ -1468,20 +1329,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'sortyear'   => {}},
                                                  {'year'       => {}}
                                                 ],
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'volume'     => {}},
                                                  {'0000'       => {}}
                                                 ]
@@ -1498,8 +1356,7 @@ is($bibentries->entry('stdmodel')->get_field('sortstring'), $noname, 'nty with u
 
 Biber::Config->setblxoption('sorting_label', [
                                                 [
-                                                 {final          => undef,
-                                                  sort_direction => undef},
+                                                 {},
                                                  {'citeorder'    => {}}
                                                 ]
                                                ]);
