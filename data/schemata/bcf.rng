@@ -260,9 +260,11 @@
           <!-- excludes of certain fields for sorting for specified types -->
           <element name="bcf:sortexclusion">
             <attribute name="type"/>
-            <element name="bcf:exclusion">
-              <data type="NCName"/>
-            </element>
+            <oneOrMore>
+              <element name="bcf:exclusion">
+                <data type="NCName"/>
+              </element>
+            </oneOrMore>
           </element>
         </zeroOrMore>
         <oneOrMore>

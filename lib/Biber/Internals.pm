@@ -250,8 +250,19 @@ our $dispatch_sorting = {
 # Main sorting dispatch method
 sub _dispatch_sorting {
   my ($self, $sortfield, $citekey, $sortelementattributes) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
   my $code_ref;
   my $code_args_ref;
+
+  # Is this field excluded from sorting for this entrytype, then skip it and return
+  if (my $se = Biber::Config->getblxoption('sortexclusion', $be->get_field('entrytype'))) {
+    if ($se->{$sortfield}) {
+      return '';
+    }
+  }
+
   # if the field is not found in the dispatch table, assume it's a literal string
   unless (exists($dispatch_sorting->{$sortfield})) {
     $code_ref = \&_sort_literal;
@@ -376,8 +387,8 @@ sub _sort_author {
   my $be = $bibentries->entry($citekey);
   if (Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey) and
     $be->get_field('author')) {
-  my $string = $self->_namestring($citekey, 'author');
-  return _process_sort_attributes($string, $sortelementattributes);
+    my $string = $self->_namestring($citekey, 'author');
+    return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -424,8 +435,8 @@ sub _sort_editor {
   my $be = $bibentries->entry($citekey);
   if (Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) and
     $be->get_field($ed)) {
-  my $string = $self->_namestring($citekey, $ed);
-  return _process_sort_attributes($string, $sortelementattributes);
+    my $string = $self->_namestring($citekey, $ed);
+    return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -444,8 +455,8 @@ sub _sort_editortc {
   my $be = $bibentries->entry($citekey);
   if (Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) and
     $be->get_field($edtypeclass)) {
-  my $string = $be->get_field($edtypeclass);
-  return _process_sort_attributes($string, $sortelementattributes);
+    my $string = $be->get_field($edtypeclass);
+    return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -468,8 +479,8 @@ sub _sort_extraalpha {
   my $be = $bibentries->entry($citekey);
   if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) and
     $be->get_field('extraalpha')) {
-  my $string = $be->get_field('extraalpha');
-  return _process_sort_attributes($string, $sortelementattributes);
+    my $string = $be->get_field('extraalpha');
+    return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -483,8 +494,8 @@ sub _sort_issuetitle {
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('issuetitle')) {
-  my $string = normalise_string_sort($be->get_field('issuetitle'));
-  return _process_sort_attributes($string, $sortelementattributes);
+    my $string = normalise_string_sort($be->get_field('issuetitle'));
+    return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -498,8 +509,8 @@ sub _sort_journal {
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('journal')) {
-  my $string = normalise_string_sort($be->get_field('journal'));
-  return _process_sort_attributes($string, $sortelementattributes);
+    my $string = normalise_string_sort($be->get_field('journal'));
+    return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -513,8 +524,8 @@ sub _sort_labelalpha {
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field('sortlabelalpha')) {
-  my $string = $be->get_field('sortlabelalpha');
-  return _process_sort_attributes($string, $sortelementattributes);
+    my $string = $be->get_field('sortlabelalpha');
+    return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -529,7 +540,7 @@ sub _sort_labelname {
   my $be = $bibentries->entry($citekey);
   # re-direct to the right sorting routine for the labelname
   if (my $ln = $be->get_field('labelnamename')) {
-    # Don't process attributes as they wil be processing in the real sub
+    # Don't process attributes as they will be processed in the real sub
     return $self->_dispatch_sorting($ln, $citekey, $sortelementattributes);
   }
   else {
@@ -545,7 +556,7 @@ sub _sort_labelyear {
   my $be = $bibentries->entry($citekey);
   # re-direct to the right sorting routine for the labelyear
   if (my $ly = $be->get_field('labelyearname')) {
-    # Don't process attributes as they wil be processing in the real sub
+    # Don't process attributes as they will be processed in the real sub
     return $self->_dispatch_sorting($ly, $citekey, $sortelementattributes);
   }
   else {
@@ -570,8 +581,8 @@ sub _sort_place {
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
   if ($be->get_field($pltype)) {
-  my $string = $self->_liststring($citekey, $pltype);
-  return _process_sort_attributes($string, $sortelementattributes);
+    my $string = $self->_liststring($citekey, $pltype);
+    return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';

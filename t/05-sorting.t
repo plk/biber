@@ -63,8 +63,9 @@ my $edtypeclass1 = 'redactor,jaffé_philipp,loewenfeld_samuel+kaltenbrunner_ferd
 my $prefix1     = 'mm,,Luzzatto_Moshe Ḥayyim,haLashon laRamḥal uvo sheloshah ḥiburim,2000,0000';
 my $diacritic1  = 'mm,,Hasan_Alī,Some title,2000,0000';
 
-my $useprefix1  = 'ww,,von_bobble_terrence,1997,things,0000';
-my $useprefix2  = 'ww,,bobble_terrence_von,1997,things,0000';
+# These have custom presort and also an exclusion on year and title set
+my $useprefix1  = 'ww,,von_bobble_terrence,,,0000';
+my $useprefix2  = 'ww,,bobble_terrence_von,,,0000';
 
 my $bibentries;
 
@@ -74,14 +75,14 @@ Biber::Config->setblxoption('useprefix', 1);
 $biber->prepare;
 
 $bibentries = $biber->sections->get_section(0)->bibentries;
-is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix1, 'von with type-specific presort and useprefix=true' );
+is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix1, 'von with type-specific presort, exclusions and useprefix=true' );
 
 Biber::Config->setblxoption('useprefix', 0);
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
-is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix2, 'von with type-specific presort and useprefix=false' );
+is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix2, 'von with type-specific presort, exclusions and useprefix=false' );
 
 
 

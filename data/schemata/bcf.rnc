@@ -118,7 +118,7 @@ start =
       # excludes of certain fields for sorting for specified types
       element bcf:sortexclusion {
         attribute type { text },
-        element bcf:exclusion { xsd:NCName }
+        element bcf:exclusion { xsd:NCName }+
       }*,
       sort+
     },

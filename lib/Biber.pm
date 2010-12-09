@@ -357,12 +357,14 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
 
   # sorting excludes
   foreach my $sex (@{$bcfxml->{sorting}{sortexclusion}}) {
+    my $excludes;
     foreach my $ex (@{$sex->{exclusion}}) {
-      Biber::Config->setblxoption('sortexclusion',
-                                 $ex->{content},
-                                 'PER_TYPE',
-                                 $sex->{type});
+      $excludes->{$ex->{content}} = 1;
     }
+    Biber::Config->setblxoption('sortexclusion',
+                                $excludes,
+                                'PER_TYPE',
+                                $sex->{type});
   }
 
   # presort defaults
