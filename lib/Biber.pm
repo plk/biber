@@ -1503,10 +1503,10 @@ sub sortentries {
   my $bibentries = $section->bibentries;
   my @citekeys = $section->get_citekeys;
   if (Biber::Config->getoption('sortcase')) {
-    $logger->debug("Sorting is case-SENSITIVE");
+    $logger->debug("Sorting is by default case-SENSITIVE");
   }
   else {
-    $logger->debug("Sorting is case-INSENSITIVE");
+    $logger->debug("Sorting is by default case-INSENSITIVE");
   }
   $logger->debug("Citekeys before sort:\n");
   foreach my $ck (@citekeys) {
@@ -1548,18 +1548,26 @@ sub sortentries {
     my $data_extractor = '[';
     my $sorter;
     my $sort_extractor;
+    # Global lowercase setting
+    my $glc = Biber::Config->getoption('sortcase') ? '' : 'lc ';
+
     foreach my $sortset (@{$sortscheme}) {
       $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
       $sorter .= ' || ' if $num_sorts; # don't add separator before first field
-      my $lc = '';
-      if (exists($sortset->[0]{sortcase})) {
-        unless ($sortset->[0]{sortcase}) {
+      my $lc = $glc; # Casing defaults to global default ...
+      my $sc = $sortset->[0]{sortcase};
+      # but is overriden by field setting if it exists
+      if (defined($sc) and $sc != Biber::Config->getoption('sortcase')) {
+        unless ($sc) {
           $lc = 'lc ';
+        }
+        else {
+          $lc = '';
         }
       }
 
-      if (exists($sortset->[0]{sort_direction}) and
-          $sortset->[0]{sort_direction} eq 'descending') {
+      my $sd = $sortset->[0]{sort_direction};
+      if (defined($sd) and $sd eq 'descending') {
         # descending field
         $sorter .=
           $lc .
@@ -1681,8 +1689,8 @@ sub sortentries {
       $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
       $sorter .= ' || ' if $num_sorts; # don't add separator before first field
 
-      if (exists($sortset->[0]{sort_direction}) and
-          $sortset->[0]{sort_direction} eq 'descending') {
+      my $sd = $sortset->[0]{sort_direction};
+      if (defined($sd) and $sd eq 'descending') {
         # descending field
         $sorter .= '$Collator' .
           $fc .

@@ -308,14 +308,6 @@ sub _generatesortinfo {
   # since we want to generate sortinit nicely below
   my $ss = $sortstring;
 
-  if (not Biber::Config->getoption('sortcase') and Biber::Config->getoption('fastsort')) {
-    if (my $thislocale = Biber::Config->getoption('sortlocale')) {
-      use locale;
-      setlocale( LC_CTYPE, $thislocale );
-    }
-    $sortstring = lc($sortstring);
-    @$sortobj = map { lc($_) } @$sortobj
-  }
   $be->set_field('sortstring', $sortstring);
   $be->set_field('sortobj', $sortobj);
 

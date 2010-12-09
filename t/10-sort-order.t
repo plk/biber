@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 22;
+use Test::More tests => 24;
 
 use Biber;
 use Biber::Output::BBL;
@@ -509,6 +509,24 @@ $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
 is_deeply([$section->get_citekeys], ['L9','L6','L7','L8','L5','L4','L3','L2','L1B','L1A','L1'], 'nty with descending n');
 check_output_string_order($out, ['L9','L6','L7','L8','L5','L4','L3','L2','L1B','L1A','L1']);
+
+
+# testing case sensitive with fastsort
+Biber::Config->setblxoption('sorting_label', [
+                                                    [
+                                                     {},
+                                                     {'location'     => {}}
+                                                    ]
+                                                   ]);
+
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+
+$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->prepare;
+$out = $biber->get_output_obj;
+$section = $biber->sections->get_section(0);
+is_deeply([$section->get_citekeys], ['L1','L1A','L1B','L2','L3','L4','L5','L6','L7','L8','L9'], 'nty');
+check_output_string_order($out, ['L1','L1A','L1B','L2','L3','L4','L5','L6','L7','L8','L9']);
 
 
 unlink "*.utf8";

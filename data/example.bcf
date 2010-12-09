@@ -22,7 +22,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortcase</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortupper</bcf:key>
@@ -122,7 +122,7 @@
     <bcf:sort order="5" final="1">
       <bcf:sortitem order="1">sortkey</bcf:sortitem>
     </bcf:sort>
-   <bcf:sort order="6">
+   <bcf:sort order="6" sortcase="0" sortupper="0">
      <bcf:sortitem order="1">sortname</bcf:sortitem>
      <bcf:sortitem order="2">author</bcf:sortitem>
      <bcf:sortitem order="3">editor</bcf:sortitem>
