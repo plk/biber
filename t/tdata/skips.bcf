@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../../data/schemata/bcf.rnc" type="compact"?>
 <?xml-stylesheet type="text/xsl" href="../../data/bcf.xsl"?>
-<bcf:controlfile version="1.0" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="1.1" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">

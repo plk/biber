@@ -24,7 +24,7 @@ our @EXPORT = qw{
 
 # Version of biblatex which this release works with. Matched against version
 # passed in control file
-Readonly::Scalar our $BIBLATEX_VERSION => '1.0';
+Readonly::Scalar our $BIBLATEX_VERSION => '1.1';
 
 # Global flags needed for sorting
 our $BIBER_SORT_FINAL = 0;
@@ -180,6 +180,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                },
                               ]
                   },
+   presort => 'mm',
    sorting_label   =>  [
                 [
                  {final          => undef,

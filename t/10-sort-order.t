@@ -512,9 +512,12 @@ check_output_string_order($out, ['L9','L6','L7','L8','L5','L4','L3','L2','L1B','
 
 
 # testing case sensitive with fastsort
+# In alphabetic, all uppercase comes before lower so the
+# "sortcase => 1" on location means that "edinburgh" sorts at the end after "London"
+# Take this out of the location sorting spec and it fails as it should
 Biber::Config->setblxoption('sorting_label', [
                                                     [
-                                                     {},
+                                                     {sortcase => 1},
                                                      {'location'     => {}}
                                                     ]
                                                    ]);
@@ -525,8 +528,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-is_deeply([$section->get_citekeys], ['L1','L1A','L1B','L2','L3','L4','L5','L6','L7','L8','L9'], 'nty');
-check_output_string_order($out, ['L1','L1A','L1B','L2','L3','L4','L5','L6','L7','L8','L9']);
+is_deeply([$section->get_citekeys], ['L1B','L1A','L1','L2','L3','L4','L7','L8','L5','L9','L6'], 'location - sortcase=1');
+check_output_string_order($out, ['L1B','L1A','L1','L2','L3','L4','L7','L8','L5','L9','L6']);
 
 
 unlink "*.utf8";
