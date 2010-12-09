@@ -1,18 +1,18 @@
-===================
-BIBER Version 0.6.9 (beta)
-===================
+=================
+BIBER Version 0.7
+=================
 
 Biber is a BibTeX replacement for users of biblatex, with full Unicode
-support.  This release coincides with the release of biblatex 1.0
+support.  This release coincides with the release of biblatex 1.1
 
 REQUIREMENTS
 
   These requirements only apply if you are installing the perl version.
   We also provide PAR::Packer generated binaries for most common OSes.
 
-  Biber is written in Perl. Version 5.10 or higher is recommended. Be aware
-  that if your version of Perl is older than that, Biber may work, but we
-  won't be offering support. We strongly recommend version 5.10 or higher.
+  Biber is written in Perl. Version 5.12 is recommended if you are running
+  the perl source version as it has the best Unicode implementation of any
+  Perl version so far.
 
   In addition Biber requires a number of CPAN modules, which if missing
   should be automatically installed during the install process described
