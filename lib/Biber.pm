@@ -1678,143 +1678,75 @@ sub sort_shorthands {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my @shorthands = $section->get_shorthands;
+  my @citekeys = $section->get_citekeys;
+  my $key_index;
+  my %citekeys = map {$_ => $key_index++} @citekeys;
   # What we sort on depends on the 'sortlos' BibLaTeX option
-#  my $sortlos = Biber::Config->getblxoption('sortlos') ? 'shorthand' : 'sortstring';
   my $thislocale = Biber::Config->getoption('sortlocale');
 
-  # Get the right sortscheme
-  my $sortscheme;
-  if ($BIBER_SORT_FIRSTPASSDONE) {
-    $sortscheme = Biber::Config->getblxoption('sorting_final');
+  # sort by sortkey - this means shorthands should be in same order as
+  # citekeys which has already been sorted so just sort on the index each
+  # shorthand (which is a citekeys) occurs in @citekeys
+  unless (Biber::Config->getblxoption('sortlos')) {
+    $logger->debug("Sorting shorthands by 'sortkey'");
+    @shorthands = sort {$citekeys{$a} <=> $citekeys{$b}} @shorthands;
   }
   else {
-    $sortscheme = Biber::Config->getblxoption('sorting_label');
-  }
-
-  if ( Biber::Config->getoption('fastsort') ) {
-    $logger->info("Sorting shorthands with built-in sort (with locale $thislocale) ...");
-    unless (setlocale( LC_ALL, $thislocale )) {
-      $logger->warn("Unavailable locale $thislocale");
-      $self->{warnings}++;
-    }
-
-    unless (Biber::Config->getblxoption('sortlos')) {
-      $logger->debug("Sorting shorthands by 'sortkey'");
-      # Construct a multi-field Schwartzian Transform with the right number of
-      # extractions into a string representing an array ref as we musn't eval this yet
-      my $num_sorts = 0;
-      my $data_extractor = '[';
-      my $sorter;
-      my $sort_extractor;
-      foreach my $sortset (@{$sortscheme}) {
-        $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
-        $sorter .= ' || ' if $num_sorts; # don't add separator before first field
-        if (defined($sortset->[0]{sort_direction}) and
-            $sortset->[0]{sort_direction} eq 'descending') {
-          # descending field
-          $sorter .= '$b->[' . $num_sorts . '] cmp $a->[' . $num_sorts . ']';
-        }
-        else {
-          # ascending field
-          $sorter .= '$a->[' . $num_sorts . '] cmp $b->[' . $num_sorts . ']';
-        }
-        $num_sorts++;
+    # sort by shorthands so we actually have to sort by the shorthand values
+    if ( Biber::Config->getoption('fastsort') ) {
+      use locale;
+      $logger->info("Sorting shorthands with built-in sort (with locale $thislocale) ...");
+      unless (setlocale( LC_ALL, $thislocale )) {
+        $logger->warn("Unavailable locale $thislocale");
+        $self->{warnings}++;
       }
-      $data_extractor .= '$_]';
-      # Handily, $num_sorts is now one larger than the number of fields which is the
-      # correct index for the actual data in the sort array
-      $sort_extractor = '$_->[' . $num_sorts . ']';
-
-      # Schwartzian transform multi-field sort
-      @shorthands = map  { eval $sort_extractor }
-        sort { eval $sorter }
-          map  { eval $data_extractor } @shorthands;
-    }
-    else {
       $logger->debug("Sorting shorthands by 'shorthand'");
       @shorthands = sort { $bibentries->entry($a)->get_field('shorthand') cmp $bibentries->entry($b)->get_field('shorthand') } @shorthands;
     }
-
-  }
-  else {
-
-    require Unicode::Collate::Locale;
-    my $opts = Biber::Config->getoption('collate_options');
-    my $collopts;
-    unless (ref($opts) eq "HASH") { # opts for this can come in a string from cmd line
-      $collopts = eval "{ $opts }" or $logger->logcarp("Incorrect collate_options: $@");
-    }
     else {
-      $collopts = $opts;
-    }
-
-    # UCA level 2 if case insensitive sorting is requested
-    unless (Biber::Config->getoption('sortcase')) {
-      $collopts->{level} = 2;
-    }
-
-    # Add upper_before_lower option
-    $collopts->{upper_before_lower} = Biber::Config->getoption('sortupper');
-
-    # Add tailoring locale for Unicode::Collate
-    if ($thislocale and not $collopts->{locale}) {
-      $collopts->{locale} = $thislocale;
-      if ($collopts->{table}) {
-        my $t = delete $collopts->{table};
-        $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)");
+      require Unicode::Collate::Locale;
+      my $opts = Biber::Config->getoption('collate_options');
+      my $collopts;
+      unless (ref($opts) eq "HASH") { # opts for this can come in a string from cmd line
+        $collopts = eval "{ $opts }" or $logger->logcarp("Incorrect collate_options: $@");
       }
-    }
-
-    # Remove locale from options as we need this to make the object
-    my $coll_locale = delete $collopts->{locale};
-    # Now create the collator object
-    my $Collator = Unicode::Collate::Locale->new( locale => $coll_locale )
-      or $logger->logcarp("Problem with Unicode::Collate options: $@");
-
-    # Note reporting tailoring locale default overrides here since we already
-    # do that during main sorting and the tailoring can't change by the time
-    # we get here
-    # Still using ->change though so we don't die on tailoring option conflicts
-    $Collator->change( %{$collopts} );
-
-    my $UCAversion = $Collator->version();
-    $logger->info("Sorting shorthands with Unicode::Collate (" .
-		  stringify_hash($collopts) . ", UCA version: $UCAversion)");
-
-
-    unless (Biber::Config->getblxoption('sortlos')) {
-      $logger->debug("Sorting shorthands by 'sortkey'");
-      # Construct a multi-field Schwartzian Transform with the right number of
-      # extractions into a string representing an array ref as we musn't eval this yet
-      my $num_sorts = 0;
-      my $data_extractor = '[';
-      my $sorter;
-      my $sort_extractor;
-      foreach my $sortset (@{$sortscheme}) {
-        $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
-        $sorter .= ' || ' if $num_sorts; # don't add separator before first field
-        if (defined($sortset->[0]{sort_direction}) and
-            $sortset->[0]{sort_direction} eq 'descending') {
-          # descending field
-          $sorter .= '$Collator->cmp($b->[' . $num_sorts . '],$a->[' . $num_sorts . '])';
-        }
-        else {
-          # ascending field
-          $sorter .= '$Collator->cmp($a->[' . $num_sorts . '],$b->[' . $num_sorts . '])';
-        }
-        $num_sorts++;
+      else {
+        $collopts = $opts;
       }
-      $data_extractor .= '$_]';
-      # Handily, $num_sorts is now one larger than the number of fields which is the
-      # correct index for the actual data in the sort array
-      $sort_extractor = '$_->[' . $num_sorts . ']';
 
-      # Schwartzian transform multi-field sort
-      @shorthands = map  { eval $sort_extractor }
-                    sort { eval $sorter }
-                    map  { eval $data_extractor } @shorthands;
-    }
-    else {
+      # UCA level 2 if case insensitive sorting is requested
+      unless (Biber::Config->getoption('sortcase')) {
+        $collopts->{level} = 2;
+      }
+
+      # Add upper_before_lower option
+      $collopts->{upper_before_lower} = Biber::Config->getoption('sortupper');
+
+      # Add tailoring locale for Unicode::Collate
+      if ($thislocale and not $collopts->{locale}) {
+        $collopts->{locale} = $thislocale;
+        if ($collopts->{table}) {
+          my $t = delete $collopts->{table};
+          $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)");
+        }
+      }
+
+      # Remove locale from options as we need this to make the object
+      my $coll_locale = delete $collopts->{locale};
+      # Now create the collator object
+      my $Collator = Unicode::Collate::Locale->new( locale => $coll_locale )
+        or $logger->logcarp("Problem with Unicode::Collate options: $@");
+
+      # Note reporting tailoring locale default overrides here since we already
+      # do that during main sorting and the tailoring can't change by the time
+      # we get here
+      # Still using ->change though so we don't die on tailoring option conflicts
+      $Collator->change( %{$collopts} );
+
+      my $UCAversion = $Collator->version();
+      $logger->info("Sorting shorthands with Unicode::Collate (" .
+                    stringify_hash($collopts) . ", UCA version: $UCAversion)");
+
       $logger->debug("Sorting shorthands by 'shorthand'");
       @shorthands = sort {
         $Collator->cmp( $bibentries->entry($a)->get_field('shorthand'),
