@@ -1659,7 +1659,7 @@ sub sortentries {
     my $sort_extractor;
     foreach my $sortset (@{$sortscheme}) {
       my $fc = '';
-
+      my @fc;
       # Reset collation object to global defaults for each sortset in case
       # locally overriden by earlier loop
       $Collator->change(level              => $collopts->{level},
@@ -1667,28 +1667,14 @@ sub sortentries {
 
       # If the case or upper option on a field is not the global default
       # set it locally on the $Collator by constructing a change() method call
-      if (exists($sortset->[0]{sortcase}) and
-          (my $sc = $sortset->[0]{sortcase} != Biber::Config->getoption('sortcase')) or
-          exists($sortset->[0]{sortupper}) and
-          (my $su = $sortset->[0]{sortupper} != Biber::Config->getoption('sortupper'))) {
+      my $sc = $sortset->[0]{sortcase};
+      my $su = $sortset->[0]{sortupper};
+      if ((defined($sc) and $sc != Biber::Config->getoption('sortcase')) or
+          (defined($su) and $su != Biber::Config->getoption('sortupper'))) {
         $fc = '->change(';
-        if (defined($sc)) {
-          if ($sc) {
-            # if case-sensitive, UCA level needs to be what was explicitly set, if any
-            $fc .= 'level => '. $collopts->{level} . defined($su) ? ',' : '';
-          }
-          else {
-            $fc .= 'level => 2' . defined($su) ? ',' : '';
-          }
-        }
-        if (defined($su)) {
-          if ($su) {
-            $fc .= 'upper_before_lower => 1';
-          }
-          else {
-            $fc .= 'upper_before_lower => 0';
-          }
-        }
+        push @fc, $sc ? 'level => 4'              : 'level => 2';
+        push @fc, $su ? 'upper_before_lower => 1' : 'upper_before_lower => 0';
+        $fc .= join(',', @fc);
         $fc .= ')';
       }
 

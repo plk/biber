@@ -40,14 +40,16 @@ check_output_string_order($out, ['CS1','CS3','CS2']);
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('sort-case.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
-Biber::Config->setoption('sortcase', 0);
 
+# Global here is sortcase=0, sortupper=1
+# title is sortcase=1, sortupper=0
+# So, all names are the same and it depends on title
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $out = $biber->get_output_obj;
-is_deeply([$section->get_citekeys], ['CS1','CS2','CS3'], 'U::C case - 2');
+is_deeply([$section->get_citekeys], ['CS3','CS2','CS1'], 'U::C case - 2');
 
-check_output_string_order($out, ['CS1','CS2','CS3']);
+check_output_string_order($out, ['CS3','CS2','CS1']);
 
 
 # This makes sure the the sortorder of the output strings is still correct

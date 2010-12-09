@@ -590,6 +590,24 @@
             </choice>
           </attribute>
         </optional>
+        <optional>
+          <!-- Sort case sensitive or not? -->
+          <attribute name="sortcase">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </attribute>
+        </optional>
+        <optional>
+          <!-- Sort upper before lower? -->
+          <attribute name="sortupper">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </attribute>
+        </optional>
         <oneOrMore>
           <!-- A sort item specification - a field or pseudo-field to get sort information from -->
           <element name="bcf:sortitem">
