@@ -99,7 +99,7 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
   </bcf:options>
-  <bcf:sorting type="global">
+  <bcf:sorting>
     <bcf:presort>mm</bcf:presort>
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>

@@ -346,7 +346,7 @@
               </xsl:for-each>
             </tbody>
           </table>
-          <div>Legal fields</div>
+          <div>Legal Fields</div>
           <table class="fields_table">
             <thead>
               <tr><td>Field</td><td>Aliases</td><td>Data type</td></tr>
@@ -354,13 +354,11 @@
             <tbody>
               <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:fields/bcf:field">
                 <tr>
-                  <xsl:if test="./@nullok='true'">
-                    <xsl:attribute name="class">field_nullok</xsl:attribute>
-                  </xsl:if>
-                  <xsl:if test="./@skip_output='true'">
-                    <xsl:attribute name="class">field_skip</xsl:attribute>
-                  </xsl:if>
-                  <td valign="top"><xsl:value-of select="./text()"/></td>
+                  <td valign="top">
+                    <xsl:value-of select="./text()"/>
+                    <xsl:if test="./@nullok='true'"><xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text></xsl:if>
+                    <xsl:if test="./@skip_output='true'"><xsl:text disable-output-escaping="yes">&amp;loz;</xsl:text></xsl:if>
+                  </td>
                   <td valign="top">
                     <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:aliases/bcf:alias[@type='field']/bcf:realname[./text()=current()/text()]">
                       <xsl:value-of select="../bcf:name/text()"/>

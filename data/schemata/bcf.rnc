@@ -109,7 +109,6 @@ start =
     
     # Global sorting specification
     element bcf:sorting {
-      attribute type { "global" },
       # presort default strings for different entry types
       element bcf:presort {
         attribute type { xsd:NCName }?,

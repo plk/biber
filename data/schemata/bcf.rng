@@ -242,9 +242,6 @@
       </optional>
       <!-- Global sorting specification -->
       <element name="bcf:sorting">
-        <attribute name="type">
-          <value>global</value>
-        </attribute>
         <oneOrMore>
           <!-- presort default strings for different entry types -->
           <element name="bcf:presort">

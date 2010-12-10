@@ -116,7 +116,7 @@
     </bcf:option>    
   </bcf:options>
   <!-- SORTING -->
-  <bcf:sorting type="global">
+  <bcf:sorting>
     <bcf:presort>mm</bcf:presort>
     <bcf:sort order="1" pass="label">
       <bcf:sortitem order="1">labelalpha</bcf:sortitem>
