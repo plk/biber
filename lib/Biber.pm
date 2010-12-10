@@ -1889,7 +1889,7 @@ sub parse_data {
     my $datatype = $datafile->{datatype};
     $name .= '.bib' unless $name =~ /\.(?:bib|xml|dbxml)\z/xms;
     $name = locate_biber_file($name);
-    $logger->logcroak("File '$name' does not exist!") unless -f $name;
+    $logger->logcroak("File '$name' does not exist!") unless -e $name;
     # Here we decide which parser to use for the data file
     if ($datatype eq 'bibtex') {
       $self->parse_bibtex($name, $datatype);
