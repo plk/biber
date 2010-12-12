@@ -72,3 +72,74 @@
   YEAR		    = {1922},
 }
 
+
+% Some examples from biblatex examples file of collection plus individual volumes
+% The date ranges should be handled differently by extrayear and extraalpha
+@BOOK{knuth:ct,
+  hyphenation	  = {american},
+  sortyear	  = {1984-0},
+  sorttitle	  = {Computers & Typesetting},
+  indexsorttitle  = {Computers & Typesetting},
+  author	  = {Knuth, Donald E.},
+  title		  = {Computers \& Typesetting},
+  volumes	  = {5},
+  publisher	  = {Addison-Wesley},
+  location	  = {Reading, Mass.},
+  date		  = {1984/1986},
+  annotation	  = {A five-volume book cited as a whole. This is a \texttt{book} entry, note the
+		    \texttt{volumes} field}
+}
+
+@BOOK{knuth:ct:a,
+  hyphenation	  = {american},
+  sortyear	  = {1984-1},
+  sorttitle	  = {Computers & Typesetting A},
+  indexsorttitle  = {The TeXbook},
+  author	  = {Knuth, Donald E.},
+  indextitle	  = {\TeX book, The},
+  title		  = {The \TeX book},
+  shorttitle	  = {\TeX book},
+  maintitle	  = {Computers \& Typesetting},
+  volume	  = {A},
+  publisher	  = {Addison-Wesley},
+  location	  = {Reading, Mass.},
+  date		  = {1984},
+  annotation	  = {The first volume of a five-volume book. Note the \texttt{sorttitle} and
+		    \texttt{sortyear} fields. We want this volume to be listed after the entry
+		    referring to the entire five-volume set. Also note the \texttt{indextitle} and
+		    \texttt{indexsorttitle} fields}
+}
+
+@BOOK{knuth:ct:b,
+  hyphenation	  = {american},
+  sortyear	  = {1986-1},
+  sorttitle	  = {Computers & Typesetting B},
+  indexsorttitle  = {TeX: The Program},
+  author	  = {Knuth, Donald E.},
+  title		  = {\TeX: The Program},
+  shorttitle	  = {\TeX},
+  maintitle	  = {Computers \& Typesetting},
+  volume	  = {B},
+  publisher	  = {Addison-Wesley},
+  location	  = {Reading, Mass.},
+  date		  = {1986},
+  annotation	  = {The second volume of a five-volume book. Note the \texttt{sorttitle} and
+		    \texttt{sortyear} fields. Also note the \texttt{indexsorttitle} field}
+}
+
+@BOOK{knuth:ct:c,
+  hyphenation	  = {american},
+  sortyear	  = {1986-2},
+  sorttitle	  = {Computers & Typesetting C},
+  author	  = {Knuth, Donald E.},
+  indextitle	  = {METAFONTbook, The},
+  title		  = {The METAFONTbook},
+  shorttitle	  = {METAFONTbook},
+  maintitle	  = {Computers \& Typesetting},
+  volume	  = {C},
+  publisher	  = {Addison-Wesley},
+  location	  = {Reading, Mass.},
+  date		  = {1986},
+  annotation	  = {The third volume of a five-volume book. Note the \texttt{sorttitle} and
+		    \texttt{sortyear} fields as well as the \texttt{indextitle} field}
+}

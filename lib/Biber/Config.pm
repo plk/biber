@@ -44,8 +44,14 @@ $CONFIG->{state}{namehashcount} = {};
 # uniquenamecount holds a hash of lastnames and lastname/initials which point to a list
 # of name(hashes) which contain them
 $CONFIG->{state}{uniquenamecount} = {};
-$CONFIG->{state}{seennameyear} = {};
-$CONFIG->{state}{seenlabelyear} = {};
+# Counter for tracking name/year combinations for extrayear
+$CONFIG->{state}{seen_nameyear_extrayear} = {};
+# Counter for the actual extrayear value
+$CONFIG->{state}{seen_extrayear} = {};
+# Counter for tracking name/year combinations for extraalpha
+$CONFIG->{state}{seen_nameyear_extraalpha} = {};
+# Counter for the actual extraalpha value
+$CONFIG->{state}{seen_extraalpha} = {};
 $CONFIG->{state}{seenkeys} = {};
 
 =head2 _init
@@ -59,8 +65,10 @@ sub _init {
   $CONFIG->{state}{seennamehash} = {};
   $CONFIG->{state}{namehashcount} = {};
   $CONFIG->{state}{uniquenamecount} = {};
-  $CONFIG->{state}{seennameyear} = {};
-  $CONFIG->{state}{seenlabelyear} = {};
+  $CONFIG->{state}{seen_nameyear_extrayear} = {};
+  $CONFIG->{state}{seen_extrayear} = {};
+  $CONFIG->{state}{seen_nameyear_extraalpha} = {};
+  $CONFIG->{state}{seen_extraalpha} = {};
   $CONFIG->{state}{seenkeys} = {};
   $CONFIG->{state}{keycase} = {};
 
@@ -428,61 +436,64 @@ sub incr_seenkey {
 }
 
 #============================
-#        seenlabelyear
+#        seen_extrayear
 #============================
 
-=head2 get_seenlabelyear
+=head2 get_seen_extrayear
 
-    Get the count of a labelyear
+    Get the counter of extrayear
 
-    Biber::Config->get_seenlabelyear($hash);
+    Biber::Config->get_seen_extrayear($ay);
 
 =cut
 
-sub get_seenlabelyear {
+sub get_seen_extrayear {
   shift; # class method so don't care about class name
   my $ay = shift;
-  return $CONFIG->{state}{seenlabelyear}{$ay};
+  return $CONFIG->{state}{seen_extrayear}{$ay};
 }
 
-=head2 incr_seenlabelyear
+=head2 incr_seen_extrayear
 
-    Increment the count of a labelyear
+    Increment the counter for extrayear
 
-    Biber::Config->incr_seenlabelyear($ay);
+    Biber::Config->incr_seen_extrayear($ay);
 
 =cut
 
-sub incr_seenlabelyear {
+sub incr_seen_extrayear {
   shift; # class method so don't care about class name
   my $ay = shift;
-  $CONFIG->{state}{seenlabelyear}{$ay}++;
+  $CONFIG->{state}{seen_extrayear}{$ay}++;
   return;
 }
 
 #============================
-#       seennameyear
+#       seen_nameyear_extrayear
 #============================
 
-=head2 get_seennameyear
+=head2 get_seen_nameyear_extrayear
 
-    Get the count of an labelname/labelyear combination
+    Get the count of an labelname/labelyear combination for tracking
+    extrayear. It uses labelyear plus name as we need to disambiguate
+    entries with different labelyear (like differentiating 1984--1986 from
+    just 1984)
 
-    Biber::Config->get_seennameyear($ny);
+    Biber::Config->get_seen_nameyear_extrayear($ny);
 
 =cut
 
-sub get_seennameyear {
+sub get_seen_nameyear_extrayear {
   shift; # class method so don't care about class name
   my $ny = shift;
-  return $CONFIG->{state}{seennameyear}{$ny};
+  return $CONFIG->{state}{seen_nameyear_extrayear}{$ny};
 }
 
-=head2 incr_seennameyear
+=head2 incr_seen_nameyear_extrayear
 
-    Increment the count of an labelname/labelyear combination
+    Increment the count of an labelname/labelyear combination for extrayear
 
-    Biber::Config->incr_seenameyear($ns, $ys);
+    Biber::Config->incr_seen_nameyear_extrayear($ns, $ys);
 
     We pass in the name and year strings seperately as we have to
     be careful and only increment this counter beyond 1 if there is
@@ -491,25 +502,110 @@ sub get_seennameyear {
 
 =cut
 
-sub incr_seennameyear {
+sub incr_seen_nameyear_extrayear {
   shift; # class method so don't care about class name
   my ($ns, $ys) = @_;
-  $tmp = $ns . '0' . $ys;
+  $tmp = "$ns,$ys";
   # We can always increment this to 1
-  unless ($CONFIG->{state}{seennameyear}{$tmp}) {
-    $CONFIG->{state}{seennameyear}{$tmp}++;
+  unless ($CONFIG->{state}{seen_nameyear_extrayear}{$tmp}) {
+    $CONFIG->{state}{seen_nameyear_extrayear}{$tmp}++;
   }
   # But beyond that only if we have a labelname and labelyear in the entry since
   # this counter is used to create extrayear which doesn't mean anything for
   # entries with only one of these.
   else {
     if ($ns and $ys) {
-      $CONFIG->{state}{seennameyear}{$tmp}++;
+      $CONFIG->{state}{seen_nameyear_extrayear}{$tmp}++;
     }
   }
   return;
 }
 
+#============================
+#        seen_extraalpha
+#============================
+
+=head2 get_seen_extraalpha
+
+    Get the counter of extraalpha
+
+    Biber::Config->get_seen_extraalpha($hash);
+
+=cut
+
+sub get_seen_extraalpha {
+  shift; # class method so don't care about class name
+  my $ay = shift;
+  return $CONFIG->{state}{seen_extraalpha}{$ay};
+}
+
+=head2 incr_seen_extraalpha
+
+    Increment the counter for extraalpha
+
+    Biber::Config->incr_seen_extraalpha($ay);
+
+=cut
+
+sub incr_seen_extraalpha {
+  shift; # class method so don't care about class name
+  my $ay = shift;
+  $CONFIG->{state}{seen_extraalpha}{$ay}++;
+  return;
+}
+
+#============================
+#       seen_nameyear_extraalpha
+#============================
+
+=head2 get_seen_nameyear_extraalpha
+
+    Get the count of an labelname/labelyear combination for tracking
+    extraalpha. It uses labelyear plus name as we need to disambiguate
+    entries with different labelyear (like differentiating 1984--1986 from
+    just 1984)
+
+    Biber::Config->get_seen_nameyear_extraalpha($ny);
+
+=cut
+
+sub get_seen_nameyear_extraalpha {
+  shift; # class method so don't care about class name
+  my $ny = shift;
+  return $CONFIG->{state}{seen_nameyear_extraalpha}{$ny};
+}
+
+=head2 incr_seen_nameyear_extraalpha
+
+    Increment the count of an labelname/labelyear combination for extraalpha
+
+    Biber::Config->incr_seen_nameyear_extraalpha($ns, $ys);
+
+    We pass in the name and year strings seperately as we have to
+    be careful and only increment this counter beyond 1 if there is
+    both a name and year component. Otherwise, extraalpha gets defined for all
+    entries with no name but the same year etc.
+
+=cut
+
+sub incr_seen_nameyear_extraalpha {
+  shift; # class method so don't care about class name
+  my ($ns, $ys) = @_;
+  $tmp = "$ns,$ys";
+  # We can always increment this to 1
+  unless ($CONFIG->{state}{seen_nameyear_extraalpha}{$tmp}) {
+    $CONFIG->{state}{seen_nameyear_extraalpha}{$tmp}++;
+  }
+  # But beyond that only if we have a labelname and labelyear in the entry since
+  # this counter is used to create extraalpha which doesn't mean anything for
+  # entries with only one of these.
+  else {
+    if ($ns and $ys) {
+      $CONFIG->{state}{seen_nameyear_extraalpha}{$tmp}++;
+    }
+  }
+  return;
+}
 
 #============================
 #       uniquenamecount

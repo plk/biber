@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 66;
+use Test::More tests => 70;
 
 use Biber;
 use Biber::Utils;
@@ -52,6 +52,10 @@ is($bibentries->entry('l8')->get_field('sortlabelalpha'), 'Sha85', 'maxnames=1 m
 ok(is_undef($bibentries->entry('l8')->get_field('extraalpha')), 'maxnames=1 minnames=1 entry L8 extraalpha');
 ok(is_undef($bibentries->entry('l9')->get_field('extraalpha')), 'L9 extraalpha unset due to shorthand');
 ok(is_undef($bibentries->entry('l10')->get_field('extraalpha')), 'L10 extraalpha unset due to shorthand');
+is($bibentries->entry('knuth:ct')->get_field('extraalpha'), '1', 'YEAR with range needs label differentiating from individual volumes - 1');
+is($bibentries->entry('knuth:ct:a')->get_field('extraalpha'), '2', 'YEAR with range needs label differentiating from individual volumes - 2');
+is($bibentries->entry('knuth:ct:b')->get_field('extraalpha'), '1', 'YEAR with range needs label differentiating from individual volumes - 3');
+is($bibentries->entry('knuth:ct:c')->get_field('extraalpha'), '2', 'YEAR with range needs label differentiating from individual volumes - 4');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('maxnames', 2);
