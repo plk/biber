@@ -162,7 +162,7 @@ sub set_output_entry {
     # Might not have been set due to skiplab/dataonly
     if (my $ey = $be->get_field('extrayear')) {
       my $nameyear_extrayear = $be->get_field('nameyear_extrayear');
-      if ( Biber::Config->get_seen_extrayear($nameyear_extrayear) > 1) {
+      if ( Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
         $acc .= "    \\field{extrayear}{$ey}\n";
       }
     }
@@ -177,7 +177,7 @@ sub set_output_entry {
     # Might not have been set due to skiplab/dataonly
     if (my $ea = $be->get_field('extraalpha')) {
       my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha');
-      if ( Biber::Config->get_seen_extraalpha($nameyear_extraalpha) > 1) {
+      if ( Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
         $acc .= "    \\field{extraalpha}{$ea}\n";
       }
     }
