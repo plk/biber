@@ -465,7 +465,7 @@ sortlocale =
     attribute type { "singlevalued" },
     element bcf:key { "sortlocale" },
     element bcf:value {
-      xsd:normalizedString { pattern = "([a-zA-Z]{2}|[iI][\-_][a-zA-Z]+|[xX][\-_][a-zA-Z]{1,8})([\-_][a-zA-Z]{1,8})*"
+      xsd:normalizedString { pattern = "([a-zA-Z]{2}|[iI][\-_][a-zA-Z]+|[xX][\-_][a-zA-Z]{1,10})([\-_][a-zA-Z]{1,8})*"
       }
     }
   }
