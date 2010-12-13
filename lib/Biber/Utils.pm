@@ -193,11 +193,11 @@ sub normalise_string {
 
 sub normalise_string_common {
   my $str = shift;
-  $str =~ s/\\[A-Za-z]+//g; # remove latex macros (assuming they have only ASCII letters)
+  $str =~ s/\\[A-Za-z]+//g;        # remove latex macros (assuming they have only ASCII letters)
   $str =~ s/[\p{P}\p{S}\p{C}]+//g; # remove punctuation, symbols, separator and control
-  $str =~ s/^\s+//;
-  $str =~ s/\s+$//;
-  $str =~ s/\s+/ /g;
+  $str =~ s/^\s+//;                # Remove leading spaces
+  $str =~ s/\s+$//;                # Remove trailing spaces
+  $str =~ s/\s+/ /g;               # collapse spaces
   return $str;
 }
 

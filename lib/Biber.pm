@@ -38,8 +38,8 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =cut
 
-our $VERSION = '0.6.4';
-our $BETA_VERSION = 1; # Is this a beta version?
+our $VERSION = '0.7';
+our $BETA_VERSION = 0; # Is this a beta version?
 
 =head1 SYNOPSIS
 
@@ -191,7 +191,7 @@ sub parse_ctrlfile {
   $logger->logcroak("Cannot find control file '$ctrl_file'! - did you pass the \"backend=biber\" option to BibLaTeX?") unless -f "$ctrl_file";
 
   # Validate if asked to
-  if (Biber::Config->getoption('validate')) {
+  if (Biber::Config->getoption('validate_control')) {
     require XML::LibXML;
 
     # Set up XML parser
@@ -263,12 +263,14 @@ sub parse_ctrlfile {
                                                            qr/\Aoption\z/,
                                                            qr/\Aoptions\z/,
                                                            qr/\Avalue\z/,
-                                                           qr/\Asorting\z/,
                                                            qr/\Asortitem\z/,
                                                            qr/\Abibdata\z/,
                                                            qr/\Adatasource\z/,
                                                            qr/\Asection\z/,
+                                                           qr/\Asortexclusion\z/,
+                                                           qr/\Aexclusion\z/,
                                                            qr/\Asort\z/,
+                                                           qr/\Apresort\z/,
                                                            qr/\Atype_pair\z/,
                                                            qr/\Ainherit\z/,
                                                            qr/\Afieldor\z/,
@@ -351,76 +353,103 @@ biber is more likely to work with version $BIBLATEX_VERSION.")
     Biber::Config->setblxoption('inheritance', $bcfxml->{inheritance});
   }
 
-  # SORTING schemes
-  foreach my $sortschemes (@{$bcfxml->{sorting}}) {
-    my $sorting_label = [];
-    my $sorting_final = [];
-    foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$sortschemes->{sort}}) {
-      my $sortingitems_label;
-      my $sortingitems_final;
+  # SORTING
 
-      # Determine which sorting pass(es) to include the item in
-      my $whichpass = ($sort->{pass} or 'both');
-
-      # Generate sorting pass structures
-      foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
-        my $sortitemattributes = {};
-        if (defined($sortitem->{final})) { # Found a sorting short-circuit marker
-          $sortitemattributes->{final} = 1;
-        }
-        if (defined($sortitem->{substring_side})) { # Found sorting substring side attribute
-          $sortitemattributes->{substring_side} = $sortitem->{substring_side};
-        }
-        if (defined($sortitem->{substring_width})) { # Found sorting substring length attribute
-          $sortitemattributes->{substring_width} = $sortitem->{substring_width};
-        }
-        if (defined($sortitem->{pad_width})) { # Found sorting pad length attribute
-          $sortitemattributes->{pad_width} = $sortitem->{pad_width};
-        }
-        if (defined($sortitem->{pad_char})) { # Found sorting pad char attribute
-          $sortitemattributes->{pad_char} = $sortitem->{pad_char};
-        }
-        if (defined($sortitem->{pad_side})) { # Found sorting pad side attribute
-          $sortitemattributes->{pad_side} = $sortitem->{pad_side};
-        }
-        if (defined($sortitem->{sort_direction})) { # Found sorting direction attribute
-          $sortitemattributes->{sort_direction} = $sortitem->{sort_direction};
-        }
-
-        # No pass specified, sortitem is included in both sort passes
-        # Note that we're cloning the sortitemattributes object so as not to have pointers
-        # from one structure to the other
-        if (lc($whichpass) eq 'both') {
-          push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
-          push @{$sortingitems_final}, {$sortitem->{content} => dclone($sortitemattributes)};
-        }
-
-        # "label" specified, sortitem is included only on "label" sort pass
-        elsif (lc($whichpass) eq 'label') {
-          push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
-        }
-
-        # "final" specified, sortitem is included only on "final" sort pass
-        elsif (lc($whichpass) eq 'final') {
-          push @{$sortingitems_final}, {$sortitem->{content} => $sortitemattributes};
-        }
-      }
-
-      # Only push a sortitem if defined. If the item has a conditional "pass"
-      # attribute, it may be ommitted in which case we don't want an empty array ref
-      # pushing
-      push @{$sorting_label}, $sortingitems_label if defined($sortingitems_label);
-      push @{$sorting_final}, $sortingitems_final if defined($sortingitems_final);
+  # sorting excludes
+  foreach my $sex (@{$bcfxml->{sorting}{sortexclusion}}) {
+    my $excludes;
+    foreach my $ex (@{$sex->{exclusion}}) {
+      $excludes->{$ex->{content}} = 1;
     }
-    if (lc($sortschemes->{type}) eq 'global') {
-      Biber::Config->setblxoption('sorting_label', $sorting_label);
-      Biber::Config->setblxoption('sorting_final', $sorting_final);
+    Biber::Config->setblxoption('sortexclusion',
+                                $excludes,
+                                'PER_TYPE',
+                                $sex->{type});
+  }
+
+  # presort defaults
+  foreach my $presort (@{$bcfxml->{sorting}{presort}}) {
+    # Global presort default
+    unless (exists($presort->{type})) {
+      Biber::Config->setblxoption('presort', $presort->{content});
     }
+    # Per-type default
     else {
-      Biber::Config->setblxoption('sorting_label', $sorting_label, 'PER_TYPE', $sortschemes->{type});
-      Biber::Config->setblxoption('sorting_final', $sorting_final, 'PER_TYPE', $sortschemes->{type});
+      Biber::Config->setblxoption('presort',
+                                  $presort->{content},
+                                  'PER_TYPE',
+                                  $presort->{type});
     }
   }
+
+  my $sorting_label = [];
+  my $sorting_final = [];
+  foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$bcfxml->{sorting}{sort}}) {
+    my $sortingitems_label;
+    my $sortingitems_final;
+
+    # Determine which sorting pass(es) to include the item in
+    my $whichpass = ($sort->{pass} or 'both');
+
+    # Generate sorting pass structures
+    foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
+      my $sortitemattributes = {};
+      if (defined($sortitem->{substring_side})) { # Found sorting substring side attribute
+        $sortitemattributes->{substring_side} = $sortitem->{substring_side};
+      }
+      if (defined($sortitem->{substring_width})) { # Found sorting substring length attribute
+        $sortitemattributes->{substring_width} = $sortitem->{substring_width};
+      }
+      if (defined($sortitem->{pad_width})) { # Found sorting pad length attribute
+        $sortitemattributes->{pad_width} = $sortitem->{pad_width};
+      }
+      if (defined($sortitem->{pad_char})) { # Found sorting pad char attribute
+        $sortitemattributes->{pad_char} = $sortitem->{pad_char};
+      }
+      if (defined($sortitem->{pad_side})) { # Found sorting pad side attribute
+        $sortitemattributes->{pad_side} = $sortitem->{pad_side};
+      }
+
+      # No pass specified, sortitem is included in both sort passes
+      # Note that we're cloning the sortitemattributes object so as not to have pointers
+      # from one structure to the other
+      if (lc($whichpass) eq 'both') {
+        push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
+        push @{$sortingitems_final}, {$sortitem->{content} => dclone($sortitemattributes)};
+      }
+
+      # "label" specified, sortitem is included only on "label" sort pass
+      elsif (lc($whichpass) eq 'label') {
+        push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
+      }
+
+      # "final" specified, sortitem is included only on "final" sort pass
+      elsif (lc($whichpass) eq 'final') {
+        push @{$sortingitems_final}, {$sortitem->{content} => $sortitemattributes};
+      }
+    }
+
+    # Only push a sortitem if defined. If the item has a conditional "pass"
+    # attribute, it may be ommitted in which case we don't want an empty array ref
+    # pushing
+    # Also, we only push the sort attributes if there are any sortitems otherwise
+    # we end up with a blank sort
+    my $sopts;
+    $sopts->{final}          = $sort->{final}          if $sort->{final};
+    $sopts->{sort_direction} = $sort->{sort_direction} if $sort->{sort_direction};
+    $sopts->{sortcase}       = $sort->{sortcase}       if $sort->{sortcase};
+    $sopts->{sortupper}      = $sort->{sortupper}      if $sort->{sortupper};
+    if (defined($sortingitems_label)) {
+      unshift @{$sortingitems_label}, $sopts;
+      push @{$sorting_label}, $sortingitems_label;
+    }
+    if (defined($sortingitems_final)) {
+      unshift @{$sortingitems_final}, $sopts;
+      push @{$sorting_final}, $sortingitems_final;
+    }
+  }
+  Biber::Config->setblxoption('sorting_label', $sorting_label);
+  Biber::Config->setblxoption('sorting_final', $sorting_final);
 
   # STRUCTURE schema (always global)
   # This should not be optional any more when biblatex implements this so take
@@ -547,7 +576,7 @@ sub parse_bibtex {
 
   my @localkeys = ();
 
-  my $ufilename = "$filename.utf8";
+  my $ufilename = "${filename}_$$.utf8";
 
   # bib encoding is not UTF-8
   if (Biber::Config->getoption('bibencoding') ne 'UTF-8') {
@@ -799,7 +828,7 @@ sub process_crossrefs {
     if ($be->get_field('entrytype') eq 'set') {
       my @inset_keys = split /\s*,\s*/, $be->get_field('entryset');
       foreach my $inset_key (@inset_keys) {
-        $logger->debug("  Adding inset entry '$inset_key' to the citekeys (section $secnum)");
+        $logger->debug("  Adding set member '$inset_key' to the citekeys (section $secnum)");
         $section->add_citekeys($inset_key);
       }
       # automatically crossref for the first set member using plain set inheritance
@@ -929,8 +958,11 @@ sub postprocess {
     # track shorthands
     $self->postprocess_shorthands($citekey);
 
+    # push entry-specific presort fields into the presort state
+    $self->postprocess_presort($citekey);
+
     # first-pass sorting to generate basic labels
-    $self->postprocess_sorting_firstpass($citekey);
+    $self->postprocess_generate_sortinfo_label($citekey);
   }
 
   $logger->debug("Finished postprocessing entries in section $secnum");
@@ -953,7 +985,7 @@ sub postprocess_sets {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
-  if ( $be->get_field('entrytype') eq 'set' ) {
+  if ($be->get_field('entrytype') eq 'set') {
     my @entrysetkeys = split /\s*,\s*/, $be->get_field('entryset');
 
     # Enforce Biber parts of virtual "dataonly" for set members
@@ -966,11 +998,33 @@ sub postprocess_sets {
         $self->biber_warn($me, "Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry '$member'");
         $me->del_field('entryset');
       }
+      # This ends up setting \inset{} in the bib
       $me->set_field('entryset', $citekey);
     }
 
     unless (@entrysetkeys) {
       $self->biber_warn($be, "No entryset found for entry $citekey of type 'set'");
+    }
+  }
+  # check if this non-set entry is in a cited set and if so, we
+  # have enforced Biber parts of virtual "dataonly" otherwise
+  # this entry will spuriously generate disambiguation data for itself
+  # This would only happen if the non-set entry was cited before any set
+  # in which it occurred of course since otherwise it would have already had
+  # "dataonly" enforced by the code above
+  else {
+    foreach my $pset_key ($section->get_citekeys) {
+      my $pset_be = $bibentries->entry($pset_key);
+      if ($pset_be->get_field('entrytype') eq 'set') {
+        my @entrysetkeys = split /\s*,\s*/, $pset_be->get_field('entryset');
+        foreach my $member (@entrysetkeys) {
+          next unless $member eq $citekey;
+          # Posssible that this has already been set if this set entry member
+          # was dealt with above but in case we haven't seen the set it's in yet ...
+          Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $member);
+          Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $member);
+        }
+      }
     }
   }
 }
@@ -1059,7 +1113,7 @@ sub postprocess_labelyear {
   my $lyearscheme = Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'));
 
   if ($lyearscheme) {
-    if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+    if (Biber::Config->getblxoption('skiplab', $be->get_field('entrytype'), $citekey)) {
       return;
     }
     # make sure we gave the correct data type:
@@ -1168,6 +1222,7 @@ sub postprocess_hashes {
   }
 }
 
+
 =head2 postprocess_labelalpha
 
     Generate the labelalpha and also the variant for sorting
@@ -1192,15 +1247,20 @@ sub postprocess_labelalpha {
 
     if ( $be->get_field('shorthand') ) {
       $sortlabel = $label = $be->get_field('shorthand');
-    } else {
+    }
+    else {
       if ( $be->get_field('label') ) {
         $sortlabel = $label = $be->get_field('label');
-      } elsif ( $be->get_field('labelnamename') and $be->get_field($be->get_field('labelnamename'))) {
+      }
+      elsif ( $be->get_field('labelnamename') and $be->get_field($be->get_field('labelnamename'))) {
         ( $label, $sortlabel ) =
           @{ $self->_getlabel( $citekey, $be->get_field('labelnamename') ) };
-      } else {
+      }
+      else {
         $sortlabel = $label = '';
       }
+
+      # biblatex manual says "publication year"
       if ( my $year = $be->get_field('year') ) {
         my $yr;
         # Make "in press" years look nice in alpha styles
@@ -1239,20 +1299,43 @@ sub postprocess_shorthands {
   }
 }
 
-=head2 postprocess_sorting_firstpass
 
-    First pass of sorting information generation
+=head2 postprocess_presort
+
+    Put presort fields for an entry into the main Biber bltx state
+    so that it's all available in the same place since this can be
+    set per-type and globally too.
 
 =cut
 
-sub postprocess_sorting_firstpass {
+sub postprocess_presort {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
-  $self->_generatesortstring( $citekey, Biber::Config->getblxoption('sorting_label', $be->get_field('entrytype')));
+  # We are treating presort as an option as it can be set per-type and globally too
+  if (my $ps = $be->get_field('presort')) {
+    Biber::Config->setblxoption('presort', $ps, 'PER_ENTRY', $citekey);
+  }
+}
+
+
+=head2 postprocess_generate_sortinfo_label
+
+    Generate label pass of sorting information
+
+=cut
+
+sub postprocess_generate_sortinfo_label {
+  my $self = shift;
+  my $citekey = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bibentries;
+  my $be = $bibentries->entry($citekey);
+  $self->_generatesortinfo( $citekey, Biber::Config->getblxoption('sorting_label', $be->get_field('entrytype')));
 }
 
 
@@ -1269,7 +1352,7 @@ sub generate_final_sortinfo {
   my $bibentries = $section->bibentries;
   foreach my $citekey ($section->get_citekeys) {
     my $be = $bibentries->entry($citekey);
-    $self->_generatesortstring($citekey, Biber::Config->getblxoption('sorting_final', $be->get_field('entrytype')));
+    $self->_generatesortinfo($citekey, Biber::Config->getblxoption('sorting_final', $be->get_field('entrytype')));
   }
   return;
 }
@@ -1338,7 +1421,6 @@ sub uniqueness {
     Gather the uniquename information as we look through the names
 
 =cut
-
 
 sub create_uniquename_info {
   my $self = shift;
@@ -1519,6 +1601,7 @@ sub create_uniquelist_info {
   return;
 }
 
+
 =head2 generate_uniquelist
 
    Generate the per-namelist uniquelist values using the information
@@ -1593,10 +1676,6 @@ sub create_extras_st_info {
   foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
-    # Only generate this information if skiplab is not set
-    next if Biber::Config->getblxoption('skiplab',
-                                        $be->get_field('entrytype'),
-                                        $be->get_field('origkey'));
     $logger->trace("Creating extra*/singletitle information for '$citekey'");
 
     # This is all used to generate extrayear/extralpha and the rules for this are:
@@ -1605,8 +1684,16 @@ sub create_extras_st_info {
     # * If there is no labelyear to use, use empty string
     # * Don't increment the seennameyear count if either name or year string is empty
     #   (see code in incr_nameyear method).
+    # * Don't increment if skiplab is set
+
     my $name_string;
-    if (my $lnn = $be->get_field('labelnamename')) {
+    # For tracking name/year combinations, use shorthand only if it exists and we
+    # are using labelyear
+    if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) and
+         $be->get_field('shorthand')) {
+      $name_string = $be->get_field('shorthand');
+    }
+    elsif (my $lnn = $be->get_field('labelnamename')) {
       $name_string = $self->_namestring($citekey, $lnn, 1);
     }
     else {
@@ -1622,20 +1709,40 @@ sub create_extras_st_info {
       $be->set_field('seenname', $name_string);
     }
 
-    my $year_string;
-    if (my $lyn = $be->get_field('labelyearname')) {
-      $year_string = $be->get_field($lyn);
+    # extrayear takes into account the labelyear which can be a range
+    my $year_string_extrayear;
+    if (my $ly = $be->get_field('labelyear')) {
+      $year_string_extrayear = $ly;
     }
-    elsif (my $y = $be->get_field('year')) { # last-ditch fallback
-      $year_string = $y;
+    elsif (my $y = $be->get_field('year')) {
+      $year_string_extrayear = $y;
     }
     else {
-      $year_string = '';
+      $year_string_extrayear = '';
     }
-    my $nameyear_string = $name_string . '0' . $year_string;
-    $be->set_field('nameyear', $nameyear_string);
-    Biber::Config->incr_seennameyear($name_string, $year_string);
-    $logger->trace("Setting nameyear for '$citekey' to '$nameyear_string'");
+
+    # extraalpha takes into account the "year of publication" and not ranges as it
+    # only has the last two digits of the year and so can't disambiguate using ranges
+    # so, we have to track it separately to extrayear
+    my $year_string_extraalpha;
+    if (my $y = $be->get_field('year')) {
+      $year_string_extraalpha = $y;
+    }
+    else {
+      $year_string_extraalpha = '';
+    }
+
+    # Don't create disambiguation data for skiplab entries
+    unless (Biber::Config->getblxoption('skiplab',
+                                        $be->get_field('entrytype'),
+                                        $be->get_field('origkey'))) {
+      my $nameyear_string_extrayear  = "$name_string,$year_string_extrayear";
+      $be->set_field('nameyear_extrayear', $nameyear_string_extrayear);
+      Biber::Config->incr_seen_nameyear_extrayear($name_string, $year_string_extrayear);
+      my $nameyear_string_extraalpha = "$name_string,$year_string_extraalpha";
+      $be->set_field('nameyear_extraalpha', $nameyear_string_extraalpha);
+      Biber::Config->incr_seen_nameyear_extraalpha($name_string, $year_string_extraalpha);
+    }
   }
   return;
 }
@@ -1652,7 +1759,6 @@ sub generate_extras {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
-
   # This loop critically depends on the order of the citekeys which
   # is why we have to do a first sorting pass before this one
   foreach my $citekey ($section->get_citekeys) {
@@ -1661,14 +1767,22 @@ sub generate_extras {
     # Only generate extrayear if skiplab is not set.
     # Don't forget that skiplab is implied for set members
     next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
-    my $nameyear = $be->get_field('nameyear');
-    if (Biber::Config->get_seennameyear($nameyear) > 1) {
-      Biber::Config->incr_seenlabelyear($nameyear);
-      if (Biber::Config->getblxoption('labelyear', $bee) ) {
-        $be->set_field('extrayear', Biber::Config->get_seenlabelyear($nameyear));
-      }
-      if (Biber::Config->getblxoption('labelalpha', $bee) ) {
-        $be->set_field('extraalpha', Biber::Config->get_seenlabelyear($nameyear));
+    # Only generate extrayear and extraapha if skiplab is not set.
+    # Don't forget that skiplab is implied for set members
+    unless (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+      my $nameyear_extrayear = $be->get_field('nameyear_extrayear');
+      if (Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
+        Biber::Config->incr_seen_extrayear($nameyear_extrayear);
+        if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
+          $be->set_field('extrayear', Biber::Config->get_seen_extrayear($nameyear_extrayear));
+        }
+        my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha');
+        if (Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
+          Biber::Config->incr_seen_extraalpha($nameyear_extraalpha);
+          if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
+            $be->set_field('extraalpha', Biber::Config->get_seen_extraalpha($nameyear_extraalpha));
+          }
+        }
       }
     }
   }
@@ -1720,14 +1834,23 @@ sub sortentries {
   my $bibentries = $section->bibentries;
   my @citekeys = $section->get_citekeys;
   if (Biber::Config->getoption('sortcase')) {
-    $logger->debug("Sorting is case-SENSITIVE");
+    $logger->debug("Sorting is by default case-SENSITIVE");
   }
   else {
-    $logger->debug("Sorting is case-INSENSITIVE");
+    $logger->debug("Sorting is by default case-INSENSITIVE");
   }
   $logger->debug("Citekeys before sort:\n");
   foreach my $ck (@citekeys) {
     $logger->debug("$ck => " . $bibentries->entry($ck)->get_field('sortstring') . "\n");
+  }
+
+  # Get the right sortscheme
+  my $sortscheme;
+  if ($BIBER_SORT_FIRSTPASSDONE) {
+    $sortscheme = Biber::Config->getblxoption('sorting_final');
+  }
+  else {
+    $sortscheme = Biber::Config->getblxoption('sorting_label');
   }
 
   # Set up locale. Order of priority is:
@@ -1739,17 +1862,78 @@ sub sortentries {
   # 6. Built-in defaults
 
   my $thislocale = Biber::Config->getoption('sortlocale');
-
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
     $logger->info("Sorting entries with built-in sort (with locale $thislocale) ...") if $BIBER_SORT_FIRSTPASSDONE;
-    unless (setlocale(LC_ALL, $thislocale) and $BIBER_SORT_FIRSTPASSDONE) {
-      $logger->warn("Unavailable locale $thislocale");
-      $self->{warnings}++;
+
+    unless (setlocale(LC_ALL, $thislocale)) {
+      if ($BIBER_SORT_FIRSTPASSDONE) {
+        $logger->warn("Unavailable locale $thislocale");
+        $self->{warnings}++;
+      }
     }
-    @citekeys = sort {
-      $bibentries->entry($a)->get_field('sortstring') cmp $bibentries->entry($b)->get_field('sortstring')
-      } @citekeys;
+
+    # Construct a multi-field Schwartzian Transform with the right number of
+    # extractions into a string representing an array ref as we musn't eval this yet
+    my $num_sorts = 0;
+    my $data_extractor = '[';
+    my $sorter;
+    my $sort_extractor;
+    # Global lowercase setting
+    my $glc = Biber::Config->getoption('sortcase') ? '' : 'lc ';
+
+    foreach my $sortset (@{$sortscheme}) {
+      $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
+      $sorter .= ' || ' if $num_sorts; # don't add separator before first field
+      my $lc = $glc; # Casing defaults to global default ...
+      my $sc = $sortset->[0]{sortcase};
+      # but is overriden by field setting if it exists
+      if (defined($sc) and $sc != Biber::Config->getoption('sortcase')) {
+        unless ($sc) {
+          $lc = 'lc ';
+        }
+        else {
+          $lc = '';
+        }
+      }
+
+      my $sd = $sortset->[0]{sort_direction};
+      if (defined($sd) and $sd eq 'descending') {
+        # descending field
+        $sorter .=
+          $lc .
+            '$b->[' .
+              $num_sorts .
+                '] cmp ' .
+                  $lc .
+                    '$a->[' .
+                      $num_sorts .
+                        ']';
+      }
+      else {
+        # ascending field
+        $sorter .=
+          $lc .
+            '$a->[' .
+              $num_sorts .
+                '] cmp ' .
+                  $lc .
+                    '$b->[' .
+                      $num_sorts .
+                        ']';
+      }
+      $num_sorts++;
+    }
+    $data_extractor .= '$_]';
+    # Handily, $num_sorts is now one larger than the number of fields which is the
+    # correct index for the actual data in the sort array
+    $sort_extractor = '$_->[' . $num_sorts . ']';
+
+    # Schwartzian transform multi-field sort
+    @citekeys = map  { eval $sort_extractor }
+                sort { eval $sorter }
+                map  { eval $data_extractor } @citekeys;
+
   }
   else {
     require Unicode::Collate::Locale;
@@ -1805,11 +1989,72 @@ sub sortentries {
     if ($Collator->getlocale eq 'default') {
       $logger->info("No sort tailoring available for locale '$thislocale'") if $BIBER_SORT_FIRSTPASSDONE;
     }
-    @citekeys = sort {
-      $Collator->cmp( $bibentries->entry($a)->get_field('sortstring'),
-        $bibentries->entry($b)->get_field('sortstring') )
-      } @citekeys;
+
+    # Construct a multi-field Schwartzian Transform with the right number of
+    # extractions into a string representing an array ref as we musn't eval this yet
+    my $num_sorts = 0;
+    my $data_extractor = '[';
+    my $sorter;
+    my $sort_extractor;
+    foreach my $sortset (@{$sortscheme}) {
+      my $fc = '';
+      my @fc;
+      # Reset collation object to global defaults for each sortset in case
+      # locally overriden by earlier loop
+      $Collator->change(level              => $collopts->{level},
+                        upper_before_lower => $collopts->{upper_before_lower});
+
+      # If the case or upper option on a field is not the global default
+      # set it locally on the $Collator by constructing a change() method call
+      my $sc = $sortset->[0]{sortcase};
+      my $su = $sortset->[0]{sortupper};
+      if ((defined($sc) and $sc != Biber::Config->getoption('sortcase')) or
+          (defined($su) and $su != Biber::Config->getoption('sortupper'))) {
+        $fc = '->change(';
+        push @fc, $sc ? 'level => 4'              : 'level => 2';
+        push @fc, $su ? 'upper_before_lower => 1' : 'upper_before_lower => 0';
+        $fc .= join(',', @fc);
+        $fc .= ')';
+      }
+
+      $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
+      $sorter .= ' || ' if $num_sorts; # don't add separator before first field
+
+      my $sd = $sortset->[0]{sort_direction};
+      if (defined($sd) and $sd eq 'descending') {
+        # descending field
+        $sorter .= '$Collator' .
+          $fc .
+          '->cmp($b->[' .
+          $num_sorts .
+            '],$a->[' .
+              $num_sorts .
+                '])';
+      }
+      else {
+        # ascending field
+        $sorter .= '$Collator' .
+          $fc .
+          '->cmp($a->[' .
+          $num_sorts .
+            '],$b->[' .
+              $num_sorts .
+                '])';
+      }
+      $num_sorts++;
+    }
+    $data_extractor .= '$_]';
+    # Handily, $num_sorts is now one larger than the number of fields which is the
+    # correct index for the actual data in the sort array
+    $sort_extractor = '$_->[' . $num_sorts . ']';
+
+    # Schwartzian transform multi-field sort
+    @citekeys = map  { eval $sort_extractor }
+                sort { eval $sorter }
+                map  { eval $data_extractor } @citekeys;
+
   }
+
   $logger->debug("Citekeys after sort:\n");
   foreach my $ck (@citekeys) {
     $logger->debug("$ck => " . $bibentries->entry($ck)->get_field('sortstring') . "\n");
@@ -1819,7 +2064,7 @@ sub sortentries {
   return;
 }
 
-=head2 sortshorthands
+=head2 sort_shorthands
 
     Sort the shorthands according to a certain sorting scheme.
     If sortlos = 1 (los), sort by shorthand
@@ -1827,75 +2072,87 @@ sub sortentries {
 
 =cut
 
-sub sortshorthands {
+sub sort_shorthands {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my @shorthands = $section->get_shorthands;
+  my @citekeys = $section->get_citekeys;
+  my $key_index;
+  my %citekeys = map {$_ => $key_index++} @citekeys;
   # What we sort on depends on the 'sortlos' BibLaTeX option
-  my $sortlos = Biber::Config->getblxoption('sortlos') ? 'shorthand' : 'sortstring';
   my $thislocale = Biber::Config->getoption('sortlocale');
 
-  $logger->debug("Sorting shorthands by '$sortlos'");
-
-  if ( Biber::Config->getoption('fastsort') ) {
-    $logger->info("Sorting shorthands with built-in sort (with locale $thislocale) ...");
-    unless (setlocale( LC_ALL, $thislocale )) {
-      $logger->warn("Unavailable locale $thislocale");
-      $self->{warnings}++;
-    }
-    @shorthands = sort { $bibentries->entry($a)->get_field($sortlos) cmp $bibentries->entry($b)->get_field($sortlos) } @shorthands;
+  # sort by sortkey - this means shorthands should be in same order as
+  # citekeys which has already been sorted so just sort on the index each
+  # shorthand (which is a citekeys) occurs in @citekeys
+  unless (Biber::Config->getblxoption('sortlos')) {
+    $logger->debug("Sorting shorthands by 'sortkey'");
+    @shorthands = sort {$citekeys{$a} <=> $citekeys{$b}} @shorthands;
   }
   else {
-
-    require Unicode::Collate::Locale;
-    my $opts = Biber::Config->getoption('collate_options');
-    my $collopts;
-    unless (ref($opts) eq "HASH") { # opts for this can come in a string from cmd line
-      $collopts = eval "{ $opts }" or $logger->logcarp("Incorrect collate_options: $@");
+    # sort by shorthands so we actually have to sort by the shorthand values
+    if ( Biber::Config->getoption('fastsort') ) {
+      use locale;
+      $logger->info("Sorting shorthands with built-in sort (with locale $thislocale) ...");
+      unless (setlocale( LC_ALL, $thislocale )) {
+        $logger->warn("Unavailable locale $thislocale");
+        $self->{warnings}++;
+      }
+      $logger->debug("Sorting shorthands by 'shorthand'");
+      @shorthands = sort { $bibentries->entry($a)->get_field('shorthand') cmp $bibentries->entry($b)->get_field('shorthand') } @shorthands;
     }
     else {
-      $collopts = $opts;
-    }
-
-    # UCA level 2 if case insensitive sorting is requested
-    unless (Biber::Config->getoption('sortcase')) {
-      $collopts->{level} = 2;
-    }
-
-    # Add upper_before_lower option
-    $collopts->{upper_before_lower} = Biber::Config->getoption('sortupper');
-
-    # Add tailoring locale for Unicode::Collate
-    if ($thislocale and not $collopts->{locale}) {
-      $collopts->{locale} = $thislocale;
-      if ($collopts->{table}) {
-        my $t = delete $collopts->{table};
-        $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)");
+      require Unicode::Collate::Locale;
+      my $opts = Biber::Config->getoption('collate_options');
+      my $collopts;
+      unless (ref($opts) eq "HASH") { # opts for this can come in a string from cmd line
+        $collopts = eval "{ $opts }" or $logger->logcarp("Incorrect collate_options: $@");
       }
-    }
+      else {
+        $collopts = $opts;
+      }
 
-    # Remove locale from options as we need this to make the object
-    my $coll_locale = delete $collopts->{locale};
-    # Now create the collator object
-    my $Collator = Unicode::Collate::Locale->new( locale => $coll_locale )
-      or $logger->logcarp("Problem with Unicode::Collate options: $@");
+      # UCA level 2 if case insensitive sorting is requested
+      unless (Biber::Config->getoption('sortcase')) {
+        $collopts->{level} = 2;
+      }
 
-    # Note reporting tailoring locale default overrides here since we already
-    # do that during main sorting and the tailoring can't change by the time
-    # we get here
-    # Still using ->change though so we don't die on tailoring option conflicts
-    $Collator->change( %{$collopts} );
+      # Add upper_before_lower option
+      $collopts->{upper_before_lower} = Biber::Config->getoption('sortupper');
 
-    my $UCAversion = $Collator->version();
-    $logger->info("Sorting shorthands with Unicode::Collate (" .
-		  stringify_hash($collopts) . ", UCA version: $UCAversion)");
+      # Add tailoring locale for Unicode::Collate
+      if ($thislocale and not $collopts->{locale}) {
+        $collopts->{locale} = $thislocale;
+        if ($collopts->{table}) {
+          my $t = delete $collopts->{table};
+          $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)");
+        }
+      }
 
-    @shorthands = sort {
-      $Collator->cmp( $bibentries->entry($a)->get_field($sortlos),
-        $bibentries->entry($b)->get_field($sortlos) )
+      # Remove locale from options as we need this to make the object
+      my $coll_locale = delete $collopts->{locale};
+      # Now create the collator object
+      my $Collator = Unicode::Collate::Locale->new( locale => $coll_locale )
+        or $logger->logcarp("Problem with Unicode::Collate options: $@");
+
+      # Note reporting tailoring locale default overrides here since we already
+      # do that during main sorting and the tailoring can't change by the time
+      # we get here
+      # Still using ->change though so we don't die on tailoring option conflicts
+      $Collator->change( %{$collopts} );
+
+      my $UCAversion = $Collator->version();
+      $logger->info("Sorting shorthands with Unicode::Collate (" .
+                    stringify_hash($collopts) . ", UCA version: $UCAversion)");
+
+      $logger->debug("Sorting shorthands by 'shorthand'");
+      @shorthands = sort {
+        $Collator->cmp( $bibentries->entry($a)->get_field('shorthand'),
+                        $bibentries->entry($b)->get_field('shorthand') )
       } @shorthands;
+    }
   }
   $section->set_shorthands([ @shorthands ]);
   return;
@@ -1965,7 +2222,7 @@ sub parse_data {
     my $datatype = $datafile->{datatype};
     $name .= '.bib' unless $name =~ /\.(?:bib|xml|dbxml)\z/xms;
     $name = locate_biber_file($name);
-    $logger->logcroak("File '$name' does not exist!") unless -f $name;
+    $logger->logcroak("File '$name' does not exist!") unless -e $name;
     # Here we decide which parser to use for the data file
     if ($datatype eq 'bibtex') {
       $self->parse_bibtex($name, $datatype);
@@ -1996,7 +2253,7 @@ sub create_output_section {
   }
   # Push the sorted shorthands for each section into the output object
   if ( $section->get_shorthands ) {
-    $self->sortshorthands;
+    $self->sort_shorthands;
     $output_obj->set_los([ $section->get_shorthands ], $secnum);
   }
 

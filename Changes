@@ -1,7 +1,22 @@
 Revision history for Biber
-
+0.7    
+       * Completely re-written sorting routine using Schwartzian transform
+         for real multi-field support and per-field sorting settings.
+       * Bug fixes
+0.6.9  (dev beta)
+       * Bug fixes
+0.6.8  (dev beta)
+       * Generalised sorting behaviour in several respects
+       * Bug fixes
+0.6.7  (dev beta)
+       * Bug fixes
+0.6.6  (dev beta)
+       * More generalised sorting options
+       * Bug fixes
+0.6.5  (dev beta)
+       * Bug fixes
 0.6.4  (dev beta)
-       * Misc bug fixes
+       * Bug fixes
 0.6.3  (dev beta)
        * Outputs labelname name list to the .bbl
        * Support for dynamic sets and simpler static set interface

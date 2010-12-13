@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../../data/schemata/bcf.rnc" type="compact"?>
-<bcf:controlfile version="1.0" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<?xml-stylesheet type="text/xsl" href="../../data/bcf.xsl"?>
+<bcf:controlfile version="1.1" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -103,7 +104,8 @@
     </bcf:option>
   </bcf:options>
   <!-- SORTING -->
-  <bcf:sorting type="global">
+  <bcf:sorting>
+    <bcf:presort>mm</bcf:presort>
     <bcf:sort order="1">
       <bcf:sortitem order="1">citeorder</bcf:sortitem>
     </bcf:sort>
@@ -113,6 +115,7 @@
     <bcf:datasource type="file">sets</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
+    <bcf:citekey>Static2</bcf:citekey>
     <bcf:citekey>Static1</bcf:citekey>
   </bcf:section>
   <!-- SECTION 1 -->

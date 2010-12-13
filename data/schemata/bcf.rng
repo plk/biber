@@ -242,24 +242,32 @@
       </optional>
       <!-- Global sorting specification -->
       <element name="bcf:sorting">
-        <attribute name="type">
-          <value>global</value>
-        </attribute>
+        <oneOrMore>
+          <!-- presort default strings for different entry types -->
+          <element name="bcf:presort">
+            <optional>
+              <attribute name="type">
+                <data type="NCName"/>
+              </attribute>
+            </optional>
+            <text/>
+          </element>
+        </oneOrMore>
+        <zeroOrMore>
+          <!-- excludes of certain fields for sorting for specified types -->
+          <element name="bcf:sortexclusion">
+            <attribute name="type"/>
+            <oneOrMore>
+              <element name="bcf:exclusion">
+                <data type="NCName"/>
+              </element>
+            </oneOrMore>
+          </element>
+        </zeroOrMore>
         <oneOrMore>
           <ref name="sort"/>
         </oneOrMore>
       </element>
-      <zeroOrMore>
-        <!-- Optional entrytype specific sorting specifications -->
-        <element name="bcf:sorting">
-          <attribute name="type">
-            <data type="NCName"/>
-          </attribute>
-          <oneOrMore>
-            <ref name="sort"/>
-          </oneOrMore>
-        </element>
-      </zeroOrMore>
       <optional>
         <!-- Structure specification -->
         <element name="bcf:structure">
@@ -564,6 +572,39 @@
             </choice>
           </attribute>
         </optional>
+        <optional>
+          <!-- Should we stop generating sorting information after this item? -->
+          <attribute name="final">
+            <data type="integer"/>
+          </attribute>
+        </optional>
+        <optional>
+          <!-- Sort ascending or descending -->
+          <attribute name="sort_direction">
+            <choice>
+              <value>ascending</value>
+              <value>descending</value>
+            </choice>
+          </attribute>
+        </optional>
+        <optional>
+          <!-- Sort case sensitive or not? -->
+          <attribute name="sortcase">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </attribute>
+        </optional>
+        <optional>
+          <!-- Sort upper before lower? -->
+          <attribute name="sortupper">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </attribute>
+        </optional>
         <oneOrMore>
           <!-- A sort item specification - a field or pseudo-field to get sort information from -->
           <element name="bcf:sortitem">
@@ -571,12 +612,6 @@
             <attribute name="order">
               <data type="integer"/>
             </attribute>
-            <optional>
-              <!-- Should we stop generating sorting information after this item? -->
-              <attribute name="final">
-                <data type="integer"/>
-              </attribute>
-            </optional>
             <optional>
               <!-- Just use a part of the item information for sorting? -->
               <attribute name="substring_side">
@@ -611,15 +646,6 @@
                   <param name="minLength">1</param>
                   <param name="maxLength">1</param>
                 </data>
-              </attribute>
-            </optional>
-            <optional>
-              <!-- Sort ascending or descending (when relevant)? -->
-              <attribute name="sort_direction">
-                <choice>
-                  <value>ascending</value>
-                  <value>descending</value>
-                </choice>
               </attribute>
             </optional>
             <text/>
@@ -1070,7 +1096,7 @@
       </element>
       <element name="bcf:value">
         <data type="normalizedString">
-          <param name="pattern">([a-zA-Z]{2}|[iI][\-_][a-zA-Z]+|[xX][\-_][a-zA-Z]{1,8})([\-_][a-zA-Z]{1,8})*</param>
+          <param name="pattern">([a-zA-Z]{2}|[iI][\-_][a-zA-Z]+|[xX][\-_][a-zA-Z]{1,10})([\-_][a-zA-Z]{1,10})*</param>
         </data>
       </element>
     </element>

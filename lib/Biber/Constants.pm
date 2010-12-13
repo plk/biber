@@ -24,7 +24,7 @@ our @EXPORT = qw{
 
 # Version of biblatex which this release works with. Matched against version
 # passed in control file
-Readonly::Scalar our $BIBLATEX_VERSION => '1.0';
+Readonly::Scalar our $BIBLATEX_VERSION => '1.1';
 
 # Global flags needed for sorting
 our $BIBER_SORT_FINAL = 0;
@@ -181,18 +181,23 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                },
                               ]
                   },
+   presort => 'mm',
    sorting_label   =>  [
                 [
+                 {final          => undef,
+                  sort_direction => undef},
                  {
                   'presort'    => {}},
-                 {
-                  'mm'         => {}},
                 ],
                 [
+                 {final          => 1,
+                  sort_direction => undef},
                  {
-                  'sortkey'    => {'final' => 1}}
+                  'sortkey'    => {}}
                 ],
                 [
+                 {final          => undef,
+                  sort_direction => undef},
                  {
                   'sortname'   => {}},
                  {
@@ -207,18 +212,24 @@ our %CONFIG_DEFAULT_BIBLATEX =
                   'title'      => {}}
                 ],
                 [
+                 {final          => undef,
+                  sort_direction => undef},
                  {
                   'sortyear'   => {}},
                  {
                   'year'       => {}}
                 ],
                 [
+                 {final          => undef,
+                  sort_direction => undef},
                  {
                   'sorttitle'  => {}},
                  {
                   'title'      => {}}
                 ],
                 [
+                 {final          => undef,
+                  sort_direction => undef},
                  {
                   'volume'     => {}},
                  {
@@ -1537,14 +1548,16 @@ our %CONFIG_SCOPE_BIBLATEX = (
   minitems          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   maxnames          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   minnames          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  presort           => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   singletitle       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   skipbib           => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
   skiplab           => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
   skiplos           => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
   sortalphaothers   => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  sorting           => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  sorting_label     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  sorting_final     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  sortexclusion     => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 0},
+  sorting           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  sorting_label     => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  sorting_final     => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   sortlos           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   structure         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   terseinits        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},

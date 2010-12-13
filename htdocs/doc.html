@@ -140,12 +140,15 @@ Options:
 
   --sortlocale|-l [locale]
       Set the locale to be used for sorting.  With default sorting
-      (--collate), the locale is used to add CLDR 
+      (--collate|-C), the locale is used to add CLDR 
       tailoring to the sort (if available for the locale). With
-      --fastsort this sets the OS locale for sorting.
+      --fastsort|-f this sets the OS locale for sorting.
 
   --sortupper=true|false
-      Sort uppercase before lower (default is true)
+      Whether to sort uppercase before lowercase when using
+      default sorting (--collate|-C). When
+      using --fastsort|-f, your OS collation locale determines
+      this and this option is ignored. (default is true)
 
   -u
       Alias for --bibencoding=UTF-8.

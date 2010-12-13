@@ -38,3 +38,4 @@ is($bibentries->entry('aristotle:anima')->get_field('labelnamename'), $ted, 'typ
 
 
 
+unlink "*.utf8";

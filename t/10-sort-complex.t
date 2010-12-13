@@ -36,16 +36,19 @@ isa_ok($biber, "Biber");
 
 my $sc1 = [
            [
+            {},
             {'labelalpha'    => {}},
            ],
            [
-            {'presort'    => {}},
-            {'mm'         => {}},
+            {},
+            {'presort'    => {}}
            ],
            [
-            {'sortkey'    => {'final' => 1}}
+            {'final' => 1},
+            {'sortkey'    => {}}
            ],
            [
+            {},
             {'sortname'   => {}},
             {'author'     => {}},
             {'editor'     => {}},
@@ -54,15 +57,18 @@ my $sc1 = [
             {'title'      => {}}
            ],
            [
-            {'sortyear'  => {sort_direction => 'descending'}},
+            {sort_direction => 'descending'},
+            {'sortyear'  => {}},
             {'year'      => {substring_side => 'right',
                              substring_width => '4'}}
            ],
            [
+            {},
             {'volume'     => {pad_char => '0'}},
             {'0000'       => {}}
            ],
            [
+            {},
             {'sorttitle'       => {}},
             {'title'       => {}}
            ],
@@ -70,21 +76,25 @@ my $sc1 = [
 
 my $sc2 = [
            [
-            {'presort'    => {}},
-            {'mm'         => {}},
+            {},
+            {'presort'    => {}}
            ],
            [
+            {},
             {'labelalpha'    => {}},
            ],
            [
+            {},
             {'extraalpha'     => {pad_side => 'left',
                                  pad_width => 4,
                                  pad_char => '0'}},
            ],
            [
-            {'sortkey'    => {'final' => 1}}
+            {'final' => 1},
+            {'sortkey'    => {}}
            ],
            [
+            {},
             {'sortname'   => {}},
             {'author'     => {}},
             {'editor'     => {}},
@@ -93,15 +103,18 @@ my $sc2 = [
             {'title'      => {}}
            ],
            [
-            {'sortyear'  => {sort_direction => 'descending'}},
+            {sort_direction => 'descending'},
+            {'sortyear'  => {}},
             {'year'      => {substring_side => 'right',
                              substring_width => '4'}}
            ],
            [
+            {},
             {'volume'     => {pad_char => '0'}},
             {'0000'       => {}}
            ],
            [
+            {},
             {'sorttitle'       => {}},
             {'title'       => {}}
            ],

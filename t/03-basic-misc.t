@@ -188,7 +188,6 @@ my $t1 = q|  \entry{t1}{misc}{}
 |;
 
 my $Worman_N = [ 'Worman, Nana', 'Worman, Nancy' ] ;
-
 my $Gennep = [ 'van Gennep, Arnold', 'van Gennep, Jean' ] ;
 
 is( $out->get_output_entry('t1'), $t1, 'bbl entry with maths in title' ) ;
@@ -204,5 +203,4 @@ $out = $biber->get_output_obj;
 
 is( $out->get_output_entry('murray'), $murray2, 'bbl with > maxnames, empty alphaothers' ) ;
 
-unlink "*.utf8" ;
-
+unlink "*.utf8";
