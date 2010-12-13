@@ -137,7 +137,7 @@ my $l16 = q|  \entry{L16}{proceedings}{}
     \strng{namehash}{DJAA1}
     \strng{fullhash}{DJAA1}
     \field{sortinit}{D}
-    \field{extrayear}{1}
+    \field{extrayear}{6}
     \field{labelyear}{1996}
     \field{eventday}{01}
     \field{eventmonth}{01}
@@ -163,7 +163,7 @@ my $l17 = q|  \entry{L17}{proceedings}{}
     \strng{namehash}{DJAA1}
     \strng{fullhash}{DJAA1}
     \field{sortinit}{D}
-    \field{extrayear}{6}
+    \field{extrayear}{5}
     \field{labelyear}{1996}
     \field{day}{10}
     \field{endday}{12}
