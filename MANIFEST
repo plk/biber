@@ -29,6 +29,7 @@ doc/biber-auctex.png
 doc/biber-texworks.png
 data/schemata/bcf.rnc
 data/schemata/bcf.rng
+data/bcf.xsl
 data/latinkeys.txt
 etc/biber.conf
 t/00-load.t

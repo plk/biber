@@ -25,6 +25,7 @@ pp --compress=6 \
   --link=/opt/local/lib/libiconv.2.dylib \
   --link=/opt/local/lib/libbtparse.dylib \
   --link=/opt/local/lib/libxml2.2.dylib \
+  --link=/opt/local/lib/libxslt.1.dylib \
   --addlist=biber.files \
   --cachedeps=scancache \
   --output=biber-darwin_x86_64 \

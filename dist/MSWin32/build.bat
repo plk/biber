@@ -21,6 +21,7 @@ CALL pp ^
   --module=Encode::Unicode ^
   --module=Encode::Unicode::UTF7 ^
   --link=C:\WINDOWS\libbtparse.dll ^
+  --link=C:\strawberry\c\bin\libxslt-1_.dll ^
   --link=C:\strawberry\c\bin\libz_.dll ^
   --link=C:\strawberry\c\bin\libxml2-2_.dll ^
   --link=C:\strawberry\c\bin\libiconv-2_.dll ^

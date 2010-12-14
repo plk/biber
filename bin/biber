@@ -32,6 +32,7 @@ GetOptions(
            'collate|C',
            'collate_options|c=s',
            'configfile|g=s',
+           'convert_control',
            'debug|D',
            'fastsort|f',
            'help|h|?',
@@ -383,6 +384,10 @@ Options:
       The default is the first file found among
       "biber.conf" in the current directory, "\$HOME/.biber.conf",
       or else the output of "kpsewhich biber.conf".
+
+  --convert_control
+      Converts the .bcf control file into html using an XSLT transform. Can
+      be useful for debugging. File is named by appendin \".html\" to .bcf file.
 
   --debug|-D
       Turn on debugging for biber.

@@ -176,7 +176,6 @@ sub get_current_section {
   return $self->{current_section};
 }
 
-
 =head2 parse_ctrlfile
 
     This method reads the control file
@@ -216,11 +215,13 @@ sub parse_ctrlfile {
       $bcf_rng = File::Spec->catfile($biber_path, 'Biber', 'bcf.rng');
     }
 
-    if (-f $bcf_rng) {
+    if (-e $bcf_rng) {
       $CFxmlschema = XML::LibXML::RelaxNG->new( location => $bcf_rng )
-    } else {
+    }
+    else {
       $logger->warn("Cannot find XML::LibXML::RelaxNG schema. Skipping validation : $!");
       $self->{warnings}++;
+      goto CONVERT;
     }
 
     # Parse file
@@ -247,7 +248,49 @@ sub parse_ctrlfile {
     undef $CFxmlparser;
   }
 
+  # Convert .bcf to .html using XSLT transform if asked to
+ CONVERT:
+  if (Biber::Config->getoption('convert_control')) {
+
+    require XML::LibXSLT;
+    require XML::LibXML;
+
+    my $xslt = XML::LibXSLT->new();
+    my $CFstyle;
+
+    # we assume that the schema files are in the same dir as Biber.pm:
+    (undef, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
+
+    # Deal with the strange world of Par::Packer paths
+    # We might be running inside a PAR executable and @INC is a bit odd in this case
+    # Specifically, "Biber.pm" in @INC might resolve to an internal jumbled name
+    # nowhere near to these files. You know what I mean if you've dealt with pp
+    my $bcf_xsl;
+    if ($biber_path =~ m|/par\-| and $biber_path !~ m|/inc|) { # a mangled PAR @INC path
+      $bcf_xsl = File::Spec->catfile($biber_path, 'inc', 'lib', 'Biber', 'bcf.xsl');
+    }
+    else {
+      $bcf_xsl = File::Spec->catfile($biber_path, 'Biber', 'bcf.xsl');
+    }
+
+    if (-e $bcf_xsl) {
+      $CFstyle = XML::LibXML->load_xml( location => $bcf_xsl, no_cdata=>1 )
+    }
+    else {
+      $logger->warn("Cannot find XML::LibXSLT stylesheet. Skipping conversion : $!");
+      $self->{warnings}++;
+      goto LOADCF;
+    }
+
+    my $CF = XML::LibXML->load_xml(location => $ctrl_file);
+    my $stylesheet = $xslt->parse_stylesheet($CFstyle);
+    my $CFhtml = $stylesheet->transform($CF);
+    $stylesheet->output_file($CFhtml, $ctrl_file . '.html');
+    $logger->info("Converted BibLaTeX control file '$ctrl_file' to '$ctrl_file.html'");
+  }
+
   # Open control file
+ LOADCF:
   my $ctrl = new IO::File "<$ctrl_file"
     or $logger->logcroak("Cannot open $ctrl_file: $!");
 
