@@ -82,21 +82,20 @@
             text-align: center;
           }
           table td {
+            wrap: soft;
             vertical-align: text-top;
+            line-height: 1;
             padding: 0px 5px 0px 5px;
             border-width: 1px;
             border-style: inset;
             border-color: gray;
           }
         </style>
-        <script type="text/javascript">
-          <![CDATA[
-          ]]>
-        </script>
       </head>
       <body>
         <h2><tt>BibLaTeX</tt> Control File (format version: <xsl:value-of select="/bcf:controlfile/@version"/>)</h2>
         <!-- OPTIONS -->
+        <hr/>
         <xsl:for-each select="/bcf:controlfile/bcf:options">
           <h3><xsl:value-of select="./@type"/> options for <tt><xsl:value-of select="./@component"/></tt></h3>
           <table>
@@ -131,6 +130,7 @@
         </xsl:for-each>
         <!-- INHERITANCE -->
         <xsl:if test="/bcf:controlfile/bcf:inheritance">
+          <hr/>
           <h3>Inheritance</h3>
           <h4>Defaults</h4>
           <!-- Defaults -->
@@ -164,8 +164,7 @@
                         <xsl:if test="/bcf:controlfile/bcf:inheritance/bcf:defaults/@override_target='yes'">
                           <xsl:attribute name="class">inherit_override</xsl:attribute>
                         </xsl:if>
-                        <xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text>
-                      </span>
+                      *</span>
                       <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
                       <span>
                         <xsl:if test="/bcf:controlfile/bcf:inheritance/bcf:defaults/@override_target='no'">
@@ -213,8 +212,7 @@
                           <xsl:if test="./@override_target='yes'">
                             <xsl:attribute name="class">inherit_override</xsl:attribute>
                           </xsl:if>
-                          <xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text>
-                        </span>
+                        *</span>
                         <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
                         <span>
                           <xsl:if test="./@override_target='no'">
@@ -256,7 +254,7 @@
                       <xsl:choose>
                         <!-- A field skip specification -->
                         <xsl:when test ="./@skip='yes'">
-                          <xsl:value-of select="./@source"/> <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> <xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text>
+                          <xsl:value-of select="./@source"/> <xsl:text disable-output-escaping="yes"> &amp;rarr; </xsl:text> <xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text>
                         </xsl:when>
                         <!-- A normal field inherit specification -->
                         <xsl:otherwise>
@@ -266,7 +264,7 @@
                             </xsl:if>
                             <xsl:value-of select="./@source"/>
                           </span>
-                          <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
+                          <xsl:text disable-output-escaping="yes"> &amp;rarr; </xsl:text>
                           <span>
                             <xsl:if test="./@override_target='no'">
                               <xsl:attribute name="class">inherit_override</xsl:attribute>
@@ -283,12 +281,19 @@
             </tbody>
           </table>
           <br/>
-          <div class="key"><u>Key</u><br/><tt>X</tt><xsl:text disable-output-escaping="yes"> &amp;asymp; </xsl:text><tt>Y</tt>: <tt>X</tt> inherits from<tt> Y</tt>
+          <div class="key"><u>Key</u>
           <br/>
-          <tt>F</tt><xsl:text disable-output-escaping="yes"> &amp;rarr; </xsl:text><tt>F'</tt>: Field <tt>F</tt> in parent becomes field <tt>F'</tt> in child.
+          <tt>*</tt> matches all entrytypes or fields
+          <br/>
+          <tt>X</tt><xsl:text disable-output-escaping="yes"> &amp;asymp; </xsl:text><tt>Y</tt>: <tt>X</tt> inherits from<tt> Y</tt>
+          <br/>
+          <tt>X</tt><xsl:text disable-output-escaping="yes"> &amp;rarr; &amp;empty;</xsl:text>: Field <tt>X</tt> is suppressed
+          <br/>
+          <tt>F</tt><xsl:text disable-output-escaping="yes"> &amp;rarr; </xsl:text><tt>F'</tt>: Field <tt>F</tt> in parent becomes field <tt>F'</tt> in child. If both field <tt>F</tt> and field <tt>F'</tt> exist, field in <span class="inherit_override">red</span> overrides the other.
           </div>
         </xsl:if>
         <!-- SORTING -->
+        <hr/>
         <h3>Sorting options</h3>
         <h4>Presort defaults</h4>
         <table>
@@ -460,6 +465,7 @@
         Field key: <span class="sort_padding">Padding specification</span> e.g. <span class="sort_padding">0000</span>field = pad field &quot;field&quot; from left with &quot;0&quot; to width 4. <span class="sort_substring">Substring specification</span> e.g. field<span class="sort_substring">&lt;&lt;&lt;&lt;</span> = take width 4 substring from right side of field &quot;field&quot;
         </div>
         <xsl:if test="/bcf:controlfile/bcf:structure">
+          <hr/>
           <h3>Data structure</h3>
           <h4>Legal entrytypes</h4>
           <table>
@@ -540,7 +546,7 @@
               </xsl:for-each>
             </tbody>
           </table>
-          <h3>Legal Fields</h3>
+          <h4>Legal Fields</h4>
           <table>
             <thead>
               <tr><td>Field</td><td>Aliases</td><td>Data type</td></tr>
@@ -570,126 +576,130 @@
           </table>
           <br/>
           <div class="key">Key to symbols: <xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text> = field can null in <tt>.bbl</tt>, <xsl:text disable-output-escaping="yes">&amp;loz;</xsl:text> = field is not output to <tt>.bbl</tt></div>
-          <h3>Constraints</h3>
-          <table>
-            <thead>
-              <tr><td>Entrytypes</td><td>Constraint</td></tr>
-            </thead>
-            <tbody>
-              <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:constraints">
-                <tr>
-                  <td>
-                    <xsl:for-each select="./bcf:entrytype">
-                      <xsl:value-of select="./text()"/>
-                      <xsl:if test="not(position()=last())">
-                        <br/>
-                      </xsl:if>
-                    </xsl:for-each>
-                  </td>
-                  <td>
-                    <xsl:for-each select="./bcf:constraint">
-                      <xsl:choose>
-                        <xsl:when test="./@type='conditional'">
-                          <xsl:choose>
-                            <xsl:when test="./bcf:antecedent/@quant='all'"><xsl:text disable-output-escaping="yes">&amp;forall;</xsl:text></xsl:when>
-                            <xsl:when test="./bcf:antecedent/@quant='one'"><xsl:text disable-output-escaping="yes">&amp;exist;</xsl:text></xsl:when>
-                            <xsl:when test="./bcf:antecedent/@quant='none'"><xsl:text disable-output-escaping="yes">&amp;not;&amp;exist;</xsl:text></xsl:when>
-                          </xsl:choose>
-                          (
-                          <xsl:for-each select="./bcf:antecedent/bcf:field">
-                            <xsl:value-of select="./text()"/>
-                            <xsl:if test="not(position()=last())">,</xsl:if>                          
-                          </xsl:for-each>
-                          )
-                          <xsl:text disable-output-escaping="yes">&amp;rarr; </xsl:text>
-                          <xsl:choose>
-                            <xsl:when test="./bcf:consequent/@quant='all'"><xsl:text disable-output-escaping="yes">&amp;forall;</xsl:text></xsl:when>
-                            <xsl:when test="./bcf:consequent/@quant='one'"><xsl:text disable-output-escaping="yes">&amp;exist;</xsl:text></xsl:when>
-                            <xsl:when test="./bcf:consequent/@quant='none'"><xsl:text disable-output-escaping="yes">&amp;not;&amp;exist;</xsl:text></xsl:when>
-                          </xsl:choose>
-                          (
-                          <xsl:for-each select="./bcf:consequent/bcf:field">
-                            <xsl:value-of select="./text()"/>
-                            <xsl:if test="not(position()=last())">,</xsl:if>                          
-                          </xsl:for-each>
-                          )
-                        </xsl:when>
-                        <xsl:when test="./@type='data'">
-                          <xsl:choose>
-                            <xsl:when test="./@datatype='integer'">
-                              <xsl:value-of select="./@rangemin"/><xsl:text disable-output-escaping="yes">&amp;le;</xsl:text>
-                              (
-                              <xsl:for-each select="./bcf:field">
-                                <xsl:value-of select="./text()"/>
-                                <xsl:if test="not(position()=last())">,</xsl:if>                          
-                              </xsl:for-each>
-                              )
-                              <xsl:text disable-output-escaping="yes">&amp;le;</xsl:text><xsl:value-of select="./@rangemax"/>
-                            </xsl:when>
-                            <xsl:when test="./@datatype='datespec'">
-                              (
-                              <xsl:for-each select="./bcf:field">
-                                <xsl:value-of select="./text()"/>
-                                <xsl:if test="not(position()=last())">,</xsl:if>                          
-                              </xsl:for-each>
-                              )
-                              must be dates
-                            </xsl:when>
-                          </xsl:choose>
-                        </xsl:when>
-                      </xsl:choose>
-                      <xsl:choose>
-                        <xsl:when test="./@type='mandatory'">
-                          <xsl:for-each select="./bcf:fieldxor">
-                            <xsl:text disable-output-escaping="yes">&amp;oplus;</xsl:text>
+          <xsl:if test="/bcf:controlfile/bcf:structure/bcf:constraints">
+            <hr/>
+            <h3>Constraints</h3>
+            <table>
+              <thead>
+                <tr><td>Entrytypes</td><td>Constraint</td></tr>
+              </thead>
+              <tbody>
+                <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:constraints">
+                  <tr>
+                    <td>
+                      <xsl:for-each select="./bcf:entrytype">
+                        <xsl:value-of select="./text()"/>
+                        <xsl:if test="not(position()=last())">
+                          <br/>
+                        </xsl:if>
+                      </xsl:for-each>
+                    </td>
+                    <td>
+                      <xsl:for-each select="./bcf:constraint">
+                        <xsl:choose>
+                          <xsl:when test="./@type='conditional'">
+                            <xsl:choose>
+                              <xsl:when test="./bcf:antecedent/@quant='all'"><xsl:text disable-output-escaping="yes">&amp;forall;</xsl:text></xsl:when>
+                              <xsl:when test="./bcf:antecedent/@quant='one'"><xsl:text disable-output-escaping="yes">&amp;exist;</xsl:text></xsl:when>
+                              <xsl:when test="./bcf:antecedent/@quant='none'"><xsl:text disable-output-escaping="yes">&amp;not;&amp;exist;</xsl:text></xsl:when>
+                            </xsl:choose>
                             (
-                            <xsl:for-each select="./bcf:field">
-                              <span>
-                                <xsl:if test="./@coerce='true'">
-                                  <xsl:attribute name="class">field_xor_coerce</xsl:attribute>
-                                </xsl:if>
-                                <xsl:value-of select="./text()"/>
-                              </span>
-                              <xsl:if test="not(position()=last())">,</xsl:if>                          
-                            </xsl:for-each>
-                            )
-                          </xsl:for-each>
-                          <xsl:for-each select="./bcf:fieldor">
-                            <xsl:text disable-output-escaping="yes">&amp;or;</xsl:text>
-                            (
-                            <xsl:for-each select="./bcf:field">
+                            <xsl:for-each select="./bcf:antecedent/bcf:field">
                               <xsl:value-of select="./text()"/>
                               <xsl:if test="not(position()=last())">,</xsl:if>                          
                             </xsl:for-each>
                             )
-                          </xsl:for-each>
-                        </xsl:when>
-                      </xsl:choose>
-                      <xsl:if test="not(position()=last())">
-                        <br/>
-                      </xsl:if>                    
-                    </xsl:for-each>
-                  </td>
-                </tr>
-              </xsl:for-each>
-            </tbody>
-          </table>
-          <br/>
-          <div class="key"><u>Key</u><br/><tt>C</tt> <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> <tt>C'</tt>: If condition <tt>C</tt> is met then condition <tt>C'</tt> must also be met
-          <br/>
-          <xsl:text disable-output-escaping="yes">&amp;forall;</xsl:text> ( ... ): True if all fields in list exist
-          <br/>
-          <xsl:text disable-output-escaping="yes">&amp;exist;</xsl:text> ( ... ): True if one field in list exists
-          <br/>
-          <xsl:text disable-output-escaping="yes">&amp;not;&amp;exist;</xsl:text> ( ... ): True if no fields in list exist
-          <br/>
-          <tt>n</tt> <xsl:text disable-output-escaping="yes">&amp;le;</xsl:text> ( ... ) <xsl:text disable-output-escaping="yes">&amp;le;</xsl:text> <tt>m</tt>: True if fields in list are have values in the range <tt>n</tt>-<tt>m</tt>
-          <br/>
-          <xsl:text disable-output-escaping="yes">&amp;oplus;</xsl:text> ( ... ): True if at least and at most one of the fields in the list exists (xor). If more than field in the set exists, all will be ignored except for the one in <span class="field_xor_coerce">red</span>.
-          <br/>
-          <xsl:text disable-output-escaping="yes">&amp;or;</xsl:text> ( ... ): True if at least one of the fields in the list exists (or).
-          </div>
+                            <xsl:text disable-output-escaping="yes">&amp;rarr; </xsl:text>
+                            <xsl:choose>
+                              <xsl:when test="./bcf:consequent/@quant='all'"><xsl:text disable-output-escaping="yes">&amp;forall;</xsl:text></xsl:when>
+                              <xsl:when test="./bcf:consequent/@quant='one'"><xsl:text disable-output-escaping="yes">&amp;exist;</xsl:text></xsl:when>
+                              <xsl:when test="./bcf:consequent/@quant='none'"><xsl:text disable-output-escaping="yes">&amp;not;&amp;exist;</xsl:text></xsl:when>
+                            </xsl:choose>
+                            (
+                            <xsl:for-each select="./bcf:consequent/bcf:field">
+                              <xsl:value-of select="./text()"/>
+                              <xsl:if test="not(position()=last())">,</xsl:if>                          
+                            </xsl:for-each>
+                            )
+                          </xsl:when>
+                          <xsl:when test="./@type='data'">
+                            <xsl:choose>
+                              <xsl:when test="./@datatype='integer'">
+                                <xsl:value-of select="./@rangemin"/><xsl:text disable-output-escaping="yes">&amp;le;</xsl:text>
+                                (
+                                <xsl:for-each select="./bcf:field">
+                                  <xsl:value-of select="./text()"/>
+                                  <xsl:if test="not(position()=last())">,</xsl:if>                          
+                                </xsl:for-each>
+                                )
+                                <xsl:text disable-output-escaping="yes">&amp;le;</xsl:text><xsl:value-of select="./@rangemax"/>
+                              </xsl:when>
+                              <xsl:when test="./@datatype='datespec'">
+                                (
+                                <xsl:for-each select="./bcf:field">
+                                  <xsl:value-of select="./text()"/>
+                                  <xsl:if test="not(position()=last())">,</xsl:if>                          
+                                </xsl:for-each>
+                                )
+                                must be dates
+                              </xsl:when>
+                            </xsl:choose>
+                          </xsl:when>
+                        </xsl:choose>
+                        <xsl:choose>
+                          <xsl:when test="./@type='mandatory'">
+                            <xsl:for-each select="./bcf:fieldxor">
+                              <xsl:text disable-output-escaping="yes">&amp;oplus;</xsl:text>
+                              (
+                              <xsl:for-each select="./bcf:field">
+                                <span>
+                                  <xsl:if test="./@coerce='true'">
+                                    <xsl:attribute name="class">field_xor_coerce</xsl:attribute>
+                                  </xsl:if>
+                                  <xsl:value-of select="./text()"/>
+                                </span>
+                                <xsl:if test="not(position()=last())">,</xsl:if>                          
+                              </xsl:for-each>
+                              )
+                            </xsl:for-each>
+                            <xsl:for-each select="./bcf:fieldor">
+                              <xsl:text disable-output-escaping="yes">&amp;or;</xsl:text>
+                              (
+                              <xsl:for-each select="./bcf:field">
+                                <xsl:value-of select="./text()"/>
+                                <xsl:if test="not(position()=last())">,</xsl:if>                          
+                              </xsl:for-each>
+                              )
+                            </xsl:for-each>
+                          </xsl:when>
+                        </xsl:choose>
+                        <xsl:if test="not(position()=last())">
+                          <br/>
+                        </xsl:if>                    
+                      </xsl:for-each>
+                    </td>
+                  </tr>
+                </xsl:for-each>
+              </tbody>
+            </table>
+            <br/>
+            <div class="key"><u>Key</u><br/><tt>C</tt> <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> <tt>C'</tt>: If condition <tt>C</tt> is met then condition <tt>C'</tt> must also be met
+            <br/>
+            <xsl:text disable-output-escaping="yes">&amp;forall;</xsl:text> ( ... ): True if all fields in list exist
+            <br/>
+            <xsl:text disable-output-escaping="yes">&amp;exist;</xsl:text> ( ... ): True if one field in list exists
+            <br/>
+            <xsl:text disable-output-escaping="yes">&amp;not;&amp;exist;</xsl:text> ( ... ): True if no fields in list exist
+            <br/>
+            <tt>n</tt> <xsl:text disable-output-escaping="yes">&amp;le;</xsl:text> ( ... ) <xsl:text disable-output-escaping="yes">&amp;le;</xsl:text> <tt>m</tt>: True if fields in list are have values in the range <tt>n</tt>-<tt>m</tt>
+            <br/>
+            <xsl:text disable-output-escaping="yes">&amp;oplus;</xsl:text> ( ... ): True if at least and at most one of the fields in the list exists (xor). If more than field in the set exists, all will be ignored except for the one in <span class="field_xor_coerce">red</span>.
+            <br/>
+            <xsl:text disable-output-escaping="yes">&amp;or;</xsl:text> ( ... ): True if at least one of the fields in the list exists (or).
+            </div>
+          </xsl:if>
         </xsl:if>
+        <hr/>
         <h3>Reference Sections</h3>
         <table>
           <thead>
