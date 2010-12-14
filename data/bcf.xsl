@@ -57,8 +57,8 @@
           .field_xor_coerce {
             color: #FF0000;
           }
-          .options_table_value {
-            font-family: "Courier New", Courier, monospace;
+          .inherit_override {
+            color: #FF0000;
           }
           .field_nullok {
             background-color: #99FF99;
@@ -82,6 +82,7 @@
             text-align: center;
           }
           table td {
+            vertical-align: text-top;
             padding: 0px 5px 0px 5px;
             border-width: 1px;
             border-style: inset;
@@ -98,7 +99,7 @@
         <!-- OPTIONS -->
         <xsl:for-each select="/bcf:controlfile/bcf:options">
           <h3><xsl:value-of select="./@type"/> options for <tt><xsl:value-of select="./@component"/></tt></h3>
-          <table class="options_table">
+          <table>
             <thead>
               <tr><td>Option</td><td>Value</td></tr>
             </thead>
@@ -108,12 +109,12 @@
                   <xsl:when test="./@type='singlevalued'">
                     <tr>
                       <td><xsl:value-of select="./bcf:key/text()"/></td>
-                      <td class="options_table_value"><xsl:value-of select="./bcf:value/text()"/></td>
+                      <td><tt><xsl:value-of select="./bcf:value/text()"/></tt></td>
                     </tr>
                   </xsl:when>
                   <xsl:when test="./@type='multivalued'">
                     <tr>
-                      <td class="options_table_value"><xsl:value-of select="./bcf:key/text()"/></td>
+                      <td><tt><xsl:value-of select="./bcf:key/text()"/></tt></td>
                       <td><xsl:for-each select="./bcf:value">
                         <xsl:sort select="./@order"/>
                         <xsl:value-of select="./text()"/>
@@ -129,12 +130,168 @@
           </table>
         </xsl:for-each>
         <!-- INHERITANCE -->
-        <h3>Inheritance</h3>
-
+        <xsl:if test="/bcf:controlfile/bcf:inheritance">
+          <h3>Inheritance</h3>
+          <h4>Defaults</h4>
+          <!-- Defaults -->
+          <table>
+            <thead>
+              <tr><td>Child type <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> Parent type</td><td>Source field <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> Target field</td></tr>
+            </thead>
+            <tbody>
+              <!-- Defaults for all types -->
+              <tr>
+                <td>* <xsl:text disable-output-escaping="yes"> &amp;asymp; </xsl:text> *</td>
+                <xsl:choose>
+                  <xsl:when test="/bcf:controlfile/bcf:inheritance/bcf:defaults/@inherit_all='yes'">
+                    <td>
+                    <span>
+                      <xsl:if test="/bcf:controlfile/bcf:inheritance/bcf:defaults/@override_target='yes'">
+                        <xsl:attribute name="class">inherit_override</xsl:attribute>
+                      </xsl:if>
+                    * </span>
+                    <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
+                    <span>
+                      <xsl:if test="/bcf:controlfile/bcf:inheritance/bcf:defaults/@override_target='no'">
+                        <xsl:attribute name="class">inherit_override</xsl:attribute>
+                      </xsl:if>
+                    * </span>
+                    </td>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <td>
+                      <span>
+                        <xsl:if test="/bcf:controlfile/bcf:inheritance/bcf:defaults/@override_target='yes'">
+                          <xsl:attribute name="class">inherit_override</xsl:attribute>
+                        </xsl:if>
+                        <xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text>
+                      </span>
+                      <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
+                      <span>
+                        <xsl:if test="/bcf:controlfile/bcf:inheritance/bcf:defaults/@override_target='no'">
+                          <xsl:attribute name="class">inherit_override</xsl:attribute>
+                        </xsl:if>
+                        <xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text>
+                      </span>
+                    </td>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </tr>
+              <!-- Defaults for certain types -->
+              <xsl:for-each select="/bcf:controlfile/bcf:inheritance/bcf:defaults/bcf:type_pair">
+                <tr>
+                  <td>
+                    <xsl:choose>
+                      <xsl:when test ="./@target='all'">*</xsl:when>
+                      <xsl:otherwise><xsl:value-of select="./@target"/></xsl:otherwise>
+                    </xsl:choose>
+                    <xsl:text disable-output-escaping="yes"> &amp;asymp; </xsl:text>
+                    <xsl:choose>
+                      <xsl:when test ="./@source='all'">*</xsl:when>
+                      <xsl:otherwise><xsl:value-of select="./@source"/></xsl:otherwise>
+                    </xsl:choose>
+                  </td>
+                  <xsl:choose>
+                    <xsl:when test="./@inherit_all='yes'">
+                      <td>
+                        <span>
+                          <xsl:if test="./@override_target='yes'">
+                            <xsl:attribute name="class">inherit_override</xsl:attribute>
+                          </xsl:if>
+                        *</span>
+                        <xsl:text disable-output-escaping="yes"> &amp;asymp; </xsl:text>
+                        <span>
+                          <xsl:if test="./@override_target='no'">
+                            <xsl:attribute name="class">inherit_override</xsl:attribute>
+                          </xsl:if>
+                        *</span>
+                      </td>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <td>
+                        <span>
+                          <xsl:if test="./@override_target='yes'">
+                            <xsl:attribute name="class">inherit_override</xsl:attribute>
+                          </xsl:if>
+                          <xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text>
+                        </span>
+                        <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
+                        <span>
+                          <xsl:if test="./@override_target='no'">
+                            <xsl:attribute name="class">inherit_override</xsl:attribute>
+                          </xsl:if>
+                          <xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text>
+                        </span>
+                      </td>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </tr>
+              </xsl:for-each>
+            </tbody>
+          </table>
+          <h4>Specifications</h4>          
+          <table>
+            <thead>
+              <tr><td>Child type <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> Parent type</td><td>Source field <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> Target field</td></tr>
+            </thead>
+            <tbody>
+              <xsl:for-each select="/bcf:controlfile/bcf:inheritance/bcf:inherit">
+                <tr>
+                  <td>
+                    <xsl:for-each select="./bcf:type_pair">
+                      <xsl:choose>
+                        <xsl:when test ="./@target='all'">*</xsl:when>
+                        <xsl:otherwise><xsl:value-of select="./@target"/></xsl:otherwise>
+                      </xsl:choose>
+                      <xsl:text disable-output-escaping="yes"> &amp;asymp; </xsl:text>
+                      <xsl:choose>
+                        <xsl:when test ="./@source='all'">*</xsl:when>
+                        <xsl:otherwise><xsl:value-of select="./@source"/></xsl:otherwise>
+                      </xsl:choose>
+                      <xsl:if test="not(position()=last())"><br/></xsl:if>
+                    </xsl:for-each>
+                  </td>
+                  <td>
+                    <xsl:for-each select="./bcf:field">
+                      <xsl:choose>
+                        <!-- A field skip specification -->
+                        <xsl:when test ="./@skip='yes'">
+                          <xsl:value-of select="./@source"/> <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> <xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text>
+                        </xsl:when>
+                        <!-- A normal field inherit specification -->
+                        <xsl:otherwise>
+                          <span>
+                            <xsl:if test="./@override_target='yes'">
+                              <xsl:attribute name="class">inherit_override</xsl:attribute>
+                            </xsl:if>
+                            <xsl:value-of select="./@source"/>
+                          </span>
+                          <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
+                          <span>
+                            <xsl:if test="./@override_target='no'">
+                              <xsl:attribute name="class">inherit_override</xsl:attribute>
+                            </xsl:if>
+                            <xsl:value-of select="./@target"/>
+                          </span>
+                        </xsl:otherwise>
+                      </xsl:choose>
+                      <xsl:if test="not(position()=last())"><br/></xsl:if>
+                    </xsl:for-each>
+                  </td>
+                </tr>
+              </xsl:for-each>
+            </tbody>
+          </table>
+          <br/>
+          <div class="key"><u>Key</u><br/><tt>X</tt><xsl:text disable-output-escaping="yes"> &amp;asymp; </xsl:text><tt>Y</tt>: <tt>X</tt> inherits from<tt> Y</tt>
+          <br/>
+          <tt>F</tt><xsl:text disable-output-escaping="yes"> &amp;rarr; </xsl:text><tt>F'</tt>: Field <tt>F</tt> in parent becomes field <tt>F'</tt> in child.
+          </div>
+        </xsl:if>
         <!-- SORTING -->
         <h3>Sorting options</h3>
         <h4>Presort defaults</h4>
-        <table class="sorting_table_presort">
+        <table>
           <thead>
             <tr><td>Entrytype</td><td>Presort default</td></tr>
           </thead>
@@ -157,7 +314,7 @@
           </tbody>
         </table>
         <h4>Sorting exclusions</h4>
-        <table class="sorting_table_exclusions">
+        <table>
           <thead>
             <tr><td>Entrytype</td><td>Fields excluded from sorting</td></tr>
           </thead>
@@ -180,12 +337,12 @@
           </tbody>
         </table>
         <h4>Sorting Specification</h4>
-        <table class="sorting_table">
+        <table>
           <thead>
             <tr>
               <xsl:for-each select="/bcf:controlfile/bcf:sorting/bcf:sort">
                 <xsl:sort select="./@order"/>
-                <td valign="top">
+                <td>
                   <xsl:if test="./@pass='label'">
                     <xsl:attribute name="class">sort_label</xsl:attribute>
                   </xsl:if>
@@ -246,7 +403,7 @@
             <tr>
               <xsl:for-each select="/bcf:controlfile/bcf:sorting/bcf:sort">
                 <xsl:sort select="./@order"/>
-                <td valign="top">
+                <td>
                   <xsl:for-each select="./bcf:sortitem">
                     <xsl:sort select="./@order"/>
                     <!-- left padding -->
@@ -305,16 +462,16 @@
         <xsl:if test="/bcf:controlfile/bcf:structure">
           <h3>Data structure</h3>
           <h4>Legal entrytypes</h4>
-          <table class="entrytype_table">
+          <table>
             <thead>
               <tr><td>Entrytype</td><td>Aliases</td><td>Field changes when resolving alias</td><td>Legal fields for entrytype</td></tr>
             </thead>
             <tbody>
               <tr>
-                <td valign="top">GLOBAL</td>
+                <td>GLOBAL</td>
                 <td></td>
                 <td></td>
-                <td valign="top">
+                <td>
                   <div class="global_entrytype_fields">
                     <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:entryfields/bcf:entrytype[text()='ALL']/../bcf:field">
                       <xsl:sort select="./text()"/>
@@ -326,8 +483,8 @@
               </tr>
               <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:entrytypes/bcf:entrytype">
                 <tr>
-                  <td valign="top"><xsl:value-of select="./text()"/></td>
-                  <td valign="top">
+                  <td><xsl:value-of select="./text()"/></td>
+                  <td>
                     <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:aliases/bcf:alias[@type='entrytype']/bcf:realname[./text()=current()/text()]">
                       <xsl:value-of select="../bcf:name/text()"/>
                       <xsl:if test="not(position()=last())">
@@ -336,7 +493,7 @@
                     </xsl:for-each>
                   </td>
                   <!-- Fields which need changing when resolving an alias -->
-                  <td valign="top">
+                  <td>
                     <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:aliases/bcf:alias[@type='entrytype']/bcf:realname[./text()=current()/text()]/../bcf:field">
                       <xsl:value-of select="./@name"/><xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text><xsl:value-of select="./text()"/>
                       <xsl:if test="not(position()=last())">
@@ -347,7 +504,7 @@
                   <!-- Save a varible pointing to the entrytype node -->
                   <xsl:variable name="entrynode" select="current()"/> 
                   <!-- Fields which are valid for this entrytype --> 
-                  <td valign="top">
+                  <td>
                     <!-- If no fields explicitly listed for entrytype, just global fields -->
                     <xsl:if test="not(/bcf:controlfile/bcf:structure/bcf:entryfields/bcf:entrytype[text()=$entrynode/text()])">
                       <div class="global_entrytype_fields">GLOBAL fields</div>
@@ -384,19 +541,19 @@
             </tbody>
           </table>
           <h3>Legal Fields</h3>
-          <table class="fields_table">
+          <table>
             <thead>
               <tr><td>Field</td><td>Aliases</td><td>Data type</td></tr>
             </thead>
             <tbody>
               <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:fields/bcf:field">
                 <tr>
-                  <td valign="top">
+                  <td>
                     <xsl:value-of select="./text()"/>
                     <xsl:if test="./@nullok='true'"><xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text></xsl:if>
                     <xsl:if test="./@skip_output='true'"><xsl:text disable-output-escaping="yes">&amp;loz;</xsl:text></xsl:if>
                   </td>
-                  <td valign="top">
+                  <td>
                     <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:aliases/bcf:alias[@type='field']/bcf:realname[./text()=current()/text()]">
                       <xsl:value-of select="../bcf:name/text()"/>
                       <xsl:if test="not(position()=last())">
@@ -404,7 +561,7 @@
                       </xsl:if>
                     </xsl:for-each>
                   </td>
-                  <td valign="top">
+                  <td>
                     <xsl:value-of select="./@datatype"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="./@fieldtype"/>
                   </td>
                 </tr>
@@ -414,14 +571,14 @@
           <br/>
           <div class="key">Key to symbols: <xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text> = field can null in <tt>.bbl</tt>, <xsl:text disable-output-escaping="yes">&amp;loz;</xsl:text> = field is not output to <tt>.bbl</tt></div>
           <h3>Constraints</h3>
-          <table class="constraints_table">
+          <table>
             <thead>
               <tr><td>Entrytypes</td><td>Constraint</td></tr>
             </thead>
             <tbody>
               <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:constraints">
                 <tr>
-                  <td valign="top">
+                  <td>
                     <xsl:for-each select="./bcf:entrytype">
                       <xsl:value-of select="./text()"/>
                       <xsl:if test="not(position()=last())">
@@ -429,7 +586,7 @@
                       </xsl:if>
                     </xsl:for-each>
                   </td>
-                  <td valign="top">
+                  <td>
                     <xsl:for-each select="./bcf:constraint">
                       <xsl:choose>
                         <xsl:when test="./@type='conditional'">
@@ -534,7 +691,7 @@
           </div>
         </xsl:if>
         <h3>Reference Sections</h3>
-        <table class="sections_table">
+        <table>
           <thead>
             <tr><td>Section Number</td><td>Data sources [type]</td><td>Citekeys</td></tr>
           </thead>
@@ -543,8 +700,8 @@
               <!-- Save a varible pointing to the section number -->
               <xsl:variable name="secnum" select="./@number"/> 
               <tr>
-                <td valign="top"> <xsl:value-of select="$secnum"/></td>
-                <td valign="top">
+                <td> <xsl:value-of select="$secnum"/></td>
+                <td>
                   <xsl:for-each select="/bcf:controlfile/bcf:bibdata[@section=$secnum]">
                     <xsl:for-each select="./bcf:datasource">
                       <xsl:value-of select="./text()"/> [<xsl:value-of select="./@type"/>]
@@ -554,7 +711,7 @@
                     </xsl:for-each>
                   </xsl:for-each>
                 </td>
-                <td valign="top">
+                <td>
                   <xsl:for-each select="./bcf:citekey">
                     <tt><xsl:value-of select="./text()"/></tt>
                     <xsl:if test="not(position()=last())">

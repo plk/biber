@@ -112,7 +112,9 @@
     </bcf:inherit>
     <bcf:inherit>
       <bcf:type_pair source="proceedings" target="inproceedings"/>
+      <bcf:type_pair source="book" target="inreference"/>
       <bcf:field source="title" target="booktitle" override_target="no"/>
+      <bcf:field source="annotation" skip="yes"/>
     </bcf:inherit>
     <bcf:inherit>
       <bcf:type_pair source="collection" target="incollection"/>
