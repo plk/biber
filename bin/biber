@@ -193,14 +193,16 @@ my $logger  = Log::Log4perl::get_logger('main') ;
 my $screen  = Log::Log4perl::get_logger('screen');
 my $logfile = Log::Log4perl::get_logger('logfile');
 
+my $vn = $VERSION;
+$vn .= ' (beta)' if $BETA_VERSION;
+
+$logger->info("This is biber $vn") unless Biber::Config->getoption('nolog');
 $logger->info("Logfile is '$biberlog'") unless Biber::Config->getoption('nolog');
 
 my $ctrlfile;
 my $bblfile;
 
 my $time_string = strftime "%a %b %e, %Y, %H:%M:%S", localtime;
-my $vn = $VERSION;
-$vn .= ' (beta)' if $BETA_VERSION;
 
 $logfile->info("=== Biber version $vn");
 $logfile->info("=== $time_string");

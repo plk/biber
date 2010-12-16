@@ -329,8 +329,7 @@ sub parse_ctrlfile {
 
   my $controlversion = $bcfxml->{version};
   Biber::Config->setblxoption('controlversion', $controlversion);
-  $logger->warn("Warning: You are using biblatex version $controlversion:
-biber is more likely to work with version $BIBLATEX_VERSION.")
+  $logger->warn("Warning: Found biblatex control file version $controlversion, expected version $BIBLATEX_VERSION")
     unless $controlversion eq $BIBLATEX_VERSION;
 
   # Look at control file and populate our main data structure with its information
