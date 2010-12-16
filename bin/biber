@@ -32,6 +32,7 @@ GetOptions(
            'collate|C',
            'collate_options|c=s',
            'configfile|g=s',
+           'convert_control',
            'debug|D',
            'fastsort|f',
            'help|h|?',
@@ -192,14 +193,16 @@ my $logger  = Log::Log4perl::get_logger('main') ;
 my $screen  = Log::Log4perl::get_logger('screen');
 my $logfile = Log::Log4perl::get_logger('logfile');
 
+my $vn = $VERSION;
+$vn .= ' (beta)' if $BETA_VERSION;
+
+$logger->info("This is biber $vn") unless Biber::Config->getoption('nolog');
 $logger->info("Logfile is '$biberlog'") unless Biber::Config->getoption('nolog');
 
 my $ctrlfile;
 my $bblfile;
 
 my $time_string = strftime "%a %b %e, %Y, %H:%M:%S", localtime;
-my $vn = $VERSION;
-$vn .= ' (beta)' if $BETA_VERSION;
 
 $logfile->info("=== Biber version $vn");
 $logfile->info("=== $time_string");
@@ -383,6 +386,10 @@ Options:
       The default is the first file found among
       "biber.conf" in the current directory, "\$HOME/.biber.conf",
       or else the output of "kpsewhich biber.conf".
+
+  --convert_control
+      Converts the .bcf control file into html using an XSLT transform. Can
+      be useful for debugging. File is named by appendin \".html\" to .bcf file.
 
   --debug|-D
       Turn on debugging for biber.

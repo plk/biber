@@ -99,6 +99,28 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
   </bcf:options>
+  <bcf:inheritance>
+    <bcf:defaults inherit_all="yes" override_target="no">
+      <bcf:type_pair source="all" target="incollection" inherit_all="no"/>
+    </bcf:defaults>
+    <bcf:inherit>
+      <bcf:type_pair source="book" target="inbook"/>
+      <bcf:field source="author" target="bookauthor" override_target="yes"/>
+      <bcf:field source="title" target="booktitle" override_target="yes"/>
+      <bcf:field source="titleaddon" target="booktitleaddon"  override_target="yes"/>
+      <bcf:field source="subtitle" target="booksubtitle" override_target="yes"/>
+    </bcf:inherit>
+    <bcf:inherit>
+      <bcf:type_pair source="proceedings" target="inproceedings"/>
+      <bcf:type_pair source="book" target="inreference"/>
+      <bcf:field source="title" target="booktitle" override_target="no"/>
+      <bcf:field source="annotation" skip="yes"/>
+    </bcf:inherit>
+    <bcf:inherit>
+      <bcf:type_pair source="collection" target="incollection"/>
+      <bcf:field source="title" target="booktitle" override_target="yes"/>
+    </bcf:inherit>
+  </bcf:inheritance>
   <bcf:sorting>
     <bcf:presort>mm</bcf:presort>
     <bcf:presort type="misc">ww</bcf:presort>

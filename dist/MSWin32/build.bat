@@ -2,6 +2,18 @@ REM The COPY/DEL steps as so that the packed biber main script is not
 REM called "biber" as on case-insensitive file systems, this clashes with
 REM the Biber lib directory and generates a (harmless) warning on first run
 
+REM XML::LibXSLT has a workaround for LibXSLT.dll conflicting with libxslt.dll on
+REM windows due to case-insensitivity. The Makefile.PL for XML::LibXSLT forces its
+REM .dll to end in ".xs.dll" which avoids the conflict but breaks when packaged with pp.
+REM Since strawberry perl includes its own libxslt with a non-default name, it is therefore
+REM safe to use the default XML::LibXSLT .dll name which does work when packed with pp.
+REM To do this, you have to install your own XML::LibXSLT in strawberry perl:
+REM edit the Makefile.PL, line 195 or thereabouts and change it to:
+REM
+REM     $config{DLEXT} = 'dll' if ($is_Win32);
+REM
+REM then build and install as usual.
+
 COPY C:\strawberry\perl\site\bin\biber C:\WINDOWS\Temp\biber-MSWIN
 
 CALL pp ^
@@ -21,6 +33,8 @@ CALL pp ^
   --module=Encode::Unicode ^
   --module=Encode::Unicode::UTF7 ^
   --link=C:\WINDOWS\libbtparse.dll ^
+  --link=C:\strawberry\c\bin\libxslt-1_.dll ^
+  --link=C:\strawberry\c\bin\libexslt-0_.dll ^
   --link=C:\strawberry\c\bin\libz_.dll ^
   --link=C:\strawberry\c\bin\libxml2-2_.dll ^
   --link=C:\strawberry\c\bin\libiconv-2_.dll ^

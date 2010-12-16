@@ -41,6 +41,7 @@ my $builder = $class->new(
         'Readonly' => 0,
         'Unicode::Collate' => '0.68',
         'XML::LibXML::Simple' => 0,
+        'XML::LibXSLT' => 0,
         'Text::BibTeX' => '0.48',
         'perl' => '5.10.0'
     },
@@ -50,6 +51,7 @@ my $builder = $class->new(
     script_files => [ glob( "bin/*" ) ],
     data_files => { 'data/schemata/bcf.rnc' => 'lib/Biber/bcf.rnc',
                     'data/schemata/bcf.rng' => 'lib/Biber/bcf.rng',
+                    'data/bcf.xsl' => 'lib/Biber/bcf.xsl',
                     'data/latinkeys.txt' => 'lib/Unicode/Collate/latinkeys.txt' }
 );
 

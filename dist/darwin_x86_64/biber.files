@@ -1,5 +1,6 @@
 ../../data/schemata/bcf.rnc;lib/Biber/bcf.rnc
 ../../data/schemata/bcf.rng;lib/Biber/bcf.rng
+../../data/bcf.xsl;lib/Biber/bcf.xsl
 ../../data/latinkeys.txt;lib/Unicode/Collate/latinkeys.txt
 /opt/local/lib/perl5/5.12.2/darwin-thread-multi-2level/Unicode/Collate/Locale;lib/Unicode/Collate/Locale
 /opt/local/lib/perl5/5.12.2/darwin-thread-multi-2level/Unicode/Collate/CJK;lib/Unicode/Collate/CJK
