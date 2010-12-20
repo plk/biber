@@ -281,7 +281,6 @@ sub _generatesortinfo {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $sortstring;
   my $sortobj;
   $BIBER_SORT_FINAL = 0;
   $BIBER_SORT_FINAL = '';
@@ -290,15 +289,12 @@ sub _generatesortinfo {
     # We have already found a "final" item so if this item returns null,
     # copy in the "final" item string as it's the master key for this entry now
     if ($BIBER_SORT_FINAL and not $BIBER_SORT_NULL) {
-      $sortstring .= "${BIBER_SORT_FINAL}$sorting_sep";
       push @$sortobj, $BIBER_SORT_FINAL;
     }
     else {
-      $sortstring .= "$s$sorting_sep";
       push @$sortobj, $s;
     }
   }
-  $sortstring =~ s/$sorting_sep\z//xms; # strip off the last sortsep added by _sortset()
 
   # Decide if we are doing case-insensitive sorting or not
   # If so, lowercase according to locale but only if using fastsort
@@ -306,9 +302,9 @@ sub _generatesortinfo {
 
   # Save a copy of the sortstring before we potentially lowercase it
   # since we want to generate sortinit nicely below
-  my $ss = $sortstring;
+  my $ss = join($sorting_sep, @$sortobj);
 
-  $be->set_field('sortstring', $sortstring);
+  $be->set_field('sortstring', $ss);
   $be->set_field('sortobj', $sortobj);
 
   # Generate sortinit - the initial letter of the sortstring. This must ignore

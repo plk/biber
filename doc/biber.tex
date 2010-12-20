@@ -354,7 +354,8 @@ or from \verb+biblatex+ by using its option \verb+sortupper=false+. Be
 aware though that some locales rightly enforce a particular setting for
 this (for example, Danish). You will be able to override it but
 \verb+biber+ will warn you if you do. \verb+sortupper+ has no effect when
-using \verb+--fastsort|-f+--you are at the mercy of what your OS locale\\[1ex]
+using \verb+--fastsort|-f+--you are at the mercy of what your OS
+locale does.\\[1ex]
 
 There are in fact many options to \verb+Unicode::Collate+
 which can tailor the collation in various ways in
@@ -420,7 +421,7 @@ using this package), otherwise «utf8» (for XeTeX or LuaTeX) or
 \noindent As you can see from item 2 above, by default, \verb+biber+
 converts LaTeX character macros into UTF-8 internally. This is very
 useful as it means that things are sorted correctly but has two
-potential (but rare) problems which you should be aware of:
+potential (albeit rarely encountered) problems which you should be aware of:
 
 \begin{itemize}
 \item If you are using PDFLaTeX and \verb+\usepackage[utf8]{inputenc}+, it
@@ -528,7 +529,7 @@ more common editors
 
 Emacs has the very powerful AUcTeX mode for editing TeX and running
 compilations. BibTeX is already integrated into AUCTeX and it is quite
-simple to add support for\verb+biber+. Use the Emacs Customise interface to
+simple to add support for \verb+biber+. Use the Emacs Customise interface to
 modify the \verb+TeX-command-list+ variable and add a \verb+Biber+ command.
 
 \begin{verbatim}
@@ -697,7 +698,7 @@ varies from OS to OS. The cache name is:\\[1ex]
 \verb+par-<username>\cache-<hash>+ (Windows)\\[1ex]
 
 \noindent The temp location is not always obvious but these are sensible
-places to look (where \verb+*+ can vary depending on user:
+places to look (where \verb+*+ can vary depending on username:
 
 \begin{itemize}
 \item \verb+/var/folders/*/*/-Tmp-/+ (OSX, local GUI login shell)

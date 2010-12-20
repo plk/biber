@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 5;
+use Test::More tests => 7;
 
 use Biber;
 use Biber::Output::BBL;
@@ -39,16 +39,16 @@ $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $out = $biber->get_output_obj;
 
-is_deeply([$section->get_citekeys], ['LS2','LS1','LS3'], 'U::C tailoring - 1');
-check_output_string_order($out, ['LS2','LS1','LS3']);
-is_deeply([$section->get_shorthands], ['LS3', 'LS2','LS1'], 'U::C tailoring - 2');
+is_deeply([$section->get_citekeys], ['LS2','LS1','LS3','LS4'], 'U::C tailoring - 1');
+check_output_string_order($out, ['LS2','LS1','LS3','LS4']);
+is_deeply([$section->get_shorthands], ['LS3', 'LS4','LS2','LS1'], 'U::C tailoring - 2');
 
 Biber::Config->setblxoption('sortlos', 0);
 $section->set_shorthands([]);
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $out = $biber->get_output_obj;
-is_deeply([$section->get_shorthands], ['LS2', 'LS1','LS3'], 'U::C tailoring - 3');
+is_deeply([$section->get_shorthands], ['LS2', 'LS1','LS3','LS4'], 'U::C tailoring - 3');
 
 
 # Descending name in Swedish collation
@@ -77,7 +77,43 @@ Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sortin
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 
-is_deeply([$section->get_citekeys], ['LS3','LS1','LS2'], 'U::C tailoring descending - 1');
+is_deeply([$section->get_citekeys], ['LS3','LS4','LS1','LS2'], 'U::C tailoring descending - 1');
+
+# Local lower before upper setting
+Biber::Config->setblxoption('sorting_label', [
+                                                    [
+                                                     {sortupper => 0},
+                                                     {'title'   => {}}
+                                                    ]
+                                                   ]);
+
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+is_deeply([$section->get_citekeys], ['LS4', 'LS3','LS2','LS1'], 'upper_before_lower locally false');
+
+# Local case insensitive negates the sortupper being false as this no longer
+# means anything so it reverts to bib order for LS3 and LS4
+# For this, have to reparse the .bcf otherwise the citekey order from previous
+# test is kept for things that are not sort distinguishable
+$biber->parse_ctrlfile('sort-uc.bcf');
+$biber->set_output_obj(Biber::Output::BBL->new());
+Biber::Config->setblxoption('sorting_label', [
+                                                    [
+                                                     {sortupper => 0,
+                                                      sortcase  => 0},
+                                                     {'title'   => {}}
+                                                    ]
+                                                   ]);
+
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+is_deeply([$section->get_citekeys], ['LS3', 'LS4','LS2','LS1'], 'sortcase locally false, upper_before_lower locally false');
+
+
 
 
 unlink "*.utf8";
