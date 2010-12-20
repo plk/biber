@@ -477,10 +477,10 @@ sub parse_ctrlfile {
     # Also, we only push the sort attributes if there are any sortitems otherwise
     # we end up with a blank sort
     my $sopts;
-    $sopts->{final}          = $sort->{final}          if $sort->{final};
-    $sopts->{sort_direction} = $sort->{sort_direction} if $sort->{sort_direction};
-    $sopts->{sortcase}       = $sort->{sortcase}       if $sort->{sortcase};
-    $sopts->{sortupper}      = $sort->{sortupper}      if $sort->{sortupper};
+    $sopts->{final}          = $sort->{final}          if defined($sort->{final});
+    $sopts->{sort_direction} = $sort->{sort_direction} if defined($sort->{sort_direction});
+    $sopts->{sortcase}       = $sort->{sortcase}       if defined($sort->{sortcase});
+    $sopts->{sortupper}      = $sort->{sortupper}      if defined($sort->{sortupper});
     if (defined($sortingitems_label)) {
       unshift @{$sortingitems_label}, $sopts;
       push @{$sorting_label}, $sortingitems_label;
@@ -1741,14 +1741,15 @@ sub sortentries {
       # If the case or upper option on a field is not the global default
       # set it locally on the $Collator by constructing a change() method call
       my $sc = $sortset->[0]{sortcase};
+      if (defined($sc) and $sc != Biber::Config->getoption('sortcase')) {
+        push @fc, $sc ? 'level => 4' : 'level => 2';
+      }
       my $su = $sortset->[0]{sortupper};
-      if ((defined($sc) and $sc != Biber::Config->getoption('sortcase')) or
-          (defined($su) and $su != Biber::Config->getoption('sortupper'))) {
-        $fc = '->change(';
-        push @fc, $sc ? 'level => 4'              : 'level => 2';
+      if (defined($su) and $su != Biber::Config->getoption('sortupper')) {
         push @fc, $su ? 'upper_before_lower => 1' : 'upper_before_lower => 0';
-        $fc .= join(',', @fc);
-        $fc .= ')';
+      }
+      if (@fc) {
+        $fc = '->change(' . join(',', @fc) . ')'
       }
 
       $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
@@ -1781,6 +1782,8 @@ sub sortentries {
     # Handily, $num_sorts is now one larger than the number of fields which is the
     # correct index for the actual data in the sort array
     $sort_extractor = '$_->[' . $num_sorts . ']';
+
+    $logger->debug('Sorter method: ' . $sorter);
 
     # Schwartzian transform multi-field sort
     @citekeys = map  { eval $sort_extractor }
