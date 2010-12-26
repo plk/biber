@@ -61,13 +61,13 @@ sub locate_biber_file {
   }
 
   if (File::Spec->file_name_is_absolute($filename)) {
-    $filenamepath = $filename;
+    return $filename;
   }
-  elsif (defined($outfile) and -f $outfile) {
-    $filenamepath = $outfile;
+  elsif (defined($outfile) and -e $outfile) {
+    return $outfile;
   }
-  elsif (-f $filename) {
-    $filenamepath = $filename;
+  elsif (-e $filename) {
+    return $filename;
   }
   elsif (can_run('kpsewhich')) {
     my $found;
@@ -77,11 +77,10 @@ sub locate_biber_file {
     if ($found) {
       chomp $found;
       # filename can be UTF-8 and run() isn't clever with UTF-8
-      $filenamepath = decode_utf8($found);
+      return decode_utf8($found);
     }
   }
-  $logger->info("Found '$filenamepath'");
-  return $filenamepath;
+  return undef;
 }
 
 =head2 makenameid
