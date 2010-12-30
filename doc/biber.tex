@@ -299,7 +299,15 @@ override the logfile name by using the \verb+--logfile+ option:
   biber --logfile=lfname test.bcf
 \end{verbatim}
 
-\noindent results in a logfile called «\verb+lfname.blg+».
+\noindent results in a logfile called «\verb+lfname.blg+».\\
+
+\noindent \textbf{Warning}: be careful if you are expecting \verb+biber+ to
+write to directories which you don't have appropriate permissions to. This
+is more commonly an issue on non-Windows OSes. For example, if you rely on
+\verb+kpsewhich+ to find your database files which are in system TeX
+directories, you may well not have write permission there so \verb+biber+
+will not be able to write the \verb+.bbl+. Use the \verb+--outfile|-O+
+option to specify the location to write the \verb+.bbl+ to in such cases.
 
 \subsection{Collation and Localisation}\label{coll}
 
