@@ -36,6 +36,7 @@ my $builder = $class->new(
         'IPC::Run' => 0,
         'LaTeX::Decode' => '0.03',
         'List::AllUtils' => 0,
+        'List::MoreUtils' => 0,
         'Regexp::Common' => 0,
         'Log::Log4perl' => 0,
         'Readonly' => 0,
