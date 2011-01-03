@@ -299,7 +299,15 @@ override the logfile name by using the \verb+--logfile+ option:
   biber --logfile=lfname test.bcf
 \end{verbatim}
 
-\noindent results in a logfile called «\verb+lfname.blg+».
+\noindent results in a logfile called «\verb+lfname.blg+».\\
+
+\noindent \textbf{Warning}: be careful if you are expecting \verb+biber+ to
+write to directories which you don't have appropriate permissions to. This
+is more commonly an issue on non-Windows OSes. For example, if you rely on
+\verb+kpsewhich+ to find your database files which are in system TeX
+directories, you may well not have write permission there so \verb+biber+
+will not be able to write the \verb+.bbl+. Use the \verb+--outfile|-O+
+option to specify the location to write the \verb+.bbl+ to in such cases.
 
 \subsection{Collation and Localisation}\label{coll}
 
@@ -561,36 +569,43 @@ actual \verb+Biber+ command parameters as you want them, using ``\verb+%s+" as
 the LaTeX file name place holder. Then define the following two functions
 in your \verb+.emacs+.
 
+\small
 \begin{verbatim}
-; Biber under AUCTeX
-(defun TeX-run-Biber (name command file)
-  "Create a process for NAME using COMMAND to format FILE with Biber." 
- (let ((process (TeX-run-command name command file)))
-    (setq TeX-sentinel-function 'TeX-Biber-sentinel)
-    (if TeX-process-asynchronous
-	process
-      (TeX-synchronous-sentinel name file process))))
+(eval-after-load "tex"
+  (quote (defun TeX-run-Biber (name command file)
+    "Create a process for NAME using COMMAND to format FILE with Biber." 
+    (let ((process (TeX-run-command name command file)))
+      (setq TeX-sentinel-function 'TeX-Biber-sentinel)
+      (if TeX-process-asynchronous
+          process
+        (TeX-synchronous-sentinel name file process))))
+         )
+  )
 
-(defun TeX-Biber-sentinel (process name)
-  "Cleanup TeX output buffer after running Biber."
-  (goto-char (point-max))
-  (cond
-   ;; Check whether Biber reports any warnings or errors.
-   ((re-search-backward (concat
-			 "^(There \\(?:was\\|were\\) \\([0-9]+\\) "
-			 "\\(warnings?\\|error messages?\\))") nil t)
-    ;; Tell the user their number so that she sees whether the
-    ;; situation is getting better or worse.
-    (message (concat "Biber finished with %s %s. "
-		     "Type `%s' to display output.")
-	     (match-string 1) (match-string 2)
-	     (substitute-command-keys
-	      "\\<TeX-mode-map>\\[TeX-recenter-output-buffer]")))
-   (t
-    (message (concat "Biber finished successfully. "
-		     "Run LaTeX again to get citations right."))))
-  (setq TeX-command-next TeX-command-default))
+(eval-after-load "tex"
+  (quote (defun TeX-Biber-sentinel (process name)
+    "Cleanup TeX output buffer after running Biber."
+    (goto-char (point-max))
+    (cond
+     ;; Check whether Biber reports any warnings or errors.
+     ((re-search-backward (concat
+                           "^(There \\(?:was\\|were\\) \\([0-9]+\\) "
+                           "\\(warnings?\\|error messages?\\))") nil t)
+      ;; Tell the user their number so that she sees whether the
+      ;; situation is getting better or worse.
+      (message (concat "Biber finished with %s %s. "
+                       "Type `%s' to display output.")
+               (match-string 1) (match-string 2)
+               (substitute-command-keys
+                "\\<TeX-mode-map>\\[TeX-recenter-output-buffer]")))
+     (t
+      (message (concat "Biber finished successfully. "
+                       "Run LaTeX again to get citations right."))))
+    (setq TeX-command-next TeX-command-default))
+         )
+  )
 \end{verbatim}
+\normalsize
 
 \noindent You'll then see a \verb+Biber+ option in your AUCTeX command menu or
 you can just \verb+C-c C-c+ and type \verb+Biber+.
