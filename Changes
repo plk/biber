@@ -1,6 +1,6 @@
 Revision history for Biber
 
-0.7    
+0.7    05-01-2011
        * Completely re-written sorting routine using Schwartzian transform
          for real multi-field support and per-field sorting settings.
        * Bug fixes

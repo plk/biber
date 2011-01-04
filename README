@@ -3,7 +3,7 @@ BIBER Version 0.7
 =================
 
 Biber is a BibTeX replacement for users of biblatex, with full Unicode
-support.  This release coincides with the release of biblatex 1.1
+support. This release is the sister release of biblatex 1.1
 
 REQUIREMENTS
 
