@@ -5,7 +5,7 @@ Things to remember when releasing new version:
 * Change version string in doc
 * Update "TODO" file
 * Update main html and doc page and sync
-  scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:/htdocs/
+  scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
 * Change version string in "Biber.pm"
 * Change beta version flag in "Biber.pm" if necessary
 * Change $BIBLATEX_VERSION in Constants.pm to match appropriate biblatex
