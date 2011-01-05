@@ -16,5 +16,6 @@ Things to remember when releasing new version:
 * Build binaries from release and upload to SF
 * Update TL contrib with new binaries
   Don't forget that the TLcontrib main package (doc package) needs to be a
-  TDS tree - doc/biber/biber.pdf
+  TDS tree - doc/biber/biber.pdf (export COPYFILE_DISABLE=true to tar on OSX)
 * Upload to CTAN
+  Build dist then unpack and repack to .zip
