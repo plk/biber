@@ -1,7 +1,10 @@
 TODO in decreasing order of priority:
 
+   * biblatex implements generalised crossref, related entries, structure defs
    * When biblatex implements interface and bcf for crossref inheritance,
      take out conditional in control file read and also change schema (biblatex 1.2)
    * ALL fields need to be put into types where possible
+   * Generalised data/sorting options split to allow different e.g. sorting
+     options to \printbibliography
    * merge in the "unique" branch to implement full uniquename/list
      automation. Needs new .bbl format and biblatex support (biblatex 1.2)
