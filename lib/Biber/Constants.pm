@@ -1529,6 +1529,7 @@ define_alias( 'x-mac-roman'    => 'MacRoman');
 define_alias( 'x-mac-centeuro' => 'MacCentralEurRoman');
 define_alias( 'x-mac-cyrillic' => 'MacCyrillic');
 define_alias( 'x-nextstep'     => 'MacRoman');
+define_alias( 'x-ascii'        => 'ascii'); # Encode doesn't resolve this one by default
 define_alias( 'lutf8'          => 'UTF-8'); # Luatex
 define_alias( 'utf8x'          => 'UTF-8'); # UCS (old)
 
