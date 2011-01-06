@@ -9,7 +9,7 @@ $Text::Wrap::columns = 80;
 use Storable qw( dclone );
 use List::AllUtils qw( :all );
 use Log::Log4perl qw(:no_extra_logdie_message);
-use POSIX qw( locale_h ); # for lc() of sorting strings
+use POSIX qw( locale_h ); # for lc()
 use Encode;
 use charnames ':full';
 use Unicode::Normalize;
@@ -296,14 +296,9 @@ sub _generatesortinfo {
     }
   }
 
-  # Decide if we are doing case-insensitive sorting or not
-  # If so, lowercase according to locale but only if using fastsort
-  # since otherwise, we use the UCS level 2/3 distinction to deal with this
-
-  # Save a copy of the sortstring before we potentially lowercase it
-  # since we want to generate sortinit nicely below
+  # Record the information needed for sorting later
+  # sortstring isn't actually used to sort, it's just useful to have it for debugging
   my $ss = join($sorting_sep, @$sortobj);
-
   $be->set_field('sortstring', $ss);
   $be->set_field('sortobj', $sortobj);
 
@@ -952,7 +947,7 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2010 François Charette and Philip Kime, all rights reserved.
+Copyright 2009-2011 François Charette and Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

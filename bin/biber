@@ -389,7 +389,8 @@ Options:
 
   --convert_control
       Converts the .bcf control file into html using an XSLT transform. Can
-      be useful for debugging. File is named by appendin \".html\" to .bcf file.
+      be useful for debugging. File is named by appending \".html\"
+      to .bcf file.
 
   --debug|-D
       Turn on debugging for biber.
@@ -500,7 +501,7 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2010 François Charette and Philip Kime, all rights reserved.
+Copyright 2009-2011 François Charette and Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

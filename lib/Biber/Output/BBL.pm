@@ -107,6 +107,29 @@ sub _printfield {
   return;
 }
 
+=head2 set_output_undefkey
+
+  Set the .bbl output for an undefined key
+
+=cut
+
+sub set_output_undefkey {
+  my $self = shift;
+  my $key = shift; # undefined key
+  my $section = shift; # Section object the entry occurs in
+  my $acc = '';
+  my $secnum = $section->number;
+
+  $acc .= "  \\missing{$key}\n";
+
+  # Use an array to preserve sort order of entries already generated
+  # Also create an index by keyname for easy retrieval
+  push @{$self->{output_data}{ENTRIES}{$secnum}{strings}}, \$acc;
+  $self->{output_data}{ENTRIES}{$secnum}{index}{lc($key)} = \$acc;
+
+  return;
+}
+
 =head2 set_output_entry
 
   Set the .bbl output for an entry. This is the meat of
@@ -449,7 +472,7 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2010 François Charette and Philip Kime, all rights reserved.
+Copyright 2009-2011 François Charette and Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.
