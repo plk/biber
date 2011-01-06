@@ -636,6 +636,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      field => [{ content => "ALL" }],
                    },
                    {
+                     entrytype => [{ content => "bibnote" }],
+                     field => [
+                       { content => "note" },
+                              ],
+                   },
+                   {
                      entrytype => [{ content => "article" }],
                      field => [
                        { content => "author" },
@@ -1230,6 +1236,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "article" },
                      { content => "artwork" },
                      { content => "audio" },
+                     { content => "bibnote" },
                      { content => "book" },
                      { content => "bookinbook" },
                      { content => "booklet" },

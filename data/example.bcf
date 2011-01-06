@@ -169,6 +169,7 @@
       <bcf:entrytype>article</bcf:entrytype>
       <bcf:entrytype>artwork</bcf:entrytype>
       <bcf:entrytype>audio</bcf:entrytype>
+      <bcf:entrytype>bibnote</bcf:entrytype>
       <bcf:entrytype>book</bcf:entrytype>
       <bcf:entrytype>bookinbook</bcf:entrytype>
       <bcf:entrytype>booklet</bcf:entrytype>
@@ -532,6 +533,10 @@
       <bcf:field>urldate</bcf:field>
       <bcf:field>version</bcf:field>
       <bcf:field>volume</bcf:field>
+    </bcf:entryfields>
+    <bcf:entryfields>
+      <bcf:entrytype>bibnote</bcf:entrytype>
+      <bcf:field>note</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
       <bcf:entrytype>book</bcf:entrytype>
