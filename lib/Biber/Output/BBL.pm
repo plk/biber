@@ -107,6 +107,29 @@ sub _printfield {
   return;
 }
 
+=head2 set_output_undefkey
+
+  Set the .bbl output for an undefined key
+
+=cut
+
+sub set_output_undefkey {
+  my $self = shift;
+  my $key = shift; # undefined key
+  my $section = shift; # Section object the entry occurs in
+  my $acc = '';
+  my $secnum = $section->number;
+
+  $acc .= "  \\missing{$key}\n";
+
+  # Use an array to preserve sort order of entries already generated
+  # Also create an index by keyname for easy retrieval
+  push @{$self->{output_data}{ENTRIES}{$secnum}{strings}}, \$acc;
+  $self->{output_data}{ENTRIES}{$secnum}{index}{lc($key)} = \$acc;
+
+  return;
+}
+
 =head2 set_output_entry
 
   Set the .bbl output for an entry. This is the meat of

@@ -585,7 +585,8 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
   # Die if there are no citations in any section
   unless ($key_flag) {
-    $logger->logcroak("The file '$ctrl_file' does not contain any citations!")
+    $logger->warn("The file '$ctrl_file' does not contain any citations!");
+    $self->{warnings}++;
   }
 
   # Add the Biber::Sections object to the Biber object
@@ -720,6 +721,7 @@ sub check_missing {
       $logger->warn("I didn't find a database entry for '$citekey' (section $secnum)");
       $self->{warnings}++;
       $section->del_citekey($citekey);
+      $section->add_undef_citekey($citekey);
       next;
     }
   }
@@ -1986,10 +1988,16 @@ sub create_output_section {
   my $section = $self->sections->get_section($secnum);
 
   my @citekeys = $section->get_citekeys;
+  my @undef_citekeys = $section->get_undef_citekeys;
   # We rely on the order of this array for the order of the .bbl
   foreach my $k (@citekeys) {
+    # Regular entry
     my $be = $section->bibentry($k) or $logger->logcroak("Cannot find entry with key '$k' to output");
     $output_obj->set_output_entry($be, $section, Biber::Config->get_structure);
+  }
+  # Missing citekeys
+  foreach my $k (@undef_citekeys) {
+    $output_obj->set_output_undefkey($k, $section);
   }
   # Push the sorted shorthands for each section into the output object
   if ( $section->get_shorthands ) {

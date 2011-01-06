@@ -23,6 +23,7 @@ sub new {
   $self->{citekeys} = [];
   $self->{dkeys} = {};
   $self->{orig_order_citekeys} = [];
+  $self->{undef_citekeys} = [];
   return $self;
 }
 
@@ -167,6 +168,18 @@ sub get_citekeys {
   return @{$self->{citekeys}};
 }
 
+=head2 get_undef_citekeys
+
+    Gets the list of undefined citekeys of a Biber::Section object
+    Returns a normal array
+
+=cut
+
+sub get_undef_citekeys {
+  my $self = shift;
+  return @{$self->{undef_citekeys}};
+}
+
 =head2 get_orig_order_citekeys
 
     Gets the citekeys of a Biber::Section object in their original order
@@ -271,6 +284,22 @@ sub add_citekeys {
   }
   return;
 }
+
+=head2 add_undef_citekey
+
+    Adds a citekey to the Biber::Section object as an undefined
+    key. This allows us to output this information to the .bbl and
+    so biblatex can do better reporting to external utils like latexmk
+
+=cut
+
+sub add_undef_citekey {
+  my $self = shift;
+  my $key = shift;
+  push @{$self->{undef_citekeys}}, $key;
+  return;
+}
+
 
 =head2 add_datafile
 
