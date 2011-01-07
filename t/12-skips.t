@@ -45,6 +45,7 @@ my $set1 = q|  \entry{seta}{set}{}
     \field{extraalpha}{1}
     \field{title}{Set Member A}
     \field{year}{2010}
+    \keyw{key1, key2}
   \endentry
 
 |;
@@ -62,6 +63,7 @@ my $set2 = q|  \entry{set:membera}{book}{}
     \field{sortinit}{D}
     \field{title}{Set Member A}
     \field{year}{2010}
+    \keyw{key1, key2}
   \endentry
 
 |;

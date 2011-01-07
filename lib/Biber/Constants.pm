@@ -637,6 +637,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      field => [{ content => "ALL" }],
                    },
                    {
+                     entrytype => [{ content => "bibnote" }],
+                     field => [
+                       { content => "note" },
+                              ],
+                   },
+                   {
                      entrytype => [{ content => "article" }],
                      field => [
                        { content => "author" },
@@ -1231,6 +1237,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "article" },
                      { content => "artwork" },
                      { content => "audio" },
+                     { content => "bibnote" },
                      { content => "book" },
                      { content => "bookinbook" },
                      { content => "booklet" },
@@ -1373,7 +1380,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        fieldtype => "field",
                      },
                      { content => "journaltitle", datatype => "literal", fieldtype => "field" },
-                     { content => "keywords", datatype => "literal", fieldtype => "field" },
+                     { content => "keywords", datatype => "special", fieldtype => "field" },
                      { content => "label", datatype => "literal", fieldtype => "field" },
                      { content => "language", datatype => "key", fieldtype => "list" },
                      { content => "library", datatype => "literal", fieldtype => "field" },
@@ -1401,7 +1408,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "namectype", datatype => "key", fieldtype => "field" },
                      { content => "note", datatype => "literal", fieldtype => "field" },
                      { content => "number", datatype => "literal", fieldtype => "field" },
-                     { content => "options", datatype => "literal", fieldtype => "field" },
+                     { content => "options", datatype => "special", fieldtype => "field" },
                      { content => "organization", datatype => "literal", fieldtype => "list" },
                      {
                        content     => "origdate",
@@ -1530,6 +1537,7 @@ define_alias( 'x-mac-roman'    => 'MacRoman');
 define_alias( 'x-mac-centeuro' => 'MacCentralEurRoman');
 define_alias( 'x-mac-cyrillic' => 'MacCyrillic');
 define_alias( 'x-nextstep'     => 'MacRoman');
+define_alias( 'x-ascii'        => 'ascii'); # Encode doesn't resolve this one by default
 define_alias( 'lutf8'          => 'UTF-8'); # Luatex
 define_alias( 'utf8x'          => 'UTF-8'); # UCS (old)
 
