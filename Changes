@@ -1,9 +1,9 @@
 Revision history for Biber
 
-0.7.1  (dev beta)
-       * Improved latexmk compat (no longer die when no citations, pass \missing{key}
-         to .bbl when citekey is missing).
+0.7.1  07-01-2011
+       * Improved latexmk compatibility
        * Added "x-ascii" encoding alias for "ascii" to deal with inputenx ascii.
+       * Bug fixes
 0.7    05-01-2011
        * Completely re-written sorting routine using Schwartzian transform
          for real multi-field support and per-field sorting settings.
