@@ -339,7 +339,7 @@
       <bcf:field fieldtype="field" datatype="literal">iswc</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">journalsubtitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">journaltitle</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">keywords</bcf:field>
+      <bcf:field fieldtype="field" datatype="special">keywords</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">label</bcf:field>
       <bcf:field fieldtype="list" datatype="key">language</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">library</bcf:field>
@@ -363,7 +363,7 @@
       <bcf:field fieldtype="field" datatype="key">namectype</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">note</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">number</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">options</bcf:field>
+      <bcf:field fieldtype="field" datatype="special">options</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">organization</bcf:field>
       <bcf:field fieldtype="field" datatype="date" skip_output="true">origdate</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">origday</bcf:field>
