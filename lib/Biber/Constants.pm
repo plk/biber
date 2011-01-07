@@ -1379,7 +1379,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        fieldtype => "field",
                      },
                      { content => "journaltitle", datatype => "literal", fieldtype => "field" },
-                     { content => "keywords", datatype => "literal", fieldtype => "field" },
+                     { content => "keywords", datatype => "special", fieldtype => "field" },
                      { content => "label", datatype => "literal", fieldtype => "field" },
                      { content => "language", datatype => "key", fieldtype => "list" },
                      { content => "library", datatype => "literal", fieldtype => "field" },
@@ -1407,7 +1407,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "namectype", datatype => "key", fieldtype => "field" },
                      { content => "note", datatype => "literal", fieldtype => "field" },
                      { content => "number", datatype => "literal", fieldtype => "field" },
-                     { content => "options", datatype => "literal", fieldtype => "field" },
+                     { content => "options", datatype => "special", fieldtype => "field" },
                      { content => "organization", datatype => "literal", fieldtype => "list" },
                      {
                        content     => "origdate",
