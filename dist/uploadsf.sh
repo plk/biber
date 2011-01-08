@@ -6,7 +6,8 @@
 # biber-linux_x86_32
 # biber-linux_x86_64
 
-DOCDIR="/Users/philkime/data/code/biblatex-biber/doc"
+BASE="/Users/philkime/data/code/biblatex-biber"
+DOCDIR=$BASE/doc
 DIR=${1:-"/Users/philkime/Desktop/b"}
 RELEASE=${2:-"development"}
 export COPYFILE_DISABLE=true # no resource forks - TL doesn't like them
@@ -41,3 +42,11 @@ scp biber.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b
 \rm biber.tar.gz biber
 # Doc
 scp $DOCDIR/biber.pdf philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/documentation/biber.pdf
+# Perl dist tree
+scp $BASE/biblatex-biber-v*.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/biblatex-biber.tar.gz
+rm $BASE/biblatex-biber-v*.tar.gz
+# Changes file
+scp $BASE/Changes philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/Changes
+# README file
+scp $BASE/README philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/README
+

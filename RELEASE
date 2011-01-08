@@ -12,7 +12,6 @@ Things to remember when releasing new version:
   version, if necessary.
 * "perl Build.PL" and "Build dist" to update YAML
 * Commit and tag with version number
-* Upload dist tar.gz, Changes to SF, add README to main files page
 * Build binaries from release and upload to SF
 * Update TL contrib with new binaries
   Don't forget that the TLcontrib main package (doc package) needs to be a

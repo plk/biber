@@ -1,5 +1,6 @@
 TODO in decreasing order of priority:
 
+   * Generalise sort exclusions within fields a la nosortprefix etc.
    * biblatex implements generalised crossref, related entries, structure defs
    * When biblatex implements interface and bcf for crossref inheritance,
      take out conditional in control file read and also change schema (biblatex 1.2)
