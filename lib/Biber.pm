@@ -38,7 +38,7 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =cut
 
-our $VERSION = '0.7.1';
+our $VERSION = '0.7.2';
 our $BETA_VERSION = 0; # Is this a beta version?
 
 =head1 SYNOPSIS
@@ -2306,9 +2306,9 @@ sub create_output_section {
     $output_obj->set_output_entry($be, $section, Biber::Config->get_structure);
   }
   # Missing citekeys
-  # foreach my $k (@undef_citekeys) {
-  #   $output_obj->set_output_undefkey($k, $section);
-  # }
+  foreach my $k (@undef_citekeys) {
+    $output_obj->set_output_undefkey($k, $section);
+  }
   # Push the sorted shorthands for each section into the output object
   if ( $section->get_shorthands ) {
     $self->sort_shorthands;
