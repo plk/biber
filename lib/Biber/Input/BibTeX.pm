@@ -71,7 +71,7 @@ sub TBSIG {
 =cut
 
 sub parsename {
-  my ($namestr, $opts) = @_;
+  my ($namestr, $fieldname, $opts) = @_;
   $logger->debug("   Parsing namestring '$namestr'");
   my $usepre = $opts->{useprefix};
   # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
@@ -113,11 +113,11 @@ sub parsename {
   my $gen_suffix_i;
   my $gen_suffix_it;
 
-    # Use a copy of $name so that when we generate the
-    # initials, we do so without diacritics. This is easier than trying
-    # hack the diacritics code into btparse ...
+  # Use a copy of $name so that when we generate the
+  # initials, we do so without diacritics. This is easier than trying
+  # hack the diacritics code into btparse ...
 
-    # Initials formats
+  # Initials formats
   my $li_f = new Text::BibTeX::NameFormat('l', 1);
   my $fi_f = new Text::BibTeX::NameFormat('f', 1);
   my $pi_f = new Text::BibTeX::NameFormat('v', 1);
@@ -131,7 +131,7 @@ sub parsename {
 
   # first name doesn't need this customisation as it's automatic for
   # an abbreviated first name format but we'll do it anyway for consistency
-  my $nd_name = new Text::BibTeX::Name(strip_nosort_name($namestr));
+  my $nd_name = new Text::BibTeX::Name(strip_nosort_name($namestr, $fieldname));
 
   # Period following normal initials
   $li_f->set_text(BTN_LAST,  undef, undef, undef, '.');
@@ -401,7 +401,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
               }
             }
 
-            $names->add_element(parsename($name, {useprefix => $useprefix}));
+            $names->add_element(parsename($name, $f, {useprefix => $useprefix}));
           }
           $bibentry->set_datafield($f, $names);
 

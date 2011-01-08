@@ -60,8 +60,8 @@ my $lists4      = "IBM_HP+\x{10FFFD}";
 my $lists5      = 'IBM_HP_Sun_Sony';
 my $dates1      = '1979,01,0200000,1980,04,08,1924,06,07,1924,07,09,1924,0002,05,192,02,03,1979,03,04,79,03,03';
 my $edtypeclass1 = 'redactor,Jaffé_Philipp,Loewenfeld_Samuel+Kaltenbrunner_Ferdinand+Ewald_Paul';
-my $prefix1     = 'mm,,Luzzatto_Moshe Ḥayyim,haLashon laRamḥal uvo sheloshah ḥiburim,2000,0000';
-my $diacritic1  = 'mm,,Hasan_Alī,Some title,2000,0000';
+my $prefix1     = 'mm,,Luzzatto_Moshe Ḥayyim,,,haLashon laRamḥal uvo sheloshah ḥiburim,2000,0000';
+my $diacritic1  = 'mm,,Hasan_Alī,alHasan_ʿAlī,Hasan_Alī,Some title,2000,0000';
 
 # These have custom presort and also an exclusion on year and title set
 my $useprefix1  = 'ww,,von_Bobble_Terrence,,,0000';
@@ -86,7 +86,7 @@ is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix2, 'von with 
 
 
 
-# Testing nosortprefix and nosortdiacritics
+# Testing nosort
 Biber::Config->setblxoption('sorting_label', [
                                                 [
                                                  {},
@@ -108,6 +108,14 @@ Biber::Config->setblxoption('sorting_label', [
                                                 ],
                                                 [
                                                  {},
+                                                 {'editor'   => {}},
+                                                ],
+                                                [
+                                                 {},
+                                                 {'translator'   => {}},
+                                                ],
+                                                [
+                                                 {},
                                                  {'sorttitle'  => {}},
                                                  {'title'      => {}}
                                                 ],
@@ -121,6 +129,9 @@ Biber::Config->setblxoption('sorting_label', [
                                                  {'0000'       => {}}
                                                 ]
                                                ]);
+Biber::Config->setoption('nosort', { author => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ],
+                                     translator => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ]});
+
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 Biber::Config->setoption('sortcase', '1');
 
@@ -128,8 +139,8 @@ Biber::Config->setoption('sortcase', '1');
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('luzzatto')->get_field('sortstring'), $prefix1, 'Title with nosortprefix' );
-is($bibentries->entry('hasan')->get_field('sortstring'), $diacritic1, 'Name with nosortdiacritic' );
+is($bibentries->entry('luzzatto')->get_field('sortstring'), $prefix1, 'Title with nosort' );
+is($bibentries->entry('hasan')->get_field('sortstring'), $diacritic1, 'Name with nosort' );
 
 # Testing editor roles
 Biber::Config->setblxoption('sorting_label', [

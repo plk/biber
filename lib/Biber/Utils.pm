@@ -34,7 +34,7 @@ All functions are exported by default.
 our @EXPORT = qw{ locate_biber_file makenameid stringify_hash
   normalise_string normalise_string_lite normalise_string_underscore normalise_string_sort
   reduce_array remove_outer add_outer ucinit strip_nosort_name
-  strip_nosortdiacritics strip_nosortprefix is_def is_undef is_def_and_notnull is_def_and_null
+  is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8};
 
 =head1 FUNCTIONS
@@ -107,38 +107,18 @@ Removes elements which are not to be used in sorting a name from a string
 =cut
 
 sub strip_nosort_name {
-  my ($string) = @_;
+  my $string = shift;
+  my $fieldname = shift;
   return '' unless $string; # Sanitise missing data
-  $string = strip_nosortprefix($string); # First remove prefix ...
-  $string = strip_nosortdiacritics($string); # ... then diacritics
-  return $string;
-}
-
-=head2 strip_nosortdiacritics
-
-Removes diacritics from a string
-
-=cut
-
-sub strip_nosortdiacritics {
-  my ($string) = @_;
-  return '' unless $string; # Sanitise missing data
-  my $sds = Biber::Config->getoption('nosortdiacritics');
-  $string =~ s/$sds//gxms;
-  return $string;
-}
-
-=head2 strip_nosortprefix
-
-Removes prefix from a string
-
-=cut
-
-sub strip_nosortprefix {
-  my ($string) = @_;
-  return '' unless $string; # Sanitise missing data
-  my $spr = Biber::Config->getoption('nosortprefix');
-  $string =~ s/\A$spr//xms;
+  my $nosort = Biber::Config->getoption('nosort');
+  if (my $restrings = $nosort->{$fieldname}) {
+    # Config::General can't force arrays per option and don't want to set this globally
+    $restrings = [ $restrings ] unless ref($restrings) eq 'ARRAY';
+    foreach my $re (@$restrings) {
+      $re = qr/$re/;
+      $string =~ s/$re//gxms;
+    }
+  }
   return $string;
 }
 

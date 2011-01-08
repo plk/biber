@@ -83,8 +83,7 @@ our %CONFIG_DEFAULT_BIBER = (
   displaymode        => $DISPLAYMODE_DEFAULT, # eventually, shall be moved to biblatex options
   mincrossrefs       => 2,
   nolog              => 0,
-  nosortdiacritics   => qr/[\x{2bf}\x{2018}]/,
-  nosortprefix       => qr/\p{L}{2}\p{Pd}/,
+  nosort             => { author => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ] },
   quiet              => 0,
   sortcase           => 1,
   sortlocale         => $locale,

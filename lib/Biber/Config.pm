@@ -97,16 +97,12 @@ sub _initopts {
     }
 
     if (defined $conffile) {
-      %LOCALCONF = ParseConfig(-ConfigFile => $conffile, -UTF8 => 1) or
+      %LOCALCONF = ParseConfig(-LowerCaseNames => 1,
+                               -MergeDuplicateBlocks => 1,
+                               -AllowMultiOptions => 1,
+                               -ConfigFile => $conffile,
+                               -UTF8 => 1) or
         $logger->logcarp("Failure to read config file " . $conffile . "\n $@");
-    }
-
-    # nsort* options are special
-    if (my $nsp = $LOCALCONF{nosortprefix}) {
-      $LOCALCONF{nosortprefix} = qr/$nsp/;
-    }
-    if (my $nsd = $LOCALCONF{nosortdiacritics}) {
-      $LOCALCONF{nosortdiacritics} = qr/$nsd/;
     }
   }
 

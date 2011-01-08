@@ -136,7 +136,7 @@ sub _getlabel {
   # This is needed in cases where alphaothers is something like
   # '\textasteriskcentered' which would mess up sorting.
 
-  my @lastnames = map { strip_nosort_name(normalise_string($_->get_lastname)) } @{$names->names};
+  my @lastnames = map { strip_nosort_name(normalise_string($_->get_lastname), $namefield) } @{$names->names};
   my @prefices  = map { $_->get_prefix } @{$names->names};
   my $numnames  = $names->count_elements;
 
@@ -779,16 +779,16 @@ sub _namestring {
     # If useprefix is true, use prefix at start of name for sorting
     if ( $n->get_prefix and
          Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-      $str .= normalise_string_sort(strip_nosort_name($n->get_prefix)) . $nsi;
+      $str .= normalise_string_sort(strip_nosort_name($n->get_prefix, $field)) . $nsi;
     }
-    $str .= normalise_string_sort(strip_nosort_name($n->get_lastname)) . $nsi;
-    $str .= normalise_string_sort(strip_nosort_name($n->get_firstname)) . $nsi if $n->get_firstname;
-    $str .= normalise_string_sort(strip_nosort_name($n->get_suffix)) . $nsi if $n->get_suffix;
+    $str .= normalise_string_sort(strip_nosort_name($n->get_lastname, $field)) . $nsi;
+    $str .= normalise_string_sort(strip_nosort_name($n->get_firstname, $field)) . $nsi if $n->get_firstname;
+    $str .= normalise_string_sort(strip_nosort_name($n->get_suffix, $field)) . $nsi if $n->get_suffix;
 
     # If useprefix is false, use prefix at end of name
     if ( $n->get_prefix and not
          Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-      $str .= normalise_string_sort(strip_nosort_name($n->get_prefix)) . $nsi;
+      $str .= normalise_string_sort(strip_nosort_name($n->get_prefix, $field)) . $nsi;
     }
 
     $str =~ s/\Q$nsi\E\z//xms;       # Remove any trailing internal separator
