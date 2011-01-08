@@ -52,6 +52,6 @@ mkdir -p ~/Desktop/doc/biber
 cp $DOCDIR/biber.pdf ~/Desktop/doc/biber/
 \rm -f ~/Desktop/doc/.DS_Store
 \rm -f ~/Desktop/doc/biber/.DS_Store
-tar cvf ~/Desktop/biber.tar ~/Desktop/doc
+tar cvf ~/Desktop/biber.tar -C ~/Desktop doc
 gzip ~/Desktop/biber.tar
 \rm -rf ~/Desktop/doc
