@@ -47,6 +47,11 @@ scp $BASE/biblatex-biber-v*.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/
 rm $BASE/biblatex-biber-v*.tar.gz
 # Changes file
 scp $BASE/Changes philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/Changes
-# README file
-scp $BASE/README philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/README
-
+# Make TLContrib main package (docs only)
+mkdir -p ~/Desktop/doc/biber
+cp $DOCDIR/biber.pdf ~/Desktop/doc/biber/
+\rm -f ~/Desktop/doc/.DS_Store
+\rm -f ~/Desktop/doc/biber/.DS_Store
+tar cvf ~/Desktop/biber.tar ~/Desktop/doc
+gzip ~/Desktop/biber.tar
+\rm -rf ~/Desktop/doc
