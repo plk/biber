@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 8;
+use Test::More tests => 10;
 
 use Biber;
 use Biber::Output::BBL;
@@ -198,8 +198,8 @@ is( $out->get_output_entry('t1'), $t1, 'bbl entry with maths in title' ) ;
 is_deeply( Biber::Config->_get_uniquename('Worman_N'), $Worman_N, 'uniquename count 1') ;
 is_deeply( Biber::Config->_get_uniquename('Gennep'), $Gennep, 'uniquename count 2') ;
 is( $out->get_output_entry('murray'), $murray1, 'bbl with > maxnames' ) ;
-#is( $out->get_output_entry('missing1'), "  \\missing{missing1}\n", 'missing citekey 1' ) ;
-#is( $out->get_output_entry('missing2'), "  \\missing{missing2}\n", 'missing citekey 2' ) ;
+is( $out->get_output_entry('missing1'), "  \\missing{missing1}\n", 'missing citekey 1' ) ;
+is( $out->get_output_entry('missing2'), "  \\missing{missing2}\n", 'missing citekey 2' ) ;
 
 Biber::Config->setblxoption('alphaothers', '');
 Biber::Config->setblxoption('sortalphaothers', '');
