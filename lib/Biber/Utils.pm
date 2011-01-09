@@ -149,28 +149,8 @@ sub normalise_string_sort {
   my $str = shift;
   my $fieldname = shift;
   return '' unless $str; # Sanitise missing data
-  my $nosort = Biber::Config->getoption('nosort');
-  my $restrings;
-  # Specific fieldnames override types
-  if (exists($nosort->{$fieldname})) {
-    $restrings = $nosort->{$fieldname};
-  }
-  else { # types
-    foreach my $ns (keys %$nosort) {
-      next unless $ns =~ /\Atype_/xms;
-      if ($NOSORT_TYPES{$ns}{$fieldname}) {
-        $restrings = $nosort->{$ns};
-      }
-    }
-  }
-  if ($restrings) {
-    # Config::General can't force arrays per option and don't want to set this globally
-    $restrings = [ $restrings ] unless ref($restrings) eq 'ARRAY';
-    foreach my $re (@$restrings) {
-      $re = qr/$re/;
-      $str =~ s/$re//gxms;
-    }
-  }
+  # First strip nosort REs
+  $str = strip_nosort($str, $fieldname);
   # First replace ties with spaces or they will be lost
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
   # Replace LaTeX chars by Unicode for sorting
