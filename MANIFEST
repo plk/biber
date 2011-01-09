@@ -20,6 +20,7 @@ lib/Biber/Entry/Name.pm
 lib/Biber/Entry/Names.pm
 lib/Biber/Internals.pm
 lib/Biber/LaTeX/Recode.pm
+lib/Biber/LaTeX/Recode/Data.pm
 lib/Biber/Sections.pm
 lib/Biber/Section.pm
 lib/Biber/Structure.pm

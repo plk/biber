@@ -21,7 +21,6 @@ use Biber::Sections;
 use Biber::Section;
 use Biber::Structure;
 use Biber::Utils;
-use LaTeX::Decode 0.03;
 use Storable qw( dclone );
 use Log::Log4perl qw( :no_extra_logdie_message );
 use base 'Biber::Internals';
@@ -640,9 +639,9 @@ sub parse_bibtex {
     require File::Slurp::Unicode;
     my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
       or $logger->logcroak("Can't read $ufilename");
-    require LaTeX::Decode;
+    require Biber::LaTeX::Recode;
     $logger->info('Decoding LaTeX character macros into UTF-8');
-    $buf = LaTeX::Decode::latex_decode($buf, strip_outer_braces => 1);
+    $buf = Biber::LaTeX::Recode::latex_decode($buf, strip_outer_braces => 1);
 
     File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
         or $logger->logcroak("Can't write $ufilename");

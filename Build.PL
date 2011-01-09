@@ -34,7 +34,6 @@ my $builder = $class->new(
         'File::Slurp::Unicode'  => 0,
         'IPC::Cmd' => 0,
         'IPC::Run' => 0,
-        'LaTeX::Decode' => '0.03',
         'List::AllUtils' => 0,
         'List::MoreUtils' => 0,
         'Regexp::Common' => 0,
