@@ -1492,8 +1492,8 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      },
                      {
                        content     => "sortname",
-                       datatype    => "literal",
-                       fieldtype   => "field",
+                       datatype    => "name",
+                       fieldtype   => "list",
                        skip_output => "true",
                      },
                      {

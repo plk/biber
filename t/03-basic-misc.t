@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 10;
+use Test::More tests => 11;
 
 use Biber;
 use Biber::Output::BBL;
@@ -30,7 +30,7 @@ my $section = $biber->sections->get_section(0);
 
 
 my @keys = sort $section->get_citekeys;
-my @citedkeys = sort qw{ murray t1 kant:ku kant:kpv };
+my @citedkeys = sort qw{ murray t1 kant:ku kant:kpv t2 };
 
 my @allkeys = sort qw{ stdmodel aristotle:poetics vazques-de-parga shore t1
 gonzalez averroes/bland laufenberg westfahl:frontier knuth:ct:a kastenholz
@@ -43,7 +43,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb} ;
+set:yoon maron coleridge tvonb t2} ;
 
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 is_deeply( [ $section->get_shorthands ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
@@ -183,9 +183,27 @@ my $t1 = q|  \entry{t1}{misc}{}
     \field{sortinit}{B}
     \field{labelyear}{1992}
     \count{uniquename}{0}
-    \true{singletitle}
     \field{title}{Normal things {$^{3}$}}
     \field{year}{1992}
+  \endentry
+
+|;
+
+my $t2 = q|  \entry{t2}{misc}{}
+    \name{labelname}{1}{%
+      {{Brown}{B}{Bill}{B}{}{}{}{}}%
+    }
+    \name{author}{1}{%
+      {{Brown}{B}{Bill}{B}{}{}{}{}}%
+    }
+    \strng{namehash}{BB1}
+    \strng{fullhash}{BB1}
+    \field{labelalpha}{Bro94}
+    \field{sortinit}{B}
+    \field{labelyear}{1994}
+    \count{uniquename}{0}
+    \field{title}{Signs of W$\frac{o}{a}$nder}
+    \field{year}{1994}
   \endentry
 
 |;
@@ -194,7 +212,8 @@ my $t1 = q|  \entry{t1}{misc}{}
 my $Worman_N = [ 'WN1', 'WN2' ] ;
 my $Gennep = [ 'vGA1', 'vGJ1' ] ;
 
-is( $out->get_output_entry('t1'), $t1, 'bbl entry with maths in title' ) ;
+is( $out->get_output_entry('t1'), $t1, 'bbl entry with maths in title 1' ) ;
+is( $out->get_output_entry('t2'), $t2, 'bbl entry with maths in title 2' ) ;
 is_deeply( Biber::Config->_get_uniquename('Worman_N'), $Worman_N, 'uniquename count 1') ;
 is_deeply( Biber::Config->_get_uniquename('Gennep'), $Gennep, 'uniquename count 2') ;
 is( $out->get_output_entry('murray'), $murray1, 'bbl with > maxnames' ) ;

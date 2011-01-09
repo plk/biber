@@ -183,9 +183,11 @@ sub latex_encode {
     $text =~ s/($DINGS_RE_R)/"\\dings{" . $DINGS_R{$1} . "}"/ge;
   }
 
+  # Accents
   $text =~ s/\{(\p{L}\p{M}*)\}($ACCENTS_RE_R)/"\\" . $ACCENTS_R{$2} . "{$1}"/ge;
   $text =~ s/(\p{L}\p{M}*)($ACCENTS_RE_R)/"\\" . $ACCENTS_R{$2} . "{$1}"/ge;
 
+  # Diacritics
 	$text =~ s{
         (\P{M})($DIAC_RE_R)($DIAC_RE_R)($DIAC_RE_R)
         }{
