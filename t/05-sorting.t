@@ -60,7 +60,7 @@ my $lists4      = "IBM_HP+\x{10FFFD}";
 my $lists5      = 'IBM_HP_Sun_Sony';
 my $dates1      = '1979,01,0200000,1980,04,08,1924,06,07,1924,07,09,1924,0002,05,192,02,03,1979,03,04,79,03,03';
 my $edtypeclass1 = 'redactor,Jaffé_Philipp,Loewenfeld_Samuel+Kaltenbrunner_Ferdinand+Ewald_Paul';
-my $prefix1     = 'mm,,Luzzatto_Moshe Ḥayyim,,,haLashon laRamḥal uvo sheloshah ḥiburim,2000,0000';
+my $prefix1     = 'mm,,Luzzatto_Moshe Ḥayyim,,,Lashon laRamḥal uvo sheloshah ḥiburim,2000,0000';
 my $diacritic1  = 'mm,,Hasan_Alī,alHasan_ʿAlī,Hasan_Alī,Some title,2000,0000';
 
 # These have custom presort and also an exclusion on year and title set
@@ -130,7 +130,12 @@ Biber::Config->setblxoption('sorting_label', [
                                                 ]
                                                ]);
 Biber::Config->setoption('nosort', { author => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ],
-                                     translator => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ]});
+                                     translator => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ],
+                                     # type_title should be not used as there is an
+                                     # explicit title nosort
+                                     type_title => q/\A.*/,
+                                     title => q/\A\p{L}{2}\p{Pd}/
+                                   });
 
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 Biber::Config->setoption('sortcase', '1');

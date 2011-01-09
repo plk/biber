@@ -11,6 +11,7 @@ our @EXPORT = qw{
   %CONFIG_DEFAULT_BIBLATEX
   %CONFIG_SCOPE_BIBLATEX
   %STRUCTURE_DATATYPES
+  %NOSORT_TYPES
   $BIBER_CONF_NAME
   $BIBLATEX_VERSION
   $BIBER_SORT_FINAL
@@ -61,6 +62,33 @@ unless ($locale) {
   }
 }
 
+# nosort type category shortcuts
+our %NOSORT_TYPES = (
+                     type_name => {
+                                    author => 1,
+                                    bookauthor => 1,
+                                    commentator => 1,
+                                    editor => 1,
+                                    editora => 1,
+                                    editorb => 1,
+                                    editorc => 1,
+                                    holder => 1,
+                                    namea => 1,
+                                    nameb => 1,
+                                    namec => 1,
+                                    translator => 1
+                                    },
+                     type_title => {
+                                    booktitle => 1,
+                                    eventtitle => 1,
+                                    issuetitle => 1,
+                                    journaltitle => 1,
+                                    maintitle => 1,
+                                    origtitle => 1,
+                                    title => 1
+                                   }
+);
+
 # datatypes for structure validation
 our %STRUCTURE_DATATYPES = (
                             integer => qr/\A\d+\z/xms
@@ -83,7 +111,7 @@ our %CONFIG_DEFAULT_BIBER = (
   displaymode        => $DISPLAYMODE_DEFAULT, # eventually, shall be moved to biblatex options
   mincrossrefs       => 2,
   nolog              => 0,
-  nosort             => { author => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ] },
+  nosort             => { type_name => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ] },
   quiet              => 0,
   sortcase           => 1,
   sortlocale         => $locale,

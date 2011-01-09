@@ -201,8 +201,7 @@ hard-coded defaults:
 
 \begin{verbatim}
 allentries          0
-bibdata             undef
-bibdatatype         bibtex
+bibdata             undef 
 bblencoding         UTF-8
 bibencoding         UTF-8
 collate             1
@@ -213,8 +212,12 @@ debug               0
 fastsort            0
 mincrossrefs        2
 nolog               0
-nosortdiacritics    [\x{2bf}\x{2018}]
-nosortprefix        \p{L}{2}\p{Pd}
+<nosort>
+  # ignore prefices like 'al-' when sorting name fields
+  type_names      \A\p{L}{2}\p{Pd}
+  # ignore diacritics when sorting author
+  type_names      [\x{2bf}\x{2018}]
+</nosort>
 onlylog             0
 quiet               0
 sortcase            true
@@ -237,23 +240,102 @@ options by setting options in \verb+biblatex+ which will pass them to
 \verb+biber+ via the \verb+.bcf+ file.
 
 The \verb+--collate_options|-c+ option takes a number of key/value pairs as
-value. See section \ref{coll} for details. The value of the \verb+nosort*+
-options can only be set in the config file and not on the command line.
-This is because the values are Perl regular expressions and would need
-special quoting to set on the command line. This can get a bit tricky on
-some OSes (like Windows) so it's safer to set them in the config file. In
-any case, it's unlikely you would want to set them for particular
-\verb+biber+ runs; they would more likely be set as your personal default
-and thus they would naturally be set in the config file anway. They specify
-stand-alone diacritic marks and name prefices to strip before sorting takes
-place and are designed to deal with cases like
+value. See section \ref{coll} for details.
+
+\subsubsection{The nosort option}
+
+The value of the \verb+nosort+ option can only be set in the config file
+and not on the command line. This is because the values are Perl regular
+expressions and would need special quoting to set on the command line. This
+can get a bit tricky on some OSes (like Windows) so it's safer to set them
+in the config file. In any case, it's unlikely you would want to set them
+for particular \verb+biber+ runs; they would more likely be set as your
+personal default and thus they would naturally be set in the config file
+anyway. \verb+nosort+ allows you to ignore parts of a field for sorting.
+This is done using \verb+perl+ regular expressions which specify what to
+ignore in a field. You can specify as many patterns as you like for a
+specific field. Also available are some field type aliases so you can, for
+example, specify patterns for all name fields or all title fields. These
+field types all begin with the string ``\verb+type_+'', see Table
+\ref{tab:nst}.
+
+\begin{table}
+\begin{center}
+\small
+\begin{tabular}{lllll}
+\toprule
+Alias & Fields\\
+\midrule
+type\_name & author\\
+          & bookauthor\\
+          & commentator\\
+          & editor\\
+          & editora\\
+          & editorb\\
+          & editorc\\
+          & holder\\
+          & namea\\
+          & nameb\\
+          & namec\\
+          & translator\\
+type\_title & booktitle\\
+           & eventtitle\\
+           & issuetitle\\
+           & journaltitle\\
+           & maintitle\\
+           & origtitle\\
+           & title\\
+\bottomrule
+\end{tabular}
+\end{center}
+\caption{nosort option field type aliases}
+\label{tab:nst}
+\end{table}
+
+For example, this option can be used to ignore diacritic marks and prefices
+in names which should not be considered when sorting. Given (the default):
 
 \begin{verbatim}
-  author	   = {{al-Hasan}, ʿAlī},
+<nosort>
+  type_names      \A\p{L}{2}\p{Pd}
+  type_names      [\x{2bf}\x{2018}]
+</nosort>
 \end{verbatim}
 
-\noindent where the prefix «al-» and the diacritic «ʿ» should not be
-considered when sorting.
+and the \verb+.bib+ entry:
+
+\begin{verbatim}
+author	   = {{al-Hasan}, ʿAlī},
+\end{verbatim}
+
+\noindent the prefix «al-» and the diacritic «ʿ» will not be considered
+when sorting. See the \verb+perl+ regular expression manual page for
+details of the regular expression syntax\footnote{\url{http://perldoc.perl.org/perlre.html}}.
+
+If a \verb+nosort+ option is found for a specific field, it will override
+any option for a type which also covers that field.
+
+Here is another example. Suppose you wanted to ignore ``The'' at the
+beginning of a \verb+TITLE+ field when sorting, you could add this to your
+\verb+biber.conf+:
+
+\begin{verbatim}
+<nosort>
+  title      \AThe\s*
+</nosort>
+\end{verbatim}
+
+\noindent If you wanted to do this for all title fields listed in Table
+\ref{tab:nst}, then you would do this:
+
+\begin{verbatim}
+<nosort>
+  type_title      \AThe\s*
+</nosort>
+\end{verbatim}
+
+\noindent \textbf{Note:} \verb+nosort+ can be specified for most fields but
+not for things like dates and special fields as that wouldn't make much sense.
 
 \subsection{Input/Output File Locations}
 

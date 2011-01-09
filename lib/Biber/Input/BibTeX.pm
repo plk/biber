@@ -131,7 +131,7 @@ sub parsename {
 
   # first name doesn't need this customisation as it's automatic for
   # an abbreviated first name format but we'll do it anyway for consistency
-  my $nd_name = new Text::BibTeX::Name(strip_nosort_name($namestr, $fieldname));
+  my $nd_name = new Text::BibTeX::Name(strip_nosort($namestr, $fieldname));
 
   # Period following normal initials
   $li_f->set_text(BTN_LAST,  undef, undef, undef, '.');

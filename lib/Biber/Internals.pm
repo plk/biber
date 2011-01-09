@@ -136,7 +136,7 @@ sub _getlabel {
   # This is needed in cases where alphaothers is something like
   # '\textasteriskcentered' which would mess up sorting.
 
-  my @lastnames = map { strip_nosort_name(normalise_string($_->get_lastname), $namefield) } @{$names->names};
+  my @lastnames = map { strip_nosort(normalise_string($_->get_lastname), $namefield) } @{$names->names};
   my @prefices  = map { $_->get_prefix } @{$names->names};
   my $numnames  = $names->count_elements;
 
@@ -190,61 +190,74 @@ our $sorting_sep = ',';
 # a pointer to extra arguments to the code. This is to make code re-use possible
 # so the sorting can share code for similar things.
 our $dispatch_sorting = {
-  'address'       =>  [\&_sort_place,         ['place']],
-  'author'        =>  [\&_sort_author,        []],
-  'citeorder'     =>  [\&_sort_citeorder,     []],
-  'day'           =>  [\&_sort_dm,            ['day']],
-  'editor'        =>  [\&_sort_editor,        ['editor']],
-  'editora'       =>  [\&_sort_editor,        ['editora']],
-  'editoratype'   =>  [\&_sort_editortc,      ['editoratype']],
-  'editorb'       =>  [\&_sort_editor,        ['editorb']],
-  'editorbtype'   =>  [\&_sort_editortc,      ['editorbtype']],
-  'editorc'       =>  [\&_sort_editor,        ['editorc']],
-  'editorctype'   =>  [\&_sort_editortc,      ['editorctype']],
-  'endday'        =>  [\&_sort_dm,            ['endday']],
-  'endmonth'      =>  [\&_sort_dm,            ['endmonth']],
-  'endyear'       =>  [\&_sort_year,          ['endyear']],
-  'entrykey'      =>  [\&_sort_entrykey,      []],
-  'eventday'      =>  [\&_sort_dm,            ['eventday']],
-  'eventendday'   =>  [\&_sort_dm,            ['eventendday']],
-  'eventendmonth' =>  [\&_sort_dm,            ['eventendmonth']],
-  'eventendyear'  =>  [\&_sort_year,          ['eventendyear']],
-  'eventmonth'    =>  [\&_sort_dm,            ['eventmonth']],
-  'eventyear'     =>  [\&_sort_year,          ['eventyear']],
-  'extraalpha'    =>  [\&_sort_extraalpha,    []],
-  'issuetitle'    =>  [\&_sort_issuetitle,    []],
-  'institution'   =>  [\&_sort_place,         ['institution']],
-  'journal'       =>  [\&_sort_journal,       []],
-  'labelalpha'    =>  [\&_sort_labelalpha,    []],
-  'labelname'     =>  [\&_sort_labelname,     []],
-  'labelyear'     =>  [\&_sort_labelyear,     []],
-  'location'      =>  [\&_sort_place,         ['location']],
-  'month'         =>  [\&_sort_dm,            ['month']],
-  'origday'       =>  [\&_sort_dm,            ['origday']],
-  'origendday'    =>  [\&_sort_dm,            ['origendday']],
-  'origendmonth'  =>  [\&_sort_dm,            ['origendmonth']],
-  'origendyear'   =>  [\&_sort_year,          ['origendyear']],
-  'origmonth'     =>  [\&_sort_dm,            ['origmonth']],
-  'origyear'      =>  [\&_sort_year,          ['origyear']],
-  'organization'  =>  [\&_sort_place,         ['organization']],
-  'presort'       =>  [\&_sort_presort,       []],
-  'publisher'     =>  [\&_sort_publisher,     []],
-  'pubstate'      =>  [\&_sort_pubstate,      []],
-  'school'        =>  [\&_sort_place,         ['school']],
-  'sortkey'       =>  [\&_sort_sortkey,       []],
-  'sortname'      =>  [\&_sort_sortname,      []],
-  'sorttitle'     =>  [\&_sort_title,         ['sorttitle']],
-  'sortyear'      =>  [\&_sort_year,          ['sortyear']],
-  'title'         =>  [\&_sort_title,         ['title']],
-  'translator'    =>  [\&_sort_translator,    []],
-  'urlday'        =>  [\&_sort_dm,            ['urlday']],
-  'urlendday'     =>  [\&_sort_dm,            ['urlendday']],
-  'urlendmonth'   =>  [\&_sort_dm,            ['urlendmonth']],
-  'urlendyear'    =>  [\&_sort_year,          ['urlendyear']],
-  'urlmonth'      =>  [\&_sort_dm,            ['urlmonth']],
-  'urlyear'       =>  [\&_sort_year,          ['urlyear']],
-  'volume'        =>  [\&_sort_volume,        []],
-  'year'          =>  [\&_sort_year,          ['year']],
+  'address'         =>  [\&_sort_place,         ['place']],
+  'author'          =>  [\&_sort_author,        []],
+  'booksubtitle'    =>  [\&_sort_title,         ['booksubtitle']],
+  'booktitle'       =>  [\&_sort_title,         ['booktitle']],
+  'booktitleaddon'  =>  [\&_sort_title,         ['booktitleaddon']],
+  'citeorder'       =>  [\&_sort_citeorder,     []],
+  'day'             =>  [\&_sort_dm,            ['day']],
+  'editor'          =>  [\&_sort_editor,        ['editor']],
+  'editora'         =>  [\&_sort_editor,        ['editora']],
+  'editoratype'     =>  [\&_sort_editortc,      ['editoratype']],
+  'editorb'         =>  [\&_sort_editor,        ['editorb']],
+  'editorbtype'     =>  [\&_sort_editortc,      ['editorbtype']],
+  'editorc'         =>  [\&_sort_editor,        ['editorc']],
+  'editorctype'     =>  [\&_sort_editortc,      ['editorctype']],
+  'endday'          =>  [\&_sort_dm,            ['endday']],
+  'endmonth'        =>  [\&_sort_dm,            ['endmonth']],
+  'endyear'         =>  [\&_sort_year,          ['endyear']],
+  'entrykey'        =>  [\&_sort_entrykey,      []],
+  'eventday'        =>  [\&_sort_dm,            ['eventday']],
+  'eventendday'     =>  [\&_sort_dm,            ['eventendday']],
+  'eventendmonth'   =>  [\&_sort_dm,            ['eventendmonth']],
+  'eventendyear'    =>  [\&_sort_year,          ['eventendyear']],
+  'eventmonth'      =>  [\&_sort_dm,            ['eventmonth']],
+  'eventtitle'      =>  [\&_sort_title,         ['eventtitle']],
+  'eventyear'       =>  [\&_sort_year,          ['eventyear']],
+  'extraalpha'      =>  [\&_sort_extraalpha,    []],
+  'issuesubtitle'   =>  [\&_sort_title,         ['issuesubtitle']],
+  'issuetitle'      =>  [\&_sort_title,         ['issuetitle']],
+  'institution'     =>  [\&_sort_place,         ['institution']],
+  'journalsubtitle' =>  [\&_sort_title,         ['journalsubtitle']],
+  'journaltitle'    =>  [\&_sort_title,         ['journaltitle']],
+  'labelalpha'      =>  [\&_sort_labelalpha,    []],
+  'labelname'       =>  [\&_sort_labelname,     []],
+  'labelyear'       =>  [\&_sort_labelyear,     []],
+  'location'        =>  [\&_sort_place,         ['location']],
+  'mainsubtitle'    =>  [\&_sort_title,         ['mainsubtitle']],
+  'maintitle'       =>  [\&_sort_title,         ['maintitle']],
+  'maintitleaddon'  =>  [\&_sort_title,         ['maintitleaddon']],
+  'month'           =>  [\&_sort_dm,            ['month']],
+  'origday'         =>  [\&_sort_dm,            ['origday']],
+  'origendday'      =>  [\&_sort_dm,            ['origendday']],
+  'origendmonth'    =>  [\&_sort_dm,            ['origendmonth']],
+  'origendyear'     =>  [\&_sort_year,          ['origendyear']],
+  'origmonth'       =>  [\&_sort_dm,            ['origmonth']],
+  'origtitle'       =>  [\&_sort_title,         ['origtitle']],
+  'origyear'        =>  [\&_sort_year,          ['origyear']],
+  'organization'    =>  [\&_sort_place,         ['organization']],
+  'presort'         =>  [\&_sort_presort,       []],
+  'publisher'       =>  [\&_sort_publisher,     []],
+  'pubstate'        =>  [\&_sort_pubstate,      []],
+  'school'          =>  [\&_sort_place,         ['school']],
+  'shorttitle'      =>  [\&_sort_title,         ['shorttitle']],
+  'sortkey'         =>  [\&_sort_sortkey,       []],
+  'sortname'        =>  [\&_sort_sortname,      []],
+  'sorttitle'       =>  [\&_sort_title,         ['sorttitle']],
+  'sortyear'        =>  [\&_sort_year,          ['sortyear']],
+  'subtitle'        =>  [\&_sort_title,         ['subtitle']],
+  'title'           =>  [\&_sort_title,         ['title']],
+  'titleaddon'      =>  [\&_sort_title,         ['titleaddon']],
+  'translator'      =>  [\&_sort_translator,    []],
+  'urlday'          =>  [\&_sort_dm,            ['urlday']],
+  'urlendday'       =>  [\&_sort_dm,            ['urlendday']],
+  'urlendmonth'     =>  [\&_sort_dm,            ['urlendmonth']],
+  'urlendyear'      =>  [\&_sort_year,          ['urlendyear']],
+  'urlmonth'        =>  [\&_sort_dm,            ['urlmonth']],
+  'urlyear'         =>  [\&_sort_year,          ['urlyear']],
+  'volume'          =>  [\&_sort_volume,        []],
+  'year'            =>  [\&_sort_year,          ['year']],
   };
 
 # Main sorting dispatch method
@@ -470,36 +483,6 @@ sub _sort_extraalpha {
   }
 }
 
-sub _sort_issuetitle {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
-  if ($be->get_field('issuetitle')) {
-    my $string = normalise_string_sort($be->get_field('issuetitle'));
-    return _process_sort_attributes($string, $sortelementattributes);
-  }
-  else {
-    return '';
-  }
-}
-
-sub _sort_journal {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
-  if ($be->get_field('journal')) {
-    my $string = normalise_string_sort($be->get_field('journal'));
-    return _process_sort_attributes($string, $sortelementattributes);
-  }
-  else {
-    return '';
-  }
-}
-
 sub _sort_labelalpha {
   my ($self, $citekey, $sortelementattributes) = @_;
   my $secnum = $self->get_current_section;
@@ -647,8 +630,8 @@ sub _sort_title {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
-  if ($be->get_field($ttype)) {
-    my $string = normalise_string_sort($be->get_field($ttype));
+  if (my $field = $be->get_field($ttype)) {
+    my $string = normalise_string_sort($field, $ttype);
     return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
@@ -779,16 +762,16 @@ sub _namestring {
     # If useprefix is true, use prefix at start of name for sorting
     if ( $n->get_prefix and
          Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-      $str .= normalise_string_sort(strip_nosort_name($n->get_prefix, $field)) . $nsi;
+      $str .= normalise_string_sort($n->get_prefix, $field) . $nsi;
     }
-    $str .= normalise_string_sort(strip_nosort_name($n->get_lastname, $field)) . $nsi;
-    $str .= normalise_string_sort(strip_nosort_name($n->get_firstname, $field)) . $nsi if $n->get_firstname;
-    $str .= normalise_string_sort(strip_nosort_name($n->get_suffix, $field)) . $nsi if $n->get_suffix;
+    $str .= normalise_string_sort($n->get_lastname, $field) . $nsi;
+    $str .= normalise_string_sort($n->get_firstname, $field) . $nsi if $n->get_firstname;
+    $str .= normalise_string_sort($n->get_suffix, $field) . $nsi if $n->get_suffix;
 
     # If useprefix is false, use prefix at end of name
     if ( $n->get_prefix and not
          Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-      $str .= normalise_string_sort(strip_nosort_name($n->get_prefix, $field)) . $nsi;
+      $str .= normalise_string_sort($n->get_prefix, $field) . $nsi;
     }
 
     $str =~ s/\Q$nsi\E\z//xms;       # Remove any trailing internal separator
@@ -825,7 +808,7 @@ sub _liststring {
   }
 
   # separate the items by a string to give some structure
-  $str = join($lsi, map { normalise_string_sort($_)} @items);
+  $str = join($lsi, map { normalise_string_sort($_, $field)} @items);
   $str .= $lse;
 
   $str =~ s/\s+\Q$lse\E/$lse/gxms;
