@@ -692,11 +692,16 @@ is worth noting:
   and so the binaries look larger than what actually runs in memory.
 \item On the first run of a new version (that is, with a specific hash),
   they actually unpack themselves to a temporary location which varies by
-  operating system. This unpacking can take a little while and only happens on
-  the first run of a new version.
+  operating system. This unpacking can take a little while and only happens
+  on the first run of a new version. \textbf{Please don't kill the process
+    if it seems to take some time to do anything on the first run of a new
+    binary}. If you do, it will not unpack everything and it will almost
+  certainly break \verb+biber+. You will then have to delete your binary
+  cache (see section \ref{bc} below) and re-run the \verb+biber+ executable
+  again for the first time to allow it to unpack properly.
 \end{itemize}
 
-\subsection{Binary Caches}
+\subsection{Binary Caches}\label{bc}
 
 \verb+PAR::Packer+ works by unpacking the required files to a cache
 location. It only does this on the first run of a binary 
