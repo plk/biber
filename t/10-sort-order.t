@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 24;
+use Test::More tests => 26;
 
 use Biber;
 use Biber::Output::BBL;
@@ -31,8 +31,6 @@ sub check_output_string_order {
   is_deeply($out->get_output_entries(0),
             [ map { $out->get_output_entry($_) }  @{$test_order} ], 'sort strings - ' . $i++);
 }
-
-
 
 # citeorder (sorting=none)
 Biber::Config->setblxoption('sorting_label', [
@@ -531,5 +529,23 @@ $section = $biber->sections->get_section(0);
 is_deeply([$section->get_citekeys], ['L1B','L1A','L1','L2','L3','L4','L7','L8','L5','L9','L6'], 'location - sortcase=1');
 check_output_string_order($out, ['L1B','L1A','L1','L2','L3','L4','L7','L8','L5','L9','L6']);
 
+# Test nosort option
+Biber::Config->setblxoption('sorting_label', [
+                                                    [
+                                                     {},
+                                                     {'title'     => {}}
+                                                    ]
+                                                   ]);
+
+Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+# Set nosort for tests, skipping "The " in titles so L7 should sort before L6
+Biber::Config->setoption('nosort', { type_title => q/\AThe\s*/ });
+
+$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->prepare;
+$out = $biber->get_output_obj;
+$section = $biber->sections->get_section(0);
+is_deeply([$section->get_citekeys], ['L1A','L1','L1B','L2','L3','L4','L5','L7','L6','L9','L8'], 'nosort 1');
+check_output_string_order($out, ['L1A','L1','L1B','L2','L3','L4','L5','L7','L6','L9','L8']);
 
 unlink "*.utf8";
