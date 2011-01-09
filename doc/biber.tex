@@ -17,7 +17,7 @@
   url={http://biblatex-biber.sourceforge.net},
   author={François Charette, Philip Kime},
   email={firmicus@ankabut.net, Philip@kime.org.uk},
-  revision={biber 0.7.2 (biblatex 1.1a)},
+  revision={biber 0.7.3 (biblatex 1.1a)},
   date={\today}}
 
 \hypersetup{%
@@ -535,12 +535,12 @@ potential (albeit rarely encountered) problems which you should be aware of:
 
   For example, suppose you were using PDFLaTeX with\\
   \verb+\usepackage[latin1]{inputenc}+ and the following
-  \verb+.bib entry+
+  \verb+.bib+ entry:
 
   \begin{verbatim}
-    @BOOK{citekey1,
-      AUTHOR = {{\v S}imple, Simon},
-    }
+@BOOK{citekey1,
+  AUTHOR = {{\v S}imple, Simon},
+}
   \end{verbatim}
 
   \noindent With normal LaTeX character macro decoding, the
