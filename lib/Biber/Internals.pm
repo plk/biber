@@ -329,14 +329,12 @@ sub _generatesortinfo {
   if ($bblenc ne 'UTF-8') {
     # Can this init be represented in the BBL encoding?
     if (encode($bblenc, $init) eq '?') { # Malformed data encoding char
-      my $initd = NFKD($init);
-      $initd =~ s/\p{NonspacingMark}//gxms;
-      my $name = charnames::viacode(ord($initd));
-      $name =~ s/\s WITH \s .+ \z//xms;
-      $initd = chr(charnames::vianame($name));
+      # So convert to macro
+      require Biber::LaTeX::Recode;
+      my $initd = Biber::LaTeX::Recode::latex_encode($init, latex_source => 1);
       # warn only on second sorting pass to avoid user confusion
       if ($BIBER_SORT_FIRSTPASSDONE) {
-        $logger->warn("The character '$init' cannot be encoded in '$bblenc'. sortinit will be set to '$initd' for entry '$citekey'");
+        $logger->warn("The character '$init' cannot be encoded in '$bblenc'. sortinit will be set to macro '$initd' for entry '$citekey'");
         $self->{warnings}++;
       }
       $init = $initd;

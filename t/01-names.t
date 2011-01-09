@@ -589,7 +589,7 @@ my $l22 = q|  \entry{L22}{book}{}
     }
     \strng{namehash}{SS1}
     \strng{fullhash}{SS1}
-    \field{sortinit}{S}
+    \field{sortinit}{\v{S}}
   \endentry
 
 |;

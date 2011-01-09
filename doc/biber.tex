@@ -505,7 +505,7 @@ using this package), otherwise «utf8» (for XeTeX or LuaTeX) or
   the encoding that \verb+bblencoding+ specifies
 \item Warns if it is asked to output to the \verb+.bbl+ any UTF-8
   decoded LaTeX character macros which are not in the
-  \verb+bblencoding+ encoding. Replaces with a diacritic-stripped substitute
+  \verb+bblencoding+ encoding. Replaces with a suitable LaTeX macro.
 \end{enumerate}
 
 \noindent As you can see from item 2 above, by default, \verb+biber+
@@ -522,9 +522,11 @@ potential (albeit rarely encountered) problems which you should be aware of:
 
   An example--if you had \verb+\DJ+ in your \verb+.bib+,
   \verb+biber+ decodes this correctly to «Đ» and this breaks \verb+inputenc+
-  because it doesn't understand that UTF-8 character. The solution
+  because it doesn't understand that UTF-8 character. The real solution
   here is to switch to a TeX engine with full UTF-8 support like XeTeX or
-  LuaTeX as these don't use or need \verb+inputenc+.
+  LuaTeX as these don't use or need \verb+inputenc+. However, you can also
+  try the \verb+--bblsafechars+ option which will try to convert any UTF-8
+  chars into LaTeX macros on output.
 \item If your \verb+bblencoding+ is not UTF-8, and you are using some
   UTF-8 equivalent LaTeX character macros in your \verb+.bib+, then
   some \verb+.bbl+ fields (currently only \verb+\sortinit{}+) might
@@ -543,18 +545,17 @@ potential (albeit rarely encountered) problems which you should be aware of:
 }
   \end{verbatim}
 
-  \noindent With normal LaTeX character macro decoding, the
-  \verb+{\v S}+ is decoded into «Š» and so with name-first sorting,
-  \verb+\sortinit{}+ would be «Š». This is an invalid character in
-  latin1 encoding and so the \verb+.bbl+ would be broken. In such
-  cases when \verb+\sortinit{}+ is a char not valid in the
-  \verb+bblencoding+, \verb+biber+ strips off any diacritics which in
-  this case results in «S». This is not ideal as this is not the
-  initial character of the string used for sorting any more but it's a
-  decent replacement in such cases. The solution is really
-  to use UTF-8 \verb+bblencoding+ wherever possible. In extreme cases like
-  the one above, this might also mean switching TeX engines to one that
-  supports full UTF-8.
+  \noindent With normal LaTeX character macro decoding, the \verb+{\v S}+
+  is decoded into «Š» and so with name-first sorting, \verb+\sortinit{}+
+  would be «Š». This is an invalid character in latin1 encoding and so the
+  \verb+.bbl+ would be broken. In such cases when \verb+\sortinit{}+ is a
+  char not valid in the \verb+bblencoding+, \verb+biber+ tries to replace
+  the character with a suitable LaTeX macro. The solution is really to use
+  UTF-8 \verb+bblencoding+ wherever possible. In extreme cases where even
+  with UTF-8 \verb+bblencoding+, the char is not recognised by LaTeX
+  due to an incomplete UTF-8 implementation (as with \verb+inputenc+),
+  this might also mean switching TeX engines to one that supports
+  full UTF-8.
 \end{itemize}
 
 \noindent Normally, you do not need to set the encoding options on the

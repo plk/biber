@@ -29,6 +29,7 @@ GetOptions(
            'bibdatatype=s',
            'bibencoding|e=s',
            'bblencoding|E=s',
+           'bblsafechars',
            'collate|C',
            'collate_options|c=s',
            'configfile|g=s',
@@ -358,6 +359,12 @@ Options:
       Normally it's not necessary to set this as it's passed via biblatex
       from the inputenc package setting.
       See "perldoc Encode::Supported" for a list of supported encodings.
+
+  --bblsafechars
+      Try to convert UTF-8 chars into LaTeX macros when writing the .bbl
+      This can prevent unknown char errors when using PDFLaTeX and inputenc
+      as this doesn't understand all of UTF-8. Note, it is better to switch
+      to XeTeX or LuaTeX to avoid this situation.
 
   --bibdata|-d <files>
       Use <files> as bibliography databases (comma separated list).

@@ -305,7 +305,19 @@ sub output {
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     foreach my $entry (@{$data->{ENTRIES}{$secnum}{strings}}) {
-      print $target $$entry;
+      my $entry_string;
+      # If requested to convert UTF-8 to macros ...
+      # Deprecated - users should switch to XeTeX or LuaTeX
+      if (Biber::Config->getoption('bblsafechars')) {
+        $logger->info('Converting UTF-8 to TeX macros on output to .bbl. Please consider switching to XeTeX or LuaTeX instead!');
+        require Biber::LaTeX::Recode;
+        $entry_string = Biber::LaTeX::Recode::latex_encode($$entry, latex_source => 1);
+      }
+      else {
+        $entry_string = $$entry;
+      }
+
+      print $target $entry_string;
     }
   }
 
