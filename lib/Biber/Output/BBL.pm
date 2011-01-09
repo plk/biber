@@ -195,6 +195,7 @@ sub set_output_entry {
 
   # then names themselves
   foreach my $namefield (@{$struc->get_field_type('name')}) {
+    next if $struc->is_field_type('skipout', $namefield);
     if ( my $nf = $be->get_field($namefield) ) {
       # If this name is labelname, we've already deleted the "others"
       # so just add the boolean
