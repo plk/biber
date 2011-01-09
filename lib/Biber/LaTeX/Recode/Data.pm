@@ -14,12 +14,14 @@ our @EXPORT    = qw[ %ACCENTS           %ACCENTS_R
                      %CMDSUPERSCRIPTS   %CMDSUPERSCRIPTS_R
                      %DINGS             %DINGS_R
                      %GREEK             %GREEK_R
+                                        %ENCODE_EXCLUDE_R
                      $ACCENTS_RE        $ACCENTS_RE_R
                      $DIAC_RE_BASE      $DIAC_RE_BASE_R
                      $DIAC_RE_EXTRA     $DIAC_RE_EXTRA_R
                      $NEG_SYMB_RE       $NEG_SYMB_RE_R
                      $SUPER_RE          $SUPER_RE_R
                      $SUPERCMD_RE       $SUPERCMD_RE_R
+                                        $DINGS_RE_R
                   ];
 
 our %ACCENTS = (
@@ -310,16 +312,9 @@ our %DIACRITICS = (
 our %DIACRITICS_R = reverse %DIACRITICS;
 
 our %DIACRITICSEXTRA = (
-    capitalring           => "\x{030A}",
-    capitalhungarumlaut   => "\x{030B}",
-    capitalcaron          => "\x{030C}",    # ??
     textvbaraccent        => "\x{030D}",
     textdoublevbaraccent  => "\x{030E}",
-    textdoublegrave       => "\x{030F}",
     textdotbreve          => "\x{0310}",
-    textroundcap          => "\x{0311}",
-    newtie                => "\x{0311}",
-    capitalnewtie         => "\x{0311}",
     textturncommaabove    => "\x{0312}",
     textcommaabove        => "\x{0313}",
     textrevcommaabove     => "\x{0314}",
@@ -337,14 +332,9 @@ our %DIACRITICSEXTRA = (
     textsubbar            => "\x{0320}",
     textsubminus          => "\x{0320}",
     textpalhookbelow      => "\x{0321}",
-    textrethookbelow      => "\x{0322}",
-    textsubdot            => "\x{0323}",
     textsubumlaut         => "\x{0324}",
     textsubring           => "\x{0325}",
     textcommabelow        => "\x{0326}",
-    capitalcedilla        => "\x{0327}",
-    textpolhook           => "\x{0328}",
-    capitalogonek         => "\x{0328}",
     textsyllabic          => "\x{0329}",
     textsubbridge         => "\x{032A}",
     textsubw              => "\x{032B}",
@@ -354,10 +344,8 @@ our %DIACRITICSEXTRA = (
     textundertie          => "\x{032E}",
     textsubarch           => "\x{032F}",
     textsubtilde          => "\x{0330}",
-    textsubbar            => "\x{0331}",
     subdoublebar          => "\x{0333}",
     textsuperimposetilde  => "\x{0334}",
-    textsstrokethru       => "\x{0335}",
     textlstrokethru       => "\x{0336}",
     textsstrikethru       => "\x{0337}",
     textlstrikethru       => "\x{0338}",
@@ -925,6 +913,33 @@ our %GREEK = (
 
 our %GREEK_R = reverse %GREEK;
 
+our %ENCODE_EXCLUDE_R = (
+                         chr(0x22)	=> 1, # \textquotedbl
+                         chr(0x23)	=> 1, # \texthash
+                         chr(0x24)	=> 1, # \textdollar
+                         chr(0x25)	=> 1, # \textpercent
+                         chr(0x26)	=> 1, # \textampersand
+                         chr(0x27)	=> 1, # \textquotesingle
+                         chr(0x2a)	=> 1, # \textasteriskcentered
+                         chr(0x3c)	=> 1, # \textless
+                         chr(0x3d)	=> 1, # \textequals
+                         chr(0x3e)	=> 1, # \textgreater
+                         chr(0x5c)	=> 1, # \textbackslash
+                         chr(0x5e)	=> 1, # \textasciicircum
+                         chr(0x5f) => 1,  # \textunderscore
+                         chr(0x60)	=> 1, # \textasciigrave
+                         chr(0x67)	=> 1, # \textg
+                         chr(0x7b)	=> 1, # \textbraceleft
+                         chr(0x7c)	=> 1, # \textbar
+                         chr(0x7d)	=> 1, # \textbraceright
+                         chr(0x7e)	=> 1, # \textasciitilde
+                         chr(0xa0)	=> 1, # \nobreakspace
+                         chr(0xa3)	=> 1, # \textsterling
+                         chr(0xb1)	=> 1, # \pm
+                         chr(0xb5)	=> 1, # \mu
+                         chr(0xb6)	=> 1, # \P
+                        );
+
 our $ACCENTS_RE = qr{[\^\.`'"~=]};
 our $ACCENTS_RE_R = qr{[\x{300}-\x{304}\x{307}\x{308}]};
 
@@ -956,6 +971,10 @@ our $SUPERCMD_RE = join('|', keys %CMDSUPERSCRIPTS);
 $SUPERCMD_RE    = qr{$SUPERCMD_RE};
 our $SUPERCMD_RE_R = join('|', keys %CMDSUPERSCRIPTS_R);
 $SUPERCMD_RE_R    = qr{$SUPERCMD_RE_R};
+
+our $DINGS_RE_R = join('|', keys %DINGS_R);
+$DINGS_RE_R    = qr{$DINGS_RE_R};
+
 
 =head1 AUTHOR
 

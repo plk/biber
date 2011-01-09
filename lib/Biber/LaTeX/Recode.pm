@@ -57,7 +57,8 @@ full  => Also converts symbols, Greek letters, dingbats, negated symbols, and
 =cut
 
 
-our $DefaultScheme = 'extra';
+our $DefaultScheme_d = 'extra';
+our $DefaultScheme_e = 'full';
 
 
 =head2 latex_decode($text, @options)
@@ -85,7 +86,7 @@ sub latex_decode {
     my %opts      = @_;
     my $norm      = exists $opts{normalize} ? $opts{normalize} : 1;
     my $norm_form = exists $opts{normalization} ? $opts{normalization} : 'NFC';
-    my $scheme    = exists $opts{scheme} ? $opts{scheme} : $DefaultScheme;
+    my $scheme    = exists $opts{scheme} ? $opts{scheme} : $DefaultScheme_d;
     croak "invalid scheme name '$scheme'"
         unless ( $scheme eq 'full' or $scheme eq 'base' or $scheme eq 'extra' );
     my $strip_outer_braces =
@@ -160,9 +161,10 @@ Converts LaTeX character macros to UTF-8
 sub latex_encode {
   my $text = NFD(shift);
   my %opts = @_;
-  my $scheme    = exists $opts{scheme} ? $opts{scheme} : $DefaultScheme;
+  my $scheme    = exists $opts{scheme} ? $opts{scheme} : $DefaultScheme_e;
 
   # choose the diacritics set to use
+  my %DIAC_R = _get_diac_r($scheme);
   my $DIAC_RE_R;
   if ( $scheme eq 'base' ) {
     $DIAC_RE_R = $DIAC_RE_BASE_R;
@@ -171,26 +173,39 @@ sub latex_encode {
     $DIAC_RE_R = $DIAC_RE_EXTRA_R;
   }
 
+  # choose the macro set to use
   my ($WORDMAC_R, $WORDMAC_RE_R) = _get_mac_r($scheme);
 
-  $text =~ s|([\\{}])|\\$1|g unless $opts{latex_source};
+  if ( $scheme eq 'full' ) {
+    $text =~ s/($NEG_SYMB_RE_R)/"\\not\\" . $NEGATEDSYMBOLS_R{$1}/ge;
+    $text =~ s/($SUPER_RE_R)/"\\textsuperscript{" . $SUPERSCRIPTS_R{$1} . "}"/ge;
+    $text =~ s/($SUPERCMD_RE_R)/"\\textsuperscript{\\" . $CMDSUPERSCRIPTS_R{$1} . "}"/ge;
+    $text =~ s/($DINGS_RE_R)/"\\dings{" . $DINGS_R{$1} . "}"/ge;
+  }
+
+  $text =~ s/\{(\p{L}\p{M}*)\}($ACCENTS_RE_R)/"\\" . $ACCENTS_R{$2} . "{$1}"/ge;
+  $text =~ s/(\p{L}\p{M}*)($ACCENTS_RE_R)/"\\" . $ACCENTS_R{$2} . "{$1}"/ge;
+
 	$text =~ s{
         (\P{M})($DIAC_RE_R)($DIAC_RE_R)($DIAC_RE_R)
         }{
-        "\\" . $DIACRITICS_R{$4} . '{' . "\\" . $DIACRITICS_R{$3} . '{' . "\\" . $DIACRITICS_R{$2} . _get_diac_last_r($1,$2) . '}}'
+        "\\" . $DIAC_R{$4} . '{' . "\\" . $DIAC_R{$3} . '{' . "\\" . $DIAC_R{$2} . _get_diac_last_r($1,$2) . '}}'
         }gex;
 	$text =~ s{
         (\P{M})($DIAC_RE_R)($DIAC_RE_R)
         }{
-        "\\" . $DIACRITICS_R{$3} . '{' . "\\" . $DIACRITICS_R{$2} . _get_diac_last_r($1,$2) . '}'
+        "\\" . $DIAC_R{$3} . '{' . "\\" . $DIAC_R{$2} . _get_diac_last_r($1,$2) . '}'
         }gex;
 	$text =~ s{
         (\P{M})($DIAC_RE_R)
         }{
-        "\\" . $DIACRITICS_R{$2} . _get_diac_last_r($1,$2)
+        "\\" . $DIAC_R{$2} . _get_diac_last_r($1,$2)
         }gex;
-	$text =~ s/\Q($WORDMAC_RE_R)\E/$WORDMACROS_R{$1}/ge;
-	return $text
+
+  # General macros (excluding special encoding excludes)
+	$text =~ s/($WORDMAC_RE_R)/"{\\" . $WORDMACROS_R{$1} . '}'/ge;
+
+	return $text;
 }
 
 # Helper subroutines
@@ -211,7 +226,7 @@ sub _get_diac_r {
         return %DIACRITICS_R;
     }
     else {
-        return ( %DIACRITICS_R, %DIACRITICSEXTRA_R );
+        return ( %DIACRITICS_R, %DIACRITICSEXTRA_R);
     }
 }
 
@@ -244,6 +259,10 @@ sub _get_mac_r {
     }
     else {
         %macs = ( %WORDMACROS_R, %WORDMACROSEXTRA_R, %PUNCTUATION_R );
+    }
+
+    foreach my $e (keys %ENCODE_EXCLUDE_R) {
+      delete($macs{$e});
     }
     return (\%macs, join( '|', sort { length $b <=> length $a } keys %macs ));
 }
