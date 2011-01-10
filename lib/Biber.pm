@@ -1532,7 +1532,7 @@ sub generate_final_sortinfo {
   foreach my $citekey ($section->get_citekeys) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
-    # Only generate extrayear and extraapha if skiplab is not set.
+    # Only generate extrayear and extraalpha if skiplab is not set.
     # Don't forget that skiplab is implied for set members
     unless (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
       my $nameyear_extrayear = $be->get_field('nameyear_extrayear');
