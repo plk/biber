@@ -500,7 +500,8 @@ using this package), otherwise «utf8» (for XeTeX or LuaTeX) or
 
 \begin{enumerate}
 \item Decodes the \verb+.bib+ into UTF-8 if it is not UTF-8 already
-\item Decodes LaTeX character macros into UTF-8
+\item Decodes LaTeX character macros into UTF-8 (See also the
+    \verb+biber --help+ output for the \verb+--decodecharsset+ option)
 \item Encodes the output so that the \verb+.bbl+ is in
   the encoding that \verb+bblencoding+ specifies
 \item Warns if it is asked to output to the \verb+.bbl+ any UTF-8
@@ -526,7 +527,9 @@ potential (albeit rarely encountered) problems which you should be aware of:
   here is to switch to a TeX engine with full UTF-8 support like XeTeX or
   LuaTeX as these don't use or need \verb+inputenc+. However, you can also
   try the \verb+--bblsafechars+ option which will try to convert any UTF-8
-  chars into LaTeX macros on output.
+  chars into LaTeX macros on output. See also the \verb+biber --help+
+  output for the \verb+--bblsafecharsset+ option which can customise the
+  set of conversion characters to use.
 \item If your \verb+bblencoding+ is not UTF-8, and you are using some
   UTF-8 equivalent LaTeX character macros in your \verb+.bib+, then
   some \verb+.bbl+ fields (currently only \verb+\sortinit{}+) might

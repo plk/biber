@@ -30,10 +30,12 @@ GetOptions(
            'bibencoding|e=s',
            'bblencoding|E=s',
            'bblsafechars',
+           'bblsafecharsset=s',
            'collate|C',
            'collate_options|c=s',
            'configfile|g=s',
            'convert_control',
+           'decodecharsset=s',
            'debug|D',
            'fastsort|f',
            'help|h|?',
@@ -364,7 +366,24 @@ Options:
       Try to convert UTF-8 chars into LaTeX macros when writing the .bbl
       This can prevent unknown char errors when using PDFLaTeX and inputenc
       as this doesn't understand all of UTF-8. Note, it is better to switch
-      to XeTeX or LuaTeX to avoid this situation.
+      to XeTeX or LuaTeX to avoid this situation. Without argument uses a
+      generous set of conversions.
+
+  --bblsafecharsset=base|extra|full
+      The set of character included in the conversion routine for
+      --bblsafechars. Set to "full" to try harder with a much
+      larger set or "base" to use a minimal set. Default is "extra" which is
+      between "base" and "full". You may need to load more macro packages
+      to deal with the results of "full" (Dings, Greek characters, special
+      symbols etc.)
+
+  --decodecharsset=base|extra|full
+      The set of character included in the conversion routine when decoding
+      LaTeX macros into UTF-8 (which happens when --bblencoding|-E is set to
+      UTF-8) Set to "full" to try harder with a much larger set or "base" to
+      use a minimal set. Default is "extra" which is between "base" and "full".
+      You may want to try "full" if you want, for example, to sort more
+      obscure UTF-8 characters in the .bib
 
   --bibdata|-d <files>
       Use <files> as bibliography databases (comma separated list).

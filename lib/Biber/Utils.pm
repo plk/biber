@@ -157,7 +157,8 @@ sub normalise_string_sort {
   # Don't bother if output is UTF-8 as in this case, we've already decoded everthing
   # before we read the file (see Biber.pm)
   unless (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
-    $str = latex_decode($str, strip_outer_braces => 1);
+    $str = latex_decode($str, strip_outer_braces => 1,
+                              scheme => Biber::Config->getoption('decodecharsset'));
   }
   return normalise_string_common($str);
 }
@@ -176,7 +177,8 @@ sub normalise_string {
   # First replace ties with spaces or they will be lost
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
   if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
-    $str = latex_decode($str, strip_outer_braces => 1);
+    $str = latex_decode($str, strip_outer_braces => 1,
+                              scheme => Biber::Config->getoption('decodecharsset'));
   }
   return normalise_string_common($str);
 }

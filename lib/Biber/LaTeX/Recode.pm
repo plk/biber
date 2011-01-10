@@ -162,7 +162,8 @@ sub latex_encode {
   my $text = NFD(shift);
   my %opts = @_;
   my $scheme    = exists $opts{scheme} ? $opts{scheme} : $DefaultScheme_e;
-
+  croak "invalid scheme name '$scheme'"
+    unless ( $scheme eq 'full' or $scheme eq 'base' or $scheme eq 'extra' );
   # choose the diacritics set to use
   my %DIAC_R = _get_diac_r($scheme);
   my $DIAC_RE_R;
@@ -184,6 +185,9 @@ sub latex_encode {
   }
 
   # Accents
+  # special cases such as "\x0131\x{304}" -> '\={\i}'
+  $text =~ s/($WORDMAC_RE_R)($ACCENTS_RE_R)/"\\" . $ACCENTS_R{$2} . "{\\" . $WORDMAC_R->{$1} . "}"/ge;
+
   $text =~ s/\{(\p{L}\p{M}*)\}($ACCENTS_RE_R)/"\\" . $ACCENTS_R{$2} . "{$1}"/ge;
   $text =~ s/(\p{L}\p{M}*)($ACCENTS_RE_R)/"\\" . $ACCENTS_R{$2} . "{$1}"/ge;
 
@@ -191,12 +195,12 @@ sub latex_encode {
   $text =~ s{
               (\P{M})($DIAC_RE_R)($DIAC_RE_R)($DIAC_RE_R)
           }{
-            "\\" . $DIAC_R{$4} . '{' . "\\" . $DIAC_R{$3} . '{' . "\\" . $DIAC_R{$2} . _get_diac_last_r($1,$2) . '}}'
+            "\\" . $DIAC_R{$4} . "{\\" . $DIAC_R{$3} . "{\\" . $DIAC_R{$2} . _get_diac_last_r($1,$2) . '}}'
           }gex;
   $text =~ s{
               (\P{M})($DIAC_RE_R)($DIAC_RE_R)
           }{
-            "\\" . $DIAC_R{$3} . '{' . "\\" . $DIAC_R{$2} . _get_diac_last_r($1,$2) . '}'
+            "\\" . $DIAC_R{$3} . "{\\" . $DIAC_R{$2} . _get_diac_last_r($1,$2) . '}'
           }gex;
   $text =~ s{
               (\P{M})($DIAC_RE_R)
@@ -205,7 +209,8 @@ sub latex_encode {
           }gex;
 
   # General macros (excluding special encoding excludes)
-  $text =~ s/($WORDMAC_RE_R)/"{\\" . $WORDMACROS_R{$1} . '}'/ge;
+  $text =~ s/($WORDMAC_RE_R)/"{\\" . $WORDMAC_R->{$1} . '}'/ge;
+
 
   return $text;
 }

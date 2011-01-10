@@ -105,9 +105,12 @@ our %CONFIG_DEFAULT_BIBER = (
   bibdata            =>  undef,
   bibdatatype        => 'bibtex',
   bibencoding        => 'UTF-8',
+  bblsafechars       => 0,
+  bblsafecharsset    => 'extra',
   collate            => 1,
   collate_options    => { level => 4 },
   debug              => 0,
+  decodecharsset     => 'extra',
   displaymode        => $DISPLAYMODE_DEFAULT, # eventually, shall be moved to biblatex options
   mincrossrefs       => 2,
   nolog              => 0,

@@ -331,7 +331,8 @@ sub _generatesortinfo {
     if (encode($bblenc, $init) eq '?') { # Malformed data encoding char
       # So convert to macro
       require Biber::LaTeX::Recode;
-      my $initd = Biber::LaTeX::Recode::latex_encode($init, latex_source => 1);
+      my $initd = Biber::LaTeX::Recode::latex_encode($init,
+                                                     scheme => Biber::Config->getoption('bblsafecharsset'));
       # warn only on second sorting pass to avoid user confusion
       if ($BIBER_SORT_FIRSTPASSDONE) {
         $logger->warn("The character '$init' cannot be encoded in '$bblenc'. sortinit will be set to macro '$initd' for entry '$citekey'");

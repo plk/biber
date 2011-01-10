@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 9;
+use Test::More tests => 10;
 
 use Biber;
 use Biber::Utils;
@@ -110,7 +110,6 @@ my $encode5 = q|  \entry{test}{book}{}
 
 |;
 
-
 my $encode6 = q|  \entry{test}{book}{}
     \name{labelname}{1}{%
       {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
@@ -128,7 +127,30 @@ my $encode6 = q|  \entry{test}{book}{}
     \field{labelyear}{1999}
     \count{uniquename}{0}
     \true{singletitle}
-    \field{title}{\`{a} titl\'{e}}
+    \field{title}{↑\`{a} titl\'{e}}
+    \field{year}{1999}
+  \endentry
+
+|;
+
+my $encode7 = q|  \entry{test}{book}{}
+    \name{labelname}{1}{%
+      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+    }
+    \name{author}{1}{%
+      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+    }
+    \list{publisher}{1}{%
+      {A press}%
+    }
+    \strng{namehash}{EE1}
+    \strng{fullhash}{EE1}
+    \field{labelalpha}{Enc99}
+    \field{sortinit}{E}
+    \field{labelyear}{1999}
+    \count{uniquename}{0}
+    \true{singletitle}
+    \field{title}{{\uparrow}\`{a} titl\'{e}}
     \field{year}{1999}
   \endentry
 
@@ -184,7 +206,7 @@ $output->output;
 is($outvar, encode(Biber::Config->getoption('bblencoding'), $encode5), 'UTF-8 .bib -> latin1 .bbl');
 
 # UTF-8 .bib -> UTF-8 with --bblsafechars
-$biber->parse_ctrlfile('encoding5.bcf');
+$biber->parse_ctrlfile('encoding6.bcf');
 $biber->set_output_obj(Biber::Output::Test->new());
 # Biber options
 Biber::Config->setoption('bibencoding', 'UTF-8');
@@ -198,6 +220,23 @@ $output->set_output_target_file(\$outvar);
 # Write the output to the target
 $output->output;
 is($outvar, encode(Biber::Config->getoption('bblencoding'), $encode6), 'UTF-8 .bib -> UTF-8 .bbl, safechars');
+
+# UTF-8 .bib -> UTF-8 with --bblsafechars and --bblcharsset=full
+$biber->parse_ctrlfile('encoding6.bcf');
+$biber->set_output_obj(Biber::Output::Test->new());
+# Biber options
+Biber::Config->setoption('bibencoding', 'UTF-8');
+Biber::Config->setoption('bblencoding', 'UTF-8');
+Biber::Config->setoption('bblsafechars', 1);
+Biber::Config->setoption('bblsafecharsset', 'full');
+# Now generate the information
+$biber->prepare;
+# Get reference to output object
+$output = $biber->get_output_obj;
+$output->set_output_target_file(\$outvar);
+# Write the output to the target
+$output->output;
+is($outvar, encode(Biber::Config->getoption('bblencoding'), $encode7), 'UTF-8 .bib -> UTF-8 .bbl, bblsafecharsset=full');
 
 # UTF-8 .bib -> Latin9 .bbl
 $biber->parse_ctrlfile('encoding2.bcf');

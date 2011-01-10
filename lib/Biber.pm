@@ -646,7 +646,8 @@ sub parse_bibtex {
       or $logger->logcroak("Can't read $ufilename");
     require Biber::LaTeX::Recode;
     $logger->info('Decoding LaTeX character macros into UTF-8');
-    $buf = Biber::LaTeX::Recode::latex_decode($buf, strip_outer_braces => 1);
+    $buf = Biber::LaTeX::Recode::latex_decode($buf, strip_outer_braces => 1,
+                                                    scheme => Biber::Config->getoption('decodecharsset'));
 
     File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
         or $logger->logcroak("Can't write $ufilename");
@@ -2029,7 +2030,8 @@ sub create_output_misc {
     # Decode UTF-8 -> LaTeX macros if asked to
     if (Biber::Config->getoption('bblsafechars')) {
       require Biber::LaTeX::Recode;
-      $pa = Biber::LaTeX::Recode::latex_encode($pa, latex_source => 1);
+      $pa = Biber::LaTeX::Recode::latex_encode($pa,
+                                               scheme => Biber::Config->getoption('bblsafecharsset'));
     }
     $output_obj->add_output_head("\\preamble{%\n$pa%\n}\n\n");
   }
