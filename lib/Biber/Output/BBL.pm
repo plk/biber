@@ -155,9 +155,6 @@ sub set_output_entry {
     $opts = $be->get_field('options');
   }
 
-  $acc .= "% sortstring = " . $be->get_field('sortstring') . "\n"
-    if (Biber::Config->getoption('debug') || Biber::Config->getblxoption('debug'));
-
   $acc .= "  \\entry{$citecasekey}{" . $be->get_field('entrytype') . "}{$opts}\n";
 
   # Generate set information
