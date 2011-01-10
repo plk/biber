@@ -395,7 +395,7 @@
       <bcf:field fieldtype="field" datatype="literal">shortseries</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">shorttitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">sortkey</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" skip_output="true">sortname</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" skip_output="true">sortname</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">sorttitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">sortyear</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">subtitle</bcf:field>
