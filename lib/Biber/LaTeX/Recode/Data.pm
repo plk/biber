@@ -913,6 +913,7 @@ our %GREEK = (
 
 our %GREEK_R = reverse %GREEK;
 
+# Things we don't want to change when encoding as this would break LaTeX
 our %ENCODE_EXCLUDE_R = (
                          chr(0x22)	=> 1, # \textquotedbl
                          chr(0x23)	=> 1, # \texthash
@@ -926,7 +927,7 @@ our %ENCODE_EXCLUDE_R = (
                          chr(0x3e)	=> 1, # \textgreater
                          chr(0x5c)	=> 1, # \textbackslash
                          chr(0x5e)	=> 1, # \textasciicircum
-                         chr(0x5f) => 1,  # \textunderscore
+                         chr(0x5f)      => 1, # \textunderscore
                          chr(0x60)	=> 1, # \textasciigrave
                          chr(0x67)	=> 1, # \textg
                          chr(0x7b)	=> 1, # \textbraceleft

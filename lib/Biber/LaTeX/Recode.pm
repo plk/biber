@@ -27,9 +27,9 @@ Version 0.01
 
     my $string       = 'Muḥammad ibn Mūsā al-Khwārizmī';
     my $latex_string = latex_encode($string);
-        # => 'Mu\\d{h}ammad ibn M\\=us\=a al-Khw\\=arizm\\={\\i}'
+        # => 'Mu\d{h}ammad ibn M\=us\=a al-Khw\=arizm\={\i}'
 
-    my $string = 'Mu\\d{h}ammad ibn M\\=us\=a al-Khw\\=arizm\\={\\i}';
+    my $string = 'Mu\d{h}ammad ibn M\=us\=a al-Khw\=arizm\={\i}';
     my $utf8_string   = latex_decode($string);
         # => 'Muḥammad ibn Mūsā al-Khwārizmī'
 
@@ -188,26 +188,26 @@ sub latex_encode {
   $text =~ s/(\p{L}\p{M}*)($ACCENTS_RE_R)/"\\" . $ACCENTS_R{$2} . "{$1}"/ge;
 
   # Diacritics
-	$text =~ s{
-        (\P{M})($DIAC_RE_R)($DIAC_RE_R)($DIAC_RE_R)
-        }{
-        "\\" . $DIAC_R{$4} . '{' . "\\" . $DIAC_R{$3} . '{' . "\\" . $DIAC_R{$2} . _get_diac_last_r($1,$2) . '}}'
-        }gex;
-	$text =~ s{
-        (\P{M})($DIAC_RE_R)($DIAC_RE_R)
-        }{
-        "\\" . $DIAC_R{$3} . '{' . "\\" . $DIAC_R{$2} . _get_diac_last_r($1,$2) . '}'
-        }gex;
-	$text =~ s{
-        (\P{M})($DIAC_RE_R)
-        }{
-        "\\" . $DIAC_R{$2} . _get_diac_last_r($1,$2)
-        }gex;
+  $text =~ s{
+              (\P{M})($DIAC_RE_R)($DIAC_RE_R)($DIAC_RE_R)
+          }{
+            "\\" . $DIAC_R{$4} . '{' . "\\" . $DIAC_R{$3} . '{' . "\\" . $DIAC_R{$2} . _get_diac_last_r($1,$2) . '}}'
+          }gex;
+  $text =~ s{
+              (\P{M})($DIAC_RE_R)($DIAC_RE_R)
+          }{
+            "\\" . $DIAC_R{$3} . '{' . "\\" . $DIAC_R{$2} . _get_diac_last_r($1,$2) . '}'
+          }gex;
+  $text =~ s{
+              (\P{M})($DIAC_RE_R)
+          }{
+            "\\" . $DIAC_R{$2} . _get_diac_last_r($1,$2)
+          }gex;
 
   # General macros (excluding special encoding excludes)
-	$text =~ s/($WORDMAC_RE_R)/"{\\" . $WORDMACROS_R{$1} . '}'/ge;
+  $text =~ s/($WORDMAC_RE_R)/"{\\" . $WORDMACROS_R{$1} . '}'/ge;
 
-	return $text;
+  return $text;
 }
 
 # Helper subroutines
@@ -263,6 +263,7 @@ sub _get_mac_r {
         %macs = ( %WORDMACROS_R, %WORDMACROSEXTRA_R, %PUNCTUATION_R );
     }
 
+    # don't encode things which latex needs like braces etc.
     foreach my $e (keys %ENCODE_EXCLUDE_R) {
       delete($macs{$e});
     }
