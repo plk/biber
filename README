@@ -19,7 +19,6 @@ REQUIREMENTS
     * IPC::Cmd and IPC::Run
     * File::Slurp::Unicode
     * Readonly (but Readonly::XS is highly recommended for performance reasons)
-    * LaTeX::Decode
     * List::AllUtils
     * Log::Log4perl
     * XML::LibXML::Simple (XML::LibXML clone of XML::Simple)
