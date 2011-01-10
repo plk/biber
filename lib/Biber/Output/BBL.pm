@@ -467,7 +467,6 @@ sub output {
     foreach my $entry (@{$data->{ENTRIES}{$secnum}{strings}}) {
       my $entry_string;
       # If requested to convert UTF-8 to macros ...
-      # Deprecated - users should switch to XeTeX or LuaTeX
       if (Biber::Config->getoption('bblsafechars')) {
         $logger->info('Converting UTF-8 to TeX macros on output to .bbl. Please consider switching to XeTeX or LuaTeX instead!');
         require Biber::LaTeX::Recode;
@@ -486,7 +485,6 @@ sub output {
       foreach my $sh (@$sec_los) {
         my $sh_string;
         # If requested to convert UTF-8 to macros ...
-        # Deprecated - users should switch to XeTeX or LuaTeX
         if (Biber::Config->getoption('bblsafechars')) {
           require Biber::LaTeX::Recode;
           $sh_string = Biber::LaTeX::Recode::latex_encode($sh, latex_source => 1);

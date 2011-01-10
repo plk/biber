@@ -539,7 +539,7 @@ Biber::Config->setblxoption('sorting_label', [
 
 Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
 # Set nosort for tests, skipping "The " in titles so L7 should sort before L6
-Biber::Config->setoption('nosort', { type_title => q/\AThe\s*/ });
+Biber::Config->setoption('nosort', { type_title => q/\AThe\s+/ });
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;

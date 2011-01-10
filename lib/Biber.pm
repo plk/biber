@@ -2019,10 +2019,14 @@ sub create_output_misc {
   my $self = shift;
   my $output_obj = $self->get_output_obj;
 
-  if ($self->{preamble}) {
-    $output_obj->add_output_head("\\preamble{%\n" .
-                                 join("%\n", @{$self->{preamble}}) .
-                                 "%\n}\n\n");
+  if (my $pa = $self->{preamble}) {
+    $pa = join("%\n", @$pa);
+    # Decode UTF-8 -> LaTeX macros if asked to
+    if (Biber::Config->getoption('bblsafechars')) {
+      require Biber::LaTeX::Recode;
+      $pa = Biber::LaTeX::Recode::latex_encode($pa, latex_source => 1);
+    }
+    $output_obj->add_output_head("\\preamble{%\n$pa%\n}\n\n");
   }
 
   $output_obj->add_output_tail("\\endinput\n\n");

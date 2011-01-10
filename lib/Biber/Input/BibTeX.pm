@@ -285,7 +285,7 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     if ( $entry->metatype == BTE_PREAMBLE ) {
       # Only push the preambles from the file if we haven't seen this data file before
       unless ($BIBER_DATAFILE_REFS{$basefilename} > 1) {
-        push @preamble, $entry->value;
+        push @preamble, decode_utf8($entry->value);
       }
       next;
     }
