@@ -634,6 +634,11 @@ sub parse_bibtex {
     File::Copy::copy($filename, $ufilename);
   }
 
+  # Force bblsafechars flag if output to ASCII
+  if (Biber::Config->getoption('bblencoding') =~ /(?:x-)ascii/xmsi) {
+    Biber::Config->setoption('bblsafechars', 1);
+  }
+
   # Decode LaTeX to UTF8 if output is UTF-8
   if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
     require File::Slurp::Unicode;

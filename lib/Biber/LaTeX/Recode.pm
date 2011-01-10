@@ -58,7 +58,7 @@ full  => Also converts symbols, Greek letters, dingbats, negated symbols, and
 
 
 our $DefaultScheme_d = 'extra';
-our $DefaultScheme_e = 'full';
+our $DefaultScheme_e = 'extra';
 
 
 =head2 latex_decode($text, @options)
