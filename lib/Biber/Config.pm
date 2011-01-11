@@ -435,23 +435,9 @@ sub incr_seenkey {
 #        seen_extrayear
 #============================
 
-=head2 get_seen_extrayear
-
-    Get the counter of extrayear
-
-    Biber::Config->get_seen_extrayear($ay);
-
-=cut
-
-sub get_seen_extrayear {
-  shift; # class method so don't care about class name
-  my $ay = shift;
-  return $CONFIG->{state}{seen_extrayear}{$ay};
-}
-
 =head2 incr_seen_extrayear
 
-    Increment the counter for extrayear
+    Increment and return the counter for extrayear
 
     Biber::Config->incr_seen_extrayear($ay);
 
@@ -460,8 +446,7 @@ sub get_seen_extrayear {
 sub incr_seen_extrayear {
   shift; # class method so don't care about class name
   my $ay = shift;
-  $CONFIG->{state}{seen_extrayear}{$ay}++;
-  return;
+  return ++$CONFIG->{state}{seen_extrayear}{$ay};
 }
 
 #============================
@@ -521,23 +506,9 @@ sub incr_seen_nameyear_extrayear {
 #        seen_extraalpha
 #============================
 
-=head2 get_seen_extraalpha
-
-    Get the counter of extraalpha
-
-    Biber::Config->get_seen_extraalpha($hash);
-
-=cut
-
-sub get_seen_extraalpha {
-  shift; # class method so don't care about class name
-  my $ay = shift;
-  return $CONFIG->{state}{seen_extraalpha}{$ay};
-}
-
 =head2 incr_seen_extraalpha
 
-    Increment the counter for extraalpha
+    Increment and return the counter for extraalpha
 
     Biber::Config->incr_seen_extraalpha($ay);
 
@@ -546,8 +517,7 @@ sub get_seen_extraalpha {
 sub incr_seen_extraalpha {
   shift; # class method so don't care about class name
   my $ay = shift;
-  $CONFIG->{state}{seen_extraalpha}{$ay}++;
-  return;
+  return ++$CONFIG->{state}{seen_extraalpha}{$ay};
 }
 
 #============================

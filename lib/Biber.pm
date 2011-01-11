@@ -1542,17 +1542,15 @@ sub generate_final_sortinfo {
     # Don't forget that skiplab is implied for set members
     unless (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
       my $nameyear_extrayear = $be->get_field('nameyear_extrayear');
-      if (Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
-        Biber::Config->incr_seen_extrayear($nameyear_extrayear);
         if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
-          $be->set_field('extrayear', Biber::Config->get_seen_extrayear($nameyear_extrayear));
+          if (Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
+            $be->set_field('extrayear', Biber::Config->incr_seen_extrayear($nameyear_extrayear));
         }
       }
       my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha');
-      if (Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
-        Biber::Config->incr_seen_extraalpha($nameyear_extraalpha);
         if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
-          $be->set_field('extraalpha', Biber::Config->get_seen_extraalpha($nameyear_extraalpha));
+          if (Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
+            $be->set_field('extraalpha', Biber::Config->incr_seen_extraalpha($nameyear_extraalpha));
         }
       }
     }
@@ -1934,7 +1932,7 @@ sub prepare {
     $self->postprocess;                  # Main entry postprocessing
     $self->sortentries;                  # then we do a label sort pass and set a flag
     $BIBER_SORT_FIRSTPASSDONE = 1;
-    $self->generate_final_sortinfo;      # in here we generate the final sort string
+    $self->generate_final_sortinfo;      # in here we generate the final sort information
     $self->sortentries;                  # and then we do a final sort pass
     $self->create_output_section;        # Generate and push the section output into the
                                          # output object ready for writing
