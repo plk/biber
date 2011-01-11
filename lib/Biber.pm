@@ -489,8 +489,8 @@ sub parse_ctrlfile {
       push @{$sorting_final}, $sortingitems_final;
     }
   }
-  Biber::Config->setblxoption('sorting_label', $sorting_label);
-  Biber::Config->setblxoption('sorting_final', $sorting_final);
+  Biber::Config->setblxoption('sorting', {label => $sorting_label,
+                                          final => $sorting_final});
 
   # STRUCTURE schema (always global)
   # This should not be optional any more when biblatex implements this so take
@@ -1514,7 +1514,7 @@ sub postprocess_generate_sortinfo_label {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
-  $self->_generatesortinfo( $citekey, Biber::Config->getblxoption('sorting_label', $be->get_field('entrytype')));
+  $self->_generatesortinfo( $citekey, Biber::Config->getblxoption('sorting')->{label});
 }
 
 =head2 generate_final_sortinfo
@@ -1534,7 +1534,7 @@ sub generate_final_sortinfo {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   # This loop critically depends on the order of the citekeys which
-  # is why we have to do a first sorting pass before this one
+  # is why we have to do a first sorting pass before this
   foreach my $citekey ($section->get_citekeys) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
@@ -1554,7 +1554,7 @@ sub generate_final_sortinfo {
         }
       }
     }
-    $self->_generatesortinfo($citekey, Biber::Config->getblxoption('sorting_final', $be->get_field('entrytype')));
+    $self->_generatesortinfo($citekey, Biber::Config->getblxoption('sorting')->{final});
   }
   return;
 }
@@ -1586,10 +1586,10 @@ sub sortentries {
   # Get the right sortscheme
   my $sortscheme;
   if ($BIBER_SORT_FIRSTPASSDONE) {
-    $sortscheme = Biber::Config->getblxoption('sorting_final');
+    $sortscheme = Biber::Config->getblxoption('sorting')->{final};
   }
   else {
-    $sortscheme = Biber::Config->getblxoption('sorting_label');
+    $sortscheme = Biber::Config->getblxoption('sorting')->{label};
   }
 
   # Set up locale. Order of priority is:

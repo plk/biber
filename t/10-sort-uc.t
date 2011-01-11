@@ -10,6 +10,7 @@ use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata") ;
+my $S;
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
@@ -52,7 +53,7 @@ is_deeply([$section->get_shorthands], ['LS2', 'LS1','LS3','LS4'], 'U::C tailorin
 
 
 # Descending name in Swedish collation
-Biber::Config->setblxoption('sorting_label', [
+$S = [
                                                     [
                                                      {},
                                                      {'presort'    => {}}
@@ -70,9 +71,9 @@ Biber::Config->setblxoption('sorting_label', [
                                                      {'sorttitle'  => {}},
                                                      {'title'      => {}}
                                                     ]
-                                                   ]);
+                                                   ];
 
-Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+Biber::Config->setblxoption('sorting', {label => $S, final => $S});
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -80,14 +81,14 @@ $section = $biber->sections->get_section(0);
 is_deeply([$section->get_citekeys], ['LS3','LS4','LS1','LS2'], 'U::C tailoring descending - 1');
 
 # Local lower before upper setting
-Biber::Config->setblxoption('sorting_label', [
+$S = [
                                                     [
                                                      {sortupper => 0},
                                                      {'title'   => {}}
                                                     ]
-                                                   ]);
+                                                   ];
 
-Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+Biber::Config->setblxoption('sorting', {label => $S, final => $S});
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -99,15 +100,15 @@ is_deeply([$section->get_citekeys], ['LS4', 'LS3','LS2','LS1'], 'upper_before_lo
 # test is kept for things that are not sort distinguishable
 $biber->parse_ctrlfile('sort-uc.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
-Biber::Config->setblxoption('sorting_label', [
+$S = [
                                                     [
                                                      {sortupper => 0,
                                                       sortcase  => 0},
                                                      {'title'   => {}}
                                                     ]
-                                                   ]);
+                                                   ];
 
-Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+Biber::Config->setblxoption('sorting', {label => $S, final => $S});
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);

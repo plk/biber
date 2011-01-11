@@ -11,6 +11,7 @@ use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata") ;
 my $i = 1;
+my $S;
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
@@ -21,14 +22,14 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # relying on here for tests
 Biber::Config->setoption('sortcase', 1);
 Biber::Config->setoption('sortupper', 1);
-Biber::Config->setblxoption('sorting_label', [
+
+$S =  [
                                                 [
                                                  {},
                                                  {'author'     => {}},
                                                 ],
-                                               ]);
-Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
-
+                                               ];
+Biber::Config->setblxoption('sorting', {label => $S, final => $S});
 
 $biber->prepare;
 my $section = $biber->sections->get_section(0);

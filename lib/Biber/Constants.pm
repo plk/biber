@@ -211,62 +211,8 @@ our %CONFIG_DEFAULT_BIBLATEX =
                               ]
                   },
    presort => 'mm',
-   sorting_label   =>  [
-                [
-                 {final          => undef,
-                  sort_direction => undef},
-                 {
-                  'presort'    => {}},
-                ],
-                [
-                 {final          => 1,
-                  sort_direction => undef},
-                 {
-                  'sortkey'    => {}}
-                ],
-                [
-                 {final          => undef,
-                  sort_direction => undef},
-                 {
-                  'sortname'   => {}},
-                 {
-                  'author'     => {}},
-                 {
-                  'editor'     => {}},
-                 {
-                  'translator' => {}},
-                 {
-                  'sorttitle'  => {}},
-                 {
-                  'title'      => {}}
-                ],
-                [
-                 {final          => undef,
-                  sort_direction => undef},
-                 {
-                  'sortyear'   => {}},
-                 {
-                  'year'       => {}}
-                ],
-                [
-                 {final          => undef,
-                  sort_direction => undef},
-                 {
-                  'sorttitle'  => {}},
-                 {
-                  'title'      => {}}
-                ],
-                [
-                 {final          => undef,
-                  sort_direction => undef},
-                 {
-                  'volume'     => {}},
-                 {
-                  '0000'       => {}}
-                ]
-               ],
    structure => {
-  aliases     => {
+   aliases     => {
                    alias => [
                      {
                        name => { content => "conference" },
@@ -1553,7 +1499,63 @@ our %CONFIG_DEFAULT_BIBLATEX =
                  },
 }
   );
-$CONFIG_DEFAULT_BIBLATEX{sorting_final} = $CONFIG_DEFAULT_BIBLATEX{sorting_label};
+
+my $S =  [
+          [
+           {final          => undef,
+            sort_direction => undef},
+           {
+            'presort'    => {}},
+          ],
+          [
+           {final          => 1,
+            sort_direction => undef},
+           {
+            'sortkey'    => {}}
+          ],
+          [
+           {final          => undef,
+            sort_direction => undef},
+           {
+            'sortname'   => {}},
+           {
+            'author'     => {}},
+           {
+            'editor'     => {}},
+           {
+            'translator' => {}},
+           {
+            'sorttitle'  => {}},
+           {
+            'title'      => {}}
+          ],
+          [
+           {final          => undef,
+            sort_direction => undef},
+           {
+            'sortyear'   => {}},
+           {
+            'year'       => {}}
+          ],
+          [
+           {final          => undef,
+            sort_direction => undef},
+           {
+            'sorttitle'  => {}},
+           {
+            'title'      => {}}
+          ],
+          [
+           {final          => undef,
+            sort_direction => undef},
+           {
+            'volume'     => {}},
+           {
+            '0000'       => {}}
+          ]
+         ];
+
+$CONFIG_DEFAULT_BIBLATEX{sorting} = {label => $S, final => $S};
 
 # Set up some encoding aliases to map \inputen{c,x} encoding names to Encode
 # It seems that inputen{c,x} has a different idea of nextstep than Encode
@@ -1593,8 +1595,6 @@ our %CONFIG_SCOPE_BIBLATEX = (
   sortalphaothers   => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   sortexclusion     => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 0},
   sorting           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  sorting_label     => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  sorting_final     => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   sortlos           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   structure         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   terseinits        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
