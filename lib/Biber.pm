@@ -1577,6 +1577,13 @@ sub generate_final_sortinfo {
 =cut
 
 sub sortentries {
+  # Only bother with sorting a second time if there has been a data
+  # change since the first sort or if we need to run a second sort as it has a different
+  # scheme
+  # if ($BIBER_SORT_FIRSTPASSDONE) {
+  #   return unless ($BIBER_SORT_DATA_CHANGE or not Biber::Config->getblxoption('sorting')->{schemes_same});
+  # }
+
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -1613,10 +1620,10 @@ sub sortentries {
   my $thislocale = Biber::Config->getoption('sortlocale');
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
-    $logger->info("Sorting entries with built-in sort (with locale $thislocale) ...") if $BIBER_SORT_FIRSTPASSDONE;
+    $logger->info("Sorting entries with built-in sort (with locale $thislocale) ...") unless $BIBER_SORT_FIRSTPASSDONE;
 
     unless (setlocale(LC_ALL, $thislocale)) {
-      if ($BIBER_SORT_FIRSTPASSDONE) {
+      unless ($BIBER_SORT_FIRSTPASSDONE) {
         $logger->warn("Unavailable locale $thislocale");
         $self->{warnings}++;
       }
@@ -1708,7 +1715,7 @@ sub sortentries {
       $collopts->{locale} = $thislocale;
       if ($collopts->{table}) {
         my $t = delete $collopts->{table};
-        $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)") if $BIBER_SORT_FIRSTPASSDONE;
+        $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)") unless $BIBER_SORT_FIRSTPASSDONE;
       }
     }
 
@@ -1727,16 +1734,16 @@ sub sortentries {
       # is undef in this hash and we don't care about such things
       next unless defined($coll_changed{$k});
       if ($coll_changed{$k} ne $collopts->{$k}) {
-        $logger->warn("Overriding locale '$coll_locale' default tailoring '$k = $v' with '$k = " . $collopts->{$k} . "'") if $BIBER_SORT_FIRSTPASSDONE;
+        $logger->warn("Overriding locale '$coll_locale' default tailoring '$k = $v' with '$k = " . $collopts->{$k} . "'") unless $BIBER_SORT_FIRSTPASSDONE;
       }
     }
 
     my $UCAversion = $Collator->version();
     $logger->info("Sorting entries with Unicode::Collate (" .
-		  stringify_hash($collopts) . ", UCA version: $UCAversion)") if $BIBER_SORT_FIRSTPASSDONE;
+		  stringify_hash($collopts) . ", UCA version: $UCAversion)") unless $BIBER_SORT_FIRSTPASSDONE;
     # Log if U::C::L currently has no tailoring for used locale
     if ($Collator->getlocale eq 'default') {
-      $logger->info("No sort tailoring available for locale '$thislocale'") if $BIBER_SORT_FIRSTPASSDONE;
+      $logger->info("No sort tailoring available for locale '$thislocale'") unless $BIBER_SORT_FIRSTPASSDONE;
     }
 
     # Construct a multi-field Schwartzian Transform with the right number of
@@ -1929,8 +1936,6 @@ sub prepare {
     # been set in previous sections (like skiplab, skiplos)
     Biber::Config->reset_per_entry_options;
 
-    $BIBER_SORT_DATA_CHANGE = 0;         # reset sort flags
-    $BIBER_SORT_FIRSTPASSDONE = 0;
     $logger->info("Processing bib section $secnum");
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
@@ -1941,10 +1946,12 @@ sub prepare {
     $self->process_crossrefs;            # Process crossrefs/sets
     $self->validate_structure;           # Check bib structure
     $self->postprocess;                  # Main entry postprocessing
-    $self->sortentries;                  # then we do a label sort pass and set a flag
+    $BIBER_SORT_FIRSTPASSDONE = 0;
+    $self->sortentries;                  # then we do a label sort pass and set some flags
     $BIBER_SORT_FIRSTPASSDONE = 1;
+    $BIBER_SORT_DATA_CHANGE = 0;
     $self->generate_final_sortinfo;      # in here we generate the final sort information
-    $self->sortentries;                  # and then we do a final sort pass
+    $self->sortentries;                  # and then possibly do a final sort pass
     $self->create_output_section;        # Generate and push the section output into the
                                          # output object ready for writing
   }
