@@ -185,8 +185,9 @@ sub latex_encode {
   }
 
   # Accents
-  # special cases such as "\x0131\x{304}" -> '\={\i}'
-  $text =~ s/($WORDMAC_RE_R)($ACCENTS_RE_R)/"\\" . $ACCENTS_R{$2} . "{\\" . $WORDMAC_R->{$1} . "}"/ge;
+
+  # special case such as "i\x{304}" -> '\={\i}' - "i" needs the dot removing for accents
+  $text =~ s/i($ACCENTS_RE_R)/"\\" . $ACCENTS_R{$1} . "{\\i}"/ge;
 
   $text =~ s/\{(\p{L}\p{M}*)\}($ACCENTS_RE_R)/"\\" . $ACCENTS_R{$2} . "{$1}"/ge;
   $text =~ s/(\p{L}\p{M}*)($ACCENTS_RE_R)/"\\" . $ACCENTS_R{$2} . "{$1}"/ge;
