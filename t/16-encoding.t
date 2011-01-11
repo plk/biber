@@ -150,7 +150,7 @@ my $encode7 = q|  \entry{test}{book}{}
     \field{labelyear}{1999}
     \count{uniquename}{0}
     \true{singletitle}
-    \field{title}{{\uparrow}\`{a} titl\'{e}}
+    \field{title}{{$\uparrow$}\`{a} titl\'{e}}
     \field{year}{1999}
   \endentry
 

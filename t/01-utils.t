@@ -33,7 +33,7 @@ is( latex_decode('\alpha', scheme => 'full'), 'α', 'Latex decode 3'); # greek d
 # LaTeX encoding
 is( latex_encode('Muḥammad ibn Mūsā al-Khwārizmī'), 'Mu\d{h}ammad ibn M\={u}s\={a} al-Khw\={a}rizm\={\i}', 'latex encode 1');
 is( latex_encode('α'), 'α', 'latex encode 2'); # no greek encoding by default
-is( latex_encode('α', scheme => 'full'), '{\alpha}', 'latex encode 3'); # greek encoding with "full"
+is( latex_encode('α', scheme => 'full'), '{$\alpha$}', 'latex encode 3'); # greek encoding with "full"
 
 my $names = bless [
     (bless { namestring => '\"Askdjksdj, Bsadk Cklsjd', nameinitstring => '\"Askdjksdj, BC' }, 'Biber::Entry::Name'),

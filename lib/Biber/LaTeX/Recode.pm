@@ -212,9 +212,17 @@ sub latex_encode {
   # General macros (excluding special encoding excludes)
   $text =~ s/($WORDMAC_RE_R)/"{\\" . $WORDMAC_R->{$1} . '}'/ge;
 
+  # Only replace these if using "full" scheme
+  if ($scheme eq 'full') {
+    my %WORDMATHMAC_R = ( %PUNCTUATION_R, %SYMBOLS_R, %GREEK_R );
+    my $WORDMATHMAC_RE_R = join( '|', sort { length $b <=> length $a } keys %WORDMATHMAC_R );
+    # Math mode macros (excluding special encoding excludes)
+    $text =~ s/($WORDMATHMAC_RE_R)/"{\$\\" . $WORDMATHMAC_R{$1} . '$}'/ge;
+  }
 
   return $text;
 }
+
 
 # Helper subroutines
 
@@ -262,11 +270,10 @@ sub _get_mac_r {
          %macs = %WORDMACROS_R;
     }
     elsif ( $scheme eq 'full' ) {
-        %macs = ( %WORDMACROS_R, %WORDMACROSEXTRA_R, %PUNCTUATION_R, %SYMBOLS_R,
-            %GREEK_R );
+        %macs = ( %WORDMACROS_R, %WORDMACROSEXTRA_R );
     }
     else {
-        %macs = ( %WORDMACROS_R, %WORDMACROSEXTRA_R, %PUNCTUATION_R );
+        %macs = ( %WORDMACROS_R, %WORDMACROSEXTRA_R );
     }
 
     # don't encode things which latex needs like braces etc.
@@ -275,7 +282,6 @@ sub _get_mac_r {
     }
     return (\%macs, join( '|', sort { length $b <=> length $a } keys %macs ));
 }
-
 
 
 sub _get_diac_last_r {
