@@ -567,7 +567,7 @@ encoding. This is because some fields must be generated from the final
 sorting data which is only available after the LaTeX character macro
 decoding step.
 
-For example, suppose you were using PDFLaTeX with\\
+For example, suppose you are using PDFLaTeX with\\
 \verb+\usepackage[latin1]{inputenc}+ and the following \verb+.bib+
 entry:
 
@@ -583,8 +583,8 @@ entry:
 latin1 encoding and so the \verb+.bbl+ would be broken. In such cases
 when \verb+\sortinit{}+ is a char not valid in the \verb+bblencoding+,
 \verb+biber+ tries to replace the character with a suitable LaTeX
-macro. The solution is really to use UTF-8 \verb+bblencoding+ wherever
-possible. In extreme cases where even with UTF-8 \verb+bblencoding+,
+macro. The solution is really to use UTF-8 \verb+.bbl+ encoding whenever
+possible. In extreme cases where even with UTF-8 encoding,
 the char is not recognised by LaTeX due to an incomplete UTF-8
 implementation (as with \verb+inputenc+), this might also mean
 switching TeX engines to one that supports full UTF-8.
