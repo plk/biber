@@ -370,20 +370,12 @@ Options:
       generous set of conversions.
 
   --bblsafecharsset=base|extra|full
-      The set of character included in the conversion routine for
+      The set of characters included in the conversion routine for
       --bblsafechars. Set to "full" to try harder with a much
       larger set or "base" to use a minimal set. Default is "extra" which is
       between "base" and "full". You may need to load more macro packages
       to deal with the results of "full" (Dings, Greek characters, special
       symbols etc.)
-
-  --decodecharsset=base|extra|full
-      The set of character included in the conversion routine when decoding
-      LaTeX macros into UTF-8 (which happens when --bblencoding|-E is set to
-      UTF-8) Set to "full" to try harder with a much larger set or "base" to
-      use a minimal set. Default is "extra" which is between "base" and "full".
-      You may want to try "full" if you want, for example, to sort more
-      obscure UTF-8 characters in the .bib
 
   --bibdata|-d <files>
       Use <files> as bibliography databases (comma separated list).
@@ -417,6 +409,14 @@ Options:
       Converts the .bcf control file into html using an XSLT transform. Can
       be useful for debugging. File is named by appending \".html\"
       to .bcf file.
+
+  --decodecharsset=base|extra|full
+      The set of characters included in the conversion routine when decoding
+      LaTeX macros into UTF-8 (which happens when --bblencoding|-E is set to
+      UTF-8) Set to "full" to try harder with a much larger set or "base" to
+      use a minimal set. Default is "extra" which is between "base" and "full".
+      You may want to try "full" if you want, for example, to sort more
+      obscure UTF-8 characters in the .bib
 
   --debug|-D
       Turn on debugging for biber.

@@ -256,7 +256,7 @@ This is done using \verb+perl+ regular expressions which specify what to
 ignore in a field. You can specify as many patterns as you like for a
 specific field. Also available are some field type aliases so you can, for
 example, specify patterns for all name fields or all title fields. These
-field types all begin with the string ``\verb+type_+'', see Table
+field types all begin with the string «\verb+type_+», see Table
 \ref{tab:nst}.
 
 \begin{table}
@@ -315,7 +315,7 @@ details of the regular expression syntax\footnote{\url{http://perldoc.perl.org/p
 If a \verb+nosort+ option is found for a specific field, it will override
 any option for a type which also covers that field.
 
-Here is another example. Suppose you wanted to ignore ``The'' at the
+Here is another example. Suppose you wanted to ignore «The» at the
 beginning of a \verb+TITLE+ field when sorting, you could add this to your
 \verb+biber.conf+:
 
@@ -491,75 +491,23 @@ reverse order at UCA level 2.
 \verb+biber+ takes care of reencoding the \verb+.bib+ data as
 necessary. In normal use, \verb+biblatex+ passes its
 \verb+bibencoding+ option value to \verb+biber+ via the \verb+.bcf+
-file. It also passes an option \verb+bblencoding+ the value of which
-is derived from the \verb+inputenc+ package setting (if the user is
-using this package), otherwise «utf8» (for XeTeX or LuaTeX) or
-«ascii» (any other TeX engine).
+file. It also passes the value of its \verb+texencoding+ option (which
+maps to \verb+biber+'s \verb+bblencoding|-E+ option) the default value
+of which depends on which TeX engine and encoding packages you are
+using (see \verb+biblatex+ manual for details).
 
 \noindent \verb+biber+ performs the following tasks:
 
 \begin{enumerate}
 \item Decodes the \verb+.bib+ into UTF-8 if it is not UTF-8 already
-\item Decodes LaTeX character macros into UTF-8 (See also the
-    \verb+biber --help+ output for the \verb+--decodecharsset+ option)
+\item Decodes LaTeX character macros into UTF-8 if \verb+--bblencoding|-E+
+  is UTF-8
 \item Encodes the output so that the \verb+.bbl+ is in
-  the encoding that \verb+bblencoding+ specifies
+  the encoding that \verb+--bblencoding|-E+ specifies
 \item Warns if it is asked to output to the \verb+.bbl+ any UTF-8
   decoded LaTeX character macros which are not in the
-  \verb+bblencoding+ encoding. Replaces with a suitable LaTeX macro.
+  \verb+--bblencoding|-E+ encoding. Replaces with a suitable LaTeX macro
 \end{enumerate}
-
-\noindent As you can see from item 2 above, by default, \verb+biber+
-converts LaTeX character macros into UTF-8 internally. This is very
-useful as it means that things are sorted correctly but has two
-potential (albeit rarely encountered) problems which you should be aware of:
-
-\begin{itemize}
-\item If you are using PDFLaTeX and \verb+\usepackage[utf8]{inputenc}+, it
-  is possible that the UTF-8 characters resulting from \verb+biber+'s
-  internal LaTeX character macro decoding break \verb+inputenc+. This
-  is because \verb+inputenc+ does not implement all of UTF-8, only a
-  commonly used subset. 
-
-  An example--if you had \verb+\DJ+ in your \verb+.bib+,
-  \verb+biber+ decodes this correctly to «Đ» and this breaks \verb+inputenc+
-  because it doesn't understand that UTF-8 character. The real solution
-  here is to switch to a TeX engine with full UTF-8 support like XeTeX or
-  LuaTeX as these don't use or need \verb+inputenc+. However, you can also
-  try the \verb+--bblsafechars+ option which will try to convert any UTF-8
-  chars into LaTeX macros on output. See also the \verb+biber --help+
-  output for the \verb+--bblsafecharsset+ option which can customise the
-  set of conversion characters to use.
-\item If your \verb+bblencoding+ is not UTF-8, and you are using some
-  UTF-8 equivalent LaTeX character macros in your \verb+.bib+, then
-  some \verb+.bbl+ fields (currently only \verb+\sortinit{}+) might
-  end up with invalid characters in them, according to the \verb+.bbl+
-  encoding. This is because some fields must be generated from the
-  final sorting data which is only available after the LaTeX character
-  macro decoding step.
-
-  For example, suppose you were using PDFLaTeX with\\
-  \verb+\usepackage[latin1]{inputenc}+ and the following
-  \verb+.bib+ entry:
-
-  \begin{verbatim}
-@BOOK{citekey1,
-  AUTHOR = {{\v S}imple, Simon},
-}
-  \end{verbatim}
-
-  \noindent With normal LaTeX character macro decoding, the \verb+{\v S}+
-  is decoded into «Š» and so with name-first sorting, \verb+\sortinit{}+
-  would be «Š». This is an invalid character in latin1 encoding and so the
-  \verb+.bbl+ would be broken. In such cases when \verb+\sortinit{}+ is a
-  char not valid in the \verb+bblencoding+, \verb+biber+ tries to replace
-  the character with a suitable LaTeX macro. The solution is really to use
-  UTF-8 \verb+bblencoding+ wherever possible. In extreme cases where even
-  with UTF-8 \verb+bblencoding+, the char is not recognised by LaTeX
-  due to an incomplete UTF-8 implementation (as with \verb+inputenc+),
-  this might also mean switching TeX engines to one that supports
-  full UTF-8.
-\end{itemize}
 
 \noindent Normally, you do not need to set the encoding options on the
 \verb+biber+ command line as they are passed in the \verb+.bcf+ via
@@ -572,17 +520,111 @@ of preference:\\[2ex]
 \hspace*{1em}\verb+biber+ config file $\rightarrow$\\
 \hspace*{2em}\verb+.bcf+ control file
 
+\subsubsection{LaTeX macro decoding}
+
+\noindent As mentioned above, \verb+biber+ sometimes converts LaTeX
+character macros into UTF-8. In fact there are two situations in which
+this occurs.
+
+\begin{enumerate}
+\item When \verb+--bblencoding|-E+ is UTF-8
+\item Always for internal sorting purposes
+\end{enumerate}
+
+\noindent This decoding is very useful but take note of the following
+two scenarios, which relate to each of the two situations in which
+LaTeX macro decoding occurs:
+
+\minisec{Decoding when output is UTF-8}
+If you are using PDFLaTeX and \verb+\usepackage[utf8]{inputenc}+, it
+is possible that the UTF-8 characters resulting from \verb+biber+'s
+internal LaTeX character macro decoding break \verb+inputenc+. This is
+because \verb+inputenc+ does not implement all of UTF-8, only a
+commonly used subset.
+
+An example--if you had \verb+\DJ+ in your \verb+.bib+, \verb+biber+
+decodes this correctly to «Đ» and this breaks \verb+inputenc+ because
+it doesn't understand that UTF-8 character. The real solution here is
+to switch to a TeX engine with full UTF-8 support like XeTeX or LuaTeX
+as these don't use or need \verb+inputenc+. However, you can also try
+the \verb+--bblsafechars+ option which will try to convert any UTF-8
+chars into LaTeX macros on output. The \verb+biblatex+ option
+«\verb+texencoding=ascii+» (which corresponds to the \verb+biber+
+option «\verb+--bblencoding|-E+») will automatically set
+\verb+--bblsafechars+.
+
+See also the \verb+biber --help+ output for the
+\verb+--bblsafecharsset+ option which can customise the set of
+conversion characters to use.
+
+\minisec{Decoding for internal sorting}
+
+If your \verb+bblencoding+ is not UTF-8, and you are using some UTF-8
+equivalent LaTeX character macros in your \verb+.bib+, then some
+\verb+.bbl+ fields (currently only \verb+\sortinit{}+) might end up
+with invalid characters in them, according to the \verb+.bbl+
+encoding. This is because some fields must be generated from the final
+sorting data which is only available after the LaTeX character macro
+decoding step.
+
+For example, suppose you were using PDFLaTeX with\\
+\verb+\usepackage[latin1]{inputenc}+ and the following \verb+.bib+
+entry:
+
+\begin{verbatim}
+@BOOK{citekey1,
+  AUTHOR = {{\v S}imple, Simon},
+}
+\end{verbatim}
+
+\noindent With normal LaTeX character macro decoding, the
+\verb+{\v S}+ is decoded into «Š» and so with name-first sorting,
+\verb+\sortinit{}+ would be «Š». This is an invalid character in
+latin1 encoding and so the \verb+.bbl+ would be broken. In such cases
+when \verb+\sortinit{}+ is a char not valid in the \verb+bblencoding+,
+\verb+biber+ tries to replace the character with a suitable LaTeX
+macro. The solution is really to use UTF-8 \verb+bblencoding+ wherever
+possible. In extreme cases where even with UTF-8 \verb+bblencoding+,
+the char is not recognised by LaTeX due to an incomplete UTF-8
+implementation (as with \verb+inputenc+), this might also mean
+switching TeX engines to one that supports full UTF-8.
+
 \subsubsection{Examples}
 
 \biberex{biber}
 
-\noindent Read \verb+bibencoding+ and \verb+bblencoding+ from the
+\noindent Set \verb+bibencoding+ and \verb+bblencoding+ from the
 config file or \verb+.bcf+.
 
 \biberex{biber --bblencoding=latin2}
 
 \noindent Encode the \verb+.bbl+ as latin2, overriding the
 \verb+.bcf+.
+
+\biberex{biber --bblsafechars}
+
+\noindent Set \verb+bibencoding+ and \verb+bblencoding+ from the
+config file or \verb+.bcf+. Force encoding of UTF-8 chars to LaTeX
+macros using default conversion set.
+
+\biberex{biber --bblencoding=ascii}
+
+\noindent Encode the \verb+.bbl+ as ascii, overriding the
+\verb+.bcf+. Automatically sets \verb+--bblsafechars+ to force UTF-8
+to LaTeX macro conversion.
+
+\biberex{biber --bblencoding=ascii --bblsafecharsset=full}
+
+\noindent Encode the \verb+.bbl+ as ascii, overriding the
+\verb+.bcf+. Automatically sets \verb+--bblsafechars+ to force UTF-8
+to LaTeX macro conversion using the full set of conversions
+
+\biberex{biber --decodecharsset=full}
+
+\noindent Set \verb+bibencoding+ and \verb+bblencoding+ from the
+config file or \verb+.bcf+. Use the full LaTeX macro to UTF-8
+conversion set because you have some more obscure character macros in
+your \verb+.bib+ which you want to sort correctly
 
 \biberex{biber -u}
 
@@ -651,7 +693,7 @@ this:
 \end{verbatim}
 
 \noindent However you add the command to \verb+TeX-command-list+, customise the
-actual \verb+Biber+ command parameters as you want them, using ``\verb+%s+" as
+actual \verb+Biber+ command parameters as you want them, using «\verb+%s+» as
 the LaTeX file name place holder. Then define the following two functions
 in your \verb+.emacs+.
 
