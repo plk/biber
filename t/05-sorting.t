@@ -151,7 +151,7 @@ $S = [
         '0000'       => {}}
       ]
      ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 Biber::Config->setoption('nosort', { author => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ],
                                      translator => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ],
                                      # type_title should be not used as there is an
@@ -187,7 +187,7 @@ $S = [
         'editora'     => {}},
       ],
      ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 Biber::Config->setoption('sortcase', 0);
 
 # regenerate information
@@ -300,7 +300,7 @@ $S = [
                                                  {'urlday'   => {}}
                                                 ],
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -316,7 +316,7 @@ $S = [
                                                  {'publisher'    => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -331,7 +331,7 @@ $S = [
                                                  {'location'    => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -347,7 +347,7 @@ $S = [
                                                  {'institution'    => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -363,7 +363,7 @@ $S = [
                                                  {'institution'    => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -380,7 +380,7 @@ $S = [
                                                  {'institution'    => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -425,7 +425,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -469,7 +469,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 Biber::Config->setoption('sortcase', 1);
 # regenerate information
 $biber->prepare;
@@ -514,7 +514,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -558,7 +558,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 Biber::Config->setoption('sortcase', 0);
 # regenerate information
 $biber->prepare;
@@ -602,7 +602,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -647,7 +647,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -692,7 +692,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -737,7 +737,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -782,7 +782,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -826,7 +826,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -871,7 +871,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -918,7 +918,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -963,7 +963,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -1009,7 +1009,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -1053,7 +1053,7 @@ $S = [
                                                  {'title'      => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -1102,7 +1102,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -1163,7 +1163,7 @@ $S = [
                                                  {'title'      => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -1238,7 +1238,7 @@ $S = [
                                                  {'title'      => {}}
                                                 ],
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -1278,7 +1278,7 @@ $S = [
                                                  {'title'      => {}}
                                                 ],
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -1294,7 +1294,7 @@ $S = [
                                                  {'entrykey'    => {}},
                                                 ],
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -1339,7 +1339,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -1385,7 +1385,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
@@ -1401,7 +1401,7 @@ $S = [
                                                  {'citeorder'    => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S});
+Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;

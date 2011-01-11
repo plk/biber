@@ -26,6 +26,7 @@ use Log::Log4perl qw( :no_extra_logdie_message );
 use base 'Biber::Internals';
 use Config::General qw( ParseConfig );
 use Data::Dump;
+use Data::Compare;
 use Text::BibTeX; # Need this in here in order to reset @STRING macros per section
 our @ISA;
 
@@ -489,8 +490,10 @@ sub parse_ctrlfile {
       push @{$sorting_final}, $sortingitems_final;
     }
   }
+
   Biber::Config->setblxoption('sorting', {label => $sorting_label,
-                                          final => $sorting_final});
+                                          final => $sorting_final,
+                                          schemes_same => Compare($sorting_label, $sorting_final)});
 
   # STRUCTURE schema (always global)
   # This should not be optional any more when biblatex implements this so take
@@ -1544,17 +1547,24 @@ sub generate_final_sortinfo {
       my $nameyear_extrayear = $be->get_field('nameyear_extrayear');
         if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
           if (Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
+            $BIBER_SORT_DATA_CHANGE = 1;
             $be->set_field('extrayear', Biber::Config->incr_seen_extrayear($nameyear_extrayear));
         }
       }
       my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha');
         if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
           if (Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
+            $BIBER_SORT_DATA_CHANGE = 1;
             $be->set_field('extraalpha', Biber::Config->incr_seen_extraalpha($nameyear_extraalpha));
         }
       }
     }
-    $self->_generatesortinfo($citekey, Biber::Config->getblxoption('sorting')->{final});
+    # Only bother with re-generating sorting information if there has been a data
+    # change since the first sort or if we need to run a second sort as it has a different
+    # scheme
+    if ($BIBER_SORT_DATA_CHANGE or not Biber::Config->getblxoption('sorting')->{schemes_same}) {
+      $self->_generatesortinfo($citekey, Biber::Config->getblxoption('sorting')->{final});
+    }
   }
   return;
 }
@@ -1919,7 +1929,8 @@ sub prepare {
     # been set in previous sections (like skiplab, skiplos)
     Biber::Config->reset_per_entry_options;
 
-    $BIBER_SORT_FIRSTPASSDONE = 0;       # sanitise sortpass flag
+    $BIBER_SORT_DATA_CHANGE = 0;         # reset sort flags
+    $BIBER_SORT_FIRSTPASSDONE = 0;
     $logger->info("Processing bib section $secnum");
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on

@@ -17,6 +17,7 @@ our @EXPORT = qw{
   $BIBER_SORT_FINAL
   $BIBER_SORT_NULL
   $BIBER_SORT_FIRSTPASSDONE
+  $BIBER_SORT_DATA_CHANGE
   %BIBER_DATAFILE_REFS
   %NUMERICALMONTH
   %DISPLAYMODES
@@ -31,6 +32,7 @@ Readonly::Scalar our $BIBLATEX_VERSION => '1.1';
 our $BIBER_SORT_FINAL = 0;
 our $BIBER_SORT_NULL  = 0;
 our $BIBER_SORT_FIRSTPASSDONE = 0;
+our $BIBER_SORT_DATA_CHANGE = 0;
 
 # the name of the Biber configuration file, which should be
 # either returned by kpsewhich or located at "$HOME/.$BIBER_CONF_NAME"
@@ -1555,7 +1557,7 @@ my $S =  [
           ]
          ];
 
-$CONFIG_DEFAULT_BIBLATEX{sorting} = {label => $S, final => $S};
+$CONFIG_DEFAULT_BIBLATEX{sorting} = {label => $S, final => $S, schemes_same => 1};
 
 # Set up some encoding aliases to map \inputen{c,x} encoding names to Encode
 # It seems that inputen{c,x} has a different idea of nextstep than Encode
