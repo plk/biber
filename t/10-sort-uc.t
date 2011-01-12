@@ -73,7 +73,7 @@ $S = [
                                                     ]
                                                    ];
 
-Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
+Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -88,7 +88,7 @@ $S = [
                                                     ]
                                                    ];
 
-Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
+Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -108,7 +108,7 @@ $S = [
                                                     ]
                                                    ];
 
-Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
+Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);

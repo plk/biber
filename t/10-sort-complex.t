@@ -218,8 +218,8 @@ my $sc6 = q|  \entry{L3}{book}{}
 
 |;
 
-is_deeply( Biber::Config->getblxoption('sorting')->{label} , $sc1, 'first pass scheme');
-is_deeply( Biber::Config->getblxoption('sorting')->{final} , $sc2, 'second pass scheme');
+is_deeply( Biber::Config->getblxoption('sorting')->{default}{label} , $sc1, 'first pass scheme');
+is_deeply( Biber::Config->getblxoption('sorting')->{default}{final} , $sc2, 'second pass scheme');
 is( $out->get_output_entry('l4'), $sc3, '\alphaothers set by "and others"');
 is( $out->get_output_entry('l1'), $sc4, '2-pass - labelalpha after title');
 is( $out->get_output_entry('l2'), $sc5, '2-pass - labelalpha after title');

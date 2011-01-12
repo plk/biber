@@ -491,9 +491,10 @@ sub parse_ctrlfile {
     }
   }
 
-  Biber::Config->setblxoption('sorting', {label => $sorting_label,
-                                          final => $sorting_final,
-                                          schemes_same => Compare($sorting_label, $sorting_final)});
+  Biber::Config->setblxoption('sorting', {default => {label => $sorting_label,
+                                                      final => $sorting_final,
+                                                      schemes_same => Compare($sorting_label, $sorting_final)}
+                                         });
 
   # STRUCTURE schema (always global)
   # This should not be optional any more when biblatex implements this so take
@@ -1514,7 +1515,7 @@ sub generate_label_sortinfo {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   foreach my $citekey ($section->get_citekeys) {
-    $self->_generatesortinfo($citekey, Biber::Config->getblxoption('sorting')->{label});
+    $self->_generatesortinfo($citekey, Biber::Config->getblxoption('sorting')->{default}{label});
   }
   return;
 }
@@ -1562,7 +1563,7 @@ sub generate_final_sortinfo {
     # change since the first sort or if we need to run a second sort as it has a different
     # scheme
     if ($BIBER_SORT_DATA_CHANGE or not Biber::Config->getblxoption('sorting')->{schemes_same}) {
-      $self->_generatesortinfo($citekey, Biber::Config->getblxoption('sorting')->{final});
+      $self->_generatesortinfo($citekey, Biber::Config->getblxoption('sorting')->{default}{final});
     }
   }
   return;
@@ -1613,10 +1614,10 @@ sub sortentries {
   # Get the right sortscheme
   my $sortscheme;
   if ($BIBER_SORT_FIRSTPASSDONE) {
-    $sortscheme = Biber::Config->getblxoption('sorting')->{final};
+    $sortscheme = Biber::Config->getblxoption('sorting')->{default}{final};
   }
   else {
-    $sortscheme = Biber::Config->getblxoption('sorting')->{label};
+    $sortscheme = Biber::Config->getblxoption('sorting')->{default}{label};
   }
 
   # Set up locale. Order of priority is:

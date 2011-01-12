@@ -40,7 +40,7 @@ $S =  [
                                                        {'citeorder'    => {}}
                                                       ]
                                                      ];
-Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
+Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
 Biber::Config->setblxoption('labelyear', undef);
 
 # (re)generate informtion based on option settings
@@ -89,7 +89,7 @@ $S = [
                                                     ]
                                                    ];
 
-Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
+Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
@@ -136,7 +136,7 @@ $S = [
                                                     ]
                                                    ];
 
-Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
+Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
@@ -184,7 +184,7 @@ $S = [
                                                    ];
 
 
-Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
+Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
@@ -232,7 +232,7 @@ $S = [
                                                    ];
 
 
-Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
+Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
@@ -274,7 +274,7 @@ $S = [
                                                     ],
                                                    ];
 
-Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
+Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
@@ -317,7 +317,7 @@ $S = [
                                                     ],
                                                    ];
 
-Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
+Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
@@ -359,7 +359,7 @@ $S = [
                                                     ],
                                                    ];
 
-Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
+Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
@@ -411,7 +411,7 @@ $S = [
                                                     ]
                                                    ];
 
-Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
+Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
 Biber::Config->setblxoption('labelalpha', 1);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
@@ -465,7 +465,7 @@ $S = [
                                                     ]
                                                    ];
 
-Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
+Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
 Biber::Config->setblxoption('labelalpha', 1);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
@@ -500,7 +500,7 @@ $S = [
                                                     ],
                                                    ];
 
-Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
+Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
@@ -521,7 +521,7 @@ $S = [
                                                     ]
                                                    ];
 
-Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
+Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
@@ -538,7 +538,7 @@ $S = [
                                                     ]
                                                    ];
 
-Biber::Config->setblxoption('sorting', {label => $S, final => $S, schemes_same => 1});
+Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
 # Set nosort for tests, skipping "The " in titles so L7 should sort before L6
 Biber::Config->setoption('nosort', { type_title => q/\AThe\s+/ });
 
