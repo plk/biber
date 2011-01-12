@@ -190,7 +190,7 @@ sub parse_ctrlfile {
   my $ctrl_file_path = locate_biber_file($ctrl_file);
   Biber::Config->set_ctrlfile_path($ctrl_file_path);
 
-  $logger->logcroak("Cannot find control file '$ctrl_file'! - did you pass the \"backend=biber\" option to BibLaTeX?") unless -f "$ctrl_file";
+  $logger->logcroak("Cannot find control file '$ctrl_file'! - did you pass the \"backend=biber\" option to BibLaTeX?") unless ($ctrl_file_path and -e $ctrl_file_path);
 
   # Validate if asked to
   if (Biber::Config->getoption('validate_control')) {
