@@ -254,8 +254,8 @@ else {
     $bblfile = File::Spec->catfile($outdir, $file)
   }
 
-  # find and parse the .bcf control file
-  $biber->parse_ctrlfile(locate_biber_file($ctrlfile));
+  # parse the .bcf control file
+  $biber->parse_ctrlfile($ctrlfile);
 }
 
 # Postprocess biber options now that they are all read from the various places

@@ -54,6 +54,9 @@ $CONFIG->{state}{seen_nameyear_extraalpha} = {};
 $CONFIG->{state}{seen_extraalpha} = {};
 $CONFIG->{state}{seenkeys} = {};
 
+# Location of the control file
+$CONFIG->{state}{control_file_location} = '';
+
 =head2 _init
 
     Reset internal hashes to defaults. This is needed for tests when
@@ -62,6 +65,7 @@ $CONFIG->{state}{seenkeys} = {};
 =cut
 
 sub _init {
+  $CONFIG->{state}{control_file_location} = '';
   $CONFIG->{state}{seennamehash} = {};
   $CONFIG->{state}{namehashcount} = {};
   $CONFIG->{state}{uniquenamecount} = {};
@@ -240,6 +244,28 @@ sub get_structure {
   return $self->{structure};
 }
 
+=head2 set_ctrlfile_path
+
+    Stores the path to the control file
+
+=cut
+
+sub set_ctrlfile_path {
+  my $self = shift;
+  $self->{control_file_location} = shift;
+  return;
+}
+
+=head2 get_ctrlfile_path
+
+    Retrieved the path to the control file
+
+=cut
+
+sub get_ctrlfile_path {
+  my $self = shift;
+  return $self->{control_file_location};
+}
 
 =head2 setoption
 
