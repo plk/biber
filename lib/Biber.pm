@@ -1019,8 +1019,6 @@ sub postprocess {
     # push entry-specific presort fields into the presort state
     $self->postprocess_presort($citekey);
 
-    # first-pass sorting to generate basic labels
-    $self->postprocess_generate_sortinfo_label($citekey);
   }
 
   $logger->debug("Finished postprocessing entries in section $secnum");
@@ -1504,20 +1502,21 @@ sub postprocess_presort {
   }
 }
 
-=head2 postprocess_generate_sortinfo_label
 
-    Generate label pass of sorting information
+=head2 generate_label_sortinfo
+
+    Generate information for first (label) pass sorting
 
 =cut
 
-sub postprocess_generate_sortinfo_label {
+sub generate_label_sortinfo {
   my $self = shift;
-  my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
-  $self->_generatesortinfo( $citekey, Biber::Config->getblxoption('sorting')->{label});
+  foreach my $citekey ($section->get_citekeys) {
+    $self->_generatesortinfo($citekey, Biber::Config->getblxoption('sorting')->{label});
+  }
+  return;
 }
 
 =head2 generate_final_sortinfo
@@ -1581,7 +1580,16 @@ sub sortentries {
   # change since the first sort or if we need to run a second sort as it has a different
   # scheme
   if ($BIBER_SORT_FIRSTPASSDONE) {
-    return unless ($BIBER_SORT_DATA_CHANGE or not Biber::Config->getblxoption('sorting')->{schemes_same});
+    if ($BIBER_SORT_DATA_CHANGE or not Biber::Config->getblxoption('sorting')->{schemes_same}) {
+      $logger->debug('Sorting - second pass needed');
+    }
+    else {
+      $logger->debug('Sorting - second pass not needed');
+      return;
+    }
+  }
+  else {
+    $logger->debug('Sorting - first pass');
   }
 
   my $self = shift;
@@ -1951,10 +1959,11 @@ sub prepare {
     $self->validate_structure;           # Check bib structure
     $self->postprocess;                  # Main entry postprocessing
     $BIBER_SORT_FIRSTPASSDONE = 0;
+    $self->generate_label_sortinfo;      # here we generate the first pass sort info
     $self->sortentries;                  # then we do a label sort pass and set some flags
     $BIBER_SORT_FIRSTPASSDONE = 1;
     $BIBER_SORT_DATA_CHANGE = 0;
-    $self->generate_final_sortinfo;      # in here we generate the final sort information
+    $self->generate_final_sortinfo;      # here we generate the final sort information
     $self->sortentries;                  # and then possibly do a final sort pass
     $self->create_output_section;        # Generate and push the section output into the
                                          # output object ready for writing
