@@ -1581,7 +1581,9 @@ sub sortentries {
   # scheme
   if ($BIBER_SORT_FIRSTPASSDONE) {
     if ($BIBER_SORT_DATA_CHANGE or not Biber::Config->getblxoption('sorting')->{schemes_same}) {
-      $logger->debug('Sorting - second pass needed');
+      $logger->debug('Sorting - second pass needed' .
+                    ($BIBER_SORT_DATA_CHANGE ? ' (data change)' : '') .
+                     (Biber::Config->getblxoption('sorting')->{schemes_same} ? '' : ' (scheme change)'));
     }
     else {
       $logger->debug('Sorting - second pass not needed');
@@ -1818,7 +1820,7 @@ sub sortentries {
     # correct index for the actual data in the sort array
     $sort_extractor = '$_->[' . $num_sorts . ']';
 
-    $logger->debug('Sorter method: ' . $sorter);
+    $logger->trace('Sorter method: ' . $sorter);
 
     # Schwartzian transform multi-field sort
     @citekeys = map  { eval $sort_extractor }
