@@ -1562,7 +1562,7 @@ sub generate_final_sortinfo {
     # Only bother with re-generating sorting information if there has been a data
     # change since the first sort or if we need to run a second sort as it has a different
     # scheme
-    if ($BIBER_SORT_DATA_CHANGE or not Biber::Config->getblxoption('sorting')->{schemes_same}) {
+    if ($BIBER_SORT_DATA_CHANGE or not Biber::Config->getblxoption('sorting')->{default}{schemes_same}) {
       $self->_generatesortinfo($citekey, Biber::Config->getblxoption('sorting')->{default}{final});
     }
   }
@@ -1581,7 +1581,7 @@ sub sortentries {
   # change since the first sort or if we need to run a second sort as it has a different
   # scheme
   if ($BIBER_SORT_FIRSTPASSDONE) {
-    if ($BIBER_SORT_DATA_CHANGE or not Biber::Config->getblxoption('sorting')->{schemes_same}) {
+    if ($BIBER_SORT_DATA_CHANGE or not Biber::Config->getblxoption('sorting')->{default}{schemes_same}) {
       $logger->debug('Sorting - second pass needed' .
                     ($BIBER_SORT_DATA_CHANGE ? ' (data change)' : '') .
                      (Biber::Config->getblxoption('sorting')->{schemes_same} ? '' : ' (scheme change)'));
