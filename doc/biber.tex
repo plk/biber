@@ -343,7 +343,7 @@ not for things like dates and special fields as that wouldn't make much sense.
 
 The control file is normally passed as the only argument to biber
 (unless using \verb+--allentries|-a+ and \verb+--bibdata|-d+). It is
-searched for using the following locations, in decreasing order of
+searched for in the following locations, in decreasing order of
 priority:\\[2ex]
 
 \noindent Absolute filename $\rightarrow$\\
@@ -353,12 +353,19 @@ priority:\\[2ex]
 
 \subsubsection{Database files}
 
-Bibliography database files are searched for using the same rule as for
-control files (see section \ref{loc:cf} above). Unless using the
-\verb+--bibdata|-d+ option, users usually do not specify explicitly the
-bibliography database files; they are normally passed in the \verb+.bcf+
-control file, taken from the \verb+biblatex + \verb+\bibliography{}+
-command arguments.
+Bibliography database files are searched for in the following locations, in
+decreasing order of priority:\\[2ex]
+
+\noindent Absolute filename $\rightarrow$\\
+\hspace*{1em}In the \verb+--output_directory+, if specified$\rightarrow$\\
+\hspace*{2em}Relative to current directory$\rightarrow$\\
+\hspace*{3em}In the same directory as the control file$\rightarrow$\\
+\hspace*{4em}Using \verb+kpsewhich+, if available\\[2ex]
+
+\noindent Unless using the \verb+--bibdata|-d+ option, users usually do not
+specify explicitly the bibliography database files; they are normally
+passed in the \verb+.bcf+ control file, taken from the \verb+biblatex+
+\verb+\bibliography{}+ command arguments.
 
 \subsection{Logfile}
 
