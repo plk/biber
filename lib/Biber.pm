@@ -228,7 +228,7 @@ sub parse_ctrlfile {
     }
 
     # Parse file
-    my $CFxp = $CFxmlparser->parse_file("$ctrl_file");
+    my $CFxp = $CFxmlparser->parse_file($ctrl_file_path);
 
     # XPath context
     my $CFxpc = XML::LibXML::XPathContext->new($CFxp);
@@ -239,13 +239,13 @@ sub parse_ctrlfile {
       eval { $CFxmlschema->validate($CFxp) };
       if (ref($@)) {
         $logger->debug( $@->dump() );
-        $logger->logcroak("BibLaTeX control file \"$ctrl_file\" failed to validate\n$@");
+        $logger->logcroak("BibLaTeX control file \"$ctrl_file_path\" failed to validate\n$@");
       }
       elsif ($@) {
-        $logger->logcroak("BibLaTeX control file \"$ctrl_file\" failed to validate\n$@");
+        $logger->logcroak("BibLaTeX control file \"$ctrl_file_path\" failed to validate\n$@");
       }
       else {
-        $logger->info("BibLaTeX control file \"$ctrl_file\" validates");
+        $logger->info("BibLaTeX control file \"$ctrl_file_path\" validates");
       }
     }
     undef $CFxmlparser;
@@ -285,19 +285,19 @@ sub parse_ctrlfile {
       goto LOADCF;
     }
 
-    my $CF = XML::LibXML->load_xml(location => $ctrl_file);
+    my $CF = XML::LibXML->load_xml(location => $ctrl_file_path);
     my $stylesheet = $xslt->parse_stylesheet($CFstyle);
     my $CFhtml = $stylesheet->transform($CF);
-    $stylesheet->output_file($CFhtml, $ctrl_file . '.html');
-    $logger->info("Converted BibLaTeX control file '$ctrl_file' to '$ctrl_file.html'");
+    $stylesheet->output_file($CFhtml, $ctrl_file_path . '.html');
+    $logger->info("Converted BibLaTeX control file '$ctrl_file_path' to '$ctrl_file_path.html'");
   }
 
   # Open control file
  LOADCF:
-  my $ctrl = new IO::File "<$ctrl_file"
-    or $logger->logcroak("Cannot open $ctrl_file: $!");
+  my $ctrl = new IO::File "<$ctrl_file_path"
+    or $logger->logcroak("Cannot open $ctrl_file_path: $!");
 
-  $logger->info("Reading $ctrl_file");
+  $logger->info("Reading $ctrl_file_path");
 
   # Read control file
   require XML::LibXML::Simple;
@@ -524,7 +524,7 @@ sub parse_ctrlfile {
   }
 
   unless (%bibdatafiles or Biber::Config->getoption('bibdata')) {
-    $logger->logcroak("No data files on command line or provided in the file '$ctrl_file'! Exiting")
+    $logger->logcroak("No data files on command line or provided in the file '$ctrl_file_path'! Exiting")
   }
 
   my $key_flag = 0;
@@ -591,7 +591,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
   # Die if there are no citations in any section
   unless ($key_flag) {
-    $logger->warn("The file '$ctrl_file' does not contain any citations!");
+    $logger->warn("The file '$ctrl_file_path' does not contain any citations!");
     $self->{warnings}++;
   }
 
