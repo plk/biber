@@ -1580,9 +1580,9 @@ sub sortentries {
   # Only bother with sorting a second time if there has been a data
   # change since the first sort or if we need to run a second sort as it has a different
   # scheme
-  # if ($BIBER_SORT_FIRSTPASSDONE) {
-  #   return unless ($BIBER_SORT_DATA_CHANGE or not Biber::Config->getblxoption('sorting')->{schemes_same});
-  # }
+  if ($BIBER_SORT_FIRSTPASSDONE) {
+    return unless ($BIBER_SORT_DATA_CHANGE or not Biber::Config->getblxoption('sorting')->{schemes_same});
+  }
 
   my $self = shift;
   my $secnum = $self->get_current_section;
@@ -1755,11 +1755,6 @@ sub sortentries {
     foreach my $sortset (@{$sortscheme}) {
       my $fc = '';
       my @fc;
-      # Reset collation object to global defaults for each sortset in case
-      # locally overriden by earlier loop
-      $Collator->change(level              => $collopts->{level},
-                        upper_before_lower => $collopts->{upper_before_lower});
-
       # If the case or upper option on a field is not the global default
       # set it locally on the $Collator by constructing a change() method call
       my $sc = $sortset->[0]{sortcase};
@@ -1771,7 +1766,17 @@ sub sortentries {
         push @fc, $su ? 'upper_before_lower => 1' : 'upper_before_lower => 0';
       }
       if (@fc) {
-        $fc = '->change(' . join(',', @fc) . ')'
+        # This field has custom collation options
+        $fc = '->change(' . join(',', @fc) . ')';
+      }
+      else {
+        # Reset collation options to global defaults if there are no field options
+        # We have to do this as ->change modifies the Collation object
+        $fc = '->change(level => ' .
+          $collopts->{level} .
+            ' ,upper_before_lower => ' .
+              $collopts->{upper_before_lower} .
+                ')';
       }
 
       $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
@@ -1811,7 +1816,6 @@ sub sortentries {
     @citekeys = map  { eval $sort_extractor }
                 sort { eval $sorter }
                 map  { eval $data_extractor } @citekeys;
-
   }
 
   $logger->debug("Citekeys after sort:\n");
@@ -1845,7 +1849,7 @@ sub sort_shorthands {
 
   # sort by sortkey - this means shorthands should be in same order as
   # citekeys which has already been sorted so just sort on the index each
-  # shorthand (which is a citekeys) occurs in @citekeys
+  # shorthand (which is a citekey) occurs in @citekeys
   unless (Biber::Config->getblxoption('sortlos')) {
     $logger->debug("Sorting shorthands by 'sortkey'");
     @shorthands = sort {$citekeys{$a} <=> $citekeys{$b}} @shorthands;
