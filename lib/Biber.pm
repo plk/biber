@@ -1667,27 +1667,25 @@ sub sortentries {
       my $sd = $sortset->[0]{sort_direction};
       if (defined($sd) and $sd eq 'descending') {
         # descending field
-        $sorter .=
-          $lc .
-            '$b->[' .
-              $num_sorts .
-                '] cmp ' .
-                  $lc .
-                    '$a->[' .
-                      $num_sorts .
-                        ']';
+        $sorter .= $lc
+          . '$b->['
+            . $num_sorts
+              . '] cmp '
+                . $lc
+                  . '$a->['
+                    . $num_sorts
+                      . ']';
       }
       else {
         # ascending field
-        $sorter .=
-          $lc .
-            '$a->[' .
-              $num_sorts .
-                '] cmp ' .
-                  $lc .
-                    '$b->[' .
-                      $num_sorts .
-                        ']';
+        $sorter .= $lc
+          . '$a->['
+            . $num_sorts
+              . '] cmp '
+                . $lc
+                  . '$b->['
+                    . $num_sorts
+                      . ']';
       }
       $num_sorts++;
     }
@@ -1783,11 +1781,11 @@ sub sortentries {
       else {
         # Reset collation options to global defaults if there are no field options
         # We have to do this as ->change modifies the Collation object
-        $fc = '->change(level => ' .
-          $collopts->{level} .
-            ' ,upper_before_lower => ' .
-              $collopts->{upper_before_lower} .
-                ')';
+        $fc = '->change(level => '
+          . $collopts->{level}
+            . ' ,upper_before_lower => '
+              . $collopts->{upper_before_lower}
+                . ')';
       }
 
       $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
@@ -1796,23 +1794,23 @@ sub sortentries {
       my $sd = $sortset->[0]{sort_direction};
       if (defined($sd) and $sd eq 'descending') {
         # descending field
-        $sorter .= '$Collator' .
-          $fc .
-          '->cmp($b->[' .
-          $num_sorts .
-            '],$a->[' .
-              $num_sorts .
-                '])';
+        $sorter .= '$Collator'
+          . $fc
+            . '->cmp($b->['
+              . $num_sorts
+                . '],$a->['
+                  . $num_sorts
+                    . '])';
       }
       else {
         # ascending field
-        $sorter .= '$Collator' .
-          $fc .
-          '->cmp($a->[' .
-          $num_sorts .
-            '],$b->[' .
-              $num_sorts .
-                '])';
+        $sorter .= '$Collator'
+          . $fc
+            . '->cmp($a->['
+              . $num_sorts
+                . '],$b->['
+                  . $num_sorts
+                    . '])';
       }
       $num_sorts++;
     }
@@ -1960,14 +1958,18 @@ sub prepare {
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
     $self->process_crossrefs;            # Process crossrefs/sets
     $self->validate_structure;           # Check bib structure
-    $self->postprocess;                  # Main entry postprocessing
-    $BIBER_SORT_FIRSTPASSDONE = 0;
-    $self->generate_label_sortinfo;      # here we generate the first pass sort info
-    $self->sortentries;                  # then we do a label sort pass and set some flags
-    $BIBER_SORT_FIRSTPASSDONE = 1;
-    $BIBER_SORT_DATA_CHANGE = 0;
-    $self->generate_final_sortinfo;      # here we generate the final sort information
-    $self->sortentries;                  # and then possibly do a final sort pass
+    $self->postprocess;                  # Main entry processing loop
+
+    # Sorting ---
+    $BIBER_SORT_FIRSTPASSDONE = 0;       # Reset first/second pass flag
+    $self->generate_label_sortinfo;      # generate the first (label) pass sort info
+    $self->sortentries;                  # do a first (label) sort pass
+    $BIBER_SORT_FIRSTPASSDONE = 1;       # Flag to say first pass is done
+    $BIBER_SORT_DATA_CHANGE = 0;         # reset data-changed-after-first-sort flag
+    $self->generate_final_sortinfo;      # generate the final sort information
+    $self->sortentries;                  # and then possibly do a second (final) sort pass
+    # --- Sorting
+
     $self->create_output_section;        # Generate and push the section output into the
                                          # output object ready for writing
   }
