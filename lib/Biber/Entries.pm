@@ -64,6 +64,26 @@ sub entry {
   # return $bibentry || undef;
 }
 
+# sub check_missing {
+#   my $self = shift;
+#   my $secnum = $self->get_current_section;
+#   my $section = $self->sections->get_section($secnum);
+#   $logger->debug("Checking for missing citekeys in section $secnum");
+#   foreach my $citekey ($section->get_citekeys) {
+#     # Either the key refers to a real bib entry or a dynamic set entry
+#     unless ( $section->bibentries->entry_exists($citekey) or
+#              $section->get_dynamic_set($citekey)) {
+#       $logger->warn("I didn't find a database entry for '$citekey' (section $secnum)");
+#       $self->{warnings}++;
+#       $section->del_citekey($citekey);
+#       $section->add_undef_citekey($citekey);
+#       next;
+#     }
+#   }
+# }
+
+
+
 =head2 sorted_keys
 
     Returns a sorted array of Biber::Entry object keys

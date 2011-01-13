@@ -676,9 +676,8 @@ sub parse_bibtex {
   # Can't just make citekeys = bibdata keys as this loses information about citekeys
   # that are missing data entries.
   if ($section->is_allkeys) {
-    my $bibentries = $section->bibentries;
     map { Biber::Config->incr_seenkey($_, $section->number) } @citedkeys;
-    foreach my $bibkey ($bibentries->sorted_keys) {
+    foreach my $bibkey ($section->bibentries->sorted_keys) {
       $section->add_citekeys($bibkey);
     }
   }
@@ -714,11 +713,10 @@ sub check_missing {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
   $logger->debug("Checking for missing citekeys in section $secnum");
   foreach my $citekey ($section->get_citekeys) {
     # Either the key refers to a real bib entry or a dynamic set entry
-    unless ( $bibentries->entry_exists($citekey) or
+    unless ( $section->bibentries->entry_exists($citekey) or
              $section->get_dynamic_set($citekey)) {
       $logger->warn("I didn't find a database entry for '$citekey' (section $secnum)");
       $self->{warnings}++;
@@ -758,7 +756,6 @@ sub resolve_aliases {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
   my $struc = Biber::Config->get_structure;
 
   # We are looping over all bibentries for the section, not just cited
@@ -766,7 +763,7 @@ sub resolve_aliases {
   # which have not been processed yet. We can't process them them before this
   # as this would be ugly - crossrefs should be resolved on canonical entrytype
   # and field names which can't be done until after these are canonicalised below
-  foreach my $key ($bibentries->sorted_keys) {
+  foreach my $key ($section->bibentries->sorted_keys) {
     my $be = $section->bibentry($key);
 
     # Entrytype aliases and special fields - biblatex manual Section 2.1.2
@@ -981,7 +978,6 @@ sub postprocess {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
   foreach my $citekey ( $section->get_citekeys ) {
     $logger->debug("Postprocessing entry '$citekey' from section $secnum");
 
@@ -1032,8 +1028,7 @@ sub postprocess_sets {
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
+  my $be = $section->bibentry($citekey);
   if ($be->get_field('entrytype') eq 'set') {
     my @entrysetkeys = split /\s*,\s*/, $be->get_field('entryset');
 
@@ -1042,7 +1037,7 @@ sub postprocess_sets {
     foreach my $member (@entrysetkeys) {
       Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $member);
       Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $member);
-      my $me = $bibentries->entry($member);
+      my $me = $section->bibentry($member);
       if ($me->get_field('entryset')) {
         $self->biber_warn($me, "Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry '$member'");
         $me->del_field('entryset');
@@ -1063,7 +1058,7 @@ sub postprocess_sets {
   # "dataonly" enforced by the code above
   else {
     foreach my $pset_key ($section->get_citekeys) {
-      my $pset_be = $bibentries->entry($pset_key);
+      my $pset_be = $section->bibentry($pset_key);
       if ($pset_be->get_field('entrytype') eq 'set') {
         my @entrysetkeys = split /\s*,\s*/, $pset_be->get_field('entryset');
         foreach my $member (@entrysetkeys) {
@@ -1100,8 +1095,7 @@ sub postprocess_labelname {
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
+  my $be = $section->bibentry($citekey);
   my $lnamescheme = Biber::Config->getblxoption('labelname', $be->get_field('entrytype'));
   # First we set the normal labelname name
   foreach my $ln ( @{$lnamescheme} ) {
@@ -1154,8 +1148,7 @@ sub postprocess_labelyear {
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
+  my $be = $section->bibentry($citekey);
   my $lyearscheme = Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'));
 
   if ($lyearscheme) {
@@ -1203,8 +1196,7 @@ sub postprocess_hashes {
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
+  my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   my $namehash = ''; # biblatex namehash field (manual, section 4.2.4.1)
   my $fullhash = ''; # biblatex fullhash field (manual, section 4.2.4.1)
@@ -1279,8 +1271,7 @@ sub postprocess_unique {
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
+  my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   my $namehash = $be->get_field('namehash');
 
@@ -1338,8 +1329,7 @@ sub postprocess_labelnameyear {
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
+  my $be = $section->bibentry($citekey);
   # This is all used to generate extrayear and the rules for this are:
   # * Generate labelname/year combination for tracking extrayear
   # * If there is no labelname to use, use empty string
@@ -1409,8 +1399,7 @@ sub postprocess_labelalpha {
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
+  my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   # Don't add a label if skiplab is set for entry
   if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
@@ -1466,8 +1455,7 @@ sub postprocess_shorthands {
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
+  my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   if ( my $sh = $be->get_field('shorthand') ) {
     $section->add_shorthand($bee, $citekey);
@@ -1487,8 +1475,7 @@ sub postprocess_presort {
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
+  my $be = $section->bibentry($citekey);
   # We are treating presort as an option as it can be set per-type and globally too
   if (my $ps = $be->get_field('presort')) {
     Biber::Config->setblxoption('presort', $ps, 'PER_ENTRY', $citekey);
@@ -1527,11 +1514,10 @@ sub generate_final_sortinfo {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
   # This loop critically depends on the order of the citekeys which
   # is why we have to do a first sorting pass before this
   foreach my $citekey ($section->get_citekeys) {
-    my $be = $bibentries->entry($citekey);
+    my $be = $section->bibentry($citekey);
     my $bee = $be->get_field('entrytype');
     # Only generate extrayear and extraalpha if skiplab is not set.
     # Don't forget that skiplab is implied for set members
@@ -1590,7 +1576,6 @@ sub sortentries {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
   my @citekeys = $section->get_citekeys;
   if (Biber::Config->getoption('sortcase')) {
     $logger->debug("Sorting is by default case-SENSITIVE");
@@ -1600,7 +1585,7 @@ sub sortentries {
   }
   $logger->debug("Citekeys before sort:\n");
   foreach my $ck (@citekeys) {
-    $logger->debug("$ck => " . $bibentries->entry($ck)->get_field('sortstring') . "\n");
+    $logger->debug("$ck => " . $section->bibentry($ck)->get_field('sortstring') . "\n");
   }
 
   # Get the right sortscheme
@@ -1642,7 +1627,7 @@ sub sortentries {
     my $glc = Biber::Config->getoption('sortcase') ? '' : 'lc ';
 
     foreach my $sortset (@{$sortscheme}) {
-      $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
+      $data_extractor .= '$section->bibentry($_)->get_field("sortobj")->[' . $num_sorts . '],';
       $sorter .= ' || ' if $num_sorts; # don't add separator before first field
       my $lc = $glc; # Casing defaults to global default ...
       my $sc = $sortset->[0]{sortcase};
@@ -1780,7 +1765,7 @@ sub sortentries {
                 . ')';
       }
 
-      $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
+      $data_extractor .= '$section->bibentry($_)->get_field("sortobj")->[' . $num_sorts . '],';
       $sorter .= ' || ' if $num_sorts; # don't add separator before first field
 
       my $sd = $sortset->[0]{sort_direction};
@@ -1821,7 +1806,7 @@ sub sortentries {
 
   $logger->debug("Citekeys after sort:\n");
   foreach my $ck (@citekeys) {
-    $logger->debug("$ck => " . $bibentries->entry($ck)->get_field('sortstring') . "\n");
+    $logger->debug("$ck => " . $section->bibentry($ck)->get_field('sortstring') . "\n");
   }
   $section->set_citekeys([ @citekeys ]);
 
@@ -1840,7 +1825,6 @@ sub sort_shorthands {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
   my @shorthands = $section->get_shorthands;
   my @citekeys = $section->get_citekeys;
   my $key_index;
@@ -1865,7 +1849,7 @@ sub sort_shorthands {
         $self->{warnings}++;
       }
       $logger->debug("Sorting shorthands by 'shorthand'");
-      @shorthands = sort { $bibentries->entry($a)->get_field('shorthand') cmp $bibentries->entry($b)->get_field('shorthand') } @shorthands;
+      @shorthands = sort { $section->bibentry($a)->get_field('shorthand') cmp $section->bibentry($b)->get_field('shorthand') } @shorthands;
     }
     else {
       require Unicode::Collate::Locale;
@@ -1913,8 +1897,8 @@ sub sort_shorthands {
 
       $logger->debug("Sorting shorthands by 'shorthand'");
       @shorthands = sort {
-        $Collator->cmp( $bibentries->entry($a)->get_field('shorthand'),
-                        $bibentries->entry($b)->get_field('shorthand') )
+        $Collator->cmp( $section->bibentry($a)->get_field('shorthand'),
+                        $section->bibentry($b)->get_field('shorthand') )
       } @shorthands;
     }
   }
