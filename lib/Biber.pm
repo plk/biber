@@ -605,10 +605,6 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
   return;
 }
 
-#=====================================================
-# Parse BIB file
-#=====================================================
-
 =head2 parse_bibtex
 
     This is a wrapper method to parse a bibtex database. It
@@ -617,11 +613,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 =cut
 
 sub parse_bibtex {
-  my ($self, $filename, $datatype) = @_;
+  my ($self, $filename) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
-  $logger->info("Processing $datatype format file '$filename' for section $secnum");
+  $logger->info("Processing bibtex format file '$filename' for section $secnum");
 
   my $ufilename = "${filename}_$$.utf8";
 
@@ -672,16 +668,16 @@ sub parse_bibtex {
   require Biber::Input::BibTeX;
   push @ISA, 'Biber::Input::BibTeX';
 
-  my @localkeys = $self->_text_bibtex_parse($filename);
+  my @citedkeys = $self->_bibtex_parse_cited($filename);
 
-  unlink $ufilename if -f $ufilename;
+  Biber::Config->add_working_data_files($secnum, $filename);
 
   # if allkeys, push all bibdata keys into citekeys (if they are not already there)
   # Can't just make citekeys = bibdata keys as this loses information about citekeys
   # that are missing data entries.
   if ($section->is_allkeys) {
     my $bibentries = $section->bibentries;
-    map { Biber::Config->incr_seenkey($_, $section->number) } @localkeys;
+    map { Biber::Config->incr_seenkey($_, $section->number) } @citedkeys;
     foreach my $bibkey ($bibentries->sorted_keys) {
       $section->add_citekeys($bibkey);
     }
@@ -1969,6 +1965,7 @@ sub prepare {
 
     $self->create_output_section;        # Generate and push the section output into the
                                          # output object ready for writing
+    Biber::Config->delete_working_data_files($secnum); # delete temporary data files
   }
   $self->create_output_misc;             # Generate and push the final misc bits of output
                                          # into the output object ready for writing
@@ -2003,7 +2000,7 @@ sub parse_data {
     }
     # Here we decide which parser to use for the data file
     if ($datatype eq 'bibtex') {
-      $self->parse_bibtex($dfname, $datatype);
+      $self->parse_bibtex($dfname);
     }
   }
   return;

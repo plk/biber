@@ -72,11 +72,13 @@ sub locate_biber_file {
   }
   elsif (my $cfp = Biber::Config->get_ctrlfile_path) {
     my ($ctlvolume, $ctldir, undef) = File::Spec->splitpath($cfp);
-    $ctldir =~ s|/\z||; # remove trailing slash if it exists - makes for neater messages
     if ($ctlvolume) { # add vol sep for windows if volume is set and there isn't one
       $ctlvolume .= ':' unless $ctlvolume =~ /:\z/;
     }
-    return "$ctlvolume$ctldir/$filename";
+    if ($ctldir) { # add path sep if there isn't one
+      $ctldir .= '/' unless $ctldir =~ /\/\z/;
+    }
+    return "$ctlvolume$ctldir$filename";
   }
   elsif (can_run('kpsewhich')) {
     my $found;

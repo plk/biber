@@ -45,37 +45,23 @@ sub entry_exists {
 
 =head2 entry
 
-    Returns a Biber::Entry object for the passed
-    citation key
+    Returns a Biber::Entry object for a given
+    citekey
 
 =cut
 
 sub entry {
   my $self = shift;
   my $citekey = lc(shift);
-  return $self->get_entry($citekey);
-}
-
-=head2 get_entry
-
-    returns a Biber::Entry object for a given
-    citekey from cache or datasource
-
-=cut
-
-sub get_entry {
-  my $self = shift;
-  my $citekey = lc(shift);
   # If entry is already cached, return it
   if ($self->{$citekey}) {
     return $self->{$citekey};
   }
-
-
   # Otherwise, we need to fetch data from the datasource and generate it
-  $bibentry->set_field('datatype', $datatype);
-  $self->add_entry($cache_key, $bibentry);
-  return $bibentry;
+  # if (my $bibentry = _bibtex_fetch_entry()) {
+  #   $self->add_entry($cache_key, $bibentry);
+  # }
+  # return $bibentry || undef;
 }
 
 =head2 sorted_keys

@@ -57,6 +57,9 @@ $CONFIG->{state}{seenkeys} = {};
 # Location of the control file
 $CONFIG->{state}{control_file_location} = '';
 
+# Data files per section being used by biber
+$CONFIG->{state}{datafiles} = {};
+
 =head2 _init
 
     Reset internal hashes to defaults. This is needed for tests when
@@ -75,6 +78,7 @@ sub _init {
   $CONFIG->{state}{seen_extraalpha} = {};
   $CONFIG->{state}{seenkeys} = {};
   $CONFIG->{state}{keycase} = {};
+  $CONFIG->{state}{datafiles} = {};
 
   return;
 }
@@ -220,6 +224,50 @@ sub postprocess_biber_opts {
 }
 
 
+=head2 add_working_data_files
+
+    Records the path of a data file for a given section
+
+=cut
+
+sub add_working_data_files {
+  shift;
+  my $secnum = shift;
+  my $file = shift;
+  push @{$CONFIG->{state}{datafiles}{$secnum}}, $file;
+  return;
+}
+
+=head2 get_working_data_files
+
+    Returns an arry of the working data files for a section
+
+=cut
+
+sub get_working_data_files {
+  shift;
+  my $secnum = shift;
+  return @{$CONFIG->{state}{datafiles}{$secnum}};
+}
+
+
+=head2 delete_working_data_files
+
+    Deletes all temporary working data files for a section
+
+=cut
+
+sub delete_working_data_files {
+  shift;
+  my $secnum = shift;
+  foreach my $tempfile (@{$CONFIG->{state}{datafiles}{$secnum}}) {
+    unlink $tempfile if -e $tempfile;
+  }
+  delete($CONFIG->{state}{datafiles}{$secnum});
+  return;
+}
+
+
 =head2 set_structure
 
     Sets the structure information object
@@ -229,7 +277,7 @@ sub postprocess_biber_opts {
 sub set_structure {
   shift;
   my $obj = shift;
-  $self->{structure} = $obj;
+  $CONFIG->{structure} = $obj;
   return;
 }
 
@@ -241,7 +289,7 @@ sub set_structure {
 
 sub get_structure {
   shift;
-  return $self->{structure};
+  return $CONFIG->{structure};
 }
 
 =head2 set_ctrlfile_path
@@ -251,8 +299,8 @@ sub get_structure {
 =cut
 
 sub set_ctrlfile_path {
-  my $self = shift;
-  $self->{control_file_location} = shift;
+  shift;
+  $CONFIG->{control_file_location} = shift;
   return;
 }
 
@@ -263,8 +311,8 @@ sub set_ctrlfile_path {
 =cut
 
 sub get_ctrlfile_path {
-  my $self = shift;
-  return $self->{control_file_location};
+  shift;
+  return $CONFIG->{control_file_location};
 }
 
 =head2 setoption
