@@ -240,14 +240,14 @@ sub add_working_data_files {
 
 =head2 get_working_data_files
 
-    Returns an arry of the working data files for a section
+    Returns an arrayref of the working data files for a section
 
 =cut
 
 sub get_working_data_files {
   shift;
   my $secnum = shift;
-  return @{$CONFIG->{state}{datafiles}{$secnum}};
+  return $CONFIG->{state}{datafiles}{$secnum};
 }
 
 

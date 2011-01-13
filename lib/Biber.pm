@@ -613,70 +613,72 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 =cut
 
 sub parse_bibtex {
-  my ($self, $filename) = @_;
+  my ($self, $files) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
-  $logger->info("Processing bibtex format file '$filename' for section $secnum");
+  $logger->info('Processing bibtex format files ' . join(', ', @$files) . "for section $secnum");
 
-  my $ufilename = "${filename}_$$.utf8";
+  foreach my $filename (@$files) {
 
-  # bib encoding is not UTF-8
-  if (Biber::Config->getoption('bibencoding') ne 'UTF-8') {
-    require File::Slurp::Unicode;
-    my $buf = File::Slurp::Unicode::read_file($filename, encoding => Biber::Config->getoption('bibencoding'))
-      or $logger->logcroak("Can't read $filename");
+    my $ufilename = "${filename}_$$.utf8";
 
-    File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
-      or $logger->logcroak("Can't write $ufilename");
+    # bib encoding is not UTF-8
+    if (Biber::Config->getoption('bibencoding') ne 'UTF-8') {
+      require File::Slurp::Unicode;
+      my $buf = File::Slurp::Unicode::read_file($filename, encoding => Biber::Config->getoption('bibencoding'))
+        or $logger->logcroak("Can't read $filename");
 
+      File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
+          or $logger->logcroak("Can't write $ufilename");
+
+    }
+    else {
+      File::Copy::copy($filename, $ufilename);
+    }
+
+    # Force bblsafechars flag if output to ASCII
+    if (Biber::Config->getoption('bblencoding') =~ /(?:x-)ascii/xmsi) {
+      Biber::Config->setoption('bblsafechars', 1);
+    }
+
+    # Decode LaTeX to UTF8 if output is UTF-8
+    if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
+      require File::Slurp::Unicode;
+      my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
+        or $logger->logcroak("Can't read $ufilename");
+      require Biber::LaTeX::Recode;
+      $logger->info('Decoding LaTeX character macros into UTF-8');
+      $buf = Biber::LaTeX::Recode::latex_decode($buf, strip_outer_braces => 1,
+                                                scheme => Biber::Config->getoption('decodecharsset'));
+
+      File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
+          or $logger->logcroak("Can't write $ufilename");
+    }
+
+    $filename = $ufilename;
+
+    # Increment the number of times each datafile has been referenced
+    # allowing for the possible ".utf8" extra intermediate extension.
+    # For example, a datafile might be referenced in more than one section.
+    # Some things find this information useful, for example, setting preambles is global
+    # and so we need to know if we've already saved the preamble for a datafile.
+    my $basefilename = $filename;
+    $basefilename =~ s/\.utf8$//;
+    $BIBER_DATAFILE_REFS{$basefilename}++;
+    Biber::Config->add_working_data_files($secnum, $filename);
   }
-  else {
-    File::Copy::copy($filename, $ufilename);
-  }
-
-  # Force bblsafechars flag if output to ASCII
-  if (Biber::Config->getoption('bblencoding') =~ /(?:x-)ascii/xmsi) {
-    Biber::Config->setoption('bblsafechars', 1);
-  }
-
-  # Decode LaTeX to UTF8 if output is UTF-8
-  if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
-    require File::Slurp::Unicode;
-    my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
-      or $logger->logcroak("Can't read $ufilename");
-    require Biber::LaTeX::Recode;
-    $logger->info('Decoding LaTeX character macros into UTF-8');
-    $buf = Biber::LaTeX::Recode::latex_decode($buf, strip_outer_braces => 1,
-                                                    scheme => Biber::Config->getoption('decodecharsset'));
-
-    File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
-        or $logger->logcroak("Can't write $ufilename");
-  }
-
-  $filename = $ufilename;
-
-  # Increment the number of times each datafile has been referenced
-  # allowing for the possible ".utf8" extra intermediate extension.
-  # For example, a datafile might be referenced in more than one section.
-  # Some things find this information useful, for example, setting preambles is global
-  # and so we need to know if we've already saved the preamble for a datafile.
-  my $basefilename = $filename;
-  $basefilename =~ s/\.utf8$//;
-  $BIBER_DATAFILE_REFS{$basefilename}++;
 
   require Biber::Input::BibTeX;
   push @ISA, 'Biber::Input::BibTeX';
 
-  my @citedkeys = $self->_bibtex_parse_cited($filename);
-
-  Biber::Config->add_working_data_files($secnum, $filename);
+  my @allkeys = $self->_bibtex_parse_cited(Biber::Config->get_working_data_files($secnum));
 
   # if allkeys, push all bibdata keys into citekeys (if they are not already there)
   # Can't just make citekeys = bibdata keys as this loses information about citekeys
   # that are missing data entries.
   if ($section->is_allkeys) {
-    map { Biber::Config->incr_seenkey($_, $section->number) } @citedkeys;
+    map { Biber::Config->incr_seenkey($_, $section->number) } @allkeys;
     foreach my $bibkey ($section->bibentries->sorted_keys) {
       $section->add_citekeys($bibkey);
     }
@@ -1966,7 +1968,7 @@ sub parse_data {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-
+  my %datafiles;
   # Clear all T::B macro definitions between sections.
   # T::B never clears these
   Text::BibTeX::delete_all_macros;
@@ -1982,9 +1984,12 @@ sub parse_data {
     else {
       $logger->logcroak("File '$name' does not exist!")
     }
-    # Here we decide which parser to use for the data file
+    push @{$datafiles{$datatype}}, $dfname;
+  }
+  # Here we decide which parser to use for the data file
+  foreach my $datatype (keys %datafiles) {
     if ($datatype eq 'bibtex') {
-      $self->parse_bibtex($dfname);
+      $self->parse_bibtex($datafiles{$datatype});
     }
   }
   return;

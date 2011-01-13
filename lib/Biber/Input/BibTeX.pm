@@ -254,23 +254,13 @@ sub parsename {
     );
 }
 
-# Fetches an undefined entry from the datasources
-# sub _bibtex_fetch_entry {
-#   if (my $lc_key = $self->_bibtex_parse_entry($section, $entry, $filename)) {
-#   $bibentry->set_field('datatype', $datatype);
-#     return $lc_key;
-# }
-
-
 # This gets all of the directly cited section entries from a single .bib file
 # and creates Biber::Entry object for them.
 sub _bibtex_parse_cited {
-  my ($self, $filename) = @_;
+  my ($self, $files) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-
-  my $basefilename = $filename;
-  $basefilename =~ s/\.utf8$//;
+  my $keys = [];
 
   # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
   if (Biber::Config->getoption('quiet')) {
@@ -278,55 +268,57 @@ sub _bibtex_parse_cited {
     open STDERR, '>', '/dev/null';
   }
 
-  my @citedkeys;
+  my $preamble = []; # is global to all files;
 
-  my $bib = Text::BibTeX::File->new( $filename, '<' )
-    or $logger->logcroak("Cannot create Text::BibTeX::File object from $filename: $!");
+  foreach my $filename (@$files) {
+    my $basefilename = $filename;
+    $basefilename =~ s/\.utf8$//;
+    my $bib = Text::BibTeX::File->new( $filename, '<' )
+      or $logger->logcroak("Cannot create Text::BibTeX::File object from $filename: $!");
+    while ( my $entry = new Text::BibTeX::Entry $bib ) {
 
-  my @preamble = ();
-  my $count = 0;
-
-BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
-    $count++;
-
-    if ( $entry->metatype == BTE_PREAMBLE ) {
-      # Only push the preambles from the file if we haven't seen this data file before
-      unless ($BIBER_DATAFILE_REFS{$basefilename} > 1) {
-        push @preamble, decode_utf8($entry->value);
+      if ( $entry->metatype == BTE_PREAMBLE ) {
+        # Only push the preambles from the file if we haven't seen this data file before
+        unless ($BIBER_DATAFILE_REFS{$basefilename} > 1) {
+          push @$preamble, decode_utf8($entry->value);
+        }
+        next;
       }
-      next;
-    }
 
-    next if ( $entry->metatype == BTE_MACRODEF or $entry->metatype == BTE_UNKNOWN
-      or $entry->metatype == BTE_COMMENT );
+      next if ( $entry->metatype == BTE_MACRODEF or $entry->metatype == BTE_UNKNOWN
+                  or $entry->metatype == BTE_COMMENT );
 
-    unless( $entry->key ) {
-      $logger->warn("Invalid or undefined BibTeX entry key! Skipping entry $count ...");
-      $self->{warnings}++;
-      next;
-    }
+      unless( $entry->key ) {
+        $logger->warn("Invalid or undefined BibTeX entry key in file '$basefilename', skipping ...");
+        $self->{warnings}++;
+        next;
+      }
 
-    # Skip entry if it's not cited or allkeys is false
-    # my $citecasekey = first {lc($origkey) eq lc($_)} $section->get_citekeys;
-    # unless ($section->is_allkeys or $citecasekey) {
-    #   next;
-    # }
+      # Skip entry if it's not cited or allkeys is false
+      # my $citecasekey = first {lc($origkey) eq lc($_)} $section->get_citekeys;
+      # unless ($section->is_allkeys or $citecasekey) {
+      #   next;
+      # }
 
-    if (my $lc_key = $self->_bibtex_parse_entry($section, $entry, $filename)) {
-      push @citedkeys, $lc_key;
+      if (my $lc_key = $self->_bibtex_parse_entry($section, $entry, $filename)) {
+        push @$keys, $lc_key if $lc_key;
+      }
     }
   }
 
-  $bib->close;
+  # Now add any set children or crossref parents of cited keys
+  # sets
 
-  push @{$self->{preamble}}, @preamble if @preamble;
+  # my $sbe = $section->bibentry($citekey);
+  # if ($be->get_field('entrytype') eq 'set') {
+
+  push @{$self->{preamble}}, @$preamble if @$preamble;
 
   if (Biber::Config->getoption('quiet')) {
     open STDERR, '>&', \*OLDERR;
   }
 
-  return @citedkeys;
-
+  return @$keys;
 }
 
 # Parse a particular entry and create a Biber::Entry object for it
@@ -445,6 +437,7 @@ sub _bibtex_parse_entry {
     $bibentry->set_field('datatype', 'bibtex');
     $bibentries->add_entry($lc_key, $bibentry);
   }
+
   return $lc_key;
 }
 

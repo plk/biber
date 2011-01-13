@@ -53,36 +53,8 @@ sub entry_exists {
 sub entry {
   my $self = shift;
   my $citekey = lc(shift);
-  # If entry is already cached, return it
-  if ($self->{$citekey}) {
-    return $self->{$citekey};
-  }
-  # Otherwise, we need to fetch data from the datasource and generate it
-  # if (my $bibentry = _bibtex_fetch_entry()) {
-  #   $self->add_entry($cache_key, $bibentry);
-  # }
-  # return $bibentry || undef;
+  return $self->{$citekey};
 }
-
-# sub check_missing {
-#   my $self = shift;
-#   my $secnum = $self->get_current_section;
-#   my $section = $self->sections->get_section($secnum);
-#   $logger->debug("Checking for missing citekeys in section $secnum");
-#   foreach my $citekey ($section->get_citekeys) {
-#     # Either the key refers to a real bib entry or a dynamic set entry
-#     unless ( $section->bibentries->entry_exists($citekey) or
-#              $section->get_dynamic_set($citekey)) {
-#       $logger->warn("I didn't find a database entry for '$citekey' (section $secnum)");
-#       $self->{warnings}++;
-#       $section->del_citekey($citekey);
-#       $section->add_undef_citekey($citekey);
-#       next;
-#     }
-#   }
-# }
-
-
 
 =head2 sorted_keys
 
