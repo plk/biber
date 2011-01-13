@@ -270,7 +270,7 @@ sub _bibtex_parse_files {
 
   foreach my $filename (@$files) {
     my $basefilename = $filename;
-    $basefilename =~ s/\.utf8$//;
+    $basefilename =~ s/_$$\.utf8$//;
     my $bib = Text::BibTeX::File->new( $filename, '<' )
       or $logger->logcroak("Cannot create Text::BibTeX::File object from $filename: $!");
     while ( my $entry = new Text::BibTeX::Entry $bib ) {
@@ -297,16 +297,14 @@ sub _bibtex_parse_files {
 
       # Repeated key
       if ( $section->bibentries->entry_exists($origkey) ) {
-        $self->{errors}++;
-        my (undef,undef,$f) = File::Spec->splitpath( $filename );
-        $logger->warn("Repeated entry---key $origkey in file $f\nI'm skipping whatever remains of this entry");
+        my (undef,undef,$f) = File::Spec->splitpath( $basefilename );
+        $logger->warn("Repeated entry---key $origkey in file $f. I'm skipping whatever remains of this entry");
         $self->{warnings}++;
         next;
       }
 
       # Bad entry
       unless ($entry->parse_ok) {
-        $self->{errors}++;
         $logger->warn("Entry $origkey does not parse correctly: skipping");
         $self->{warnings}++;
         next;
@@ -393,7 +391,7 @@ sub _bibtex_parse_entry {
           # Consecutive "and" causes Text::BibTeX::Name to segfault
           unless ($name) {
             $logger->warn("Name in key '$origkey' is empty (probably consecutive 'and'): skipping name");
-            $self->{errors}++;
+            $self->{warnings}++;
             $section->del_citekey($origkey);
             next;
           }
@@ -407,7 +405,7 @@ sub _bibtex_parse_entry {
             my @commas = $name =~ m/,/g;
             if ($#commas > 1) {
               $logger->warn("Name \"$name\" has too many commas: skipping entry $origkey");
-              $self->{errors}++;
+              $self->{warnings}++;
               $section->del_citekey($origkey);
               return undef;
             }
@@ -415,7 +413,7 @@ sub _bibtex_parse_entry {
             # Consecutive commas cause Text::BibTeX::Name to segfault
             if ($name =~ /,,/) {
               $logger->warn("Name \"$name\" is malformed (consecutive commas): skipping entry $origkey");
-              $self->{errors}++;
+              $self->{warnings}++;
               $section->del_citekey($origkey);
               return undef;
             }

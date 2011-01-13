@@ -659,12 +659,12 @@ sub parse_bibtex {
     $filename = $ufilename;
 
     # Increment the number of times each datafile has been referenced
-    # allowing for the possible ".utf8" extra intermediate extension.
+    # allowing for the possible "_$$.utf8" extra intermediate extension.
     # For example, a datafile might be referenced in more than one section.
     # Some things find this information useful, for example, setting preambles is global
     # and so we need to know if we've already saved the preamble for a datafile.
     my $basefilename = $filename;
-    $basefilename =~ s/\.utf8$//;
+    $basefilename =~ s/_$$\.utf8$//;
     $BIBER_DATAFILE_REFS{$basefilename}++;
     Biber::Config->add_working_data_files($secnum, $filename);
   }
