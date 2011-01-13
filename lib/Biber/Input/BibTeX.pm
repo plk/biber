@@ -254,13 +254,11 @@ sub parsename {
     );
 }
 
-# This gets all of the directly cited section entries from a single .bib file
-# and creates Biber::Entry object for them.
-sub _bibtex_parse_cited {
+sub _bibtex_parse_files {
   my ($self, $files) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $keys = [];
+  my @keys = ();
 
   # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
   if (Biber::Config->getoption('quiet')) {
@@ -268,7 +266,7 @@ sub _bibtex_parse_cited {
     open STDERR, '>', '/dev/null';
   }
 
-  my $preamble = []; # is global to all files;
+  my @preamble = (); # is global to all files;
 
   foreach my $filename (@$files) {
     my $basefilename = $filename;
@@ -280,7 +278,7 @@ sub _bibtex_parse_cited {
       if ( $entry->metatype == BTE_PREAMBLE ) {
         # Only push the preambles from the file if we haven't seen this data file before
         unless ($BIBER_DATAFILE_REFS{$basefilename} > 1) {
-          push @$preamble, decode_utf8($entry->value);
+          push @preamble, decode_utf8($entry->value);
         }
         next;
       }
@@ -294,30 +292,53 @@ sub _bibtex_parse_cited {
         next;
       }
 
+      # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing utf8 keys
+      my $origkey = decode_utf8($entry->key);
+
+      # Repeated key
+      if ( $section->bibentries->entry_exists($origkey) ) {
+        $self->{errors}++;
+        my (undef,undef,$f) = File::Spec->splitpath( $filename );
+        $logger->warn("Repeated entry---key $origkey in file $f\nI'm skipping whatever remains of this entry");
+        $self->{warnings}++;
+        next;
+      }
+
+      # Bad entry
+      unless ($entry->parse_ok) {
+        $self->{errors}++;
+        $logger->warn("Entry $origkey does not parse correctly: skipping");
+        $self->{warnings}++;
+        next;
+      }
+
+
       # Skip entry if it's not cited or allkeys is false
       # my $citecasekey = first {lc($origkey) eq lc($_)} $section->get_citekeys;
       # unless ($section->is_allkeys or $citecasekey) {
       #   next;
       # }
 
-      if (my $lc_key = $self->_bibtex_parse_entry($section, $entry, $filename)) {
-        push @$keys, $lc_key if $lc_key;
+      if (my $lc_key = $self->_bibtex_parse_entry($entry)) {
+        push @keys, $lc_key if $lc_key;
       }
     }
   }
 
-  push @{$self->{preamble}}, @$preamble if @$preamble;
+  push @{$self->{preamble}}, @preamble if @preamble;
 
   if (Biber::Config->getoption('quiet')) {
     open STDERR, '>&', \*OLDERR;
   }
 
-  return @$keys;
+  return @keys;
 }
 
 # Parse a particular entry and create a Biber::Entry object for it
 sub _bibtex_parse_entry {
-  my ($self, $section, $entry, $filename) = @_;
+  my ($self, $entry) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
   my $struc = Biber::Config->get_structure;
   my $bibentries = $section->bibentries;
 
@@ -332,21 +353,6 @@ sub _bibtex_parse_entry {
   my $lc_key = lc($origkey);
 
   $logger->debug("Processing entry '$origkey'");
-
-  if ( $bibentries->entry_exists($origkey) ) {
-    $self->{errors}++;
-    my (undef,undef,$f) = File::Spec->splitpath( $filename );
-    $logger->warn("Repeated entry---key $origkey in file $f\nI'm skipping whatever remains of this entry");
-    $self->{warnings}++;
-    return undef;
-  }
-
-  unless ($entry->parse_ok) {
-    $self->{errors}++;
-    $logger->warn("Entry $origkey does not parse correctly: skipping");
-    $self->{warnings}++;
-    return undef;
-  }
 
   my $bibentry = new Biber::Entry;
   $bibentry->set_field('origkey', $origkey);
@@ -403,7 +409,7 @@ sub _bibtex_parse_entry {
               $logger->warn("Name \"$name\" has too many commas: skipping entry $origkey");
               $self->{errors}++;
               $section->del_citekey($origkey);
-              return undef;;
+              return undef;
             }
 
             # Consecutive commas cause Text::BibTeX::Name to segfault

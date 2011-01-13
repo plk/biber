@@ -672,7 +672,7 @@ sub parse_bibtex {
   require Biber::Input::BibTeX;
   push @ISA, 'Biber::Input::BibTeX';
 
-  my @allkeys = $self->_bibtex_parse_cited(Biber::Config->get_working_data_files($secnum));
+  my @allkeys = $self->_bibtex_parse_files(Biber::Config->get_working_data_files($secnum));
 
   # if allkeys, push all bibdata keys into citekeys (if they are not already there)
   # Can't just make citekeys = bibdata keys as this loses information about citekeys
