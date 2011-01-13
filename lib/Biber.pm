@@ -623,8 +623,6 @@ sub parse_bibtex {
 
   $logger->info("Processing $datatype format file '$filename' for section $secnum");
 
-  my @localkeys = ();
-
   my $ufilename = "${filename}_$$.utf8";
 
   # bib encoding is not UTF-8
@@ -674,20 +672,16 @@ sub parse_bibtex {
   require Biber::Input::BibTeX;
   push @ISA, 'Biber::Input::BibTeX';
 
-  @localkeys = $self->_text_bibtex_parse($filename);
+  my @localkeys = $self->_text_bibtex_parse($filename);
 
   unlink $ufilename if -f $ufilename;
-
-  if ($section->is_allkeys) {
-    map { Biber::Config->incr_seenkey($_, $section->number) } @localkeys
-  }
-
-  my $bibentries = $section->bibentries;
 
   # if allkeys, push all bibdata keys into citekeys (if they are not already there)
   # Can't just make citekeys = bibdata keys as this loses information about citekeys
   # that are missing data entries.
   if ($section->is_allkeys) {
+    my $bibentries = $section->bibentries;
+    map { Biber::Config->incr_seenkey($_, $section->number) } @localkeys;
     foreach my $bibkey ($bibentries->sorted_keys) {
       $section->add_citekeys($bibkey);
     }
@@ -969,7 +963,6 @@ sub validate_structure {
         $self->biber_warn($be, $warning);
       }
     }
-
 
     # Date components - we always check these, even if not validating structure
     # as the validation is part of unpacking the *date fields
@@ -1961,6 +1954,7 @@ sub prepare {
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
     $self->process_crossrefs;            # Process crossrefs/sets
     $self->validate_structure;           # Check bib structure
+
     $self->postprocess;                  # Main entry processing loop
 
     # Sorting ---

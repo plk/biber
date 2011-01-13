@@ -254,6 +254,9 @@ sub parsename {
     );
 }
 
+
+# We actually parse all of the .bib file as we don't know yet what we need due to
+# sets, crossrefs etc.
 sub _text_bibtex_parse {
   my ($self, $filename) = @_;
   my $secnum = $self->get_current_section;
@@ -293,20 +296,20 @@ BIBLOOP:  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     next if ( $entry->metatype == BTE_MACRODEF or $entry->metatype == BTE_UNKNOWN
       or $entry->metatype == BTE_COMMENT );
 
-    unless ( $entry->key ) {
-      $logger->warn("Cannot get the key of entry no $count : Skipping");
-      $self->{warnings}++;
-      next;
-    }
-
     # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing utf8 keys
     my $origkey = decode_utf8($entry->key);
 
-    if (!defined $origkey or $origkey =~ /\s/ or $origkey eq '') {
-      $logger->warn("Invalid BibTeX key! Skipping...");
+    if ( not $entry->key or not defined $origkey or $origkey =~ /\s/ or $origkey eq '') {
+      $logger->warn("Invalid or undefined BibTeX entry key! Skipping entry $count ...");
       $self->{warnings}++;
       next;
     }
+
+    # Skip entry if it's not cited or allkeys is false
+    # my $citecasekey = first {lc($origkey) eq lc($_)} $section->get_citekeys;
+    # unless ($section->is_allkeys or $citecasekey) {
+    #   next;
+    # }
 
     # Want a version of the key that is the same case as any citations which
     # reference it, in case they are different. We use this as the .bbl

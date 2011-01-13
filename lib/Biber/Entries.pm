@@ -39,8 +39,7 @@ sub notnull {
 
 sub entry_exists {
   my $self = shift;
-  my $citekey = shift;
-  $citekey = lc($citekey);
+  my $citekey = lc(shift);
   return defined($self->{$citekey}) ? 1 : 0;
 }
 
@@ -53,9 +52,30 @@ sub entry_exists {
 
 sub entry {
   my $self = shift;
-  my $citekey = shift;
-  $citekey = lc($citekey);
-  return $self->{$citekey};
+  my $citekey = lc(shift);
+  return $self->get_entry($citekey);
+}
+
+=head2 get_entry
+
+    returns a Biber::Entry object for a given
+    citekey from cache or datasource
+
+=cut
+
+sub get_entry {
+  my $self = shift;
+  my $citekey = lc(shift);
+  # If entry is already cached, return it
+  if ($self->{$citekey}) {
+    return $self->{$citekey};
+  }
+
+
+  # Otherwise, we need to fetch data from the datasource and generate it
+  $bibentry->set_field('datatype', $datatype);
+  $self->add_entry($cache_key, $bibentry);
+  return $bibentry;
 }
 
 =head2 sorted_keys
