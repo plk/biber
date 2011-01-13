@@ -617,7 +617,7 @@ sub parse_bibtex {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
-  $logger->info('Processing bibtex format files ' . join(', ', @$files) . "for section $secnum");
+  $logger->info('Processing bibtex format files (' . join(',', @$files) . ") for section $secnum");
 
   foreach my $filename (@$files) {
 

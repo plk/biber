@@ -1557,7 +1557,7 @@ my $S =  [
           ]
          ];
 
-$CONFIG_DEFAULT_BIBLATEX{sorting} = {label => $S, final => $S, schemes_same => 1};
+$CONFIG_DEFAULT_BIBLATEX{sorting}{default} = {label => $S, final => $S, schemes_same => 1};
 
 # Set up some encoding aliases to map \inputen{c,x} encoding names to Encode
 # It seems that inputen{c,x} has a different idea of nextstep than Encode

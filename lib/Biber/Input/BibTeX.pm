@@ -306,12 +306,6 @@ sub _bibtex_parse_cited {
     }
   }
 
-  # Now add any set children or crossref parents of cited keys
-  # sets
-
-  # my $sbe = $section->bibentry($citekey);
-  # if ($be->get_field('entrytype') eq 'set') {
-
   push @{$self->{preamble}}, @$preamble if @$preamble;
 
   if (Biber::Config->getoption('quiet')) {
