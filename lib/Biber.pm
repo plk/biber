@@ -41,6 +41,9 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 our $VERSION = '0.7.3';
 our $BETA_VERSION = 1; # Is this a beta version?
 
+my $logger = Log::Log4perl::get_logger('main');
+
+
 =head1 SYNOPSIS
 
     use Biber;
@@ -50,8 +53,6 @@ our $BETA_VERSION = 1; # Is this a beta version?
     $biber->prepare;
 
 =cut
-
-my $logger = Log::Log4perl::get_logger('main');
 
 =head1 METHODS
 
@@ -612,82 +613,6 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
   return;
 }
 
-=head2 parse_bibtex
-
-    This is a wrapper method to parse a bibtex database. It
-    passes the job to Text::BibTeX via Biber::Input::BibTeX
-
-=cut
-
-sub parse_bibtex {
-  my ($self, $files) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-
-  # Clear all T::B macro definitions between sections.
-  # T::B never clears these
-  Text::BibTeX::delete_all_macros;
-
-  $logger->info('Processing bibtex format files (' . join(',', @$files) . ") for section $secnum");
-
-  foreach my $filename (@$files) {
-
-    my $ufilename = "${filename}_$$.utf8";
-
-    # bib encoding is not UTF-8
-    if (Biber::Config->getoption('bibencoding') ne 'UTF-8') {
-      require File::Slurp::Unicode;
-      my $buf = File::Slurp::Unicode::read_file($filename, encoding => Biber::Config->getoption('bibencoding'))
-        or $logger->logcroak("Can't read $filename");
-
-      File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
-          or $logger->logcroak("Can't write $ufilename");
-
-    }
-    else {
-      File::Copy::copy($filename, $ufilename);
-    }
-
-    # Decode LaTeX to UTF8 if output is UTF-8
-    if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
-      require File::Slurp::Unicode;
-      my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
-        or $logger->logcroak("Can't read $ufilename");
-      require Biber::LaTeX::Recode;
-      $logger->info('Decoding LaTeX character macros into UTF-8');
-      $buf = Biber::LaTeX::Recode::latex_decode($buf, strip_outer_braces => 1,
-                                                scheme => Biber::Config->getoption('decodecharsset'));
-
-      File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
-          or $logger->logcroak("Can't write $ufilename");
-    }
-
-    $filename = $ufilename;
-
-    # Increment the number of times each datafile has been referenced
-    # allowing for the possible "_$$.utf8" extra intermediate extension.
-    # For example, a datafile might be referenced in more than one section.
-    # Some things find this information useful, for example, setting preambles is global
-    # and so we need to know if we've already saved the preamble for a datafile.
-    my $basefilename = $filename;
-    $basefilename =~ s/_$$\.utf8$//;
-    $BIBER_DATAFILE_REFS{$basefilename}++;
-    Biber::Config->add_working_data_files($filename);
-  }
-
-  require Biber::Input::BibTeX;
-  # We need the Biber object ref a lot in the parsing routines. This makes it easier
-  push @ISA, 'Biber::Input::BibTeX';
-
-  $self->_bibtex_parse_files(Biber::Config->get_working_data_files);
-
-  # if allkeys, push all bibdata keys into citekeys (if they are not already there)
-  if ($section->is_allkeys) {
-    $section->add_citekeys($section->bibentries->sorted_keys);
-  }
-
-  return;
-}
 
 =head2 parse_biblatexml
 
@@ -1929,6 +1854,10 @@ sub prepare {
     # shortcut - skip sections that don't have any keys
     next unless $section->get_citekeys or $section->is_allkeys;
 
+    # Clear all T::B macro definitions between sections
+    # T::B never clears these
+    Text::BibTeX::delete_all_macros;
+
     my $secnum = $section->number;
     # Remove any dynamically generated per-entry options which might have
     # been set in previous sections (like skiplab, skiplos)
@@ -1977,6 +1906,15 @@ sub fetch_data {
   my $section = $self->sections->get_section($secnum);
   my %datasources;
 
+# call parse on citekeys
+# generate dependents from surviving keys
+# call parse on depedents
+
+# call parse - loop over datasources looking for entry
+#              at end of loop error if not found, instantiate B:E
+#              and resolve aliases if found
+
+
   # Some pre-processing on data sources
   foreach my $datasource ($section->get_datasources) {
     while (my ($type, $sources) = each %$datasource) {
@@ -2017,6 +1955,10 @@ sub fetch_data {
   # Files
   while (my ($datatype, $sources) = each %{$datasources{file}}) {
     if ($datatype eq 'bibtex') {
+      require Biber::Input::BibTeX;
+      # We need the Biber object ref a lot in the parsing routines. This makes it easier
+      push @ISA, 'Biber::Input::BibTeX';
+
       $self->parse_bibtex($sources);
     }
     elsif ($datatype eq 'biblatexml') {

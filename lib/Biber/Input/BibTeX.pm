@@ -30,13 +30,83 @@ our @EXPORT = qw{ parsename };
 =head2 TBSIG
 
      Signal handler to catch fatal Text::BibTex SEGFAULTS. It has bugs
-     and we want to say at least something when it coredumps
+     and we want to say at least something if it coredumps
 
 =cut
 
 sub TBSIG {
   my $sig = shift;
-    $logger->logcroak("Caught signal: $sig\nLikely your .bib has a bad entry: $!");
+  $logger->logcroak("Caught signal: $sig\nLikely your .bib has a bad entry: $!");
+}
+
+
+=head2 parse_bibtex
+
+    This is a wrapper method to parse a bibtex database. It
+    passes the job to Text::BibTeX via Biber::Input::BibTeX
+
+=cut
+
+sub parse_bibtex {
+  my ($self, $files) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+
+  $logger->info('Processing bibtex format files (' . join(',', @$files) . ") for section $secnum");
+
+  foreach my $filename (@$files) {
+
+    my $ufilename = "${filename}_$$.utf8";
+
+    # bib encoding is not UTF-8
+    if (Biber::Config->getoption('bibencoding') ne 'UTF-8') {
+      require File::Slurp::Unicode;
+      my $buf = File::Slurp::Unicode::read_file($filename, encoding => Biber::Config->getoption('bibencoding'))
+        or $logger->logcroak("Can't read $filename");
+
+      File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
+          or $logger->logcroak("Can't write $ufilename");
+
+    }
+    else {
+      File::Copy::copy($filename, $ufilename);
+    }
+
+    # Decode LaTeX to UTF8 if output is UTF-8
+    if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
+      require File::Slurp::Unicode;
+      my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
+        or $logger->logcroak("Can't read $ufilename");
+      require Biber::LaTeX::Recode;
+      $logger->info('Decoding LaTeX character macros into UTF-8');
+      $buf = Biber::LaTeX::Recode::latex_decode($buf, strip_outer_braces => 1,
+                                                scheme => Biber::Config->getoption('decodecharsset'));
+
+      File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
+          or $logger->logcroak("Can't write $ufilename");
+    }
+
+    $filename = $ufilename;
+
+    # Increment the number of times each datafile has been referenced
+    # allowing for the possible "_$$.utf8" extra intermediate extension.
+    # For example, a datafile might be referenced in more than one section.
+    # Some things find this information useful, for example, setting preambles is global
+    # and so we need to know if we've already saved the preamble for a datafile.
+    my $basefilename = $filename;
+    $basefilename =~ s/_$$\.utf8$//;
+    $BIBER_DATAFILE_REFS{$basefilename}++;
+    Biber::Config->add_working_data_files($filename);
+  }
+
+  $self->_bibtex_parse_files(Biber::Config->get_working_data_files);
+
+  # if allkeys, push all bibdata keys into citekeys (if they are not already there)
+  if ($section->is_allkeys) {
+    $section->add_citekeys($section->bibentries->sorted_keys);
+  }
+
+  return;
 }
 
 

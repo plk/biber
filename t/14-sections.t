@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 9;
+use Test::More tests => 11;
 
 use Biber;
 use Biber::Utils;
@@ -67,6 +67,9 @@ String for Preamble 4%
 |;
 
 is_deeply($biber->get_preamble, $preamble, 'Preamble for all sections');
+is($section0->bibentry('sect1')->get_field('note'), 'value1', 'Section 0 macro test');
+# If macros were not reset between sections, this would give a macro redef error
+is($section1->bibentry('sect4')->get_field('note'), 'value2', 'Section 1 macro test');
 is_deeply([$section0->get_citekeys], ['sect1', 'sect2', 'sect3', 'sect8'], 'Section 0 citekeys');
 is_deeply([$section0->get_shorthands], ['sect1', 'sect2', 'sect8'], 'Section 0 shorthands');
 is_deeply([$section1->get_citekeys], ['sect4', 'sect5'], 'Section 1 citekeys');
