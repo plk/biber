@@ -1937,7 +1937,7 @@ sub prepare {
     $logger->info("Processing bib section $secnum");
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
-    $self->parse_data;                   # Parse data into section objects
+    $self->fetch_data;                   # Fetch cited key and depedent data from sources
     $self->check_missing;                # Check for missing citekeys before anything else
     $self->resolve_aliases;              # Resolve entrytype/field aliases to normalise entries
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
@@ -1965,13 +1965,13 @@ sub prepare {
   return;
 }
 
-=head2 parse_data
+=head2 fetch_data
 
-    Read the data file(s) for the section and store it in the section object
+    Fetch citekey and depedents data from section sources
 
 =cut
 
-sub parse_data {
+sub fetch_data {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -2012,7 +2012,7 @@ sub parse_data {
     }
   }
 
-  # Here we decide which parser to use for the data sources
+  # Here we decide which parsing routine to use for the data sources
 
   # Files
   while (my ($datatype, $sources) = each %{$datasources{file}}) {
