@@ -617,6 +617,10 @@ sub parse_bibtex {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
+  # Clear all T::B macro definitions between sections.
+  # T::B never clears these
+  Text::BibTeX::delete_all_macros;
+
   $logger->info('Processing bibtex format files (' . join(',', @$files) . ") for section $secnum");
 
   foreach my $filename (@$files) {
@@ -1969,9 +1973,6 @@ sub parse_data {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my %datafiles;
-  # Clear all T::B macro definitions between sections.
-  # T::B never clears these
-  Text::BibTeX::delete_all_macros;
 
   foreach my $datafile ($section->get_datafiles) {
     my $name = $datafile->{name};
