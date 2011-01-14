@@ -301,46 +301,48 @@ sub add_undef_citekey {
 }
 
 
-=head2 add_datafile
+=head2 add_datasource
 
-    Adds a data file to a section
+    Adds a data source to a section
 
 =cut
 
-sub add_datafile {
+sub add_datasource {
   my $self = shift;
-  my $file = shift;
-  push @{$self->{datafiles}}, $file;
+  my $type = shift;
+  my $source = shift;
+  push @{$self->{datasources}{$type}}, $source;
   return;
 }
 
-=head2 set_datafiles
+=head2 set_datasources
 
-    Sets the datafiles for a section, passed as arrayref
+    Sets the data sources for a section
 
 =cut
 
-sub set_datafiles {
+sub set_datasources {
   my $self = shift;
-  my $files = shift;
-  $self->{datafiles} = $files;
+  my $type = shift;
+  my $sources = shift;
+  $self->{datasources}{$type} = $sources;
   return;
 }
 
 
-=head2 get_datafiles
+=head2 get_datasources
 
-    Gets an array of data files for this section
+    Gets an array of data sources for this section
 
 =cut
 
-sub get_datafiles {
+sub get_datasources {
   my $self = shift;
-  if (exists($self->{datafiles})) {
-    return @{$self->{datafiles}};
+  if (exists($self->{datasources})) {
+    return $self->{datasources};
   }
   else {
-    return ();
+    return undef;
   }
 }
 

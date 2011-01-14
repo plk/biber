@@ -509,21 +509,26 @@ sub parse_ctrlfile {
   # SECTIONS
   # This is also where we set data files as these are associated with a bib section
 
-  # Datafiles
-  my %bibdatafiles = ();
+  # Data sources
+  my %bibdatasources = ();
   foreach my $data (@{$bcfxml->{bibdata}}) {
     foreach my $datasource (@{$data->{datasource}}) {
       # default datatype is bibtex
       my $datatype = $datasource->{datatype} ? $datasource->{datatype} : 'bibtex';
       # file data sources
       if ($datasource->{type} eq 'file') {
-        push @{$bibdatafiles{$data->{section}[0]}}, { name     => $datasource->{content},
-                                                      datatype => $datatype };
+        push @{$bibdatasources{$data->{section}[0]}{file}}, { name     => $datasource->{content},
+                                                              datatype => $datatype };
+      }
+      # db data sources
+      if ($datasource->{type} eq 'db') {
+        push @{$bibdatasources{$data->{section}[0]}{db}}, { name     => $datasource->{content},
+                                                            datatype => $datatype };
       }
     }
   }
 
-  unless (%bibdatafiles or Biber::Config->getoption('bibdata')) {
+  unless (%bibdatasources or Biber::Config->getoption('bibdata')) {
     $logger->logcroak("No data files on command line or provided in the file '$ctrl_file_path'! Exiting")
   }
 
@@ -543,8 +548,10 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
     # Set the data files for the section unless we've already done so
     # (for example, for multiple section 0 entries)
-    $bib_section->set_datafiles($bibdatafiles{$section->{number}}) unless
-      $bib_section->get_datafiles;
+    while (my ($type, $source) = each %{$bibdatasources{$section->{number}}}) {
+      $bib_section->set_datasources($type, $source) unless
+        $bib_section->get_datasources;
+    }
 
     # Stop reading citekeys if we encounter "*" as a citation as this means
     # "all keys"
@@ -1972,25 +1979,60 @@ sub parse_data {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my %datafiles;
+  my %datasources;
 
-  foreach my $datafile ($section->get_datafiles) {
-    my $name = $datafile->{name};
-    my $datatype = $datafile->{datatype};
-    $name .= '.bib' unless $name =~ /\.(?:bib|xml|dbxml)\z/xms;
-    my $dfname;
-    if ($dfname = locate_biber_file($name)) {
-      $logger->info("Found $datatype data file '$dfname'");
+  # Some pre-processing on data sources
+  foreach my $datasource ($section->get_datasources) {
+    while (my ($type, $sources) = each %$datasource) {
+      foreach my $source (@$sources) {
+        my $name = $source->{name};
+        my $datatype = $source->{datatype};
+        if ($type eq 'file') {
+          if ($datatype eq 'bibtex') {
+            $name .= '.bib' unless $name =~ /\.bib\z/xms;
+          }
+          elsif ($datatype eq 'biblatexml') {
+            $name .= '.xml' unless $name =~ /\.xml\z/xms;
+          }
+          elsif ($datatype eq 'biblatexmldb') {
+            $name .= '.dbxml' unless $name =~ /\.dbxml\z/xms;
+          }
+          my $dfname;
+          if ($dfname = locate_biber_file($name)) {
+            $logger->info("Found $datatype data file '$dfname'");
+          }
+          else {
+            $logger->logcroak("File '$name' does not exist!")
+          }
+          push @{$datasources{$type}{$datatype}}, $dfname;
+        }
+        elsif ($type eq 'db') {
+          my $connection;
+          if ($datatype eq 'zotero') {
+          }
+          push @{$datasources{$type}{$datatype}}, $connection;
+        }
+      }
     }
-    else {
-      $logger->logcroak("File '$name' does not exist!")
-    }
-    push @{$datafiles{$datatype}}, $dfname;
   }
-  # Here we decide which parser to use for the data file
-  foreach my $datatype (keys %datafiles) {
+
+  # Here we decide which parser to use for the data sources
+  # Files
+  while (my ($datatype, $sources) = each %{$datasources{file}}) {
     if ($datatype eq 'bibtex') {
-      $self->parse_bibtex($datafiles{$datatype});
+      $self->parse_bibtex($sources);
+    }
+    elsif ($datatype eq 'biblatexml') {
+      $self->parse_biblatexml($sources);
+    }
+    elsif ($datatype eq 'biblatexmldb') {
+      $self->parse_biblatexmldb($sources);
+    }
+  }
+  # DBs
+  while (my ($datatype, $sources) = each %{$datasources{file}}) {
+    if ($datatype eq 'zotero') {
+      $self->parse_zotero($sources);
     }
   }
   return;
