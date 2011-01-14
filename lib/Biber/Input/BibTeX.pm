@@ -258,7 +258,6 @@ sub _bibtex_parse_files {
   my ($self, $files) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my @keys = ();
 
   # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
   if (Biber::Config->getoption('quiet')) {
@@ -317,9 +316,7 @@ sub _bibtex_parse_files {
       #   next;
       # }
 
-      if (my $lc_key = $self->_bibtex_parse_entry($entry)) {
-        push @keys, $lc_key if $lc_key;
-      }
+      $self->_bibtex_parse_entry($entry);
     }
   }
 
@@ -328,8 +325,6 @@ sub _bibtex_parse_files {
   if (Biber::Config->getoption('quiet')) {
     open STDERR, '>&', \*OLDERR;
   }
-
-  return @keys;
 }
 
 # Parse a particular entry and create a Biber::Entry object for it
@@ -436,7 +431,7 @@ sub _bibtex_parse_entry {
     $bibentries->add_entry($lc_key, $bibentry);
   }
 
-  return $lc_key;
+  return;
 }
 
 1;

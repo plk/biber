@@ -679,16 +679,11 @@ sub parse_bibtex {
   # We need the Biber object ref a lot in the parsing routines. This makes it easier
   push @ISA, 'Biber::Input::BibTeX';
 
-  my @allkeys = $self->_bibtex_parse_files(Biber::Config->get_working_data_files);
+  $self->_bibtex_parse_files(Biber::Config->get_working_data_files);
 
   # if allkeys, push all bibdata keys into citekeys (if they are not already there)
-  # Can't just make citekeys = bibdata keys as this loses information about citekeys
-  # that are missing data entries.
   if ($section->is_allkeys) {
-    map { Biber::Config->incr_seenkey($_, $section->number) } @allkeys;
-    foreach my $bibkey ($section->bibentries->sorted_keys) {
-      $section->add_citekeys($bibkey);
-    }
+    $section->add_citekeys($section->bibentries->sorted_keys);
   }
 
   return;
