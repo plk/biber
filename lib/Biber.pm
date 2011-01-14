@@ -648,11 +648,6 @@ sub parse_bibtex {
       File::Copy::copy($filename, $ufilename);
     }
 
-    # Force bblsafechars flag if output to ASCII
-    if (Biber::Config->getoption('bblencoding') =~ /(?:x-)ascii/xmsi) {
-      Biber::Config->setoption('bblsafechars', 1);
-    }
-
     # Decode LaTeX to UTF8 if output is UTF-8
     if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
       require File::Slurp::Unicode;
@@ -677,13 +672,14 @@ sub parse_bibtex {
     my $basefilename = $filename;
     $basefilename =~ s/_$$\.utf8$//;
     $BIBER_DATAFILE_REFS{$basefilename}++;
-    Biber::Config->add_working_data_files($secnum, $filename);
+    Biber::Config->add_working_data_files($filename);
   }
 
   require Biber::Input::BibTeX;
+  # We need the Biber object ref a lot in the parsing routines. This makes it easier
   push @ISA, 'Biber::Input::BibTeX';
 
-  my @allkeys = $self->_bibtex_parse_files(Biber::Config->get_working_data_files($secnum));
+  my @allkeys = $self->_bibtex_parse_files(Biber::Config->get_working_data_files);
 
   # if allkeys, push all bibdata keys into citekeys (if they are not already there)
   # Can't just make citekeys = bibdata keys as this loses information about citekeys
@@ -752,6 +748,11 @@ sub process_setup {
   # This has to be here as opposed to in parse_control() so that it can pick
   # up structure defaults in Constants.pm in case there is no .bcf
   Biber::Config->set_structure(Biber::Structure->new(Biber::Config->getblxoption('structure')));
+
+  # Force bblsafechars flag if output to ASCII
+  if (Biber::Config->getoption('bblencoding') =~ /(?:x-)ascii/xmsi) {
+    Biber::Config->setoption('bblsafechars', 1);
+  }
 }
 
 =head2 resolve_aliases
@@ -1962,7 +1963,7 @@ sub prepare {
 
     $self->create_output_section;        # Generate and push the section output into the
                                          # output object ready for writing
-    Biber::Config->delete_working_data_files($secnum); # delete temporary data files
+    Biber::Config->delete_working_data_files; # delete temporary data files
   }
   $self->create_output_misc;             # Generate and push the final misc bits of output
                                          # into the output object ready for writing
@@ -2017,6 +2018,7 @@ sub parse_data {
   }
 
   # Here we decide which parser to use for the data sources
+
   # Files
   while (my ($datatype, $sources) = each %{$datasources{file}}) {
     if ($datatype eq 'bibtex') {

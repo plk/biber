@@ -58,7 +58,7 @@ $CONFIG->{state}{seenkeys} = {};
 $CONFIG->{state}{control_file_location} = '';
 
 # Data files per section being used by biber
-$CONFIG->{state}{datafiles} = {};
+$CONFIG->{state}{datafiles} = [];
 
 =head2 _init
 
@@ -78,7 +78,7 @@ sub _init {
   $CONFIG->{state}{seen_extraalpha} = {};
   $CONFIG->{state}{seenkeys} = {};
   $CONFIG->{state}{keycase} = {};
-  $CONFIG->{state}{datafiles} = {};
+  $CONFIG->{state}{datafiles} = [];
 
   return;
 }
@@ -232,9 +232,8 @@ sub postprocess_biber_opts {
 
 sub add_working_data_files {
   shift;
-  my $secnum = shift;
   my $file = shift;
-  push @{$CONFIG->{state}{datafiles}{$secnum}}, $file;
+  push @{$CONFIG->{state}{datafiles}}, $file;
   return;
 }
 
@@ -246,8 +245,7 @@ sub add_working_data_files {
 
 sub get_working_data_files {
   shift;
-  my $secnum = shift;
-  return $CONFIG->{state}{datafiles}{$secnum};
+  return $CONFIG->{state}{datafiles};
 }
 
 
@@ -259,11 +257,10 @@ sub get_working_data_files {
 
 sub delete_working_data_files {
   shift;
-  my $secnum = shift;
-  foreach my $tempfile (@{$CONFIG->{state}{datafiles}{$secnum}}) {
+  foreach my $tempfile (@{$CONFIG->{state}{datafiles}}) {
     unlink $tempfile if -e $tempfile;
   }
-  delete($CONFIG->{state}{datafiles}{$secnum});
+  delete($CONFIG->{state}{datafiles});
   return;
 }
 
