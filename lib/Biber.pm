@@ -1896,7 +1896,7 @@ sub prepare {
 
 =head2 fetch_data
 
-    Fetch citekey and depedents data from section sources
+    Fetch citekey and dependents data from section sources
 
 =cut
 
@@ -1955,9 +1955,9 @@ sub fetch_data {
   # Files
   while (my ($datatype, $sources) = each %{$datasources{file}}) {
     if ($datatype eq 'bibtex') {
-      require Biber::Input::BibTeX;
+      require Biber::Input::file::bibtex;
       # We need the Biber object ref a lot in the parsing routines. This makes it easier
-      push @ISA, 'Biber::Input::BibTeX';
+      push @ISA, 'Biber::Input::file::bibtex';
 
       $self->parse_bibtex($sources);
     }

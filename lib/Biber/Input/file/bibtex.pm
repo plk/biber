@@ -1,4 +1,4 @@
-package Biber::Input::BibTeX;
+package Biber::Input::file::bibtex;
 use sigtrap qw(handler TBSIG SEGV);
 use strict;
 use warnings;
