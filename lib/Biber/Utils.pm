@@ -61,16 +61,23 @@ sub locate_biber_file {
     $outfile = File::Spec->catfile($outdir, $filename);
   }
 
+  # Filename is absolute
   if (File::Spec->file_name_is_absolute($filename)) {
     return $filename;
   }
-  elsif (defined($outfile) and -e $outfile) {
+
+  # File is output_directory
+  if (defined($outfile) and -e $outfile) {
     return $outfile;
   }
-  elsif (-e $filename) {
+
+  # File is relative to cwd
+  if (-e $filename) {
     return $filename;
   }
-  elsif (my $cfp = Biber::Config->get_ctrlfile_path) {
+
+  # File is where control file lives
+  if (my $cfp = Biber::Config->get_ctrlfile_path) {
     my ($ctlvolume, $ctldir, undef) = File::Spec->splitpath($cfp);
     if ($ctlvolume) { # add vol sep for windows if volume is set and there isn't one
       $ctlvolume .= ':' unless $ctlvolume =~ /:\z/;
@@ -78,9 +85,14 @@ sub locate_biber_file {
     if ($ctldir) { # add path sep if there isn't one
       $ctldir .= '/' unless $ctldir =~ /\/\z/;
     }
-    return "$ctlvolume$ctldir$filename";
+
+    my $path = "$ctlvolume$ctldir$filename";
+
+    return $path if -e $path;
   }
-  elsif (can_run('kpsewhich')) {
+
+  # File is in kpse path
+  if (can_run('kpsewhich')) {
     my $found;
     scalar run( command => [ 'kpsewhich', $filename ],
                 verbose => 0,
