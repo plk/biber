@@ -114,7 +114,8 @@ sub extract_entries {
   }
 
   # Only push the preambles from the file if we haven't seen this data file before
-  unless ($cache->{counts}{$filename} > 1) {
+  # and there are some preambles to push
+  if ($cache->{counts}{$filename} < 2 and @{$cache->{preamble}{$filename}}) {
     push @{$self->{preamble}}, @{$cache->{preamble}{$filename}};
   }
 
