@@ -85,8 +85,14 @@ sub extract_entries {
   if ($section->is_allkeys) {
     $logger->debug("All cached citekeys will be used for section '$secnum'");
     # Loop over all entries, creating objects
-    while (my ($key, $entry) = each %{$cache->{data}{$filename}}) {
-      create_entry($self, $key, $entry);
+    while (my (undef, $entry) = each %{$cache->{data}{$filename}}) {
+      # We have to pass the datasource cased (and UTF-8ed) key to
+      # create_entry() as this sub needs to know the original case of the
+      # citation key so we can do case-insensitive key/entry comparisons
+      # later but we need to put the original citation case when we write
+      # the .bbl. If we lowercase before this, we lose this information.
+      # Of course, with allkeys, "citation case" means "datasource entry case"
+      create_entry($self, decode_utf8($entry->key), $entry);
     }
 
     # if allkeys, push all bibdata keys into citekeys (if they are not already there)
@@ -99,8 +105,12 @@ sub extract_entries {
     $logger->debug('Wanted keys: ' . join(', ', @$keys));
     foreach my $wanted_key (@$keys) {
       $logger->debug("Looking for key '$wanted_key' in Text::BibTeX cache");
-      if (my $entry = $cache->{data}{$filename}{$wanted_key}) {
+      # Cache index keys are lower-cased. This next line effectively implements
+      # case insensitive citekeys
+      if (my $entry = $cache->{data}{$filename}{lc($wanted_key)}) {
         $logger->debug("Found key '$wanted_key' in Text::BibTeX cache");
+        # See comment above about the importance of the case of the key
+        # passed to create_entry()
         create_entry($self, $wanted_key, $entry);
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
@@ -232,7 +242,8 @@ sub create_entry {
 
 =head2 cache_data
 
-   Caches file data into T::B objects
+   Caches file data into T::B objects indexed by the original
+   datasource key, decoded into UTF8
 
 =cut
 
@@ -277,7 +288,7 @@ sub cache_data {
 
     # Cache the entry so we don't have to read the file again on next pass.
     # Two reasons - So we avoid T::B macro redef warnings and speed
-    $cache->{data}{$filename}{$origkey} = $entry;
+    $cache->{data}{$filename}{lc($origkey)} = $entry;
     $logger->debug("Cached Text::BibTeX entry for key '$origkey' from bibtex file '$filename'");
   }
 
