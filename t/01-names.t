@@ -6,7 +6,7 @@ no warnings 'utf8';
 use Test::More tests => 45;
 
 use Biber;
-use Biber::Input::BibTeX;
+use Biber::Input::file::bibtex;
 use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
@@ -665,20 +665,20 @@ my $l29 = q|  \entry{L29}{book}{}
 
 |;
 
-is_deeply(parsename('John Doe', 'author'), $name1, 'parsename 1');
-is_deeply(parsename('Doe, Jr, John', 'author'), $name2, 'parsename 2');
-is_deeply(parsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author', {useprefix => 1}), $name3, 'parsename 3') ;
-is_deeply(parsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author', {useprefix => 0}), $name4, 'parsename 4') ;
-is_deeply(parsename('{Robert and Sons, Inc.}', 'author'), $name5, 'parsename 5') ;
-is_deeply(parsename('al-Ṣāliḥ, ʿAbdallāh', 'author'), $name6, 'parsename 6') ;
-is_deeply(parsename('Jean Charles Gabriel de la Vallée Poussin', 'author', {useprefix => 1}), $name7, 'parsename 7');
-is_deeply(parsename('{Jean Charles Gabriel} de la Vallée Poussin', 'author'), $name8, 'parsename 8');
-is_deeply(parsename('Jean Charles Gabriel {de la} Vallée Poussin', 'author'), $name9, 'parsename 9');
-is_deeply(parsename('Jean Charles Gabriel de la {Vallée Poussin}', 'author'), $name10, 'parsename 10');
-is_deeply(parsename('{Jean Charles Gabriel} de la {Vallée Poussin}', 'author'), $name11, 'parsename 11');
-is_deeply(parsename('Jean Charles Gabriel Poussin', 'author'), $name12, 'parsename 12');
-is_deeply(parsename('Jean Charles {Poussin Lecoq}', 'author'), $name13, 'parsename 13');
-is_deeply(parsename('J. C. G. de la Vallée Poussin', 'author', {useprefix => 1}), $name14, 'parsename 14');
+is_deeply(Biber::Input::file::bibtex::parsename('John Doe', 'author'), $name1, 'parsename 1');
+is_deeply(Biber::Input::file::bibtex::parsename('Doe, Jr, John', 'author'), $name2, 'parsename 2');
+is_deeply(Biber::Input::file::bibtex::parsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author', {useprefix => 1}), $name3, 'parsename 3') ;
+is_deeply(Biber::Input::file::bibtex::parsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author', {useprefix => 0}), $name4, 'parsename 4') ;
+is_deeply(Biber::Input::file::bibtex::parsename('{Robert and Sons, Inc.}', 'author'), $name5, 'parsename 5') ;
+is_deeply(Biber::Input::file::bibtex::parsename('al-Ṣāliḥ, ʿAbdallāh', 'author'), $name6, 'parsename 6') ;
+is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la Vallée Poussin', 'author', {useprefix => 1}), $name7, 'parsename 7');
+is_deeply(Biber::Input::file::bibtex::parsename('{Jean Charles Gabriel} de la Vallée Poussin', 'author'), $name8, 'parsename 8');
+is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel {de la} Vallée Poussin', 'author'), $name9, 'parsename 9');
+is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la {Vallée Poussin}', 'author'), $name10, 'parsename 10');
+is_deeply(Biber::Input::file::bibtex::parsename('{Jean Charles Gabriel} de la {Vallée Poussin}', 'author'), $name11, 'parsename 11');
+is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel Poussin', 'author'), $name12, 'parsename 12');
+is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles {Poussin Lecoq}', 'author'), $name13, 'parsename 13');
+is_deeply(Biber::Input::file::bibtex::parsename('J. C. G. de la Vallée Poussin', 'author', {useprefix => 1}), $name14, 'parsename 14');
 
 is( $out->get_output_entry('l1'), $l1, 'First Last') ;
 is( $out->get_output_entry('l2'), $l2, 'First Initial. Last') ;
@@ -704,7 +704,7 @@ is( $out->get_output_entry('l23'), $l23, 'Unicode firstname');
 is( $out->get_output_entry('l24'), $l24, 'Unicode lastname');
 is( $out->get_output_entry('l25'), $l25, 'Single string name');
 is( $out->get_output_entry('l26'), $l26, 'Hyphen at brace level <> 0');
-is($section->has_citekey('l27'), '0', 'Bad name with 3 commas');
+is($section->bibentry('l27')->get_field('author')->count_elements, 1, 'Bad name with 3 commas');
 is($section->has_citekey('l28'), '0', 'Bad name with consecutive commas');
 is( $out->get_output_entry('l29'), $l29, 'Escaped name with 3 commas');
 

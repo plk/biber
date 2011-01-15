@@ -27,8 +27,7 @@ use base 'Biber::Internals';
 use Config::General qw( ParseConfig );
 use Data::Dump;
 use Data::Compare;
-use Text::BibTeX; # Need this in here in order to reset @STRING macros per section
-our @ISA;
+use Text::BibTeX;
 
 =encoding utf-8
 
@@ -518,13 +517,15 @@ sub parse_ctrlfile {
       my $datatype = $datasource->{datatype} ? $datasource->{datatype} : 'bibtex';
       # file data sources
       if ($datasource->{type} eq 'file') {
-        push @{$bibdatasources{$data->{section}[0]}{file}}, { name     => $datasource->{content},
-                                                              datatype => $datatype };
+        push @{$bibdatasources{$data->{section}[0]}}, { type     => 'file', 
+                                                        name     => $datasource->{content},
+                                                        datatype => $datatype };
       }
       # db data sources
       if ($datasource->{type} eq 'db') {
-        push @{$bibdatasources{$data->{section}[0]}{db}}, { name     => $datasource->{content},
-                                                            datatype => $datatype };
+        push @{$bibdatasources{$data->{section}[0]}}, { type    => 'db',
+                                                        name     => $datasource->{content},
+                                                        datatype => $datatype };
       }
     }
   }
@@ -549,10 +550,8 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
     # Set the data files for the section unless we've already done so
     # (for example, for multiple section 0 entries)
-    while (my ($type, $source) = each %{$bibdatasources{$section->{number}}}) {
-      $bib_section->set_datasources($type, $source) unless
-        $bib_section->get_datasources;
-    }
+    $bib_section->set_datasources($bibdatasources{$section->{number}}) unless
+      $bib_section->get_datasources;
 
     # Stop reading citekeys if we encounter "*" as a citation as this means
     # "all keys"
@@ -613,48 +612,6 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
   return;
 }
 
-
-=head2 parse_biblatexml
-
-    $biber->parse_biblatexml('data.xml');
-
-    Parse a database in the BibLaTeXML format with Biber::BibLaTeXML (via
-    XML::LibXML). If the suffix is dbxml, then the database is assumed to
-    be stored in a Berkeley DBXML container and will be queried through the
-    Sleepycat::DbXml interface.
-
-=cut
-
-sub parse_biblatexml {
-  my ($self, $xml) = @_;
-  require Biber::BibLaTeXML;
-  push @ISA, 'Biber::BibLaTeXML';
-  $self->_parse_biblatexml($xml);
-}
-
-=head2 check_missing
-
-   Check for missing citation keys
-
-=cut
-
-sub check_missing {
-  my $self = shift;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  $logger->debug("Checking for missing citekeys in section $secnum");
-  foreach my $citekey ($section->get_citekeys) {
-    # Either the key refers to a real bib entry or a dynamic set entry
-    unless ( $section->bibentries->entry_exists($citekey) or
-             $section->get_dynamic_set($citekey)) {
-      $logger->warn("I didn't find a database entry for '$citekey' (section $secnum)");
-      $self->{warnings}++;
-      $section->del_citekey($citekey);
-      $section->add_undef_citekey($citekey);
-      next;
-    }
-  }
-}
 
 =head2 process_setup
 
@@ -730,7 +687,7 @@ sub instantiate_dynamic {
   $logger->debug("Creating dynamic entries (sets/related) for section $secnum");
 
   # Instantiate any dynamic set entries before we do anything else
-  foreach my $dset ($section->dynamic_set_keys) {
+  foreach my $dset (@{$section->dynamic_set_keys}) {
     my @members = $section->get_dynamic_set($dset);
     my $be = new Biber::Entry;
     $be->set_field('entrytype', 'set');
@@ -1762,6 +1719,7 @@ sub sort_shorthands {
   my @shorthands = $section->get_shorthands;
   my @citekeys = $section->get_citekeys;
   my $key_index;
+
   my %citekeys = map {$_ => $key_index++} @citekeys;
   # What we sort on depends on the 'sortlos' BibLaTeX option
   my $thislocale = Biber::Config->getoption('sortlocale');
@@ -1854,10 +1812,6 @@ sub prepare {
     # shortcut - skip sections that don't have any keys
     next unless $section->get_citekeys or $section->is_allkeys;
 
-    # Clear all T::B macro definitions between sections
-    # T::B never clears these
-    Text::BibTeX::delete_all_macros;
-
     my $secnum = $section->number;
     # Remove any dynamically generated per-entry options which might have
     # been set in previous sections (like skiplab, skiplos)
@@ -1866,8 +1820,7 @@ sub prepare {
     $logger->info("Processing bib section $secnum");
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
-    $self->fetch_data;                   # Fetch cited key and depedent data from sources
-    $self->check_missing;                # Check for missing citekeys before anything else
+    $self->fetch_data;                   # Fetch cited key and dependent data from sources
     $self->resolve_aliases;              # Resolve entrytype/field aliases to normalise entries
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
     $self->process_crossrefs;            # Process crossrefs/sets
@@ -1887,7 +1840,6 @@ sub prepare {
 
     $self->create_output_section;        # Generate and push the section output into the
                                          # output object ready for writing
-    Biber::Config->delete_working_data_files; # delete temporary data files
   }
   $self->create_output_misc;             # Generate and push the final misc bits of output
                                          # into the output object ready for writing
@@ -1896,7 +1848,7 @@ sub prepare {
 
 =head2 fetch_data
 
-    Fetch citekey and dependents data from section sources
+    Fetch citekey and dependents data from section datasources
 
 =cut
 
@@ -1904,76 +1856,99 @@ sub fetch_data {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my %datasources;
+  my @citekeys = $section->get_static_citekeys;
+  no strict "refs"; # symbolic references below ...
 
-# call parse on citekeys
-# generate dependents from surviving keys
-# call parse on depedents
+  # Clear all T::B macro definitions between sections
+  # T::B never clears these
+  $logger->debug('Clearing Text::BibTeX macros definitions');
+  Text::BibTeX::delete_all_macros;
 
-# call parse - loop over datasources looking for entry
-#              at end of loop error if not found, instantiate B:E
-#              and resolve aliases if found
+  # First we look for the directly cited keys in each datasource
+  my @remaining_keys = @citekeys;
+  foreach my $datasource (@{$section->get_datasources}) {
+    # shortcut if we have found all the keys now
+    last unless (@remaining_keys or $section->is_allkeys);
+    my $type = $datasource->{type};
+    my $name = $datasource->{name};
+    my $datatype = $datasource->{datatype};
+    my $package = 'Biber::Input::' . $type . '::' . $datatype;
+    $logger->debug("Looking in data source '$name' ...");
+    eval "require $package";
+    @remaining_keys = eval "${package}::extract_entries(\$self, \$name, \\\@citekeys)";
+    $logger->croak("Error in eval of ${package}::extract_entries(): $@") if $@;
+  }
 
+  # error reporting
+  $logger->debug("Directly cited keys not found for section '$secnum': " . join(',', @remaining_keys));
+  foreach my $citekey (@remaining_keys) {
+    # Dynamic set key entries always exist as we create them
+    unless ($section->get_dynamic_set($citekey)) {
+      $logger->warn("I didn't find a database entry for '$citekey' (section $secnum)");
+      $self->{warnings}++;
+      $section->del_citekey($citekey);
+      $section->add_undef_citekey($citekey);
+    }
+  }
 
-  # Some pre-processing on data sources
-  foreach my $datasource ($section->get_datasources) {
-    while (my ($type, $sources) = each %$datasource) {
-      foreach my $source (@$sources) {
-        my $name = $source->{name};
-        my $datatype = $source->{datatype};
-        if ($type eq 'file') {
-          if ($datatype eq 'bibtex') {
-            $name .= '.bib' unless $name =~ /\.bib\z/xms;
-          }
-          elsif ($datatype eq 'biblatexml') {
-            $name .= '.xml' unless $name =~ /\.xml\z/xms;
-          }
-          elsif ($datatype eq 'biblatexmldb') {
-            $name .= '.dbxml' unless $name =~ /\.dbxml\z/xms;
-          }
-          my $dfname;
-          if ($dfname = locate_biber_file($name)) {
-            $logger->info("Found $datatype data file '$dfname'");
-          }
-          else {
-            $logger->logcroak("File '$name' does not exist!")
-          }
-          push @{$datasources{$type}{$datatype}}, $dfname;
+  # Don't need to look for dependents if allkeys, we have everything already
+  unless ($section->is_allkeys) {
+  # dependent key list generation
+    my @dependent_keys = ();
+    foreach my $citekey ($section->get_citekeys) {
+      # Dynamic sets don't exist yet but their members do
+      if (my @dmems = $section->get_dynamic_set($citekey)) {
+        push @dependent_keys, @dmems;
+        $logger->debug("Dynamic set entry '$citekey' has members: " . join(', ', @dmems));
+      }
+      else {
+        # This must exist for all but dynamic sets
+        my $be = $section->bibentry($citekey);
+        # crossrefs/xrefs
+        my $refkey;
+        if ($refkey = $be->get_field('xref') or
+            $refkey = $be->get_field('crossref')) {
+          push @dependent_keys, $refkey;
+          $logger->debug("Entry '$citekey' has cross/xref '$refkey'");
         }
-        elsif ($type eq 'db') {
-          my $connection;
-          if ($datatype eq 'zotero') {
-          }
-          push @{$datasources{$type}{$datatype}}, $connection;
+        # static sets
+        if ($be->get_field('entrytype') eq 'set') {
+          my @smems = split /\s*,\s*/, $be->get_field('entryset');
+          push @dependent_keys, @smems;
+          $logger->debug("Static set entry '$citekey' has members: " . join(', ', @smems));
         }
+      }
+    }
+
+    if (@dependent_keys) {
+      # Now look for the dependents of the directly cited keys in each datasource
+      @remaining_keys = @dependent_keys;
+      foreach my $datasource (@{$section->get_datasources}) {
+        # shortcut if we have found all the keys now
+        last unless (@remaining_keys or $section->is_allkeys);
+        my $type = $datasource->{type};
+        my $name = $datasource->{name};
+        my $datatype = $datasource->{datatype};
+        my $package = 'Biber::Input::' . $type . '::' . $datatype;
+        eval "require $package";
+        @remaining_keys = eval "${package}::extract_entries(\$self, \$name, \\\@dependent_keys)";
+      }
+
+      # error reporting
+      $logger->debug("Dependent keys not found for section '$secnum': " . join(',', @remaining_keys));
+      foreach my $citekey (@remaining_keys) {
+        $logger->warn("I didn't find a database entry for '$citekey' (section $secnum)");
+        $self->{warnings}++;
+        $section->del_citekey($citekey);
+        $section->add_undef_citekey($citekey);
       }
     }
   }
 
-  # Here we decide which parsing routine to use for the data sources
+  $logger->debug("Citekeys for section '$secnum' after fetching data: " . join(', ', $section->get_citekeys));
 
-  # Files
-  while (my ($datatype, $sources) = each %{$datasources{file}}) {
-    if ($datatype eq 'bibtex') {
-      require Biber::Input::file::bibtex;
-      # We need the Biber object ref a lot in the parsing routines. This makes it easier
-      push @ISA, 'Biber::Input::file::bibtex';
-
-      $self->parse_bibtex($sources);
-    }
-    elsif ($datatype eq 'biblatexml') {
-      $self->parse_biblatexml($sources);
-    }
-    elsif ($datatype eq 'biblatexmldb') {
-      $self->parse_biblatexmldb($sources);
-    }
-  }
-  # DBs
-  while (my ($datatype, $sources) = each %{$datasources{file}}) {
-    if ($datatype eq 'zotero') {
-      $self->parse_zotero($sources);
-    }
-  }
+  # Reset any cache of bibtex data
+  $Biber::Input::file::bibtex::cache->{data} = undef;
   return;
 }
 

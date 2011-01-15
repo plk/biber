@@ -66,6 +66,7 @@ for (my $i=1; $i<9; $i++) {
   $bibentries->entry("l$i")->del_field('labelalpha');
   $bibentries->entry("l$i")->del_field('extraalpha');
 }
+
 $biber->prepare;
 
 is($bibentries->entry('l1')->get_field('sortlabelalpha'), 'Doe95', 'maxnames=2 minnames=1 entry L1 labelalpha');

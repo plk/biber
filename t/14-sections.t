@@ -4,7 +4,6 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 11;
-
 use Biber;
 use Biber::Utils;
 use Biber::Output::BBL;

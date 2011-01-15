@@ -1,6 +1,7 @@
 package Biber::Section;
 
 use Biber::Entries;
+use Biber::Utils;
 use List::Util qw( first );
 
 =encoding utf-8
@@ -129,6 +130,19 @@ sub bibentries {
   return $self->{bibentries};
 }
 
+=head2 del_bibentries
+
+    Delete all Biber::Entry objects from the Biber::Section object
+
+=cut
+
+sub del_bibentries {
+  my $self = shift;
+  $self->{bibentries} = new Biber::Entries;
+  return;
+}
+
+
 =head2 set_citekeys
 
     Sets the citekeys in a Biber::Section object
@@ -167,6 +181,20 @@ sub get_citekeys {
   my $self = shift;
   return @{$self->{citekeys}};
 }
+
+=head2 get_static_citekeys
+
+    Gets the citekeys of a Biber::Section object
+    excluding dynamic set entry keys
+    Returns a normal array
+
+=cut
+
+sub get_static_citekeys {
+  my $self = shift;
+  return reduce_array($self->{citekeys}, $self->dynamic_set_keys);
+}
+
 
 =head2 get_undef_citekeys
 
@@ -252,7 +280,7 @@ sub get_dynamic_set {
     return @$set_members;
   }
   else {
-    return undef;
+    return ();
   }
 }
 
@@ -264,7 +292,7 @@ sub get_dynamic_set {
 
 sub dynamic_set_keys {
   my $self = shift;
-  return keys %{$self->{dkeys}};
+  return [keys %{$self->{dkeys}}];
 }
 
 
@@ -309,9 +337,8 @@ sub add_undef_citekey {
 
 sub add_datasource {
   my $self = shift;
-  my $type = shift;
   my $source = shift;
-  push @{$self->{datasources}{$type}}, $source;
+  push @{$self->{datasources}}, $source;
   return;
 }
 
@@ -323,9 +350,8 @@ sub add_datasource {
 
 sub set_datasources {
   my $self = shift;
-  my $type = shift;
   my $sources = shift;
-  $self->{datasources}{$type} = $sources;
+  $self->{datasources} = $sources;
   return;
 }
 

@@ -18,11 +18,10 @@ our @EXPORT = qw{
   $BIBER_SORT_NULL
   $BIBER_SORT_FIRSTPASSDONE
   $BIBER_SORT_DATA_CHANGE
-  %BIBER_DATAFILE_REFS
   %NUMERICALMONTH
   %DISPLAYMODES
   $DISPLAYMODE_DEFAULT
-  } ;
+  };
 
 # Version of biblatex which this release works with. Matched against version
 # passed in control file

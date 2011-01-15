@@ -223,48 +223,6 @@ sub postprocess_biber_opts {
   }
 }
 
-
-=head2 add_working_data_files
-
-    Records the path of a data file for a given section
-
-=cut
-
-sub add_working_data_files {
-  shift;
-  my $file = shift;
-  push @{$CONFIG->{state}{datafiles}}, $file;
-  return;
-}
-
-=head2 get_working_data_files
-
-    Returns an arrayref of the working data files for a section
-
-=cut
-
-sub get_working_data_files {
-  shift;
-  return $CONFIG->{state}{datafiles};
-}
-
-
-=head2 delete_working_data_files
-
-    Deletes all temporary working data files for a section
-
-=cut
-
-sub delete_working_data_files {
-  shift;
-  foreach my $tempfile (@{$CONFIG->{state}{datafiles}}) {
-    unlink $tempfile if -e $tempfile;
-  }
-  delete($CONFIG->{state}{datafiles});
-  return;
-}
-
-
 =head2 set_structure
 
     Sets the structure information object
