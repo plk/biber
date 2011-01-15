@@ -94,10 +94,8 @@ sub set_field {
   my $self = shift;
   my ($key, $val) = @_;
   my $struc = Biber::Config->get_structure;
-  # Only set fields which are either not null or are ok to be null
-  if ( $struc->is_field_type('nullok', $key) or is_notnull($val)) {
-    $self->{derivedfields}{$key} = $val;
-  }
+  # All derived fields can be null
+  $self->{derivedfields}{$key} = $val;
   return;
 }
 

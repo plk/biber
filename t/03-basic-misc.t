@@ -20,7 +20,6 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # relying on here for tests
 
 # Biber options
-Biber::Config->setoption('quiet', 1);
 Biber::Config->setoption('fastsort', 1);
 
 # Now generate the information
@@ -49,6 +48,8 @@ is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 is_deeply( [ $section->get_shorthands ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
 
 # reset some options and re-generate information
+$section->del_bibentries;
+$section->del_citekeys;
 $section->allkeys;
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -223,6 +224,8 @@ is( $out->get_output_entry('missing2'), "  \\missing{missing2}\n", 'missing cite
 Biber::Config->setblxoption('alphaothers', '');
 Biber::Config->setblxoption('sortalphaothers', '');
 
+$section->del_bibentries;
+$section->del_citekeys;
 $biber->prepare ;
 $out = $biber->get_output_obj;
 

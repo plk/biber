@@ -22,7 +22,6 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
-Biber::Config->setoption('quiet', 1);
 
 my $yearoff1    = 'mm,,Knuth_Donald E,Computers Typesetting,1984,0000';
 my $yearoff2    = 'mm,,Knuth_Donald E,Computers Typesetting,198,0000';

@@ -317,8 +317,11 @@ sub set_output_entry {
     $acc .= "    \\count{uniquename}{$un}\n";
   }
 
+  # skiplab entries don't have a seennamehash count so this gives an error
+  # unless we check for this
   if ( Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'))
-    and Biber::Config->get_seennamehash($be->get_field('fullhash')) < 2 )
+    and (not Biber::Config->get_seennamehash($be->get_field('fullhash')) or
+       Biber::Config->get_seennamehash($be->get_field('fullhash')) < 2 ))
   {
     $acc .= "    \\true{singletitle}\n";
   }

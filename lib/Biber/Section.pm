@@ -251,6 +251,20 @@ sub del_citekey {
   return;
 }
 
+=head2 del_citekeys
+
+    Deletes al citekeys from a Biber::Section object
+
+=cut
+
+sub del_citekeys {
+  my $self = shift;
+  $self->{citekeys}            = [ ];
+  $self->{orig_order_citekeys} = [ ];
+  return;
+}
+
+
 =head2 set_dynamic_set
 
     Record a mapping of dynamic key to member keys

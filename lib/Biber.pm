@@ -1881,6 +1881,7 @@ sub fetch_data {
 
   # First we look for the directly cited keys in each datasource
   my @remaining_keys = @citekeys;
+  $logger->debug('Looking for directly cited keys: ' . join(', ', @remaining_keys));
   foreach my $datasource (@{$section->get_datasources}) {
     # shortcut if we have found all the keys now
     last unless (@remaining_keys or $section->is_allkeys);
@@ -1888,9 +1889,8 @@ sub fetch_data {
     my $name = $datasource->{name};
     my $datatype = $datasource->{datatype};
     my $package = 'Biber::Input::' . $type . '::' . $datatype;
-    $logger->debug("Looking in data source '$name' ...");
     eval "require $package";
-    @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@citekeys);
+    @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@remaining_keys);
   }
 
   # error reporting
@@ -1907,7 +1907,8 @@ sub fetch_data {
 
   # Don't need to look for dependents if allkeys, we have everything already
   unless ($section->is_allkeys) {
-  # dependent key list generation
+    $logger->debug('Building dependents for keys: ' . join(',', $section->get_citekeys));
+    # dependent key list generation
     my @dependent_keys = ();
     foreach my $citekey ($section->get_citekeys) {
       # Dynamic sets don't exist yet but their members do
@@ -1937,6 +1938,7 @@ sub fetch_data {
     if (@dependent_keys) {
       # Now look for the dependents of the directly cited keys in each datasource
       @remaining_keys = @dependent_keys;
+      $logger->debug('Looking for dependent keys: ' . join(', ', @remaining_keys));
       foreach my $datasource (@{$section->get_datasources}) {
         # shortcut if we have found all the keys now
         last unless (@remaining_keys or $section->is_allkeys);
@@ -1945,7 +1947,7 @@ sub fetch_data {
         my $datatype = $datasource->{datatype};
         my $package = 'Biber::Input::' . $type . '::' . $datatype;
         eval "require $package";
-        @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@dependent_keys);
+        @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@remaining_keys);
       }
 
       # error reporting

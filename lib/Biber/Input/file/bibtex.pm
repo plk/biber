@@ -53,8 +53,8 @@ sub extract_entries {
   my ($self, $filename, $keys) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $struc = Biber::Config->get_structure;
   my $bibentries = $section->bibentries;
+  my @rkeys = @$keys;
 
   # Need to get the filename even if using cache so we increment
   # the filename count for preambles at the bottom of this sub
@@ -78,118 +78,39 @@ sub extract_entries {
     $logger->debug("Caching data for bibtex format file '$filename' for section $secnum");
     cache_data($self, $filename);
   }
+  else {
+    $logger->debug("Using cached data for bibtex format file '$filename' for section $secnum");
+  }
 
   if ($section->is_allkeys) {
     $logger->debug("All cached citekeys will be used for section '$secnum'");
+    # Loop over all entries, creating objects
+    while (my ($key, $entry) = each %{$cache->{data}{$filename}}) {
+      create_entry($self, $key, $entry);
+    }
+
+    # if allkeys, push all bibdata keys into citekeys (if they are not already there)
+    $section->add_citekeys($section->bibentries->sorted_keys);
+    $logger->debug("Added all citekeys to section '$secnum': " . join(', ', $section->get_citekeys));
+  }
+  else {
+    # loop over all keys we're looking for and create objects
+    $logger->debug('Text::BibTeX cache keys: ' . join(', ', keys %{$cache->{data}{$filename}}));
+    $logger->debug('Wanted keys: ' . join(', ', @$keys));
+    foreach my $wanted_key (@$keys) {
+      $logger->debug("Looking for key '$wanted_key' in Text::BibTeX cache");
+      if (my $entry = $cache->{data}{$filename}{$wanted_key}) {
+        $logger->debug("Found key '$wanted_key' in Text::BibTeX cache");
+        create_entry($self, $wanted_key, $entry);
+        # found a key, remove it from the list of keys we want
+        @rkeys = grep {$wanted_key ne $_} @rkeys;
+      }
+      $logger->debug('Wanted keys now: ' . join(', ', @rkeys));
+    }
   }
 
-  # Loop over cached T:B objects, potentially twice
-BIBLOOP:  while (my ($key, $entry) = each %{$cache->{data}{$filename}}) {
-
-    # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing utf8 keys
-    my $origkey = decode_utf8($key);
-
-    $logger->debug('Reading Text::BibTeX entry for key ' . $entry->key . "' from cache");
-
-    # We want all entries with allkeys
-    unless ($section->is_allkeys) {
-      # not allkeys, is this a key we want?
-      next unless my $wantkey = first {lc($origkey) eq lc($_)} @$keys;
-      $logger->debug("Found citekey '$wantkey' in Text::BibTeX cache");
-
-      # found a key, remove it from the list of keys we want
-      @$keys = grep {lc($wantkey) ne lc($_)} @$keys;
-    }
-
-    # Want a version of the key that is the same case as any citations which
-    # reference it, in case they are different. We use this as the .bbl
-    # entry key
-    my $citecasekey = first {lc($origkey) eq lc($_)} $section->get_citekeys;
-    $citecasekey = $origkey unless $citecasekey;
-    my $lc_key = lc($origkey);
-
-    my $bibentry = new Biber::Entry;
-    $bibentry->set_field('origkey', $origkey);
-    $bibentry->set_field('citecasekey', $citecasekey);
-
-    # all fields used for this entry
-    my @flist = $entry->fieldlist;
-
-    # here we only keep those that do not require splitting
-    my @flistnosplit = reduce_array(\@flist, $struc->get_field_type('split'));
-
-    if ( $entry->metatype == BTE_REGULAR ) {
-      foreach my $f ( @flistnosplit ) {
-        next unless $entry->exists($f);
-        my $value = decode_utf8($entry->get($f));
-
-        $bibentry->set_datafield($f, $value);
-
-        # We have to process local options as early as possible in order
-        # to make them available for things that need them like parsename()
-        if (lc($f) eq 'options') {
-          $self->process_entry_options($bibentry);
-        }
-      }
-
-      # Set entrytype. This may be changed later in process_aliases
-      $bibentry->set_field('entrytype', $entry->type);
-
-      foreach my $f ( @{$struc->get_field_type('split')} ) {
-        next unless $entry->exists($f);
-        my @tmp = $entry->split($f);
-
-        if ($struc->is_field_type('name', $f)) {
-          my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
-          my $names = new Biber::Entry::Names;
-          foreach my $name (@tmp) {
-
-            # Consecutive "and" causes Text::BibTeX::Name to segfault
-            unless ($name) {
-              $logger->warn("Name in key '$origkey' is empty (probably consecutive 'and'): skipping name");
-              $self->{warnings}++;
-              $section->del_citekey($origkey);
-              next;
-            }
-
-            $name = decode_utf8($name);
-
-            # Check for malformed names in names which aren't completely escaped
-
-            # Too many commas
-            unless ($name =~ m/\A{.+}\z/xms) { # Ignore these tests for escaped names
-              my @commas = $name =~ m/,/g;
-              if ($#commas > 1) {
-                $logger->warn("Name \"$name\" has too many commas: skipping entry $origkey");
-                $self->{warnings}++;
-                $section->del_citekey($origkey);
-                next;
-              }
-
-              # Consecutive commas cause Text::BibTeX::Name to segfault
-              if ($name =~ /,,/) {
-                $logger->warn("Name \"$name\" is malformed (consecutive commas): skipping entry $origkey");
-                $self->{warnings}++;
-                $section->del_citekey($origkey);
-                next BIBLOOP;
-              }
-            }
-
-            $names->add_element(parsename($name, $f, {useprefix => $useprefix}));
-          }
-          $bibentry->set_datafield($f, $names);
-
-        }
-        else {
-          # Name fields are decoded during parsing, others here
-          @tmp = map { decode_utf8($_) } @tmp;
-          @tmp = map { remove_outer($_) } @tmp;
-          $bibentry->set_datafield($f, [ @tmp ]);
-        }
-      }
-      $bibentry->set_field('datatype', 'bibtex');
-      $bibentries->add_entry($lc_key, $bibentry);
-    }
+  if (Biber::Config->getoption('quiet')) {
+    open STDERR, '>&', \*OLDERR;
   }
 
   # Only push the preambles from the file if we haven't seen this data file before
@@ -197,19 +118,115 @@ BIBLOOP:  while (my ($key, $entry) = each %{$cache->{data}{$filename}}) {
     push @{$self->{preamble}}, @{$cache->{preamble}{$filename}};
   }
 
-  if (Biber::Config->getoption('quiet')) {
-    open STDERR, '>&', \*OLDERR;
-  }
-
-  # if allkeys, push all bibdata keys into citekeys (if they are not already there)
-  if ($section->is_allkeys) {
-    $section->add_citekeys($section->bibentries->sorted_keys);
-    $logger->debug("Added all citekeys to section '$secnum': " . join(', ', $section->get_citekeys));
-    return ();
-  }
-
-  return @$keys;
+  return @rkeys;
 }
+
+=head2 create_entry
+
+   Create a Biber::Entry object from a Text::BibTeX object
+
+=cut
+
+sub create_entry {
+  my ($self, $origkey, $entry) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $struc = Biber::Config->get_structure;
+  my $bibentries = $section->bibentries;
+
+  # Want a version of the key that is the same case as any citations which
+  # reference it, in case they are different. We use this as the .bbl
+  # entry key
+  my $citecasekey = first {lc($origkey) eq lc($_)} $section->get_citekeys;
+  $citecasekey = $origkey unless $citecasekey;
+  my $lc_key = lc($origkey);
+
+  my $bibentry = new Biber::Entry;
+  $bibentry->set_field('origkey', $origkey);
+  $bibentry->set_field('citecasekey', $citecasekey);
+
+  # all fields used for this entry
+  my @flist = $entry->fieldlist;
+
+  # here we only keep those that do not require splitting
+  my @flistnosplit = reduce_array(\@flist, $struc->get_field_type('split'));
+
+  if ( $entry->metatype == BTE_REGULAR ) {
+    foreach my $f ( @flistnosplit ) {
+      next unless $entry->exists($f);
+      my $value = decode_utf8($entry->get($f));
+
+      $bibentry->set_datafield($f, $value);
+
+      # We have to process local options as early as possible in order
+      # to make them available for things that need them like parsename()
+      if (lc($f) eq 'options') {
+        $self->process_entry_options($bibentry);
+      }
+    }
+
+    # Set entrytype. This may be changed later in process_aliases
+    $bibentry->set_field('entrytype', $entry->type);
+
+    foreach my $f ( @{$struc->get_field_type('split')} ) {
+      next unless $entry->exists($f);
+      my @tmp = $entry->split($f);
+
+      if ($struc->is_field_type('name', $f)) {
+        my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
+        my $names = new Biber::Entry::Names;
+        foreach my $name (@tmp) {
+
+          # Consecutive "and" causes Text::BibTeX::Name to segfault
+          unless ($name) {
+            $logger->warn("Name in key '$origkey' is empty (probably consecutive 'and'): skipping name");
+            $self->{warnings}++;
+            $section->del_citekey($origkey);
+            next;
+          }
+
+          $name = decode_utf8($name);
+
+          # Check for malformed names in names which aren't completely escaped
+
+          # Too many commas
+          unless ($name =~ m/\A{.+}\z/xms) { # Ignore these tests for escaped names
+            my @commas = $name =~ m/,/g;
+            if ($#commas > 1) {
+              $logger->warn("Name \"$name\" has too many commas: skipping entry $origkey");
+              $self->{warnings}++;
+              $section->del_citekey($origkey);
+              next;
+            }
+
+            # Consecutive commas cause Text::BibTeX::Name to segfault
+            if ($name =~ /,,/) {
+              $logger->warn("Name \"$name\" is malformed (consecutive commas): skipping entry $origkey");
+              $self->{warnings}++;
+              $section->del_citekey($origkey);
+              return;
+            }
+          }
+
+          $names->add_element(parsename($name, $f, {useprefix => $useprefix}));
+        }
+        $bibentry->set_datafield($f, $names);
+
+      }
+      else {
+        # Name fields are decoded during parsing, others here
+        @tmp = map { decode_utf8($_) } @tmp;
+        @tmp = map { remove_outer($_) } @tmp;
+        $bibentry->set_datafield($f, [ @tmp ]);
+      }
+    }
+    $bibentry->set_field('datatype', 'bibtex');
+    $bibentries->add_entry($lc_key, $bibentry);
+  }
+
+  return;
+}
+
 
 
 =head2 cache_data
@@ -259,8 +276,8 @@ sub cache_data {
 
     # Cache the entry so we don't have to read the file again on next pass.
     # Two reasons - So we avoid T::B macro redef warnings and speed
-    $cache->{data}{$filename}{$entry->key} = $entry;
-    $logger->debug('Cached Text::BibTeX entry for key ' . $entry->key . "' from bibtex file '$filename'");
+    $cache->{data}{$filename}{$origkey} = $entry;
+    $logger->debug("Cached Text::BibTeX entry for key '$origkey' from bibtex file '$filename'");
   }
 
   unlink $pfilename if -e $pfilename;
