@@ -190,7 +190,7 @@ sub parse_ctrlfile {
   my $ctrl_file_path = locate_biber_file($ctrl_file);
   Biber::Config->set_ctrlfile_path($ctrl_file_path);
 
-  $logger->logcroak("Cannot find control file '$ctrl_file'! - did you pass the \"backend=biber\" option to BibLaTeX?") unless ($ctrl_file_path and -e $ctrl_file_path);
+  $logger->logdie("Cannot find control file '$ctrl_file'! - did you pass the \"backend=biber\" option to BibLaTeX?") unless ($ctrl_file_path and -e $ctrl_file_path);
 
   # Validate if asked to
   if (Biber::Config->getoption('validate_control')) {
@@ -239,10 +239,10 @@ sub parse_ctrlfile {
       eval { $CFxmlschema->validate($CFxp) };
       if (ref($@)) {
         $logger->debug( $@->dump() );
-        $logger->logcroak("BibLaTeX control file \"$ctrl_file_path\" failed to validate\n$@");
+        $logger->logdie("BibLaTeX control file \"$ctrl_file_path\" failed to validate\n$@");
       }
       elsif ($@) {
-        $logger->logcroak("BibLaTeX control file \"$ctrl_file_path\" failed to validate\n$@");
+        $logger->logdie("BibLaTeX control file \"$ctrl_file_path\" failed to validate\n$@");
       }
       else {
         $logger->info("BibLaTeX control file \"$ctrl_file_path\" validates");
@@ -295,7 +295,7 @@ sub parse_ctrlfile {
   # Open control file
  LOADCF:
   my $ctrl = new IO::File "<$ctrl_file_path"
-    or $logger->logcroak("Cannot open $ctrl_file_path: $!");
+    or $logger->logdie("Cannot open $ctrl_file_path: $!");
 
   $logger->info("Reading $ctrl_file_path");
 
@@ -517,7 +517,7 @@ sub parse_ctrlfile {
       my $datatype = $datasource->{datatype} ? $datasource->{datatype} : 'bibtex';
       # file data sources
       if ($datasource->{type} eq 'file') {
-        push @{$bibdatasources{$data->{section}[0]}}, { type     => 'file', 
+        push @{$bibdatasources{$data->{section}[0]}}, { type     => 'file',
                                                         name     => $datasource->{content},
                                                         datatype => $datatype };
       }
@@ -531,7 +531,7 @@ sub parse_ctrlfile {
   }
 
   unless (%bibdatasources or Biber::Config->getoption('bibdata')) {
-    $logger->logcroak("No data files on command line or provided in the file '$ctrl_file_path'! Exiting")
+    $logger->logdie("No data files on command line or provided in the file '$ctrl_file_path'! Exiting")
   }
 
   my $key_flag = 0;
@@ -1047,7 +1047,7 @@ sub postprocess_labelyear {
       return;
     }
     # make sure we gave the correct data type:
-    $logger->logcroak("Invalid value for option labelyear: $lyearscheme\n")
+    $logger->logdie("Invalid value for option labelyear: $lyearscheme\n")
       unless ref $lyearscheme eq 'ARRAY';
     foreach my $ly ( @{$lyearscheme} ) {
       if ($be->get_field($ly)) {
@@ -1849,6 +1849,21 @@ sub prepare {
 =head2 fetch_data
 
     Fetch citekey and dependents data from section datasources
+    Expects to find datasource packages named:
+
+    Biber::Input::<type>::<datatype>
+
+    and one defined subroutine called:
+
+    Biber::Input::<type>::<datatype>::extract_entries
+
+    which takes args:
+
+    1: Biber object
+    2: Datasource name
+    3: Reference to an array of cite keys to look for
+
+    and returns an array of the cite keys it didn't find in the datasource
 
 =cut
 
@@ -1875,8 +1890,7 @@ sub fetch_data {
     my $package = 'Biber::Input::' . $type . '::' . $datatype;
     $logger->debug("Looking in data source '$name' ...");
     eval "require $package";
-    @remaining_keys = eval "${package}::extract_entries(\$self, \$name, \\\@citekeys)";
-    $logger->croak("Error in eval of ${package}::extract_entries(): $@") if $@;
+    @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@citekeys);
   }
 
   # error reporting
@@ -1931,7 +1945,7 @@ sub fetch_data {
         my $datatype = $datasource->{datatype};
         my $package = 'Biber::Input::' . $type . '::' . $datatype;
         eval "require $package";
-        @remaining_keys = eval "${package}::extract_entries(\$self, \$name, \\\@dependent_keys)";
+        @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@dependent_keys);
       }
 
       # error reporting
@@ -1971,7 +1985,7 @@ sub create_output_section {
   # We rely on the order of this array for the order of the .bbl
   foreach my $k (@citekeys) {
     # Regular entry
-    my $be = $section->bibentry($k) or $logger->logcroak("Cannot find entry with key '$k' to output");
+    my $be = $section->bibentry($k) or $logger->logdie("Cannot find entry with key '$k' to output");
     $output_obj->set_output_entry($be, $section, Biber::Config->get_structure);
   }
   # Missing citekeys

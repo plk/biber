@@ -36,7 +36,7 @@ our $cache = {};
 
 sub TBSIG {
   my $sig = shift;
-  $logger->logcroak("Caught signal: $sig\nLikely your .bib has a bad entry: $!");
+  $logger->logdie("Caught signal: $sig\nLikely your .bib has a bad entry: $!");
 }
 
 =head2 extract_entries
@@ -44,7 +44,7 @@ sub TBSIG {
    Main data extraction routine.
    Accepts a data source identifier (filename in this case),
    preprocesses the file and then looks for the passed keys,
-   creating entries when it finds them and passing out an
+   creating entries when it finds them and passes out an
    array of keys it didn't find.
 
 =cut
@@ -59,11 +59,12 @@ sub extract_entries {
   # Need to get the filename even if using cache so we increment
   # the filename count for preambles at the bottom of this sub
   $filename .= '.bib' unless $filename =~ /\.bib\z/xms; # Normalise filename
+  my $trying_filename = $filename;
   if ($filename = locate_biber_file($filename)) {
     $logger->info("Processing bibtex format file '$filename' for section $secnum");
   }
   else {
-    $logger->croak("Cannot find file '$filename'!")
+    $logger->logdie("Cannot find file '$trying_filename'!")
   }
 
   # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
@@ -227,7 +228,7 @@ sub cache_data {
   my $pfilename = preprocess_file($self, $filename);
 
   my $bib = Text::BibTeX::File->new( $pfilename, '<' )
-    or $logger->logcroak("Cannot create Text::BibTeX::File object from $pfilename: $!");
+    or $logger->logdie("Cannot create Text::BibTeX::File object from $pfilename: $!");
   while ( my $entry = new Text::BibTeX::Entry $bib ) {
 
     if ( $entry->metatype == BTE_PREAMBLE ) {
@@ -285,10 +286,10 @@ sub preprocess_file {
   if (Biber::Config->getoption('bibencoding') ne 'UTF-8') {
     require File::Slurp::Unicode;
     my $buf = File::Slurp::Unicode::read_file($filename, encoding => Biber::Config->getoption('bibencoding'))
-      or $logger->logcroak("Can't read $filename");
+      or $logger->logdie("Can't read $filename");
 
     File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
-        or $logger->logcroak("Can't write $ufilename");
+        or $logger->logdie("Can't write $ufilename");
 
   }
   else {
@@ -299,14 +300,14 @@ sub preprocess_file {
   if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
     require File::Slurp::Unicode;
     my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
-      or $logger->logcroak("Can't read $ufilename");
+      or $logger->logdie("Can't read $ufilename");
     require Biber::LaTeX::Recode;
     $logger->info('Decoding LaTeX character macros into UTF-8');
     $buf = Biber::LaTeX::Recode::latex_decode($buf, strip_outer_braces => 1,
                                               scheme => Biber::Config->getoption('decodecharsset'));
 
     File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
-        or $logger->logcroak("Can't write $ufilename");
+        or $logger->logdie("Can't write $ufilename");
   }
 
   # Increment the number of times each datafile has been referenced

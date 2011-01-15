@@ -1,6 +1,7 @@
 Revision history for Biber
 
 0.7.3  (dev beta)
+       * Re-write of datasource processing to allow for modular plugins
        * Generalised nosort option.
        * Merged LaTeX::Decode into Biber::LaTeX::Recode and added encoding
          to deal with inputenc's limitations for PDFLaTeX users

@@ -206,7 +206,7 @@ sub postprocess_biber_opts {
     }
     unless ($CONFIG->{options}{biber}{sortcase} eq '1' or
             $CONFIG->{options}{biber}{sortcase} eq '0') {
-      $logger->logcroak("Invalid value for option 'sortcase'");
+      $logger->logdie("Invalid value for option 'sortcase'");
     }
   }
 
@@ -218,7 +218,7 @@ sub postprocess_biber_opts {
     }
     unless ($CONFIG->{options}{biber}{sortupper} eq '1' or
             $CONFIG->{options}{biber}{sortupper} eq '0') {
-      $logger->logcroak("Invalid value for option 'sortupper'");
+      $logger->logdie("Invalid value for option 'sortupper'");
     }
   }
 }

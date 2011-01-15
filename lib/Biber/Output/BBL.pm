@@ -71,7 +71,7 @@ sub set_output_target_file {
   if (Biber::Config->getoption('bblencoding')) {
     $enc_out = ':encoding(' . Biber::Config->getoption('bblencoding') . ')';
   }
-  my $BBLFILE = IO::File->new($bblfile, ">$enc_out") or $logger->croak("Failed to open $bblfile : $!");
+  my $BBLFILE = IO::File->new($bblfile, ">$enc_out") or $logger->logdie("Failed to open $bblfile : $!");
   $self->set_output_target($BBLFILE);
 }
 
@@ -457,7 +457,7 @@ sub output {
 
   $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('bblencoding') . "'");
 
-  print $target $data->{HEAD} or $logger->logcroak("Failure to write head to $target_string: $!");
+  print $target $data->{HEAD} or $logger->logdie("Failure to write head to $target_string: $!");
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     print $target "\n\\refsection{$secnum}\n";
@@ -474,7 +474,7 @@ sub output {
         $entry_string = $$entry;
       }
 
-      print $target $entry_string or $logger->logcroak("Failure to write entry to $target_string: $!");
+      print $target $entry_string or $logger->logdie("Failure to write entry to $target_string: $!");
     }
 
     # Output section list of shorthands if there is one
@@ -499,10 +499,10 @@ sub output {
     print $target "\\endrefsection\n"
   }
 
-  print $target $data->{TAIL} or $logger->logcroak("Failure to write tail to $target_string: $!");
+  print $target $data->{TAIL} or $logger->logdie("Failure to write tail to $target_string: $!");
 
   $logger->info("Output to $target_string");
-  close $target or $logger->logcroak("Failure to close $target_string: $!");
+  close $target or $logger->logdie("Failure to close $target_string: $!");
   return;
 }
 

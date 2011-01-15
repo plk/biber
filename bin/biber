@@ -226,7 +226,7 @@ if ( $opts->{allentries} and $opts->{bibdata} ) {
   # Convert bibdata into correct format for putting into section object
   # If using command line, all data files must be of same type (e.g. bibtex)
   foreach my $bibdatafile (@{$opts->{bibdata}}) {
-    $bib_section->add_datasource('file', { name => $bibdatafile, datatype => Biber::Config->getoption('bibdatatype')});
+    $bib_section->add_datasource({ type => 'file', name => $bibdatafile, datatype => Biber::Config->getoption('bibdatatype')});
   }
   $bib_section->allkeys;
   $logger->info('Using all citekeys in ' . Biber::Config->getoption('bibdatatype') . ' format files: ' . join(',', @{$opts->{bibdata}}));
