@@ -1871,6 +1871,7 @@ sub fetch_data {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+  # Only looking for static keys, dynamic key entries are not in any datasource ...
   my @citekeys = $section->get_static_citekeys;
   no strict "refs"; # symbolic references below ...
 
@@ -1896,13 +1897,10 @@ sub fetch_data {
   # error reporting
   $logger->debug("Directly cited keys not found for section '$secnum': " . join(',', @remaining_keys));
   foreach my $citekey (@remaining_keys) {
-    # Dynamic set key entries always exist as we create them
-    unless ($section->get_dynamic_set($citekey)) {
-      $logger->warn("I didn't find a database entry for '$citekey' (section $secnum)");
-      $self->{warnings}++;
-      $section->del_citekey($citekey);
-      $section->add_undef_citekey($citekey);
-    }
+    $logger->warn("I didn't find a database entry for '$citekey' (section $secnum)");
+    $self->{warnings}++;
+    $section->del_citekey($citekey);
+    $section->add_undef_citekey($citekey);
   }
 
   # Don't need to look for dependents if allkeys, we have everything already

@@ -148,6 +148,8 @@ sub create_entry {
   # Want a version of the key that is the same case as any citations which
   # reference it, in case they are different. We use this as the .bbl
   # entry key
+  # In case off allkeys, this will just be the datasource key as ->get_citekeys
+  # returns an empty list
   my $citecasekey = first {lc($origkey) eq lc($_)} $section->get_citekeys;
   $citecasekey = $origkey unless $citecasekey;
   my $lc_key = lc($origkey);
