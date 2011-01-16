@@ -48,7 +48,6 @@ is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 is_deeply( [ $section->get_shorthands ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
 
 # reset some options and re-generate information
-$section->del_bibentries;
 $section->del_citekeys;
 $section->allkeys;
 $biber->prepare;
