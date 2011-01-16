@@ -50,9 +50,9 @@ sub TBSIG {
 =cut
 
 sub extract_entries {
-  my ($self, $filename, $keys) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
+  my ($biber, $filename, $keys) = @_;
+  my $secnum = $biber->get_current_section;
+  my $section = $biber->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my @rkeys = @$keys;
 
@@ -76,7 +76,7 @@ sub extract_entries {
   # Don't read the file again if it's already cached
   unless ($cache->{data}{$filename}) {
     $logger->debug("Caching data for bibtex format file '$filename' for section $secnum");
-    cache_data($self, $filename);
+    cache_data($biber, $filename);
   }
   else {
     $logger->debug("Using cached data for bibtex format file '$filename' for section $secnum");
@@ -92,7 +92,7 @@ sub extract_entries {
       # later but we need to put the original citation case when we write
       # the .bbl. If we lowercase before this, we lose this information.
       # Of course, with allkeys, "citation case" means "datasource entry case"
-      create_entry($self, decode_utf8($entry->key), $entry);
+      create_entry($biber, decode_utf8($entry->key), $entry);
     }
 
     # if allkeys, push all bibdata keys into citekeys (if they are not already there)
@@ -111,7 +111,7 @@ sub extract_entries {
         $logger->debug("Found key '$wanted_key' in Text::BibTeX cache");
         # See comment above about the importance of the case of the key
         # passed to create_entry()
-        create_entry($self, $wanted_key, $entry);
+        create_entry($biber, $wanted_key, $entry);
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
@@ -126,7 +126,7 @@ sub extract_entries {
   # Only push the preambles from the file if we haven't seen this data file before
   # and there are some preambles to push
   if ($cache->{counts}{$filename} < 2 and @{$cache->{preamble}{$filename}}) {
-    push @{$self->{preamble}}, @{$cache->{preamble}{$filename}};
+    push @{$biber->{preamble}}, @{$cache->{preamble}{$filename}};
   }
 
   return @rkeys;
@@ -139,9 +139,9 @@ sub extract_entries {
 =cut
 
 sub create_entry {
-  my ($self, $origkey, $entry) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
+  my ($biber, $origkey, $entry) = @_;
+  my $secnum = $biber->get_current_section;
+  my $section = $biber->sections->get_section($secnum);
   my $struc = Biber::Config->get_structure;
   my $bibentries = $section->bibentries;
 
@@ -172,7 +172,7 @@ sub create_entry {
       # We have to process local options as early as possible in order
       # to make them available for things that need them like parsename()
       if (lc($f) eq 'options') {
-        $self->process_entry_options($bibentry);
+        $biber->process_entry_options($bibentry);
       }
     }
 
@@ -191,7 +191,7 @@ sub create_entry {
           # Consecutive "and" causes Text::BibTeX::Name to segfault
           unless ($name) {
             $logger->warn("Name in key '$origkey' is empty (probably consecutive 'and'): skipping name");
-            $self->{warnings}++;
+            $biber->{warnings}++;
             $section->del_citekey($origkey);
             next;
           }
@@ -205,7 +205,7 @@ sub create_entry {
             my @commas = $name =~ m/,/g;
             if ($#commas > 1) {
               $logger->warn("Name \"$name\" has too many commas: skipping entry $origkey");
-              $self->{warnings}++;
+              $biber->{warnings}++;
               $section->del_citekey($origkey);
               next;
             }
@@ -213,7 +213,7 @@ sub create_entry {
             # Consecutive commas cause Text::BibTeX::Name to segfault
             if ($name =~ /,,/) {
               $logger->warn("Name \"$name\" is malformed (consecutive commas): skipping entry $origkey");
-              $self->{warnings}++;
+              $biber->{warnings}++;
               $section->del_citekey($origkey);
               return;
             }
@@ -248,13 +248,13 @@ sub create_entry {
 =cut
 
 sub cache_data {
-  my ($self, $filename) = @_;
+  my ($biber, $filename) = @_;
 
   # Initialise this
   $cache->{preamble}{$filename} = [];
 
   # Convert/decode file
-  my $pfilename = preprocess_file($self, $filename);
+  my $pfilename = preprocess_file($biber, $filename);
 
   my $bib = Text::BibTeX::File->new( $pfilename, '<' )
     or $logger->logdie("Cannot create Text::BibTeX::File object from $pfilename: $!");
@@ -272,7 +272,7 @@ sub cache_data {
     # If an entry has no key, ignore it and warn
     unless( $entry->key ) {
       $logger->warn("Invalid or undefined BibTeX entry key in file '$pfilename', skipping ...");
-      $self->{warnings}++;
+      $biber->{warnings}++;
       next;
     }
 
@@ -282,7 +282,7 @@ sub cache_data {
     # Bad entry
     unless ($entry->parse_ok) {
       $logger->warn("Entry $origkey does not parse correctly: skipping");
-      $self->{warnings}++;
+      $biber->{warnings}++;
       next;
     }
 
@@ -305,9 +305,9 @@ sub cache_data {
 =cut
 
 sub preprocess_file {
-  my ($self, $filename) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
+  my ($biber, $filename) = @_;
+  my $secnum = $biber->get_current_section;
+  my $section = $biber->sections->get_section($secnum);
 
   my $ufilename = "${filename}_$$.utf8";
 

@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 7;
+use Test::More tests => 9;
 
 use Biber;
 use Biber::Output::BBL;
@@ -41,7 +41,7 @@ my $k1 = q|  \entry{key1}{article}{}
     \field{labelyear}{1998}
     \field{journaltitle}{Journal Title}
     \field{number}{5}
-    \field{related}{78f825aaa0103319aaa1a30bf4fe3ada,3631578538a2d6ba5879b31a9a42f290}
+    \field{related}{78f825aaa0103319aaa1a30bf4fe3ada,3631578538a2d6ba5879b31a9a42f290,caf8e34be07426ae7127c1b4829983c1}
     \field{relatedtype}{reprintas}
     \field{shorthand}{RK1}
     \field{title}{Original Title}
@@ -179,6 +179,30 @@ my $kck3 = q|  \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{}
 
 |;
 
+my $kck4 = q|  \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{}
+    \name{labelname}{1}{%
+      {{Author}{A.}{}{}{}{}{}{}}%
+    }
+    \name{author}{1}{%
+      {{Author}{A.}{}{}{}{}{}{}}%
+    }
+    \list{location}{1}{%
+      {Location}%
+    }
+    \list{publisher}{1}{%
+      {Publisher2}%
+    }
+    \strng{namehash}{A1}
+    \strng{fullhash}{A1}
+    \field{sortinit}{0}
+    \field{booktitle}{Booktitle}
+    \field{shorthand}{RK4}
+    \field{title}{Reprint Title}
+    \field{year}{2011}
+    \field{pages}{33\bibrangedash 57}
+  \endentry
+
+|;
 
 is( $out->get_output_entry('key1'), $k1, 'Related entry test 1' ) ;
 is( $out->get_output_entry('key2'), $k2, 'Related entry test 2' ) ;
@@ -186,7 +210,11 @@ is( $out->get_output_entry('key3'), $k3, 'Related entry test 3' ) ;
 is( $out->get_output_entry('c2add694bf942dc77b376592d9c862cd'), $kck1, 'Related entry test 4' ) ;
 is( $out->get_output_entry('78f825aaa0103319aaa1a30bf4fe3ada'), $kck2, 'Related entry test 5' ) ;
 is( $out->get_output_entry('3631578538a2d6ba5879b31a9a42f290'), $kck3, 'Related entry test 6' ) ;
-is_deeply([$section->get_shorthands], ['key1', 'key2', 'key3'], 'Related entry test 7');
+# Key k4 is used only to create a related entry clone but since it isn't cited itself
+# it shouldn't be in the .bbl
+is( $out->get_output_entry('caf8e34be07426ae7127c1b4829983c1'), $kck4, 'Related entry test 7' ) ;
+is( $out->get_output_entry('key4'), undef, 'Related entry test 8' ) ;
+is_deeply([$section->get_shorthands], ['key1', 'key2', 'key3'], 'Related entry test 9');
 
 
 unlink "*.utf8";

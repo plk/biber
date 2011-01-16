@@ -307,38 +307,42 @@ sub _generatesortinfo {
   }
 
   # Record the information needed for sorting later
-  # sortstring isn't actually used to sort, it's just useful to have it for debugging
+  # sortstring isn't actually used to sort, it's used to generate sortinit and
+  # for debugging purposes
   my $ss = join($sorting_sep, @$sortobj);
   $be->set_field('sortstring', $ss);
   $be->set_field('sortobj', $sortobj);
 
-  # Generate sortinit - the initial letter of the sortstring. This must ignore
-  # presort characters, naturally
-  my $pre = Biber::Config->getblxoption('presort', $be->get_field('entrytype'), $citekey);
+  # Generate sortinit - the initial letter of the sortstring. Skip
+  # if there is no sortstring which is possible in tests
+  if ($ss) {
+  # This must ignore the presort characters, naturally
+    my $pre = Biber::Config->getblxoption('presort', $be->get_field('entrytype'), $citekey);
 
-  # Strip off the prefix
-  $ss =~ s/\A$pre$sorting_sep+//;
-  my $init = substr $ss, 0, 1;
+    # Strip off the prefix
+    $ss =~ s/\A$pre$sorting_sep+//;
+    my $init = substr $ss, 0, 1;
 
-  # Now check if this sortinit is valid in the bblencoding. If not, warn
-  # and replace with a suitable value
-  my $bblenc = Biber::Config->getoption('bblencoding');
-  if ($bblenc ne 'UTF-8') {
-    # Can this init be represented in the BBL encoding?
-    if (encode($bblenc, $init) eq '?') { # Malformed data encoding char
-      # So convert to macro
-      require Biber::LaTeX::Recode;
-      my $initd = Biber::LaTeX::Recode::latex_encode($init,
-                                                     scheme => Biber::Config->getoption('bblsafecharsset'));
-      # warn only on second sorting pass to avoid user confusion
-      unless ($BIBER_SORT_FIRSTPASSDONE) {
-        $logger->warn("The character '$init' cannot be encoded in '$bblenc'. sortinit will be set to macro '$initd' for entry '$citekey'");
-        $self->{warnings}++;
+    # Now check if this sortinit is valid in the bblencoding. If not, warn
+    # and replace with a suitable value
+    my $bblenc = Biber::Config->getoption('bblencoding');
+    if ($bblenc ne 'UTF-8') {
+      # Can this init be represented in the BBL encoding?
+      if (encode($bblenc, $init) eq '?') { # Malformed data encoding char
+        # So convert to macro
+        require Biber::LaTeX::Recode;
+        my $initd = Biber::LaTeX::Recode::latex_encode($init,
+                                                       scheme => Biber::Config->getoption('bblsafecharsset'));
+        # warn only on second sorting pass to avoid user confusion
+        unless ($BIBER_SORT_FIRSTPASSDONE) {
+          $logger->warn("The character '$init' cannot be encoded in '$bblenc'. sortinit will be set to macro '$initd' for entry '$citekey'");
+          $self->{warnings}++;
+        }
+        $init = $initd;
       }
-      $init = $initd;
     }
+    $be->set_field('sortinit', $init);
   }
-  $be->set_field('sortinit', $init);
   return;
 }
 

@@ -168,9 +168,23 @@ sub set_output_entry {
   return;
 }
 
+=head2 get_output_entries
+
+    Get the output data for all entries in an array ref
+
+=cut
+
+sub get_output_entries {
+  my $self = shift;
+  my $section = shift;
+  return [ map {$$_} @{$self->{output_data}{ENTRIES}{$section}{strings}} ];
+}
+
+
 =head2 get_output_entry
 
-    Get the output data for a specific entry
+    Get the output data for a specific entry.
+    Used really only in tests
 
 =cut
 
@@ -179,8 +193,38 @@ sub get_output_entry {
   my $key = shift;
   my $section = shift;
   $section = '0' if not defined($section); # default - mainly for tests
-  return $self->{output_data}{ENTRIES}{$section}{lc($key)};
+  # Force a return of undef if there is no output for this key to avoid
+  # dereferencing errors in tests
+  my $out = $self->{output_data}{ENTRIES}{$section}{index}{lc($key)};
+  return $out ? $$out : undef;
 }
+
+=head2 set_los
+
+    Set the output list of shorthands for a section
+
+=cut
+
+sub set_los {
+  my $self = shift;
+  my $shs = shift;
+  my $section = shift;
+  $self->{output_data}{LOS}{$section} = $shs;
+  return;
+}
+
+=head2 get_los
+
+    Get the output list of shorthands for a section as an array
+
+=cut
+
+sub get_los {
+  my $self = shift;
+  my $section = shift;
+  return @{$self->{output_data}{LOS}{$section}}
+}
+
 
 =head2 output
 

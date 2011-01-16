@@ -1913,7 +1913,8 @@ sub fetch_data {
     foreach my $citekey ($section->get_citekeys) {
       # Dynamic sets don't exist yet but their members do
       if (my @dmems = $section->get_dynamic_set($citekey)) {
-        push @dependent_keys, @dmems;
+        # skip looking for dependent if it's already been directly cited
+        push @dependent_keys, grep { not $section->bibentry($_) } @dmems;
         $logger->debug("Dynamic set entry '$citekey' has members: " . join(', ', @dmems));
       }
       else {
@@ -1923,14 +1924,23 @@ sub fetch_data {
         my $refkey;
         if ($refkey = $be->get_field('xref') or
             $refkey = $be->get_field('crossref')) {
-          push @dependent_keys, $refkey;
+          # skip looking for dependent if it's already been directly cited
+          push @dependent_keys, $refkey unless $section->bibentry($refkey);
           $logger->debug("Entry '$citekey' has cross/xref '$refkey'");
         }
         # static sets
         if ($be->get_field('entrytype') eq 'set') {
           my @smems = split /\s*,\s*/, $be->get_field('entryset');
-          push @dependent_keys, @smems;
+          # skip looking for dependent if it's already been directly cited
+          push @dependent_keys, grep {not $section->bibentry($_)} @smems;
           $logger->debug("Static set entry '$citekey' has members: " . join(', ', @smems));
+        }
+        # Related entries
+        if (my $relkeys = $be->get_field('related')) {
+          my @rmems = split /\s*,\s*/, $relkeys;
+          # skip looking for dependent if it's already been directly cited
+          push @dependent_keys, grep {not $section->bibentry($_)} @rmems;
+          $logger->debug("Entry '$citekey' has related entries: " . join(', ', @rmems));
         }
       }
     }

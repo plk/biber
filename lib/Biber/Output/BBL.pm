@@ -379,61 +379,6 @@ sub set_output_entry {
   return;
 }
 
-=head2 set_los
-
-    Set the output list of shorthands for a section
-
-=cut
-
-sub set_los {
-  my $self = shift;
-  my $shs = shift;
-  my $section = shift;
-  $self->{output_data}{LOS}{$section} = $shs;
-  return;
-}
-
-=head2 get_los
-
-    Get the output list of shorthands for a section as an array
-
-=cut
-
-sub get_los {
-  my $self = shift;
-  my $section = shift;
-  return @{$self->{output_data}{LOS}{$section}}
-}
-
-
-
-=head2 get_output_entry
-
-    Get the output data for a specific entry
-
-=cut
-
-sub get_output_entry {
-  my $self = shift;
-  my $key = shift;
-  my $section = shift;
-  $section = '0' if not defined($section); # default - mainly for tests
-
-  return ${$self->{output_data}{ENTRIES}{$section}{index}{lc($key)}};
-}
-
-=head2 get_output_entries
-
-    Get the output data for a all entries in an array ref
-
-=cut
-
-sub get_output_entries {
-  my $self = shift;
-  my $section = shift;
-  return [ map {$$_} @{$self->{output_data}{ENTRIES}{$section}{strings}} ];
-}
-
 
 =head2 output
 
