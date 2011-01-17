@@ -129,48 +129,16 @@ sub create_entry {
   }
 
   # Set entrytype. This may be changed later in process_aliases
-  $bibentry->set_field('entrytype', $entry->type);
+  $bibentry->set_field('entrytype', $entry->getAttribute('entrytype'));
 
-  # Now fields that do require splitting
-  foreach my $f ( @{$struc->get_field_type('complex')} ) {
-    next unless $entry->exists($f);
-    my @tmp = $entry->split($f);
+  # Now nodes that have complex content
+  foreach my $f (@flistcomplex) {
 
-    if ($struc->is_field_type('name', $f)) {
+    # name fields
+    if ($struc->is_field_type('name', lc($f->nodeName))) {
       my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
       my $names = new Biber::Entry::Names;
-      foreach my $name (@tmp) {
-
-        # Consecutive "and" causes Text::BibTeX::Name to segfault
-        unless ($name) {
-          $logger->warn("Name in key '$dskey' is empty (probably consecutive 'and'): skipping name");
-          $biber->{warnings}++;
-          $section->del_citekey($dskey);
-          next;
-        }
-
-        $name = decode_utf8($name);
-
-        # Check for malformed names in names which aren't completely escaped
-
-        # Too many commas
-        unless ($name =~ m/\A{.+}\z/xms) { # Ignore these tests for escaped names
-          my @commas = $name =~ m/,/g;
-          if ($#commas > 1) {
-            $logger->warn("Name \"$name\" has too many commas: skipping entry $dskey");
-            $biber->{warnings}++;
-            $section->del_citekey($dskey);
-            next;
-          }
-
-          # Consecutive commas cause Text::BibTeX::Name to segfault
-          if ($name =~ /,,/) {
-            $logger->warn("Name \"$name\" is malformed (consecutive commas): skipping entry $dskey");
-            $biber->{warnings}++;
-            $section->del_citekey($dskey);
-            return;
-          }
-        }
+      foreach my $name ($f->childNodes) {
 
         $names->add_element(parsename($name, $f, {useprefix => $useprefix}));
       }
