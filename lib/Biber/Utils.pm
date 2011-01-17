@@ -62,7 +62,7 @@ sub locate_biber_file {
   }
 
   # Filename is absolute
-  if (File::Spec->file_name_is_absolute($filename)) {
+  if (File::Spec->file_name_is_absolute($filename) and -e $filename) {
     return $filename;
   }
 

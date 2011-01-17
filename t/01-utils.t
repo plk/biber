@@ -3,16 +3,36 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 14;
+use Test::More tests => 19;
 use Biber;
 use Biber::Entry::Name;
 use Biber::Entry::Names;
 use Biber::Utils;
 use Biber::LaTeX::Recode;
 use Log::Log4perl qw(:easy);
+use Cwd;
+my $cwd = getcwd;
+
 Log::Log4perl->easy_init($ERROR);
 my $biber = Biber->new(noconf => 1);
 
+# File locating
+# Using File::Spec->canonpath() to normalise path separators so these tests work
+# on Windows/non-Windows
+# Absolute path
+is(File::Spec->canonpath(locate_biber_file("$cwd/t/tdata/general1.bcf")), File::Spec->canonpath("$cwd/t/tdata/general1.bcf"), 'File location - 1');
+# Relative path
+is(File::Spec->canonpath(locate_biber_file('t/tdata/general1.bcf')), File::Spec->canonpath('t/tdata/general1.bcf'), 'File location - 2');
+# Same place as control file
+Biber::Config->set_ctrlfile_path('t/tdata/general1.bcf');
+is(File::Spec->canonpath(locate_biber_file('t/tdata/examples.bib')), File::Spec->canonpath('t/tdata/examples.bib'), 'File location - 3');
+# using kpsewhich
+like(File::Spec->canonpath(locate_biber_file('biblatex-examples.bib')), qr|[/\\]bibtex[/\\]bib[/\\]biblatex[/\\]biblatex-examples\.bib\z|, 'File location - 4');
+# In output_directory
+Biber::Config->setoption('output_directory', 't/tdata');
+is(File::Spec->canonpath(locate_biber_file('general1.bcf')), File::Spec->canonpath("t/tdata/general1.bcf"), 'File location - 5');
+
+# String normalising
 is( normalise_string('"a, b–c: d" ', 1),  'a bc d', 'normalise_string' );
 
 Biber::Config->setoption('bblencoding', 'latin1');
