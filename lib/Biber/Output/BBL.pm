@@ -144,18 +144,18 @@ sub set_output_entry {
   my $struc = shift; # Structure object
   my $acc = '';
   my $opts = '';
-  my $citecasekey; # entry key forced to case of any citations(s) which reference it
+  my $citekey; # entry key in original form (case) from citation
   my $secnum = $section->number;
 
-  if ( $be->get_field('citecasekey') ) {
-    $citecasekey = $be->get_field('citecasekey');
+  if ( $be->get_field('citekey') ) {
+    $citekey = $be->get_field('citekey');
   }
 
   if ($be->field_exists('options')) {
     $opts = $be->get_field('options');
   }
 
-  $acc .= "  \\entry{$citecasekey}{" . $be->get_field('entrytype') . "}{$opts}\n";
+  $acc .= "  \\entry{$citekey}{" . $be->get_field('entrytype') . "}{$opts}\n";
 
   # Generate set information
   if ( $be->get_field('entrytype') eq 'set' ) {   # Set parents get \set entry ...
@@ -374,7 +374,7 @@ sub set_output_entry {
   # Use an array to preserve sort order of entries already generated
   # Also create an index by keyname for easy retrieval
   push @{$self->{output_data}{ENTRIES}{$secnum}{strings}}, \$acc;
-  $self->{output_data}{ENTRIES}{$secnum}{index}{lc($citecasekey)} = \$acc;
+  $self->{output_data}{ENTRIES}{$secnum}{index}{lc($citekey)} = \$acc;
 
   return;
 }

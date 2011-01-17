@@ -47,8 +47,8 @@ sub clone {
   $new->{derivedfields}{entrytype} = $self->{derivedfields}{entrytype};
   # put in key if specified
   if ($newkey) {
-    $new->{derivedfields}{origkey} = $newkey;
-    $new->{derivedfields}{citecasekey} = $newkey;
+    $new->{derivedfields}{dskey} = $newkey;
+    $new->{derivedfields}{citekey} = $newkey;
   }
   return $new;
 }

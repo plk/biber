@@ -139,7 +139,7 @@ sub extract_entries {
 =cut
 
 sub create_entry {
-  my ($biber, $origkey, $entry) = @_;
+  my ($biber, $dskey, $entry) = @_;
   my $secnum = $biber->get_current_section;
   my $section = $biber->sections->get_section($secnum);
   my $struc = Biber::Config->get_structure;
@@ -150,13 +150,14 @@ sub create_entry {
   # entry key
   # In case off allkeys, this will just be the datasource key as ->get_citekeys
   # returns an empty list
-  my $citecasekey = first {lc($origkey) eq lc($_)} $section->get_citekeys;
-  $citecasekey = $origkey unless $citecasekey;
-  my $lc_key = lc($origkey);
+  my $citekey = first {lc($dskey) eq lc($_)} $section->get_citekeys;
+  $citekey = $dskey unless $citekey;
+  my $lc_key = lc($dskey);
 
   my $bibentry = new Biber::Entry;
-  $bibentry->set_field('origkey', $origkey);
-  $bibentry->set_field('citecasekey', $citecasekey);
+  # We record the original keys of both the datasource and citation. They may differ in case.
+  $bibentry->set_field('dskey', $dskey);
+  $bibentry->set_field('citekey', $citekey);
 
   # all fields used for this entry
   my @flist = $entry->fieldlist;
@@ -192,9 +193,9 @@ sub create_entry {
 
           # Consecutive "and" causes Text::BibTeX::Name to segfault
           unless ($name) {
-            $logger->warn("Name in key '$origkey' is empty (probably consecutive 'and'): skipping name");
+            $logger->warn("Name in key '$dskey' is empty (probably consecutive 'and'): skipping name");
             $biber->{warnings}++;
-            $section->del_citekey($origkey);
+            $section->del_citekey($dskey);
             next;
           }
 
@@ -206,17 +207,17 @@ sub create_entry {
           unless ($name =~ m/\A{.+}\z/xms) { # Ignore these tests for escaped names
             my @commas = $name =~ m/,/g;
             if ($#commas > 1) {
-              $logger->warn("Name \"$name\" has too many commas: skipping entry $origkey");
+              $logger->warn("Name \"$name\" has too many commas: skipping entry $dskey");
               $biber->{warnings}++;
-              $section->del_citekey($origkey);
+              $section->del_citekey($dskey);
               next;
             }
 
             # Consecutive commas cause Text::BibTeX::Name to segfault
             if ($name =~ /,,/) {
-              $logger->warn("Name \"$name\" is malformed (consecutive commas): skipping entry $origkey");
+              $logger->warn("Name \"$name\" is malformed (consecutive commas): skipping entry $dskey");
               $biber->{warnings}++;
-              $section->del_citekey($origkey);
+              $section->del_citekey($dskey);
               return;
             }
           }
@@ -279,19 +280,19 @@ sub cache_data {
     }
 
     # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing utf8 keys
-    my $origkey = decode_utf8($entry->key);
+    my $dskey = decode_utf8($entry->key);
 
     # Bad entry
     unless ($entry->parse_ok) {
-      $logger->warn("Entry $origkey does not parse correctly: skipping");
+      $logger->warn("Entry $dskey does not parse correctly: skipping");
       $biber->{warnings}++;
       next;
     }
 
     # Cache the entry so we don't have to read the file again on next pass.
     # Two reasons - So we avoid T::B macro redef warnings and speed
-    $cache->{data}{$filename}{lc($origkey)} = $entry;
-    $logger->debug("Cached Text::BibTeX entry for key '$origkey' from bibtex file '$filename'");
+    $cache->{data}{$filename}{lc($dskey)} = $entry;
+    $logger->debug("Cached Text::BibTeX entry for key '$dskey' from bibtex file '$filename'");
   }
 
   unlink $pfilename if -e $pfilename;

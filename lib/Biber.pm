@@ -692,8 +692,8 @@ sub instantiate_dynamic {
     my $be = new Biber::Entry;
     $be->set_field('entrytype', 'set');
     $be->set_field('entryset', join(',', @members));
-    $be->set_field('origkey', $dset);
-    $be->set_field('citecasekey', $dset);
+    $be->set_field('dskey', $dset);
+    $be->set_field('citekey', $dset);
     $be->set_field('datatype', 'bibtex');
     $section->bibentries->add_entry($dset, $be);
     # Setting dataonly for members is handled by postprocess_sets()
@@ -1269,7 +1269,7 @@ sub postprocess_labelnameyear {
   # Don't create disambiguation data for skiplab entries
   unless (Biber::Config->getblxoption('skiplab',
                                       $be->get_field('entrytype'),
-                                      $be->get_field('origkey'))) {
+                                      $be->get_field('dskey'))) {
     my $nameyear_string_extrayear  = "$name_string,$year_string_extrayear";
     $be->set_field('nameyear_extrayear', $nameyear_string_extrayear);
     Biber::Config->incr_seen_nameyear_extrayear($name_string, $year_string_extrayear);

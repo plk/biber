@@ -59,9 +59,9 @@ sub set_output_entry {
   my $struc = shift; # Structure object
   my $acc = '';
   my $opts = '';
-  my $citecasekey; # entry key forced to case of any citations(s) which reference it
-  if ( $be->get_field('citecasekey') ) {
-    $citecasekey = $be->get_field('citecasekey');
+  my $citekey; # entry key forced to case of any citations(s) which reference it
+  if ( $be->get_field('citekey') ) {
+    $citekey = $be->get_field('citekey');
   }
 
   if ( $be->field_exists('options') ) {
@@ -71,7 +71,7 @@ sub set_output_entry {
   $acc .= "% sortstring = " . $be->get_field('sortstring') . "\n"
     if (Biber::Config->getoption('debug') || Biber::Config->getblxoption('debug'));
 
-  $acc .= "  \\entry{$citecasekey}{" . $be->get_field('entrytype') . "}{$opts}\n";
+  $acc .= "  \\entry{$citekey}{" . $be->get_field('entrytype') . "}{$opts}\n";
 
   # Generate set information
   if ( $be->get_field('entrytype') eq 'set' ) {   # Set parents get \set entry ...
@@ -283,7 +283,7 @@ sub set_output_entry {
   # Use an array to preserve sort order of entries already generated
   # Also create an index by keyname for easy retrieval
   push @{$self->{output_data}{ENTRIES}{$section}{strings}}, \$acc;
-  $self->{output_data}{ENTRIES}{$section}{index}{lc($citecasekey)} = \$acc;
+  $self->{output_data}{ENTRIES}{$section}{index}{lc($citekey)} = \$acc;
 
   return;
 }
