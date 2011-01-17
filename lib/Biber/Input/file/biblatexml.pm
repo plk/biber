@@ -96,13 +96,19 @@ sub create_entry {
   # all field nodes for this entry
   my @flist = $entry->childNodes;
 
-  # here we find those field nodes that do not require splitting
-  my @flistnosplit;
+  # differentiate which nodes need their values splitting and which don't
+  my @flistsimple;
+  my @flistcomplex;
   foreach my $f (@flist) {
-    push @flistnosplit, $f if first {lc($f->nodeName) eq $_} @{$struc->get_field_type('split')};
+    if (first {lc($f->nodeName) eq $_} @{$struc->get_field_type('complex')}) {
+      push @flistsimple, $f;
+    }
+    else {
+      push @flistcomplex, $f;
+    }
   }
 
-  foreach my $f (@flistnosplit) {
+  foreach my $f (@flistsimple) {
     my $found_node;
     if ($dm = Biber::Config->getoption('displaymode')) {
       if (lc($f->getAttribute('mode')) eq lc($dm)) {
@@ -126,7 +132,7 @@ sub create_entry {
   $bibentry->set_field('entrytype', $entry->type);
 
   # Now fields that do require splitting
-  foreach my $f ( @{$struc->get_field_type('split')} ) {
+  foreach my $f ( @{$struc->get_field_type('complex')} ) {
     next unless $entry->exists($f);
     my @tmp = $entry->split($f);
 

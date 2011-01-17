@@ -126,7 +126,7 @@ sub new {
     $self->{fields}{literal}  = { map {$_ => 1} (@literal, @key, @integer) };
     $self->{fields}{name}     = { map {$_ => 1} @name };
     $self->{fields}{list}     = { map {$_ => 1} @list };
-    $self->{fields}{split}    = { map {$_ => 1} (@name, @list) };
+    $self->{fields}{complex}  = { map {$_ => 1} (@name, @list) };
     $self->{fields}{verbatim} = { map {$_ => 1} @verbatim };
     $self->{fields}{range}    = { map {$_ => 1} @range };
 

@@ -163,10 +163,10 @@ sub create_entry {
   my @flist = $entry->fieldlist;
 
   # here we only keep those that do not require splitting
-  my @flistnosplit = reduce_array(\@flist, $struc->get_field_type('split'));
+  my @flistsimple = reduce_array(\@flist, $struc->get_field_type('complex'));
 
   if ( $entry->metatype == BTE_REGULAR ) {
-    foreach my $f ( @flistnosplit ) {
+    foreach my $f ( @flistsimple ) {
       next unless $entry->exists($f);
       my $value = decode_utf8($entry->get($f));
 
@@ -182,7 +182,7 @@ sub create_entry {
     # Set entrytype. This may be changed later in process_aliases
     $bibentry->set_field('entrytype', $entry->type);
 
-    foreach my $f ( @{$struc->get_field_type('split')} ) {
+    foreach my $f ( @{$struc->get_field_type('complex')} ) {
       next unless $entry->exists($f);
       my @tmp = $entry->split($f);
 
