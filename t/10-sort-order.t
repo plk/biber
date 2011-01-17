@@ -549,4 +549,4 @@ $section = $biber->sections->get_section(0);
 is_deeply([$section->get_citekeys], ['L1A','L1','L1B','L2','L3','L4','L5','L7','L6','L9','L8'], 'nosort 1');
 check_output_string_order($out, ['L1A','L1','L1B','L2','L3','L4','L5','L7','L6','L9','L8']);
 
-unlink "*.utf8";
+unlink <*.utf8>;

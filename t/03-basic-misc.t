@@ -234,4 +234,4 @@ $out = $biber->get_output_obj;
 
 is( $out->get_output_entry('murray'), $murray2, 'bbl with > maxnames, empty alphaothers' ) ;
 
-unlink "*.utf8";
+unlink <*.utf8>;

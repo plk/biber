@@ -78,4 +78,4 @@ is_deeply([$section2->get_shorthands], ['sect1', 'sect6', 'sect7'], 'Section 2 s
 is_deeply([$section3->get_orig_order_citekeys], ['sect1', 'sect2', 'sectall1'], 'Section 3 citekeys');
 is($out->get_output_head, $head, 'Preamble output check with bblsafechars');
 
-unlink "*.utf8";
+unlink <*.utf8>;

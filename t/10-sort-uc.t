@@ -114,7 +114,4 @@ $biber->prepare;
 $section = $biber->sections->get_section(0);
 is_deeply([$section->get_citekeys], ['LS3', 'LS4','LS2','LS1'], 'sortcase locally false, upper_before_lower locally false');
 
-
-
-
-unlink "*.utf8";
+unlink <*.utf8>;

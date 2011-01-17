@@ -390,4 +390,4 @@ is($out->get_output_entry('xrt'), $xrt, 'xref test 5');
 is($out->get_output_entry('xr4'), $xr4, 'xref test 6');
 is($section->has_citekey('xrn'), 0,'xref test 7');
 
-unlink "*.utf8";
+unlink <*.utf8>;

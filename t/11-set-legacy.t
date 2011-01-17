@@ -112,4 +112,4 @@ is($out->get_output_entry('elias1955'), $string1, 'Legacy set test 1');
 is($out->get_output_entry('elias1955a'), $string2, 'Legacy set test 2');
 is($out->get_output_entry('elias1955b'), $string3, 'Legacy set test 3');
 
-unlink "*.utf8";
+unlink <*.utf8>;

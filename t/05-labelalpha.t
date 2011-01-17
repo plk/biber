@@ -142,4 +142,4 @@ ok(is_undef($bibentries->entry('l7')->get_field('extraalpha')), 'maxnames=3 minn
 is($bibentries->entry('l8')->get_field('sortlabelalpha'), 'Sha85', 'maxnames=3 minnames=1 entry L8 labelalpha');
 ok(is_undef($bibentries->entry('l8')->get_field('extraalpha')), 'maxnames=3 minnames=1 entry L8 extraalpha');
 
-unlink "*.utf8";
+unlink <*.utf8>;

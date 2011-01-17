@@ -131,4 +131,4 @@ is($out->get_output_entry('Dynamic3', 1), $string5, 'Dynamic set test 5');
 is_deeply([$section0->get_shorthands], ['DynSet'], 'Dynamic set skiplos 1');
 is_deeply([$section1->get_shorthands], ['Dynamic3'], 'Dynamic set skiplos 2');
 
-unlink "*.utf8";
+unlink <*.utf8>;

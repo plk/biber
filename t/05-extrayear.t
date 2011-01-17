@@ -51,5 +51,4 @@ ok(is_undef($bibentries->entry('gennep')->get_field('extrayear')), 'Entry gennep
 ok(is_undef($bibentries->entry('ly1')->get_field('extrayear')), 'Date range means no extrayear - 1');
 ok(is_undef($bibentries->entry('ly2')->get_field('extrayear')), 'Date range means no extrayear - 2');
 
-
-unlink "*.utf8";
+unlink <*.utf8>;

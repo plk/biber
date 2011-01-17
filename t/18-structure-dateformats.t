@@ -325,5 +325,4 @@ $out = $biber->get_output_obj;
 is($bibentries->entry('l17')->get_field('labelyearname'), 'eventyear', 'Date format test 17d - labelyearname = EVENTYEAR' ) ;
 is($out->get_output_entry('l17'), $l17e, 'Date format test 17e - labelyear = ORIGYEAR-ORIGENDYEAR' ) ;
 
-
-unlink "*.utf8";
+unlink <*.utf8>;

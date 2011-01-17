@@ -225,5 +225,4 @@ is( $out->get_output_entry('l1'), $sc4, '2-pass - labelalpha after title');
 is( $out->get_output_entry('l2'), $sc5, '2-pass - labelalpha after title');
 is( $out->get_output_entry('l3'), $sc6, '2-pass - labelalpha after title');
 
-
-unlink "*.utf8";
+unlink <*.utf8>;

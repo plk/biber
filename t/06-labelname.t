@@ -37,5 +37,4 @@ is($bibentries->entry('stdmodel')->get_field('labelnamename'), $a, 'global autho
 is($bibentries->entry('aristotle:anima')->get_field('labelnamename'), $ted, 'type-specific editor' );
 
 
-
-unlink "*.utf8";
+unlink <*.utf8>;

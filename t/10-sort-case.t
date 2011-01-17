@@ -64,5 +64,4 @@ sub check_output_string_order {
             [ map { $out->get_output_entry($_) }  @{$test_order} ], 'U::C case strings - ' . $i++);
 }
 
-
-unlink "*.utf8";
+unlink <*.utf8>;

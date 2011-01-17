@@ -1409,4 +1409,4 @@ $bibentries = $biber->sections->get_section(0)->bibentries;
 is($bibentries->entry('stdmodel')->get_field('sortstring'), $citeorder, 'citeorder' );
 
 
-unlink "*.utf8";
+unlink <*.utf8>;

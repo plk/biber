@@ -319,4 +319,4 @@ $output->set_output_target_file(\$outvar);
 $output->output;
 is($outvar, encode(Biber::Config->getoption('bblencoding'), $encode2), 'latin1 .bib -> applemacce (custom alias) .bbl');
 
-unlink "*.utf8";
+unlink <*.utf8>;
