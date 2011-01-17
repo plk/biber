@@ -148,7 +148,7 @@ sub create_entry {
   # Want a version of the key that is the same case as any citations which
   # reference it, in case they are different. We use this as the .bbl
   # entry key
-  # In case off allkeys, this will just be the datasource key as ->get_citekeys
+  # In case of allkeys, this will just be the datasource key as ->get_citekeys
   # returns an empty list
   my $citekey = first {lc($dskey) eq lc($_)} $section->get_citekeys;
   $citekey = $dskey unless $citekey;
@@ -576,11 +576,12 @@ __END__
 
 =head1 NAME
 
-Biber::Input::BibTeX - parse a bib database with Text::BibTeX
+Biber::Input::file::bibtex - look in a BibTeX file for an entry and create it if found
 
 =head1 DESCRIPTION
 
-Internal method ...
+Provides the extract_entries() method to get entries from a bibtex data source
+and instantiate Biber::Entry objects for what it finds
 
 =head1 AUTHOR
 

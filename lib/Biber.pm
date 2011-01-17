@@ -803,6 +803,10 @@ sub process_crossrefs {
 =head2 validate_structure
 
   Validate bib structure according to a bib schema
+  Note that we are validating the internal Biber::Entries
+  after they have been created from the datasources so this is
+  datasource neutral, as it should be. It is here to enforce
+  adherence to what biblatex expects.
 
 =cut
 

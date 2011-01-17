@@ -70,7 +70,7 @@ sub new {
     # field datatypes
     my ($nullok, $skipout, @name, @list, @literal, @date, @integer, @range, @verbatim, @key);
 
-    # Create date for field types, including any aliases which might be
+    # Create data for field types, including any aliases which might be
     # needed when reading the bib data.
     foreach my $f (@{$struc->{fields}{field}}) {
       if ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'name') {
