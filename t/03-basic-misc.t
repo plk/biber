@@ -48,6 +48,9 @@ is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 is_deeply( [ $section->get_shorthands ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
 
 # reset some options and re-generate information
+
+# Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
+# Otherwise, we have citekeys and allkeys which confuses fetch_data()
 $section->del_citekeys;
 $section->allkeys;
 $biber->prepare;
@@ -223,7 +226,8 @@ is( $out->get_output_entry('missing2'), "  \\missing{missing2}\n", 'missing cite
 Biber::Config->setblxoption('alphaothers', '');
 Biber::Config->setblxoption('sortalphaothers', '');
 
-$section->del_bibentries;
+# Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
+# Otherwise, we have citekeys and allkeys which confuses fetch_data()
 $section->del_citekeys;
 $biber->prepare ;
 $out = $biber->get_output_obj;

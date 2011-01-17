@@ -560,6 +560,9 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
       my $key = $keyc->{content};
       if ($key eq '*') {
         $bib_section->allkeys;
+        # Normalise - when allkeys is true don't need citekeys - just in case someone
+        # lists "*" and also some other citekeys
+        $bib_section->del_citekeys;
         $key_flag = 1; # There is at least one key, used for error reporting below
         $logger->info("Using all citekeys in bib section " . $section->{number});
         $bib_sections->add_section($bib_section);
