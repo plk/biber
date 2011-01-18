@@ -809,9 +809,9 @@ sub _liststring {
 
 sub process_entry_options {
   my $self = shift;
-  my $be = shift;
-  my $citekey = lc($be->get_field('dskey'));
-  if ( my $options = $be->get_field('options') ) {
+  my $citekey = shift;
+  my $options = shift;
+  if ( $options ) { # Just in case it's null
     my @entryoptions = split /\s*,\s*/, $options;
     foreach (@entryoptions) {
       m/^([^=]+)=?(.+)?$/;

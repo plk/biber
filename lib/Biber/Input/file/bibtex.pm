@@ -166,6 +166,11 @@ sub create_entry {
   my @flistsimple = reduce_array(\@flist, $struc->get_field_type('complex'));
 
   if ( $entry->metatype == BTE_REGULAR ) {
+
+    # Set entrytype. This may be changed later in process_aliases
+    $bibentry->set_field('entrytype', $entry->type);
+
+    # Simple fields
     foreach my $f ( @flistsimple ) {
       next unless $entry->exists($f);
       my $value = decode_utf8($entry->get($f));
@@ -175,18 +180,28 @@ sub create_entry {
       # We have to process local options as early as possible in order
       # to make them available for things that need them like parsename()
       if (lc($f) eq 'options') {
-        $biber->process_entry_options($bibentry);
+        $biber->process_entry_options($dskey, $value);
       }
     }
 
-    # Set entrytype. This may be changed later in process_aliases
-    $bibentry->set_field('entrytype', $entry->type);
-
+    # Complex fields
     foreach my $f ( @{$struc->get_field_type('complex')} ) {
       next unless $entry->exists($f);
       my @tmp = $entry->split($f);
 
-      if ($struc->is_field_type('name', $f)) {
+      # range lists become an array ref of two element array refs
+      if ($struc->is_field_type('range', $f)) {
+        my $values_ref;
+        my @values = split(/\s*,\s*/, decode_utf8($entry->get($f)));
+        # Here the "-–" contains two different chars even though they might
+        # look the same ...
+        foreach my $value (@values) {
+          $value =~ m/\A\s*([^-–]+)[-–]*([^-–]*)\s*\z/xms;
+          push @$values_ref, [$1 || '', $2 || ''];
+        }
+        $bibentry->set_datafield($f, $values_ref);
+      }
+      elsif ($struc->is_field_type('name', $f)) {
         my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
         my $names = new Biber::Entry::Names;
         foreach my $name (@tmp) {
@@ -396,8 +411,6 @@ sub parsename {
   open STDERR, '>&', \*OLDERR;
 
   # Formats so we can get BibTeX compatible nbsp inserted
-  # We can't use formats to get initials as Text::BibTeX < 0.42 as it
-  # has a problem dealing with braced names when extracting initials
   my $l_f = new Text::BibTeX::NameFormat('l', 0);
   my $f_f = new Text::BibTeX::NameFormat('f', 0);
   my $p_f = new Text::BibTeX::NameFormat('v', 0);
@@ -427,6 +440,7 @@ sub parsename {
   # Use a copy of $name so that when we generate the
   # initials, we do so without diacritics. This is easier than trying
   # hack the diacritics code into btparse ...
+  my $nd_name = new Text::BibTeX::Name(strip_nosort($namestr, $fieldname));
 
   # Initials formats
   my $li_f = new Text::BibTeX::NameFormat('l', 1);
@@ -439,10 +453,6 @@ sub parsename {
   my $fit_f = new Text::BibTeX::NameFormat('f', 1);
   my $pit_f = new Text::BibTeX::NameFormat('v', 1);
   my $sit_f = new Text::BibTeX::NameFormat('j', 1);
-
-  # first name doesn't need this customisation as it's automatic for
-  # an abbreviated first name format but we'll do it anyway for consistency
-  my $nd_name = new Text::BibTeX::Name(strip_nosort($namestr, $fieldname));
 
   # Period following normal initials
   $li_f->set_text(BTN_LAST,  undef, undef, undef, '.');

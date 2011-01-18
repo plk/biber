@@ -304,7 +304,7 @@ sub set_output_entry {
       $un = '0';
     }
     # Otherwise, if there is one entry (hash) for the lastname plus initials,
-    # the it needs the initials to make it unique
+    # then it needs the initials to make it unique
     elsif (Biber::Config->get_numofuniquenames($nameinitstr) == 1 ) {
       $un = '1';
     }
@@ -346,16 +346,17 @@ sub set_output_entry {
   }
 
   foreach my $rfield (@{$struc->get_field_type('range')}) {
-    if ( $rf = $be->get_field($rfield) ) {
-      $rf =~ s/[-–]+/\\bibrangedash /g;
-      $acc .= "    \\field{$rfield}{$rf}\n";
+    if ( my $rf = $be->get_field($rfield) ) {
+      # range fields are an array ref of two-element array refs [range_start, range_end]
+      my $bbl_rf = join(', ', map {$_->[0] . '\bibrangedash' . ($_->[1] ? ' ' . $_->[1] : '')} @$rf);
+      $acc .= "    \\field{$rfield}{$bbl_rf}\n";
     }
   }
 
   foreach my $vfield (@{$struc->get_field_type('verbatim')}) {
-    if ( my $rf = $be->get_field($vfield) ) {
+    if ( my $vf = $be->get_field($vfield) ) {
       $acc .= "    \\verb{$vfield}\n";
-      $acc .= "    \\verb $rf\n    \\endverb\n";
+      $acc .= "    \\verb $vf\n    \\endverb\n";
     }
   }
   if ( my $k = $be->get_field('keywords') ) {

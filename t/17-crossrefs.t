@@ -185,7 +185,7 @@ my $cr6 = q|  \entry{cr6}{inproceedings}{}
     \field{title}{Title of inproceeding}
     \field{venue}{Location of event}
     \field{year}{2009}
-    \field{pages}{123\bibrangedash 126}
+    \field{pages}{123\bibrangedash}
   \endentry
 
 |;
