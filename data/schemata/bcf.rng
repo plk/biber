@@ -669,7 +669,7 @@
               <value>file</value>
             </attribute>
             <optional>
-              <attribute name="format">
+              <attribute name="datatype">
                 <choice>
                   <value>bibtex</value>
                   <value>biblatexml</value>

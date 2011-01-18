@@ -737,7 +737,7 @@
                     <xsl:for-each select="/bcf:controlfile/bcf:bibdata[@section=$secnum]">
                       <xsl:for-each select="./bcf:datasource">
                         <li>
-                          <xsl:value-of select="./text()"/> [<xsl:value-of select="./@type"/>]
+                          <xsl:value-of select="./text()"/> [<xsl:value-of select="./@datatype"/> <xsl:value-of select="./@type"/>]
                         </li>
                       </xsl:for-each>
                     </xsl:for-each>

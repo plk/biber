@@ -219,19 +219,21 @@ sub parsename {
   my $suffix_i;
   my $suffix_it;
 
-  if (my @parts = $rangenode->findnodes("./$NS:lastname/$NS:namepart->textContent()")) {
+  # Allow no namepart, just text (in rnc and test file)
+
+  if (my @parts = $rangenode->findnodes("./$NS:lastname/$NS:namepart")->textContent()) {
     $lastname = _join_name_parts(\@parts);
     ($lastname_i, $lastname_it) = _gen_initials(\@parts);
   }
-  if (my $n = $rangenode->findnodes("./$NS:firstname/$NS:namepart->textContent()")) {
+  if (my $n = $rangenode->findnodes("./$NS:firstname/$NS:namepart")->textContent()) {
     $firstname = _join_name_parts(\@parts);
     ($firstname_i, $firstname_it) = _gen_initials(\@parts);
   }
-  if (my $n = $rangenode->findnodes("./$NS:prefix/$NS:namepart->textContent()")) {
+  if (my $n = $rangenode->findnodes("./$NS:prefix/$NS:namepart")->textContent()) {
     $prefix = _join_name_parts(\@parts);
     ($prefix_i, $prefix_it) = _gen_initials(\@parts);
   }
-  if (my $n = $rangenode->findnodes("./$NS:suffix/$NS:namepart->textContent()")) {
+  if (my $n = $rangenode->findnodes("./$NS:suffix/$NS:namepart")->textContent()) {
     $suffix = _join_name_parts(\@parts);
     ($suffix_i, $suffix_it) = _gen_initials(\@parts);
   }
