@@ -440,7 +440,11 @@ sub parsename {
   # Use a copy of $name so that when we generate the
   # initials, we do so without diacritics. This is easier than trying
   # hack the diacritics code into btparse ...
-  my $nd_name = new Text::BibTeX::Name(strip_nosort($namestr, $fieldname));
+  # This is a hard-coded hack
+  my $nd_namestr = $namestr;
+  $nd_namestr =~ s/\A\p{L}{2}\p{Pd}//; #strip prefices
+  $nd_namestr =~ s/[\x{2bf}\x{2018}]//g; # strip specific diacritics
+  my $nd_name = new Text::BibTeX::Name($nd_namestr, $fieldname);
 
   # Initials formats
   my $li_f = new Text::BibTeX::NameFormat('l', 1);
