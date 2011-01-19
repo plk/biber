@@ -20,6 +20,7 @@ use base 'Exporter';
 use List::AllUtils qw(first);
 use XML::LibXML;
 use Readonly;
+use Data::Dump qw(dump);
 
 my $logger = Log::Log4perl::get_logger('main');
 Readonly::Scalar our $BIBLATEXML_NAMESPACE_URI => 'http://biblatex-biber.sourceforge.net/biblatexml';
@@ -60,6 +61,65 @@ sub extract_entries {
   $xpc->registerNs($NS, $BIBLATEXML_NAMESPACE_URI);
 
 
+
+  if ($section->is_allkeys) {
+    $logger->debug("All citekeys will be used for section '$secnum'");
+    # Loop over all entries, creating objects
+    foreach my $entry ($xpc->findnodes("//$NS:entry")) {
+      # We have to pass the datasource cased key to
+      # create_entry() as this sub needs to know the original case of the
+      # citation key so we can do case-insensitive key/entry comparisons
+      # later but we need to put the original citation case when we write
+      # the .bbl. If we lowercase before this, we lose this information.
+      # Of course, with allkeys, "citation case" means "datasource entry case"
+
+      # If an entry has no key, ignore it and warn
+      unless ($entry->hasAttribute('id')) {
+        $logger->warn("Invalid or undefined BibLaTeXML entry key in file '$filename', skipping ...");
+        $biber->{warnings}++;
+        next;
+      }
+      create_entry($biber, $entry->getAttribute('id'), $entry);
+    }
+
+    # if allkeys, push all bibdata keys into citekeys (if they are not already there)
+    $section->add_citekeys($section->bibentries->sorted_keys);
+    $logger->debug("Added all citekeys to section '$secnum': " . join(', ', $section->get_citekeys));
+  }
+  else {
+    # loop over all keys we're looking for and create objects
+    $logger->debug('Wanted keys: ' . join(', ', @$keys));
+    foreach my $wanted_key (@$keys) {
+      $logger->debug("Looking for key '$wanted_key' in BibLaTeXML file '$filename'");
+      # Cache index keys are lower-cased. This next line effectively implements
+      # case insensitive citekeys
+      # This will also get the first match it finds
+      if (my @entries = $xpc->findnodes("//$NS:entry[\@id='" . lc($wanted_key) . "']")) {
+        my $entry;
+        # Check to see if there is more than one entry with this key and warn if so
+        if ($#entries > 0) {
+          $logger->warn("Found more than one entry for key '$wanted_key' in '$filename': " .
+                       join(',', map {$_->getAttribute('id')} @entries) . ' - using the first one!');
+          $biber->{warnings}++;
+        }
+        $entry = $entries[0];
+
+        $logger->debug("Found key '$wanted_key' in BibLaTeXML file '$filename'");
+        # See comment above about the importance of the case of the key
+        # passed to create_entry()
+        create_entry($biber, $wanted_key, $entry);
+        # found a key, remove it from the list of keys we want
+        @rkeys = grep {$wanted_key ne $_} @rkeys;
+      }
+      $logger->debug('Wanted keys now: ' . join(', ', @rkeys));
+    }
+  }
+
+  # Only push the preambles from the file if we haven't seen this data file before
+  # and there are some preambles to push
+  if ($cache->{counts}{$filename} < 2 and @{$cache->{preamble}{$filename}}) {
+    push @{$biber->{preamble}}, @{$cache->{preamble}{$filename}};
+  }
 
   return @rkeys;
 }
@@ -151,7 +211,6 @@ sub create_entry {
   foreach my $f (@$fields_name) {
     # Pick out the node with the right mode
     my $node = _resolve_mode_set($entry, $f);
-    # name fields
     my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
     my $names = new Biber::Entry::Names;
     foreach my $name ($node->findnodes("./$NS:person")) {
@@ -160,12 +219,19 @@ sub create_entry {
     $bibentry->set_datafield($f, $names);
   }
 
-    # else {
-    #   # Name fields are decoded during parsing, others here
-    #   @tmp = map { decode_utf8($_) } @tmp;
-    #   @tmp = map { remove_outer($_) } @tmp;
-    #   $bibentry->set_datafield($f, [ @tmp ]);
+  # key fields
+  foreach my $f (@$fields_key) {
+    # Pick out the node with the right mode
+    my $node = _resolve_mode_set($entry, $f);
+    $bibentry->set_datafield(_norm($node->nodeName), $node->textContent());
+  }
 
+  # integer fields
+  foreach my $f (@$fields_integer) {
+    # Pick out the node with the right mode
+    my $node = _resolve_mode_set($entry, $f);
+    $bibentry->set_datafield(_norm($node->nodeName), $node->textContent());
+  }
 
   $bibentry->set_field('datatype', 'bibtex');
   $bibentries->add_entry($lc_key, $bibentry);
@@ -206,6 +272,8 @@ sub parsename {
   $logger->debug("   Parsing BibLaTeXML name object ...");
   my $usepre = $opts->{useprefix};
 
+  no strict "refs"; # symbolic references below ...
+
   my $lastname;
   my $firstname;
   my $prefix;
@@ -219,150 +287,72 @@ sub parsename {
   my $suffix_i;
   my $suffix_it;
 
-  # Allow no namepart, just text (in rnc and test file)
-
-  if (my @parts = $rangenode->findnodes("./$NS:lastname/$NS:namepart")->textContent()) {
-    $lastname = _join_name_parts(\@parts);
-    ($lastname_i, $lastname_it) = _gen_initials(\@parts);
-  }
-  if (my $n = $rangenode->findnodes("./$NS:firstname/$NS:namepart")->textContent()) {
-    $firstname = _join_name_parts(\@parts);
-    ($firstname_i, $firstname_it) = _gen_initials(\@parts);
-  }
-  if (my $n = $rangenode->findnodes("./$NS:prefix/$NS:namepart")->textContent()) {
-    $prefix = _join_name_parts(\@parts);
-    ($prefix_i, $prefix_it) = _gen_initials(\@parts);
-  }
-  if (my $n = $rangenode->findnodes("./$NS:suffix/$NS:namepart")->textContent()) {
-    $suffix = _join_name_parts(\@parts);
-    ($suffix_i, $suffix_it) = _gen_initials(\@parts);
+  foreach my $n (('lastname', 'firstname', 'prefix', 'suffix')) {
+    if (my @parts = $rangenode->findnodes("./$NS:$n/$NS:namepart")->textContent()) {
+      ${$n} = _join_name_parts(\@parts);
+      (${$n}_i, ${$n}_it) = _gen_initials(\@parts);
+    }
+    # name with no parts
+    elsif (my ${$n} = $rangenode->findnodes("./$NS:$n")->get_node(1)->textContent()) {
+      (${$n}_i, ${$n}_it) = _gen_initials([${$n}]);
+    }
   }
 
+  # Only warn about lastnames since there should always be one
+  $logger->warn("Couldn't determine Lastname for name object: " . dump($node)) unless $lastname;
 
+  my $namestring = '';
 
-  # # first name doesn't need this customisation as it's automatic for
-  # # an abbreviated first name format but we'll do it anyway for consistency
-  # my $nd_name = new Text::BibTeX::Name(strip_nosort($namestr, $fieldname));
+  # prefix
+  if ($prefix) {
+    $namestring .= "$prefix ";
+  }
 
-  # # Period following normal initials
-  # $li_f->set_text(BTN_LAST,  undef, undef, undef, '.');
-  # $fi_f->set_text(BTN_FIRST, undef, undef, undef, '.');
-  # $pi_f->set_text(BTN_VON,   undef, undef, undef, '.');
-  # $si_f->set_text(BTN_JR,    undef, undef, undef, '.');
-  # $li_f->set_options(BTN_LAST,  1, BTJ_MAYTIE, BTJ_NOTHING);
-  # $fi_f->set_options(BTN_FIRST, 1, BTJ_MAYTIE, BTJ_NOTHING);
-  # $pi_f->set_options(BTN_VON,   1, BTJ_MAYTIE, BTJ_NOTHING);
-  # $si_f->set_options(BTN_JR,    1, BTJ_MAYTIE, BTJ_NOTHING);
+  # lastname
+  if ($lastname) {
+    $namestring .= "$lastname, ";
+  }
 
-  # # Nothing following truncated initials
-  # $lit_f->set_text(BTN_LAST,  undef, undef, undef, '');
-  # $fit_f->set_text(BTN_FIRST, undef, undef, undef, '');
-  # $pit_f->set_text(BTN_VON,   undef, undef, undef, '');
-  # $sit_f->set_text(BTN_JR,    undef, undef, undef, '');
-  # $lit_f->set_options(BTN_LAST,  1, BTJ_NOTHING, BTJ_NOTHING);
-  # $fit_f->set_options(BTN_FIRST, 1, BTJ_NOTHING, BTJ_NOTHING);
-  # $pit_f->set_options(BTN_VON,   1, BTJ_NOTHING, BTJ_NOTHING);
-  # $sit_f->set_options(BTN_JR,    1, BTJ_NOTHING, BTJ_NOTHING);
+  # suffix
+  if ($suffix) {
+    $namestring .= "$suffix, ";
+  }
 
-  # $gen_lastname_i    = decode_utf8($nd_name->format($li_f));
-  # $gen_lastname_it   = decode_utf8($nd_name->format($lit_f));
-  # $gen_firstname_i   = decode_utf8($nd_name->format($fi_f));
-  # $gen_firstname_it  = decode_utf8($nd_name->format($fit_f));
-  # $gen_prefix_i      = decode_utf8($nd_name->format($pi_f));
-  # $gen_prefix_it     = decode_utf8($nd_name->format($pit_f));
-  # $gen_suffix_i      = decode_utf8($nd_name->format($si_f));
-  # $gen_suffix_it     = decode_utf8($nd_name->format($sit_f));
+  # firstname
+  if ($firstname) {
+    $namestring .= "$firstname";
+  }
 
-  # # Only warn about lastnames since there should always be one
-  # $logger->warn("Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
+  # Remove any trailing comma and space if, e.g. missing firstname
+  # Replace any nbspes
+  $namestring =~ s/,\s+\z//xms;
+  $namestring =~ s/~/ /gxms;
 
-  # my $namestring = '';
-  # # prefix
-  # my $ps;
-  # my $prefix_stripped;
-  # my $prefix_i;
-  # my $prefix_it;
-  # if ($prefix) {
-  #   $prefix_i        = $gen_prefix_i;
-  #   $prefix_it       = $gen_prefix_it;
-  #   $prefix_stripped = remove_outer($prefix);
-  #   $ps = $prefix ne $prefix_stripped ? 1 : 0;
-  #   $namestring .= "$prefix_stripped ";
-  # }
-  # # lastname
-  # my $ls;
-  # my $lastname_stripped;
-  # my $lastname_i;
-  # my $lastname_it;
-  # if ($lastname) {
-  #   $lastname_i        = $gen_lastname_i;
-  #   $lastname_it       = $gen_lastname_it;
-  #   $lastname_stripped = remove_outer($lastname);
-  #   $ls = $lastname ne $lastname_stripped ? 1 : 0;
-  #   $namestring .= "$lastname_stripped, ";
-  # }
-  # # suffix
-  # my $ss;
-  # my $suffix_stripped;
-  # my $suffix_i;
-  # my $suffix_it;
-  # if ($suffix) {
-  #   $suffix_i        = $gen_suffix_i;
-  #   $suffix_it       = $gen_suffix_it;
-  #   $suffix_stripped = remove_outer($suffix);
-  #   $ss = $suffix ne $suffix_stripped ? 1 : 0;
-  #   $namestring .= "$suffix_stripped, ";
-  # }
-  # # firstname
-  # my $fs;
-  # my $firstname_stripped;
-  # my $firstname_i;
-  # my $firstname_it;
-  # if ($firstname) {
-  #   $firstname_i        = $gen_firstname_i;
-  #   $firstname_it       = $gen_firstname_it;
-  #   $firstname_stripped = remove_outer($firstname);
-  #   $fs = $firstname ne $firstname_stripped ? 1 : 0;
-  #   $namestring .= "$firstname_stripped";
-  # }
+  # Construct $nameinitstring
+  my $nameinitstr = '';
+  $nameinitstr .= $prefix_it . '_' if ( $usepre and $prefix );
+  $nameinitstr .= $lastname if $lastname;
+  $nameinitstr .= '_' . $suffix_it if $suffix;
+  $nameinitstr .= '_' . $firstname_it if $firstname;
+  $nameinitstr =~ s/\s+/_/g;
+  $nameinitstr =~ s/~/_/g;
 
-  # # Remove any trailing comma and space if, e.g. missing firstname
-  # # Replace any nbspes
-  # $namestring =~ s/,\s+\z//xms;
-  # $namestring =~ s/~/ /gxms;
-
-  # # Construct $nameinitstring
-  # my $nameinitstr = '';
-  # $nameinitstr .= $prefix_it . '_' if ( $usepre and $prefix );
-  # $nameinitstr .= $lastname if $lastname;
-  # $nameinitstr .= '_' . $suffix_it if $suffix;
-  # $nameinitstr .= '_' . $firstname_it if $firstname;
-  # $nameinitstr =~ s/\s+/_/g;
-  # $nameinitstr =~ s/~/_/g;
-
-  # # The "strip" entry tells us which of the name parts had outer braces
-  # # stripped during processing so we can add them back when printing the
-  # # .bbl so as to maintain maximum BibTeX compatibility
-  # return Biber::Entry::Name->new(
-  #   firstname       => $firstname      eq '' ? undef : $firstname_stripped,
-  #   firstname_i     => $firstname      eq '' ? undef : $firstname_i,
-  #   firstname_it    => $firstname      eq '' ? undef : $firstname_it,
-  #   lastname        => $lastname       eq '' ? undef : $lastname_stripped,
-  #   lastname_i      => $lastname       eq '' ? undef : $lastname_i,
-  #   lastname_it     => $lastname       eq '' ? undef : $lastname_it,
-  #   prefix          => $prefix         eq '' ? undef : $prefix_stripped,
-  #   prefix_i        => $prefix         eq '' ? undef : $prefix_i,
-  #   prefix_it       => $prefix         eq '' ? undef : $prefix_it,
-  #   suffix          => $suffix         eq '' ? undef : $suffix_stripped,
-  #   suffix_i        => $suffix         eq '' ? undef : $suffix_i,
-  #   suffix_it       => $suffix         eq '' ? undef : $suffix_it,
-  #   namestring      => $namestring,
-  #   nameinitstring  => $nameinitstr,
-  #   strip           => {'firstname' => $fs,
-  #                       'lastname'  => $ls,
-  #                       'prefix'    => $ps,
-  #                       'suffix'    => $ss}
-  #   );
+  return Biber::Entry::Name->new(
+    firstname       => $firstname // undef,
+    firstname_i     => $firstname ? $firstname_i : undef,
+    firstname_it    => $firstname ? $firstname_it : undef,
+    lastname        => $lastname // undef,
+    lastname_i      => $lastname ? $lastname_i : undef,
+    lastname_it     => $lastname ? $lastname_it : undef,
+    prefix          => $prefix // undef,
+    prefix_i        => $prefix ? $prefix_i : undef,
+    prefix_it       => $prefix ? $prefix_it : undef,
+    suffix          => $suffix // undef,
+    suffix_i        => $suffix ? $suffix_i : undef,
+    suffix_it       => $suffix ? $suffix_it : undef,
+    namestring      => $namestring,
+    nameinitstring  => $nameinitstr,
+    );
 }
 
 

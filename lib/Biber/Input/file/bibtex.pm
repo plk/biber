@@ -288,7 +288,7 @@ sub cache_data {
               or $entry->metatype == BTE_COMMENT );
 
     # If an entry has no key, ignore it and warn
-    unless( $entry->key ) {
+    unless ($entry->key) {
       $logger->warn("Invalid or undefined BibTeX entry key in file '$pfilename', skipping ...");
       $biber->{warnings}++;
       next;

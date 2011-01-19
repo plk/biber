@@ -67,7 +67,7 @@ sub notnull {
 
 sub was_stripped {
   my ($self, $part) = @_;
-  return $self->{strip}{$part};
+  return exists($self->{strip}) ? $self->{strip}{$part} : undef;
 }
 
 
