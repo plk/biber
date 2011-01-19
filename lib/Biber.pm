@@ -316,6 +316,8 @@ sub parse_ctrlfile {
                                                            qr/\Asortexclusion\z/,
                                                            qr/\Aexclusion\z/,
                                                            qr/\Asort\z/,
+                                                           qr/\Adisplaymode\z/,
+                                                           qr/\Amode\z/,
                                                            qr/\Apresort\z/,
                                                            qr/\Atype_pair\z/,
                                                            qr/\Ainherit\z/,
@@ -390,6 +392,18 @@ sub parse_ctrlfile {
       }
     }
   }
+
+  # DISPLAYMODES
+  # This should not be optional any more when biblatex implements this so take
+  # out this conditional
+  if (exists($bcfxml->{displaymodes})) {
+    my $dms;
+    foreach my $dm (@{$bcfxml->{displaymodes}{displaymode}}) {
+      $dms->{$dm->{target}{content}} = [ map {$_->{content}} @{$dm->{mode}} ];
+    }
+    Biber::Config->setblxoption('displaymodes', $dms);
+  }
+
 
   # INHERITANCE schemes for crossreferences (always global)
   # This should not be optional any more when biblatex implements this so take

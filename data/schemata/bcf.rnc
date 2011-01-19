@@ -14,7 +14,6 @@ start =
       bblencoding,
       bibencoding,
       debug,
-      displaymode?,
       mincrossrefs,
       sortcase,
       sortlocale?,
@@ -64,7 +63,15 @@ start =
       useprefix?,
       usetranslator?
     }*,
-    
+
+    # Display modes definition
+    element bcf:displaymodes {
+      element bcf:displaymode {
+        element bcf:target { "ALL" | xsd:string },
+        element bcf:mode { "original" | "uniform" | "romanised"  | "translated" }+
+      }+
+    }?,
+
     # Cross-reference inheritance specifications
     element bcf:inheritance {
       # Defaults
@@ -493,7 +500,4 @@ nonsortdiacritics =
   element bcf:nonsortdiacritics {
     element bcf:item { text }+
   }
-
-# This is for setting the display mode of non-roman scripts
-displaymode = element displaymode { "original" | "romanized" | "translated" | "uniform" }
 

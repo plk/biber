@@ -165,7 +165,7 @@ sub create_entry {
   # We have to process local options as early as possible in order
   # to make them available for things that need them like name parsing
   if (_norm($entry->nodeName) eq 'options') {
-    if (my $node = _resolve_mode_set($biber, $entry, 'options')) {
+    if (my $node = _resolve_display_mode($biber, $entry, 'options')) {
       $biber->process_entry_options($dskey, $node->textContent());
     }
   }
@@ -173,7 +173,7 @@ sub create_entry {
   # Literal fields
   foreach my $f ((@$fields_literal,@$fields_verbatim)) {
     # Pick out the node with the right mode
-    if (my $node = _resolve_mode_set($biber, $entry, $f)) {
+    if (my $node = _resolve_display_mode($biber, $entry, $f)) {
       $bibentry->set_datafield(_norm($node->nodeName), $node->textContent());
     }
   }
@@ -181,7 +181,7 @@ sub create_entry {
   # List fields
   foreach my $f (@$fields_list) {
     # Pick out the node with the right mode
-    if (my $node = _resolve_mode_set($biber, $entry, $f)) {
+    if (my $node = _resolve_display_mode($biber, $entry, $f)) {
       $bibentry->set_datafield(_norm($node->nodeName), _split_list($node));
     }
   }
@@ -189,7 +189,7 @@ sub create_entry {
   # Range fields
   foreach my $f (@$fields_range) {
     # Pick out the node with the right mode
-    if (my $node = _resolve_mode_set($biber, $entry, $f)) {
+    if (my $node = _resolve_display_mode($biber, $entry, $f)) {
       # List of ranges/values
       if (my @rangelist = $node->findnodes("./$NS:list/$NS:item")) {
         my $rl;
@@ -212,7 +212,7 @@ sub create_entry {
   # Name fields
   foreach my $f (@$fields_name) {
     # Pick out the node with the right mode
-    if (my $node = _resolve_mode_set($biber, $entry, $f)) {
+    if (my $node = _resolve_display_mode($biber, $entry, $f)) {
       my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
       my $names = new Biber::Entry::Names;
       foreach my $name ($node->findnodes("./$NS:person")) {
@@ -404,9 +404,10 @@ sub _split_list {
 
 
 # Given an entry and a fieldname, returns the field node with the right language mode
-sub _resolve_mode_set {
+sub _resolve_display_mode {
   my ($biber, $entry, $fieldname) = @_;
   my @nodelist;
+  # TODO - displaymode is now in config and is a list
   if (my $dm = Biber::Config->getoption('displaymode')) {
     if (@nodelist = $entry->findnodes("./$NS:${fieldname}[\@mode='$dm']")) {
       # Check to see if there is more than one entry with a mode and warn

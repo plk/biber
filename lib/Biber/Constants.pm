@@ -19,8 +19,6 @@ our @EXPORT = qw{
   $BIBER_SORT_FIRSTPASSDONE
   $BIBER_SORT_DATA_CHANGE
   %NUMERICALMONTH
-  %DISPLAYMODES
-  $DISPLAYMODE_DEFAULT
   };
 
 # Version of biblatex which this release works with. Matched against version
@@ -36,8 +34,6 @@ our $BIBER_SORT_DATA_CHANGE = 0;
 # the name of the Biber configuration file, which should be
 # either returned by kpsewhich or located at "$HOME/.$BIBER_CONF_NAME"
 our $BIBER_CONF_NAME = 'biber.conf';
-
-Readonly::Scalar our $DISPLAYMODE_DEFAULT => 'uniform';
 
 ## Biber CONFIGURATION DEFAULTS
 
@@ -112,7 +108,6 @@ our %CONFIG_DEFAULT_BIBER = (
   collate_options    => { level => 4 },
   debug              => 0,
   decodecharsset     => 'extra',
-  displaymode        => $DISPLAYMODE_DEFAULT, # eventually, shall be moved to biblatex options
   mincrossrefs       => 2,
   nolog              => 0,
   nosort             => { type_name => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ] },
@@ -153,6 +148,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
    useeditor       => '1',
    useprefix       => '0',
    usetranslator   => '0',
+   displaymode     => { ALL => ["original", "romanised", "uniform", "translated"] },
    # Now the defaults for special .bcf sections information
    inheritance     => {
                    defaults => {
@@ -1579,6 +1575,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
   controlversion    => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   debug             => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   dataonly          => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
+  displaymodes      => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   inheritance       => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   labelalpha        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelname         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
@@ -1645,13 +1642,6 @@ Readonly::Hash our %NUMERICALMONTH => (
   'dec' => 12
   );
 
-
-Readonly::Hash our %DISPLAYMODES => {
-  uniform => [ qw/uniform romanized translated original/ ],
-  translated => [ qw/translated uniform romanized original/ ],
-  romanized => [ qw/romanized uniform translated original/ ],
-  original => [ qw/original romanized uniform translated/ ]
-  } ;
 
 1;
 

@@ -23,9 +23,6 @@
         <ref name="bblencoding"/>
         <ref name="bibencoding"/>
         <ref name="debug"/>
-        <optional>
-          <ref name="displaymode"/>
-        </optional>
         <ref name="mincrossrefs"/>
         <ref name="sortcase"/>
         <optional>
@@ -121,6 +118,31 @@
           </optional>
         </element>
       </zeroOrMore>
+      <optional>
+        <!-- Display modes definition -->
+        <element name="bcf:displaymodes">
+          <oneOrMore>
+            <element name="bcf:displaymode">
+              <element name="bcf:target">
+                <choice>
+                  <value>ALL</value>
+                  <data type="string"/>
+                </choice>
+              </element>
+              <oneOrMore>
+                <element name="bcf:mode">
+                  <choice>
+                    <value>original</value>
+                    <value>uniform</value>
+                    <value>romanised</value>
+                    <value>translated</value>
+                  </choice>
+                </element>
+              </oneOrMore>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
       <optional>
         <!-- Cross-reference inheritance specifications -->
         <element name="bcf:inheritance">
@@ -1149,17 +1171,6 @@
           <text/>
         </element>
       </oneOrMore>
-    </element>
-  </define>
-  <!-- This is for setting the display mode of non-roman scripts -->
-  <define name="displaymode">
-    <element name="displaymode">
-      <choice>
-        <value>original</value>
-        <value>romanized</value>
-        <value>translated</value>
-        <value>uniform</value>
-      </choice>
     </element>
   </define>
 </grammar>

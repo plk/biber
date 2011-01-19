@@ -99,6 +99,22 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
   </bcf:options>
+  <bcf:displaymodes>
+    <bcf:displaymode>
+      <bcf:target>ALL</bcf:target>
+      <bcf:mode>original</bcf:mode>
+      <bcf:mode>romanised</bcf:mode>
+      <bcf:mode>uniform</bcf:mode>
+      <bcf:mode>translated</bcf:mode>
+    </bcf:displaymode>
+    <bcf:displaymode>
+      <bcf:target>title</bcf:target>
+      <bcf:mode>romanised</bcf:mode>
+      <bcf:mode>uniform</bcf:mode>
+      <bcf:mode>translated</bcf:mode>
+      <bcf:mode>original</bcf:mode>
+    </bcf:displaymode>
+  </bcf:displaymodes>
   <bcf:inheritance>
     <bcf:defaults inherit_all="yes" override_target="no">
       <bcf:type_pair source="all" target="incollection" inherit_all="no"/>
