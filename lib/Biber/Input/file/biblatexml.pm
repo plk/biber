@@ -23,6 +23,7 @@ use Readonly;
 use Data::Dump qw(dump);
 
 my $logger = Log::Log4perl::get_logger('main');
+
 Readonly::Scalar our $BIBLATEXML_NAMESPACE_URI => 'http://biblatex-biber.sourceforge.net/biblatexml';
 Readonly::Scalar our $NS => 'bib';
 
@@ -66,6 +67,7 @@ sub extract_entries {
     $logger->debug("All citekeys will be used for section '$secnum'");
     # Loop over all entries, creating objects
     foreach my $entry ($xpc->findnodes("//$NS:entry")) {
+      $logger->debug(' Parsing BibLaTeXML entry object ' . $entry->nodePath);
       # We have to pass the datasource cased key to
       # create_entry() as this sub needs to know the original case of the
       # citation key so we can do case-insensitive key/entry comparisons
@@ -105,6 +107,7 @@ sub extract_entries {
         $entry = $entries[0];
 
         $logger->debug("Found key '$wanted_key' in BibLaTeXML file '$filename'");
+        $logger->debug(' Parsing BibLaTeXML entry object ' . $entry->nodePath);
         # See comment above about the importance of the case of the key
         # passed to create_entry()
         create_entry($biber, $wanted_key, $entry);
@@ -113,12 +116,6 @@ sub extract_entries {
       }
       $logger->debug('Wanted keys now: ' . join(', ', @rkeys));
     }
-  }
-
-  # Only push the preambles from the file if we haven't seen this data file before
-  # and there are some preambles to push
-  if ($cache->{counts}{$filename} < 2 and @{$cache->{preamble}{$filename}}) {
-    push @{$biber->{preamble}}, @{$cache->{preamble}{$filename}};
   }
 
   return @rkeys;
@@ -167,70 +164,62 @@ sub create_entry {
 
   # We have to process local options as early as possible in order
   # to make them available for things that need them like name parsing
-  if (_norm($f->nodeName) eq 'options') {
-    $biber->process_entry_options($dskey, $f->textContent());
+  if (_norm($entry->nodeName) eq 'options') {
+    if (my $node = _resolve_mode_set($biber, $entry, 'options')) {
+      $biber->process_entry_options($dskey, $node->textContent());
+    }
   }
 
   # Literal fields
   foreach my $f ((@$fields_literal,@$fields_verbatim)) {
     # Pick out the node with the right mode
-    my $node = _resolve_mode_set($entry, $f);
-    $bibentry->set_datafield(_norm($node->nodeName), $node->textContent());
+    if (my $node = _resolve_mode_set($biber, $entry, $f)) {
+      $bibentry->set_datafield(_norm($node->nodeName), $node->textContent());
+    }
   }
 
   # List fields
   foreach my $f (@$fields_list) {
     # Pick out the node with the right mode
-    my $node = _resolve_mode_set($entry, $f);
-    $bibentry->set_datafield(_norm($node->nodeName), _split_list($node));
+    if (my $node = _resolve_mode_set($biber, $entry, $f)) {
+      $bibentry->set_datafield(_norm($node->nodeName), _split_list($node));
+    }
   }
 
   # Range fields
   foreach my $f (@$fields_range) {
     # Pick out the node with the right mode
-    my $node = _resolve_mode_set($entry, $f);
-    # List of ranges/values
-    if (my @rangelist = $node->findnodes("./$NS:list/$NS:item")) {
-      my $rl;
-      foreach my $range (@rangelist) {
-        push @$rl, _parse_range_list($range);
+    if (my $node = _resolve_mode_set($biber, $entry, $f)) {
+      # List of ranges/values
+      if (my @rangelist = $node->findnodes("./$NS:list/$NS:item")) {
+        my $rl;
+        foreach my $range (@rangelist) {
+          push @$rl, _parse_range_list($range);
+        }
+        $bibentry->set_datafield(_norm($node->nodeName), $rl);
       }
-      $bibentry->set_datafield(_norm($node->nodeName), $rl);
-    }
-    # Simple range
-    elsif (my $range = $node->findnodes("./$NS:range")->get_node(1)) {
-      $bibentry->set_datafield(_norm($node->nodeName), [ _parse_range_list($range) ]);
-    }
-    # simple list
-    else {
-      $bibentry->set_datafield(_norm($node->nodeName), $node->textContent());
+      # Simple range
+      elsif (my $range = $node->findnodes("./$NS:range")->get_node(1)) {
+        $bibentry->set_datafield(_norm($node->nodeName), [ _parse_range_list($range) ]);
+      }
+      # simple list
+      else {
+        $bibentry->set_datafield(_norm($node->nodeName), $node->textContent());
+      }
     }
   }
 
   # Name fields
   foreach my $f (@$fields_name) {
     # Pick out the node with the right mode
-    my $node = _resolve_mode_set($entry, $f);
-    my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
-    my $names = new Biber::Entry::Names;
-    foreach my $name ($node->findnodes("./$NS:person")) {
-      $names->add_element(parsename($name, $f, {useprefix => $useprefix}));
+    if (my $node = _resolve_mode_set($biber, $entry, $f)) {
+      my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
+      my $names = new Biber::Entry::Names;
+      foreach my $name ($node->findnodes("./$NS:person")) {
+        $names->add_element(parsename($name, $f, {useprefix => $useprefix}));
+      }
+      $bibentry->set_datafield($f, $names);
     }
-    $bibentry->set_datafield($f, $names);
-  }
-
-  # key fields
-  foreach my $f (@$fields_key) {
-    # Pick out the node with the right mode
-    my $node = _resolve_mode_set($entry, $f);
-    $bibentry->set_datafield(_norm($node->nodeName), $node->textContent());
-  }
-
-  # integer fields
-  foreach my $f (@$fields_integer) {
-    # Pick out the node with the right mode
-    my $node = _resolve_mode_set($entry, $f);
-    $bibentry->set_datafield(_norm($node->nodeName), $node->textContent());
   }
 
   $bibentry->set_field('datatype', 'bibtex');
@@ -259,68 +248,57 @@ sub create_entry {
       suffix_it     => undef,
       namestring    => 'Doe, John',
       nameinitstring => 'Doe_J',
-      strip          => {'firstname' => 0,
-                         'lastname'  => 0,
-                         'prefix'    => 0,
-                         'suffix'    => 0}
-      }
 
 =cut
 
 sub parsename {
   my ($node, $fieldname, $opts) = @_;
-  $logger->debug("   Parsing BibLaTeXML name object ...");
+  $logger->debug('   Parsing BibLaTeXML name object ' . $node->nodePath);
   my $usepre = $opts->{useprefix};
 
-  no strict "refs"; # symbolic references below ...
+  my %namec;
 
-  my $lastname;
-  my $firstname;
-  my $prefix;
-  my $suffix;
-  my $lastname_i;
-  my $lastname_it;
-  my $firstname_i;
-  my $firstname_it;
-  my $prefix_i;
-  my $prefix_it;
-  my $suffix_i;
-  my $suffix_it;
-
-  foreach my $n (('lastname', 'firstname', 'prefix', 'suffix')) {
-    if (my @parts = $rangenode->findnodes("./$NS:$n/$NS:namepart")->textContent()) {
-      ${$n} = _join_name_parts(\@parts);
-      (${$n}_i, ${$n}_it) = _gen_initials(\@parts);
-    }
-    # name with no parts
-    elsif (my ${$n} = $rangenode->findnodes("./$NS:$n")->get_node(1)->textContent()) {
-      (${$n}_i, ${$n}_it) = _gen_initials([${$n}]);
+  foreach my $n ('last', 'first', 'prefix', 'suffix') {
+    # If there is a name component node for this component ...
+    if (my $nc_node = $node->findnodes("./$NS:$n")->get_node(1)) {
+    # name component with parts
+      if (my @parts = map {$_->textContent()} $nc_node->findnodes("./$NS:namepart")) {
+        $namec{$n} = _join_name_parts(\@parts);
+        $logger->debug("      Found name component '$n': " . $namec{$n});
+        ($namec{"${n}_i"}, $namec{"${n}_it"}) = _gen_initials(\@parts);
+      }
+      # with no parts
+      elsif (my $t = $nc_node->textContent()) {
+        $logger->debug("      Found name component '$n': $t");
+        $namec{$n} = $t;
+        ($namec{"${n}_i"}, $namec{"${n}_it"}) = _gen_initials([$t]);
+      }
     }
   }
 
   # Only warn about lastnames since there should always be one
-  $logger->warn("Couldn't determine Lastname for name object: " . dump($node)) unless $lastname;
+  $logger->warn("Couldn't determine Lastname for name XPath: " . $node->nodePath) unless exists($namec{last});
 
   my $namestring = '';
 
   # prefix
-  if ($prefix) {
-    $namestring .= "$prefix ";
+  if (my $p = $namec{prefix}) {
+    $namestring .= "$p ";
   }
 
   # lastname
-  if ($lastname) {
-    $namestring .= "$lastname, ";
+  if (my $l = $namec{last}) {
+    $namestring .= "$l, ";
   }
 
   # suffix
-  if ($suffix) {
-    $namestring .= "$suffix, ";
+  if (my $s = $namec{suffix}) {
+    $namestring .= "$s, ";
   }
 
   # firstname
-  if ($firstname) {
-    $namestring .= "$firstname";
+  if (my $f = $namec{first}) {
+    $namestring .= "$f";
   }
 
   # Remove any trailing comma and space if, e.g. missing firstname
@@ -330,26 +308,26 @@ sub parsename {
 
   # Construct $nameinitstring
   my $nameinitstr = '';
-  $nameinitstr .= $prefix_it . '_' if ( $usepre and $prefix );
-  $nameinitstr .= $lastname if $lastname;
-  $nameinitstr .= '_' . $suffix_it if $suffix;
-  $nameinitstr .= '_' . $firstname_it if $firstname;
+  $nameinitstr .= $namec{prefix_it} . '_' if ( $usepre and exists($namec{prefix}) );
+  $nameinitstr .= $namec{last} if exists($namec{last});
+  $nameinitstr .= '_' . $namec{suffix_it} if exists($namec{suffix});
+  $nameinitstr .= '_' . $namec{first_it} if exists($namec{first});
   $nameinitstr =~ s/\s+/_/g;
   $nameinitstr =~ s/~/_/g;
 
   return Biber::Entry::Name->new(
-    firstname       => $firstname // undef,
-    firstname_i     => $firstname ? $firstname_i : undef,
-    firstname_it    => $firstname ? $firstname_it : undef,
-    lastname        => $lastname // undef,
-    lastname_i      => $lastname ? $lastname_i : undef,
-    lastname_it     => $lastname ? $lastname_it : undef,
-    prefix          => $prefix // undef,
-    prefix_i        => $prefix ? $prefix_i : undef,
-    prefix_it       => $prefix ? $prefix_it : undef,
-    suffix          => $suffix // undef,
-    suffix_i        => $suffix ? $suffix_i : undef,
-    suffix_it       => $suffix ? $suffix_it : undef,
+    firstname       => $namec{first} // undef,
+    firstname_i     => exists($namec{first}) ? $namec{first_i} : undef,
+    firstname_it    => exists($namec{first}) ? $namec{first_it} : undef,
+    lastname        => $namec{last} // undef,
+    lastname_i      => exists($namec{last}) ? $namec{last_i} : undef,
+    lastname_it     => exists($namec{last}) ? $namec{last_it} : undef,
+    prefix          => $namec{prefix} // undef,
+    prefix_i        => exists($namec{prefix}) ? $namec{prefix_i} : undef,
+    prefix_it       => exists($namec{prefix}) ? $namec{prefix_it} : undef,
+    suffix          => $namec{suffix} // undef,
+    suffix_i        => exists($namec{suffix}) ? $namec{suffix_i} : undef,
+    suffix_it       => exists($namec{suffix}) ? $namec{suffix_it} : undef,
     namestring      => $namestring,
     nameinitstring  => $nameinitstr,
     );
@@ -364,9 +342,17 @@ sub parsename {
 # 2. Before the last part
 sub _join_name_parts {
   my $parts = shift;
+  # special case - 1 part
+  if ($#{$parts} == 0) {
+    return $parts->[0];
+  }
+  # special case - 2 parts
+  if ($#{$parts} == 1) {
+    return $parts->[0] . '~' . $parts->[1];
+  }
   my $namestring = $parts->[0];
   $namestring .= length($parts->[0]) < 3 ? '~' : ' ';
-  $namestring .= join(' ', @$parts[1 .. $#{$parts}-1]);
+  $namestring .= join(' ', @$parts[1 .. ($#{$parts} - 1)]);
   $namestring .= '~' . $parts->[$#{$parts}];
   return $namestring;
 }
@@ -408,47 +394,50 @@ sub _parse_range_list {
 # Splits a list field into an array ref
 sub _split_list {
   my $node = shift;
-  return [ map {$_->textContent()} $node->findnodes("./$NS:item") ];
+  if (my @list = $node->findnodes("./$NS:item")) {
+    return [ map {$_->textContent()} @list ];
+  }
+  else {
+    return [ $node->textContent() ];
+  }
 }
 
 
 # Given an entry and a fieldname, returns the field node with the right language mode
 sub _resolve_mode_set {
-  my ($entry, $fieldname) = @_;
-  if ($dm = Biber::Config->getoption('displaymode')) {
-    if (my $nodelist = $entry->findnodes("./$NS:${fieldname}[\@mode='$dm']")) {
-      return $nodelist->get_node(1);
+  my ($biber, $entry, $fieldname) = @_;
+  my @nodelist;
+  if (my $dm = Biber::Config->getoption('displaymode')) {
+    if (@nodelist = $entry->findnodes("./$NS:${fieldname}[\@mode='$dm']")) {
+      # Check to see if there is more than one entry with a mode and warn
+      if ($#nodelist > 0) {
+        $logger->warn("Found more than one mode '$dm' '$fieldname' field in entry '" .
+                      $entry->getAttribute('id') . "' - using the first one!");
+        $biber->{warnings}++;
+      }
+      return $nodelist[0];
     }
-    else {
-      return $entry->findnodes("./$NS:${fieldname}[not(\@mode)]")->get_pos(1);
+    elsif (@nodelist = $entry->findnodes("./$NS:${fieldname}[not(\@mode)]")) {
+      # Check to see if there is more than one entry with a mode and warn
+      if ($#nodelist > 0) {
+        $logger->warn("Found more than one mode;ess '$fieldname' field in entry '" .
+                      $entry->getAttribute('id') . "' - using the first one!");
+        $biber->{warnings}++;
+      }
+      return $nodelist[0];
     }
   }
-  else {
-    return $entry->findnodes("./$NS:${fieldname}[not(\@mode)]")->get_pos(1);
+  elsif (@nodelist = $entry->findnodes("./$NS:${fieldname}[not(\@mode)]")) {
+    # Check to see if there is more than one entry with a mode and warn
+    if ($#nodelist > 0) {
+      $logger->warn("Found more than one mode;ess '$fieldname' field in entry '" .
+                    $entry->getAttribute('id') . "' - using the first one!");
+      $biber->{warnings}++;
+    }
+    return $nodelist[0];
   }
-  return undef; # Shouldn't get here
+  return undef;                 # Shouldn't get here
 }
-
-
-
-
-
-  foreach my $node (@nodes) {
-    my $found_node;
-    if (not $node->hasAttribute('mode')) {
-    }
-
-    if (lc($node->getAttribute('mode')) eq lc($dm)) {
-      $found_node = $f;
-    }
-    else {
-      # skip modes if we don't want one
-      $found_node = $f unless $f->hasAttribute('mode');
-    }
-
-  }
-}
-
 
 # normalise a node name as they have a namsespace and might not be lowercase
 sub _norm {

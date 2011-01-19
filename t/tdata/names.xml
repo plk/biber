@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="../../data/schemata/biblatexml.rnc" type="compact"?>
+<bib:entries xmlns:bib="http://biblatex-biber.sourceforge.net/biblatexml">
+  <bib:entry id="BulgakovRozenfeld:1983" entrytype="book">
+    <bib:author>
+      <bib:person>
+        <bib:first>
+          <bib:namepart>Павел</bib:namepart>
+          <bib:namepart>Георгиевич</bib:namepart>
+        </bib:first>
+        <bib:last>Булгаков</bib:last>
+      </bib:person>
+      <bib:person>
+        <bib:first>
+          <bib:namepart>Борис</bib:namepart>
+          <bib:namepart>Абрамович</bib:namepart>
+        </bib:first>
+        <bib:last>Розенфельд</bib:last>
+      </bib:person>
+      <bib:person>
+        <bib:first>
+          <bib:namepart>Ашраф</bib:namepart>
+          <bib:namepart>Ахмедович</bib:namepart>
+        </bib:first>
+        <bib:last>Ахмедов</bib:last>
+      </bib:person>
+    </bib:author>
+    <bib:author mode="uniform">
+      <bib:person>
+        <bib:first>
+          <bib:namepart>Pavel</bib:namepart>
+          <bib:namepart>G.</bib:namepart>
+        </bib:first>
+        <bib:last>Bulgakov</bib:last>
+      </bib:person>
+      <bib:person>
+        <bib:first>
+          <bib:namepart>Boris</bib:namepart>
+          <bib:namepart>A.</bib:namepart>
+        </bib:first>
+        <bib:last>Rozenfeld</bib:last>
+      </bib:person>
+      <bib:person>
+        <bib:first>
+          <bib:namepart>Ashraf</bib:namepart>
+          <bib:namepart>A.</bib:namepart>
+        </bib:first>
+        <bib:last>Akhmedov</bib:last>
+      </bib:person>
+    </bib:author>
+    <bib:title>Мухаммад ибн муса ал-Хорезми. Около 783 – около 850</bib:title>
+    <bib:title mode="romanized">Mukhammad al-Khorezmi. Okolo 783 – okolo 850</bib:title>
+    <bib:title mode="translated" xml:lang="en">Mukhammad al-Khorezmi. Ca. 783 – ca. 850</bib:title>
+    <bib:location>Москва</bib:location>
+    <bib:location mode="romanized">Moskva</bib:location>
+    <bib:location mode="uniform">Moscow</bib:location>
+    <bib:publisher>Наука</bib:publisher>
+    <bib:publisher mode="romanized">Nauka</bib:publisher>
+    <bib:language>Russian</bib:language>
+    <bib:series>Научно-биографическая литература</bib:series>
+    <bib:series mode="romanized">Nauchno-biograficheskaya literatura</bib:series>
+    <bib:date>1983</bib:date>
+    <bib:pagetotal>240</bib:pagetotal>
+    <bib:reviews>
+      <bib:item author="Kennedy" type="Mathematical Reviews">85k:01005a</bib:item>
+      <bib:item author="P. Mürsepp" type="Zentralblatt">0603.01010</bib:item>
+    </bib:reviews>
+  </bib:entry>
+</bib:entries>
