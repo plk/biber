@@ -1067,17 +1067,6 @@
     </bcf:entryfields>
     <bcf:constraints>
       <bcf:entrytype>ALL</bcf:entrytype>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
-        <bcf:field>month</bcf:field>
-      </bcf:constraint>
       <bcf:constraint type="data" datatype="datespec">
         <bcf:field>date</bcf:field>
         <bcf:field>origdate</bcf:field>

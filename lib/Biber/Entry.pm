@@ -189,6 +189,19 @@ sub del_datafield {
   return;
 }
 
+=head2 del_pseudodatafield
+
+    Delete an pseudo data field from a Biber::Entry object
+
+=cut
+
+sub del_pseudodatafield {
+  my $self = shift;
+  my $key = shift;
+  delete $self->{pseudodatafields}{$key};
+  return;
+}
+
 
 =head2 field_exists
 

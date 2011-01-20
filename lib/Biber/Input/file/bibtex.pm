@@ -201,6 +201,7 @@ sub create_entry {
         }
         $bibentry->set_datafield($f, $values_ref);
       }
+      # Names
       elsif ($struc->is_field_type('name', $f)) {
         my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
         my $names = new Biber::Entry::Names;
@@ -238,6 +239,7 @@ sub create_entry {
         }
         $bibentry->set_datafield($f, $names);
       }
+      # Dates
       elsif ($struc->is_field_type('date', $f)) {
         my ($datetype) = $f =~ m/\A(.*)date\z/xms;
         my $date = decode_utf8($entry->get($f));

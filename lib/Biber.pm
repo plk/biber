@@ -828,7 +828,6 @@ sub validate_structure {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $struc = Biber::Config->get_structure;
-
   if (Biber::Config->getoption('validate_structure')) {
     foreach my $citekey ($section->get_citekeys) {
       my $be = $section->bibentry($citekey);
@@ -1290,9 +1289,11 @@ sub postprocess_labelnameyear {
                                       $be->get_field('entrytype'),
                                       $be->get_field('dskey'))) {
     my $nameyear_string_extrayear  = "$name_string,$year_string_extrayear";
+    $logger->debug("Setting 'nameyear_extrayear' to '$nameyear_string_extrayear' for entry '$citekey'");
     $be->set_field('nameyear_extrayear', $nameyear_string_extrayear);
     Biber::Config->incr_seen_nameyear_extrayear($name_string, $year_string_extrayear);
     my $nameyear_string_extraalpha = "$name_string,$year_string_extraalpha";
+    $logger->debug("Setting 'nameyear_extraalpha' to '$nameyear_string_extraalpha' for entry '$citekey'");
     $be->set_field('nameyear_extraalpha', $nameyear_string_extraalpha);
     Biber::Config->incr_seen_nameyear_extraalpha($name_string, $year_string_extraalpha);
   }

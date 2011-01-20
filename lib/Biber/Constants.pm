@@ -290,18 +290,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                    {
                      constraint => [
                                      {
-                                       antecedent => { field => [{ content => "date" }], quant => "all" },
-                                       consequent => { field => [{ content => "month" }], quant => "none" },
-                                       type => "conditional",
-                                     },
-                                     {
-                                       datatype => "integer",
-                                       field    => [{ content => "month" }],
-                                       rangemax => 12,
-                                       rangemin => 1,
-                                       type     => "data",
-                                     },
-                                     {
                                        datatype => "datespec",
                                        field => [
                                          { content => "date" },

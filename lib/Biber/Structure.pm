@@ -11,7 +11,11 @@ use Date::Simple;
 
 Biber::Structure
 
+
 =cut
+
+my $logger = Log::Log4perl::get_logger('main');
+
 
 =head2 new
 
@@ -502,16 +506,30 @@ sub check_date_components {
     if ($c->{datatype} eq 'datespec') {
       foreach my $f (@{$c->{fields}}) {
         my ($d) = $f =~ m/\A(.*)date\z/xms;
-        # Now check the fields but only the dericed pseudo fields as original data source
-        # values of "year" can be an arbitrary string, for example.
+
+        # The only two data source date fields which aren't called "*date" are
+        # YEAR and MONTH. Explicit YEAR doesn't need validating as it can be an
+        # arbitrary string by design. Explicit month can be validated so we do. Then
+        # we validate pseudo-fields which were derived from "*date" fields.
+        if (my $m = $be->get_datafield($d . 'month')) {
+          my $int = $STRUCTURE_DATATYPES{integer};
+          unless ($m =~ /$int/ and $m <= 12 and $m >= 1) {
+            push @warnings, "Invalid value of field 'month' must be and integer between 1 and 12 - ignoring field in entry '$citekey'";
+            $be->del_datafield('month');
+          }
+        }
+
         # Begin date
         if (my $by = $be->get_pseudodatafield($d . 'year')) {
           my $bm = $be->get_pseudodatafield($d . 'month') || '01';
           my $bd = $be->get_pseudodatafield($d . 'day') || '01';
           my $begin_date = "$by$bm$bd";
+          $logger->debug("Checking date value '$by$bm$bd' for key '$citekey'");
           unless (Date::Simple->new($begin_date)) {
             push @warnings, "Invalid value '$begin_date' of date field '$f' - ignoring field in entry '$citekey'";
-            $be->del_field($f);
+            $be->del_pseudodatafield($d . 'year');
+            $be->del_pseudodatafield($d . 'month');
+            $be->del_pseudodatafield($d . 'day');
             next;
           }
         }
@@ -522,9 +540,12 @@ sub check_date_components {
           my $em = $be->get_pseudodatafield($d . 'endmonth') || '01';
           my $ed = $be->get_pseudodatafield($d . 'endday') || '01';
           my $end_date = "$ey$em$ed";
+          $logger->debug("Checking date value '$ey$em$ed' for key '$citekey'");
           unless (Date::Simple->new($end_date)) {
             push @warnings, "Invalid value '$end_date' of date field '$f' - ignoring field in entry '$citekey'";
-            $be->del_field($f);
+            $be->del_pseudodatafield($d . 'endyear');
+            $be->del_pseudodatafield($d . 'endmonth');
+            $be->del_pseudodatafield($d . 'endday');
             next;
           }
         }
