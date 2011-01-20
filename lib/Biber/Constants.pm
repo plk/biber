@@ -1306,7 +1306,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "eprinttype", datatype => "literal", fieldtype => "field" },
                      {
                        content     => "eventdate",
-                       datatype    => "literal",
+                       datatype    => "date",
                        fieldtype   => "field",
                        skip_output => "true",
                      },
@@ -1575,7 +1575,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
   controlversion    => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   debug             => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   dataonly          => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
-  displaymodes      => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  displaymode       => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   inheritance       => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   labelalpha        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelname         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},

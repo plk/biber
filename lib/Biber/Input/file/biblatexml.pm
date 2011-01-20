@@ -407,37 +407,30 @@ sub _split_list {
 sub _resolve_display_mode {
   my ($biber, $entry, $fieldname) = @_;
   my @nodelist;
-  # TODO - displaymode is now in config and is a list
-  if (my $dm = Biber::Config->getoption('displaymode')) {
-    if (@nodelist = $entry->findnodes("./$NS:${fieldname}[\@mode='$dm']")) {
-      # Check to see if there is more than one entry with a mode and warn
-      if ($#nodelist > 0) {
-        $logger->warn("Found more than one mode '$dm' '$fieldname' field in entry '" .
-                      $entry->getAttribute('id') . "' - using the first one!");
-        $biber->{warnings}++;
-      }
-      return $nodelist[0];
+  my $dm = Biber::Config->getblxoption('displaymode');
+  # Either a fieldname specific mode or the default
+  my $modelist = $dm->{$fieldname} || $dm->{ALL};
+  foreach my $mode (@$modelist) {
+    my $modeattr;
+    # mode is omissable if it is "original"
+    if ($mode eq 'original') {
+      $mode = 'original';
+      $modeattr = "\@mode='$mode' or not(\@mode)"
     }
-    elsif (@nodelist = $entry->findnodes("./$NS:${fieldname}[not(\@mode)]")) {
+    else {
+      $modeattr = "\@mode='$mode'"
+    }
+    if (@nodelist = $entry->findnodes("./$NS:${fieldname}[$modeattr]")) {
       # Check to see if there is more than one entry with a mode and warn
       if ($#nodelist > 0) {
-        $logger->warn("Found more than one mode;ess '$fieldname' field in entry '" .
+        $logger->warn("Found more than one mode '$mode' '$fieldname' field in entry '" .
                       $entry->getAttribute('id') . "' - using the first one!");
         $biber->{warnings}++;
       }
       return $nodelist[0];
     }
   }
-  elsif (@nodelist = $entry->findnodes("./$NS:${fieldname}[not(\@mode)]")) {
-    # Check to see if there is more than one entry with a mode and warn
-    if ($#nodelist > 0) {
-      $logger->warn("Found more than one mode;ess '$fieldname' field in entry '" .
-                    $entry->getAttribute('id') . "' - using the first one!");
-      $biber->{warnings}++;
-    }
-    return $nodelist[0];
-  }
-  return undef;                 # Shouldn't get here
+  return undef; # Shouldn't get here
 }
 
 # normalise a node name as they have a namsespace and might not be lowercase

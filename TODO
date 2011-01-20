@@ -1,5 +1,6 @@
 TODO in decreasing order of priority:
 
+   * All postprocessing should move any bibtex-specific code into bibtex.pm
    * Generalised \printbibliography system
    * Zotero? http://www.zotero.org/support/dev/start
      https://api.zotero.org/users/<USERID>/items/<iTEMID>?key=<APIKEY>

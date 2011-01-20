@@ -208,8 +208,7 @@ sub create_entry {
 
           # Consecutive "and" causes Text::BibTeX::Name to segfault
           unless ($name) {
-            $logger->warn("Name in key '$dskey' is empty (probably consecutive 'and'): skipping name");
-            $biber->{warnings}++;
+            $biber->biber_warn($bibentry, "Name in key '$dskey' is empty (probably consecutive 'and'): skipping name");
             $section->del_citekey($dskey);
             next;
           }
@@ -222,16 +221,14 @@ sub create_entry {
           unless ($name =~ m/\A{.+}\z/xms) { # Ignore these tests for escaped names
             my @commas = $name =~ m/,/g;
             if ($#commas > 1) {
-              $logger->warn("Name \"$name\" has too many commas: skipping entry $dskey");
-              $biber->{warnings}++;
+              $biber->biber_warn($bibentry, "Name \"$name\" has too many commas: skipping name");
               $section->del_citekey($dskey);
               next;
             }
 
             # Consecutive commas cause Text::BibTeX::Name to segfault
             if ($name =~ /,,/) {
-              $logger->warn("Name \"$name\" is malformed (consecutive commas): skipping entry $dskey");
-              $biber->{warnings}++;
+              $biber->biber_warn($bibentry, "Name \"$name\" is malformed (consecutive commas): skipping name");
               $section->del_citekey($dskey);
               return;
             }
@@ -240,7 +237,50 @@ sub create_entry {
           $names->add_element(parsename($name, $f, {useprefix => $useprefix}));
         }
         $bibentry->set_datafield($f, $names);
+      }
+      elsif ($struc->is_field_type('date', $f)) {
+        my ($datetype) = $f =~ m/\A(.*)date\z/xms;
+        my $date = decode_utf8($entry->get($f));
+        # We are not validating dates here, just syntax parsing
+        my $date_re = qr/(\d{4}) # year
+                         (?:-(\d{2}))? # month
+                         (?:-(\d{2}))? # day
+                        /xms;
+        if (my ($byear, $bmonth, $bday, $r, $eyear, $emonth, $eday) =
+            $date =~ m|\A$date_re(/)?(?:$date_re)?\z|xms) {
 
+          # Some warnings for overwriting YEAR and MONTH from DATE
+          if ($byear and
+              ($datetype . 'year' eq 'year') and
+              $entry->get('year')) {
+            $biber->biber_warn($bibentry, "Overwriting field 'year' with year value from field 'date' for entry '$dskey'");
+            $bibentry->del_datafield('year');
+          }
+          if ($bmonth and
+              ($datetype . 'month' eq 'month') and
+              $entry->get('month')) {
+            $biber->biber_warn($bibentry, "Overwriting field 'month' with month value from field 'date' for entry '$dskey'");
+            $bibentry->del_datafield('month');
+          }
+
+          # Set these as pseudodata fields as they are not originally in the datasource
+          # but they do need to be inherited in crossrefs/sets
+          $bibentry->set_pseudodatafield($datetype . 'year', $byear)      if $byear;
+          $bibentry->set_pseudodatafield($datetype . 'month', $bmonth)    if $bmonth;
+          $bibentry->set_pseudodatafield($datetype . 'day', $bday)        if $bday;
+          $bibentry->set_pseudodatafield($datetype . 'endmonth', $emonth) if $emonth;
+          $bibentry->set_pseudodatafield($datetype . 'endday', $eday)     if $eday;
+          if ($r and $eyear) {  # normal range
+            $bibentry->set_pseudodatafield($datetype . 'endyear', $eyear);
+          }
+          elsif ($r and not $eyear) { # open ended range - endyear is defined but empty
+            $bibentry->set_pseudodatafield($datetype . 'endyear', '');
+          }
+        }
+        else {
+          $biber->biber_warn($bibentry, "Invalid format '$date' of date field '$f' in entry '$citekey' - ignoring");
+          next;
+        }
       }
       else {
         # Name fields are decoded during parsing, others here
@@ -290,7 +330,6 @@ sub cache_data {
     # If an entry has no key, ignore it and warn
     unless ($entry->key) {
       $logger->warn("Invalid or undefined BibTeX entry key in file '$pfilename', skipping ...");
-      $biber->{warnings}++;
       next;
     }
 
@@ -300,7 +339,6 @@ sub cache_data {
     # Bad entry
     unless ($entry->parse_ok) {
       $logger->warn("Entry $dskey does not parse correctly: skipping");
-      $biber->{warnings}++;
       next;
     }
 

@@ -43,6 +43,9 @@ sub clone {
   while (my ($k, $v) = each(%{$self->{datafields}})) {
     $new->{datafields}{$k} = $v;
   }
+  while (my ($k, $v) = each(%{$self->{pseudodatafields}})) {
+    $new->{pseudodatafields}{$k} = $v;
+  }
   # Need to add entrytype
   $new->{derivedfields}{entrytype} = $self->{derivedfields}{entrytype};
   # put in key if specified
@@ -82,6 +85,23 @@ sub set_datafield {
   return;
 }
 
+=head2 set_pseudodatafield
+
+    Set a field which was not in the data source but which was derived
+    from a data source field directly
+
+=cut
+
+sub set_pseudodatafield {
+  my $self = shift;
+  my ($key, $val) = @_;
+  my $struc = Biber::Config->get_structure;
+  # Only set fields which are either not null or are ok to be null
+  if ( $struc->is_field_type('nullok', $key) or is_notnull($val)) {
+    $self->{pseudodatafields}{$key} = $val;
+  }
+  return;
+}
 
 =head2 set_field
 
@@ -108,8 +128,10 @@ sub set_field {
 sub get_field {
   my $self = shift;
   my $key = shift;
-  return $self->{datafields}{$key} if $self->{datafields}{$key};
-  return $self->{derivedfields}{$key} if $self->{derivedfields}{$key};
+  return $self->{datafields}{$key} if exists($self->{datafields}{$key});
+  return $self->{pseudodatafields}{$key} if exists($self->{pseudodatafields}{$key});
+  return $self->{derivedfields}{$key} if exists($self->{derivedfields}{$key});
+  return undef;
 }
 
 =head2 get_datafield
@@ -124,6 +146,20 @@ sub get_datafield {
   return $self->{datafields}{$key};
 }
 
+=head2 get_pseudodatafield
+
+    Get a field that was not in the original data source but
+    was derived directly from such data
+
+=cut
+
+sub get_pseudodatafield {
+  my $self = shift;
+  my $key = shift;
+  return $self->{pseudodatafields}{$key};
+}
+
+
 
 =head2 del_field
 
@@ -136,8 +172,23 @@ sub del_field {
   my $key = shift;
   delete $self->{datafields}{$key};
   delete $self->{derivedfields}{$key};
+  delete $self->{pseudodatafields}{$key};
   return;
 }
+
+=head2 del_datafield
+
+    Delete an original data source data field in a Biber::Entry object
+
+=cut
+
+sub del_datafield {
+  my $self = shift;
+  my $key = shift;
+  delete $self->{datafields}{$key};
+  return;
+}
+
 
 =head2 field_exists
 
@@ -148,12 +199,14 @@ sub del_field {
 sub field_exists {
   my $self = shift;
   my $key = shift;
-  return (exists($self->{datafields}{$key}) or exists($self->{derivedfields}{$key})) ? 1 : 0;
+  return (exists($self->{datafields}{$key}) or
+          exists($self->{derivedfields}{$key}) or
+          exists($self->{pseudodatafields}{$key})) ? 1 : 0;
 }
 
 =head2 datafields
 
-    Returns a sorted array of the fields which came from the bib data file
+    Returns a sorted array of the fields which came from the data source
 
 =cut
 
@@ -162,6 +215,20 @@ sub datafields {
   use locale;
   return sort keys %{$self->{datafields}};
 }
+
+=head2 pseudodatafields
+
+    Returns a sorted array of the fields which were not in the data source
+    but are the result of splitting up an original data source field
+
+=cut
+
+sub pseudodatafields {
+  my $self = shift;
+  use locale;
+  return sort keys %{$self->{pseudodatafields}};
+}
+
 
 =head2 fields
 
@@ -174,7 +241,7 @@ sub datafields {
 sub fields {
   my $self = shift;
   use locale;
-  my %keys = (%{$self->{derivedfields}}, %{$self->{datafields}});
+  my %keys = (%{$self->{derivedfields}}, %{$self->{datafields}}, %{$self->{pseudodatafields}});
   return sort keys %keys;
 }
 
@@ -207,9 +274,15 @@ sub set_inherit_from {
   my $self = shift;
   my $parent = shift;
 
+  # Data source fields
   foreach my $field ($parent->datafields) {
     next if $self->field_exists($field); # Don't overwrite existing fields
     $self->set_datafield($field, $parent->get_field($field));
+  }
+  # Derived data source fields
+  foreach my $field ($parent->pseudodatafields) {
+    next if $self->field_exists($field); # Don't overwrite existing fields
+    $self->set_pseudodatafield($field, $parent->get_field($field));
   }
   return;
 }
@@ -279,6 +352,13 @@ sub inherit_from {
       # Set the field if null or override is requested
       if (not $self->get_field($field) or $override_target eq 'yes') {
         $self->set_datafield($field, $parent->get_field($field));
+      }
+    }
+    foreach my $field ($parent->pseudodatafields) {
+      next if $processed{$field}; # Skip if we already dealt with this field above
+      # Set the field if null or override is requested
+      if (not $self->get_field($field) or $override_target eq 'yes') {
+        $self->set_pseudodatafield($field, $parent->get_field($field));
       }
     }
   }

@@ -3,6 +3,7 @@ use List::Util qw( first );
 use Biber::Utils;
 use Biber::Constants;
 use Data::Dump qw( pp );
+use Date::Simple;
 
 =encoding utf-8
 
@@ -123,12 +124,13 @@ sub new {
     # Store as lookup tables for speed and multiple re-use
     $self->{fields}{nullok}   = $nullok;
     $self->{fields}{skipout}  = $skipout;
+    $self->{fields}{complex}  = { map {$_ => 1} (@name, @list, @range, @date) };
     $self->{fields}{literal}  = { map {$_ => 1} (@literal, @key, @integer) };
     $self->{fields}{name}     = { map {$_ => 1} @name };
     $self->{fields}{list}     = { map {$_ => 1} @list };
-    $self->{fields}{complex}  = { map {$_ => 1} (@name, @list, @range) };
     $self->{fields}{verbatim} = { map {$_ => 1} @verbatim };
     $self->{fields}{range}    = { map {$_ => 1} @range };
+    $self->{fields}{date}     = { map {$_ => 1} @date };
 
     # constraints
     my $constraints;
@@ -481,69 +483,47 @@ sub check_data_constraints {
   return @warnings;
 }
 
-=head2 resolve_date_components
+=head2 check_date_components
 
-     Resolved date fields into components, performing some date
-     validation checks
+     Perform content validation checks on data components by trying to
+     instantiate a Date::Simple object.
 
 =cut
 
-sub resolve_date_components {
+sub check_date_components {
   my $self = shift;
   my $be = shift;
   my @warnings;
   my $et = $be->get_field('entrytype');
   my $citekey = $be->get_field('dskey');
 
-  # Split date into components and do some date field validation
-  # No date module I looked at would distinguish between an undefined month
-  # passed to ->new() and "01". Same for day. Pretty useless since a bare
-  # year is a valid ISO8601 format date. Regexp::Common::time doesn't validate
-  # month/day value either.
-  # This doesn't validate that the day is valid for the month but perhaps
-  # when some date module really implements 8601, I'll use it.
   foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{data}},
                   @{$self->{legal_entrytypes}{$et}{constraints}{data}})) {
     if ($c->{datatype} eq 'datespec') {
       foreach my $f (@{$c->{fields}}) {
-        if (my $fv = $be->get_field($f)) {
-          my ($datetype) = $f =~ m/\A(.*)date\z/xms;
-          my $date_re = qr/(\d{4}) # year
-                           (?:-(0[1-9]|1[0-2]))? # month
-                           (?:-(0[1-9]|1[0-9]|2[0-9]|3[0-1]))? # day
-                          /xms;
-          if (my ($byear, $bmonth, $bday, $r, $eyear, $emonth, $eday) =
-              $be->get_field($datetype . 'date') =~
-              m|\A$date_re(/)?(?:$date_re)?\z|xms) {
-
-            # Some warnings for overwriting YEAR and MONTH from DATE, just in case
-            # validate_structure is false and so YEAR and MONTH may still
-            # co-exist with DATE
-            if ($byear and
-                ($datetype . 'year' eq 'year') and
-                $be->get_field('year')) {
-              push @warnings, "Overwriting field 'year' with year value from field 'date' for entry '$citekey'";
-            }
-            if ($bmonth and
-                ($datetype . 'month' eq 'month') and
-                $be->get_field('month')) {
-              push @warnings, "Overwriting field 'month' with month value from field 'date' for entry '$citekey'";
-            }
-
-            $be->set_field($datetype . 'year', $byear)      if $byear;
-            $be->set_field($datetype . 'month', $bmonth)    if $bmonth;
-            $be->set_field($datetype . 'day', $bday)        if $bday;
-            $be->set_field($datetype . 'endmonth', $emonth) if $emonth;
-            $be->set_field($datetype . 'endday', $eday)     if $eday;
-            if ($r and $eyear) { # normal range
-              $be->set_field($datetype . 'endyear', $eyear);
-            }
-            elsif ($r and not $eyear) { # open ended range - endyear is defined but empty
-              $be->set_field($datetype . 'endyear', '');
-            }
+        my ($d) = $f =~ m/\A(.*)date\z/xms;
+        # Now check the fields but only the dericed pseudo fields as original data source
+        # values of "year" can be an arbitrary string, for example.
+        # Begin date
+        if (my $by = $be->get_pseudodatafield($d . 'year')) {
+          my $bm = $be->get_pseudodatafield($d . 'month') || '01';
+          my $bd = $be->get_pseudodatafield($d . 'day') || '01';
+          my $begin_date = "$by$bm$bd";
+          unless (Date::Simple->new($begin_date)) {
+            push @warnings, "Invalid value '$begin_date' of date field '$f' - ignoring field in entry '$citekey'";
+            $be->del_field($f);
+            next;
           }
-          else {
-            push @warnings, "Invalid format of field '$f' in entry '$citekey' - ignoring";
+        }
+        # End date
+        # defined and some value - end*year can be empty but defined in which case,
+        # we don't need to validate
+        if (my $ey = $be->get_pseudodatafield($d . 'endyear')) {
+          my $em = $be->get_pseudodatafield($d . 'endmonth') || '01';
+          my $ed = $be->get_pseudodatafield($d . 'endday') || '01';
+          my $end_date = "$ey$em$ed";
+          unless (Date::Simple->new($end_date)) {
+            push @warnings, "Invalid value '$end_date' of date field '$f' - ignoring field in entry '$citekey'";
             $be->del_field($f);
             next;
           }

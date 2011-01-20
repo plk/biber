@@ -401,9 +401,8 @@ sub parse_ctrlfile {
     foreach my $dm (@{$bcfxml->{displaymodes}{displaymode}}) {
       $dms->{$dm->{target}{content}} = [ map {$_->{content}} @{$dm->{mode}} ];
     }
-    Biber::Config->setblxoption('displaymodes', $dms);
+    Biber::Config->setblxoption('displaymode', $dms);
   }
-
 
   # INHERITANCE schemes for crossreferences (always global)
   # This should not be optional any more when biblatex implements this so take
@@ -830,10 +829,10 @@ sub validate_structure {
   my $section = $self->sections->get_section($secnum);
   my $struc = Biber::Config->get_structure;
 
-  foreach my $citekey ($section->get_citekeys) {
-    my $be = $section->bibentry($citekey);
-    my $et = $be->get_field('entrytype');
-    if (Biber::Config->getoption('validate_structure')) {
+  if (Biber::Config->getoption('validate_structure')) {
+    foreach my $citekey ($section->get_citekeys) {
+      my $be = $section->bibentry($citekey);
+      my $et = $be->get_field('entrytype');
 
       # default entrytype to MISC type if not a known type
       unless ($struc->is_entrytype($et)) {
@@ -867,12 +866,11 @@ sub validate_structure {
       foreach my $warning ($struc->check_data_constraints($be)) {
         $self->biber_warn($be, $warning);
       }
-    }
 
-    # Date components - we always check these, even if not validating structure
-    # as the validation is part of unpacking the *date fields
-    foreach my $warning ($struc->resolve_date_components($be)) {
-      $self->biber_warn($be, $warning);
+      # Date constraints
+      foreach my $warning ($struc->check_date_components($be)) {
+        $self->biber_warn($be, $warning);
+      }
     }
   }
 }

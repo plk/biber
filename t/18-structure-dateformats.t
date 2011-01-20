@@ -34,18 +34,20 @@ my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 
-my $l1 = [ "Invalid value of field 'month' must be '<=12' - ignoring field in entry 'L1'",
-           "Invalid format of field 'origdate' in entry 'L1' - ignoring",
-           "Invalid format of field 'urldate' in entry 'L1' - ignoring", ];
-my $l2 = [ "Invalid format of field 'origdate' in entry 'L2' - ignoring" ];
-my $l3 = [ "Invalid format of field 'urldate' in entry 'L3' - ignoring" ];
-my $l4 = [ "Invalid format of field 'date' in entry 'L4' - ignoring" ];
-my $l5 = [ "Invalid format of field 'date' in entry 'L5' - ignoring" ];
-my $l6 = [ "Invalid format of field 'date' in entry 'L6' - ignoring" ];
-my $l7 = [ "Invalid format of field 'eventdate' in entry 'L7' - ignoring" ];
+my $l1 = [ "Invalid format '1985-1030' of date field 'origdate' in entry 'L1' - ignoring",
+           "Invalid format '1.5.1998' of date field 'urldate' in entry 'L1' - ignoring",
+           "Invalid value of field 'month' must be '<=12' - ignoring field in entry 'L1'" ];
+my $l2 = [ "Invalid format '1995-1230' of date field 'origdate' in entry 'L2' - ignoring" ];
+my $l3 = [ "Invalid format '1.5.1988' of date field 'urldate' in entry 'L3' - ignoring" ];
+my $l4 = [ "Invalid format '1995-1-04' of date field 'date' in entry 'L4' - ignoring",
+           "Missing mandatory field - one of 'date, year' must be defined in entry 'L4'" ];
+my $l5 = [ "Invalid format '1995-10-4' of date field 'date' in entry 'L5' - ignoring",
+           "Missing mandatory field - one of 'date, year' must be defined in entry 'L5'" ];
+my $l6 = [ "Invalid value of field 'month' must be '<=12' - ignoring field in entry 'L6'" ];
+my $l7 = [ "Invalid value '19961035' of date field 'eventdate' - ignoring field in entry 'L7'" ];
 my $l8 = [ "Invalid format (integer) of field 'month' - ignoring field in entry 'L8'" ];
-my $l11 = [ "Mandatory fields - only one of 'date, year' must be defined in entry 'L11' ignoring field 'year'"];
-my $l12 = [ "Constraint violation - none of fields (month) must exist when all of fields (date) exist. Ignoring them." ];
+my $l11 = [ "Overwriting field 'year' with year value from field 'date' for entry 'L11'"];
+my $l12 = [ "Overwriting field 'month' with month value from field 'date' for entry 'L12'" ];
 
 my $l13c = q|  \entry{L13}{book}{}
     \name{labelname}{2}{%
