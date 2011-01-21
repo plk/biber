@@ -350,6 +350,8 @@ sub cache_data {
     $logger->debug("Cached Text::BibTeX entry for key '$dskey' from bibtex file '$filename'");
   }
 
+  $bib->close; # If we don't do this, we can't unlink the temp file on Windows
+
   unlink $pfilename if -e $pfilename;
 
   return;
