@@ -22,6 +22,7 @@ use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use base 'Exporter';
 use List::AllUtils qw(first);
+use Data::Compare;
 
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -318,6 +319,7 @@ sub create_entry {
   $bibentry->set_field('citekey', $citekey);
 
   if ( $entry->metatype == BTE_REGULAR ) {
+    my @found_fields; # For error reporting below
 
     # Set entrytype. This may be changed later in process_aliases
     $bibentry->set_field('entrytype', $entry->type);
@@ -334,6 +336,7 @@ sub create_entry {
       if (lc($f) eq 'options') {
         $biber->process_entry_options($dskey, $value);
       }
+      push @found_fields, $f;
     }
 
     # Literal fields
@@ -342,6 +345,7 @@ sub create_entry {
       my $value = decode_utf8($entry->get($f));
 
       $bibentry->set_datafield($f, $value);
+      push @found_fields, $f;
     }
 
     # Verbatim fields
@@ -350,6 +354,7 @@ sub create_entry {
       my $value = decode_utf8($entry->get($f));
 
       $bibentry->set_datafield($f, $value);
+      push @found_fields, $f;
     }
 
     # range lists become an array ref of two element array refs
@@ -364,6 +369,7 @@ sub create_entry {
         push @$values_ref, [$1 || '', $2 || ''];
       }
       $bibentry->set_datafield($f, $values_ref);
+      push @found_fields, $f;
     }
 
     # Names
@@ -405,12 +411,13 @@ sub create_entry {
         $names->add_element(parsename($name, $f, {useprefix => $useprefix}));
       }
       $bibentry->set_datafield($f, $names);
+      push @found_fields, $f;
     }
 
     # Dates
     foreach my $f ( @{$FIELDS->{date}} ) {
       next unless $entry->exists($f);
-
+      push @found_fields, $f;
       my ($datetype) = $f =~ m/\A(.*)date\z/xms;
       my $date = decode_utf8($entry->get($f));
       # We are not validating dates here, just syntax parsing
@@ -463,6 +470,14 @@ sub create_entry {
       @tmp = map { decode_utf8($_) } @tmp;
       @tmp = map { remove_outer($_) } @tmp;
       $bibentry->set_datafield($f, [ @tmp ]);
+      push @found_fields, $f;
+    }
+
+    # Warn about unknown fields
+    foreach my $ef ($entry->fieldlist) {
+      unless (first {$ef eq $_} @found_fields) {
+        $biber->biber_warn($bibentry, "Field '$ef' is unknown in entry '$dskey' - ignoring");
+      }
     }
 
     $bibentry->set_field('datatype', 'bibtex');

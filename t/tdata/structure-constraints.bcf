@@ -349,22 +349,6 @@
       <bcf:field fieldtype="field" datatype="literal">volumes</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">xref</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">year</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">fielda</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">fieldb</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">field1</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">field2</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">field3</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">field4</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">field5</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">field6</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">field7</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">field8</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">field9</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">field10</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">field11</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">field12</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">field13</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">field14</bcf:field>
     </bcf:fields>
     <bcf:entryfields>
       <bcf:entrytype>ALL</bcf:entrytype>
@@ -391,22 +375,21 @@
       <bcf:field>date</bcf:field>
       <bcf:field>month</bcf:field>
       <bcf:field>journaltitle</bcf:field>
-      <bcf:field>fielda</bcf:field>
-      <bcf:field>fieldb</bcf:field>
-      <bcf:field>field1</bcf:field>
-      <bcf:field>field2</bcf:field>
-      <bcf:field>field3</bcf:field>
-      <bcf:field>field4</bcf:field>
-      <bcf:field>field5</bcf:field>
-      <bcf:field>field6</bcf:field>
-      <bcf:field>field7</bcf:field>
-      <bcf:field>field8</bcf:field>
-      <bcf:field>field9</bcf:field>
-      <bcf:field>field10</bcf:field>
-      <bcf:field>field11</bcf:field>
-      <bcf:field>field12</bcf:field>
-      <bcf:field>field13</bcf:field>
-      <bcf:field>field14</bcf:field>
+      <bcf:field>usera</bcf:field>
+      <bcf:field>userb</bcf:field>
+      <bcf:field>userc</bcf:field>
+      <bcf:field>userd</bcf:field>
+      <bcf:field>usere</bcf:field>
+      <bcf:field>userf</bcf:field>
+      <bcf:field>lista</bcf:field>
+      <bcf:field>listb</bcf:field>
+      <bcf:field>listc</bcf:field>
+      <bcf:field>listd</bcf:field>
+      <bcf:field>liste</bcf:field>
+      <bcf:field>listf</bcf:field>
+      <bcf:field>verba</bcf:field>
+      <bcf:field>verbb</bcf:field>
+      <bcf:field>verbc</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
       <bcf:entrytype>misc</bcf:entrytype>
@@ -419,20 +402,6 @@
     </bcf:entryfields>
     <bcf:constraints>
       <bcf:entrytype>ALL</bcf:entrytype>
-      <bcf:constraint type="mandatory">
-        <bcf:fieldxor>
-          <bcf:field coerce="true">date</bcf:field>
-          <bcf:field>year</bcf:field>
-        </bcf:fieldxor>
-      </bcf:constraint>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
       <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
@@ -458,37 +427,37 @@
         <bcf:field>journaltitle</bcf:field>
       </bcf:constraint>
       <bcf:constraint type="data" datatype="integer" rangemin="5" rangemax="12">
-        <bcf:field>field1</bcf:field>
+        <bcf:field>usera</bcf:field>
       </bcf:constraint>
       <bcf:constraint type="conditional">
         <bcf:antecedent quant="all">
-          <bcf:field>field2</bcf:field>
-          <bcf:field>field3</bcf:field>
-          <bcf:field>field4</bcf:field>
+          <bcf:field>userb</bcf:field>
+          <bcf:field>userc</bcf:field>
+          <bcf:field>userd</bcf:field>
         </bcf:antecedent>
         <bcf:consequent quant="none">
-          <bcf:field>field5</bcf:field>
-          <bcf:field>field6</bcf:field>
+          <bcf:field>usere</bcf:field>
+          <bcf:field>userf</bcf:field>
         </bcf:consequent>
       </bcf:constraint>
       <bcf:constraint type="conditional">
         <bcf:antecedent quant="all">
-          <bcf:field>field1</bcf:field>
-          <bcf:field>field2</bcf:field>
+          <bcf:field>usera</bcf:field>
+          <bcf:field>userb</bcf:field>
         </bcf:antecedent>
         <bcf:consequent quant="one">
-          <bcf:field>field7</bcf:field>
-          <bcf:field>field8</bcf:field>
+          <bcf:field>lista</bcf:field>
+          <bcf:field>listb</bcf:field>
         </bcf:consequent>
       </bcf:constraint>
       <bcf:constraint type="conditional">
         <bcf:antecedent quant="all">
-          <bcf:field>field5</bcf:field>
-          <bcf:field>field6</bcf:field>
+          <bcf:field>usere</bcf:field>
+          <bcf:field>userf</bcf:field>
         </bcf:antecedent>
         <bcf:consequent quant="all">
-          <bcf:field>field9</bcf:field>
-          <bcf:field>field10</bcf:field>
+          <bcf:field>listc</bcf:field>
+          <bcf:field>listd</bcf:field>
         </bcf:consequent>
       </bcf:constraint>
     </bcf:constraints>
@@ -501,39 +470,39 @@
       </bcf:constraint>
       <bcf:constraint type="conditional">
         <bcf:antecedent quant="one">
-          <bcf:field>field2</bcf:field>
-          <bcf:field>field3</bcf:field>
+          <bcf:field>userb</bcf:field>
+          <bcf:field>userc</bcf:field>
         </bcf:antecedent>
         <bcf:consequent quant="none">
-          <bcf:field>field4</bcf:field>
+          <bcf:field>userd</bcf:field>
         </bcf:consequent>
       </bcf:constraint>
       <bcf:constraint type="conditional">
         <bcf:antecedent quant="one">
-          <bcf:field>field5</bcf:field>
-          <bcf:field>field6</bcf:field>
+          <bcf:field>usere</bcf:field>
+          <bcf:field>userf</bcf:field>
         </bcf:antecedent>
         <bcf:consequent quant="none">
-          <bcf:field>field7</bcf:field>
+          <bcf:field>lista</bcf:field>
         </bcf:consequent>
       </bcf:constraint>
       <bcf:constraint type="conditional">
         <bcf:antecedent quant="one">
-          <bcf:field>field2</bcf:field>
-          <bcf:field>field3</bcf:field>
+          <bcf:field>userb</bcf:field>
+          <bcf:field>userc</bcf:field>
         </bcf:antecedent>
         <bcf:consequent quant="all">
-          <bcf:field>field8</bcf:field>
-          <bcf:field>field9</bcf:field>
+          <bcf:field>listb</bcf:field>
+          <bcf:field>listc</bcf:field>
         </bcf:consequent>
       </bcf:constraint>
       <bcf:constraint type="conditional">
         <bcf:antecedent quant="one">
-          <bcf:field>field10</bcf:field>
-          <bcf:field>field11</bcf:field>
+          <bcf:field>listd</bcf:field>
+          <bcf:field>liste</bcf:field>
         </bcf:antecedent>
         <bcf:consequent quant="one">
-          <bcf:field>field5</bcf:field>
+          <bcf:field>usere</bcf:field>
         </bcf:consequent>
       </bcf:constraint>
     </bcf:constraints>
@@ -542,8 +511,8 @@
       <bcf:entrytype>etc</bcf:entrytype>
       <bcf:constraint type="mandatory">
         <bcf:fieldor>
-          <bcf:field>fielda</bcf:field>
-          <bcf:field>fieldb</bcf:field>
+          <bcf:field>verba</bcf:field>
+          <bcf:field>verbb</bcf:field>
         </bcf:fieldor>
       </bcf:constraint>
     </bcf:constraints>
@@ -556,38 +525,38 @@
       </bcf:constraint>
       <bcf:constraint type="conditional">
         <bcf:antecedent quant="none">
-          <bcf:field>field2</bcf:field>
-          <bcf:field>field3</bcf:field>
+          <bcf:field>userb</bcf:field>
+          <bcf:field>userc</bcf:field>
         </bcf:antecedent>
         <bcf:consequent quant="none">
-          <bcf:field>field4</bcf:field>
+          <bcf:field>userd</bcf:field>
         </bcf:consequent>
       </bcf:constraint>
       <bcf:constraint type="conditional">
         <bcf:antecedent quant="none">
-          <bcf:field>field7</bcf:field>
+          <bcf:field>lista</bcf:field>
         </bcf:antecedent>
         <bcf:consequent quant="none">
-          <bcf:field>field5</bcf:field>
+          <bcf:field>usere</bcf:field>
         </bcf:consequent>
       </bcf:constraint>
       <bcf:constraint type="conditional">
         <bcf:antecedent quant="none">
-          <bcf:field>field8</bcf:field>
-          <bcf:field>field9</bcf:field>
+          <bcf:field>listb</bcf:field>
+          <bcf:field>listc</bcf:field>
         </bcf:antecedent>
         <bcf:consequent quant="one">
-          <bcf:field>field10</bcf:field>
-          <bcf:field>field11</bcf:field>
+          <bcf:field>listd</bcf:field>
+          <bcf:field>liste</bcf:field>
         </bcf:consequent>
       </bcf:constraint>
       <bcf:constraint type="conditional">
         <bcf:antecedent quant="none">
-          <bcf:field>field6</bcf:field>
+          <bcf:field>userf</bcf:field>
         </bcf:antecedent>
         <bcf:consequent quant="all">
-          <bcf:field>field12</bcf:field>
-          <bcf:field>field13</bcf:field>
+          <bcf:field>listf</bcf:field>
+          <bcf:field>verbc</bcf:field>
         </bcf:consequent>
       </bcf:constraint>
     </bcf:constraints>
