@@ -56,6 +56,71 @@ sub new {
 
   # Pull out legal entrytypes, fields and constraints and make lookup hash
   # for quick tests later
+
+  # field datatypes
+  my ($nullok, $skipout, @name, @list, @literal, @date, @integer, @range, @verbatim, @key);
+
+  # Create data for field types, including any aliases which might be
+  # needed when reading the bib data.
+  foreach my $f (@{$struc->{fields}{field}}) {
+    if ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'name') {
+      push @name, $f->{content};
+      push @name, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
+    }
+    elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'literal') {
+      push @list, $f->{content};
+      push @list, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
+    }
+    elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'key') {
+      push @list, $f->{content};
+      push @list, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
+    }
+    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'literal') {
+      push @literal, $f->{content};
+      push @literal, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
+    }
+    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'date') {
+      push @date, $f->{content};
+      push @date, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
+    }
+    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'integer') {
+      push @integer, $f->{content};
+      push @integer, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
+    }
+    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'range') {
+      push @range, $f->{content};
+      push @range, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
+    }
+    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'verbatim') {
+      push @verbatim, $f->{content};
+      push @verbatim, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
+    }
+    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'key') {
+      push @key, $f->{content};
+      push @key, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
+    }
+
+    # check null_ok
+    if ($f->{nullok}) {
+      $nullok->{$f->{content}} = 1;
+    }
+    # check skips - fields we dont' want to output to BBL
+    if ($f->{skip_output}) {
+      $skipout->{$f->{content}} = 1;
+    }
+  }
+
+  # Store as lookup tables for speed and multiple re-use
+  $self->{fields}{nullok}   = $nullok;
+  $self->{fields}{skipout}  = $skipout;
+  $self->{fields}{complex}  = { map {$_ => 1} (@name, @list, @range, @date) };
+  $self->{fields}{literal}  = { map {$_ => 1} (@literal, @key, @integer) };
+  $self->{fields}{name}     = { map {$_ => 1} @name };
+  $self->{fields}{list}     = { map {$_ => 1} @list };
+  $self->{fields}{verbatim} = { map {$_ => 1} @verbatim };
+  $self->{fields}{range}    = { map {$_ => 1} @range };
+  $self->{fields}{date}     = { map {$_ => 1} @date };
+
   my $leg_ents;
   my $ets = [ sort map {$_->{content}} @{$struc->{entrytypes}{entrytype}} ];
 
@@ -71,70 +136,6 @@ sub new {
         }
       }
     }
-
-    # field datatypes
-    my ($nullok, $skipout, @name, @list, @literal, @date, @integer, @range, @verbatim, @key);
-
-    # Create data for field types, including any aliases which might be
-    # needed when reading the bib data.
-    foreach my $f (@{$struc->{fields}{field}}) {
-      if ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'name') {
-        push @name, $f->{content};
-        push @name, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'literal') {
-        push @list, $f->{content};
-        push @list, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'key') {
-        push @list, $f->{content};
-        push @list, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'literal') {
-        push @literal, $f->{content};
-        push @literal, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'date') {
-        push @date, $f->{content};
-        push @date, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'integer') {
-        push @integer, $f->{content};
-        push @integer, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'range') {
-        push @range, $f->{content};
-        push @range, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'verbatim') {
-        push @verbatim, $f->{content};
-        push @verbatim, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'key') {
-        push @key, $f->{content};
-        push @key, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-
-      # check null_ok
-      if ($f->{nullok}) {
-        $nullok->{$f->{content}} = 1;
-      }
-      # check skips - fields we dont' want to output to BBL
-      if ($f->{skip_output}) {
-        $skipout->{$f->{content}} = 1;
-      }
-    }
-
-    # Store as lookup tables for speed and multiple re-use
-    $self->{fields}{nullok}   = $nullok;
-    $self->{fields}{skipout}  = $skipout;
-    $self->{fields}{complex}  = { map {$_ => 1} (@name, @list, @range, @date) };
-    $self->{fields}{literal}  = { map {$_ => 1} (@literal, @key, @integer) };
-    $self->{fields}{name}     = { map {$_ => 1} @name };
-    $self->{fields}{list}     = { map {$_ => 1} @list };
-    $self->{fields}{verbatim} = { map {$_ => 1} @verbatim };
-    $self->{fields}{range}    = { map {$_ => 1} @range };
-    $self->{fields}{date}     = { map {$_ => 1} @date };
 
     # constraints
     my $constraints;
