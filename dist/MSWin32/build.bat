@@ -14,10 +14,15 @@ REM     $config{DLEXT} = 'dll' if ($is_Win32);
 REM
 REM then build and install as usual.
 
+REM Have to explicitly include the Input* modules as the names of these are dynamically
+REM constructed in the code so Par::Packer can't auto-detect them
+
 COPY C:\strawberry\perl\site\bin\biber C:\WINDOWS\Temp\biber-MSWIN
 
 CALL pp ^
   --compress=6 ^
+  --module=Biber::Input::file::bibtex ^
+  --module=Biber::Input::file::biblatex ^
   --module=Encode::Byte ^
   --module=Encode::CN ^
   --module=Encode::CJKConstants ^
