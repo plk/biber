@@ -113,7 +113,6 @@ sub set_pseudodatafield {
 sub set_field {
   my $self = shift;
   my ($key, $val) = @_;
-  my $struc = Biber::Config->get_structure;
   # All derived fields can be null
   $self->{derivedfields}{$key} = $val;
   return;
