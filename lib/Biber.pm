@@ -710,7 +710,7 @@ sub instantiate_dynamic {
     $be->set_field('entryset', join(',', @members));
     $be->set_field('dskey', $dset);
     $be->set_field('citekey', $dset);
-    $be->set_field('datatype', 'bibtex');
+    $be->set_field('datatype', 'dynamic');
     $section->bibentries->add_entry($dset, $be);
     # Setting dataonly for members is handled by postprocess_sets()
   }
