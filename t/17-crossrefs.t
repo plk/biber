@@ -83,7 +83,7 @@ my $cr2 = q|  \entry{cr2}{inbook}{}
     \field{origyear}{1943}
     \field{title}{Fabulous Fourier Forms}
     \field{year}{1974}
-    \warn{\item Field 'school' is an alias for field 'institution' but both are defined in entry with key 'cr2' - skipping field 'school'}
+    \warn{\item Field 'school' is aliased to field 'institution' but both are defined in entry with key 'cr2' - skipping field 'school'}
   \endentry
 
 |;
@@ -130,7 +130,7 @@ my $cr3 = q|  \entry{cr3}{inbook}{}
     \field{origyear}{1934}
     \field{title}{Arrangements of All Articles}
     \field{year}{1996}
-    \warn{\item Field 'archiveprefix' is an alias for field 'eprinttype' but both are defined in entry with key 'cr3' - skipping field 'archiveprefix'}
+    \warn{\item Field 'archiveprefix' is aliased to field 'eprinttype' but both are defined in entry with key 'cr3' - skipping field 'archiveprefix'}
   \endentry
 
 |;

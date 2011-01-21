@@ -22,170 +22,186 @@ use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use base 'Exporter';
 use List::AllUtils qw(first);
-use Data::Compare;
 
 my $logger = Log::Log4perl::get_logger('main');
 
 our $cache = {};
 
-# Data for fields
-my $FIELDS = {
-  special  => [ 'options', 'keywords' ],
-  date     => [ 'date', 'eventdate', 'origdate', 'urldate' ],
-  list     => [ 'address',
-                'institution',
-                'language',
-                'lista',
-                'listb',
-                'listc',
-                'listd',
-                'liste',
-                'listf',
-                'location',
-                'organization',
-                'origlocation',
-                'origpublisher',
-                'publisher',
-                'school'
-              ],
-  literal  => [
-                'abstract',
-                'addendum',
-                'annotation',
-                'annote',
-                'archiveprefix',
-                'authortype',
-                'bookpagination',
-                'booksubtitle',
-                'booktitle',
-                'booktitleaddon',
-                'chapter',
-                'crossref',
-                'day',
-                'edition',
-                'editoratype',
-                'editorbtype',
-                'editorctype',
-                'editortype',
-                'eid',
-                'endday',
-                'endmonth',
-                'endyear',
-                'entryset',
-                'entrysubtype',
-                'eprintclass',
-                'eprinttype',
-                'eventday',
-                'eventendday',
-                'eventendmonth',
-                'eventendyear',
-                'eventmonth',
-                'eventtitle',
-                'eventyear',
-                'execute',
-                'gender',
-                'howpublished',
-                'hyphenation',
-                'indexsorttitle',
-                'indextitle',
-                'isan',
-                'isbn',
-                'ismn',
-                'isrn',
-                'issn',
-                'issue',
-                'issuesubtitle',
-                'issuetitle',
-                'iswc',
-                'journal',
-                'journalsubtitle',
-                'journaltitle',
-                'key',
-                'label',
-                'library',
-                'mainsubtitle',
-                'maintitle',
-                'maintitleaddon',
-                'month',
-                'nameaddon',
-                'nameatype',
-                'namebtype',
-                'namectype',
-                'note',
-                'number',
-                'origday',
-                'origendday',
-                'origendmonth',
-                'origendyear',
-                'origlanguage',
-                'origmonth',
-                'origtitle',
-                'origyear',
-                'pagetotal',
-                'pagination',
-                'part',
-                'presort',
-                'primaryclass',
-                'pubstate',
-                'related',
-                'relatedtype',
-                'reprinttitle',
-                'series',
-                'shorthand',
-                'shorthandintro',
-                'shortjournal',
-                'shortseries',
-                'shorttitle',
-                'sortkey',
-                'sorttitle',
-                'sortyear',
-                'subtitle',
-                'title',
-                'titleaddon',
-                'type',
-                'urlday',
-                'urlendday',
-                'urlendmonth',
-                'urlendyear',
-                'urlmonth',
-                'urlyear',
-                'usera',
-                'userb',
-                'userc',
-                'userd',
-                'usere',
-                'userf',
-                'venue',
-                'version',
-                'volume',
-                'volumes',
-                'xref',
-                'year'
-              ],
-  name     => [
-                'afterword',
-                'annotator',
-                'author',
-                'bookauthor',
-                'commentator',
-                'editor',
-                'editora',
-                'editorb',
-                'editorc',
-                'foreword',
-                'holder',
-                'introduction',
-                'namea',
-                'nameb',
-                'namec',
-                'shortauthor',
-                'shorteditor',
-                'sortname',
-                'translator'
-              ],
-  range    => [ 'pages' ],
-  verbatim => [ 'doi', 'eprint', 'file', 'pdf', 'url', 'verba', 'verbb', 'verbc' ]
+# These are entry type aliases we expect to find in the the datasource so
+# we can decide how to map and convert them into Biber::Entry objects
+my $DS_EMAP = {
+               conference    => { aliasof => 'inproceedings' },
+               electronic    => { aliasof => 'online' },
+               mastersthesis => { aliasof => 'thesis',
+                                  alsoset => [ 'type', 'mathesis' ] },
+               phdthesis     => { aliasof => 'thesis',
+                                  alsoset => [ 'type', 'phdthesis' ] },
+               techreport    => { aliasof => 'report',
+                                  alsoset => [ 'type', 'techreport' ] },
+               www    => { aliasof => 'online' },
 };
+
+# These are the fields we expect to find in the the datasource so
+# we can decide how to map and convert them into Biber::Entry fields
+# This has nothing conceptually to do with the internal structure
+# setup, it's a datasource driver specific set of settings to allow
+# parsing into internal objects. It looks very similar to aspects
+# of the Biber::Structure defaults because biber/biblatex was developed
+# at first as a solely bibtex datasource project.
+
+my $DS_FMAP = {
+              # Special fields
+              keywords        => { handler => \&_special },
+              options         => { handler => \&_special },
+
+              # Date fields
+              date            => { handler => \&_date },
+              eventdate       => { handler => \&_date },
+              origdate        => { handler => \&_date },
+              urldate         => { handler => \&_date },
+
+              # List fields
+              address         => { aliasof => 'location' },
+              institution     => { handler => \&_list },
+              language        => { handler => \&_list },
+              lista           => { handler => \&_list },
+              listb           => { handler => \&_list },
+              listc           => { handler => \&_list },
+              listd           => { handler => \&_list },
+              liste           => { handler => \&_list },
+              listf           => { handler => \&_list },
+              location        => { handler => \&_list },
+              organization    => { handler => \&_list },
+              origlocation    => { handler => \&_list },
+              origpublisher   => { handler => \&_list },
+              publisher       => { handler => \&_list },
+              school          => { aliasof => 'institution' },
+
+              # Literal fields
+              abstract        => { handler => \&_literal },
+              addendum        => { handler => \&_literal },
+              annotation      => { handler => \&_literal },
+              annote          => { aliasof => 'annotation' },
+              archiveprefix   => { aliasof => 'eprinttype' },
+              authortype      => { handler => \&_literal },
+              bookpagination  => { handler => \&_literal },
+              booksubtitle    => { handler => \&_literal },
+              booktitle       => { handler => \&_literal },
+              booktitleaddon  => { handler => \&_literal },
+              chapter         => { handler => \&_literal },
+              crossref        => { handler => \&_literal },
+              day             => { handler => \&_literal },
+              edition         => { handler => \&_literal },
+              editoratype     => { handler => \&_literal },
+              editorbtype     => { handler => \&_literal },
+              editorctype     => { handler => \&_literal },
+              editortype      => { handler => \&_literal },
+              eid             => { handler => \&_literal },
+              entryset        => { handler => \&_literal },
+              entrysubtype    => { handler => \&_literal },
+              eprintclass     => { handler => \&_literal },
+              eprinttype      => { handler => \&_literal },
+              eventtitle      => { handler => \&_literal },
+              execute         => { handler => \&_literal },
+              gender          => { handler => \&_literal },
+              howpublished    => { handler => \&_literal },
+              hyphenation     => { handler => \&_literal },
+              indexsorttitle  => { handler => \&_literal },
+              indextitle      => { handler => \&_literal },
+              isan            => { handler => \&_literal },
+              isbn            => { handler => \&_literal },
+              ismn            => { handler => \&_literal },
+              isrn            => { handler => \&_literal },
+              issn            => { handler => \&_literal },
+              issue           => { handler => \&_literal },
+              issuesubtitle   => { handler => \&_literal },
+              issuetitle      => { handler => \&_literal },
+              iswc            => { handler => \&_literal },
+              journal         => { aliasof => 'journaltitle' },
+              journalsubtitle => { handler => \&_literal },
+              journaltitle    => { handler => \&_literal },
+              key             => { aliasof => 'sortkey' },
+              label           => { handler => \&_literal },
+              library         => { handler => \&_literal },
+              mainsubtitle    => { handler => \&_literal },
+              maintitle       => { handler => \&_literal },
+              maintitleaddon  => { handler => \&_literal },
+              month           => { handler => \&_literal },
+              nameaddon       => { handler => \&_literal },
+              nameatype       => { handler => \&_literal },
+              namebtype       => { handler => \&_literal },
+              namectype       => { handler => \&_literal },
+              note            => { handler => \&_literal },
+              number          => { handler => \&_literal },
+              origlanguage    => { handler => \&_literal },
+              origtitle       => { handler => \&_literal },
+              pagetotal       => { handler => \&_literal },
+              pagination      => { handler => \&_literal },
+              part            => { handler => \&_literal },
+              presort         => { handler => \&_literal },
+              primaryclass    => { aliasof => 'eprintclass' },
+              pubstate        => { handler => \&_literal },
+              related         => { handler => \&_literal },
+              relatedtype     => { handler => \&_literal },
+              reprinttitle    => { handler => \&_literal },
+              series          => { handler => \&_literal },
+              shorthand       => { handler => \&_literal },
+              shorthandintro  => { handler => \&_literal },
+              shortjournal    => { handler => \&_literal },
+              shortseries     => { handler => \&_literal },
+              shorttitle      => { handler => \&_literal },
+              sortkey         => { handler => \&_literal },
+              sorttitle       => { handler => \&_literal },
+              sortyear        => { handler => \&_literal },
+              subtitle        => { handler => \&_literal },
+              title           => { handler => \&_literal },
+              titleaddon      => { handler => \&_literal },
+              type            => { handler => \&_literal },
+              usera           => { handler => \&_literal },
+              userb           => { handler => \&_literal },
+              userc           => { handler => \&_literal },
+              userd           => { handler => \&_literal },
+              usere           => { handler => \&_literal },
+              userf           => { handler => \&_literal },
+              venue           => { handler => \&_literal },
+              version         => { handler => \&_literal },
+              volume          => { handler => \&_literal },
+              volumes         => { handler => \&_literal },
+              xref            => { handler => \&_literal },
+              year            => { handler => \&_literal },
+
+              # Name fields
+              afterword       => { handler => \&_name },
+              annotator       => { handler => \&_name },
+              author          => { handler => \&_name },
+              bookauthor      => { handler => \&_name },
+              commentator     => { handler => \&_name },
+              editor          => { handler => \&_name },
+              editora         => { handler => \&_name },
+              editorb         => { handler => \&_name },
+              editorc         => { handler => \&_name },
+              foreword        => { handler => \&_name },
+              holder          => { handler => \&_name },
+              introduction    => { handler => \&_name },
+              namea           => { handler => \&_name },
+              nameb           => { handler => \&_name },
+              namec           => { handler => \&_name },
+              shortauthor     => { handler => \&_name },
+              shorteditor     => { handler => \&_name },
+              sortname        => { handler => \&_name },
+              translator      => { handler => \&_name },
+              pages           => { handler => \&_range },
+
+              # Verbatim fields
+              doi             => { handler => \&_verbatim },
+              eprint          => { handler => \&_verbatim },
+              file            => { handler => \&_verbatim },
+              pdf             => { aliasof => 'file' },
+              url             => { handler => \&_verbatim },
+              verba           => { handler => \&_verbatim },
+              verbb           => { handler => \&_verbatim },
+              verbc           => { handler => \&_verbatim }
+             };
 
 =head2 TBSIG
 
@@ -319,171 +335,209 @@ sub create_entry {
   $bibentry->set_field('citekey', $citekey);
 
   if ( $entry->metatype == BTE_REGULAR ) {
-    my @found_fields; # For error reporting below
 
-    # Set entrytype. This may be changed later in process_aliases
-    $bibentry->set_field('entrytype', $entry->type);
+    # Set entrytype taking note of any aliases for this datasource driver
+    if (my $ealias = $DS_EMAP->{$entry->type}) {
+      $bibentry->set_field('entrytype', $ealias->{aliasof});
+      if (my $alsoset = $ealias->{alsoset}) {
+        unless ($bibentry->field_exists($alsoset->[0])) {
+          $bibentry->set_field($alsoset->[0], $alsoset->[1]);
+        }
+      }
+    }
+    else {
+      $bibentry->set_field('entrytype', $entry->type);
+    }
 
-    # Special fields
-    foreach my $f ( @{$FIELDS->{special}} ) {
-      next unless $entry->exists($f);
-      my $value = decode_utf8($entry->get($f));
-
-      $bibentry->set_datafield($f, $value);
-
+    foreach my $f ($entry->fieldlist) {
       # We have to process local options as early as possible in order
       # to make them available for things that need them like parsename()
-      if (lc($f) eq 'options') {
+      if ($f eq 'options') {
+        my $value = decode_utf8($entry->get($f));
         $biber->process_entry_options($dskey, $value);
       }
-      push @found_fields, $f;
-    }
 
-    # Literal fields
-    foreach my $f ( @{$FIELDS->{literal}} ) {
-      next unless $entry->exists($f);
-      my $value = decode_utf8($entry->get($f));
-
-      $bibentry->set_datafield($f, $value);
-      push @found_fields, $f;
-    }
-
-    # Verbatim fields
-    foreach my $f ( @{$FIELDS->{verbatim}} ) {
-      next unless $entry->exists($f);
-      my $value = decode_utf8($entry->get($f));
-
-      $bibentry->set_datafield($f, $value);
-      push @found_fields, $f;
-    }
-
-    # range lists become an array ref of two element array refs
-    foreach my $f ( @{$FIELDS->{range}} ) {
-      next unless $entry->exists($f);
-      my $values_ref;
-      my @values = split(/\s*,\s*/, decode_utf8($entry->get($f)));
-      # Here the "-–" contains two different chars even though they might
-      # look the same ...
-      foreach my $value (@values) {
-        $value =~ m/\A\s*([^-–]+)[-–]*([^-–]*)\s*\z/xms;
-        push @$values_ref, [$1 || '', $2 || ''];
-      }
-      $bibentry->set_datafield($f, $values_ref);
-      push @found_fields, $f;
-    }
-
-    # Names
-    foreach my $f ( @{$FIELDS->{name}} ) {
-      next unless $entry->exists($f);
-      my @tmp = $entry->split($f);
-      my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
-      my $names = new Biber::Entry::Names;
-      foreach my $name (@tmp) {
-
-        # Consecutive "and" causes Text::BibTeX::Name to segfault
-        unless ($name) {
-          $biber->biber_warn($bibentry, "Name in key '$dskey' is empty (probably consecutive 'and'): skipping name");
-          $section->del_citekey($dskey);
-          next;
-        }
-
-        $name = decode_utf8($name);
-
-        # Check for malformed names in names which aren't completely escaped
-
-        # Too many commas
-        unless ($name =~ m/\A{.+}\z/xms) { # Ignore these tests for escaped names
-          my @commas = $name =~ m/,/g;
-          if ($#commas > 1) {
-            $biber->biber_warn($bibentry, "Name \"$name\" has too many commas: skipping name");
-            $section->del_citekey($dskey);
+      if (my $fm = $DS_FMAP->{$f}) {
+        my $to = $f; # By default, field to set internally is the same as data source
+        # Redirect any alias
+        if (my $alias = $fm->{aliasof}) {
+          $logger->debug("Found alias '$alias' of field '$f' in entry '$dskey'");
+          # If both a field and its alias is set, warn and delete alias field
+          if ($entry->exists($alias)) {
+            # Warn as that's wrong
+            $biber->biber_warn($bibentry, "Field '$f' is aliased to field '$alias' but both are defined in entry with key '$dskey' - skipping field '$f'");
             next;
           }
-
-          # Consecutive commas cause Text::BibTeX::Name to segfault
-          if ($name =~ /,,/) {
-            $biber->biber_warn($bibentry, "Name \"$name\" is malformed (consecutive commas): skipping name");
-            $section->del_citekey($dskey);
-            return;
-          }
+          $fm = $DS_FMAP->{$alias};
+          $to = $alias; # Field to set internally is the alias
         }
-
-        $names->add_element(parsename($name, $f, {useprefix => $useprefix}));
+        &{$fm->{handler}}($biber, $bibentry, $entry, $f, $to, $dskey);
       }
-      $bibentry->set_datafield($f, $names);
-      push @found_fields, $f;
-    }
-
-    # Dates
-    foreach my $f ( @{$FIELDS->{date}} ) {
-      next unless $entry->exists($f);
-      push @found_fields, $f;
-      my ($datetype) = $f =~ m/\A(.*)date\z/xms;
-      my $date = decode_utf8($entry->get($f));
-      # We are not validating dates here, just syntax parsing
-      my $date_re = qr/(\d{4}) # year
-                       (?:-(\d{2}))? # month
-                       (?:-(\d{2}))? # day
-                      /xms;
-      if (my ($byear, $bmonth, $bday, $r, $eyear, $emonth, $eday) =
-          $date =~ m|\A$date_re(/)?(?:$date_re)?\z|xms) {
-
-        # Some warnings for overwriting YEAR and MONTH from DATE
-        if ($byear and
-            ($datetype . 'year' eq 'year') and
-            $entry->get('year')) {
-          $biber->biber_warn($bibentry, "Overwriting field 'year' with year value from field 'date' for entry '$dskey'");
-          $bibentry->del_datafield('year');
-        }
-        if ($bmonth and
-            ($datetype . 'month' eq 'month') and
-            $entry->get('month')) {
-          $biber->biber_warn($bibentry, "Overwriting field 'month' with month value from field 'date' for entry '$dskey'");
-          $bibentry->del_datafield('month');
-        }
-
-        # Set these as pseudodata fields as they are not originally in the datasource
-        # but they do need to be inherited in crossrefs/sets
-        $bibentry->set_pseudodatafield($datetype . 'year', $byear)      if $byear;
-        $bibentry->set_pseudodatafield($datetype . 'month', $bmonth)    if $bmonth;
-        $bibentry->set_pseudodatafield($datetype . 'day', $bday)        if $bday;
-        $bibentry->set_pseudodatafield($datetype . 'endmonth', $emonth) if $emonth;
-        $bibentry->set_pseudodatafield($datetype . 'endday', $eday)     if $eday;
-        if ($r and $eyear) {    # normal range
-          $bibentry->set_pseudodatafield($datetype . 'endyear', $eyear);
-        }
-        elsif ($r and not $eyear) { # open ended range - endyear is defined but empty
-          $bibentry->set_pseudodatafield($datetype . 'endyear', '');
-        }
-      }
+      # Default if no explicit way to set the field
       else {
-        $biber->biber_warn($bibentry, "Invalid format '$date' of date field '$f' in entry '$citekey' - ignoring");
-        next;
+        my $value = decode_utf8($entry->get($f));
+        $bibentry->set_datafield($f, $value);
       }
     }
 
-    # List fields
-    foreach my $f ( @{$FIELDS->{list}} ) {
-      next unless $entry->exists($f);
-      my @tmp = $entry->split($f);
-
-      @tmp = map { decode_utf8($_) } @tmp;
-      @tmp = map { remove_outer($_) } @tmp;
-      $bibentry->set_datafield($f, [ @tmp ]);
-      push @found_fields, $f;
+    if ($bibentry->get_pseudodatafield('year') and
+        $bibentry->get_datafield('year')) {
+      $bibentry->del_datafield('year');
     }
-
-    # Warn about unknown fields
-    foreach my $ef ($entry->fieldlist) {
-      unless (first {$ef eq $_} @found_fields) {
-        $biber->biber_warn($bibentry, "Field '$ef' is unknown in entry '$dskey' - ignoring");
-      }
+    if ($bibentry->get_pseudodatafield('month') and
+        $bibentry->get_datafield('month')) {
+      $bibentry->del_datafield('month');
     }
 
     $bibentry->set_field('datatype', 'bibtex');
     $bibentries->add_entry($lc_key, $bibentry);
   }
 
+  return;
+}
+
+
+# Special fields
+sub _special {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my $value = decode_utf8($entry->get($f));
+  $bibentry->set_datafield($to, $value);
+  return;
+}
+
+# Literal fields
+sub _literal {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my $value = decode_utf8($entry->get($f));
+  $bibentry->set_datafield($to, $value) unless $bibentry->get_datafield($to);
+  return;
+}
+
+# Verbatim fields
+sub _verbatim {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my $value = decode_utf8($entry->get($f));
+
+  $bibentry->set_datafield($to, $value);
+  return;
+}
+
+# Range fields
+sub _range {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my $values_ref;
+  my @values = split(/\s*,\s*/, decode_utf8($entry->get($f)));
+  # Here the "-–" contains two different chars even though they might
+  # look the same ...
+  foreach my $value (@values) {
+    $value =~ m/\A\s*([^-–]+)[-–]*([^-–]*)\s*\z/xms;
+    push @$values_ref, [$1 || '', $2 || ''];
+  }
+  $bibentry->set_datafield($to, $values_ref);
+  return;
+}
+
+
+# Names
+sub _name {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my $secnum = $biber->get_current_section;
+  my $section = $biber->sections->get_section($secnum);
+  my @tmp = $entry->split($f);
+  my $lc_key = lc($dskey);
+  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
+  my $names = new Biber::Entry::Names;
+  foreach my $name (@tmp) {
+
+    # Consecutive "and" causes Text::BibTeX::Name to segfault
+    unless ($name) {
+      $biber->biber_warn($bibentry, "Name in key '$dskey' is empty (probably consecutive 'and'): skipping name");
+      $section->del_citekey($dskey);
+      next;
+    }
+
+    $name = decode_utf8($name);
+
+    # Check for malformed names in names which aren't completely escaped
+
+    # Too many commas
+    unless ($name =~ m/\A{.+}\z/xms) { # Ignore these tests for escaped names
+      my @commas = $name =~ m/,/g;
+      if ($#commas > 1) {
+        $biber->biber_warn($bibentry, "Name \"$name\" has too many commas: skipping name");
+        $section->del_citekey($dskey);
+        next;
+      }
+
+      # Consecutive commas cause Text::BibTeX::Name to segfault
+      if ($name =~ /,,/) {
+        $biber->biber_warn($bibentry, "Name \"$name\" is malformed (consecutive commas): skipping name");
+        $section->del_citekey($dskey);
+        next;
+      }
+    }
+
+    $names->add_element(parsename($name, $f, {useprefix => $useprefix}));
+  }
+  $bibentry->set_datafield($to, $names);
+  return;
+}
+
+# Dates
+sub _date {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($datetype) = $f =~ m/\A(.*)date\z/xms;
+  my $date = decode_utf8($entry->get($f));
+  # We are not validating dates here, just syntax parsing
+  my $date_re = qr/(\d{4}) # year
+                   (?:-(\d{2}))? # month
+                   (?:-(\d{2}))? # day
+                  /xms;
+  if (my ($byear, $bmonth, $bday, $r, $eyear, $emonth, $eday) =
+      $date =~ m|\A$date_re(/)?(?:$date_re)?\z|xms) {
+
+    # Some warnings for overwriting YEAR and MONTH from DATE
+    if ($byear and
+        ($datetype . 'year' eq 'year') and
+        $entry->get('year')) {
+      $biber->biber_warn($bibentry, "Overwriting field 'year' with year value from field 'date' for entry '$dskey'");
+      $bibentry->del_datafield('year');
+    }
+    if ($bmonth and
+        ($datetype . 'month' eq 'month') and
+        $entry->get('month')) {
+      $biber->biber_warn($bibentry, "Overwriting field 'month' with month value from field 'date' for entry '$dskey'");
+      $bibentry->del_datafield('month');
+    }
+
+    # Set these as pseudodata fields as they are not originally in the datasource
+    # but they do need to be inherited in crossrefs/sets
+    $bibentry->set_pseudodatafield($datetype . 'year', $byear)      if $byear;
+    $bibentry->set_pseudodatafield($datetype . 'month', $bmonth)    if $bmonth;
+    $bibentry->set_pseudodatafield($datetype . 'day', $bday)        if $bday;
+    $bibentry->set_pseudodatafield($datetype . 'endmonth', $emonth) if $emonth;
+    $bibentry->set_pseudodatafield($datetype . 'endday', $eday)     if $eday;
+    if ($r and $eyear) {        # normal range
+      $bibentry->set_pseudodatafield($datetype . 'endyear', $eyear);
+    }
+    elsif ($r and not $eyear) { # open ended range - endyear is defined but empty
+      $bibentry->set_pseudodatafield($datetype . 'endyear', '');
+    }
+  }
+  else {
+    $biber->biber_warn($bibentry, "Invalid format '$date' of date field '$f' in entry '$dskey' - ignoring");
+  }
+  return;
+}
+
+# List fields
+sub _list {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my @tmp = $entry->split($f);
+
+  @tmp = map { decode_utf8($_) } @tmp;
+  @tmp = map { remove_outer($_) } @tmp;
+  $bibentry->set_datafield($to, [ @tmp ]);
   return;
 }
 

@@ -651,6 +651,17 @@ my $l26 = q|  \entry{L26}{book}{}
 
 |;
 
+# Malformed anyway but a decent test
+my $l28 = q|  \entry{L28}{book}{}
+    \strng{namehash}{1}
+    \strng{fullhash}{1}
+    \field{sortinit}{0}
+    \warn{\item Name "Deux et al.,, O." is malformed (consecutive commas): skipping name}
+  \endentry
+
+|;
+
+
 my $l29 = q|  \entry{L29}{book}{}
     \name{labelname}{1}{%
       {{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}}{U.}{}{}{}{}{}{}}%
@@ -664,6 +675,7 @@ my $l29 = q|  \entry{L29}{book}{}
   \endentry
 
 |;
+
 
 is_deeply(Biber::Input::file::bibtex::parsename('John Doe', 'author'), $name1, 'parsename 1');
 is_deeply(Biber::Input::file::bibtex::parsename('Doe, Jr, John', 'author'), $name2, 'parsename 2');
@@ -705,7 +717,8 @@ is( $out->get_output_entry('l24'), $l24, 'Unicode lastname');
 is( $out->get_output_entry('l25'), $l25, 'Single string name');
 is( $out->get_output_entry('l26'), $l26, 'Hyphen at brace level <> 0');
 is($section->bibentry('l27')->get_field('author')->count_elements, 1, 'Bad name with 3 commas');
-is($section->has_citekey('l28'), '0', 'Bad name with consecutive commas');
+#is($section->has_citekey('l28'), '0', 'Bad name with consecutive commas');
+is( $out->get_output_entry('l28'), $l28, 'Bad name with consecutive commas');
 is( $out->get_output_entry('l29'), $l29, 'Escaped name with 3 commas');
 
 # A few tests depend set to non UTF-8 output

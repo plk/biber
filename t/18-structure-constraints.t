@@ -31,7 +31,7 @@ my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 
 my $c1 = [ "Entry 'c1' - invalid entry type 'badtype' - defaulting to 'misc'" ];
-my $c2 = [ "Field 'badfield' is unknown in entry 'c2' - ignoring",
+my $c2 = [ "Entry 'c2' - invalid field 'badfield' for entrytype 'eta'",
            "Entry 'c2' - invalid field 'journaltitle' for entrytype 'eta'",
            "Missing mandatory field 'author' in entry 'c2'" ];
 my $c3 = [ "Invalid format (integer) of field 'month' - ignoring field in entry 'c3'" ];

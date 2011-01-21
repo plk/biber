@@ -34,26 +34,6 @@ sub new {
     $self = bless {}, $class;
   }
 
-  # Create internal aliases data format for easy use
-  my $aliases;
-  my $reverse_aliases;
-  foreach my $alias (@{$struc->{aliases}{alias}}) {
-    $aliases->{$alias->{type}}{$alias->{name}{content}}
-      = {
-         realname => $alias->{realname}{content}
-        };
-    # So we can automatically add aliases to the field definitions
-    # without having to maintain them there too.
-    $reverse_aliases->{$alias->{realname}{content}} = $alias->{name}{content};
-
-    if (exists($alias->{field})) {
-      $aliases->{$alias->{type}}{$alias->{name}{content}}{fields}
-        = { map {$_->{name} => $_->{content}} @{$alias->{field}}};
-    }
-  }
-  $self->{aliases} = $aliases;
-  $self->{reverse_aliases} = $reverse_aliases;
-
   # Pull out legal entrytypes, fields and constraints and make lookup hash
   # for quick tests later
 
@@ -65,39 +45,30 @@ sub new {
   foreach my $f (@{$struc->{fields}{field}}) {
     if ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'name') {
       push @name, $f->{content};
-      push @name, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
     }
     elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'literal') {
       push @list, $f->{content};
-      push @list, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
     }
     elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'key') {
       push @list, $f->{content};
-      push @list, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
     }
     elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'literal') {
       push @literal, $f->{content};
-      push @literal, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
     }
     elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'date') {
       push @date, $f->{content};
-      push @date, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
     }
     elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'integer') {
       push @integer, $f->{content};
-      push @integer, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
     }
     elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'range') {
       push @range, $f->{content};
-      push @range, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
     }
     elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'verbatim') {
       push @verbatim, $f->{content};
-      push @verbatim, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
     }
     elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'key') {
       push @key, $f->{content};
-      push @key, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
     }
 
     # check null_ok
@@ -240,58 +211,6 @@ sub is_field_for_entrytype {
   }
 }
 
-=head2 resolve_entry_aliases
-
-    Resolve entrytype alias for an entry, if any
-
-=cut
-
-sub resolve_entry_aliases {
-  my $self = shift;
-  my $be = shift;
-  # normalise field name according to alias
-  if (my $alias = $self->{aliases}{entrytype}{$be->get_field('entrytype')}) {
-    $be->set_field('entrytype', $alias->{realname});
-    # Set any other fields which normalising this alias requires if not already set
-    foreach my $field (keys %{$alias->{fields}}) {
-      unless ($be->field_exists($field)) {
-        $be->set_field($field, $alias->{fields}{$field});
-      }
-    }
-  }
-
-  return;
-}
-
-=head2 resolve_field_aliases
-
-    Resolve field alias for an entry, if any
-
-=cut
-
-sub resolve_field_aliases {
-  my $self = shift;
-  my $be = shift;
-  my @warnings;
-  my $citekey = $be->get_field('dskey');
-  while (my ($faliasn, $falias) = each %{$self->{aliases}{field}}) {
-    # Field which is an alias and has a value?
-    if (my $falias_value = $be->get_field($faliasn)) {
-      my $freal = $falias->{realname};
-      # If both a field and its alias is set, warn and delete alias field
-      if ($be->get_field($freal)) {
-        push @warnings, "Field '$faliasn' is an alias for field '$freal' but both are defined in entry with key '$citekey' - skipping field '$faliasn'"; # Warn as that's wrong
-        $be->del_field($faliasn);
-      }
-      else {
-        # datafield since aliases only apply to actual data fields from the data file
-        $be->set_datafield($freal, $falias_value);
-        $be->del_field($faliasn);
-      }
-    }
-  }
-  return @warnings;
-}
 
 =head2 get_field_type
 

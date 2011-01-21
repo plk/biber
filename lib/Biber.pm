@@ -648,42 +648,6 @@ sub process_setup {
   }
 }
 
-=head2 resolve_aliases
-
-   Normalise entries by resolving any:
-
-   * Entrytype aliases
-   * Field aliases
-
-   Defined in the structure schema passed in the .bcf
-
-=cut
-
-sub resolve_aliases {
-  my $self = shift;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $struc = Biber::Config->get_structure;
-
-  # We are looping over all bibentries for the section, not just cited
-  # entries. We have to do this to process aliases in potential crossrefs
-  # which have not been processed yet. We can't process them them before this
-  # as this would be ugly - crossrefs should be resolved on canonical entrytype
-  # and field names which can't be done until after these are canonicalised below
-  foreach my $key ($section->bibentries->sorted_keys) {
-    my $be = $section->bibentry($key);
-
-    # Entrytype aliases and special fields - biblatex manual Section 2.1.2
-    foreach my $warning ($struc->resolve_entry_aliases($be)) {
-      $self->biber_warn($be, $warning);
-    }
-
-    # Field aliases
-    foreach my $warning ($struc->resolve_field_aliases($be)) {
-      $self->biber_warn($be, $warning);
-    }
-  }
-}
 
 =head2 instantiate_dynamic
 
@@ -1841,7 +1805,6 @@ sub prepare {
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->fetch_data;                   # Fetch cited key and dependent data from sources
-    $self->resolve_aliases;              # Resolve entrytype/field aliases to normalise entries
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
     $self->process_crossrefs;            # Process crossrefs/sets
     $self->validate_structure;           # Check bib structure

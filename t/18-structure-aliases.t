@@ -29,7 +29,7 @@ $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 
-my $w1 = ["Field 'school' is an alias for field 'institution' but both are defined in entry with key 'alias2' - skipping field 'school'",
+my $w1 = ["Field 'school' is aliased to field 'institution' but both are defined in entry with key 'alias2' - skipping field 'school'",
           "Entry 'alias2' - invalid entry type 'thing' - defaulting to 'misc'",
           "Entry 'alias2' - invalid field 'institution' for entrytype 'misc'"
 ];

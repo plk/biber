@@ -486,13 +486,11 @@
           <h4>Legal entrytypes</h4>
           <table>
             <thead>
-              <tr><td>Entrytype</td><td>Aliases</td><td>Field changes when resolving alias</td><td>Legal fields for entrytype</td></tr>
+              <tr><td>Entrytype</td><td>Legal fields for entrytype</td></tr>
             </thead>
             <tbody>
               <tr>
                 <td>GLOBAL</td>
-                <td></td>
-                <td></td>
                 <td>
                   <div class="global_entrytype_fields">
                     <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:entryfields/bcf:entrytype[text()='ALL']/../bcf:field">
@@ -506,26 +504,6 @@
               <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:entrytypes/bcf:entrytype">
                 <tr>
                   <td><xsl:value-of select="./text()"/></td>
-                  <td>
-                    <ul>
-                      <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:aliases/bcf:alias[@type='entrytype']/bcf:realname[./text()=current()/text()]">
-                        <li>
-                          <xsl:value-of select="../bcf:name/text()"/>
-
-                        </li>
-                      </xsl:for-each>
-                    </ul>
-                  </td>
-                  <!-- Fields which need changing when resolving an alias -->
-                  <td>
-                    <ul>
-                      <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:aliases/bcf:alias[@type='entrytype']/bcf:realname[./text()=current()/text()]/../bcf:field">
-                        <li>
-                          <xsl:value-of select="./@name"/><xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text><xsl:value-of select="./text()"/>
-                        </li>
-                      </xsl:for-each>                    
-                    </ul>
-                  </td>
                   <!-- Save a varible pointing to the entrytype node -->
                   <xsl:variable name="entrynode" select="current()"/> 
                   <!-- Fields which are valid for this entrytype --> 
@@ -568,7 +546,7 @@
           <h4>Legal Fields</h4>
           <table>
             <thead>
-              <tr><td>Field</td><td>Aliases</td><td>Data type</td></tr>
+              <tr><td>Field</td><td>Data type</td></tr>
             </thead>
             <tbody>
               <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:fields/bcf:field">
@@ -577,15 +555,6 @@
                     <xsl:value-of select="./text()"/>
                     <xsl:if test="./@nullok='true'"><xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text></xsl:if>
                     <xsl:if test="./@skip_output='true'"><xsl:text disable-output-escaping="yes">&amp;loz;</xsl:text></xsl:if>
-                  </td>
-                  <td>
-                    <ul>
-                      <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:aliases/bcf:alias[@type='field']/bcf:realname[./text()=current()/text()]">
-                        <li>
-                          <xsl:value-of select="../bcf:name/text()"/>
-                        </li>
-                      </xsl:for-each>
-                    </ul>
                   </td>
                   <td>
                     <xsl:value-of select="./@datatype"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="./@fieldtype"/>
