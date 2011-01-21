@@ -10,7 +10,7 @@
 /usr/local/perl/bin/pp \
   --compress=6 \
   --module=Biber::Input::file::bibtex \
-  --module=Biber::Input::file::biblatex \
+  --module=Biber::Input::file::biblatexml \
   --module=Encode::Byte \
   --module=Encode::CN \
   --module=Encode::CJKConstants \

@@ -12,6 +12,7 @@ lib/Biber/Output/Base.pm
 lib/Biber/Output/BBL.pm
 lib/Biber/Output/Test.pm
 lib/Biber/Input/file/bibtex.pm
+lib/Biber/Input/file/biblatexml.pm
 lib/Biber/Config.pm
 lib/Biber/Constants.pm
 lib/Biber/Entries.pm

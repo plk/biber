@@ -17,7 +17,7 @@ cp /opt/local/lib/libz.1.2.5.dylib /tmp/libz.1.dylib
 
 pp --compress=6 \
   --module=Biber::Input::file::bibtex \
-  --module=Biber::Input::file::biblatex \
+  --module=Biber::Input::file::biblatexml \
   --module=Encode::Byte \
   --module=Encode::CN \
   --module=Encode::CJKConstants \
