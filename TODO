@@ -1,6 +1,5 @@
 TODO in decreasing order of priority:
 
-   * Don't use structure for data source processing. Then remove pseudodata stuff
    * Generalised \printbibliography system
    * Zotero? http://www.zotero.org/support/dev/start
      https://api.zotero.org/users/<USERID>/items/<iTEMID>?key=<APIKEY>

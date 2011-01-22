@@ -17,7 +17,7 @@ use Encode;
 use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use base 'Exporter';
-use List::AllUtils qw(first);
+use List::AllUtils qw(first uniq);
 use XML::LibXML;
 use Readonly;
 use Data::Dump qw(dump);
@@ -26,6 +26,184 @@ my $logger = Log::Log4perl::get_logger('main');
 
 Readonly::Scalar our $BIBLATEXML_NAMESPACE_URI => 'http://biblatex-biber.sourceforge.net/biblatexml';
 Readonly::Scalar our $NS => 'bib';
+
+# These entry type aliases we might find in the the datasource so
+# we can decide how to map and convert them into Biber::Entry objects
+# We are not validating anything here, that comes later and is not
+# datasource specific
+my $DS_EMAP = {
+               conference    => { aliasof => 'inproceedings' },
+               electronic    => { aliasof => 'online' },
+               mastersthesis => { aliasof => 'thesis',
+                                  alsoset => [ 'type', 'mathesis' ] },
+               phdthesis     => { aliasof => 'thesis',
+                                  alsoset => [ 'type', 'phdthesis' ] },
+               techreport    => { aliasof => 'report',
+                                  alsoset => [ 'type', 'techreport' ] },
+               www    => { aliasof => 'online' },
+};
+
+# These are the fields we expect to find in the the datasource so
+# we can decide how to map and convert them into Biber::Entry fields
+# This has nothing conceptually to do with the internal structure
+# setup, it's a datasource driver specific set of settings to allow
+# parsing into internal objects. It looks very similar to aspects
+# of the Biber::Structure defaults because biber/biblatex was developed
+# at first as a solely bibtex datasource project.
+
+my $DS_FMAP = {
+              # Special fields
+              keywords        => { handler => \&_special },
+              options         => { handler => \&_special },
+
+              # Date fields
+              date            => { handler => \&_date },
+              eventdate       => { handler => \&_date },
+              origdate        => { handler => \&_date },
+              urldate         => { handler => \&_date },
+
+              # List fields
+              address         => { aliasof => 'location' },
+              institution     => { handler => \&_list },
+              language        => { handler => \&_list },
+              lista           => { handler => \&_list },
+              listb           => { handler => \&_list },
+              listc           => { handler => \&_list },
+              listd           => { handler => \&_list },
+              liste           => { handler => \&_list },
+              listf           => { handler => \&_list },
+              location        => { handler => \&_list },
+              organization    => { handler => \&_list },
+              origlocation    => { handler => \&_list },
+              origpublisher   => { handler => \&_list },
+              publisher       => { handler => \&_list },
+              school          => { aliasof => 'institution' },
+
+              # Literal fields
+              abstract        => { handler => \&_literal },
+              addendum        => { handler => \&_literal },
+              annotation      => { handler => \&_literal },
+              annote          => { aliasof => 'annotation' },
+              archiveprefix   => { aliasof => 'eprinttype' },
+              authortype      => { handler => \&_literal },
+              bookpagination  => { handler => \&_literal },
+              booksubtitle    => { handler => \&_literal },
+              booktitle       => { handler => \&_literal },
+              booktitleaddon  => { handler => \&_literal },
+              chapter         => { handler => \&_literal },
+              crossref        => { handler => \&_literal },
+              day             => { handler => \&_literal },
+              edition         => { handler => \&_literal },
+              editoratype     => { handler => \&_literal },
+              editorbtype     => { handler => \&_literal },
+              editorctype     => { handler => \&_literal },
+              editortype      => { handler => \&_literal },
+              eid             => { handler => \&_literal },
+              entryset        => { handler => \&_literal },
+              entrysubtype    => { handler => \&_literal },
+              eprintclass     => { handler => \&_literal },
+              eprinttype      => { handler => \&_literal },
+              eventtitle      => { handler => \&_literal },
+              execute         => { handler => \&_literal },
+              gender          => { handler => \&_literal },
+              howpublished    => { handler => \&_literal },
+              hyphenation     => { handler => \&_literal },
+              indexsorttitle  => { handler => \&_literal },
+              indextitle      => { handler => \&_literal },
+              isan            => { handler => \&_literal },
+              isbn            => { handler => \&_literal },
+              ismn            => { handler => \&_literal },
+              isrn            => { handler => \&_literal },
+              issn            => { handler => \&_literal },
+              issue           => { handler => \&_literal },
+              issuesubtitle   => { handler => \&_literal },
+              issuetitle      => { handler => \&_literal },
+              iswc            => { handler => \&_literal },
+              journal         => { aliasof => 'journaltitle' },
+              journalsubtitle => { handler => \&_literal },
+              journaltitle    => { handler => \&_literal },
+              key             => { aliasof => 'sortkey' },
+              label           => { handler => \&_literal },
+              library         => { handler => \&_literal },
+              mainsubtitle    => { handler => \&_literal },
+              maintitle       => { handler => \&_literal },
+              maintitleaddon  => { handler => \&_literal },
+              month           => { handler => \&_literal },
+              nameaddon       => { handler => \&_literal },
+              nameatype       => { handler => \&_literal },
+              namebtype       => { handler => \&_literal },
+              namectype       => { handler => \&_literal },
+              note            => { handler => \&_literal },
+              number          => { handler => \&_literal },
+              origlanguage    => { handler => \&_literal },
+              origtitle       => { handler => \&_literal },
+              pagetotal       => { handler => \&_literal },
+              pagination      => { handler => \&_literal },
+              part            => { handler => \&_literal },
+              presort         => { handler => \&_literal },
+              primaryclass    => { aliasof => 'eprintclass' },
+              pubstate        => { handler => \&_literal },
+              related         => { handler => \&_literal },
+              relatedtype     => { handler => \&_literal },
+              reprinttitle    => { handler => \&_literal },
+              series          => { handler => \&_literal },
+              shorthand       => { handler => \&_literal },
+              shorthandintro  => { handler => \&_literal },
+              shortjournal    => { handler => \&_literal },
+              shortseries     => { handler => \&_literal },
+              shorttitle      => { handler => \&_literal },
+              sortkey         => { handler => \&_literal },
+              sorttitle       => { handler => \&_literal },
+              sortyear        => { handler => \&_literal },
+              subtitle        => { handler => \&_literal },
+              title           => { handler => \&_literal },
+              titleaddon      => { handler => \&_literal },
+              type            => { handler => \&_literal },
+              usera           => { handler => \&_literal },
+              userb           => { handler => \&_literal },
+              userc           => { handler => \&_literal },
+              userd           => { handler => \&_literal },
+              usere           => { handler => \&_literal },
+              userf           => { handler => \&_literal },
+              venue           => { handler => \&_literal },
+              version         => { handler => \&_literal },
+              volume          => { handler => \&_literal },
+              volumes         => { handler => \&_literal },
+              xref            => { handler => \&_literal },
+              year            => { handler => \&_literal },
+
+              # Name fields
+              afterword       => { handler => \&_name },
+              annotator       => { handler => \&_name },
+              author          => { handler => \&_name },
+              bookauthor      => { handler => \&_name },
+              commentator     => { handler => \&_name },
+              editor          => { handler => \&_name },
+              editora         => { handler => \&_name },
+              editorb         => { handler => \&_name },
+              editorc         => { handler => \&_name },
+              foreword        => { handler => \&_name },
+              holder          => { handler => \&_name },
+              introduction    => { handler => \&_name },
+              namea           => { handler => \&_name },
+              nameb           => { handler => \&_name },
+              namec           => { handler => \&_name },
+              shortauthor     => { handler => \&_name },
+              shorteditor     => { handler => \&_name },
+              sortname        => { handler => \&_name },
+              translator      => { handler => \&_name },
+              pages           => { handler => \&_range },
+
+              # Verbatim fields
+              doi             => { handler => \&_verbatim },
+              eprint          => { handler => \&_verbatim },
+              file            => { handler => \&_verbatim },
+              pdf             => { aliasof => 'file' },
+              url             => { handler => \&_verbatim },
+              verba           => { handler => \&_verbatim },
+              verbb           => { handler => \&_verbatim },
+              verbc           => { handler => \&_verbatim }
+             };
 
 =head2 extract_entries
 
@@ -151,81 +329,139 @@ sub create_entry {
   $bibentry->set_field('dskey', $dskey);
   $bibentry->set_field('citekey', $citekey);
 
-  my $fields_literal = $struc->get_field_type('literal');
-  my $fields_list = $struc->get_field_type('list');
-  my $fields_verbatim = $struc->get_field_type('verbatim');
-  my $fields_range = $struc->get_field_type('range');
-  my $fields_name = $struc->get_field_type('name');
+  # my $fields_literal = $struc->get_field_type('literal');
+  # my $fields_list = $struc->get_field_type('list');
+  # my $fields_verbatim = $struc->get_field_type('verbatim');
+  # my $fields_range = $struc->get_field_type('range');
+  # my $fields_name = $struc->get_field_type('name');
 
-  # Set entrytype. This may be changed later in process_aliases
-  $bibentry->set_field('entrytype', $entry->getAttribute('entrytype'));
-
-  # Special fields
-
-  # We have to process local options as early as possible in order
-  # to make them available for things that need them like name parsing
-  if (_norm($entry->nodeName) eq 'options') {
-    if (my $node = _resolve_display_mode($biber, $entry, 'options')) {
-      $biber->process_entry_options($dskey, $node->textContent());
+    # Set entrytype taking note of any aliases for this datasource driver
+  if (my $ealias = $DS_EMAP->{$entry->getAttribute('entrytype')}) {
+    $bibentry->set_field('entrytype', $ealias->{aliasof});
+    if (my $alsoset = $ealias->{alsoset}) {
+      unless ($bibentry->field_exists($alsoset->[0])) {
+        $bibentry->set_field($alsoset->[0], $alsoset->[1]);
+      }
     }
   }
-
-  # Literal fields
-  foreach my $f ((@$fields_literal,@$fields_verbatim)) {
-    # Pick out the node with the right mode
-    if (my $node = _resolve_display_mode($biber, $entry, $f)) {
-      $bibentry->set_datafield(_norm($node->nodeName), $node->textContent());
-    }
+  else {
+    $bibentry->set_field('entrytype', $entry->getAttribute('entrytype'));
   }
 
-  # List fields
-  foreach my $f (@$fields_list) {
-    # Pick out the node with the right mode
-    if (my $node = _resolve_display_mode($biber, $entry, $f)) {
-      $bibentry->set_datafield(_norm($node->nodeName), _split_list($node));
-    }
-  }
+  # We put all the fields we find modulo field aliases into the object
+  # validation happens later and is not datasource dependent
+  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes("*")) {
 
-  # Range fields
-  foreach my $f (@$fields_range) {
-    # Pick out the node with the right mode
-    if (my $node = _resolve_display_mode($biber, $entry, $f)) {
-      # List of ranges/values
-      if (my @rangelist = $node->findnodes("./$NS:list/$NS:item")) {
-        my $rl;
-        foreach my $range (@rangelist) {
-          push @$rl, _parse_range_list($range);
+    # We have to process local options as early as possible in order
+    # to make them available for things that need them like name parsing
+    if (_norm($entry->nodeName) eq 'options') {
+      if (my $node = _resolve_display_mode($biber, $entry, 'options')) {
+        $biber->process_entry_options($dskey, $node->textContent());
+      }
+    }
+
+
+    if (my $fm = $DS_FMAP->{_norm($f)}) {
+      my $to = $f; # By default, field to set internally is the same as data source
+      # Redirect any alias
+      if (my $alias = $fm->{aliasof}) {
+        $logger->debug("Found alias '$alias' of field '$f' in entry '$dskey'");
+        # If both a field and its alias is set, warn and delete alias field
+        if ($entry->findnodes("./$NS:$alias")) {
+          # Warn as that's wrong
+          $biber->biber_warn($bibentry, "Field '$f' is aliased to field '$alias' but both are defined in entry with key '$dskey' - skipping field '$f'");
+          next;
         }
-        $bibentry->set_datafield(_norm($node->nodeName), $rl);
+        $fm = $DS_FMAP->{$alias};
+        $to = "$NS:$alias"; # Field to set internally is the alias
       }
-      # Simple range
-      elsif (my $range = $node->findnodes("./$NS:range")->get_node(1)) {
-        $bibentry->set_datafield(_norm($node->nodeName), [ _parse_range_list($range) ]);
-      }
-      # simple list
-      else {
-        $bibentry->set_datafield(_norm($node->nodeName), $node->textContent());
-      }
+      &{$fm->{handler}}($biber, $bibentry, $entry, $f, $to, $dskey);
+    }
+    # Default if no explicit way to set the field
+    else {
+      my $node = _resolve_display_mode($biber, $entry, $f);
+      my $value = $node->textContent();
+      $bibentry->set_datafield($f, $value);
     }
   }
 
-  # Name fields
-  foreach my $f (@$fields_name) {
-    # Pick out the node with the right mode
-    if (my $node = _resolve_display_mode($biber, $entry, $f)) {
-      my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
-      my $names = new Biber::Entry::Names;
-      foreach my $name ($node->findnodes("./$NS:person")) {
-        $names->add_element(parsename($name, $f, {useprefix => $useprefix}));
-      }
-      $bibentry->set_datafield($f, $names);
-    }
-  }
-
-  $bibentry->set_field('datatype', 'bibtex');
+  $bibentry->set_field('datatype', 'biblatexml');
   $bibentries->add_entry($lc_key, $bibentry);
 
   return;
+}
+
+
+
+# Special fields
+sub _special {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  # Pick out the node with the right mode
+  my $node = _resolve_display_mode($biber, $entry, $f);
+  $bibentry->set_datafield(_norm($to), $node->textContent());
+  return;
+}
+
+
+# Literal fields
+sub _literal {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  # Pick out the node with the right mode
+  my $node = _resolve_display_mode($biber, $entry, $f);
+  $bibentry->set_datafield(_norm($to), $node->textContent());
+}
+
+# List fields
+sub _list {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  # Pick out the node with the right mode
+  my $node = _resolve_display_mode($biber, $entry, $f);
+  $bibentry->set_datafield(_norm($to), _split_list($node));
+}
+
+# Range fields
+sub _range {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  # Pick out the node with the right mode
+  my $node = _resolve_display_mode($biber, $entry, $f);
+  # List of ranges/values
+  if (my @rangelist = $node->findnodes("./$NS:list/$NS:item")) {
+    my $rl;
+    foreach my $range (@rangelist) {
+      push @$rl, _parse_range_list($range);
+    }
+    $bibentry->set_datafield(_norm($to), $rl);
+  }
+  # Simple range
+  elsif (my $range = $node->findnodes("./$NS:range")->get_node(1)) {
+    $bibentry->set_datafield(_norm($to), [ _parse_range_list($range) ]);
+  }
+  # simple list
+  else {
+    $bibentry->set_datafield(_norm($to), $node->textContent());
+  }
+}
+
+# Date fields
+sub _date {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  # Pick out the node with the right mode
+  my $node = _resolve_display_mode($biber, $entry, $f);
+  $bibentry->set_datafield(_norm($to), $node->textContent());
+}
+
+
+# Name fields
+sub _name {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  # Pick out the node with the right mode
+  my $node = _resolve_display_mode($biber, $entry, $f);
+  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), lc($dskey));
+  my $names = new Biber::Entry::Names;
+  foreach my $name ($node->findnodes("./$NS:person")) {
+    $names->add_element(parsename($name, $f, {useprefix => $useprefix}));
+  }
+  $bibentry->set_datafield(_norm($to), $names);
 }
 
 =head2 parsename
@@ -420,7 +656,7 @@ sub _resolve_display_mode {
     else {
       $modeattr = "\@mode='$mode'"
     }
-    if (@nodelist = $entry->findnodes("./$NS:${fieldname}[$modeattr]")) {
+    if (@nodelist = $entry->findnodes("./${fieldname}[$modeattr]")) {
       # Check to see if there is more than one entry with a mode and warn
       if ($#nodelist > 0) {
         $logger->warn("Found more than one mode '$mode' '$fieldname' field in entry '" .

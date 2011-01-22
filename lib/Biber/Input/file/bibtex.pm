@@ -27,8 +27,10 @@ my $logger = Log::Log4perl::get_logger('main');
 
 our $cache = {};
 
-# These are entry type aliases we expect to find in the the datasource so
+# These entry type aliases we might find in the the datasource so
 # we can decide how to map and convert them into Biber::Entry objects
+# We are not validating anything here, that comes later and is not
+# datasource specific
 my $DS_EMAP = {
                conference    => { aliasof => 'inproceedings' },
                electronic    => { aliasof => 'online' },
@@ -349,6 +351,8 @@ sub create_entry {
       $bibentry->set_field('entrytype', $entry->type);
     }
 
+    # We put all the fields we find modulo field aliases into the object
+    # validation happens later and is not datasource dependent
     foreach my $f ($entry->fieldlist) {
       # We have to process local options as early as possible in order
       # to make them available for things that need them like parsename()
