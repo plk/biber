@@ -293,6 +293,14 @@
       <optional>
         <!-- Structure specification -->
         <element name="bcf:structure">
+          <!-- Valid datetypes -->
+          <element name="bcf:datetypes">
+            <oneOrMore>
+              <element name="bcf:datetype">
+                <data type="NCName"/>
+              </element>
+            </oneOrMore>
+          </element>
           <!-- Valid entrytypes -->
           <element name="bcf:entrytypes">
             <oneOrMore>

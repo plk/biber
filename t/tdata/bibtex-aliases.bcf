@@ -129,6 +129,12 @@
     </bcf:sort>
   </bcf:sorting>
   <bcf:structure>
+    <bcf:datetypes>
+      <bcf:datetype>date</bcf:datetype>
+      <bcf:datetype>origdate</bcf:datetype>
+      <bcf:datetype>eventdate</bcf:datetype>
+      <bcf:datetype>urldate</bcf:datetype>
+    </bcf:datetypes>
     <bcf:entrytypes>
       <bcf:entrytype>article</bcf:entrytype>
       <bcf:entrytype>artwork</bcf:entrytype>
@@ -190,7 +196,6 @@
       <bcf:field fieldtype="field" datatype="literal">chapter</bcf:field>
       <bcf:field fieldtype="list" datatype="name">commentator</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">crossref</bcf:field>
-      <bcf:field fieldtype="field" datatype="date" skip_output="true">date</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">day</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">doi</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">edition</bcf:field>
@@ -211,7 +216,6 @@
       <bcf:field fieldtype="field" datatype="verbatim">eprint</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eprintclass</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eprinttype</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" skip_output="true">eventdate</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eventday</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eventendday</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eventendmonth</bcf:field>
@@ -267,7 +271,6 @@
       <bcf:field fieldtype="field" datatype="literal">number</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">options</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">organization</bcf:field>
-      <bcf:field fieldtype="field" datatype="date" skip_output="true">origdate</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">origday</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">origendday</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">origendmonth</bcf:field>
@@ -306,7 +309,6 @@
       <bcf:field fieldtype="list" datatype="name">translator</bcf:field>
       <bcf:field fieldtype="field" datatype="key">type</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">url</bcf:field>
-      <bcf:field fieldtype="field" datatype="date" skip_output="true">urldate</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">usera</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">userb</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">userc</bcf:field>
@@ -358,7 +360,12 @@
       <bcf:field>listf</bcf:field>
       <bcf:field>nameaddon</bcf:field>
       <bcf:field>options</bcf:field>
-      <bcf:field>origdate</bcf:field>
+      <bcf:field>origday</bcf:field>
+      <bcf:field>origendday</bcf:field>
+      <bcf:field>origendmonth</bcf:field>
+      <bcf:field>origendyear</bcf:field>
+      <bcf:field>origmonth</bcf:field>
+      <bcf:field>origyear</bcf:field>
       <bcf:field>origlocation</bcf:field>
       <bcf:field>origpublisher</bcf:field>
       <bcf:field>origtitle</bcf:field>
@@ -398,8 +405,12 @@
       <bcf:field>author</bcf:field>
       <bcf:field>journaltitle</bcf:field>
       <bcf:field>title</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
       <bcf:field>addendum</bcf:field>
       <bcf:field>annotator</bcf:field>
       <bcf:field>commentator</bcf:field>
@@ -432,7 +443,12 @@
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>translator</bcf:field>
       <bcf:field>url</bcf:field>
-      <bcf:field>urldate</bcf:field>
+      <bcf:field>urlday</bcf:field>
+      <bcf:field>urlendday</bcf:field>
+      <bcf:field>urlendmonth</bcf:field>
+      <bcf:field>urlendyear</bcf:field>
+      <bcf:field>urlmonth</bcf:field>
+      <bcf:field>urlyear</bcf:field>
       <bcf:field>version</bcf:field>
       <bcf:field>volume</bcf:field>
     </bcf:entryfields>
@@ -440,8 +456,12 @@
       <bcf:entrytype>book</bcf:entrytype>
       <bcf:field>author</bcf:field>
       <bcf:field>title</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
       <bcf:field>addendum</bcf:field>
       <bcf:field>afterword</bcf:field>
       <bcf:field>annotator</bcf:field>
@@ -480,7 +500,12 @@
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>translator</bcf:field>
       <bcf:field>url</bcf:field>
-      <bcf:field>urldate</bcf:field>
+      <bcf:field>urlday</bcf:field>
+      <bcf:field>urlendday</bcf:field>
+      <bcf:field>urlendmonth</bcf:field>
+      <bcf:field>urlendyear</bcf:field>
+      <bcf:field>urlmonth</bcf:field>
+      <bcf:field>urlyear</bcf:field>
       <bcf:field>volume</bcf:field>
       <bcf:field>volumes</bcf:field>
     </bcf:entryfields>
@@ -491,8 +516,12 @@
       <bcf:field>author</bcf:field>
       <bcf:field>title</bcf:field>
       <bcf:field>booktitle</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
       <bcf:field>addendum</bcf:field>
       <bcf:field>afterword</bcf:field>
       <bcf:field>annotator</bcf:field>
@@ -533,7 +562,12 @@
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>translator</bcf:field>
       <bcf:field>url</bcf:field>
-      <bcf:field>urldate</bcf:field>
+      <bcf:field>urlday</bcf:field>
+      <bcf:field>urlendday</bcf:field>
+      <bcf:field>urlendmonth</bcf:field>
+      <bcf:field>urlendyear</bcf:field>
+      <bcf:field>urlmonth</bcf:field>
+      <bcf:field>urlyear</bcf:field>
       <bcf:field>volume</bcf:field>
       <bcf:field>volumes</bcf:field>
     </bcf:entryfields>
@@ -542,8 +576,12 @@
       <bcf:field>author</bcf:field>
       <bcf:field>editor</bcf:field>
       <bcf:field>title</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
       <bcf:field>addendum</bcf:field>
       <bcf:field>chapter</bcf:field>
       <bcf:field>doi</bcf:field>
@@ -561,15 +599,24 @@
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>type</bcf:field>
       <bcf:field>url</bcf:field>
-      <bcf:field>urldate</bcf:field>
+      <bcf:field>urlday</bcf:field>
+      <bcf:field>urlendday</bcf:field>
+      <bcf:field>urlendmonth</bcf:field>
+      <bcf:field>urlendyear</bcf:field>
+      <bcf:field>urlmonth</bcf:field>
+      <bcf:field>urlyear</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
       <bcf:entrytype>collection</bcf:entrytype>
       <bcf:entrytype>reference</bcf:entrytype>
       <bcf:field>editor</bcf:field>
       <bcf:field>title</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
       <bcf:field>addendum</bcf:field>
       <bcf:field>afterword</bcf:field>
       <bcf:field>annotator</bcf:field>
@@ -607,7 +654,12 @@
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>translator</bcf:field>
       <bcf:field>url</bcf:field>
-      <bcf:field>urldate</bcf:field>
+      <bcf:field>urlday</bcf:field>
+      <bcf:field>urlendday</bcf:field>
+      <bcf:field>urlendmonth</bcf:field>
+      <bcf:field>urlendyear</bcf:field>
+      <bcf:field>urlmonth</bcf:field>
+      <bcf:field>urlyear</bcf:field>
       <bcf:field>volume</bcf:field>
       <bcf:field>volumes</bcf:field>
     </bcf:entryfields>
@@ -619,8 +671,12 @@
       <bcf:field>editor</bcf:field>
       <bcf:field>title</bcf:field>
       <bcf:field>booktitle</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
       <bcf:field>addendum</bcf:field>
       <bcf:field>afterword</bcf:field>
       <bcf:field>annotator</bcf:field>
@@ -659,15 +715,24 @@
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>translator</bcf:field>
       <bcf:field>url</bcf:field>
-      <bcf:field>urldate</bcf:field>
+      <bcf:field>urlday</bcf:field>
+      <bcf:field>urlendday</bcf:field>
+      <bcf:field>urlendmonth</bcf:field>
+      <bcf:field>urlendyear</bcf:field>
+      <bcf:field>urlmonth</bcf:field>
+      <bcf:field>urlyear</bcf:field>
       <bcf:field>volume</bcf:field>
       <bcf:field>volumes</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
       <bcf:entrytype>manual</bcf:entrytype>
       <bcf:field>title</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
       <bcf:field>addendum</bcf:field>
       <bcf:field>author</bcf:field>
       <bcf:field>chapter</bcf:field>
@@ -692,14 +757,23 @@
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>type</bcf:field>
       <bcf:field>url</bcf:field>
-      <bcf:field>urldate</bcf:field>
+      <bcf:field>urlday</bcf:field>
+      <bcf:field>urlendday</bcf:field>
+      <bcf:field>urlendmonth</bcf:field>
+      <bcf:field>urlendyear</bcf:field>
+      <bcf:field>urlmonth</bcf:field>
+      <bcf:field>urlyear</bcf:field>
       <bcf:field>version</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
       <bcf:entrytype>misc</bcf:entrytype>
       <bcf:field>title</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
       <bcf:field>addendum</bcf:field>
       <bcf:field>author</bcf:field>
       <bcf:field>doi</bcf:field>
@@ -718,7 +792,12 @@
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>type</bcf:field>
       <bcf:field>url</bcf:field>
-      <bcf:field>urldate</bcf:field>
+      <bcf:field>urlday</bcf:field>
+      <bcf:field>urlendday</bcf:field>
+      <bcf:field>urlendmonth</bcf:field>
+      <bcf:field>urlendyear</bcf:field>
+      <bcf:field>urlmonth</bcf:field>
+      <bcf:field>urlyear</bcf:field>
       <bcf:field>version</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
@@ -735,7 +814,12 @@
       <bcf:field>pubstate</bcf:field>
       <bcf:field>subtitle</bcf:field>
       <bcf:field>titleaddon</bcf:field>
-      <bcf:field>urldate</bcf:field>
+      <bcf:field>urlday</bcf:field>
+      <bcf:field>urlendday</bcf:field>
+      <bcf:field>urlendmonth</bcf:field>
+      <bcf:field>urlendyear</bcf:field>
+      <bcf:field>urlmonth</bcf:field>
+      <bcf:field>urlyear</bcf:field>
       <bcf:field>version</bcf:field>
       <bcf:field>year</bcf:field>
     </bcf:entryfields>
@@ -744,8 +828,12 @@
       <bcf:field>author</bcf:field>
       <bcf:field>title</bcf:field>
       <bcf:field>number</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
       <bcf:field>addendum</bcf:field>
       <bcf:field>doi</bcf:field>
       <bcf:field>eprint</bcf:field>
@@ -760,15 +848,24 @@
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>type</bcf:field>
       <bcf:field>url</bcf:field>
-      <bcf:field>urldate</bcf:field>
+      <bcf:field>urlday</bcf:field>
+      <bcf:field>urlendday</bcf:field>
+      <bcf:field>urlendmonth</bcf:field>
+      <bcf:field>urlendyear</bcf:field>
+      <bcf:field>urlmonth</bcf:field>
+      <bcf:field>urlyear</bcf:field>
       <bcf:field>version</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
       <bcf:entrytype>periodical</bcf:entrytype>
       <bcf:field>editor</bcf:field>
       <bcf:field>title</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
       <bcf:field>addendum</bcf:field>
       <bcf:field>doi</bcf:field>
       <bcf:field>editora</bcf:field>
@@ -792,22 +889,36 @@
       <bcf:field>series</bcf:field>
       <bcf:field>subtitle</bcf:field>
       <bcf:field>url</bcf:field>
-      <bcf:field>urldate</bcf:field>
+      <bcf:field>urlday</bcf:field>
+      <bcf:field>urlendday</bcf:field>
+      <bcf:field>urlendmonth</bcf:field>
+      <bcf:field>urlendyear</bcf:field>
+      <bcf:field>urlmonth</bcf:field>
+      <bcf:field>urlyear</bcf:field>
       <bcf:field>volume</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
       <bcf:entrytype>proceedings</bcf:entrytype>
       <bcf:field>editor</bcf:field>
       <bcf:field>title</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
       <bcf:field>addendum</bcf:field>
       <bcf:field>chapter</bcf:field>
       <bcf:field>doi</bcf:field>
       <bcf:field>eprint</bcf:field>
       <bcf:field>eprintclass</bcf:field>
       <bcf:field>eprinttype</bcf:field>
-      <bcf:field>eventdate</bcf:field>
+      <bcf:field>eventday</bcf:field>
+      <bcf:field>eventendday</bcf:field>
+      <bcf:field>eventendmonth</bcf:field>
+      <bcf:field>eventendyear</bcf:field>
+      <bcf:field>eventmonth</bcf:field>
+      <bcf:field>eventyear</bcf:field>
       <bcf:field>eventtitle</bcf:field>
       <bcf:field>isbn</bcf:field>
       <bcf:field>language</bcf:field>
@@ -828,7 +939,12 @@
       <bcf:field>subtitle</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>url</bcf:field>
-      <bcf:field>urldate</bcf:field>
+      <bcf:field>urlday</bcf:field>
+      <bcf:field>urlendday</bcf:field>
+      <bcf:field>urlendmonth</bcf:field>
+      <bcf:field>urlendyear</bcf:field>
+      <bcf:field>urlmonth</bcf:field>
+      <bcf:field>urlyear</bcf:field>
       <bcf:field>venue</bcf:field>
       <bcf:field>volume</bcf:field>
       <bcf:field>volumes</bcf:field>
@@ -839,8 +955,12 @@
       <bcf:field>editor</bcf:field>
       <bcf:field>title</bcf:field>
       <bcf:field>booktitle</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
       <bcf:field>addendum</bcf:field>
       <bcf:field>booksubtitle</bcf:field>
       <bcf:field>booktitleaddon</bcf:field>
@@ -849,7 +969,12 @@
       <bcf:field>eprint</bcf:field>
       <bcf:field>eprintclass</bcf:field>
       <bcf:field>eprinttype</bcf:field>
-      <bcf:field>eventdate</bcf:field>
+      <bcf:field>eventday</bcf:field>
+      <bcf:field>eventendday</bcf:field>
+      <bcf:field>eventendmonth</bcf:field>
+      <bcf:field>eventendyear</bcf:field>
+      <bcf:field>eventmonth</bcf:field>
+      <bcf:field>eventyear</bcf:field>
       <bcf:field>eventtitle</bcf:field>
       <bcf:field>isbn</bcf:field>
       <bcf:field>language</bcf:field>
@@ -869,7 +994,12 @@
       <bcf:field>subtitle</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>url</bcf:field>
-      <bcf:field>urldate</bcf:field>
+      <bcf:field>urlday</bcf:field>
+      <bcf:field>urlendday</bcf:field>
+      <bcf:field>urlendmonth</bcf:field>
+      <bcf:field>urlendyear</bcf:field>
+      <bcf:field>urlmonth</bcf:field>
+      <bcf:field>urlyear</bcf:field>
       <bcf:field>venue</bcf:field>
       <bcf:field>volume</bcf:field>
       <bcf:field>volumes</bcf:field>
@@ -880,8 +1010,12 @@
       <bcf:field>title</bcf:field>
       <bcf:field>type</bcf:field>
       <bcf:field>institution</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
       <bcf:field>addendum</bcf:field>
       <bcf:field>chapter</bcf:field>
       <bcf:field>doi</bcf:field>
@@ -900,7 +1034,12 @@
       <bcf:field>subtitle</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>url</bcf:field>
-      <bcf:field>urldate</bcf:field>
+      <bcf:field>urlday</bcf:field>
+      <bcf:field>urlendday</bcf:field>
+      <bcf:field>urlendmonth</bcf:field>
+      <bcf:field>urlendyear</bcf:field>
+      <bcf:field>urlmonth</bcf:field>
+      <bcf:field>urlyear</bcf:field>
       <bcf:field>version</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
@@ -909,8 +1048,12 @@
       <bcf:field>title</bcf:field>
       <bcf:field>type</bcf:field>
       <bcf:field>institution</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
       <bcf:field>addendum</bcf:field>
       <bcf:field>chapter</bcf:field>
       <bcf:field>doi</bcf:field>
@@ -927,14 +1070,23 @@
       <bcf:field>subtitle</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>url</bcf:field>
-      <bcf:field>urldate</bcf:field>
+      <bcf:field>urlday</bcf:field>
+      <bcf:field>urlendday</bcf:field>
+      <bcf:field>urlendmonth</bcf:field>
+      <bcf:field>urlendyear</bcf:field>
+      <bcf:field>urlmonth</bcf:field>
+      <bcf:field>urlyear</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
       <bcf:entrytype>unpublished</bcf:entrytype>
       <bcf:field>author</bcf:field>
       <bcf:field>title</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
       <bcf:field>addendum</bcf:field>
       <bcf:field>howpublished</bcf:field>
       <bcf:field>language</bcf:field>
@@ -945,28 +1097,13 @@
       <bcf:field>subtitle</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>url</bcf:field>
-      <bcf:field>urldate</bcf:field>
+      <bcf:field>urlday</bcf:field>
+      <bcf:field>urlendday</bcf:field>
+      <bcf:field>urlendmonth</bcf:field>
+      <bcf:field>urlendyear</bcf:field>
+      <bcf:field>urlmonth</bcf:field>
+      <bcf:field>urlyear</bcf:field>
     </bcf:entryfields>
-    <bcf:constraints>
-      <bcf:entrytype>ALL</bcf:entrytype>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
-        <bcf:field>month</bcf:field>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="datespec">
-        <bcf:field>date</bcf:field>
-        <bcf:field>origdate</bcf:field>
-        <bcf:field>eventdate</bcf:field>
-        <bcf:field>urldate</bcf:field>
-      </bcf:constraint>
-    </bcf:constraints>     
     <bcf:constraints>
       <bcf:entrytype>article</bcf:entrytype>
       <bcf:entrytype>book</bcf:entrytype>
@@ -991,12 +1128,6 @@
       <bcf:entrytype>set</bcf:entrytype>
       <bcf:entrytype>thesis</bcf:entrytype>
       <bcf:entrytype>unpublished</bcf:entrytype>
-      <bcf:constraint type="mandatory">
-        <bcf:fieldxor>
-          <bcf:field coerce="true">date</bcf:field>
-          <bcf:field>year</bcf:field>
-        </bcf:fieldxor>
-      </bcf:constraint>
     </bcf:constraints>     
     <bcf:constraints>
       <bcf:entrytype>set</bcf:entrytype>

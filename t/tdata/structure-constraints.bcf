@@ -129,6 +129,12 @@
     </bcf:sort>
   </bcf:sorting>
   <bcf:structure>
+    <bcf:datetypes>
+      <bcf:datetype>date</bcf:datetype>
+      <bcf:datetype>origdate</bcf:datetype>
+      <bcf:datetype>eventdate</bcf:datetype>
+      <bcf:datetype>urldate</bcf:datetype>
+    </bcf:datetypes>
     <bcf:entrytypes>
       <bcf:entrytype>eta</bcf:entrytype>
       <bcf:entrytype>etb</bcf:entrytype>
@@ -136,67 +142,6 @@
       <bcf:entrytype>etd</bcf:entrytype>
       <bcf:entrytype>misc</bcf:entrytype>
     </bcf:entrytypes>
-    <bcf:aliases>
-      <bcf:alias type="entrytype">
-        <bcf:name>conference</bcf:name>
-        <bcf:realname>inproceedings</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="entrytype">
-        <bcf:name>electronic</bcf:name>
-        <bcf:realname>online</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="entrytype">
-        <bcf:name>mastersthesis</bcf:name>
-        <bcf:realname>thesis</bcf:realname>
-        <bcf:field name="type">mathesis</bcf:field>
-      </bcf:alias>
-      <bcf:alias type="entrytype">
-        <bcf:name>phdthesis</bcf:name>
-        <bcf:realname>thesis</bcf:realname>
-        <bcf:field name="type">phdthesis</bcf:field>
-      </bcf:alias>
-      <bcf:alias type="entrytype">
-        <bcf:name>techreport</bcf:name>
-        <bcf:realname>report</bcf:realname>
-        <bcf:field name="type">techreport</bcf:field>
-      </bcf:alias>
-      <bcf:alias type="entrytype">
-        <bcf:name>www</bcf:name>
-        <bcf:realname>online</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>address</bcf:name>
-        <bcf:realname>location</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>annote</bcf:name>
-        <bcf:realname>annotation</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>archiveprefix</bcf:name>
-        <bcf:realname>eprinttype</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>journal</bcf:name>
-        <bcf:realname>journaltitle</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>key</bcf:name>
-        <bcf:realname>sortkey</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>pdf</bcf:name>
-        <bcf:realname>file</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>primaryclass</bcf:name>
-        <bcf:realname>eprintclass</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>school</bcf:name>
-        <bcf:realname>institution</bcf:realname>
-      </bcf:alias>
-    </bcf:aliases>
     <bcf:fields>
       <bcf:field fieldtype="field" datatype="literal">abstract</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">addendum</bcf:field>
@@ -213,7 +158,6 @@
       <bcf:field fieldtype="field" datatype="literal">chapter</bcf:field>
       <bcf:field fieldtype="list" datatype="name">commentator</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">crossref</bcf:field>
-      <bcf:field fieldtype="field" datatype="date" skip_output="true">date</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">day</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">doi</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">edition</bcf:field>
@@ -234,7 +178,6 @@
       <bcf:field fieldtype="field" datatype="verbatim">eprint</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eprintclass</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eprinttype</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" skip_output="true">eventdate</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eventday</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eventendday</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eventendmonth</bcf:field>
@@ -290,7 +233,6 @@
       <bcf:field fieldtype="field" datatype="literal">number</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">options</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">organization</bcf:field>
-      <bcf:field fieldtype="field" datatype="date" skip_output="true">origdate</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">origday</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">origendday</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">origendmonth</bcf:field>
@@ -327,7 +269,6 @@
       <bcf:field fieldtype="list" datatype="name">translator</bcf:field>
       <bcf:field fieldtype="field" datatype="key">type</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">url</bcf:field>
-      <bcf:field fieldtype="field" datatype="date" skip_output="true">urldate</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">usera</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">userb</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">userc</bcf:field>
@@ -378,8 +319,12 @@
       <bcf:entrytype>eta</bcf:entrytype>
       <bcf:field>author</bcf:field>
       <bcf:field>title</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
       <bcf:entrytype>etb</bcf:entrytype>
@@ -387,8 +332,12 @@
       <bcf:entrytype>etd</bcf:entrytype>
       <bcf:field>author</bcf:field>
       <bcf:field>title</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
       <bcf:field>month</bcf:field>
       <bcf:field>journaltitle</bcf:field>
       <bcf:field>fielda</bcf:field>
@@ -412,35 +361,19 @@
       <bcf:entrytype>misc</bcf:entrytype>
       <bcf:field>author</bcf:field>
       <bcf:field>title</bcf:field>
+      <bcf:field>day</bcf:field>
+      <bcf:field>endday</bcf:field>
+      <bcf:field>endmonth</bcf:field>
+      <bcf:field>endyear</bcf:field>
+      <bcf:field>month</bcf:field>
       <bcf:field>year</bcf:field>
-      <bcf:field>date</bcf:field>
       <bcf:field>month</bcf:field>
       <bcf:field>journaltitle</bcf:field>
     </bcf:entryfields>
     <bcf:constraints>
       <bcf:entrytype>ALL</bcf:entrytype>
-      <bcf:constraint type="mandatory">
-        <bcf:fieldxor>
-          <bcf:field coerce="true">date</bcf:field>
-          <bcf:field>year</bcf:field>
-        </bcf:fieldxor>
-      </bcf:constraint>
-      <bcf:constraint type="conditional">
-        <bcf:antecedent quant="all">
-          <bcf:field>date</bcf:field>
-        </bcf:antecedent>
-        <bcf:consequent quant="none">
-          <bcf:field>month</bcf:field>
-        </bcf:consequent>
-      </bcf:constraint>
       <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
-      </bcf:constraint>
-      <bcf:constraint type="data" datatype="datespec">
-        <bcf:field>date</bcf:field>
-        <bcf:field>origdate</bcf:field>
-        <bcf:field>eventdate</bcf:field>
-        <bcf:field>urldate</bcf:field>
       </bcf:constraint>
     </bcf:constraints>     
     <bcf:constraints>

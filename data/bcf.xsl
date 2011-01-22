@@ -483,6 +483,17 @@
         <xsl:if test="/bcf:controlfile/bcf:structure">
           <hr/>
           <h3>Data structure</h3>
+          <h4>Legal datetypes</h4>
+          <table>
+            <thead>
+              <tr><td>Datetypes</td></tr>
+            </thead>
+            <tbody>
+              <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:datetypes/bcf:datetype">
+              <tr><td><xsl:value-of select="./text()"/></td></tr>
+              </xsl:for-each>
+            </tbody>
+          </table>
           <h4>Legal entrytypes</h4>
           <table>
             <thead>

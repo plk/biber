@@ -176,6 +176,15 @@ sub new {
     $leg_ents->{$es}{constraints} = $constraints;
   }
   $self->{legal_entrytypes} = $leg_ents;
+
+  # date types
+  my $dts;
+  foreach my $dt (@{$struc->{datetypes}{datetype}}) {
+    push @$dts, $dt->{content};
+  }
+
+  $self->{legal_datetypes} = $dts;
+
   return $self;
 }
 
@@ -409,7 +418,7 @@ sub check_data_constraints {
 
 =head2 check_date_components
 
-     Perform content validation checks on data components by trying to
+     Perform content validation checks on date components by trying to
      instantiate a Date::Simple object.
 
 =cut
@@ -421,54 +430,56 @@ sub check_date_components {
   my $et = $be->get_field('entrytype');
   my $citekey = $be->get_field('dskey');
 
-  foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{data}},
-                  @{$self->{legal_entrytypes}{$et}{constraints}{data}})) {
-    if ($c->{datatype} eq 'datespec') {
-      foreach my $f (@{$c->{fields}}) {
-        my ($d) = $f =~ m/\A(.*)date\z/xms;
+  foreach my $f (@{$self->{legal_datetypes}}) {
+    my ($d) = $f =~ m/\A(.*)date\z/xms;
+    # Don't bother unless this type of date is defined (has a year)
+    next unless $be->get_datafield($d . 'year');
 
-        # The only two data source date fields which aren't called "*date" are
-        # YEAR and MONTH. Explicit YEAR doesn't need validating as it can be an
-        # arbitrary string by design. Explicit month can be validated so we do. Then
-        # we validate pseudo-fields which were derived from "*date" fields.
-        if (my $m = $be->get_datafield($d . 'month')) {
-          my $int = $STRUCTURE_DATATYPES{integer};
-          unless ($m =~ /$int/ and $m <= 12 and $m >= 1) {
-            push @warnings, "Invalid value of field 'month' must be and integer between 1 and 12 - ignoring field in entry '$citekey'";
-            $be->del_datafield('month');
-          }
-        }
+    # When checking date components not split from date fields, have ignore the value
+    # of an explicit YEAR field as it is allowed to be an arbitrary string
+    # so we just set it to any valid value for the test
+    my $byc;
+    my $byc_d; # Display value for errors so as not to confuse people
+    if ($d eq '' and not $be->get_field('datesplit')) {
+      $byc = '1900'; # Any valid value is fine
+      $byc_d = 'YYYY';
+    }
+    else {
+      $byc = $be->get_datafield($d . 'year')
+    }
 
-        # Begin date
-        if (my $by = $be->get_pseudodatafield($d . 'year')) {
-          my $bm = $be->get_pseudodatafield($d . 'month') || '01';
-          my $bd = $be->get_pseudodatafield($d . 'day') || '01';
-          my $begin_date = "$by$bm$bd";
-          $logger->debug("Checking date value '$by$bm$bd' for key '$citekey'");
-          unless (Date::Simple->new($begin_date)) {
-            push @warnings, "Invalid value '$begin_date' of date field '$f' - ignoring field in entry '$citekey'";
-            $be->del_pseudodatafield($d . 'year');
-            $be->del_pseudodatafield($d . 'month');
-            $be->del_pseudodatafield($d . 'day');
-            next;
-          }
-        }
-        # End date
-        # defined and some value - end*year can be empty but defined in which case,
-        # we don't need to validate
-        if (my $ey = $be->get_pseudodatafield($d . 'endyear')) {
-          my $em = $be->get_pseudodatafield($d . 'endmonth') || '01';
-          my $ed = $be->get_pseudodatafield($d . 'endday') || '01';
-          my $end_date = "$ey$em$ed";
-          $logger->debug("Checking date value '$ey$em$ed' for key '$citekey'");
-          unless (Date::Simple->new($end_date)) {
-            push @warnings, "Invalid value '$end_date' of date field '$f' - ignoring field in entry '$citekey'";
-            $be->del_pseudodatafield($d . 'endyear');
-            $be->del_pseudodatafield($d . 'endmonth');
-            $be->del_pseudodatafield($d . 'endday');
-            next;
-          }
-        }
+    # Begin date
+    if ($byc) {
+      my $bm = $be->get_datafield($d . 'month') || 'MM';
+      my $bmc = $bm  eq 'MM' ? '01' : $bm;
+      my $bd = $be->get_datafield($d . 'day') || 'DD';
+      my $bdc = $bd  eq 'DD' ? '01' : $bd;
+      $logger->debug("Checking '${d}date' date value '$byc/$bmc/$bdc' for key '$citekey'");
+      unless (Date::Simple->new("$byc$bmc$bdc")) {
+        push @warnings, "Invalid date value '" .
+          ($byc_d || $byc) .
+                "/$bm/$bd' - ignoring its components in entry '$citekey'";
+        $be->del_datafield($d . 'year');
+        $be->del_datafield($d . 'month');
+        $be->del_datafield($d . 'day');
+        next;
+      }
+    }
+    # End date
+    # defined and some value - end*year can be empty but defined in which case,
+    # we don't need to validate
+    if (my $eyc = $be->get_datafield($d . 'endyear')) {
+      my $em = $be->get_datafield($d . 'endmonth') || 'MM';
+      my $emc = $em  eq 'MM' ? '01' : $em;
+      my $ed = $be->get_datafield($d . 'endday') || 'DD';
+      my $edc = $ed  eq 'DD' ? '01' : $ed;
+      $logger->debug("Checking '${d}date' date value '$eyc/$emc/$edc' for key '$citekey'");
+      unless (Date::Simple->new("$eyc$emc$edc")) {
+        push @warnings, "Invalid date value '$eyc/$em/$ed' - ignoring its components in entry '$citekey'";
+        $be->del_datafield($d . 'endyear');
+        $be->del_datafield($d . 'endmonth');
+        $be->del_datafield($d . 'endday');
+        next;
       }
     }
   }

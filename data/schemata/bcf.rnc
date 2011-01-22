@@ -131,6 +131,10 @@ start =
 
     # Structure specification
     element bcf:structure {
+      # Valid datetypes
+      element bcf:datetypes {
+        element bcf:datetype { xsd:NCName }+
+      },
       # Valid entrytypes
       element bcf:entrytypes {
         element bcf:entrytype { xsd:NCName }+

@@ -380,15 +380,6 @@ sub create_entry {
       }
     }
 
-    if ($bibentry->get_pseudodatafield('year') and
-        $bibentry->get_datafield('year')) {
-      $bibentry->del_datafield('year');
-    }
-    if ($bibentry->get_pseudodatafield('month') and
-        $bibentry->get_datafield('month')) {
-      $bibentry->del_datafield('month');
-    }
-
     $bibentry->set_field('datatype', 'bibtex');
     $bibentries->add_entry($lc_key, $bibentry);
   }
@@ -409,7 +400,14 @@ sub _special {
 sub _literal {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   my $value = decode_utf8($entry->get($f));
-  $bibentry->set_datafield($to, $value) unless $bibentry->get_datafield($to);
+
+  # If we have already split some date fields into literal fields
+  # like date -> year/month/day, don't overwrite them with explicit
+  # year/month
+  return if ($to eq 'year' and $bibentry->get_datafield('year'));
+  return if ($to eq 'month' and $bibentry->get_datafield('month'));
+
+  $bibentry->set_datafield($to, $value);
   return;
 }
 
@@ -495,33 +493,33 @@ sub _date {
                   /xms;
   if (my ($byear, $bmonth, $bday, $r, $eyear, $emonth, $eday) =
       $date =~ m|\A$date_re(/)?(?:$date_re)?\z|xms) {
-
+    # did this entry get its year/month fields from splitting an ISO8601 date field?
+    # We only need to know this for date, year/month as year/month can also
+    # be explicitly set. It makes a difference on how we do any potential future
+    # date validation
+    $bibentry->set_field('datesplit', 1) if $datetype eq '';
     # Some warnings for overwriting YEAR and MONTH from DATE
     if ($byear and
         ($datetype . 'year' eq 'year') and
         $entry->get('year')) {
       $biber->biber_warn($bibentry, "Overwriting field 'year' with year value from field 'date' for entry '$dskey'");
-      $bibentry->del_datafield('year');
     }
     if ($bmonth and
         ($datetype . 'month' eq 'month') and
         $entry->get('month')) {
       $biber->biber_warn($bibentry, "Overwriting field 'month' with month value from field 'date' for entry '$dskey'");
-      $bibentry->del_datafield('month');
     }
 
-    # Set these as pseudodata fields as they are not originally in the datasource
-    # but they do need to be inherited in crossrefs/sets
-    $bibentry->set_pseudodatafield($datetype . 'year', $byear)      if $byear;
-    $bibentry->set_pseudodatafield($datetype . 'month', $bmonth)    if $bmonth;
-    $bibentry->set_pseudodatafield($datetype . 'day', $bday)        if $bday;
-    $bibentry->set_pseudodatafield($datetype . 'endmonth', $emonth) if $emonth;
-    $bibentry->set_pseudodatafield($datetype . 'endday', $eday)     if $eday;
+    $bibentry->set_datafield($datetype . 'year', $byear)      if $byear;
+    $bibentry->set_datafield($datetype . 'month', $bmonth)    if $bmonth;
+    $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
+    $bibentry->set_datafield($datetype . 'endmonth', $emonth) if $emonth;
+    $bibentry->set_datafield($datetype . 'endday', $eday)     if $eday;
     if ($r and $eyear) {        # normal range
-      $bibentry->set_pseudodatafield($datetype . 'endyear', $eyear);
+      $bibentry->set_datafield($datetype . 'endyear', $eyear);
     }
     elsif ($r and not $eyear) { # open ended range - endyear is defined but empty
-      $bibentry->set_pseudodatafield($datetype . 'endyear', '');
+      $bibentry->set_datafield($datetype . 'endyear', '');
     }
   }
   else {

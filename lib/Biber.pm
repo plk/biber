@@ -328,6 +328,7 @@ sub parse_ctrlfile {
                                                            qr/\Aconstraints\z/,
                                                            qr/\Aconstraint\z/,
                                                            qr/\Aentrytype\z/,
+                                                           qr/\Adatetype\z/,
                                                           ],
                                           'NsStrip' => 1,
                                           'KeyAttr' => []);
