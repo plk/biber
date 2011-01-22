@@ -36,19 +36,19 @@ my $c2 = [ "Entry 'c2' - invalid field 'badfield' for entrytype 'eta'",
            "Missing mandatory field 'author' in entry 'c2'" ];
 my $c3 = [ "Invalid format (integer) of field 'month' - ignoring field in entry 'c3'" ];
 my $c4 = [ "Invalid value of field 'month' must be '<=12' - ignoring field in entry 'c4'",
-           "Invalid value of field 'usera' must be '>=5' - ignoring field in entry 'c4'" ];
+           "Invalid value of field 'field1' must be '>=5' - ignoring field in entry 'c4'" ];
 # There would also have been a date+year constraint violation in the next test if
 # it weren't for the fact that the date processing in bibtex.pm already deals with this
 # and removed the year field
 my $c5 = [ "Overwriting field 'year' with year value from field 'date' for entry 'c5'",
-           "Constraint violation - none of fields (usere, userf) must exist when all of fields (userb, userc, userd) exist. Ignoring them." ];
-my $c6 = [ "Constraint violation - one of fields (lista, listb) must exist when all of fields (usera, userb) exist",
-           "Constraint violation - all of fields (listc, listd) must exist when all of fields (usere, userf) exist" ];
-my $c7 = [ "Missing mandatory field - one of 'verba, verbb' must be defined in entry 'c7'",
-           "Constraint violation - none of fields (lista) must exist when one of fields (usere, userf) exist. Ignoring them."];
-my $c8 = [ "Constraint violation - none of fields (userd) must exist when none of fields (userb, userc) exist. Ignoring them.",
-           "Constraint violation - one of fields (listd, liste) must exist when none of fields (listb, listc) exist",
-           "Constraint violation - all of fields (listf, verbc) must exist when none of fields (userf) exist" ];
+           "Constraint violation - none of fields (field5, field6) must exist when all of fields (field2, field3, field4) exist. Ignoring them." ];
+my $c6 = [ "Constraint violation - one of fields (field7, field8) must exist when all of fields (field1, field2) exist",
+           "Constraint violation - all of fields (field9, field10) must exist when all of fields (field5, field6) exist" ];
+my $c7 = [ "Missing mandatory field - one of 'fielda, fieldb' must be defined in entry 'c7'",
+           "Constraint violation - none of fields (field7) must exist when one of fields (field5, field6) exist. Ignoring them."];
+my $c8 = [ "Constraint violation - none of fields (field4) must exist when none of fields (field2, field3) exist. Ignoring them.",
+           "Constraint violation - one of fields (field10, field11) must exist when none of fields (field8, field9) exist",
+           "Constraint violation - all of fields (field12, field13) must exist when none of fields (field6) exist" ];
 
 is_deeply($bibentries->entry('c1')->get_field('warnings'), $c1, 'Constraints test 1' );
 is_deeply($bibentries->entry('c2')->get_field('warnings'), $c2, 'Constraints test 2' );
@@ -57,12 +57,12 @@ ok(is_undef($bibentries->entry('c3')->get_field('month')), 'Constraints test 3b'
 is_deeply($bibentries->entry('c4')->get_field('warnings'), $c4, 'Constraints test 4a' );
 ok(is_undef($bibentries->entry('c4')->get_field('month')), 'Constraints test 4b' );
 is_deeply($bibentries->entry('c5')->get_field('warnings'), $c5, 'Constraints test 5a' );
-ok(is_undef($bibentries->entry('c5')->get_field('usere')), 'Constraints test 5b' );
-ok(is_undef($bibentries->entry('c5')->get_field('userf')), 'Constraints test 5c' );
+ok(is_undef($bibentries->entry('c5')->get_field('field5')), 'Constraints test 5b' );
+ok(is_undef($bibentries->entry('c5')->get_field('field6')), 'Constraints test 5c' );
 is_deeply($bibentries->entry('c6')->get_field('warnings'), $c6, 'Constraints test 6' );
 is_deeply($bibentries->entry('c7')->get_field('warnings'), $c7, 'Constraints test 7a' );
-ok(is_undef($bibentries->entry('c7')->get_field('lista')), 'Constraints test 7b' );
+ok(is_undef($bibentries->entry('c7')->get_field('field7')), 'Constraints test 7b' );
 is_deeply($bibentries->entry('c8')->get_field('warnings'), $c8, 'Constraints test 8a' );
-ok(is_undef($bibentries->entry('c8')->get_field('userd')), 'Constraints test 8b' );
+ok(is_undef($bibentries->entry('c8')->get_field('field4')), 'Constraints test 8b' );
 
 unlink <*.utf8>;

@@ -63,7 +63,7 @@ t/15-sections-complex.t
 t/16-encoding.t
 t/17-crossrefs.t
 t/18-structure-dateformats.t
-t/18-structure-aliases.t
+t/18-bibtex-aliases.t
 t/18-structure-constraints.t
 t/19-related-entries.t
 t/pod-coverage.t
@@ -123,7 +123,7 @@ t/tdata/set-legacy.bcf
 t/tdata/set-static.bcf
 t/tdata/set-dynamic.bcf
 t/tdata/uniquename.bcf
-t/tdata/structure-aliases.bcf
-t/tdata/structure-aliases.bib
+t/tdata/bibtex-aliases.bcf
+t/tdata/bibtex-aliases.bib
 t/tdata/structure-constraints.bcf
 t/tdata/structure-constraints.bib

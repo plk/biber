@@ -174,67 +174,6 @@
       <bcf:entrytype>unpublished</bcf:entrytype>
       <bcf:entrytype>video</bcf:entrytype>
     </bcf:entrytypes>
-    <bcf:aliases>
-      <bcf:alias type="entrytype">
-        <bcf:name>conference</bcf:name>
-        <bcf:realname>inproceedings</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="entrytype">
-        <bcf:name>electronic</bcf:name>
-        <bcf:realname>online</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="entrytype">
-        <bcf:name>mastersthesis</bcf:name>
-        <bcf:realname>thesis</bcf:realname>
-        <bcf:field name="type">mathesis</bcf:field>
-      </bcf:alias>
-      <bcf:alias type="entrytype">
-        <bcf:name>phdthesis</bcf:name>
-        <bcf:realname>thesis</bcf:realname>
-        <bcf:field name="type">phdthesis</bcf:field>
-      </bcf:alias>
-      <bcf:alias type="entrytype">
-        <bcf:name>techreport</bcf:name>
-        <bcf:realname>report</bcf:realname>
-        <bcf:field name="type">techreport</bcf:field>
-      </bcf:alias>
-      <bcf:alias type="entrytype">
-        <bcf:name>www</bcf:name>
-        <bcf:realname>online</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>address</bcf:name>
-        <bcf:realname>location</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>annote</bcf:name>
-        <bcf:realname>annotation</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>archiveprefix</bcf:name>
-        <bcf:realname>eprinttype</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>journal</bcf:name>
-        <bcf:realname>journaltitle</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>key</bcf:name>
-        <bcf:realname>sortkey</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>pdf</bcf:name>
-        <bcf:realname>file</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>primaryclass</bcf:name>
-        <bcf:realname>eprintclass</bcf:realname>
-      </bcf:alias>
-      <bcf:alias type="field">
-        <bcf:name>school</bcf:name>
-        <bcf:realname>institution</bcf:realname>
-      </bcf:alias>
-    </bcf:aliases>
     <bcf:fields>
       <bcf:field fieldtype="field" datatype="literal">abstract</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">addendum</bcf:field>
@@ -1198,7 +1137,7 @@
   </bcf:structure>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file">structure-aliases</bcf:datasource>
+    <bcf:datasource type="file">bibtex-aliases</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey>alias1</bcf:citekey>

@@ -13,7 +13,7 @@ chdir("t/tdata") ;
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
-$biber->parse_ctrlfile('structure-aliases.bcf');
+$biber->parse_ctrlfile('bibtex-aliases.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 
 # Options - we could set these in the control file but it's nice to see what we're
