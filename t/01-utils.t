@@ -10,6 +10,7 @@ use Biber::Entry::Names;
 use Biber::Utils;
 use Biber::LaTeX::Recode;
 use Log::Log4perl qw(:easy);
+use IPC::Cmd qw( can_run run );
 use Cwd;
 my $cwd = getcwd;
 
@@ -26,8 +27,13 @@ is(File::Spec->canonpath(locate_biber_file('t/tdata/general1.bcf')), File::Spec-
 # Same place as control file
 Biber::Config->set_ctrlfile_path('t/tdata/general1.bcf');
 is(File::Spec->canonpath(locate_biber_file('t/tdata/examples.bib')), File::Spec->canonpath('t/tdata/examples.bib'), 'File location - 3');
-# using kpsewhich
-like(File::Spec->canonpath(locate_biber_file('biblatex-examples.bib')), qr|[/\\]bibtex[/\\]bib[/\\]biblatex[/\\]biblatex-examples\.bib\z|, 'File location - 4');
+
+SKIP: {
+  skip "No LaTeX installation", 1 unless can_run('kpsewhich');
+  # using kpsewhich
+  like(File::Spec->canonpath(locate_biber_file('biblatex-examples.bib')), qr|[/\\]bibtex[/\\]bib[/\\]biblatex[/\\]biblatex-examples\.bib\z|, 'File location - 4');
+    }
+
 # In output_directory
 Biber::Config->setoption('output_directory', 't/tdata');
 is(File::Spec->canonpath(locate_biber_file('general1.bcf')), File::Spec->canonpath("t/tdata/general1.bcf"), 'File location - 5');
