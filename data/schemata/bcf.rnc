@@ -115,20 +115,7 @@ start =
     }?,
     
     # Global sorting specification
-    element bcf:sorting {
-      # presort default strings for different entry types
-      element bcf:presort {
-        attribute type { xsd:NCName }?,
-        text
-      }+,
-      # excludes of certain fields for sorting for specified types
-      element bcf:sortexclusion {
-        attribute type { text },
-        element bcf:exclusion { xsd:NCName }+
-      }*,
-      sort+
-    },
-
+    sorting,
     # Structure specification
     element bcf:structure {
       # Valid datetypes
@@ -257,6 +244,21 @@ start =
       secspec+
     }
 
+sorting = 
+  element bcf:sorting {
+    # presort default strings for different entry types
+    element bcf:presort {
+      attribute type { xsd:NCName }?,
+      text
+    }+,
+    # excludes of certain fields for sorting for specified types
+    element bcf:sortexclusion {
+      attribute type { text },
+      element bcf:exclusion { xsd:NCName }+
+    }*,
+    sort+
+  }
+
 sort =
   # sort specification
   element bcf:sort {
@@ -308,6 +310,15 @@ secspec =
         attribute members { xsd:string },
         xsd:string ) |
       xsd:string
+    }*,
+    element bcf:sectionlist {
+      attribute label { xsd:string },
+      element bcf:filter {
+        attribute type { "type" | "nottype" | "subtype" | "notsubtype"
+                         | "keyword" | "notkeyword" | "field" | "notfield" },
+        xsd:string
+      }*,
+      sorting+
     }*
   }
 

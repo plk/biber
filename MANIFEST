@@ -24,6 +24,7 @@ lib/Biber/LaTeX/Recode.pm
 lib/Biber/LaTeX/Recode/Data.pm
 lib/Biber/Sections.pm
 lib/Biber/Section.pm
+lib/Biber/Section/List.pm
 lib/Biber/Structure.pm
 lib/Biber/Utils.pm
 doc/biber.tex

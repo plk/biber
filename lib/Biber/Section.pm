@@ -386,6 +386,46 @@ sub get_datasources {
   }
 }
 
+=head2 add_list
+
+    Adds a section list to this section
+
+=cut
+
+sub add_list {
+  my $self = shift;
+  my $list = shift;
+  push @{$self->{lists}}, $list;
+  return;
+}
+
+=head2 get_lists
+
+    Returns an array ref of all section lists
+
+=cut
+
+sub get_lists {
+  my $self = shift;
+  return $self->{lists};
+}
+
+=head2 get_list
+
+    Returns a specific list by label
+
+=cut
+
+sub get_list {
+  my $self = shift;
+  my $label;
+  foreach my $list (@{$self->{lists}}) {
+    return $list if $list->get_label eq lc($label);
+  }
+  return undef;
+}
+
+
 
 =head2 number
 

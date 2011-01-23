@@ -263,33 +263,7 @@
         </element>
       </optional>
       <!-- Global sorting specification -->
-      <element name="bcf:sorting">
-        <oneOrMore>
-          <!-- presort default strings for different entry types -->
-          <element name="bcf:presort">
-            <optional>
-              <attribute name="type">
-                <data type="NCName"/>
-              </attribute>
-            </optional>
-            <text/>
-          </element>
-        </oneOrMore>
-        <zeroOrMore>
-          <!-- excludes of certain fields for sorting for specified types -->
-          <element name="bcf:sortexclusion">
-            <attribute name="type"/>
-            <oneOrMore>
-              <element name="bcf:exclusion">
-                <data type="NCName"/>
-              </element>
-            </oneOrMore>
-          </element>
-        </zeroOrMore>
-        <oneOrMore>
-          <ref name="sort"/>
-        </oneOrMore>
-      </element>
+      <ref name="sorting"/>
       <optional>
         <!-- Structure specification -->
         <element name="bcf:structure">
@@ -582,6 +556,35 @@
       </oneOrMore>
     </element>
   </start>
+  <define name="sorting">
+    <element name="bcf:sorting">
+      <oneOrMore>
+        <!-- presort default strings for different entry types -->
+        <element name="bcf:presort">
+          <optional>
+            <attribute name="type">
+              <data type="NCName"/>
+            </attribute>
+          </optional>
+          <text/>
+        </element>
+      </oneOrMore>
+      <zeroOrMore>
+        <!-- excludes of certain fields for sorting for specified types -->
+        <element name="bcf:sortexclusion">
+          <attribute name="type"/>
+          <oneOrMore>
+            <element name="bcf:exclusion">
+              <data type="NCName"/>
+            </element>
+          </oneOrMore>
+        </element>
+      </zeroOrMore>
+      <oneOrMore>
+        <ref name="sort"/>
+      </oneOrMore>
+    </element>
+  </define>
   <define name="sort">
     <oneOrMore>
       <!-- sort specification -->
@@ -730,6 +733,33 @@
             </group>
             <data type="string"/>
           </choice>
+        </element>
+      </zeroOrMore>
+      <zeroOrMore>
+        <element name="bcf:sectionlist">
+          <attribute name="label">
+            <data type="string"/>
+          </attribute>
+          <zeroOrMore>
+            <element name="bcf:filter">
+              <attribute name="type">
+                <choice>
+                  <value>type</value>
+                  <value>nottype</value>
+                  <value>subtype</value>
+                  <value>notsubtype</value>
+                  <value>keyword</value>
+                  <value>notkeyword</value>
+                  <value>field</value>
+                  <value>notfield</value>
+                </choice>
+              </attribute>
+              <data type="string"/>
+            </element>
+          </zeroOrMore>
+          <oneOrMore>
+            <ref name="sorting"/>
+          </oneOrMore>
         </element>
       </zeroOrMore>
     </element>

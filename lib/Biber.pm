@@ -19,6 +19,7 @@ use Biber::Entry;
 use Biber::Entry::Name;
 use Biber::Sections;
 use Biber::Section;
+use Biber::Section::List;
 use Biber::Structure;
 use Biber::Utils;
 use Storable qw( dclone );
@@ -329,6 +330,8 @@ sub parse_ctrlfile {
                                                            qr/\Aconstraint\z/,
                                                            qr/\Aentrytype\z/,
                                                            qr/\Adatetype\z/,
+                                                           qr/\Asectionlist\z/,
+                                                           qr/\Afilter\z/,
                                                           ],
                                           'NsStrip' => 1,
                                           'KeyAttr' => []);
@@ -610,6 +613,16 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
       }
     }
     $bib_section->add_citekeys(@keys);
+
+    # Add any list specs to the Biber::Section object
+    foreach my $list (@{$section->{sectionlist}}) {
+      my $seclist = Biber::Section::List->new(label => $list->{label});
+      foreach my $filter (@{$list->{filter}}) {
+        $seclist->add_filter($filter->{type}, $filter->{content});
+      }
+      $bib_section->add_list($seclist);
+    }
+
     $bib_sections->add_section($bib_section);
   }
 

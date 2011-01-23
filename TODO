@@ -1,5 +1,9 @@
 TODO in decreasing order of priority:
 
+sorting specs into seclists. presort and exludes are not now global? Need
+to change this before anything else if so.
+
+
 * bltx middlename support made transparent in Name.pm
 * Generalised \printbibliography system
   Filtering
