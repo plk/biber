@@ -58,9 +58,6 @@ my $DS_FMAP = {
 
               # Date fields
               date            => { handler => \&_date },
-              eventdate       => { handler => \&_date },
-              origdate        => { handler => \&_date },
-              urldate         => { handler => \&_date },
 
               # List fields
               address         => { aliasof => 'location' },
@@ -329,13 +326,7 @@ sub create_entry {
   $bibentry->set_field('dskey', $dskey);
   $bibentry->set_field('citekey', $citekey);
 
-  # my $fields_literal = $struc->get_field_type('literal');
-  # my $fields_list = $struc->get_field_type('list');
-  # my $fields_verbatim = $struc->get_field_type('verbatim');
-  # my $fields_range = $struc->get_field_type('range');
-  # my $fields_name = $struc->get_field_type('name');
-
-    # Set entrytype taking note of any aliases for this datasource driver
+  # Set entrytype taking note of any aliases for this datasource driver
   if (my $ealias = $DS_EMAP->{$entry->getAttribute('entrytype')}) {
     $bibentry->set_field('entrytype', $ealias->{aliasof});
     if (my $alsoset = $ealias->{alsoset}) {
@@ -445,11 +436,61 @@ sub _range {
 # Date fields
 sub _date {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
-  # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f);
-  $bibentry->set_datafield(_norm($to), $node->textContent());
-}
+  foreach my $node ($entry->findnodes("./$f")) {
+    my $datetype = $node->getAttribute('datetype') // '';
+    # We are not validating dates here, just syntax parsing
+    my $date_re = qr/(\d{4}) # year
+                     (?:-(\d{2}))? # month
+                     (?:-(\d{2}))? # day
+                    /xms;
+    if (my $start = $node->findnodes("./$NS:start")) { # Date range
+      my $end = $node->findnodes("./$NS:end");
+      # Start of range
+      if (my ($byear, $bmonth, $bday) =
+          $start->get_node(1)->textContent() =~ m|\A$date_re\z|xms) {
+        $bibentry->set_datafield($datetype . 'year', $byear)      if $byear;
+        $bibentry->set_datafield($datetype . 'month', $bmonth)    if $bmonth;
+        $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
+      }
+      else {
+        $biber->biber_warn($bibentry, "Invalid format '" . $start->get_node(1)->textContent() . "' of date field '$f' range start in entry '$dskey' - ignoring");
+      }
 
+      # End of range
+      if (my ($eyear, $emonth, $eday) =
+          $end->get_node(1)->textContent() =~ m|\A(?:$date_re)?\z|xms) {
+        $bibentry->set_datafield($datetype . 'endmonth', $emonth)    if $emonth;
+        $bibentry->set_datafield($datetype . 'endday', $eday)        if $eday;
+        if ($eyear) {           # normal range
+          $bibentry->set_datafield($datetype . 'endyear', $eyear);
+        }
+        else {            # open ended range - endyear is defined but empty
+          $bibentry->set_datafield($datetype . 'endyear', '');
+        }
+      }
+      else {
+        $biber->biber_warn($bibentry, "Invalid format '" . $end->get_node(1)->textContent() . "' of date field '$f' range end in entry '$dskey' - ignoring");
+      }
+    }
+    else { # Simple date
+      if (my ($byear, $bmonth, $bday) =
+          $node->textContent() =~ m|\A$date_re\z|xms) {
+        # did this entry get its year/month fields from splitting an ISO8601 date field?
+        # We only need to know this for date, year/month as year/month can also
+        # be explicitly set. It makes a difference on how we do any potential future
+        # date validation
+        $bibentry->set_field('datesplit', 1) if $datetype eq '';
+        $bibentry->set_datafield($datetype . 'year', $byear)      if $byear;
+        $bibentry->set_datafield($datetype . 'month', $bmonth)    if $bmonth;
+        $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
+      }
+      else {
+        $biber->biber_warn($bibentry, "Invalid format '" . $node->textContent() . "' of date field '$f' in entry '$dskey' - ignoring");
+      }
+    }
+  }
+  return;
+}
 
 # Name fields
 sub _name {
@@ -473,6 +514,9 @@ sub _name {
     { firstname     => 'John',
       firstname_i   => 'J.',
       firstname_it  => 'J',
+      middlename    => 'Fred',
+      middlename_i  => 'F.',
+      middlename_it => 'F',
       lastname      => 'Doe',
       lastname_i    => 'D.',
       lastname_it   => 'D',
@@ -482,8 +526,8 @@ sub _name {
       suffix        => undef,
       suffix_i      => undef,
       suffix_it     => undef,
-      namestring    => 'Doe, John',
-      nameinitstring => 'Doe_J',
+      namestring    => 'Doe, John Fred',
+      nameinitstring => 'Doe_JF',
 
 =cut
 
@@ -494,7 +538,7 @@ sub parsename {
 
   my %namec;
 
-  foreach my $n ('last', 'first', 'prefix', 'suffix') {
+  foreach my $n ('last', 'first', 'middle', 'prefix', 'suffix') {
     # If there is a name component node for this component ...
     if (my $nc_node = $node->findnodes("./$NS:$n")->get_node(1)) {
     # name component with parts
@@ -537,6 +581,11 @@ sub parsename {
     $namestring .= "$f";
   }
 
+  # middlename
+  if (my $m = $namec{middle}) {
+    $namestring .= "$m, ";
+  }
+
   # Remove any trailing comma and space if, e.g. missing firstname
   # Replace any nbspes
   $namestring =~ s/,\s+\z//xms;
@@ -548,6 +597,7 @@ sub parsename {
   $nameinitstr .= $namec{last} if exists($namec{last});
   $nameinitstr .= '_' . $namec{suffix_it} if exists($namec{suffix});
   $nameinitstr .= '_' . $namec{first_it} if exists($namec{first});
+  $nameinitstr .= '_' . $namec{middle_it} if exists($namec{middle});
   $nameinitstr =~ s/\s+/_/g;
   $nameinitstr =~ s/~/_/g;
 
@@ -555,6 +605,9 @@ sub parsename {
     firstname       => $namec{first} // undef,
     firstname_i     => exists($namec{first}) ? $namec{first_i} : undef,
     firstname_it    => exists($namec{first}) ? $namec{first_it} : undef,
+    middlename      => $namec{middle} // undef,
+    middlename_i    => exists($namec{middle}) ? $namec{middle_i} : undef,
+    middlename_it   => exists($namec{middle}) ? $namec{middle_it} : undef,
     lastname        => $namec{last} // undef,
     lastname_i      => exists($namec{last}) ? $namec{last_i} : undef,
     lastname_it     => exists($namec{last}) ? $namec{last_it} : undef,

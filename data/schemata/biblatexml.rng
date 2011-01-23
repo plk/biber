@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar ns="http://biblatex-biber.sourceforge.net/biblatexml" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:user="http://localhost/biblatexml/user" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+<grammar ns="http://biblatex-biber.sourceforge.net/biblatexml" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:bib="http://biblatex-biber.sourceforge.net/biblatexml" xmlns:user="http://localhost/biblatexml/user" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <start>
     <a:documentation>TODO?  change namespace of bib:emphasis, bib:superscript, bib:subscript
        to db = "http://docbook.org/ns/docbook"</a:documentation>
@@ -75,9 +75,6 @@
       </optional>
       <optional>
         <ref name="origtitle"/>
-      </optional>
-      <optional>
-        <ref name="origdate"/>
       </optional>
       <optional>
         <ref name="language"/>
@@ -1823,6 +1820,15 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <attribute name="note"/>
     </optional>
   </define>
+  <define name="attlist.dates">
+    <attribute name="datetype">
+      <choice>
+        <value>orig</value>
+        <value>event</value>
+        <value>url</value>
+      </choice>
+    </attribute>
+  </define>
   <!--
     year.range = (year.range.list | ( year.range.start, year.range.end) )
     year.range.start = element start { xsd:gYear }
@@ -1833,12 +1839,17 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <a:documentation>now same thing for date formats</a:documentation>
     <choice>
       <ref name="pubstate"/>
-      <ref name="date.simple"/>
+      <oneOrMore>
+        <ref name="date.simple"/>
+      </oneOrMore>
       <ref name="date.converted"/>
     </choice>
   </define>
   <define name="date.simple">
     <element name="date">
+      <optional>
+        <ref name="attlist.dates"/>
+      </optional>
       <optional>
         <ref name="attlist.year"/>
       </optional>
@@ -1865,99 +1876,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="pubstate">
     <element name="pubstate">
       <text/>
-    </element>
-  </define>
-  <define name="origdate">
-    <choice>
-      <ref name="origdate.simple"/>
-      <ref name="origdate.converted"/>
-    </choice>
-  </define>
-  <define name="origdate.simple">
-    <element name="origdate">
-      <optional>
-        <ref name="attlist.year"/>
-      </optional>
-      <choice>
-        <ref name="date.type"/>
-        <ref name="date.range"/>
-      </choice>
-    </element>
-  </define>
-  <define name="origdate.converted">
-    <element name="origdate">
-      <attribute name="type">
-        <value>converted</value>
-      </attribute>
-      <element name="value">
-        <choice>
-          <ref name="date.type"/>
-          <ref name="date.range"/>
-        </choice>
-      </element>
-      <ref name="localdate"/>
-    </element>
-  </define>
-  <define name="urldate">
-    <choice>
-      <ref name="urldate.simple"/>
-      <ref name="urldate.converted"/>
-    </choice>
-  </define>
-  <define name="urldate.simple">
-    <element name="urldate">
-      <optional>
-        <ref name="attlist.year"/>
-      </optional>
-      <choice>
-        <ref name="date.type"/>
-        <ref name="date.range"/>
-      </choice>
-    </element>
-  </define>
-  <define name="urldate.converted">
-    <element name="urldate">
-      <attribute name="type">
-        <value>converted</value>
-      </attribute>
-      <element name="value">
-        <choice>
-          <ref name="date.type"/>
-          <ref name="date.range"/>
-        </choice>
-      </element>
-      <ref name="localdate"/>
-    </element>
-  </define>
-  <define name="eventdate">
-    <choice>
-      <ref name="eventdate.simple"/>
-      <ref name="eventdate.converted"/>
-    </choice>
-  </define>
-  <define name="eventdate.simple">
-    <element name="eventdate">
-      <optional>
-        <ref name="attlist.year"/>
-      </optional>
-      <choice>
-        <ref name="date.type"/>
-        <ref name="date.range"/>
-      </choice>
-    </element>
-  </define>
-  <define name="eventdate.converted">
-    <element name="eventdate">
-      <attribute name="type">
-        <value>converted</value>
-      </attribute>
-      <element name="value">
-        <choice>
-          <ref name="date.type"/>
-          <ref name="date.range"/>
-        </choice>
-      </element>
-      <ref name="localdate"/>
     </element>
   </define>
   <define name="date.type">
@@ -2015,12 +1933,19 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="date.range.start">
     <element name="start">
-      <ref name="date.type"/>
+      <choice>
+        <data type="date"/>
+        <data type="gYear"/>
+      </choice>
     </element>
   </define>
   <define name="date.range.end">
     <element name="end">
-      <ref name="date.type"/>
+      <choice>
+        <data type="date"/>
+        <data type="gYear"/>
+        <value/>
+      </choice>
     </element>
   </define>
   <define name="date.range.list">
@@ -5386,9 +5311,6 @@ for instance a reedition.</a:documentation>
       <optional>
         <ref name="doi"/>
       </optional>
-      <optional>
-        <ref name="urldate"/>
-      </optional>
     </interleave>
   </define>
   <define name="BibLaTeXML.article.fields">
@@ -5629,9 +5551,6 @@ for instance a reedition.</a:documentation>
       <optional>
         <ref name="eprint"/>
       </optional>
-      <optional>
-        <ref name="urldate"/>
-      </optional>
     </interleave>
   </define>
   <define name="BibLaTeXML.book.fields">
@@ -5700,9 +5619,6 @@ for instance a reedition.</a:documentation>
       </optional>
       <optional>
         <ref name="url"/>
-      </optional>
-      <optional>
-        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -5851,9 +5767,6 @@ for instance a reedition.</a:documentation>
       </optional>
       <optional>
         <ref name="url"/>
-      </optional>
-      <optional>
-        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -6004,9 +5917,6 @@ for instance a reedition.</a:documentation>
       <optional>
         <ref name="url"/>
       </optional>
-      <optional>
-        <ref name="urldate"/>
-      </optional>
     </interleave>
   </define>
   <define name="BibLaTeXML.inbook.fields">
@@ -6154,9 +6064,6 @@ for instance a reedition.</a:documentation>
       <optional>
         <ref name="url"/>
       </optional>
-      <optional>
-        <ref name="urldate"/>
-      </optional>
     </interleave>
   </define>
   <define name="BibLaTeXML.incollection.fields">
@@ -6278,12 +6185,6 @@ for instance a reedition.</a:documentation>
       <optional>
         <ref name="url"/>
       </optional>
-      <optional>
-        <ref name="urldate"/>
-      </optional>
-      <optional>
-        <ref name="eventdate"/>
-      </optional>
     </interleave>
   </define>
   <define name="BibLaTeXML.inproceedings.fields">
@@ -6371,9 +6272,6 @@ for instance a reedition.</a:documentation>
       <optional>
         <ref name="url"/>
       </optional>
-      <optional>
-        <ref name="urldate"/>
-      </optional>
     </interleave>
   </define>
   <define name="BibLaTeXML.manual.fields">
@@ -6437,9 +6335,6 @@ for instance a reedition.</a:documentation>
       </optional>
       <optional>
         <ref name="url"/>
-      </optional>
-      <optional>
-        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -6505,9 +6400,6 @@ for instance a reedition.</a:documentation>
       <optional>
         <ref name="addendum"/>
       </optional>
-      <optional>
-        <ref name="urldate"/>
-      </optional>
     </interleave>
   </define>
   <define name="BibLaTeXML.online.fields">
@@ -6562,9 +6454,6 @@ for instance a reedition.</a:documentation>
       </optional>
       <optional>
         <ref name="url"/>
-      </optional>
-      <optional>
-        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -6687,12 +6576,9 @@ for instance a reedition.</a:documentation>
       <optional>
         <ref name="eprint"/>
       </optional>
-      <optional>
-        <!--  url? & -->
-        <ref name="urldate"/>
-      </optional>
     </interleave>
   </define>
+  <!--  url? -->
   <define name="BibLaTeXML.periodical.fields">
     <interleave>
       <ref name="BibLaTeXML.periodical.standard.fields"/>
@@ -6828,12 +6714,6 @@ for instance a reedition.</a:documentation>
       <optional>
         <ref name="url"/>
       </optional>
-      <optional>
-        <ref name="urldate"/>
-      </optional>
-      <optional>
-        <ref name="eventdate"/>
-      </optional>
     </interleave>
   </define>
   <define name="BibLaTeXML.proceedings.fields">
@@ -6904,9 +6784,6 @@ for instance a reedition.</a:documentation>
       </optional>
       <optional>
         <ref name="url"/>
-      </optional>
-      <optional>
-        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>
@@ -6996,9 +6873,6 @@ for instance a reedition.</a:documentation>
       <optional>
         <ref name="url"/>
       </optional>
-      <optional>
-        <ref name="urldate"/>
-      </optional>
     </interleave>
   </define>
   <define name="BibLaTeXML.thesis.fields">
@@ -7058,9 +6932,6 @@ for instance a reedition.</a:documentation>
       <optional>
         <ref name="url"/>
       </optional>
-      <optional>
-        <ref name="urldate"/>
-      </optional>
     </interleave>
   </define>
   <define name="BibLaTeXML.unpublished.fields">
@@ -7114,9 +6985,6 @@ for instance a reedition.</a:documentation>
       </optional>
       <optional>
         <ref name="url"/>
-      </optional>
-      <optional>
-        <ref name="urldate"/>
       </optional>
     </interleave>
   </define>

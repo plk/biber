@@ -16,6 +16,7 @@
           <bib:namepart>Абрамович</bib:namepart>
         </bib:first>
         <bib:last>Розенфельд</bib:last>
+        <bib:middle>Билл</bib:middle>
       </bib:person>
       <bib:person>
         <bib:first>
@@ -39,6 +40,7 @@
           <bib:namepart>A.</bib:namepart>
         </bib:first>
         <bib:last>Rozenfeld</bib:last>
+        <bib:middle>Bill</bib:middle>
       </bib:person>
       <bib:person>
         <bib:first>
@@ -60,6 +62,15 @@
     <bib:series>Научно-биографическая литература</bib:series>
     <bib:series mode="romanized">Nauchno-biograficheskaya literatura</bib:series>
     <bib:date>1983</bib:date>
+    <bib:date datetype="orig">1985-04-02</bib:date>
+    <bib:date datetype ="event">
+      <bib:start>1990-05-16</bib:start>
+      <bib:end>1990-05-17</bib:end>
+    </bib:date>
+    <bib:date datetype="url">
+      <bib:start>1991-07-01</bib:start>
+      <bib:end></bib:end>
+    </bib:date>
     <bib:pagetotal>240</bib:pagetotal>
     <bib:reviews>
       <bib:item author="Kennedy" type="Mathematical Reviews">85k:01005a</bib:item>

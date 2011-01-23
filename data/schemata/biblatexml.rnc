@@ -52,7 +52,6 @@ BibLaTeXML.common.fields =
   shorthandintro? &
   shorttitle? &
   origtitle? &
-  origdate? &
   language? &
   origlanguage? &
   script? &
@@ -336,36 +335,19 @@ edition = element edition { xsd:integer | ( attribute string { text } ) }
 ## "approximate" when exact date is uncertain,
 ## "assumed" when it is known but not stated on the document
 attlist.year = attribute appeared { date.type }?, attribute type { "approximate" | "assumed" }?, attribute note { text }?
+attlist.dates = attribute datetype { "orig" | "event" | "url" }
 #year.range = (year.range.list | ( year.range.start, year.range.end) )
 #year.range.start = element start { xsd:gYear }
 #year.range.end = element end { xsd:gYear }
 #year.range.list = element list { element item { xsd:gYear }+ }
 ## now same thing for date formats
-date = ( pubstate | date.simple | date.converted )
-date.simple = element date { attlist.year?, (date.type | date.range) }
+date = ( pubstate | date.simple+ | date.converted )
+date.simple = element date { attlist.dates?, attlist.year?, (date.type | date.range) }
 date.converted = element date {
         attribute type { "converted" },
         element value { date.type | date.range },
         localdate }
 pubstate = element pubstate { text }
-origdate = origdate.simple | origdate.converted
-origdate.simple = element origdate { attlist.year?, (date.type | date.range) }
-origdate.converted = element origdate {
-        attribute type { "converted" },
-        element value { date.type | date.range },
-        localdate }
-urldate = ( urldate.simple | urldate.converted )
-urldate.simple = element urldate { attlist.year?, (date.type | date.range) }
-urldate.converted = element urldate {
-        attribute type { "converted" },
-        element value { date.type | date.range },
-        localdate}
-eventdate = eventdate.simple | eventdate.converted
-eventdate.simple = element eventdate { attlist.year?, (date.type | date.range) }
-eventdate.converted = element eventdate {
-        attribute type { "converted" },
-        element value { date.type | date.range },
-        localdate}
 date.type = (xsd:date | xsd:gYearMonth | xsd:gYear)
 localyear = element localvalue { attlist.localdate, xsd:gYear }
 ## we cannot use the xsd: datatypes for localdate since they serve for Gregorian dates only
@@ -374,8 +356,8 @@ attlist.localdate =
   attribute calendar { "julian" | "hebrew" | "islamic" | "hijrishamsi" | "revolutionary" | "japanese" | "bahai" | "chinese" | "tibetan" | "indian" },
   attribute note { text }?
 date.range = (date.range.list | (date.range.start, date.range.end?) )
-date.range.start = element start { date.type }
-date.range.end = element end { date.type }
+date.range.start = element start { xsd:date | xsd:gYear }
+date.range.end = element end { xsd:date | xsd:gYear | "" }
 date.range.list = element list { element item { (date.type|date.range) }+ }
 
 ## PAGES
@@ -606,7 +588,7 @@ namec = ( element nameC { attlist.lists?, (text | person+) },
          ( element nameC { attlist.lists?, uniform, (text | person+) }+ )
 person = element person {
     attlist.person,
-    ( text | (first, prefix?, last, suffix?) )
+    ( text | (first & prefix? & middle? & last & suffix?) )
   }
 attlist.person |=
   attribute id { text }?,
@@ -620,6 +602,7 @@ attlist.person |=
 first = element first { (text | namepart+) }
 # initials = element initials { text }
 last = element last { (text | namepart+) }
+middle = element middle { (text | namepart+) }
 # middle = element middle { text }
 prefix = element prefix { (text | namepart+) }
 suffix = element suffix { (text | namepart+) }
@@ -690,8 +673,7 @@ BibLaTeXML.article.standard.fields =
   note? &
   issn? &
   addendum? &
-  doi? &
-  urldate?
+  doi?
 BibLaTeXML.article.fields =
   BibLaTeXML.article.standard.fields &
   BibLaTeXML.common.fields &
@@ -757,8 +739,7 @@ BibLaTeXML.book.standard.fields =
   addendum? &
   doi? &
   url? &
-  eprint? &
-  urldate?
+  eprint?
 
 BibLaTeXML.book.fields =
   BibLaTeXML.book.standard.fields &
@@ -786,8 +767,7 @@ BibLaTeXML.booklet.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  url? &
-  urldate?
+  url?
 BibLaTeXML.booklet.fields =
   BibLaTeXML.booklet.standard.fields &
   BibLaTeXML.common.fields &
@@ -835,8 +815,7 @@ BibLaTeXML.collection.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  url? &
-  urldate?
+  url?
 BibLaTeXML.collection.fields =
   BibLaTeXML.collection.standard.fields &
   BibLaTeXML.common.fields &
@@ -886,8 +865,7 @@ BibLaTeXML.inbook.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  url? &
-  urldate?
+  url?
 BibLaTeXML.inbook.fields =
   BibLaTeXML.inbook.standard.fields &
   BibLaTeXML.common.fields &
@@ -936,8 +914,7 @@ BibLaTeXML.incollection.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  url? &
-  urldate?
+  url?
 BibLaTeXML.incollection.fields =
   BibLaTeXML.incollection.standard.fields &
   BibLaTeXML.common.fields &
@@ -979,9 +956,7 @@ BibLaTeXML.inproceedings.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  url? &
-  urldate? &
-  eventdate?
+  url?
 
 BibLaTeXML.inproceedings.fields =
   BibLaTeXML.inproceedings.standard.fields &
@@ -1013,8 +988,7 @@ BibLaTeXML.manual.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  url? &
-  urldate?
+  url?
 BibLaTeXML.manual.fields =
   BibLaTeXML.manual.standard.fields &
   BibLaTeXML.common.fields &
@@ -1037,8 +1011,7 @@ BibLaTeXML.misc.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  url? &
-  urldate?
+  url?
 BibLaTeXML.misc.fields =
   BibLaTeXML.misc.standard.fields &
   BibLaTeXML.common.fields &
@@ -1057,8 +1030,7 @@ BibLaTeXML.online.standard.fields =
   version? &
   note? &
   organization? &
-  addendum? &
-  urldate?
+  addendum?
 BibLaTeXML.online.fields =
   BibLaTeXML.online.standard.fields &
   BibLaTeXML.common.fields &
@@ -1080,8 +1052,7 @@ BibLaTeXML.patent.standard.fields =
   origlocation? &
   note? &
   addendum? &
-  url? &
-  urldate?
+  url?
 BibLaTeXML.patent.fields =
   BibLaTeXML.patent.standard.fields &
   BibLaTeXML.common.fields &
@@ -1136,9 +1107,8 @@ BibLaTeXML.periodical.standard.fields =
   issn? &
   addendum? &
   doi? &
-  eprint? &
-#  url? &
-  urldate?
+  eprint?
+#  url?
 BibLaTeXML.periodical.fields =
   BibLaTeXML.periodical.standard.fields &
   BibLaTeXML.common.fields &
@@ -1180,9 +1150,7 @@ BibLaTeXML.proceedings.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  url? &
-  urldate? &
-  eventdate?
+  url?
 BibLaTeXML.proceedings.fields =
   BibLaTeXML.proceedings.standard.fields &
   BibLaTeXML.common.fields &
@@ -1210,8 +1178,7 @@ BibLaTeXML.report.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  url? &
-  urldate?
+  url?
 BibLaTeXML.report.fields =
   BibLaTeXML.report.standard.fields &
   BibLaTeXML.common.fields &
@@ -1240,8 +1207,7 @@ BibLaTeXML.thesis.standard.fields =
   addendum? &
   doi? &
   eprint? &
-  url? &
-  urldate?
+  url?
 BibLaTeXML.thesis.fields =
   BibLaTeXML.thesis.standard.fields &
   BibLaTeXML.common.fields &
@@ -1260,8 +1226,7 @@ BibLaTeXML.unpublished.standard.fields =
   pagetotal? & #added
   note? &
   addendum? &
-  url? &
-  urldate?
+  url?
 
 BibLaTeXML.unpublished.fields =
   BibLaTeXML.unpublished.standard.fields &
@@ -1283,8 +1248,7 @@ BibLaTeXML.preprint.standard.fields =
   pagetotal? &
   note? &
   addendum? &
-  url? &
-  urldate?
+  url?
 
 BibLaTeXML.preprint.fields =
   BibLaTeXML.preprint.standard.fields &
