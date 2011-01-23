@@ -50,6 +50,9 @@ sub _getnamehash {
       if ( $n->get_firstname ) {
         $initstr .= $n->get_firstname_it;
       }
+      if ( $n->get_middlename ) {
+        $initstr .= $n->get_middlename_it;
+      }
      # without useprefix, prefix is not first in the hash
      if ( $n->get_prefix and not
        Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
@@ -73,6 +76,9 @@ sub _getnamehash {
       $initstr .= $names->nth_element($i)->get_lastname_it;
       if ( $names->nth_element($i)->get_firstname ) {
         $initstr .= $names->nth_element($i)->get_firstname_it;
+      }
+      if ( $names->nth_element($i)->get_middlename ) {
+        $initstr .= $names->nth_element($i)->get_middlename_it;
       }
 
       # without useprefix, prefix is not first in the hash
@@ -105,6 +111,10 @@ sub _getfullhash {
 
     if ( $n->get_firstname ) {
       $initstr .= $n->get_firstname_it;
+    }
+
+    if ( $n->get_middlename ) {
+      $initstr .= $n->get_middlename_it;
     }
 
     # without useprefix, prefix is not first in the hash
@@ -747,6 +757,7 @@ sub _namestring {
     }
     $str .= normalise_string_sort($n->get_lastname, $field) . $nsi;
     $str .= normalise_string_sort($n->get_firstname, $field) . $nsi if $n->get_firstname;
+    $str .= normalise_string_sort($n->get_middlename, $field) . $nsi if $n->get_middlename;
     $str .= normalise_string_sort($n->get_suffix, $field) . $nsi if $n->get_suffix;
 
     # If useprefix is false, use prefix at end of name

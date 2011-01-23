@@ -4,7 +4,7 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More skip_all => 'bltxml not working yet';
-#xuse Test::More tests => 1;
+#use Test::More tests => 1;
 
 use Biber;
 use Biber::Input::file::bibtex;

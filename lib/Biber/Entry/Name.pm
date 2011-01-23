@@ -27,6 +27,9 @@ sub new {
                          firstname
                          firstname_i
                          firstname_it
+                         middlename
+                         middlename_i
+                         middlename_it
                          prefix
                          prefix_i
                          prefix_it
@@ -114,6 +117,52 @@ sub get_firstname_i {
 sub get_firstname_it {
   my $self = shift;
   return $self->{firstname_it};
+}
+
+
+=head2 set_middlename
+
+    Set middlename for a Biber::Entry::Name object
+
+=cut
+
+sub set_middlename {
+  my ($self, $val) = @_;
+  $self->{middlename} = $val;
+  return;
+}
+
+=head2 get_middlename
+
+    Get middlename for a Biber::Entry::Name object
+
+=cut
+
+sub get_middlename {
+  my $self = shift;
+  return $self->{middlename};
+}
+
+=head2 get_middlename_i
+
+    Get middlename initials for a Biber::Entry::Name object
+
+=cut
+
+sub get_middlename_i {
+  my $self = shift;
+  return $self->{middlename_i};
+}
+
+=head2 get_middlename_it
+
+    Get middlename terse initials for a Biber::Entry::Name object
+
+=cut
+
+sub get_middlename_it {
+  my $self = shift;
+  return $self->{middlename_it};
 }
 
 
@@ -331,6 +380,17 @@ sub name_to_bbl {
     $fni = '';
   }
 
+  # middlename
+  my $mn;
+  my $mni;
+  if ($mn = $self->get_middlename) {
+    $mni = Biber::Config->getblxoption('terseinits') ? $self->get_middlename_it : $self->get_middlename_i;
+  }
+  else {
+    $mn = '';
+    $mni = '';
+  }
+
   # prefix
   my $pre;
   my $prei;
@@ -369,7 +429,13 @@ sub name_to_bbl {
   # Bernard {H.\,P.} -> Bernard~{H.\,P.}
   $fn =~ s/\s+(\p{Lu}\.|$RE{balanced}{-parens=>'{}'})/~$1/g;
   $pre =~ s/\s/~/g if $pre;       # van der -> van~der
-  return "      {{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
+  # BIBLATEXML supports middle names
+  if ($self->get_middlename) {
+    return "      {{$ln}{$lni}{$fn}{$fni}{$mn}{$mni}{$pre}{$prei}{$suf}{$sufi}}%\n";
+  }
+  else {
+    return "      {{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
+  }
 }
 
 
