@@ -2,14 +2,18 @@ TODO in decreasing order of priority:
 
 * bltx middlename support made transparent in Name.pm
 * Generalised \printbibliography system
+  Filtering
+  - type/nottype (get_field('entrytype') eq ??)
+  - subtype/notsubtype (get_field('entrysubtype') eq ??)
+  - keyword/notkeyword (has_keyword)
+  - field/notfield (field available/missing) (field_exists)
+
 * Zotero? http://www.zotero.org/support/dev/start
   https://api.zotero.org/users/<USERID>/items/<iTEMID>?key=<APIKEY>
   gives a parseable ATOM XML with the information in
 * biblatex implements generalised crossref, related entries, structure defs
 * When biblatex implements interface and bcf for crossref inheritance,
   take out conditional in control file read and also change schema (biblatex 1.2)
-* ALL fields need to be put into types where possible
-* Generalised data/sorting options split to allow different e.g. sorting
-  options to \printbibliography
+* Structure ALL fields need to be put into types where possible
 * merge in the "unique" branch to implement full uniquename/list
-  automation. Needs new .bbl format and biblatex support (biblatex 1.2)
+  automation. Needs new .bbl format and biblatex support (biblatex 1.3)

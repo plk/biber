@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 11;
+use Test::More tests => 14;
 
 use Biber;
 use Biber::Output::BBL;
@@ -26,7 +26,6 @@ Biber::Config->setoption('fastsort', 1);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-
 
 my @keys = sort $section->get_citekeys;
 my @citedkeys = sort qw{ murray t1 kant:ku kant:kpv t2 };
@@ -188,6 +187,7 @@ my $t1 = q|  \entry{t1}{misc}{}
     \count{uniquename}{0}
     \field{title}{Normal things {$^{3}$}}
     \field{year}{1992}
+    \keyw{primary, something,somethingelse}
   \endentry
 
 |;
@@ -216,6 +216,9 @@ my $Worman_N = [ 'WN1', 'WN2' ] ;
 my $Gennep = [ 'vGA1', 'vGJ1' ] ;
 
 is( $out->get_output_entry('t1'), $t1, 'bbl entry with maths in title 1' ) ;
+ok( $bibentries->entry('t1')->has_keyword('primary'), 'Keywords test - 1' ) ;
+ok( $bibentries->entry('t1')->has_keyword('something'), 'Keywords test - 2' ) ;
+ok( $bibentries->entry('t1')->has_keyword('somethingelse'), 'Keywords test - 3' ) ;
 is( $out->get_output_entry('t2'), $t2, 'bbl entry with maths in title 2' ) ;
 is_deeply( Biber::Config->_get_uniquename('Worman_N'), $Worman_N, 'uniquename count 1') ;
 is_deeply( Biber::Config->_get_uniquename('Gennep'), $Gennep, 'uniquename count 2') ;

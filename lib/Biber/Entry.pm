@@ -194,6 +194,27 @@ sub fields {
   return sort keys %keys;
 }
 
+=head2 has_keyword
+
+    Check if a Biber::Entry object has a particular keyword in
+    in the keyword field.
+
+=cut
+
+sub has_keyword {
+  my $self = shift;
+  my $keyword = shift;
+  if (my $keywords = $self->{datafields}{keywords}) {
+    return (first {lc($_) eq lc($keyword)} split(/\s*,\s*/, $keywords)) ? 1 : 0;
+  }
+  else {
+    return 0;
+  }
+  return undef; # shouldn't get here
+}
+
+
+
 =head2 add_warning
 
     Append a warning to a Biber::Entry object
