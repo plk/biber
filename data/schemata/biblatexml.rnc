@@ -598,7 +598,8 @@ attlist.person |=
   # FIXME
   attribute yearofbirth { xsd:integer }?,
   attribute yearofdeath { xsd:integer }?,
-  attribute gender { "male" | "female" }?
+  attribute gender { "male" | "female" }?,
+  attribute useprefix { "yes" | "no" }?
 first = element first { (text | namepart+) }
 # initials = element initials { text }
 last = element last { (text | namepart+) }
