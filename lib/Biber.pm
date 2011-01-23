@@ -444,72 +444,7 @@ sub parse_ctrlfile {
     }
   }
 
-  my $sorting_label = [];
-  my $sorting_final = [];
-  foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$bcfxml->{sorting}{sort}}) {
-    my $sortingitems_label;
-    my $sortingitems_final;
-
-    # Determine which sorting pass(es) to include the item in
-    my $whichpass = ($sort->{pass} or 'both');
-
-    # Generate sorting pass structures
-    foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
-      my $sortitemattributes = {};
-      if (defined($sortitem->{substring_side})) { # Found sorting substring side attribute
-        $sortitemattributes->{substring_side} = $sortitem->{substring_side};
-      }
-      if (defined($sortitem->{substring_width})) { # Found sorting substring length attribute
-        $sortitemattributes->{substring_width} = $sortitem->{substring_width};
-      }
-      if (defined($sortitem->{pad_width})) { # Found sorting pad length attribute
-        $sortitemattributes->{pad_width} = $sortitem->{pad_width};
-      }
-      if (defined($sortitem->{pad_char})) { # Found sorting pad char attribute
-        $sortitemattributes->{pad_char} = $sortitem->{pad_char};
-      }
-      if (defined($sortitem->{pad_side})) { # Found sorting pad side attribute
-        $sortitemattributes->{pad_side} = $sortitem->{pad_side};
-      }
-
-      # No pass specified, sortitem is included in both sort passes
-      # Note that we're cloning the sortitemattributes object so as not to have pointers
-      # from one structure to the other
-      if (lc($whichpass) eq 'both') {
-        push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
-        push @{$sortingitems_final}, {$sortitem->{content} => dclone($sortitemattributes)};
-      }
-
-      # "label" specified, sortitem is included only on "label" sort pass
-      elsif (lc($whichpass) eq 'label') {
-        push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
-      }
-
-      # "final" specified, sortitem is included only on "final" sort pass
-      elsif (lc($whichpass) eq 'final') {
-        push @{$sortingitems_final}, {$sortitem->{content} => $sortitemattributes};
-      }
-    }
-
-    # Only push a sortitem if defined. If the item has a conditional "pass"
-    # attribute, it may be ommitted in which case we don't want an empty array ref
-    # pushing
-    # Also, we only push the sort attributes if there are any sortitems otherwise
-    # we end up with a blank sort
-    my $sopts;
-    $sopts->{final}          = $sort->{final}          if defined($sort->{final});
-    $sopts->{sort_direction} = $sort->{sort_direction} if defined($sort->{sort_direction});
-    $sopts->{sortcase}       = $sort->{sortcase}       if defined($sort->{sortcase});
-    $sopts->{sortupper}      = $sort->{sortupper}      if defined($sort->{sortupper});
-    if (defined($sortingitems_label)) {
-      unshift @{$sortingitems_label}, $sopts;
-      push @{$sorting_label}, $sortingitems_label;
-    }
-    if (defined($sortingitems_final)) {
-      unshift @{$sortingitems_final}, $sopts;
-      push @{$sorting_final}, $sortingitems_final;
-    }
-  }
+  my ($sorting_label, $sorting_final) = _parse_sort($bcfxml->{sorting});
 
   Biber::Config->setblxoption('sorting', {default => {label => $sorting_label,
                                                       final => $sorting_final,
@@ -620,6 +555,12 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
       foreach my $filter (@{$list->{filter}}) {
         $seclist->add_filter($filter->{type}, $filter->{content});
       }
+
+      my ($sorting_label, $sorting_final) = _parse_sort($list->{sorting});
+
+      $seclist->set_sortspec({label => $sorting_label,
+                              final => $sorting_final,
+                              schemes_same => Compare($sorting_label, $sorting_final)});
       $bib_section->add_list($seclist);
     }
 
@@ -2035,6 +1976,84 @@ sub create_output_misc {
   return;
 }
 
+=head2 _parse_sort
+
+   Convenience sub to parse a .bcf sorting section and return nice
+   objects for the label and final sort passes.
+
+=cut
+
+sub _parse_sort {
+  my $root_obj = shift;
+  my $sorting_label;
+  my $sorting_final;
+
+  foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$root_obj->{sort}}) {
+    my $sortingitems_label;
+    my $sortingitems_final;
+
+    # Determine which sorting pass(es) to include the item in
+    my $whichpass = ($sort->{pass} or 'both');
+
+    # Generate sorting pass structures
+    foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
+      my $sortitemattributes = {};
+      if (defined($sortitem->{substring_side})) { # Found sorting substring side attribute
+        $sortitemattributes->{substring_side} = $sortitem->{substring_side};
+      }
+      if (defined($sortitem->{substring_width})) { # Found sorting substring length attribute
+        $sortitemattributes->{substring_width} = $sortitem->{substring_width};
+      }
+      if (defined($sortitem->{pad_width})) { # Found sorting pad length attribute
+        $sortitemattributes->{pad_width} = $sortitem->{pad_width};
+      }
+      if (defined($sortitem->{pad_char})) { # Found sorting pad char attribute
+        $sortitemattributes->{pad_char} = $sortitem->{pad_char};
+      }
+      if (defined($sortitem->{pad_side})) { # Found sorting pad side attribute
+        $sortitemattributes->{pad_side} = $sortitem->{pad_side};
+      }
+
+      # No pass specified, sortitem is included in both sort passes
+      # Note that we're cloning the sortitemattributes object so as not to have pointers
+      # from one structure to the other
+      if (lc($whichpass) eq 'both') {
+        push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
+        push @{$sortingitems_final}, {$sortitem->{content} => dclone($sortitemattributes)};
+      }
+
+      # "label" specified, sortitem is included only on "label" sort pass
+      elsif (lc($whichpass) eq 'label') {
+        push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
+      }
+
+      # "final" specified, sortitem is included only on "final" sort pass
+      elsif (lc($whichpass) eq 'final') {
+        push @{$sortingitems_final}, {$sortitem->{content} => $sortitemattributes};
+      }
+    }
+
+    # Only push a sortitem if defined. If the item has a conditional "pass"
+    # attribute, it may be ommitted in which case we don't want an empty array ref
+    # pushing
+    # Also, we only push the sort attributes if there are any sortitems otherwise
+    # we end up with a blank sort
+    my $sopts;
+    $sopts->{final}          = $sort->{final}          if defined($sort->{final});
+    $sopts->{sort_direction} = $sort->{sort_direction} if defined($sort->{sort_direction});
+    $sopts->{sortcase}       = $sort->{sortcase}       if defined($sort->{sortcase});
+    $sopts->{sortupper}      = $sort->{sortupper}      if defined($sort->{sortupper});
+    if (defined($sortingitems_label)) {
+      unshift @{$sortingitems_label}, $sopts;
+      push @{$sorting_label}, $sortingitems_label;
+    }
+    if (defined($sortingitems_final)) {
+      unshift @{$sortingitems_final}, $sopts;
+      push @{$sorting_final}, $sortingitems_final;
+    }
+  }
+  return ($sorting_label, $sorting_final);
+}
 
 =head2 _filedump and _stringdump
 

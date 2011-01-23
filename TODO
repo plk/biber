@@ -1,7 +1,6 @@
 TODO in decreasing order of priority:
 
-sorting specs into seclists. Leave presort and excludes global.
-sorting in spec lists is optional, uses global sort spec otherwise
+Global sortspec is in Config, per-list is in list - ok?
 
 * bltx middlename support made transparent in Name.pm
 * Generalised \printbibliography system

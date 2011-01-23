@@ -45,6 +45,32 @@ sub get_label {
   return $self->{label};
 }
 
+
+=head2 set_sortspec
+
+    Sets the sortspec of a list
+
+=cut
+
+sub set_sortspec {
+  my $self = shift;
+  my $sortspec = shift;
+  $self->{sortspec} = $sortspec;
+  return;
+}
+
+=head2 get_sortspec
+
+    Gets the sortspec of a list
+
+=cut
+
+sub get_sortspec {
+  my $self = shift;
+  return $self->{sortspec};
+}
+
+
 =head2 add_filter
 
     Adds a filter to a list object
