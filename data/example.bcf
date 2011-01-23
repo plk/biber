@@ -1348,12 +1348,6 @@
       <bcf:filter type="field">editor,translator</bcf:filter>
       <bcf:filter type="notkeyword">ignore</bcf:filter>
       <bcf:sorting>
-        <bcf:presort>mm</bcf:presort>
-        <bcf:presort type="misc">ww</bcf:presort>
-        <bcf:sortexclusion type="misc">
-          <bcf:exclusion>year</bcf:exclusion>
-          <bcf:exclusion>title</bcf:exclusion>
-        </bcf:sortexclusion>
         <bcf:sort order="1" pass="label">
           <bcf:sortitem order="1">labelalpha</bcf:sortitem>
         </bcf:sort>

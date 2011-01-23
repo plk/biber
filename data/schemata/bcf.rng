@@ -757,9 +757,11 @@
               <data type="string"/>
             </element>
           </zeroOrMore>
-          <oneOrMore>
-            <ref name="sorting"/>
-          </oneOrMore>
+          <element name="bcf:sorting">
+            <oneOrMore>
+              <ref name="sort"/>
+            </oneOrMore>
+          </element>
         </element>
       </zeroOrMore>
     </element>

@@ -1,7 +1,6 @@
 TODO in decreasing order of priority:
 
-sorting specs into seclists. presort and exludes are not now global? Need
-to change this before anything else if so.
+sorting specs into seclists. Leave presort and excludes global.
 
 
 * bltx middlename support made transparent in Name.pm

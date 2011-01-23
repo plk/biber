@@ -318,7 +318,9 @@ secspec =
                          | "keyword" | "notkeyword" | "field" | "notfield" },
         xsd:string
       }*,
-      sorting+
+      element bcf:sorting {
+        sort+
+      }
     }*
   }
 
