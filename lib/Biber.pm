@@ -514,11 +514,14 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         $seclist->add_filter($filter->{type}, $filter->{content});
       }
 
-      my ($sorting_label, $sorting_final) = _parse_sort($list->{sorting});
 
-      $seclist->set_sortspec({label => $sorting_label,
-                              final => $sorting_final,
-                              schemes_same => Compare($sorting_label, $sorting_final)});
+      if ($list->{sorting}) { # can be undef for fallback to global sorting
+        my ($sorting_label, $sorting_final) = _parse_sort($list->{sorting});
+
+        $seclist->set_sortspec({label => $sorting_label,
+                                final => $sorting_final,
+                                schemes_same => Compare($sorting_label, $sorting_final)});
+      }
       $bib_section->add_list($seclist);
     }
 
