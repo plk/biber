@@ -8,6 +8,7 @@
           <bib:namepart>Павел</bib:namepart>
           <bib:namepart>Георгиевич</bib:namepart>
         </bib:first>
+        <bib:firstinitial>П</bib:firstinitial>
         <bib:last>Булгаков</bib:last>
       </bib:person>
       <bib:person>
@@ -15,8 +16,10 @@
           <bib:namepart>Борис</bib:namepart>
           <bib:namepart>Абрамович</bib:namepart>
         </bib:first>
+        <bib:firstinitial>Б. B.</bib:firstinitial>
         <bib:last>Розенфельд</bib:last>
         <bib:middle>Билл</bib:middle>
+        <bib:middleinitial>д</bib:middleinitial>
       </bib:person>
       <bib:person>
         <bib:first>

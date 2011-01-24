@@ -4997,14 +4997,29 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <interleave>
           <ref name="first"/>
           <optional>
+            <ref name="firstinitial"/>
+          </optional>
+          <optional>
             <ref name="prefix"/>
+          </optional>
+          <optional>
+            <ref name="prefixinitial"/>
           </optional>
           <optional>
             <ref name="middle"/>
           </optional>
+          <optional>
+            <ref name="middleinitial"/>
+          </optional>
           <ref name="last"/>
           <optional>
+            <ref name="lastinitial"/>
+          </optional>
+          <optional>
             <ref name="suffix"/>
+          </optional>
+          <optional>
+            <ref name="suffixinitial"/>
           </optional>
         </interleave>
       </choice>
@@ -5059,6 +5074,11 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       </choice>
     </element>
   </define>
+  <define name="firstinitial">
+    <element name="firstinitial">
+      <text/>
+    </element>
+  </define>
   <!-- initials = element initials { text } -->
   <define name="last">
     <element name="last">
@@ -5070,6 +5090,11 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       </choice>
     </element>
   </define>
+  <define name="lastinitial">
+    <element name="lastinitial">
+      <text/>
+    </element>
+  </define>
   <define name="middle">
     <element name="middle">
       <choice>
@@ -5078,6 +5103,11 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           <ref name="namepart"/>
         </oneOrMore>
       </choice>
+    </element>
+  </define>
+  <define name="middleinitial">
+    <element name="middleinitial">
+      <text/>
     </element>
   </define>
   <!-- middle = element middle { text } -->
@@ -5091,6 +5121,11 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       </choice>
     </element>
   </define>
+  <define name="prefixinitial">
+    <element name="prefixinitial">
+      <text/>
+    </element>
+  </define>
   <define name="suffix">
     <element name="suffix">
       <choice>
@@ -5099,6 +5134,11 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           <ref name="namepart"/>
         </oneOrMore>
       </choice>
+    </element>
+  </define>
+  <define name="suffixinitial">
+    <element name="suffixinitial">
+      <text/>
     </element>
   </define>
   <define name="namepart">

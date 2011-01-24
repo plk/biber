@@ -545,13 +545,31 @@ sub parsename {
       if (my @parts = map {$_->textContent()} $nc_node->findnodes("./$NS:namepart")) {
         $namec{$n} = _join_name_parts(\@parts);
         $logger->debug("      Found name component '$n': " . $namec{$n});
-        ($namec{"${n}_i"}, $namec{"${n}_it"}) = _gen_initials(\@parts);
+        if (my $nin = $node->findnodes("./$NS:${n}initial")->get_node(1)) {
+          my $ni = $nin->textContent();
+          $ni =~ s/\.\z//xms; # normalise initials to without period
+          $ni =~ s/\s+/~/xms; # normalise spaces to ties
+          $namec{"${n}_it"} = $ni;
+          $namec{"${n}_i"} = $ni . '.';
+        }
+        else {
+          ($namec{"${n}_i"}, $namec{"${n}_it"}) = _gen_initials(\@parts);
+        }
       }
       # with no parts
       elsif (my $t = $nc_node->textContent()) {
-        $logger->debug("      Found name component '$n': $t");
         $namec{$n} = $t;
-        ($namec{"${n}_i"}, $namec{"${n}_it"}) = _gen_initials([$t]);
+        $logger->debug("      Found name component '$n': $t");
+        if (my $nin = $node->findnodes("./$NS:${n}initial")->get_node(1)) {
+          my $ni = $nin->textContent();
+          $ni =~ s/\.\z//xms; # normalise initials to without period
+          $ni =~ s/\s+/~/xms; # normalise spaces to ties
+          $namec{"${n}_it"} = $ni;
+          $namec{"${n}_i"} = $ni . '.';
+        }
+        else {
+          ($namec{"${n}_i"}, $namec{"${n}_it"}) = _gen_initials([$t]);
+        }
       }
     }
   }

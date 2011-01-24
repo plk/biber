@@ -588,7 +588,16 @@ namec = ( element nameC { attlist.lists?, (text | person+) },
          ( element nameC { attlist.lists?, uniform, (text | person+) }+ )
 person = element person {
     attlist.person,
-    ( text | (first & prefix? & middle? & last & suffix?) )
+    ( text | (first &
+              firstinitial? &
+              prefix? &
+              prefixinitial? &
+              middle? &
+              middleinitial? &
+              last &
+              lastinitial? &
+              suffix? &
+              suffixinitial?) )
   }
 attlist.person |=
   attribute id { text }?,
@@ -601,12 +610,17 @@ attlist.person |=
   attribute gender { "male" | "female" }?,
   attribute useprefix { "yes" | "no" }?
 first = element first { (text | namepart+) }
+firstinitial = element firstinitial { text }
 # initials = element initials { text }
 last = element last { (text | namepart+) }
+lastinitial = element lastinitial { text }
 middle = element middle { (text | namepart+) }
+middleinitial = element middleinitial { text }
 # middle = element middle { text }
 prefix = element prefix { (text | namepart+) }
+prefixinitial = element prefixinitial { text }
 suffix = element suffix { (text | namepart+) }
+suffixinitial = element suffixinitial { text }
 namepart = element namepart { text }
 keywords |= element keywords { list {xsd:string+} | item+ }  #NB in biblatex this list is comma-separated, here it is separated by whitespace or itemized
 reprintinfo = element reprintinfo { attlist.reprintinfo | (attribute note {text}?, text) }
