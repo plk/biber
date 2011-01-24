@@ -78,6 +78,7 @@ sub new {
       Biber::Config->setcmdlineoption($_, $opts{$_});
     }
   }
+
   return $self;
 }
 
@@ -505,6 +506,29 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     $bib_section->set_datasources($bibdatasources{$section->{number}}) unless
       $bib_section->get_datasources;
 
+
+    # Add any list specs to the Biber::Section object
+    foreach my $list (@{$section->{sectionlist}}) {
+      my $seclist = Biber::Section::List->new(label => $list->{label});
+      foreach my $filter (@{$list->{filter}}) {
+        $seclist->add_filter($filter->{type}, $filter->{content});
+      }
+
+      my ($sorting_label, $sorting_final) = _parse_sort($list->{sorting});
+
+      $seclist->set_sortspec({label => $sorting_label,
+                              final => $sorting_final,
+                              schemes_same => Compare($sorting_label, $sorting_final)});
+      $bib_section->add_list($seclist);
+    }
+
+    # Intermediate code until biblatex moves main \printbibliography to a list
+    # MAIN list has no filter and no sorting spec so it uses all citekeys and the
+    # global sort default.
+    unless ($bib_section->get_list('MAIN')) {
+      $bib_section->add_list(Biber::Section::List->new(label => 'MAIN'));
+    }
+
     # Stop reading citekeys if we encounter "*" as a citation as this means
     # "all keys"
     my @keys = ();
@@ -547,23 +571,8 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         $logger->debug("The citekeys for section " . $section->{number} . " are:\n", "@debug_keys", "\n");
       }
     }
+
     $bib_section->add_citekeys(@keys);
-
-    # Add any list specs to the Biber::Section object
-    foreach my $list (@{$section->{sectionlist}}) {
-      my $seclist = Biber::Section::List->new(label => $list->{label});
-      foreach my $filter (@{$list->{filter}}) {
-        $seclist->add_filter($filter->{type}, $filter->{content});
-      }
-
-      my ($sorting_label, $sorting_final) = _parse_sort($list->{sorting});
-
-      $seclist->set_sortspec({label => $sorting_label,
-                              final => $sorting_final,
-                              schemes_same => Compare($sorting_label, $sorting_final)});
-      $bib_section->add_list($seclist);
-    }
-
     $bib_sections->add_section($bib_section);
   }
 
@@ -631,7 +640,7 @@ sub instantiate_dynamic {
     $be->set_field('citekey', $dset);
     $be->set_field('datatype', 'dynamic');
     $section->bibentries->add_entry($dset, $be);
-    # Setting dataonly for members is handled by postprocess_sets()
+    # Setting dataonly for members is handled by process_sets()
   }
 
   # Instantiate any related entry clones we need
@@ -793,57 +802,57 @@ sub validate_structure {
   }
 }
 
-=head2 postprocess
+=head2 process
 
-    Various postprocessing operations, mostly to generate special fields for
-    biblatex. This method is automatically called by C<prepare>.
+    Main processing operations, to generate metadata and entry information
+    This method is automatically called by C<prepare>.
     Here we parse names, generate the "namehash" and the strings for
     "labelname", "labelyear", "labelalpha", "sortstrings", etc.
 
 =cut
 
-sub postprocess {
+sub process {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   foreach my $citekey ( $section->get_citekeys ) {
     $logger->debug("Postprocessing entry '$citekey' from section $secnum");
 
-    # post process "set" entries:
-    $self->postprocess_sets($citekey);
+    # process "set" entries:
+    $self->process_sets($citekey);
 
     # generate labelname name
-    $self->postprocess_labelname($citekey);
+    $self->process_labelname($citekey);
 
     # generate labelyear name
-    $self->postprocess_labelyear($citekey);
+    $self->process_labelyear($citekey);
 
     # generate namehash,fullhash
-    $self->postprocess_hashes($citekey);
+    $self->process_hashes($citekey);
 
     # generate uniqueness information
-    $self->postprocess_unique($citekey);
+    $self->process_unique($citekey);
 
     # track labelname/year combinations
-    $self->postprocess_labelnameyear($citekey);
+    $self->process_labelnameyear($citekey);
 
     # generate labelalpha information
-    $self->postprocess_labelalpha($citekey);
+    $self->process_labelalpha($citekey);
 
     # track shorthands
-    $self->postprocess_shorthands($citekey);
+    $self->process_shorthands($citekey);
 
     # push entry-specific presort fields into the presort state
-    $self->postprocess_presort($citekey);
+    $self->process_presort($citekey);
 
   }
 
-  $logger->debug("Finished postprocessing entries in section $secnum");
+  $logger->debug("Finished processing entries in section $secnum");
 
   return;
 }
 
-=head2 postprocess_sets
+=head2 process_sets
 
     Postprocess set entries
 
@@ -851,7 +860,7 @@ sub postprocess {
 
 =cut
 
-sub postprocess_sets {
+sub process_sets {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
@@ -901,7 +910,7 @@ sub postprocess_sets {
   }
 }
 
-=head2 postprocess_labelname
+=head2 process_labelname
 
     Generate labelname information. Fields set are:
 
@@ -918,7 +927,7 @@ sub postprocess_sets {
 
 =cut
 
-sub postprocess_labelname {
+sub process_labelname {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
@@ -963,7 +972,7 @@ sub postprocess_labelname {
   }
 }
 
-=head2 postprocess_labelyear
+=head2 process_labelyear
 
     Generate labelyear
     Here, "labelyearname" is the name of the labelyear field
@@ -971,7 +980,7 @@ sub postprocess_labelname {
 
 =cut
 
-sub postprocess_labelyear {
+sub process_labelyear {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
@@ -1013,13 +1022,13 @@ sub postprocess_labelyear {
   }
 }
 
-=head2 postprocess_hashes
+=head2 process_hashes
 
     Generate namehash and fullhash
 
 =cut
 
-sub postprocess_hashes {
+sub process_hashes {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
@@ -1088,13 +1097,13 @@ sub postprocess_hashes {
   }
 }
 
-=head2 postprocess_unique
+=head2 process_unique
 
     Generate uniqueness information. This is used later to generate unique* fields
 
 =cut
 
-sub postprocess_unique {
+sub process_unique {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
@@ -1146,13 +1155,13 @@ sub postprocess_unique {
   }
 }
 
-=head2 postprocess_labelnameyear
+=head2 process_labelnameyear
 
     Track author/year combination
 
 =cut
 
-sub postprocess_labelnameyear {
+sub process_labelnameyear {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
@@ -1218,13 +1227,13 @@ sub postprocess_labelnameyear {
   }
 }
 
-=head2 postprocess_labelalpha
+=head2 process_labelalpha
 
     Generate the labelalpha and also the variant for sorting
 
 =cut
 
-sub postprocess_labelalpha {
+sub process_labelalpha {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
@@ -1274,13 +1283,13 @@ sub postprocess_labelalpha {
   }
 }
 
-=head2 postprocess_shorthands
+=head2 process_shorthands
 
     Track shorthands
 
 =cut
 
-sub postprocess_shorthands {
+sub process_shorthands {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
@@ -1292,7 +1301,7 @@ sub postprocess_shorthands {
   }
 }
 
-=head2 postprocess_presort
+=head2 process_presort
 
     Put presort fields for an entry into the main Biber bltx state
     so that it's all available in the same place since this can be
@@ -1300,7 +1309,7 @@ sub postprocess_shorthands {
 
 =cut
 
-sub postprocess_presort {
+sub process_presort {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
@@ -1312,6 +1321,72 @@ sub postprocess_presort {
   }
 }
 
+=head2 process_lists
+
+    Put presort fields for an entry into the main Biber bltx state
+    so that it's all available in the same place since this can be
+    set per-type and globally too.
+
+=cut
+
+sub process_lists {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  foreach my $list (@{$section->get_lists}) {
+    # Default to global sortspec if none defined for this list
+    my $sortspec = $list->get_sortspec || Biber::Config->getblxoption('sorting')->{default};
+
+    # Sorting
+    $BIBER_SORT_DATA_CHANGE = 0; # reset data-changed-after-first-sort flag
+    $BIBER_SORT_FIRSTPASSDONE = 0; # Reset first/second pass flag
+    $self->generate_label_sortinfo($sortspec); # generate the first (label) pass sort info
+    $self->sortentries;          # do a first (label) sort pass
+    $BIBER_SORT_FIRSTPASSDONE = 1; # Flag to say first pass is done
+    $self->generate_final_sortinfo($sortspec); # generate the final sort information
+    $self->sortentries; # and then possibly do a second (final) sort pass
+
+    # Filtering
+    my $flist;
+    foreach my $k ($section->get_citekeys) {
+      my $be = $section->bibentry($k);
+      if (my $filters = $list->get_filters) {
+        while (my ($t, $fs) = each %$filters) {
+          if ($t eq 'type') {
+            next unless grep {$be->get_field('entrytype') eq $_} @$fs;
+          }
+          elsif ($t eq 'nottype') {
+            next if grep {$be->get_field('entrytype') eq $_} @$fs;
+          }
+          elsif ($t eq 'subtype') {
+            next unless grep {$be->has_field('entrysubtype') and
+                                $be->get_field('entrysubtype') eq $_} @$fs;
+          }
+          elsif ($t eq 'notsubtype') {
+            next if grep {$be->has_field('entrysubtype') and
+                            $be->get_field('entrysubtype') eq $_} @$fs;
+          }
+          elsif ($t eq 'keyword') {
+            next unless grep {$be->has_keyword($_)} @$fs;
+          }
+          elsif ($t eq 'notkeyword') {
+            next if grep {$be->has_keyword($_)} @$fs;
+          }
+          elsif ($t eq 'field') {
+            next unless grep {$be->field_exists($_)} @$fs;
+          }
+          elsif ($t eq 'notfield') {
+            next if grep {$be->field_exists($_)} @$fs;
+          }
+        }
+      }
+      push @$flist, $k;
+    }
+
+    $list->set_keys($flist); # Now save the sorted list in the list object
+  }
+  return;
+}
 
 =head2 generate_label_sortinfo
 
@@ -1321,10 +1396,11 @@ sub postprocess_presort {
 
 sub generate_label_sortinfo {
   my $self = shift;
+  my $sortspec = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   foreach my $citekey ($section->get_citekeys) {
-    $self->_generatesortinfo($citekey, Biber::Config->getblxoption('sorting')->{default}{label});
+    $self->_generatesortinfo($citekey, $sortspec->{label});
   }
   return;
 }
@@ -1342,6 +1418,7 @@ sub generate_label_sortinfo {
 
 sub generate_final_sortinfo {
   my $self = shift;
+  my $sortspec = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   # This loop critically depends on the order of the citekeys which
@@ -1370,8 +1447,8 @@ sub generate_final_sortinfo {
     # Only bother with re-generating sorting information if there has been a data
     # change since the first sort or if we need to run a second sort as it has a different
     # scheme
-    if ($BIBER_SORT_DATA_CHANGE or not Biber::Config->getblxoption('sorting')->{default}{schemes_same}) {
-      $self->_generatesortinfo($citekey, Biber::Config->getblxoption('sorting')->{default}{final});
+    if ($BIBER_SORT_DATA_CHANGE or not $sortspec->{schemes_same}) {
+      $self->_generatesortinfo($citekey, $sortspec->{final});
     }
   }
   return;
@@ -1764,17 +1841,9 @@ sub prepare {
     $self->process_crossrefs;            # Process crossrefs/sets
     $self->validate_structure;           # Check bib structure
 
-    $self->postprocess;                  # Main entry processing loop
+    $self->process;                      # Main entry processing loop
 
-    # Sorting ---
-    $BIBER_SORT_FIRSTPASSDONE = 0;       # Reset first/second pass flag
-    $self->generate_label_sortinfo;      # generate the first (label) pass sort info
-    $self->sortentries;                  # do a first (label) sort pass
-    $BIBER_SORT_FIRSTPASSDONE = 1;       # Flag to say first pass is done
-    $BIBER_SORT_DATA_CHANGE = 0;         # reset data-changed-after-first-sort flag
-    $self->generate_final_sortinfo;      # generate the final sort information
-    $self->sortentries;                  # and then possibly do a second (final) sort pass
-    # --- Sorting
+    $self->process_lists;                # process the output lists (sorting and filtering)
 
     $self->create_output_section;        # Generate and push the section output into the
                                          # output object ready for writing
@@ -1928,18 +1997,25 @@ sub create_output_section {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
-  my @citekeys = $section->get_citekeys;
-  my @undef_citekeys = $section->get_undef_citekeys;
+
   # We rely on the order of this array for the order of the .bbl
+  my @citekeys = $section->get_citekeys;
   foreach my $k (@citekeys) {
     # Regular entry
     my $be = $section->bibentry($k) or $logger->logdie("Cannot find entry with key '$k' to output");
     $output_obj->set_output_entry($be, $section, Biber::Config->get_structure);
   }
+
+  # Make sure the output object knows about the output lists
+  $output_obj->set_output_lists($section->get_lists);
+
+  # undef citekeys are global
+  my @undef_citekeys = $section->get_undef_citekeys;
   # Missing citekeys
   foreach my $k (@undef_citekeys) {
     $output_obj->set_output_undefkey($k, $section);
   }
+
   # Push the sorted shorthands for each section into the output object
   if ( $section->get_shorthands ) {
     $self->sort_shorthands;

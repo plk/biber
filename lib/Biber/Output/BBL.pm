@@ -130,6 +130,7 @@ sub set_output_undefkey {
   return;
 }
 
+
 =head2 set_output_entry
 
   Set the .bbl output for an entry. This is the meat of
@@ -410,20 +411,23 @@ sub output {
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     print $target "\n\\refsection{$secnum}\n";
-    foreach my $entry (@{$data->{ENTRIES}{$secnum}{strings}}) {
-      my $entry_string;
-      # If requested to convert UTF-8 to macros ...
-      if (Biber::Config->getoption('bblsafechars')) {
-        $logger->info('Converting UTF-8 to TeX macros on output to .bbl');
-        require Biber::LaTeX::Recode;
-        $entry_string = Biber::LaTeX::Recode::latex_encode($$entry,
-                                                           scheme => Biber::Config->getoption('bblsafecharsset'));
-      }
-      else {
-        $entry_string = $$entry;
-      }
+    foreach my $list (@{$self->get_output_lists}) {
+      my $listlabel = $list->get_label;
+      print $target "\n  \\sortlist{$listlabel}\n" unless ($listlabel eq 'MAIN');
+      foreach my $k ($list->get_keys) {
+        my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
+        my $entry_string = $$entry;
+        # If requested to convert UTF-8 to macros ...
+        if (Biber::Config->getoption('bblsafechars')) {
+          $logger->info('Converting UTF-8 to TeX macros on output to .bbl');
+          require Biber::LaTeX::Recode;
+          $entry_string = Biber::LaTeX::Recode::latex_encode($entry_string,
+                                                             scheme => Biber::Config->getoption('bblsafecharsset'));
+        }
 
-      print $target $entry_string or $logger->logdie("Failure to write entry to $target_string: $!");
+        print $target $entry_string or $logger->logdie("Failure to write entry to $target_string: $!");
+      }
+      print $target "\n  \\endsortlist\n" unless ($listlabel eq 'MAIN');
     }
 
     # Output section list of shorthands if there is one

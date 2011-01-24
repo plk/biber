@@ -274,6 +274,7 @@ sub inherit_from {
   my $type        = $self->get_field('entrytype');
   my $parenttype  = $parent->get_field('entrytype');
   my $inheritance = Biber::Config->getblxoption('inheritance');
+
   my %processed;
   # get defaults
   my $defaults = $inheritance->{defaults};
@@ -306,7 +307,7 @@ sub inherit_from {
             $processed{$field->{source}} = 1;
           }
           # Set the field if null or override is requested
-          elsif (not $self->get_field($field->{target}) or
+          elsif (not $self->field_exists($field->{target}) or
                  $field_override_target eq 'yes') {
             $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
           }
@@ -319,8 +320,8 @@ sub inherit_from {
   if ($inherit_all eq 'yes') {
     foreach my $field ($parent->datafields) {
       next if $processed{$field}; # Skip if we already dealt with this field above
-      # Set the field if null or override is requested
-      if (not $self->get_field($field) or $override_target eq 'yes') {
+      # Set the field if it doesn't exist or override is requested
+      if (not $self->field_exists($field) or $override_target eq 'yes') {
         $self->set_datafield($field, $parent->get_field($field));
       }
     }

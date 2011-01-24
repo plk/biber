@@ -108,6 +108,31 @@ sub get_filters {
 }
 
 
+=head2 set_keys
+
+    Sets the keys for the list
+
+=cut
+
+sub set_keys {
+  my $self = shift;
+  my $keys = shift;
+  $self->{keys} = $keys;
+  return;
+}
+
+=head2 get_keys
+
+    Gets the keys for the list
+
+=cut
+
+sub get_keys {
+  my $self = shift;
+  return @{$self->{keys}};
+}
+
+
 
 =head1 AUTHORS
 

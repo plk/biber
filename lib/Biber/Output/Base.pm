@@ -152,21 +152,30 @@ sub add_output_tail {
 }
 
 
-=head2 set_output_entry
+=head2 set_output_lists
 
-    Add an entry output to a Biber::Output::Base object
-    The base class method just does a dump
+  Sets the lists to output
 
 =cut
 
-sub set_output_entry {
+sub set_output_lists {
   my $self = shift;
-  my $entry = shift;
-  my $section = shift;
-  my $struc = shift;
-  $self->{output_data}{ENTRIES}{$section}{lc($entry->get_field('citekey'))} = $entry->dump;
+  my $lists = shift;
+  $self->{lists} = $lists;
   return;
 }
+
+=head2 get_output_lists
+
+  Retrieve the output lists
+
+=cut
+
+sub get_output_lists {
+  my $self = shift;
+  return $self->{lists};
+}
+
 
 =head2 get_output_entries
 
@@ -179,7 +188,6 @@ sub get_output_entries {
   my $section = shift;
   return [ map {$$_} @{$self->{output_data}{ENTRIES}{$section}{strings}} ];
 }
-
 
 =head2 get_output_entry
 
@@ -226,6 +234,23 @@ sub get_los {
 }
 
 
+=head2 set_output_entry
+
+    Add an entry output to a Biber::Output::Base object
+    The base class method just does a dump
+
+=cut
+
+sub set_output_entry {
+  my $self = shift;
+  my $entry = shift;
+  my $section = shift;
+  my $struc = shift;
+  push @{$self->{output_data}{ENTRIES}{$section}{strings}}, $entry->dump;
+  $self->{output_data}{ENTRIES}{$section}{index}{lc($entry->get_field('citekey'))} = $entry->dump;
+  return;
+}
+
 =head2 output
 
     Generic base output method
@@ -247,12 +272,18 @@ sub output {
 
   print $target $data->{HEAD} or $logger->logdie("Failure to write head to $target_string: $!");
 
-  foreach my $secnum (sort keys %{$data}) {
+  foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     print $target "SECTION: $secnum\n\n";
-    while (my ($entry, $data) = each %{$data->{$secnum}}) {
-      print $target $data or $logger->logdie("Failure to write entry '$entry' to $target_string: $!");
+    foreach my $list (@{$self->get_output_lists}) {
+      my $listlabel = $list->get_label;
+      print $target "  LIST: $listlabel\n\n";
+      foreach my $k ($list->get_keys) {
+        my $entry_string = $data->{ENTRIES}{$secnum}{index}{$k};
+        print $target $entry_string or $logger->logdie("Failure to write entry '$k' to $target_string: $!");
+      }
     }
   }
+
   print $target $data->{TAIL} or $logger->logdie("Failure to write tail to $target_string: $!");
 
   $logger->info("Output to $target_string");

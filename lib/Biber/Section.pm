@@ -418,9 +418,9 @@ sub get_lists {
 
 sub get_list {
   my $self = shift;
-  my $label;
+  my $label = shift;
   foreach my $list (@{$self->{lists}}) {
-    return $list if $list->get_label eq lc($label);
+    return $list if ($list->get_label eq $label);
   }
   return undef;
 }

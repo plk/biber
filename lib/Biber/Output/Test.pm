@@ -288,8 +288,6 @@ sub set_output_entry {
   return;
 }
 
-
-
 =head2 output
 
     BBL output method - this takes care to output entries in the explicit order
@@ -305,23 +303,22 @@ sub output {
   $logger->info("Writing output with encoding '" . Biber::Config->getoption('bblencoding') . "'");
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
-    foreach my $entry (@{$data->{ENTRIES}{$secnum}{strings}}) {
-      my $entry_string;
-      # If requested to convert UTF-8 to macros ...
-      if (Biber::Config->getoption('bblsafechars')) {
-        $logger->info('Converting UTF-8 to TeX macros on output to .bbl');
-        require Biber::LaTeX::Recode;
-        $entry_string = Biber::LaTeX::Recode::latex_encode($$entry,
-                                                           scheme => Biber::Config->getoption('bblsafecharsset'));
+    foreach my $list (@{$self->get_output_lists}) {
+      my $listlabel = $list->get_label;
+      foreach my $k ($list->get_keys) {
+        my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
+        my $entry_string = $$entry;
+        # If requested to convert UTF-8 to macros ...
+        if (Biber::Config->getoption('bblsafechars')) {
+          $logger->info('Converting UTF-8 to TeX macros on output to .bbl');
+          require Biber::LaTeX::Recode;
+          $entry_string = Biber::LaTeX::Recode::latex_encode($entry_string,
+                                                             scheme => Biber::Config->getoption('bblsafecharsset'));
+        }
+        print $target $entry_string;
       }
-      else {
-        $entry_string = $$entry;
-      }
-
-      print $target $entry_string;
     }
   }
-
   close $target;
   return;
 }
