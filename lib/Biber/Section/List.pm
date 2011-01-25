@@ -80,7 +80,13 @@ sub get_sortspec {
 sub add_filter {
   my $self = shift;
   my ($type, $values) = @_;
-  $self->{filters}{$type} = [ split(/\s*,\s*/,$values) ];
+  # Disjunctive filters are not simple values
+  if ($type eq 'orfilter') {
+    $self->{filters}{$type} = $values;
+  }
+  else {
+    $self->{filters}{$type} = [ split(/\s*,\s*/,$values) ];
+  }
   return;
 }
 

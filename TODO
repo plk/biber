@@ -1,11 +1,9 @@
 TODO in decreasing order of priority:
 
-Global sortspec is in Config, per-list is in list - ok?
-
-* bltx middlename support made transparent in Name.pm
 * Generalised \printbibliography system
   Take out MAIN backwards conmpat hacks in Biber.pm and BBL.pm
   LOS needs to be moved to this new structure
+* bltx middlename support made transparent in Name.pm
 * Zotero? http://www.zotero.org/support/dev/start
   https://api.zotero.org/users/<USERID>/items/<iTEMID>?key=<APIKEY>
   gives a parseable ATOM XML with the information in

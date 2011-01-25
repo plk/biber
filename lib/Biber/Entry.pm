@@ -200,7 +200,7 @@ sub fields {
 =head2 has_keyword
 
     Check if a Biber::Entry object has a particular keyword in
-    in the keyword field.
+    in the KEYWORDS field.
 
 =cut
 

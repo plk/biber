@@ -741,21 +741,10 @@
             <data type="string"/>
           </attribute>
           <zeroOrMore>
-            <element name="bcf:filter">
-              <attribute name="type">
-                <choice>
-                  <value>type</value>
-                  <value>nottype</value>
-                  <value>subtype</value>
-                  <value>notsubtype</value>
-                  <value>keyword</value>
-                  <value>notkeyword</value>
-                  <value>field</value>
-                  <value>notfield</value>
-                </choice>
-              </attribute>
-              <data type="string"/>
-            </element>
+            <choice>
+              <ref name="filter"/>
+              <ref name="orfilter"/>
+            </choice>
           </zeroOrMore>
           <optional>
             <element name="bcf:sorting">
@@ -766,6 +755,30 @@
           </optional>
         </element>
       </zeroOrMore>
+    </element>
+  </define>
+  <define name="orfilter">
+    <element name="bcf:orfilter">
+      <oneOrMore>
+        <ref name="filter"/>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="filter">
+    <element name="bcf:filter">
+      <attribute name="type">
+        <choice>
+          <value>type</value>
+          <value>nottype</value>
+          <value>subtype</value>
+          <value>notsubtype</value>
+          <value>keyword</value>
+          <value>notkeyword</value>
+          <value>field</value>
+          <value>notfield</value>
+        </choice>
+      </attribute>
+      <data type="string"/>
     </element>
   </define>
   <!-- option definitions -->

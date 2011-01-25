@@ -1346,6 +1346,10 @@
     <bcf:citekey>Key5</bcf:citekey>
     <bcf:sectionlist label="listA">
       <bcf:filter type="field">editor,translator</bcf:filter>
+      <bcf:orfilter>
+        <bcf:filter type="keyword">key1</bcf:filter>
+        <bcf:filter type="type">book</bcf:filter>
+      </bcf:orfilter>
       <bcf:filter type="notkeyword">ignore</bcf:filter>
       <bcf:sorting>
         <bcf:sort order="1" pass="label">

@@ -332,7 +332,7 @@ sub parse_ctrlfile {
                                                            qr/\Aentrytype\z/,
                                                            qr/\Adatetype\z/,
                                                            qr/\Asectionlist\z/,
-                                                           qr/\Afilter\z/,
+                                                           qr/\A(?:or)?filter\z/,
                                                           ],
                                           'NsStrip' => 1,
                                           'KeyAttr' => []);
@@ -506,14 +506,16 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     $bib_section->set_datasources($bibdatasources{$section->{number}}) unless
       $bib_section->get_datasources;
 
-
     # Add any list specs to the Biber::Section object
     foreach my $list (@{$section->{sectionlist}}) {
       my $seclist = Biber::Section::List->new(label => $list->{label});
       foreach my $filter (@{$list->{filter}}) {
         $seclist->add_filter($filter->{type}, $filter->{content});
       }
-
+      # disjunctive filters
+      foreach my $orfilter (@{$list->{orfilter}}) {
+        $seclist->add_filter('orfilter', { map {$_->{type} => [$_->{content}]} @{$orfilter->{filter}} });
+      }
 
       if ($list->{sorting}) { # can be undef for fallback to global sorting
         my ($sorting_label, $sorting_final) = _parse_sort($list->{sorting});
@@ -1338,7 +1340,8 @@ sub process_lists {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   foreach my $list (@{$section->get_lists}) {
-    $logger->debug("Sorting list with label '" . $list->get_label . "'");
+    my $llabel = $list->get_label;
+    $logger->debug("Sorting list with label '$llabel'");
     # Default to global sortspec if none defined for this list
     my $sortspec = $list->get_sortspec;
     unless ($sortspec) {
@@ -1358,34 +1361,17 @@ sub process_lists {
     # Filtering
     if (my $filters = $list->get_filters) {
       my $flist;
-      foreach my $k ($section->get_citekeys) {
+KEYLOOP: foreach my $k ($section->get_citekeys) {
+        $logger->debug("Checking key '$k' in list '$llabel' against list filters");
         my $be = $section->bibentry($k);
-        while (my ($t, $fs) = each %$filters) {
-          if ($t eq 'type') {
-            next unless grep {$be->get_field('entrytype') eq $_} @$fs;
+        foreach my $t (keys %$filters) {
+          my $fs = $filters->{$t};
+          # Filter disjunction is ok if any of the checks are ok, hence the grep()
+          if ($t eq 'orfilter') {
+            next KEYLOOP unless grep {check_list_filter($k, $_, $fs->{$_}, $be)} keys %$fs;
           }
-          elsif ($t eq 'nottype') {
-            next if grep {$be->get_field('entrytype') eq $_} @$fs;
-          }
-          elsif ($t eq 'subtype') {
-            next unless grep {$be->has_field('entrysubtype') and
-                                $be->get_field('entrysubtype') eq $_} @$fs;
-          }
-          elsif ($t eq 'notsubtype') {
-            next if grep {$be->has_field('entrysubtype') and
-                            $be->get_field('entrysubtype') eq $_} @$fs;
-          }
-          elsif ($t eq 'keyword') {
-            next unless grep {$be->has_keyword($_)} @$fs;
-          }
-          elsif ($t eq 'notkeyword') {
-            next if grep {$be->has_keyword($_)} @$fs;
-          }
-          elsif ($t eq 'field') {
-            next unless grep {$be->field_exists($_)} @$fs;
-          }
-          elsif ($t eq 'notfield') {
-            next if grep {$be->field_exists($_)} @$fs;
+          else {
+            next KEYLOOP unless check_list_filter($k, $t, $fs, $be);
           }
         }
         push @$flist, $k;
@@ -1398,6 +1384,46 @@ sub process_lists {
   }
   return;
 }
+
+
+=head2 check_list_filter
+
+    Run an entry through a list filter. Returns a boolean.
+
+=cut
+
+sub check_list_filter {
+  my ($k, $t, $fs, $be) = @_;
+  $logger->debug("  Checking key '$k' against filter '$t=" . join(',', @$fs) . "'");
+  if ($t eq 'type') {
+    return 0 unless grep {$be->get_field('entrytype') eq $_} @$fs;
+  }
+  elsif ($t eq 'nottype') {
+    return 0 if grep {$be->get_field('entrytype') eq $_} @$fs;
+  }
+  elsif ($t eq 'subtype') {
+    return 0 unless grep {$be->field_exists('entrysubtype') and
+                                $be->get_field('entrysubtype') eq $_} @$fs;
+  }
+  elsif ($t eq 'notsubtype') {
+    return 0 if grep {$be->field_exists('entrysubtype') and
+                            $be->get_field('entrysubtype') eq $_} @$fs;
+  }
+  elsif ($t eq 'keyword') {
+    return 0 unless grep {$be->has_keyword($_)} @$fs;
+  }
+  elsif ($t eq 'notkeyword') {
+    return 0 if grep {$be->has_keyword($_)} @$fs;
+  }
+  elsif ($t eq 'field') {
+    return 0 unless grep {$be->field_exists($_)} @$fs;
+  }
+  elsif ($t eq 'notfield') {
+    return 0 if grep {$be->field_exists($_)} @$fs;
+  }
+  return 1;
+}
+
 
 =head2 generate_label_sortinfo
 

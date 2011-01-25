@@ -313,16 +313,23 @@ secspec =
     }*,
     element bcf:sectionlist {
       attribute label { xsd:string },
-      element bcf:filter {
-        attribute type { "type" | "nottype" | "subtype" | "notsubtype"
-                         | "keyword" | "notkeyword" | "field" | "notfield" },
-        xsd:string
-      }*,
+      (filter | orfilter )*,
       element bcf:sorting {
         sort+
       }?
     }*
   }
+
+orfilter = element bcf:orfilter {
+             filter+
+           }
+
+filter = element bcf:filter {
+           attribute type { "type" | "nottype" | "subtype" | "notsubtype"
+                         | "keyword" | "notkeyword" | "field" | "notfield" },
+           xsd:string
+         }
+
 
 # option definitions
 terseinits =

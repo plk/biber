@@ -126,6 +126,53 @@
         </bcf:sort>
       </bcf:sorting>
     </bcf:sectionlist>
+    <bcf:sectionlist label="lnamef1">
+      <bcf:filter type="field">publisher</bcf:filter>
+      <bcf:filter type="notfield">verba</bcf:filter>
+      <bcf:sorting>
+        <bcf:sort order="1">
+          <bcf:sortitem order="1">author</bcf:sortitem>
+        </bcf:sort>
+      </bcf:sorting>
+    </bcf:sectionlist>
+    <bcf:sectionlist label="lnamef2">
+      <bcf:filter type="keyword">key2</bcf:filter>
+      <bcf:sorting>
+        <bcf:sort order="1">
+          <bcf:sortitem order="1">author</bcf:sortitem>
+        </bcf:sort>
+      </bcf:sorting>
+    </bcf:sectionlist>
+    <bcf:sectionlist label="lnamef3">
+      <bcf:filter type="nottype">thesis</bcf:filter>
+      <bcf:filter type="notkeyword">key1</bcf:filter>
+      <bcf:sorting>
+        <bcf:sort order="1">
+          <bcf:sortitem order="1">author</bcf:sortitem>
+        </bcf:sort>
+      </bcf:sorting>
+    </bcf:sectionlist>
+    <bcf:sectionlist label="lnamef4">
+      <bcf:filter type="notfield">verba</bcf:filter>
+      <bcf:filter type="subtype">rubbish</bcf:filter>
+      <bcf:sorting>
+        <bcf:sort order="1">
+          <bcf:sortitem order="1">author</bcf:sortitem>
+        </bcf:sort>
+      </bcf:sorting>
+    </bcf:sectionlist>
+    <bcf:sectionlist label="lnamef5">
+      <bcf:filter type="field">author</bcf:filter>
+      <bcf:orfilter>
+        <bcf:filter type="field">verba</bcf:filter>
+        <bcf:filter type="subtype">rubbish</bcf:filter>
+      </bcf:orfilter>
+      <bcf:sorting>
+        <bcf:sort order="1">
+          <bcf:sortitem order="1">author</bcf:sortitem>
+        </bcf:sort>
+      </bcf:sorting>
+    </bcf:sectionlist>
     <bcf:sectionlist label="lyear">
       <bcf:sorting>
         <bcf:sort order="1" sort_direction="descending">
