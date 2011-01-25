@@ -3,6 +3,9 @@ use List::Util qw( first );
 use Biber::Utils;
 use Biber::Constants;
 use Data::Dump qw( pp );
+use Log::Log4perl qw( :no_extra_logdie_message );
+
+my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
 
@@ -274,7 +277,6 @@ sub inherit_from {
   my $type        = $self->get_field('entrytype');
   my $parenttype  = $parent->get_field('entrytype');
   my $inheritance = Biber::Config->getblxoption('inheritance');
-
   my %processed;
   # get defaults
   my $defaults = $inheritance->{defaults};
@@ -297,7 +299,7 @@ sub inherit_from {
     if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
         ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
         foreach my $field (@{$inherit->{field}}) {
-          next unless $parent->get_field($field->{source});
+          next unless $parent->field_exists($field->{source});
           $processed{$field->{source}} = 1;
           # localise defaults according to field, if specified
           my $field_override_target = $field->{override_target}
@@ -306,9 +308,20 @@ sub inherit_from {
           if ($field->{skip}) {
             $processed{$field->{source}} = 1;
           }
-          # Set the field if null or override is requested
-          elsif (not $self->field_exists($field->{target}) or
-                 $field_override_target eq 'true') {
+          # Set the field if it doesn't exist or override is requested
+          # AND it's not suppressed with an empty target spec
+          elsif ($field->{target} and
+                 (not $self->field_exists($field->{target}) or
+                 $field_override_target eq 'true')) {
+            $logger->debug("    Entry '" .
+                           $self->get_field('dskey') .
+                           "' is inheriting field '" .
+                           $field->{source}.
+                           "' as '" .
+                           $field->{target} .
+                           "' from entry '" .
+                           $parent->get_field('dskey') .
+                           "'");
             $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
           }
         }
@@ -322,6 +335,11 @@ sub inherit_from {
       next if $processed{$field}; # Skip if we already dealt with this field above
       # Set the field if it doesn't exist or override is requested
       if (not $self->field_exists($field) or $override_target eq 'true') {
+            $logger->debug("    Entry '" .
+                           $self->get_field('dskey') .
+                           "' is inheriting field '$field' from entry '" .
+                           $parent->get_field('dskey') .
+                           "'");
         $self->set_datafield($field, $parent->get_field($field));
       }
     }

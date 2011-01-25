@@ -109,8 +109,15 @@
       <bcf:type_pair source="*" target="incollection" inherit_all="false"/>
     </bcf:defaults>
     <bcf:inherit>
-      <bcf:type_pair source="book" target="inbook"/>
+      <bcf:type_pair source="*" target="*"/>
+      <bcf:field source="verba" target="verbb" override_target="true"/>
+    </bcf:inherit>
+    <bcf:inherit>
+      <bcf:type_pair source="*" target="inbook"/>
       <bcf:field source="author" target="bookauthor" override_target="true"/>
+    </bcf:inherit>
+    <bcf:inherit>
+      <bcf:type_pair source="book" target="inbook"/>
       <bcf:field source="title" target="booktitle" override_target="true"/>
       <bcf:field source="titleaddon" target="booktitleaddon"  override_target="true"/>
       <bcf:field source="subtitle" target="booksubtitle" override_target="true"/>
@@ -118,6 +125,7 @@
     <bcf:inherit>
       <bcf:type_pair source="proceedings" target="inproceedings"/>
       <bcf:field source="title" target="booktitle" override_target="false"/>
+      <bcf:field source="publisher" target=""/>
     </bcf:inherit>
     <bcf:inherit>
       <bcf:type_pair source="collection" target="incollection"/>

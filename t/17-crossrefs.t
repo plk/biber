@@ -167,9 +167,6 @@ my $cr6 = q|  \entry{cr6}{inproceedings}{}
     \list{location}{1}{%
       {Address}%
     }
-    \list{publisher}{1}{%
-      {Publisher of proceeding}%
-    }
     \strng{namehash}{AF1}
     \strng{fullhash}{AF1}
     \field{sortinit}{A}
@@ -214,6 +211,9 @@ my $cr7 = q|  \entry{cr7}{inbook}{}
     \field{title}{Title of Book bit}
     \field{year}{2010}
     \field{pages}{123\bibrangedash 126}
+    \verb{verbb}
+    \verb String
+    \endverb
   \endentry
 
 |;

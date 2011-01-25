@@ -152,8 +152,8 @@ our %CONFIG_DEFAULT_BIBLATEX =
    # Now the defaults for special .bcf sections information
    inheritance     => {
                    defaults => {
-                                inherit_all     => 'yes',
-                                override_target => 'no',
+                                inherit_all     => 'true',
+                                override_target => 'false',
                                 type_pair => []
                                },
                    inherit => [
@@ -176,17 +176,17 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                            {
                                             source => 'title',
                                             target => 'booktitle',
-                                            override_target => 'yes',
+                                            override_target => 'true',
                                            },
                                            {
                                             source => 'subtitle',
                                             target => 'booksubtitle',
-                                            override_target => 'yes',
+                                            override_target => 'true',
                                            },
                                            {
                                             source => 'titleaddon',
                                             target => 'booktitleaddon',
-                                            override_target => 'yes',
+                                            override_target => 'true',
                                            },
                                           ]
                                },
@@ -201,7 +201,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                            {
                                             source => 'author',
                                             target => 'bookauthor',
-                                            override_target => 'yes',
+                                            override_target => 'true',
                                            },
                                           ]
                                },
