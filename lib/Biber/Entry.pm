@@ -283,8 +283,8 @@ sub inherit_from {
   my $override_target = $defaults->{override_target};
   # override with type_pair specific defaults if they exist ...
   foreach my $type_pair (@{$defaults->{type_pair}}) {
-    if (($type_pair->{source} eq 'all' or $type_pair->{source} eq $parenttype) and
-        ($type_pair->{target} eq 'all' or $type_pair->{target} eq $type)) {
+    if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
+        ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
       $inherit_all = $type_pair->{inherit_all} if $type_pair->{inherit_all};
       $override_target = $type_pair->{override_target} if $type_pair->{override_target};
     }
@@ -294,8 +294,8 @@ sub inherit_from {
   foreach my $inherit (@{$inheritance->{inherit}}) {
     # Match for this combination of entry and crossref parent?
     foreach my $type_pair (@{$inherit->{type_pair}}) {
-    if (($type_pair->{source} eq 'all' or $type_pair->{source} eq $parenttype) and
-        ($type_pair->{target} eq 'all' or $type_pair->{target} eq $type)) {
+    if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
+        ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
         foreach my $field (@{$inherit->{field}}) {
           next unless $parent->get_field($field->{source});
           $processed{$field->{source}} = 1;
@@ -308,7 +308,7 @@ sub inherit_from {
           }
           # Set the field if null or override is requested
           elsif (not $self->field_exists($field->{target}) or
-                 $field_override_target eq 'yes') {
+                 $field_override_target eq 'true') {
             $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
           }
         }
@@ -317,11 +317,11 @@ sub inherit_from {
   }
 
   # Now process the rest of the (original data only) fields, if necessary
-  if ($inherit_all eq 'yes') {
+  if ($inherit_all eq 'true') {
     foreach my $field ($parent->datafields) {
       next if $processed{$field}; # Skip if we already dealt with this field above
       # Set the field if it doesn't exist or override is requested
-      if (not $self->field_exists($field) or $override_target eq 'yes') {
+      if (not $self->field_exists($field) or $override_target eq 'true') {
         $self->set_datafield($field, $parent->get_field($field));
       }
     }

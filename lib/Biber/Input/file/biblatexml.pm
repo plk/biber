@@ -716,7 +716,7 @@ sub _resolve_display_mode {
   my @nodelist;
   my $dm = Biber::Config->getblxoption('displaymode');
   # Either a fieldname specific mode or the default
-  my $modelist = $dm->{$fieldname} || $dm->{ALL};
+  my $modelist = $dm->{$fieldname} || $dm->{'*'};
   foreach my $mode (@$modelist) {
     my $modeattr;
     # mode is omissable if it is "original"

@@ -125,7 +125,7 @@
             <element name="bcf:displaymode">
               <element name="bcf:target">
                 <choice>
-                  <value>ALL</value>
+                  <value>*</value>
                   <data type="string"/>
                 </choice>
               </element>
@@ -151,15 +151,15 @@
             <!-- Whether to inherit all fields -->
             <attribute name="inherit_all">
               <choice>
-                <value>yes</value>
-                <value>no</value>
+                <value>true</value>
+                <value>false</value>
               </choice>
             </attribute>
             <!-- Should we overwrite the target field if it exists? -->
             <attribute name="override_target">
               <choice>
-                <value>yes</value>
-                <value>no</value>
+                <value>true</value>
+                <value>false</value>
               </choice>
             </attribute>
             <zeroOrMore>
@@ -167,29 +167,29 @@
               <element name="bcf:type_pair">
                 <attribute name="source">
                   <choice>
-                    <value>all</value>
+                    <value>*</value>
                     <data type="string"/>
                   </choice>
                 </attribute>
                 <attribute name="target">
                   <choice>
-                    <value>all</value>
+                    <value>*</value>
                     <data type="string"/>
                   </choice>
                 </attribute>
                 <optional>
                   <attribute name="inherit_all">
                     <choice>
-                      <value>yes</value>
-                      <value>no</value>
+                      <value>true</value>
+                      <value>false</value>
                     </choice>
                   </attribute>
                 </optional>
                 <optional>
                   <attribute name="override_target">
                     <choice>
-                      <value>yes</value>
-                      <value>no</value>
+                      <value>true</value>
+                      <value>false</value>
                     </choice>
                   </attribute>
                 </optional>
@@ -205,13 +205,13 @@
                 <element name="bcf:type_pair">
                   <attribute name="source">
                     <choice>
-                      <value>all</value>
+                      <value>*</value>
                       <data type="string"/>
                     </choice>
                   </attribute>
                   <attribute name="target">
                     <choice>
-                      <value>all</value>
+                      <value>*</value>
                       <data type="string"/>
                     </choice>
                   </attribute>
@@ -232,8 +232,8 @@
                       </attribute>
                       <attribute name="skip">
                         <choice>
-                          <value>yes</value>
-                          <value>no</value>
+                          <value>true</value>
+                          <value>false</value>
                         </choice>
                       </attribute>
                     </group>
@@ -248,8 +248,8 @@
                       <optional>
                         <attribute name="override_target">
                           <choice>
-                            <value>yes</value>
-                            <value>no</value>
+                            <value>true</value>
+                            <value>false</value>
                           </choice>
                         </attribute>
                       </optional>

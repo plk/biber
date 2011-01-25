@@ -67,7 +67,7 @@ start =
     # Display modes definition
     element bcf:displaymodes {
       element bcf:displaymode {
-        element bcf:target { "ALL" | xsd:string },
+        element bcf:target { "*" | xsd:string },
         element bcf:mode { "original" | "uniform" | "romanised"  | "translated" }+
       }+
     }?,
@@ -77,15 +77,15 @@ start =
       # Defaults
       element bcf:defaults {
         # Whether to inherit all fields
-        attribute inherit_all { "yes" | "no" },
+        attribute inherit_all { "true" | "false" },
         # Should we overwrite the target field if it exists?
-        attribute override_target { "yes" | "no" },
+        attribute override_target { "true" | "false" },
         # Default inherit_all and override_target settings for entrytype source/target pairs
         element bcf:type_pair {
-          attribute source { "all" | xsd:string },
-          attribute target { "all" | xsd:string },
-          attribute inherit_all { "yes" | "no" }?,
-          attribute override_target { "yes" | "no" }?,
+          attribute source { "*" | xsd:string },
+          attribute target { "*" | xsd:string },
+          attribute inherit_all { "true" | "false" }?,
+          attribute override_target { "true" | "false" }?,
           empty
         }*
       },
@@ -93,8 +93,8 @@ start =
       element bcf:inherit {
         # applies to these pairs of source/target entrytypes
         element bcf:type_pair {
-          attribute source { "all" | xsd:string },
-          attribute target { "all" | xsd:string },
+          attribute source { "*" | xsd:string },
+          attribute target { "*" | xsd:string },
           empty
         }+,
         # and here are the field specifications
@@ -103,11 +103,11 @@ start =
             # either a "skip this field" specification
             # so we can say inherit all except certain fields OR ...
             (attribute source { xsd:string },
-              attribute skip { "yes" | "no" }) |
+              attribute skip { "true" | "false" }) |
             # ... a source and target field with an optional override attribute
             (attribute source { xsd:string },
               attribute target { xsd:string },
-              attribute override_target { "yes" | "no" }?)
+              attribute override_target { "true" | "false" }?)
           ),
           empty
         }+

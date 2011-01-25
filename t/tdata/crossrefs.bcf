@@ -105,23 +105,23 @@
   </bcf:options>
   <!-- INHERITANCE -->
   <bcf:inheritance>
-    <bcf:defaults inherit_all="yes" override_target="no">
-      <bcf:type_pair source="all" target="incollection" inherit_all="no"/>
+    <bcf:defaults inherit_all="true" override_target="false">
+      <bcf:type_pair source="*" target="incollection" inherit_all="false"/>
     </bcf:defaults>
     <bcf:inherit>
       <bcf:type_pair source="book" target="inbook"/>
-      <bcf:field source="author" target="bookauthor" override_target="yes"/>
-      <bcf:field source="title" target="booktitle" override_target="yes"/>
-      <bcf:field source="titleaddon" target="booktitleaddon"  override_target="yes"/>
-      <bcf:field source="subtitle" target="booksubtitle" override_target="yes"/>
+      <bcf:field source="author" target="bookauthor" override_target="true"/>
+      <bcf:field source="title" target="booktitle" override_target="true"/>
+      <bcf:field source="titleaddon" target="booktitleaddon"  override_target="true"/>
+      <bcf:field source="subtitle" target="booksubtitle" override_target="true"/>
     </bcf:inherit>
     <bcf:inherit>
       <bcf:type_pair source="proceedings" target="inproceedings"/>
-      <bcf:field source="title" target="booktitle" override_target="no"/>
+      <bcf:field source="title" target="booktitle" override_target="false"/>
     </bcf:inherit>
     <bcf:inherit>
       <bcf:type_pair source="collection" target="incollection"/>
-      <bcf:field source="title" target="booktitle" override_target="yes"/>
+      <bcf:field source="title" target="booktitle" override_target="true"/>
     </bcf:inherit>
   </bcf:inheritance>
   <!-- SORTING -->
