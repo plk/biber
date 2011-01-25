@@ -1337,23 +1337,28 @@ sub process_lists {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   foreach my $list (@{$section->get_lists}) {
+    $logger->debug("Sorting list with label '" . $list->get_label . "'");
     # Default to global sortspec if none defined for this list
-    my $sortspec = $list->get_sortspec || Biber::Config->getblxoption('sorting')->{default};
+    my $sortspec = $list->get_sortspec;
+    unless ($sortspec) {
+      $sortspec = Biber::Config->getblxoption('sorting')->{default};
+      $logger->debug("List '" . $list->get_label . "' defaults to global sorting spec");
+    }
 
     # Sorting
-    $BIBER_SORT_DATA_CHANGE = 0; # reset data-changed-after-first-sort flag
-    $BIBER_SORT_FIRSTPASSDONE = 0; # Reset first/second pass flag
+    $BIBER_SORT_DATA_CHANGE = 0;               # reset data-changed-after-first-sort flag
+    $BIBER_SORT_FIRSTPASSDONE = 0;             # Reset first/second pass flag
     $self->generate_label_sortinfo($sortspec); # generate the first (label) pass sort info
-    $self->sortentries;          # do a first (label) sort pass
-    $BIBER_SORT_FIRSTPASSDONE = 1; # Flag to say first pass is done
+    $self->sortentries($sortspec);             # do a first (label) sort pass
+    $BIBER_SORT_FIRSTPASSDONE = 1;             # Flag to say first pass is done
     $self->generate_final_sortinfo($sortspec); # generate the final sort information
-    $self->sortentries; # and then possibly do a second (final) sort pass
+    $self->sortentries($sortspec);             # and then possibly do a second (final) sort pass
 
     # Filtering
-    my $flist;
-    foreach my $k ($section->get_citekeys) {
-      my $be = $section->bibentry($k);
-      if (my $filters = $list->get_filters) {
+    if (my $filters = $list->get_filters) {
+      my $flist;
+      foreach my $k ($section->get_citekeys) {
+        my $be = $section->bibentry($k);
         while (my ($t, $fs) = each %$filters) {
           if ($t eq 'type') {
             next unless grep {$be->get_field('entrytype') eq $_} @$fs;
@@ -1382,11 +1387,13 @@ sub process_lists {
             next if grep {$be->field_exists($_)} @$fs;
           }
         }
+        push @$flist, $k;
       }
-      push @$flist, $k;
+      $list->set_keys($flist); # Now save the sorted list in the list object
     }
-
-    $list->set_keys($flist); # Now save the sorted list in the list object
+    else {
+      $list->set_keys([$section->get_citekeys]); # No filtering, keys are the same as the section
+    }
   }
   return;
 }
@@ -1465,14 +1472,17 @@ sub generate_final_sortinfo {
 =cut
 
 sub sortentries {
+  my $self = shift;
+  my $sortspec = shift;
+
   # Only bother with sorting a second time if there has been a data
   # change since the first sort or if we need to run a second sort as it has a different
   # scheme
   if ($BIBER_SORT_FIRSTPASSDONE) {
-    if ($BIBER_SORT_DATA_CHANGE or not Biber::Config->getblxoption('sorting')->{default}{schemes_same}) {
+    if ($BIBER_SORT_DATA_CHANGE or not $sortspec->{schemes_same}) {
       $logger->debug('Sorting - second pass needed' .
                     ($BIBER_SORT_DATA_CHANGE ? ' (data change)' : '') .
-                     (Biber::Config->getblxoption('sorting')->{schemes_same} ? '' : ' (scheme change)'));
+                     ($sortspec->{schemes_same} ? '' : ' (scheme change)'));
     }
     else {
       $logger->debug('Sorting - second pass not needed');
@@ -1483,7 +1493,6 @@ sub sortentries {
     $logger->debug('Sorting - first pass');
   }
 
-  my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my @citekeys = $section->get_citekeys;
@@ -1501,10 +1510,10 @@ sub sortentries {
   # Get the right sortscheme
   my $sortscheme;
   if ($BIBER_SORT_FIRSTPASSDONE) {
-    $sortscheme = Biber::Config->getblxoption('sorting')->{default}{final};
+    $sortscheme = $sortspec->{final};
   }
   else {
-    $sortscheme = Biber::Config->getblxoption('sorting')->{default}{label};
+    $sortscheme = $sortspec->{label};
   }
 
   # Set up locale. Order of priority is:
@@ -1516,9 +1525,10 @@ sub sortentries {
   # 6. Built-in defaults
 
   my $thislocale = Biber::Config->getoption('sortlocale');
+
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
-    $logger->info("Sorting entries with built-in sort (with locale $thislocale) ...") unless $BIBER_SORT_FIRSTPASSDONE;
+    $logger->debug("Sorting entries with built-in sort (with locale $thislocale) ...") unless $BIBER_SORT_FIRSTPASSDONE;
 
     unless (setlocale(LC_ALL, $thislocale)) {
       unless ($BIBER_SORT_FIRSTPASSDONE) {
@@ -1580,6 +1590,7 @@ sub sortentries {
     # Handily, $num_sorts is now one larger than the number of fields which is the
     # correct index for the actual data in the sort array
     $sort_extractor = '$_->[' . $num_sorts . ']';
+    $logger->trace("Sorting structure is: $sorter");
 
     # Schwartzian transform multi-field sort
     @citekeys = map  { eval $sort_extractor }
@@ -1705,8 +1716,7 @@ sub sortentries {
     # Handily, $num_sorts is now one larger than the number of fields which is the
     # correct index for the actual data in the sort array
     $sort_extractor = '$_->[' . $num_sorts . ']';
-
-    $logger->trace('Sorter method: ' . $sorter);
+    $logger->trace("Sorting structure is: $sorter");
 
     # Schwartzian transform multi-field sort
     @citekeys = map  { eval $sort_extractor }

@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 26;
+use Test::More tests => 13;
 
 use Biber;
 use Biber::Output::BBL;
@@ -21,18 +21,6 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # relying on here for tests
 Biber::Config->setoption('fastsort', 1);
 
-my $i = 1;
-
-# This makes sure the the sortorder of the output strings is still correct
-# since the sorting and output are far enough apart, codewise, for problems
-# to intervene ...
-sub check_output_string_order {
-  my $out = shift;
-  my $test_order = shift;
-  is_deeply($out->get_output_entries(0),
-            [ map { $out->get_output_entry($_) }  @{$test_order} ], 'sort strings - ' . $i++);
-}
-
 # citeorder (sorting=none)
 $S =  [
                                                       [
@@ -49,7 +37,6 @@ my $section = $biber->sections->get_section(0);
 my $out = $biber->get_output_obj;
 
 is_deeply([$section->get_citekeys], ['L2','L1B','L1','L4','L3','L5','L1A','L7','L8','L6','L9'], 'citeorder');
-check_output_string_order($out, ['L2','L1B','L1','L4','L3','L5','L1A','L7','L8','L6','L9']);
 
 # nty
 $S = [
@@ -96,7 +83,6 @@ $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
 is_deeply([$section->get_citekeys], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nty');
-check_output_string_order($out, ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9']);
 
 # nyt
 $S = [
@@ -143,7 +129,6 @@ $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
 is_deeply([$section->get_citekeys], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyt');
-check_output_string_order($out, ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9']);
 
 # nyvt
 $S = [
@@ -191,7 +176,6 @@ $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
 is_deeply([$section->get_citekeys], ['L5','L1','L1A','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyvt');
-check_output_string_order($out, ['L5','L1','L1A','L1B','L2','L3','L4','L8','L7','L6','L9']);
 
 # nyvt with volume padding
 $S = [
@@ -239,7 +223,6 @@ $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
 is_deeply([$section->get_citekeys], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyvt with volume padding');
-check_output_string_order($out, ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9']);
 
 # ynt
 $S = [
@@ -281,7 +264,6 @@ $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
 is_deeply([$section->get_citekeys], ['L3','L1B','L1A','L1','L4','L2','L8','L7','L6','L9','L5'], 'ynt');
-check_output_string_order($out, ['L3','L1B','L1A','L1','L4','L2','L8','L7','L6','L9','L5']);
 
 # ynt with year substring
 $S = [
@@ -324,7 +306,6 @@ $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
 is_deeply([$section->get_citekeys], ['L3','L1B','L1A','L1','L2','L4','L8','L7','L6','L9','L5'], 'ynt with year substring');
-check_output_string_order($out, ['L3','L1B','L1A','L1','L2','L4','L8','L7','L6','L9','L5']);
 
 # ydnt
 $S = [
@@ -367,7 +348,6 @@ $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
 # This is correct as "aaaaaa" sorts before all years when descending
 is_deeply([$section->get_citekeys], ['L5','L9','L6','L7','L8','L2','L4','L1A','L1','L1B','L3'], 'ydnt');
-check_output_string_order($out, ['L5','L9','L6','L7','L8','L2','L4','L1A','L1','L1B','L3']);
 
 # anyt
 $S = [
@@ -419,7 +399,6 @@ $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
 is_deeply([$section->get_citekeys], ['L1B','L1A','L1','L2','L3','L4','L5','L8','L7','L6','L9'], 'anyt');
-check_output_string_order($out, ['L1B','L1A','L1','L2','L3','L4','L5','L8','L7','L6','L9']);
 
 Biber::Config->setblxoption('labelalpha', 0);
 
@@ -473,7 +452,6 @@ $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
 is_deeply([$section->get_citekeys], ['L1B','L1','L1A','L2','L3','L4','L5','L8','L7','L6','L9'], 'anyvt');
-check_output_string_order($out, ['L1B','L1','L1A','L2','L3','L4','L5','L8','L7','L6','L9']);
 
 
 # nty with descending n
@@ -507,7 +485,6 @@ $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
 is_deeply([$section->get_citekeys], ['L9','L6','L7','L8','L5','L4','L3','L2','L1B','L1A','L1'], 'nty with descending n');
-check_output_string_order($out, ['L9','L6','L7','L8','L5','L4','L3','L2','L1B','L1A','L1']);
 
 
 # testing case sensitive with fastsort
@@ -524,11 +501,13 @@ $S = [
 Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
 
 $biber->set_output_obj(Biber::Output::BBL->new());
+# Have to set local to something which understand lexical/case differences for this test
+# otherwise testing on Windows doesn't work ...
+Biber::Config->setoption('sortlocale', 'C');
 $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
 is_deeply([$section->get_citekeys], ['L1B','L1A','L1','L2','L3','L4','L7','L8','L5','L9','L6'], 'location - sortcase=1');
-check_output_string_order($out, ['L1B','L1A','L1','L2','L3','L4','L7','L8','L5','L9','L6']);
 
 # Test nosort option
 $S = [
@@ -547,6 +526,5 @@ $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
 is_deeply([$section->get_citekeys], ['L1A','L1','L1B','L2','L3','L4','L5','L7','L6','L9','L8'], 'nosort 1');
-check_output_string_order($out, ['L1A','L1','L1B','L2','L3','L4','L5','L7','L6','L9','L8']);
 
 unlink <*.utf8>;

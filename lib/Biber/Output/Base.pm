@@ -179,14 +179,15 @@ sub get_output_lists {
 
 =head2 get_output_entries
 
-    Get the output data for all entries in an array ref
+    Get the sorted order output data for all entries in a list as array ref
 
 =cut
 
 sub get_output_entries {
   my $self = shift;
   my $section = shift;
-  return [ map {$$_} @{$self->{output_data}{ENTRIES}{$section}{strings}} ];
+  my $list = shift;
+  return [ map {$self->{output_data}{ENTRIES}{$section}{index}{$_}} @{$list->get_keys}];
 }
 
 =head2 get_output_entry
@@ -246,7 +247,6 @@ sub set_output_entry {
   my $entry = shift;
   my $section = shift;
   my $struc = shift;
-  push @{$self->{output_data}{ENTRIES}{$section}{strings}}, $entry->dump;
   $self->{output_data}{ENTRIES}{$section}{index}{lc($entry->get_field('citekey'))} = $entry->dump;
   return;
 }

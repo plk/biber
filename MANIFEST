@@ -67,6 +67,7 @@ t/18-structure-dateformats.t
 t/18-bibtex-aliases.t
 t/18-structure-constraints.t
 t/19-related-entries.t
+t/20-sortlists.t
 t/pod-coverage.t
 t/pod.t
 t/tdata/options.bcf
@@ -100,6 +101,8 @@ t/tdata/labelalpha.bcf
 t/tdata/skips.bcf
 t/tdata/sort-complex.bcf
 t/tdata/sort-order.bcf
+t/tdata/sortlists.bcf
+t/tdata/sortlists.bib
 t/tdata/sort-uc.bcf
 t/tdata/sort-case.bcf
 t/tdata/biber3.conf

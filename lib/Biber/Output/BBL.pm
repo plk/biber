@@ -122,9 +122,7 @@ sub set_output_undefkey {
 
   $acc .= "  \\missing{$key}\n";
 
-  # Use an array to preserve sort order of entries already generated
-  # Also create an index by keyname for easy retrieval
-  push @{$self->{output_data}{ENTRIES}{$secnum}{strings}}, \$acc;
+  # Create an index by keyname for easy retrieval
   $self->{output_data}{ENTRIES}{$secnum}{index}{lc($key)} = \$acc;
 
   return;
@@ -373,9 +371,7 @@ sub set_output_entry {
 
   $acc .= "  \\endentry\n\n";
 
-  # Use an array to preserve sort order of entries already generated
-  # Also create an index by keyname for easy retrieval
-  push @{$self->{output_data}{ENTRIES}{$secnum}{strings}}, \$acc;
+  # Create an index by keyname for easy retrieval
   $self->{output_data}{ENTRIES}{$secnum}{index}{lc($citekey)} = \$acc;
 
   return;
@@ -414,6 +410,7 @@ sub output {
     foreach my $list (@{$self->get_output_lists}) {
       my $listlabel = $list->get_label;
       print $target "\n  \\sortlist{$listlabel}\n" unless ($listlabel eq 'MAIN');
+      # The order of this array is the sorted order
       foreach my $k ($list->get_keys) {
         my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
         my $entry_string = $$entry;

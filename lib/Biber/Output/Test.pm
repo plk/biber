@@ -280,9 +280,7 @@ sub set_output_entry {
 
   $acc .= "  \\endentry\n\n";
 
-  # Use an array to preserve sort order of entries already generated
-  # Also create an index by keyname for easy retrieval
-  push @{$self->{output_data}{ENTRIES}{$section}{strings}}, \$acc;
+  # Create an index by keyname for easy retrieval
   $self->{output_data}{ENTRIES}{$section}{index}{lc($citekey)} = \$acc;
 
   return;
