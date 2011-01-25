@@ -108,7 +108,7 @@ my $k3 = q|  \entry{key3}{inbook}{}
 
 |;
 
-my $kck1 = q|  \entry{c2add694bf942dc77b376592d9c862cd}{article}{}
+my $kck1 = q|  \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
     \name{labelname}{1}{%
       {{Author}{A.}{}{}{}{}{}{}}%
     }
@@ -129,7 +129,7 @@ my $kck1 = q|  \entry{c2add694bf942dc77b376592d9c862cd}{article}{}
 
 |;
 
-my $kck2 = q|  \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{}
+my $kck2 = q|  \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
     \name{labelname}{1}{%
       {{Author}{A.}{}{}{}{}{}{}}%
     }
@@ -154,7 +154,7 @@ my $kck2 = q|  \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{}
 
 |;
 
-my $kck3 = q|  \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{}
+my $kck3 = q|  \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
     \name{labelname}{1}{%
       {{Author}{A.}{}{}{}{}{}{}}%
     }
@@ -179,7 +179,7 @@ my $kck3 = q|  \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{}
 
 |;
 
-my $kck4 = q|  \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{}
+my $kck4 = q|  \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly}
     \name{labelname}{1}{%
       {{Author}{A.}{}{}{}{}{}{}}%
     }

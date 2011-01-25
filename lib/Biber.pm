@@ -660,6 +660,7 @@ sub instantiate_dynamic {
         # clone doesn't need the related fields
         $relclone->del_field('related');
         $relclone->del_field('relatedtype');
+        $relclone->set_datafield('options', 'dataonly');
         $section->bibentries->add_entry($clonekey, $relclone);
         Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $clonekey);
         Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $clonekey);
