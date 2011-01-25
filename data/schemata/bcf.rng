@@ -7,7 +7,9 @@
         Sometimes the BCF format version doesn't change between biblatex releases
       -->
       <attribute name="version">
-        <data type="string"/>
+        <data type="string">
+          <param name="minLength">1</param>
+        </data>
       </attribute>
       <!--
         "Global" Biber options. It's not clear what a non-global biber option
@@ -126,7 +128,9 @@
               <element name="bcf:target">
                 <choice>
                   <value>*</value>
-                  <data type="string"/>
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
                 </choice>
               </element>
               <oneOrMore>
@@ -168,13 +172,17 @@
                 <attribute name="source">
                   <choice>
                     <value>*</value>
-                    <data type="string"/>
+                    <data type="string">
+                      <param name="minLength">1</param>
+                    </data>
                   </choice>
                 </attribute>
                 <attribute name="target">
                   <choice>
                     <value>*</value>
-                    <data type="string"/>
+                    <data type="string">
+                      <param name="minLength">1</param>
+                    </data>
                   </choice>
                 </attribute>
                 <optional>
@@ -206,13 +214,17 @@
                   <attribute name="source">
                     <choice>
                       <value>*</value>
-                      <data type="string"/>
+                      <data type="string">
+                        <param name="minLength">1</param>
+                      </data>
                     </choice>
                   </attribute>
                   <attribute name="target">
                     <choice>
                       <value>*</value>
-                      <data type="string"/>
+                      <data type="string">
+                        <param name="minLength">1</param>
+                      </data>
                     </choice>
                   </attribute>
                   <empty/>
@@ -240,10 +252,14 @@
                     <!-- ... a source and target field with an optional override attribute -->
                     <group>
                       <attribute name="source">
-                        <data type="string"/>
+                        <data type="string">
+                          <param name="minLength">1</param>
+                        </data>
                       </attribute>
                       <attribute name="target">
-                        <data type="string"/>
+                        <data type="string">
+                          <param name="minLength">1</param>
+                        </data>
                       </attribute>
                       <optional>
                         <attribute name="override_target">
@@ -727,18 +743,26 @@
                 <value>set</value>
               </attribute>
               <attribute name="members">
-                <data type="string"/>
+                <data type="string">
+                  <param name="minLength">1</param>
+                </data>
               </attribute>
-              <data type="string"/>
+              <data type="string">
+                <param name="minLength">1</param>
+              </data>
             </group>
-            <data type="string"/>
+            <data type="string">
+              <param name="minLength">1</param>
+            </data>
           </choice>
         </element>
       </zeroOrMore>
       <zeroOrMore>
         <element name="bcf:sectionlist">
           <attribute name="label">
-            <data type="string"/>
+            <data type="string">
+              <param name="minLength">1</param>
+            </data>
           </attribute>
           <zeroOrMore>
             <choice>
@@ -778,7 +802,9 @@
           <value>notfield</value>
         </choice>
       </attribute>
-      <data type="string"/>
+      <data type="string">
+        <param name="minLength">1</param>
+      </data>
     </element>
   </define>
   <!-- option definitions -->

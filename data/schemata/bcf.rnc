@@ -4,7 +4,7 @@ start =
   element bcf:controlfile {
     # This is usually the same as the biblatex version string but not necessarily.
     # Sometimes the BCF format version doesn't change between biblatex releases
-    attribute version { xsd:string },
+    attribute version { xsd:string {minLength="1"}},
 
     # "Global" Biber options. It's not clear what a non-global biber option
     # would be but just in case, we have the option ...
@@ -67,7 +67,7 @@ start =
     # Display modes definition
     element bcf:displaymodes {
       element bcf:displaymode {
-        element bcf:target { "*" | xsd:string },
+        element bcf:target { "*" | xsd:string {minLength="1"}},
         element bcf:mode { "original" | "uniform" | "romanised"  | "translated" }+
       }+
     }?,
@@ -82,8 +82,8 @@ start =
         attribute override_target { "true" | "false" },
         # Default inherit_all and override_target settings for entrytype source/target pairs
         element bcf:type_pair {
-          attribute source { "*" | xsd:string },
-          attribute target { "*" | xsd:string },
+          attribute source { "*" | xsd:string {minLength="1"}},
+          attribute target { "*" | xsd:string {minLength="1"}},
           attribute inherit_all { "true" | "false" }?,
           attribute override_target { "true" | "false" }?,
           empty
@@ -93,8 +93,8 @@ start =
       element bcf:inherit {
         # applies to these pairs of source/target entrytypes
         element bcf:type_pair {
-          attribute source { "*" | xsd:string },
-          attribute target { "*" | xsd:string },
+          attribute source { "*" | xsd:string {minLength="1"}},
+          attribute target { "*" | xsd:string {minLength="1"}},
           empty
         }+,
         # and here are the field specifications
@@ -105,8 +105,8 @@ start =
             (attribute source { xsd:string },
               attribute skip { "true" | "false" }) |
             # ... a source and target field with an optional override attribute
-            (attribute source { xsd:string },
-              attribute target { xsd:string },
+            (attribute source { xsd:string {minLength="1"}},
+              attribute target { xsd:string {minLength="1"}},
               attribute override_target { "true" | "false" }?)
           ),
           empty
@@ -307,12 +307,12 @@ secspec =
     attribute number { xsd:integer },
     element bcf:citekey {
       ( attribute type { "set" },
-        attribute members { xsd:string },
-        xsd:string ) |
-      xsd:string
+        attribute members { xsd:string {minLength="1"}},
+        xsd:string {minLength="1"}) |
+      xsd:string {minLength="1"}
     }*,
     element bcf:sectionlist {
-      attribute label { xsd:string },
+      attribute label { xsd:string {minLength="1"}},
       (filter | orfilter )*,
       element bcf:sorting {
         sort+
@@ -327,7 +327,7 @@ orfilter = element bcf:orfilter {
 filter = element bcf:filter {
            attribute type { "type" | "nottype" | "subtype" | "notsubtype"
                          | "keyword" | "notkeyword" | "field" | "notfield" },
-           xsd:string
+           xsd:string {minLength="1"}
          }
 
 

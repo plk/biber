@@ -309,10 +309,8 @@ sub inherit_from {
             $processed{$field->{source}} = 1;
           }
           # Set the field if it doesn't exist or override is requested
-          # AND it's not suppressed with an empty target spec
-          elsif ($field->{target} and
-                 (not $self->field_exists($field->{target}) or
-                 $field_override_target eq 'true')) {
+          elsif (not $self->field_exists($field->{target}) or
+                 $field_override_target eq 'true') {
             $logger->debug("    Entry '" .
                            $self->get_field('dskey') .
                            "' is inheriting field '" .
