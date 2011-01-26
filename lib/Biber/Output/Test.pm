@@ -309,7 +309,7 @@ sub output {
       my $listtype = $list->get_type;
       foreach my $k ($list->get_keys) {
         if ($listtype eq 'entry') {
-          my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
+          my $entry = $data->{ENTRIES}{$secnum}{index}{lc($k)};
           my $entry_string = $$entry;
 
           # Do any dynamic information replacement for information
