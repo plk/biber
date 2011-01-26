@@ -512,6 +512,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
       if ($bib_section->get_list($llabel)) {
         $logger->warn("Section list '$llabel' is repeated for section $secnum - ignoring subsequent mentions");
         $self->{warnings}++;
+        next;
       }
 
       my $seclist = Biber::Section::List->new(label => $llabel);

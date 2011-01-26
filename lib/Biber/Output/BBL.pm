@@ -422,7 +422,7 @@ sub output {
       # The order of this array is the sorted order
       foreach my $k ($list->get_keys) {
         if ($listtype eq 'entry') {
-          my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
+          my $entry = $data->{ENTRIES}{$secnum}{index}{lc($k)};
           my $entry_string = $$entry;
 
           # Do any dynamic information replacement for information
