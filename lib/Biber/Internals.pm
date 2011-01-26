@@ -248,6 +248,7 @@ our $dispatch_sorting = {
   'publisher'       =>  [\&_sort_publisher,     []],
   'pubstate'        =>  [\&_sort_pubstate,      []],
   'school'          =>  [\&_sort_place,         ['school']],
+  'shorthand'       =>  [\&_sort_shorthand,     []],
   'shorttitle'      =>  [\&_sort_title,         ['shorttitle']],
   'sortkey'         =>  [\&_sort_sortkey,       []],
   'sortname'        =>  [\&_sort_sortname,      []],
@@ -584,6 +585,15 @@ sub _sort_pubstate {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $string = $be->get_field('pubstate') // '';
+  return _process_sort_attributes($string, $sortelementattributes);
+}
+
+sub _sort_shorthand {
+  my ($self, $citekey, $sortelementattributes) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $string = $be->get_field('shorthand') // '';
   return _process_sort_attributes($string, $sortelementattributes);
 }
 

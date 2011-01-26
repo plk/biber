@@ -32,9 +32,9 @@ Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, sc
 
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $out = $biber->get_output_obj;
+my $main = $section->get_list('MAIN');
 
-is_deeply([$section->get_citekeys], ['CS1','CS3','CS2'], 'U::C case - 1');
+is_deeply([$main->get_keys], ['CS1','CS3','CS2'], 'U::C case - 1');
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('sort-case.bcf');
@@ -45,7 +45,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # So, all names are the same and it depends on title
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$out = $biber->get_output_obj;
-is_deeply([$section->get_citekeys], ['CS3','CS2','CS1'], 'U::C case - 2');
+$section = $biber->sections->get_section(0);
+$main = $section->get_list('MAIN');
+is_deeply([$main->get_keys], ['CS3','CS2','CS1'], 'U::C case - 2');
 
 unlink <*.utf8>;

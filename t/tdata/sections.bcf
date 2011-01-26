@@ -163,8 +163,8 @@
     <bcf:citekey>sect1</bcf:citekey>
     <bcf:citekey>sect2</bcf:citekey>
     <bcf:citekey>sect3</bcf:citekey>
-    <bcf:sectionlist label="TMAIN" type="entry"/>
-    <bcf:sectionlist label="TSHORTHANDS" type="shorthand">
+    <bcf:sectionlist label="MAIN" type="entry"/>
+    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
       <bcf:filter type="field">shorthand</bcf:filter>
     </bcf:sectionlist>
   </bcf:section>
@@ -175,8 +175,8 @@
   <bcf:section number="1">
     <bcf:citekey>sect4</bcf:citekey>
     <bcf:citekey>sect5</bcf:citekey>
-    <bcf:sectionlist label="TMAIN" type="entry"/>
-    <bcf:sectionlist label="TSHORTHANDS" type="shorthand">
+    <bcf:sectionlist label="MAIN" type="entry"/>
+    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
       <bcf:filter type="field">shorthand</bcf:filter>
     </bcf:sectionlist>
   </bcf:section>
@@ -191,8 +191,8 @@
     <bcf:citekey>sect7</bcf:citekey>
     <bcf:citekey>sect3</bcf:citekey> <!-- Bad key for section 2, should be dropped in tests -->
     <bcf:citekey>sectx</bcf:citekey> <!-- Bad key for section 2, should be dropped in tests -->
-    <bcf:sectionlist label="TMAIN" type="entry"/>
-    <bcf:sectionlist label="TSHORTHANDS" type="shorthand">
+    <bcf:sectionlist label="MAIN" type="entry"/>
+    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
       <bcf:filter type="field">shorthand</bcf:filter>
     </bcf:sectionlist>
   </bcf:section>
@@ -202,8 +202,8 @@
   </bcf:bibdata>
   <bcf:section number="3">
     <bcf:citekey>*</bcf:citekey>
-    <bcf:sectionlist label="TMAIN" type="entry"/>
-    <bcf:sectionlist label="TSHORTHANDS" type="shorthand">
+    <bcf:sectionlist label="MAIN" type="entry"/>
+    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
       <bcf:filter type="field">shorthand</bcf:filter>
     </bcf:sectionlist>
   </bcf:section>

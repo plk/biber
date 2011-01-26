@@ -44,7 +44,7 @@ my $cr1 = q|  \entry{cr1}{inbook}{}
     }
     \strng{namehash}{GG1}
     \strng{fullhash}{GG1}
-    \field{sortinit}{G}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1974}
     \field{booktitle}{Graphs of the Continent}
     \strng{crossref}{crm}
@@ -76,7 +76,7 @@ my $cr2 = q|  \entry{cr2}{inbook}{}
     }
     \strng{namehash}{FF1}
     \strng{fullhash}{FF1}
-    \field{sortinit}{F}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1974}
     \field{booktitle}{Graphs of the Continent}
     \strng{crossref}{crm}
@@ -98,7 +98,7 @@ my $crm = q|  \entry{crm}{book}{}
     }
     \strng{namehash}{1}
     \strng{fullhash}{1}
-    \field{sortinit}{G}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1974}
     \field{title}{Graphs of the Continent}
     \field{year}{1974}
@@ -122,7 +122,7 @@ my $cr3 = q|  \entry{cr3}{inbook}{}
     }
     \strng{namehash}{AA1}
     \strng{fullhash}{AA1}
-    \field{sortinit}{A}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1996}
     \field{booktitle}{Beasts of the Burbling Burns}
     \strng{crossref}{crt}
@@ -145,7 +145,7 @@ my $crt = q|  \entry{crt}{book}{}
     }
     \strng{namehash}{1}
     \strng{fullhash}{1}
-    \field{sortinit}{B}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1996}
     \field{title}{Beasts of the Burbling Burns}
     \field{year}{1996}
@@ -169,7 +169,7 @@ my $cr6 = q|  \entry{cr6}{inproceedings}{}
     }
     \strng{namehash}{AF1}
     \strng{fullhash}{AF1}
-    \field{sortinit}{A}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{2009}
     \field{booktitle}{Manual booktitle}
     \field{eventday}{21}
@@ -203,7 +203,7 @@ my $cr7 = q|  \entry{cr7}{inbook}{}
     }
     \strng{namehash}{AF1}
     \strng{fullhash}{AF1}
-    \field{sortinit}{A}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{2010}
     \field{booksubtitle}{Book Subtitle}
     \field{booktitle}{Book Title}
@@ -228,7 +228,7 @@ my $cr8 = q|  \entry{cr8}{incollection}{}
     }
     \strng{namehash}{SF1}
     \strng{fullhash}{SF1}
-    \field{sortinit}{S}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{2010}
     \field{booktitle}{Book Title}
     \field{title}{Title of Collection bit}
@@ -248,7 +248,7 @@ my $xr1 = q|  \entry{xr1}{inbook}{}
     }
     \strng{namehash}{ZZ1}
     \strng{fullhash}{ZZ1}
-    \field{sortinit}{Z}
+    <BDS>SORTINIT</BDS>
     \field{origyear}{1921}
     \field{title}{Moods Mildly Modified}
     \strng{xref}{xrm}
@@ -266,7 +266,7 @@ my $xr2 = q|  \entry{xr2}{inbook}{}
     }
     \strng{namehash}{II1}
     \strng{fullhash}{II1}
-    \field{sortinit}{I}
+    <BDS>SORTINIT</BDS>
     \field{origyear}{1926}
     \field{title}{Migraines Multiplying Madly}
     \strng{xref}{xrm}
@@ -284,7 +284,7 @@ my $xrm = q|  \entry{xrm}{book}{}
     }
     \strng{namehash}{1}
     \strng{fullhash}{1}
-    \field{sortinit}{C}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1970}
     \field{title}{Calligraphy, Calisthenics, Culture}
     \field{year}{1970}
@@ -302,7 +302,7 @@ my $xr3 = q|  \entry{xr3}{inbook}{}
     }
     \strng{namehash}{NN1}
     \strng{fullhash}{NN1}
-    \field{sortinit}{N}
+    <BDS>SORTINIT</BDS>
     \field{origyear}{1923}
     \field{title}{Russion Regalia Revisited}
     \strng{xref}{xrt}
@@ -320,7 +320,7 @@ my $xrt = q|  \entry{xrt}{book}{}
     }
     \strng{namehash}{1}
     \strng{fullhash}{1}
-    \field{sortinit}{K}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1977}
     \field{title}{Kings, Cork and Calculation}
     \field{year}{1977}
@@ -344,7 +344,7 @@ my $cr4 = q|  \entry{cr4}{inbook}{}
     }
     \strng{namehash}{MM1}
     \strng{fullhash}{MM1}
-    \field{sortinit}{M}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1945}
     \field{booktitle}{Vanquished, Victor, Vandal}
     \field{origyear}{1911}
@@ -364,7 +364,7 @@ my $xr4 = q|  \entry{xr4}{inbook}{}
     }
     \strng{namehash}{MM2}
     \strng{fullhash}{MM2}
-    \field{sortinit}{M}
+    <BDS>SORTINIT</BDS>
     \field{origyear}{1933}
     \field{title}{Lumbering Lunatics}
   \endentry

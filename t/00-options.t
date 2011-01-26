@@ -75,7 +75,7 @@ my $l1 = q|  \entry{L1}{book}{}
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1998}
     \count{uniquename}{0}
     \field{day}{05}

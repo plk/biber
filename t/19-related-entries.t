@@ -26,6 +26,7 @@ Biber::Config->setoption('fastsort', 1);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
+my $shs = $section->get_list('SHORTHANDS');
 my $bibentries = $section->bibentries;
 
 my $k1 = q|  \entry{key1}{article}{}
@@ -37,7 +38,7 @@ my $k1 = q|  \entry{key1}{article}{}
     }
     \strng{namehash}{A1}
     \strng{fullhash}{A1}
-    \field{sortinit}{0}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1998}
     \field{journaltitle}{Journal Title}
     \field{number}{5}
@@ -67,7 +68,7 @@ my $k2 = q|  \entry{key2}{inbook}{}
     }
     \strng{namehash}{A1}
     \strng{fullhash}{A1}
-    \field{sortinit}{0}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{2009}
     \field{booktitle}{Booktitle}
     \field{related}{c2add694bf942dc77b376592d9c862cd}
@@ -95,7 +96,7 @@ my $k3 = q|  \entry{key3}{inbook}{}
     }
     \strng{namehash}{A1}
     \strng{fullhash}{A1}
-    \field{sortinit}{0}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{2010}
     \field{booktitle}{Booktitle}
     \field{related}{c2add694bf942dc77b376592d9c862cd}
@@ -117,7 +118,7 @@ my $kck1 = q|  \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
     }
     \strng{namehash}{A1}
     \strng{fullhash}{A1}
-    \field{sortinit}{0}
+    <BDS>SORTINIT</BDS>
     \field{journaltitle}{Journal Title}
     \field{number}{5}
     \field{shorthand}{RK1}
@@ -144,7 +145,7 @@ my $kck2 = q|  \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
     }
     \strng{namehash}{A1}
     \strng{fullhash}{A1}
-    \field{sortinit}{0}
+    <BDS>SORTINIT</BDS>
     \field{booktitle}{Booktitle}
     \field{shorthand}{RK2}
     \field{title}{Reprint Title}
@@ -169,7 +170,7 @@ my $kck3 = q|  \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
     }
     \strng{namehash}{A1}
     \strng{fullhash}{A1}
-    \field{sortinit}{0}
+    <BDS>SORTINIT</BDS>
     \field{booktitle}{Booktitle}
     \field{shorthand}{RK3}
     \field{title}{Reprint Title}
@@ -194,7 +195,7 @@ my $kck4 = q|  \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly}
     }
     \strng{namehash}{A1}
     \strng{fullhash}{A1}
-    \field{sortinit}{0}
+    <BDS>SORTINIT</BDS>
     \field{booktitle}{Booktitle}
     \field{shorthand}{RK4}
     \field{title}{Reprint Title}
@@ -214,6 +215,6 @@ is( $out->get_output_entry('3631578538a2d6ba5879b31a9a42f290'), $kck3, 'Related 
 # it shouldn't be in the .bbl
 is( $out->get_output_entry('caf8e34be07426ae7127c1b4829983c1'), $kck4, 'Related entry test 7' ) ;
 is( $out->get_output_entry('key4'), undef, 'Related entry test 8' ) ;
-is_deeply([$section->get_shorthands], ['key1', 'key2', 'key3'], 'Related entry test 9');
+is_deeply([$shs->get_keys], ['key1', 'key2', 'key3'], 'Related entry test 9');
 
 unlink <*.utf8>;

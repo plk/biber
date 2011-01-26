@@ -276,7 +276,7 @@ my $l1 = q|  \entry{L1}{book}{}
     }
     \strng{namehash}{AA1}
     \strng{fullhash}{AA1}
-    \field{sortinit}{A}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -290,7 +290,7 @@ my $l2 = q|  \entry{L2}{book}{}
     }
     \strng{namehash}{BBB1}
     \strng{fullhash}{BBB1}
-    \field{sortinit}{B}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -304,7 +304,7 @@ my $l3 = q|  \entry{L3}{book}{}
     }
     \strng{namehash}{CCZ1}
     \strng{fullhash}{CCZ1}
-    \field{sortinit}{C}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -318,7 +318,7 @@ my $l4 = q|  \entry{L4}{book}{}
     }
     \strng{namehash}{DDD1}
     \strng{fullhash}{DDD1}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -332,7 +332,7 @@ my $l5 = q|  \entry{L5}{book}{}
     }
     \strng{namehash}{vEE1}
     \strng{fullhash}{vEE1}
-    \field{sortinit}{v}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -346,7 +346,7 @@ my $l6 = q|  \entry{L6}{book}{}
     }
     \strng{namehash}{vdvFF1}
     \strng{fullhash}{vdvFF1}
-    \field{sortinit}{v}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -360,7 +360,7 @@ my $l7 = q|  \entry{L7}{book}{}
     }
     \strng{namehash}{vGGR1}
     \strng{fullhash}{vGGR1}
-    \field{sortinit}{v}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -374,7 +374,7 @@ my $l8 = q|  \entry{L8}{book}{}
     }
     \strng{namehash}{vHHF1}
     \strng{fullhash}{vHHF1}
-    \field{sortinit}{v}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -388,7 +388,7 @@ my $l9 = q|  \entry{L9}{book}{}
     }
     \strng{namehash}{II1}
     \strng{fullhash}{II1}
-    \field{sortinit}{I}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -403,7 +403,7 @@ my $l10 = q|  \entry{L10}{book}{}
     }
     \strng{namehash}{JIJ1}
     \strng{fullhash}{JIJ1}
-    \field{sortinit}{J}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -418,7 +418,7 @@ my $l10a = q|  \entry{L10a}{book}{}
     }
     \strng{namehash}{PJJJ1}
     \strng{fullhash}{PJJJ1}
-    \field{sortinit}{P}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -433,7 +433,7 @@ my $l11 = q|  \entry{L11}{book}{}
     }
     \strng{namehash}{vKJK1}
     \strng{fullhash}{vKJK1}
-    \field{sortinit}{v}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -447,7 +447,7 @@ my $l12 = q|  \entry{L12}{book}{}
     }
     \strng{namehash}{dlVPCLXJ1}
     \strng{fullhash}{dlVPCLXJ1}
-    \field{sortinit}{d}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -461,7 +461,7 @@ my $l13 = q|  \entry{L13}{book}{}
     }
     \strng{namehash}{VdGRJ1}
     \strng{fullhash}{VdGRJ1}
-    \field{sortinit}{V}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -475,7 +475,7 @@ my $l14 = q|  \entry{L14}{book}{}
     }
     \strng{namehash}{SJMO1}
     \strng{fullhash}{SJMO1}
-    \field{sortinit}{S}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -489,7 +489,7 @@ my $l15 = q|  \entry{L15}{book}{}
     }
     \strng{namehash}{vGRP1}
     \strng{fullhash}{vGRP1}
-    \field{sortinit}{v}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -503,7 +503,7 @@ my $l16 = q|  \entry{L16}{book}{}
     }
     \strng{namehash}{vGRP1}
     \strng{fullhash}{vGRP1}
-    \field{sortinit}{v}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -517,7 +517,7 @@ my $l17 = q|  \entry{L17}{book}{}
     }
     \strng{namehash}{LBH1}
     \strng{fullhash}{LBH1}
-    \field{sortinit}{L}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -531,7 +531,7 @@ my $l18 = q|  \entry{L18}{book}{}
     }
     \strng{namehash}{LBH1}
     \strng{fullhash}{LBH1}
-    \field{sortinit}{L}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -545,7 +545,7 @@ my $l19 = q|  \entry{L19}{book}{}
     }
     \strng{namehash}{MKP1}
     \strng{fullhash}{MKP1}
-    \field{sortinit}{M}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -559,7 +559,7 @@ my $l20 = q|  \entry{L20}{book}{}
     }
     \strng{namehash}{FJ1}
     \strng{fullhash}{FJ1}
-    \field{sortinit}{F}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -573,13 +573,11 @@ my $l21 = q|  \entry{L21}{book}{}
     }
     \strng{namehash}{SS1}
     \strng{fullhash}{SS1}
-    \field{sortinit}{S}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
 
-# sortinit is set to a diacritic-stripped fallback since the Unicode equivalent
-# of the sortinit latex character macro is not valid in the bbl encoding
 my $l22 = q|  \entry{L22}{book}{}
     \name{labelname}{1}{%
       {{{\v S}mith}{{\v S}.}{Someone}{S.}{}{}{}{}}%
@@ -589,7 +587,7 @@ my $l22 = q|  \entry{L22}{book}{}
     }
     \strng{namehash}{SS1}
     \strng{fullhash}{SS1}
-    \field{sortinit}{\v{S}}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -604,7 +602,7 @@ my $l23 = q|  \entry{L23}{book}{}
     }
     \strng{namehash}{SŠ1}
     \strng{fullhash}{SŠ1}
-    \field{sortinit}{S}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -618,7 +616,7 @@ my $l24 = q|  \entry{L24}{book}{}
     }
     \strng{namehash}{ŠS1}
     \strng{fullhash}{ŠS1}
-    \field{sortinit}{Š}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -632,7 +630,7 @@ my $l25 = q|  \entry{L25}{book}{}
     }
     \strng{namehash}{A1}
     \strng{fullhash}{A1}
-    \field{sortinit}{A}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -646,7 +644,7 @@ my $l26 = q|  \entry{L26}{book}{}
     }
     \strng{namehash}{S1}
     \strng{fullhash}{S1}
-    \field{sortinit}{S}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;
@@ -655,7 +653,7 @@ my $l26 = q|  \entry{L26}{book}{}
 my $l28 = q|  \entry{L28}{book}{}
     \strng{namehash}{1}
     \strng{fullhash}{1}
-    \field{sortinit}{0}
+    <BDS>SORTINIT</BDS>
     \warn{\item Name "Deux et al.,, O." is malformed (consecutive commas): skipping name}
   \endentry
 
@@ -671,7 +669,7 @@ my $l29 = q|  \entry{L29}{book}{}
     }
     \strng{namehash}{U1}
     \strng{fullhash}{U1}
-    \field{sortinit}{U}
+    <BDS>SORTINIT</BDS>
   \endentry
 
 |;

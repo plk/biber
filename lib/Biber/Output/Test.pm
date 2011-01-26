@@ -155,7 +155,10 @@ sub set_output_entry {
       $acc .= "    \\field{labelalpha}{$label}\n";
     }
   }
-  $acc .= "    \\field{sortinit}{" . $be->get_field('sortinit') . "}\n";
+
+  # This is special, we have to put a marker for sortinit and then replace this string
+  # on output as it can vary between lists
+  $acc .= "    <BDS>SORTINIT</BDS>\n";
 
   # The labelyear option determines whether "extrayear" is output
   # Skip generating extrayear for entries with "skiplab" set
@@ -308,6 +311,15 @@ sub output {
         if ($listtype eq 'entry') {
           my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
           my $entry_string = $$entry;
+
+          # Do any dynamic information replacement for information
+          # which varies in an entry between lists. Currently this means:
+          #
+          # * sortinit
+
+          my $si = '\field{sortinit}{' . $list->get_sortinitdata($k) . "}";
+          $entry_string =~ s|<BDS>SORTINIT</BDS>|$si|gxms;
+
           # If requested to convert UTF-8 to macros ...
           if (Biber::Config->getoption('bblsafechars')) {
             $logger->info('Converting UTF-8 to TeX macros on output to .bbl');

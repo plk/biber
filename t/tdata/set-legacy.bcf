@@ -116,8 +116,8 @@
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey>Elias1955</bcf:citekey>
-    <bcf:sectionlist label="TMAIN" type="entry"/>
-    <bcf:sectionlist label="TSHORTHANDS" type="shorthand">
+    <bcf:sectionlist label="MAIN" type="entry"/>
+    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
       <bcf:filter type="field">shorthand</bcf:filter>
     </bcf:sectionlist>
   </bcf:section>

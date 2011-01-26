@@ -20,24 +20,23 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
 Biber::Config->setoption('sortlocale', 'sv_SE');
-Biber::Config->setblxoption('sortlos', 1);
-
-
 
 # U::C Swedish tailoring
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $out = $biber->get_output_obj;
+my $main = $section->get_list('MAIN');
+my $shs = $section->get_list('SHORTHANDS');
 
-is_deeply([$section->get_citekeys], ['LS2','LS1','LS3','LS4'], 'U::C tailoring - 1');
-is_deeply([$section->get_shorthands], ['LS3', 'LS4','LS2','LS1'], 'U::C tailoring - 2');
+# Shorthands are sorted by shorthand (as per bcf)
+is_deeply([$main->get_keys], ['LS2','LS1','LS3','LS4'], 'U::C tailoring - 1');
+is_deeply([$shs->get_keys], ['LS3', 'LS4','LS2','LS1'], 'U::C tailoring - 2');
 
-Biber::Config->setblxoption('sortlos', 0);
-$section->set_shorthands([]);
+# Set sorting of shorthands to global sorting default
+$shs->set_sortspec(Biber::Config->getblxoption('sorting')->{default});
+
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$out = $biber->get_output_obj;
-is_deeply([$section->get_shorthands], ['LS2', 'LS1','LS3','LS4'], 'U::C tailoring - 3');
+is_deeply([$shs->get_keys], ['LS2', 'LS1','LS3','LS4'], 'U::C tailoring - 3');
 
 
 # Descending name in Swedish collation
@@ -61,12 +60,12 @@ $S = [
                                                     ]
                                                    ];
 
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 
-is_deeply([$section->get_citekeys], ['LS3','LS4','LS1','LS2'], 'U::C tailoring descending - 1');
+is_deeply([$main->get_keys], ['LS3','LS4','LS1','LS2'], 'U::C tailoring descending - 1');
 
 # Local lower before upper setting
 $S = [
@@ -76,17 +75,19 @@ $S = [
                                                     ]
                                                    ];
 
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-is_deeply([$section->get_citekeys], ['LS4', 'LS3','LS2','LS1'], 'upper_before_lower locally false');
+is_deeply([$main->get_keys], ['LS4', 'LS3','LS2','LS1'], 'upper_before_lower locally false');
 
 # Local case insensitive negates the sortupper being false as this no longer
 # means anything so it reverts to bib order for LS3 and LS4
 # For this, have to reparse the .bcf otherwise the citekey order from previous
 # test is kept for things that are not sort distinguishable
 $biber->parse_ctrlfile('sort-uc.bcf');
+$section = $biber->sections->get_section(0);
+$main = $section->get_list('MAIN');
 $biber->set_output_obj(Biber::Output::BBL->new());
 $S = [
                                                     [
@@ -96,10 +97,8 @@ $S = [
                                                     ]
                                                    ];
 
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
-
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 $biber->prepare;
-$section = $biber->sections->get_section(0);
-is_deeply([$section->get_citekeys], ['LS3', 'LS4','LS2','LS1'], 'sortcase locally false, upper_before_lower locally false');
+is_deeply([$main->get_keys], ['LS3', 'LS4','LS2','LS1'], 'sortcase locally false, upper_before_lower locally false');
 
 unlink <*.utf8>;

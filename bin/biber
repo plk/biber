@@ -229,6 +229,10 @@ if ( $opts->{allentries} and $opts->{bibdata} ) {
     $bib_section->add_datasource({ type => 'file', name => $bibdatafile, datatype => Biber::Config->getoption('bibdatatype')});
   }
   $bib_section->allkeys;
+  my $mainlist = Biber::Section::List->new(label => 'MAIN');
+  $mainlist->set_type('entry');
+  $bib_section->add_list($mainlist);
+
   $logger->info('Using all citekeys in ' . Biber::Config->getoption('bibdatatype') . ' format files: ' . join(',', @{$opts->{bibdata}}));
   $bib_sections->add_section($bib_section);
   $biber->{sections} = $bib_sections;

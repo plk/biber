@@ -28,6 +28,8 @@ Biber::Config->setblxoption('labelyear', undef);
 
 # Now generate the information
 $biber->prepare;
+my $section = $biber->sections->get_section(0);
+my $main = $section->get_list('MAIN');
 my $out = $biber->get_output_obj;
 
 isa_ok($biber, "Biber");
@@ -138,7 +140,7 @@ my $sc3 = q|  \entry{L4}{book}{}
     \strng{namehash}{DJo1}
     \strng{fullhash}{DJo1}
     \field{labelalpha}{Doe\textbf{+}95}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{extraalpha}{2}
     \field{title}{Some title about sorting}
     \field{year}{1995}
@@ -162,7 +164,7 @@ my $sc4 = q|  \entry{L1}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe95}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{extraalpha}{1}
     \field{title}{Algorithms For Sorting}
     \field{year}{1995}
@@ -186,7 +188,7 @@ my $sc5 = q|  \entry{L2}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe95}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{extraalpha}{3}
     \field{title}{Sorting Algorithms}
     \field{year}{1995}
@@ -210,7 +212,7 @@ my $sc6 = q|  \entry{L3}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe95}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{extraalpha}{2}
     \field{title}{More and More Algorithms}
     \field{year}{1995}
@@ -218,8 +220,8 @@ my $sc6 = q|  \entry{L3}{book}{}
 
 |;
 
-is_deeply( Biber::Config->getblxoption('sorting')->{default}{label} , $sc1, 'first pass scheme');
-is_deeply( Biber::Config->getblxoption('sorting')->{default}{final} , $sc2, 'second pass scheme');
+is_deeply( $main->get_sortspec->{label} , $sc1, 'first pass scheme');
+is_deeply( $main->get_sortspec->{final} , $sc2, 'second pass scheme');
 is( $out->get_output_entry('l4'), $sc3, '\alphaothers set by "and others"');
 is( $out->get_output_entry('l1'), $sc4, '2-pass - labelalpha after title');
 is( $out->get_output_entry('l2'), $sc5, '2-pass - labelalpha after title');

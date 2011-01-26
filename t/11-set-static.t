@@ -36,7 +36,7 @@ my $string1 = q|  \entry{Static1}{set}{}
     }
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}
-    \field{sortinit}{0}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{2001}
     \field{annotation}{Some notes}
     \field{title}{Blessed Brains}
@@ -55,7 +55,7 @@ my $string2 = q|  \entry{Static2}{book}{}
     }
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}
-    \field{sortinit}{0}
+    <BDS>SORTINIT</BDS>
     \field{annotation}{Some Blessed Note}
     \field{title}{Blessed Brains}
     \field{year}{2001}
@@ -73,7 +73,7 @@ my $string3 = q|  \entry{Static3}{book}{}
     }
     \strng{namehash}{CC1}
     \strng{fullhash}{CC1}
-    \field{sortinit}{0}
+    <BDS>SORTINIT</BDS>
     \field{title}{Castles and Crime}
     \field{year}{2002}
   \endentry
@@ -90,7 +90,7 @@ my $string4 = q|  \entry{Static4}{book}{}
     }
     \strng{namehash}{DD1}
     \strng{fullhash}{DD1}
-    \field{sortinit}{0}
+    <BDS>SORTINIT</BDS>
     \field{title}{Dungeons, Dark and Dangerous}
     \field{year}{2005}
   \endentry
@@ -108,7 +108,7 @@ my $string5 = q|  \entry{Static2}{book}{}
     }
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}
-    \field{sortinit}{0}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{2001}
     \field{annotation}{Some Blessed Note}
     \field{title}{Blessed Brains}

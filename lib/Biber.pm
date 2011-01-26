@@ -509,6 +509,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     # Add any list specs to the Biber::Section object
     foreach my $list (@{$section->{sectionlist}}) {
       my $llabel = $list->{label};
+      if ($bib_section->get_list($llabel)) {
+        $logger->warn("Section list '$llabel' is repeated for section $secnum - ignoring subsequent mentions");
+        $self->{warnings}++;
+      }
+
       my $seclist = Biber::Section::List->new(label => $llabel);
       foreach my $filter (@{$list->{filter}}) {
         $seclist->add_filter($filter->{type}, $filter->{content});
@@ -547,14 +552,16 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     unless ($bib_section->get_list('SHORTHANDS')) {
       my $los = Biber::Section::List->new(label => 'SHORTHANDS');
       if (Biber::Config->getblxoption('sortlos')) {
-        $los->set_sortspec([ [ {}, {'shorthand'     => {}} ] ]);
+        $los->set_sortspec({label => [ [ {}, {'shorthand'     => {}} ] ],
+                            final => [ [ {}, {'shorthand'     => {}} ] ],
+                            schemes_same => 1});
         $los->add_filter('field', 'shorthand');
       }
       else {
         $los->set_sortspec(Biber::Config->getblxoption('sorting')->{default});
         $los->add_filter('field', 'shorthand');
       }
-      $los->set_type('key');
+      $los->set_type('shorthand');
       $bib_section->add_list($los);
     }
 
@@ -1331,7 +1338,6 @@ sub process_presort {
   }
 }
 
-
 =head2 process_lists
 
     Put presort fields for an entry into the main Biber bltx state
@@ -1346,7 +1352,11 @@ sub process_lists {
   my $section = $self->sections->get_section($secnum);
   foreach my $list (@{$section->get_lists}) {
     my $llabel = $list->get_label;
-    $logger->debug("Sorting list '$llabel'");
+
+    # Last-ditch falback in case we still don't have a sorting spec
+    # probably due to being called via biber with -a and -d flags
+    $list->set_sortspec(Biber::Config->getblxoption('sorting')->{default}) unless $list->get_sortspec;
+
     $list->set_keys([ $section->get_citekeys ]);
     $logger->debug("Populated list '$llabel' in section $secnum with keys: " . join(', ', $list->get_keys));
 
@@ -1363,6 +1373,11 @@ sub process_lists {
     if (my $filters = $list->get_filters) {
       my $flist = [];
 KEYLOOP: foreach my $k ($list->get_keys) {
+        # Filter out skiplos entries as a special case in 'shorthand' type lists
+        if ($list->get_type eq 'shorthand') {
+          next if Biber::Config->getblxoption('skiplos', $section->bibentry($k), $k);
+        }
+
         $logger->debug("Checking key '$k' in list '$llabel' against list filters");
         my $be = $section->bibentry($k);
         foreach my $t (keys %$filters) {
@@ -1433,6 +1448,7 @@ sub check_list_filter {
 sub generate_label_sortinfo {
   my $self = shift;
   my $list = shift;
+
   my $sortspec = $list->get_sortspec;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -1459,7 +1475,7 @@ sub generate_final_sortinfo {
   my $sortspec = $list->get_sortspec;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  Biber::Config->reset_extra(); # Since this sub is per-list, have to reset the
+  Biber::Config->reset_seen_extra(); # Since this sub is per-list, have to reset the
                                 # extra* counters per list
   # This loop critically depends on the order of the citekeys which
   # is why we have to do a first sorting pass before this
@@ -1506,6 +1522,7 @@ sub sort_list {
   my $list = shift;
   my $sortspec = $list->get_sortspec;
   my @keys = $list->get_keys;
+  my $llabel = $list->get_label;
 
   # Only bother with sorting a second time if there has been a data
   # change since the first sort or if we need to run a second sort as it has a different
@@ -1547,6 +1564,8 @@ sub sort_list {
     $sortscheme = $sortspec->{label};
   }
 
+  $logger->trace("Sorting with scheme\n-------------------\n" . Data::Dump::pp($sortscheme) . "\n-------------------\n");
+
   # Set up locale. Order of priority is:
   # 1. locale value passed to Unicode::Collate::Locale->new() (Unicode::Collate sorts only)
   # 2. Biber sortlocale option
@@ -1559,8 +1578,8 @@ sub sort_list {
 
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
-    $logger->debug("Sorting keys with built-in sort (with locale $thislocale) ...") unless $BIBER_SORT_FIRSTPASSDONE;
-
+    $logger->info("Sorting list '$llabel' keys") unless $BIBER_SORT_FIRSTPASSDONE;
+    $logger->debug("Sorting with fastsort (locale $thislocale)") unless $BIBER_SORT_FIRSTPASSDONE;
     unless (setlocale(LC_ALL, $thislocale)) {
       unless ($BIBER_SORT_FIRSTPASSDONE) {
         $logger->warn("Unavailable locale $thislocale");
@@ -1676,8 +1695,9 @@ sub sort_list {
     }
 
     my $UCAversion = $Collator->version();
-    $logger->info("Sorting keys with Unicode::Collate (" .
-		  stringify_hash($collopts) . ", UCA version: $UCAversion)") unless $BIBER_SORT_FIRSTPASSDONE;
+    $logger->info("Sorting list '$llabel' keys") unless $BIBER_SORT_FIRSTPASSDONE;
+    $logger->debug("Sorting with Unicode::Collate (" . stringify_hash($collopts) . ", UCA version: $UCAversion)") unless $BIBER_SORT_FIRSTPASSDONE;
+
     # Log if U::C::L currently has no tailoring for used locale
     if ($Collator->getlocale eq 'default') {
       $logger->info("No sort tailoring available for locale '$thislocale'") unless $BIBER_SORT_FIRSTPASSDONE;
@@ -1761,100 +1781,6 @@ sub sort_list {
 
   $list->set_keys([ @keys ]);
 
-  return;
-}
-
-=head2 sort_shorthands
-
-    Sort the shorthands according to a certain sorting scheme.
-    If sortlos = 1 (los), sort by shorthand
-    If sortlos = 0 (bib), sort by bibliography order
-
-=cut
-
-sub sort_shorthands {
-  my $self = shift;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my @shorthands = $section->get_shorthands;
-  my @citekeys = $section->get_citekeys;
-  my $key_index;
-
-  my %citekeys = map {$_ => $key_index++} @citekeys;
-  # What we sort on depends on the 'sortlos' BibLaTeX option
-  my $thislocale = Biber::Config->getoption('sortlocale');
-
-  # sort by sortkey - this means shorthands should be in same order as
-  # citekeys which has already been sorted so just sort on the index each
-  # shorthand (which is a citekey) occurs in @citekeys
-  unless (Biber::Config->getblxoption('sortlos')) {
-    $logger->debug("Sorting shorthands by 'sortkey'");
-    @shorthands = sort {$citekeys{$a} <=> $citekeys{$b}} @shorthands;
-  }
-  else {
-    # sort by shorthands so we actually have to sort by the shorthand values
-    if ( Biber::Config->getoption('fastsort') ) {
-      use locale;
-      $logger->info("Sorting shorthands with built-in sort (with locale $thislocale) ...");
-      unless (setlocale( LC_ALL, $thislocale )) {
-        $logger->warn("Unavailable locale $thislocale");
-        $self->{warnings}++;
-      }
-      $logger->debug("Sorting shorthands by 'shorthand'");
-      @shorthands = sort { $section->bibentry($a)->get_field('shorthand') cmp $section->bibentry($b)->get_field('shorthand') } @shorthands;
-    }
-    else {
-      require Unicode::Collate::Locale;
-      my $opts = Biber::Config->getoption('collate_options');
-      my $collopts;
-      unless (ref($opts) eq "HASH") { # opts for this can come in a string from cmd line
-        $collopts = eval "{ $opts }" or $logger->logcarp("Incorrect collate_options: $@");
-      }
-      else {
-        $collopts = $opts;
-      }
-
-      # UCA level 2 if case insensitive sorting is requested
-      unless (Biber::Config->getoption('sortcase')) {
-        $collopts->{level} = 2;
-      }
-
-      # Add upper_before_lower option
-      $collopts->{upper_before_lower} = Biber::Config->getoption('sortupper');
-
-      # Add tailoring locale for Unicode::Collate
-      if ($thislocale and not $collopts->{locale}) {
-        $collopts->{locale} = $thislocale;
-        if ($collopts->{table}) {
-          my $t = delete $collopts->{table};
-          $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)");
-        }
-      }
-
-      # Remove locale from options as we need this to make the object
-      my $coll_locale = delete $collopts->{locale};
-      # Now create the collator object
-      my $Collator = Unicode::Collate::Locale->new( locale => $coll_locale )
-        or $logger->logcarp("Problem with Unicode::Collate options: $@");
-
-      # Note reporting tailoring locale default overrides here since we already
-      # do that during main sorting and the tailoring can't change by the time
-      # we get here
-      # Still using ->change though so we don't die on tailoring option conflicts
-      $Collator->change( %{$collopts} );
-
-      my $UCAversion = $Collator->version();
-      $logger->info("Sorting shorthands with Unicode::Collate (" .
-                    stringify_hash($collopts) . ", UCA version: $UCAversion)");
-
-      $logger->debug("Sorting shorthands by 'shorthand'");
-      @shorthands = sort {
-        $Collator->cmp( $section->bibentry($a)->get_field('shorthand'),
-                        $section->bibentry($b)->get_field('shorthand') )
-      } @shorthands;
-    }
-  }
-  $section->set_shorthands([ @shorthands ]);
   return;
 }
 
@@ -2055,12 +1981,6 @@ sub create_output_section {
   foreach my $k (@undef_citekeys) {
     $output_obj->set_output_undefkey($k, $section);
   }
-
-  # # Push the sorted shorthands for each section into the output object
-  # if ( $section->get_shorthands ) {
-  #   $self->sort_shorthands;
-  #   $output_obj->set_los([ $section->get_shorthands ], $secnum);
-  # }
 
   return;
 }

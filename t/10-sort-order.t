@@ -34,7 +34,7 @@ Biber::Config->setblxoption('labelyear', undef);
 # (re)generate informtion based on option settings
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $section->get_list('TMAIN');
+my $main = $section->get_list('MAIN');
 
 is_deeply([ $main->get_keys ], ['L2','L1B','L1','L4','L3','L5','L1A','L7','L8','L6','L9'], 'citeorder');
 

@@ -26,6 +26,7 @@ Biber::Config->setoption('fastsort', 1);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
+my $shs = $section->get_list('SHORTHANDS');
 my $bibentries = $section->bibentries;
 
 my $set1 = q|  \entry{seta}{set}{}
@@ -39,7 +40,7 @@ my $set1 = q|  \entry{seta}{set}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe10}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{extrayear}{1}
     \field{labelyear}{2010}
     \field{extraalpha}{1}
@@ -60,7 +61,7 @@ my $set2 = q|  \entry{set:membera}{book}{}
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{title}{Set Member A}
     \field{year}{2010}
     \keyw{key1, key2}
@@ -78,7 +79,7 @@ my $set3 = q|  \entry{set:memberb}{book}{}
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{title}{Set Member B}
     \field{year}{2010}
   \endentry
@@ -95,7 +96,7 @@ my $set4 = q|  \entry{set:memberc}{book}{}
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{title}{Set Member C}
     \field{year}{2010}
   \endentry
@@ -112,7 +113,7 @@ my $noset1 = q|  \entry{noseta}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe10}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{extrayear}{2}
     \field{labelyear}{2010}
     \field{extraalpha}{2}
@@ -132,7 +133,7 @@ my $noset2 = q|  \entry{nosetb}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe10}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{extrayear}{3}
     \field{labelyear}{2010}
     \field{extraalpha}{3}
@@ -152,7 +153,7 @@ my $noset3 = q|  \entry{nosetc}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe10}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{extrayear}{4}
     \field{labelyear}{2010}
     \field{extraalpha}{4}
@@ -177,7 +178,7 @@ my $sk4 = q|  \entry{skip4}{article}{dataonly}
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{shorthand}{AWS}
     \field{title}{Algorithms Which Sort}
     \field{year}{1932}
@@ -185,7 +186,7 @@ my $sk4 = q|  \entry{skip4}{article}{dataonly}
 
 |;
 
-is_deeply([$section->get_shorthands], ['skip1'], 'skiplos - not in LOS');
+is_deeply([$shs->get_keys], ['skip1'], 'skiplos - not in LOS');
 is($bibentries->entry('skip1')->get_field('options'), 'skipbib', 'Passing skipbib through');
 is($bibentries->entry('skip2')->get_field('labelalpha'), 'SA', 'Normal labelalpha');
 is($bibentries->entry('skip2')->get_field($bibentries->entry('skip2')->get_field('labelyearname')), '1995', 'Normal labelyear');

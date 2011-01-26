@@ -44,7 +44,7 @@ vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsc
 set:yoon maron coleridge tvonb t2} ;
 
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
-is_deeply( [ $section->get_list('TSHORTHANDS')->get_keys ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
+is_deeply( [ $section->get_list('SHORTHANDS')->get_keys ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
 
 # reset some options and re-generate information
 
@@ -98,7 +98,7 @@ my $murray1 = q|  \entry{murray}{article}{}
     \strng{namehash}{HMJ+1}
     \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
     \field{labelalpha}{Hos\textbf{+}98}
-    \field{sortinit}{H}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1998}
     \count{uniquename}{0}
     \true{singletitle}
@@ -153,7 +153,7 @@ my $murray2 = q|  \entry{murray}{article}{}
     \strng{namehash}{HMJ+1}
     \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
     \field{labelalpha}{Hos98}
-    \field{sortinit}{H}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1998}
     \count{uniquename}{0}
     \true{singletitle}
@@ -182,7 +182,7 @@ my $t1 = q|  \entry{t1}{misc}{}
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}
     \field{labelalpha}{Bro92}
-    \field{sortinit}{B}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1992}
     \count{uniquename}{0}
     \field{title}{Normal things {$^{3}$}}
@@ -202,7 +202,7 @@ my $t2 = q|  \entry{t2}{misc}{}
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}
     \field{labelalpha}{Bro94}
-    \field{sortinit}{B}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1994}
     \count{uniquename}{0}
     \field{title}{Signs of W$\frac{o}{a}$nder}

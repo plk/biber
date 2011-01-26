@@ -72,8 +72,8 @@ Biber::Config->setblxoption('useprefix', 1);
 $biber->prepare;
 
 my $section = $biber->sections->get_section(0);
-my $main = $section->get_list('TMAIN');
-my $bibentries = $section->bibentries;
+my $main = $section->get_list('MAIN');
+my $bibentries;
 
 is($main->get_sortdata('tvonb')->[0], $useprefix1, 'von with type-specific presort, exclusions and useprefix=true' );
 
@@ -81,7 +81,6 @@ Biber::Config->setblxoption('useprefix', 0);
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('tvonb')->[0], $useprefix2, 'von with type-specific presort, exclusions and useprefix=false' );
 
@@ -165,7 +164,6 @@ Biber::Config->setoption('sortcase', '1');
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('luzzatto')->[0], $prefix1, 'Title with nosort' );
 is($main->get_sortdata('hasan')->[0], $diacritic1, 'Name with nosort' );
@@ -193,7 +191,6 @@ Biber::Config->setoption('sortcase', 0);
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('jaffe')->[0], $edtypeclass1, 'Editor type/class' );
 
@@ -305,7 +302,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('moraux')->[0], $dates1, 'Very contrived but thorough test of date sorting' );
 
@@ -321,7 +317,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('augustine')->[0], $lists1, 'max/minitems test 1 (publisher)' );
 
@@ -336,7 +331,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('cotton')->[0], $lists2, 'max/minitems test 2 (location)' );
 
@@ -352,7 +346,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('chiu')->[0], $lists3, 'max/minitems test 3 (institution)' );
 
@@ -368,7 +361,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('chiu')->[0], $lists4, 'max/minitems test 4 (institution - minitems=2)' );
 
@@ -385,7 +377,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('chiu')->[0], $lists5, 'max/minitems test 5 (institution - maxitems=4/minitems=3)' );
 
@@ -430,7 +421,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff1, 'nty with default left offset, 4 digit year' );
 
@@ -474,7 +464,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 Biber::Config->setoption('sortcase', 1);
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff2, 'nty with left offset, 3 digit year, case sensitive' );
 
@@ -519,7 +508,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff3, 'nty with left offset, 4 digit year, case sensitive' );
 
@@ -563,7 +551,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 Biber::Config->setoption('sortcase', 0);
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff4, 'nty with right offset, 3 digit year' );
 
@@ -607,7 +594,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff5, 'nty with right offset, 4 digit year' );
 
@@ -652,7 +638,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff6, 'ntyd with left offset, 4 digit year' );
 
@@ -697,7 +682,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff7, 'ntyd with left offset, 3 digit year' );
 
@@ -742,7 +726,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff8, 'ntyd with right offset, 4 digit year' );
 
@@ -787,7 +770,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff9, 'ntyd with right offset, 3 digit year' );
 
@@ -831,7 +813,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('stdmodel')->[0], $vol1, 'nty with right-padded vol' );
 
@@ -876,7 +857,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('stdmodel')->[0], $vol2, 'nty with right-padded 7-char vol' );
 
@@ -923,7 +903,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('stdmodel')->[0], $vol3, 'nty with left-padded 5-char "a" pad char vol' );
 
@@ -968,7 +947,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('stdmodel')->[0], $nty, 'basic nty sort' );
 is($main->get_sortdata('angenendtsk')->[0], $sk1, 'basic sortkey sort' );
@@ -1014,7 +992,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('stdmodel')->[0], $nyt, 'basic nyt sort' );
 
@@ -1058,7 +1035,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('stdmodel')->[0], $nyvt, 'basic nyvt sort' );
 
@@ -1119,7 +1095,6 @@ $bibentries->entry('stdmodel:glashow')->del_field('sortlabelalpha');
 # anyt without labelalpha
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('stdmodel')->[0], $anyt, 'anyt sort (without labelalpha)' );
 
@@ -1168,7 +1143,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('stdmodel')->[0], $anyvt_la, 'anyvt sort (with labelalpha)' );
 is($main->get_sortdata('murray')->[0], $anyvt_la2, 'anyvt sort (> maxnames=3 minnames=1, with labelalpha and alphaothers)' );
@@ -1178,7 +1152,6 @@ Biber::Config->setblxoption('minnames', 2);
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('murray')->[0], $anyvt_la4, 'anyvt sort (> maxnames=2 minnames=2, with labelalpha and alphaothers)' );
 
@@ -1203,7 +1176,6 @@ $bibentries->entry('murray')->del_field('sortlabelalpha');
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('stdmodel')->[0], $anyvt, 'anyvt sort (without labelalpha)' );
 
@@ -1243,7 +1215,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('stdmodel')->[0], $ynt, 'basic ynt sort' );
 
@@ -1283,7 +1254,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('stdmodel')->[0], $ydnt, 'basic ydnt sort' );
 Biber::Config->setblxoption('labelalpha', 0);
@@ -1299,7 +1269,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('stdmodel')->[0], $debug, 'basic debug sort' );
 
@@ -1344,7 +1313,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 is($main->get_sortdata('stdmodel:ps_sc')->[0], $ps_sc, 'nty with modified presort and short-circuit title' );
 
 # nty with use* all off
@@ -1390,7 +1358,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('stdmodel')->[0], $noname, 'nty with use* all off' );
 
@@ -1406,7 +1373,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('stdmodel')->[0], $citeorder, 'citeorder' );
 

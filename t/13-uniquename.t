@@ -44,7 +44,7 @@ my $un1 = q|  \entry{un1}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe94}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1994}
     \count{uniquename}{2}
     \field{title}{Unique 1}
@@ -69,7 +69,7 @@ my $un2 = q|  \entry{un2}{book}{}
     \strng{namehash}{DE1}
     \strng{fullhash}{DE1}
     \field{labelalpha}{Doe34}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1934}
     \count{uniquename}{1}
     \field{title}{Unique 2}
@@ -94,7 +94,7 @@ my $un3 = q|  \entry{un3}{book}{}
     \strng{namehash}{DJ2}
     \strng{fullhash}{DJ2}
     \field{labelalpha}{Doe83}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1983}
     \count{uniquename}{2}
     \field{title}{Unique 3}
@@ -121,7 +121,7 @@ my $un4 = q|  \entry{un4}{book}{}
     \strng{namehash}{DJ+1}
     \strng{fullhash}{DJMM1}
     \field{labelalpha}{Doe\textbf{+}21}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1921}
     \count{uniquename}{0}
     \field{title}{Unique 4}
@@ -150,7 +150,7 @@ my $un5 = q|  \entry{un5}{book}{}
     \strng{namehash}{C1}
     \strng{fullhash}{DJMM1}
     \field{labelalpha}{Cha21}
-    \field{sortinit}{D}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1921}
     \count{uniquename}{0}
     \field{title}{Unique 5}

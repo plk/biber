@@ -173,8 +173,8 @@
     <bcf:citekey>knuth:ct:a</bcf:citekey>
     <bcf:citekey>knuth:ct:b</bcf:citekey>
     <bcf:citekey>knuth:ct:c</bcf:citekey>
-    <bcf:sectionlist label="TMAIN" type="entry"/>
-    <bcf:sectionlist label="TSHORTHANDS" type="shorthand">
+    <bcf:sectionlist label="MAIN" type="entry"/>
+    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
       <bcf:filter type="field">shorthand</bcf:filter>
     </bcf:sectionlist>
   </bcf:section>

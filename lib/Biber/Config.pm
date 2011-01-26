@@ -469,7 +469,7 @@ sub incr_seenkey {
 
 =cut
 
-sub reset_extra {
+sub reset_seen_extra {
   shift; # class method so don't care about class name
   my $ay = shift;
   $CONFIG->{state}{seen_extrayear}= {};

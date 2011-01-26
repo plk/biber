@@ -1,14 +1,8 @@
 TODO in decreasing order of priority:
 
 * Generalised \printbibliography system
-  sortinit is a special, trick case as it's where the sort order peeks into an entry. It's
-  the only place where this happens and since sort order changes on every list potentially,
-  this means that the entries are not static.
-  What happens on multiple section 0s with repeated/non-repreated lists?
-  Warning on repeated list defined and skip (test)
-  Test skiplos in shorthand list
   Typed lists - entry, key, shorthand etc.
-  Take out MAIN, LOS backwards conmpat hacks in Biber.pm and BBL.pm
+  Take out MAIN, SHORTHANDS backwards compat hacks in Biber.pm and BBL.pm
 * bltx middlename support made transparent in Name.pm
 * Zotero? http://www.zotero.org/support/dev/start
   https://api.zotero.org/users/<USERID>/items/<iTEMID>?key=<APIKEY>

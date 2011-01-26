@@ -240,15 +240,9 @@ sub set_output_entry {
     }
   }
 
-  # # Skip sortinit if it's undefined from being skipped due to encoding issues
-  # if (my $si = $list->get_sortinitdata($be->get_field('citekey')) {
-  #   $acc .= "    \\field{sortinit}{$si}\n";
-  # }
-
-  # Skip sortinit if it's undefined from being skipped due to encoding issues
-  if ($be->field_exists('sortinit')) {
-    $acc .= "    \\field{sortinit}{" . $be->get_field('sortinit') . "}\n";
-  }
+  # This is special, we have to put a marker for sortinit and then replace this string
+  # on output as it can vary between lists
+  $acc .= "    <BDS>SORTINIT</BDS>\n";
 
   # The labelyear option determines whether "extrayear" is output
   # Skip generating extrayear for entries with "skiplab" set
@@ -411,10 +405,9 @@ sub output {
   print $target $data->{HEAD} or $logger->logdie("Failure to write head to $target_string: $!");
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
-    my $section = $self->sections->get_section($secnum);
 
     print $target "\n\\refsection{$secnum}\n";
-    foreach my $list (sort @{$self->get_output_lists}) {
+    foreach my $list (sort {$a->get_label cmp $b->get_label} @{$self->get_output_lists}) {
       my $listlabel = $list->get_label;
       my $listtype = $list->get_type;
 
@@ -432,24 +425,32 @@ sub output {
           my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
           my $entry_string = $$entry;
 
+          # Do any dynamic information replacement for information
+          # which varies in an entry between lists. Currently this means:
+          #
+          # * sortinit
+
+          my $si = '\field{sortinit}{' . $list->get_sortinitdata($k) . "}";
+          $entry_string =~ s|<BDS>SORTINIT</BDS>|$si|gxms;
+
           # If requested to convert UTF-8 to macros ...
           if (Biber::Config->getoption('bblsafechars')) {
             $entry_string = latex_recode_output($entry_string);
           }
+
           print $target $entry_string or $logger->logdie("Failure to write list element to $target_string: $!");
         }
         elsif ($listtype eq 'shorthand') {
-          next if Biber::Config->getblxoption('skiplos', $section->bibentry($k), $k);
           print $target "    \\key{$k}\n" or $logger->logdie("Failure to write list element to $target_string: $!");
         }
       }
 
       # Remove most of this conditional when biblatex supports lists
       if ($listlabel eq 'SHORTHANDS') {
-        print $target "  \\endlossort\n";
+        print $target "  \\endlossort\n\n";
       }
       else {
-        print $target "\n  \\endsortlist\n" unless ($listlabel eq 'MAIN');
+        print $target "\n  \\endsortlist\n\n" unless ($listlabel eq 'MAIN');
       }
     }
 

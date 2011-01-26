@@ -36,7 +36,7 @@ my $string1 = q|  \entry{Elias1955}{set}{}
     }
     \strng{namehash}{EP1}
     \strng{fullhash}{EP1}
-    \field{sortinit}{0}
+    <BDS>SORTINIT</BDS>
     \field{labelyear}{1955}
     \field{issn}{0096-1000}
     \field{journaltitle}{IRE Transactions on Information Theory}
@@ -64,7 +64,7 @@ my $string2 = q|  \entry{Elias1955a}{article}{}
     }
     \strng{namehash}{EP1}
     \strng{fullhash}{EP1}
-    \field{sortinit}{0}
+    <BDS>SORTINIT</BDS>
     \field{issn}{0096-1000}
     \field{journaltitle}{IRE Transactions on Information Theory}
     \field{month}{3}
@@ -91,7 +91,7 @@ my $string3 = q|  \entry{Elias1955b}{article}{}
     }
     \strng{namehash}{EP1}
     \strng{fullhash}{EP1}
-    \field{sortinit}{0}
+    <BDS>SORTINIT</BDS>
     \field{issn}{0096-1000}
     \field{journaltitle}{IRE Transactions on Information Theory}
     \field{month}{3}
