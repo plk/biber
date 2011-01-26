@@ -460,6 +460,23 @@ sub incr_seenkey {
   return;
 }
 
+
+=head2 reset_seen_extra
+
+    Reset the counters for extrayear and extraalpha
+
+    Biber::Config->reset_extra;
+
+=cut
+
+sub reset_extra {
+  shift; # class method so don't care about class name
+  my $ay = shift;
+  $CONFIG->{state}{seen_extrayear}= {};
+  $CONFIG->{state}{seen_extraalpha}= {};
+  return;
+}
+
 #============================
 #        seen_extrayear
 #============================
@@ -477,6 +494,7 @@ sub incr_seen_extrayear {
   my $ay = shift;
   return ++$CONFIG->{state}{seen_extrayear}{$ay};
 }
+
 
 #============================
 #       seen_nameyear_extrayear
@@ -548,6 +566,7 @@ sub incr_seen_extraalpha {
   my $ay = shift;
   return ++$CONFIG->{state}{seen_extraalpha}{$ay};
 }
+
 
 #============================
 #       seen_nameyear_extraalpha

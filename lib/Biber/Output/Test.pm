@@ -303,17 +303,24 @@ sub output {
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     foreach my $list (@{$self->get_output_lists}) {
       my $listlabel = $list->get_label;
+      my $listtype = $list->get_type;
       foreach my $k ($list->get_keys) {
-        my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
-        my $entry_string = $$entry;
-        # If requested to convert UTF-8 to macros ...
-        if (Biber::Config->getoption('bblsafechars')) {
-          $logger->info('Converting UTF-8 to TeX macros on output to .bbl');
-          require Biber::LaTeX::Recode;
-          $entry_string = Biber::LaTeX::Recode::latex_encode($entry_string,
-                                                             scheme => Biber::Config->getoption('bblsafecharsset'));
+        if ($listtype eq 'entry') {
+          my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
+          my $entry_string = $$entry;
+          # If requested to convert UTF-8 to macros ...
+          if (Biber::Config->getoption('bblsafechars')) {
+            $logger->info('Converting UTF-8 to TeX macros on output to .bbl');
+            require Biber::LaTeX::Recode;
+            $entry_string = Biber::LaTeX::Recode::latex_encode($entry_string,
+                                                               scheme => Biber::Config->getoption('bblsafecharsset'));
+          }
+          print $target $entry_string;
         }
-        print $target $entry_string;
+        elsif ($listtype eq 'shorthand') {
+          next if Biber::Config->getblxoption('skiplos', $section->bibentry($k), $k);
+          print $target $k;
+        }
       }
     }
   }

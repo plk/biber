@@ -142,5 +142,9 @@
     <bcf:citekey>un3</bcf:citekey>
     <bcf:citekey>un4</bcf:citekey>
     <bcf:citekey>un5</bcf:citekey>
+    <bcf:sectionlist label="TMAIN" type="entry"/>
+    <bcf:sectionlist label="TSHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
   </bcf:section>
 </bcf:controlfile>

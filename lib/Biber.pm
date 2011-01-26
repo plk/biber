@@ -492,23 +492,24 @@ sub parse_ctrlfile {
 
 SECTION: foreach my $section (@{$bcfxml->{section}}) {
     my $bib_section;
-
+    my $secnum = $section->{number};
     # Can be multiple section 0 entries and so re-use that section object if it exists
-    if (my $existing_section = $bib_sections->get_section($section->{number})) {
+    if (my $existing_section = $bib_sections->get_section($secnum)) {
       $bib_section = $existing_section;
     }
     else {
-      $bib_section = new Biber::Section('number' => $section->{number});
+      $bib_section = new Biber::Section('number' => $secnum);
     }
 
     # Set the data files for the section unless we've already done so
     # (for example, for multiple section 0 entries)
-    $bib_section->set_datasources($bibdatasources{$section->{number}}) unless
+    $bib_section->set_datasources($bibdatasources{$secnum}) unless
       $bib_section->get_datasources;
 
     # Add any list specs to the Biber::Section object
     foreach my $list (@{$section->{sectionlist}}) {
-      my $seclist = Biber::Section::List->new(label => $list->{label});
+      my $llabel = $list->{label};
+      my $seclist = Biber::Section::List->new(label => $llabel);
       foreach my $filter (@{$list->{filter}}) {
         $seclist->add_filter($filter->{type}, $filter->{content});
       }
@@ -524,6 +525,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
                                 final => $sorting_final,
                                 schemes_same => Compare($sorting_label, $sorting_final)});
       }
+      else {
+        $seclist->set_sortspec(Biber::Config->getblxoption('sorting')->{default});
+      }
+      $seclist->set_type($list->{type} || 'entry'); # lists are entry lists by default
+      $logger->debug("Adding list '$llabel' to section $secnum");
       $bib_section->add_list($seclist);
     }
 
@@ -531,7 +537,25 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     # MAIN list has no filter and no sorting spec so it uses all citekeys and the
     # global sort default.
     unless ($bib_section->get_list('MAIN')) {
-      $bib_section->add_list(Biber::Section::List->new(label => 'MAIN'));
+      my $mainlist = Biber::Section::List->new(label => 'MAIN');
+      $mainlist->set_sortspec(Biber::Config->getblxoption('sorting')->{default});
+      $mainlist->set_type('entry');
+      $bib_section->add_list($mainlist);
+    }
+
+    # Intermediate code until biblatex moves SHORTHANDS to a .bcf supported list
+    unless ($bib_section->get_list('SHORTHANDS')) {
+      my $los = Biber::Section::List->new(label => 'SHORTHANDS');
+      if (Biber::Config->getblxoption('sortlos')) {
+        $los->set_sortspec([ [ {}, {'shorthand'     => {}} ] ]);
+        $los->add_filter('field', 'shorthand');
+      }
+      else {
+        $los->set_sortspec(Biber::Config->getblxoption('sorting')->{default});
+        $los->add_filter('field', 'shorthand');
+      }
+      $los->set_type('key');
+      $bib_section->add_list($los);
     }
 
     # Stop reading citekeys if we encounter "*" as a citation as this means
@@ -545,11 +569,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         # lists "*" and also some other citekeys
         $bib_section->del_citekeys;
         $key_flag = 1; # There is at least one key, used for error reporting below
-        $logger->info("Using all citekeys in bib section " . $section->{number});
+        $logger->info("Using all citekeys in bib section " . $secnum);
         $bib_sections->add_section($bib_section);
         next SECTION;
       }
-      elsif (not Biber::Config->get_seenkey($key, $section->{number})) {
+      elsif (not Biber::Config->get_seenkey($key, $secnum)) {
         # Dynamic set definition
         # Save dynamic key -> member keys mapping for set entry auto creation later
         if (exists($keyc->{type}) and $keyc->{type} eq 'set') {
@@ -557,7 +581,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         }
         push @keys, $key;
         $key_flag = 1; # There is at least one key, used for error reporting below
-        Biber::Config->incr_seenkey($key, $section->{number});
+        Biber::Config->incr_seenkey($key, $secnum);
       }
       elsif (Biber::Config->get_keycase($key) ne $key) {
         $logger->warn("Case mismatch error between cite keys '$key' and '" . Biber::Config->get_keycase($key) . "'");
@@ -567,13 +591,13 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     }
 
     unless ($bib_section->is_allkeys) {
-      $logger->info("Found ", $#keys+1 , " citekeys in bib section " . $section->{number})
+      $logger->info("Found ", $#keys+1 , " citekeys in bib section $secnum")
     }
 
     if (Biber::Config->getoption('debug')) {
       my @debug_keys = sort @keys;
       unless ($bib_section->is_allkeys) {
-        $logger->debug("The citekeys for section " . $section->{number} . " are:\n", "@debug_keys", "\n");
+        $logger->debug("The citekeys for section $secnum are:\n", "@debug_keys", "\n");
       }
     }
 
@@ -844,9 +868,6 @@ sub process {
 
     # generate labelalpha information
     $self->process_labelalpha($citekey);
-
-    # track shorthands
-    $self->process_shorthands($citekey);
 
     # push entry-specific presort fields into the presort state
     $self->process_presort($citekey);
@@ -1289,23 +1310,6 @@ sub process_labelalpha {
   }
 }
 
-=head2 process_shorthands
-
-    Track shorthands
-
-=cut
-
-sub process_shorthands {
-  my $self = shift;
-  my $citekey = shift;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  my $bee = $be->get_field('entrytype');
-  if ( my $sh = $be->get_field('shorthand') ) {
-    $section->add_shorthand($bee, $citekey);
-  }
-}
 
 =head2 process_presort
 
@@ -1327,6 +1331,7 @@ sub process_presort {
   }
 }
 
+
 =head2 process_lists
 
     Put presort fields for an entry into the main Biber bltx state
@@ -1341,27 +1346,23 @@ sub process_lists {
   my $section = $self->sections->get_section($secnum);
   foreach my $list (@{$section->get_lists}) {
     my $llabel = $list->get_label;
-    $logger->debug("Sorting list with label '$llabel'");
-    # Default to global sortspec if none defined for this list
-    my $sortspec = $list->get_sortspec;
-    unless ($sortspec) {
-      $sortspec = Biber::Config->getblxoption('sorting')->{default};
-      $logger->debug("List '" . $list->get_label . "' defaults to global sorting spec");
-    }
+    $logger->debug("Sorting list '$llabel'");
+    $list->set_keys([ $section->get_citekeys ]);
+    $logger->debug("Populated list '$llabel' in section $secnum with keys: " . join(', ', $list->get_keys));
 
     # Sorting
-    $BIBER_SORT_DATA_CHANGE = 0;               # reset data-changed-after-first-sort flag
-    $BIBER_SORT_FIRSTPASSDONE = 0;             # Reset first/second pass flag
-    $self->generate_label_sortinfo($sortspec); # generate the first (label) pass sort info
-    $self->sortentries($sortspec);             # do a first (label) sort pass
-    $BIBER_SORT_FIRSTPASSDONE = 1;             # Flag to say first pass is done
-    $self->generate_final_sortinfo($sortspec); # generate the final sort information
-    $self->sortentries($sortspec);             # and then possibly do a second (final) sort pass
+    $BIBER_SORT_DATA_CHANGE = 0;           # reset data-changed-after-first-sort flag
+    $BIBER_SORT_FIRSTPASSDONE = 0;         # Reset first/second pass flag
+    $self->generate_label_sortinfo($list); # generate the first (label) pass sort info
+    $self->sort_list($list);               # do a first (label) sort pass
+    $BIBER_SORT_FIRSTPASSDONE = 1;         # Flag to say first pass is done
+    $self->generate_final_sortinfo($list); # generate the final sort information
+    $self->sort_list($list);               # possibly do a second (final) sort pass
 
     # Filtering
     if (my $filters = $list->get_filters) {
-      my $flist;
-KEYLOOP: foreach my $k ($section->get_citekeys) {
+      my $flist = [];
+KEYLOOP: foreach my $k ($list->get_keys) {
         $logger->debug("Checking key '$k' in list '$llabel' against list filters");
         my $be = $section->bibentry($k);
         foreach my $t (keys %$filters) {
@@ -1376,10 +1377,8 @@ KEYLOOP: foreach my $k ($section->get_citekeys) {
         }
         push @$flist, $k;
       }
+      $logger->debug("Keys after filtering list '$llabel' in section $secnum: " . join(', ', @$flist));
       $list->set_keys($flist); # Now save the sorted list in the list object
-    }
-    else {
-      $list->set_keys([$section->get_citekeys]); # No filtering, keys are the same as the section
     }
   }
   return;
@@ -1433,11 +1432,12 @@ sub check_list_filter {
 
 sub generate_label_sortinfo {
   my $self = shift;
-  my $sortspec = shift;
+  my $list = shift;
+  my $sortspec = $list->get_sortspec;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  foreach my $citekey ($section->get_citekeys) {
-    $self->_generatesortinfo($citekey, $sortspec->{label});
+  foreach my $key ($list->get_keys) {
+    $self->_generatesortinfo($key, $list, $sortspec->{label});
   }
   return;
 }
@@ -1455,26 +1455,29 @@ sub generate_label_sortinfo {
 
 sub generate_final_sortinfo {
   my $self = shift;
-  my $sortspec = shift;
+  my $list = shift;
+  my $sortspec = $list->get_sortspec;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+  Biber::Config->reset_extra(); # Since this sub is per-list, have to reset the
+                                # extra* counters per list
   # This loop critically depends on the order of the citekeys which
   # is why we have to do a first sorting pass before this
-  foreach my $citekey ($section->get_citekeys) {
-    my $be = $section->bibentry($citekey);
+  foreach my $key ($list->get_keys) {
+    my $be = $section->bibentry($key);
     my $bee = $be->get_field('entrytype');
     # Only generate extrayear and extraalpha if skiplab is not set.
     # Don't forget that skiplab is implied for set members
-    unless (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
-      my $nameyear_extrayear = $be->get_field('nameyear_extrayear');
-        if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
+    unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
+      if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
+        my $nameyear_extrayear = $be->get_field('nameyear_extrayear');
           if (Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
             $BIBER_SORT_DATA_CHANGE = 1;
             $be->set_field('extrayear', Biber::Config->incr_seen_extrayear($nameyear_extrayear));
         }
       }
-      my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha');
-        if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
+      if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
+        my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha');
           if (Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
             $BIBER_SORT_DATA_CHANGE = 1;
             $be->set_field('extraalpha', Biber::Config->incr_seen_extraalpha($nameyear_extraalpha));
@@ -1485,22 +1488,24 @@ sub generate_final_sortinfo {
     # change since the first sort or if we need to run a second sort as it has a different
     # scheme
     if ($BIBER_SORT_DATA_CHANGE or not $sortspec->{schemes_same}) {
-      $self->_generatesortinfo($citekey, $sortspec->{final});
+      $self->_generatesortinfo($key, $list, $sortspec->{final});
     }
   }
   return;
 }
 
-=head2 sortentries
+=head2 sort_list
 
-    Sort the entries according to a certain sorting scheme.
+    Sort a list using information in entries according to a certain sorting scheme.
     Use a flag to skip info messages on first pass
 
 =cut
 
-sub sortentries {
+sub sort_list {
   my $self = shift;
-  my $sortspec = shift;
+  my $list = shift;
+  my $sortspec = $list->get_sortspec;
+  my @keys = $list->get_keys;
 
   # Only bother with sorting a second time if there has been a data
   # change since the first sort or if we need to run a second sort as it has a different
@@ -1522,16 +1527,15 @@ sub sortentries {
 
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my @citekeys = $section->get_citekeys;
   if (Biber::Config->getoption('sortcase')) {
     $logger->debug("Sorting is by default case-SENSITIVE");
   }
   else {
     $logger->debug("Sorting is by default case-INSENSITIVE");
   }
-  $logger->debug("Citekeys before sort:\n");
-  foreach my $ck (@citekeys) {
-    $logger->debug("$ck => " . $section->bibentry($ck)->get_field('sortstring') . "\n");
+  $logger->debug("Keys before sort:\n");
+  foreach my $k (@keys) {
+    $logger->debug("$k => " . $list->get_sortdata($k)->[0] . "\n");
   }
 
   # Get the right sortscheme
@@ -1555,7 +1559,7 @@ sub sortentries {
 
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
-    $logger->debug("Sorting entries with built-in sort (with locale $thislocale) ...") unless $BIBER_SORT_FIRSTPASSDONE;
+    $logger->debug("Sorting keys with built-in sort (with locale $thislocale) ...") unless $BIBER_SORT_FIRSTPASSDONE;
 
     unless (setlocale(LC_ALL, $thislocale)) {
       unless ($BIBER_SORT_FIRSTPASSDONE) {
@@ -1574,7 +1578,7 @@ sub sortentries {
     my $glc = Biber::Config->getoption('sortcase') ? '' : 'lc ';
 
     foreach my $sortset (@{$sortscheme}) {
-      $data_extractor .= '$section->bibentry($_)->get_field("sortobj")->[' . $num_sorts . '],';
+      $data_extractor .= '$list->get_sortdata($_)->[1][' . $num_sorts . '],';
       $sorter .= ' || ' if $num_sorts; # don't add separator before first field
       my $lc = $glc; # Casing defaults to global default ...
       my $sc = $sortset->[0]{sortcase};
@@ -1620,10 +1624,9 @@ sub sortentries {
     $logger->trace("Sorting structure is: $sorter");
 
     # Schwartzian transform multi-field sort
-    @citekeys = map  { eval $sort_extractor }
-                sort { eval $sorter }
-                map  { eval $data_extractor } @citekeys;
-
+    @keys = map  { eval $sort_extractor }
+            sort { eval $sorter }
+            map  { eval $data_extractor } @keys;
   }
   else {
     require Unicode::Collate::Locale;
@@ -1673,7 +1676,7 @@ sub sortentries {
     }
 
     my $UCAversion = $Collator->version();
-    $logger->info("Sorting entries with Unicode::Collate (" .
+    $logger->info("Sorting keys with Unicode::Collate (" .
 		  stringify_hash($collopts) . ", UCA version: $UCAversion)") unless $BIBER_SORT_FIRSTPASSDONE;
     # Log if U::C::L currently has no tailoring for used locale
     if ($Collator->getlocale eq 'default') {
@@ -1713,7 +1716,7 @@ sub sortentries {
                 . ')';
       }
 
-      $data_extractor .= '$section->bibentry($_)->get_field("sortobj")->[' . $num_sorts . '],';
+      $data_extractor .= '$list->get_sortdata($_)->[1][' . $num_sorts . '],';
       $sorter .= ' || ' if $num_sorts; # don't add separator before first field
 
       my $sd = $sortset->[0]{sort_direction};
@@ -1746,16 +1749,17 @@ sub sortentries {
     $logger->trace("Sorting structure is: $sorter");
 
     # Schwartzian transform multi-field sort
-    @citekeys = map  { eval $sort_extractor }
-                sort { eval $sorter }
-                map  { eval $data_extractor } @citekeys;
+    @keys = map  { eval $sort_extractor }
+            sort { eval $sorter }
+            map  { eval $data_extractor } @keys;
   }
 
-  $logger->debug("Citekeys after sort:\n");
-  foreach my $ck (@citekeys) {
-    $logger->debug("$ck => " . $section->bibentry($ck)->get_field('sortstring') . "\n");
+  $logger->debug("Keys after sort:\n");
+  foreach my $k (@keys) {
+    $logger->debug("$k => " . $list->get_sortdata($k)->[0] . "\n");
   }
-  $section->set_citekeys([ @citekeys ]);
+
+  $list->set_keys([ @keys ]);
 
   return;
 }
@@ -1880,11 +1884,8 @@ sub prepare {
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
     $self->process_crossrefs;            # Process crossrefs/sets
     $self->validate_structure;           # Check bib structure
-
     $self->process;                      # Main entry processing loop
-
     $self->process_lists;                # process the output lists (sorting and filtering)
-
     $self->create_output_section;        # Generate and push the section output into the
                                          # output object ready for writing
   }
@@ -2037,7 +2038,6 @@ sub create_output_section {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
-
   # We rely on the order of this array for the order of the .bbl
   my @citekeys = $section->get_citekeys;
   foreach my $k (@citekeys) {
@@ -2056,11 +2056,11 @@ sub create_output_section {
     $output_obj->set_output_undefkey($k, $section);
   }
 
-  # Push the sorted shorthands for each section into the output object
-  if ( $section->get_shorthands ) {
-    $self->sort_shorthands;
-    $output_obj->set_los([ $section->get_shorthands ], $secnum);
-  }
+  # # Push the sorted shorthands for each section into the output object
+  # if ( $section->get_shorthands ) {
+  #   $self->sort_shorthands;
+  #   $output_obj->set_los([ $section->get_shorthands ], $secnum);
+  # }
 
   return;
 }

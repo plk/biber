@@ -276,10 +276,17 @@ sub output {
     print $target "SECTION: $secnum\n\n";
     foreach my $list (@{$self->get_output_lists}) {
       my $listlabel = $list->get_label;
+      my $listtype = $list->get_type;
       print $target "  LIST: $listlabel\n\n";
       foreach my $k ($list->get_keys) {
-        my $entry_string = $data->{ENTRIES}{$secnum}{index}{$k};
-        print $target $entry_string or $logger->logdie("Failure to write entry '$k' to $target_string: $!");
+        if ($listtype eq 'entry') {
+          my $entry_string = $data->{ENTRIES}{$secnum}{index}{$k};
+          print $target $entry_string or $logger->logdie("Failure to write entry '$k' to $target_string: $!");
+        }
+        elsif ($listtype eq 'shorthand') {
+          next if Biber::Config->getblxoption('skiplos', $section->bibentry($k), $k);
+          print $target $k or $logger->logdie("Failure to write list element to $target_string: $!");
+        }
       }
     }
   }

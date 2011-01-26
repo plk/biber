@@ -144,5 +144,9 @@
     <bcf:citekey>kant:kpv</bcf:citekey>
     <bcf:citekey>missing1</bcf:citekey>
     <bcf:citekey>missing2</bcf:citekey>
+    <bcf:sectionlist label="TMAIN" type="entry"/>
+    <bcf:sectionlist label="TSHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
   </bcf:section>
 </bcf:controlfile>

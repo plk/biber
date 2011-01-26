@@ -164,6 +164,10 @@
     <bcf:citekey>L3</bcf:citekey>
     <bcf:citekey>L4</bcf:citekey>
     <bcf:citekey>L5</bcf:citekey>
+    <bcf:sectionlist label="TMAIN" type="entry"/>
+    <bcf:sectionlist label="TSHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
   </bcf:section>
   <!-- section 0 (cont.) -->
   <bcf:section number="0">

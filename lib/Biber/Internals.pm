@@ -297,7 +297,7 @@ sub _dispatch_sorting {
 
 # Conjunctive set of sorting sets
 sub _generatesortinfo {
-  my ($self, $citekey, $sortscheme) = @_;
+  my ($self, $citekey, $list, $sortscheme) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -320,8 +320,7 @@ sub _generatesortinfo {
   # sortstring isn't actually used to sort, it's used to generate sortinit and
   # for debugging purposes
   my $ss = join($sorting_sep, @$sortobj);
-  $be->set_field('sortstring', $ss);
-  $be->set_field('sortobj', $sortobj);
+  $list->set_sortdata($citekey, [$ss, $sortobj]);
 
   # Generate sortinit - the initial letter of the sortstring. Skip
   # if there is no sortstring which is possible in tests
@@ -351,7 +350,7 @@ sub _generatesortinfo {
         $init = $initd;
       }
     }
-    $be->set_field('sortinit', $init);
+    $list->set_sortinitdata($citekey, $init);
   }
   return;
 }

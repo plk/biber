@@ -123,6 +123,20 @@ sub makenameid {
   return normalise_string_underscore($tmp);
 }
 
+=head2 latex_recode_output
+
+  Tries to convert UTF-8 to TeX macros in passes string
+
+=cut
+
+sub latex_recode_output {
+  my $string = shift;
+  $logger->info('Converting UTF-8 to TeX macros on output to .bbl');
+  require Biber::LaTeX::Recode;
+  return Biber::LaTeX::Recode::latex_encode($string,
+                                            scheme => Biber::Config->getoption('bblsafecharsset'));
+};
+
 =head2 strip_nosort
 
 Removes elements which are not to be used in sorting a name from a string

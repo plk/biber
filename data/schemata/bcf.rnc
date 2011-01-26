@@ -313,6 +313,7 @@ secspec =
     }*,
     element bcf:sectionlist {
       attribute label { xsd:string {minLength="1"}},
+      attribute type { "entry" | "key" | "shorthand" },
       (filter | orfilter )*,
       element bcf:sorting {
         sort+

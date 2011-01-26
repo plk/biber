@@ -167,6 +167,10 @@
     <bcf:citekey>noseta</bcf:citekey>
     <bcf:citekey>nosetb</bcf:citekey>
     <bcf:citekey>nosetc</bcf:citekey>
+    <bcf:sectionlist label="TMAIN" type="entry"/>
+    <bcf:sectionlist label="TSHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
   </bcf:section>
 </bcf:controlfile>
 

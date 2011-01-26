@@ -160,6 +160,10 @@
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey>*</bcf:citekey>
+    <bcf:sectionlist label="TMAIN" type="entry"/>
+    <bcf:sectionlist label="TSHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
   </bcf:section>
 </bcf:controlfile>
 

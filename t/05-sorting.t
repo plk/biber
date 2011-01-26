@@ -66,22 +66,24 @@ my $diacritic1  = 'mm,,Hasan_Alī,alHasan_ʿAlī,Hasan_Alī,Some title,2000,0000
 my $useprefix1  = 'ww,,von_Bobble_Terrence,,,0000';
 my $useprefix2  = 'ww,,Bobble_Terrence_von,,,0000';
 
-my $bibentries;
-
 Biber::Config->setblxoption('useprefix', 1);
 
 # regenerate information
 $biber->prepare;
 
-$bibentries = $biber->sections->get_section(0)->bibentries;
-is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix1, 'von with type-specific presort, exclusions and useprefix=true' );
+my $section = $biber->sections->get_section(0);
+my $main = $section->get_list('TMAIN');
+my $bibentries = $section->bibentries;
+
+is($main->get_sortdata('tvonb')->[0], $useprefix1, 'von with type-specific presort, exclusions and useprefix=true' );
 
 Biber::Config->setblxoption('useprefix', 0);
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
-is($bibentries->entry('tvonb')->get_field('sortstring'), $useprefix2, 'von with type-specific presort, exclusions and useprefix=false' );
+
+is($main->get_sortdata('tvonb')->[0], $useprefix2, 'von with type-specific presort, exclusions and useprefix=false' );
 
 my $S;
 
@@ -150,7 +152,7 @@ $S = [
         '0000'       => {}}
       ]
      ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 Biber::Config->setoption('nosort', { author => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ],
                                      translator => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ],
                                      # type_title should be not used as there is an
@@ -165,8 +167,8 @@ Biber::Config->setoption('sortcase', '1');
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('luzzatto')->get_field('sortstring'), $prefix1, 'Title with nosort' );
-is($bibentries->entry('hasan')->get_field('sortstring'), $diacritic1, 'Name with nosort' );
+is($main->get_sortdata('luzzatto')->[0], $prefix1, 'Title with nosort' );
+is($main->get_sortdata('hasan')->[0], $diacritic1, 'Name with nosort' );
 
 # Testing editor roles
 $S = [
@@ -186,14 +188,14 @@ $S = [
         'editora'     => {}},
       ],
      ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 Biber::Config->setoption('sortcase', 0);
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('jaffe')->get_field('sortstring'), $edtypeclass1, 'Editor type/class' );
+is($main->get_sortdata('jaffe')->[0], $edtypeclass1, 'Editor type/class' );
 
 
 # Testing sorting using various date fields
@@ -299,13 +301,13 @@ $S = [
                                                  {'urlday'   => {}}
                                                 ],
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('moraux')->get_field('sortstring'), $dates1, 'Very contrived but thorough test of date sorting' );
+is($main->get_sortdata('moraux')->[0], $dates1, 'Very contrived but thorough test of date sorting' );
 
 # Testing max/minITEMS with sorting using list fields
 # publisher
@@ -315,13 +317,13 @@ $S = [
                                                  {'publisher'    => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('augustine')->get_field('sortstring'), $lists1, 'max/minitems test 1 (publisher)' );
+is($main->get_sortdata('augustine')->[0], $lists1, 'max/minitems test 1 (publisher)' );
 
 # location
 $S = [
@@ -330,13 +332,13 @@ $S = [
                                                  {'location'    => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('cotton')->get_field('sortstring'), $lists2, 'max/minitems test 2 (location)' );
+is($main->get_sortdata('cotton')->[0], $lists2, 'max/minitems test 2 (location)' );
 
 
 # institution
@@ -346,13 +348,13 @@ $S = [
                                                  {'institution'    => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('chiu')->get_field('sortstring'), $lists3, 'max/minitems test 3 (institution)' );
+is($main->get_sortdata('chiu')->[0], $lists3, 'max/minitems test 3 (institution)' );
 
 # institution with minitems=2
 Biber::Config->setblxoption('minitems', 2);
@@ -362,13 +364,13 @@ $S = [
                                                  {'institution'    => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('chiu')->get_field('sortstring'), $lists4, 'max/minitems test 4 (institution - minitems=2)' );
+is($main->get_sortdata('chiu')->[0], $lists4, 'max/minitems test 4 (institution - minitems=2)' );
 
 # institution with maxitems=4, minitems=3
 Biber::Config->setblxoption('maxitems', 4);
@@ -379,13 +381,13 @@ $S = [
                                                  {'institution'    => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('chiu')->get_field('sortstring'), $lists5, 'max/minitems test 5 (institution - maxitems=4/minitems=3)' );
+is($main->get_sortdata('chiu')->[0], $lists5, 'max/minitems test 5 (institution - maxitems=4/minitems=3)' );
 
 
 
@@ -424,13 +426,13 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff1, 'nty with default left offset, 4 digit year' );
+is($main->get_sortdata('knuth:ct')->[0], $yearoff1, 'nty with default left offset, 4 digit year' );
 
 # nty with left, 3-digit year sort, case sensitive
 $S = [
@@ -468,13 +470,13 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 Biber::Config->setoption('sortcase', 1);
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff2, 'nty with left offset, 3 digit year, case sensitive' );
+is($main->get_sortdata('knuth:ct')->[0], $yearoff2, 'nty with left offset, 3 digit year, case sensitive' );
 
 
 # nty with left, 4-digit year sort, case sensitive
@@ -513,13 +515,13 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff3, 'nty with left offset, 4 digit year, case sensitive' );
+is($main->get_sortdata('knuth:ct')->[0], $yearoff3, 'nty with left offset, 4 digit year, case sensitive' );
 
 # nty with right, 3-digit year sort
 $S = [
@@ -557,13 +559,13 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 Biber::Config->setoption('sortcase', 0);
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff4, 'nty with right offset, 3 digit year' );
+is($main->get_sortdata('knuth:ct')->[0], $yearoff4, 'nty with right offset, 3 digit year' );
 
 # nty with right, 4-digit year sort
 $S = [
@@ -601,13 +603,13 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff5, 'nty with right offset, 4 digit year' );
+is($main->get_sortdata('knuth:ct')->[0], $yearoff5, 'nty with right offset, 4 digit year' );
 
 # ntyd with left, 4-digit year sort
 $S = [
@@ -646,13 +648,13 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff6, 'ntyd with left offset, 4 digit year' );
+is($main->get_sortdata('knuth:ct')->[0], $yearoff6, 'ntyd with left offset, 4 digit year' );
 
 # ntyd with left, 3-digit year sort
 $S = [
@@ -691,13 +693,13 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff7, 'ntyd with left offset, 3 digit year' );
+is($main->get_sortdata('knuth:ct')->[0], $yearoff7, 'ntyd with left offset, 3 digit year' );
 
 # ntyd with right, 4-digit year sort
 $S = [
@@ -736,13 +738,13 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff8, 'ntyd with right offset, 4 digit year' );
+is($main->get_sortdata('knuth:ct')->[0], $yearoff8, 'ntyd with right offset, 4 digit year' );
 
 # ntyd with right, 3-digit year sort
 $S = [
@@ -781,13 +783,13 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('knuth:ct')->get_field('sortstring'), $yearoff9, 'ntyd with right offset, 3 digit year' );
+is($main->get_sortdata('knuth:ct')->[0], $yearoff9, 'ntyd with right offset, 3 digit year' );
 
 # nty with right-padded vol
 $S = [
@@ -825,13 +827,13 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('stdmodel')->get_field('sortstring'), $vol1, 'nty with right-padded vol' );
+is($main->get_sortdata('stdmodel')->[0], $vol1, 'nty with right-padded vol' );
 
 # nty with right-padded 7-char vol
 $S = [
@@ -870,13 +872,13 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('stdmodel')->get_field('sortstring'), $vol2, 'nty with right-padded 7-char vol' );
+is($main->get_sortdata('stdmodel')->[0], $vol2, 'nty with right-padded 7-char vol' );
 
 # nty with left-padded 5-char using Unicode "Đ" as pad_char vol
 # Unicode char will be lowercase "đ" in sortstring
@@ -917,13 +919,13 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('stdmodel')->get_field('sortstring'), $vol3, 'nty with left-padded 5-char "a" pad char vol' );
+is($main->get_sortdata('stdmodel')->[0], $vol3, 'nty with left-padded 5-char "a" pad char vol' );
 
 
 # nty
@@ -962,14 +964,14 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('stdmodel')->get_field('sortstring'), $nty, 'basic nty sort' );
-is($bibentries->entry('angenendtsk')->get_field('sortstring'), $sk1, 'basic sortkey sort' );
+is($main->get_sortdata('stdmodel')->[0], $nty, 'basic nty sort' );
+is($main->get_sortdata('angenendtsk')->[0], $sk1, 'basic sortkey sort' );
 
 # nyt
 $S = [
@@ -1008,13 +1010,13 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('stdmodel')->get_field('sortstring'), $nyt, 'basic nyt sort' );
+is($main->get_sortdata('stdmodel')->[0], $nyt, 'basic nyt sort' );
 
 # nyvt
 $S = [
@@ -1052,13 +1054,13 @@ $S = [
                                                  {'title'      => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('stdmodel')->get_field('sortstring'), $nyvt, 'basic nyvt sort' );
+is($main->get_sortdata('stdmodel')->[0], $nyvt, 'basic nyvt sort' );
 
 # anyt with labelalpha
 Biber::Config->setblxoption('labelalpha', 1);
@@ -1101,13 +1103,13 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('stdmodel')->get_field('sortstring'), $anyt_la, 'anyt sort (with labelalpha)' );
+is($main->get_sortdata('stdmodel')->[0], $anyt_la, 'anyt sort (with labelalpha)' );
 Biber::Config->setblxoption('labelalpha', 0);
 $bibentries->entry('stdmodel')->del_field('labelalpha');
 $bibentries->entry('stdmodel')->del_field('sortlabelalpha');
@@ -1119,7 +1121,7 @@ $bibentries->entry('stdmodel:glashow')->del_field('sortlabelalpha');
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('stdmodel')->get_field('sortstring'), $anyt, 'anyt sort (without labelalpha)' );
+is($main->get_sortdata('stdmodel')->[0], $anyt, 'anyt sort (without labelalpha)' );
 
 # anyvt with labelalpha
 Biber::Config->setblxoption('labelalpha',1);
@@ -1162,14 +1164,14 @@ $S = [
                                                  {'title'      => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('stdmodel')->get_field('sortstring'), $anyvt_la, 'anyvt sort (with labelalpha)' );
-is($bibentries->entry('murray')->get_field('sortstring'), $anyvt_la2, 'anyvt sort (> maxnames=3 minnames=1, with labelalpha and alphaothers)' );
+is($main->get_sortdata('stdmodel')->[0], $anyvt_la, 'anyvt sort (with labelalpha)' );
+is($main->get_sortdata('murray')->[0], $anyvt_la2, 'anyvt sort (> maxnames=3 minnames=1, with labelalpha and alphaothers)' );
 
 Biber::Config->setblxoption('maxnames', 2);
 Biber::Config->setblxoption('minnames', 2);
@@ -1178,7 +1180,7 @@ Biber::Config->setblxoption('minnames', 2);
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('murray')->get_field('sortstring'), $anyvt_la4, 'anyvt sort (> maxnames=2 minnames=2, with labelalpha and alphaothers)' );
+is($main->get_sortdata('murray')->[0], $anyvt_la4, 'anyvt sort (> maxnames=2 minnames=2, with labelalpha and alphaothers)' );
 
 Biber::Config->setblxoption('alphaothers', '');
 Biber::Config->setblxoption('sortalphaothers', '');
@@ -1187,7 +1189,7 @@ Biber::Config->setblxoption('sortalphaothers', '');
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('murray')->get_field('sortstring'), $anyvt_la3, 'anyvt sort (> maxnames=2 minnames=2,with labelalpha and without alphaothers)' );
+is($main->get_sortdata('murray')->[0], $anyvt_la3, 'anyvt sort (> maxnames=2 minnames=2,with labelalpha and without alphaothers)' );
 
 Biber::Config->setblxoption('labelalpha', 0);
 $bibentries->entry('stdmodel')->del_field('labelalpha');
@@ -1203,7 +1205,7 @@ $bibentries->entry('murray')->del_field('sortlabelalpha');
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('stdmodel')->get_field('sortstring'), $anyvt, 'anyvt sort (without labelalpha)' );
+is($main->get_sortdata('stdmodel')->[0], $anyvt, 'anyvt sort (without labelalpha)' );
 
 # ynt
 $S = [
@@ -1237,13 +1239,13 @@ $S = [
                                                  {'title'      => {}}
                                                 ],
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('stdmodel')->get_field('sortstring'), $ynt, 'basic ynt sort' );
+is($main->get_sortdata('stdmodel')->[0], $ynt, 'basic ynt sort' );
 
 # ydnt
 $S = [
@@ -1277,13 +1279,13 @@ $S = [
                                                  {'title'      => {}}
                                                 ],
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('stdmodel')->get_field('sortstring'), $ydnt, 'basic ydnt sort' );
+is($main->get_sortdata('stdmodel')->[0], $ydnt, 'basic ydnt sort' );
 Biber::Config->setblxoption('labelalpha', 0);
 
 # debug
@@ -1293,13 +1295,13 @@ $S = [
                                                  {'entrykey'    => {}},
                                                 ],
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('stdmodel')->get_field('sortstring'), $debug, 'basic debug sort' );
+is($main->get_sortdata('stdmodel')->[0], $debug, 'basic debug sort' );
 
 # nty with modified presort and short_circuit at title
 $S = [
@@ -1338,12 +1340,12 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
-is($bibentries->entry('stdmodel:ps_sc')->get_field('sortstring'), $ps_sc, 'nty with modified presort and short-circuit title' );
+is($main->get_sortdata('stdmodel:ps_sc')->[0], $ps_sc, 'nty with modified presort and short-circuit title' );
 
 # nty with use* all off
 Biber::Config->setblxoption('useauthor', 0);
@@ -1384,13 +1386,13 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('stdmodel')->get_field('sortstring'), $noname, 'nty with use* all off' );
+is($main->get_sortdata('stdmodel')->[0], $noname, 'nty with use* all off' );
 
 # citeorder sort
 
@@ -1400,13 +1402,12 @@ $S = [
                                                  {'citeorder'    => {}}
                                                 ]
                                                ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
 $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('stdmodel')->get_field('sortstring'), $citeorder, 'citeorder' );
-
+is($main->get_sortdata('stdmodel')->[0], $citeorder, 'citeorder' );
 
 unlink <*.utf8>;

@@ -44,7 +44,7 @@ vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsc
 set:yoon maron coleridge tvonb t2} ;
 
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
-is_deeply( [ $section->get_shorthands ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
+is_deeply( [ $section->get_list('TSHORTHANDS')->get_keys ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
 
 # reset some options and re-generate information
 

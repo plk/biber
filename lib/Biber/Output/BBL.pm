@@ -240,6 +240,11 @@ sub set_output_entry {
     }
   }
 
+  # # Skip sortinit if it's undefined from being skipped due to encoding issues
+  # if (my $si = $list->get_sortinitdata($be->get_field('citekey')) {
+  #   $acc .= "    \\field{sortinit}{$si}\n";
+  # }
+
   # Skip sortinit if it's undefined from being skipped due to encoding issues
   if ($be->field_exists('sortinit')) {
     $acc .= "    \\field{sortinit}{" . $be->get_field('sortinit') . "}\n";
@@ -406,44 +411,46 @@ sub output {
   print $target $data->{HEAD} or $logger->logdie("Failure to write head to $target_string: $!");
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
+    my $section = $self->sections->get_section($secnum);
+
     print $target "\n\\refsection{$secnum}\n";
-    foreach my $list (@{$self->get_output_lists}) {
+    foreach my $list (sort @{$self->get_output_lists}) {
       my $listlabel = $list->get_label;
-      print $target "\n  \\sortlist{$listlabel}\n" unless ($listlabel eq 'MAIN');
+      my $listtype = $list->get_type;
+
+      # Remove most of this conditional when biblatex supports lists
+      if ($listlabel eq 'SHORTHANDS') {
+        print $target "  \\lossort\n";
+      }
+      else {
+        print $target "\n  \\sortlist{$listlabel}\n" unless ($listlabel eq 'MAIN');
+      }
+
       # The order of this array is the sorted order
       foreach my $k ($list->get_keys) {
-        my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
-        my $entry_string = $$entry;
-        # If requested to convert UTF-8 to macros ...
-        if (Biber::Config->getoption('bblsafechars')) {
-          $logger->info('Converting UTF-8 to TeX macros on output to .bbl');
-          require Biber::LaTeX::Recode;
-          $entry_string = Biber::LaTeX::Recode::latex_encode($entry_string,
-                                                             scheme => Biber::Config->getoption('bblsafecharsset'));
-        }
+        if ($listtype eq 'entry') {
+          my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
+          my $entry_string = $$entry;
 
-        print $target $entry_string or $logger->logdie("Failure to write entry to $target_string: $!");
+          # If requested to convert UTF-8 to macros ...
+          if (Biber::Config->getoption('bblsafechars')) {
+            $entry_string = latex_recode_output($entry_string);
+          }
+          print $target $entry_string or $logger->logdie("Failure to write list element to $target_string: $!");
+        }
+        elsif ($listtype eq 'shorthand') {
+          next if Biber::Config->getblxoption('skiplos', $section->bibentry($k), $k);
+          print $target "    \\key{$k}\n" or $logger->logdie("Failure to write list element to $target_string: $!");
+        }
       }
-      print $target "\n  \\endsortlist\n" unless ($listlabel eq 'MAIN');
-    }
 
-    # Output section list of shorthands if there is one
-    if ( my $sec_los = $data->{LOS}{$secnum} ) {
-      print $target "  \\lossort\n";
-      foreach my $sh (@$sec_los) {
-        my $sh_string;
-        # If requested to convert UTF-8 to macros ...
-        if (Biber::Config->getoption('bblsafechars')) {
-          require Biber::LaTeX::Recode;
-          $sh_string = Biber::LaTeX::Recode::latex_encode($sh,
-                                                          scheme => Biber::Config->getoption('bblsafecharsset'));
-        }
-        else {
-          $sh_string = $sh;
-        }
-        print $target "    \\key{$sh_string}\n";
+      # Remove most of this conditional when biblatex supports lists
+      if ($listlabel eq 'SHORTHANDS') {
+        print $target "  \\endlossort\n";
       }
-      print $target "  \\endlossort\n\n";
+      else {
+        print $target "\n  \\endsortlist\n" unless ($listlabel eq 'MAIN');
+      }
     }
 
     print $target "\\endrefsection\n"
@@ -455,6 +462,7 @@ sub output {
   close $target or $logger->logdie("Failure to close $target_string: $!");
   return;
 }
+
 
 
 =head1 AUTHORS

@@ -1329,6 +1329,9 @@
     <bcf:citekey>L15</bcf:citekey>
     <bcf:citekey>L16</bcf:citekey>
     <bcf:citekey>L17</bcf:citekey>
+    <bcf:sectionlist label="TMAIN" type="entry"/>
+    <bcf:sectionlist label="TSHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
   </bcf:section>
 </bcf:controlfile>
-

@@ -163,6 +163,10 @@
     <bcf:citekey>L2</bcf:citekey>
     <bcf:citekey>L3</bcf:citekey>
     <bcf:citekey>L4</bcf:citekey>
+    <bcf:sectionlist label="TMAIN" type="entry"/>
+    <bcf:sectionlist label="TSHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
   </bcf:section>
   <bcf:bibdata section="1">
     <bcf:datasource type="file">labelalpha</bcf:datasource>
@@ -172,6 +176,10 @@
     <bcf:citekey>L6</bcf:citekey>
     <bcf:citekey>L7</bcf:citekey>
     <bcf:citekey>L8</bcf:citekey>
+    <bcf:sectionlist label="TMAIN" type="entry"/>
+    <bcf:sectionlist label="TSHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
   </bcf:section>
 </bcf:controlfile>
 

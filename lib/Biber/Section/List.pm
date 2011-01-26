@@ -45,6 +45,87 @@ sub get_label {
   return $self->{label};
 }
 
+=head2 set_type
+
+    Sets the type of a section list
+
+=cut
+
+sub set_type {
+  my $self = shift;
+  my $type = shift;
+  $self->{type} = lc($type);
+  return;
+}
+
+=head2 get_type
+
+    Gets the type of a section list
+
+=cut
+
+sub get_type {
+  my $self = shift;
+  return $self->{type};
+}
+
+
+
+=head2 set_sortdata
+
+    Saves sorting data in a list for a key
+
+=cut
+
+sub set_sortdata {
+  my $self = shift;
+  my $key = shift;
+  my $sd = shift;
+  $self->{sortdata}{$key} = $sd;
+  return;
+}
+
+=head2 get_sortdata
+
+    Gets the sorting data in a list for a key
+
+=cut
+
+sub get_sortdata {
+  my $self = shift;
+  my $key = shift;
+  return $self->{sortdata}{$key};
+}
+
+
+=head2 set_sortinitdata
+
+    Saves sortinit data in a list for a key
+
+=cut
+
+sub set_sortinitdata {
+  my $self = shift;
+  my $key = shift;
+  my $sid = shift;
+  $self->{sortinitdata}{$key} = $sid;
+  return;
+}
+
+
+=head2 get_sortinitdata
+
+    Gets the sortinit data in a list for a key
+
+=cut
+
+sub get_sortinitdata {
+  my $self = shift;
+  my $key = shift;
+  return $self->{sortinitdata}{$key};
+
+}
+
 
 =head2 set_sortspec
 

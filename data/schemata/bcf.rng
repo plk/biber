@@ -764,6 +764,13 @@
               <param name="minLength">1</param>
             </data>
           </attribute>
+          <attribute name="type">
+            <choice>
+              <value>entry</value>
+              <value>key</value>
+              <value>shorthand</value>
+            </choice>
+          </attribute>
           <zeroOrMore>
             <choice>
               <ref name="filter"/>

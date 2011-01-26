@@ -1344,7 +1344,7 @@
     <bcf:citekey>Key7</bcf:citekey>
     <bcf:citekey>Key2</bcf:citekey>
     <bcf:citekey>Key5</bcf:citekey>
-    <bcf:sectionlist label="listA">
+    <bcf:sectionlist label="listA" type="entry">
       <bcf:filter type="field">editor,translator</bcf:filter>
       <bcf:orfilter>
         <bcf:filter type="keyword">key1</bcf:filter>
@@ -1369,6 +1369,9 @@
         </bcf:sort>
       </bcf:sorting>
     </bcf:sectionlist>
+    <bcf:sectionlist label="shorthands" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
   </bcf:section>
   <bcf:bibdata section="1">
     <bcf:datasource type="file" datatype="bibtex">bibdata3</bcf:datasource>
@@ -1380,7 +1383,7 @@
     <bcf:citekey>Key7</bcf:citekey>
     <bcf:citekey>Key34</bcf:citekey>
     <bcf:citekey>Key99</bcf:citekey>
-    <bcf:sectionlist label="nobooks">
+    <bcf:sectionlist label="nobooks" type="entry">
       <bcf:filter type="nottype">book</bcf:filter>
     </bcf:sectionlist>
   </bcf:section>
