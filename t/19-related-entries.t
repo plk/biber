@@ -72,6 +72,7 @@ my $k2 = q|  \entry{key2}{inbook}{}
     \field{labelyear}{2009}
     \field{booktitle}{Booktitle}
     \field{related}{c2add694bf942dc77b376592d9c862cd}
+    \field{relatedstring}{First}
     \field{relatedtype}{reprintof}
     \field{shorthand}{RK2}
     \field{title}{Reprint Title}
@@ -100,6 +101,7 @@ my $k3 = q|  \entry{key3}{inbook}{}
     \field{labelyear}{2010}
     \field{booktitle}{Booktitle}
     \field{related}{c2add694bf942dc77b376592d9c862cd}
+    \field{relatedstring}{Second}
     \field{relatedtype}{reprintof}
     \field{shorthand}{RK3}
     \field{title}{Reprint Title}

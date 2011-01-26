@@ -52,60 +52,6 @@ sub is_allkeys {
 }
 
 
-=head2 get_shorthands
-
-    Returns the list of all shorthands for a section
-
-=cut
-
-sub get_shorthands {
-  my $self = shift;
-  if ( $self->{shorthands} ) {
-    return @{ $self->{shorthands} }
-  } else {
-    return;
-  }
-}
-
-=head2 set_shorthands
-
-    Sets the list of all shorthands for a section
-
-=cut
-
-sub set_shorthands {
-  my $self = shift;
-  my $shorthands = shift;
-  $self->{shorthands} = $shorthands;
-  return;
-}
-
-
-=head2 add_shorthand
-
-    Add a shorthand to a section
-
-=cut
-
-sub add_shorthand {
-  my ($self, $bee, $key) = @_;
-  # Don't add to los if skiplos is set for entry
-  if (Biber::Config->getblxoption('skiplos', $bee, $key)) {
-    return;
-  }
-  my @los;
-  if ( $self->get_shorthands ) {
-    @los = $self->get_shorthands;
-  }
-  else {
-    @los = ();
-  }
-  push @los, $key;
-  $self->{shorthands} = [ @los ];
-  return;
-}
-
-
 =head2 bibentry
 
     Returns a Biber::Entry object for the given citation key
