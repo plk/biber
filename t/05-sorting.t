@@ -49,7 +49,7 @@ my $ynt         = 'mm,,1961,Glashow_Sheldon,Partial Symmetries of Weak Interacti
 my $ydnt        = 'mm,,1961,Glashow_Sheldon,Partial Symmetries of Weak Interactions';
 my $debug       = 'stdmodel';
 my $sk1         = 'mm,,AATESTKEY,AATESTKEY,AATESTKEY,AATESTKEY';
-my $ps_sc       = 'zs,,Glashow_Sheldon,,Partial Symmetries of Weak Interactions,Partial Symmetries of Weak Interactions';
+my $ps_sc       = 'zs,,Partial Symmetries of Weak Interactions,,Partial Symmetries of Weak Interactions,Partial Symmetries of Weak Interactions';
 my $noname      = 'mm,,Partial Symmetries of Weak Interactions,Partial Symmetries of Weak Interactions,1961,22';
 my $citeorder   = '0000001';
 my $lists1      = 'Marcel Dekker';
@@ -70,10 +70,9 @@ Biber::Config->setblxoption('useprefix', 1);
 
 # regenerate information
 $biber->prepare;
-
 my $section = $biber->sections->get_section(0);
+my $bibentries = $section->bibentries;
 my $main = $section->get_list('MAIN');
-my $bibentries;
 
 is($main->get_sortdata('tvonb')->[0], $useprefix1, 'von with type-specific presort, exclusions and useprefix=true' );
 
@@ -1083,7 +1082,6 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('stdmodel')->[0], $anyt_la, 'anyt sort (with labelalpha)' );
 Biber::Config->setblxoption('labelalpha', 0);
@@ -1160,7 +1158,6 @@ Biber::Config->setblxoption('sortalphaothers', '');
 
 # regenerate information
 $biber->prepare;
-$bibentries = $biber->sections->get_section(0)->bibentries;
 
 is($main->get_sortdata('murray')->[0], $anyvt_la3, 'anyvt sort (> maxnames=2 minnames=2,with labelalpha and without alphaothers)' );
 
@@ -1272,49 +1269,6 @@ $biber->prepare;
 
 is($main->get_sortdata('stdmodel')->[0], $debug, 'basic debug sort' );
 
-# nty with modified presort and short_circuit at title
-$S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortyear'   => {}},
-                                                 {'year'       => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
-
-# regenerate information
-$biber->prepare;
-is($main->get_sortdata('stdmodel:ps_sc')->[0], $ps_sc, 'nty with modified presort and short-circuit title' );
-
 # nty with use* all off
 Biber::Config->setblxoption('useauthor', 0);
 Biber::Config->setblxoption('useeditor', 0);
@@ -1360,6 +1314,53 @@ $main->set_sortspec({label => $S, final => $S, schemes_same => 1});
 $biber->prepare;
 
 is($main->get_sortdata('stdmodel')->[0], $noname, 'nty with use* all off' );
+
+
+# nty with modified presort and short_circuit at title
+$S = [
+                                                [
+                                                 {},
+                                                 {'presort'    => {}}
+                                                ],
+                                                [
+                                                 {final          => 1,
+                                                  },
+                                                 {'sortkey'    => {}}
+                                                ],
+                                                [
+                                                 {},
+                                                 {'sortname'   => {}},
+                                                 {'author'     => {}},
+                                                 {'editor'     => {}},
+                                                 {'translator' => {}},
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {final          => 1,
+                                                  },
+                                                 {'sorttitle'  => {}},
+                                                 {'title'      => {}}
+                                                ],
+                                                [
+                                                 {},
+                                                 {'sortyear'   => {}},
+                                                 {'year'       => {}}
+                                                ],
+                                                [
+                                                 {},
+                                                 {'volume'     => {}},
+                                                 {'0000'       => {}}
+                                                ]
+                                               ];
+
+$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+
+# regenerate information
+$biber->prepare;
+
+is($main->get_sortdata('stdmodel:ps_sc')->[0], $ps_sc, 'nty with modified presort and short-circuit title' );
+
 
 # citeorder sort
 

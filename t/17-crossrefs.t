@@ -90,6 +90,7 @@ my $cr2 = q|  \entry{cr2}{inbook}{}
 |;
 
 # This is included as it is crossrefed >= mincrossrefs times
+# Notice lack of labelname and hashes because the only name is EDITOR and useeditor is false
 my $crm = q|  \entry{crm}{book}{}
     \name{editor}{1}{%
       {{Erbriss}{E.}{Edgar}{E.}{}{}{}{}}%
@@ -276,6 +277,7 @@ my $xr2 = q|  \entry{xr2}{inbook}{}
 |;
 
 # This is included as it is crossrefed >= mincrossrefs times
+# Notice lack of labelname and hashes because the only name is EDITOR and useeditor is false
 my $xrm = q|  \entry{xrm}{book}{}
     \name{editor}{1}{%
       {{Prendergast}{P.}{Peter}{P.}{}{}{}{}}%

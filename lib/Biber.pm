@@ -28,7 +28,7 @@ use base 'Biber::Internals';
 use Config::General qw( ParseConfig );
 use Data::Dump;
 use Data::Compare;
-use Text::BibTeX;
+use Text::BibTeX qw(:macrosubs);
 
 =encoding utf-8
 
@@ -970,6 +970,7 @@ sub process_labelname {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $lnamescheme = Biber::Config->getblxoption('labelname', $be->get_field('entrytype'));
+
   # First we set the normal labelname name
   foreach my $ln ( @{$lnamescheme} ) {
     my $lnameopt;
@@ -1856,7 +1857,7 @@ sub fetch_data {
   # Clear all T::B macro definitions between sections
   # T::B never clears these
   $logger->debug('Clearing Text::BibTeX macros definitions');
-  Text::BibTeX::delete_all_macros;
+  Text::BibTeX::delete_all_macros();
 
   # First we look for the directly cited keys in each datasource
   my @remaining_keys = @citekeys;
