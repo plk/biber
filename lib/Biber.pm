@@ -841,7 +841,7 @@ sub validate_structure {
   }
 }
 
-=head2 process
+=head2 process_entries
 
     Main processing operations, to generate metadata and entry information
     This method is automatically called by C<prepare>.
@@ -850,7 +850,7 @@ sub validate_structure {
 
 =cut
 
-sub process {
+sub process_entries {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -1492,7 +1492,6 @@ sub generate_final_sortinfo {
         my $nameyear_extrayear = $be->get_field('nameyear_extrayear');
           if (Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
             $BIBER_SORT_DATA_CHANGE = 1;
-#            $be->set_field('extrayear', Biber::Config->incr_seen_extrayear($nameyear_extrayear));
             $list->set_extrayeardata($key, Biber::Config->incr_seen_extrayear($nameyear_extrayear));
         }
       }
@@ -1500,7 +1499,6 @@ sub generate_final_sortinfo {
         my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha');
           if (Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
             $BIBER_SORT_DATA_CHANGE = 1;
-#            $be->set_field('extraalpha', Biber::Config->incr_seen_extraalpha($nameyear_extraalpha));
             $list->set_extraalphadata($key, Biber::Config->incr_seen_extraalpha($nameyear_extraalpha));
         }
       }
@@ -1815,7 +1813,7 @@ sub prepare {
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
     $self->process_crossrefs;            # Process crossrefs/sets
     $self->validate_structure;           # Check bib structure
-    $self->process;                      # Main entry processing loop
+    $self->process_entries;              # Main entry processing loop
     $self->process_lists;                # process the output lists (sorting and filtering)
     $self->create_output_section;        # Generate and push the section output into the
                                          # output object ready for writing
