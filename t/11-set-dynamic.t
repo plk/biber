@@ -42,7 +42,7 @@ my $string1 = q|  \entry{DynSet}{set}{}
     }
     \strng{namehash}{DD1}
     \strng{fullhash}{DD1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{0}
     \field{labelyear}{2002}
     \field{annotation}{Some Dynamic Note}
     \field{shorthand}{d1}
@@ -62,7 +62,7 @@ my $string2 = q|  \entry{Dynamic1}{book}{}
     }
     \strng{namehash}{DD1}
     \strng{fullhash}{DD1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{0}
     \field{annotation}{Some Dynamic Note}
     \field{shorthand}{d1}
     \field{title}{Doing Daring Deeds}
@@ -81,7 +81,7 @@ my $string3 = q|  \entry{Dynamic2}{book}{}
     }
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{0}
     \field{shorthand}{d2}
     \field{title}{Beautiful Birthdays}
     \field{year}{2010}
@@ -99,7 +99,7 @@ my $string4 = q|  \entry{Dynamic3}{book}{}
     }
     \strng{namehash}{RR1}
     \strng{fullhash}{RR1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{0}
     \field{shorthand}{d3}
     \field{title}{Reckless Ravishings}
     \field{year}{2000}
@@ -118,7 +118,7 @@ my $string5 = q|  \entry{Dynamic3}{book}{}
     }
     \strng{namehash}{RR1}
     \strng{fullhash}{RR1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{0}
     \field{labelyear}{2000}
     \field{shorthand}{d3}
     \field{title}{Reckless Ravishings}
@@ -127,11 +127,11 @@ my $string5 = q|  \entry{Dynamic3}{book}{}
 
 |;
 
-is($out->get_output_entry('DynSet'), $string1, 'Dynamic set test 1');
-is($out->get_output_entry('Dynamic1'), $string2, 'Dynamic set test 2');
-is($out->get_output_entry('Dynamic2'), $string3, 'Dynamic set test 3');
-is($out->get_output_entry('Dynamic3'), $string4, 'Dynamic set test 4');
-is($out->get_output_entry('Dynamic3', 1), $string5, 'Dynamic set test 5');
+is($out->get_output_entry($main0,'DynSet'), $string1, 'Dynamic set test 1');
+is($out->get_output_entry($main0,'Dynamic1'), $string2, 'Dynamic set test 2');
+is($out->get_output_entry($main0,'Dynamic2'), $string3, 'Dynamic set test 3');
+is($out->get_output_entry($main0,'Dynamic3'), $string4, 'Dynamic set test 4');
+is($out->get_output_entry($main0,'Dynamic3', 1), $string5, 'Dynamic set test 5');
 is_deeply([$sh0->get_keys], ['DynSet'], 'Dynamic set skiplos 1');
 is_deeply([$sh1->get_keys], ['Dynamic3'], 'Dynamic set skiplos 2');
 

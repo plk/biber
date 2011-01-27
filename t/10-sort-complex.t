@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 7;
+use Test::More tests => 8;
 
 use Biber;
 use Biber::Output::BBL;
@@ -37,11 +37,11 @@ isa_ok($biber, "Biber");
 my $sc1 = [
            [
             {},
-            {'labelalpha'    => {}},
+            {'presort'    => {}}
            ],
            [
             {},
-            {'presort'    => {}}
+            {'labelalpha'    => {}},
            ],
            [
             {final          => 1,
@@ -58,20 +58,21 @@ my $sc1 = [
             {'title'      => {}}
            ],
            [
-            {sort_direction => 'descending'},
-            {'sortyear'  => {}},
-            {'year'      => {substring_side => 'right',
-                             substring_width => '4'}}
-           ],
-           [
             {},
-            {'volume'     => {pad_char => '0'}},
-            {'0000'       => {}}
+            {'sortyear'  => {}},
+            {'year'      => {}}
            ],
            [
             {},
             {'sorttitle'       => {}},
             {'title'       => {}}
+           ],
+           [
+            {},
+            {'volume'     => {pad_char => '0',
+                              pad_side => 'left',
+                              pad_width => '4'}},
+            {'0000'       => {}}
            ],
           ];
 
@@ -79,6 +80,11 @@ my $sc2 = [
            [
             {},
             {'presort'    => {}}
+           ],
+           [
+            {final          => 1,
+             },
+            {'sortkey'    => {}}
            ],
            [
             {},
@@ -91,11 +97,6 @@ my $sc2 = [
                                  pad_char => '0'}},
            ],
            [
-            {final          => 1,
-             },
-            {'sortkey'    => {}}
-           ],
-           [
             {},
             {'sortname'   => {}},
             {'author'     => {}},
@@ -105,20 +106,21 @@ my $sc2 = [
             {'title'      => {}}
            ],
            [
-            {sort_direction => 'descending'},
-            {'sortyear'  => {}},
-            {'year'      => {substring_side => 'right',
-                             substring_width => '4'}}
-           ],
-           [
             {},
-            {'volume'     => {pad_char => '0'}},
-            {'0000'       => {}}
+            {'sortyear'  => {}},
+            {'year'      => {}}
            ],
            [
             {},
             {'sorttitle'       => {}},
             {'title'       => {}}
+           ],
+           [
+            {},
+            {'volume'     => {pad_char => '0',
+                              pad_side => 'left',
+                              pad_width => '4'}},
+            {'0000'       => {}}
            ],
           ];
 
@@ -140,7 +142,7 @@ my $sc3 = q|  \entry{L4}{book}{}
     \strng{namehash}{DJo1}
     \strng{fullhash}{DJo1}
     \field{labelalpha}{Doe\textbf{+}95}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{extraalpha}{2}
     \field{title}{Some title about sorting}
     \field{year}{1995}
@@ -164,7 +166,7 @@ my $sc4 = q|  \entry{L1}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe95}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{extraalpha}{1}
     \field{title}{Algorithms For Sorting}
     \field{year}{1995}
@@ -188,7 +190,7 @@ my $sc5 = q|  \entry{L2}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe95}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{extraalpha}{3}
     \field{title}{Sorting Algorithms}
     \field{year}{1995}
@@ -212,7 +214,7 @@ my $sc6 = q|  \entry{L3}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe95}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{extraalpha}{2}
     \field{title}{More and More Algorithms}
     \field{year}{1995}
@@ -222,9 +224,11 @@ my $sc6 = q|  \entry{L3}{book}{}
 
 is_deeply( $main->get_sortspec->{label} , $sc1, 'first pass scheme');
 is_deeply( $main->get_sortspec->{final} , $sc2, 'second pass scheme');
-is( $out->get_output_entry('l4'), $sc3, '\alphaothers set by "and others"');
-is( $out->get_output_entry('l1'), $sc4, '2-pass - labelalpha after title');
-is( $out->get_output_entry('l2'), $sc5, '2-pass - labelalpha after title');
-is( $out->get_output_entry('l3'), $sc6, '2-pass - labelalpha after title');
+is( $out->get_output_entry($main,'l4'), $sc3, '\alphaothers set by "and others"');
+is( $out->get_output_entry($main,'l1'), $sc4, '2-pass - labelalpha after title');
+is( $out->get_output_entry($main,'l2'), $sc5, '2-pass - labelalpha after title');
+is( $out->get_output_entry($main,'l3'), $sc6, '2-pass - labelalpha after title');
+is_deeply([ $main->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'citeorder - 1');
+
 
 unlink <*.utf8>;

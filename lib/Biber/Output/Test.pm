@@ -304,21 +304,16 @@ sub output {
   $logger->info("Writing output with encoding '" . Biber::Config->getoption('bblencoding') . "'");
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
-    foreach my $list (@{$self->get_output_lists}) {
+    my $section = $self->get_output_section($secnum);
+    foreach my $list (@{$section->get_lists}) {
       my $listlabel = $list->get_label;
       my $listtype = $list->get_type;
       foreach my $k ($list->get_keys) {
         if ($listtype eq 'entry') {
           my $entry = $data->{ENTRIES}{$secnum}{index}{lc($k)};
-          my $entry_string = $$entry;
 
-          # Do any dynamic information replacement for information
-          # which varies in an entry between lists. Currently this means:
-          #
-          # * sortinit
-
-          my $si = '\field{sortinit}{' . $list->get_sortinitdata($k) . "}";
-          $entry_string =~ s|<BDS>SORTINIT</BDS>|$si|gxms;
+          # Instantiate any dynamic, list specific entry information
+          my $entry_string = $list->instantiate_entry($entry, $k);
 
           # If requested to convert UTF-8 to macros ...
           if (Biber::Config->getoption('bblsafechars')) {

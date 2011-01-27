@@ -29,7 +29,9 @@ Biber::Config->setblxoption('labelyear', [ 'year' ]);
 # Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $bibentries = $biber->sections->get_section(0)->bibentries;
+my $section = $biber->sections->get_section(0);
+my $main = $section->get_list('MAIN');
+my $bibentries = $section->bibentries;
 
 my $dmv =  [
               [
@@ -75,7 +77,7 @@ my $l1 = q|  \entry{L1}{book}{}
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{labelyear}{1998}
     \count{uniquename}{0}
     \field{day}{05}
@@ -95,6 +97,6 @@ ok(Biber::Config->getoption('mincrossrefs') == 88, "Setting Biber options via co
 ok(Biber::Config->getblxoption('useprefix', 'book') == 1 , "Per-type single-valued options");
 is_deeply(Biber::Config->getblxoption('labelname', 'book'), $bln, "Per-type multi-valued options");
 is($bibentries->entry('l1')->get_field('labelyearname'), 'year', 'Global labelyear setting' ) ;
-is( $out->get_output_entry('l1'), $l1, 'Global labelyear setting - labelyear should be YEAR') ;
+is( $out->get_output_entry($main,'l1'), $l1, 'Global labelyear setting - labelyear should be YEAR') ;
 
 

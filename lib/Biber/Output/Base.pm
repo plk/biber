@@ -152,28 +152,29 @@ sub add_output_tail {
 }
 
 
-=head2 set_output_lists
+=head2 set_output_section
 
-  Sets the lists to output
+  Records the section object in the output object
+  We need some information from this when writing the .bbl
 
 =cut
 
-sub set_output_lists {
+sub set_output_section {
   my $self = shift;
-  my $lists = shift;
-  $self->{lists} = $lists;
+  my $section = shift;
+  $self->{section} = $section;
   return;
 }
 
-=head2 get_output_lists
+=head2 get_output_section
 
-  Retrieve the output lists
+  Retrieve the output section object
 
 =cut
 
-sub get_output_lists {
+sub get_output_section {
   my $self = shift;
-  return $self->{lists};
+  return $self->{section};
 }
 
 
@@ -193,19 +194,22 @@ sub get_output_entries {
 =head2 get_output_entry
 
     Get the output data for a specific entry.
-    Used really only in tests
+    Used really only in tests as it instantiates list dynamic information so
+    we can see it in tests
 
 =cut
 
 sub get_output_entry {
   my $self = shift;
+  my $list = shift;
   my $key = shift;
   my $section = shift;
   $section = '0' if not defined($section); # default - mainly for tests
   # Force a return of undef if there is no output for this key to avoid
   # dereferencing errors in tests
   my $out = $self->{output_data}{ENTRIES}{$section}{index}{lc($key)};
-  return $out ? $$out : undef;
+  my $out_string = $list->instantiate_entry($out, $key);
+  return $out ? $out_string : undef;
 }
 
 =head2 set_los
@@ -274,7 +278,7 @@ sub output {
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     print $target "SECTION: $secnum\n\n";
-    foreach my $list (@{$self->get_output_lists}) {
+    foreach my $list (@{$self->get_output_section($secnum)->get_lists}) {
       my $listlabel = $list->get_label;
       my $listtype = $list->get_type;
       print $target "  LIST: $listlabel\n\n";

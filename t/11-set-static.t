@@ -24,6 +24,8 @@ Biber::Config->setoption('fastsort', 1);
 
 # Now generate the information
 $biber->prepare;
+my $section = $biber->sections->get_section(0);
+my $main = $section->get_list('MAIN');
 my $out = $biber->get_output_obj;
 
 my $string1 = q|  \entry{Static1}{set}{}
@@ -36,7 +38,7 @@ my $string1 = q|  \entry{Static1}{set}{}
     }
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{0}
     \field{labelyear}{2001}
     \field{annotation}{Some notes}
     \field{title}{Blessed Brains}
@@ -55,7 +57,7 @@ my $string2 = q|  \entry{Static2}{book}{}
     }
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{0}
     \field{annotation}{Some Blessed Note}
     \field{title}{Blessed Brains}
     \field{year}{2001}
@@ -73,7 +75,7 @@ my $string3 = q|  \entry{Static3}{book}{}
     }
     \strng{namehash}{CC1}
     \strng{fullhash}{CC1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{0}
     \field{title}{Castles and Crime}
     \field{year}{2002}
   \endentry
@@ -90,7 +92,7 @@ my $string4 = q|  \entry{Static4}{book}{}
     }
     \strng{namehash}{DD1}
     \strng{fullhash}{DD1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{0}
     \field{title}{Dungeons, Dark and Dangerous}
     \field{year}{2005}
   \endentry
@@ -108,7 +110,7 @@ my $string5 = q|  \entry{Static2}{book}{}
     }
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{0}
     \field{labelyear}{2001}
     \field{annotation}{Some Blessed Note}
     \field{title}{Blessed Brains}
@@ -118,10 +120,10 @@ my $string5 = q|  \entry{Static2}{book}{}
 |;
 
 
-is($out->get_output_entry('Static1'), $string1, 'Static set test 1');
-is($out->get_output_entry('Static2'), $string2, 'Static set test 2');
-is($out->get_output_entry('Static3'), $string3, 'Static set test 3');
-is($out->get_output_entry('Static4'), $string4, 'Static set test 4');
-is($out->get_output_entry('Static2', 1), $string5, 'Static set test 5');
+is($out->get_output_entry($main,'Static1'), $string1, 'Static set test 1');
+is($out->get_output_entry($main,'Static2'), $string2, 'Static set test 2');
+is($out->get_output_entry($main,'Static3'), $string3, 'Static set test 3');
+is($out->get_output_entry($main,'Static4'), $string4, 'Static set test 4');
+is($out->get_output_entry($main,'Static2', 1), $string5, 'Static set test 5');
 
 unlink <*.utf8>;

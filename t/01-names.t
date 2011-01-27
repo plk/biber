@@ -28,6 +28,7 @@ Biber::Config->setoption('sortlocale', 'C');
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
+my $main = $section->get_list('MAIN');
 my $bibentries = $section->bibentries;
 
 my $name1 =
@@ -276,7 +277,7 @@ my $l1 = q|  \entry{L1}{book}{}
     }
     \strng{namehash}{AA1}
     \strng{fullhash}{AA1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{A}
   \endentry
 
 |;
@@ -290,7 +291,7 @@ my $l2 = q|  \entry{L2}{book}{}
     }
     \strng{namehash}{BBB1}
     \strng{fullhash}{BBB1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{B}
   \endentry
 
 |;
@@ -304,7 +305,7 @@ my $l3 = q|  \entry{L3}{book}{}
     }
     \strng{namehash}{CCZ1}
     \strng{fullhash}{CCZ1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{C}
   \endentry
 
 |;
@@ -318,7 +319,7 @@ my $l4 = q|  \entry{L4}{book}{}
     }
     \strng{namehash}{DDD1}
     \strng{fullhash}{DDD1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
   \endentry
 
 |;
@@ -332,7 +333,7 @@ my $l5 = q|  \entry{L5}{book}{}
     }
     \strng{namehash}{vEE1}
     \strng{fullhash}{vEE1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{v}
   \endentry
 
 |;
@@ -346,7 +347,7 @@ my $l6 = q|  \entry{L6}{book}{}
     }
     \strng{namehash}{vdvFF1}
     \strng{fullhash}{vdvFF1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{v}
   \endentry
 
 |;
@@ -360,7 +361,7 @@ my $l7 = q|  \entry{L7}{book}{}
     }
     \strng{namehash}{vGGR1}
     \strng{fullhash}{vGGR1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{v}
   \endentry
 
 |;
@@ -374,7 +375,7 @@ my $l8 = q|  \entry{L8}{book}{}
     }
     \strng{namehash}{vHHF1}
     \strng{fullhash}{vHHF1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{v}
   \endentry
 
 |;
@@ -388,7 +389,7 @@ my $l9 = q|  \entry{L9}{book}{}
     }
     \strng{namehash}{II1}
     \strng{fullhash}{II1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{I}
   \endentry
 
 |;
@@ -403,7 +404,7 @@ my $l10 = q|  \entry{L10}{book}{}
     }
     \strng{namehash}{JIJ1}
     \strng{fullhash}{JIJ1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{J}
   \endentry
 
 |;
@@ -418,7 +419,7 @@ my $l10a = q|  \entry{L10a}{book}{}
     }
     \strng{namehash}{PJJJ1}
     \strng{fullhash}{PJJJ1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{P}
   \endentry
 
 |;
@@ -433,7 +434,7 @@ my $l11 = q|  \entry{L11}{book}{}
     }
     \strng{namehash}{vKJK1}
     \strng{fullhash}{vKJK1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{v}
   \endentry
 
 |;
@@ -447,7 +448,7 @@ my $l12 = q|  \entry{L12}{book}{}
     }
     \strng{namehash}{dlVPCLXJ1}
     \strng{fullhash}{dlVPCLXJ1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{d}
   \endentry
 
 |;
@@ -461,7 +462,7 @@ my $l13 = q|  \entry{L13}{book}{}
     }
     \strng{namehash}{VdGRJ1}
     \strng{fullhash}{VdGRJ1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{V}
   \endentry
 
 |;
@@ -475,7 +476,7 @@ my $l14 = q|  \entry{L14}{book}{}
     }
     \strng{namehash}{SJMO1}
     \strng{fullhash}{SJMO1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{S}
   \endentry
 
 |;
@@ -489,7 +490,7 @@ my $l15 = q|  \entry{L15}{book}{}
     }
     \strng{namehash}{vGRP1}
     \strng{fullhash}{vGRP1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{v}
   \endentry
 
 |;
@@ -503,7 +504,7 @@ my $l16 = q|  \entry{L16}{book}{}
     }
     \strng{namehash}{vGRP1}
     \strng{fullhash}{vGRP1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{v}
   \endentry
 
 |;
@@ -517,7 +518,7 @@ my $l17 = q|  \entry{L17}{book}{}
     }
     \strng{namehash}{LBH1}
     \strng{fullhash}{LBH1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{L}
   \endentry
 
 |;
@@ -531,7 +532,7 @@ my $l18 = q|  \entry{L18}{book}{}
     }
     \strng{namehash}{LBH1}
     \strng{fullhash}{LBH1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{L}
   \endentry
 
 |;
@@ -545,7 +546,7 @@ my $l19 = q|  \entry{L19}{book}{}
     }
     \strng{namehash}{MKP1}
     \strng{fullhash}{MKP1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{M}
   \endentry
 
 |;
@@ -559,7 +560,7 @@ my $l20 = q|  \entry{L20}{book}{}
     }
     \strng{namehash}{FJ1}
     \strng{fullhash}{FJ1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{F}
   \endentry
 
 |;
@@ -573,7 +574,7 @@ my $l21 = q|  \entry{L21}{book}{}
     }
     \strng{namehash}{SS1}
     \strng{fullhash}{SS1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{S}
   \endentry
 
 |;
@@ -587,7 +588,7 @@ my $l22 = q|  \entry{L22}{book}{}
     }
     \strng{namehash}{SS1}
     \strng{fullhash}{SS1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{\v{S}}
   \endentry
 
 |;
@@ -602,7 +603,7 @@ my $l23 = q|  \entry{L23}{book}{}
     }
     \strng{namehash}{SŠ1}
     \strng{fullhash}{SŠ1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{S}
   \endentry
 
 |;
@@ -616,7 +617,7 @@ my $l24 = q|  \entry{L24}{book}{}
     }
     \strng{namehash}{ŠS1}
     \strng{fullhash}{ŠS1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{Š}
   \endentry
 
 |;
@@ -630,7 +631,7 @@ my $l25 = q|  \entry{L25}{book}{}
     }
     \strng{namehash}{A1}
     \strng{fullhash}{A1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{A}
   \endentry
 
 |;
@@ -644,7 +645,7 @@ my $l26 = q|  \entry{L26}{book}{}
     }
     \strng{namehash}{S1}
     \strng{fullhash}{S1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{S}
   \endentry
 
 |;
@@ -653,7 +654,7 @@ my $l26 = q|  \entry{L26}{book}{}
 my $l28 = q|  \entry{L28}{book}{}
     \strng{namehash}{1}
     \strng{fullhash}{1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{0}
     \warn{\item Name "Deux et al.,, O." is malformed (consecutive commas): skipping name}
   \endentry
 
@@ -669,7 +670,7 @@ my $l29 = q|  \entry{L29}{book}{}
     }
     \strng{namehash}{U1}
     \strng{fullhash}{U1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{U}
   \endentry
 
 |;
@@ -690,34 +691,33 @@ is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel Poussin', 
 is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles {Poussin Lecoq}', 'author'), $name13, 'parsename 13');
 is_deeply(Biber::Input::file::bibtex::parsename('J. C. G. de la Vallée Poussin', 'author', {useprefix => 1}), $name14, 'parsename 14');
 
-is( $out->get_output_entry('l1'), $l1, 'First Last') ;
-is( $out->get_output_entry('l2'), $l2, 'First Initial. Last') ;
-is( $out->get_output_entry('l3'), $l3, 'Initial. Initial. Last') ;
-is( $out->get_output_entry('l4'), $l4, 'First Initial Last') ;
-is( $out->get_output_entry('l5'), $l5, 'First prefix Last') ;
-is( $out->get_output_entry('l6'), $l6, 'First prefix prefix Last') ;
-is( $out->get_output_entry('l7'), $l7, 'First Initial. prefix Last') ;
-is( $out->get_output_entry('l8'), $l8, 'First Initial prefix Last') ;
-is( $out->get_output_entry('l9'), $l9, 'First {Last Last}') ;
-is( $out->get_output_entry('l10'), $l10, 'Last, Suffix, First') ;
-is( $out->get_output_entry('l10a'), $l10a, 'Last, Suffix, First Initial.') ;
-is( $out->get_output_entry('l11'), $l11, 'prefix Last, Suffix, First') ;
-is( $out->get_output_entry('l13'), $l13, 'Last Last Last, Initial. Initial.');
-is( $out->get_output_entry('l14'), $l14, 'Last Last-Last, First');
-is( $out->get_output_entry('l15'), $l15, 'First F.{\,}F. Last');
-is( $out->get_output_entry('l16'), $l16, 'First {F.\,F.} Last');
-is( $out->get_output_entry('l17'), $l17, 'Last, First {F.\,F.}');
-is( $out->get_output_entry('l18'), $l18, 'Last, First F.{\,}F.');
-is( $out->get_output_entry('l19'), $l19, 'Firstname with hyphen');
-is( $out->get_output_entry('l20'), $l20, 'Protected dual first name');
-is( $out->get_output_entry('l23'), $l23, 'Unicode firstname');
-is( $out->get_output_entry('l24'), $l24, 'Unicode lastname');
-is( $out->get_output_entry('l25'), $l25, 'Single string name');
-is( $out->get_output_entry('l26'), $l26, 'Hyphen at brace level <> 0');
+is( $out->get_output_entry($main,'l1'), $l1, 'First Last') ;
+is( $out->get_output_entry($main,'l2'), $l2, 'First Initial. Last') ;
+is( $out->get_output_entry($main,'l3'), $l3, 'Initial. Initial. Last') ;
+is( $out->get_output_entry($main,'l4'), $l4, 'First Initial Last') ;
+is( $out->get_output_entry($main,'l5'), $l5, 'First prefix Last') ;
+is( $out->get_output_entry($main,'l6'), $l6, 'First prefix prefix Last') ;
+is( $out->get_output_entry($main,'l7'), $l7, 'First Initial. prefix Last') ;
+is( $out->get_output_entry($main,'l8'), $l8, 'First Initial prefix Last') ;
+is( $out->get_output_entry($main,'l9'), $l9, 'First {Last Last}') ;
+is( $out->get_output_entry($main,'l10'), $l10, 'Last, Suffix, First') ;
+is( $out->get_output_entry($main,'l10a'), $l10a, 'Last, Suffix, First Initial.') ;
+is( $out->get_output_entry($main,'l11'), $l11, 'prefix Last, Suffix, First') ;
+is( $out->get_output_entry($main,'l13'), $l13, 'Last Last Last, Initial. Initial.');
+is( $out->get_output_entry($main,'l14'), $l14, 'Last Last-Last, First');
+is( $out->get_output_entry($main,'l15'), $l15, 'First F.{\,}F. Last');
+is( $out->get_output_entry($main,'l16'), $l16, 'First {F.\,F.} Last');
+is( $out->get_output_entry($main,'l17'), $l17, 'Last, First {F.\,F.}');
+is( $out->get_output_entry($main,'l18'), $l18, 'Last, First F.{\,}F.');
+is( $out->get_output_entry($main,'l19'), $l19, 'Firstname with hyphen');
+is( $out->get_output_entry($main,'l20'), $l20, 'Protected dual first name');
+is( $out->get_output_entry($main,'l23'), $l23, 'Unicode firstname');
+is( $out->get_output_entry($main,'l24'), $l24, 'Unicode lastname');
+is( $out->get_output_entry($main,'l25'), $l25, 'Single string name');
+is( $out->get_output_entry($main,'l26'), $l26, 'Hyphen at brace level <> 0');
 is($section->bibentry('l27')->get_field('author')->count_elements, 1, 'Bad name with 3 commas');
-#is($section->has_citekey('l28'), '0', 'Bad name with consecutive commas');
-is( $out->get_output_entry('l28'), $l28, 'Bad name with consecutive commas');
-is( $out->get_output_entry('l29'), $l29, 'Escaped name with 3 commas');
+is( $out->get_output_entry($main,'l28'), $l28, 'Bad name with consecutive commas');
+is( $out->get_output_entry($main,'l29'), $l29, 'Escaped name with 3 commas');
 
 # A few tests depend set to non UTF-8 output
 # Have to use a new biber object when trying to change encoding as this isn't
@@ -732,11 +732,12 @@ Biber::Config->setoption('bblencoding', 'latin1');
 $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
+$main = $section->get_list('MAIN');
 $bibentries = $section->bibentries;
 
 is($bibentries->entry('l21')->get_field($bibentries->entry('l21')->get_field('labelnamename'))->nth_element(1)->get_firstname_it, '{\v S}', 'Terseinitials 1');
-is( $out->get_output_entry('l12'), $l12, 'First First First First prefix prefix Last Last') ;
-is( $out->get_output_entry('l21'), $l21, 'LaTeX encoded unicode firstname');
-is( $out->get_output_entry('l22'), $l22, 'LaTeX encoded unicode lastname');
+is( $out->get_output_entry($main,'l12'), $l12, 'First First First First prefix prefix Last Last') ;
+is( $out->get_output_entry($main,'l21'), $l21, 'LaTeX encoded unicode firstname');
+is( $out->get_output_entry($main,'l22'), $l22, 'LaTeX encoded unicode lastname');
 
 unlink <*.utf8>;

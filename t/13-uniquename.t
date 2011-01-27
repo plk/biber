@@ -26,7 +26,9 @@ Biber::Config->setoption('fastsort', 1);
 # Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $bibentries = $biber->sections->get_section(0)->bibentries;
+my $section = $biber->sections->get_section(0);
+my $main = $section->get_list('MAIN');
+my $bibentries = $section->bibentries;
 
 my $un1 = q|  \entry{un1}{book}{}
     \name{labelname}{1}{%
@@ -44,7 +46,7 @@ my $un1 = q|  \entry{un1}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe94}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{labelyear}{1994}
     \count{uniquename}{2}
     \field{title}{Unique 1}
@@ -69,7 +71,7 @@ my $un2 = q|  \entry{un2}{book}{}
     \strng{namehash}{DE1}
     \strng{fullhash}{DE1}
     \field{labelalpha}{Doe34}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{labelyear}{1934}
     \count{uniquename}{1}
     \field{title}{Unique 2}
@@ -94,7 +96,7 @@ my $un3 = q|  \entry{un3}{book}{}
     \strng{namehash}{DJ2}
     \strng{fullhash}{DJ2}
     \field{labelalpha}{Doe83}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{labelyear}{1983}
     \count{uniquename}{2}
     \field{title}{Unique 3}
@@ -121,7 +123,7 @@ my $un4 = q|  \entry{un4}{book}{}
     \strng{namehash}{DJ+1}
     \strng{fullhash}{DJMM1}
     \field{labelalpha}{Doe\textbf{+}21}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{labelyear}{1921}
     \count{uniquename}{0}
     \field{title}{Unique 4}
@@ -150,7 +152,7 @@ my $un5 = q|  \entry{un5}{book}{}
     \strng{namehash}{C1}
     \strng{fullhash}{DJMM1}
     \field{labelalpha}{Cha21}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{labelyear}{1921}
     \count{uniquename}{0}
     \field{title}{Unique 5}
@@ -160,10 +162,10 @@ my $un5 = q|  \entry{un5}{book}{}
 |;
 
 
-is($out->get_output_entry('un1'), $un1, 'Uniquename requiring full name expansion - 1');
-is($out->get_output_entry('un3'), $un3, 'Uniquename requiring full name expansion - 2');
-is($out->get_output_entry('un2'), $un2, 'Uniquename requiring initials name expansion');
-is($out->get_output_entry('un4'), $un4, 'Namehash and fullhash different due to maxnames setting');
-is($out->get_output_entry('un5'), $un5, 'Fullnamshash ignores SHORT* names');
+is($out->get_output_entry($main,'un1'), $un1, 'Uniquename requiring full name expansion - 1');
+is($out->get_output_entry($main,'un3'), $un3, 'Uniquename requiring full name expansion - 2');
+is($out->get_output_entry($main,'un2'), $un2, 'Uniquename requiring initials name expansion');
+is($out->get_output_entry($main,'un4'), $un4, 'Namehash and fullhash different due to maxnames setting');
+is($out->get_output_entry($main,'un5'), $un5, 'Fullnamshash ignores SHORT* names');
 
 unlink <*.utf8>;

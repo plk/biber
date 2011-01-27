@@ -223,6 +223,7 @@ our $dispatch_sorting = {
   'eventtitle'      =>  [\&_sort_title,         ['eventtitle']],
   'eventyear'       =>  [\&_sort_year,          ['eventyear']],
   'extraalpha'      =>  [\&_sort_extraalpha,    []],
+  'extrayear'       =>  [\&_sort_extrayear,     []],
   'issuesubtitle'   =>  [\&_sort_title,         ['issuesubtitle']],
   'issuetitle'      =>  [\&_sort_title,         ['issuetitle']],
   'institution'     =>  [\&_sort_place,         ['institution']],
@@ -324,7 +325,7 @@ sub _generatesortinfo {
   $list->set_sortdata($citekey, [$ss, $sortobj]);
 
   # Generate sortinit - the initial letter of the sortstring. Skip
-  # if there is no sortstring which is possible in tests
+  # if there is no sortstring, which is possible in tests
   if ($ss) {
   # This must ignore the presort characters, naturally
     my $pre = Biber::Config->getblxoption('presort', $be->get_field('entrytype'), $citekey);
@@ -487,6 +488,22 @@ sub _sort_extraalpha {
     return '';
   }
 }
+
+sub _sort_extrayear {
+  my ($self, $citekey, $sortelementattributes) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype')) and
+    $be->get_field('extrayear')) {
+    my $string = $be->get_field('extrayear');
+    return _process_sort_attributes($string, $sortelementattributes);
+  }
+  else {
+    return '';
+  }
+}
+
 
 sub _sort_labelalpha {
   my ($self, $citekey, $sortelementattributes) = @_;

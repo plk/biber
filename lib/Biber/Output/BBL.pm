@@ -245,13 +245,11 @@ sub set_output_entry {
   $acc .= "    <BDS>SORTINIT</BDS>\n";
 
   # The labelyear option determines whether "extrayear" is output
-  # Skip generating extrayear for entries with "skiplab" set
   if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
-    if (my $ey = $be->get_field('extrayear')) {
-      my $nameyear_extrayear = $be->get_field('nameyear_extrayear');
+    if (my $nameyear_extrayear = $be->get_field('nameyear_extrayear')) {
       if ( Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
-        $acc .= "    \\field{extrayear}{$ey}\n";
+        $acc .= "    <BDS>EXTRAYEAR</BDS>\n";
       }
     }
     if (my $ly = $be->get_field('labelyear')) {
@@ -260,13 +258,11 @@ sub set_output_entry {
   }
 
   # The labelalpha option determines whether "extraalpha" is output
-  # Skip generating extraalpha for entries with "skiplab" set
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
-    if (my $ea = $be->get_field('extraalpha')) {
-      my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha');
+    if (my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha')) {
       if ( Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
-        $acc .= "    \\field{extraalpha}{$ea}\n";
+        $acc .= "    <BDS>EXTRAALPHA</BDS>\n";
       }
     }
   }
@@ -407,7 +403,8 @@ sub output {
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
 
     print $target "\n\\refsection{$secnum}\n";
-    foreach my $list (sort {$a->get_label cmp $b->get_label} @{$self->get_output_lists}) {
+    my $section = $self->get_output_section($secnum);
+    foreach my $list (sort {$a->get_label cmp $b->get_label} @{$section->get_lists}) {
       my $listlabel = $list->get_label;
       my $listtype = $list->get_type;
 
@@ -421,17 +418,12 @@ sub output {
 
       # The order of this array is the sorted order
       foreach my $k ($list->get_keys) {
+        $logger->debug("Writing entry for key '$k'");
         if ($listtype eq 'entry') {
           my $entry = $data->{ENTRIES}{$secnum}{index}{lc($k)};
-          my $entry_string = $$entry;
 
-          # Do any dynamic information replacement for information
-          # which varies in an entry between lists. Currently this means:
-          #
-          # * sortinit
-
-          my $si = '\field{sortinit}{' . $list->get_sortinitdata($k) . "}";
-          $entry_string =~ s|<BDS>SORTINIT</BDS>|$si|gxms;
+          # Instantiate any dynamic, list specific entry information
+          my $entry_string = $list->instantiate_entry($entry, $k);
 
           # If requested to convert UTF-8 to macros ...
           if (Biber::Config->getoption('bblsafechars')) {
@@ -463,7 +455,6 @@ sub output {
   close $target or $logger->logdie("Failure to close $target_string: $!");
   return;
 }
-
 
 
 =head1 AUTHORS

@@ -26,7 +26,7 @@ Biber::Config->setoption('fastsort', 1);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-
+my $main = $section->get_list('MAIN');
 my @keys = sort $section->get_citekeys;
 my @citedkeys = sort qw{ murray t1 kant:ku kant:kpv t2 };
 
@@ -98,7 +98,7 @@ my $murray1 = q|  \entry{murray}{article}{}
     \strng{namehash}{HMJ+1}
     \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
     \field{labelalpha}{Hos\textbf{+}98}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{H}
     \field{labelyear}{1998}
     \count{uniquename}{0}
     \true{singletitle}
@@ -153,7 +153,7 @@ my $murray2 = q|  \entry{murray}{article}{}
     \strng{namehash}{HMJ+1}
     \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
     \field{labelalpha}{Hos98}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{H}
     \field{labelyear}{1998}
     \count{uniquename}{0}
     \true{singletitle}
@@ -182,7 +182,7 @@ my $t1 = q|  \entry{t1}{misc}{}
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}
     \field{labelalpha}{Bro92}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{B}
     \field{labelyear}{1992}
     \count{uniquename}{0}
     \field{title}{Normal things {$^{3}$}}
@@ -202,7 +202,7 @@ my $t2 = q|  \entry{t2}{misc}{}
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}
     \field{labelalpha}{Bro94}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{B}
     \field{labelyear}{1994}
     \count{uniquename}{0}
     \field{title}{Signs of W$\frac{o}{a}$nder}
@@ -215,16 +215,16 @@ my $t2 = q|  \entry{t2}{misc}{}
 my $Worman_N = [ 'WN1', 'WN2' ] ;
 my $Gennep = [ 'vGA1', 'vGJ1' ] ;
 
-is( $out->get_output_entry('t1'), $t1, 'bbl entry with maths in title 1' ) ;
+is( $out->get_output_entry($main,'t1'), $t1, 'bbl entry with maths in title 1' ) ;
 ok( $bibentries->entry('t1')->has_keyword('primary'), 'Keywords test - 1' ) ;
 ok( $bibentries->entry('t1')->has_keyword('something'), 'Keywords test - 2' ) ;
 ok( $bibentries->entry('t1')->has_keyword('somethingelse'), 'Keywords test - 3' ) ;
-is( $out->get_output_entry('t2'), $t2, 'bbl entry with maths in title 2' ) ;
+is( $out->get_output_entry($main,'t2'), $t2, 'bbl entry with maths in title 2' ) ;
 is_deeply( Biber::Config->_get_uniquename('Worman_N'), $Worman_N, 'uniquename count 1') ;
 is_deeply( Biber::Config->_get_uniquename('Gennep'), $Gennep, 'uniquename count 2') ;
-is( $out->get_output_entry('murray'), $murray1, 'bbl with > maxnames' ) ;
-is( $out->get_output_entry('missing1'), "  \\missing{missing1}\n", 'missing citekey 1' ) ;
-is( $out->get_output_entry('missing2'), "  \\missing{missing2}\n", 'missing citekey 2' ) ;
+is( $out->get_output_entry($main,'murray'), $murray1, 'bbl with > maxnames' ) ;
+is( $out->get_output_entry($main,'missing1'), "  \\missing{missing1}\n", 'missing citekey 1' ) ;
+is( $out->get_output_entry($main,'missing2'), "  \\missing{missing2}\n", 'missing citekey 2' ) ;
 
 Biber::Config->setblxoption('alphaothers', '');
 Biber::Config->setblxoption('sortalphaothers', '');
@@ -233,8 +233,10 @@ Biber::Config->setblxoption('sortalphaothers', '');
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()
 $section->del_citekeys;
 $biber->prepare ;
+$section = $biber->sections->get_section(0);
+$main = $section->get_list('MAIN');
 $out = $biber->get_output_obj;
 
-is( $out->get_output_entry('murray'), $murray2, 'bbl with > maxnames, empty alphaothers' ) ;
+is( $out->get_output_entry($main,'murray'), $murray2, 'bbl with > maxnames, empty alphaothers' ) ;
 
 unlink <*.utf8>;

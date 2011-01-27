@@ -71,6 +71,58 @@ sub get_type {
 
 
 
+=head2 set_extrayeardata
+
+    Saves extrayear field data for a key
+
+=cut
+
+sub set_extrayeardata {
+  my $self = shift;
+  my $key = shift;
+  my $ed = shift;
+  $self->{extrayeardata}{lc($key)} = $ed;
+  return;
+}
+
+=head2 get_extrayeardata
+
+    Gets the extrayear field data for a key
+
+=cut
+
+sub get_extrayeardata {
+  my $self = shift;
+  my $key = shift;
+  return $self->{extrayeardata}{lc($key)};
+}
+
+=head2 set_extraalphadata
+
+    Saves extrayear field data for a key
+
+=cut
+
+sub set_extraalphadata {
+  my $self = shift;
+  my $key = shift;
+  my $ed = shift;
+  $self->{extraalphadata}{lc($key)} = $ed;
+  return;
+}
+
+=head2 get_extraalphadata
+
+    Gets the extraalpha field data for a key
+
+=cut
+
+sub get_extraalphadata {
+  my $self = shift;
+  my $key = shift;
+  return $self->{extraalphadata}{lc($key)};
+}
+
 =head2 set_sortdata
 
     Saves sorting data in a list for a key
@@ -81,7 +133,7 @@ sub set_sortdata {
   my $self = shift;
   my $key = shift;
   my $sd = shift;
-  $self->{sortdata}{$key} = $sd;
+  $self->{sortdata}{lc($key)} = $sd;
   return;
 }
 
@@ -94,7 +146,7 @@ sub set_sortdata {
 sub get_sortdata {
   my $self = shift;
   my $key = shift;
-  return $self->{sortdata}{$key};
+  return $self->{sortdata}{lc($key)};
 }
 
 
@@ -108,7 +160,7 @@ sub set_sortinitdata {
   my $self = shift;
   my $key = shift;
   my $sid = shift;
-  $self->{sortinitdata}{$key} = $sid;
+  $self->{sortinitdata}{lc($key)} = $sid;
   return;
 }
 
@@ -122,7 +174,7 @@ sub set_sortinitdata {
 sub get_sortinitdata {
   my $self = shift;
   my $key = shift;
-  return $self->{sortinitdata}{$key};
+  return $self->{sortinitdata}{lc($key)};
 
 }
 
@@ -219,6 +271,53 @@ sub get_keys {
   return @{$self->{keys}};
 }
 
+=head2 instantiate_entry
+
+  Do any dynamic information replacement for information
+  which varies in an entry between lists. This is information which
+  needs to be output to the .bbl for an entry but which is a property
+  of the sorting list and not the entry per se so it can't be stored
+  statically in the entry and must be pulled from the specific list
+  when outputting the entry.
+
+  Currently this means:
+
+  * sortinit
+  * extrayear
+  * extraalpha
+
+=cut
+
+sub instantiate_entry {
+  my $self = shift;
+  my $entry = shift;
+  my $key = shift;
+  return '' unless $entry;
+
+  my $entry_string = $$entry;
+
+  my $sid = $self->get_sortinitdata($key);
+  if (defined($sid)) {
+    my $si = "\\field{sortinit}{$sid}";
+    $entry_string =~ s|<BDS>SORTINIT</BDS>|$si|gxms;
+  }
+
+  my $eys;
+  # Might not be set due to skip
+  if (my $ey = $self->get_extrayeardata($key)) {
+    $eys = "    \\field{extrayear}{$ey}\n";
+  }
+  $entry_string =~ s|^\s*<BDS>EXTRAYEAR</BDS>\n|$eys|gxms;
+
+  my $eas;
+  # Might not be set due to skip
+  if (my $ea = $self->get_extraalphadata($key)) {
+    $eas = "    \\field{extraalpha}{$ea}\n";
+  }
+  $entry_string =~ s|^\s*<BDS>EXTRAALPHA</BDS>\n|$eas|gxms;
+
+  return $entry_string;
+}
 
 
 =head1 AUTHORS

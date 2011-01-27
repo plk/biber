@@ -1355,7 +1355,7 @@ sub process_lists {
   foreach my $list (@{$section->get_lists}) {
     my $llabel = $list->get_label;
 
-    # Last-ditch falback in case we still don't have a sorting spec
+    # Last-ditch fallback in case we still don't have a sorting spec
     # probably due to being called via biber with -a and -d flags
     $list->set_sortspec(Biber::Config->getblxoption('sorting')->{default}) unless $list->get_sortspec;
 
@@ -1491,14 +1491,16 @@ sub generate_final_sortinfo {
         my $nameyear_extrayear = $be->get_field('nameyear_extrayear');
           if (Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
             $BIBER_SORT_DATA_CHANGE = 1;
-            $be->set_field('extrayear', Biber::Config->incr_seen_extrayear($nameyear_extrayear));
+#            $be->set_field('extrayear', Biber::Config->incr_seen_extrayear($nameyear_extrayear));
+            $list->set_extrayeardata($key, Biber::Config->incr_seen_extrayear($nameyear_extrayear));
         }
       }
       if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
         my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha');
           if (Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
             $BIBER_SORT_DATA_CHANGE = 1;
-            $be->set_field('extraalpha', Biber::Config->incr_seen_extraalpha($nameyear_extraalpha));
+#            $be->set_field('extraalpha', Biber::Config->incr_seen_extraalpha($nameyear_extraalpha));
+            $list->set_extraalphadata($key, Biber::Config->incr_seen_extraalpha($nameyear_extraalpha));
         }
       }
     }
@@ -1974,8 +1976,8 @@ sub create_output_section {
     $output_obj->set_output_entry($be, $section, Biber::Config->get_structure);
   }
 
-  # Make sure the output object knows about the output lists
-  $output_obj->set_output_lists($section->get_lists);
+  # Make sure the output object knows about the output section
+  $output_obj->set_output_section($section);
 
   # undef citekeys are global
   my @undef_citekeys = $section->get_undef_citekeys;

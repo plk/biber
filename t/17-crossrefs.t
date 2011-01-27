@@ -24,8 +24,9 @@ Biber::Config->setoption('fastsort', 1);
 
 # Now generate the information
 $biber->prepare;
-
 my $section = $biber->sections->get_section(0);
+my $main = $section->get_list('MAIN');
+my $bibentries = $section->bibentries;
 my $out = $biber->get_output_obj;
 
 # crossref field is included as the parent is included by being crossrefed >= mincrossrefs times
@@ -44,7 +45,7 @@ my $cr1 = q|  \entry{cr1}{inbook}{}
     }
     \strng{namehash}{GG1}
     \strng{fullhash}{GG1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{G}
     \field{labelyear}{1974}
     \field{booktitle}{Graphs of the Continent}
     \strng{crossref}{crm}
@@ -76,7 +77,7 @@ my $cr2 = q|  \entry{cr2}{inbook}{}
     }
     \strng{namehash}{FF1}
     \strng{fullhash}{FF1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{F}
     \field{labelyear}{1974}
     \field{booktitle}{Graphs of the Continent}
     \strng{crossref}{crm}
@@ -98,7 +99,7 @@ my $crm = q|  \entry{crm}{book}{}
     }
     \strng{namehash}{1}
     \strng{fullhash}{1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{G}
     \field{labelyear}{1974}
     \field{title}{Graphs of the Continent}
     \field{year}{1974}
@@ -122,7 +123,7 @@ my $cr3 = q|  \entry{cr3}{inbook}{}
     }
     \strng{namehash}{AA1}
     \strng{fullhash}{AA1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{A}
     \field{labelyear}{1996}
     \field{booktitle}{Beasts of the Burbling Burns}
     \strng{crossref}{crt}
@@ -145,7 +146,7 @@ my $crt = q|  \entry{crt}{book}{}
     }
     \strng{namehash}{1}
     \strng{fullhash}{1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{B}
     \field{labelyear}{1996}
     \field{title}{Beasts of the Burbling Burns}
     \field{year}{1996}
@@ -169,7 +170,7 @@ my $cr6 = q|  \entry{cr6}{inproceedings}{}
     }
     \strng{namehash}{AF1}
     \strng{fullhash}{AF1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{A}
     \field{labelyear}{2009}
     \field{booktitle}{Manual booktitle}
     \field{eventday}{21}
@@ -203,7 +204,7 @@ my $cr7 = q|  \entry{cr7}{inbook}{}
     }
     \strng{namehash}{AF1}
     \strng{fullhash}{AF1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{A}
     \field{labelyear}{2010}
     \field{booksubtitle}{Book Subtitle}
     \field{booktitle}{Book Title}
@@ -228,7 +229,7 @@ my $cr8 = q|  \entry{cr8}{incollection}{}
     }
     \strng{namehash}{SF1}
     \strng{fullhash}{SF1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{S}
     \field{labelyear}{2010}
     \field{booktitle}{Book Title}
     \field{title}{Title of Collection bit}
@@ -248,7 +249,7 @@ my $xr1 = q|  \entry{xr1}{inbook}{}
     }
     \strng{namehash}{ZZ1}
     \strng{fullhash}{ZZ1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{Z}
     \field{origyear}{1921}
     \field{title}{Moods Mildly Modified}
     \strng{xref}{xrm}
@@ -266,7 +267,7 @@ my $xr2 = q|  \entry{xr2}{inbook}{}
     }
     \strng{namehash}{II1}
     \strng{fullhash}{II1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{I}
     \field{origyear}{1926}
     \field{title}{Migraines Multiplying Madly}
     \strng{xref}{xrm}
@@ -284,7 +285,7 @@ my $xrm = q|  \entry{xrm}{book}{}
     }
     \strng{namehash}{1}
     \strng{fullhash}{1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{C}
     \field{labelyear}{1970}
     \field{title}{Calligraphy, Calisthenics, Culture}
     \field{year}{1970}
@@ -302,7 +303,7 @@ my $xr3 = q|  \entry{xr3}{inbook}{}
     }
     \strng{namehash}{NN1}
     \strng{fullhash}{NN1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{N}
     \field{origyear}{1923}
     \field{title}{Russion Regalia Revisited}
     \strng{xref}{xrt}
@@ -320,7 +321,7 @@ my $xrt = q|  \entry{xrt}{book}{}
     }
     \strng{namehash}{1}
     \strng{fullhash}{1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{K}
     \field{labelyear}{1977}
     \field{title}{Kings, Cork and Calculation}
     \field{year}{1977}
@@ -344,7 +345,7 @@ my $cr4 = q|  \entry{cr4}{inbook}{}
     }
     \strng{namehash}{MM1}
     \strng{fullhash}{MM1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{M}
     \field{labelyear}{1945}
     \field{booktitle}{Vanquished, Victor, Vandal}
     \field{origyear}{1911}
@@ -364,7 +365,7 @@ my $xr4 = q|  \entry{xr4}{inbook}{}
     }
     \strng{namehash}{MM2}
     \strng{fullhash}{MM2}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{M}
     \field{origyear}{1933}
     \field{title}{Lumbering Lunatics}
   \endentry
@@ -372,22 +373,22 @@ my $xr4 = q|  \entry{xr4}{inbook}{}
 |;
 
 
-is($out->get_output_entry('cr1'), $cr1, 'crossref test 1');
-is($out->get_output_entry('cr2'), $cr2, 'crossref test 2');
-is($out->get_output_entry('crm'), $crm, 'crossref test 3');
-is($out->get_output_entry('cr3'), $cr3, 'crossref test 4');
-is($out->get_output_entry('crt'), $crt, 'crossref test 5');
-is($out->get_output_entry('cr4'), $cr4, 'crossref test 6');
+is($out->get_output_entry($main,'cr1'), $cr1, 'crossref test 1');
+is($out->get_output_entry($main,'cr2'), $cr2, 'crossref test 2');
+is($out->get_output_entry($main,'crm'), $crm, 'crossref test 3');
+is($out->get_output_entry($main,'cr3'), $cr3, 'crossref test 4');
+is($out->get_output_entry($main,'crt'), $crt, 'crossref test 5');
+is($out->get_output_entry($main,'cr4'), $cr4, 'crossref test 6');
 is($section->has_citekey('crn'), 0,'crossref test 7');
-is($out->get_output_entry('cr6'), $cr6, 'crossref test (inheritance) 8');
-is($out->get_output_entry('cr7'), $cr7, 'crossref test (inheritance) 9');
-is($out->get_output_entry('cr8'), $cr8, 'crossref test (inheritance) 10');
-is($out->get_output_entry('xr1'), $xr1, 'xref test 1');
-is($out->get_output_entry('xr2'), $xr2, 'xref test 2');
-is($out->get_output_entry('xrm'), $xrm, 'xref test 3');
-is($out->get_output_entry('xr3'), $xr3, 'xref test 4');
-is($out->get_output_entry('xrt'), $xrt, 'xref test 5');
-is($out->get_output_entry('xr4'), $xr4, 'xref test 6');
+is($out->get_output_entry($main,'cr6'), $cr6, 'crossref test (inheritance) 8');
+is($out->get_output_entry($main,'cr7'), $cr7, 'crossref test (inheritance) 9');
+is($out->get_output_entry($main,'cr8'), $cr8, 'crossref test (inheritance) 10');
+is($out->get_output_entry($main,'xr1'), $xr1, 'xref test 1');
+is($out->get_output_entry($main,'xr2'), $xr2, 'xref test 2');
+is($out->get_output_entry($main,'xrm'), $xrm, 'xref test 3');
+is($out->get_output_entry($main,'xr3'), $xr3, 'xref test 4');
+is($out->get_output_entry($main,'xrt'), $xrt, 'xref test 5');
+is($out->get_output_entry($main,'xr4'), $xr4, 'xref test 6');
 is($section->has_citekey('xrn'), 0,'xref test 7');
 
 unlink <*.utf8>;

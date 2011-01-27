@@ -27,6 +27,7 @@ $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $shs = $section->get_list('SHORTHANDS');
+my $main = $section->get_list('MAIN');
 my $bibentries = $section->bibentries;
 
 my $set1 = q|  \entry{seta}{set}{}
@@ -40,7 +41,7 @@ my $set1 = q|  \entry{seta}{set}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe10}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{extrayear}{1}
     \field{labelyear}{2010}
     \field{extraalpha}{1}
@@ -61,7 +62,7 @@ my $set2 = q|  \entry{set:membera}{book}{}
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{title}{Set Member A}
     \field{year}{2010}
     \keyw{key1, key2}
@@ -79,7 +80,7 @@ my $set3 = q|  \entry{set:memberb}{book}{}
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{title}{Set Member B}
     \field{year}{2010}
   \endentry
@@ -96,7 +97,7 @@ my $set4 = q|  \entry{set:memberc}{book}{}
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{title}{Set Member C}
     \field{year}{2010}
   \endentry
@@ -113,7 +114,7 @@ my $noset1 = q|  \entry{noseta}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe10}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{extrayear}{2}
     \field{labelyear}{2010}
     \field{extraalpha}{2}
@@ -133,7 +134,7 @@ my $noset2 = q|  \entry{nosetb}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe10}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{extrayear}{3}
     \field{labelyear}{2010}
     \field{extraalpha}{3}
@@ -153,7 +154,7 @@ my $noset3 = q|  \entry{nosetc}{book}{}
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
     \field{labelalpha}{Doe10}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{extrayear}{4}
     \field{labelyear}{2010}
     \field{extraalpha}{4}
@@ -178,7 +179,7 @@ my $sk4 = q|  \entry{skip4}{article}{dataonly}
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
-    <BDS>SORTINIT</BDS>
+    \field{sortinit}{D}
     \field{shorthand}{AWS}
     \field{title}{Algorithms Which Sort}
     \field{year}{1932}
@@ -193,14 +194,14 @@ is($bibentries->entry('skip2')->get_field($bibentries->entry('skip2')->get_field
 ok(is_undef($bibentries->entry('skip3')->get_field('labelalpha')), 'skiplab - no labelalpha');
 ok(is_undef($bibentries->entry('skip3')->get_field('labelyearname')), 'skiplab - no labelyear');
 ok(is_undef($bibentries->entry('skip4')->get_field('labelalpha')), 'dataonly - no labelalpha');
-is($out->get_output_entry('skip4'), $sk4, 'dataonly - checking output');
+is($out->get_output_entry($main,'skip4'), $sk4, 'dataonly - checking output');
 ok(is_undef($bibentries->entry('skip4')->get_field('labelyearname')), 'dataonly - no labelyear');
-is($out->get_output_entry('seta'), $set1, 'Set parent - with labels');
-is($out->get_output_entry('set:membera'), $set2, 'Set member - no labels 1');
-is($out->get_output_entry('set:memberb'), $set3, 'Set member - no labels 2');
-is($out->get_output_entry('set:memberc'), $set4, 'Set member - no labels 3');
-is($out->get_output_entry('noseta'), $noset1, 'Not a set member - extrayear continues from set 1');
-is($out->get_output_entry('nosetb'), $noset2, 'Not a set member - extrayear continues from set 2');
-is($out->get_output_entry('nosetc'), $noset3, 'Not a set member - extrayear continues from set 3');
+is($out->get_output_entry($main,'seta'), $set1, 'Set parent - with labels');
+is($out->get_output_entry($main,'set:membera'), $set2, 'Set member - no labels 1');
+is($out->get_output_entry($main,'set:memberb'), $set3, 'Set member - no labels 2');
+is($out->get_output_entry($main,'set:memberc'), $set4, 'Set member - no labels 3');
+is($out->get_output_entry($main,'noseta'), $noset1, 'Not a set member - extrayear continues from set 1');
+is($out->get_output_entry($main,'nosetb'), $noset2, 'Not a set member - extrayear continues from set 2');
+is($out->get_output_entry($main,'nosetc'), $noset3, 'Not a set member - extrayear continues from set 3');
 
 unlink <*.utf8>;
