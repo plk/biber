@@ -1,5 +1,6 @@
 TODO in decreasing order of priority:
 
+* Dependency on T::B 0.49
 * Generalised \printbibliography system
   Typed lists - entry, key, shorthand etc.
   Take out MAIN, SHORTHANDS backwards compat hacks in Biber.pm and BBL.pm
