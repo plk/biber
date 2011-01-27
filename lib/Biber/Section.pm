@@ -1,4 +1,5 @@
 package Biber::Section;
+use feature 'unicode_strings';
 
 use Biber::Entries;
 use Biber::Utils;

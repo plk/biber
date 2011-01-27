@@ -1,6 +1,7 @@
 package Biber;
 use strict;
 use warnings;
+use feature 'unicode_strings';
 use Carp;
 use Encode;
 use File::Copy;

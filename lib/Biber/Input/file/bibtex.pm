@@ -1,4 +1,5 @@
 package Biber::Input::file::bibtex;
+use feature 'unicode_strings';
 use sigtrap qw(handler TBSIG SEGV);
 use strict;
 use warnings;

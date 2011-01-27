@@ -1,4 +1,6 @@
 package Biber::Utils;
+use feature 'unicode_strings';
+
 use strict;
 use warnings;
 use Carp;

@@ -1,4 +1,5 @@
 package Biber::Entry::Names;
+use feature 'unicode_strings';
 
 use Data::Dump;
 
