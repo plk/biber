@@ -79,5 +79,8 @@
       <bib:item author="Kennedy" type="Mathematical Reviews">85k:01005a</bib:item>
       <bib:item author="P. Mürsepp" type="Zentralblatt">0603.01010</bib:item>
     </bib:reviews>
+    <bib:related>
+      <bib:item type="reprint" string="Somestring" ids="rel1,rel2"/>
+    </bib:related>
   </bib:entry>
 </bib:entries>

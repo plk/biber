@@ -60,6 +60,9 @@ my $DS_FMAP = {
               # Date fields
               date            => { handler => \&_date },
 
+              # Related entries
+              related         => { handler => \&_related },
+
               # List fields
               address         => { aliasof => 'location' },
               institution     => { handler => \&_list },
@@ -141,8 +144,6 @@ my $DS_FMAP = {
               presort         => { handler => \&_literal },
               primaryclass    => { aliasof => 'eprintclass' },
               pubstate        => { handler => \&_literal },
-              related         => { handler => \&_literal },
-              relatedtype     => { handler => \&_literal },
               reprinttitle    => { handler => \&_literal },
               series          => { handler => \&_literal },
               shorthand       => { handler => \&_literal },
@@ -383,6 +384,22 @@ sub create_entry {
 }
 
 
+# Related entries
+sub _related {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  # Pick out the node with the right mode
+  my $node = _resolve_display_mode($biber, $entry, $f);
+  # TODO
+  # Current biblatex data model doesn't allow for multiple items here
+  foreach my $item ($node->findnodes("./$NS:item")) {
+    $bibentry->set_datafield('related', $item->getAttribute('ids'));
+    $bibentry->set_datafield('relatedtype', $item->getAttribute('type'));
+    if (my $string = $item->getAttribute('string')) {
+      $bibentry->set_datafield('relatedstring', $string);
+    }
+  }
+  return;
+}
 
 # Special fields
 sub _special {
@@ -392,7 +409,6 @@ sub _special {
   $bibentry->set_datafield(_norm($to), $node->textContent());
   return;
 }
-
 
 # Literal fields
 sub _literal {
@@ -544,7 +560,7 @@ sub parsename {
     # name component with parts
       if (my @parts = map {$_->textContent()} $nc_node->findnodes("./$NS:namepart")) {
         $namec{$n} = _join_name_parts(\@parts);
-        $logger->debug("      Found name component '$n': " . $namec{$n});
+        $logger->debug("Found name component '$n': " . $namec{$n});
         if (my $nin = $node->findnodes("./$NS:${n}initial")->get_node(1)) {
           my $ni = $nin->textContent();
           $ni =~ s/\.\z//xms; # normalise initials to without period
@@ -559,7 +575,7 @@ sub parsename {
       # with no parts
       elsif (my $t = $nc_node->textContent()) {
         $namec{$n} = $t;
-        $logger->debug("      Found name component '$n': $t");
+        $logger->debug("Found name component '$n': $t");
         if (my $nin = $node->findnodes("./$NS:${n}initial")->get_node(1)) {
           my $ni = $nin->textContent();
           $ni =~ s/\.\z//xms; # normalise initials to without period
@@ -717,7 +733,7 @@ sub _resolve_display_mode {
   my $dm = Biber::Config->getblxoption('displaymode');
   $logger->debug("Resolving display mode for '$fieldname' in node " . $entry->nodePath );
   # Either a fieldname specific mode or the default
-  my $modelist = $dm->{$fieldname} || $dm->{'*'};
+  my $modelist = $dm->{_norm($fieldname)} || $dm->{'*'};
   foreach my $mode (@$modelist) {
     my $modeattr;
     # mode is omissable if it is "original"
@@ -728,6 +744,7 @@ sub _resolve_display_mode {
     else {
       $modeattr = "\@mode='$mode'"
     }
+    $logger->debug("Found display mode '$mode' for field '$fieldname'");
     if (@nodelist = $entry->findnodes("./${fieldname}[$modeattr]")) {
       # Check to see if there is more than one entry with a mode and warn
       if ($#nodelist > 0) {
@@ -735,7 +752,6 @@ sub _resolve_display_mode {
                       $entry->getAttribute('id') . "' - using the first one!");
         $biber->{warnings}++;
       }
-      $logger->debug('Found display mode ' . $nodelist[0] . "' for field '$fieldname'");
       return $nodelist[0];
     }
   }

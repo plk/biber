@@ -290,6 +290,18 @@ sub add_undef_citekey {
   return;
 }
 
+=head2 is_undef_citekey
+
+    Checks to see if a key is undef
+
+=cut
+
+sub is_undef_citekey {
+  my $self = shift;
+  my $key = shift;
+  return (first {$_ eq $key} @{$self->{undef_citekeys}}) ? 1 : 0;
+}
+
 
 =head2 add_datasource
 

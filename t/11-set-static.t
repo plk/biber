@@ -29,7 +29,7 @@ my $main = $section->get_list('MAIN');
 my $out = $biber->get_output_obj;
 
 my $string1 = q|  \entry{Static1}{set}{}
-    \set{Static2, Static3, Static4}
+    \set{Static2, Static3, Static4, missing1}
     \name{labelname}{1}{%
       {{Bumble}{B.}{Brian}{B.}{}{}{}{}}%
     }
@@ -43,6 +43,7 @@ my $string1 = q|  \entry{Static1}{set}{}
     \field{annotation}{Some notes}
     \field{title}{Blessed Brains}
     \field{year}{2001}
+    \warn{\item   Set member 'missing1' does not exist!}
   \endentry
 
 |;

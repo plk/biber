@@ -688,6 +688,10 @@ sub instantiate_dynamic {
       $be->del_field('related'); # clear the related field
       my @clonekeys;
       foreach my $relkey (split /\s*,\s*/, $relkeys) {
+        if ($section->is_undef_citekey($relkey)) {
+          $self->biber_warn($be, "Related entry '$relkey' does not exist!");
+          next;
+        }
         my $relentry = $section->bibentry($relkey);
         my $clonekey = md5_hex($relkey);
         push @clonekeys, $clonekey;
@@ -747,7 +751,10 @@ sub process_crossrefs {
       my @inset_keys = split /\s*,\s*/, $be->get_field('entryset');
       foreach my $inset_key (@inset_keys) {
         $logger->debug("  Adding set member '$inset_key' to the citekeys (section $secnum)");
-        $section->add_citekeys($inset_key);
+        # unless it's undefined ...
+        unless ($section->is_undef_citekey($inset_key)) {
+          $section->add_citekeys($inset_key);
+        }
       }
       # automatically crossref for the first set member using plain set inheritance
       $be->set_inherit_from($section->bibentry($inset_keys[0]));
@@ -909,6 +916,11 @@ sub process_sets {
     # Enforce Biber parts of virtual "dataonly" for set members
     # Also automatically create an "entryset" field for the members
     foreach my $member (@entrysetkeys) {
+      if ($section->is_undef_citekey($member)) {
+        $self->biber_warn($be, "  Set member '$member' does not exist!");
+        next;
+      }
+
       Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $member);
       Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $member);
       my $me = $section->bibentry($member);
@@ -1912,59 +1924,68 @@ sub fetch_data {
     $section->add_undef_citekey($citekey);
   }
 
-  # Don't need to look for dependents if allkeys, we have everything already
-  unless ($section->is_allkeys) {
-    $logger->debug('Building dependents for keys: ' . join(',', $section->get_citekeys));
-    # dependent key list generation
-    my @dependent_keys = ();
-    foreach my $citekey ($section->get_citekeys) {
-      # Dynamic sets don't exist yet but their members do
-      if (my @dmems = $section->get_dynamic_set($citekey)) {
+  $logger->debug('Building dependents for keys: ' . join(',', $section->get_citekeys));
+  # dependent key list generation
+  my @dependent_keys = ();
+  foreach my $citekey ($section->get_citekeys) {
+    # Dynamic sets don't exist yet but their members do
+    if (my @dmems = $section->get_dynamic_set($citekey)) {
+      # skip looking for dependent if it's already been directly cited
+      push @dependent_keys, grep { not $section->bibentry($_) } @dmems;
+      $logger->debug("Dynamic set entry '$citekey' has members: " . join(', ', @dmems));
+    }
+    else {
+      # This must exist for all but dynamic sets
+      my $be = $section->bibentry($citekey);
+      # crossrefs/xrefs
+      my $refkey;
+      if ($refkey = $be->get_field('xref') or
+          $refkey = $be->get_field('crossref')) {
         # skip looking for dependent if it's already been directly cited
-        push @dependent_keys, grep { not $section->bibentry($_) } @dmems;
-        $logger->debug("Dynamic set entry '$citekey' has members: " . join(', ', @dmems));
+        push @dependent_keys, $refkey unless $section->bibentry($refkey);
+        $logger->debug("Entry '$citekey' has cross/xref '$refkey'");
       }
-      else {
-        # This must exist for all but dynamic sets
-        my $be = $section->bibentry($citekey);
-        # crossrefs/xrefs
-        my $refkey;
-        if ($refkey = $be->get_field('xref') or
-            $refkey = $be->get_field('crossref')) {
-          # skip looking for dependent if it's already been directly cited
-          push @dependent_keys, $refkey unless $section->bibentry($refkey);
-          $logger->debug("Entry '$citekey' has cross/xref '$refkey'");
-        }
-        # static sets
-        if ($be->get_field('entrytype') eq 'set') {
-          my @smems = split /\s*,\s*/, $be->get_field('entryset');
-          # skip looking for dependent if it's already been directly cited
-          push @dependent_keys, grep {not $section->bibentry($_)} @smems;
-          $logger->debug("Static set entry '$citekey' has members: " . join(', ', @smems));
-        }
-        # Related entries
-        if (my $relkeys = $be->get_field('related')) {
-          my @rmems = split /\s*,\s*/, $relkeys;
-          # skip looking for dependent if it's already been directly cited
-          push @dependent_keys, grep {not $section->bibentry($_)} @rmems;
-          $logger->debug("Entry '$citekey' has related entries: " . join(', ', @rmems));
-        }
+      # static sets
+      if ($be->get_field('entrytype') eq 'set') {
+        my @smems = split /\s*,\s*/, $be->get_field('entryset');
+        # skip looking for dependent if it's already been directly cited
+        push @dependent_keys, grep {not $section->bibentry($_)} @smems;
+        $logger->debug("Static set entry '$citekey' has members: " . join(', ', @smems));
+      }
+      # Related entries
+      if (my $relkeys = $be->get_field('related')) {
+        my @rmems = split /\s*,\s*/, $relkeys;
+        # skip looking for dependent if it's already been directly cited
+        push @dependent_keys, grep {not $section->bibentry($_)} @rmems;
+        $logger->debug("Entry '$citekey' has related entries: " . join(', ', @rmems));
       }
     }
 
     if (@dependent_keys) {
-      # Now look for the dependents of the directly cited keys in each datasource
+      # Now look for the dependents of the directly cited keys
       @remaining_keys = @dependent_keys;
       $logger->debug('Looking for dependent keys: ' . join(', ', @remaining_keys));
-      foreach my $datasource (@{$section->get_datasources}) {
-        # shortcut if we have found all the keys now
-        last unless (@remaining_keys or $section->is_allkeys);
-        my $type = $datasource->{type};
-        my $name = $datasource->{name};
-        my $datatype = $datasource->{datatype};
-        my $package = 'Biber::Input::' . $type . '::' . $datatype;
-        eval "require $package";
-        @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@remaining_keys);
+
+      # No need to go back to the datasource if allkeys, just see if the keys
+      # are in section
+      if ($section->is_allkeys) {
+        my @missing;
+        foreach my $dk (@dependent_keys) {
+          push @missing, $dk unless first {$_ eq $dk} $section->get_citekeys;
+        }
+        @remaining_keys = @missing;
+      }
+      else {
+        foreach my $datasource (@{$section->get_datasources}) {
+          # shortcut if we have found all the keys now
+          last unless (@remaining_keys or $section->is_allkeys);
+          my $type = $datasource->{type};
+          my $name = $datasource->{name};
+          my $datatype = $datasource->{datatype};
+          my $package = 'Biber::Input::' . $type . '::' . $datatype;
+          eval "require $package";
+          @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@remaining_keys);
+        }
       }
 
       # error reporting
@@ -1972,7 +1993,6 @@ sub fetch_data {
       foreach my $citekey (@remaining_keys) {
         $logger->warn("I didn't find a database entry for '$citekey' (section $secnum)");
         $self->{warnings}++;
-        $section->del_citekey($citekey);
         $section->add_undef_citekey($citekey);
       }
     }

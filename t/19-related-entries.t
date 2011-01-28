@@ -50,6 +50,7 @@ my $k1 = q|  \entry{key1}{article}{}
     \field{volume}{12}
     \field{year}{1998}
     \field{pages}{125\bibrangedash 150}
+    \warn{\item Related entry 'missing1' does not exist!}
   \endentry
 
 |;
@@ -214,9 +215,9 @@ is( $out->get_output_entry($main,'key3'), $k3, 'Related entry test 3' ) ;
 is( $out->get_output_entry($main,'c2add694bf942dc77b376592d9c862cd'), $kck1, 'Related entry test 4' ) ;
 is( $out->get_output_entry($main,'78f825aaa0103319aaa1a30bf4fe3ada'), $kck2, 'Related entry test 5' ) ;
 is( $out->get_output_entry($main,'3631578538a2d6ba5879b31a9a42f290'), $kck3, 'Related entry test 6' ) ;
+is( $out->get_output_entry($main,'caf8e34be07426ae7127c1b4829983c1'), $kck4, 'Related entry test 7' ) ;
 # Key k4 is used only to create a related entry clone but since it isn't cited itself
 # it shouldn't be in the .bbl
-is( $out->get_output_entry($main,'caf8e34be07426ae7127c1b4829983c1'), $kck4, 'Related entry test 7' ) ;
 is( $out->get_output_entry($main,'key4'), undef, 'Related entry test 8' ) ;
 is_deeply([$shs->get_keys], ['key1', 'key2', 'key3'], 'Related entry test 9');
 

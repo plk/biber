@@ -651,14 +651,15 @@ remarks = element remarks {formattext|item+}
 ## works
 ## This is used to record crossrefs to other entries that are related to the present one,
 ## for instance a reedition.
-relatedentries = element relatedentries {
+relatedentries = element related {
     element item {
       attribute type { "reedition"    | "reprint"    | "contains" | "translation" | 
                        "reedition_of" | "reprint_of" | "part_of"  | "translation_of" | 
                        "revised_version"    | "expanded_version"     | "review"    | "essay_review" |
                        "revised_version_of" |  "expanded_version_of" | "review_of" | "essay_review_of" |
                        text },
-      attribute id { text } }+
+      attribute string { text }?,
+      attribute ids { text } }+ # can be comma-sep IDs
     }
 
 #########################################################
