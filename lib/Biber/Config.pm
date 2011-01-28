@@ -68,6 +68,7 @@ $CONFIG->{state}{datafiles} = [];
 =cut
 
 sub _init {
+  $CONFIG->{options}{biblatex}{PER_ENTRY} = {};
   $CONFIG->{state}{control_file_location} = '';
   $CONFIG->{state}{seennamehash} = {};
   $CONFIG->{state}{namehashcount} = {};
@@ -324,19 +325,6 @@ sub getcmdlineoption {
 #################################
 # BibLaTeX options static methods
 #################################
-
-=head2 reset_per_entry_options
-
-    Unset all per_entry_options. Sometimes these are dynamically generated
-    (skiplab, skiplos etc.) and we don't want these persisting over sections
-
-=cut
-
-sub reset_per_entry_options {
-  shift; # class method so don't care about class name
-  $CONFIG->{options}{biblatex}{PER_ENTRY} = {};
-  return;
-}
 
 
 =head2 setblxoption

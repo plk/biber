@@ -243,7 +243,7 @@ sub extract_entries {
     $logger->debug("All citekeys will be used for section '$secnum'");
     # Loop over all entries, creating objects
     foreach my $entry ($xpc->findnodes("//$NS:entry")) {
-      $logger->debug(' Parsing BibLaTeXML entry object ' . $entry->nodePath);
+      $logger->debug('Parsing BibLaTeXML entry object ' . $entry->nodePath);
       # We have to pass the datasource cased key to
       # create_entry() as this sub needs to know the original case of the
       # citation key so we can do case-insensitive key/entry comparisons
@@ -283,7 +283,7 @@ sub extract_entries {
         $entry = $entries[0];
 
         $logger->debug("Found key '$wanted_key' in BibLaTeXML file '$filename'");
-        $logger->debug(' Parsing BibLaTeXML entry object ' . $entry->nodePath);
+        $logger->debug('Parsing BibLaTeXML entry object ' . $entry->nodePath);
         # See comment above about the importance of the case of the key
         # passed to create_entry()
         create_entry($biber, $wanted_key, $entry);
@@ -340,8 +340,8 @@ sub create_entry {
     $bibentry->set_field('entrytype', $entry->getAttribute('entrytype'));
   }
 
-  # We put all the fields we find modulo field aliases into the object
-  # validation happens later and is not datasource dependent
+  # We put all the fields we find modulo field aliases into the object.
+  # Validation happens later and is not datasource dependent
   foreach my $f (uniq map {$_->nodeName()} $entry->findnodes("*")) {
 
     # We have to process local options as early as possible in order
@@ -351,7 +351,6 @@ sub create_entry {
         $biber->process_entry_options($dskey, $node->textContent());
       }
     }
-
 
     if (my $fm = $DS_FMAP->{_norm($f)}) {
       my $to = $f; # By default, field to set internally is the same as data source
@@ -534,7 +533,7 @@ sub _name {
 
 sub parsename {
   my ($node, $fieldname, $opts) = @_;
-  $logger->debug('   Parsing BibLaTeXML name object ' . $node->nodePath);
+  $logger->debug('Parsing BibLaTeXML name object ' . $node->nodePath);
   my $usepre = $opts->{useprefix};
 
   my %namec;
@@ -716,6 +715,7 @@ sub _resolve_display_mode {
   my ($biber, $entry, $fieldname) = @_;
   my @nodelist;
   my $dm = Biber::Config->getblxoption('displaymode');
+  $logger->debug("Resolving display mode for '$fieldname' in node " . $entry->nodePath );
   # Either a fieldname specific mode or the default
   my $modelist = $dm->{$fieldname} || $dm->{'*'};
   foreach my $mode (@$modelist) {
@@ -735,6 +735,7 @@ sub _resolve_display_mode {
                       $entry->getAttribute('id') . "' - using the first one!");
         $biber->{warnings}++;
       }
+      $logger->debug('Found display mode ' . $nodelist[0] . "' for field '$fieldname'");
       return $nodelist[0];
     }
   }

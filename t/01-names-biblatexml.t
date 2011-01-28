@@ -3,8 +3,8 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More skip_all => 'bltxml not working yet';
-#use Test::More tests => 1;
+#use Test::More skip_all => 'bltxml not working yet';
+use Test::More tests => 1;
 
 use Biber;
 use Biber::Input::file::bibtex;
@@ -29,10 +29,11 @@ Biber::Config->setoption('sortlocale', 'C');
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
+my $main = $section->get_list('MAIN');
 my $bibentries = $section->bibentries;
 
 my $l1 = q||;
 
-is( $out->get_output_entry('bulgakovrozenfeld:1983'), $l1, 'Basic BibLaTeXML test - 1') ;
+is( $out->get_output_entry($main, 'bulgakovrozenfeld:1983'), $l1, 'Basic BibLaTeXML test - 1') ;
 
 unlink <*.utf8>;

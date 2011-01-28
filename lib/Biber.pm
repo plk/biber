@@ -1834,16 +1834,11 @@ sub prepare {
   foreach my $section (@{$self->sections->get_sections}) {
     # shortcut - skip sections that don't have any keys
     next unless $section->get_citekeys or $section->is_allkeys;
-
-    # Reset the the sorting cache
-    $section->reset_sort_cache;
-
     my $secnum = $section->number;
-    # Remove any dynamically generated per-entry options which might have
-    # been set in previous sections (like skiplab, skiplos)
-    Biber::Config->reset_per_entry_options;
 
     $logger->info("Processing bib section $secnum");
+
+    $section->reset_sort_cache;          # Reset the the sorting cache
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->fetch_data;                   # Fetch cited key and dependent data from sources

@@ -118,7 +118,7 @@
   <!-- DISPLAYMODES -->
   <bcf:displaymodes>
     <bcf:displaymode>
-      <bcf:target>ALL</bcf:target>
+      <bcf:target>*</bcf:target>
       <bcf:mode>original</bcf:mode>
       <bcf:mode>romanised</bcf:mode>
       <bcf:mode>uniform</bcf:mode>
