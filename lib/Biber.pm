@@ -1407,6 +1407,9 @@ sub process_lists {
     }
 
     # Filtering
+    # This is not really used - filtering is more efficient to do on the biblatex
+    # side since we are filtering afer sorting anyway. It is used to provide
+    # a field=shorthand filter for type=shorthand lists though.
     if (my $filters = $list->get_filters) {
       my $flist = [];
 KEYLOOP: foreach my $k ($list->get_keys) {
