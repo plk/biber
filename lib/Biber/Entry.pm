@@ -73,6 +73,8 @@ sub notnull {
 =head2 set_datafield
 
     Set a field which is in the bib data file
+    Only set to null if the field is a nullable one
+    otherwise if value is null, remove the field
 
 =cut
 
@@ -83,6 +85,9 @@ sub set_datafield {
   # Only set fields which are either not null or are ok to be null
   if ( $struc->is_field_type('nullok', $key) or is_notnull($val)) {
     $self->{datafields}{$key} = $val;
+  }
+  elsif (is_null($val)) {
+    delete($self->{datafields}{$key});
   }
   return;
 }

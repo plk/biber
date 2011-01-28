@@ -688,10 +688,6 @@ sub instantiate_dynamic {
       $be->del_field('related'); # clear the related field
       my @clonekeys;
       foreach my $relkey (split /\s*,\s*/, $relkeys) {
-        if ($section->is_undef_citekey($relkey)) {
-          $self->biber_warn($be, "Related entry '$relkey' does not exist!");
-          next;
-        }
         my $relentry = $section->bibentry($relkey);
         my $clonekey = md5_hex($relkey);
         push @clonekeys, $clonekey;
@@ -751,10 +747,7 @@ sub process_crossrefs {
       my @inset_keys = split /\s*,\s*/, $be->get_field('entryset');
       foreach my $inset_key (@inset_keys) {
         $logger->debug("  Adding set member '$inset_key' to the citekeys (section $secnum)");
-        # unless it's undefined ...
-        unless ($section->is_undef_citekey($inset_key)) {
-          $section->add_citekeys($inset_key);
-        }
+        $section->add_citekeys($inset_key);
       }
       # automatically crossref for the first set member using plain set inheritance
       $be->set_inherit_from($section->bibentry($inset_keys[0]));
@@ -916,11 +909,6 @@ sub process_sets {
     # Enforce Biber parts of virtual "dataonly" for set members
     # Also automatically create an "entryset" field for the members
     foreach my $member (@entrysetkeys) {
-      if ($section->is_undef_citekey($member)) {
-        $self->biber_warn($be, "  Set member '$member' does not exist!");
-        next;
-      }
-
       Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $member);
       Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $member);
       my $me = $section->bibentry($member);
@@ -1927,11 +1915,17 @@ sub fetch_data {
   $logger->debug('Building dependents for keys: ' . join(',', $section->get_citekeys));
   # dependent key list generation
   my @dependent_keys = ();
+  my $dep_map = {}; # a map of dependent keys to entry keys in case we need to delete
   foreach my $citekey ($section->get_citekeys) {
     # Dynamic sets don't exist yet but their members do
     if (my @dmems = $section->get_dynamic_set($citekey)) {
       # skip looking for dependent if it's already been directly cited
-      push @dependent_keys, grep { not $section->bibentry($_) } @dmems;
+      foreach my $dm (@dmems) {
+        unless ($section->bibentry($dm)) {
+          push @dependent_keys, $dm;
+          $dep_map->{$dm} = $citekey;
+        }
+      }
       $logger->debug("Dynamic set entry '$citekey' has members: " . join(', ', @dmems));
     }
     else {
@@ -1944,19 +1938,30 @@ sub fetch_data {
         # skip looking for dependent if it's already been directly cited
         push @dependent_keys, $refkey unless $section->bibentry($refkey);
         $logger->debug("Entry '$citekey' has cross/xref '$refkey'");
+        $dep_map->{$refkey} = $citekey;
       }
       # static sets
       if ($be->get_field('entrytype') eq 'set') {
         my @smems = split /\s*,\s*/, $be->get_field('entryset');
         # skip looking for dependent if it's already been directly cited
-        push @dependent_keys, grep {not $section->bibentry($_)} @smems;
+        foreach my $sm (@smems) {
+          unless ($section->bibentry($sm)) {
+            push @dependent_keys, $sm;
+            $dep_map->{$sm} = $citekey;
+          }
+        }
         $logger->debug("Static set entry '$citekey' has members: " . join(', ', @smems));
       }
       # Related entries
       if (my $relkeys = $be->get_field('related')) {
         my @rmems = split /\s*,\s*/, $relkeys;
         # skip looking for dependent if it's already been directly cited
-        push @dependent_keys, grep {not $section->bibentry($_)} @rmems;
+        foreach my $rm (@rmems) {
+          unless ($section->bibentry($rm)) {
+            push @dependent_keys, $rm;
+            $dep_map->{$rm} = $citekey;
+          }
+        }
         $logger->debug("Entry '$citekey' has related entries: " . join(', ', @rmems));
       }
     }
@@ -1991,9 +1996,8 @@ sub fetch_data {
       # error reporting
       $logger->debug("Dependent keys not found for section '$secnum': " . join(',', @remaining_keys));
       foreach my $citekey (@remaining_keys) {
-        $logger->warn("I didn't find a database entry for '$citekey' (section $secnum)");
-        $self->{warnings}++;
-        $section->add_undef_citekey($citekey);
+        $logger->debug("Removing missing dependent key '$citekey' from entries");
+        $self->remove_undef_dependent($dep_map, $citekey);
       }
     }
   }
@@ -2003,6 +2007,67 @@ sub fetch_data {
   # Reset any cache of bibtex data
   $Biber::Input::file::bibtex::cache->{data} = undef;
   return;
+}
+
+=head2 remove_undef_dependent
+
+    Remove undefined dependent keys from an entries using a map of
+    depedent keys to entries
+
+=cut
+
+sub remove_undef_dependent {
+  my $self = shift;
+  my $dep_map = shift;
+  my $missing_key = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $entry_key = $dep_map->{$missing_key};
+
+  # remove from any dynamic keys
+  if (my @dmems = $section->get_dynamic_set($entry_key)) {
+    $section->set_dynamic_set($entry_key, grep {$_ ne $missing_key} @dmems);
+    $logger->warn("I didn't find a database entry for dynamic set member '$missing_key' - ignoring (section $secnum)");
+    $self->{warnings}++;
+  }
+  else {
+    my $be = $section->bibentry($entry_key);
+    # remove any xrefs
+    if ($be->get_field('xref') and ($be->get_field('xref') eq $missing_key)) {
+      $be->del_field('xref');
+      $logger->warn("I didn't find a database entry for xref '$missing_key' in entry '$entry_key' - ignoring (section $secnum)");
+      $self->{warnings}++;
+    }
+
+    # remove any crossrefs
+    if ($be->get_field('crossref') and ($be->get_field('crossref') eq $missing_key)) {
+      $be->del_field('crossref');
+      $logger->warn("I didn't find a database entry for crossref '$missing_key' in entry '$entry_key' - ignoring (section $secnum)");
+      $self->{warnings}++;
+    }
+
+    # remove static sets
+    if ($be->get_field('entrytype') eq 'set') {
+      my @smems = split /\s*,\s*/, $be->get_field('entryset');
+      $be->set_datafield('entryset', join(',', grep {$_ ne $missing_key} @smems));
+      $logger->warn("I didn't find a database entry for static set member '$missing_key' in entry '$entry_key' - ignoring (section $secnum)");
+      $self->{warnings}++;
+    }
+
+    # remove related entries
+    if (my $relkeys = $be->get_field('related')) {
+      my @rmems = split /\s*,\s*/, $relkeys;
+      $be->set_datafield('related', join(',', grep {$_ ne $missing_key} @rmems));
+      # If no more related entries, remove the other related fields
+      unless ($be->get_field('related')) {
+        $be->del_field('relatedtype');
+        $be->del_field('relatedstring');
+      }
+      $logger->warn("I didn't find a database entry for related entry '$missing_key' in entry '$entry_key' - ignoring (section $secnum)");
+      $self->{warnings}++;
+    }
+  }
+    return;
 }
 
 =head2 create_output_section

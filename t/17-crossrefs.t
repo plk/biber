@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 17;
+use Test::More tests => 19;
 
 use Biber;
 use Biber::Output::BBL;
@@ -374,6 +374,40 @@ my $xr4 = q|  \entry{xr4}{inbook}{}
 
 |;
 
+# Missing keys in xref/crossref should be deleted during datasource parse
+# So these two should have no xref/crossref data in them
+my $mxr = q|  \entry{mxr}{inbook}{}
+    \name{labelname}{1}{%
+      {{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
+    }
+    \name{author}{1}{%
+      {{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
+    }
+    \strng{namehash}{MM2}
+    \strng{fullhash}{MM2}
+    \field{sortinit}{M}
+    \field{origyear}{1933}
+    \field{title}{Lumbering Lunatics}
+  \endentry
+
+|;
+
+my $mcr = q|  \entry{mcr}{inbook}{}
+    \name{labelname}{1}{%
+      {{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
+    }
+    \name{author}{1}{%
+      {{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
+    }
+    \strng{namehash}{MM2}
+    \strng{fullhash}{MM2}
+    \field{sortinit}{M}
+    \field{origyear}{1933}
+    \field{title}{Lumbering Lunatics}
+  \endentry
+
+|;
+
 
 is($out->get_output_entry($main,'cr1'), $cr1, 'crossref test 1');
 is($out->get_output_entry($main,'cr2'), $cr2, 'crossref test 2');
@@ -392,5 +426,7 @@ is($out->get_output_entry($main,'xr3'), $xr3, 'xref test 4');
 is($out->get_output_entry($main,'xrt'), $xrt, 'xref test 5');
 is($out->get_output_entry($main,'xr4'), $xr4, 'xref test 6');
 is($section->has_citekey('xrn'), 0,'xref test 7');
+is($out->get_output_entry($main,'mxr'), $mxr, 'missing xref test');
+is($out->get_output_entry($main,'mcr'), $mcr, 'missing crossef test');
 
 unlink <*.utf8>;

@@ -50,7 +50,6 @@ my $k1 = q|  \entry{key1}{article}{}
     \field{volume}{12}
     \field{year}{1998}
     \field{pages}{125\bibrangedash 150}
-    \warn{\item Related entry 'missing1' does not exist!}
   \endentry
 
 |;
