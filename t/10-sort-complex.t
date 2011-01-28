@@ -91,7 +91,7 @@ my $sc2 = [
             {'labelalpha'    => {}},
            ],
            [
-            {},
+            {sort_direction => 'descending'},
             {'extraalpha'     => {pad_side => 'left',
                                  pad_width => 4,
                                  pad_char => '0'}},
@@ -228,7 +228,7 @@ is( $out->get_output_entry($main,'l4'), $sc3, '\alphaothers set by "and others"'
 is( $out->get_output_entry($main,'l1'), $sc4, '2-pass - labelalpha after title');
 is( $out->get_output_entry($main,'l2'), $sc5, '2-pass - labelalpha after title');
 is( $out->get_output_entry($main,'l3'), $sc6, '2-pass - labelalpha after title');
-is_deeply([ $main->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'citeorder - 1');
+is_deeply([ $main->get_keys ], ['L4', 'L5', 'L2', 'L3', 'L1'], 'citeorder - 1');
 
 
 unlink <*.utf8>;

@@ -130,7 +130,7 @@
     <bcf:sort order="4" pass="final">
       <bcf:sortitem order="1">labelalpha</bcf:sortitem>
     </bcf:sort>
-    <bcf:sort order="5" pass="final">
+    <bcf:sort order="5" pass="final" sort_direction="descending">
       <bcf:sortitem order="1" pad_side="left" pad_width="4" pad_char="0">extraalpha</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="6">
