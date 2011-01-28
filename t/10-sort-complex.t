@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 8;
+use Test::More tests => 9;
 
 use Biber;
 use Biber::Output::BBL;
@@ -30,6 +30,7 @@ Biber::Config->setblxoption('labelyear', undef);
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $main = $section->get_list('MAIN');
+my $shs = $section->get_list('SHORTHANDS');
 my $out = $biber->get_output_obj;
 
 isa_ok($biber, "Biber");
@@ -229,6 +230,13 @@ is( $out->get_output_entry($main,'l1'), $sc4, '2-pass - labelalpha after title')
 is( $out->get_output_entry($main,'l2'), $sc5, '2-pass - labelalpha after title');
 is( $out->get_output_entry($main,'l3'), $sc6, '2-pass - labelalpha after title');
 is_deeply([ $main->get_keys ], ['L4', 'L5', 'L2', 'L3', 'L1'], 'citeorder - 1');
+
+# This should be the same as $main citeorder as both $main and $shs use same
+# global sort spec. $shs should also get the keys from the sort cache as a result.
+# Can't do the usual SHORTHAND filter on SHORTHAND field in .bcf as adding SHORTHAND
+# fields to the entries changes the sort order of $main (as SHORTHAND overrides the default
+# label)
+is_deeply([ $shs->get_keys ], ['L4', 'L5', 'L2', 'L3', 'L1'], 'citeorder - 2');
 
 
 unlink <*.utf8>;

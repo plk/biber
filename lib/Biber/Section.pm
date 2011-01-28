@@ -23,6 +23,7 @@ sub new {
   $self->{bibentries} = new Biber::Entries;
   $self->{allkeys} = 0;
   $self->{citekeys} = [];
+  $self->{sortcache} = [];
   $self->{dkeys} = {};
   $self->{orig_order_citekeys} = [];
   $self->{undef_citekeys} = [];
@@ -370,6 +371,44 @@ sub get_list {
     return $list if ($list->get_label eq $label);
   }
   return undef;
+}
+
+=head2 add_sort_cache
+
+    Adds a scheme/keys pair to the sort cache:
+    [$scheme, $keys, $sortinitdata, $extraalphadata, $extrayeardata ]
+
+=cut
+
+sub add_sort_cache {
+  my $self = shift;
+  my $cacheitem = shift;
+  push @{$self->{sortcache}}, $cacheitem;
+  return;
+}
+
+
+=head2 get_sort_cache
+
+    Retrieves the sort cache
+
+=cut
+
+sub get_sort_cache {
+  my $self = shift;
+  return $self->{sortcache};
+}
+
+=head2 reset_sort_cache
+
+    Reset the sort cache
+
+=cut
+
+sub reset_sort_cache {
+  my $self = shift;
+  $self->{sortcache} = [];
+  return;
 }
 
 

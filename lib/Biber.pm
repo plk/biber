@@ -1364,14 +1364,47 @@ sub process_lists {
     $list->set_keys([ $section->get_citekeys ]);
     $logger->debug("Populated list '$llabel' in section $secnum with keys: " . join(', ', $list->get_keys));
 
-    # Sorting
-    $BIBER_SORT_DATA_CHANGE = 0;           # reset data-changed-after-first-sort flag
-    $BIBER_SORT_FIRSTPASSDONE = 0;         # Reset first/second pass flag
-    $self->generate_label_sortinfo($list); # generate the first (label) pass sort info
-    $self->sort_list($list);               # do a first (label) sort pass
-    $BIBER_SORT_FIRSTPASSDONE = 1;         # Flag to say first pass is done
-    $self->generate_final_sortinfo($list); # generate the final sort information
-    $self->sort_list($list);               # possibly do a second (final) sort pass
+    # Now we check the sorting cache to see if we already have results
+    # for this scheme since sorting is computationally expensive.
+    # We know the keys are the same as we just set them
+    # to a copy of the section citekeys above. If the scheme is the same
+    # as a previous sort then the results have to also be the same so inherit
+    # the results which are normally set by sorting:
+    #
+    # * sorted keys
+    # * sortinit data
+    # * extraalpha data
+    # * extrayear data
+
+    my $cache_flag = 0;
+    $logger->debug("Checking sorting cache for list '$llabel'");
+    foreach my $cacheitem (@{$section->get_sort_cache}) {
+      if (Compare($list->get_sortspec, $cacheitem->[0])) {
+        $logger->debug("Found sorting cache entry for '$llabel'");
+        $list->set_keys($cacheitem->[1]);
+        $list->set_sortinitdata($cacheitem->[2]);
+        $list->set_extraalphadata($cacheitem->[3]);
+        $list->set_extrayeardata($cacheitem->[4]);
+        $cache_flag = 1;
+        last;
+      }
+    }
+
+    unless ($cache_flag) {
+      $logger->debug("No sorting cache entry for '$llabel'");
+      # Sorting
+      $BIBER_SORT_DATA_CHANGE = 0;           # reset data-changed-after-first-sort flag
+      $BIBER_SORT_FIRSTPASSDONE = 0;         # Reset first/second pass flag
+      $self->generate_label_sortinfo($list); # generate the first (label) pass sort info
+      $self->sort_list($list);               # do a first (label) sort pass
+      $BIBER_SORT_FIRSTPASSDONE = 1;         # Flag to say first pass is done
+      $self->generate_final_sortinfo($list); # generate the final sort information
+      $self->sort_list($list);               # possibly do a second (final) sort pass
+
+      # Cache the results
+      $logger->debug("Adding sorting cache entry for '$llabel'");
+      $section->add_sort_cache($list->get_listdata);
+    }
 
     # Filtering
     if (my $filters = $list->get_filters) {
@@ -1801,6 +1834,9 @@ sub prepare {
   foreach my $section (@{$self->sections->get_sections}) {
     # shortcut - skip sections that don't have any keys
     next unless $section->get_citekeys or $section->is_allkeys;
+
+    # Reset the the sorting cache
+    $section->reset_sort_cache;
 
     my $secnum = $section->number;
     # Remove any dynamically generated per-entry options which might have

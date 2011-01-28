@@ -69,7 +69,20 @@ sub get_type {
   return $self->{type};
 }
 
+=head2 get_listdata
 
+    Gets all of the list metadata
+
+=cut
+
+sub get_listdata {
+  my $self = shift;
+  return [ $self->{sortspec},
+           $self->{keys},
+           $self->{sortinitdata},
+           $self->{extraalphadata},
+           $self->{extrayeardata} ];
+}
 
 =head2 set_extrayeardata
 
@@ -81,6 +94,7 @@ sub set_extrayeardata {
   my $self = shift;
   my $key = shift;
   my $ed = shift;
+  return unless defined($key);
   $self->{extrayeardata}{lc($key)} = $ed;
   return;
 }
@@ -94,6 +108,7 @@ sub set_extrayeardata {
 sub get_extrayeardata {
   my $self = shift;
   my $key = shift;
+  return unless defined($key);
   return $self->{extrayeardata}{lc($key)};
 }
 
@@ -107,6 +122,7 @@ sub set_extraalphadata {
   my $self = shift;
   my $key = shift;
   my $ed = shift;
+  return unless defined($key);
   $self->{extraalphadata}{lc($key)} = $ed;
   return;
 }
@@ -120,6 +136,7 @@ sub set_extraalphadata {
 sub get_extraalphadata {
   my $self = shift;
   my $key = shift;
+  return unless defined($key);
   return $self->{extraalphadata}{lc($key)};
 }
 
@@ -133,6 +150,7 @@ sub set_sortdata {
   my $self = shift;
   my $key = shift;
   my $sd = shift;
+  return unless defined($key);
   $self->{sortdata}{lc($key)} = $sd;
   return;
 }
@@ -146,6 +164,7 @@ sub set_sortdata {
 sub get_sortdata {
   my $self = shift;
   my $key = shift;
+  return unless defined($key);
   return $self->{sortdata}{lc($key)};
 }
 
@@ -160,6 +179,7 @@ sub set_sortinitdata {
   my $self = shift;
   my $key = shift;
   my $sid = shift;
+  return unless defined($key);
   $self->{sortinitdata}{lc($key)} = $sid;
   return;
 }
@@ -174,8 +194,8 @@ sub set_sortinitdata {
 sub get_sortinitdata {
   my $self = shift;
   my $key = shift;
+  return unless defined($key);
   return $self->{sortinitdata}{lc($key)};
-
 }
 
 
