@@ -1,5 +1,5 @@
 package Biber::Entries;
-use feature 'unicode_strings';
+#use feature 'unicode_strings';
 
 =encoding utf-8
 

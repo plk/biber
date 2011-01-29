@@ -1,5 +1,5 @@
 package Biber::Section::List;
-use feature 'unicode_strings';
+#use feature 'unicode_strings';
 use Biber::Utils;
 use List::Util qw( first );
 

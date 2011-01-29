@@ -1,5 +1,5 @@
 package Biber::LaTeX::Recode;
-use feature 'unicode_strings';
+#use feature 'unicode_strings';
 use strict;
 use warnings;
 no warnings 'utf8';

@@ -1,5 +1,5 @@
 package Biber::Output::Base;
-use feature 'unicode_strings';
+#use feature 'unicode_strings';
 
 use Biber::Entry;
 use IO::File;

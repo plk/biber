@@ -1,5 +1,5 @@
 package Biber::Output::Test;
-use feature 'unicode_strings';
+#use feature 'unicode_strings';
 use base 'Biber::Output::Base';
 
 use Biber::Config;

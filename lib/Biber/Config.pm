@@ -1,5 +1,5 @@
 package Biber::Config;
-use feature 'unicode_strings';
+#use feature 'unicode_strings';
 use Biber::Constants;
 use IPC::Cmd qw( can_run run );
 use Cwd qw( abs_path );

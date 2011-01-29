@@ -1,5 +1,5 @@
 package Biber::LaTeX::Recode::Data;
-use feature 'unicode_strings';
+#use feature 'unicode_strings';
 use strict;
 use warnings;
 use base qw(Exporter);

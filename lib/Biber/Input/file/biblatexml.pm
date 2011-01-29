@@ -1,5 +1,5 @@
 package Biber::Input::file::biblatexml;
-use feature 'unicode_strings';
+#use feature 'unicode_strings';
 use strict;
 use warnings;
 use Carp;

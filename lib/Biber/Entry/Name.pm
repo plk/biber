@@ -1,5 +1,5 @@
 package Biber::Entry::Name;
-use feature 'unicode_strings';
+#use feature 'unicode_strings';
 
 use Regexp::Common qw( balanced );
 use Data::Dump qw( pp );

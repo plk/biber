@@ -1,5 +1,5 @@
 package Biber::Utils;
-use feature 'unicode_strings';
+#use feature 'unicode_strings';
 
 use strict;
 use warnings;
