@@ -224,8 +224,6 @@ our $dispatch_sorting = {
   'eventmonth'      =>  [\&_sort_dm,            ['eventmonth']],
   'eventtitle'      =>  [\&_sort_title,         ['eventtitle']],
   'eventyear'       =>  [\&_sort_year,          ['eventyear']],
-  'extraalpha'      =>  [\&_sort_extraalpha,    []],
-  'extrayear'       =>  [\&_sort_extrayear,     []],
   'issuesubtitle'   =>  [\&_sort_title,         ['issuesubtitle']],
   'issuetitle'      =>  [\&_sort_title,         ['issuetitle']],
   'institution'     =>  [\&_sort_place,         ['institution']],
@@ -273,7 +271,7 @@ our $dispatch_sorting = {
 
 # Main sorting dispatch method
 sub _dispatch_sorting {
-  my ($self, $sortfield, $list, $citekey, $sortelementattributes) = @_;
+  my ($self, $sortfield, $citekey, $sortelementattributes) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -295,7 +293,6 @@ sub _dispatch_sorting {
   else { # real sorting field
     $code_ref = ${$dispatch_sorting->{$sortfield}}[0];
     $code_args_ref  = ${$dispatch_sorting->{$sortfield}}[1];
-    push @$code_args_ref, $list;
   }
   return &{$code_ref}($self, $citekey, $sortelementattributes, $code_args_ref);
 }
@@ -310,7 +307,7 @@ sub _generatesortinfo {
   $BIBER_SORT_FINAL = 0;
   $BIBER_SORT_FINAL = '';
   foreach my $sortset (@{$sortscheme}) {
-    my $s = $self->_sortset($sortset, $list, $citekey);
+    my $s = $self->_sortset($sortset, $citekey);
     # We have already found a "final" item so if this item returns null,
     # copy in the "final" item string as it's the master key for this entry now
     if ($BIBER_SORT_FINAL and not $BIBER_SORT_NULL) {
@@ -348,10 +345,8 @@ sub _generatesortinfo {
         my $initd = Biber::LaTeX::Recode::latex_encode($init,
                                                        scheme => Biber::Config->getoption('bblsafecharsset'));
         # warn only on second sorting pass to avoid user confusion
-        unless ($BIBER_SORT_FIRSTPASSDONE) {
-          $logger->warn("The character '$init' cannot be encoded in '$bblenc'. sortinit will be set to macro '$initd' for entry '$citekey'");
-          $self->{warnings}++;
-        }
+        $logger->warn("The character '$init' cannot be encoded in '$bblenc'. sortinit will be set to macro '$initd' for entry '$citekey'");
+        $self->{warnings}++;
         $init = $initd;
       }
     }
@@ -362,11 +357,11 @@ sub _generatesortinfo {
 
 # Process sorting set
 sub _sortset {
-  my ($self, $sortset, $list, $citekey) = @_;
+  my ($self, $sortset, $citekey) = @_;
   foreach my $sortelement (@$sortset[1..$#$sortset]) {
     my ($sortelementname, $sortelementattributes) = %$sortelement;
     $BIBER_SORT_NULL = 0; # reset this per sortset
-    my $string = $self->_dispatch_sorting($sortelementname, $list, $citekey, $sortelementattributes);
+    my $string = $self->_dispatch_sorting($sortelementname, $citekey, $sortelementattributes);
     if ($string) { # sort returns something for this key
       if ($sortset->[0]{final}) {
         # If we encounter a "final" element, we return an empty sort
@@ -477,40 +472,6 @@ sub _sort_entrykey {
   return $citekey;
 }
 
-# Special - this information comes from the current list, not the entry
-sub _sort_extraalpha {
-  my ($self, $citekey, $sortelementattributes, $args) = @_;
-  my $list = $args->[0]; # get list
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) and
-    $list->get_extraalphadata($citekey)) {
-    my $string = $list->get_extraalphadata($citekey);
-    return _process_sort_attributes($string, $sortelementattributes);
-  }
-  else {
-    return '';
-  }
-}
-
-# Special - this information comes from the current list, not the entry
-sub _sort_extrayear {
-  my ($self, $citekey, $sortelementattributes, $args) = @_;
-  my $list = $args->[0]; # get list
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype')) and
-    $list->get_extrayeardata($citekey)) {
-    my $string = $list->get_extrayeardata($citekey);
-    return _process_sort_attributes($string, $sortelementattributes);
-  }
-  else {
-    return '';
-  }
-}
-
 
 sub _sort_labelalpha {
   my ($self, $citekey, $sortelementattributes) = @_;
@@ -528,14 +489,13 @@ sub _sort_labelalpha {
 
 sub _sort_labelname {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
-  my $list = $args->[1]; # get list
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   # re-direct to the right sorting routine for the labelname
   if (my $ln = $be->get_field('labelnamename')) {
     # Don't process attributes as they will be processed in the real sub
-    return $self->_dispatch_sorting($ln, $list, $citekey, $sortelementattributes);
+    return $self->_dispatch_sorting($ln, $citekey, $sortelementattributes);
   }
   else {
     return '';
@@ -544,14 +504,13 @@ sub _sort_labelname {
 
 sub _sort_labelyear {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
-  my $list = $args->[1]; # get list
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   # re-direct to the right sorting routine for the labelyear
   if (my $ly = $be->get_field('labelyearname')) {
     # Don't process attributes as they will be processed in the real sub
-    return $self->_dispatch_sorting($ly, $list, $citekey, $sortelementattributes);
+    return $self->_dispatch_sorting($ly, $citekey, $sortelementattributes);
   }
   else {
     return '';

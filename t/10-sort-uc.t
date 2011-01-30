@@ -32,7 +32,7 @@ is_deeply([$main->get_keys], ['LS2','LS1','LS3','LS4'], 'U::C tailoring - 1');
 is_deeply([$shs->get_keys], ['LS3', 'LS4','LS2','LS1'], 'U::C tailoring - 2');
 
 # Set sorting of shorthands to global sorting default
-$shs->set_sortspec(Biber::Config->getblxoption('sorting')->{default});
+$shs->set_sortscheme(Biber::Config->getblxoption('sorting'));
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -60,7 +60,7 @@ $S = [
                                                     ]
                                                    ];
 
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -75,7 +75,7 @@ $S = [
                                                     ]
                                                    ];
 
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -97,7 +97,7 @@ $S = [
                                                     ]
                                                    ];
 
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 $biber->prepare;
 is_deeply([$main->get_keys], ['LS3', 'LS4','LS2','LS1'], 'sortcase locally false, upper_before_lower locally false');
 

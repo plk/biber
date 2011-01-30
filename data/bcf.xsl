@@ -38,9 +38,6 @@
           <xsl:for-each select="$spec/bcf:sort">
             <xsl:sort select="./@order"/>
             <td>
-              <xsl:if test="./@pass='label'">
-                <xsl:attribute name="class">sort_label</xsl:attribute>
-              </xsl:if>
               <xsl:if test="./@final='1'">
                 <xsl:attribute name="class">sort_final</xsl:attribute>
               </xsl:if>
@@ -151,7 +148,7 @@
     <div class="key"><u>Key</u>
     <ul>
       <li><b>Heading Format</b>: (sort-direction)(case-order)/(case-sensitivity)</li>
-      <li><b>Heading key</b>: <xsl:text disable-output-escaping="yes">&amp;uarr;</xsl:text> = ascending sort, <xsl:text disable-output-escaping="yes">&amp;darr;</xsl:text> = descending sort, <tt>Aa</tt> = sort uppercase before lower, <tt>aA</tt> = sort lowercase before upper, <tt>A</tt> = case-sensitive sorting, <tt>a</tt> = case-insensitive sorting, <span class="sort_label">sort fieldset valid only for first (label) pass</span>, <span class="sort_final">sort fieldset is final master key if defined</span></li>
+      <li><b>Heading key</b>: <xsl:text disable-output-escaping="yes">&amp;uarr;</xsl:text> = ascending sort, <xsl:text disable-output-escaping="yes">&amp;darr;</xsl:text> = descending sort, <tt>Aa</tt> = sort uppercase before lower, <tt>aA</tt> = sort lowercase before upper, <tt>A</tt> = case-sensitive sorting, <tt>a</tt> = case-insensitive sorting, <span class="sort_final">sort fieldset is final master key if defined</span></li>
       <li><b>Field key</b>: <span class="sort_padding">Padding specification</span> e.g. <span class="sort_padding">0000</span>field = pad field &quot;field&quot; from left with &quot;0&quot; to width 4. <span class="sort_substring">Substring specification</span> e.g. field<span class="sort_substring">&lt;&lt;&lt;&lt;</span> = take width 4 substring from right side of field &quot;field&quot;</li>        
     </ul>
     </div>
@@ -169,12 +166,6 @@
           .key {
             font-size: 70%;
             padding-top: 2ex;
-          }
-          .sort_final {
-            background-color: #FF9999;
-          }
-          .sort_label {
-            background-color: #D0D0D0;
           }
           .sort_padding {
             color: #6699CC;
@@ -484,9 +475,9 @@
           </tbody>
         </table>
         <h4>Sorting Specification</h4>
-	<xsl:call-template name="sorting-spec">
-	  <xsl:with-param name="spec" select="/bcf:controlfile/bcf:sorting"/>
-	</xsl:call-template>
+	      <xsl:call-template name="sorting-spec">
+	        <xsl:with-param name="spec" select="/bcf:controlfile/bcf:sorting"/>
+	      </xsl:call-template>
         <xsl:if test="/bcf:controlfile/bcf:structure">
           <hr/>
           <h3>Data Structure</h3>

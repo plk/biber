@@ -446,12 +446,9 @@ sub parse_ctrlfile {
     }
   }
 
-  my ($sorting_label, $sorting_final) = _parse_sort($bcfxml->{sorting});
+  my $sorting = _parse_sort($bcfxml->{sorting});
 
-  Biber::Config->setblxoption('sorting', {default => {label => $sorting_label,
-                                                      final => $sorting_final,
-                                                      schemes_same => Compare($sorting_label, $sorting_final)}
-                                         });
+  Biber::Config->setblxoption('sorting', $sorting);
 
   # STRUCTURE schema (always global)
   # This should not be optional any more when biblatex implements this so take
@@ -525,15 +522,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         $seclist->add_filter('orfilter', { map {$_->{type} => [$_->{content}]} @{$orfilter->{filter}} });
       }
 
-      if ($list->{sorting}) { # can be undef for fallback to global sorting
-        my ($sorting_label, $sorting_final) = _parse_sort($list->{sorting});
-
-        $seclist->set_sortspec({label => $sorting_label,
-                                final => $sorting_final,
-                                schemes_same => Compare($sorting_label, $sorting_final)});
+      if (my $sorting = $list->{sorting}) { # can be undef for fallback to global sorting
+        $seclist->set_sortscheme(_parse_sort($sorting));
       }
       else {
-        $seclist->set_sortspec(Biber::Config->getblxoption('sorting')->{default});
+        $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
       }
       $seclist->set_type($list->{type} || 'entry'); # lists are entry lists by default
       $logger->debug("Adding list '$llabel' to section $secnum");
@@ -545,7 +538,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     # global sort default.
     unless ($bib_section->get_list('MAIN')) {
       my $mainlist = Biber::Section::List->new(label => 'MAIN');
-      $mainlist->set_sortspec(Biber::Config->getblxoption('sorting')->{default});
+      $mainlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
       $mainlist->set_type('entry');
       $bib_section->add_list($mainlist);
     }
@@ -554,13 +547,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     unless ($bib_section->get_list('SHORTHANDS')) {
       my $los = Biber::Section::List->new(label => 'SHORTHANDS');
       if (Biber::Config->getblxoption('sortlos')) {
-        $los->set_sortspec({label => [ [ {}, {'shorthand'     => {}} ] ],
-                            final => [ [ {}, {'shorthand'     => {}} ] ],
-                            schemes_same => 1});
+        $los->set_sortscheme([ [ {}, {'shorthand'     => {}} ] ]);
         $los->add_filter('field', 'shorthand');
       }
       else {
-        $los->set_sortspec(Biber::Config->getblxoption('sorting')->{default});
+        $los->set_sortscheme(Biber::Config->getblxoption('sorting'));
         $los->add_filter('field', 'shorthand');
       }
       $los->set_type('shorthand');
@@ -1359,7 +1350,7 @@ sub process_lists {
 
     # Last-ditch fallback in case we still don't have a sorting spec
     # probably due to being called via biber with -a and -d flags
-    $list->set_sortspec(Biber::Config->getblxoption('sorting')->{default}) unless $list->get_sortspec;
+    $list->set_sortscheme(Biber::Config->getblxoption('sorting')) unless $list->get_sortscheme;
 
     $list->set_keys([ $section->get_citekeys ]);
     $logger->debug("Populated list '$llabel' in section $secnum with keys: " . join(', ', $list->get_keys));
@@ -1379,7 +1370,7 @@ sub process_lists {
     my $cache_flag = 0;
     $logger->debug("Checking sorting cache for list '$llabel'");
     foreach my $cacheitem (@{$section->get_sort_cache}) {
-      if (Compare($list->get_sortspec, $cacheitem->[0])) {
+      if (Compare($list->get_sortscheme, $cacheitem->[0])) {
         $logger->debug("Found sorting cache entry for '$llabel'");
         $list->set_keys($cacheitem->[1]);
         $list->set_sortinitdata($cacheitem->[2]);
@@ -1393,13 +1384,9 @@ sub process_lists {
     unless ($cache_flag) {
       $logger->debug("No sorting cache entry for '$llabel'");
       # Sorting
-      $BIBER_SORT_DATA_CHANGE = 0;           # reset data-changed-after-first-sort flag
-      $BIBER_SORT_FIRSTPASSDONE = 0;         # Reset first/second pass flag
-      $self->generate_label_sortinfo($list); # generate the first (label) pass sort info
+      $self->generate_sortinfo($list);       # generate the sort information
       $self->sort_list($list);               # do a first (label) sort pass
-      $BIBER_SORT_FIRSTPASSDONE = 1;         # Flag to say first pass is done
-      $self->generate_final_sortinfo($list); # generate the final sort information
-      $self->sort_list($list);               # possibly do a second (final) sort pass
+      $self->generate_extra($list);         # generate the extra* fields
 
       # Cache the results
       $logger->debug("Adding sorting cache entry for '$llabel'");
@@ -1479,40 +1466,38 @@ sub check_list_filter {
 }
 
 
-=head2 generate_label_sortinfo
+=head2 generate_sortinfo
 
-    Generate information for first (label) pass sorting
+    Generate information for sorting
 
 =cut
 
-sub generate_label_sortinfo {
+sub generate_sortinfo {
   my $self = shift;
   my $list = shift;
 
-  my $sortspec = $list->get_sortspec;
+  my $sortscheme = $list->get_sortscheme;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   foreach my $key ($list->get_keys) {
-    $self->_generatesortinfo($key, $list, $sortspec->{label});
+    $self->_generatesortinfo($key, $list, $sortscheme);
   }
   return;
 }
 
-=head2 generate_final_sortinfo
+=head2 generate_extra
 
     Generate:
 
       * extraalpha
       * extrayear
 
-    For use in final sorting and generate final pass sort string
-
 =cut
 
-sub generate_final_sortinfo {
+sub generate_extra {
   my $self = shift;
   my $list = shift;
-  my $sortspec = $list->get_sortspec;
+  my $sortscheme = $list->get_sortscheme;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   Biber::Config->reset_seen_extra(); # Since this sub is per-list, have to reset the
@@ -1528,23 +1513,15 @@ sub generate_final_sortinfo {
       if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
         my $nameyear_extrayear = $be->get_field('nameyear_extrayear');
           if (Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
-            $BIBER_SORT_DATA_CHANGE = 1;
             $list->set_extrayeardata($key, Biber::Config->incr_seen_extrayear($nameyear_extrayear));
         }
       }
       if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
         my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha');
           if (Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
-            $BIBER_SORT_DATA_CHANGE = 1;
             $list->set_extraalphadata($key, Biber::Config->incr_seen_extraalpha($nameyear_extraalpha));
         }
       }
-    }
-    # Only bother with re-generating sorting information if there has been a data
-    # change since the first sort or if we need to run a second sort as it has a different
-    # scheme
-    if ($BIBER_SORT_DATA_CHANGE or not $sortspec->{schemes_same}) {
-      $self->_generatesortinfo($key, $list, $sortspec->{final});
     }
   }
   return;
@@ -1560,27 +1537,11 @@ sub generate_final_sortinfo {
 sub sort_list {
   my $self = shift;
   my $list = shift;
-  my $sortspec = $list->get_sortspec;
+  my $sortscheme = $list->get_sortscheme;
   my @keys = $list->get_keys;
   my $llabel = $list->get_label;
 
-  # Only bother with sorting a second time if there has been a data
-  # change since the first sort or if we need to run a second sort as it has a different
-  # scheme
-  if ($BIBER_SORT_FIRSTPASSDONE) {
-    if ($BIBER_SORT_DATA_CHANGE or not $sortspec->{schemes_same}) {
-      $logger->debug('Sorting - second pass needed' .
-                    ($BIBER_SORT_DATA_CHANGE ? ' (data change)' : '') .
-                     ($sortspec->{schemes_same} ? '' : ' (scheme change)'));
-    }
-    else {
-      $logger->debug('Sorting - second pass not needed');
-      return;
-    }
-  }
-  else {
-    $logger->debug('Sorting - first pass');
-  }
+  $logger->debug("Sorting list '$llabel'");
 
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -1593,15 +1554,6 @@ sub sort_list {
   $logger->debug("Keys before sort:\n");
   foreach my $k (@keys) {
     $logger->debug("$k => " . $list->get_sortdata($k)->[0] . "\n");
-  }
-
-  # Get the right sortscheme
-  my $sortscheme;
-  if ($BIBER_SORT_FIRSTPASSDONE) {
-    $sortscheme = $sortspec->{final};
-  }
-  else {
-    $sortscheme = $sortspec->{label};
   }
 
   $logger->trace("Sorting with scheme\n-------------------\n" . Data::Dump::pp($sortscheme) . "\n-------------------\n");
@@ -1618,13 +1570,11 @@ sub sort_list {
 
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
-    $logger->info("Sorting list '$llabel' keys") unless $BIBER_SORT_FIRSTPASSDONE;
-    $logger->debug("Sorting with fastsort (locale $thislocale)") unless $BIBER_SORT_FIRSTPASSDONE;
+    $logger->info("Sorting list '$llabel' keys");
+    $logger->debug("Sorting with fastsort (locale $thislocale)");
     unless (setlocale(LC_ALL, $thislocale)) {
-      unless ($BIBER_SORT_FIRSTPASSDONE) {
-        $logger->warn("Unavailable locale $thislocale");
-        $self->{warnings}++;
-      }
+      $logger->warn("Unavailable locale $thislocale");
+      $self->{warnings}++;
     }
 
     # Construct a multi-field Schwartzian Transform with the right number of
@@ -1711,7 +1661,7 @@ sub sort_list {
       $collopts->{locale} = $thislocale;
       if ($collopts->{table}) {
         my $t = delete $collopts->{table};
-        $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)") unless $BIBER_SORT_FIRSTPASSDONE;
+        $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)");
       }
     }
 
@@ -1730,17 +1680,17 @@ sub sort_list {
       # is undef in this hash and we don't care about such things
       next unless defined($coll_changed{$k});
       if ($coll_changed{$k} ne $collopts->{$k}) {
-        $logger->warn("Overriding locale '$coll_locale' default tailoring '$k = $v' with '$k = " . $collopts->{$k} . "'") unless $BIBER_SORT_FIRSTPASSDONE;
+        $logger->warn("Overriding locale '$coll_locale' default tailoring '$k = $v' with '$k = " . $collopts->{$k} . "'");
       }
     }
 
     my $UCAversion = $Collator->version();
-    $logger->info("Sorting list '$llabel' keys") unless $BIBER_SORT_FIRSTPASSDONE;
-    $logger->debug("Sorting with Unicode::Collate (" . stringify_hash($collopts) . ", UCA version: $UCAversion)") unless $BIBER_SORT_FIRSTPASSDONE;
+    $logger->info("Sorting list '$llabel' keys");
+    $logger->debug("Sorting with Unicode::Collate (" . stringify_hash($collopts) . ", UCA version: $UCAversion)");
 
     # Log if U::C::L currently has no tailoring for used locale
     if ($Collator->getlocale eq 'default') {
-      $logger->info("No sort tailoring available for locale '$thislocale'") unless $BIBER_SORT_FIRSTPASSDONE;
+      $logger->info("No sort tailoring available for locale '$thislocale'");
     }
 
     # Construct a multi-field Schwartzian Transform with the right number of
@@ -2138,21 +2088,16 @@ sub create_output_misc {
 =head2 _parse_sort
 
    Convenience sub to parse a .bcf sorting section and return nice
-   objects for the label and final sort passes.
+   sorting object
 
 =cut
 
 sub _parse_sort {
   my $root_obj = shift;
-  my $sorting_label;
-  my $sorting_final;
+  my $sorting;
 
   foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$root_obj->{sort}}) {
-    my $sortingitems_label;
-    my $sortingitems_final;
-
-    # Determine which sorting pass(es) to include the item in
-    my $whichpass = ($sort->{pass} or 'both');
+    my $sortingitems;
 
     # Generate sorting pass structures
     foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
@@ -2172,24 +2117,7 @@ sub _parse_sort {
       if (defined($sortitem->{pad_side})) { # Found sorting pad side attribute
         $sortitemattributes->{pad_side} = $sortitem->{pad_side};
       }
-
-      # No pass specified, sortitem is included in both sort passes
-      # Note that we're cloning the sortitemattributes object so as not to have pointers
-      # from one structure to the other
-      if (lc($whichpass) eq 'both') {
-        push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
-        push @{$sortingitems_final}, {$sortitem->{content} => dclone($sortitemattributes)};
-      }
-
-      # "label" specified, sortitem is included only on "label" sort pass
-      elsif (lc($whichpass) eq 'label') {
-        push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
-      }
-
-      # "final" specified, sortitem is included only on "final" sort pass
-      elsif (lc($whichpass) eq 'final') {
-        push @{$sortingitems_final}, {$sortitem->{content} => $sortitemattributes};
-      }
+      push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
     }
 
     # Only push a sortitem if defined. If the item has a conditional "pass"
@@ -2202,16 +2130,12 @@ sub _parse_sort {
     $sopts->{sort_direction} = $sort->{sort_direction} if defined($sort->{sort_direction});
     $sopts->{sortcase}       = $sort->{sortcase}       if defined($sort->{sortcase});
     $sopts->{sortupper}      = $sort->{sortupper}      if defined($sort->{sortupper});
-    if (defined($sortingitems_label)) {
-      unshift @{$sortingitems_label}, $sopts;
-      push @{$sorting_label}, $sortingitems_label;
-    }
-    if (defined($sortingitems_final)) {
-      unshift @{$sortingitems_final}, $sopts;
-      push @{$sorting_final}, $sortingitems_final;
+    if (defined($sortingitems)) {
+      unshift @{$sortingitems}, $sopts;
+      push @{$sorting}, $sortingitems;
     }
   }
-  return ($sorting_label, $sorting_final);
+  return $sorting;
 }
 
 =head2 _filedump and _stringdump

@@ -610,18 +610,6 @@
           <data type="integer"/>
         </attribute>
         <optional>
-          <!--
-            Is this sort specification applicable to the first (label generatio)
-            sort pass or the second (final) pass?
-          -->
-          <attribute name="pass">
-            <choice>
-              <value>label</value>
-              <value>final</value>
-            </choice>
-          </attribute>
-        </optional>
-        <optional>
           <!-- Should we stop generating sorting information after this item? -->
           <attribute name="final">
             <data type="integer"/>

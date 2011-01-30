@@ -77,7 +77,7 @@ sub get_type {
 
 sub get_listdata {
   my $self = shift;
-  return [ $self->{sortspec},
+  return [ $self->{sortscheme},
            $self->{keys},
            $self->{sortinitdata},
            $self->{extraalphadata},
@@ -199,28 +199,28 @@ sub get_sortinitdata {
 }
 
 
-=head2 set_sortspec
+=head2 set_sortscheme
 
-    Sets the sortspec of a list
+    Sets the sortscheme of a list
 
 =cut
 
-sub set_sortspec {
+sub set_sortscheme {
   my $self = shift;
-  my $sortspec = shift;
-  $self->{sortspec} = $sortspec;
+  my $sortscheme = shift;
+  $self->{sortscheme} = $sortscheme;
   return;
 }
 
-=head2 get_sortspec
+=head2 get_sortscheme
 
-    Gets the sortspec of a list
+    Gets the sortscheme of a list
 
 =cut
 
-sub get_sortspec {
+sub get_sortscheme {
   my $self = shift;
-  return $self->{sortspec};
+  return $self->{sortscheme};
 }
 
 

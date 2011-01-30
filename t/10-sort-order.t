@@ -28,7 +28,7 @@ $S =  [
                                                        {'citeorder'    => {}}
                                                       ]
                                                      ];
-Biber::Config->setblxoption('sorting', {default => {label => $S, final => $S, schemes_same => 1}});
+Biber::Config->setblxoption('sorting', {default => $S});
 Biber::Config->setblxoption('labelyear', undef);
 
 # (re)generate informtion based on option settings
@@ -76,7 +76,7 @@ $S = [
                                                     ]
                                                    ];
 
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
@@ -121,7 +121,7 @@ $S = [
                                                     ]
                                                    ];
 
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
@@ -167,7 +167,7 @@ $S = [
                                                    ];
 
 
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
@@ -213,7 +213,7 @@ $S = [
                                                    ];
 
 
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
@@ -253,7 +253,7 @@ $S = [
                                                     ],
                                                    ];
 
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
@@ -294,7 +294,7 @@ $S = [
                                                     ],
                                                    ];
 
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
@@ -334,7 +334,7 @@ $S = [
                                                     ],
                                                    ];
 
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
@@ -384,7 +384,7 @@ $S = [
                                                     ]
                                                    ];
 
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 Biber::Config->setblxoption('labelalpha', 1);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
@@ -436,7 +436,7 @@ $S = [
                                                     ]
                                                    ];
 
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 Biber::Config->setblxoption('labelalpha', 1);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
@@ -469,7 +469,7 @@ $S = [
                                                     ],
                                                    ];
 
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
@@ -488,7 +488,7 @@ $S = [
                                                     ]
                                                    ];
 
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 # Have to set local to something which understand lexical/case differences for this test
@@ -506,7 +506,7 @@ $S = [
                                                     ]
                                                    ];
 
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 # Set nosort for tests, skipping "The " in titles so L7 should sort before L6
 Biber::Config->setoption('nosort', { type_title => q/\AThe\s+/ });
 

@@ -264,9 +264,6 @@ sort =
   element bcf:sort {
     # order of this specification in the set of all sort specifications
     attribute order { xsd:integer },
-    # Is this sort specification applicable to the first (label generatio)
-    # sort pass or the second (final) pass?
-    attribute pass { "label" | "final" }?,
     # Should we stop generating sorting information after this item?
     attribute final { xsd:integer }?,
     # Sort ascending or descending

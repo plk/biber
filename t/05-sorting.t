@@ -150,7 +150,7 @@ $S = [
         '0000'       => {}}
       ]
      ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 Biber::Config->setoption('nosort', { author => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ],
                                      translator => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ],
                                      # type_title should be not used as there is an
@@ -185,7 +185,7 @@ $S = [
         'editora'     => {}},
       ],
      ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 Biber::Config->setoption('sortcase', 0);
 
 # regenerate information
@@ -297,7 +297,7 @@ $S = [
                                                  {'urlday'   => {}}
                                                 ],
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -312,7 +312,7 @@ $S = [
                                                  {'publisher'    => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -326,7 +326,7 @@ $S = [
                                                  {'location'    => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -341,7 +341,7 @@ $S = [
                                                  {'institution'    => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -356,7 +356,7 @@ $S = [
                                                  {'institution'    => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -372,7 +372,7 @@ $S = [
                                                  {'institution'    => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -416,7 +416,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -459,7 +459,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 Biber::Config->setoption('sortcase', 1);
 # regenerate information
 $biber->prepare;
@@ -503,7 +503,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -546,7 +546,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 Biber::Config->setoption('sortcase', 0);
 # regenerate information
 $biber->prepare;
@@ -589,7 +589,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -633,7 +633,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -677,7 +677,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -721,7 +721,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -765,7 +765,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -808,7 +808,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -852,7 +852,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -898,7 +898,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -942,7 +942,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -987,7 +987,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -1030,7 +1030,7 @@ $S = [
                                                  {'title'      => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -1078,7 +1078,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -1137,7 +1137,7 @@ $S = [
                                                  {'title'      => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -1208,7 +1208,7 @@ $S = [
                                                  {'title'      => {}}
                                                 ],
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -1247,7 +1247,7 @@ $S = [
                                                  {'title'      => {}}
                                                 ],
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -1262,7 +1262,7 @@ $S = [
                                                  {'entrykey'    => {}},
                                                 ],
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -1308,7 +1308,7 @@ $S = [
                                                  {'0000'       => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -1354,7 +1354,7 @@ $S = [
                                                 ]
                                                ];
 
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
@@ -1370,7 +1370,7 @@ $S = [
                                                  {'citeorder'    => {}}
                                                 ]
                                                ];
-$main->set_sortspec({label => $S, final => $S, schemes_same => 1});
+$main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;

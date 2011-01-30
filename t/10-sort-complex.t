@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 9;
+use Test::More tests => 8;
 
 use Biber;
 use Biber::Output::BBL;
@@ -35,49 +35,7 @@ my $out = $biber->get_output_obj;
 
 isa_ok($biber, "Biber");
 
-my $sc1 = [
-           [
-            {},
-            {'presort'    => {}}
-           ],
-           [
-            {},
-            {'labelalpha'    => {}},
-           ],
-           [
-            {final          => 1,
-             },
-            {'sortkey'    => {}}
-           ],
-           [
-            {},
-            {'sortname'   => {}},
-            {'author'     => {}},
-            {'editor'     => {}},
-            {'translator' => {}},
-            {'sorttitle'  => {}},
-            {'title'      => {}}
-           ],
-           [
-            {},
-            {'sortyear'  => {}},
-            {'year'      => {}}
-           ],
-           [
-            {},
-            {'sorttitle'       => {}},
-            {'title'       => {}}
-           ],
-           [
-            {},
-            {'volume'     => {pad_char => '0',
-                              pad_side => 'left',
-                              pad_width => '4'}},
-            {'0000'       => {}}
-           ],
-          ];
-
-my $sc2 = [
+my $sc = [
            [
             {},
             {'presort'    => {}}
@@ -90,12 +48,6 @@ my $sc2 = [
            [
             {},
             {'labelalpha'    => {}},
-           ],
-           [
-            {sort_direction => 'descending'},
-            {'extraalpha'     => {pad_side => 'left',
-                                 pad_width => 4,
-                                 pad_char => '0'}},
            ],
            [
             {},
@@ -223,20 +175,19 @@ my $sc6 = q|  \entry{L3}{book}{}
 
 |;
 
-is_deeply( $main->get_sortspec->{label} , $sc1, 'first pass scheme');
-is_deeply( $main->get_sortspec->{final} , $sc2, 'second pass scheme');
+is_deeply( $main->get_sortscheme , $sc, 'sort scheme');
 is( $out->get_output_entry($main,'l4'), $sc3, '\alphaothers set by "and others"');
 is( $out->get_output_entry($main,'l1'), $sc4, '2-pass - labelalpha after title');
 is( $out->get_output_entry($main,'l2'), $sc5, '2-pass - labelalpha after title');
 is( $out->get_output_entry($main,'l3'), $sc6, '2-pass - labelalpha after title');
-is_deeply([ $main->get_keys ], ['L4', 'L5', 'L2', 'L3', 'L1'], 'citeorder - 1');
+is_deeply([ $main->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'citeorder - 1');
 
 # This should be the same as $main citeorder as both $main and $shs use same
 # global sort spec. $shs should also get the keys from the sort cache as a result.
 # Can't do the usual SHORTHAND filter on SHORTHAND field in .bcf as adding SHORTHAND
 # fields to the entries changes the sort order of $main (as SHORTHAND overrides the default
 # label)
-is_deeply([ $shs->get_keys ], ['L4', 'L5', 'L2', 'L3', 'L1'], 'citeorder - 2');
+is_deeply([ $shs->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'citeorder - 2');
 
 
 unlink <*.utf8>;
