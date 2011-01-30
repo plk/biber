@@ -1851,6 +1851,7 @@ sub fetch_data {
     my $datatype = $datasource->{datatype};
     my $package = 'Biber::Input::' . $type . '::' . $datatype;
     eval "require $package";
+    $logger->info("Processing $datatype format $type '$name' for section $secnum");
     @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@remaining_keys);
   }
 

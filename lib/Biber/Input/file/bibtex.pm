@@ -239,10 +239,7 @@ sub extract_entries {
   # the filename count for preambles at the bottom of this sub
   $filename .= '.bib' unless $filename =~ /\.bib\z/xms; # Normalise filename
   my $trying_filename = $filename;
-  if ($filename = locate_biber_file($filename)) {
-    $logger->info("Processing bibtex format file '$filename' for section $secnum");
-  }
-  else {
+  unless ($filename = locate_biber_file($filename)) {
     $logger->logdie("Cannot find file '$trying_filename'!")
   }
 

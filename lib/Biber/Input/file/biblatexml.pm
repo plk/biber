@@ -224,10 +224,7 @@ sub extract_entries {
   # First make sure we can find the biblatexml file
   $filename .= '.xml' unless $filename =~ /\.xml\z/xms; # Normalise filename
   my $trying_filename = $filename;
-  if ($filename = locate_biber_file($filename)) {
-    $logger->info("Processing biblatexml format file '$filename' for section $secnum");
-  }
-  else {
+  unless ($filename = locate_biber_file($filename)) {
     $logger->logdie("Cannot find file '$trying_filename'!")
   }
 
