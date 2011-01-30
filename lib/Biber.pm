@@ -1917,40 +1917,39 @@ sub fetch_data {
         $logger->debug("Entry '$citekey' has related entries: " . join(', ', @rmems));
       }
     }
+  }
+  if (@dependent_keys) {
+    # Now look for the dependents of the directly cited keys
+    @remaining_keys = @dependent_keys;
+    $logger->debug('Looking for dependent keys: ' . join(', ', @remaining_keys));
 
-    if (@dependent_keys) {
-      # Now look for the dependents of the directly cited keys
-      @remaining_keys = @dependent_keys;
-      $logger->debug('Looking for dependent keys: ' . join(', ', @remaining_keys));
+    # No need to go back to the datasource if allkeys, just see if the keys
+    # are in section
+    if ($section->is_allkeys) {
+      my @missing;
+      foreach my $dk (@dependent_keys) {
+        push @missing, $dk unless first {$_ eq $dk} $section->get_citekeys;
+      }
+      @remaining_keys = @missing;
+    }
+    else {
+      foreach my $datasource (@{$section->get_datasources}) {
+        # shortcut if we have found all the keys now
+        last unless (@remaining_keys or $section->is_allkeys);
+        my $type = $datasource->{type};
+        my $name = $datasource->{name};
+        my $datatype = $datasource->{datatype};
+        my $package = 'Biber::Input::' . $type . '::' . $datatype;
+        eval "require $package";
+        @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@remaining_keys);
+      }
+    }
 
-      # No need to go back to the datasource if allkeys, just see if the keys
-      # are in section
-      if ($section->is_allkeys) {
-        my @missing;
-        foreach my $dk (@dependent_keys) {
-          push @missing, $dk unless first {$_ eq $dk} $section->get_citekeys;
-        }
-        @remaining_keys = @missing;
-      }
-      else {
-        foreach my $datasource (@{$section->get_datasources}) {
-          # shortcut if we have found all the keys now
-          last unless (@remaining_keys or $section->is_allkeys);
-          my $type = $datasource->{type};
-          my $name = $datasource->{name};
-          my $datatype = $datasource->{datatype};
-          my $package = 'Biber::Input::' . $type . '::' . $datatype;
-          eval "require $package";
-          @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@remaining_keys);
-        }
-      }
-
-      # error reporting
-      $logger->debug("Dependent keys not found for section '$secnum': " . join(',', @remaining_keys));
-      foreach my $citekey (@remaining_keys) {
-        $logger->debug("Removing missing dependent key '$citekey' from entries");
-        $self->remove_undef_dependent($dep_map, $citekey);
-      }
+    # error reporting
+    $logger->debug("Dependent keys not found for section '$secnum': " . join(',', @remaining_keys));
+    foreach my $citekey (@remaining_keys) {
+      $logger->debug("Removing missing dependent key '$citekey' from entries");
+      $self->remove_undef_dependent($dep_map, $citekey);
     }
   }
 

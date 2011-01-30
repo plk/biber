@@ -221,6 +221,8 @@ sub extract_entries {
   my $bibentries = $section->bibentries;
   my @rkeys = @$keys;
 
+  $logger->trace("Entering extract_entries()");
+
   # First make sure we can find the biblatexml file
   $filename .= '.xml' unless $filename =~ /\.xml\z/xms; # Normalise filename
   my $trying_filename = $filename;

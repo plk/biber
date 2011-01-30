@@ -235,6 +235,8 @@ sub extract_entries {
   my $bibentries = $section->bibentries;
   my @rkeys = @$keys;
 
+  $logger->trace("Entering extract_entries()");
+
   # Need to get the filename even if using cache so we increment
   # the filename count for preambles at the bottom of this sub
   $filename .= '.bib' unless $filename =~ /\.bib\z/xms; # Normalise filename
