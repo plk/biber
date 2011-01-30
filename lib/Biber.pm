@@ -1540,11 +1540,9 @@ sub sort_list {
   my $sortscheme = $list->get_sortscheme;
   my @keys = $list->get_keys;
   my $llabel = $list->get_label;
-
-  $logger->debug("Sorting list '$llabel'");
-
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+
   if (Biber::Config->getoption('sortcase')) {
     $logger->debug("Sorting is by default case-SENSITIVE");
   }
