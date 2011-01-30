@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use Carp;
 
-use Text::BibTeX 0.48 qw(:nameparts :joinmethods :metatypes);
+use Text::BibTeX 0.49 qw(:nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
 use Text::BibTeX::NameFormat;
 use Biber::Constants;
@@ -23,188 +23,39 @@ use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use base 'Exporter';
 use List::AllUtils qw(first);
+use XML::LibXML::Simple;
 
 my $logger = Log::Log4perl::get_logger('main');
 
 our $cache = {};
 
-# These entry type aliases we might find in the the datasource so
-# we can decide how to map and convert them into Biber::Entry objects
-# We are not validating anything here, that comes later and is not
-# datasource specific
-my $DS_EMAP = {
-               conference    => { aliasof => 'inproceedings' },
-               electronic    => { aliasof => 'online' },
-               mastersthesis => { aliasof => 'thesis',
-                                  alsoset => [ 'type', 'mathesis' ] },
-               phdthesis     => { aliasof => 'thesis',
-                                  alsoset => [ 'type', 'phdthesis' ] },
-               techreport    => { aliasof => 'report',
-                                  alsoset => [ 'type', 'techreport' ] },
-               www    => { aliasof => 'online' },
-};
+# we assume that the driver config file is in the same dir as the driver:
+(undef, my $driver_path, undef) = File::Spec->splitpath( $INC{"Biber/Input/file/bibtex.pm"} );
 
-# These are the fields we expect to find in the the datasource so
-# we can decide how to map and convert them into Biber::Entry fields
-# This has nothing conceptually to do with the internal structure
-# setup, it's a datasource driver specific set of settings to allow
-# parsing into internal objects. It looks very similar to aspects
-# of the Biber::Structure defaults because biber/biblatex was developed
-# at first as a solely bibtex datasource project.
+# Deal with the strange world of Par::Packer paths, see similar code in Biber.pm
+my $dcf;
+if ($driver_path =~ m|/par\-| and $driver_path !~ m|/inc|) { # a mangled PAR @INC path
+  $dcf = File::Spec->catfile($driver_path, 'inc', 'lib', 'Biber', 'Input', 'file', 'bibtex.dcf');
+}
+else {
+  $dcf = File::Spec->catfile($driver_path, 'bibtex.dcf');
+}
 
-my $DS_FMAP = {
-              # Special fields
-              keywords        => { handler => \&_special },
-              options         => { handler => \&_special },
 
-              # Date fields
-              date            => { handler => \&_date },
-              eventdate       => { handler => \&_date },
-              origdate        => { handler => \&_date },
-              urldate         => { handler => \&_date },
+# Read driver config file
+my $dcfxml = XML::LibXML::Simple::XMLin($dcf,
+                                        'ForceContent' => 1,
+                                        'ForceArray' => [
+                                                         qr/\Aentry-type\z/,
+                                                         qr/\Afield\z/,
+                                                        ],
+                                        'NsStrip' => 1,
+                                        'KeyAttr' => ['name']);
 
-              # List fields
-              address         => { aliasof => 'location' },
-              institution     => { handler => \&_list },
-              language        => { handler => \&_list },
-              lista           => { handler => \&_list },
-              listb           => { handler => \&_list },
-              listc           => { handler => \&_list },
-              listd           => { handler => \&_list },
-              liste           => { handler => \&_list },
-              listf           => { handler => \&_list },
-              location        => { handler => \&_list },
-              organization    => { handler => \&_list },
-              origlocation    => { handler => \&_list },
-              origpublisher   => { handler => \&_list },
-              publisher       => { handler => \&_list },
-              school          => { aliasof => 'institution' },
-
-              # Literal fields
-              abstract        => { handler => \&_literal },
-              addendum        => { handler => \&_literal },
-              annotation      => { handler => \&_literal },
-              annote          => { aliasof => 'annotation' },
-              archiveprefix   => { aliasof => 'eprinttype' },
-              authortype      => { handler => \&_literal },
-              bookpagination  => { handler => \&_literal },
-              booksubtitle    => { handler => \&_literal },
-              booktitle       => { handler => \&_literal },
-              booktitleaddon  => { handler => \&_literal },
-              chapter         => { handler => \&_literal },
-              crossref        => { handler => \&_literal },
-              day             => { handler => \&_literal },
-              edition         => { handler => \&_literal },
-              editoratype     => { handler => \&_literal },
-              editorbtype     => { handler => \&_literal },
-              editorctype     => { handler => \&_literal },
-              editortype      => { handler => \&_literal },
-              eid             => { handler => \&_literal },
-              entryset        => { handler => \&_literal },
-              entrysubtype    => { handler => \&_literal },
-              eprintclass     => { handler => \&_literal },
-              eprinttype      => { handler => \&_literal },
-              eventtitle      => { handler => \&_literal },
-              execute         => { handler => \&_literal },
-              gender          => { handler => \&_literal },
-              howpublished    => { handler => \&_literal },
-              hyphenation     => { handler => \&_literal },
-              indexsorttitle  => { handler => \&_literal },
-              indextitle      => { handler => \&_literal },
-              isan            => { handler => \&_literal },
-              isbn            => { handler => \&_literal },
-              ismn            => { handler => \&_literal },
-              isrn            => { handler => \&_literal },
-              issn            => { handler => \&_literal },
-              issue           => { handler => \&_literal },
-              issuesubtitle   => { handler => \&_literal },
-              issuetitle      => { handler => \&_literal },
-              iswc            => { handler => \&_literal },
-              journal         => { aliasof => 'journaltitle' },
-              journalsubtitle => { handler => \&_literal },
-              journaltitle    => { handler => \&_literal },
-              key             => { aliasof => 'sortkey' },
-              label           => { handler => \&_literal },
-              library         => { handler => \&_literal },
-              mainsubtitle    => { handler => \&_literal },
-              maintitle       => { handler => \&_literal },
-              maintitleaddon  => { handler => \&_literal },
-              month           => { handler => \&_literal },
-              nameaddon       => { handler => \&_literal },
-              nameatype       => { handler => \&_literal },
-              namebtype       => { handler => \&_literal },
-              namectype       => { handler => \&_literal },
-              note            => { handler => \&_literal },
-              number          => { handler => \&_literal },
-              origlanguage    => { handler => \&_literal },
-              origtitle       => { handler => \&_literal },
-              pagetotal       => { handler => \&_literal },
-              pagination      => { handler => \&_literal },
-              part            => { handler => \&_literal },
-              presort         => { handler => \&_literal },
-              primaryclass    => { aliasof => 'eprintclass' },
-              pubstate        => { handler => \&_literal },
-              related         => { handler => \&_literal },
-              relatedtype     => { handler => \&_literal },
-              reprinttitle    => { handler => \&_literal },
-              series          => { handler => \&_literal },
-              shorthand       => { handler => \&_literal },
-              shorthandintro  => { handler => \&_literal },
-              shortjournal    => { handler => \&_literal },
-              shortseries     => { handler => \&_literal },
-              shorttitle      => { handler => \&_literal },
-              sortkey         => { handler => \&_literal },
-              sorttitle       => { handler => \&_literal },
-              sortyear        => { handler => \&_literal },
-              subtitle        => { handler => \&_literal },
-              title           => { handler => \&_literal },
-              titleaddon      => { handler => \&_literal },
-              type            => { handler => \&_literal },
-              usera           => { handler => \&_literal },
-              userb           => { handler => \&_literal },
-              userc           => { handler => \&_literal },
-              userd           => { handler => \&_literal },
-              usere           => { handler => \&_literal },
-              userf           => { handler => \&_literal },
-              venue           => { handler => \&_literal },
-              version         => { handler => \&_literal },
-              volume          => { handler => \&_literal },
-              volumes         => { handler => \&_literal },
-              xref            => { handler => \&_literal },
-              year            => { handler => \&_literal },
-
-              # Name fields
-              afterword       => { handler => \&_name },
-              annotator       => { handler => \&_name },
-              author          => { handler => \&_name },
-              bookauthor      => { handler => \&_name },
-              commentator     => { handler => \&_name },
-              editor          => { handler => \&_name },
-              editora         => { handler => \&_name },
-              editorb         => { handler => \&_name },
-              editorc         => { handler => \&_name },
-              foreword        => { handler => \&_name },
-              holder          => { handler => \&_name },
-              introduction    => { handler => \&_name },
-              namea           => { handler => \&_name },
-              nameb           => { handler => \&_name },
-              namec           => { handler => \&_name },
-              shortauthor     => { handler => \&_name },
-              shorteditor     => { handler => \&_name },
-              sortname        => { handler => \&_name },
-              translator      => { handler => \&_name },
-              pages           => { handler => \&_range },
-
-              # Verbatim fields
-              doi             => { handler => \&_verbatim },
-              eprint          => { handler => \&_verbatim },
-              file            => { handler => \&_verbatim },
-              pdf             => { aliasof => 'file' },
-              url             => { handler => \&_verbatim },
-              verba           => { handler => \&_verbatim },
-              verbb           => { handler => \&_verbatim },
-              verbc           => { handler => \&_verbatim }
-             };
+# Check we have the right driver
+unless ($dcfxml->{driver} eq 'bibtex') {
+  $logger->logdie("Expected driver config type 'bibtex', got '" . $dcfxml->{driver} . "'");
+}
 
 =head2 TBSIG
 
@@ -339,11 +190,11 @@ sub create_entry {
   if ( $entry->metatype == BTE_REGULAR ) {
 
     # Set entrytype taking note of any aliases for this datasource driver
-    if (my $ealias = $DS_EMAP->{$entry->type}) {
-      $bibentry->set_field('entrytype', $ealias->{aliasof});
+    if (my $ealias = $dcfxml->{'entry-types'}{'entry-type'}{$entry->type}) {
+      $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
       if (my $alsoset = $ealias->{alsoset}) {
-        unless ($bibentry->field_exists($alsoset->[0])) {
-          $bibentry->set_field($alsoset->[0], $alsoset->[1]);
+        unless ($bibentry->field_exists($alsoset->{target})) {
+          $bibentry->set_field($alsoset->{target}, $alsoset->{value});
         }
       }
     }
@@ -361,7 +212,7 @@ sub create_entry {
         $biber->process_entry_options($dskey, $value);
       }
 
-      if (my $fm = $DS_FMAP->{$f}) {
+      if (my $fm = $dcfxml->{fields}{field}{$f}) {
         my $to = $f; # By default, field to set internally is the same as data source
         # Redirect any alias
         if (my $alias = $fm->{aliasof}) {
@@ -372,10 +223,11 @@ sub create_entry {
             $biber->biber_warn($bibentry, "Field '$f' is aliased to field '$alias' but both are defined in entry with key '$dskey' - skipping field '$f'");
             next;
           }
-          $fm = $DS_FMAP->{$alias};
+          $fm = $dcfxml->{fields}{field}{$alias};
           $to = $alias; # Field to set internally is the alias
         }
-        &{$fm->{handler}}($biber, $bibentry, $entry, $f, $to, $dskey);
+        no strict 'refs'; # symbolic references below ...
+        &{'_' . $fm->{handler}}($biber, $bibentry, $entry, $f, $to, $dskey);
       }
       # Default if no explicit way to set the field
       else {

@@ -1,0 +1,25 @@
+namespace dcf = "https://sourceforge.net/projects/biblatex"
+
+start =
+  element dcf:driver-control {
+    attribute driver { "bibtex" | "biblatexml" },
+    element dcf:entry-types {
+      element dcf:entry-type {
+        attribute name { xsd:string },
+        element dcf:aliasof { xsd:string },
+        element dcf:alsoset {
+          attribute target { xsd:string },
+          attribute value { xsd:string },
+          empty
+        }*
+      }+
+    }*,
+    element dcf:fields {
+      element dcf:field {
+        attribute name { xsd:string },
+        (attribute handler { xsd:string } |
+          attribute aliasof { xsd:string }),
+        empty
+      }+
+    }
+  }

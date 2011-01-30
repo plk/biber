@@ -53,6 +53,11 @@ my $builder = $class->new(
     script_files => [ glob( "bin/*" ) ],
     data_files => { 'data/schemata/bcf.rnc' => 'lib/Biber/bcf.rnc',
                     'data/schemata/bcf.rng' => 'lib/Biber/bcf.rng',
+                    'data/schemata/dcf.rnc' => 'lib/Biber/dcf.rnc',
+                    'data/schemata/dcf.rng' => 'lib/Biber/dcf.rng',
+                    'lib/Biber/Input/file/bibtex.dcf' => 'lib/Biber/Input/file/bibtex.dcf',
+                    'data/schemata/biblatexml.rnc' => 'lib/Biber/biblatexml.rnc',
+                    'data/schemata/biblatexml.rng' => 'lib/Biber/biblatexml.rng',
                     'data/bcf.xsl' => 'lib/Biber/bcf.xsl',
                     'data/latinkeys.txt' => 'lib/Unicode/Collate/latinkeys.txt' }
 );

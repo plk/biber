@@ -12,6 +12,7 @@ lib/Biber/Output/Base.pm
 lib/Biber/Output/BBL.pm
 lib/Biber/Output/Test.pm
 lib/Biber/Input/file/bibtex.pm
+lib/Biber/Input/file/bibtex.dcf
 lib/Biber/Input/file/biblatexml.pm
 lib/Biber/Config.pm
 lib/Biber/Constants.pm
@@ -33,6 +34,8 @@ doc/biber-auctex.png
 doc/biber-texworks.png
 data/schemata/bcf.rnc
 data/schemata/bcf.rng
+data/schemata/dcf.rnc
+data/schemata/dcf.rng
 data/schemata/biblatexml.rnc
 data/schemata/biblatexml.rng
 data/bcf.xsl
