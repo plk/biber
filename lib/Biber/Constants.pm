@@ -525,7 +525,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                    },
                    {
                      entrytype => [{ content => "set" }],
-                     field => [{ content => "ALL" }],
+                     field => [{ content => "entryset" }, { content => "crossref" }],
                    },
                    {
                      entrytype => [{ content => "article" }],

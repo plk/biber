@@ -3,41 +3,12 @@
 <dcf:driver-control driver="biblatexml" xmlns:dcf="https://sourceforge.net/projects/biber">
   <!--
       These entry type aliases we might find in the the datasource so
-      we can decide how to map and convert them into Biber::Entry objects
-      We are not validating anything here, that comes later and is not
-      datasource specific
+      Since biblatexml is specifically for biblatex, there should be no need
+      for entrytype aliases - a biblatexml file should have only what biblatex expects
   -->
-  <dcf:entry-types>
-    <dcf:entry-type name="conference">
-      <dcf:aliasof>inproceedings</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="electronic">
-      <dcf:aliasof>online</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="www">
-      <dcf:aliasof>online</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="mastersthesis">
-      <dcf:aliasof>thesis</dcf:aliasof>
-      <dcf:alsoset target="type" value="mathesis"/>
-    </dcf:entry-type>
-    <dcf:entry-type name="phdthesis">
-      <dcf:aliasof>thesis</dcf:aliasof>
-      <dcf:alsoset target="type" value="phdthesis"/>
-    </dcf:entry-type>
-    <dcf:entry-type name="techreport">
-      <dcf:aliasof>report</dcf:aliasof>
-      <dcf:alsoset target="type" value="techreport"/>
-    </dcf:entry-type>
-  </dcf:entry-types>
+
   <!--
-    These are the fields we expect to find in the the datasource so
-    we can decide how to map and convert them into Biber::Entry fields
-    This has nothing conceptually to do with the internal structure
-    setup, it's a datasource driver specific set of settings to allow
-    parsing into internal objects. It looks very similar to aspects
-    of the Biber::Structure defaults because biber/biblatex was developed
-    at first as a solely bibtex datasource project.
+      Field handlers
   -->
   <dcf:fields>
     <!-- special fields -->
@@ -46,7 +17,6 @@
     <!-- date fields -->
     <dcf:field name="date" handler="date"/>
     <!-- list fields -->
-    <dcf:field name="address" aliasof="location"/>
     <dcf:field name="institution" handler="list"/>
     <dcf:field name="language" handler="list"/>
     <dcf:field name="lista" handler="list"/>
@@ -60,13 +30,10 @@
     <dcf:field name="origlocation" handler="list"/>
     <dcf:field name="origpublisher" handler="list"/>
     <dcf:field name="publisher" handler="list"/>
-    <dcf:field name="school" aliasof="institution"/>
     <!-- literal fields -->
     <dcf:field name="abstract" handler="literal"/>
     <dcf:field name="addendum" handler="literal"/>
     <dcf:field name="annotation" handler="literal"/>
-    <dcf:field name="annote" aliasof="annotation"/>
-    <dcf:field name="archiveprefix" aliasof="eprinttype"/>
     <dcf:field name="authortype" handler="literal"/>
     <dcf:field name="bookpagination" handler="literal"/>
     <dcf:field name="booksubtitle" handler="literal"/>
@@ -101,10 +68,8 @@
     <dcf:field name="issuesubtitle" handler="literal"/>
     <dcf:field name="issuetitle" handler="literal"/>
     <dcf:field name="iswc" handler="literal"/>
-    <dcf:field name="journal" aliasof="journaltitle"/>
     <dcf:field name="journalsubtitle" handler="literal"/>
     <dcf:field name="journaltitle" handler="literal"/>
-    <dcf:field name="key" aliasof="sortkey"/>
     <dcf:field name="label" handler="literal"/>
     <dcf:field name="library" handler="literal"/>
     <dcf:field name="mainsubtitle" handler="literal"/>
@@ -123,7 +88,6 @@
     <dcf:field name="pagination" handler="literal"/>
     <dcf:field name="part" handler="literal"/>
     <dcf:field name="presort" handler="literal"/>
-    <dcf:field name="primaryclass" aliasof="eprintclass"/>
     <dcf:field name="pubstate" handler="literal"/>
     <dcf:field name="related" handler="literal"/>
     <dcf:field name="relatedtype" handler="literal"/>
@@ -179,7 +143,6 @@
     <dcf:field name="doi" handler="verbatim"/>
     <dcf:field name="eprint" handler="verbatim"/>
     <dcf:field name="file" handler="verbatim"/>
-    <dcf:field name="pdf" aliasof="file"/>
     <dcf:field name="url" handler="verbatim"/>
     <dcf:field name="verba" handler="verbatim"/>
     <dcf:field name="verbb" handler="verbatim"/>

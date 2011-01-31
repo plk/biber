@@ -424,7 +424,6 @@
       <bcf:field>related</bcf:field>
       <bcf:field>relatedtype</bcf:field>
       <bcf:field>relatedstring</bcf:field>
-      <bcf:field>reprinttitle</bcf:field>
       <bcf:field>shortauthor</bcf:field>
       <bcf:field>shorteditor</bcf:field>
       <bcf:field>shorthand</bcf:field>
@@ -449,7 +448,8 @@
     </bcf:entryfields>
     <bcf:entryfields>
       <bcf:entrytype>set</bcf:entrytype>
-      <bcf:field>ALL</bcf:field>
+      <bcf:field>entryset</bcf:field>
+      <bcf:field>crossref</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
       <bcf:entrytype>article</bcf:entrytype>
@@ -483,7 +483,6 @@
       <bcf:field>issuesubtitle</bcf:field>
       <bcf:field>journalsubtitle</bcf:field>
       <bcf:field>language</bcf:field>
-      <bcf:field>month</bcf:field>
       <bcf:field>note</bcf:field>
       <bcf:field>number</bcf:field>
       <bcf:field>origlanguage</bcf:field>
@@ -941,7 +940,6 @@
       <bcf:field>howpublished</bcf:field>
       <bcf:field>language</bcf:field>
       <bcf:field>location</bcf:field>
-      <bcf:field>month</bcf:field>
       <bcf:field>note</bcf:field>
       <bcf:field>organization</bcf:field>
       <bcf:field>pubstate</bcf:field>
@@ -998,7 +996,6 @@
       <bcf:field>eprinttype</bcf:field>
       <bcf:field>holder</bcf:field>
       <bcf:field>location</bcf:field>
-      <bcf:field>month</bcf:field>
       <bcf:field>note</bcf:field>
       <bcf:field>pubstate</bcf:field>
       <bcf:field>subtitle</bcf:field>
@@ -1039,7 +1036,6 @@
       <bcf:field>issuesubtitle</bcf:field>
       <bcf:field>issuetitle</bcf:field>
       <bcf:field>language</bcf:field>
-      <bcf:field>month</bcf:field>
       <bcf:field>note</bcf:field>
       <bcf:field>number</bcf:field>
       <bcf:field>pubstate</bcf:field>
@@ -1083,7 +1079,6 @@
       <bcf:field>mainsubtitle</bcf:field>
       <bcf:field>maintitle</bcf:field>
       <bcf:field>maintitleaddon</bcf:field>
-      <bcf:field>month</bcf:field>
       <bcf:field>note</bcf:field>
       <bcf:field>number</bcf:field>
       <bcf:field>organization</bcf:field>
@@ -1139,7 +1134,6 @@
       <bcf:field>mainsubtitle</bcf:field>
       <bcf:field>maintitle</bcf:field>
       <bcf:field>maintitleaddon</bcf:field>
-      <bcf:field>month</bcf:field>
       <bcf:field>note</bcf:field>
       <bcf:field>number</bcf:field>
       <bcf:field>organization</bcf:field>
@@ -1182,7 +1176,6 @@
       <bcf:field>isrn</bcf:field>
       <bcf:field>language</bcf:field>
       <bcf:field>location</bcf:field>
-      <bcf:field>month</bcf:field>
       <bcf:field>note</bcf:field>
       <bcf:field>number</bcf:field>
       <bcf:field>pages</bcf:field>
@@ -1219,7 +1212,6 @@
       <bcf:field>eprinttype</bcf:field>
       <bcf:field>language</bcf:field>
       <bcf:field>location</bcf:field>
-      <bcf:field>month</bcf:field>
       <bcf:field>note</bcf:field>
       <bcf:field>pages</bcf:field>
       <bcf:field>pagetotal</bcf:field>
@@ -1248,7 +1240,6 @@
       <bcf:field>howpublished</bcf:field>
       <bcf:field>language</bcf:field>
       <bcf:field>location</bcf:field>
-      <bcf:field>month</bcf:field>
       <bcf:field>note</bcf:field>
       <bcf:field>pubstate</bcf:field>
       <bcf:field>subtitle</bcf:field>

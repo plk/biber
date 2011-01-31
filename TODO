@@ -2,9 +2,7 @@ TODO in decreasing order of priority:
 
 * When biblatex implements interface and bcf for crossref inheritance,
   take out conditional in control file read and also change schema (biblatex 1.2)
-* Make driver entrytype/field information external in a driver config file.
-  Make biber config/options for point to the driver config file. No
-  hardcoded defaults as these aren't visible to user.
+* When biblatex implements related entries, take out reprinttitle
 * Generalised \printbibliography system
   Typed lists - entry, key, shorthand etc.
   Take out MAIN, SHORTHANDS backwards compat hacks in Biber.pm and BBL.pm
