@@ -587,12 +587,13 @@ sub parsename {
   my $gen_suffix_it;
 
   # Use a copy of $name so that when we generate the
-  # initials, we do so without diacritics. This is easier than trying
-  # hack the diacritics code into btparse ...
+  # initials, we do so without certain things. This is easier than trying
+  # hack robust initials code into btparse ...
   # This is a hard-coded hack
   my $nd_namestr = $namestr;
-  $nd_namestr =~ s/\A\p{L}{2}\p{Pd}//; #strip prefices
+  $nd_namestr =~ s/\A\p{L}{2}\p{Pd}//; # strip prefices
   $nd_namestr =~ s/[\x{2bf}\x{2018}]//g; # strip specific diacritics
+  $nd_namestr =~ s/\{(\w)\}/$1/g; # strip case protecting braces
   my $nd_name = new Text::BibTeX::Name($nd_namestr, $fieldname);
 
   # Initials formats
