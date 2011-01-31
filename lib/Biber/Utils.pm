@@ -429,6 +429,7 @@ sub is_null {
 
 sub is_notnull {
   my $arg = shift;
+  return undef unless defined($arg);
   my $st = is_notnull_scalar($arg);
   if (defined($st) and $st) { return 1; }
   my $at = is_notnull_array($arg);
