@@ -59,19 +59,25 @@ unless ($locale) {
 # nosort type category shortcuts
 our %NOSORT_TYPES = (
                      type_name => {
-                                    author => 1,
-                                    bookauthor => 1,
-                                    commentator => 1,
-                                    editor => 1,
-                                    editora => 1,
-                                    editorb => 1,
-                                    editorc => 1,
-                                    holder => 1,
-                                    namea => 1,
-                                    nameb => 1,
-                                    namec => 1,
-                                    translator => 1
-                                    },
+                                   author => 1,
+                                   afterword => 1,
+                                   annotator => 1,
+                                   bookauthor => 1,
+                                   commentator => 1,
+                                   editor => 1,
+                                   editora => 1,
+                                   editorb => 1,
+                                   editorc => 1,
+                                   foreword => 1,
+                                   holder => 1,
+                                   introduction => 1,
+                                   namea => 1,
+                                   nameb => 1,
+                                   namec => 1,
+                                   shortauthor => 1,
+                                   shorteditor => 1,
+                                   translator => 1
+                                  },
                      type_title => {
                                     booktitle => 1,
                                     eventtitle => 1,

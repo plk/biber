@@ -610,7 +610,7 @@
                                 (
                                 <xsl:for-each select="./bcf:antecedent/bcf:field">
                                   <xsl:value-of select="./text()"/>
-                                  <xsl:if test="not(position()=last())">,</xsl:if>                          
+                                  <xsl:if test="not(position()=last())">,</xsl:if>
                                 </xsl:for-each>
                                 )
                                 <xsl:text disable-output-escaping="yes">&amp;rarr; </xsl:text>
@@ -622,7 +622,7 @@
                                 (
                                 <xsl:for-each select="./bcf:consequent/bcf:field">
                                   <xsl:value-of select="./text()"/>
-                                  <xsl:if test="not(position()=last())">,</xsl:if>                          
+                                  <xsl:if test="not(position()=last())">,</xsl:if>
                                 </xsl:for-each>
                                 )
                               </xsl:when>
@@ -633,7 +633,7 @@
                                     (
                                     <xsl:for-each select="./bcf:field">
                                       <xsl:value-of select="./text()"/>
-                                      <xsl:if test="not(position()=last())">,</xsl:if>                          
+                                      <xsl:if test="not(position()=last())">,</xsl:if>
                                     </xsl:for-each>
                                     )
                                     <xsl:text disable-output-escaping="yes">&amp;le;</xsl:text><xsl:value-of select="./@rangemax"/>
@@ -642,7 +642,7 @@
                                     (
                                     <xsl:for-each select="./bcf:field">
                                       <xsl:value-of select="./text()"/>
-                                      <xsl:if test="not(position()=last())">,</xsl:if>                          
+                                      <xsl:if test="not(position()=last())">,</xsl:if>
                                     </xsl:for-each>
                                     )
                                     must be dates
@@ -662,7 +662,7 @@
                                       </xsl:if>
                                       <xsl:value-of select="./text()"/>
                                     </span>
-                                    <xsl:if test="not(position()=last())">,</xsl:if>                          
+                                    <xsl:if test="not(position()=last())">,</xsl:if>
                                   </xsl:for-each>
                                   )
                                 </xsl:for-each>
@@ -671,7 +671,7 @@
                                   (
                                   <xsl:for-each select="./bcf:field">
                                     <xsl:value-of select="./text()"/>
-                                    <xsl:if test="not(position()=last())">,</xsl:if>                          
+                                    <xsl:if test="not(position()=last())">,</xsl:if>
                                   </xsl:for-each>
                                   )
                                 </xsl:for-each>
@@ -700,9 +700,67 @@
         </xsl:if>
         <hr/>
         <h3>Reference Sections</h3>
-        <xsl:for-each select="/bcf:controlfile/bcf:section">
+        <!-- Section 0 is special as it can be empty and there can be many of them -->
+        <h4>Section 0</h4>
+        <table>
+          <thead>
+            <tr><td>Data sources</td><td>Citekeys</td></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <ul>
+                  <xsl:for-each select="/bcf:controlfile/bcf:bibdata[@section='0']">
+                    <xsl:for-each select="./bcf:datasource">
+                      <li>
+                        <xsl:value-of select="./text()"/> (<xsl:value-of select="./@datatype"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="./@type"/>)
+                      </li>
+                    </xsl:for-each>
+                  </xsl:for-each>
+                </ul>
+              </td>
+              <td>
+                <ul>
+                  <xsl:for-each select="/bcf:controlfile/bcf:section[@number='0' and *]/bcf:citekey">
+                    <li><tt><xsl:value-of select="./text()"/></tt></li>
+                  </xsl:for-each>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <xsl:for-each select="/bcf:controlfile/bcf:section[@number='0' and *]/bcf:sectionlist">
+          <h5><u>Output list &quot;<xsl:value-of select="./@label"/>&quot;</u></h5>
+          <div>
+            <h6>Filters</h6>
+            <table>
+              <thead>
+                <tr><td>Filter type</td><td>Filter value</td></tr>
+              </thead>
+              <tbody>
+                <xsl:for-each select="./bcf:filter">
+                  <tr><td><xsl:value-of select="./@type"/></td><td><xsl:value-of select="./text()"/></td></tr>
+                </xsl:for-each>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <h6>Sorting Specification</h6>
+            <xsl:choose>
+              <xsl:when test="./bcf:sorting">
+                <xsl:call-template name="sorting-spec">
+                  <xsl:with-param name="spec" select="./bcf:sorting"/>
+                </xsl:call-template>
+              </xsl:when>
+              <xsl:otherwise>
+                (global default)
+              </xsl:otherwise>
+            </xsl:choose>
+          </div>
+        </xsl:for-each>
+        <xsl:for-each select="/bcf:controlfile/bcf:section[@number != '0']">
           <!-- Save a varible pointing to the section number -->
-          <xsl:variable name="secnum" select="./@number"/> 
+          <xsl:variable name="secnum" select="./@number"/>
           <h4>Section <xsl:value-of select="$secnum"/></h4>
           <table>
             <thead>

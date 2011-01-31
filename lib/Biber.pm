@@ -207,7 +207,7 @@ sub parse_ctrlfile {
     my $CFxmlschema;
 
     # we assume that the schema files are in the same dir as Biber.pm:
-    (undef, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
+    (my $vol, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
 
     # Deal with the strange world of Par::Packer paths
     # We might be running inside a PAR executable and @INC is a bit odd in this case
@@ -215,10 +215,10 @@ sub parse_ctrlfile {
     # nowhere near to these files. You know what I mean if you've dealt with pp
     my $bcf_rng;
     if ($biber_path =~ m|/par\-| and $biber_path !~ m|/inc|) { # a mangled PAR @INC path
-      $bcf_rng = File::Spec->catfile($biber_path, 'inc', 'lib', 'Biber', 'bcf.rng');
+      $bcf_rng = File::Spec->catpath($vol, "$biber_path/inc/lib/Biber", 'bcf.rng');
     }
     else {
-      $bcf_rng = File::Spec->catfile($biber_path, 'Biber', 'bcf.rng');
+      $bcf_rng = File::Spec->catpath($vol, "$biber_path/Biber", 'bcf.rng');
     }
 
     if (-e $bcf_rng) {
@@ -265,7 +265,7 @@ sub parse_ctrlfile {
     my $CFstyle;
 
     # we assume that the schema files are in the same dir as Biber.pm:
-    (undef, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
+    (my $vol, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
 
     # Deal with the strange world of Par::Packer paths
     # We might be running inside a PAR executable and @INC is a bit odd in this case
@@ -273,10 +273,10 @@ sub parse_ctrlfile {
     # nowhere near to these files. You know what I mean if you've dealt with pp
     my $bcf_xsl;
     if ($biber_path =~ m|/par\-| and $biber_path !~ m|/inc|) { # a mangled PAR @INC path
-      $bcf_xsl = File::Spec->catfile($biber_path, 'inc', 'lib', 'Biber', 'bcf.xsl');
+      $bcf_xsl = File::Spec->catpath($vol, "$biber_path/inc/lib/Biber", 'bcf.xsl');
     }
     else {
-      $bcf_xsl = File::Spec->catfile($biber_path, 'Biber', 'bcf.xsl');
+      $bcf_xsl = File::Spec->catpath($vol, "$biber_path/Biber", 'bcf.xsl');
     }
 
     if (-e $bcf_xsl) {

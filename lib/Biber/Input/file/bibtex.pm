@@ -29,18 +29,29 @@ my $logger = Log::Log4perl::get_logger('main');
 
 our $cache = {};
 
+# Handlers for field types
+my %handlers = (
+                'date'     => \&_date,
+                'list'     => \&_list,
+                'literal'  => \&_literal,
+                'name'     => \&_name,
+                'range'    => \&_range,
+                'special'  => \&_special,
+                'verbatim' => \&_verbatim
+);
+
+
 # we assume that the driver config file is in the same dir as the driver:
-(undef, my $driver_path, undef) = File::Spec->splitpath( $INC{"Biber/Input/file/bibtex.pm"} );
+(my $vol, my $driver_path, undef) = File::Spec->splitpath( $INC{"Biber/Input/file/bibtex.pm"} );
 
 # Deal with the strange world of Par::Packer paths, see similar code in Biber.pm
 my $dcf;
 if ($driver_path =~ m|/par\-| and $driver_path !~ m|/inc|) { # a mangled PAR @INC path
-  $dcf = File::Spec->catfile($driver_path, 'inc', 'lib', 'Biber', 'Input', 'file', 'bibtex.dcf');
+  $dcf = File::Spec->catpath($vol, "$driver_path/inc/lib/Biber/Input/file", 'bibtex.dcf');
 }
 else {
-  $dcf = File::Spec->catfile($driver_path, 'bibtex.dcf');
+  $dcf = File::Spec->catpath($vol, $driver_path, 'bibtex.dcf');
 }
-
 
 # Read driver config file
 my $dcfxml = XML::LibXML::Simple::XMLin($dcf,
@@ -226,8 +237,7 @@ sub create_entry {
           $fm = $dcfxml->{fields}{field}{$alias};
           $to = $alias; # Field to set internally is the alias
         }
-        no strict 'refs'; # symbolic references below ...
-        &{'_' . $fm->{handler}}($biber, $bibentry, $entry, $f, $to, $dskey);
+        &{$handlers{$fm->{handler}}}($biber, $bibentry, $entry, $f, $to, $dskey);
       }
       # Default if no explicit way to set the field
       else {
