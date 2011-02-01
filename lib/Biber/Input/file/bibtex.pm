@@ -593,7 +593,6 @@ sub parsename {
   my $nd_namestr = $namestr;
   $nd_namestr =~ s/\b\p{L}{2}\p{Pd}//gxms; # strip prefices
   $nd_namestr =~ s/[\x{2bf}\x{2018}]//gxms; # strip specific diacritics
-  $nd_namestr =~ s/\{(\w)\}/$1/gxms; # strip case protecting braces
   my $nd_name = new Text::BibTeX::Name($nd_namestr, $fieldname);
 
   # Initials formats
