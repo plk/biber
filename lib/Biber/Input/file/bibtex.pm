@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use Carp;
 
-use Text::BibTeX 0.49 qw(:nameparts :joinmethods :metatypes);
+use Text::BibTeX 0.50 qw(:nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
 use Text::BibTeX::NameFormat;
 use Biber::Constants;
