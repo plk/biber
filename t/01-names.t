@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 46;
+use Test::More tests => 47;
 
 use Biber;
 use Biber::Input::file::bibtex;
@@ -283,6 +283,25 @@ my $name15 =
       strip => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
       namestring => 'El-{M}allah, E. S.',
       nameinitstring => 'El-{M}allah_ES' } ;
+
+
+my $name16 =
+   {  firstname    => 'E.~S.',
+      firstname_i  => 'E.~S.',
+      firstname_it => 'ES',
+      lastname     => '{K}ent-{B}oswell',
+      lastname_i   => 'K.-B.',
+      lastname_it  => 'KB',
+      prefix       => undef,
+      prefix_i     => undef,
+      prefix_it    => undef,
+      suffix       => undef,
+      suffix_i     => undef,
+      suffix_it    => undef,
+      strip => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      namestring => '{K}ent-{B}oswell, E. S.',
+      nameinitstring => '{K}ent-{B}oswell_ES' } ;
+
 
 my $l1 = q|  \entry{L1}{book}{}
     \name{labelname}{1}{%
@@ -707,6 +726,7 @@ is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel Poussin', 
 is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles {Poussin Lecoq}', 'author'), $name13, 'parsename 13');
 is_deeply(Biber::Input::file::bibtex::parsename('J. C. G. de la Vallée Poussin', 'author', {useprefix => 1}), $name14, 'parsename 14');
 is_deeply(Biber::Input::file::bibtex::parsename('E. S. El-{M}allah', 'author'), $name15, 'parsename 15');
+is_deeply(Biber::Input::file::bibtex::parsename('E. S. {K}ent-{B}oswell', 'author'), $name16, 'parsename 16');
 
 is( $out->get_output_entry($main,'l1'), $l1, 'First Last') ;
 is( $out->get_output_entry($main,'l2'), $l2, 'First Initial. Last') ;

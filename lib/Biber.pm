@@ -1840,6 +1840,12 @@ sub fetch_data {
   $logger->debug('Clearing Text::BibTeX macros definitions');
   Text::BibTeX::delete_all_macros();
 
+  # (Re-)define the old BibTeX month macros to what biblatex wants
+  my $mi = 1;
+  foreach my $month ('jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec') {
+    Text::BibTeX::add_macro_text($month, $mi++);
+  }
+
   # First we look for the directly cited keys in each datasource
   my @remaining_keys = @citekeys;
   $logger->debug('Looking for directly cited keys: ' . join(', ', @remaining_keys));

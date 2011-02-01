@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 
 use Biber;
 use Biber::Output::BBL;
@@ -28,20 +28,20 @@ my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $main = $section->get_list('MAIN');
 my @keys = sort $section->get_citekeys;
-my @citedkeys = sort qw{ murray t1 kant:ku kant:kpv t2 };
+my @citedkeys = sort qw{ murray t1 kant:ku kant:kpv t2 shore};
 
-my @allkeys = sort qw{ stdmodel aristotle:poetics vazques-de-parga shore t1
+my @allkeys = sort qw{ stdmodel aristotle:poetics vazques-de-parga t1
 gonzalez averroes/bland laufenberg westfahl:frontier knuth:ct:a kastenholz
 averroes/hannes iliad luzzatto malinowski sorace knuth:ct:d britannica
 nietzsche:historie stdmodel:weinberg knuth:ct:b baez/article knuth:ct:e itzhaki
-jaffe padhye cicero stdmodel:salam reese averroes/hercz murray
+jaffe padhye cicero stdmodel:salam reese averroes/hercz murray shore
 aristotle:physics massa aristotle:anima gillies set kowalik gaonkar springer
 geer hammond wormanx westfahl:space worman set:herrmann augustine gerhardt
 piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2} ;
+set:yoon maron coleridge tvonb t2 } ;
 
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 is_deeply( [ $section->get_list('SHORTHANDS')->get_keys ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
@@ -216,6 +216,7 @@ my $Worman_N = [ 'WN1', 'WN2' ] ;
 my $Gennep = [ 'vGA1', 'vGJ1' ] ;
 
 is( $out->get_output_entry($main,'t1'), $t1, 'bbl entry with maths in title 1' ) ;
+is( $bibentries->entry('shore')->get_field('month'), '3', 'default bib month macros' ) ;
 ok( $bibentries->entry('t1')->has_keyword('primary'), 'Keywords test - 1' ) ;
 ok( $bibentries->entry('t1')->has_keyword('something'), 'Keywords test - 2' ) ;
 ok( $bibentries->entry('t1')->has_keyword('somethingelse'), 'Keywords test - 3' ) ;
