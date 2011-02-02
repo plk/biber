@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 11;
+use Test::More tests => 14;
 use Biber;
 use Biber::Utils;
 use Biber::Output::BBL;
@@ -84,6 +84,9 @@ is_deeply([$shs1->get_keys], ['sect4', 'sect5'], 'Section 1 shorthands');
 is_deeply([$main2->get_keys], ['sect1', 'sect6', 'sect7'], 'Section 2 citekeys');
 is_deeply([$shs2->get_keys], ['sect1', 'sect6', 'sect7'], 'Section 2 shorthands');
 is_deeply([$section3->get_orig_order_citekeys], ['sect1', 'sect2', 'sectall1'], 'Section 3 citekeys');
+is($out->get_output_section(0)->number, '0', 'Checking output sections - 1');
+is($out->get_output_section(1)->number, '1', 'Checking output sections - 2');
+is($out->get_output_section(2)->number, '2', 'Checking output sections - 3');
 is($out->get_output_head, $head, 'Preamble output check with bblsafechars');
 
 unlink <*.utf8>;
