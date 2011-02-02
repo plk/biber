@@ -162,8 +162,9 @@ sub add_output_tail {
 
 sub set_output_section {
   my $self = shift;
+  my $secnum = shift;
   my $section = shift;
-  $self->{section} = $section;
+  $self->{section}{$secnum} = $section;
   return;
 }
 
@@ -175,7 +176,8 @@ sub set_output_section {
 
 sub get_output_section {
   my $self = shift;
-  return $self->{section};
+  my $secnum = shift;
+  return $self->{section}{$secnum};
 }
 
 

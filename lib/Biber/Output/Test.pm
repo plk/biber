@@ -61,6 +61,8 @@ sub set_output_entry {
   my $acc = '';
   my $opts = '';
   my $citekey; # entry key forced to case of any citations(s) which reference it
+  my $secnum = $section->number;
+
   if ( $be->get_field('citekey') ) {
     $citekey = $be->get_field('citekey');
   }
@@ -285,8 +287,7 @@ sub set_output_entry {
   $acc .= "  \\endentry\n\n";
 
   # Create an index by keyname for easy retrieval
-  $self->{output_data}{ENTRIES}{$section}{index}{lc($citekey)} = \$acc;
-
+  $self->{output_data}{ENTRIES}{$secnum}{index}{lc($citekey)} = \$acc;
   return;
 }
 

@@ -597,7 +597,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     if (Biber::Config->getoption('debug')) {
       my @debug_keys = sort @keys;
       unless ($bib_section->is_allkeys) {
-        $logger->debug("The citekeys for section $secnum are:\n", "@debug_keys", "\n");
+        $logger->debug("The citekeys for section $secnum are: ", join(', ', @debug_keys), "\n");
       }
     }
 
@@ -1840,10 +1840,12 @@ sub fetch_data {
   $logger->debug('Clearing Text::BibTeX macros definitions');
   Text::BibTeX::delete_all_macros();
 
-  # (Re-)define the old BibTeX month macros to what biblatex wants
-  my $mi = 1;
-  foreach my $month ('jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec') {
-    Text::BibTeX::add_macro_text($month, $mi++);
+  # (Re-)define the old BibTeX month macros to what biblatex wants unless user stops this
+  unless (Biber::Config->getoption('nostdmacros')) {
+    my $mi = 1;
+    foreach my $mon ('jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec') {
+      Text::BibTeX::add_macro_text($mon, $mi++);
+    }
   }
 
   # First we look for the directly cited keys in each datasource
@@ -2050,7 +2052,7 @@ sub create_output_section {
   }
 
   # Make sure the output object knows about the output section
-  $output_obj->set_output_section($section);
+  $output_obj->set_output_section($secnum, $section);
 
   # undef citekeys are global
   my @undef_citekeys = $section->get_undef_citekeys;

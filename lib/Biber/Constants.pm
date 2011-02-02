@@ -112,6 +112,7 @@ our %CONFIG_DEFAULT_BIBER = (
   decodecharsset     => 'extra',
   mincrossrefs       => 2,
   nolog              => 0,
+  nostdmacros        => 0,
   nosort             => { type_name => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ] },
   quiet              => 0,
   sortcase           => 1,

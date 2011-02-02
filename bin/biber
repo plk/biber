@@ -43,6 +43,7 @@ GetOptions(
            'logfile=s',
            'noconf',
            'nolog',
+           'nostdmacros',
            'onlylog',
            'outfile|O=s',
            'output_directory=s',
@@ -443,6 +444,11 @@ Options:
 
   --nolog
       Do not write any logfile.
+
+  --nostdmacros
+      Don't automatically define any standard macros like month abbreviations.
+      If you also define these yourself, this option can be used to suppress
+      macro redefinition warnings.
 
   --onlylog
       Do not write any message to screen.

@@ -402,12 +402,16 @@ sub output {
   print $target $data->{HEAD} or $logger->logdie("Failure to write head to $target_string: $!");
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
+    $logger->debug("Writing entries for section $secnum");
 
     print $target "\n\\refsection{$secnum}\n";
     my $section = $self->get_output_section($secnum);
+
+    # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
     foreach my $list (sort {$a->get_label cmp $b->get_label} @{$section->get_lists}) {
       my $listlabel = $list->get_label;
       my $listtype = $list->get_type;
+      $logger->debug("Writing entries in list '$listlabel'");
 
       # Remove most of this conditional when biblatex supports lists
       if ($listlabel eq 'SHORTHANDS') {
