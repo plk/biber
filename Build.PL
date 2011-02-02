@@ -44,7 +44,7 @@ my $builder = $class->new(
         'Unicode::Collate' => '0.72',
         'XML::LibXML::Simple' => 0,
         'XML::LibXSLT' => 0,
-        'Text::BibTeX' => '0.50',
+        'Text::BibTeX' => '0.51',
         'perl' => '5.10.0'
     },
     recommends => {
