@@ -214,6 +214,7 @@ debug               0
 fastsort            0
 mincrossrefs        2
 nolog               0
+nostdmacros         0
 <nosort>
   # ignore prefices like 'al-' when sorting name fields
   type_names      \A\p{L}{2}\p{Pd}
@@ -817,6 +818,17 @@ Source & Target & Source field & $\rightarrow$ & Target field\\
 \caption{Custom cross-reference mappings}
 \label{tab:ct}
 \end{table}
+
+\subsection{BibTeX macros}
+
+\verb+BibTeX+ defines automatically macros for month abbreviations
+like «\verb+jan+», «\verb+feb+» etc. \verb+biber+ also does this,
+defining them as numbers since that is what \verb+biblatex+ wants. In
+case you are also defining these yourself (although if you are only
+using \verb+biblatex+, there isn't much point), you will get macro
+redefinition warnings from the \verb+btparse+ library. You can turn
+off \verb+biber+'s macro definitions to avoid this by using the option
+\verb+--nostdmacros+.
 
 \section{Binaries}
 
