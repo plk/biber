@@ -1,6 +1,9 @@
 Revision history for Biber
 
-0.7.3  (dev beta)
+0.7.3  03-02-2011
+       * Performance tuning for sorting
+       * Text::BibTeX 0.51 for increased macro stack space
+       * Support for old BibTeX month macros by default
        * Re-write of datasource processing to allow for modular plugins
        * Generalised nosort option.
        * Merged LaTeX::Decode into Biber::LaTeX::Recode and added encoding

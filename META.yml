@@ -16,7 +16,7 @@ name: biblatex-biber
 provides:
   Biber:
     file: lib/Biber.pm
-    version: v0.7.2
+    version: v0.7.3
   Biber::Config:
     file: lib/Biber/Config.pm
   Biber::Constants:
@@ -29,10 +29,17 @@ provides:
     file: lib/Biber/Entry/Name.pm
   Biber::Entry::Names:
     file: lib/Biber/Entry/Names.pm
-  Biber::Input::BibTeX:
-    file: lib/Biber/Input/BibTeX.pm
+  Biber::Input::file::biblatexml:
+    file: lib/Biber/Input/file/biblatexml.pm
+  Biber::Input::file::bibtex:
+    file: lib/Biber/Input/file/bibtex.pm
   Biber::Internals:
     file: lib/Biber/Internals.pm
+  Biber::LaTeX::Recode:
+    file: lib/Biber/LaTeX/Recode.pm
+    version: 0.1
+  Biber::LaTeX::Recode::Data:
+    file: lib/Biber/LaTeX/Recode/Data.pm
   Biber::Output::BBL:
     file: lib/Biber/Output/BBL.pm
   Biber::Output::Base:
@@ -41,6 +48,8 @@ provides:
     file: lib/Biber/Output/Test.pm
   Biber::Section:
     file: lib/Biber/Section.pm
+  Biber::Section::List:
+    file: lib/Biber/Section/List.pm
   Biber::Sections:
     file: lib/Biber/Sections.pm
   Biber::Structure:
@@ -51,21 +60,22 @@ recommends:
   Readonly::XS: 0
 requires:
   Config::General: 0
+  Data::Compare: 0
   Data::Dump: 0
+  Date::Simple: 0
   File::Slurp::Unicode: 0
   IPC::Cmd: 0
   IPC::Run: 0
-  LaTeX::Decode: 0.03
   List::AllUtils: 0
   List::MoreUtils: 0
   Log::Log4perl: 0
   Readonly: 0
   Regexp::Common: 0
-  Text::BibTeX: 0.48
-  Unicode::Collate: 0.68
+  Text::BibTeX: 0.51
+  Unicode::Collate: 0.72
   XML::LibXML::Simple: 0
   XML::LibXSLT: 0
   perl: v5.10.0
 resources:
   license: http://dev.perl.org/licenses/
-version: v0.7.2
+version: v0.7.3

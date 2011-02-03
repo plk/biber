@@ -8,7 +8,6 @@ TODO in decreasing order of priority:
   Typed lists - entry, key, shorthand etc.
   Take out MAIN, SHORTHANDS backwards compat hacks in Biber.pm and BBL.pm
   Shorthands should be requested otherwise it's a big sorting overhead
-* bltx middlename support made transparent in Name.pm
 * Zotero? http://www.zotero.org/support/dev/start
   https://api.zotero.org/users/<USERID>/items/<iTEMID>?key=<APIKEY>
   gives a parseable ATOM XML with the information in
