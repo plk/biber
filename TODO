@@ -1,5 +1,6 @@
 TODO in decreasing order of priority:
 
+* bbl+? middlenames, unique, per-name gender, per-name prefix
 * When biblatex implements interface and bcf for crossref inheritance,
   take out conditional in control file read and also change schema (biblatex 1.2)
 * When biblatex implements related entries, take out reprinttitle
