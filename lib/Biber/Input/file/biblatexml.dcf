@@ -50,12 +50,8 @@
     <dcf:field name="eid" handler="literal"/>
     <dcf:field name="entryset" handler="literal"/>
     <dcf:field name="entrysubtype" handler="literal"/>
-    <dcf:field name="eprintclass" handler="literal"/>
-    <dcf:field name="eprinttype" handler="literal"/>
     <dcf:field name="eventtitle" handler="literal"/>
     <dcf:field name="execute" handler="literal"/>
-    <dcf:field name="gender" handler="literal"/>
-    <dcf:field name="howpublished" handler="literal"/>
     <dcf:field name="hyphenation" handler="literal"/>
     <dcf:field name="indexsorttitle" handler="literal"/>
     <dcf:field name="indextitle" handler="literal"/>
@@ -91,7 +87,6 @@
     <dcf:field name="pubstate" handler="literal"/>
     <dcf:field name="related" handler="literal"/>
     <dcf:field name="relatedtype" handler="literal"/>
-    <dcf:field name="reprinttitle" handler="literal"/>
     <dcf:field name="series" handler="literal"/>
     <dcf:field name="shorthand" handler="literal"/>
     <dcf:field name="shorthandintro" handler="literal"/>

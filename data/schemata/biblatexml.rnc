@@ -238,6 +238,7 @@ person = element person {
   }
 attlist.person |=
   attribute id { text }?,
+  att.gender?,
   attribute useprefix { "yes" | "no" }?
 first = element first { (text | namepart+) }
 firstinitial = element firstinitial { text }

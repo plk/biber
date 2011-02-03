@@ -22,7 +22,8 @@ sub new {
   my ($class, %params) = @_;
   if (%params) {
     my $name = {};
-    foreach my $attr (qw/lastname
+    foreach my $attr (qw/gender
+                         lastname
                          lastname_i
                          lastname_it
                          firstname
@@ -303,6 +304,31 @@ sub get_prefix_it {
   my $self = shift;
   return $self->{prefix_it};
 }
+
+
+=head2 set_gender
+
+    Set gender for a Biber::Entry::Name object
+
+=cut
+
+sub set_gender {
+  my ($self, $val) = @_;
+  $self->{gender} = $val;
+  return;
+}
+
+=head2 get_gender
+
+    Get gender for a Biber::Entry::Name object
+
+=cut
+
+sub get_gender {
+  my $self = shift;
+  return $self->{gender};
+}
+
 
 
 =head2 set_namestring

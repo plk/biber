@@ -203,6 +203,11 @@ sub create_entry {
     $bibentry->set_field('entrytype', $entry->getAttribute('entrytype'));
   }
 
+  # Some entry attributes
+  if (my $hp = $entry->getAttribute('howpublished')) {
+    $bibentry->set_datafield('howpublished', $hp);
+  }
+
   # We put all the fields we find modulo field aliases into the object.
   # Validation happens later and is not datasource dependent
   foreach my $f (uniq map {$_->nodeName()} $entry->findnodes("*")) {
@@ -272,12 +277,32 @@ sub _special {
   return;
 }
 
+# Verbatim fields
+sub _verbatim {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  # Pick out the node with the right mode
+  my $node = _resolve_display_mode($biber, $entry, $f);
+
+  # eprint is special case
+  if ($f eq "$NS:eprint") {
+    $bibentry->set_datafield('eprinttype', $node->getAttribute('type'));
+    if (my $ec = $node->getAttribute('class')) {
+      $bibentry->set_datafield('eprintclass', $ec);
+    }
+  }
+  else {
+    $bibentry->set_datafield(_norm($to), $node->textContent());
+  }
+  return;
+}
+
 # Literal fields
 sub _literal {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   # Pick out the node with the right mode
   my $node = _resolve_display_mode($biber, $entry, $f);
   $bibentry->set_datafield(_norm($to), $node->textContent());
+  return;
 }
 
 # List fields
@@ -286,6 +311,7 @@ sub _list {
   # Pick out the node with the right mode
   my $node = _resolve_display_mode($biber, $entry, $f);
   $bibentry->set_datafield(_norm($to), _split_list($node));
+  return;
 }
 
 # Range fields
@@ -309,6 +335,7 @@ sub _range {
   else {
     $bibentry->set_datafield(_norm($to), $node->textContent());
   }
+  return;
 }
 
 # Date fields
@@ -381,6 +408,7 @@ sub _name {
     $names->add_element(parsename($name, $f, {useprefix => $useprefix}));
   }
   $bibentry->set_datafield(_norm($to), $names);
+  return;
 }
 
 =head2 parsename
@@ -406,6 +434,7 @@ sub _name {
       suffix_it     => undef,
       namestring    => 'Doe, John Fred',
       nameinitstring => 'Doe_JF',
+      gender         => sm
 
 =cut
 
@@ -415,6 +444,8 @@ sub parsename {
   my $usepre = $opts->{useprefix};
 
   my %namec;
+
+  my $gender = $node->getAttribute('gender');
 
   foreach my $n ('last', 'first', 'middle', 'prefix', 'suffix') {
     # If there is a name component node for this component ...
@@ -515,6 +546,7 @@ sub parsename {
     suffix_it       => exists($namec{suffix}) ? $namec{suffix_it} : undef,
     namestring      => $namestring,
     nameinitstring  => $nameinitstr,
+    gender          => $gender
     );
 }
 

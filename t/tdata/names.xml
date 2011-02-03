@@ -3,7 +3,7 @@
 <bib:entries xmlns:bib="http://biblatex-biber.sourceforge.net/biblatexml">
   <bib:entry id="BulgakovRozenfeld:1983" entrytype="book">
     <bib:author>
-      <bib:person>
+      <bib:person gender="sm">
         <bib:first>
           <bib:namepart>Павел</bib:namepart>
           <bib:namepart>Георгиевич</bib:namepart>

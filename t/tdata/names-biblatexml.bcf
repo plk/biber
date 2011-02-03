@@ -126,9 +126,9 @@
     </bcf:displaymode>
     <bcf:displaymode>
       <bcf:target>title</bcf:target>
+      <bcf:mode>translated</bcf:mode>
       <bcf:mode>romanised</bcf:mode>
       <bcf:mode>uniform</bcf:mode>
-      <bcf:mode>translated</bcf:mode>
       <bcf:mode>original</bcf:mode>
     </bcf:displaymode>
   </bcf:displaymodes>

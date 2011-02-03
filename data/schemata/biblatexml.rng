@@ -1557,6 +1557,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <attribute name="id"/>
     </optional>
     <optional>
+      <ref name="att.gender"/>
+    </optional>
+    <optional>
       <attribute name="useprefix">
         <choice>
           <value>yes</value>
