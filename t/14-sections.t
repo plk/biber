@@ -47,7 +47,7 @@ my $preamble = [
 
 my $head = q|% $ biblatex auxiliary file $
 % $ biblatex version 1.1 $
-% $ biber version 0.7.3 (beta)$
+% $ biber version 0.7.3 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
