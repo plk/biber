@@ -207,6 +207,7 @@ my $t2 = q|  \entry{t2}{misc}{}
     \count{uniquename}{0}
     \field{title}{Signs of W$\frac{o}{a}$nder}
     \field{year}{1994}
+    \field{pages}{100}
   \endentry
 
 |;

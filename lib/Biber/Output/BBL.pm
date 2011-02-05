@@ -343,7 +343,17 @@ sub set_output_entry {
   foreach my $rfield (@{$struc->get_field_type('range')}) {
     if ( my $rf = $be->get_field($rfield) ) {
       # range fields are an array ref of two-element array refs [range_start, range_end]
-      my $bbl_rf = join(', ', map {$_->[0] . '\bibrangedash' . ($_->[1] ? ' ' . $_->[1] : '')} @$rf);
+      # range_end can be be empty for open-ended range or undef
+      my @pr;
+      foreach my $f (@$rf) {
+        if (defined($f->[1])) {
+          push @pr, $f->[0] . '\bibrangedash' . ($f->[1] ? ' ' . $f->[1] : '');
+        }
+        else {
+          push @pr, $f->[0];
+        }
+      }
+      my $bbl_rf = join(', ', @pr);
       $acc .= "    \\field{$rfield}{$bbl_rf}\n";
     }
   }
