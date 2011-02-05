@@ -6,6 +6,8 @@
 
 # Have to explicitly include the Input* modules as the names of these are dynamically
 # constructed in the code so Par::Packer can't auto-detect them
+# Added libz as some linux distros like SUSE 11.3 have a slightly older zlib
+# which doesn't have gzopen64 in it
 
 /usr/local/perl/bin/pp \
   --compress=6 \
@@ -29,6 +31,7 @@
   --link=/usr/lib/libxml2.so.2 \
   --link=/usr/lib/libxslt.so.1 \
   --link=/usr/lib/libexslt.so.0 \
+  --link=/lib/libz.so.1 \
   --addlist=biber.files \
   --cachedeps=scancache \
   --output=biber-linux_x86_64 \
