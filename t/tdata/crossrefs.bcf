@@ -187,4 +187,15 @@
       <bcf:filter type="field">shorthand</bcf:filter>
     </bcf:sectionlist>
   </bcf:section>
+  <!-- SECTION 0 -->
+  <bcf:bibdata section="1">
+    <bcf:datasource type="file">crossrefs</bcf:datasource>
+  </bcf:bibdata>
+  <bcf:section number="1">
+    <bcf:citekey>cr5</bcf:citekey>
+    <bcf:sectionlist label="MAIN" type="entry"/>
+    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
+  </bcf:section>
 </bcf:controlfile>

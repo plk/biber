@@ -71,6 +71,7 @@ sub _init {
   $CONFIG->{options}{biblatex}{PER_ENTRY} = {};
   $CONFIG->{state}{control_file_location} = '';
   $CONFIG->{state}{seennamehash} = {};
+  $CONFIG->{state}{crossrefkeys} = {};
   $CONFIG->{state}{namehashcount} = {};
   $CONFIG->{state}{uniquenamecount} = {};
   $CONFIG->{state}{seen_nameyear_extrayear} = {};

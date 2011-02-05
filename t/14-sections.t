@@ -45,27 +45,30 @@ my $preamble = [
                 'String for Preamble 4'
                ];
 
-my $head = q|% $ biblatex auxiliary file $
-% $ biblatex version 1.1 $
-% $ biber version 0.7.3 $
+my $v = "$Biber::VERSION";
+$v .= ' (beta)' if $Biber::BETA_VERSION;
+
+my $head = qq|% \$ biblatex auxiliary file \$
+% \$ biblatex version 1.1 \$
+% \$ biber version $v \$
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
 % This file may safely be deleted. It will be recreated by
 % biber or bibtex as required.
 %
-\begingroup
-\makeatletter
-\@ifundefined{ver@biblatex.sty}
-  {\@latex@error
+\\begingroup
+\\makeatletter
+\\\@ifundefined{ver\@biblatex.sty}
+  {\\\@latex\@error
      {Missing 'biblatex' package}
      {The bibliography requires the 'biblatex' package.}
-      \aftergroup\endinput}
+      \\aftergroup\\endinput}
   {}
-\endgroup
+\\endgroup
 
-\preamble{%
-\v{S}tring for Preamble 1%
+\\preamble{%
+\\v{S}tring for Preamble 1%
 String for Preamble 2%
 String for Preamble 3%
 String for Preamble 4%

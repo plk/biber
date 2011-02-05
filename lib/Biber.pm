@@ -39,7 +39,7 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =cut
 
-our $VERSION = '0.7.3';
+our $VERSION = '0.7.4';
 our $BETA_VERSION = 0; # Is this a beta version?
 
 my $logger = Log::Log4perl::get_logger('main');
@@ -1335,9 +1335,7 @@ sub process_presort {
 
 =head2 process_lists
 
-    Put presort fields for an entry into the main Biber bltx state
-    so that it's all available in the same place since this can be
-    set per-type and globally too.
+    Sort and filter lists for a section
 
 =cut
 

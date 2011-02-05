@@ -1,5 +1,7 @@
 Revision history for Biber
 
+0.7.4  05-02-2011
+       * Fix for mincrossrefs leaking across sections (biblatex SF bug #3173032)
 0.7.3  03-02-2011
        * Performance tuning for sorting
        * Text::BibTeX 0.51 for increased macro stack space

@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 19;
+use Test::More tests => 20;
 
 use Biber;
 use Biber::Output::BBL;
@@ -24,9 +24,10 @@ Biber::Config->setoption('fastsort', 1);
 
 # Now generate the information
 $biber->prepare;
-my $section = $biber->sections->get_section(0);
-my $main = $section->get_list('MAIN');
-my $bibentries = $section->bibentries;
+my $section0 = $biber->sections->get_section(0);
+my $main0 = $section0->get_list('MAIN');
+my $section1 = $biber->sections->get_section(1);
+my $main1 = $section1->get_list('MAIN');
 my $out = $biber->get_output_obj;
 
 # crossref field is included as the parent is included by being crossrefed >= mincrossrefs times
@@ -409,24 +410,25 @@ my $mcr = q|  \entry{mcr}{inbook}{}
 |;
 
 
-is($out->get_output_entry($main,'cr1'), $cr1, 'crossref test 1');
-is($out->get_output_entry($main,'cr2'), $cr2, 'crossref test 2');
-is($out->get_output_entry($main,'crm'), $crm, 'crossref test 3');
-is($out->get_output_entry($main,'cr3'), $cr3, 'crossref test 4');
-is($out->get_output_entry($main,'crt'), $crt, 'crossref test 5');
-is($out->get_output_entry($main,'cr4'), $cr4, 'crossref test 6');
-is($section->has_citekey('crn'), 0,'crossref test 7');
-is($out->get_output_entry($main,'cr6'), $cr6, 'crossref test (inheritance) 8');
-is($out->get_output_entry($main,'cr7'), $cr7, 'crossref test (inheritance) 9');
-is($out->get_output_entry($main,'cr8'), $cr8, 'crossref test (inheritance) 10');
-is($out->get_output_entry($main,'xr1'), $xr1, 'xref test 1');
-is($out->get_output_entry($main,'xr2'), $xr2, 'xref test 2');
-is($out->get_output_entry($main,'xrm'), $xrm, 'xref test 3');
-is($out->get_output_entry($main,'xr3'), $xr3, 'xref test 4');
-is($out->get_output_entry($main,'xrt'), $xrt, 'xref test 5');
-is($out->get_output_entry($main,'xr4'), $xr4, 'xref test 6');
-is($section->has_citekey('xrn'), 0,'xref test 7');
-is($out->get_output_entry($main,'mxr'), $mxr, 'missing xref test');
-is($out->get_output_entry($main,'mcr'), $mcr, 'missing crossef test');
+is($out->get_output_entry($main0,'cr1'), $cr1, 'crossref test 1');
+is($out->get_output_entry($main0,'cr2'), $cr2, 'crossref test 2');
+is($out->get_output_entry($main0,'crm'), $crm, 'crossref test 3');
+is($out->get_output_entry($main0,'cr3'), $cr3, 'crossref test 4');
+is($out->get_output_entry($main0,'crt'), $crt, 'crossref test 5');
+is($out->get_output_entry($main0,'cr4'), $cr4, 'crossref test 6');
+is($section0->has_citekey('crn'), 0,'crossref test 7');
+is($out->get_output_entry($main0,'cr6'), $cr6, 'crossref test (inheritance) 8');
+is($out->get_output_entry($main0,'cr7'), $cr7, 'crossref test (inheritance) 9');
+is($out->get_output_entry($main0,'cr8'), $cr8, 'crossref test (inheritance) 10');
+is($out->get_output_entry($main0,'xr1'), $xr1, 'xref test 1');
+is($out->get_output_entry($main0,'xr2'), $xr2, 'xref test 2');
+is($out->get_output_entry($main0,'xrm'), $xrm, 'xref test 3');
+is($out->get_output_entry($main0,'xr3'), $xr3, 'xref test 4');
+is($out->get_output_entry($main0,'xrt'), $xrt, 'xref test 5');
+is($out->get_output_entry($main0,'xr4'), $xr4, 'xref test 6');
+is($section0->has_citekey('xrn'), 0,'xref test 7');
+is($out->get_output_entry($main0,'mxr'), $mxr, 'missing xref test');
+is($out->get_output_entry($main0,'mcr'), $mcr, 'missing crossef test');
+is($section1->has_citekey('crn'), 0,'mincrossrefs reset between sections');
 
 unlink <*.utf8>;
