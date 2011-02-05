@@ -187,6 +187,7 @@ my $t1 = q|  \entry{t1}{misc}{}
     \count{uniquename}{0}
     \field{title}{Normal things {$^{3}$}}
     \field{year}{1992}
+    \field{pages}{100\bibrangedash}
     \keyw{primary, something,somethingelse}
   \endentry
 
