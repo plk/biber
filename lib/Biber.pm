@@ -1383,8 +1383,8 @@ sub process_lists {
       $logger->debug("No sorting cache entry for '$llabel'");
       # Sorting
       $self->generate_sortinfo($list);       # generate the sort information
-      $self->sort_list($list);               # do a first (label) sort pass
-      $self->generate_extra($list);         # generate the extra* fields
+      $self->sort_list($list);               # sort the list
+      $self->generate_extra($list);          # generate the extra* fields
 
       # Cache the results
       $logger->debug("Adding sorting cache entry for '$llabel'");
