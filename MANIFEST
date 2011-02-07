@@ -73,6 +73,8 @@ t/19-related-entries.t
 t/20-sortlists.t
 t/pod-coverage.t
 t/pod.t
+t/tdata/papers.bib
+t/tdata/definitions.bib
 t/tdata/options.bcf
 t/tdata/encoding1.bcf
 t/tdata/encoding2.bcf
