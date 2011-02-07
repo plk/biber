@@ -208,41 +208,6 @@ sub set_output_entry {
     }
   }
 
-  if (my $unopt = Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'))) {
-    my $lname = $be->get_field('labelnamename');
-    my $name;
-    my $lastname;
-    my $nameinitstr;
-    my $un;
-
-    if ($lname) {
-      $name = $be->get_field($lname)->nth_element(1);
-      $lastname = $name->get_lastname;
-      $nameinitstr = $name->get_nameinitstring;
-    }
-    # uniquename is requested but there is no labelname or there are more than two names in
-    # labelname
-    if ($be->get_field('ignoreuniquename')) {
-      $un = '0';
-    }
-    # If there is one entry (hash) for the lastname, then it's unique
-    elsif (Biber::Config->get_numofuniquenames($lastname) == 1 ) {
-      $un = '0';
-    }
-    # Otherwise, if there is one entry (hash) for the lastname plus initials,
-    # the it needs the initials to make it unique
-    elsif (Biber::Config->get_numofuniquenames($nameinitstr) == 1 ) {
-      $un = '1';
-    }
-    # Otherwise the name needs to be full to make it unique
-    # but restricted to uniquename biblatex option value just in case
-    # this is inits only (1);
-    else {
-      $un = $unopt;
-    }
-    $acc .= "    \\count{uniquename}{$un}\n";
-  }
-
   if ( Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'))
     and Biber::Config->get_seennamehash($be->get_field('fullhash')) < 2 )
   {

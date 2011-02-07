@@ -33,7 +33,6 @@ my $encode1 = q|  \entry{testŠ}{book}{}
     \field{labelalpha}{Enc99}
     \field{sortinit}{E}
     \field{labelyear}{1999}
-    \count{uniquename}{0}
     \true{singletitle}
     \field{title}{Šome title}
     \field{year}{1999}
@@ -56,7 +55,6 @@ my $encode2 = q|  \entry{test1}{book}{}
     \field{labelalpha}{Enc99}
     \field{sortinit}{E}
     \field{labelyear}{1999}
-    \count{uniquename}{0}
     \true{singletitle}
     \field{title}{Söme title}
     \field{year}{1999}
@@ -79,7 +77,6 @@ my $encode3 = q|  \entry{test1}{book}{}
     \field{labelalpha}{Enc99}
     \field{sortinit}{E}
     \field{labelyear}{1999}
-    \count{uniquename}{0}
     \true{singletitle}
     \field{title}{Żome title}
     \field{year}{1999}
@@ -102,7 +99,6 @@ my $encode5 = q|  \entry{test}{book}{}
     \field{labelalpha}{Enc99}
     \field{sortinit}{E}
     \field{labelyear}{1999}
-    \count{uniquename}{0}
     \true{singletitle}
     \field{title}{à titlé}
     \field{year}{1999}
@@ -112,30 +108,7 @@ my $encode5 = q|  \entry{test}{book}{}
 
 my $encode6 = q|  \entry{test}{book}{}
     \name{labelname}{1}{}{%
-      {{}{Encalcer}{E}{Edward}{E}{}{}{}{}}%
-    }
-    \name{author}{1}{%
-      {{}{Encalcer}{E}{Edward}{E}{}{}{}{}}%
-    }
-    \list{publisher}{1}{%
-      {A press}%
-    }
-    \strng{namehash}{EE1}
-    \strng{fullhash}{EE1}
-    \field{labelalpha}{Enc99}
-    \field{sortinit}{E}
-    \field{labelyear}{1999}
-    \count{uniquename}{0}
-    \true{singletitle}
-    \field{title}{↑\`{a} titl\'{e}}
-    \field{year}{1999}
-  \endentry
-
-|;
-
-my $encode7 = q|  \entry{test}{book}{}
-    \name{labelname}{1}{}{%
-      {{}{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+      {{uniquename=0}{Encalcer}{E}{Edward}{E}{}{}{}{}}%
     }
     \name{author}{1}{}{%
       {{}{Encalcer}{E}{Edward}{E}{}{}{}{}}%
@@ -148,7 +121,28 @@ my $encode7 = q|  \entry{test}{book}{}
     \field{labelalpha}{Enc99}
     \field{sortinit}{E}
     \field{labelyear}{1999}
-    \count{uniquename}{0}
+    \true{singletitle}
+    \field{title}{↑\`{a} titl\'{e}}
+    \field{year}{1999}
+  \endentry
+
+|;
+
+my $encode7 = q|  \entry{test}{book}{}
+    \name{labelname}{1}{}{%
+      {{uniquename=0}{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+    }
+    \list{publisher}{1}{%
+      {A press}%
+    }
+    \strng{namehash}{EE1}
+    \strng{fullhash}{EE1}
+    \field{labelalpha}{Enc99}
+    \field{sortinit}{E}
+    \field{labelyear}{1999}
     \true{singletitle}
     \field{title}{{$\uparrow$}\`{a} titl\'{e}}
     \field{year}{1999}

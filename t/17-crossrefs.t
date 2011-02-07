@@ -378,11 +378,11 @@ my $xr4 = q|  \entry{xr4}{inbook}{}
 # Missing keys in xref/crossref should be deleted during datasource parse
 # So these two should have no xref/crossref data in them
 my $mxr = q|  \entry{mxr}{inbook}{}
-    \name{labelname}{1}{%
-      {{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
+    \name{labelname}{1}{}{%
+      {{}{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
     }
-    \name{author}{1}{%
-      {{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
+    \name{author}{1}{}{%
+      {{}{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
     }
     \strng{namehash}{MM2}
     \strng{fullhash}{MM2}
@@ -394,11 +394,11 @@ my $mxr = q|  \entry{mxr}{inbook}{}
 |;
 
 my $mcr = q|  \entry{mcr}{inbook}{}
-    \name{labelname}{1}{%
-      {{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
+    \name{labelname}{1}{}{%
+      {{}{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
     }
-    \name{author}{1}{%
-      {{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
+    \name{author}{1}{}{%
+      {{}{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
     }
     \strng{namehash}{MM2}
     \strng{fullhash}{MM2}

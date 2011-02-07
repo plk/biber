@@ -184,11 +184,11 @@ my $kck3 = q|  \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
 |;
 
 my $kck4 = q|  \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly}
-    \name{labelname}{1}{%
-      {{Author}{A.}{}{}{}{}{}{}}%
+    \name{labelname}{1}{}{%
+      {{}{Author}{A.}{}{}{}{}{}{}}%
     }
-    \name{author}{1}{%
-      {{Author}{A.}{}{}{}{}{}{}}%
+    \name{author}{1}{}{%
+      {{}{Author}{A.}{}{}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Location}%
