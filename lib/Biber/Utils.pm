@@ -1,4 +1,6 @@
 package Biber::Utils;
+#use feature 'unicode_strings';
+
 use strict;
 use warnings;
 use Carp;
@@ -7,8 +9,8 @@ use File::Find;
 use File::Spec;
 use IPC::Cmd qw( can_run run );
 use List::Util qw( first );
-use LaTeX::Decode 0.03;
 use Biber::Constants;
+use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
 use Regexp::Common qw( balanced );
 use re 'eval';
@@ -33,8 +35,8 @@ All functions are exported by default.
 
 our @EXPORT = qw{ locate_biber_file makenameid stringify_hash
   normalise_string normalise_string_lite normalise_string_underscore normalise_string_sort
-  reduce_array remove_outer add_outer ucinit strip_nosort_name
-  strip_nosortdiacritics strip_nosortprefix is_def is_undef is_def_and_notnull is_def_and_null
+  reduce_array remove_outer add_outer ucinit strip_nosort
+  is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8};
 
 =head1 FUNCTIONS
@@ -46,6 +48,7 @@ our @EXPORT = qw{ locate_biber_file makenameid stringify_hash
   For the exact path if the filename is absolute
   In the output_directory, if defined
   Relative to the current directory
+  In the same directory as the control file
   Using kpsewhich, if available
 
 =cut
@@ -60,16 +63,38 @@ sub locate_biber_file {
     $outfile = File::Spec->catfile($outdir, $filename);
   }
 
-  if (File::Spec->file_name_is_absolute($filename)) {
+  # Filename is absolute
+  if (File::Spec->file_name_is_absolute($filename) and -e $filename) {
     return $filename;
   }
-  elsif (defined($outfile) and -e $outfile) {
+
+  # File is output_directory
+  if (defined($outfile) and -e $outfile) {
     return $outfile;
   }
-  elsif (-e $filename) {
+
+  # File is relative to cwd
+  if (-e $filename) {
     return $filename;
   }
-  elsif (can_run('kpsewhich')) {
+
+  # File is where control file lives
+  if (my $cfp = Biber::Config->get_ctrlfile_path) {
+    my ($ctlvolume, $ctldir, undef) = File::Spec->splitpath($cfp);
+    if ($ctlvolume) { # add vol sep for windows if volume is set and there isn't one
+      $ctlvolume .= ':' unless $ctlvolume =~ /:\z/;
+    }
+    if ($ctldir) { # add path sep if there isn't one
+      $ctldir .= '/' unless $ctldir =~ /\/\z/;
+    }
+
+    my $path = "$ctlvolume$ctldir$filename";
+
+    return $path if -e $path;
+  }
+
+  # File is in kpse path
+  if (can_run('kpsewhich')) {
     my $found;
     scalar run( command => [ 'kpsewhich', $filename ],
                 verbose => 0,
@@ -100,45 +125,53 @@ sub makenameid {
   return normalise_string_underscore($tmp);
 }
 
-=head2 strip_nosort_name
+=head2 latex_recode_output
+
+  Tries to convert UTF-8 to TeX macros in passes string
+
+=cut
+
+sub latex_recode_output {
+  my $string = shift;
+  $logger->info('Converting UTF-8 to TeX macros on output to .bbl');
+  require Biber::LaTeX::Recode;
+  return Biber::LaTeX::Recode::latex_encode($string,
+                                            scheme => Biber::Config->getoption('bblsafecharsset'));
+};
+
+=head2 strip_nosort
 
 Removes elements which are not to be used in sorting a name from a string
 
 =cut
 
-sub strip_nosort_name {
-  my ($string) = @_;
+sub strip_nosort {
+  my $string = shift;
+  my $fieldname = shift;
   return '' unless $string; # Sanitise missing data
-  $string = strip_nosortprefix($string); # First remove prefix ...
-  $string = strip_nosortdiacritics($string); # ... then diacritics
-  return $string;
-}
-
-=head2 strip_nosortdiacritics
-
-Removes diacritics from a string
-
-=cut
-
-sub strip_nosortdiacritics {
-  my ($string) = @_;
-  return '' unless $string; # Sanitise missing data
-  my $sds = Biber::Config->getoption('nosortdiacritics');
-  $string =~ s/$sds//gxms;
-  return $string;
-}
-
-=head2 strip_nosortprefix
-
-Removes prefix from a string
-
-=cut
-
-sub strip_nosortprefix {
-  my ($string) = @_;
-  return '' unless $string; # Sanitise missing data
-  my $spr = Biber::Config->getoption('nosortprefix');
-  $string =~ s/\A$spr//xms;
+  my $nosort = Biber::Config->getoption('nosort');
+  # Strip user-defined REs from string
+  my $restrings;
+  # Specific fieldnames override types
+  if (exists($nosort->{$fieldname})) {
+    $restrings = $nosort->{$fieldname};
+  }
+  else { # types
+    foreach my $ns (keys %$nosort) {
+      next unless $ns =~ /\Atype_/xms;
+      if ($NOSORT_TYPES{$ns}{$fieldname}) {
+        $restrings = $nosort->{$ns};
+      }
+    }
+  }
+  # If no nosort to do, just return string
+  return $string unless $restrings;
+  # Config::General can't force arrays per option and don't want to set this globally
+  $restrings = [ $restrings ] unless ref($restrings) eq 'ARRAY';
+  foreach my $re (@$restrings) {
+    $re = qr/$re/;
+    $string =~ s/$re//gxms;
+  }
   return $string;
 }
 
@@ -153,14 +186,18 @@ normalising strings for sorting since they don't appear in the output.
 
 sub normalise_string_sort {
   my $str = shift;
+  my $fieldname = shift;
   return '' unless $str; # Sanitise missing data
+  # First strip nosort REs
+  $str = strip_nosort($str, $fieldname);
   # First replace ties with spaces or they will be lost
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
   # Replace LaTeX chars by Unicode for sorting
   # Don't bother if output is UTF-8 as in this case, we've already decoded everthing
   # before we read the file (see Biber.pm)
   unless (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
-    $str = latex_decode($str, strip_outer_braces => 1);
+    $str = latex_decode($str, strip_outer_braces => 1,
+                              scheme => Biber::Config->getoption('decodecharsset'));
   }
   return normalise_string_common($str);
 }
@@ -179,7 +216,8 @@ sub normalise_string {
   # First replace ties with spaces or they will be lost
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
   if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
-    $str = latex_decode($str, strip_outer_braces => 1);
+    $str = latex_decode($str, strip_outer_braces => 1,
+                              scheme => Biber::Config->getoption('decodecharsset'));
   }
   return normalise_string_common($str);
 }
@@ -391,6 +429,7 @@ sub is_null {
 
 sub is_notnull {
   my $arg = shift;
+  return undef unless defined($arg);
   my $st = is_notnull_scalar($arg);
   if (defined($st) and $st) { return 1; }
   my $at = is_notnull_array($arg);

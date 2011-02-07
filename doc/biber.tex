@@ -17,7 +17,7 @@
   url={http://biblatex-biber.sourceforge.net},
   author={François Charette, Philip Kime},
   email={firmicus@ankabut.net, Philip@kime.org.uk},
-  revision={biber 0.7.2 (biblatex 1.1a)},
+  revision={biber 0.7.4 (biblatex 1.1b)},
   date={\today}}
 
 \hypersetup{%
@@ -97,27 +97,29 @@ preparation and file encoding.
 
 \verb+biber+ was designed specifically for \verb+biblatex+ in order to
 provide a powerful backend engine which could deal with any required
-tasks to do with \verb+.bbl+ preparation. It can
+tasks to do with \verb+.bbl+ preparation. Its main features are:
 
 \begin{itemize}
-\item Deal with the full range of UTF-8
-\item Sort in a completely customisable manner, using when available,
+\item Deals with the full range of UTF-8
+\item Sorts in a completely customisable manner, using when available,
   CLDR collation tailorings
-\item Per-type options (including sorting schemes)
-\item Automatically encode the \verb+.bbl+ into any supported encoding
+\item Allows for per-entrytype options
+\item Automatically encodes the \verb+.bbl+ into any supported encoding
   format\footnote{«Supported» here means encodings supported by the
     Perl \texttt{Encode} module}
-\item Process all bibliography sections in one pass of the tool
-\item Handle UTF-8 citekeys and filenames (given a suitable fully
+\item Processes all bibliography sections in one pass of the tool
+\item Handles UTF-8 citekeys and filenames (given a suitable fully
   UTF-8 compliant TeX engine)
-\item Create entry sets dynamically and allow easily defined static entry sets,
+\item Creates entry sets dynamically and allow easily defined static entry sets,
   all processed in one pass
 \item Flexible user-customisable crossreference field inheritance
   model\footnote{In BibLaTeX 1.2}
-\item Support for linked entries, to enable generic treatment of things
+\item Support for related entries, to enable generic treatment of things
   like «translated as», «reprinted as», «reprint of» etc.\footnote{In BibLaTeX 1.2}
-\item Handle very complex auto-expansion and contraction of names and
+\item Handles very complex auto-expansion and contraction of names and
   namelists\footnote{In BibLaTeX 1.3}
+\item Extensible modular data sources architecture for ease of adding
+  more data source types.
 \end{itemize}
 
 \subsection{Acknowledgements}
@@ -201,8 +203,7 @@ hard-coded defaults:
 
 \begin{verbatim}
 allentries          0
-bibdata             undef
-bibdatatype         bibtex
+bibdata             undef 
 bblencoding         UTF-8
 bibencoding         UTF-8
 collate             1
@@ -213,8 +214,13 @@ debug               0
 fastsort            0
 mincrossrefs        2
 nolog               0
-nosortdiacritics    [\x{2bf}\x{2018}]
-nosortprefix        \p{L}{2}\p{Pd}
+nostdmacros         0
+<nosort>
+  # ignore prefices like 'al-' when sorting name fields
+  type_names      \A\p{L}{2}\p{Pd}
+  # ignore diacritics when sorting author
+  type_names      [\x{2bf}\x{2018}]
+</nosort>
 onlylog             0
 quiet               0
 sortcase            true
@@ -237,23 +243,108 @@ options by setting options in \verb+biblatex+ which will pass them to
 \verb+biber+ via the \verb+.bcf+ file.
 
 The \verb+--collate_options|-c+ option takes a number of key/value pairs as
-value. See section \ref{coll} for details. The value of the \verb+nosort*+
-options can only be set in the config file and not on the command line.
-This is because the values are Perl regular expressions and would need
-special quoting to set on the command line. This can get a bit tricky on
-some OSes (like Windows) so it's safer to set them in the config file. In
-any case, it's unlikely you would want to set them for particular
-\verb+biber+ runs; they would more likely be set as your personal default
-and thus they would naturally be set in the config file anway. They specify
-stand-alone diacritic marks and name prefices to strip before sorting takes
-place and are designed to deal with cases like
+value. See section \ref{coll} for details.
+
+\subsubsection{The nosort option}
+
+The value of the \verb+nosort+ option can only be set in the config file
+and not on the command line. This is because the values are Perl regular
+expressions and would need special quoting to set on the command line. This
+can get a bit tricky on some OSes (like Windows) so it's safer to set them
+in the config file. In any case, it's unlikely you would want to set them
+for particular \verb+biber+ runs; they would more likely be set as your
+personal default and thus they would naturally be set in the config file
+anyway. \verb+nosort+ allows you to ignore parts of a field for sorting.
+This is done using \verb+perl+ regular expressions which specify what to
+ignore in a field. You can specify as many patterns as you like for a
+specific field. Also available are some field type aliases so you can, for
+example, specify patterns for all name fields or all title fields. These
+field types all begin with the string «\verb+type_+», see Table
+\ref{tab:nst}.
+
+\begin{table}
+\begin{center}
+\small
+\begin{tabular}{lllll}
+\toprule
+Alias & Fields\\
+\midrule
+type\_name & author\\
+          & afterword\\
+          & annotator\\
+          & bookauthor\\
+          & commentator\\
+          & editor\\
+          & editora\\
+          & editorb\\
+          & editorc\\
+          & foreword\\
+          & holder\\
+          & introduction\\
+          & namea\\
+          & nameb\\
+          & namec\\
+          & shortauthor\\
+          & shorteditor\\
+          & translator\\
+type\_title & booktitle\\
+           & eventtitle\\
+           & issuetitle\\
+           & journaltitle\\
+           & maintitle\\
+           & origtitle\\
+           & title\\
+\bottomrule
+\end{tabular}
+\end{center}
+\caption{nosort option field type aliases}
+\label{tab:nst}
+\end{table}
+
+For example, this option can be used to ignore diacritic marks and prefices
+in names which should not be considered when sorting. Given (the default):
 
 \begin{verbatim}
-  author	   = {{al-Hasan}, ʿAlī},
+<nosort>
+  type_names      \A\p{L}{2}\p{Pd}
+  type_names      [\x{2bf}\x{2018}]
+</nosort>
 \end{verbatim}
 
-\noindent where the prefix «al-» and the diacritic «ʿ» should not be
-considered when sorting.
+and the \verb+.bib+ entry:
+
+\begin{verbatim}
+author	   = {{al-Hasan}, ʿAlī},
+\end{verbatim}
+
+\noindent the prefix «al-» and the diacritic «ʿ» will not be considered
+when sorting. See the \verb+perl+ regular expression manual page for
+details of the regular expression syntax\footnote{\url{http://perldoc.perl.org/perlre.html}}.
+
+If a \verb+nosort+ option is found for a specific field, it will override
+any option for a type which also covers that field.
+
+Here is another example. Suppose you wanted to ignore «The» at the
+beginning of a \verb+TITLE+ field when sorting, you could add this to your
+\verb+biber.conf+:
+
+\begin{verbatim}
+<nosort>
+  title      \AThe\s+
+</nosort>
+\end{verbatim}
+
+\noindent If you wanted to do this for all title fields listed in Table
+\ref{tab:nst}, then you would do this:
+
+\begin{verbatim}
+<nosort>
+  type_title      \AThe\s+
+</nosort>
+\end{verbatim}
+
+\noindent \textbf{Note:} \verb+nosort+ can be specified for most fields but
+not for things like dates and special fields as that wouldn't make much sense.
 
 \subsection{Input/Output File Locations}
 
@@ -261,7 +352,7 @@ considered when sorting.
 
 The control file is normally passed as the only argument to biber
 (unless using \verb+--allentries|-a+ and \verb+--bibdata|-d+). It is
-searched for using the following locations, in decreasing order of
+searched for in the following locations, in decreasing order of
 priority:\\[2ex]
 
 \noindent Absolute filename $\rightarrow$\\
@@ -271,12 +362,19 @@ priority:\\[2ex]
 
 \subsubsection{Database files}
 
-Bibliography database files are searched for using the same rule as for
-control files (see section \ref{loc:cf} above). Unless using the
-\verb+--bibdata|-d+ option, users usually do not specify explicitly the
-bibliography database files; they are normally passed in the \verb+.bcf+
-control file, taken from the \verb+biblatex + \verb+\bibliography{}+
-command arguments.
+Bibliography database files are searched for in the following locations, in
+decreasing order of priority:\\[2ex]
+
+\noindent Absolute filename $\rightarrow$\\
+\hspace*{1em}In the \verb+--output_directory+, if specified$\rightarrow$\\
+\hspace*{2em}Relative to current directory$\rightarrow$\\
+\hspace*{3em}In the same directory as the control file$\rightarrow$\\
+\hspace*{4em}Using \verb+kpsewhich+, if available\\[2ex]
+
+\noindent Unless using the \verb+--bibdata|-d+ option, users usually do not
+specify explicitly the bibliography database files; they are normally
+passed in the \verb+.bcf+ control file, taken from the \verb+biblatex+
+\verb+\bibliography{}+ command arguments.
 
 \subsection{Logfile}
 
@@ -409,71 +507,23 @@ reverse order at UCA level 2.
 \verb+biber+ takes care of reencoding the \verb+.bib+ data as
 necessary. In normal use, \verb+biblatex+ passes its
 \verb+bibencoding+ option value to \verb+biber+ via the \verb+.bcf+
-file. It also passes an option \verb+bblencoding+ the value of which
-is derived from the \verb+inputenc+ package setting (if the user is
-using this package), otherwise «utf8» (for XeTeX or LuaTeX) or
-«ascii» (any other TeX engine).
+file. It also passes the value of its \verb+texencoding+ option (which
+maps to \verb+biber+'s \verb+bblencoding|-E+ option) the default value
+of which depends on which TeX engine and encoding packages you are
+using (see \verb+biblatex+ manual for details).
 
 \noindent \verb+biber+ performs the following tasks:
 
 \begin{enumerate}
 \item Decodes the \verb+.bib+ into UTF-8 if it is not UTF-8 already
-\item Decodes LaTeX character macros into UTF-8
+\item Decodes LaTeX character macros into UTF-8 if \verb+--bblencoding|-E+
+  is UTF-8
 \item Encodes the output so that the \verb+.bbl+ is in
-  the encoding that \verb+bblencoding+ specifies
+  the encoding that \verb+--bblencoding|-E+ specifies
 \item Warns if it is asked to output to the \verb+.bbl+ any UTF-8
   decoded LaTeX character macros which are not in the
-  \verb+bblencoding+ encoding. Replaces with a diacritic-stripped substitute
+  \verb+--bblencoding|-E+ encoding. Replaces with a suitable LaTeX macro
 \end{enumerate}
-
-\noindent As you can see from item 2 above, by default, \verb+biber+
-converts LaTeX character macros into UTF-8 internally. This is very
-useful as it means that things are sorted correctly but has two
-potential (albeit rarely encountered) problems which you should be aware of:
-
-\begin{itemize}
-\item If you are using PDFLaTeX and \verb+\usepackage[utf8]{inputenc}+, it
-  is possible that the UTF-8 characters resulting from \verb+biber+'s
-  internal LaTeX character macro decoding break \verb+inputenc+. This
-  is because \verb+inputenc+ does not implement all of UTF-8, only a
-  commonly used subset. 
-
-  An example--if you had \verb+\DJ+ in your \verb+.bib+,
-  \verb+biber+ decodes this correctly to «Đ» and this breaks \verb+inputenc+
-  because it doesn't understand that UTF-8 character. The solution
-  here is to switch to a TeX engine with full UTF-8 support like XeTeX or
-  LuaTeX as these don't use or need \verb+inputenc+.
-\item If your \verb+bblencoding+ is not UTF-8, and you are using some
-  UTF-8 equivalent LaTeX character macros in your \verb+.bib+, then
-  some \verb+.bbl+ fields (currently only \verb+\sortinit{}+) might
-  end up with invalid characters in them, according to the \verb+.bbl+
-  encoding. This is because some fields must be generated from the
-  final sorting data which is only available after the LaTeX character
-  macro decoding step.
-
-  For example, suppose you were using PDFLaTeX with\\
-  \verb+\usepackage[latin1]{inputenc}+ and the following
-  \verb+.bib entry+
-
-  \begin{verbatim}
-    @BOOK{citekey1,
-      AUTHOR = {{\v S}imple, Simon},
-    }
-  \end{verbatim}
-
-  \noindent With normal LaTeX character macro decoding, the
-  \verb+{\v S}+ is decoded into «Š» and so with name-first sorting,
-  \verb+\sortinit{}+ would be «Š». This is an invalid character in
-  latin1 encoding and so the \verb+.bbl+ would be broken. In such
-  cases when \verb+\sortinit{}+ is a char not valid in the
-  \verb+bblencoding+, \verb+biber+ strips off any diacritics which in
-  this case results in «S». This is not ideal as this is not the
-  initial character of the string used for sorting any more but it's a
-  decent replacement in such cases. The solution is really
-  to use UTF-8 \verb+bblencoding+ wherever possible. In extreme cases like
-  the one above, this might also mean switching TeX engines to one that
-  supports full UTF-8.
-\end{itemize}
 
 \noindent Normally, you do not need to set the encoding options on the
 \verb+biber+ command line as they are passed in the \verb+.bcf+ via
@@ -486,17 +536,111 @@ of preference:\\[2ex]
 \hspace*{1em}\verb+biber+ config file $\rightarrow$\\
 \hspace*{2em}\verb+.bcf+ control file
 
+\subsubsection{LaTeX macro decoding}
+
+\noindent As mentioned above, \verb+biber+ sometimes converts LaTeX
+character macros into UTF-8. In fact there are two situations in which
+this occurs.
+
+\begin{enumerate}
+\item When \verb+--bblencoding|-E+ is UTF-8
+\item Always for internal sorting purposes
+\end{enumerate}
+
+\noindent This decoding is very useful but take note of the following
+two scenarios, which relate to each of the two situations in which
+LaTeX macro decoding occurs:
+
+\minisec{Decoding when output is UTF-8}
+If you are using PDFLaTeX and \verb+\usepackage[utf8]{inputenc}+, it
+is possible that the UTF-8 characters resulting from \verb+biber+'s
+internal LaTeX character macro decoding break \verb+inputenc+. This is
+because \verb+inputenc+ does not implement all of UTF-8, only a
+commonly used subset.
+
+An example--if you had \verb+\DJ+ in your \verb+.bib+, \verb+biber+
+decodes this correctly to «Đ» and this breaks \verb+inputenc+ because
+it doesn't understand that UTF-8 character. The real solution here is
+to switch to a TeX engine with full UTF-8 support like XeTeX or LuaTeX
+as these don't use or need \verb+inputenc+. However, you can also try
+the \verb+--bblsafechars+ option which will try to convert any UTF-8
+chars into LaTeX macros on output. The \verb+biblatex+ option
+«\verb+texencoding=ascii+» (which corresponds to the \verb+biber+
+option «\verb+--bblencoding|-E+») will automatically set
+\verb+--bblsafechars+.
+
+See also the \verb+biber --help+ output for the
+\verb+--bblsafecharsset+ option which can customise the set of
+conversion characters to use.
+
+\minisec{Decoding for internal sorting}
+
+If your \verb+bblencoding+ is not UTF-8, and you are using some UTF-8
+equivalent LaTeX character macros in your \verb+.bib+, then some
+\verb+.bbl+ fields (currently only \verb+\sortinit{}+) might end up
+with invalid characters in them, according to the \verb+.bbl+
+encoding. This is because some fields must be generated from the final
+sorting data which is only available after the LaTeX character macro
+decoding step.
+
+For example, suppose you are using PDFLaTeX with\\
+\verb+\usepackage[latin1]{inputenc}+ and the following \verb+bibtex+
+data source entry:
+
+\begin{verbatim}
+@BOOK{citekey1,
+  AUTHOR = {{\v S}imple, Simon},
+}
+\end{verbatim}
+
+\noindent With normal LaTeX character macro decoding, the
+\verb+{\v S}+ is decoded into «Š» and so with name-first sorting,
+\verb+\sortinit{}+ would be «Š». This is an invalid character in
+latin1 encoding and so the \verb+.bbl+ would be broken. In such cases
+when \verb+\sortinit{}+ is a char not valid in the \verb+bblencoding+,
+\verb+biber+ tries to replace the character with a suitable LaTeX
+macro. The solution is really to use UTF-8 \verb+.bbl+ encoding whenever
+possible. In extreme cases where even with UTF-8 encoding,
+the char is not recognised by LaTeX due to an incomplete UTF-8
+implementation (as with \verb+inputenc+), this might also mean
+switching TeX engines to one that supports full UTF-8.
+
 \subsubsection{Examples}
 
 \biberex{biber}
 
-\noindent Read \verb+bibencoding+ and \verb+bblencoding+ from the
+\noindent Set \verb+bibencoding+ and \verb+bblencoding+ from the
 config file or \verb+.bcf+.
 
 \biberex{biber --bblencoding=latin2}
 
 \noindent Encode the \verb+.bbl+ as latin2, overriding the
 \verb+.bcf+.
+
+\biberex{biber --bblsafechars}
+
+\noindent Set \verb+bibencoding+ and \verb+bblencoding+ from the
+config file or \verb+.bcf+. Force encoding of UTF-8 chars to LaTeX
+macros using default conversion set.
+
+\biberex{biber --bblencoding=ascii}
+
+\noindent Encode the \verb+.bbl+ as ascii, overriding the
+\verb+.bcf+. Automatically sets \verb+--bblsafechars+ to force UTF-8
+to LaTeX macro conversion.
+
+\biberex{biber --bblencoding=ascii --bblsafecharsset=full}
+
+\noindent Encode the \verb+.bbl+ as ascii, overriding the
+\verb+.bcf+. Automatically sets \verb+--bblsafechars+ to force UTF-8
+to LaTeX macro conversion using the full set of conversions
+
+\biberex{biber --decodecharsset=full}
+
+\noindent Set \verb+bibencoding+ and \verb+bblencoding+ from the
+config file or \verb+.bcf+. Use the full LaTeX macro to UTF-8
+conversion set because you have some more obscure character macros in
+your \verb+.bib+ which you want to sort correctly
 
 \biberex{biber -u}
 
@@ -508,18 +652,13 @@ config file or \verb+.bcf+.
 
 \subsection{Limitations}
 
-Currently, users are restricted to the bibliography entry types hard-coded
-into \verb+biblatex+. This is mitigated a little by the custom fields
-listed in section 2.2.4 of the \verb+bibatex+ manual but these are not
-portable or semantically obvious in their meaning. It is planned to have a
-customisable interface in \verb+biblatex+ which will allow users to define
-entry types an fields and have these passed through to \verb+biber+ which
-will validate the structure of the bibliography against these definitions.
-This would allow a fully customisable data model interface. Currently this
-is impossible due to a reliance on the \verb+.bib+ format which is quite
-restricted in scope and extensibility. It is likely that \verb+biblatex+
-and \verb+biber+ will move to a modular data layer with an XML format as
-the default. \verb+.bib+ support will be maintained as a legacy format.
+Currently, users are restricted to a one-one mapping from datasource
+entry types/fields to the \verb+biblatex+ supported entry type/fields.
+This is mitigated a little by the type/field aliases which
+\verb+biblatex+ supports. In the future, users will be able to
+customise the data source driver config in order to define their own
+entry type/field aliases so that there is more flexibility in mapping
+data source entry type/fields to internal \verb+biblatex+ types/fields.
 
 Currently it is not possible to automatically expand name lists to their
 minimally unique truncation which is required by some styles (APA for
@@ -565,7 +704,7 @@ this:
 \end{verbatim}
 
 \noindent However you add the command to \verb+TeX-command-list+, customise the
-actual \verb+Biber+ command parameters as you want them, using ``\verb+%s+" as
+actual \verb+Biber+ command parameters as you want them, using «\verb+%s+» as
 the LaTeX file name place holder. Then define the following two functions
 in your \verb+.emacs+.
 
@@ -680,6 +819,17 @@ Source & Target & Source field & $\rightarrow$ & Target field\\
 \label{tab:ct}
 \end{table}
 
+\subsection{BibTeX macros}
+
+\verb+BibTeX+ defines automatically macros for month abbreviations
+like «\verb+jan+», «\verb+feb+» etc. \verb+biber+ also does this,
+defining them as numbers since that is what \verb+biblatex+ wants. In
+case you are also defining these yourself (although if you are only
+using \verb+biblatex+, there isn't much point), you will get macro
+redefinition warnings from the \verb+btparse+ library. You can turn
+off \verb+biber+'s macro definitions to avoid this by using the option
+\verb+--nostdmacros+.
+
 \section{Binaries}
 
 The binary distributions of biber are made using the Perl \verb+PAR::Packer+
@@ -692,11 +842,16 @@ is worth noting:
   and so the binaries look larger than what actually runs in memory.
 \item On the first run of a new version (that is, with a specific hash),
   they actually unpack themselves to a temporary location which varies by
-  operating system. This unpacking can take a little while and only happens on
-  the first run of a new version.
+  operating system. This unpacking can take a little while and only happens
+  on the first run of a new version. \textbf{Please don't kill the process
+    if it seems to take some time to do anything on the first run of a new
+    binary}. If you do, it will not unpack everything and it will almost
+  certainly break \verb+biber+. You will then have to delete your binary
+  cache (see section \ref{bc} below) and re-run the \verb+biber+ executable
+  again for the first time to allow it to unpack properly.
 \end{itemize}
 
-\subsection{Binary Caches}
+\subsection{Binary Caches}\label{bc}
 
 \verb+PAR::Packer+ works by unpacking the required files to a cache
 location. It only does this on the first run of a binary 

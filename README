@@ -15,15 +15,15 @@ REQUIREMENTS
   should be automatically installed during the install process described
   below.
 
-    * Unicode::Collate 0.68 or higher
+    * Unicode::Collate 0.72 or higher
     * IPC::Cmd and IPC::Run
     * File::Slurp::Unicode
     * Readonly (but Readonly::XS is highly recommended for performance reasons)
-    * LaTeX::Decode
     * List::AllUtils
     * Log::Log4perl
     * XML::LibXML::Simple (XML::LibXML clone of XML::Simple)
-    * Text::BibTeX (requires Config::AutoConf when installing - please install this first.)
+    * Text::BibTeX 0.5.1 or higher (requires Config::AutoConf when
+      installing - please install this first.)
 
 INSTALLATION
 

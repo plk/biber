@@ -13,7 +13,7 @@ chdir("t/tdata") ;
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
-$biber->parse_ctrlfile('structure-aliases.bcf');
+$biber->parse_ctrlfile('bibtex-aliases.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 
 # Options - we could set these in the control file but it's nice to see what we're
@@ -29,7 +29,7 @@ $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 
-my $w1 = ["Field 'school' is an alias for field 'institution' but both are defined in entry with key 'alias2' - skipping field 'school'",
+my $w1 = ["Field 'school' is aliased to field 'institution' but both are defined in entry with key 'alias2' - skipping field 'school'",
           "Entry 'alias2' - invalid entry type 'thing' - defaulting to 'misc'",
           "Entry 'alias2' - invalid field 'institution' for entrytype 'misc'"
 ];
@@ -42,4 +42,4 @@ is($bibentries->entry('alias2')->get_field('entrytype'), 'misc', 'Alias - 5' );
 is_deeply($bibentries->entry('alias2')->get_field('warnings'), $w1, 'Alias - 6' ) ;
 is($bibentries->entry('alias2')->get_field('school'), undef, 'Alias - 7' );
 
-unlink "*.utf8";
+unlink <*.utf8>;

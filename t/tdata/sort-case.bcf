@@ -141,6 +141,10 @@
     <bcf:citekey>CS1</bcf:citekey>
     <bcf:citekey>CS2</bcf:citekey>
     <bcf:citekey>CS3</bcf:citekey>
+    <bcf:sectionlist label="MAIN" type="entry"/>
+    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
   </bcf:section>
 </bcf:controlfile>
 

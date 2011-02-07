@@ -1,4 +1,5 @@
 package Biber::Output::BBL;
+#use feature 'unicode_strings';
 use base 'Biber::Output::Base';
 
 use Biber::Config;
@@ -71,7 +72,7 @@ sub set_output_target_file {
   if (Biber::Config->getoption('bblencoding')) {
     $enc_out = ':encoding(' . Biber::Config->getoption('bblencoding') . ')';
   }
-  my $BBLFILE = IO::File->new($bblfile, ">$enc_out") or $logger->croak("Failed to open $bblfile : $!");
+  my $BBLFILE = IO::File->new($bblfile, ">$enc_out") or $logger->logdie("Failed to open $bblfile : $!");
   $self->set_output_target($BBLFILE);
 }
 
@@ -122,13 +123,12 @@ sub set_output_undefkey {
 
   $acc .= "  \\missing{$key}\n";
 
-  # Use an array to preserve sort order of entries already generated
-  # Also create an index by keyname for easy retrieval
-  push @{$self->{output_data}{ENTRIES}{$secnum}{strings}}, \$acc;
+  # Create an index by keyname for easy retrieval
   $self->{output_data}{ENTRIES}{$secnum}{index}{lc($key)} = \$acc;
 
   return;
 }
+
 
 =head2 set_output_entry
 
@@ -144,21 +144,18 @@ sub set_output_entry {
   my $struc = shift; # Structure object
   my $acc = '';
   my $opts = '';
-  my $citecasekey; # entry key forced to case of any citations(s) which reference it
+  my $citekey; # entry key in original form (case) from citation
   my $secnum = $section->number;
 
-  if ( $be->get_field('citecasekey') ) {
-    $citecasekey = $be->get_field('citecasekey');
+  if ( $be->get_field('citekey') ) {
+    $citekey = $be->get_field('citekey');
   }
 
   if ($be->field_exists('options')) {
     $opts = $be->get_field('options');
   }
 
-  $acc .= "% sortstring = " . $be->get_field('sortstring') . "\n"
-    if (Biber::Config->getoption('debug') || Biber::Config->getblxoption('debug'));
-
-  $acc .= "  \\entry{$citecasekey}{" . $be->get_field('entrytype') . "}{$opts}\n";
+  $acc .= "  \\entry{$citekey}{" . $be->get_field('entrytype') . "}{$opts}\n";
 
   # Generate set information
   if ( $be->get_field('entrytype') eq 'set' ) {   # Set parents get \set entry ...
@@ -205,6 +202,7 @@ sub set_output_entry {
 
   # then names themselves
   foreach my $namefield (@{$struc->get_field_type('name')}) {
+    next if $struc->is_field_type('skipout', $namefield);
     if ( my $nf = $be->get_field($namefield) ) {
       # If this name is labelname, we've already deleted the "others"
       # so just add the boolean
@@ -253,19 +251,16 @@ sub set_output_entry {
     }
   }
 
-  # Skip sortinit if it's undefined from being skipped due to encoding issues
-  if ($be->field_exists('sortinit')) {
-    $acc .= "    \\field{sortinit}{" . $be->get_field('sortinit') . "}\n";
-  }
+  # This is special, we have to put a marker for sortinit and then replace this string
+  # on output as it can vary between lists
+  $acc .= "    <BDS>SORTINIT</BDS>\n";
 
   # The labelyear option determines whether "extrayear" is output
-  # Skip generating extrayear for entries with "skiplab" set
   if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
-    if (my $ey = $be->get_field('extrayear')) {
-      my $nameyear_extrayear = $be->get_field('nameyear_extrayear');
+    if (my $nameyear_extrayear = $be->get_field('nameyear_extrayear')) {
       if ( Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
-        $acc .= "    \\field{extrayear}{$ey}\n";
+        $acc .= "    <BDS>EXTRAYEAR</BDS>\n";
       }
     }
     if (my $ly = $be->get_field('labelyear')) {
@@ -274,13 +269,11 @@ sub set_output_entry {
   }
 
   # The labelalpha option determines whether "extraalpha" is output
-  # Skip generating extraalpha for entries with "skiplab" set
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
-    if (my $ea = $be->get_field('extraalpha')) {
-      my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha');
+    if (my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha')) {
       if ( Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
-        $acc .= "    \\field{extraalpha}{$ea}\n";
+        $acc .= "    <BDS>EXTRAALPHA</BDS>\n";
       }
     }
   }
@@ -318,16 +311,27 @@ sub set_output_entry {
   }
 
   foreach my $rfield (@{$struc->get_field_type('range')}) {
-    if ( $rf = $be->get_field($rfield) ) {
-      $rf =~ s/[-–]+/\\bibrangedash /g;
-      $acc .= "    \\field{$rfield}{$rf}\n";
+    if ( my $rf = $be->get_field($rfield) ) {
+      # range fields are an array ref of two-element array refs [range_start, range_end]
+      # range_end can be be empty for open-ended range or undef
+      my @pr;
+      foreach my $f (@$rf) {
+        if (defined($f->[1])) {
+          push @pr, $f->[0] . '\bibrangedash' . ($f->[1] ? ' ' . $f->[1] : '');
+        }
+        else {
+          push @pr, $f->[0];
+        }
+      }
+      my $bbl_rf = join(', ', @pr);
+      $acc .= "    \\field{$rfield}{$bbl_rf}\n";
     }
   }
 
   foreach my $vfield (@{$struc->get_field_type('verbatim')}) {
-    if ( my $rf = $be->get_field($vfield) ) {
+    if ( my $vf = $be->get_field($vfield) ) {
       $acc .= "    \\verb{$vfield}\n";
-      $acc .= "    \\verb $rf\n    \\endverb\n";
+      $acc .= "    \\verb $vf\n    \\endverb\n";
     }
   }
   if ( my $k = $be->get_field('keywords') ) {
@@ -343,67 +347,10 @@ sub set_output_entry {
 
   $acc .= "  \\endentry\n\n";
 
-  # Use an array to preserve sort order of entries already generated
-  # Also create an index by keyname for easy retrieval
-  push @{$self->{output_data}{ENTRIES}{$secnum}{strings}}, \$acc;
-  $self->{output_data}{ENTRIES}{$secnum}{index}{lc($citecasekey)} = \$acc;
+  # Create an index by keyname for easy retrieval
+  $self->{output_data}{ENTRIES}{$secnum}{index}{lc($citekey)} = \$acc;
 
   return;
-}
-
-=head2 set_los
-
-    Set the output list of shorthands for a section
-
-=cut
-
-sub set_los {
-  my $self = shift;
-  my $shs = shift;
-  my $section = shift;
-  $self->{output_data}{LOS}{$section} = $shs;
-  return;
-}
-
-=head2 get_los
-
-    Get the output list of shorthands for a section as an array
-
-=cut
-
-sub get_los {
-  my $self = shift;
-  my $section = shift;
-  return @{$self->{output_data}{LOS}{$section}}
-}
-
-
-
-=head2 get_output_entry
-
-    Get the output data for a specific entry
-
-=cut
-
-sub get_output_entry {
-  my $self = shift;
-  my $key = shift;
-  my $section = shift;
-  $section = '0' if not defined($section); # default - mainly for tests
-
-  return ${$self->{output_data}{ENTRIES}{$section}{index}{lc($key)}};
-}
-
-=head2 get_output_entries
-
-    Get the output data for a all entries in an array ref
-
-=cut
-
-sub get_output_entries {
-  my $self = shift;
-  my $section = shift;
-  return [ map {$$_} @{$self->{output_data}{ENTRIES}{$section}{strings}} ];
 }
 
 
@@ -432,30 +379,65 @@ sub output {
 
   $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('bblencoding') . "'");
 
-  print $target $data->{HEAD} or $logger->logcroak("Failure to write head to $target_string: $!");
+  print $target $data->{HEAD} or $logger->logdie("Failure to write head to $target_string: $!");
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
-    print $target "\n\\refsection{$secnum}\n";
-    foreach my $entry (@{$data->{ENTRIES}{$secnum}{strings}}) {
-      print $target $$entry or $logger->logcroak("Failure to write entry to $target_string: $!");
-    }
+    $logger->debug("Writing entries for section $secnum");
 
-    # Output section list of shorthands if there is one
-    if ( my $sec_los = $data->{LOS}{$secnum} ) {
-      print $target "  \\lossort\n";
-      foreach my $sh (@$sec_los) {
-        print $target "    \\key{$sh}\n";
+    print $target "\n\\refsection{$secnum}\n";
+    my $section = $self->get_output_section($secnum);
+
+    # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
+    foreach my $list (sort {$a->get_label cmp $b->get_label} @{$section->get_lists}) {
+      my $listlabel = $list->get_label;
+      my $listtype = $list->get_type;
+      $logger->debug("Writing entries in list '$listlabel'");
+
+      # Remove most of this conditional when biblatex supports lists
+      if ($listlabel eq 'SHORTHANDS') {
+        print $target "  \\lossort\n";
       }
-      print $target "  \\endlossort\n\n";
+      else {
+        print $target "\n  \\sortlist{$listlabel}\n" unless ($listlabel eq 'MAIN');
+      }
+
+      # The order of this array is the sorted order
+      foreach my $k ($list->get_keys) {
+        $logger->debug("Writing entry for key '$k'");
+        if ($listtype eq 'entry') {
+          my $entry = $data->{ENTRIES}{$secnum}{index}{lc($k)};
+
+          # Instantiate any dynamic, list specific entry information
+          my $entry_string = $list->instantiate_entry($entry, $k);
+
+          # If requested to convert UTF-8 to macros ...
+          if (Biber::Config->getoption('bblsafechars')) {
+            $entry_string = latex_recode_output($entry_string);
+          }
+
+          print $target $entry_string or $logger->logdie("Failure to write list element to $target_string: $!");
+        }
+        elsif ($listtype eq 'shorthand') {
+          print $target "    \\key{$k}\n" or $logger->logdie("Failure to write list element to $target_string: $!");
+        }
+      }
+
+      # Remove most of this conditional when biblatex supports lists
+      if ($listlabel eq 'SHORTHANDS') {
+        print $target "  \\endlossort\n\n";
+      }
+      else {
+        print $target "\n  \\endsortlist\n\n" unless ($listlabel eq 'MAIN');
+      }
     }
 
     print $target "\\endrefsection\n"
   }
 
-  print $target $data->{TAIL} or $logger->logcroak("Failure to write tail to $target_string: $!");
+  print $target $data->{TAIL} or $logger->logdie("Failure to write tail to $target_string: $!");
 
   $logger->info("Output to $target_string");
-  close $target or $logger->logcroak("Failure to close $target_string: $!");
+  close $target or $logger->logdie("Failure to close $target_string: $!");
   return;
 }
 

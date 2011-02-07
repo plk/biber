@@ -7,7 +7,9 @@
         Sometimes the BCF format version doesn't change between biblatex releases
       -->
       <attribute name="version">
-        <data type="string"/>
+        <data type="string">
+          <param name="minLength">1</param>
+        </data>
       </attribute>
       <!--
         "Global" Biber options. It's not clear what a non-global biber option
@@ -23,9 +25,6 @@
         <ref name="bblencoding"/>
         <ref name="bibencoding"/>
         <ref name="debug"/>
-        <optional>
-          <ref name="displaymode"/>
-        </optional>
         <ref name="mincrossrefs"/>
         <ref name="sortcase"/>
         <optional>
@@ -122,6 +121,33 @@
         </element>
       </zeroOrMore>
       <optional>
+        <!-- Display modes definition -->
+        <element name="bcf:displaymodes">
+          <oneOrMore>
+            <element name="bcf:displaymode">
+              <element name="bcf:target">
+                <choice>
+                  <value>*</value>
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </choice>
+              </element>
+              <oneOrMore>
+                <element name="bcf:mode">
+                  <choice>
+                    <value>original</value>
+                    <value>uniform</value>
+                    <value>romanised</value>
+                    <value>translated</value>
+                  </choice>
+                </element>
+              </oneOrMore>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
+      <optional>
         <!-- Cross-reference inheritance specifications -->
         <element name="bcf:inheritance">
           <!-- Defaults -->
@@ -129,15 +155,15 @@
             <!-- Whether to inherit all fields -->
             <attribute name="inherit_all">
               <choice>
-                <value>yes</value>
-                <value>no</value>
+                <value>true</value>
+                <value>false</value>
               </choice>
             </attribute>
             <!-- Should we overwrite the target field if it exists? -->
             <attribute name="override_target">
               <choice>
-                <value>yes</value>
-                <value>no</value>
+                <value>true</value>
+                <value>false</value>
               </choice>
             </attribute>
             <zeroOrMore>
@@ -145,29 +171,33 @@
               <element name="bcf:type_pair">
                 <attribute name="source">
                   <choice>
-                    <value>all</value>
-                    <data type="string"/>
+                    <value>*</value>
+                    <data type="string">
+                      <param name="minLength">1</param>
+                    </data>
                   </choice>
                 </attribute>
                 <attribute name="target">
                   <choice>
-                    <value>all</value>
-                    <data type="string"/>
+                    <value>*</value>
+                    <data type="string">
+                      <param name="minLength">1</param>
+                    </data>
                   </choice>
                 </attribute>
                 <optional>
                   <attribute name="inherit_all">
                     <choice>
-                      <value>yes</value>
-                      <value>no</value>
+                      <value>true</value>
+                      <value>false</value>
                     </choice>
                   </attribute>
                 </optional>
                 <optional>
                   <attribute name="override_target">
                     <choice>
-                      <value>yes</value>
-                      <value>no</value>
+                      <value>true</value>
+                      <value>false</value>
                     </choice>
                   </attribute>
                 </optional>
@@ -183,14 +213,18 @@
                 <element name="bcf:type_pair">
                   <attribute name="source">
                     <choice>
-                      <value>all</value>
-                      <data type="string"/>
+                      <value>*</value>
+                      <data type="string">
+                        <param name="minLength">1</param>
+                      </data>
                     </choice>
                   </attribute>
                   <attribute name="target">
                     <choice>
-                      <value>all</value>
-                      <data type="string"/>
+                      <value>*</value>
+                      <data type="string">
+                        <param name="minLength">1</param>
+                      </data>
                     </choice>
                   </attribute>
                   <empty/>
@@ -210,24 +244,28 @@
                       </attribute>
                       <attribute name="skip">
                         <choice>
-                          <value>yes</value>
-                          <value>no</value>
+                          <value>true</value>
+                          <value>false</value>
                         </choice>
                       </attribute>
                     </group>
                     <!-- ... a source and target field with an optional override attribute -->
                     <group>
                       <attribute name="source">
-                        <data type="string"/>
+                        <data type="string">
+                          <param name="minLength">1</param>
+                        </data>
                       </attribute>
                       <attribute name="target">
-                        <data type="string"/>
+                        <data type="string">
+                          <param name="minLength">1</param>
+                        </data>
                       </attribute>
                       <optional>
                         <attribute name="override_target">
                           <choice>
-                            <value>yes</value>
-                            <value>no</value>
+                            <value>true</value>
+                            <value>false</value>
                           </choice>
                         </attribute>
                       </optional>
@@ -241,36 +279,18 @@
         </element>
       </optional>
       <!-- Global sorting specification -->
-      <element name="bcf:sorting">
-        <oneOrMore>
-          <!-- presort default strings for different entry types -->
-          <element name="bcf:presort">
-            <optional>
-              <attribute name="type">
-                <data type="NCName"/>
-              </attribute>
-            </optional>
-            <text/>
-          </element>
-        </oneOrMore>
-        <zeroOrMore>
-          <!-- excludes of certain fields for sorting for specified types -->
-          <element name="bcf:sortexclusion">
-            <attribute name="type"/>
+      <ref name="sorting"/>
+      <optional>
+        <!-- Structure specification -->
+        <element name="bcf:structure">
+          <!-- Valid datetypes -->
+          <element name="bcf:datetypes">
             <oneOrMore>
-              <element name="bcf:exclusion">
+              <element name="bcf:datetype">
                 <data type="NCName"/>
               </element>
             </oneOrMore>
           </element>
-        </zeroOrMore>
-        <oneOrMore>
-          <ref name="sort"/>
-        </oneOrMore>
-      </element>
-      <optional>
-        <!-- Structure specification -->
-        <element name="bcf:structure">
           <!-- Valid entrytypes -->
           <element name="bcf:entrytypes">
             <oneOrMore>
@@ -552,6 +572,35 @@
       </oneOrMore>
     </element>
   </start>
+  <define name="sorting">
+    <element name="bcf:sorting">
+      <oneOrMore>
+        <!-- presort default strings for different entry types -->
+        <element name="bcf:presort">
+          <optional>
+            <attribute name="type">
+              <data type="NCName"/>
+            </attribute>
+          </optional>
+          <text/>
+        </element>
+      </oneOrMore>
+      <zeroOrMore>
+        <!-- excludes of certain fields for sorting for specified types -->
+        <element name="bcf:sortexclusion">
+          <attribute name="type"/>
+          <oneOrMore>
+            <element name="bcf:exclusion">
+              <data type="NCName"/>
+            </element>
+          </oneOrMore>
+        </element>
+      </zeroOrMore>
+      <oneOrMore>
+        <ref name="sort"/>
+      </oneOrMore>
+    </element>
+  </define>
   <define name="sort">
     <oneOrMore>
       <!-- sort specification -->
@@ -560,18 +609,6 @@
         <attribute name="order">
           <data type="integer"/>
         </attribute>
-        <optional>
-          <!--
-            Is this sort specification applicable to the first (label generatio)
-            sort pass or the second (final) pass?
-          -->
-          <attribute name="pass">
-            <choice>
-              <value>label</value>
-              <value>final</value>
-            </choice>
-          </attribute>
-        </optional>
         <optional>
           <!-- Should we stop generating sorting information after this item? -->
           <attribute name="final">
@@ -669,7 +706,7 @@
               <value>file</value>
             </attribute>
             <optional>
-              <attribute name="format">
+              <attribute name="datatype">
                 <choice>
                   <value>bibtex</value>
                   <value>biblatexml</value>
@@ -694,14 +731,75 @@
                 <value>set</value>
               </attribute>
               <attribute name="members">
-                <data type="string"/>
+                <data type="string">
+                  <param name="minLength">1</param>
+                </data>
               </attribute>
-              <data type="string"/>
+              <data type="string">
+                <param name="minLength">1</param>
+              </data>
             </group>
-            <data type="string"/>
+            <data type="string">
+              <param name="minLength">1</param>
+            </data>
           </choice>
         </element>
       </zeroOrMore>
+      <zeroOrMore>
+        <element name="bcf:sectionlist">
+          <attribute name="label">
+            <data type="string">
+              <param name="minLength">1</param>
+            </data>
+          </attribute>
+          <attribute name="type">
+            <choice>
+              <value>entry</value>
+              <value>key</value>
+              <value>shorthand</value>
+            </choice>
+          </attribute>
+          <zeroOrMore>
+            <choice>
+              <ref name="filter"/>
+              <ref name="orfilter"/>
+            </choice>
+          </zeroOrMore>
+          <optional>
+            <element name="bcf:sorting">
+              <oneOrMore>
+                <ref name="sort"/>
+              </oneOrMore>
+            </element>
+          </optional>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="orfilter">
+    <element name="bcf:orfilter">
+      <oneOrMore>
+        <ref name="filter"/>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="filter">
+    <element name="bcf:filter">
+      <attribute name="type">
+        <choice>
+          <value>type</value>
+          <value>nottype</value>
+          <value>subtype</value>
+          <value>notsubtype</value>
+          <value>keyword</value>
+          <value>notkeyword</value>
+          <value>field</value>
+          <value>notfield</value>
+        </choice>
+      </attribute>
+      <data type="string">
+        <param name="minLength">1</param>
+      </data>
     </element>
   </define>
   <!-- option definitions -->
@@ -1149,17 +1247,6 @@
           <text/>
         </element>
       </oneOrMore>
-    </element>
-  </define>
-  <!-- This is for setting the display mode of non-roman scripts -->
-  <define name="displaymode">
-    <element name="displaymode">
-      <choice>
-        <value>original</value>
-        <value>romanized</value>
-        <value>translated</value>
-        <value>uniform</value>
-      </choice>
     </element>
   </define>
 </grammar>

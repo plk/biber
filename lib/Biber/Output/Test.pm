@@ -1,4 +1,5 @@
 package Biber::Output::Test;
+#use feature 'unicode_strings';
 use base 'Biber::Output::Base';
 
 use Biber::Config;
@@ -59,9 +60,11 @@ sub set_output_entry {
   my $struc = shift; # Structure object
   my $acc = '';
   my $opts = '';
-  my $citecasekey; # entry key forced to case of any citations(s) which reference it
-  if ( $be->get_field('citecasekey') ) {
-    $citecasekey = $be->get_field('citecasekey');
+  my $citekey; # entry key forced to case of any citations(s) which reference it
+  my $secnum = $section->number;
+
+  if ( $be->get_field('citekey') ) {
+    $citekey = $be->get_field('citekey');
   }
 
   if ( $be->field_exists('options') ) {
@@ -71,7 +74,7 @@ sub set_output_entry {
   $acc .= "% sortstring = " . $be->get_field('sortstring') . "\n"
     if (Biber::Config->getoption('debug') || Biber::Config->getblxoption('debug'));
 
-  $acc .= "  \\entry{$citecasekey}{" . $be->get_field('entrytype') . "}{$opts}\n";
+  $acc .= "  \\entry{$citekey}{" . $be->get_field('entrytype') . "}{$opts}\n";
 
   # Generate set information
   if ( $be->get_field('entrytype') eq 'set' ) {   # Set parents get \set entry ...
@@ -117,6 +120,7 @@ sub set_output_entry {
 
   # then names themselves
   foreach my $namefield (@{$struc->get_field_type('name')}) {
+    next if $struc->is_field_type('skipout', $namefield);
     if ( my $nf = $be->get_field($namefield) ) {
       # If this name is labelname, we've already deleted the "others"
       # so just add the boolean
@@ -163,7 +167,10 @@ sub set_output_entry {
       $acc .= "    \\field{labelalpha}{$label}\n";
     }
   }
-  $acc .= "    \\field{sortinit}{" . $be->get_field('sortinit') . "}\n";
+
+  # This is special, we have to put a marker for sortinit and then replace this string
+  # on output as it can vary between lists
+  $acc .= "    <BDS>SORTINIT</BDS>\n";
 
   # The labelyear option determines whether "extrayear" is output
   # Skip generating extrayear for entries with "skiplab" set
@@ -288,15 +295,10 @@ sub set_output_entry {
 
   $acc .= "  \\endentry\n\n";
 
-  # Use an array to preserve sort order of entries already generated
-  # Also create an index by keyname for easy retrieval
-  push @{$self->{output_data}{ENTRIES}{$section}{strings}}, \$acc;
-  $self->{output_data}{ENTRIES}{$section}{index}{lc($citecasekey)} = \$acc;
-
+  # Create an index by keyname for easy retrieval
+  $self->{output_data}{ENTRIES}{$secnum}{index}{lc($citekey)} = \$acc;
   return;
 }
-
-
 
 =head2 output
 
@@ -313,11 +315,33 @@ sub output {
   $logger->info("Writing output with encoding '" . Biber::Config->getoption('bblencoding') . "'");
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
-    foreach my $entry (@{$data->{ENTRIES}{$secnum}{strings}}) {
-      print $target $$entry;
+    my $section = $self->get_output_section($secnum);
+    foreach my $list (@{$section->get_lists}) {
+      my $listlabel = $list->get_label;
+      my $listtype = $list->get_type;
+      foreach my $k ($list->get_keys) {
+        if ($listtype eq 'entry') {
+          my $entry = $data->{ENTRIES}{$secnum}{index}{lc($k)};
+
+          # Instantiate any dynamic, list specific entry information
+          my $entry_string = $list->instantiate_entry($entry, $k);
+
+          # If requested to convert UTF-8 to macros ...
+          if (Biber::Config->getoption('bblsafechars')) {
+            $logger->info('Converting UTF-8 to TeX macros on output to .bbl');
+            require Biber::LaTeX::Recode;
+            $entry_string = Biber::LaTeX::Recode::latex_encode($entry_string,
+                                                               scheme => Biber::Config->getoption('bblsafecharsset'));
+          }
+          print $target $entry_string;
+        }
+        elsif ($listtype eq 'shorthand') {
+          next if Biber::Config->getblxoption('skiplos', $section->bibentry($k), $k);
+          print $target $k;
+        }
+      }
     }
   }
-
   close $target;
   return;
 }

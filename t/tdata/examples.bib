@@ -251,7 +251,7 @@
   volume	  = {93},
   series	  = {newseries},
   number	  = {1},
-  month		  = {3},
+  month		  = mar,
   year		  = {1991},
   pages		  = {9--27},
   annotation	  = {An \texttt{article} entry with \texttt{series}, \texttt{volume}, and
@@ -1366,15 +1366,28 @@
 % the lastname on Windows for some reason
 @Book{hasan,
   author	   = {{al-Hasan}, ʿAlī},
+  editor	   = {{al-Hasan}, ʿAlī},
+  translator = {{al-Hasan}, ʿAlī},
   title		   = {Some title},
   publisher  = {Some press},
   year		   = {2000}
 }
 
 @misc{t1,
-AUTHOR = {Bill Brown},
-TITLE = {Normal things {$^{3}$}},
-YEAR = {1992}
+  KEYWORDS	= { primary, something,somethingelse},
+  AUTHOR = {Bill Brown},
+  TITLE = {Normal things {$^{3}$}},
+  YEAR = {1992},
+  PAGES = {100--}
+}
+
+% SORTNAME should not be output
+@misc{t2,
+  AUTHOR = {Bill Brown},
+  SORTNAME = {Bill Brown},
+  TITLE = {Signs of W$\frac{o}{a}$nder},
+  YEAR = {1994},
+  PAGES = {100}
 }
 
 @misc{tvonb,

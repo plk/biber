@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 17;
+use Test::More tests => 20;
 
 use Biber;
 use Biber::Output::BBL;
@@ -24,8 +24,10 @@ Biber::Config->setoption('fastsort', 1);
 
 # Now generate the information
 $biber->prepare;
-
-my $section = $biber->sections->get_section(0);
+my $section0 = $biber->sections->get_section(0);
+my $main0 = $section0->get_list('MAIN');
+my $section1 = $biber->sections->get_section(1);
+my $main1 = $section1->get_list('MAIN');
 my $out = $biber->get_output_obj;
 
 # crossref field is included as the parent is included by being crossrefed >= mincrossrefs times
@@ -83,12 +85,13 @@ my $cr2 = q|  \entry{cr2}{inbook}{}
     \field{origyear}{1943}
     \field{title}{Fabulous Fourier Forms}
     \field{year}{1974}
-    \warn{\item Field 'school' is an alias for field 'institution' but both are defined in entry with key 'cr2' - skipping field 'school'}
+    \warn{\item Field 'school' is aliased to field 'institution' but both are defined in entry with key 'cr2' - skipping field 'school'}
   \endentry
 
 |;
 
 # This is included as it is crossrefed >= mincrossrefs times
+# Notice lack of labelname and hashes because the only name is EDITOR and useeditor is false
 my $crm = q|  \entry{crm}{book}{}
     \name{editor}{1}{}{%
       {{}{Erbriss}{E.}{Edgar}{E.}{}{}{}{}}%
@@ -130,7 +133,7 @@ my $cr3 = q|  \entry{cr3}{inbook}{}
     \field{origyear}{1934}
     \field{title}{Arrangements of All Articles}
     \field{year}{1996}
-    \warn{\item Field 'archiveprefix' is an alias for field 'eprinttype' but both are defined in entry with key 'cr3' - skipping field 'archiveprefix'}
+    \warn{\item Field 'archiveprefix' is aliased to field 'eprinttype' but both are defined in entry with key 'cr3' - skipping field 'archiveprefix'}
   \endentry
 
 |;
@@ -167,9 +170,6 @@ my $cr6 = q|  \entry{cr6}{inproceedings}{}
     \list{location}{1}{%
       {Address}%
     }
-    \list{publisher}{1}{%
-      {Publisher of proceeding}%
-    }
     \strng{namehash}{AF1}
     \strng{fullhash}{AF1}
     \field{sortinit}{A}
@@ -185,7 +185,7 @@ my $cr6 = q|  \entry{cr6}{inproceedings}{}
     \field{title}{Title of inproceeding}
     \field{venue}{Location of event}
     \field{year}{2009}
-    \field{pages}{123\bibrangedash 126}
+    \field{pages}{123\bibrangedash}
   \endentry
 
 |;
@@ -214,6 +214,9 @@ my $cr7 = q|  \entry{cr7}{inbook}{}
     \field{title}{Title of Book bit}
     \field{year}{2010}
     \field{pages}{123\bibrangedash 126}
+    \verb{verbb}
+    \verb String
+    \endverb
   \endentry
 
 |;
@@ -275,6 +278,7 @@ my $xr2 = q|  \entry{xr2}{inbook}{}
 |;
 
 # This is included as it is crossrefed >= mincrossrefs times
+# Notice lack of labelname and hashes because the only name is EDITOR and useeditor is false
 my $xrm = q|  \entry{xrm}{book}{}
     \name{editor}{1}{}{%
       {{}{Prendergast}{P.}{Peter}{P.}{}{}{}{}}%
@@ -371,23 +375,60 @@ my $xr4 = q|  \entry{xr4}{inbook}{}
 
 |;
 
+# Missing keys in xref/crossref should be deleted during datasource parse
+# So these two should have no xref/crossref data in them
+my $mxr = q|  \entry{mxr}{inbook}{}
+    \name{labelname}{1}{%
+      {{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
+    }
+    \name{author}{1}{%
+      {{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
+    }
+    \strng{namehash}{MM2}
+    \strng{fullhash}{MM2}
+    \field{sortinit}{M}
+    \field{origyear}{1933}
+    \field{title}{Lumbering Lunatics}
+  \endentry
 
-is($out->get_output_entry('cr1'), $cr1, 'crossref test 1');
-is($out->get_output_entry('cr2'), $cr2, 'crossref test 2');
-is($out->get_output_entry('crm'), $crm, 'crossref test 3');
-is($out->get_output_entry('cr3'), $cr3, 'crossref test 4');
-is($out->get_output_entry('crt'), $crt, 'crossref test 5');
-is($out->get_output_entry('cr4'), $cr4, 'crossref test 6');
-is($section->has_citekey('crn'), 0,'crossref test 7');
-is($out->get_output_entry('cr6'), $cr6, 'crossref test (inheritance) 8');
-is($out->get_output_entry('cr7'), $cr7, 'crossref test (inheritance) 9');
-is($out->get_output_entry('cr8'), $cr8, 'crossref test (inheritance) 10');
-is($out->get_output_entry('xr1'), $xr1, 'xref test 1');
-is($out->get_output_entry('xr2'), $xr2, 'xref test 2');
-is($out->get_output_entry('xrm'), $xrm, 'xref test 3');
-is($out->get_output_entry('xr3'), $xr3, 'xref test 4');
-is($out->get_output_entry('xrt'), $xrt, 'xref test 5');
-is($out->get_output_entry('xr4'), $xr4, 'xref test 6');
-is($section->has_citekey('xrn'), 0,'xref test 7');
+|;
 
-unlink "*.utf8";
+my $mcr = q|  \entry{mcr}{inbook}{}
+    \name{labelname}{1}{%
+      {{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
+    }
+    \name{author}{1}{%
+      {{Mistrel}{M.}{Megan}{M.}{}{}{}{}}%
+    }
+    \strng{namehash}{MM2}
+    \strng{fullhash}{MM2}
+    \field{sortinit}{M}
+    \field{origyear}{1933}
+    \field{title}{Lumbering Lunatics}
+  \endentry
+
+|;
+
+
+is($out->get_output_entry($main0,'cr1'), $cr1, 'crossref test 1');
+is($out->get_output_entry($main0,'cr2'), $cr2, 'crossref test 2');
+is($out->get_output_entry($main0,'crm'), $crm, 'crossref test 3');
+is($out->get_output_entry($main0,'cr3'), $cr3, 'crossref test 4');
+is($out->get_output_entry($main0,'crt'), $crt, 'crossref test 5');
+is($out->get_output_entry($main0,'cr4'), $cr4, 'crossref test 6');
+is($section0->has_citekey('crn'), 0,'crossref test 7');
+is($out->get_output_entry($main0,'cr6'), $cr6, 'crossref test (inheritance) 8');
+is($out->get_output_entry($main0,'cr7'), $cr7, 'crossref test (inheritance) 9');
+is($out->get_output_entry($main0,'cr8'), $cr8, 'crossref test (inheritance) 10');
+is($out->get_output_entry($main0,'xr1'), $xr1, 'xref test 1');
+is($out->get_output_entry($main0,'xr2'), $xr2, 'xref test 2');
+is($out->get_output_entry($main0,'xrm'), $xrm, 'xref test 3');
+is($out->get_output_entry($main0,'xr3'), $xr3, 'xref test 4');
+is($out->get_output_entry($main0,'xrt'), $xrt, 'xref test 5');
+is($out->get_output_entry($main0,'xr4'), $xr4, 'xref test 6');
+is($section0->has_citekey('xrn'), 0,'xref test 7');
+is($out->get_output_entry($main0,'mxr'), $mxr, 'missing xref test');
+is($out->get_output_entry($main0,'mcr'), $mcr, 'missing crossef test');
+is($section1->has_citekey('crn'), 0,'mincrossrefs reset between sections');
+
+unlink <*.utf8>;

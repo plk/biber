@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 15;
+use Test::More tests => 16;
 
 use Biber;
 use Biber::Utils;
@@ -26,6 +26,8 @@ Biber::Config->setoption('fastsort', 1);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
+my $shs = $section->get_list('SHORTHANDS');
+my $main = $section->get_list('MAIN');
 my $bibentries = $section->bibentries;
 
 my $set1 = q|  \entry{seta}{set}{}
@@ -162,22 +164,44 @@ my $noset3 = q|  \entry{nosetc}{book}{}
 
 |;
 
+my $sk4 = q|  \entry{skip4}{article}{dataonly}
+    \name{labelname}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \list{location}{1}{%
+      {Cambridge}%
+    }
+    \list{publisher}{1}{%
+      {A press}%
+    }
+    \strng{namehash}{DJ1}
+    \strng{fullhash}{DJ1}
+    \field{sortinit}{D}
+    \field{shorthand}{AWS}
+    \field{title}{Algorithms Which Sort}
+    \field{year}{1932}
+  \endentry
 
-is_deeply([$section->get_shorthands], ['skip1'], 'skiplos - not in LOS');
+|;
+
+is_deeply([$shs->get_keys], ['skip1'], 'skiplos - not in LOS');
 is($bibentries->entry('skip1')->get_field('options'), 'skipbib', 'Passing skipbib through');
 is($bibentries->entry('skip2')->get_field('labelalpha'), 'SA', 'Normal labelalpha');
 is($bibentries->entry('skip2')->get_field($bibentries->entry('skip2')->get_field('labelyearname')), '1995', 'Normal labelyear');
 ok(is_undef($bibentries->entry('skip3')->get_field('labelalpha')), 'skiplab - no labelalpha');
 ok(is_undef($bibentries->entry('skip3')->get_field('labelyearname')), 'skiplab - no labelyear');
 ok(is_undef($bibentries->entry('skip4')->get_field('labelalpha')), 'dataonly - no labelalpha');
+is($out->get_output_entry($main,'skip4'), $sk4, 'dataonly - checking output');
 ok(is_undef($bibentries->entry('skip4')->get_field('labelyearname')), 'dataonly - no labelyear');
-is($out->get_output_entry('seta'), $set1, 'Set parent - with labels');
-is($out->get_output_entry('set:membera'), $set2, 'Set member - no labels 1');
-is($out->get_output_entry('set:memberb'), $set3, 'Set member - no labels 2');
-is($out->get_output_entry('set:memberc'), $set4, 'Set member - no labels 3');
-is($out->get_output_entry('noseta'), $noset1, 'Not a set member - extrayear continues from set 1');
-is($out->get_output_entry('nosetb'), $noset2, 'Not a set member - extrayear continues from set 2');
-is($out->get_output_entry('nosetc'), $noset3, 'Not a set member - extrayear continues from set 3');
+is($out->get_output_entry($main,'seta'), $set1, 'Set parent - with labels');
+is($out->get_output_entry($main,'set:membera'), $set2, 'Set member - no labels 1');
+is($out->get_output_entry($main,'set:memberb'), $set3, 'Set member - no labels 2');
+is($out->get_output_entry($main,'set:memberc'), $set4, 'Set member - no labels 3');
+is($out->get_output_entry($main,'noseta'), $noset1, 'Not a set member - extrayear continues from set 1');
+is($out->get_output_entry($main,'nosetb'), $noset2, 'Not a set member - extrayear continues from set 2');
+is($out->get_output_entry($main,'nosetc'), $noset3, 'Not a set member - extrayear continues from set 3');
 
-
-unlink "*.utf8";
+unlink <*.utf8>;

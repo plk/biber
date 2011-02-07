@@ -4,8 +4,13 @@
 # resolves any symlinks but names the packed lib the same as the link name. This is
 # a good thing.
 
+# Have to explicitly include the Input* modules as the names of these are dynamically
+# constructed in the code so Par::Packer can't auto-detect them
+
 /usr/local/perl/bin/pp \
   --compress=6 \
+  --module=Biber::Input::file::bibtex \
+  --module=Biber::Input::file::biblatexml \
   --module=Encode::Byte \
   --module=Encode::CN \
   --module=Encode::CJKConstants \

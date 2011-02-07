@@ -24,6 +24,8 @@ Biber::Config->setoption('fastsort', 1);
 
 # Now generate the information
 $biber->prepare;
+my $section = $biber->sections->get_section(0);
+my $main = $section->get_list('MAIN');
 my $out = $biber->get_output_obj;
 
 my $string1 = q|  \entry{Elias1955}{set}{}
@@ -108,8 +110,8 @@ my $string3 = q|  \entry{Elias1955b}{article}{}
 
 |;
 
-is($out->get_output_entry('elias1955'), $string1, 'Legacy set test 1');
-is($out->get_output_entry('elias1955a'), $string2, 'Legacy set test 2');
-is($out->get_output_entry('elias1955b'), $string3, 'Legacy set test 3');
+is($out->get_output_entry($main,'elias1955'), $string1, 'Legacy set test 1');
+is($out->get_output_entry($main,'elias1955a'), $string2, 'Legacy set test 2');
+is($out->get_output_entry($main,'elias1955b'), $string3, 'Legacy set test 3');
 
-unlink "*.utf8";
+unlink <*.utf8>;

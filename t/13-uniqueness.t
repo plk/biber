@@ -31,7 +31,9 @@ Biber::Config->setblxoption('uniquelist', 0);
 
 # Now generate the information
 $biber->prepare;
-my $bibentries = $biber->sections->get_section('0')->bibentries;
+my $section = $biber->sections->get_section(0);
+my $bibentries = $section->bibentries;
+my $main = $section->get_list('MAIN');
 
 # Basic uniquename and hash testing
 is($bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename requiring full name expansion - 1');
@@ -85,14 +87,16 @@ Biber::Config->setblxoption('singletitle', 1);
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 # Now generate the information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bibentries;
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
+$main = $section->get_list('MAIN');
 
-is($bibentries->entry('ey1')->get_field('extrayear'), '1', 'Extrayear - 1');
-is($bibentries->entry('ey2')->get_field('extrayear'), '2', 'Extrayear - 2');
-is($bibentries->entry('ey3')->get_field('extrayear'), '1', 'Extrayear - 3');
-is($bibentries->entry('ey4')->get_field('extrayear'), '2', 'Extrayear - 4');
-is($bibentries->entry('ey5')->get_field('extrayear'), '1', 'Extrayear - 5');
-is($bibentries->entry('ey6')->get_field('extrayear'), '2', 'Extrayear - 6');
+is($main->get_extraalphadata('ey1'), '1', 'Extrayear - 1');
+is($main->get_extraalphadata('ey2'), '2', 'Extrayear - 2');
+is($main->get_extraalphadata('ey3'), '1', 'Extrayear - 3');
+is($main->get_extraalphadata('ey4'), '2', 'Extrayear - 4');
+is($main->get_extraalphadata('ey5'), '1', 'Extrayear - 5');
+is($main->get_extraalphadata('ey6'), '2', 'Extrayear - 6');
 ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'Singletitle - 1');
 ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'Singletitle - 2');
 ok(is_undef($bibentries->entry('ey5')->get_field('singletitle')), 'Singletitle - 3');
@@ -111,14 +115,16 @@ Biber::Config->setblxoption('singletitle', 1);
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 # Now generate the information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bibentries;
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
+$main = $section->get_list('MAIN');
 
-ok(is_undef($bibentries->entry('ey1')->get_field('extrayear')), 'Extrayear - 7');
-ok(is_undef($bibentries->entry('ey2')->get_field('extrayear')), 'Extrayear - 8');
-is($bibentries->entry('ey3')->get_field('extrayear'), '1', 'Extrayear - 9');
-is($bibentries->entry('ey4')->get_field('extrayear'), '2', 'Extrayear - 10');
-ok(is_undef($bibentries->entry('ey5')->get_field('extrayear')), 'Extrayear - 11');
-ok(is_undef($bibentries->entry('ey6')->get_field('extrayear')), 'Extrayear - 12');
+ok(is_undef($main->get_extraalphadata('ey1')), 'Extrayear - 7');
+ok(is_undef($main->get_extraalphadata('ey2')), 'Extrayear - 8');
+is($main->get_extraalphadata('ey3'), '1', 'Extrayear - 9');
+is($main->get_extraalphadata('ey4'), '2', 'Extrayear - 10');
+ok(is_undef($main->get_extraalphadata('ey5')), 'Extrayear - 11');
+ok(is_undef($main->get_extraalphadata('ey6')), 'Extrayear - 12');
 is($bibentries->entry('ey1')->get_field('singletitle'), '1', 'Singletitle - 4');
 is($bibentries->entry('ey2')->get_field('singletitle'), '1', 'Singletitle - 5');
 is($bibentries->entry('ey5')->get_field('singletitle'), '1', 'Singletitle - 6');
@@ -137,15 +143,17 @@ Biber::Config->setblxoption('singletitle', 1);
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 # Now generate the information
 $biber->prepare;
-$bibentries = $biber->sections->get_section('0')->bibentries;
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
+$main = $section->get_list('MAIN');
 
-is($bibentries->entry('ey1')->get_field('extrayear'), '1', 'Extrayear - 13');
-is($bibentries->entry('ey2')->get_field('extrayear'), '2', 'Extrayear - 14');
-is($bibentries->entry('ey3')->get_field('extrayear'), '1', 'Extrayear - 15');
-is($bibentries->entry('ey4')->get_field('extrayear'), '2', 'Extrayear - 16');
-is($bibentries->entry('ey5')->get_field('extrayear'), '1', 'Extrayear - 17');
-is($bibentries->entry('ey6')->get_field('extrayear'), '2', 'Extrayear - 18');
+is($main->get_extraalphadata('ey1'), '1', 'Extrayear - 13');
+is($main->get_extraalphadata('ey2'), '2', 'Extrayear - 14');
+is($main->get_extraalphadata('ey3'), '1', 'Extrayear - 15');
+is($main->get_extraalphadata('ey4'), '2', 'Extrayear - 16');
+is($main->get_extraalphadata('ey5'), '1', 'Extrayear - 17');
+is($main->get_extraalphadata('ey6'), '2', 'Extrayear - 18');
 ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'Singletitle - 7');
 ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'Singletitle - 8');
 
-unlink "*.utf8";
+unlink <*.utf8>;

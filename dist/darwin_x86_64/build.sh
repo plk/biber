@@ -8,11 +8,16 @@
 # through the link name break. So, we copy them to the link names first and
 # and package those
 
+# Have to explicitly include the Input* modules as the names of these are dynamically
+# constructed in the code so Par::Packer can't auto-detect them
+
 cp /opt/local/bin/biber /tmp/biber-darwin
 cp /opt/local/lib/libgdbm.3.0.0.dylib /tmp/libgdbm.3.dylib
 cp /opt/local/lib/libz.1.2.5.dylib /tmp/libz.1.dylib
 
 pp --compress=6 \
+  --module=Biber::Input::file::bibtex \
+  --module=Biber::Input::file::biblatexml \
   --module=Encode::Byte \
   --module=Encode::CN \
   --module=Encode::CJKConstants \

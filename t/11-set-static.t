@@ -24,10 +24,12 @@ Biber::Config->setoption('fastsort', 1);
 
 # Now generate the information
 $biber->prepare;
+my $section = $biber->sections->get_section(0);
+my $main = $section->get_list('MAIN');
 my $out = $biber->get_output_obj;
 
 my $string1 = q|  \entry{Static1}{set}{}
-    \set{Static2, Static3, Static4}
+    \set{Static2,Static3,Static4}
     \name{labelname}{1}{}{%
       {{}{Bumble}{B.}{Brian}{B.}{}{}{}{}}%
     }
@@ -118,10 +120,10 @@ my $string5 = q|  \entry{Static2}{book}{}
 |;
 
 
-is($out->get_output_entry('Static1'), $string1, 'Static set test 1');
-is($out->get_output_entry('Static2'), $string2, 'Static set test 2');
-is($out->get_output_entry('Static3'), $string3, 'Static set test 3');
-is($out->get_output_entry('Static4'), $string4, 'Static set test 4');
-is($out->get_output_entry('Static2', 1), $string5, 'Static set test 5');
+is($out->get_output_entry($main,'Static1'), $string1, 'Static set test 1');
+is($out->get_output_entry($main,'Static2'), $string2, 'Static set test 2');
+is($out->get_output_entry($main,'Static3'), $string3, 'Static set test 3');
+is($out->get_output_entry($main,'Static4'), $string4, 'Static set test 4');
+is($out->get_output_entry($main,'Static2', 1), $string5, 'Static set test 5');
 
-unlink "*.utf8";
+unlink <*.utf8>;

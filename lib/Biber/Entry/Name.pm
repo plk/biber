@@ -1,4 +1,5 @@
 package Biber::Entry::Name;
+#use feature 'unicode_strings';
 
 use Regexp::Common qw( balanced );
 use Biber::Config;
@@ -22,12 +23,16 @@ sub new {
   my ($class, %params) = @_;
   if (%params) {
     my $name = {};
-    foreach my $attr (qw/lastname
+    foreach my $attr (qw/gender
+                         lastname
                          lastname_i
                          lastname_it
                          firstname
                          firstname_i
                          firstname_it
+                         middlename
+                         middlename_i
+                         middlename_it
                          prefix
                          prefix_i
                          prefix_it
@@ -68,7 +73,7 @@ sub notnull {
 
 sub was_stripped {
   my ($self, $part) = @_;
-  return $self->{strip}{$part};
+  return exists($self->{strip}) ? $self->{strip}{$part} : undef;
 }
 
 
@@ -181,6 +186,52 @@ sub get_firstname_i {
 sub get_firstname_it {
   my $self = shift;
   return $self->{firstname_it};
+}
+
+
+=head2 set_middlename
+
+    Set middlename for a Biber::Entry::Name object
+
+=cut
+
+sub set_middlename {
+  my ($self, $val) = @_;
+  $self->{middlename} = $val;
+  return;
+}
+
+=head2 get_middlename
+
+    Get middlename for a Biber::Entry::Name object
+
+=cut
+
+sub get_middlename {
+  my $self = shift;
+  return $self->{middlename};
+}
+
+=head2 get_middlename_i
+
+    Get middlename initials for a Biber::Entry::Name object
+
+=cut
+
+sub get_middlename_i {
+  my $self = shift;
+  return $self->{middlename_i};
+}
+
+=head2 get_middlename_it
+
+    Get middlename terse initials for a Biber::Entry::Name object
+
+=cut
+
+sub get_middlename_it {
+  my $self = shift;
+  return $self->{middlename_it};
 }
 
 
@@ -322,6 +373,31 @@ sub get_prefix_it {
 }
 
 
+=head2 set_gender
+
+    Set gender for a Biber::Entry::Name object
+
+=cut
+
+sub set_gender {
+  my ($self, $val) = @_;
+  $self->{gender} = $val;
+  return;
+}
+
+=head2 get_gender
+
+    Get gender for a Biber::Entry::Name object
+
+=cut
+
+sub get_gender {
+  my $self = shift;
+  return $self->{gender};
+}
+
+
+
 =head2 set_namestring
 
     Set namestring for a Biber::Entry::Name object
@@ -405,6 +481,17 @@ sub name_to_bbl {
     $fni = '';
   }
 
+  # middlename
+  my $mn;
+  my $mni;
+  if ($mn = $self->get_middlename) {
+    $mni = Biber::Config->getblxoption('terseinits') ? $self->get_middlename_it : $self->get_middlename_i;
+  }
+  else {
+    $mn = '';
+    $mni = '';
+  }
+
   # prefix
   my $pre;
   my $prei;
@@ -449,10 +536,14 @@ sub name_to_bbl {
   if ($ln_special and defined($self->get_uniquename)) {
     push @pno, 'uniquename=' . $self->get_uniquename;
   }
-
   $pno = join(',', @pno);
-
-  return "      {{$pno}{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
+  # BIBLATEXML supports middle names
+  if ($self->get_middlename) {
+    return "      {{$pno}{$ln}{$lni}{$fn}{$fni}{$mn}{$mni}{$pre}{$prei}{$suf}{$sufi}}%\n";
+  }
+  else {
+    return "      {{$pno}{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
+  }
 }
 
 

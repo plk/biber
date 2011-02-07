@@ -118,22 +118,16 @@
   <!-- SORTING -->
   <bcf:sorting>
     <bcf:presort>mm</bcf:presort>
-    <bcf:sort order="1" pass="label">
-      <bcf:sortitem order="1">labelalpha</bcf:sortitem>
-    </bcf:sort>
-    <bcf:sort order="2">
+    <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
     </bcf:sort>
-    <bcf:sort order="3" pass="final">
+    <bcf:sort order="2">
       <bcf:sortitem order="1">labelalpha</bcf:sortitem>
     </bcf:sort>
-    <bcf:sort order="4" pass="final">
-      <bcf:sortitem order="1" pad_side="left" pad_width="4" pad_char="0">extraalpha</bcf:sortitem>
-    </bcf:sort>
-    <bcf:sort order="5" final="1">
+    <bcf:sort order="3" final="1">
       <bcf:sortitem order="1">sortkey</bcf:sortitem>
     </bcf:sort>
-   <bcf:sort order="6">
+   <bcf:sort order="4">
      <bcf:sortitem order="1">sortname</bcf:sortitem>
      <bcf:sortitem order="2">author</bcf:sortitem>
      <bcf:sortitem order="3">editor</bcf:sortitem>
@@ -141,15 +135,15 @@
      <bcf:sortitem order="5">sorttitle</bcf:sortitem>
      <bcf:sortitem order="6">title</bcf:sortitem>
    </bcf:sort>
-   <bcf:sort order="7" sort_direction="descending">
+   <bcf:sort order="5" sort_direction="descending">
       <bcf:sortitem order="1">sortyear</bcf:sortitem>
       <bcf:sortitem substring_side="right" substring_width="4" order="2">year</bcf:sortitem>
    </bcf:sort>
-   <bcf:sort order="8">
+   <bcf:sort order="6">
       <bcf:sortitem order="1" pad_char="0">volume</bcf:sortitem>
       <bcf:sortitem order="2">0000</bcf:sortitem>
    </bcf:sort>
-   <bcf:sort order="9">
+   <bcf:sort order="7">
      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
      <bcf:sortitem order="2">title</bcf:sortitem>
    </bcf:sort>
@@ -163,6 +157,10 @@
     <bcf:citekey>sect1</bcf:citekey>
     <bcf:citekey>sect2</bcf:citekey>
     <bcf:citekey>sect3</bcf:citekey>
+    <bcf:sectionlist label="MAIN" type="entry"/>
+    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">
@@ -171,6 +169,10 @@
   <bcf:section number="1">
     <bcf:citekey>sect4</bcf:citekey>
     <bcf:citekey>sect5</bcf:citekey>
+    <bcf:sectionlist label="MAIN" type="entry"/>
+    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
   </bcf:section>
   <!-- SECTION 2 -->
   <bcf:bibdata section="2">
@@ -183,6 +185,10 @@
     <bcf:citekey>sect7</bcf:citekey>
     <bcf:citekey>sect3</bcf:citekey> <!-- Bad key for section 2, should be dropped in tests -->
     <bcf:citekey>sectx</bcf:citekey> <!-- Bad key for section 2, should be dropped in tests -->
+    <bcf:sectionlist label="MAIN" type="entry"/>
+    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
   </bcf:section>
   <!-- SECTION 3 -->
   <bcf:bibdata section="3">
@@ -190,6 +196,10 @@
   </bcf:bibdata>
   <bcf:section number="3">
     <bcf:citekey>*</bcf:citekey>
+    <bcf:sectionlist label="MAIN" type="entry"/>
+    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
   </bcf:section>
   <!-- SECTION 0 -->
   <bcf:section number="0">

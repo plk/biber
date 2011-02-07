@@ -1,8 +1,11 @@
 package Biber::Structure;
+#use feature 'unicode_strings';
+
 use List::Util qw( first );
 use Biber::Utils;
 use Biber::Constants;
 use Data::Dump qw( pp );
+use Date::Simple;
 
 =encoding utf-8
 
@@ -10,7 +13,11 @@ use Data::Dump qw( pp );
 
 Biber::Structure
 
+
 =cut
+
+my $logger = Log::Log4perl::get_logger('main');
+
 
 =head2 new
 
@@ -29,28 +36,64 @@ sub new {
     $self = bless {}, $class;
   }
 
-  # Create internal aliases data format for easy use
-  my $aliases;
-  my $reverse_aliases;
-  foreach my $alias (@{$struc->{aliases}{alias}}) {
-    $aliases->{$alias->{type}}{$alias->{name}{content}}
-      = {
-         realname => $alias->{realname}{content}
-        };
-    # So we can automatically add aliases to the field definitions
-    # without having to maintain them there too.
-    $reverse_aliases->{$alias->{realname}{content}} = $alias->{name}{content};
-
-    if (exists($alias->{field})) {
-      $aliases->{$alias->{type}}{$alias->{name}{content}}{fields}
-        = { map {$_->{name} => $_->{content}} @{$alias->{field}}};
-    }
-  }
-  $self->{aliases} = $aliases;
-  $self->{reverse_aliases} = $reverse_aliases;
-
   # Pull out legal entrytypes, fields and constraints and make lookup hash
   # for quick tests later
+
+  # field datatypes
+  my ($nullok, $skipout, @name, @list, @literal, @date, @integer, @range, @verbatim, @key);
+
+  # Create data for field types, including any aliases which might be
+  # needed when reading the bib data.
+  foreach my $f (@{$struc->{fields}{field}}) {
+    if ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'name') {
+      push @name, $f->{content};
+    }
+    elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'literal') {
+      push @list, $f->{content};
+    }
+    elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'key') {
+      push @list, $f->{content};
+    }
+    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'literal') {
+      push @literal, $f->{content};
+    }
+    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'date') {
+      push @date, $f->{content};
+    }
+    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'integer') {
+      push @integer, $f->{content};
+    }
+    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'range') {
+      push @range, $f->{content};
+    }
+    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'verbatim') {
+      push @verbatim, $f->{content};
+    }
+    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'key') {
+      push @key, $f->{content};
+    }
+
+    # check null_ok
+    if ($f->{nullok}) {
+      $nullok->{$f->{content}} = 1;
+    }
+    # check skips - fields we dont' want to output to BBL
+    if ($f->{skip_output}) {
+      $skipout->{$f->{content}} = 1;
+    }
+  }
+
+  # Store as lookup tables for speed and multiple re-use
+  $self->{fields}{nullok}   = $nullok;
+  $self->{fields}{skipout}  = $skipout;
+  $self->{fields}{complex}  = { map {$_ => 1} (@name, @list, @range, @date) };
+  $self->{fields}{literal}  = { map {$_ => 1} (@literal, @key, @integer) };
+  $self->{fields}{name}     = { map {$_ => 1} @name };
+  $self->{fields}{list}     = { map {$_ => 1} @list };
+  $self->{fields}{verbatim} = { map {$_ => 1} @verbatim };
+  $self->{fields}{range}    = { map {$_ => 1} @range };
+  $self->{fields}{date}     = { map {$_ => 1} @date };
+
   my $leg_ents;
   my $ets = [ sort map {$_->{content}} @{$struc->{entrytypes}{entrytype}} ];
 
@@ -66,69 +109,6 @@ sub new {
         }
       }
     }
-
-    # field datatypes
-    my ($nullok, $skipout, @name, @list, @literal, @date, @integer, @range, @verbatim, @key);
-
-    # Create date for field types, including any aliases which might be
-    # needed when reading the bib data.
-    foreach my $f (@{$struc->{fields}{field}}) {
-      if ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'name') {
-        push @name, $f->{content};
-        push @name, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'literal') {
-        push @list, $f->{content};
-        push @list, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'key') {
-        push @list, $f->{content};
-        push @list, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'literal') {
-        push @literal, $f->{content};
-        push @literal, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'date') {
-        push @date, $f->{content};
-        push @date, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'integer') {
-        push @integer, $f->{content};
-        push @integer, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'range') {
-        push @range, $f->{content};
-        push @range, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'verbatim') {
-        push @verbatim, $f->{content};
-        push @verbatim, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'key') {
-        push @key, $f->{content};
-        push @key, $reverse_aliases->{$f->{content}} if exists($reverse_aliases->{$f->{content}});
-      }
-
-      # check null_ok
-      if ($f->{nullok}) {
-        $nullok->{$f->{content}} = 1;
-      }
-      # check skips - fields we dont' want to output to BBL
-      if ($f->{skip_output}) {
-        $skipout->{$f->{content}} = 1;
-      }
-    }
-
-    # Store as lookup tables for speed and multiple re-use
-    $self->{fields}{nullok}   = $nullok;
-    $self->{fields}{skipout}  = $skipout;
-    $self->{fields}{literal}  = { map {$_ => 1} (@literal, @key, @integer) };
-    $self->{fields}{name}     = { map {$_ => 1} @name };
-    $self->{fields}{list}     = { map {$_ => 1} @list };
-    $self->{fields}{split}    = { map {$_ => 1} (@name, @list) };
-    $self->{fields}{verbatim} = { map {$_ => 1} @verbatim };
-    $self->{fields}{range}    = { map {$_ => 1} @range };
 
     # constraints
     my $constraints;
@@ -198,6 +178,15 @@ sub new {
     $leg_ents->{$es}{constraints} = $constraints;
   }
   $self->{legal_entrytypes} = $leg_ents;
+
+  # date types
+  my $dts;
+  foreach my $dt (@{$struc->{datetypes}{datetype}}) {
+    push @$dts, $dt->{content};
+  }
+
+  $self->{legal_datetypes} = $dts;
+
   return $self;
 }
 
@@ -233,58 +222,6 @@ sub is_field_for_entrytype {
   }
 }
 
-=head2 resolve_entry_aliases
-
-    Resolve entrytype alias for an entry, if any
-
-=cut
-
-sub resolve_entry_aliases {
-  my $self = shift;
-  my $be = shift;
-  # normalise field name according to alias
-  if (my $alias = $self->{aliases}{entrytype}{$be->get_field('entrytype')}) {
-    $be->set_field('entrytype', $alias->{realname});
-    # Set any other fields which normalising this alias requires if not already set
-    foreach my $field (keys %{$alias->{fields}}) {
-      unless ($be->field_exists($field)) {
-        $be->set_field($field, $alias->{fields}{$field});
-      }
-    }
-  }
-
-  return;
-}
-
-=head2 resolve_field_aliases
-
-    Resolve field alias for an entry, if any
-
-=cut
-
-sub resolve_field_aliases {
-  my $self = shift;
-  my $be = shift;
-  my @warnings;
-  my $citekey = $be->get_field('origkey');
-  while (my ($faliasn, $falias) = each %{$self->{aliases}{field}}) {
-    # Field which is an alias and has a value?
-    if (my $falias_value = $be->get_field($faliasn)) {
-      my $freal = $falias->{realname};
-      # If both a field and its alias is set, warn and delete alias field
-      if ($be->get_field($freal)) {
-        push @warnings, "Field '$faliasn' is an alias for field '$freal' but both are defined in entry with key '$citekey' - skipping field '$faliasn'"; # Warn as that's wrong
-        $be->del_field($faliasn);
-      }
-      else {
-        # datafield since aliases only apply to actual data fields from the data file
-        $be->set_datafield($freal, $falias_value);
-        $be->del_field($faliasn);
-      }
-    }
-  }
-  return @warnings;
-}
 
 =head2 get_field_type
 
@@ -325,7 +262,7 @@ sub check_mandatory_constraints {
   my $be = shift;
   my @warnings;
   my $et = $be->get_field('entrytype');
-  my $citekey = $be->get_field('origkey');
+  my $citekey = $be->get_field('dskey');
   foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{mandatory}},
                   @{$self->{legal_entrytypes}{$et}{constraints}{mandatory}})) {
     if (ref($c) eq 'ARRAY') {
@@ -385,7 +322,7 @@ sub check_conditional_constraints {
   my $be = shift;
   my @warnings;
   my $et = $be->get_field('entrytype');
-  my $citekey = $be->get_field('origkey');
+  my $citekey = $be->get_field('dskey');
 
   foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{conditional}},
                   @{$self->{legal_entrytypes}{$et}{constraints}{conditional}})) {
@@ -448,7 +385,7 @@ sub check_data_constraints {
   my $be = shift;
   my @warnings;
   my $et = $be->get_field('entrytype');
-  my $citekey = $be->get_field('origkey');
+  my $citekey = $be->get_field('dskey');
   foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{data}},
                   @{$self->{legal_entrytypes}{$et}{constraints}{data}})) {
     if ($c->{datatype} eq 'integer') {
@@ -481,73 +418,70 @@ sub check_data_constraints {
   return @warnings;
 }
 
-=head2 resolve_date_components
+=head2 check_date_components
 
-     Resolved date fields into components, performing some date
-     validation checks
+     Perform content validation checks on date components by trying to
+     instantiate a Date::Simple object.
 
 =cut
 
-sub resolve_date_components {
+sub check_date_components {
   my $self = shift;
   my $be = shift;
   my @warnings;
   my $et = $be->get_field('entrytype');
-  my $citekey = $be->get_field('origkey');
+  my $citekey = $be->get_field('dskey');
 
-  # Split date into components and do some date field validation
-  # No date module I looked at would distinguish between an undefined month
-  # passed to ->new() and "01". Same for day. Pretty useless since a bare
-  # year is a valid ISO8601 format date. Regexp::Common::time doesn't validate
-  # month/day value either.
-  # This doesn't validate that the day is valid for the month but perhaps
-  # when some date module really implements 8601, I'll use it.
-  foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{data}},
-                  @{$self->{legal_entrytypes}{$et}{constraints}{data}})) {
-    if ($c->{datatype} eq 'datespec') {
-      foreach my $f (@{$c->{fields}}) {
-        if (my $fv = $be->get_field($f)) {
-          my ($datetype) = $f =~ m/\A(.*)date\z/xms;
-          my $date_re = qr/(\d{4}) # year
-                           (?:-(0[1-9]|1[0-2]))? # month
-                           (?:-(0[1-9]|1[0-9]|2[0-9]|3[0-1]))? # day
-                          /xms;
-          if (my ($byear, $bmonth, $bday, $r, $eyear, $emonth, $eday) =
-              $be->get_field($datetype . 'date') =~
-              m|\A$date_re(/)?(?:$date_re)?\z|xms) {
+  foreach my $f (@{$self->{legal_datetypes}}) {
+    my ($d) = $f =~ m/\A(.*)date\z/xms;
+    # Don't bother unless this type of date is defined (has a year)
+    next unless $be->get_datafield($d . 'year');
 
-            # Some warnings for overwriting YEAR and MONTH from DATE, just in case
-            # validate_structure is false and so YEAR and MONTH may still
-            # co-exist with DATE
-            if ($byear and
-                ($datetype . 'year' eq 'year') and
-                $be->get_field('year')) {
-              push @warnings, "Overwriting field 'year' with year value from field 'date' for entry '$citekey'";
-            }
-            if ($bmonth and
-                ($datetype . 'month' eq 'month') and
-                $be->get_field('month')) {
-              push @warnings, "Overwriting field 'month' with month value from field 'date' for entry '$citekey'";
-            }
+    # When checking date components not split from date fields, have ignore the value
+    # of an explicit YEAR field as it is allowed to be an arbitrary string
+    # so we just set it to any valid value for the test
+    my $byc;
+    my $byc_d; # Display value for errors so as not to confuse people
+    if ($d eq '' and not $be->get_field('datesplit')) {
+      $byc = '1900'; # Any valid value is fine
+      $byc_d = 'YYYY';
+    }
+    else {
+      $byc = $be->get_datafield($d . 'year')
+    }
 
-            $be->set_field($datetype . 'year', $byear)      if $byear;
-            $be->set_field($datetype . 'month', $bmonth)    if $bmonth;
-            $be->set_field($datetype . 'day', $bday)        if $bday;
-            $be->set_field($datetype . 'endmonth', $emonth) if $emonth;
-            $be->set_field($datetype . 'endday', $eday)     if $eday;
-            if ($r and $eyear) { # normal range
-              $be->set_field($datetype . 'endyear', $eyear);
-            }
-            elsif ($r and not $eyear) { # open ended range - endyear is defined but empty
-              $be->set_field($datetype . 'endyear', '');
-            }
-          }
-          else {
-            push @warnings, "Invalid format of field '$f' in entry '$citekey' - ignoring";
-            $be->del_field($f);
-            next;
-          }
-        }
+    # Begin date
+    if ($byc) {
+      my $bm = $be->get_datafield($d . 'month') || 'MM';
+      my $bmc = $bm  eq 'MM' ? '01' : $bm;
+      my $bd = $be->get_datafield($d . 'day') || 'DD';
+      my $bdc = $bd  eq 'DD' ? '01' : $bd;
+      $logger->debug("Checking '${d}date' date value '$byc/$bmc/$bdc' for key '$citekey'");
+      unless (Date::Simple->new("$byc$bmc$bdc")) {
+        push @warnings, "Invalid date value '" .
+          ($byc_d || $byc) .
+                "/$bm/$bd' - ignoring its components in entry '$citekey'";
+        $be->del_datafield($d . 'year');
+        $be->del_datafield($d . 'month');
+        $be->del_datafield($d . 'day');
+        next;
+      }
+    }
+    # End date
+    # defined and some value - end*year can be empty but defined in which case,
+    # we don't need to validate
+    if (my $eyc = $be->get_datafield($d . 'endyear')) {
+      my $em = $be->get_datafield($d . 'endmonth') || 'MM';
+      my $emc = $em  eq 'MM' ? '01' : $em;
+      my $ed = $be->get_datafield($d . 'endday') || 'DD';
+      my $edc = $ed  eq 'DD' ? '01' : $ed;
+      $logger->debug("Checking '${d}date' date value '$eyc/$emc/$edc' for key '$citekey'");
+      unless (Date::Simple->new("$eyc$emc$edc")) {
+        push @warnings, "Invalid date value '$eyc/$em/$ed' - ignoring its components in entry '$citekey'";
+        $be->del_datafield($d . 'endyear');
+        $be->del_datafield($d . 'endmonth');
+        $be->del_datafield($d . 'endday');
+        next;
       }
     }
   }

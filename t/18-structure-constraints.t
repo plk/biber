@@ -37,7 +37,10 @@ my $c2 = [ "Entry 'c2' - invalid field 'badfield' for entrytype 'eta'",
 my $c3 = [ "Invalid format (integer) of field 'month' - ignoring field in entry 'c3'" ];
 my $c4 = [ "Invalid value of field 'month' must be '<=12' - ignoring field in entry 'c4'",
            "Invalid value of field 'field1' must be '>=5' - ignoring field in entry 'c4'" ];
-my $c5 = [ "Mandatory fields - only one of 'date, year' must be defined in entry 'c5' ignoring field 'year'",
+# There would also have been a date+year constraint violation in the next test if
+# it weren't for the fact that the date processing in bibtex.pm already deals with this
+# and removed the year field
+my $c5 = [ "Overwriting field 'year' with year value from field 'date' for entry 'c5'",
            "Constraint violation - none of fields (field5, field6) must exist when all of fields (field2, field3, field4) exist. Ignoring them." ];
 my $c6 = [ "Constraint violation - one of fields (field7, field8) must exist when all of fields (field1, field2) exist",
            "Constraint violation - all of fields (field9, field10) must exist when all of fields (field5, field6) exist" ];
@@ -62,4 +65,4 @@ ok(is_undef($bibentries->entry('c7')->get_field('field7')), 'Constraints test 7b
 is_deeply($bibentries->entry('c8')->get_field('warnings'), $c8, 'Constraints test 8a' );
 ok(is_undef($bibentries->entry('c8')->get_field('field4')), 'Constraints test 8b' );
 
-unlink "*.utf8";
+unlink <*.utf8>;

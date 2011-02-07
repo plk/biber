@@ -1,4 +1,5 @@
 package Biber::Entry::Names;
+#use feature 'unicode_strings';
 
 use Data::Dump;
 use Biber::Config;
@@ -17,7 +18,7 @@ Biber::Entry::Names
 
 sub new {
   my $class = shift;
-  return bless {}, $class;
+  return bless {namelist => []}, $class;
 }
 
 

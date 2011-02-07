@@ -82,7 +82,7 @@
 @INPROCEEDINGS{cr6,
   AUTHOR     = {Author, Firstname},
   CROSSREF   = {cr6i},
-  PAGES      = {123--126},
+  PAGES      = {123--},
   TITLE      = {Title of inproceeding},
   BOOKTITLE  = {Manual booktitle},
   YEAR       = {2009},
@@ -95,7 +95,8 @@
   SUBTITLE   = {Book Subtitle},
   TITLEADDON = {Book Titleaddon},
   PUBLISHER  = {Publisher of proceeding},
-  YEAR       = {2009}
+  YEAR       = {2009},
+  VERBA      = {String}
 }
 
 @INBOOK{cr7,
@@ -184,5 +185,21 @@
   TITLE     = {Examples of Excellent Exaggerations},
   PUBLISHER = {Oxford},
   YEAR      = {1935}
+}
+
+% Testing missing xref
+@INBOOK{mxr,
+  AUTHOR    = {Megan Mistrel},
+  TITLE     = {Lumbering Lunatics},
+  ORIGDATE  = {1933},
+  XREF      = {missing1}
+}
+
+% Testing missing crossref
+@INBOOK{mcr,
+  AUTHOR    = {Megan Mistrel},
+  TITLE     = {Lumbering Lunatics},
+  ORIGDATE  = {1933},
+  CROSSREF  = {missing1}
 }
 

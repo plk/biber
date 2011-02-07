@@ -1,8 +1,13 @@
 package Biber::Entry;
+#use feature 'unicode_strings';
+
 use List::Util qw( first );
 use Biber::Utils;
 use Biber::Constants;
 use Data::Dump qw( pp );
+use Log::Log4perl qw( :no_extra_logdie_message );
+
+my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
 
@@ -47,8 +52,8 @@ sub clone {
   $new->{derivedfields}{entrytype} = $self->{derivedfields}{entrytype};
   # put in key if specified
   if ($newkey) {
-    $new->{derivedfields}{origkey} = $newkey;
-    $new->{derivedfields}{citecasekey} = $newkey;
+    $new->{derivedfields}{dskey} = $newkey;
+    $new->{derivedfields}{citekey} = $newkey;
   }
   return $new;
 }
@@ -68,6 +73,8 @@ sub notnull {
 =head2 set_datafield
 
     Set a field which is in the bib data file
+    Only set to null if the field is a nullable one
+    otherwise if value is null, remove the field
 
 =cut
 
@@ -78,6 +85,9 @@ sub set_datafield {
   # Only set fields which are either not null or are ok to be null
   if ( $struc->is_field_type('nullok', $key) or is_notnull($val)) {
     $self->{datafields}{$key} = $val;
+  }
+  elsif (is_null($val)) {
+    delete($self->{datafields}{$key});
   }
   return;
 }
@@ -93,11 +103,8 @@ sub set_datafield {
 sub set_field {
   my $self = shift;
   my ($key, $val) = @_;
-  my $struc = Biber::Config->get_structure;
-  # Only set fields which are either not null or are ok to be null
-  if ( $struc->is_field_type('nullok', $key) or is_notnull($val)) {
-    $self->{derivedfields}{$key} = $val;
-  }
+  # All derived fields can be null
+  $self->{derivedfields}{$key} = $val;
   return;
 }
 
@@ -110,8 +117,9 @@ sub set_field {
 sub get_field {
   my $self = shift;
   my $key = shift;
-  return $self->{datafields}{$key} if $self->{datafields}{$key};
-  return $self->{derivedfields}{$key} if $self->{derivedfields}{$key};
+  return $self->{datafields}{$key} if exists($self->{datafields}{$key});
+  return $self->{derivedfields}{$key} if exists($self->{derivedfields}{$key});
+  return undef;
 }
 
 =head2 get_datafield
@@ -141,6 +149,20 @@ sub del_field {
   return;
 }
 
+=head2 del_datafield
+
+    Delete an original data source data field in a Biber::Entry object
+
+=cut
+
+sub del_datafield {
+  my $self = shift;
+  my $key = shift;
+  delete $self->{datafields}{$key};
+  return;
+}
+
+
 =head2 field_exists
 
     Check whether a field exists (even if null)
@@ -150,12 +172,13 @@ sub del_field {
 sub field_exists {
   my $self = shift;
   my $key = shift;
-  return (exists($self->{datafields}{$key}) or exists($self->{derivedfields}{$key})) ? 1 : 0;
+  return (exists($self->{datafields}{$key}) or
+          exists($self->{derivedfields}{$key})) ? 1 : 0;
 }
 
 =head2 datafields
 
-    Returns a sorted array of the fields which came from the bib data file
+    Returns a sorted array of the fields which came from the data source
 
 =cut
 
@@ -164,6 +187,7 @@ sub datafields {
   use locale;
   return sort keys %{$self->{datafields}};
 }
+
 
 =head2 fields
 
@@ -179,6 +203,27 @@ sub fields {
   my %keys = (%{$self->{derivedfields}}, %{$self->{datafields}});
   return sort keys %keys;
 }
+
+=head2 has_keyword
+
+    Check if a Biber::Entry object has a particular keyword in
+    in the KEYWORDS field.
+
+=cut
+
+sub has_keyword {
+  my $self = shift;
+  my $keyword = shift;
+  if (my $keywords = $self->{datafields}{keywords}) {
+    return (first {lc($_) eq lc($keyword)} split(/\s*,\s*/, $keywords)) ? 1 : 0;
+  }
+  else {
+    return 0;
+  }
+  return undef; # shouldn't get here
+}
+
+
 
 =head2 add_warning
 
@@ -209,9 +254,15 @@ sub set_inherit_from {
   my $self = shift;
   my $parent = shift;
 
+  # Data source fields
   foreach my $field ($parent->datafields) {
     next if $self->field_exists($field); # Don't overwrite existing fields
     $self->set_datafield($field, $parent->get_field($field));
+  }
+  # Datesplit is a special non datafield and needs to be inherited for any
+  # validation checks which may occur later
+  if (my $ds = $parent->get_field('datesplit')) {
+    $self->set_field('datesplit', $ds);
   }
   return;
 }
@@ -241,8 +292,8 @@ sub inherit_from {
   my $override_target = $defaults->{override_target};
   # override with type_pair specific defaults if they exist ...
   foreach my $type_pair (@{$defaults->{type_pair}}) {
-    if (($type_pair->{source} eq 'all' or $type_pair->{source} eq $parenttype) and
-        ($type_pair->{target} eq 'all' or $type_pair->{target} eq $type)) {
+    if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
+        ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
       $inherit_all = $type_pair->{inherit_all} if $type_pair->{inherit_all};
       $override_target = $type_pair->{override_target} if $type_pair->{override_target};
     }
@@ -252,10 +303,10 @@ sub inherit_from {
   foreach my $inherit (@{$inheritance->{inherit}}) {
     # Match for this combination of entry and crossref parent?
     foreach my $type_pair (@{$inherit->{type_pair}}) {
-    if (($type_pair->{source} eq 'all' or $type_pair->{source} eq $parenttype) and
-        ($type_pair->{target} eq 'all' or $type_pair->{target} eq $type)) {
+    if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
+        ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
         foreach my $field (@{$inherit->{field}}) {
-          next unless $parent->get_field($field->{source});
+          next unless $parent->field_exists($field->{source});
           $processed{$field->{source}} = 1;
           # localise defaults according to field, if specified
           my $field_override_target = $field->{override_target}
@@ -264,9 +315,18 @@ sub inherit_from {
           if ($field->{skip}) {
             $processed{$field->{source}} = 1;
           }
-          # Set the field if null or override is requested
-          elsif (not $self->get_field($field->{target}) or
-                 $field_override_target eq 'yes') {
+          # Set the field if it doesn't exist or override is requested
+          elsif (not $self->field_exists($field->{target}) or
+                 $field_override_target eq 'true') {
+            $logger->debug("    Entry '" .
+                           $self->get_field('dskey') .
+                           "' is inheriting field '" .
+                           $field->{source}.
+                           "' as '" .
+                           $field->{target} .
+                           "' from entry '" .
+                           $parent->get_field('dskey') .
+                           "'");
             $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
           }
         }
@@ -275,15 +335,26 @@ sub inherit_from {
   }
 
   # Now process the rest of the (original data only) fields, if necessary
-  if ($inherit_all eq 'yes') {
+  if ($inherit_all eq 'true') {
     foreach my $field ($parent->datafields) {
       next if $processed{$field}; # Skip if we already dealt with this field above
-      # Set the field if null or override is requested
-      if (not $self->get_field($field) or $override_target eq 'yes') {
+      # Set the field if it doesn't exist or override is requested
+      if (not $self->field_exists($field) or $override_target eq 'true') {
+            $logger->debug("    Entry '" .
+                           $self->get_field('dskey') .
+                           "' is inheriting field '$field' from entry '" .
+                           $parent->get_field('dskey') .
+                           "'");
         $self->set_datafield($field, $parent->get_field($field));
       }
     }
   }
+  # Datesplit is a special non datafield and needs to be inherited for any
+  # validation checks which may occur later
+  if (my $ds = $parent->get_field('datesplit')) {
+    $self->set_field('datesplit', $ds);
+  }
+  return;
 }
 
 =head2 dump

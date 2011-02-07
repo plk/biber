@@ -1,11 +1,16 @@
 TODO in decreasing order of priority:
 
-   * Generalise sort exclusions within fields a la nosortprefix etc.
-   * biblatex implements generalised crossref, related entries, structure defs
-   * When biblatex implements interface and bcf for crossref inheritance,
-     take out conditional in control file read and also change schema (biblatex 1.2)
-   * ALL fields need to be put into types where possible
-   * Generalised data/sorting options split to allow different e.g. sorting
-     options to \printbibliography
-   * merge in the "unique" branch to implement full uniquename/list
-     automation. Needs new .bbl format and biblatex support (biblatex 1.2)
+* bbl+? middlenames, unique, per-name gender, per-name prefix
+* When biblatex implements interface and bcf for crossref inheritance,
+  take out conditional in control file read and also change schema (biblatex 1.2)
+* When biblatex implements related entries, take out reprinttitle
+* Generalised \printbibliography system
+  Typed lists - entry, key, shorthand etc.
+  Take out MAIN, SHORTHANDS backwards compat hacks in Biber.pm and BBL.pm
+  Shorthands should be requested otherwise it's a big sorting overhead
+* Zotero? http://www.zotero.org/support/dev/start
+  https://api.zotero.org/users/<USERID>/items/<iTEMID>?key=<APIKEY>
+  gives a parseable ATOM XML with the information in
+* Structure ALL fields need to be put into types where possible
+* merge in the "unique" branch to implement full uniquename/list
+  automation. Needs new .bbl format and biblatex support (biblatex 1.3)

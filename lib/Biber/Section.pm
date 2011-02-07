@@ -1,6 +1,8 @@
 package Biber::Section;
+#use feature 'unicode_strings';
 
 use Biber::Entries;
+use Biber::Utils;
 use List::Util qw( first );
 
 =encoding utf-8
@@ -21,6 +23,7 @@ sub new {
   $self->{bibentries} = new Biber::Entries;
   $self->{allkeys} = 0;
   $self->{citekeys} = [];
+  $self->{sortcache} = [];
   $self->{dkeys} = {};
   $self->{orig_order_citekeys} = [];
   $self->{undef_citekeys} = [];
@@ -51,60 +54,6 @@ sub is_allkeys {
 }
 
 
-=head2 get_shorthands
-
-    Returns the list of all shorthands for a section
-
-=cut
-
-sub get_shorthands {
-  my $self = shift;
-  if ( $self->{shorthands} ) {
-    return @{ $self->{shorthands} }
-  } else {
-    return;
-  }
-}
-
-=head2 set_shorthands
-
-    Sets the list of all shorthands for a section
-
-=cut
-
-sub set_shorthands {
-  my $self = shift;
-  my $shorthands = shift;
-  $self->{shorthands} = $shorthands;
-  return;
-}
-
-
-=head2 add_shorthand
-
-    Add a shorthand to a section
-
-=cut
-
-sub add_shorthand {
-  my ($self, $bee, $key) = @_;
-  # Don't add to los if skiplos is set for entry
-  if (Biber::Config->getblxoption('skiplos', $bee, $key)) {
-    return;
-  }
-  my @los;
-  if ( $self->get_shorthands ) {
-    @los = $self->get_shorthands;
-  }
-  else {
-    @los = ();
-  }
-  push @los, $key;
-  $self->{shorthands} = [ @los ];
-  return;
-}
-
-
 =head2 bibentry
 
     Returns a Biber::Entry object for the given citation key
@@ -128,6 +77,19 @@ sub bibentries {
   my $self = shift;
   return $self->{bibentries};
 }
+
+=head2 del_bibentries
+
+    Delete all Biber::Entry objects from the Biber::Section object
+
+=cut
+
+sub del_bibentries {
+  my $self = shift;
+  $self->{bibentries} = new Biber::Entries;
+  return;
+}
+
 
 =head2 set_citekeys
 
@@ -167,6 +129,20 @@ sub get_citekeys {
   my $self = shift;
   return @{$self->{citekeys}};
 }
+
+=head2 get_static_citekeys
+
+    Gets the citekeys of a Biber::Section object
+    excluding dynamic set entry keys
+    Returns a normal array
+
+=cut
+
+sub get_static_citekeys {
+  my $self = shift;
+  return reduce_array($self->{citekeys}, $self->dynamic_set_keys);
+}
+
 
 =head2 get_undef_citekeys
 
@@ -223,6 +199,20 @@ sub del_citekey {
   return;
 }
 
+=head2 del_citekeys
+
+    Deletes al citekeys from a Biber::Section object
+
+=cut
+
+sub del_citekeys {
+  my $self = shift;
+  $self->{citekeys}            = [ ];
+  $self->{orig_order_citekeys} = [ ];
+  return;
+}
+
+
 =head2 set_dynamic_set
 
     Record a mapping of dynamic key to member keys
@@ -252,7 +242,7 @@ sub get_dynamic_set {
     return @$set_members;
   }
   else {
-    return undef;
+    return ();
   }
 }
 
@@ -264,7 +254,7 @@ sub get_dynamic_set {
 
 sub dynamic_set_keys {
   my $self = shift;
-  return keys %{$self->{dkeys}};
+  return [keys %{$self->{dkeys}}];
 }
 
 
@@ -301,48 +291,126 @@ sub add_undef_citekey {
 }
 
 
-=head2 add_datafile
+=head2 add_datasource
 
-    Adds a data file to a section
+    Adds a data source to a section
 
 =cut
 
-sub add_datafile {
+sub add_datasource {
   my $self = shift;
-  my $file = shift;
-  push @{$self->{datafiles}}, $file;
+  my $source = shift;
+  push @{$self->{datasources}}, $source;
   return;
 }
 
-=head2 set_datafiles
+=head2 set_datasources
 
-    Sets the datafiles for a section, passed as arrayref
+    Sets the data sources for a section
 
 =cut
 
-sub set_datafiles {
+sub set_datasources {
   my $self = shift;
-  my $files = shift;
-  $self->{datafiles} = $files;
+  my $sources = shift;
+  $self->{datasources} = $sources;
   return;
 }
 
 
-=head2 get_datafiles
+=head2 get_datasources
 
-    Gets an array of data files for this section
+    Gets an array of data sources for this section
 
 =cut
 
-sub get_datafiles {
+sub get_datasources {
   my $self = shift;
-  if (exists($self->{datafiles})) {
-    return @{$self->{datafiles}};
+  if (exists($self->{datasources})) {
+    return $self->{datasources};
   }
   else {
-    return ();
+    return undef;
   }
 }
+
+=head2 add_list
+
+    Adds a section list to this section
+
+=cut
+
+sub add_list {
+  my $self = shift;
+  my $list = shift;
+  push @{$self->{lists}}, $list;
+  return;
+}
+
+=head2 get_lists
+
+    Returns an array ref of all section lists
+
+=cut
+
+sub get_lists {
+  my $self = shift;
+  return $self->{lists};
+}
+
+=head2 get_list
+
+    Returns a specific list by label
+
+=cut
+
+sub get_list {
+  my $self = shift;
+  my $label = shift;
+  foreach my $list (@{$self->{lists}}) {
+    return $list if ($list->get_label eq $label);
+  }
+  return undef;
+}
+
+=head2 add_sort_cache
+
+    Adds a scheme/keys pair to the sort cache:
+    [$scheme, $keys, $sortinitdata, $extraalphadata, $extrayeardata ]
+
+=cut
+
+sub add_sort_cache {
+  my $self = shift;
+  my $cacheitem = shift;
+  push @{$self->{sortcache}}, $cacheitem;
+  return;
+}
+
+
+=head2 get_sort_cache
+
+    Retrieves the sort cache
+
+=cut
+
+sub get_sort_cache {
+  my $self = shift;
+  return $self->{sortcache};
+}
+
+=head2 reset_sort_cache
+
+    Reset the sort cache
+
+=cut
+
+sub reset_sort_cache {
+  my $self = shift;
+  $self->{sortcache} = [];
+  return;
+}
+
 
 
 =head2 number

@@ -115,8 +115,12 @@
     <bcf:datasource type="file">sets</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey type="set" members="Dynamic1,Dynamic2,Dynamic3">DynSet</bcf:citekey>
+    <bcf:citekey type="set" members="Dynamic1,Dynamic2,Dynamic3,missing1">DynSet</bcf:citekey>
     <bcf:citekey>DynSet</bcf:citekey>
+    <bcf:sectionlist label="MAIN" type="entry"/>
+    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">
@@ -124,6 +128,10 @@
   </bcf:bibdata>
   <bcf:section number="1">
     <bcf:citekey>Dynamic3</bcf:citekey>
+    <bcf:sectionlist label="MAIN" type="entry"/>
+    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
   </bcf:section>
 </bcf:controlfile>
 

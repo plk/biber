@@ -76,7 +76,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortlos</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>terseinits</bcf:key>
@@ -142,6 +142,15 @@
     <bcf:citekey>LS2</bcf:citekey>
     <bcf:citekey>LS3</bcf:citekey>
     <bcf:citekey>LS4</bcf:citekey>
+    <bcf:sectionlist label="MAIN" type="entry"/>
+    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+      <bcf:sorting>
+        <bcf:sort order="1">
+          <bcf:sortitem order="1">shorthand</bcf:sortitem>
+        </bcf:sort>
+      </bcf:sorting>
+    </bcf:sectionlist>
   </bcf:section>
 </bcf:controlfile>
 

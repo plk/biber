@@ -1,4 +1,5 @@
 package Biber::Constants;
+#use feature 'unicode_strings';
 use strict;
 use warnings;
 use Encode::Alias;
@@ -10,17 +11,13 @@ our @EXPORT = qw{
   %CONFIG_DEFAULT_BIBER
   %CONFIG_DEFAULT_BIBLATEX
   %CONFIG_SCOPE_BIBLATEX
+  %NOSORT_TYPES
   %STRUCTURE_DATATYPES
   $BIBER_CONF_NAME
   $BIBLATEX_VERSION
   $BIBER_SORT_FINAL
   $BIBER_SORT_NULL
-  $BIBER_SORT_FIRSTPASSDONE
-  %BIBER_DATAFILE_REFS
-  %NUMERICALMONTH
-  %DISPLAYMODES
-  $DISPLAYMODE_DEFAULT
-  } ;
+  };
 
 # Version of biblatex which this release works with. Matched against version
 # passed in control file
@@ -29,13 +26,10 @@ Readonly::Scalar our $BIBLATEX_VERSION => '1.1';
 # Global flags needed for sorting
 our $BIBER_SORT_FINAL = 0;
 our $BIBER_SORT_NULL  = 0;
-our $BIBER_SORT_FIRSTPASSDONE = 0;
 
 # the name of the Biber configuration file, which should be
 # either returned by kpsewhich or located at "$HOME/.$BIBER_CONF_NAME"
 our $BIBER_CONF_NAME = 'biber.conf';
-
-Readonly::Scalar our $DISPLAYMODE_DEFAULT => 'uniform';
 
 ## Biber CONFIGURATION DEFAULTS
 
@@ -61,6 +55,39 @@ unless ($locale) {
   }
 }
 
+# nosort type category shortcuts
+our %NOSORT_TYPES = (
+                     type_name => {
+                                   author => 1,
+                                   afterword => 1,
+                                   annotator => 1,
+                                   bookauthor => 1,
+                                   commentator => 1,
+                                   editor => 1,
+                                   editora => 1,
+                                   editorb => 1,
+                                   editorc => 1,
+                                   foreword => 1,
+                                   holder => 1,
+                                   introduction => 1,
+                                   namea => 1,
+                                   nameb => 1,
+                                   namec => 1,
+                                   shortauthor => 1,
+                                   shorteditor => 1,
+                                   translator => 1
+                                  },
+                     type_title => {
+                                    booktitle => 1,
+                                    eventtitle => 1,
+                                    issuetitle => 1,
+                                    journaltitle => 1,
+                                    maintitle => 1,
+                                    origtitle => 1,
+                                    title => 1
+                                   }
+);
+
 # datatypes for structure validation
 our %STRUCTURE_DATATYPES = (
                             integer => qr/\A\d+\z/xms
@@ -77,14 +104,16 @@ our %CONFIG_DEFAULT_BIBER = (
   bibdata            =>  undef,
   bibdatatype        => 'bibtex',
   bibencoding        => 'UTF-8',
+  bblsafechars       => 0,
+  bblsafecharsset    => 'extra',
   collate            => 1,
   collate_options    => { level => 4 },
   debug              => 0,
-  displaymode        => $DISPLAYMODE_DEFAULT, # eventually, shall be moved to biblatex options
+  decodecharsset     => 'extra',
   mincrossrefs       => 2,
   nolog              => 0,
-  nosortdiacritics   => qr/[\x{2bf}\x{2018}]/,
-  nosortprefix       => qr/\p{L}{2}\p{Pd}/,
+  nostdmacros        => 0,
+  nosort             => { type_name => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ] },
   quiet              => 0,
   sortcase           => 1,
   sortlocale         => $locale,
@@ -123,11 +152,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
    useeditor       => '1',
    useprefix       => '0',
    usetranslator   => '0',
+   displaymode     => { ALL => ["original", "romanised", "uniform", "translated"] },
    # Now the defaults for special .bcf sections information
    inheritance     => {
                    defaults => {
-                                inherit_all     => 'yes',
-                                override_target => 'no',
+                                inherit_all     => 'true',
+                                override_target => 'false',
                                 type_pair => []
                                },
                    inherit => [
@@ -150,17 +180,17 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                            {
                                             source => 'title',
                                             target => 'booktitle',
-                                            override_target => 'yes',
+                                            override_target => 'true',
                                            },
                                            {
                                             source => 'subtitle',
                                             target => 'booksubtitle',
-                                            override_target => 'yes',
+                                            override_target => 'true',
                                            },
                                            {
                                             source => 'titleaddon',
                                             target => 'booktitleaddon',
-                                            override_target => 'yes',
+                                            override_target => 'true',
                                            },
                                           ]
                                },
@@ -175,173 +205,15 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                            {
                                             source => 'author',
                                             target => 'bookauthor',
-                                            override_target => 'yes',
+                                            override_target => 'true',
                                            },
                                           ]
                                },
                               ]
                   },
    presort => 'mm',
-   sorting_label   =>  [
-                [
-                 {final          => undef,
-                  sort_direction => undef},
-                 {
-                  'presort'    => {}},
-                ],
-                [
-                 {final          => 1,
-                  sort_direction => undef},
-                 {
-                  'sortkey'    => {}}
-                ],
-                [
-                 {final          => undef,
-                  sort_direction => undef},
-                 {
-                  'sortname'   => {}},
-                 {
-                  'author'     => {}},
-                 {
-                  'editor'     => {}},
-                 {
-                  'translator' => {}},
-                 {
-                  'sorttitle'  => {}},
-                 {
-                  'title'      => {}}
-                ],
-                [
-                 {final          => undef,
-                  sort_direction => undef},
-                 {
-                  'sortyear'   => {}},
-                 {
-                  'year'       => {}}
-                ],
-                [
-                 {final          => undef,
-                  sort_direction => undef},
-                 {
-                  'sorttitle'  => {}},
-                 {
-                  'title'      => {}}
-                ],
-                [
-                 {final          => undef,
-                  sort_direction => undef},
-                 {
-                  'volume'     => {}},
-                 {
-                  '0000'       => {}}
-                ]
-               ],
    structure => {
-  aliases     => {
-                   alias => [
-                     {
-                       name => { content => "conference" },
-                       realname => { content => "inproceedings" },
-                       type => "entrytype",
-                     },
-                     {
-                       name => { content => "electronic" },
-                       realname => { content => "online" },
-                       type => "entrytype",
-                     },
-                     {
-                       field    => [{ content => "mathesis", name => "type" }],
-                       name     => { content => "mastersthesis" },
-                       realname => { content => "thesis" },
-                       type     => "entrytype",
-                     },
-                     {
-                       field    => [{ content => "phdthesis", name => "type" }],
-                       name     => { content => "phdthesis" },
-                       realname => { content => "thesis" },
-                       type     => "entrytype",
-                     },
-                     {
-                       field    => [{ content => "techreport", name => "type" }],
-                       name     => { content => "techreport" },
-                       realname => { content => "report" },
-                       type     => "entrytype",
-                     },
-                     {
-                       name => { content => "www" },
-                       realname => { content => "online" },
-                       type => "entrytype",
-                     },
-                     {
-                       name => { content => "address" },
-                       realname => { content => "location" },
-                       type => "field",
-                     },
-                     {
-                       name => { content => "annote" },
-                       realname => { content => "annotation" },
-                       type => "field",
-                     },
-                     {
-                       name => { content => "archiveprefix" },
-                       realname => { content => "eprinttype" },
-                       type => "field",
-                     },
-                     {
-                       name => { content => "journal" },
-                       realname => { content => "journaltitle" },
-                       type => "field",
-                     },
-                     {
-                       name => { content => "key" },
-                       realname => { content => "sortkey" },
-                       type => "field",
-                     },
-                     {
-                       name => { content => "pdf" },
-                       realname => { content => "file" },
-                       type => "field",
-                     },
-                     {
-                       name => { content => "primaryclass" },
-                       realname => { content => "eprintclass" },
-                       type => "field",
-                     },
-                     {
-                       name => { content => "school" },
-                       realname => { content => "institution" },
-                       type => "field",
-                     },
-                   ],
-                 },
   constraints => [
-                   {
-                     constraint => [
-                                     {
-                                       antecedent => { field => [{ content => "date" }], quant => "all" },
-                                       consequent => { field => [{ content => "month" }], quant => "none" },
-                                       type => "conditional",
-                                     },
-                                     {
-                                       datatype => "integer",
-                                       field    => [{ content => "month" }],
-                                       rangemax => 12,
-                                       rangemin => 1,
-                                       type     => "data",
-                                     },
-                                     {
-                                       datatype => "datespec",
-                                       field => [
-                                         { content => "date" },
-                                         { content => "origdate" },
-                                         { content => "eventdate" },
-                                         { content => "urldate" },
-                                       ],
-                                       type => "data",
-                                     },
-                                   ],
-                     entrytype  => [{ content => "ALL" }],
-                   },
                    {
                      constraint => [
                                      {
@@ -359,11 +231,13 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      entrytype  => [
                                      { content => "article" },
                                      { content => "book" },
+                                     { content => "books" },
                                      { content => "inbook" },
                                      { content => "bookinbook" },
                                      { content => "suppbook" },
                                      { content => "booklet" },
                                      { content => "collection" },
+                                     { content => "collections" },
                                      { content => "incollection" },
                                      { content => "suppcollection" },
                                      { content => "manual" },
@@ -411,7 +285,11 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                        type  => "mandatory",
                                      },
                                    ],
-                     entrytype  => [{ content => "book" }],
+                     entrytype  => [
+                                     { content => "book" },
+                                     { content => "books" },
+                                     { content => "collections" },
+                                   ],
                    },
                    {
                      constraint => [
@@ -569,6 +447,14 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      entrytype  => [{ content => "unpublished" }],
                    },
                  ],
+  datetypes   => {
+                   datetype => [
+                     { content => "date" },
+                     { content => "origdate" },
+                     { content => "eventdate" },
+                     { content => "urldate" },
+                   ],
+                 },
   entryfields => [
                    {
                      entrytype => [{ content => "ALL" }],
@@ -600,7 +486,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "listf" },
                        { content => "nameaddon" },
                        { content => "options" },
-                       { content => "origdate" },
+                       { content => "origday" },
+                       { content => "origendday" },
+                       { content => "origendmonth" },
+                       { content => "origendyear" },
+                       { content => "origmonth" },
+                       { content => "origyear" },
                        { content => "origlocation" },
                        { content => "origpublisher" },
                        { content => "origtitle" },
@@ -608,6 +499,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "presort" },
                        { content => "related" },
                        { content => "relatedtype" },
+                       { content => "relatedstring" },
                        { content => "reprinttitle" },
                        { content => "shortauthor" },
                        { content => "shorteditor" },
@@ -634,13 +526,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                    },
                    {
                      entrytype => [{ content => "set" }],
-                     field => [{ content => "ALL" }],
-                   },
-                   {
-                     entrytype => [{ content => "bibnote" }],
-                     field => [
-                       { content => "note" },
-                              ],
+                     field => [{ content => "entryset" }, { content => "crossref" }],
                    },
                    {
                      entrytype => [{ content => "article" }],
@@ -648,8 +534,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "author" },
                        { content => "journaltitle" },
                        { content => "title" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
                        { content => "year" },
-                       { content => "date" },
                        { content => "addendum" },
                        { content => "annotator" },
                        { content => "commentator" },
@@ -682,18 +572,31 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "titleaddon" },
                        { content => "translator" },
                        { content => "url" },
-                       { content => "urldate" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
                        { content => "version" },
                        { content => "volume" },
                      ],
+                   },
+                   {
+                     entrytype => [{ content => "bibnote" }],
+                     field => [{ content => "note" }],
                    },
                    {
                      entrytype => [{ content => "book" }],
                      field => [
                        { content => "author" },
                        { content => "title" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
                        { content => "year" },
-                       { content => "date" },
                        { content => "addendum" },
                        { content => "afterword" },
                        { content => "annotator" },
@@ -732,7 +635,63 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "titleaddon" },
                        { content => "translator" },
                        { content => "url" },
-                       { content => "urldate" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
+                       { content => "volume" },
+                       { content => "volumes" },
+                     ],
+                   },
+                   {
+                     entrytype => [{ content => "books" }],
+                     field => [
+                       { content => "author" },
+                       { content => "title" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
+                       { content => "year" },
+                       { content => "addendum" },
+                       { content => "afterword" },
+                       { content => "annotator" },
+                       { content => "commentator" },
+                       { content => "doi" },
+                       { content => "edition" },
+                       { content => "editor" },
+                       { content => "editora" },
+                       { content => "editorb" },
+                       { content => "editorc" },
+                       { content => "editoratype" },
+                       { content => "editorbtype" },
+                       { content => "editorctype" },
+                       { content => "eprint" },
+                       { content => "eprintclass" },
+                       { content => "eprinttype" },
+                       { content => "foreword" },
+                       { content => "introduction" },
+                       { content => "isbn" },
+                       { content => "language" },
+                       { content => "location" },
+                       { content => "note" },
+                       { content => "number" },
+                       { content => "origlanguage" },
+                       { content => "publisher" },
+                       { content => "pubstate" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "translator" },
+                       { content => "url" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
                        { content => "volume" },
                        { content => "volumes" },
                      ],
@@ -747,8 +706,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "author" },
                        { content => "title" },
                        { content => "booktitle" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
                        { content => "year" },
-                       { content => "date" },
                        { content => "addendum" },
                        { content => "afterword" },
                        { content => "annotator" },
@@ -789,7 +752,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "titleaddon" },
                        { content => "translator" },
                        { content => "url" },
-                       { content => "urldate" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
                        { content => "volume" },
                        { content => "volumes" },
                      ],
@@ -800,8 +768,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "author" },
                        { content => "editor" },
                        { content => "title" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
                        { content => "year" },
-                       { content => "date" },
                        { content => "addendum" },
                        { content => "chapter" },
                        { content => "doi" },
@@ -819,7 +791,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "titleaddon" },
                        { content => "type" },
                        { content => "url" },
-                       { content => "urldate" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
                      ],
                    },
                    {
@@ -827,8 +804,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      field => [
                        { content => "editor" },
                        { content => "title" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
                        { content => "year" },
-                       { content => "date" },
                        { content => "addendum" },
                        { content => "afterword" },
                        { content => "annotator" },
@@ -866,7 +847,63 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "titleaddon" },
                        { content => "translator" },
                        { content => "url" },
-                       { content => "urldate" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
+                       { content => "volume" },
+                       { content => "volumes" },
+                     ],
+                   },
+                   {
+                     entrytype => [{ content => "collections" }],
+                     field => [
+                       { content => "author" },
+                       { content => "title" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
+                       { content => "year" },
+                       { content => "addendum" },
+                       { content => "afterword" },
+                       { content => "annotator" },
+                       { content => "commentator" },
+                       { content => "doi" },
+                       { content => "edition" },
+                       { content => "editor" },
+                       { content => "editora" },
+                       { content => "editorb" },
+                       { content => "editorc" },
+                       { content => "editoratype" },
+                       { content => "editorbtype" },
+                       { content => "editorctype" },
+                       { content => "eprint" },
+                       { content => "eprintclass" },
+                       { content => "eprinttype" },
+                       { content => "foreword" },
+                       { content => "introduction" },
+                       { content => "isbn" },
+                       { content => "language" },
+                       { content => "location" },
+                       { content => "note" },
+                       { content => "number" },
+                       { content => "origlanguage" },
+                       { content => "publisher" },
+                       { content => "pubstate" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "translator" },
+                       { content => "url" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
                        { content => "volume" },
                        { content => "volumes" },
                      ],
@@ -882,8 +919,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "editor" },
                        { content => "title" },
                        { content => "booktitle" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
                        { content => "year" },
-                       { content => "date" },
                        { content => "addendum" },
                        { content => "afterword" },
                        { content => "annotator" },
@@ -922,7 +963,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "titleaddon" },
                        { content => "translator" },
                        { content => "url" },
-                       { content => "urldate" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
                        { content => "volume" },
                        { content => "volumes" },
                      ],
@@ -931,8 +977,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      entrytype => [{ content => "manual" }],
                      field => [
                        { content => "title" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
                        { content => "year" },
-                       { content => "date" },
                        { content => "addendum" },
                        { content => "author" },
                        { content => "chapter" },
@@ -957,7 +1007,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "titleaddon" },
                        { content => "type" },
                        { content => "url" },
-                       { content => "urldate" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
                        { content => "version" },
                      ],
                    },
@@ -965,8 +1020,16 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      entrytype => [{ content => "misc" }],
                      field => [
                        { content => "title" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
                        { content => "year" },
-                       { content => "date" },
                        { content => "addendum" },
                        { content => "author" },
                        { content => "doi" },
@@ -985,7 +1048,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "titleaddon" },
                        { content => "type" },
                        { content => "url" },
-                       { content => "urldate" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
                        { content => "version" },
                      ],
                    },
@@ -1004,7 +1072,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "pubstate" },
                        { content => "subtitle" },
                        { content => "titleaddon" },
-                       { content => "urldate" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
                        { content => "version" },
                        { content => "year" },
                      ],
@@ -1015,8 +1088,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "author" },
                        { content => "title" },
                        { content => "number" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
                        { content => "year" },
-                       { content => "date" },
                        { content => "addendum" },
                        { content => "doi" },
                        { content => "eprint" },
@@ -1031,7 +1108,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "titleaddon" },
                        { content => "type" },
                        { content => "url" },
-                       { content => "urldate" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
                        { content => "version" },
                      ],
                    },
@@ -1040,8 +1122,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      field => [
                        { content => "editor" },
                        { content => "title" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
                        { content => "year" },
-                       { content => "date" },
                        { content => "addendum" },
                        { content => "doi" },
                        { content => "editora" },
@@ -1065,7 +1151,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "series" },
                        { content => "subtitle" },
                        { content => "url" },
-                       { content => "urldate" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
                        { content => "volume" },
                      ],
                    },
@@ -1074,15 +1165,24 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      field => [
                        { content => "editor" },
                        { content => "title" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
                        { content => "year" },
-                       { content => "date" },
                        { content => "addendum" },
                        { content => "chapter" },
                        { content => "doi" },
                        { content => "eprint" },
                        { content => "eprintclass" },
                        { content => "eprinttype" },
-                       { content => "eventdate" },
+                       { content => "eventday" },
+                       { content => "eventendday" },
+                       { content => "eventendmonth" },
+                       { content => "eventendyear" },
+                       { content => "eventmonth" },
+                       { content => "eventyear" },
                        { content => "eventtitle" },
                        { content => "isbn" },
                        { content => "language" },
@@ -1103,7 +1203,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "subtitle" },
                        { content => "titleaddon" },
                        { content => "url" },
-                       { content => "urldate" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
                        { content => "venue" },
                        { content => "volume" },
                        { content => "volumes" },
@@ -1116,8 +1221,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "editor" },
                        { content => "title" },
                        { content => "booktitle" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
                        { content => "year" },
-                       { content => "date" },
                        { content => "addendum" },
                        { content => "booksubtitle" },
                        { content => "booktitleaddon" },
@@ -1126,7 +1235,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "eprint" },
                        { content => "eprintclass" },
                        { content => "eprinttype" },
-                       { content => "eventdate" },
+                       { content => "eventday" },
+                       { content => "eventendday" },
+                       { content => "eventendmonth" },
+                       { content => "eventendyear" },
+                       { content => "eventmonth" },
+                       { content => "eventyear" },
                        { content => "eventtitle" },
                        { content => "isbn" },
                        { content => "language" },
@@ -1146,7 +1260,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "subtitle" },
                        { content => "titleaddon" },
                        { content => "url" },
-                       { content => "urldate" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
                        { content => "venue" },
                        { content => "volume" },
                        { content => "volumes" },
@@ -1159,8 +1278,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "title" },
                        { content => "type" },
                        { content => "institution" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
                        { content => "year" },
-                       { content => "date" },
                        { content => "addendum" },
                        { content => "chapter" },
                        { content => "doi" },
@@ -1179,7 +1302,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "subtitle" },
                        { content => "titleaddon" },
                        { content => "url" },
-                       { content => "urldate" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
                        { content => "version" },
                      ],
                    },
@@ -1190,8 +1318,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "title" },
                        { content => "type" },
                        { content => "institution" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
                        { content => "year" },
-                       { content => "date" },
                        { content => "addendum" },
                        { content => "chapter" },
                        { content => "doi" },
@@ -1208,7 +1340,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "subtitle" },
                        { content => "titleaddon" },
                        { content => "url" },
-                       { content => "urldate" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
                      ],
                    },
                    {
@@ -1216,8 +1353,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      field => [
                        { content => "author" },
                        { content => "title" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
                        { content => "year" },
-                       { content => "date" },
                        { content => "addendum" },
                        { content => "howpublished" },
                        { content => "language" },
@@ -1228,7 +1369,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "subtitle" },
                        { content => "titleaddon" },
                        { content => "url" },
-                       { content => "urldate" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
                      ],
                    },
                  ],
@@ -1241,7 +1387,9 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "book" },
                      { content => "bookinbook" },
                      { content => "booklet" },
+                     { content => "books" },
                      { content => "collection" },
+                     { content => "collections" },
                      { content => "commentary" },
                      { content => "customa" },
                      { content => "customb" },
@@ -1301,12 +1449,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "chapter", datatype => "literal", fieldtype => "field" },
                      { content => "commentator", datatype => "name", fieldtype => "list" },
                      { content => "crossref", datatype => "literal", fieldtype => "field" },
-                     {
-                       content     => "date",
-                       datatype    => "date",
-                       fieldtype   => "field",
-                       skip_output => "true",
-                     },
                      { content => "day", datatype => "literal", fieldtype => "field" },
                      { content => "doi", datatype => "verbatim", fieldtype => "field" },
                      { content => "edition", datatype => "literal", fieldtype => "field" },
@@ -1327,17 +1469,16 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        fieldtype => "field",
                        nullok    => "true",
                      },
-                     { content => "entryset", datatype => "literal", fieldtype => "field", skip_output => "true"},
-                     { content => "entrysubtype", datatype => "literal", fieldtype => "field" },
-                     { content => "eprint", datatype => "verbatim", fieldtype => "field" },
-                     { content => "eprintclass", datatype => "literal", fieldtype => "field" },
-                     { content => "eprinttype", datatype => "literal", fieldtype => "field" },
                      {
-                       content     => "eventdate",
+                       content     => "entryset",
                        datatype    => "literal",
                        fieldtype   => "field",
                        skip_output => "true",
                      },
+                     { content => "entrysubtype", datatype => "literal", fieldtype => "field" },
+                     { content => "eprint", datatype => "verbatim", fieldtype => "field" },
+                     { content => "eprintclass", datatype => "literal", fieldtype => "field" },
+                     { content => "eprinttype", datatype => "literal", fieldtype => "field" },
                      { content => "eventday", datatype => "literal", fieldtype => "field" },
                      { content => "eventendday", datatype => "literal", fieldtype => "field" },
                      { content => "eventendmonth", datatype => "literal", fieldtype => "field" },
@@ -1410,12 +1551,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "number", datatype => "literal", fieldtype => "field" },
                      { content => "options", datatype => "special", fieldtype => "field" },
                      { content => "organization", datatype => "literal", fieldtype => "list" },
-                     {
-                       content     => "origdate",
-                       datatype    => "date",
-                       fieldtype   => "field",
-                       skip_output => "true",
-                     },
                      { content => "origday", datatype => "literal", fieldtype => "field" },
                      { content => "origendday", datatype => "literal", fieldtype => "field" },
                      { content => "origendmonth", datatype => "literal", fieldtype => "field" },
@@ -1445,6 +1580,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "pubstate", datatype => "key", fieldtype => "field" },
                      { content => "related", datatype => "literal", fieldtype => "field" },
                      { content => "relatedtype", datatype => "literal", fieldtype => "field" },
+                     { content => "relatedstring", datatype => "literal", fieldtype => "field" },
                      { content => "reprinttitle", datatype => "literal", fieldtype => "field" },
                      { content => "series", datatype => "literal", fieldtype => "field" },
                      { content => "shortauthor", datatype => "name", fieldtype => "list" },
@@ -1466,8 +1602,8 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      },
                      {
                        content     => "sortname",
-                       datatype    => "literal",
-                       fieldtype   => "field",
+                       datatype    => "name",
+                       fieldtype   => "list",
                        skip_output => "true",
                      },
                      {
@@ -1488,12 +1624,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "translator", datatype => "name", fieldtype => "list" },
                      { content => "type", datatype => "key", fieldtype => "field" },
                      { content => "url", datatype => "verbatim", fieldtype => "field" },
-                     {
-                       content     => "urldate",
-                       datatype    => "date",
-                       fieldtype   => "field",
-                       skip_output => "true",
-                     },
                      { content => "usera", datatype => "literal", fieldtype => "field" },
                      { content => "userb", datatype => "literal", fieldtype => "field" },
                      { content => "userc", datatype => "literal", fieldtype => "field" },
@@ -1522,9 +1652,65 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "year", datatype => "literal", fieldtype => "field" },
                    ],
                  },
-}
+                }
   );
-$CONFIG_DEFAULT_BIBLATEX{sorting_final} = $CONFIG_DEFAULT_BIBLATEX{sorting_label};
+
+my $S =  [
+          [
+           {final          => undef,
+            sort_direction => undef},
+           {
+            'presort'    => {}},
+          ],
+          [
+           {final          => 1,
+            sort_direction => undef},
+           {
+            'sortkey'    => {}}
+          ],
+          [
+           {final          => undef,
+            sort_direction => undef},
+           {
+            'sortname'   => {}},
+           {
+            'author'     => {}},
+           {
+            'editor'     => {}},
+           {
+            'translator' => {}},
+           {
+            'sorttitle'  => {}},
+           {
+            'title'      => {}}
+          ],
+          [
+           {final          => undef,
+            sort_direction => undef},
+           {
+            'sortyear'   => {}},
+           {
+            'year'       => {}}
+          ],
+          [
+           {final          => undef,
+            sort_direction => undef},
+           {
+            'sorttitle'  => {}},
+           {
+            'title'      => {}}
+          ],
+          [
+           {final          => undef,
+            sort_direction => undef},
+           {
+            'volume'     => {}},
+           {
+            '0000'       => {}}
+          ]
+         ];
+
+$CONFIG_DEFAULT_BIBLATEX{sorting}{default} = {label => $S, final => $S, schemes_same => 1};
 
 # Set up some encoding aliases to map \inputen{c,x} encoding names to Encode
 # It seems that inputen{c,x} has a different idea of nextstep than Encode
@@ -1547,6 +1733,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
   controlversion    => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   debug             => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   dataonly          => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
+  displaymode       => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   inheritance       => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   labelalpha        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelname         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
@@ -1564,8 +1751,6 @@ our %CONFIG_SCOPE_BIBLATEX = (
   sortalphaothers   => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   sortexclusion     => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 0},
   sorting           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  sorting_label     => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  sorting_final     => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   sortlos           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   structure         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   terseinits        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
@@ -1577,52 +1762,6 @@ our %CONFIG_SCOPE_BIBLATEX = (
   usetranslator     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
 );
 
-Readonly::Hash our %NUMERICALMONTH => (
-  'January' => 1,
-  'February' => 2,
-  'March' => 3,
-  'April' => 4,
-  'May' => 5,
-  'June' => 6,
-  'July' => 7,
-  'August' => 8,
-  'September' => 9,
-  'October' => 10,
-  'November' => 11,
-  'December' => 12,
-  'january' => 1,
-  'february' => 2,
-  'march' => 3,
-  'april' => 4,
-  'may' => 5,
-  'june' => 6,
-  'july' => 7,
-  'august' => 8,
-  'september' => 9,
-  'october' => 10,
-  'november' => 11,
-  'december' => 12,
-  'jan' => 1,
-  'feb' => 2,
-  'mar' => 3,
-  'apr' => 4,
-  'may' => 5,
-  'jun' => 6,
-  'jul' => 7,
-  'aug' => 8,
-  'sep' => 9,
-  'oct' => 10,
-  'nov' => 11,
-  'dec' => 12
-  );
-
-
-Readonly::Hash our %DISPLAYMODES => {
-  uniform => [ qw/uniform romanized translated original/ ],
-  translated => [ qw/translated uniform romanized original/ ],
-  romanized => [ qw/romanized uniform translated original/ ],
-  original => [ qw/original romanized uniform translated/ ]
-  } ;
 
 1;
 

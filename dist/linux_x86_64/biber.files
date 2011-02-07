@@ -1,5 +1,11 @@
 ../../data/schemata/bcf.rnc;lib/Biber/bcf.rnc
 ../../data/schemata/bcf.rng;lib/Biber/bcf.rng
+../../data/schemata/dcf.rnc;lib/Biber/dcf.rnc
+../../data/schemata/dcf.rng;lib/Biber/dcf.rng
+../../data/schemata/biblatexml.rnc;lib/Biber/biblatexml.rnc
+../../data/schemata/biblatexml.rng;lib/Biber/biblatexml.rng
+../../lib/Biber/Input/file/bibtex.dcf;lib/Biber/Input/file/bibtex.dcf
+../../lib/Biber/Input/file/biblatexml.dcf;lib/Biber/Input/file/biblatexml.dcf
 ../../data/bcf.xsl;lib/Biber/bcf.xsl
 ../../data/latinkeys.txt;lib/Unicode/Collate/latinkeys.txt
 /usr/local/perl/lib/5.12.2/x86_64-linux-thread-multi/Unicode/Collate/Locale;lib/Unicode/Collate/Locale

@@ -30,6 +30,130 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template name="sorting-spec">
+    <xsl:param name="spec"/>
+    <table>
+      <thead>
+        <tr>
+          <xsl:for-each select="$spec/bcf:sort">
+            <xsl:sort select="./@order"/>
+            <td>
+              <xsl:if test="./@final='1'">
+                <xsl:attribute name="class">sort_final</xsl:attribute>
+              </xsl:if>
+              <xsl:choose>
+                <xsl:when test="./@sort_direction='descending'">
+                  <xsl:text disable-output-escaping="yes">&amp;darr;</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:text disable-output-escaping="yes">&amp;uarr;</xsl:text>
+                </xsl:otherwise>
+              </xsl:choose>
+              <tt>
+                <!-- sortupper -->
+                <xsl:choose>
+                  <xsl:when test ="./@sortupper">
+                    <!-- Field setting -->
+                    <xsl:choose>
+                      <xsl:when test="./@sortupper='1'">Aa/</xsl:when>
+                      <xsl:otherwise>aA/</xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <!-- Global setting -->
+                    <xsl:choose>
+                      <xsl:when test="/bcf:controlfile/bcf:options[@component='biber']/bcf:option/bcf:key[text()='sortupper']/../bcf:value/text()">Aa/</xsl:when>
+                      <xsl:otherwise>aA/</xsl:otherwise>
+                    </xsl:choose>
+                    
+                  </xsl:otherwise>
+                </xsl:choose>
+                <!-- sortcase -->
+                <xsl:choose>
+                  <xsl:when test ="./@sortcase">
+                    <!-- Field setting -->
+                    <xsl:choose>
+                      <xsl:when test="./@sortcase='1'">A</xsl:when>
+                      <xsl:otherwise>a</xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <!-- Global setting -->
+                    <xsl:choose>
+                      <xsl:when test="/bcf:controlfile/bcf:options[@component='biber']/bcf:option/bcf:key[text()='sortcase']/../bcf:value/text()">A</xsl:when>
+                      <xsl:otherwise>a</xsl:otherwise>
+                    </xsl:choose>
+                    
+                  </xsl:otherwise>
+                </xsl:choose>
+              </tt>
+            </td>
+          </xsl:for-each>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <xsl:for-each select="$spec/bcf:sort">
+            <xsl:sort select="./@order"/>
+            <td>
+              <ul>
+                <xsl:for-each select="./bcf:sortitem">
+                  <xsl:sort select="./@order"/>
+                  <li>
+                    <!-- left padding -->
+                    <xsl:if test="./@pad_side = 'left'">
+                      <span class="sort_padding">
+                        <xsl:call-template name='generate-string'>
+                          <xsl:with-param name='text'><xsl:value-of select="./@pad_char"/></xsl:with-param>
+                          <xsl:with-param name='count' select='./@pad_width'/>
+                        </xsl:call-template>
+                      </span>
+                    </xsl:if>
+                    <!-- left substring -->
+                    <xsl:if test="./@substring_side = 'left'">
+                      <span class="sort_substring">
+                        <xsl:call-template name='generate-string'>
+                          <xsl:with-param name='text'>&gt;</xsl:with-param>
+                          <xsl:with-param name='count' select='./@substring_width'/>
+                        </xsl:call-template>
+                      </span>
+                    </xsl:if>
+                    <xsl:value-of select="./text()"/>
+                    <!-- right padding -->
+                    <xsl:if test="./@pad_side='right'">
+                      <span class="sort_padding">
+                        <xsl:call-template name='generate-string'>
+                          <xsl:with-param name='text'><xsl:value-of select="./@pad_char"/></xsl:with-param>
+                          <xsl:with-param name='count' select='./@pad_width'/>
+                        </xsl:call-template>
+                      </span>
+                    </xsl:if>
+                    <!-- right substring -->
+                    <xsl:if test="./@substring_side='right'">
+                      <span class="sort_substring">
+                        <xsl:call-template name='generate-string'>
+                          <xsl:with-param name='text'>&lt;</xsl:with-param>
+                          <xsl:with-param name='count' select='./@substring_width'/>
+                        </xsl:call-template>
+                      </span>
+                    </xsl:if>
+                  </li>
+                </xsl:for-each>
+              </ul>
+            </td>
+          </xsl:for-each>
+        </tr>
+      </tbody>
+    </table>
+    <div class="key"><u>Key</u>
+    <ul>
+      <li><b>Heading Format</b>: (sort-direction)(case-order)/(case-sensitivity)</li>
+      <li><b>Heading key</b>: <xsl:text disable-output-escaping="yes">&amp;uarr;</xsl:text> = ascending sort, <xsl:text disable-output-escaping="yes">&amp;darr;</xsl:text> = descending sort, <tt>Aa</tt> = sort uppercase before lower, <tt>aA</tt> = sort lowercase before upper, <tt>A</tt> = case-sensitive sorting, <tt>a</tt> = case-insensitive sorting, <span class="sort_final">sort fieldset is final master key if defined</span></li>
+      <li><b>Field key</b>: <span class="sort_padding">Padding specification</span> e.g. <span class="sort_padding">0000</span>field = pad field &quot;field&quot; from left with &quot;0&quot; to width 4. <span class="sort_substring">Substring specification</span> e.g. field<span class="sort_substring">&lt;&lt;&lt;&lt;</span> = take width 4 substring from right side of field &quot;field&quot;</li>        
+    </ul>
+    </div>
+  </xsl:template>
+
   <xsl:template match="/">
     <html>
       <head>
@@ -42,12 +166,6 @@
           .key {
             font-size: 70%;
             padding-top: 2ex;
-          }
-          .sort_final {
-            background-color: #FF9999;
-          }
-          .sort_label {
-            background-color: #D0D0D0;
           }
           .sort_padding {
             color: #6699CC;
@@ -309,7 +427,7 @@
         </xsl:if>
         <!-- SORTING -->
         <hr/>
-        <h3>Sorting options</h3>
+        <h3>Global Default Sorting Options</h3>
         <h4>Presort defaults</h4>
         <table>
           <thead>
@@ -357,142 +475,31 @@
           </tbody>
         </table>
         <h4>Sorting Specification</h4>
-        <table>
-          <thead>
-            <tr>
-              <xsl:for-each select="/bcf:controlfile/bcf:sorting/bcf:sort">
-                <xsl:sort select="./@order"/>
-                <td>
-                  <xsl:if test="./@pass='label'">
-                    <xsl:attribute name="class">sort_label</xsl:attribute>
-                  </xsl:if>
-                  <xsl:if test="./@final='1'">
-                    <xsl:attribute name="class">sort_final</xsl:attribute>
-                  </xsl:if>
-                  <xsl:choose>
-                    <xsl:when test="./@sort_direction='descending'">
-                      <xsl:text disable-output-escaping="yes">&amp;darr;</xsl:text>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:text disable-output-escaping="yes">&amp;uarr;</xsl:text>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                  <tt>
-                    <!-- sortupper -->
-                    <xsl:choose>
-                      <xsl:when test ="./@sortupper">
-                        <!-- Field setting -->
-                        <xsl:choose>
-                          <xsl:when test="./@sortupper='1'">Aa/</xsl:when>
-                          <xsl:otherwise>aA/</xsl:otherwise>
-                        </xsl:choose>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <!-- Global setting -->
-                        <xsl:choose>
-                          <xsl:when test="/bcf:controlfile/bcf:options[@component='biber']/bcf:option/bcf:key[text()='sortupper']/../bcf:value/text()">Aa/</xsl:when>
-                          <xsl:otherwise>aA/</xsl:otherwise>
-                        </xsl:choose>
-                        
-                      </xsl:otherwise>
-                    </xsl:choose>
-                    <!-- sortcase -->
-                    <xsl:choose>
-                      <xsl:when test ="./@sortcase">
-                        <!-- Field setting -->
-                        <xsl:choose>
-                          <xsl:when test="./@sortcase='1'">A</xsl:when>
-                          <xsl:otherwise>a</xsl:otherwise>
-                        </xsl:choose>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <!-- Global setting -->
-                        <xsl:choose>
-                          <xsl:when test="/bcf:controlfile/bcf:options[@component='biber']/bcf:option/bcf:key[text()='sortcase']/../bcf:value/text()">A</xsl:when>
-                          <xsl:otherwise>a</xsl:otherwise>
-                        </xsl:choose>
-                        
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </tt>
-                </td>
-              </xsl:for-each>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <xsl:for-each select="/bcf:controlfile/bcf:sorting/bcf:sort">
-                <xsl:sort select="./@order"/>
-                <td>
-                  <ul>
-                    <xsl:for-each select="./bcf:sortitem">
-                      <xsl:sort select="./@order"/>
-                      <li>
-                        <!-- left padding -->
-                        <xsl:if test="./@pad_side = 'left'">
-                          <span class="sort_padding">
-                            <xsl:call-template name='generate-string'>
-                              <xsl:with-param name='text'><xsl:value-of select="./@pad_char"/></xsl:with-param>
-                              <xsl:with-param name='count' select='./@pad_width'/>
-                            </xsl:call-template>
-                          </span>
-                        </xsl:if>
-                        <!-- left substring -->
-                        <xsl:if test="./@substring_side = 'left'">
-                          <span class="sort_substring">
-                            <xsl:call-template name='generate-string'>
-                              <xsl:with-param name='text'>&gt;</xsl:with-param>
-                              <xsl:with-param name='count' select='./@substring_width'/>
-                            </xsl:call-template>
-                          </span>
-                        </xsl:if>
-                        <xsl:value-of select="./text()"/>
-                        <!-- right padding -->
-                        <xsl:if test="./@pad_side='right'">
-                          <span class="sort_padding">
-                            <xsl:call-template name='generate-string'>
-                              <xsl:with-param name='text'><xsl:value-of select="./@pad_char"/></xsl:with-param>
-                              <xsl:with-param name='count' select='./@pad_width'/>
-                            </xsl:call-template>
-                          </span>
-                        </xsl:if>
-                        <!-- right substring -->
-                        <xsl:if test="./@substring_side='right'">
-                          <span class="sort_substring">
-                            <xsl:call-template name='generate-string'>
-                              <xsl:with-param name='text'>&lt;</xsl:with-param>
-                              <xsl:with-param name='count' select='./@substring_width'/>
-                            </xsl:call-template>
-                          </span>
-                        </xsl:if>
-                      </li>
-                    </xsl:for-each>
-                  </ul>
-                </td>
-              </xsl:for-each>
-            </tr>
-          </tbody>
-        </table>
-        <div class="key"><u>Key</u>
-          <ul>
-            <li><b>Heading Format</b>: (sort-direction)(case-order)/(case-sensitivity)</li>
-            <li><b>Heading key</b>: <xsl:text disable-output-escaping="yes">&amp;uarr;</xsl:text> = ascending sort, <xsl:text disable-output-escaping="yes">&amp;darr;</xsl:text> = descending sort, <tt>Aa</tt> = sort uppercase before lower, <tt>aA</tt> = sort lowercase before upper, <tt>A</tt> = case-sensitive sorting, <tt>a</tt> = case-insensitive sorting, <span class="sort_label">sort fieldset valid only for first (label) pass</span>, <span class="sort_final">sort fieldset is final master key if defined</span></li>
-            <li><b>Field key</b>: <span class="sort_padding">Padding specification</span> e.g. <span class="sort_padding">0000</span>field = pad field &quot;field&quot; from left with &quot;0&quot; to width 4. <span class="sort_substring">Substring specification</span> e.g. field<span class="sort_substring">&lt;&lt;&lt;&lt;</span> = take width 4 substring from right side of field &quot;field&quot;</li>        
-          </ul>
-        </div>
+	      <xsl:call-template name="sorting-spec">
+	        <xsl:with-param name="spec" select="/bcf:controlfile/bcf:sorting"/>
+	      </xsl:call-template>
         <xsl:if test="/bcf:controlfile/bcf:structure">
           <hr/>
-          <h3>Data structure</h3>
+          <h3>Data Structure</h3>
+          <h4>Legal datetypes</h4>
+          <table>
+            <thead>
+              <tr><td>Datetypes</td></tr>
+            </thead>
+            <tbody>
+              <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:datetypes/bcf:datetype">
+              <tr><td><xsl:value-of select="./text()"/></td></tr>
+              </xsl:for-each>
+            </tbody>
+          </table>
           <h4>Legal entrytypes</h4>
           <table>
             <thead>
-              <tr><td>Entrytype</td><td>Aliases</td><td>Field changes when resolving alias</td><td>Legal fields for entrytype</td></tr>
+              <tr><td>Entrytype</td><td>Legal fields for entrytype</td></tr>
             </thead>
             <tbody>
               <tr>
                 <td>GLOBAL</td>
-                <td></td>
-                <td></td>
                 <td>
                   <div class="global_entrytype_fields">
                     <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:entryfields/bcf:entrytype[text()='ALL']/../bcf:field">
@@ -506,26 +513,6 @@
               <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:entrytypes/bcf:entrytype">
                 <tr>
                   <td><xsl:value-of select="./text()"/></td>
-                  <td>
-                    <ul>
-                      <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:aliases/bcf:alias[@type='entrytype']/bcf:realname[./text()=current()/text()]">
-                        <li>
-                          <xsl:value-of select="../bcf:name/text()"/>
-
-                        </li>
-                      </xsl:for-each>
-                    </ul>
-                  </td>
-                  <!-- Fields which need changing when resolving an alias -->
-                  <td>
-                    <ul>
-                      <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:aliases/bcf:alias[@type='entrytype']/bcf:realname[./text()=current()/text()]/../bcf:field">
-                        <li>
-                          <xsl:value-of select="./@name"/><xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text><xsl:value-of select="./text()"/>
-                        </li>
-                      </xsl:for-each>                    
-                    </ul>
-                  </td>
                   <!-- Save a varible pointing to the entrytype node -->
                   <xsl:variable name="entrynode" select="current()"/> 
                   <!-- Fields which are valid for this entrytype --> 
@@ -568,7 +555,7 @@
           <h4>Legal Fields</h4>
           <table>
             <thead>
-              <tr><td>Field</td><td>Aliases</td><td>Data type</td></tr>
+              <tr><td>Field</td><td>Data type</td></tr>
             </thead>
             <tbody>
               <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:fields/bcf:field">
@@ -577,15 +564,6 @@
                     <xsl:value-of select="./text()"/>
                     <xsl:if test="./@nullok='true'"><xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text></xsl:if>
                     <xsl:if test="./@skip_output='true'"><xsl:text disable-output-escaping="yes">&amp;loz;</xsl:text></xsl:if>
-                  </td>
-                  <td>
-                    <ul>
-                      <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:aliases/bcf:alias[@type='field']/bcf:realname[./text()=current()/text()]">
-                        <li>
-                          <xsl:value-of select="../bcf:name/text()"/>
-                        </li>
-                      </xsl:for-each>
-                    </ul>
                   </td>
                   <td>
                     <xsl:value-of select="./@datatype"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="./@fieldtype"/>
@@ -632,7 +610,7 @@
                                 (
                                 <xsl:for-each select="./bcf:antecedent/bcf:field">
                                   <xsl:value-of select="./text()"/>
-                                  <xsl:if test="not(position()=last())">,</xsl:if>                          
+                                  <xsl:if test="not(position()=last())">,</xsl:if>
                                 </xsl:for-each>
                                 )
                                 <xsl:text disable-output-escaping="yes">&amp;rarr; </xsl:text>
@@ -644,7 +622,7 @@
                                 (
                                 <xsl:for-each select="./bcf:consequent/bcf:field">
                                   <xsl:value-of select="./text()"/>
-                                  <xsl:if test="not(position()=last())">,</xsl:if>                          
+                                  <xsl:if test="not(position()=last())">,</xsl:if>
                                 </xsl:for-each>
                                 )
                               </xsl:when>
@@ -655,7 +633,7 @@
                                     (
                                     <xsl:for-each select="./bcf:field">
                                       <xsl:value-of select="./text()"/>
-                                      <xsl:if test="not(position()=last())">,</xsl:if>                          
+                                      <xsl:if test="not(position()=last())">,</xsl:if>
                                     </xsl:for-each>
                                     )
                                     <xsl:text disable-output-escaping="yes">&amp;le;</xsl:text><xsl:value-of select="./@rangemax"/>
@@ -664,7 +642,7 @@
                                     (
                                     <xsl:for-each select="./bcf:field">
                                       <xsl:value-of select="./text()"/>
-                                      <xsl:if test="not(position()=last())">,</xsl:if>                          
+                                      <xsl:if test="not(position()=last())">,</xsl:if>
                                     </xsl:for-each>
                                     )
                                     must be dates
@@ -684,7 +662,7 @@
                                       </xsl:if>
                                       <xsl:value-of select="./text()"/>
                                     </span>
-                                    <xsl:if test="not(position()=last())">,</xsl:if>                          
+                                    <xsl:if test="not(position()=last())">,</xsl:if>
                                   </xsl:for-each>
                                   )
                                 </xsl:for-each>
@@ -693,7 +671,7 @@
                                   (
                                   <xsl:for-each select="./bcf:field">
                                     <xsl:value-of select="./text()"/>
-                                    <xsl:if test="not(position()=last())">,</xsl:if>                          
+                                    <xsl:if test="not(position()=last())">,</xsl:if>
                                   </xsl:for-each>
                                   )
                                 </xsl:for-each>
@@ -722,22 +700,80 @@
         </xsl:if>
         <hr/>
         <h3>Reference Sections</h3>
+        <!-- Section 0 is special as it can be empty and there can be many of them -->
+        <h4>Section 0</h4>
         <table>
           <thead>
-            <tr><td>Section Number</td><td>Data sources [type]</td><td>Citekeys</td></tr>
+            <tr><td>Data sources</td><td>Citekeys</td></tr>
           </thead>
           <tbody>
-            <xsl:for-each select="/bcf:controlfile/bcf:section">
-              <!-- Save a varible pointing to the section number -->
-              <xsl:variable name="secnum" select="./@number"/> 
+            <tr>
+              <td>
+                <ul>
+                  <xsl:for-each select="/bcf:controlfile/bcf:bibdata[@section='0']">
+                    <xsl:for-each select="./bcf:datasource">
+                      <li>
+                        <xsl:value-of select="./text()"/> (<xsl:value-of select="./@datatype"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="./@type"/>)
+                      </li>
+                    </xsl:for-each>
+                  </xsl:for-each>
+                </ul>
+              </td>
+              <td>
+                <ul>
+                  <xsl:for-each select="/bcf:controlfile/bcf:section[@number='0' and *]/bcf:citekey">
+                    <li><tt><xsl:value-of select="./text()"/></tt></li>
+                  </xsl:for-each>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <xsl:for-each select="/bcf:controlfile/bcf:section[@number='0' and *]/bcf:sectionlist">
+          <h5><u>Output list &quot;<xsl:value-of select="./@label"/>&quot;</u></h5>
+          <div>
+            <h6>Filters</h6>
+            <table>
+              <thead>
+                <tr><td>Filter type</td><td>Filter value</td></tr>
+              </thead>
+              <tbody>
+                <xsl:for-each select="./bcf:filter">
+                  <tr><td><xsl:value-of select="./@type"/></td><td><xsl:value-of select="./text()"/></td></tr>
+                </xsl:for-each>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <h6>Sorting Specification</h6>
+            <xsl:choose>
+              <xsl:when test="./bcf:sorting">
+                <xsl:call-template name="sorting-spec">
+                  <xsl:with-param name="spec" select="./bcf:sorting"/>
+                </xsl:call-template>
+              </xsl:when>
+              <xsl:otherwise>
+                (global default)
+              </xsl:otherwise>
+            </xsl:choose>
+          </div>
+        </xsl:for-each>
+        <xsl:for-each select="/bcf:controlfile/bcf:section[@number != '0']">
+          <!-- Save a varible pointing to the section number -->
+          <xsl:variable name="secnum" select="./@number"/>
+          <h4>Section <xsl:value-of select="$secnum"/></h4>
+          <table>
+            <thead>
+              <tr><td>Data sources</td><td>Citekeys</td></tr>
+            </thead>
+            <tbody>
               <tr>
-                <td> <xsl:value-of select="$secnum"/></td>
                 <td>
                   <ul>
                     <xsl:for-each select="/bcf:controlfile/bcf:bibdata[@section=$secnum]">
                       <xsl:for-each select="./bcf:datasource">
                         <li>
-                          <xsl:value-of select="./text()"/> [<xsl:value-of select="./@type"/>]
+                          <xsl:value-of select="./text()"/> (<xsl:value-of select="./@datatype"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="./@type"/>)
                         </li>
                       </xsl:for-each>
                     </xsl:for-each>
@@ -746,14 +782,43 @@
                 <td>
                   <ul>
                     <xsl:for-each select="./bcf:citekey">
-                    <li><tt><xsl:value-of select="./text()"/></tt></li>
-                  </xsl:for-each>
+                      <li><tt><xsl:value-of select="./text()"/></tt></li>
+                    </xsl:for-each>
                   </ul>
                 </td>
               </tr>
-            </xsl:for-each>
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+          <xsl:for-each select="./bcf:sectionlist">
+            <h5><u>Output list &quot;<xsl:value-of select="./@label"/>&quot;</u></h5>
+            <div>
+              <h6>Filters</h6>
+              <table>
+                <thead>
+                  <tr><td>Filter type</td><td>Filter value</td></tr>
+                </thead>
+                <tbody>
+                  <xsl:for-each select="./bcf:filter">
+                    <tr><td><xsl:value-of select="./@type"/></td><td><xsl:value-of select="./text()"/></td></tr>
+                  </xsl:for-each>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <h6>Sorting Specification</h6>
+              <xsl:choose>
+                <xsl:when test="./bcf:sorting">
+                  <xsl:call-template name="sorting-spec">
+                    <xsl:with-param name="spec" select="./bcf:sorting"/>
+                  </xsl:call-template>
+                </xsl:when>
+                <xsl:otherwise>
+                  (global default)
+                </xsl:otherwise>
+              </xsl:choose>
+            </div>
+          </xsl:for-each>
+        </xsl:for-each>
       </body>
     </html>
   </xsl:template>

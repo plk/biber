@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns:dcf="https://sourceforge.net/projects/biblatex" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <element name="dcf:driver-control">
+      <attribute name="driver">
+        <choice>
+          <value>bibtex</value>
+          <value>biblatexml</value>
+        </choice>
+      </attribute>
+      <zeroOrMore>
+        <element name="dcf:entry-types">
+          <oneOrMore>
+            <element name="dcf:entry-type">
+              <attribute name="name">
+                <data type="string"/>
+              </attribute>
+              <element name="dcf:aliasof">
+                <data type="string"/>
+              </element>
+              <zeroOrMore>
+                <element name="dcf:alsoset">
+                  <attribute name="target">
+                    <data type="string"/>
+                  </attribute>
+                  <attribute name="value">
+                    <data type="string"/>
+                  </attribute>
+                  <empty/>
+                </element>
+              </zeroOrMore>
+            </element>
+          </oneOrMore>
+        </element>
+      </zeroOrMore>
+      <element name="dcf:fields">
+        <oneOrMore>
+          <element name="dcf:field">
+            <attribute name="name">
+              <data type="string"/>
+            </attribute>
+            <choice>
+              <attribute name="handler">
+                <data type="string"/>
+              </attribute>
+              <attribute name="aliasof">
+                <data type="string"/>
+              </attribute>
+            </choice>
+            <empty/>
+          </element>
+        </oneOrMore>
+      </element>
+    </element>
+  </start>
+</grammar>

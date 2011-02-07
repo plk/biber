@@ -1,6 +1,7 @@
 package Biber;
 use strict;
 use warnings;
+#use feature 'unicode_strings';
 use Carp;
 use Encode;
 use File::Copy;
@@ -19,16 +20,16 @@ use Biber::Entry;
 use Biber::Entry::Name;
 use Biber::Sections;
 use Biber::Section;
+use Biber::Section::List;
 use Biber::Structure;
 use Biber::Utils;
-use LaTeX::Decode 0.03;
 use Storable qw( dclone );
 use Log::Log4perl qw( :no_extra_logdie_message );
 use base 'Biber::Internals';
 use Config::General qw( ParseConfig );
 use Data::Dump;
-use Text::BibTeX; # Need this in here in order to reset @STRING macros per section
-our @ISA;
+use Data::Compare;
+use Text::BibTeX qw(:macrosubs);
 
 =encoding utf-8
 
@@ -38,8 +39,11 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =cut
 
-our $VERSION = '0.7.2';
+our $VERSION = '0.7.4';
 our $BETA_VERSION = 0; # Is this a beta version?
+
+my $logger = Log::Log4perl::get_logger('main');
+
 
 =head1 SYNOPSIS
 
@@ -50,8 +54,6 @@ our $BETA_VERSION = 0; # Is this a beta version?
     $biber->prepare;
 
 =cut
-
-my $logger = Log::Log4perl::get_logger('main');
 
 =head1 METHODS
 
@@ -77,6 +79,7 @@ sub new {
       Biber::Config->setcmdlineoption($_, $opts{$_});
     }
   }
+
   return $self;
 }
 
@@ -187,7 +190,10 @@ sub get_current_section {
 sub parse_ctrlfile {
   my ($self, $ctrl_file) = @_;
 
-  $logger->logcroak("Cannot find control file '$ctrl_file'! - did you pass the \"backend=biber\" option to BibLaTeX?") unless -f "$ctrl_file";
+  my $ctrl_file_path = locate_biber_file($ctrl_file);
+  Biber::Config->set_ctrlfile_path($ctrl_file_path);
+
+  $logger->logdie("Cannot find control file '$ctrl_file'! - did you pass the \"backend=biber\" option to BibLaTeX?") unless ($ctrl_file_path and -e $ctrl_file_path);
 
   # Validate if asked to
   if (Biber::Config->getoption('validate_control')) {
@@ -201,7 +207,7 @@ sub parse_ctrlfile {
     my $CFxmlschema;
 
     # we assume that the schema files are in the same dir as Biber.pm:
-    (undef, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
+    (my $vol, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
 
     # Deal with the strange world of Par::Packer paths
     # We might be running inside a PAR executable and @INC is a bit odd in this case
@@ -209,10 +215,10 @@ sub parse_ctrlfile {
     # nowhere near to these files. You know what I mean if you've dealt with pp
     my $bcf_rng;
     if ($biber_path =~ m|/par\-| and $biber_path !~ m|/inc|) { # a mangled PAR @INC path
-      $bcf_rng = File::Spec->catfile($biber_path, 'inc', 'lib', 'Biber', 'bcf.rng');
+      $bcf_rng = File::Spec->catpath($vol, "$biber_path/inc/lib/Biber", 'bcf.rng');
     }
     else {
-      $bcf_rng = File::Spec->catfile($biber_path, 'Biber', 'bcf.rng');
+      $bcf_rng = File::Spec->catpath($vol, "$biber_path/Biber", 'bcf.rng');
     }
 
     if (-e $bcf_rng) {
@@ -225,7 +231,7 @@ sub parse_ctrlfile {
     }
 
     # Parse file
-    my $CFxp = $CFxmlparser->parse_file("$ctrl_file");
+    my $CFxp = $CFxmlparser->parse_file($ctrl_file_path);
 
     # XPath context
     my $CFxpc = XML::LibXML::XPathContext->new($CFxp);
@@ -236,13 +242,13 @@ sub parse_ctrlfile {
       eval { $CFxmlschema->validate($CFxp) };
       if (ref($@)) {
         $logger->debug( $@->dump() );
-        $logger->logcroak("BibLaTeX control file \"$ctrl_file\" failed to validate\n$@");
+        $logger->logdie("BibLaTeX control file \"$ctrl_file_path\" failed to validate\n$@");
       }
       elsif ($@) {
-        $logger->logcroak("BibLaTeX control file \"$ctrl_file\" failed to validate\n$@");
+        $logger->logdie("BibLaTeX control file \"$ctrl_file_path\" failed to validate\n$@");
       }
       else {
-        $logger->info("BibLaTeX control file \"$ctrl_file\" validates");
+        $logger->info("BibLaTeX control file \"$ctrl_file_path\" validates");
       }
     }
     undef $CFxmlparser;
@@ -259,7 +265,7 @@ sub parse_ctrlfile {
     my $CFstyle;
 
     # we assume that the schema files are in the same dir as Biber.pm:
-    (undef, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
+    (my $vol, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
 
     # Deal with the strange world of Par::Packer paths
     # We might be running inside a PAR executable and @INC is a bit odd in this case
@@ -267,10 +273,10 @@ sub parse_ctrlfile {
     # nowhere near to these files. You know what I mean if you've dealt with pp
     my $bcf_xsl;
     if ($biber_path =~ m|/par\-| and $biber_path !~ m|/inc|) { # a mangled PAR @INC path
-      $bcf_xsl = File::Spec->catfile($biber_path, 'inc', 'lib', 'Biber', 'bcf.xsl');
+      $bcf_xsl = File::Spec->catpath($vol, "$biber_path/inc/lib/Biber", 'bcf.xsl');
     }
     else {
-      $bcf_xsl = File::Spec->catfile($biber_path, 'Biber', 'bcf.xsl');
+      $bcf_xsl = File::Spec->catpath($vol, "$biber_path/Biber", 'bcf.xsl');
     }
 
     if (-e $bcf_xsl) {
@@ -282,19 +288,19 @@ sub parse_ctrlfile {
       goto LOADCF;
     }
 
-    my $CF = XML::LibXML->load_xml(location => $ctrl_file);
+    my $CF = XML::LibXML->load_xml(location => $ctrl_file_path);
     my $stylesheet = $xslt->parse_stylesheet($CFstyle);
     my $CFhtml = $stylesheet->transform($CF);
-    $stylesheet->output_file($CFhtml, $ctrl_file . '.html');
-    $logger->info("Converted BibLaTeX control file '$ctrl_file' to '$ctrl_file.html'");
+    $stylesheet->output_file($CFhtml, $ctrl_file_path . '.html');
+    $logger->info("Converted BibLaTeX control file '$ctrl_file_path' to '$ctrl_file_path.html'");
   }
 
   # Open control file
  LOADCF:
-  my $ctrl = new IO::File "<$ctrl_file"
-    or $logger->logcroak("Cannot open $ctrl_file: $!");
+  my $ctrl = new IO::File "<$ctrl_file_path"
+    or $logger->logdie("Cannot open $ctrl_file_path: $!");
 
-  $logger->info("Reading $ctrl_file");
+  $logger->info("Reading $ctrl_file_path");
 
   # Read control file
   require XML::LibXML::Simple;
@@ -313,6 +319,8 @@ sub parse_ctrlfile {
                                                            qr/\Asortexclusion\z/,
                                                            qr/\Aexclusion\z/,
                                                            qr/\Asort\z/,
+                                                           qr/\Adisplaymode\z/,
+                                                           qr/\Amode\z/,
                                                            qr/\Apresort\z/,
                                                            qr/\Atype_pair\z/,
                                                            qr/\Ainherit\z/,
@@ -323,6 +331,9 @@ sub parse_ctrlfile {
                                                            qr/\Aconstraints\z/,
                                                            qr/\Aconstraint\z/,
                                                            qr/\Aentrytype\z/,
+                                                           qr/\Adatetype\z/,
+                                                           qr/\Asectionlist\z/,
+                                                           qr/\A(?:or)?filter\z/,
                                                           ],
                                           'NsStrip' => 1,
                                           'KeyAttr' => []);
@@ -388,6 +399,17 @@ sub parse_ctrlfile {
     }
   }
 
+  # DISPLAYMODES
+  # This should not be optional any more when biblatex implements this so take
+  # out this conditional
+  if (exists($bcfxml->{displaymodes})) {
+    my $dms;
+    foreach my $dm (@{$bcfxml->{displaymodes}{displaymode}}) {
+      $dms->{$dm->{target}{content}} = [ map {$_->{content}} @{$dm->{mode}} ];
+    }
+    Biber::Config->setblxoption('displaymode', $dms);
+  }
+
   # INHERITANCE schemes for crossreferences (always global)
   # This should not be optional any more when biblatex implements this so take
   # out this conditional
@@ -424,74 +446,9 @@ sub parse_ctrlfile {
     }
   }
 
-  my $sorting_label = [];
-  my $sorting_final = [];
-  foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$bcfxml->{sorting}{sort}}) {
-    my $sortingitems_label;
-    my $sortingitems_final;
+  my $sorting = _parse_sort($bcfxml->{sorting});
 
-    # Determine which sorting pass(es) to include the item in
-    my $whichpass = ($sort->{pass} or 'both');
-
-    # Generate sorting pass structures
-    foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
-      my $sortitemattributes = {};
-      if (defined($sortitem->{substring_side})) { # Found sorting substring side attribute
-        $sortitemattributes->{substring_side} = $sortitem->{substring_side};
-      }
-      if (defined($sortitem->{substring_width})) { # Found sorting substring length attribute
-        $sortitemattributes->{substring_width} = $sortitem->{substring_width};
-      }
-      if (defined($sortitem->{pad_width})) { # Found sorting pad length attribute
-        $sortitemattributes->{pad_width} = $sortitem->{pad_width};
-      }
-      if (defined($sortitem->{pad_char})) { # Found sorting pad char attribute
-        $sortitemattributes->{pad_char} = $sortitem->{pad_char};
-      }
-      if (defined($sortitem->{pad_side})) { # Found sorting pad side attribute
-        $sortitemattributes->{pad_side} = $sortitem->{pad_side};
-      }
-
-      # No pass specified, sortitem is included in both sort passes
-      # Note that we're cloning the sortitemattributes object so as not to have pointers
-      # from one structure to the other
-      if (lc($whichpass) eq 'both') {
-        push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
-        push @{$sortingitems_final}, {$sortitem->{content} => dclone($sortitemattributes)};
-      }
-
-      # "label" specified, sortitem is included only on "label" sort pass
-      elsif (lc($whichpass) eq 'label') {
-        push @{$sortingitems_label}, {$sortitem->{content} => $sortitemattributes};
-      }
-
-      # "final" specified, sortitem is included only on "final" sort pass
-      elsif (lc($whichpass) eq 'final') {
-        push @{$sortingitems_final}, {$sortitem->{content} => $sortitemattributes};
-      }
-    }
-
-    # Only push a sortitem if defined. If the item has a conditional "pass"
-    # attribute, it may be ommitted in which case we don't want an empty array ref
-    # pushing
-    # Also, we only push the sort attributes if there are any sortitems otherwise
-    # we end up with a blank sort
-    my $sopts;
-    $sopts->{final}          = $sort->{final}          if defined($sort->{final});
-    $sopts->{sort_direction} = $sort->{sort_direction} if defined($sort->{sort_direction});
-    $sopts->{sortcase}       = $sort->{sortcase}       if defined($sort->{sortcase});
-    $sopts->{sortupper}      = $sort->{sortupper}      if defined($sort->{sortupper});
-    if (defined($sortingitems_label)) {
-      unshift @{$sortingitems_label}, $sopts;
-      push @{$sorting_label}, $sortingitems_label;
-    }
-    if (defined($sortingitems_final)) {
-      unshift @{$sortingitems_final}, $sopts;
-      push @{$sorting_final}, $sortingitems_final;
-    }
-  }
-  Biber::Config->setblxoption('sorting_label', $sorting_label);
-  Biber::Config->setblxoption('sorting_final', $sorting_final);
+  Biber::Config->setblxoption('sorting', $sorting);
 
   # STRUCTURE schema (always global)
   # This should not be optional any more when biblatex implements this so take
@@ -503,22 +460,29 @@ sub parse_ctrlfile {
   # SECTIONS
   # This is also where we set data files as these are associated with a bib section
 
-  # Datafiles
-  my %bibdatafiles = ();
+  # Data sources
+  my %bibdatasources = ();
   foreach my $data (@{$bcfxml->{bibdata}}) {
     foreach my $datasource (@{$data->{datasource}}) {
       # default datatype is bibtex
       my $datatype = $datasource->{datatype} ? $datasource->{datatype} : 'bibtex';
       # file data sources
       if ($datasource->{type} eq 'file') {
-        push @{$bibdatafiles{$data->{section}[0]}}, { name     => $datasource->{content},
-                                                      datatype => $datatype };
+        push @{$bibdatasources{$data->{section}[0]}}, { type     => 'file',
+                                                        name     => $datasource->{content},
+                                                        datatype => $datatype };
+      }
+      # db data sources
+      if ($datasource->{type} eq 'db') {
+        push @{$bibdatasources{$data->{section}[0]}}, { type    => 'db',
+                                                        name     => $datasource->{content},
+                                                        datatype => $datatype };
       }
     }
   }
 
-  unless (%bibdatafiles or Biber::Config->getoption('bibdata')) {
-    $logger->logcroak("No data files on command line or provided in the file '$ctrl_file'! Exiting")
+  unless (%bibdatasources or Biber::Config->getoption('bibdata')) {
+    $logger->logdie("No data files on command line or provided in the file '$ctrl_file_path'! Exiting")
   }
 
   my $key_flag = 0;
@@ -526,19 +490,73 @@ sub parse_ctrlfile {
 
 SECTION: foreach my $section (@{$bcfxml->{section}}) {
     my $bib_section;
-
+    my $secnum = $section->{number};
     # Can be multiple section 0 entries and so re-use that section object if it exists
-    if (my $existing_section = $bib_sections->get_section($section->{number})) {
+    if (my $existing_section = $bib_sections->get_section($secnum)) {
       $bib_section = $existing_section;
     }
     else {
-      $bib_section = new Biber::Section('number' => $section->{number});
+      $bib_section = new Biber::Section('number' => $secnum);
     }
 
     # Set the data files for the section unless we've already done so
     # (for example, for multiple section 0 entries)
-    $bib_section->set_datafiles($bibdatafiles{$section->{number}}) unless
-      $bib_section->get_datafiles;
+    $bib_section->set_datasources($bibdatasources{$secnum}) unless
+      $bib_section->get_datasources;
+
+    # Add any list specs to the Biber::Section object
+    foreach my $list (@{$section->{sectionlist}}) {
+      my $llabel = $list->{label};
+      if ($bib_section->get_list($llabel)) {
+        $logger->warn("Section list '$llabel' is repeated for section $secnum - ignoring subsequent mentions");
+        $self->{warnings}++;
+        next;
+      }
+
+      my $seclist = Biber::Section::List->new(label => $llabel);
+      foreach my $filter (@{$list->{filter}}) {
+        $seclist->add_filter($filter->{type}, $filter->{content});
+      }
+      # disjunctive filters
+      foreach my $orfilter (@{$list->{orfilter}}) {
+        $seclist->add_filter('orfilter', { map {$_->{type} => [$_->{content}]} @{$orfilter->{filter}} });
+      }
+
+      if (my $sorting = $list->{sorting}) { # can be undef for fallback to global sorting
+        $seclist->set_sortscheme(_parse_sort($sorting));
+      }
+      else {
+        $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
+      }
+      $seclist->set_type($list->{type} || 'entry'); # lists are entry lists by default
+      $logger->debug("Adding list '$llabel' to section $secnum");
+      $bib_section->add_list($seclist);
+    }
+
+    # Intermediate code until biblatex moves main \printbibliography to a list
+    # MAIN list has no filter and no sorting spec so it uses all citekeys and the
+    # global sort default.
+    unless ($bib_section->get_list('MAIN')) {
+      my $mainlist = Biber::Section::List->new(label => 'MAIN');
+      $mainlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
+      $mainlist->set_type('entry');
+      $bib_section->add_list($mainlist);
+    }
+
+    # Intermediate code until biblatex moves SHORTHANDS to a .bcf supported list
+    unless ($bib_section->get_list('SHORTHANDS')) {
+      my $los = Biber::Section::List->new(label => 'SHORTHANDS');
+      if (Biber::Config->getblxoption('sortlos')) {
+        $los->set_sortscheme([ [ {}, {'shorthand'     => {}} ] ]);
+        $los->add_filter('field', 'shorthand');
+      }
+      else {
+        $los->set_sortscheme(Biber::Config->getblxoption('sorting'));
+        $los->add_filter('field', 'shorthand');
+      }
+      $los->set_type('shorthand');
+      $bib_section->add_list($los);
+    }
 
     # Stop reading citekeys if we encounter "*" as a citation as this means
     # "all keys"
@@ -547,12 +565,15 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
       my $key = $keyc->{content};
       if ($key eq '*') {
         $bib_section->allkeys;
+        # Normalise - when allkeys is true don't need citekeys - just in case someone
+        # lists "*" and also some other citekeys
+        $bib_section->del_citekeys;
         $key_flag = 1; # There is at least one key, used for error reporting below
-        $logger->info("Using all citekeys in bib section " . $section->{number});
+        $logger->info("Using all citekeys in bib section " . $secnum);
         $bib_sections->add_section($bib_section);
         next SECTION;
       }
-      elsif (not Biber::Config->get_seenkey($key, $section->{number})) {
+      elsif (not Biber::Config->get_seenkey($key, $secnum)) {
         # Dynamic set definition
         # Save dynamic key -> member keys mapping for set entry auto creation later
         if (exists($keyc->{type}) and $keyc->{type} eq 'set') {
@@ -560,7 +581,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         }
         push @keys, $key;
         $key_flag = 1; # There is at least one key, used for error reporting below
-        Biber::Config->incr_seenkey($key, $section->{number});
+        Biber::Config->incr_seenkey($key, $secnum);
       }
       elsif (Biber::Config->get_keycase($key) ne $key) {
         $logger->warn("Case mismatch error between cite keys '$key' and '" . Biber::Config->get_keycase($key) . "'");
@@ -570,22 +591,23 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     }
 
     unless ($bib_section->is_allkeys) {
-      $logger->info("Found ", $#keys+1 , " citekeys in bib section " . $section->{number})
+      $logger->info("Found ", $#keys+1 , " citekeys in bib section $secnum")
     }
 
     if (Biber::Config->getoption('debug')) {
       my @debug_keys = sort @keys;
       unless ($bib_section->is_allkeys) {
-        $logger->debug("The citekeys for section " . $section->{number} . " are:\n", "@debug_keys", "\n");
+        $logger->debug("The citekeys for section $secnum are: ", join(', ', @debug_keys), "\n");
       }
     }
+
     $bib_section->add_citekeys(@keys);
     $bib_sections->add_section($bib_section);
   }
 
   # Die if there are no citations in any section
   unless ($key_flag) {
-    $logger->warn("The file '$ctrl_file' does not contain any citations!");
+    $logger->warn("The file '$ctrl_file_path' does not contain any citations!");
     $self->{warnings}++;
   }
 
@@ -599,133 +621,6 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
   return;
 }
 
-#=====================================================
-# Parse BIB file
-#=====================================================
-
-=head2 parse_bibtex
-
-    This is a wrapper method to parse a bibtex database. It
-    passes the job to Text::BibTeX via Biber::Input::BibTeX
-
-=cut
-
-sub parse_bibtex {
-  my ($self, $filename, $datatype) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-
-  $logger->info("Processing $datatype format file '$filename' for section $secnum");
-
-  my @localkeys = ();
-
-  my $ufilename = "${filename}_$$.utf8";
-
-  # bib encoding is not UTF-8
-  if (Biber::Config->getoption('bibencoding') ne 'UTF-8') {
-    require File::Slurp::Unicode;
-    my $buf = File::Slurp::Unicode::read_file($filename, encoding => Biber::Config->getoption('bibencoding'))
-      or $logger->logcroak("Can't read $filename");
-
-    File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
-      or $logger->logcroak("Can't write $ufilename");
-
-  }
-  else {
-    File::Copy::copy($filename, $ufilename);
-  }
-
-  # Decode LaTeX to UTF8 if output is UTF-8
-  if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
-    require File::Slurp::Unicode;
-    my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
-      or $logger->logcroak("Can't read $ufilename");
-    require LaTeX::Decode;
-    $logger->info('Decoding LaTeX character macros into UTF-8');
-    $buf = LaTeX::Decode::latex_decode($buf, strip_outer_braces => 1);
-
-    File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
-        or $logger->logcroak("Can't write $ufilename");
-  }
-
-  $filename = $ufilename;
-
-  # Increment the number of times each datafile has been referenced
-  # allowing for the possible ".utf8" extra intermediate extension.
-  # For example, a datafile might be referenced in more than one section.
-  # Some things find this information useful, for example, setting preambles is global
-  # and so we need to know if we've already saved the preamble for a datafile.
-  my $basefilename = $filename;
-  $basefilename =~ s/\.utf8$//;
-  $BIBER_DATAFILE_REFS{$basefilename}++;
-
-  require Biber::Input::BibTeX;
-  push @ISA, 'Biber::Input::BibTeX';
-
-  @localkeys = $self->_text_bibtex_parse($filename);
-
-  unlink $ufilename if -f $ufilename;
-
-  if ($section->is_allkeys) {
-    map { Biber::Config->incr_seenkey($_, $section->number) } @localkeys
-  }
-
-  my $bibentries = $section->bibentries;
-
-  # if allkeys, push all bibdata keys into citekeys (if they are not already there)
-  # Can't just make citekeys = bibdata keys as this loses information about citekeys
-  # that are missing data entries.
-  if ($section->is_allkeys) {
-    foreach my $bibkey ($bibentries->sorted_keys) {
-      $section->add_citekeys($bibkey);
-    }
-  }
-
-  return;
-}
-
-=head2 parse_biblatexml
-
-    $biber->parse_biblatexml('data.xml');
-
-    Parse a database in the BibLaTeXML format with Biber::BibLaTeXML (via
-    XML::LibXML). If the suffix is dbxml, then the database is assumed to
-    be stored in a Berkeley DBXML container and will be queried through the
-    Sleepycat::DbXml interface.
-
-=cut
-
-sub parse_biblatexml {
-  my ($self, $xml) = @_;
-  require Biber::BibLaTeXML;
-  push @ISA, 'Biber::BibLaTeXML';
-  $self->_parse_biblatexml($xml);
-}
-
-=head2 check_missing
-
-   Check for missing citation keys
-
-=cut
-
-sub check_missing {
-  my $self = shift;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  $logger->debug("Checking for missing citekeys in section $secnum");
-  foreach my $citekey ($section->get_citekeys) {
-    # Either the key refers to a real bib entry or a dynamic set entry
-    unless ( $bibentries->entry_exists($citekey) or
-             $section->get_dynamic_set($citekey)) {
-      $logger->warn("I didn't find a database entry for '$citekey' (section $secnum)");
-      $self->{warnings}++;
-      $section->del_citekey($citekey);
-      $section->add_undef_citekey($citekey);
-      next;
-    }
-  }
-}
 
 =head2 process_setup
 
@@ -739,45 +634,13 @@ sub process_setup {
   # This has to be here as opposed to in parse_control() so that it can pick
   # up structure defaults in Constants.pm in case there is no .bcf
   Biber::Config->set_structure(Biber::Structure->new(Biber::Config->getblxoption('structure')));
-}
 
-=head2 resolve_aliases
-
-   Normalise entries by resolving any:
-
-   * Entrytype aliases
-   * Field aliases
-
-   Defined in the structure schema passed in the .bcf
-
-=cut
-
-sub resolve_aliases {
-  my $self = shift;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $struc = Biber::Config->get_structure;
-
-  # We are looping over all bibentries for the section, not just cited
-  # entries. We have to do this to process aliases in potential crossrefs
-  # which have not been processed yet. We can't process them them before this
-  # as this would be ugly - crossrefs should be resolved on canonical entrytype
-  # and field names which can't be done until after these are canonicalised below
-  foreach my $key ($bibentries->sorted_keys) {
-    my $be = $section->bibentry($key);
-
-    # Entrytype aliases and special fields - biblatex manual Section 2.1.2
-    foreach my $warning ($struc->resolve_entry_aliases($be)) {
-      $self->biber_warn($be, $warning);
-    }
-
-    # Field aliases
-    foreach my $warning ($struc->resolve_field_aliases($be)) {
-      $self->biber_warn($be, $warning);
-    }
+  # Force bblsafechars flag if output to ASCII
+  if (Biber::Config->getoption('bblencoding') =~ /(?:x-)ascii/xmsi) {
+    Biber::Config->setoption('bblsafechars', 1);
   }
 }
+
 
 =head2 instantiate_dynamic
 
@@ -797,16 +660,16 @@ sub instantiate_dynamic {
   $logger->debug("Creating dynamic entries (sets/related) for section $secnum");
 
   # Instantiate any dynamic set entries before we do anything else
-  foreach my $dset ($section->dynamic_set_keys) {
+  foreach my $dset (@{$section->dynamic_set_keys}) {
     my @members = $section->get_dynamic_set($dset);
     my $be = new Biber::Entry;
     $be->set_field('entrytype', 'set');
     $be->set_field('entryset', join(',', @members));
-    $be->set_field('origkey', $dset);
-    $be->set_field('citecasekey', $dset);
-    $be->set_field('datatype', 'bibtex');
+    $be->set_field('dskey', $dset);
+    $be->set_field('citekey', $dset);
+    $be->set_field('datatype', 'dynamic');
     $section->bibentries->add_entry($dset, $be);
-    # Setting dataonly for members is handled by postprocess_sets()
+    # Setting dataonly for members is handled by process_sets()
   }
 
   # Instantiate any related entry clones we need
@@ -823,6 +686,8 @@ sub instantiate_dynamic {
         # clone doesn't need the related fields
         $relclone->del_field('related');
         $relclone->del_field('relatedtype');
+        $relclone->del_field('relatedstring');
+        $relclone->set_datafield('options', 'dataonly');
         $section->bibentries->add_entry($clonekey, $relclone);
         Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $clonekey);
         Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $clonekey);
@@ -910,6 +775,10 @@ sub process_crossrefs {
 =head2 validate_structure
 
   Validate bib structure according to a bib schema
+  Note that we are validating the internal Biber::Entries
+  after they have been created from the datasources so this is
+  datasource neutral, as it should be. It is here to enforce
+  adherence to what biblatex expects.
 
 =cut
 
@@ -918,11 +787,10 @@ sub validate_structure {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $struc = Biber::Config->get_structure;
-
-  foreach my $citekey ($section->get_citekeys) {
-    my $be = $section->bibentry($citekey);
-    my $et = $be->get_field('entrytype');
-    if (Biber::Config->getoption('validate_structure')) {
+  if (Biber::Config->getoption('validate_structure')) {
+    foreach my $citekey ($section->get_citekeys) {
+      my $be = $section->bibentry($citekey);
+      my $et = $be->get_field('entrytype');
 
       # default entrytype to MISC type if not a known type
       unless ($struc->is_entrytype($et)) {
@@ -956,65 +824,57 @@ sub validate_structure {
       foreach my $warning ($struc->check_data_constraints($be)) {
         $self->biber_warn($be, $warning);
       }
-    }
 
-
-    # Date components - we always check these, even if not validating structure
-    # as the validation is part of unpacking the *date fields
-    foreach my $warning ($struc->resolve_date_components($be)) {
-      $self->biber_warn($be, $warning);
+      # Date constraints
+      foreach my $warning ($struc->check_date_components($be)) {
+        $self->biber_warn($be, $warning);
+      }
     }
   }
 }
 
-=head2 postprocess
+=head2 process_entries
 
-    Various postprocessing operations, mostly to generate special fields for
-    biblatex. This method is automatically called by C<prepare>.
+    Main processing operations, to generate metadata and entry information
+    This method is automatically called by C<prepare>.
     Here we parse names, generate the "namehash" and the strings for
     "labelname", "labelyear", "labelalpha", "sortstrings", etc.
 
 =cut
 
-sub postprocess {
+sub process_entries {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
   foreach my $citekey ( $section->get_citekeys ) {
     $logger->debug("Postprocessing entry '$citekey' from section $secnum");
 
-    # post process "set" entries:
-    $self->postprocess_sets($citekey);
+    # process "set" entries:
+    $self->process_sets($citekey);
 
     # generate labelname name
-    $self->postprocess_labelname($citekey);
+    $self->process_labelname($citekey);
 
     # generate labelyear name
-    $self->postprocess_labelyear($citekey);
+    $self->process_labelyear($citekey);
 
     # generate namehash,fullhash
-    $self->postprocess_hashes($citekey);
+    $self->process_hashes($citekey);
 
     # generate labelalpha information
-    $self->postprocess_labelalpha($citekey);
-
-    # track shorthands
-    $self->postprocess_shorthands($citekey);
+    $self->process_labelalpha($citekey);
 
     # push entry-specific presort fields into the presort state
-    $self->postprocess_presort($citekey);
+    $self->process_presort($citekey);
 
-    # first-pass sorting to generate basic labels
-    $self->postprocess_generate_sortinfo_label($citekey);
   }
 
-  $logger->debug("Finished postprocessing entries in section $secnum");
+  $logger->debug("Finished processing entries in section $secnum");
 
   return;
 }
 
-=head2 postprocess_sets
+=head2 process_sets
 
     Postprocess set entries
 
@@ -1022,13 +882,12 @@ sub postprocess {
 
 =cut
 
-sub postprocess_sets {
+sub process_sets {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
+  my $be = $section->bibentry($citekey);
   if ($be->get_field('entrytype') eq 'set') {
     my @entrysetkeys = split /\s*,\s*/, $be->get_field('entryset');
 
@@ -1037,7 +896,7 @@ sub postprocess_sets {
     foreach my $member (@entrysetkeys) {
       Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $member);
       Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $member);
-      my $me = $bibentries->entry($member);
+      my $me = $section->bibentry($member);
       if ($me->get_field('entryset')) {
         $self->biber_warn($me, "Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry '$member'");
         $me->del_field('entryset');
@@ -1058,7 +917,7 @@ sub postprocess_sets {
   # "dataonly" enforced by the code above
   else {
     foreach my $pset_key ($section->get_citekeys) {
-      my $pset_be = $bibentries->entry($pset_key);
+      my $pset_be = $section->bibentry($pset_key);
       if ($pset_be->get_field('entrytype') eq 'set') {
         my @entrysetkeys = split /\s*,\s*/, $pset_be->get_field('entryset');
         foreach my $member (@entrysetkeys) {
@@ -1073,7 +932,7 @@ sub postprocess_sets {
   }
 }
 
-=head2 postprocess_labelname
+=head2 process_labelname
 
     Generate labelname information. Fields set are:
 
@@ -1090,15 +949,13 @@ sub postprocess_sets {
 
 =cut
 
-sub postprocess_labelname {
+sub process_labelname {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
-  my $bee = $be->get_field('entrytype');
-  my $lnamescheme = Biber::Config->getblxoption('labelname', $bee);
+  my $be = $section->bibentry($citekey);
+  my $lnamescheme = Biber::Config->getblxoption('labelname', $be->get_field('entrytype'));
 
   # First we set the normal labelname name
   foreach my $ln ( @{$lnamescheme} ) {
@@ -1109,7 +966,7 @@ sub postprocess_labelname {
       $lnameopt = $ln;
     }
     if ($be->get_field($ln) and
-      Biber::Config->getblxoption("use$lnameopt", $bee, $citekey) ) {
+      Biber::Config->getblxoption("use$lnameopt", $be->get_field('entrytype'), $citekey) ) {
       $be->set_field('labelnamename', $ln);
       last;
     }
@@ -1123,7 +980,7 @@ sub postprocess_labelname {
       next;
     }
     if ($be->get_field($ln) and
-      Biber::Config->getblxoption("use$ln", $bee, $citekey ) ) {
+      Biber::Config->getblxoption("use$ln", $be->get_field('entrytype'), $citekey ) ) {
       $be->set_field('labelnamenamefullhash', $ln);
       last;
     }
@@ -1138,7 +995,7 @@ sub postprocess_labelname {
   }
 }
 
-=head2 postprocess_labelyear
+=head2 process_labelyear
 
     Generate labelyear
     Here, "labelyearname" is the name of the labelyear field
@@ -1146,14 +1003,12 @@ sub postprocess_labelname {
 
 =cut
 
-sub postprocess_labelyear {
+sub process_labelyear {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
-  my $bee = $be->get_field('entrytype');
+  my $be = $section->bibentry($citekey);
   my $lyearscheme = Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'));
 
   if ($lyearscheme) {
@@ -1161,7 +1016,7 @@ sub postprocess_labelyear {
       return;
     }
     # make sure we gave the correct data type:
-    $logger->logcroak("Invalid value for option labelyear: $lyearscheme\n")
+    $logger->logdie("Invalid value for option labelyear: $lyearscheme\n")
       unless ref $lyearscheme eq 'ARRAY';
     foreach my $ly ( @{$lyearscheme} ) {
       if ($be->get_field($ly)) {
@@ -1190,19 +1045,18 @@ sub postprocess_labelyear {
   }
 }
 
-=head2 postprocess_hashes
+=head2 process_hashes
 
     Generate namehash and fullhash
 
 =cut
 
-sub postprocess_hashes {
+sub process_hashes {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
+  my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   my $namehash = ''; # biblatex namehash field (manual, section 4.2.4.1)
   my $fullhash = ''; # biblatex fullhash field (manual, section 4.2.4.1)
@@ -1266,20 +1120,90 @@ sub postprocess_hashes {
   }
 }
 
+# =head2 process_labelnameyear
 
-=head2 postprocess_labelalpha
+#     Track author/year combination
+
+# =cut
+
+# sub process_labelnameyear {
+#   my $self = shift;
+#   my $citekey = shift;
+#   my $secnum = $self->get_current_section;
+#   my $section = $self->sections->get_section($secnum);
+#   my $be = $section->bibentry($citekey);
+#   # This is all used to generate extrayear and the rules for this are:
+#   # * Generate labelname/year combination for tracking extrayear
+#   # * If there is no labelname to use, use empty string
+#   # * If there is no labelyear to use, use empty string
+#   # * Don't increment the seen_extra* count if either name or year string is empty
+#   #   (see code in incr_seen_extra* methods).
+#   # * Don't increment if skiplab is set
+
+#   my $name_string;
+#   # For tracking name/year combinations, use shorthand only if it exists and we
+#   # are using labelyear
+#   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) and
+#        $be->get_field('shorthand')) {
+#     $name_string = $be->get_field('shorthand');
+#   }
+#   elsif (my $lnn = $be->get_field('labelnamename')) {
+#     $name_string = $self->_namestring($citekey, $lnn);
+#   }
+#   else {
+#     $name_string = '';
+#   }
+
+#   # extrayear takes into account the labelyear which can be a range
+#   my $year_string_extrayear;
+#   if (my $ly = $be->get_field('labelyear')) {
+#     $year_string_extrayear = $ly;
+#   }
+#   elsif (my $y = $be->get_field('year')) {
+#     $year_string_extrayear = $y;
+#   }
+#   else {
+#     $year_string_extrayear = '';
+#   }
+
+#   # extraalpha takes into account the "year of publication" and not ranges as it
+#   # only has the last two digits of the year and so can't disambiguate using ranges
+#   # so, we have to track it separately to extrayear
+#   my $year_string_extraalpha;
+#   if (my $y = $be->get_field('year')) {
+#     $year_string_extraalpha = $y;
+#   }
+#   else {
+#     $year_string_extraalpha = '';
+#   }
+
+#   # Don't create disambiguation data for skiplab entries
+#   unless (Biber::Config->getblxoption('skiplab',
+#                                       $be->get_field('entrytype'),
+#                                       $be->get_field('dskey'))) {
+#     my $nameyear_string_extrayear  = "$name_string,$year_string_extrayear";
+#     $logger->debug("Setting 'nameyear_extrayear' to '$nameyear_string_extrayear' for entry '$citekey'");
+#     $be->set_field('nameyear_extrayear', $nameyear_string_extrayear);
+#     Biber::Config->incr_seen_nameyear_extrayear($name_string, $year_string_extrayear);
+#     my $nameyear_string_extraalpha = "$name_string,$year_string_extraalpha";
+#     $logger->debug("Setting 'nameyear_extraalpha' to '$nameyear_string_extraalpha' for entry '$citekey'");
+#     $be->set_field('nameyear_extraalpha', $nameyear_string_extraalpha);
+#     Biber::Config->incr_seen_nameyear_extraalpha($name_string, $year_string_extraalpha);
+#   }
+# }
+
+=head2 process_labelalpha
 
     Generate the labelalpha and also the variant for sorting
 
 =cut
 
-sub postprocess_labelalpha {
+sub process_labelalpha {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
+  my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   # Don't add a label if skiplab is set for entry
   if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
@@ -1324,27 +1248,8 @@ sub postprocess_labelalpha {
   }
 }
 
-=head2 postprocess_shorthands
 
-    Track shorthands
-
-=cut
-
-sub postprocess_shorthands {
-  my $self = shift;
-  my $citekey = shift;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
-  my $bee = $be->get_field('entrytype');
-  if ( my $sh = $be->get_field('shorthand') ) {
-    $section->add_shorthand($bee, $citekey);
-  }
-}
-
-
-=head2 postprocess_presort
+=head2 process_presort
 
     Put presort fields for an entry into the main Biber bltx state
     so that it's all available in the same place since this can be
@@ -1352,51 +1257,163 @@ sub postprocess_shorthands {
 
 =cut
 
-sub postprocess_presort {
+sub process_presort {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
+  my $be = $section->bibentry($citekey);
   # We are treating presort as an option as it can be set per-type and globally too
   if (my $ps = $be->get_field('presort')) {
     Biber::Config->setblxoption('presort', $ps, 'PER_ENTRY', $citekey);
   }
 }
 
+=head2 process_lists
 
-=head2 postprocess_generate_sortinfo_label
-
-    Generate label pass of sorting information
+    Sort and filter lists for a section
 
 =cut
 
-sub postprocess_generate_sortinfo_label {
+sub process_lists {
   my $self = shift;
-  my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my $be = $bibentries->entry($citekey);
-  $self->_generatesortinfo( $citekey, Biber::Config->getblxoption('sorting_label', $be->get_field('entrytype')));
+  foreach my $list (@{$section->get_lists}) {
+    my $llabel = $list->get_label;
+
+    # Last-ditch fallback in case we still don't have a sorting spec
+    # probably due to being called via biber with -a and -d flags
+    $list->set_sortscheme(Biber::Config->getblxoption('sorting')) unless $list->get_sortscheme;
+
+    $list->set_keys([ $section->get_citekeys ]);
+    $logger->debug("Populated list '$llabel' in section $secnum with keys: " . join(', ', $list->get_keys));
+
+    # Now we check the sorting cache to see if we already have results
+    # for this scheme since sorting is computationally expensive.
+    # We know the keys are the same as we just set them
+    # to a copy of the section citekeys above. If the scheme is the same
+    # as a previous sort then the results have to also be the same so inherit
+    # the results which are normally set by sorting:
+    #
+    # * sorted keys
+    # * sortinit data
+    # * extraalpha data
+    # * extrayear data
+
+    my $cache_flag = 0;
+    $logger->debug("Checking sorting cache for list '$llabel'");
+    foreach my $cacheitem (@{$section->get_sort_cache}) {
+      if (Compare($list->get_sortscheme, $cacheitem->[0])) {
+        $logger->debug("Found sorting cache entry for '$llabel'");
+        $list->set_keys($cacheitem->[1]);
+        $list->set_sortinitdata($cacheitem->[2]);
+        $list->set_extraalphadata($cacheitem->[3]);
+        $list->set_extrayeardata($cacheitem->[4]);
+        $cache_flag = 1;
+        last;
+      }
+    }
+
+    unless ($cache_flag) {
+      $logger->debug("No sorting cache entry for '$llabel'");
+      # Sorting
+      $self->generate_sortinfo($list);       # generate the sort information
+      $self->sort_list($list);               # sort the list
+      $self->generate_extra($list);          # generate the extra* fields
+
+      # Cache the results
+      $logger->debug("Adding sorting cache entry for '$llabel'");
+      $section->add_sort_cache($list->get_listdata);
+    }
+
+    # Filtering
+    # This is not really used - filtering is more efficient to do on the biblatex
+    # side since we are filtering afer sorting anyway. It is used to provide
+    # a field=shorthand filter for type=shorthand lists though.
+    if (my $filters = $list->get_filters) {
+      my $flist = [];
+KEYLOOP: foreach my $k ($list->get_keys) {
+        # Filter out skiplos entries as a special case in 'shorthand' type lists
+        if ($list->get_type eq 'shorthand') {
+          next if Biber::Config->getblxoption('skiplos', $section->bibentry($k), $k);
+        }
+
+        $logger->debug("Checking key '$k' in list '$llabel' against list filters");
+        my $be = $section->bibentry($k);
+        foreach my $t (keys %$filters) {
+          my $fs = $filters->{$t};
+          # Filter disjunction is ok if any of the checks are ok, hence the grep()
+          if ($t eq 'orfilter') {
+            next KEYLOOP unless grep {check_list_filter($k, $_, $fs->{$_}, $be)} keys %$fs;
+          }
+          else {
+            next KEYLOOP unless check_list_filter($k, $t, $fs, $be);
+          }
+        }
+        push @$flist, $k;
+      }
+      $logger->debug("Keys after filtering list '$llabel' in section $secnum: " . join(', ', @$flist));
+      $list->set_keys($flist); # Now save the sorted list in the list object
+    }
+  }
+  return;
 }
 
 
-=head2 generate_final_sortinfo
+=head2 check_list_filter
 
-    Generate final sort information
+    Run an entry through a list filter. Returns a boolean.
 
 =cut
 
-sub generate_final_sortinfo {
+sub check_list_filter {
+  my ($k, $t, $fs, $be) = @_;
+  $logger->debug("  Checking key '$k' against filter '$t=" . join(',', @$fs) . "'");
+  if ($t eq 'type') {
+    return 0 unless grep {$be->get_field('entrytype') eq $_} @$fs;
+  }
+  elsif ($t eq 'nottype') {
+    return 0 if grep {$be->get_field('entrytype') eq $_} @$fs;
+  }
+  elsif ($t eq 'subtype') {
+    return 0 unless grep {$be->field_exists('entrysubtype') and
+                                $be->get_field('entrysubtype') eq $_} @$fs;
+  }
+  elsif ($t eq 'notsubtype') {
+    return 0 if grep {$be->field_exists('entrysubtype') and
+                            $be->get_field('entrysubtype') eq $_} @$fs;
+  }
+  elsif ($t eq 'keyword') {
+    return 0 unless grep {$be->has_keyword($_)} @$fs;
+  }
+  elsif ($t eq 'notkeyword') {
+    return 0 if grep {$be->has_keyword($_)} @$fs;
+  }
+  elsif ($t eq 'field') {
+    return 0 unless grep {$be->field_exists($_)} @$fs;
+  }
+  elsif ($t eq 'notfield') {
+    return 0 if grep {$be->field_exists($_)} @$fs;
+  }
+  return 1;
+}
+
+=head2 generate_sortinfo
+
+    Generate information for sorting
+
+=cut
+
+sub generate_sortinfo {
   my $self = shift;
+  my $list = shift;
+
+  my $sortscheme = $list->get_sortscheme;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  foreach my $citekey ($section->get_citekeys) {
-    my $be = $bibentries->entry($citekey);
-    $self->_generatesortinfo($citekey, Biber::Config->getblxoption('sorting_final', $be->get_field('entrytype')));
+  foreach my $key ($list->get_keys) {
+    $self->_generatesortinfo($key, $list, $sortscheme);
   }
   return;
 }
@@ -1407,23 +1424,19 @@ sub generate_final_sortinfo {
 
 =cut
 
-
 sub uniqueness {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
   # Generate uniqueness information according to this algorithm:
   # 1. Generate uniquename if uniquename option is set
   # 2. if (uniquelist has never run before OR step 1 changed any uniquename values) {
   #      goto step 3
-  #    } else { goto step 5 }
+  #    } else { return }
   # 3. Completely regenerate uniquelist if uniquelist option is set
   # 4. if (step 3 changed any uniquelist values) {
   #      goto step 1
-  #    } else { goto step 5 }
-  # 5. Run extrayear generation if requested based on data as it stands after step 4
-  # 6. Run singletitle generation if requested based on data as it stands after step 4
+  #    } else { return }
 
   # Set a flag for first uniquelist pass. This is a special case as we always want to run
   # at least one uniquelist pass if requested, regardless of unul_done global flag.
@@ -1451,12 +1464,7 @@ sub uniqueness {
       last; # uniquename/uniquelist disambiguation is finished as nothing changed
     }
   }
-  # Generate singltitle/extras* information if requested
-  $self->create_extras_st_info;
-  # Generate extra* fields if requested
-  $self->generate_extras;
-  # Generate singletitle field if requested
-  $self->generate_singletitle;
+  return;
 }
 
 
@@ -1779,59 +1787,103 @@ sub create_extras_st_info {
     # Don't create disambiguation data for skiplab entries
     unless (Biber::Config->getblxoption('skiplab',
                                         $be->get_field('entrytype'),
-                                        $be->get_field('origkey'))) {
-      my $nameyear_string_extrayear  = "$name_string,$year_string_extrayear";
+                                        $be->get_field('dskey'))) {
+      my $nameyear_string_extrayear = "$name_string,$year_string_extrayear";
+      $logger->trace("Setting nameyear_extrayear to '$nameyear_string_extrayear' for entry '$citekey'");
       $be->set_field('nameyear_extrayear', $nameyear_string_extrayear);
+      $logger->trace("Incrementing nameyear_extrayear for '$name_string'");
       Biber::Config->incr_seen_nameyear_extrayear($name_string, $year_string_extrayear);
       my $nameyear_string_extraalpha = "$name_string,$year_string_extraalpha";
+      $logger->trace("Setting nameyear_extraalpha to '$nameyear_string_extraalpha' for entry '$citekey'");
       $be->set_field('nameyear_extraalpha', $nameyear_string_extraalpha);
+      $logger->trace("Incrementing nameyear_extraalpha for '$name_string'");
       Biber::Config->incr_seen_nameyear_extraalpha($name_string, $year_string_extraalpha);
     }
   }
   return;
 }
 
-=head2 generate_extras
 
-    Generate extrayear and extraalpha using information created by
-    create_extras_st_info()
+=head2 generate_extra
+
+    Generate:
+
+      * extraalpha
+      * extrayear
 
 =cut
 
-sub generate_extras {
+sub generate_extra {
   my $self = shift;
+  my $list = shift;
+  my $sortscheme = $list->get_sortscheme;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
+  Biber::Config->reset_seen_extra(); # Since this sub is per-list, have to reset the
+                                     # extra* counters per list
   # This loop critically depends on the order of the citekeys which
-  # is why we have to do a first sorting pass before this one
-  foreach my $citekey ($section->get_citekeys) {
-    my $be = $bibentries->entry($citekey);
+  # is why we have to do a first sorting pass before this
+  foreach my $key ($list->get_keys) {
+    my $be = $section->bibentry($key);
     my $bee = $be->get_field('entrytype');
-    # Only generate extrayear if skiplab is not set.
+    # Only generate extrayear and extraalpha if skiplab is not set.
     # Don't forget that skiplab is implied for set members
-    next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
-    # Only generate extrayear and extraapha if skiplab is not set.
-    # Don't forget that skiplab is implied for set members
-    unless (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
-      my $nameyear_extrayear = $be->get_field('nameyear_extrayear');
-      if (Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
-        Biber::Config->incr_seen_extrayear($nameyear_extrayear);
-        if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
-          $be->set_field('extrayear', Biber::Config->get_seen_extrayear($nameyear_extrayear));
+    unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
+      if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
+        my $nameyear_extrayear = $be->get_field('nameyear_extrayear');
+          if (Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
+            $logger->trace("nameyear_extrayear for '$nameyear_extrayear': " . Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear));
+            $list->set_extrayeardata($key, Biber::Config->incr_seen_extrayear($nameyear_extrayear));
         }
+      }
+      if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
         my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha');
-        if (Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
-          Biber::Config->incr_seen_extraalpha($nameyear_extraalpha);
-          if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
-            $be->set_field('extraalpha', Biber::Config->get_seen_extraalpha($nameyear_extraalpha));
-          }
+          if (Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
+            $logger->trace("nameyear_extraalpha for '$nameyear_extraalpha': " . Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha));
+            $list->set_extraalphadata($key, Biber::Config->incr_seen_extraalpha($nameyear_extraalpha));
         }
       }
     }
   }
   return;
 }
+
+
+# =head2 generate_extras
+
+#     Generate extrayear and extraalpha using information created by
+#     create_extras_st_info()
+
+# =cut
+
+# sub generate_extras {
+#   my $self = shift;
+#   my $secnum = $self->get_current_section;
+#   my $section = $self->sections->get_section($secnum);
+#   # This loop critically depends on the order of the citekeys which
+#   # is why we have to do a first sorting pass before this
+#   foreach my $key ($section->get_citekeys) {
+#     my $be = $section->bibentry($key);
+#     my $bee = $be->get_field('entrytype');
+#     # Only generate extrayear and extraalpha if skiplab is not set.
+#     # Don't forget that skiplab is implied for set members
+#     unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
+#       if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
+#         my $nameyear_extrayear = $be->get_field('nameyear_extrayear');
+#           if (Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
+#             $list->set_extrayeardata($key, Biber::Config->incr_seen_extrayear($nameyear_extrayear));
+#         }
+#       }
+#       if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
+#         my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha');
+#           if (Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
+#             $list->set_extraalphadata($key, Biber::Config->incr_seen_extraalpha($nameyear_extraalpha));
+#         }
+#       }
+#     }
+#   }
+#   return;
+# }
 
 =head2 generate_singletitle
 
@@ -1849,53 +1901,47 @@ sub generate_singletitle {
   foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     if (Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'))) {
-      $logger->trace("Generating singletitle information for '$citekey'");
       if ($be->get_field('seenname') and
           Biber::Config->get_seenname($be->get_field('seenname')) < 2 ) {
+        $logger->trace("Setting singletitle for '$citekey'");
         $be->set_field('singletitle', 1);
+      }
+      else {
+        $logger->trace("Not setting singletitle for '$citekey'");
       }
     }
   }
   return;
 }
 
+=head2 sort_list
 
-#===========================
-# SORTING
-#===========================
-
-=head2 sortentries
-
-    Sort the entries according to a certain sorting scheme.
+    Sort a list using information in entries according to a certain sorting scheme.
     Use a flag to skip info messages on first pass
 
 =cut
 
-sub sortentries {
+sub sort_list {
   my $self = shift;
+  my $list = shift;
+  my $sortscheme = $list->get_sortscheme;
+  my @keys = $list->get_keys;
+  my $llabel = $list->get_label;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my @citekeys = $section->get_citekeys;
+
   if (Biber::Config->getoption('sortcase')) {
     $logger->debug("Sorting is by default case-SENSITIVE");
   }
   else {
     $logger->debug("Sorting is by default case-INSENSITIVE");
   }
-  $logger->debug("Citekeys before sort:\n");
-  foreach my $ck (@citekeys) {
-    $logger->debug("$ck => " . $bibentries->entry($ck)->get_field('sortstring') . "\n");
+  $logger->debug("Keys before sort:\n");
+  foreach my $k (@keys) {
+    $logger->debug("$k => " . $list->get_sortdata($k)->[0] . "\n");
   }
 
-  # Get the right sortscheme
-  my $sortscheme;
-  if ($BIBER_SORT_FIRSTPASSDONE) {
-    $sortscheme = Biber::Config->getblxoption('sorting_final');
-  }
-  else {
-    $sortscheme = Biber::Config->getblxoption('sorting_label');
-  }
+  $logger->trace("Sorting with scheme\n-------------------\n" . Data::Dump::pp($sortscheme) . "\n-------------------\n");
 
   # Set up locale. Order of priority is:
   # 1. locale value passed to Unicode::Collate::Locale->new() (Unicode::Collate sorts only)
@@ -1906,15 +1952,14 @@ sub sortentries {
   # 6. Built-in defaults
 
   my $thislocale = Biber::Config->getoption('sortlocale');
+
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
-    $logger->info("Sorting entries with built-in sort (with locale $thislocale) ...") if $BIBER_SORT_FIRSTPASSDONE;
-
+    $logger->info("Sorting list '$llabel' keys");
+    $logger->debug("Sorting with fastsort (locale $thislocale)");
     unless (setlocale(LC_ALL, $thislocale)) {
-      if ($BIBER_SORT_FIRSTPASSDONE) {
-        $logger->warn("Unavailable locale $thislocale");
-        $self->{warnings}++;
-      }
+      $logger->warn("Unavailable locale $thislocale");
+      $self->{warnings}++;
     }
 
     # Construct a multi-field Schwartzian Transform with the right number of
@@ -1927,7 +1972,7 @@ sub sortentries {
     my $glc = Biber::Config->getoption('sortcase') ? '' : 'lc ';
 
     foreach my $sortset (@{$sortscheme}) {
-      $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
+      $data_extractor .= '$list->get_sortdata($_)->[1][' . $num_sorts . '],';
       $sorter .= ' || ' if $num_sorts; # don't add separator before first field
       my $lc = $glc; # Casing defaults to global default ...
       my $sc = $sortset->[0]{sortcase};
@@ -1944,27 +1989,25 @@ sub sortentries {
       my $sd = $sortset->[0]{sort_direction};
       if (defined($sd) and $sd eq 'descending') {
         # descending field
-        $sorter .=
-          $lc .
-            '$b->[' .
-              $num_sorts .
-                '] cmp ' .
-                  $lc .
-                    '$a->[' .
-                      $num_sorts .
-                        ']';
+        $sorter .= $lc
+          . '$b->['
+            . $num_sorts
+              . '] cmp '
+                . $lc
+                  . '$a->['
+                    . $num_sorts
+                      . ']';
       }
       else {
         # ascending field
-        $sorter .=
-          $lc .
-            '$a->[' .
-              $num_sorts .
-                '] cmp ' .
-                  $lc .
-                    '$b->[' .
-                      $num_sorts .
-                        ']';
+        $sorter .= $lc
+          . '$a->['
+            . $num_sorts
+              . '] cmp '
+                . $lc
+                  . '$b->['
+                    . $num_sorts
+                      . ']';
       }
       $num_sorts++;
     }
@@ -1972,12 +2015,12 @@ sub sortentries {
     # Handily, $num_sorts is now one larger than the number of fields which is the
     # correct index for the actual data in the sort array
     $sort_extractor = '$_->[' . $num_sorts . ']';
+    $logger->trace("Sorting structure is: $sorter");
 
     # Schwartzian transform multi-field sort
-    @citekeys = map  { eval $sort_extractor }
-                sort { eval $sorter }
-                map  { eval $data_extractor } @citekeys;
-
+    @keys = map  { eval $sort_extractor }
+            sort { eval $sorter }
+            map  { eval $data_extractor } @keys;
   }
   else {
     require Unicode::Collate::Locale;
@@ -2003,7 +2046,7 @@ sub sortentries {
       $collopts->{locale} = $thislocale;
       if ($collopts->{table}) {
         my $t = delete $collopts->{table};
-        $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)") if $BIBER_SORT_FIRSTPASSDONE;
+        $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)");
       }
     }
 
@@ -2022,16 +2065,17 @@ sub sortentries {
       # is undef in this hash and we don't care about such things
       next unless defined($coll_changed{$k});
       if ($coll_changed{$k} ne $collopts->{$k}) {
-        $logger->warn("Overriding locale '$coll_locale' default tailoring '$k = $v' with '$k = " . $collopts->{$k} . "'") if $BIBER_SORT_FIRSTPASSDONE;
+        $logger->warn("Overriding locale '$coll_locale' default tailoring '$k = $v' with '$k = " . $collopts->{$k} . "'");
       }
     }
 
     my $UCAversion = $Collator->version();
-    $logger->info("Sorting entries with Unicode::Collate (" .
-		  stringify_hash($collopts) . ", UCA version: $UCAversion)") if $BIBER_SORT_FIRSTPASSDONE;
+    $logger->info("Sorting list '$llabel' keys");
+    $logger->debug("Sorting with Unicode::Collate (" . stringify_hash($collopts) . ", UCA version: $UCAversion)");
+
     # Log if U::C::L currently has no tailoring for used locale
     if ($Collator->getlocale eq 'default') {
-      $logger->info("No sort tailoring available for locale '$thislocale'") if $BIBER_SORT_FIRSTPASSDONE;
+      $logger->info("No sort tailoring available for locale '$thislocale'");
     }
 
     # Construct a multi-field Schwartzian Transform with the right number of
@@ -2043,11 +2087,6 @@ sub sortentries {
     foreach my $sortset (@{$sortscheme}) {
       my $fc = '';
       my @fc;
-      # Reset collation object to global defaults for each sortset in case
-      # locally overriden by earlier loop
-      $Collator->change(level              => $collopts->{level},
-                        upper_before_lower => $collopts->{upper_before_lower});
-
       # If the case or upper option on a field is not the global default
       # set it locally on the $Collator by constructing a change() method call
       my $sc = $sortset->[0]{sortcase};
@@ -2059,32 +2098,42 @@ sub sortentries {
         push @fc, $su ? 'upper_before_lower => 1' : 'upper_before_lower => 0';
       }
       if (@fc) {
-        $fc = '->change(' . join(',', @fc) . ')'
+        # This field has custom collation options
+        $fc = '->change(' . join(',', @fc) . ')';
+      }
+      else {
+        # Reset collation options to global defaults if there are no field options
+        # We have to do this as ->change modifies the Collation object
+        $fc = '->change(level => '
+          . $collopts->{level}
+            . ' ,upper_before_lower => '
+              . $collopts->{upper_before_lower}
+                . ')';
       }
 
-      $data_extractor .= '$bibentries->entry($_)->get_field("sortobj")->[' . $num_sorts . '],';
+      $data_extractor .= '$list->get_sortdata($_)->[1][' . $num_sorts . '],';
       $sorter .= ' || ' if $num_sorts; # don't add separator before first field
 
       my $sd = $sortset->[0]{sort_direction};
       if (defined($sd) and $sd eq 'descending') {
         # descending field
-        $sorter .= '$Collator' .
-          $fc .
-          '->cmp($b->[' .
-          $num_sorts .
-            '],$a->[' .
-              $num_sorts .
-                '])';
+        $sorter .= '$Collator'
+          . $fc
+            . '->cmp($b->['
+              . $num_sorts
+                . '],$a->['
+                  . $num_sorts
+                    . '])';
       }
       else {
         # ascending field
-        $sorter .= '$Collator' .
-          $fc .
-          '->cmp($a->[' .
-          $num_sorts .
-            '],$b->[' .
-              $num_sorts .
-                '])';
+        $sorter .= '$Collator'
+          . $fc
+            . '->cmp($a->['
+              . $num_sorts
+                . '],$b->['
+                  . $num_sorts
+                    . '])';
       }
       $num_sorts++;
     }
@@ -2092,116 +2141,21 @@ sub sortentries {
     # Handily, $num_sorts is now one larger than the number of fields which is the
     # correct index for the actual data in the sort array
     $sort_extractor = '$_->[' . $num_sorts . ']';
-
-    $logger->debug('Sorter method: ' . $sorter);
+    $logger->trace("Sorting structure is: $sorter");
 
     # Schwartzian transform multi-field sort
-    @citekeys = map  { eval $sort_extractor }
-                sort { eval $sorter }
-                map  { eval $data_extractor } @citekeys;
-
+    @keys = map  { eval $sort_extractor }
+            sort { eval $sorter }
+            map  { eval $data_extractor } @keys;
   }
 
-  $logger->debug("Citekeys after sort:\n");
-  foreach my $ck (@citekeys) {
-    $logger->debug("$ck => " . $bibentries->entry($ck)->get_field('sortstring') . "\n");
+  $logger->debug("Keys after sort:\n");
+  foreach my $k (@keys) {
+    $logger->debug("$k => " . $list->get_sortdata($k)->[0] . "\n");
   }
-  $section->set_citekeys([ @citekeys ]);
 
-  return;
-}
+  $list->set_keys([ @keys ]);
 
-=head2 sort_shorthands
-
-    Sort the shorthands according to a certain sorting scheme.
-    If sortlos = 1 (los), sort by shorthand
-    If sortlos = 0 (bib), sort by bibliography order
-
-=cut
-
-sub sort_shorthands {
-  my $self = shift;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  my @shorthands = $section->get_shorthands;
-  my @citekeys = $section->get_citekeys;
-  my $key_index;
-  my %citekeys = map {$_ => $key_index++} @citekeys;
-  # What we sort on depends on the 'sortlos' BibLaTeX option
-  my $thislocale = Biber::Config->getoption('sortlocale');
-
-  # sort by sortkey - this means shorthands should be in same order as
-  # citekeys which has already been sorted so just sort on the index each
-  # shorthand (which is a citekeys) occurs in @citekeys
-  unless (Biber::Config->getblxoption('sortlos')) {
-    $logger->debug("Sorting shorthands by 'sortkey'");
-    @shorthands = sort {$citekeys{$a} <=> $citekeys{$b}} @shorthands;
-  }
-  else {
-    # sort by shorthands so we actually have to sort by the shorthand values
-    if ( Biber::Config->getoption('fastsort') ) {
-      use locale;
-      $logger->info("Sorting shorthands with built-in sort (with locale $thislocale) ...");
-      unless (setlocale( LC_ALL, $thislocale )) {
-        $logger->warn("Unavailable locale $thislocale");
-        $self->{warnings}++;
-      }
-      $logger->debug("Sorting shorthands by 'shorthand'");
-      @shorthands = sort { $bibentries->entry($a)->get_field('shorthand') cmp $bibentries->entry($b)->get_field('shorthand') } @shorthands;
-    }
-    else {
-      require Unicode::Collate::Locale;
-      my $opts = Biber::Config->getoption('collate_options');
-      my $collopts;
-      unless (ref($opts) eq "HASH") { # opts for this can come in a string from cmd line
-        $collopts = eval "{ $opts }" or $logger->logcarp("Incorrect collate_options: $@");
-      }
-      else {
-        $collopts = $opts;
-      }
-
-      # UCA level 2 if case insensitive sorting is requested
-      unless (Biber::Config->getoption('sortcase')) {
-        $collopts->{level} = 2;
-      }
-
-      # Add upper_before_lower option
-      $collopts->{upper_before_lower} = Biber::Config->getoption('sortupper');
-
-      # Add tailoring locale for Unicode::Collate
-      if ($thislocale and not $collopts->{locale}) {
-        $collopts->{locale} = $thislocale;
-        if ($collopts->{table}) {
-          my $t = delete $collopts->{table};
-          $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)");
-        }
-      }
-
-      # Remove locale from options as we need this to make the object
-      my $coll_locale = delete $collopts->{locale};
-      # Now create the collator object
-      my $Collator = Unicode::Collate::Locale->new( locale => $coll_locale )
-        or $logger->logcarp("Problem with Unicode::Collate options: $@");
-
-      # Note reporting tailoring locale default overrides here since we already
-      # do that during main sorting and the tailoring can't change by the time
-      # we get here
-      # Still using ->change though so we don't die on tailoring option conflicts
-      $Collator->change( %{$collopts} );
-
-      my $UCAversion = $Collator->version();
-      $logger->info("Sorting shorthands with Unicode::Collate (" .
-                    stringify_hash($collopts) . ", UCA version: $UCAversion)");
-
-      $logger->debug("Sorting shorthands by 'shorthand'");
-      @shorthands = sort {
-        $Collator->cmp( $bibentries->entry($a)->get_field('shorthand'),
-                        $bibentries->entry($b)->get_field('shorthand') )
-      } @shorthands;
-    }
-  }
-  $section->set_shorthands([ @shorthands ]);
   return;
 }
 
@@ -2218,29 +2172,22 @@ sub prepare {
   foreach my $section (@{$self->sections->get_sections}) {
     # shortcut - skip sections that don't have any keys
     next unless $section->get_citekeys or $section->is_allkeys;
-
     my $secnum = $section->number;
-    # Remove any dynamically generated per-entry options which might have
-    # been set in previous sections (like skiplab, skiplos)
-    Biber::Config->reset_per_entry_options;
 
-    $BIBER_SORT_FIRSTPASSDONE = 0;       # sanitise sortpass flag
     $logger->info("Processing bib section $secnum");
+
+    $section->reset_sort_cache;          # Reset the the sorting cache
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
-    $self->parse_data;                   # Parse data into section objects
-    $self->check_missing;                # Check for missing citekeys before anything else
-    $self->resolve_aliases;              # Resolve entrytype/field aliases to normalise entries
+    $self->fetch_data;                   # Fetch cited key and dependent data from sources
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
     $self->process_crossrefs;            # Process crossrefs/sets
     $self->validate_structure;           # Check bib structure
-    $self->postprocess;                  # Main entry postprocessing
-    $self->sortentries;                  # then we do a label sort pass and set a flag
+    $self->process_entries;              # Main entry processing loop
     $self->uniqueness;                   # Here we generate uniqueness information
-                                         # (extra*, unique* etc.)
-    $BIBER_SORT_FIRSTPASSDONE = 1;
-    $self->generate_final_sortinfo;      # in here we generate the final sort string
-    $self->sortentries;                  # and then we do a final sort pass
+    $self->create_extras_st_info;        # Generate singltitle/extras* information
+    $self->process_lists;                # process the output lists (sort and filtering)
+    $self->generate_singletitle;         # Generate singletitle field if requested
     $self->create_output_section;        # Generate and push the section output into the
                                          # output object ready for writing
   }
@@ -2249,38 +2196,227 @@ sub prepare {
   return;
 }
 
-=head2 parse_data
+=head2 fetch_data
 
-    Read the data file(s) for the section and store it in the section object
+    Fetch citekey and dependents data from section datasources
+    Expects to find datasource packages named:
+
+    Biber::Input::<type>::<datatype>
+
+    and one defined subroutine called:
+
+    Biber::Input::<type>::<datatype>::extract_entries
+
+    which takes args:
+
+    1: Biber object
+    2: Datasource name
+    3: Reference to an array of cite keys to look for
+
+    and returns an array of the cite keys it didn't find in the datasource
 
 =cut
 
-sub parse_data {
+sub fetch_data {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+  # Only looking for static keys, dynamic key entries are not in any datasource ...
+  my @citekeys = $section->get_static_citekeys;
+  no strict 'refs'; # symbolic references below ...
 
-  # Clear all T::B macro definitions between sections.
+  # Clear all T::B macro definitions between sections
   # T::B never clears these
-  Text::BibTeX::delete_all_macros;
+  $logger->debug('Clearing Text::BibTeX macros definitions');
+  Text::BibTeX::delete_all_macros();
 
-  foreach my $datafile ($section->get_datafiles) {
-    my $name = $datafile->{name};
-    my $datatype = $datafile->{datatype};
-    $name .= '.bib' unless $name =~ /\.(?:bib|xml|dbxml)\z/xms;
-    my $dfname;
-    if ($dfname = locate_biber_file($name)) {
-      $logger->info("Found $datatype data file '$dfname'");
-    }
-    else {
-      $logger->logcroak("File '$name' does not exist!")
-    }
-    # Here we decide which parser to use for the data file
-    if ($datatype eq 'bibtex') {
-      $self->parse_bibtex($dfname, $datatype);
+  # (Re-)define the old BibTeX month macros to what biblatex wants unless user stops this
+  unless (Biber::Config->getoption('nostdmacros')) {
+    my $mi = 1;
+    foreach my $mon ('jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec') {
+      Text::BibTeX::add_macro_text($mon, $mi++);
     }
   }
+
+  # First we look for the directly cited keys in each datasource
+  my @remaining_keys = @citekeys;
+  $logger->debug('Looking for directly cited keys: ' . join(', ', @remaining_keys));
+  foreach my $datasource (@{$section->get_datasources}) {
+    # shortcut if we have found all the keys now
+    last unless (@remaining_keys or $section->is_allkeys);
+    my $type = $datasource->{type};
+    my $name = $datasource->{name};
+    my $datatype = $datasource->{datatype};
+    my $package = 'Biber::Input::' . $type . '::' . $datatype;
+    eval "require $package";
+    $logger->info("Processing $datatype format $type '$name' for section $secnum");
+    @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@remaining_keys);
+  }
+
+  # error reporting
+  $logger->debug("Directly cited keys not found for section '$secnum': " . join(',', @remaining_keys));
+  foreach my $citekey (@remaining_keys) {
+    $logger->warn("I didn't find a database entry for '$citekey' (section $secnum)");
+    $self->{warnings}++;
+    $section->del_citekey($citekey);
+    $section->add_undef_citekey($citekey);
+  }
+
+  $logger->debug('Building dependents for keys: ' . join(',', $section->get_citekeys));
+  # dependent key list generation
+  my @dependent_keys = ();
+  my $dep_map = {}; # a map of dependent keys to entry keys in case we need to delete
+  foreach my $citekey ($section->get_citekeys) {
+    # Dynamic sets don't exist yet but their members do
+    if (my @dmems = $section->get_dynamic_set($citekey)) {
+      # skip looking for dependent if it's already been directly cited
+      foreach my $dm (@dmems) {
+        unless ($section->bibentry($dm)) {
+          push @dependent_keys, $dm;
+          $dep_map->{$dm} = $citekey;
+        }
+      }
+      $logger->debug("Dynamic set entry '$citekey' has members: " . join(', ', @dmems));
+    }
+    else {
+      # This must exist for all but dynamic sets
+      my $be = $section->bibentry($citekey);
+      # crossrefs/xrefs
+      my $refkey;
+      if ($refkey = $be->get_field('xref') or
+          $refkey = $be->get_field('crossref')) {
+        # skip looking for dependent if it's already been directly cited
+        push @dependent_keys, $refkey unless $section->bibentry($refkey);
+        $logger->debug("Entry '$citekey' has cross/xref '$refkey'");
+        $dep_map->{$refkey} = $citekey;
+      }
+      # static sets
+      if ($be->get_field('entrytype') eq 'set') {
+        my @smems = split /\s*,\s*/, $be->get_field('entryset');
+        # skip looking for dependent if it's already been directly cited
+        foreach my $sm (@smems) {
+          unless ($section->bibentry($sm)) {
+            push @dependent_keys, $sm;
+            $dep_map->{$sm} = $citekey;
+          }
+        }
+        $logger->debug("Static set entry '$citekey' has members: " . join(', ', @smems));
+      }
+      # Related entries
+      if (my $relkeys = $be->get_field('related')) {
+        my @rmems = split /\s*,\s*/, $relkeys;
+        # skip looking for dependent if it's already been directly cited
+        foreach my $rm (@rmems) {
+          unless ($section->bibentry($rm)) {
+            push @dependent_keys, $rm;
+            $dep_map->{$rm} = $citekey;
+          }
+        }
+        $logger->debug("Entry '$citekey' has related entries: " . join(', ', @rmems));
+      }
+    }
+  }
+  if (@dependent_keys) {
+    # Now look for the dependents of the directly cited keys
+    @remaining_keys = @dependent_keys;
+    $logger->debug('Looking for dependent keys: ' . join(', ', @remaining_keys));
+
+    # No need to go back to the datasource if allkeys, just see if the keys
+    # are in section
+    if ($section->is_allkeys) {
+      my @missing;
+      foreach my $dk (@dependent_keys) {
+        push @missing, $dk unless first {$_ eq $dk} $section->get_citekeys;
+      }
+      @remaining_keys = @missing;
+    }
+    else {
+      foreach my $datasource (@{$section->get_datasources}) {
+        # shortcut if we have found all the keys now
+        last unless (@remaining_keys or $section->is_allkeys);
+        my $type = $datasource->{type};
+        my $name = $datasource->{name};
+        my $datatype = $datasource->{datatype};
+        my $package = 'Biber::Input::' . $type . '::' . $datatype;
+        eval "require $package";
+        @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@remaining_keys);
+      }
+    }
+
+    # error reporting
+    $logger->debug("Dependent keys not found for section '$secnum': " . join(',', @remaining_keys));
+    foreach my $citekey (@remaining_keys) {
+      $logger->debug("Removing missing dependent key '$citekey' from entries");
+      $self->remove_undef_dependent($dep_map, $citekey);
+    }
+  }
+
+  $logger->debug("Citekeys for section '$secnum' after fetching data: " . join(', ', $section->get_citekeys));
+
+  # Reset any cache of bibtex data
+  $Biber::Input::file::bibtex::cache->{data} = undef;
   return;
+}
+
+=head2 remove_undef_dependent
+
+    Remove undefined dependent keys from an entries using a map of
+    depedent keys to entries
+
+=cut
+
+sub remove_undef_dependent {
+  my $self = shift;
+  my $dep_map = shift;
+  my $missing_key = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $entry_key = $dep_map->{$missing_key};
+
+  # remove from any dynamic keys
+  if (my @dmems = $section->get_dynamic_set($entry_key)) {
+    $section->set_dynamic_set($entry_key, grep {$_ ne $missing_key} @dmems);
+    $logger->warn("I didn't find a database entry for dynamic set member '$missing_key' - ignoring (section $secnum)");
+    $self->{warnings}++;
+  }
+  else {
+    my $be = $section->bibentry($entry_key);
+    # remove any xrefs
+    if ($be->get_field('xref') and ($be->get_field('xref') eq $missing_key)) {
+      $be->del_field('xref');
+      $logger->warn("I didn't find a database entry for xref '$missing_key' in entry '$entry_key' - ignoring (section $secnum)");
+      $self->{warnings}++;
+    }
+
+    # remove any crossrefs
+    if ($be->get_field('crossref') and ($be->get_field('crossref') eq $missing_key)) {
+      $be->del_field('crossref');
+      $logger->warn("I didn't find a database entry for crossref '$missing_key' in entry '$entry_key' - ignoring (section $secnum)");
+      $self->{warnings}++;
+    }
+
+    # remove static sets
+    if ($be->get_field('entrytype') eq 'set') {
+      my @smems = split /\s*,\s*/, $be->get_field('entryset');
+      $be->set_datafield('entryset', join(',', grep {$_ ne $missing_key} @smems));
+      $logger->warn("I didn't find a database entry for static set member '$missing_key' in entry '$entry_key' - ignoring (section $secnum)");
+      $self->{warnings}++;
+    }
+
+    # remove related entries
+    if (my $relkeys = $be->get_field('related')) {
+      my @rmems = split /\s*,\s*/, $relkeys;
+      $be->set_datafield('related', join(',', grep {$_ ne $missing_key} @rmems));
+      # If no more related entries, remove the other related fields
+      unless ($be->get_field('related')) {
+        $be->del_field('relatedtype');
+        $be->del_field('relatedstring');
+      }
+      $logger->warn("I didn't find a database entry for related entry '$missing_key' in entry '$entry_key' - ignoring (section $secnum)");
+      $self->{warnings}++;
+    }
+  }
+    return;
 }
 
 =head2 create_output_section
@@ -2297,22 +2433,22 @@ sub create_output_section {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
-  my @citekeys = $section->get_citekeys;
-  my @undef_citekeys = $section->get_undef_citekeys;
   # We rely on the order of this array for the order of the .bbl
+  my @citekeys = $section->get_citekeys;
   foreach my $k (@citekeys) {
     # Regular entry
-    my $be = $section->bibentry($k) or $logger->logcroak("Cannot find entry with key '$k' to output");
+    my $be = $section->bibentry($k) or $logger->logdie("Cannot find entry with key '$k' to output");
     $output_obj->set_output_entry($be, $section, Biber::Config->get_structure);
   }
+
+  # Make sure the output object knows about the output section
+  $output_obj->set_output_section($secnum, $section);
+
+  # undef citekeys are global
+  my @undef_citekeys = $section->get_undef_citekeys;
   # Missing citekeys
   foreach my $k (@undef_citekeys) {
     $output_obj->set_output_undefkey($k, $section);
-  }
-  # Push the sorted shorthands for each section into the output object
-  if ( $section->get_shorthands ) {
-    $self->sort_shorthands;
-    $output_obj->set_los([ $section->get_shorthands ], $secnum);
   }
 
   return;
@@ -2330,16 +2466,73 @@ sub create_output_misc {
   my $self = shift;
   my $output_obj = $self->get_output_obj;
 
-  if ($self->{preamble}) {
-    $output_obj->add_output_head("\\preamble{%\n" .
-                                 join("%\n", @{$self->{preamble}}) .
-                                 "%\n}\n\n");
+  if (my $pa = $self->{preamble}) {
+    $pa = join("%\n", @$pa);
+    # Decode UTF-8 -> LaTeX macros if asked to
+    if (Biber::Config->getoption('bblsafechars')) {
+      require Biber::LaTeX::Recode;
+      $pa = Biber::LaTeX::Recode::latex_encode($pa,
+                                               scheme => Biber::Config->getoption('bblsafecharsset'));
+    }
+    $output_obj->add_output_head("\\preamble{%\n$pa%\n}\n\n");
   }
 
   $output_obj->add_output_tail("\\endinput\n\n");
   return;
 }
 
+=head2 _parse_sort
+
+   Convenience sub to parse a .bcf sorting section and return nice
+   sorting object
+
+=cut
+
+sub _parse_sort {
+  my $root_obj = shift;
+  my $sorting;
+
+  foreach my $sort (sort {$a->{order} <=> $b->{order}} @{$root_obj->{sort}}) {
+    my $sortingitems;
+
+    # Generate sorting pass structures
+    foreach my $sortitem (sort {$a->{order} <=> $b->{order}} @{$sort->{sortitem}}) {
+      my $sortitemattributes = {};
+      if (defined($sortitem->{substring_side})) { # Found sorting substring side attribute
+        $sortitemattributes->{substring_side} = $sortitem->{substring_side};
+      }
+      if (defined($sortitem->{substring_width})) { # Found sorting substring length attribute
+        $sortitemattributes->{substring_width} = $sortitem->{substring_width};
+      }
+      if (defined($sortitem->{pad_width})) { # Found sorting pad length attribute
+        $sortitemattributes->{pad_width} = $sortitem->{pad_width};
+      }
+      if (defined($sortitem->{pad_char})) { # Found sorting pad char attribute
+        $sortitemattributes->{pad_char} = $sortitem->{pad_char};
+      }
+      if (defined($sortitem->{pad_side})) { # Found sorting pad side attribute
+        $sortitemattributes->{pad_side} = $sortitem->{pad_side};
+      }
+      push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
+    }
+
+    # Only push a sortitem if defined. If the item has a conditional "pass"
+    # attribute, it may be ommitted in which case we don't want an empty array ref
+    # pushing
+    # Also, we only push the sort attributes if there are any sortitems otherwise
+    # we end up with a blank sort
+    my $sopts;
+    $sopts->{final}          = $sort->{final}          if defined($sort->{final});
+    $sopts->{sort_direction} = $sort->{sort_direction} if defined($sort->{sort_direction});
+    $sopts->{sortcase}       = $sort->{sortcase}       if defined($sort->{sortcase});
+    $sopts->{sortupper}      = $sort->{sortupper}      if defined($sort->{sortupper});
+    if (defined($sortingitems)) {
+      unshift @{$sortingitems}, $sopts;
+      push @{$sorting}, $sortingitems;
+    }
+  }
+  return $sorting;
+}
 
 =head2 _filedump and _stringdump
 

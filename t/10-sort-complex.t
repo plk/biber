@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 11;
+use Test::More tests => 8;
 
 use Biber;
 use Biber::Output::BBL;
@@ -28,17 +28,14 @@ Biber::Config->setblxoption('labelyear', undef);
 
 # Now generate the information
 $biber->prepare;
-my $bibentries = $biber->sections->get_section('0')->bibentries;
-
+my $section = $biber->sections->get_section(0);
+my $main = $section->get_list('MAIN');
+my $shs = $section->get_list('SHORTHANDS');
 my $out = $biber->get_output_obj;
 
 isa_ok($biber, "Biber");
 
-my $sc1 = [
-           [
-            {},
-            {'labelalpha'    => {}},
-           ],
+my $sc = [
            [
             {},
             {'presort'    => {}}
@@ -46,6 +43,10 @@ my $sc1 = [
            [
             {'final' => 1},
             {'sortkey'    => {}}
+           ],
+           [
+            {},
+            {'labelalpha'    => {}},
            ],
            [
             {},
@@ -57,71 +58,25 @@ my $sc1 = [
             {'title'      => {}}
            ],
            [
-            {sort_direction => 'descending'},
-            {'sortyear'  => {}},
-            {'year'      => {substring_side => 'right',
-                             substring_width => '4'}}
-           ],
-           [
             {},
-            {'volume'     => {pad_char => '0'}},
-            {'0000'       => {}}
+            {'sortyear'  => {}},
+            {'year'      => {}}
            ],
            [
             {},
             {'sorttitle'       => {}},
             {'title'       => {}}
            ],
-          ];
-
-my $sc2 = [
            [
             {},
-            {'presort'    => {}}
-           ],
-           [
-            {},
-            {'labelalpha'    => {}},
-           ],
-           [
-            {},
-            {'extraalpha'     => {pad_side => 'left',
-                                 pad_width => 4,
-                                 pad_char => '0'}},
-           ],
-           [
-            {'final' => 1},
-            {'sortkey'    => {}}
-           ],
-           [
-            {},
-            {'sortname'   => {}},
-            {'author'     => {}},
-            {'editor'     => {}},
-            {'translator' => {}},
-            {'sorttitle'  => {}},
-            {'title'      => {}}
-           ],
-           [
-            {sort_direction => 'descending'},
-            {'sortyear'  => {}},
-            {'year'      => {substring_side => 'right',
-                             substring_width => '4'}}
-           ],
-           [
-            {},
-            {'volume'     => {pad_char => '0'}},
+            {'volume'     => {pad_char => '0',
+                              pad_side => 'left',
+                              pad_width => '4'}},
             {'0000'       => {}}
            ],
-           [
-            {},
-            {'sorttitle'       => {}},
-            {'title'       => {}}
-           ],
           ];
 
-
-my $sc4 = q|  \entry{L4}{book}{}
+my $sc3 = q|  \entry{L4}{book}{}
     \true{morelabelname}
     \name{labelname}{1}{}{%
       {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
@@ -147,17 +102,90 @@ my $sc4 = q|  \entry{L4}{book}{}
 
 |;
 
-is_deeply( Biber::Config->getblxoption('sorting_label') , $sc1, 'first pass scheme');
-is_deeply( Biber::Config->getblxoption('sorting_final') , $sc2, 'second pass scheme');
+my $sc4 = q|  \entry{L1}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \list{location}{1}{%
+      {Cambridge}%
+    }
+    \list{publisher}{1}{%
+      {A press}%
+    }
+    \strng{namehash}{DJ1}
+    \strng{fullhash}{DJ1}
+    \field{labelalpha}{Doe95}
+    \field{sortinit}{D}
+    \field{extraalpha}{1}
+    \field{title}{Algorithms For Sorting}
+    \field{year}{1995}
+  \endentry
 
-is( $out->get_output_entry('l4'), $sc4, 'Check more* fields"');
-is ($bibentries->entry('l4')->get_field('labelalpha'), 'Doe\textbf{+}95', '\alphaothers set by "and others"');
-is ($bibentries->entry('l1')->get_field('labelalpha'), 'Doe95', '2-pass - labelalpha after title - 1');
-is ($bibentries->entry('l1')->get_field('extraalpha'), '1', '2-pass - labelalpha after title - 2');
-is ($bibentries->entry('l2')->get_field('labelalpha'), 'Doe95', '2-pass - labelalpha after title - 3');
-is ($bibentries->entry('l2')->get_field('extraalpha'), '3', '2-pass - labelalpha after title - 4');
-is ($bibentries->entry('l3')->get_field('labelalpha'), 'Doe95', '2-pass - labelalpha after title - 5');
-is ($bibentries->entry('l3')->get_field('extraalpha'), '2', '2-pass - labelalpha after title - 6');
+|;
 
-unlink "*.utf8";
+my $sc5 = q|  \entry{L2}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \list{location}{1}{%
+      {Cambridge}%
+    }
+    \list{publisher}{1}{%
+      {A press}%
+    }
+    \strng{namehash}{DJ1}
+    \strng{fullhash}{DJ1}
+    \field{labelalpha}{Doe95}
+    \field{sortinit}{D}
+    \field{extraalpha}{3}
+    \field{title}{Sorting Algorithms}
+    \field{year}{1995}
+  \endentry
 
+|;
+
+my $sc6 = q|  \entry{L3}{book}{}
+    \name{labelname}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{}{Doe}{D.}{John}{J.}{}{}{}{}}%
+    }
+    \list{location}{1}{%
+      {Cambridge}%
+    }
+    \list{publisher}{1}{%
+      {A press}%
+    }
+    \strng{namehash}{DJ1}
+    \strng{fullhash}{DJ1}
+    \field{labelalpha}{Doe95}
+    \field{sortinit}{D}
+    \field{extraalpha}{2}
+    \field{title}{More and More Algorithms}
+    \field{year}{1995}
+  \endentry
+
+|;
+
+is_deeply( $main->get_sortscheme , $sc, 'sort scheme');
+is( $out->get_output_entry($main,'l4'), $sc3, '\alphaothers set by "and others"');
+is( $out->get_output_entry($main,'l1'), $sc4, '2-pass - labelalpha after title');
+is( $out->get_output_entry($main,'l2'), $sc5, '2-pass - labelalpha after title');
+is( $out->get_output_entry($main,'l3'), $sc6, '2-pass - labelalpha after title');
+is_deeply([ $main->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'citeorder - 1');
+
+# This should be the same as $main citeorder as both $main and $shs use same
+# global sort spec. $shs should also get the keys from the sort cache as a result.
+# Can't do the usual SHORTHAND filter on SHORTHAND field in .bcf as adding SHORTHAND
+# fields to the entries changes the sort order of $main (as SHORTHAND overrides the default
+# label)
+is_deeply([ $shs->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'citeorder - 2');
+
+unlink <*.utf8>;

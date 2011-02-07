@@ -4,7 +4,7 @@ start =
   element bcf:controlfile {
     # This is usually the same as the biblatex version string but not necessarily.
     # Sometimes the BCF format version doesn't change between biblatex releases
-    attribute version { xsd:string },
+    attribute version { xsd:string {minLength="1"}},
 
     # "Global" Biber options. It's not clear what a non-global biber option
     # would be but just in case, we have the option ...
@@ -14,7 +14,6 @@ start =
       bblencoding,
       bibencoding,
       debug,
-      displaymode?,
       mincrossrefs,
       sortcase,
       sortlocale?,
@@ -64,21 +63,29 @@ start =
       useprefix?,
       usetranslator?
     }*,
-    
+
+    # Display modes definition
+    element bcf:displaymodes {
+      element bcf:displaymode {
+        element bcf:target { "*" | xsd:string {minLength="1"}},
+        element bcf:mode { "original" | "uniform" | "romanised"  | "translated" }+
+      }+
+    }?,
+
     # Cross-reference inheritance specifications
     element bcf:inheritance {
       # Defaults
       element bcf:defaults {
         # Whether to inherit all fields
-        attribute inherit_all { "yes" | "no" },
+        attribute inherit_all { "true" | "false" },
         # Should we overwrite the target field if it exists?
-        attribute override_target { "yes" | "no" },
+        attribute override_target { "true" | "false" },
         # Default inherit_all and override_target settings for entrytype source/target pairs
         element bcf:type_pair {
-          attribute source { "all" | xsd:string },
-          attribute target { "all" | xsd:string },
-          attribute inherit_all { "yes" | "no" }?,
-          attribute override_target { "yes" | "no" }?,
+          attribute source { "*" | xsd:string {minLength="1"}},
+          attribute target { "*" | xsd:string {minLength="1"}},
+          attribute inherit_all { "true" | "false" }?,
+          attribute override_target { "true" | "false" }?,
           empty
         }*
       },
@@ -86,8 +93,8 @@ start =
       element bcf:inherit {
         # applies to these pairs of source/target entrytypes
         element bcf:type_pair {
-          attribute source { "all" | xsd:string },
-          attribute target { "all" | xsd:string },
+          attribute source { "*" | xsd:string {minLength="1"}},
+          attribute target { "*" | xsd:string {minLength="1"}},
           empty
         }+,
         # and here are the field specifications
@@ -96,11 +103,11 @@ start =
             # either a "skip this field" specification
             # so we can say inherit all except certain fields OR ...
             (attribute source { xsd:string },
-              attribute skip { "yes" | "no" }) |
+              attribute skip { "true" | "false" }) |
             # ... a source and target field with an optional override attribute
-            (attribute source { xsd:string },
-              attribute target { xsd:string },
-              attribute override_target { "yes" | "no" }?)
+            (attribute source { xsd:string {minLength="1"}},
+              attribute target { xsd:string {minLength="1"}},
+              attribute override_target { "true" | "false" }?)
           ),
           empty
         }+
@@ -108,22 +115,13 @@ start =
     }?,
     
     # Global sorting specification
-    element bcf:sorting {
-      # presort default strings for different entry types
-      element bcf:presort {
-        attribute type { xsd:NCName }?,
-        text
-      }+,
-      # excludes of certain fields for sorting for specified types
-      element bcf:sortexclusion {
-        attribute type { text },
-        element bcf:exclusion { xsd:NCName }+
-      }*,
-      sort+
-    },
-
+    sorting,
     # Structure specification
     element bcf:structure {
+      # Valid datetypes
+      element bcf:datetypes {
+        element bcf:datetype { xsd:NCName }+
+      },
       # Valid entrytypes
       element bcf:entrytypes {
         element bcf:entrytype { xsd:NCName }+
@@ -246,14 +244,26 @@ start =
       secspec+
     }
 
+sorting = 
+  element bcf:sorting {
+    # presort default strings for different entry types
+    element bcf:presort {
+      attribute type { xsd:NCName }?,
+      text
+    }+,
+    # excludes of certain fields for sorting for specified types
+    element bcf:sortexclusion {
+      attribute type { text },
+      element bcf:exclusion { xsd:NCName }+
+    }*,
+    sort+
+  }
+
 sort =
   # sort specification
   element bcf:sort {
     # order of this specification in the set of all sort specifications
     attribute order { xsd:integer },
-    # Is this sort specification applicable to the first (label generatio)
-    # sort pass or the second (final) pass?
-    attribute pass { "label" | "final" }?,
     # Should we stop generating sorting information after this item?
     attribute final { xsd:integer }?,
     # Sort ascending or descending
@@ -285,7 +295,7 @@ secspec =
     attribute section { xsd:integer },
     element bcf:datasource {
       attribute type { "file" },
-      attribute format { "bibtex" | "biblatexml" }?,
+      attribute datatype { "bibtex" | "biblatexml" }?,
       xsd:NCName
     }*
   }?,
@@ -294,11 +304,30 @@ secspec =
     attribute number { xsd:integer },
     element bcf:citekey {
       ( attribute type { "set" },
-        attribute members { xsd:string },
-        xsd:string ) |
-      xsd:string
+        attribute members { xsd:string {minLength="1"}},
+        xsd:string {minLength="1"}) |
+      xsd:string {minLength="1"}
+    }*,
+    element bcf:sectionlist {
+      attribute label { xsd:string {minLength="1"}},
+      attribute type { "entry" | "key" | "shorthand" },
+      (filter | orfilter )*,
+      element bcf:sorting {
+        sort+
+      }?
     }*
   }
+
+orfilter = element bcf:orfilter {
+             filter+
+           }
+
+filter = element bcf:filter {
+           attribute type { "type" | "nottype" | "subtype" | "notsubtype"
+                         | "keyword" | "notkeyword" | "field" | "notfield" },
+           xsd:string {minLength="1"}
+         }
+
 
 # option definitions
 terseinits =
@@ -494,5 +523,3 @@ nonsortdiacritics =
     element bcf:item { text }+
   }
 
-# This is for setting the display mode of non-roman scripts
-displaymode = element displaymode { "original" | "romanized" | "translated" | "uniform" }

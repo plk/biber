@@ -29,10 +29,13 @@ GetOptions(
            'bibdatatype=s',
            'bibencoding|e=s',
            'bblencoding|E=s',
+           'bblsafechars',
+           'bblsafecharsset=s',
            'collate|C',
            'collate_options|c=s',
            'configfile|g=s',
            'convert_control',
+           'decodecharsset=s',
            'debug|D',
            'fastsort|f',
            'help|h|?',
@@ -40,6 +43,7 @@ GetOptions(
            'logfile=s',
            'noconf',
            'nolog',
+           'nostdmacros',
            'onlylog',
            'outfile|O=s',
            'output_directory=s',
@@ -223,9 +227,13 @@ if ( $opts->{allentries} and $opts->{bibdata} ) {
   # Convert bibdata into correct format for putting into section object
   # If using command line, all data files must be of same type (e.g. bibtex)
   foreach my $bibdatafile (@{$opts->{bibdata}}) {
-    $bib_section->add_datafile({ name => $bibdatafile, datatype => Biber::Config->getoption('bibdatatype')});
+    $bib_section->add_datasource({ type => 'file', name => $bibdatafile, datatype => Biber::Config->getoption('bibdatatype')});
   }
   $bib_section->allkeys;
+  my $mainlist = Biber::Section::List->new(label => 'MAIN');
+  $mainlist->set_type('entry');
+  $bib_section->add_list($mainlist);
+
   $logger->info('Using all citekeys in ' . Biber::Config->getoption('bibdatatype') . ' format files: ' . join(',', @{$opts->{bibdata}}));
   $bib_sections->add_section($bib_section);
   $biber->{sections} = $bib_sections;
@@ -251,8 +259,8 @@ else {
     $bblfile = File::Spec->catfile($outdir, $file)
   }
 
-  # find and parse the .bcf control file
-  $biber->parse_ctrlfile(locate_biber_file($ctrlfile));
+  # parse the .bcf control file
+  $biber->parse_ctrlfile($ctrlfile);
 }
 
 # Postprocess biber options now that they are all read from the various places
@@ -342,7 +350,7 @@ Usage:  biber file.bcf
         Creates file.bbl using control file file.bcf (.bcf extension is optional)
 
         biber -d foo.bib file.bcf
-        Creates file.bbl from entries in foo.bib and the datafiles
+        Creates file.bbl from entries in foo.bib and the data sources
         listed in file.bcf
 
         biber -d foo.bib,bar.bib -a
@@ -358,6 +366,21 @@ Options:
       Normally it's not necessary to set this as it's passed via biblatex
       from the inputenc package setting.
       See "perldoc Encode::Supported" for a list of supported encodings.
+
+  --bblsafechars
+      Try to convert UTF-8 chars into LaTeX macros when writing the .bbl
+      This can prevent unknown char errors when using PDFLaTeX and inputenc
+      as this doesn't understand all of UTF-8. Note, it is better to switch
+      to XeTeX or LuaTeX to avoid this situation. Without argument uses a
+      generous set of conversions.
+
+  --bblsafecharsset=base|extra|full
+      The set of characters included in the conversion routine for
+      --bblsafechars. Set to "full" to try harder with a much
+      larger set or "base" to use a minimal set. Default is "extra" which is
+      between "base" and "full". You may need to load more macro packages
+      to deal with the results of "full" (Dings, Greek characters, special
+      symbols etc.)
 
   --bibdata|-d <files>
       Use <files> as bibliography databases (comma separated list).
@@ -392,6 +415,14 @@ Options:
       be useful for debugging. File is named by appending \".html\"
       to .bcf file.
 
+  --decodecharsset=base|extra|full
+      The set of characters included in the conversion routine when decoding
+      LaTeX macros into UTF-8 (which happens when --bblencoding|-E is set to
+      UTF-8) Set to "full" to try harder with a much larger set or "base" to
+      use a minimal set. Default is "extra" which is between "base" and "full".
+      You may want to try "full" if you want, for example, to sort more
+      obscure UTF-8 characters in the .bib
+
   --debug|-D
       Turn on debugging for biber.
 
@@ -413,6 +444,11 @@ Options:
 
   --nolog
       Do not write any logfile.
+
+  --nostdmacros
+      Don't automatically define any standard macros like month abbreviations.
+      If you also define these yourself, this option can be used to suppress
+      macro redefinition warnings.
 
   --onlylog
       Do not write any message to screen.

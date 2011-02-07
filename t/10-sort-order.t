@@ -3,13 +3,14 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 24;
+use Test::More tests => 13;
 
 use Biber;
 use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata") ;
+my $S;
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
@@ -20,40 +21,25 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # relying on here for tests
 Biber::Config->setoption('fastsort', 1);
 
-my $i = 1;
-
-# This makes sure the the sortorder of the output strings is still correct
-# since the sorting and output are far enough apart, codewise, for problems
-# to intervene ...
-sub check_output_string_order {
-  my $out = shift;
-  my $test_order = shift;
-  is_deeply($out->get_output_entries(0),
-            [ map { $out->get_output_entry($_) }  @{$test_order} ], 'sort strings - ' . $i++);
-}
-
-
-
 # citeorder (sorting=none)
-Biber::Config->setblxoption('sorting_label', [
+$S =  [
                                                       [
                                                        {},
                                                        {'citeorder'    => {}}
                                                       ]
-                                                     ]);
-Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+                                                     ];
+Biber::Config->setblxoption('sorting', {default => $S});
 Biber::Config->setblxoption('labelyear', undef);
 
 # (re)generate informtion based on option settings
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $out = $biber->get_output_obj;
+my $main = $section->get_list('MAIN');
 
-is_deeply([$section->get_citekeys], ['L2','L1B','L1','L4','L3','L5','L1A','L7','L8','L6','L9'], 'citeorder');
-check_output_string_order($out, ['L2','L1B','L1','L4','L3','L5','L1A','L7','L8','L6','L9']);
+is_deeply([ $main->get_keys ], ['L2','L1B','L1','L4','L3','L5','L1A','L7','L8','L6','L9'], 'citeorder');
 
 # nty
-Biber::Config->setblxoption('sorting_label', [
+$S = [
                                                     [
                                                      {},
                                                      {'presort'    => {}}
@@ -88,19 +74,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                      {'volume'     => {}},
                                                      {'0000'       => {}}
                                                     ]
-                                                   ]);
+                                                   ];
 
-Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+$main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
-$out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-is_deeply([$section->get_citekeys], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nty');
-check_output_string_order($out, ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9']);
+is_deeply([ $main->get_keys ], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nty');
 
 # nyt
-Biber::Config->setblxoption('sorting_label', [
+$S = [
                                                     [
                                                      {},
                                                      {'presort'    => {}}
@@ -135,19 +119,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                      {'volume'     => {}},
                                                      {'0000'       => {}}
                                                     ]
-                                                   ]);
+                                                   ];
 
-Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+$main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
-$out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-is_deeply([$section->get_citekeys], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyt');
-check_output_string_order($out, ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9']);
+is_deeply([$main->get_keys], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyt');
 
 # nyvt
-Biber::Config->setblxoption('sorting_label', [
+$S = [
                                                     [
                                                      {},
                                                      {'presort'    => {}}
@@ -182,20 +164,18 @@ Biber::Config->setblxoption('sorting_label', [
                                                      {'sorttitle'  => {}},
                                                      {'title'      => {}}
                                                     ]
-                                                   ]);
+                                                   ];
 
 
-Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+$main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
-$out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-is_deeply([$section->get_citekeys], ['L5','L1','L1A','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyvt');
-check_output_string_order($out, ['L5','L1','L1A','L1B','L2','L3','L4','L8','L7','L6','L9']);
+is_deeply([$main->get_keys], ['L5','L1','L1A','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyvt');
 
 # nyvt with volume padding
-Biber::Config->setblxoption('sorting_label', [
+$S = [
                                                     [
                                                      {},
                                                      {'presort'    => {}}
@@ -230,20 +210,18 @@ Biber::Config->setblxoption('sorting_label', [
                                                      {'sorttitle'  => {}},
                                                      {'title'      => {}}
                                                     ]
-                                                   ]);
+                                                   ];
 
 
-Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+$main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
-$out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-is_deeply([$section->get_citekeys], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyvt with volume padding');
-check_output_string_order($out, ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9']);
+is_deeply([$main->get_keys], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyvt with volume padding');
 
 # ynt
-Biber::Config->setblxoption('sorting_label', [
+$S = [
                                						      [
                                                      {},
                                                      {'presort'    => {}}
@@ -273,19 +251,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                      {'sorttitle'  => {}},
                                                      {'title'      => {}}
                                                     ],
-                                                   ]);
+                                                   ];
 
-Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+$main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
-$out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-is_deeply([$section->get_citekeys], ['L3','L1B','L1A','L1','L4','L2','L8','L7','L6','L9','L5'], 'ynt');
-check_output_string_order($out, ['L3','L1B','L1A','L1','L4','L2','L8','L7','L6','L9','L5']);
+is_deeply([$main->get_keys], ['L3','L1B','L1A','L1','L4','L2','L8','L7','L6','L9','L5'], 'ynt');
 
 # ynt with year substring
-Biber::Config->setblxoption('sorting_label', [
+$S = [
 						      [
                                                      {},
                                                      {'presort'    => {}}
@@ -316,19 +292,17 @@ Biber::Config->setblxoption('sorting_label', [
                                                      {'sorttitle'  => {}},
                                                      {'title'      => {}}
                                                     ],
-                                                   ]);
+                                                   ];
 
-Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+$main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
-$out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-is_deeply([$section->get_citekeys], ['L3','L1B','L1A','L1','L2','L4','L8','L7','L6','L9','L5'], 'ynt with year substring');
-check_output_string_order($out, ['L3','L1B','L1A','L1','L2','L4','L8','L7','L6','L9','L5']);
+is_deeply([$main->get_keys], ['L3','L1B','L1A','L1','L2','L4','L8','L7','L6','L9','L5'], 'ynt with year substring');
 
 # ydnt
-Biber::Config->setblxoption('sorting_label', [
+$S = [
                                                     [
                                                      {},
                                                      {'presort'    => {}}
@@ -358,20 +332,18 @@ Biber::Config->setblxoption('sorting_label', [
                                                      {'sorttitle'  => {}},
                                                      {'title'      => {}}
                                                     ],
-                                                   ]);
+                                                   ];
 
-Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+$main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
-$out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
 # This is correct as "aaaaaa" sorts before all years when descending
-is_deeply([$section->get_citekeys], ['L5','L9','L6','L7','L8','L2','L4','L1A','L1','L1B','L3'], 'ydnt');
-check_output_string_order($out, ['L5','L9','L6','L7','L8','L2','L4','L1A','L1','L1B','L3']);
+is_deeply([$main->get_keys], ['L5','L9','L6','L7','L8','L2','L4','L1A','L1','L1B','L3'], 'ydnt');
 
 # anyt
-Biber::Config->setblxoption('sorting_label', [
+$S = [
                                                     [
                                                      {},
                                                      {'presort'    => {}}
@@ -410,22 +382,20 @@ Biber::Config->setblxoption('sorting_label', [
                                                      {'sorttitle'  => {}},
                                                      {'0000'       => {}}
                                                     ]
-                                                   ]);
+                                                   ];
 
-Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+$main->set_sortscheme($S);
 Biber::Config->setblxoption('labelalpha', 1);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
-$out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-is_deeply([$section->get_citekeys], ['L1B','L1A','L1','L2','L3','L4','L5','L8','L7','L6','L9'], 'anyt');
-check_output_string_order($out, ['L1B','L1A','L1','L2','L3','L4','L5','L8','L7','L6','L9']);
+is_deeply([$main->get_keys], ['L1B','L1A','L1','L2','L3','L4','L5','L8','L7','L6','L9'], 'anyt');
 
 Biber::Config->setblxoption('labelalpha', 0);
 
 # anyvt
-Biber::Config->setblxoption('sorting_label', [
+$S = [
                                                     [
                                                      {},
                                                      {'presort'    => {}}
@@ -464,21 +434,19 @@ Biber::Config->setblxoption('sorting_label', [
                                                      {'sorttitle'  => {}},
                                                      {'title'      => {}}
                                                     ]
-                                                   ]);
+                                                   ];
 
-Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+$main->set_sortscheme($S);
 Biber::Config->setblxoption('labelalpha', 1);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
-$out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-is_deeply([$section->get_citekeys], ['L1B','L1','L1A','L2','L3','L4','L5','L8','L7','L6','L9'], 'anyvt');
-check_output_string_order($out, ['L1B','L1','L1A','L2','L3','L4','L5','L8','L7','L6','L9']);
+is_deeply([$main->get_keys], ['L1B','L1','L1A','L2','L3','L4','L5','L8','L7','L6','L9'], 'anyvt');
 
 
 # nty with descending n
-Biber::Config->setblxoption('sorting_label', [
+$S = [
                                                     [
                                                      {sort_direction => 'descending'},
                                                      {'sortname'   => {}},
@@ -499,37 +467,52 @@ Biber::Config->setblxoption('sorting_label', [
                                                      {'year'       => {}},
                                                      {'0000'       => {}}
                                                     ],
-                                                   ]);
+                                                   ];
 
-Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+$main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
-$out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-is_deeply([$section->get_citekeys], ['L9','L6','L7','L8','L5','L4','L3','L2','L1B','L1A','L1'], 'nty with descending n');
-check_output_string_order($out, ['L9','L6','L7','L8','L5','L4','L3','L2','L1B','L1A','L1']);
+is_deeply([$main->get_keys], ['L9','L6','L7','L8','L5','L4','L3','L2','L1B','L1A','L1'], 'nty with descending n');
 
 
 # testing case sensitive with fastsort
 # In alphabetic, all uppercase comes before lower so the
 # "sortcase => 1" on location means that "edinburgh" sorts at the end after "London"
 # Take this out of the location sorting spec and it fails as it should
-Biber::Config->setblxoption('sorting_label', [
+$S = [
                                                     [
                                                      {sortcase => 1},
                                                      {'location'     => {}}
                                                     ]
-                                                   ]);
+                                                   ];
 
-Biber::Config->setblxoption('sorting_final', Biber::Config->getblxoption('sorting_label'));
+$main->set_sortscheme($S);
+
+$biber->set_output_obj(Biber::Output::BBL->new());
+# Have to set local to something which understand lexical/case differences for this test
+# otherwise testing on Windows doesn't work ...
+Biber::Config->setoption('sortlocale', 'C');
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+is_deeply([$main->get_keys], ['L1B','L1','L1A','L2','L3','L4','L5','L7','L8','L9','L6'], 'location - sortcase=1');
+
+# Test nosort option
+$S = [
+                                                    [
+                                                     {},
+                                                     {'title'     => {}}
+                                                    ]
+                                                   ];
+
+$main->set_sortscheme($S);
+# Set nosort for tests, skipping "The " in titles so L7 should sort before L6
+Biber::Config->setoption('nosort', { type_title => q/\AThe\s+/ });
 
 $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
-$out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-is_deeply([$section->get_citekeys], ['L1B','L1A','L1','L2','L3','L4','L7','L8','L5','L9','L6'], 'location - sortcase=1');
-check_output_string_order($out, ['L1B','L1A','L1','L2','L3','L4','L7','L8','L5','L9','L6']);
+is_deeply([$main->get_keys], ['L1A','L1','L1B','L2','L3','L4','L5','L7','L6','L9','L8'], 'nosort 1');
 
-
-unlink "*.utf8";
+unlink <*.utf8>;

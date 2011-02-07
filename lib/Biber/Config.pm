@@ -1,5 +1,5 @@
 package Biber::Config;
-
+#use feature 'unicode_strings';
 use Biber::Constants;
 use IPC::Cmd qw( can_run run );
 use Cwd qw( abs_path );
@@ -34,6 +34,7 @@ Biber::Config - Configuration items which need to be saved across the
 our $CONFIG;
 $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{seennamehash} = {};
+$CONFIG->{state}{seenname} = {};
 $CONFIG->{state}{keycase} = {};
 
 # Boolean to say whether uniquename/uniquelist information has changed
@@ -58,6 +59,12 @@ $CONFIG->{state}{seen_nameyear_extraalpha} = {};
 $CONFIG->{state}{seen_extraalpha} = {};
 $CONFIG->{state}{seenkeys} = {};
 
+# Location of the control file
+$CONFIG->{state}{control_file_location} = '';
+
+# Data files per section being used by biber
+$CONFIG->{state}{datafiles} = [];
+
 =head2 _init
 
     Reset internal hashes to defaults. This is needed for tests when
@@ -67,7 +74,11 @@ $CONFIG->{state}{seenkeys} = {};
 
 sub _init {
   $CONFIG->{state}{unulchanged} = 1;
+  $CONFIG->{options}{biblatex}{PER_ENTRY} = {};
+  $CONFIG->{state}{control_file_location} = '';
   $CONFIG->{state}{seennamehash} = {};
+  $CONFIG->{state}{seenname} = {};
+  $CONFIG->{state}{crossrefkeys} = {};
   $CONFIG->{state}{namehashcount} = {};
   $CONFIG->{state}{uniquenamecount} = {};
   $CONFIG->{state}{seen_nameyear_extrayear} = {};
@@ -76,6 +87,7 @@ sub _init {
   $CONFIG->{state}{seen_extraalpha} = {};
   $CONFIG->{state}{seenkeys} = {};
   $CONFIG->{state}{keycase} = {};
+  $CONFIG->{state}{datafiles} = [];
 
   return;
 }
@@ -102,16 +114,12 @@ sub _initopts {
     }
 
     if (defined $conffile) {
-      %LOCALCONF = ParseConfig(-ConfigFile => $conffile, -UTF8 => 1) or
+      %LOCALCONF = ParseConfig(-LowerCaseNames => 1,
+                               -MergeDuplicateBlocks => 1,
+                               -AllowMultiOptions => 1,
+                               -ConfigFile => $conffile,
+                               -UTF8 => 1) or
         $logger->logcarp("Failure to read config file " . $conffile . "\n $@");
-    }
-
-    # nsort* options are special
-    if (my $nsp = $LOCALCONF{nosortprefix}) {
-      $LOCALCONF{nosortprefix} = qr/$nsp/;
-    }
-    if (my $nsd = $LOCALCONF{nosortdiacritics}) {
-      $LOCALCONF{nosortdiacritics} = qr/$nsd/;
     }
   }
 
@@ -232,7 +240,7 @@ sub postprocess_biber_opts {
     }
     unless ($CONFIG->{options}{biber}{sortcase} eq '1' or
             $CONFIG->{options}{biber}{sortcase} eq '0') {
-      $logger->logcroak("Invalid value for option 'sortcase'");
+      $logger->logdie("Invalid value for option 'sortcase'");
     }
   }
 
@@ -244,11 +252,10 @@ sub postprocess_biber_opts {
     }
     unless ($CONFIG->{options}{biber}{sortupper} eq '1' or
             $CONFIG->{options}{biber}{sortupper} eq '0') {
-      $logger->logcroak("Invalid value for option 'sortupper'");
+      $logger->logdie("Invalid value for option 'sortupper'");
     }
   }
 }
-
 
 =head2 set_structure
 
@@ -259,7 +266,7 @@ sub postprocess_biber_opts {
 sub set_structure {
   shift;
   my $obj = shift;
-  $self->{structure} = $obj;
+  $CONFIG->{structure} = $obj;
   return;
 }
 
@@ -271,9 +278,31 @@ sub set_structure {
 
 sub get_structure {
   shift;
-  return $self->{structure};
+  return $CONFIG->{structure};
 }
 
+=head2 set_ctrlfile_path
+
+    Stores the path to the control file
+
+=cut
+
+sub set_ctrlfile_path {
+  shift;
+  $CONFIG->{control_file_location} = shift;
+  return;
+}
+
+=head2 get_ctrlfile_path
+
+    Retrieved the path to the control file
+
+=cut
+
+sub get_ctrlfile_path {
+  shift;
+  return $CONFIG->{control_file_location};
+}
 
 =head2 setoption
 
@@ -329,19 +358,6 @@ sub getcmdlineoption {
 #################################
 # BibLaTeX options static methods
 #################################
-
-=head2 reset_per_entry_options
-
-    Unset all per_entry_options. Sometimes these are dynamically generated
-    (skiplab, skiplos etc.) and we don't want these persisting over sections
-
-=cut
-
-sub reset_per_entry_options {
-  shift; # class method so don't care about class name
-  $CONFIG->{options}{biblatex}{PER_ENTRY} = {};
-  return;
-}
 
 
 =head2 setblxoption
@@ -499,27 +515,30 @@ sub incr_seenname {
 }
 
 
+
+=head2 reset_seen_extra
+
+    Reset the counters for extrayear and extraalpha
+
+    Biber::Config->reset_extra;
+
+=cut
+
+sub reset_seen_extra {
+  shift; # class method so don't care about class name
+  my $ay = shift;
+  $CONFIG->{state}{seen_extrayear} = {};
+  $CONFIG->{state}{seen_extraalpha} = {};
+  return;
+}
+
 #============================
 #        seen_extrayear
 #============================
 
-=head2 get_seen_extrayear
-
-    Get the counter of extrayear
-
-    Biber::Config->get_seen_extrayear($ay);
-
-=cut
-
-sub get_seen_extrayear {
-  shift; # class method so don't care about class name
-  my $ay = shift;
-  return $CONFIG->{state}{seen_extrayear}{$ay};
-}
-
 =head2 incr_seen_extrayear
 
-    Increment the counter for extrayear
+    Increment and return the counter for extrayear
 
     Biber::Config->incr_seen_extrayear($ay);
 
@@ -528,9 +547,9 @@ sub get_seen_extrayear {
 sub incr_seen_extrayear {
   shift; # class method so don't care about class name
   my $ay = shift;
-  $CONFIG->{state}{seen_extrayear}{$ay}++;
-  return;
+  return ++$CONFIG->{state}{seen_extrayear}{$ay};
 }
+
 
 #============================
 #       seen_nameyear_extrayear
@@ -589,23 +608,9 @@ sub incr_seen_nameyear_extrayear {
 #        seen_extraalpha
 #============================
 
-=head2 get_seen_extraalpha
-
-    Get the counter of extraalpha
-
-    Biber::Config->get_seen_extraalpha($hash);
-
-=cut
-
-sub get_seen_extraalpha {
-  shift; # class method so don't care about class name
-  my $ay = shift;
-  return $CONFIG->{state}{seen_extraalpha}{$ay};
-}
-
 =head2 incr_seen_extraalpha
 
-    Increment the counter for extraalpha
+    Increment and return the counter for extraalpha
 
     Biber::Config->incr_seen_extraalpha($ay);
 
@@ -614,9 +619,9 @@ sub get_seen_extraalpha {
 sub incr_seen_extraalpha {
   shift; # class method so don't care about class name
   my $ay = shift;
-  $CONFIG->{state}{seen_extraalpha}{$ay}++;
-  return;
+  return ++$CONFIG->{state}{seen_extraalpha}{$ay};
 }
+
 
 #============================
 #       seen_nameyear_extraalpha

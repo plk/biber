@@ -1,0 +1,3316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar ns="http://biblatex-biber.sourceforge.net/biblatexml" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:bib="http://biblatex-biber.sourceforge.net/biblatexml" xmlns:user="http://localhost/biblatexml/user" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <a:documentation>TODO?  change namespace of bib:emphasis, bib:superscript, bib:subscript
+       to db = "http://docbook.org/ns/docbook"</a:documentation>
+    <element name="entries">
+      <oneOrMore>
+        <choice>
+          <ref name="article"/>
+          <ref name="bibnote"/>
+          <ref name="book"/>
+          <ref name="bookmisc"/>
+          <ref name="booklet"/>
+          <ref name="books"/>
+          <ref name="collmisc"/>
+          <ref name="collections"/>
+          <ref name="inmisc"/>
+          <ref name="inproceedings"/>
+          <ref name="manual"/>
+          <ref name="misc"/>
+          <ref name="online"/>
+          <ref name="patent"/>
+          <ref name="periodical"/>
+          <ref name="proceedings"/>
+          <ref name="report"/>
+          <ref name="set"/>
+          <ref name="thesis"/>
+          <ref name="unpublished"/>
+          <ref name="misctypes"/>
+        </choice>
+      </oneOrMore>
+    </element>
+  </start>
+  <define name="BibLaTeXML.common.fields">
+    <interleave>
+      <optional>
+        <ref name="abstract"/>
+      </optional>
+      <optional>
+        <ref name="annotation"/>
+      </optional>
+      <optional>
+        <ref name="crossref"/>
+      </optional>
+      <optional>
+        <ref name="entryset"/>
+      </optional>
+      <optional>
+        <ref name="entrysubtype"/>
+      </optional>
+      <optional>
+        <ref name="execute"/>
+      </optional>
+      <optional>
+        <ref name="file"/>
+      </optional>
+      <optional>
+        <ref name="hyphenation"/>
+      </optional>
+      <zeroOrMore>
+        <ref name="indextitle"/>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="indexsorttitle"/>
+      </zeroOrMore>
+      <optional>
+        <ref name="isan"/>
+      </optional>
+      <optional>
+        <ref name="ismn"/>
+      </optional>
+      <optional>
+        <ref name="iswc"/>
+      </optional>
+      <optional>
+        <ref name="keywords"/>
+      </optional>
+      <optional>
+        <ref name="label"/>
+      </optional>
+      <optional>
+        <ref name="library"/>
+      </optional>
+      <zeroOrMore>
+        <ref name="nameaddon"/>
+      </zeroOrMore>
+      <optional>
+        <ref name="options"/>
+      </optional>
+      <zeroOrMore>
+        <ref name="origlocation"/>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="origpublisher"/>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="origtitle"/>
+      </zeroOrMore>
+      <optional>
+        <ref name="presort"/>
+      </optional>
+      <optional>
+        <ref name="related"/>
+      </optional>
+      <zeroOrMore>
+        <ref name="shortauthor"/>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="shorteditor"/>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="shorthand"/>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="shorthandintro"/>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="shortjournal"/>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="shortseries"/>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="shorttitle"/>
+      </zeroOrMore>
+      <optional>
+        <ref name="sortkey"/>
+      </optional>
+      <zeroOrMore>
+        <ref name="sortname"/>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="sorttitle"/>
+      </zeroOrMore>
+      <optional>
+        <ref name="sortyear"/>
+      </optional>
+      <optional>
+        <ref name="xref"/>
+      </optional>
+    </interleave>
+  </define>
+  <define name="formattext">
+    <a:documentation>
+We now define the biblatexml elements</a:documentation>
+    <zeroOrMore>
+      <optional>
+        <ref name="emphasis"/>
+      </optional>
+      <optional>
+        <ref name="superscript"/>
+      </optional>
+      <optional>
+        <ref name="subscript"/>
+      </optional>
+      <optional>
+        <ref name="quote"/>
+      </optional>
+      <optional>
+        <ref name="math"/>
+      </optional>
+      <optional>
+        <text/>
+      </optional>
+    </zeroOrMore>
+  </define>
+  <define name="emphasis">
+    <element name="emphasis">
+      <text/>
+    </element>
+  </define>
+  <define name="superscript">
+    <element name="superscript">
+      <text/>
+    </element>
+  </define>
+  <define name="subscript">
+    <element name="subscript">
+      <text/>
+    </element>
+  </define>
+  <define name="quote">
+    <element name="quote">
+      <text/>
+    </element>
+  </define>
+  <define name="math">
+    <a:documentation>The textual content of bib:math should be in (La)TeX notation
+MathML mathml:* insertions would also be possible with http://xsltml.sourceforge.net/
+the optional attribute "text" gives a Unicode representation of the mathematical expression (if feasible), e.g., xÂ³+yÂ³=zÂ³</a:documentation>
+    <element name="math">
+      <optional>
+        <attribute name="text"/>
+      </optional>
+      <text/>
+    </element>
+  </define>
+  <define name="att.mode">
+    <attribute name="mode">
+      <choice>
+        <value>original</value>
+        <value>romanised</value>
+        <value>translated</value>
+        <value>uniform</value>
+      </choice>
+    </attribute>
+  </define>
+  <define name="att.lang">
+    <attribute name="xml:lang">
+      <data type="language"/>
+    </attribute>
+  </define>
+  <define name="abstract">
+    <element name="abstract">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="addendum">
+    <element name="addendum">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="annotation">
+    <element name="annotation">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="booksubtitle">
+    <element name="booksubtitle">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="booktitle">
+    <element name="booktitle">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="booktitleaddon">
+    <element name="booktitleaddon">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="chapter">
+    <element name="chapter">
+      <text/>
+    </element>
+  </define>
+  <define name="crossref">
+    <element name="crossref">
+      <text/>
+    </element>
+  </define>
+  <define name="doi">
+    <element name="doi">
+      <text/>
+    </element>
+  </define>
+  <define name="edition">
+    <element name="edition">
+      <choice>
+        <data type="integer"/>
+        <attribute name="string"/>
+      </choice>
+    </element>
+  </define>
+  <define name="eid">
+    <element name="eid">
+      <text/>
+    </element>
+  </define>
+  <define name="entryset">
+    <element name="entryset">
+      <choice>
+        <oneOrMore>
+          <ref name="item"/>
+        </oneOrMore>
+        <text/>
+      </choice>
+    </element>
+  </define>
+  <define name="entrysubtype">
+    <element name="entrysubtype">
+      <text/>
+    </element>
+  </define>
+  <define name="eprint">
+    <element name="eprint">
+      <attribute name="type"/>
+      <optional>
+        <attribute name="class"/>
+      </optional>
+      <text/>
+    </element>
+  </define>
+  <define name="eventtitle">
+    <element name="eventtitle">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="execute">
+    <element name="execute">
+      <text/>
+    </element>
+  </define>
+  <define name="file">
+    <element name="file">
+      <text/>
+    </element>
+  </define>
+  <define name="hyphenation">
+    <element name="hyphenation">
+      <text/>
+    </element>
+  </define>
+  <define name="pdf">
+    <element name="pdf">
+      <text/>
+    </element>
+  </define>
+  <define name="id">
+    <element name="id">
+      <text/>
+    </element>
+  </define>
+  <define name="indexsorttitle">
+    <element name="indexsorttitle">
+      <text/>
+    </element>
+  </define>
+  <define name="indextitle">
+    <element name="indextitle">
+      <text/>
+    </element>
+  </define>
+  <define name="isan">
+    <element name="isan">
+      <text/>
+    </element>
+  </define>
+  <!-- TODO validate with pattern -->
+  <define name="isbn">
+    <element name="isbn">
+      <text/>
+    </element>
+  </define>
+  <!-- TODO validate with pattern -->
+  <define name="oclc">
+    <element name="oclc">
+      <text/>
+    </element>
+  </define>
+  <!-- TODO validate with pattern -->
+  <define name="lccn">
+    <element name="lccn">
+      <text/>
+    </element>
+  </define>
+  <!-- TODO validate with pattern -->
+  <define name="ismn">
+    <element name="ismn">
+      <text/>
+    </element>
+  </define>
+  <!-- TODO validate with pattern -->
+  <define name="isrn">
+    <element name="isrn">
+      <text/>
+    </element>
+  </define>
+  <!-- TODO validate with pattern -->
+  <define name="issn">
+    <element name="issn">
+      <text/>
+    </element>
+  </define>
+  <!-- TODO validate with pattern -->
+  <define name="issue">
+    <element name="issue">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="issuetitle">
+    <element name="issuetitle">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="issuesubtitle">
+    <element name="issuesubtitle">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="iswc">
+    <element name="iswc">
+      <text/>
+    </element>
+  </define>
+  <define name="journaltitle">
+    <element name="journaltitle">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="journalsubtitle">
+    <element name="journalsubtitle">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="label">
+    <element name="label">
+      <text/>
+    </element>
+  </define>
+  <define name="user.field">
+    <element>
+      <nsName ns="http://localhost/biblatexml/user"/>
+      <text/>
+    </element>
+  </define>
+  <define name="library">
+    <element name="library">
+      <oneOrMore>
+        <ref name="libraryitem"/>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="libraryitem">
+    <element name="item">
+      <optional>
+        <attribute name="location"/>
+      </optional>
+      <optional>
+        <attribute name="ref"/>
+      </optional>
+      <optional>
+        <attribute name="url">
+          <data type="anyURI"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="note"/>
+      </optional>
+    </element>
+  </define>
+  <define name="mainsubtitle">
+    <element name="mainsubtitle">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="maintitle">
+    <element name="maintitle">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="maintitleaddon">
+    <element name="maintitleaddon">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="nameaddon">
+    <element name="nameaddon">
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <text/>
+    </element>
+  </define>
+  <define name="note">
+    <element name="note">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="number">
+    <element name="number">
+      <text/>
+    </element>
+  </define>
+  <define name="options">
+    <element name="options">
+      <choice>
+        <element name="option">
+          <element name="key">
+            <text/>
+          </element>
+          <element name="value">
+            <text/>
+          </element>
+        </element>
+        <text/>
+      </choice>
+    </element>
+  </define>
+  <define name="origtitle">
+    <element name="origtitle">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="pagetotal">
+    <element name="pagetotal">
+      <text/>
+    </element>
+  </define>
+  <define name="part">
+    <element name="part">
+      <text/>
+    </element>
+  </define>
+  <define name="presort">
+    <element name="presort">
+      <text/>
+    </element>
+  </define>
+  <define name="series">
+    <element name="series">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="shorthand">
+    <element name="shorthand">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <text/>
+    </element>
+  </define>
+  <define name="shorthandintro">
+    <element name="shorthandintro">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <text/>
+    </element>
+  </define>
+  <define name="shorttitle">
+    <element name="shorttitle">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="shortjournal">
+    <element name="shortjournal">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="shortseries">
+    <element name="shortseries">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="sortkey">
+    <element name="sortkey">
+      <text/>
+    </element>
+  </define>
+  <define name="sortyear">
+    <element name="sortyear">
+      <text/>
+    </element>
+  </define>
+  <define name="sorttitle">
+    <element name="sorttitle">
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <text/>
+    </element>
+  </define>
+  <define name="subtitle">
+    <element name="subtitle">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="title">
+    <element name="title">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="titleaddon">
+    <element name="titleaddon">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="url">
+    <element name="url">
+      <data type="anyURI"/>
+    </element>
+  </define>
+  <define name="useprefix">
+    <element name="useprefix">
+      <text/>
+    </element>
+  </define>
+  <define name="venue">
+    <element name="venue">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="version">
+    <element name="version">
+      <text/>
+    </element>
+  </define>
+  <define name="volume">
+    <element name="volume">
+      <choice>
+        <text/>
+        <ref name="volume.range"/>
+      </choice>
+    </element>
+  </define>
+  <define name="volume.range">
+    <choice>
+      <ref name="volume.list"/>
+      <ref name="range"/>
+    </choice>
+  </define>
+  <define name="volume.list">
+    <element name="list">
+      <oneOrMore>
+        <element name="item">
+          <choice>
+            <text/>
+            <ref name="volume.range"/>
+          </choice>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="volumes">
+    <element name="volumes">
+      <text/>
+    </element>
+  </define>
+  <define name="xref">
+    <element name="xref">
+      <text/>
+    </element>
+  </define>
+  <!-- dates -->
+  <define name="attlist.year">
+    <optional>
+      <attribute name="appeared">
+        <ref name="date.type"/>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="type">
+        <choice>
+          <value>approximate</value>
+          <value>assumed</value>
+        </choice>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="note"/>
+    </optional>
+  </define>
+  <define name="attlist.dates">
+    <attribute name="datetype">
+      <choice>
+        <value>orig</value>
+        <value>event</value>
+        <value>url</value>
+      </choice>
+    </attribute>
+  </define>
+  <define name="date">
+    <element name="date">
+      <optional>
+        <ref name="attlist.dates"/>
+      </optional>
+      <optional>
+        <ref name="attlist.year"/>
+      </optional>
+      <choice>
+        <ref name="date.type"/>
+        <ref name="date.range"/>
+      </choice>
+    </element>
+  </define>
+  <define name="pubstate">
+    <element name="pubstate">
+      <text/>
+    </element>
+  </define>
+  <define name="date.type">
+    <choice>
+      <data type="date"/>
+      <data type="gYearMonth"/>
+      <data type="gYear"/>
+    </choice>
+  </define>
+  <define name="date.range">
+    <choice>
+      <ref name="date.range.list"/>
+      <group>
+        <ref name="date.range.start"/>
+        <optional>
+          <ref name="date.range.end"/>
+        </optional>
+      </group>
+    </choice>
+  </define>
+  <define name="date.range.start">
+    <element name="start">
+      <choice>
+        <data type="date"/>
+        <data type="gYear"/>
+      </choice>
+    </element>
+  </define>
+  <define name="date.range.end">
+    <element name="end">
+      <choice>
+        <data type="date"/>
+        <data type="gYear"/>
+        <value/>
+      </choice>
+    </element>
+  </define>
+  <define name="date.range.list">
+    <element name="list">
+      <oneOrMore>
+        <element name="item">
+          <choice>
+            <ref name="date.type"/>
+            <ref name="date.range"/>
+          </choice>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <!-- pages -->
+  <define name="pages">
+    <element name="pages">
+      <optional>
+        <ref name="attlist.pages"/>
+      </optional>
+      <choice>
+        <text/>
+        <ref name="range"/>
+        <ref name="pagelist"/>
+      </choice>
+    </element>
+  </define>
+  <define name="pagelist">
+    <element name="list">
+      <choice>
+        <text/>
+        <oneOrMore>
+          <element name="item">
+            <choice>
+              <text/>
+              <ref name="range"/>
+            </choice>
+          </element>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="attlist.pages">
+    <optional>
+      <attribute name="pagination">
+        <choice>
+          <value>page</value>
+          <value>column</value>
+          <value>line</value>
+          <value>verse</value>
+          <value>paragraph</value>
+          <value>none</value>
+        </choice>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="bookpagination">
+        <choice>
+          <value>page</value>
+          <value>column</value>
+          <value>line</value>
+          <value>verse</value>
+          <value>paragraph</value>
+          <value>none</value>
+        </choice>
+      </attribute>
+    </optional>
+    <optional>
+      <attribute name="part"/>
+    </optional>
+  </define>
+  <define name="range">
+    <a:documentation>e.g. when a book has parts in different scripts, with respective paginations</a:documentation>
+    <ref name="range.start"/>
+    <ref name="range.end"/>
+  </define>
+  <define name="range.start">
+    <element name="start">
+      <text/>
+    </element>
+  </define>
+  <define name="range.end">
+    <element name="end">
+      <text/>
+    </element>
+  </define>
+  <!-- literal lists -->
+  <define name="att.lists">
+    <attribute name="andothers">
+      <value>true</value>
+    </attribute>
+  </define>
+  <define name="institution">
+    <element name="institution">
+      <optional>
+        <ref name="att.lists"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="item"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="organisation">
+    <choice>
+      <element name="organisation">
+        <optional>
+          <ref name="att.lists"/>
+        </optional>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="item"/>
+          </oneOrMore>
+        </choice>
+      </element>
+      <element name="organization">
+        <optional>
+          <ref name="att.lists"/>
+        </optional>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
+        <choice>
+          <text/>
+          <oneOrMore>
+            <ref name="item"/>
+          </oneOrMore>
+        </choice>
+      </element>
+    </choice>
+  </define>
+  <define name="location">
+    <element name="location">
+      <optional>
+        <ref name="att.lists"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="item"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="origlocation">
+    <element name="origlocation">
+      <optional>
+        <ref name="att.lists"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="item"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="publisher">
+    <element name="publisher">
+      <optional>
+        <ref name="att.lists"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="pubitem"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="origpublisher">
+    <element name="origpublisher">
+      <optional>
+        <ref name="att.lists"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="pubitem"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="item">
+    <element name="item">
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="pubitem">
+    <element name="item">
+      <ref name="publishername"/>
+      <ref name="location"/>
+    </element>
+  </define>
+  <define name="publishername">
+    <element name="name">
+      <optional>
+        <attribute name="id"/>
+      </optional>
+      <ref name="formattext"/>
+    </element>
+  </define>
+  <define name="publocation">
+    <element name="location">
+      <optional>
+        <attribute name="id"/>
+      </optional>
+      <text/>
+    </element>
+  </define>
+  <!-- key lists -->
+  <define name="language">
+    <element name="language">
+      <choice>
+        <data type="language"/>
+        <oneOrMore>
+          <ref name="itemlang"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="origlanguage">
+    <element name="origlanguage">
+      <choice>
+        <data type="language"/>
+        <oneOrMore>
+          <ref name="itemlang"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="itemlang">
+    <element name="item">
+      <data type="language"/>
+    </element>
+  </define>
+  <define name="script.list">
+    <choice>
+      <value>Arab</value>
+      <value>Armi</value>
+      <value>Armn</value>
+      <value>Avst</value>
+      <value>Bali</value>
+      <value>Batk</value>
+      <value>Beng</value>
+      <value>Blis</value>
+      <value>Bopo</value>
+      <value>Brah</value>
+      <value>Brai</value>
+      <value>Bugi</value>
+      <value>Buhd</value>
+      <value>Cakm</value>
+      <value>Cans</value>
+      <value>Cari</value>
+      <value>Cham</value>
+      <value>Cher</value>
+      <value>Cirt</value>
+      <value>Copt</value>
+      <value>Cprt</value>
+      <value>Cyrl</value>
+      <value>Cyrs</value>
+      <value>Deva</value>
+      <value>Dsrt</value>
+      <value>Egyd</value>
+      <value>Egyh</value>
+      <value>Egyp</value>
+      <value>Ethi</value>
+      <value>Geok</value>
+      <value>Geor</value>
+      <value>Glag</value>
+      <value>Goth</value>
+      <value>Grek</value>
+      <value>Gujr</value>
+      <value>Guru</value>
+      <value>Hang</value>
+      <value>Hani</value>
+      <value>Hano</value>
+      <value>Hans</value>
+      <value>Hant</value>
+      <value>Hebr</value>
+      <value>Hira</value>
+      <value>Hmng</value>
+      <value>Hrkt</value>
+      <value>Hung</value>
+      <value>Inds</value>
+      <value>Ital</value>
+      <value>Java</value>
+      <value>Jpan</value>
+      <value>Kali</value>
+      <value>Kana</value>
+      <value>Khar</value>
+      <value>Khmr</value>
+      <value>Knda</value>
+      <value>Kore</value>
+      <value>Kthi</value>
+      <value>Lana</value>
+      <value>Laoo</value>
+      <value>Latf</value>
+      <value>Latg</value>
+      <value>Latn</value>
+      <value>Lepc</value>
+      <value>Limb</value>
+      <value>Lina</value>
+      <value>Linb</value>
+      <value>Lisu</value>
+      <value>Lyci</value>
+      <value>Lydi</value>
+      <value>Mand</value>
+      <value>Mani</value>
+      <value>Maya</value>
+      <value>Mero</value>
+      <value>Mlym</value>
+      <value>Mong</value>
+      <value>Moon</value>
+      <value>Mtei</value>
+      <value>Mymr</value>
+      <value>Nkgb</value>
+      <value>Nkoo</value>
+      <value>Ogam</value>
+      <value>Olck</value>
+      <value>Orkh</value>
+      <value>Orya</value>
+      <value>Osma</value>
+      <value>Perm</value>
+      <value>Phag</value>
+      <value>Phli</value>
+      <value>Phlp</value>
+      <value>Phlv</value>
+      <value>Phnx</value>
+      <value>Plrd</value>
+      <value>Prti</value>
+      <value>Qaaa</value>
+      <value>Qabx</value>
+      <value>Rjng</value>
+      <value>Roro</value>
+      <value>Runr</value>
+      <value>Samr</value>
+      <value>Sara</value>
+      <value>Saur</value>
+      <value>Sgnw</value>
+      <value>Shaw</value>
+      <value>Sinh</value>
+      <value>Sund</value>
+      <value>Sylo</value>
+      <value>Syrc</value>
+      <value>Syre</value>
+      <value>Syrj</value>
+      <value>Syrn</value>
+      <value>Tagb</value>
+      <value>Tale</value>
+      <value>Talu</value>
+      <value>Taml</value>
+      <value>Tavt</value>
+      <value>Telu</value>
+      <value>Teng</value>
+      <value>Tfng</value>
+      <value>Tglg</value>
+      <value>Thaa</value>
+      <value>Thai</value>
+      <value>Tibt</value>
+      <value>Ugar</value>
+      <value>Vaii</value>
+      <value>Visp</value>
+      <value>Xpeo</value>
+      <value>Xsux</value>
+      <value>Yiii</value>
+      <value>Zinh</value>
+      <value>Zmth</value>
+      <value>Zsym</value>
+      <value>Zxxx</value>
+      <value>Zyyy</value>
+      <value>Zzzz</value>
+    </choice>
+  </define>
+  <define name="script">
+    <element name="script">
+      <choice>
+        <ref name="script.list"/>
+        <oneOrMore>
+          <ref name="itemscript"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="origscript">
+    <element name="origscript">
+      <choice>
+        <ref name="script.list"/>
+        <oneOrMore>
+          <ref name="itemscript"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="itemscript">
+    <element name="item">
+      <ref name="script.list"/>
+    </element>
+  </define>
+  <!-- NAME LISTS -->
+  <define name="attlist.name">
+    <optional>
+      <attribute name="class">
+        <choice>
+          <value>sub</value>
+          <value>vol</value>
+          <value>main</value>
+        </choice>
+      </attribute>
+    </optional>
+    <optional>
+      <ref name="att.gender"/>
+    </optional>
+    <optional>
+      <ref name="att.lists"/>
+    </optional>
+  </define>
+  <define name="att.gender">
+    <attribute name="gender">
+      <choice>
+        <value>sf</value>
+        <value>sm</value>
+        <value>sn</value>
+        <value>pf</value>
+        <value>pm</value>
+        <value>pn</value>
+        <value>pp</value>
+      </choice>
+    </attribute>
+  </define>
+  <define name="author">
+    <element name="author">
+      <optional>
+        <ref name="attlist.name"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="editor">
+    <element name="editor">
+      <optional>
+        <ref name="attlist.name"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="afterword">
+    <element name="afterword">
+      <optional>
+        <ref name="attlist.name"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="annotator">
+    <element name="annotator">
+      <optional>
+        <ref name="attlist.name"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="bookauthor">
+    <element name="bookauthor">
+      <optional>
+        <ref name="attlist.name"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="commentator">
+    <element name="commentator">
+      <optional>
+        <ref name="attlist.name"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="foreword">
+    <element name="foreword">
+      <optional>
+        <ref name="attlist.name"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="holder">
+    <element name="holder">
+      <optional>
+        <ref name="attlist.name"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="introduction">
+    <element name="introduction">
+      <optional>
+        <ref name="attlist.name"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="translator">
+    <element name="translator">
+      <optional>
+        <ref name="attlist.name"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="shortauthor">
+    <element name="shortauthor">
+      <optional>
+        <ref name="attlist.name"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="shorteditor">
+    <element name="shorteditor">
+      <optional>
+        <ref name="attlist.name"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="sortname">
+    <element name="sortname">
+      <optional>
+        <ref name="attlist.name"/>
+      </optional>
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="person"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="person">
+    <element name="person">
+      <ref name="attlist.person"/>
+      <choice>
+        <text/>
+        <interleave>
+          <ref name="first"/>
+          <optional>
+            <ref name="firstinitial"/>
+          </optional>
+          <optional>
+            <ref name="prefix"/>
+          </optional>
+          <optional>
+            <ref name="prefixinitial"/>
+          </optional>
+          <optional>
+            <ref name="middle"/>
+          </optional>
+          <optional>
+            <ref name="middleinitial"/>
+          </optional>
+          <ref name="last"/>
+          <optional>
+            <ref name="lastinitial"/>
+          </optional>
+          <optional>
+            <ref name="suffix"/>
+          </optional>
+          <optional>
+            <ref name="suffixinitial"/>
+          </optional>
+        </interleave>
+      </choice>
+    </element>
+  </define>
+  <define name="attlist.person" combine="choice">
+    <optional>
+      <attribute name="id"/>
+    </optional>
+    <optional>
+      <ref name="att.gender"/>
+    </optional>
+    <optional>
+      <attribute name="useprefix">
+        <choice>
+          <value>yes</value>
+          <value>no</value>
+        </choice>
+      </attribute>
+    </optional>
+  </define>
+  <define name="first">
+    <element name="first">
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="namepart"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="firstinitial">
+    <element name="firstinitial">
+      <text/>
+    </element>
+  </define>
+  <define name="last">
+    <element name="last">
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="namepart"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="lastinitial">
+    <element name="lastinitial">
+      <text/>
+    </element>
+  </define>
+  <define name="middle">
+    <element name="middle">
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="namepart"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="middleinitial">
+    <element name="middleinitial">
+      <text/>
+    </element>
+  </define>
+  <define name="prefix">
+    <element name="prefix">
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="namepart"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="prefixinitial">
+    <element name="prefixinitial">
+      <text/>
+    </element>
+  </define>
+  <define name="suffix">
+    <element name="suffix">
+      <choice>
+        <text/>
+        <oneOrMore>
+          <ref name="namepart"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="suffixinitial">
+    <element name="suffixinitial">
+      <text/>
+    </element>
+  </define>
+  <define name="namepart">
+    <element name="namepart">
+      <text/>
+    </element>
+  </define>
+  <define name="keywords">
+    <element name="keywords">
+      <choice>
+        <list>
+          <oneOrMore>
+            <data type="string"/>
+          </oneOrMore>
+        </list>
+        <oneOrMore>
+          <ref name="item"/>
+        </oneOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="related">
+    <element name="related">
+      <oneOrMore>
+        <element name="item">
+          <attribute name="type"/>
+          <optional>
+            <attribute name="string"/>
+          </optional>
+          <attribute name="ids"/>
+        </element>
+      </oneOrMore>
+      <!-- can be comma-sep IDs -->
+    </element>
+  </define>
+  <define name="article">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <value>article</value>
+        </attribute>
+        <oneOrMore>
+          <ref name="author"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="journaltitle"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="annotator"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="commentator"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="doi"/>
+        </optional>
+        <optional>
+          <ref name="editor"/>
+        </optional>
+        <optional>
+          <ref name="eid"/>
+        </optional>
+        <optional>
+          <ref name="eprint"/>
+        </optional>
+        <optional>
+          <ref name="issn"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="issue"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="issuetitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="issuesubtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="journalsubtitle"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <optional>
+          <ref name="number"/>
+        </optional>
+        <optional>
+          <ref name="origlanguage"/>
+        </optional>
+        <optional>
+          <ref name="pages"/>
+        </optional>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="series"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="translator"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <optional>
+          <ref name="version"/>
+        </optional>
+        <optional>
+          <ref name="volume"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="bibnote">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <value>bibnote</value>
+        </attribute>
+        <element name="note">
+          <text/>
+        </element>
+      </interleave>
+    </element>
+  </define>
+  <define name="book">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <value>book</value>
+        </attribute>
+        <oneOrMore>
+          <ref name="author"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="afterword"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="annotator"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="chapter"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="commentator"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="doi"/>
+        </optional>
+        <optional>
+          <ref name="edition"/>
+        </optional>
+        <optional>
+          <ref name="editor"/>
+        </optional>
+        <optional>
+          <ref name="eprint"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="foreword"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="introduction"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="isbn"/>
+        </optional>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="location"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="maintitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="maintitleaddon"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="mainsubtitle"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <optional>
+          <ref name="number"/>
+        </optional>
+        <optional>
+          <ref name="origlanguage"/>
+        </optional>
+        <optional>
+          <ref name="pages"/>
+        </optional>
+        <optional>
+          <ref name="pagetotal"/>
+        </optional>
+        <optional>
+          <ref name="part"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="publisher"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="series"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="translator"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <optional>
+          <ref name="volume"/>
+        </optional>
+        <optional>
+          <ref name="volumes"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="booklet">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <value>booklet</value>
+        </attribute>
+        <optional>
+          <attribute name="howpublished"/>
+        </optional>
+        <optional>
+          <attribute name="type"/>
+        </optional>
+        <choice>
+          <ref name="author"/>
+          <ref name="editor"/>
+        </choice>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <optional>
+          <ref name="chapter"/>
+        </optional>
+        <optional>
+          <ref name="doi"/>
+        </optional>
+        <optional>
+          <ref name="eprint"/>
+        </optional>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="location"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <optional>
+          <ref name="pages"/>
+        </optional>
+        <optional>
+          <ref name="pagetotal"/>
+        </optional>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="books">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <value>books</value>
+        </attribute>
+        <oneOrMore>
+          <ref name="author"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="afterword"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="annotator"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="commentator"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="doi"/>
+        </optional>
+        <optional>
+          <ref name="edition"/>
+        </optional>
+        <optional>
+          <ref name="editor"/>
+        </optional>
+        <optional>
+          <ref name="eprint"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="foreword"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="introduction"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="isbn"/>
+        </optional>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="location"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <optional>
+          <ref name="number"/>
+        </optional>
+        <optional>
+          <ref name="origlanguage"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="publisher"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="translator"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <optional>
+          <ref name="volume"/>
+        </optional>
+        <optional>
+          <ref name="volumes"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="bookmisc">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <choice>
+            <value>inbook</value>
+            <value>bookinbook</value>
+            <value>suppbook</value>
+          </choice>
+        </attribute>
+        <oneOrMore>
+          <ref name="author"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="booktitle"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="afterword"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="annotator"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="bookauthor"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="booksubtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="booktitleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="chapter"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="commentator"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="doi"/>
+        </optional>
+        <optional>
+          <ref name="edition"/>
+        </optional>
+        <optional>
+          <ref name="editor"/>
+        </optional>
+        <optional>
+          <ref name="eprint"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="foreword"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="introduction"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="isbn"/>
+        </optional>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="location"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="mainsubtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="maintitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="maintitleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <optional>
+          <ref name="number"/>
+        </optional>
+        <optional>
+          <ref name="origlanguage"/>
+        </optional>
+        <optional>
+          <ref name="part"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="publisher"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="pages"/>
+        </optional>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="series"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="translator"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <optional>
+          <ref name="volume"/>
+        </optional>
+        <optional>
+          <ref name="volumes"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="collmisc">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <choice>
+            <value>collection</value>
+            <value>reference</value>
+          </choice>
+        </attribute>
+        <oneOrMore>
+          <ref name="editor"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="afterword"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="annotator"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="chapter"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="commentator"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="doi"/>
+        </optional>
+        <optional>
+          <ref name="edition"/>
+        </optional>
+        <optional>
+          <ref name="eprint"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="foreword"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="introduction"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="isbn"/>
+        </optional>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="location"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="mainsubtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="maintitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="maintitleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <optional>
+          <ref name="number"/>
+        </optional>
+        <optional>
+          <ref name="origlanguage"/>
+        </optional>
+        <optional>
+          <ref name="pages"/>
+        </optional>
+        <optional>
+          <ref name="pagetotal"/>
+        </optional>
+        <optional>
+          <ref name="part"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="publisher"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="series"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="translator"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <optional>
+          <ref name="volume"/>
+        </optional>
+        <optional>
+          <ref name="volumes"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="collections">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <value>collections</value>
+        </attribute>
+        <oneOrMore>
+          <ref name="author"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="afterword"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="annotator"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="commentator"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="doi"/>
+        </optional>
+        <optional>
+          <ref name="edition"/>
+        </optional>
+        <optional>
+          <ref name="editor"/>
+        </optional>
+        <optional>
+          <ref name="eprint"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="foreword"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="introduction"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="isbn"/>
+        </optional>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="location"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <optional>
+          <ref name="number"/>
+        </optional>
+        <optional>
+          <ref name="origlanguage"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="publisher"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="translator"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <optional>
+          <ref name="volume"/>
+        </optional>
+        <optional>
+          <ref name="volumes"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="inmisc">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <choice>
+            <value>incollection</value>
+            <value>suppcollection</value>
+            <value>inreference</value>
+          </choice>
+        </attribute>
+        <oneOrMore>
+          <ref name="author"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="editor"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="booktitle"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="afterword"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="annotator"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="booksubtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="booktitleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="chapter"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="commentator"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="doi"/>
+        </optional>
+        <optional>
+          <ref name="edition"/>
+        </optional>
+        <optional>
+          <ref name="eprint"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="foreword"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="introduction"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="isbn"/>
+        </optional>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="location"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="mainsubtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="maintitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="maintitleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <optional>
+          <ref name="number"/>
+        </optional>
+        <optional>
+          <ref name="origlanguage"/>
+        </optional>
+        <optional>
+          <ref name="pages"/>
+        </optional>
+        <optional>
+          <ref name="part"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="publisher"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="series"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="translator"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <optional>
+          <ref name="volume"/>
+        </optional>
+        <optional>
+          <ref name="volumes"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="inproceedings">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <value>inproceedings</value>
+        </attribute>
+        <oneOrMore>
+          <ref name="author"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="editor"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="booktitle"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="booksubtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="booktitleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="chapter"/>
+        </optional>
+        <optional>
+          <ref name="doi"/>
+        </optional>
+        <optional>
+          <ref name="eprint"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="eventtitle"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="isbn"/>
+        </optional>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="location"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="mainsubtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="maintitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="maintitleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <optional>
+          <ref name="number"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="organisation"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="pages"/>
+        </optional>
+        <optional>
+          <ref name="part"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="publisher"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="series"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="venue"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="volume"/>
+        </optional>
+        <optional>
+          <ref name="volumes"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="manual">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <value>manual</value>
+        </attribute>
+        <attribute name="type"/>
+        <choice>
+          <ref name="author"/>
+          <ref name="editor"/>
+        </choice>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <optional>
+          <ref name="chapter"/>
+        </optional>
+        <optional>
+          <ref name="doi"/>
+        </optional>
+        <optional>
+          <ref name="edition"/>
+        </optional>
+        <optional>
+          <ref name="eprint"/>
+        </optional>
+        <optional>
+          <ref name="isbn"/>
+        </optional>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="location"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <optional>
+          <ref name="number"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="organisation"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="pages"/>
+        </optional>
+        <optional>
+          <ref name="pagetotal"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="publisher"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="series"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <optional>
+          <ref name="version"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="misc">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <value>misc</value>
+        </attribute>
+        <attribute name="howpublished"/>
+        <attribute name="type"/>
+        <choice>
+          <ref name="author"/>
+          <ref name="editor"/>
+        </choice>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <optional>
+          <ref name="doi"/>
+        </optional>
+        <optional>
+          <ref name="eprint"/>
+        </optional>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="location"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="organisation"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <optional>
+          <ref name="version"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="online">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <value>online</value>
+        </attribute>
+        <choice>
+          <ref name="author"/>
+          <ref name="editor"/>
+        </choice>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <ref name="url"/>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="organisation"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="version"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="patent">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <value>patent</value>
+        </attribute>
+        <attribute name="type"/>
+        <oneOrMore>
+          <ref name="author"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <ref name="number"/>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <optional>
+          <ref name="doi"/>
+        </optional>
+        <optional>
+          <ref name="eprint"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="holder"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="location"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <optional>
+          <ref name="version"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="periodical">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <value>periodical</value>
+        </attribute>
+        <oneOrMore>
+          <ref name="editor"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <optional>
+          <ref name="doi"/>
+        </optional>
+        <optional>
+          <ref name="eprint"/>
+        </optional>
+        <optional>
+          <ref name="issn"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="issue"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="issuesubtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="issuetitle"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <optional>
+          <ref name="number"/>
+        </optional>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="series"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <optional>
+          <ref name="volume"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="proceedings">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <value>proceedings</value>
+        </attribute>
+        <oneOrMore>
+          <ref name="editor"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <optional>
+          <ref name="chapter"/>
+        </optional>
+        <optional>
+          <ref name="doi"/>
+        </optional>
+        <optional>
+          <ref name="eprint"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="eventtitle"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="isbn"/>
+        </optional>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="location"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="mainsubtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="maintitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="maintitleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <optional>
+          <ref name="number"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="organisation"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="pages"/>
+        </optional>
+        <optional>
+          <ref name="pagetotal"/>
+        </optional>
+        <optional>
+          <ref name="part"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="publisher"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="series"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="venue"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="volume"/>
+        </optional>
+        <optional>
+          <ref name="volumes"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="report">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <value>report</value>
+        </attribute>
+        <attribute name="type"/>
+        <oneOrMore>
+          <ref name="author"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="institution"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <optional>
+          <ref name="chapter"/>
+        </optional>
+        <optional>
+          <ref name="doi"/>
+        </optional>
+        <optional>
+          <ref name="eprint"/>
+        </optional>
+        <optional>
+          <ref name="isrn"/>
+        </optional>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="location"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <optional>
+          <ref name="number"/>
+        </optional>
+        <optional>
+          <ref name="pages"/>
+        </optional>
+        <optional>
+          <ref name="pagetotal"/>
+        </optional>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <optional>
+          <ref name="version"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="thesis">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <value>thesis</value>
+        </attribute>
+        <attribute name="type"/>
+        <oneOrMore>
+          <ref name="author"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="institution"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <optional>
+          <ref name="chapter"/>
+        </optional>
+        <optional>
+          <ref name="doi"/>
+        </optional>
+        <optional>
+          <ref name="eprint"/>
+        </optional>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="location"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <optional>
+          <ref name="pages"/>
+        </optional>
+        <optional>
+          <ref name="pagetotal"/>
+        </optional>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="unpublished">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <value>unpublished</value>
+        </attribute>
+        <attribute name="howpublished"/>
+        <oneOrMore>
+          <ref name="author"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="title"/>
+        </oneOrMore>
+        <oneOrMore>
+          <ref name="date"/>
+        </oneOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="location"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+  <define name="set">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <value>set</value>
+        </attribute>
+        <attribute name="howpublished"/>
+        <ref name="entryset"/>
+        <optional>
+          <ref name="crossref"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <define name="misctypes">
+    <a:documentation/>
+    <element name="entry">
+      <interleave>
+        <attribute name="id"/>
+        <attribute name="entrytype">
+          <choice>
+            <value>artwork</value>
+            <value>audio</value>
+            <value>commentary</value>
+            <value>image</value>
+            <value>jurisdiction</value>
+            <value>legal</value>
+            <value>legislation</value>
+            <value>letter</value>
+            <value>movie</value>
+            <value>music</value>
+            <value>performance</value>
+            <value>review</value>
+            <value>software</value>
+            <value>standard</value>
+            <value>video</value>
+          </choice>
+        </attribute>
+        <attribute name="howpublished"/>
+        <zeroOrMore>
+          <ref name="author"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="title"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="date"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="addendum"/>
+        </optional>
+        <optional>
+          <ref name="language"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="location"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="note"/>
+        </optional>
+        <optional>
+          <ref name="pubstate"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="subtitle"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="titleaddon"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="url"/>
+        </optional>
+        <ref name="BibLaTeXML.common.fields"/>
+      </interleave>
+    </element>
+  </define>
+</grammar>

@@ -1,4 +1,5 @@
 package Biber::Output::Base;
+#use feature 'unicode_strings';
 
 use Biber::Entry;
 use IO::File;
@@ -48,7 +49,7 @@ sub set_output_target_file {
   if (Biber::Config->getoption('bblencoding')) {
     $enc_out = ':encoding(' . Biber::Config->getoption('bblencoding') . ')';
   }
-  my $TARGET = IO::File->new($file, ">$enc_out") or $logger->croak("Failed to open $file : $!");
+  my $TARGET = IO::File->new($file, ">$enc_out") or $logger->logdie("Failed to open $file : $!");
   $self->set_output_target($TARGET);
 }
 
@@ -62,7 +63,7 @@ sub set_output_target_file {
 sub set_output_target {
   my $self = shift;
   my $target = shift;
-  $logger->croak('Output target must be a IO::Handle object!') unless $target->isa('IO::Handle');
+  $logger->logdie('Output target must be a IO::Handle object!') unless $target->isa('IO::Handle');
   $self->{output_target} = $target;
   return;
 }
@@ -152,6 +153,95 @@ sub add_output_tail {
 }
 
 
+=head2 set_output_section
+
+  Records the section object in the output object
+  We need some information from this when writing the .bbl
+
+=cut
+
+sub set_output_section {
+  my $self = shift;
+  my $secnum = shift;
+  my $section = shift;
+  $self->{section}{$secnum} = $section;
+  return;
+}
+
+=head2 get_output_section
+
+  Retrieve the output section object
+
+=cut
+
+sub get_output_section {
+  my $self = shift;
+  my $secnum = shift;
+  return $self->{section}{$secnum};
+}
+
+
+=head2 get_output_entries
+
+    Get the sorted order output data for all entries in a list as array ref
+
+=cut
+
+sub get_output_entries {
+  my $self = shift;
+  my $section = shift;
+  my $list = shift;
+  return [ map {$self->{output_data}{ENTRIES}{$section}{index}{$_}} @{$list->get_keys}];
+}
+
+=head2 get_output_entry
+
+    Get the output data for a specific entry.
+    Used really only in tests as it instantiates list dynamic information so
+    we can see it in tests
+
+=cut
+
+sub get_output_entry {
+  my $self = shift;
+  my $list = shift;
+  my $key = shift;
+  my $section = shift;
+  $section = '0' if not defined($section); # default - mainly for tests
+  # Force a return of undef if there is no output for this key to avoid
+  # dereferencing errors in tests
+  my $out = $self->{output_data}{ENTRIES}{$section}{index}{lc($key)};
+  my $out_string = $list->instantiate_entry($out, $key);
+  return $out ? $out_string : undef;
+}
+
+=head2 set_los
+
+    Set the output list of shorthands for a section
+
+=cut
+
+sub set_los {
+  my $self = shift;
+  my $shs = shift;
+  my $section = shift;
+  $self->{output_data}{LOS}{$section} = $shs;
+  return;
+}
+
+=head2 get_los
+
+    Get the output list of shorthands for a section as an array
+
+=cut
+
+sub get_los {
+  my $self = shift;
+  my $section = shift;
+  return @{$self->{output_data}{LOS}{$section}}
+}
+
+
 =head2 set_output_entry
 
     Add an entry output to a Biber::Output::Base object
@@ -164,22 +254,8 @@ sub set_output_entry {
   my $entry = shift;
   my $section = shift;
   my $struc = shift;
-  $self->{output_data}{ENTRIES}{$section}{lc($entry->get_field('citecasekey'))} = $entry->dump;
+  $self->{output_data}{ENTRIES}{$section}{index}{lc($entry->get_field('citekey'))} = $entry->dump;
   return;
-}
-
-=head2 get_output_entry
-
-    Get the output data for a specific entry
-
-=cut
-
-sub get_output_entry {
-  my $self = shift;
-  my $key = shift;
-  my $section = shift;
-  $section = '0' if not defined($section); # default - mainly for tests
-  return $self->{output_data}{ENTRIES}{$section}{lc($key)};
 }
 
 =head2 output
@@ -201,18 +277,31 @@ sub output {
 
   $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('bblencoding') . "'");
 
-  print $target $data->{HEAD} or $logger->logcroak("Failure to write head to $target_string: $!");
+  print $target $data->{HEAD} or $logger->logdie("Failure to write head to $target_string: $!");
 
-  foreach my $secnum (sort keys %{$data}) {
+  foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     print $target "SECTION: $secnum\n\n";
-    while (my ($entry, $data) = each %{$data->{$secnum}}) {
-      print $target $data or $logger->logcroak("Failure to write entry '$entry' to $target_string: $!");
+    foreach my $list (@{$self->get_output_section($secnum)->get_lists}) {
+      my $listlabel = $list->get_label;
+      my $listtype = $list->get_type;
+      print $target "  LIST: $listlabel\n\n";
+      foreach my $k ($list->get_keys) {
+        if ($listtype eq 'entry') {
+          my $entry_string = $data->{ENTRIES}{$secnum}{index}{$k};
+          print $target $entry_string or $logger->logdie("Failure to write entry '$k' to $target_string: $!");
+        }
+        elsif ($listtype eq 'shorthand') {
+          next if Biber::Config->getblxoption('skiplos', $section->bibentry($k), $k);
+          print $target $k or $logger->logdie("Failure to write list element to $target_string: $!");
+        }
+      }
     }
   }
-  print $target $data->{TAIL} or $logger->logcroak("Failure to write tail to $target_string: $!");
+
+  print $target $data->{TAIL} or $logger->logdie("Failure to write tail to $target_string: $!");
 
   $logger->info("Output to $target_string");
-  close $target or $logger->logcroak("Failure to close $target_string: $!");
+  close $target or $logger->logdie("Failure to close $target_string: $!");
   return;
 }
 

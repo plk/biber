@@ -1,4 +1,5 @@
 package Biber::Entries;
+#use feature 'unicode_strings';
 
 =encoding utf-8
 
@@ -39,22 +40,20 @@ sub notnull {
 
 sub entry_exists {
   my $self = shift;
-  my $citekey = shift;
-  $citekey = lc($citekey);
+  my $citekey = lc(shift);
   return defined($self->{$citekey}) ? 1 : 0;
 }
 
 =head2 entry
 
-    Returns a Biber::Entry object for the passed
-    citation key
+    Returns a Biber::Entry object for a given
+    citekey
 
 =cut
 
 sub entry {
   my $self = shift;
-  my $citekey = shift;
-  $citekey = lc($citekey);
+  my $citekey = lc(shift);
   return $self->{$citekey};
 }
 

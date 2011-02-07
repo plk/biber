@@ -1,23 +1,28 @@
-REM The COPY/DEL steps as so that the packed biber main script is not
-REM called "biber" as on case-insensitive file systems, this clashes with
-REM the Biber lib directory and generates a (harmless) warning on first run
+:: The COPY/DEL steps as so that the packed biber main script is not
+:: called "biber" as on case-insensitive file systems, this clashes with
+:: the Biber lib directory and generates a (harmless) warning on first run
 
-REM XML::LibXSLT has a workaround for LibXSLT.dll conflicting with libxslt.dll on
-REM windows due to case-insensitivity. The Makefile.PL for XML::LibXSLT forces its
-REM .dll to end in ".xs.dll" which avoids the conflict but breaks when packaged with pp.
-REM Since strawberry perl includes its own libxslt with a non-default name, it is therefore
-REM safe to use the default XML::LibXSLT .dll name which does work when packed with pp.
-REM To do this, you have to install your own XML::LibXSLT in strawberry perl:
-REM edit the Makefile.PL, line 195 or thereabouts and change it to:
-REM
-REM     $config{DLEXT} = 'dll' if ($is_Win32);
-REM
-REM then build and install as usual.
+:: XML::LibXSLT has a workaround for LibXSLT.dll conflicting with libxslt.dll on
+:: windows due to case-insensitivity. The Makefile.PL for XML::LibXSLT forces its
+:: .dll to end in ".xs.dll" which avoids the conflict but breaks when packaged with pp.
+:: Since strawberry perl includes its own libxslt with a non-default name, it is therefore
+:: safe to use the default XML::LibXSLT .dll name which does work when packed with pp.
+:: To do this, you have to install your own XML::LibXSLT in strawberry perl:
+:: edit the Makefile.PL, line 195 or thereabouts and change it to:
+::
+::     $config{DLEXT} = 'dll' if ($is_Win32);
+::
+:: then build and install as usual.
+
+:: Have to explicitly include the Input* modules as the names of these are dynamically
+:: constructed in the code so Par::Packer can't auto-detect them
 
 COPY C:\strawberry\perl\site\bin\biber C:\WINDOWS\Temp\biber-MSWIN
 
 CALL pp ^
   --compress=6 ^
+  --module=Biber::Input::file::bibtex ^
+  --module=Biber::Input::file::biblatexml ^
   --module=Encode::Byte ^
   --module=Encode::CN ^
   --module=Encode::CJKConstants ^

@@ -13,6 +13,7 @@ chdir("t/tdata");
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
+Biber::Config->setoption('fastsort', 1);
 $biber->parse_ctrlfile("general1.bcf");
 $biber->set_output_obj(Biber::Output::BBL->new());
 
@@ -37,5 +38,4 @@ is($bibentries->entry('stdmodel')->get_field('labelnamename'), $a, 'global autho
 is($bibentries->entry('aristotle:anima')->get_field('labelnamename'), $ted, 'type-specific editor' );
 
 
-
-unlink "*.utf8";
+unlink <*.utf8>;
