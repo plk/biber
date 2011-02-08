@@ -45,6 +45,8 @@ my $builder = $class->new(
         'XML::LibXML::Simple' => 0,
         'XML::LibXSLT' => 0,
         'Text::BibTeX' => '0.51',
+        'URI::Split' => 0,
+        'LWP::Simple' => 0,
         'perl' => '5.10.0'
     },
     recommends => {

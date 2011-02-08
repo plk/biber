@@ -713,7 +713,7 @@
                 </choice>
               </attribute>
             </optional>
-            <data type="NCName"/>
+            <data type="anyURI"/>
           </element>
         </zeroOrMore>
       </element>

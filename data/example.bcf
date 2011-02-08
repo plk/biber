@@ -1461,6 +1461,7 @@
   <bcf:bibdata section="1">
     <bcf:datasource type="file" datatype="bibtex">bibdata3</bcf:datasource>
     <bcf:datasource type="file" datatype="biblatexml">bibdata2</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">http://www.citeulike.org/bibtex/9517</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="1">
     <bcf:citekey>Key1</bcf:citekey>

@@ -96,15 +96,29 @@ sub extract_entries {
   my $section = $biber->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my @rkeys = @$keys;
-
+  my $tf; # Up here so that the temp file has enough scope to survive until we've
+          # used it
   $logger->trace("Entering extract_entries()");
 
-  # Need to get the filename even if using cache so we increment
-  # the filename count for preambles at the bottom of this sub
-  $filename .= '.bib' unless $filename =~ /\.bib\z/xms; # Normalise filename
-  my $trying_filename = $filename;
-  unless ($filename = locate_biber_file($filename)) {
-    $logger->logdie("Cannot find file '$trying_filename'!")
+  # If it's a remote .bib file, fetch it first
+  if ($filename =~ m/\A(?:http|ftp):/xms) {
+    $logger->info("Data source '$filename' is a remote .bib - fetching ...");
+    require LWP::Simple;
+    require File::Temp;
+    $tf = File::Temp->new(SUFFIX => '.bib');
+    unless (LWP::Simple::getstore($filename, $tf->filename) == 200) {
+      $logger->logdie ("Could not fetch file '$filename'");
+    }
+    $filename = $tf->filename;
+  }
+  else {
+    # Need to get the filename even if using cache so we increment
+    # the filename count for preambles at the bottom of this sub
+    $filename .= '.bib' unless $filename =~ /\.bib\z/xms; # Normalise filename
+    my $trying_filename = $filename;
+    unless ($filename = locate_biber_file($filename)) {
+      $logger->logdie("Cannot find file '$trying_filename'!")
+    }
   }
 
   # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
