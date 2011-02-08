@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 use Biber;
 use Biber::Output::BBL;
@@ -22,6 +22,7 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('quiet', 1);
 
 # Now generate the information
 $biber->prepare;
@@ -63,6 +64,31 @@ my $cu1 = q|  \entry{seuss}{inproceedings}{}
 
 |;
 
-is( $out->get_output_entry($main,'seuss'), $cu1, 'Fetch from citeulike - 1') ;
+my $dl1 = q|  \entry{AbdelbarH98}{article}{}
+    \name{labelname}{2}{%
+      {{Abdelbar}{A.}{A.M.}{A.}{}{}{}{}}%
+      {{Hedetniemi}{H.}{S.M.}{S.}{}{}{}{}}%
+    }
+    \name{author}{2}{%
+      {{Abdelbar}{A.}{A.M.}{A.}{}{}{}{}}%
+      {{Hedetniemi}{H.}{S.M.}{S.}{}{}{}{}}%
+    }
+    \strng{namehash}{AAHS1}
+    \strng{fullhash}{AAHS1}
+    \field{sortinit}{A}
+    \field{labelyear}{1998}
+    \count{uniquename}{0}
+    \field{journaltitle}{Artificial Intelligence}
+    \field{title}{Approximating {MAP}s for belief networks is {NP}-hard and other theorems}
+    \field{volume}{102}
+    \field{year}{1998}
+    \field{pages}{21\bibrangedash 38}
+  \endentry
 
+|;
+
+is( $out->get_output_entry($main,'seuss'), $cu1, 'Fetch from citeulike') ;
+is( $out->get_output_entry($main,'AbdelbarH98'), $dl1, 'Fetch from plan bib download') ;
+
+unlink <*.utf8>;
 

@@ -142,9 +142,12 @@
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
     <bcf:datasource type="file" datatype="bibtex">http://www.citeulike.org/bibtex/9517</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">http://people.cs.uu.nl/hansb/graphs-bib/definitions.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">http://people.cs.uu.nl/hansb/graphs-bib/papers.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey>seuss</bcf:citekey>
+    <bcf:citekey>AbdelbarH98</bcf:citekey>
     <bcf:sectionlist label="MAIN" type="entry"/>
     <bcf:sectionlist label="SHORTHANDS" type="shorthand">
       <bcf:filter type="field">shorthand</bcf:filter>
