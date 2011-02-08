@@ -1654,62 +1654,61 @@ our %CONFIG_DEFAULT_BIBLATEX =
                 }
   );
 
-my $S =  [
-          [
-           {final          => undef,
-            sort_direction => undef},
-           {
-            'presort'    => {}},
-          ],
-          [
-           {final          => 1,
-            sort_direction => undef},
-           {
-            'sortkey'    => {}}
-          ],
-          [
-           {final          => undef,
-            sort_direction => undef},
-           {
-            'sortname'   => {}},
-           {
-            'author'     => {}},
-           {
-            'editor'     => {}},
-           {
-            'translator' => {}},
-           {
-            'sorttitle'  => {}},
-           {
-            'title'      => {}}
-          ],
-          [
-           {final          => undef,
-            sort_direction => undef},
-           {
-            'sortyear'   => {}},
-           {
-            'year'       => {}}
-          ],
-          [
-           {final          => undef,
-            sort_direction => undef},
-           {
-            'sorttitle'  => {}},
-           {
-            'title'      => {}}
-          ],
-          [
-           {final          => undef,
-            sort_direction => undef},
-           {
-            'volume'     => {}},
-           {
-            '0000'       => {}}
-          ]
-         ];
-
-$CONFIG_DEFAULT_BIBLATEX{sorting}{default} = {label => $S, final => $S, schemes_same => 1};
+$CONFIG_DEFAULT_BIBLATEX{sorting} =
+  [
+   [
+    {final          => undef,
+     sort_direction => undef},
+    {
+     'presort'    => {}},
+   ],
+   [
+    {final          => 1,
+     sort_direction => undef},
+    {
+     'sortkey'    => {}}
+   ],
+   [
+    {final          => undef,
+     sort_direction => undef},
+    {
+     'sortname'   => {}},
+    {
+     'author'     => {}},
+    {
+     'editor'     => {}},
+    {
+     'translator' => {}},
+    {
+     'sorttitle'  => {}},
+    {
+     'title'      => {}}
+   ],
+   [
+    {final          => undef,
+     sort_direction => undef},
+    {
+     'sortyear'   => {}},
+    {
+     'year'       => {}}
+   ],
+   [
+    {final          => undef,
+     sort_direction => undef},
+    {
+     'sorttitle'  => {}},
+    {
+     'title'      => {}}
+   ],
+   [
+    {final          => undef,
+     sort_direction => undef},
+    {
+     'volume'     => {}},
+    {
+     '0000'       => {}}
+   ]
+  ];
 
 # Set up some encoding aliases to map \inputen{c,x} encoding names to Encode
 # It seems that inputen{c,x} has a different idea of nextstep than Encode
