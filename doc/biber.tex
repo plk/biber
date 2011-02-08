@@ -17,7 +17,7 @@
   url={http://biblatex-biber.sourceforge.net},
   author={François Charette, Philip Kime},
   email={firmicus@ankabut.net, Philip@kime.org.uk},
-  revision={biber 0.7.4 (biblatex 1.1b)},
+  revision={biber 0.8 (biblatex 1.2)},
   date={\today}}
 
 \hypersetup{%
@@ -772,63 +772,6 @@ select the Typesetting tab and then add a new Processing Tool as in Figure
   \caption{Screenshot of TeXworks processing tool setup for Biber}
   \label{fig:biber-texworks}
 \end{figure}
-
-\subsection{Cross-references}
-
-\verb+biblatex+ supports the \verb+CROSSREF+ field in bibliography
-databases and because \verb+biber+ performs the actual processing of such
-fields, it can do this in a customisable way. Currently, the customisable
-interface via user \verb+biblatex+ macros and the \verb+.bcf+ file is not
-yet implemented but the internal code in \verb+biber+ is ready for this.
-The purpose of this section is to describe the current hard-coded
-\verb+biber+ defaults. By default, the cross-reference target (child) will
-inherit all of the source (parent) fields if they are not already defined
-in the target. Table \ref{tab:ct} shows the current custom
-mappings which apply. These custom cross-reference mappings
-will overwrite the target fields, if they exist. In future, the fully
-customisable interface will allow:
-
-\begin{itemize}
-\item Choice of overwriting target fields with source fields
-\item Choice of whether or not to, by default, inherit all fields from the source
-\item Mapping of any source field to any target field
-\item Mapping of field(s) in any source to specific targets
-\item Mapping of field(s) in specific sources to any targets
-\item Many-to-one and one-to-many field mappings
-\item Skipping inheritance of specific source fields
-\end{itemize}
-
-\noindent The custom cross-reference mappings will make it possible to
-overcome the problems with the traditional \verb+bibtex+ handling of
-cross-references which are mentioned in section 2.4.1 of the
-\verb+biblatex+ manual. As mentioned above, only the hard-coded mappings in
-Table \ref{tab:ct} are currently implemented.
-
-\begin{table}
-\begin{center}
-\small
-\begin{tabular}{lllll}
-\toprule
-Source & Target & Source field & $\rightarrow$ & Target field\\
-\midrule
-\texttt{PROCEEDINGS} & \texttt{INPROCEEDINGS} & \texttt{TITLE} & $\rightarrow$ & \texttt{BOOKTITLE}\\
-& & \texttt{SUBTITLE} & $\rightarrow$ & \texttt{BOOKSUBTITLE}\\
-& & \texttt{TITLEADDON} & $\rightarrow$ & \texttt{BOOKTITLEADDON}\\
-\cmidrule{3-5}
-\texttt{COLLECTION} & \texttt{INCOLLECTION} & \texttt{TITLE} & $\rightarrow$ & \texttt{BOOKTITLE}\\
-& & \texttt{SUBTITLE} & $\rightarrow$ & \texttt{BOOKSUBTITLE}\\
-& & \texttt{TITLEADDON} & $\rightarrow$ & \texttt{BOOKTITLEADDON}\\
-\cmidrule{3-5}
-\texttt{BOOK} & \texttt{INBOOK} & \texttt{TITLE} & $\rightarrow$ & \texttt{BOOKTITLE}\\
-& & \texttt{SUBTITLE} & $\rightarrow$ & \texttt{BOOKSUBTITLE}\\
-& & \texttt{TITLEADDON} & $\rightarrow$ & \texttt{BOOKTITLEADDON}\\
-& & \texttt{AUTHOR} & $\rightarrow$ & \texttt{BOOKAUTHOR}\\
-\bottomrule
-\end{tabular}
-\end{center}
-\caption{Custom cross-reference mappings}
-\label{tab:ct}
-\end{table}
 
 \subsection{BibTeX macros}
 
