@@ -122,6 +122,17 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
   more data source types.
 \end{itemize}
 
+\subsection{Performance}
+
+\verb+biber+ can't really be compared with \verb+bibtex+ in any meaningful
+way performance-wise. \verb+biber+ is written in perl and does a
+great deal more than \verb+bibtex+ which is written in C. One of
+\verb+biber+'s test cases is a 2150 entry, 15,000 line \verb+.bib+ file
+which references a 630 entry macros file with a resulting 160 or so page (A4)
+formatted bibliography. This takes \verb+biber+ about 100 seconds on
+average to process on a reasonable computer. This is perfectly acceptable,
+especially for a batch program \ldots
+
 \subsection{Acknowledgements}
 
 François Charette originally wrote \verb+biber+. Philip Kime joined in
