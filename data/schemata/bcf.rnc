@@ -296,7 +296,7 @@ secspec =
     element bcf:datasource {
       attribute type { "file" },
       attribute datatype { "bibtex" | "biblatexml" }?,
-      xsd:NCName
+      xsd:anyURI
     }*
   }?,
   # citekeys or citekey sets in each section

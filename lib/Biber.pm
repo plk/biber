@@ -466,18 +466,9 @@ sub parse_ctrlfile {
     foreach my $datasource (@{$data->{datasource}}) {
       # default datatype is bibtex
       my $datatype = $datasource->{datatype} ? $datasource->{datatype} : 'bibtex';
-      # file data sources
-      if ($datasource->{type} eq 'file') {
-        push @{$bibdatasources{$data->{section}[0]}}, { type     => 'file',
-                                                        name     => $datasource->{content},
-                                                        datatype => $datatype };
-      }
-      # db data sources
-      if ($datasource->{type} eq 'db') {
-        push @{$bibdatasources{$data->{section}[0]}}, { type    => 'db',
-                                                        name     => $datasource->{content},
-                                                        datatype => $datatype };
-      }
+      push @{$bibdatasources{$data->{section}[0]}}, { type     => $datasource->{type},
+                                                      name     => $datasource->{content},
+                                                      datatype => $datatype };
     }
   }
 
