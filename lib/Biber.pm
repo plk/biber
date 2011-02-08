@@ -411,11 +411,7 @@ sub parse_ctrlfile {
   }
 
   # INHERITANCE schemes for crossreferences (always global)
-  # This should not be optional any more when biblatex implements this so take
-  # out this conditional
-  if (exists($bcfxml->{inheritance})) {
-    Biber::Config->setblxoption('inheritance', $bcfxml->{inheritance});
-  }
+  Biber::Config->setblxoption('inheritance', $bcfxml->{inheritance});
 
   # SORTING
 

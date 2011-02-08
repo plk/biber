@@ -154,62 +154,120 @@ our %CONFIG_DEFAULT_BIBLATEX =
    displaymode     => { ALL => ["original", "romanised", "uniform", "translated"] },
    # Now the defaults for special .bcf sections information
    inheritance     => {
-                   defaults => {
-                                inherit_all     => 'true',
-                                override_target => 'false',
-                                type_pair => []
-                               },
-                   inherit => [
-                               {
-                                type_pair => [
-                                               {
-                                                source => 'proceedings',
-                                                target => 'inproceedings'
-                                               },
-                                               {
-                                                source => 'collection',
-                                                target => 'incollection',
-                                               },
-                                               {
-                                                source => 'book',
-                                                target => 'inbook',
-                                               }
-                                              ],
-                                field => [
-                                           {
-                                            source => 'title',
-                                            target => 'booktitle',
-                                            override_target => 'true',
-                                           },
-                                           {
-                                            source => 'subtitle',
-                                            target => 'booksubtitle',
-                                            override_target => 'true',
-                                           },
-                                           {
-                                            source => 'titleaddon',
-                                            target => 'booktitleaddon',
-                                            override_target => 'true',
-                                           },
-                                          ]
-                               },
-                               {
-                                type_pair => [
-                                               {
-                                                source => 'book',
-                                                target => 'inbook',
-                                               }
-                                              ],
-                                field => [
-                                           {
-                                            source => 'author',
-                                            target => 'bookauthor',
-                                            override_target => 'true',
-                                           },
-                                          ]
-                               },
-                              ]
-                  },
+  defaults => { content => "\n    ", inherit_all => "true", override_target => "false" },
+  inherit  => [
+                {
+                  field => [
+                    { source => "author", target => "author" },
+                    { source => "author", target => "bookauthor" },
+                  ],
+                  type_pair => [
+                    { source => "mvbook", target => "inbook" },
+                    { source => "mvbook", target => "bookinbook" },
+                    { source => "mvbook", target => "suppbook" },
+                    { source => "book", target => "inbook" },
+                    { source => "book", target => "bookinbook" },
+                    { source => "book", target => "suppbook" },
+                  ],
+                },
+                {
+                  field => [
+                    { source => "title", target => "maintitle" },
+                    { source => "subtitle", target => "mainsubtitle" },
+                    { source => "titleaddon", target => "maintitleaddon" },
+                  ],
+                  type_pair => [
+                    { source => "mvbook", target => "book" },
+                    { source => "mvbook", target => "inbook" },
+                    { source => "mvbook", target => "bookinbook" },
+                    { source => "mvbook", target => "suppbook" },
+                  ],
+                },
+                {
+                  field => [
+                    { source => "title", target => "maintitle" },
+                    { source => "subtitle", target => "mainsubtitle" },
+                    { source => "titleaddon", target => "maintitleaddon" },
+                  ],
+                  type_pair => [
+                    { source => "mvcollection", target => "collection" },
+                    { source => "mvcollection", target => "incollection" },
+                    { source => "mvcollection", target => "suppcollection" },
+                  ],
+                },
+                {
+                  field => [
+                    { source => "title", target => "maintitle" },
+                    { source => "subtitle", target => "mainsubtitle" },
+                    { source => "titleaddon", target => "maintitleaddon" },
+                  ],
+                  type_pair => [
+                    { source => "mvproceedings", target => "proceedings" },
+                    { source => "mvproceedings", target => "inproceedings" },
+                  ],
+                },
+                {
+                  field => [
+                    { source => "title", target => "maintitle" },
+                    { source => "subtitle", target => "mainsubtitle" },
+                    { source => "titleaddon", target => "maintitleaddon" },
+                  ],
+                  type_pair => [
+                    { source => "mvreference", target => "reference" },
+                    { source => "mvreference", target => "inreference" },
+                  ],
+                },
+                {
+                  field => [
+                    { source => "title", target => "booktitle" },
+                    { source => "subtitle", target => "booksubtitle" },
+                    { source => "titleaddon", target => "booktitleaddon" },
+                  ],
+                  type_pair => [
+                    { source => "book", target => "inbook" },
+                    { source => "book", target => "bookinbook" },
+                    { source => "book", target => "suppbook" },
+                  ],
+                },
+                {
+                  field => [
+                    { source => "title", target => "booktitle" },
+                    { source => "subtitle", target => "booksubtitle" },
+                    { source => "titleaddon", target => "booktitleaddon" },
+                  ],
+                  type_pair => [
+                    { source => "collection", target => "incollection" },
+                    { source => "collection", target => "suppcollection" },
+                  ],
+                },
+                {
+                  field => [
+                    { source => "title", target => "booktitle" },
+                    { source => "subtitle", target => "booksubtitle" },
+                    { source => "titleaddon", target => "booktitleaddon" },
+                  ],
+                  type_pair => [{ source => "reference", target => "inreference" }],
+                },
+                {
+                  field => [
+                    { source => "title", target => "booktitle" },
+                    { source => "subtitle", target => "booksubtitle" },
+                    { source => "titleaddon", target => "booktitleaddon" },
+                  ],
+                  type_pair => [{ source => "proceedings", target => "inproceedings" }],
+                },
+                {
+                  field => [
+                    { source => "title", target => "journaltitle" },
+                    { source => "subtitle", target => "journalsubtitle" },
+                  ],
+                  type_pair => [
+                    { source => "periodical", target => "article" },
+                    { source => "periodical", target => "suppperiodical" },
+                  ],
+                },
+              ],
+                      },
    presort => 'mm',
    structure => {
   constraints => [
