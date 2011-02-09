@@ -708,7 +708,8 @@ sub process_crossrefs {
   $logger->debug("Processing explicit and implicit crossrefs for section $secnum");
 
   # Loop over cited keys and count the cross/xrefs
-  # Can't do this when parsing .bib as this would count them for potentially uncited children
+  # Can't do this when parsing entries as this would count them
+  # for potentially uncited children
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
     my $refkey;
