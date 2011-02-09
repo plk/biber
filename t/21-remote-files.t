@@ -31,35 +31,37 @@ my $section = $biber->sections->get_section(0);
 my $main = $section->get_list('MAIN');
 my $bibentries = $section->bibentries;
 
-my $cu1 = q|  \entry{seuss}{inproceedings}{}
-    \name{labelname}{2}{%
-      {{McNatt}{M.}{W.~B.}{W.~B.}{}{}{}{}}%
-      {{Bieman}{B.}{J.~M.}{J.~M.}{}{}{}{}}%
+my $cu1 = q|  \entry{citeulike:8283461}{article}{}
+    \name{labelname}{4}{%
+      {{Marazziti}{M.}{D.}{D.}{}{}{}{}}%
+      {{Akiskal}{A.}{H.~S.}{H.~S.}{}{}{}{}}%
+      {{Rossi}{R.}{A.}{A.}{}{}{}{}}%
+      {{Cassano}{C.}{G.~B.}{G.~B.}{}{}{}{}}%
     }
-    \name{author}{2}{%
-      {{McNatt}{M.}{W.~B.}{W.~B.}{}{}{}{}}%
-      {{Bieman}{B.}{J.~M.}{J.~M.}{}{}{}{}}%
+    \name{author}{4}{%
+      {{Marazziti}{M.}{D.}{D.}{}{}{}{}}%
+      {{Akiskal}{A.}{H.~S.}{H.~S.}{}{}{}{}}%
+      {{Rossi}{R.}{A.}{A.}{}{}{}{}}%
+      {{Cassano}{C.}{G.~B.}{G.~B.}{}{}{}{}}%
     }
-    \list{location}{1}{%
-      {Chicago, IL, USA}%
-    }
-    \strng{namehash}{MWBBJM1}
-    \strng{fullhash}{MWBBJM1}
+    \strng{namehash}{MD+1}
+    \strng{fullhash}{MDAHSRACGB1}
     \field{sortinit}{M}
-    \field{labelyear}{2001}
+    \field{labelyear}{1999}
     \count{uniquename}{0}
-    \field{abstract}{{Object-oriented (OO) design patterns define collections of interconnected classes that serve a particular purpose. A design pattern is a structural unit in a system built out of patterns, not unlike the way a function is a structural unit in a procedural program or a class is a structural unit in an OO system designed without patterns. When designers treat patterns as structural units, they become concerned with issues such as coupling and cohesion at a new level of abstraction. We examine the notion of pattern coupling to classify how designs may include coupled patterns. We find many examples of coupled patterns; this coupling may be "tight" or "loose", and provides both benefits and costs. We qualitatively assess the goodness of pattern coupling in terms of effects on maintainability, factorability, and reusability when patterns are coupled in various ways}}
-    \field{booktitle}{Computer Software and Applications Conference, 2001. COMPSAC 2001. 25th Annual International}
-    \field{journaltitle}{Computer Software and Applications Conference, 2001. COMPSAC 2001. 25th Annual International}
-    \field{title}{{Coupling of design patterns: common practices and their benefits}}
-    \field{year}{2001}
-    \field{pages}{574\bibrangedash 579}
-    \verb{doi}
-    \verb 10.1109/CMPSAC.2001.960670
-    \endverb
+    \field{abstract}{{BACKGROUND: The evolutionary consequences of love are so important that there must be some long-established biological process regulating it. Recent findings suggest that the serotonin (5-HT) transporter might be linked to both neuroticism and sexual behaviour as well as to obsessive-compulsive disorder (OCD). The similarities between an overvalued idea, such as that typical of subjects in the early phase of a love relationship, and obsession, prompted us to explore the possibility that the two conditions might share alterations at the level of the 5-HT transporter. METHODS: Twenty subjects who had recently (within the previous 6 months) fallen in love, 20 unmedicated OCD patients and 20 normal controls, were included in the study. The 5-HT transporter was evaluated with the specific binding of 3H-paroxetine (3H-Par) to platelet membranes. RESULTS: The results showed that the density of 3H-Par binding sites was significantly lower in subjects who had recently fallen in love and in OCD patients than in controls. DISCUSSION: The main finding of the present study is that subjects who were in the early romantic phase of a love relationship were not different from OCD patients in terms of the density of the platelet 5-HT transporter, which proved to be significantly lower than in the normal controls. This would suggest common neurochemical changes involving the 5-HT system, linked to psychological dimensions shared by the two conditions, perhaps at an ideational level.}}
+    \field{issn}{0033-2917}
+    \field{journaltitle}{Psychological medicine}
+    \field{month}{May}
+    \field{number}{3}
+    \field{title}{{Alteration of the platelet serotonin transporter in romantic love.}}
+    \field{volume}{29}
+    \field{year}{1999}
+    \field{pages}{741\bibrangedash 745}
     \verb{url}
-    \verb http://dx.doi.org/10.1109/CMPSAC.2001.960670
+    \verb http://www.biomedexperts.com/Abstract.bme/10405096
     \endverb
+    \keyw{love, romantic}
   \endentry
 
 |;
@@ -87,7 +89,7 @@ my $dl1 = q|  \entry{AbdelbarH98}{article}{}
 
 |;
 
-is( $out->get_output_entry($main,'seuss'), $cu1, 'Fetch from citeulike') ;
+is( $out->get_output_entry($main,'citeulike:8283461'), $cu1, 'Fetch from citeulike') ;
 is( $out->get_output_entry($main,'AbdelbarH98'), $dl1, 'Fetch from plan bib download') ;
 
 unlink <*.utf8>;
