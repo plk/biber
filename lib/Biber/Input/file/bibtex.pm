@@ -101,7 +101,7 @@ sub extract_entries {
   $logger->trace("Entering extract_entries()");
 
   # If it's a remote .bib file, fetch it first
-  if ($filename =~ m/\A(?:http|ftp):/xms) {
+  if ($filename =~ m/\A(?:https?|ftp):/xms) {
     $logger->info("Data source '$filename' is a remote .bib - fetching ...");
     require LWP::Simple;
     require File::Temp;

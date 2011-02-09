@@ -155,62 +155,120 @@ our %CONFIG_DEFAULT_BIBLATEX =
    displaymode     => { ALL => ["original", "romanised", "uniform", "translated"] },
    # Now the defaults for special .bcf sections information
    inheritance     => {
-                   defaults => {
-                                inherit_all     => 'true',
-                                override_target => 'false',
-                                type_pair => []
-                               },
-                   inherit => [
-                               {
-                                type_pair => [
-                                               {
-                                                source => 'proceedings',
-                                                target => 'inproceedings'
-                                               },
-                                               {
-                                                source => 'collection',
-                                                target => 'incollection',
-                                               },
-                                               {
-                                                source => 'book',
-                                                target => 'inbook',
-                                               }
-                                              ],
-                                field => [
-                                           {
-                                            source => 'title',
-                                            target => 'booktitle',
-                                            override_target => 'true',
-                                           },
-                                           {
-                                            source => 'subtitle',
-                                            target => 'booksubtitle',
-                                            override_target => 'true',
-                                           },
-                                           {
-                                            source => 'titleaddon',
-                                            target => 'booktitleaddon',
-                                            override_target => 'true',
-                                           },
-                                          ]
-                               },
-                               {
-                                type_pair => [
-                                               {
-                                                source => 'book',
-                                                target => 'inbook',
-                                               }
-                                              ],
-                                field => [
-                                           {
-                                            source => 'author',
-                                            target => 'bookauthor',
-                                            override_target => 'true',
-                                           },
-                                          ]
-                               },
-                              ]
-                  },
+  defaults => { content => "\n    ", inherit_all => "true", override_target => "false" },
+  inherit  => [
+                {
+                  field => [
+                    { source => "author", target => "author" },
+                    { source => "author", target => "bookauthor" },
+                  ],
+                  type_pair => [
+                    { source => "mvbook", target => "inbook" },
+                    { source => "mvbook", target => "bookinbook" },
+                    { source => "mvbook", target => "suppbook" },
+                    { source => "book", target => "inbook" },
+                    { source => "book", target => "bookinbook" },
+                    { source => "book", target => "suppbook" },
+                  ],
+                },
+                {
+                  field => [
+                    { source => "title", target => "maintitle" },
+                    { source => "subtitle", target => "mainsubtitle" },
+                    { source => "titleaddon", target => "maintitleaddon" },
+                  ],
+                  type_pair => [
+                    { source => "mvbook", target => "book" },
+                    { source => "mvbook", target => "inbook" },
+                    { source => "mvbook", target => "bookinbook" },
+                    { source => "mvbook", target => "suppbook" },
+                  ],
+                },
+                {
+                  field => [
+                    { source => "title", target => "maintitle" },
+                    { source => "subtitle", target => "mainsubtitle" },
+                    { source => "titleaddon", target => "maintitleaddon" },
+                  ],
+                  type_pair => [
+                    { source => "mvcollection", target => "collection" },
+                    { source => "mvcollection", target => "incollection" },
+                    { source => "mvcollection", target => "suppcollection" },
+                  ],
+                },
+                {
+                  field => [
+                    { source => "title", target => "maintitle" },
+                    { source => "subtitle", target => "mainsubtitle" },
+                    { source => "titleaddon", target => "maintitleaddon" },
+                  ],
+                  type_pair => [
+                    { source => "mvproceedings", target => "proceedings" },
+                    { source => "mvproceedings", target => "inproceedings" },
+                  ],
+                },
+                {
+                  field => [
+                    { source => "title", target => "maintitle" },
+                    { source => "subtitle", target => "mainsubtitle" },
+                    { source => "titleaddon", target => "maintitleaddon" },
+                  ],
+                  type_pair => [
+                    { source => "mvreference", target => "reference" },
+                    { source => "mvreference", target => "inreference" },
+                  ],
+                },
+                {
+                  field => [
+                    { source => "title", target => "booktitle" },
+                    { source => "subtitle", target => "booksubtitle" },
+                    { source => "titleaddon", target => "booktitleaddon" },
+                  ],
+                  type_pair => [
+                    { source => "book", target => "inbook" },
+                    { source => "book", target => "bookinbook" },
+                    { source => "book", target => "suppbook" },
+                  ],
+                },
+                {
+                  field => [
+                    { source => "title", target => "booktitle" },
+                    { source => "subtitle", target => "booksubtitle" },
+                    { source => "titleaddon", target => "booktitleaddon" },
+                  ],
+                  type_pair => [
+                    { source => "collection", target => "incollection" },
+                    { source => "collection", target => "suppcollection" },
+                  ],
+                },
+                {
+                  field => [
+                    { source => "title", target => "booktitle" },
+                    { source => "subtitle", target => "booksubtitle" },
+                    { source => "titleaddon", target => "booktitleaddon" },
+                  ],
+                  type_pair => [{ source => "reference", target => "inreference" }],
+                },
+                {
+                  field => [
+                    { source => "title", target => "booktitle" },
+                    { source => "subtitle", target => "booksubtitle" },
+                    { source => "titleaddon", target => "booktitleaddon" },
+                  ],
+                  type_pair => [{ source => "proceedings", target => "inproceedings" }],
+                },
+                {
+                  field => [
+                    { source => "title", target => "journaltitle" },
+                    { source => "subtitle", target => "journalsubtitle" },
+                  ],
+                  type_pair => [
+                    { source => "periodical", target => "article" },
+                    { source => "periodical", target => "suppperiodical" },
+                  ],
+                },
+              ],
+                      },
    presort => 'mm',
    structure => {
   constraints => [
@@ -231,17 +289,17 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      entrytype  => [
                                      { content => "article" },
                                      { content => "book" },
-                                     { content => "books" },
                                      { content => "inbook" },
                                      { content => "bookinbook" },
                                      { content => "suppbook" },
                                      { content => "booklet" },
                                      { content => "collection" },
-                                     { content => "collections" },
                                      { content => "incollection" },
                                      { content => "suppcollection" },
                                      { content => "manual" },
                                      { content => "misc" },
+                                     { content => "mvbook" },
+                                     { content => "mvcollection" },
                                      { content => "online" },
                                      { content => "patent" },
                                      { content => "periodical" },
@@ -287,8 +345,9 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                    ],
                      entrytype  => [
                                      { content => "book" },
-                                     { content => "books" },
-                                     { content => "collections" },
+                                     { content => "mvbook" },
+                                     { content => "mvcollection" },
+                                     { content => "mvreference" },
                                    ],
                    },
                    {
@@ -393,7 +452,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                        type  => "mandatory",
                                      },
                                    ],
-                     entrytype  => [{ content => "proceedings" }],
+                     entrytype  => [{ content => "proceedings" }, { content => "mvproceedings" }],
                    },
                    {
                      constraint => [
@@ -500,7 +559,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "related" },
                        { content => "relatedtype" },
                        { content => "relatedstring" },
-                       { content => "reprinttitle" },
                        { content => "shortauthor" },
                        { content => "shorteditor" },
                        { content => "shorthand" },
@@ -561,7 +619,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "issuesubtitle" },
                        { content => "journalsubtitle" },
                        { content => "language" },
-                       { content => "month" },
                        { content => "note" },
                        { content => "number" },
                        { content => "origlanguage" },
@@ -646,7 +703,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      ],
                    },
                    {
-                     entrytype => [{ content => "books" }],
+                     entrytype => [{ content => "mvbook" }],
                      field => [
                        { content => "author" },
                        { content => "title" },
@@ -858,7 +915,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      ],
                    },
                    {
-                     entrytype => [{ content => "collections" }],
+                     entrytype => [{ content => "mvcollection" }, { content => "mvreference" }],
                      field => [
                        { content => "author" },
                        { content => "title" },
@@ -1040,7 +1097,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "howpublished" },
                        { content => "language" },
                        { content => "location" },
-                       { content => "month" },
                        { content => "note" },
                        { content => "organization" },
                        { content => "pubstate" },
@@ -1101,7 +1157,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "eprinttype" },
                        { content => "holder" },
                        { content => "location" },
-                       { content => "month" },
                        { content => "note" },
                        { content => "pubstate" },
                        { content => "subtitle" },
@@ -1144,7 +1199,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "issuesubtitle" },
                        { content => "issuetitle" },
                        { content => "language" },
-                       { content => "month" },
                        { content => "note" },
                        { content => "number" },
                        { content => "pubstate" },
@@ -1158,6 +1212,52 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "urlmonth" },
                        { content => "urlyear" },
                        { content => "volume" },
+                     ],
+                   },
+                   {
+                     entrytype => [{ content => "mvproceedings" }],
+                     field => [
+                       { content => "editor" },
+                       { content => "title" },
+                       { content => "day" },
+                       { content => "endday" },
+                       { content => "endmonth" },
+                       { content => "endyear" },
+                       { content => "month" },
+                       { content => "year" },
+                       { content => "addendum" },
+                       { content => "doi" },
+                       { content => "eprint" },
+                       { content => "eprintclass" },
+                       { content => "eprinttype" },
+                       { content => "eventday" },
+                       { content => "eventendday" },
+                       { content => "eventendmonth" },
+                       { content => "eventendyear" },
+                       { content => "eventmonth" },
+                       { content => "eventyear" },
+                       { content => "eventtitle" },
+                       { content => "isbn" },
+                       { content => "language" },
+                       { content => "location" },
+                       { content => "note" },
+                       { content => "number" },
+                       { content => "organization" },
+                       { content => "pagetotal" },
+                       { content => "publisher" },
+                       { content => "pubstate" },
+                       { content => "series" },
+                       { content => "subtitle" },
+                       { content => "titleaddon" },
+                       { content => "url" },
+                       { content => "urlday" },
+                       { content => "urlendday" },
+                       { content => "urlendmonth" },
+                       { content => "urlendyear" },
+                       { content => "urlmonth" },
+                       { content => "urlyear" },
+                       { content => "venue" },
+                       { content => "volumes" },
                      ],
                    },
                    {
@@ -1190,7 +1290,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "mainsubtitle" },
                        { content => "maintitle" },
                        { content => "maintitleaddon" },
-                       { content => "month" },
                        { content => "note" },
                        { content => "number" },
                        { content => "organization" },
@@ -1248,7 +1347,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "mainsubtitle" },
                        { content => "maintitle" },
                        { content => "maintitleaddon" },
-                       { content => "month" },
                        { content => "note" },
                        { content => "number" },
                        { content => "organization" },
@@ -1293,7 +1391,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "isrn" },
                        { content => "language" },
                        { content => "location" },
-                       { content => "month" },
                        { content => "note" },
                        { content => "number" },
                        { content => "pages" },
@@ -1332,7 +1429,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "eprinttype" },
                        { content => "language" },
                        { content => "location" },
-                       { content => "month" },
                        { content => "note" },
                        { content => "pages" },
                        { content => "pagetotal" },
@@ -1363,7 +1459,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "howpublished" },
                        { content => "language" },
                        { content => "location" },
-                       { content => "month" },
                        { content => "note" },
                        { content => "pubstate" },
                        { content => "subtitle" },
@@ -1387,9 +1482,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "book" },
                      { content => "bookinbook" },
                      { content => "booklet" },
-                     { content => "books" },
                      { content => "collection" },
-                     { content => "collections" },
                      { content => "commentary" },
                      { content => "customa" },
                      { content => "customb" },
@@ -1410,6 +1503,8 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "misc" },
                      { content => "movie" },
                      { content => "music" },
+                     { content => "mvcollection" },
+                     { content => "mvbook" },
                      { content => "online" },
                      { content => "patent" },
                      { content => "performance" },

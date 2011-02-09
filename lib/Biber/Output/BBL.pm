@@ -33,7 +33,7 @@ sub new {
   my $BBLHEAD = <<EOF;
 % \$ biblatex auxiliary file \$
 % \$ biblatex version $ctrlver \$
-% \$ biber version $Biber::VERSION $beta\$
+% \$ biber version $Biber::VERSION $beta \$
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.

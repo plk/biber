@@ -147,27 +147,68 @@
           </oneOrMore>
         </element>
       </optional>
-      <optional>
-        <!-- Cross-reference inheritance specifications -->
-        <element name="bcf:inheritance">
-          <!-- Defaults -->
-          <element name="bcf:defaults">
-            <!-- Whether to inherit all fields -->
-            <attribute name="inherit_all">
-              <choice>
-                <value>true</value>
-                <value>false</value>
-              </choice>
-            </attribute>
-            <!-- Should we overwrite the target field if it exists? -->
-            <attribute name="override_target">
-              <choice>
-                <value>true</value>
-                <value>false</value>
-              </choice>
-            </attribute>
-            <zeroOrMore>
-              <!-- Default inherit_all and override_target settings for entrytype source/target pairs -->
+      <!-- Cross-reference inheritance specifications -->
+      <element name="bcf:inheritance">
+        <!-- Defaults -->
+        <element name="bcf:defaults">
+          <!-- Whether to inherit all fields -->
+          <attribute name="inherit_all">
+            <choice>
+              <value>true</value>
+              <value>false</value>
+            </choice>
+          </attribute>
+          <!-- Should we overwrite the target field if it exists? -->
+          <attribute name="override_target">
+            <choice>
+              <value>true</value>
+              <value>false</value>
+            </choice>
+          </attribute>
+          <zeroOrMore>
+            <!-- Default inherit_all and override_target settings for entrytype source/target pairs -->
+            <element name="bcf:type_pair">
+              <attribute name="source">
+                <choice>
+                  <value>*</value>
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </choice>
+              </attribute>
+              <attribute name="target">
+                <choice>
+                  <value>*</value>
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </choice>
+              </attribute>
+              <optional>
+                <attribute name="inherit_all">
+                  <choice>
+                    <value>true</value>
+                    <value>false</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="override_target">
+                  <choice>
+                    <value>true</value>
+                    <value>false</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <empty/>
+            </element>
+          </zeroOrMore>
+        </element>
+        <zeroOrMore>
+          <!-- An inheritance specification -->
+          <element name="bcf:inherit">
+            <oneOrMore>
+              <!-- applies to these pairs of source/target entrytypes -->
               <element name="bcf:type_pair">
                 <attribute name="source">
                   <choice>
@@ -185,99 +226,56 @@
                     </data>
                   </choice>
                 </attribute>
-                <optional>
-                  <attribute name="inherit_all">
-                    <choice>
-                      <value>true</value>
-                      <value>false</value>
-                    </choice>
-                  </attribute>
-                </optional>
-                <optional>
-                  <attribute name="override_target">
-                    <choice>
-                      <value>true</value>
-                      <value>false</value>
-                    </choice>
-                  </attribute>
-                </optional>
                 <empty/>
               </element>
-            </zeroOrMore>
-          </element>
-          <zeroOrMore>
-            <!-- An inheritance specification -->
-            <element name="bcf:inherit">
-              <oneOrMore>
-                <!-- applies to these pairs of source/target entrytypes -->
-                <element name="bcf:type_pair">
-                  <attribute name="source">
-                    <choice>
-                      <value>*</value>
+            </oneOrMore>
+            <oneOrMore>
+              <!-- and here are the field specifications -->
+              <element name="bcf:field">
+                <choice>
+                  <!--
+                    either a "skip this field" specification
+                    so we can say inherit all except certain fields OR ...
+                  -->
+                  <group>
+                    <attribute name="source">
+                      <data type="string"/>
+                    </attribute>
+                    <attribute name="skip">
+                      <choice>
+                        <value>true</value>
+                        <value>false</value>
+                      </choice>
+                    </attribute>
+                  </group>
+                  <!-- ... a source and target field with an optional override attribute -->
+                  <group>
+                    <attribute name="source">
                       <data type="string">
                         <param name="minLength">1</param>
                       </data>
-                    </choice>
-                  </attribute>
-                  <attribute name="target">
-                    <choice>
-                      <value>*</value>
+                    </attribute>
+                    <attribute name="target">
                       <data type="string">
                         <param name="minLength">1</param>
                       </data>
-                    </choice>
-                  </attribute>
-                  <empty/>
-                </element>
-              </oneOrMore>
-              <oneOrMore>
-                <!-- and here are the field specifications -->
-                <element name="bcf:field">
-                  <choice>
-                    <!--
-                      either a "skip this field" specification
-                      so we can say inherit all except certain fields OR ...
-                    -->
-                    <group>
-                      <attribute name="source">
-                        <data type="string"/>
-                      </attribute>
-                      <attribute name="skip">
+                    </attribute>
+                    <optional>
+                      <attribute name="override_target">
                         <choice>
                           <value>true</value>
                           <value>false</value>
                         </choice>
                       </attribute>
-                    </group>
-                    <!-- ... a source and target field with an optional override attribute -->
-                    <group>
-                      <attribute name="source">
-                        <data type="string">
-                          <param name="minLength">1</param>
-                        </data>
-                      </attribute>
-                      <attribute name="target">
-                        <data type="string">
-                          <param name="minLength">1</param>
-                        </data>
-                      </attribute>
-                      <optional>
-                        <attribute name="override_target">
-                          <choice>
-                            <value>true</value>
-                            <value>false</value>
-                          </choice>
-                        </attribute>
-                      </optional>
-                    </group>
-                  </choice>
-                  <empty/>
-                </element>
-              </oneOrMore>
-            </element>
-          </zeroOrMore>
-        </element>
-      </optional>
+                    </optional>
+                  </group>
+                </choice>
+                <empty/>
+              </element>
+            </oneOrMore>
+          </element>
+        </zeroOrMore>
+      </element>
       <!-- Global sorting specification -->
       <ref name="sorting"/>
       <optional>

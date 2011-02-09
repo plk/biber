@@ -39,8 +39,8 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =cut
 
-our $VERSION = '0.7.4';
-our $BETA_VERSION = 0; # Is this a beta version?
+our $VERSION = '0.8';
+our $BETA_VERSION = 1; # Is this a beta version?
 
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -411,11 +411,7 @@ sub parse_ctrlfile {
   }
 
   # INHERITANCE schemes for crossreferences (always global)
-  # This should not be optional any more when biblatex implements this so take
-  # out this conditional
-  if (exists($bcfxml->{inheritance})) {
-    Biber::Config->setblxoption('inheritance', $bcfxml->{inheritance});
-  }
+  Biber::Config->setblxoption('inheritance', $bcfxml->{inheritance});
 
   # SORTING
 
