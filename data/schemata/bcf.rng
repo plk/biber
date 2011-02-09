@@ -708,6 +708,7 @@
                 <choice>
                   <value>bibtex</value>
                   <value>biblatexml</value>
+                  <value>ris</value>
                 </choice>
               </attribute>
             </optional>

@@ -40,9 +40,6 @@
     at first as a solely bibtex datasource project.
   -->
   <dcf:fields>
-    <!-- special fields -->
-    <dcf:field name="keywords" handler="special"/>
-    <dcf:field name="options" handler="special"/>
     <!-- date fields -->
     <dcf:field name="date" handler="date"/>
     <dcf:field name="eventdate" handler="date"/>
@@ -179,6 +176,8 @@
     <!-- range fields -->
     <dcf:field name="pages" handler="range"/>
     <!-- verbatim fields -->
+    <dcf:field name="keywords" handler="verbatim"/>
+    <dcf:field name="options" handler="verbatim"/>
     <dcf:field name="doi" handler="verbatim"/>
     <dcf:field name="eprint" handler="verbatim"/>
     <dcf:field name="file" handler="verbatim"/>

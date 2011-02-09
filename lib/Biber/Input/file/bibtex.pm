@@ -30,13 +30,15 @@ my $logger = Log::Log4perl::get_logger('main');
 our $cache = {};
 
 # Handlers for field types
+# The names of these have nothing to do whatever with the biblatex field types
+# They just started out copying them - they are categories of this specific
+# data source date types
 my %handlers = (
                 'date'     => \&_date,
                 'list'     => \&_list,
                 'literal'  => \&_literal,
                 'name'     => \&_name,
                 'range'    => \&_range,
-                'special'  => \&_special,
                 'verbatim' => \&_verbatim
 );
 
@@ -268,14 +270,6 @@ sub create_entry {
 }
 
 
-# Special fields
-sub _special {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
-  my $value = decode_utf8($entry->get($f));
-  $bibentry->set_datafield($to, $value);
-  return;
-}
-
 # Literal fields
 sub _literal {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
@@ -295,7 +289,6 @@ sub _literal {
 sub _verbatim {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   my $value = decode_utf8($entry->get($f));
-
   $bibentry->set_datafield($to, $value);
   return;
 }

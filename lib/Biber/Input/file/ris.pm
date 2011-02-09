@@ -26,13 +26,13 @@ use Switch;
 my $logger = Log::Log4perl::get_logger('main');
 
 # Handlers for field types
+# The names of these have nothing to do whatever with the biblatex field types
+# They just started out copying them - they are categories of this specific
+# data source date types
 my %handlers = (
                 'date'     => \&_date,
-                'literal'  => \&_literal,
                 'name'     => \&_name,
                 'range'    => \&_range,
-                'related'  => \&_related,
-                'special'  => \&_special,
                 'verbatim' => \&_verbatim
 );
 
@@ -79,6 +79,7 @@ sub extract_entries {
   my $section = $biber->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my @rkeys = @$keys;
+  my $tf;
 
   $logger->trace("Entering extract_entries()");
 
@@ -110,10 +111,10 @@ sub extract_entries {
   my @ris_entries;
   my $last_tag;
   while(<$ris>) {
-    if (m/\A([A-Z][A-Z0-9])\s\s\-\s([^\n]+)\z/xms) {
-      my $last_tag = $1;
+    if (m/\A([A-Z][A-Z0-9])\s\s\-\s*(.+)?\n\z/xms) {
+      $last_tag = $1;
       switch ($1) {
-        case 'TY'                { $e = {} }
+        case 'TY'                { $e = {'TY' => $2};  }
         case 'KW'                { push @{$e->{KW}}, $2 } # amalgamate keywords
         case 'SP'                { push @{$e->{SPEP}}, {'SP' => $2} } # amalgamate page range
         case 'EP'                { push @{$e->{SPEP}}, {'EP' => $2} } # amalgamate page range
@@ -122,16 +123,18 @@ sub extract_entries {
         case 'A3'                { push @{$e->{A3}}, $2 } # amalgamate names
         case 'AU'                { push @{$e->{AU}}, $2 } # amalgamate names
         case 'ED'                { push @{$e->{ED}}, $2 } # amalgamate names
-        case 'ER'                { push @es, $e }
+        case 'ER'                { $e->{KW} = join(',', @{$e->{KW}});
+                                   push @ris_entries, $e }
         else                     { $e->{$1} = $2 }
       }
     }
-    elsif (m/\A([^\n]+)\z/xms) { # Deal with stupid line continuations
+    elsif (m/\A(.+)\n\z/xms) { # Deal with stupid line continuations
       $e->{$last_tag} .= " $1";
     }
   }
   $ris->close;
   undef $ris;
+  use Data::Dump;dd($e);
 
   if ($section->is_allkeys) {
     $logger->debug("All citekeys will be used for section '$secnum'");
@@ -166,7 +169,7 @@ sub extract_entries {
       # Cache index keys are lower-cased. This next line effectively implements
       # case insensitive citekeys
       # This will also get the first match it finds
-      if (my @entries = grep { lc($wanted_key) eq lc($_) } @ris_entries) {
+      if (my @entries = grep { lc($wanted_key) eq lc($_->{ID}) } @ris_entries) {
         if ($#entries > 0) {
           $logger->warn("Found more than one entry for key '$wanted_key' in '$filename' - using the first one!");
           $biber->{warnings}++;
@@ -218,7 +221,7 @@ sub create_entry {
   $bibentry->set_field('citekey', $citekey);
 
   # Set entrytype taking note of any aliases for this datasource driver
-  if (my $ealias = $dcfxml->{'entry-types'}{'entry-type'}{$entry->getAttribute('entrytype')}) {
+  if (my $ealias = $dcfxml->{'entry-types'}{'entry-type'}{$entry->{TY}}) {
     $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
     if (my $alsoset = $ealias->{alsoset}) {
       unless ($bibentry->field_exists($alsoset->{target})) {
@@ -227,7 +230,7 @@ sub create_entry {
     }
   }
   else {
-    $bibentry->set_field('entrytype', $entry->getAttribute('entrytype'));
+    $bibentry->set_field('entrytype', $entry->{TY});
   }
 
   # We put all the fields we find modulo field aliases into the object.
@@ -259,299 +262,105 @@ sub create_entry {
 # Verbatim fields
 sub _verbatim {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
-  # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f);
-
-  # eprint is special case
-  if ($f eq "$NS:eprint") {
-    $bibentry->set_datafield('eprinttype', $node->getAttribute('type'));
-    if (my $ec = $node->getAttribute('class')) {
-      $bibentry->set_datafield('eprintclass', $ec);
-    }
-  }
-  else {
-    $bibentry->set_datafield(_norm($to), $node->textContent());
-  }
-  return;
-}
-
-# Literal fields
-sub _literal {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
-  # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f);
-  $bibentry->set_datafield(_norm($to), $node->textContent());
-  return;
-}
-
-# List fields
-sub _list {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
-  # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f);
-  $bibentry->set_datafield(_norm($to), _split_list($node));
+  $bibentry->set_datafield($to, $entry->{$f});
   return;
 }
 
 # Range fields
 sub _range {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
-  # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f);
-  # List of ranges/values
-  if (my @rangelist = $node->findnodes("./$NS:list/$NS:item")) {
-    my $rl;
-    foreach my $range (@rangelist) {
-      push @$rl, _parse_range_list($range);
-    }
-    $bibentry->set_datafield(_norm($to), $rl);
-  }
-  # Simple range
-  elsif (my $range = $node->findnodes("./$NS:range")->get_node(1)) {
-    $bibentry->set_datafield(_norm($to), [ _parse_range_list($range) ]);
-  }
-  # simple list
-  else {
-    $bibentry->set_datafield(_norm($to), $node->textContent());
-  }
+  $bibentry->set_datafield($to, _parse_range_list($entry->{$f}));
   return;
 }
 
 # Date fields
 sub _date {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
-  foreach my $node ($entry->findnodes("./$f")) {
-    my $datetype = $node->getAttribute('datetype') // '';
-    # We are not validating dates here, just syntax parsing
-    my $date_re = qr/(\d{4}) # year
-                     (?:-(\d{2}))? # month
-                     (?:-(\d{2}))? # day
-                    /xms;
-    if (my $start = $node->findnodes("./$NS:start")) { # Date range
-      my $end = $node->findnodes("./$NS:end");
-      # Start of range
-      if (my ($byear, $bmonth, $bday) =
-          $start->get_node(1)->textContent() =~ m|\A$date_re\z|xms) {
-        $bibentry->set_datafield($datetype . 'year', $byear)      if $byear;
-        $bibentry->set_datafield($datetype . 'month', $bmonth)    if $bmonth;
-        $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
-      }
-      else {
-        $biber->biber_warn($bibentry, "Invalid format '" . $start->get_node(1)->textContent() . "' of date field '$f' range start in entry '$dskey' - ignoring");
-      }
-
-      # End of range
-      if (my ($eyear, $emonth, $eday) =
-          $end->get_node(1)->textContent() =~ m|\A(?:$date_re)?\z|xms) {
-        $bibentry->set_datafield($datetype . 'endmonth', $emonth)    if $emonth;
-        $bibentry->set_datafield($datetype . 'endday', $eday)        if $eday;
-        if ($eyear) {           # normal range
-          $bibentry->set_datafield($datetype . 'endyear', $eyear);
-        }
-        else {            # open ended range - endyear is defined but empty
-          $bibentry->set_datafield($datetype . 'endyear', '');
-        }
-      }
-      else {
-        $biber->biber_warn($bibentry, "Invalid format '" . $end->get_node(1)->textContent() . "' of date field '$f' range end in entry '$dskey' - ignoring");
-      }
-    }
-    else { # Simple date
-      if (my ($byear, $bmonth, $bday) =
-          $node->textContent() =~ m|\A$date_re\z|xms) {
-        # did this entry get its year/month fields from splitting an ISO8601 date field?
-        # We only need to know this for date, year/month as year/month can also
-        # be explicitly set. It makes a difference on how we do any potential future
-        # date validation
-        $bibentry->set_field('datesplit', 1) if $datetype eq '';
-        $bibentry->set_datafield($datetype . 'year', $byear)      if $byear;
-        $bibentry->set_datafield($datetype . 'month', $bmonth)    if $bmonth;
-        $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
-      }
-      else {
-        $biber->biber_warn($bibentry, "Invalid format '" . $node->textContent() . "' of date field '$f' in entry '$dskey' - ignoring");
-      }
-    }
+  my $date = $entry->{$f};
+  if ($date =~ m|\A([0-9]{4})/([0-9]{2})/([0-9]{2}/([^\n]+))\z|xms) {
+    $bibentry->set_datafield('year', $1);
+    $bibentry->set_datafield('month', $2);
+    $bibentry->set_datafield('day', $3);
+  }
+  elsif ($date =~ m|\A([0-9])\z|xms) {
+    $bibentry->set_datafield('year', $1);
+  }
+  else {
+    $logger->warn("Invalid RIS date format: '$date' - ignoring");
   }
   return;
 }
 
 # Name fields
-# A3 -> series editor
 sub _name {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
-  # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f);
-  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), lc($dskey));
-  my $names = new Biber::Entry::Names;
-  foreach my $name ($node->findnodes("./$NS:person")) {
-    $names->add_element(parsename($name, $f, {useprefix => $useprefix}));
-  }
-  $bibentry->set_datafield(_norm($to), $names);
-  return;
-}
+  my $names = $entry->{$f};
+  my $names_obj = new Biber::Entry::Names;
+  foreach my $name (@$names) {
+    $logger->debug('Parsing RIS name');
+    if ($name =~ m|\A([^,]+)\s*,?\s*([^,]+)?\s*,?\s*([^,])?\z|xms) {
+      my $lastname = $1;
+      my $firstname = $2;
+      my $suffix = $3;
+      $logger->debug("Found name component 'lastname': $lastname") if $lastname;
+      $logger->debug("Found name component 'firstname': $firstname") if $firstname;
+      $logger->debug("Found name component 'suffix': $suffix") if $suffix;
 
-=head2 parsename
+      my @fni = _gen_initials([split(/\s/, $firstname)]) if $firstname;
+      my @lni = _gen_initials([split(/\s/, $lastname)]) if $lastname;
+      my @si = _gen_initials([split(/\s/, $suffix)]) if $suffix;
 
-    Given a name node, this function returns a Biber::Entry::Name object
+      my $namestring = '';
 
-    Returns an object which internally looks a bit like this:
+      # lastname
+      $namestring .= "$lastname, ";
 
-    { firstname     => 'John',
-      firstname_i   => 'J.',
-      firstname_it  => 'J',
-      middlename    => 'Fred',
-      middlename_i  => 'F.',
-      middlename_it => 'F',
-      lastname      => 'Doe',
-      lastname_i    => 'D.',
-      lastname_it   => 'D',
-      prefix        => undef,
-      prefix_i      => undef,
-      prefix_it     => undef,
-      suffix        => undef,
-      suffix_i      => undef,
-      suffix_it     => undef,
-      namestring    => 'Doe, John Fred',
-      nameinitstring => 'Doe_JF',
-      gender         => sm
+      # suffix
+      $namestring .= "$suffix, " if $suffix;
 
-=cut
+      # firstname
+      $namestring .= $firstname if $firstname;
 
-sub parsename {
-  my ($node, $fieldname, $opts) = @_;
-  $logger->debug('Parsing BibLaTeXML name object ' . $node->nodePath);
-  my $usepre = $opts->{useprefix};
+      # Remove any trailing comma and space if, e.g. missing firstname
+      # Replace any nbspes
+      $namestring =~ s/,\s+\z//xms;
+      $namestring =~ s/~/ /gxms;
 
-  my %namec;
+      # Construct $nameinitstring
+      my $nameinitstr = '';
+      $nameinitstr .= $lastname if $lastname;
+      $nameinitstr .= '_' . $si[1] if $suffix;
+      $nameinitstr .= '_' . $fni[1] if $firstname;
+      $nameinitstr =~ s/\s+/_/g;
+      $nameinitstr =~ s/~/_/g;
 
-  my $gender = $node->getAttribute('gender');
+      my $name_obj = Biber::Entry::Name->new(
+        firstname       => $firstname || undef,
+        firstname_i     => $firstname ? $fni[0] : undef,
+        firstname_it    => $firstname ? $fni[1] : undef,
+        lastname        => $lastname,
+        lastname_i      => $lni[0],
+        lastname_it     => $lni[1],
+        suffix          => $suffix || undef,
+        suffix_i        => $suffix ? $si[0] : undef,
+        suffix_it       => $suffix ? $si[1] : undef,
+        namestring      => $namestring,
+        nameinitstring  => $nameinitstr
+      );
+      $names_obj->add_element($name_obj);
+      $bibentry->set_datafield($to, $names_obj);
 
-  foreach my $n ('last', 'first', 'middle', 'prefix', 'suffix') {
-    # If there is a name component node for this component ...
-    if (my $nc_node = $node->findnodes("./$NS:$n")->get_node(1)) {
-    # name component with parts
-      if (my @parts = map {$_->textContent()} $nc_node->findnodes("./$NS:namepart")) {
-        $namec{$n} = _join_name_parts(\@parts);
-        $logger->debug("Found name component '$n': " . $namec{$n});
-        if (my $nin = $node->findnodes("./$NS:${n}initial")->get_node(1)) {
-          my $ni = $nin->textContent();
-          $ni =~ s/\.\z//xms; # normalise initials to without period
-          $ni =~ s/\s+/~/xms; # normalise spaces to ties
-          $namec{"${n}_it"} = $ni;
-          $namec{"${n}_i"} = $ni . '.';
-        }
-        else {
-          ($namec{"${n}_i"}, $namec{"${n}_it"}) = _gen_initials(\@parts);
-        }
-      }
-      # with no parts
-      elsif (my $t = $nc_node->textContent()) {
-        $namec{$n} = $t;
-        $logger->debug("Found name component '$n': $t");
-        if (my $nin = $node->findnodes("./$NS:${n}initial")->get_node(1)) {
-          my $ni = $nin->textContent();
-          $ni =~ s/\.\z//xms; # normalise initials to without period
-          $ni =~ s/\s+/~/xms; # normalise spaces to ties
-          $namec{"${n}_it"} = $ni;
-          $namec{"${n}_i"} = $ni . '.';
-        }
-        else {
-          ($namec{"${n}_i"}, $namec{"${n}_it"}) = _gen_initials([$t]);
-        }
+      # Special case
+      if ($f eq 'A3') {
+        $bibentry->set_datafield('editortype', 'series');
       }
     }
+    else {
+      $logger->warn("Invalid RIS name format: '$name' - ignoring");
+    }
   }
+  return;
 
-  # Only warn about lastnames since there should always be one
-  $logger->warn("Couldn't determine Lastname for name XPath: " . $node->nodePath) unless exists($namec{last});
-
-  my $namestring = '';
-
-  # prefix
-  if (my $p = $namec{prefix}) {
-    $namestring .= "$p ";
-  }
-
-  # lastname
-  if (my $l = $namec{last}) {
-    $namestring .= "$l, ";
-  }
-
-  # suffix
-  if (my $s = $namec{suffix}) {
-    $namestring .= "$s, ";
-  }
-
-  # firstname
-  if (my $f = $namec{first}) {
-    $namestring .= "$f";
-  }
-
-  # middlename
-  if (my $m = $namec{middle}) {
-    $namestring .= "$m, ";
-  }
-
-  # Remove any trailing comma and space if, e.g. missing firstname
-  # Replace any nbspes
-  $namestring =~ s/,\s+\z//xms;
-  $namestring =~ s/~/ /gxms;
-
-  # Construct $nameinitstring
-  my $nameinitstr = '';
-  $nameinitstr .= $namec{prefix_it} . '_' if ( $usepre and exists($namec{prefix}) );
-  $nameinitstr .= $namec{last} if exists($namec{last});
-  $nameinitstr .= '_' . $namec{suffix_it} if exists($namec{suffix});
-  $nameinitstr .= '_' . $namec{first_it} if exists($namec{first});
-  $nameinitstr .= '_' . $namec{middle_it} if exists($namec{middle});
-  $nameinitstr =~ s/\s+/_/g;
-  $nameinitstr =~ s/~/_/g;
-
-  return Biber::Entry::Name->new(
-    firstname       => $namec{first} // undef,
-    firstname_i     => exists($namec{first}) ? $namec{first_i} : undef,
-    firstname_it    => exists($namec{first}) ? $namec{first_it} : undef,
-    middlename      => $namec{middle} // undef,
-    middlename_i    => exists($namec{middle}) ? $namec{middle_i} : undef,
-    middlename_it   => exists($namec{middle}) ? $namec{middle_it} : undef,
-    lastname        => $namec{last} // undef,
-    lastname_i      => exists($namec{last}) ? $namec{last_i} : undef,
-    lastname_it     => exists($namec{last}) ? $namec{last_it} : undef,
-    prefix          => $namec{prefix} // undef,
-    prefix_i        => exists($namec{prefix}) ? $namec{prefix_i} : undef,
-    prefix_it       => exists($namec{prefix}) ? $namec{prefix_it} : undef,
-    suffix          => $namec{suffix} // undef,
-    suffix_i        => exists($namec{suffix}) ? $namec{suffix_i} : undef,
-    suffix_it       => exists($namec{suffix}) ? $namec{suffix_it} : undef,
-    namestring      => $namestring,
-    nameinitstring  => $nameinitstr,
-    gender          => $gender
-    );
-}
-
-
-
-
-# Joins name parts using BibTeX tie algorithm. Ties are added:
-#
-# 1. After the first part if it is less than three characters long
-# 2. Before the last part
-sub _join_name_parts {
-  my $parts = shift;
-  # special case - 1 part
-  if ($#{$parts} == 0) {
-    return $parts->[0];
-  }
-  # special case - 2 parts
-  if ($#{$parts} == 1) {
-    return $parts->[0] . '~' . $parts->[1];
-  }
-  my $namestring = $parts->[0];
-  $namestring .= length($parts->[0]) < 3 ? '~' : ' ';
-  $namestring .= join(' ', @$parts[1 .. ($#{$parts} - 1)]);
-  $namestring .= '~' . $parts->[$#{$parts}];
-  return $namestring;
 }
 
 # Passed an array ref of strings, returns an array of two strings,
@@ -572,71 +381,13 @@ sub _gen_initials {
   return (join('.~', @strings) . '.', join('', @strings));
 }
 
+
 # parses a range and returns a ref to an array of start and end values
 sub _parse_range_list {
-  my $rangenode = shift;
-  my $start = '';
-  my $end = '';
-  if (my $s = $rangenode->findnodes("./$NS:start")) {
-    $start = $s->get_node(1)->textContent();
-  }
-  if (my $e = $rangenode->findnodes("./$NS:end")) {
-    $end = $e->get_node(1)->textContent();
-  }
+  my $range = shift;
+  my $start = $range->{SP} || '';
+  my $end = $range->{EP} || '';
   return [$start, $end];
-}
-
-
-
-# Splits a list field into an array ref
-sub _split_list {
-  my $node = shift;
-  if (my @list = $node->findnodes("./$NS:item")) {
-    return [ map {$_->textContent()} @list ];
-  }
-  else {
-    return [ $node->textContent() ];
-  }
-}
-
-
-# Given an entry and a fieldname, returns the field node with the right language mode
-sub _resolve_display_mode {
-  my ($biber, $entry, $fieldname) = @_;
-  my @nodelist;
-  my $dm = Biber::Config->getblxoption('displaymode');
-  $logger->debug("Resolving display mode for '$fieldname' in node " . $entry->nodePath );
-  # Either a fieldname specific mode or the default
-  my $modelist = $dm->{_norm($fieldname)} || $dm->{'*'};
-  foreach my $mode (@$modelist) {
-    my $modeattr;
-    # mode is omissable if it is "original"
-    if ($mode eq 'original') {
-      $mode = 'original';
-      $modeattr = "\@mode='$mode' or not(\@mode)"
-    }
-    else {
-      $modeattr = "\@mode='$mode'"
-    }
-    $logger->debug("Found display mode '$mode' for field '$fieldname'");
-    if (@nodelist = $entry->findnodes("./${fieldname}[$modeattr]")) {
-      # Check to see if there is more than one entry with a mode and warn
-      if ($#nodelist > 0) {
-        $logger->warn("Found more than one mode '$mode' '$fieldname' field in entry '" .
-                      $entry->getAttribute('id') . "' - using the first one!");
-        $biber->{warnings}++;
-      }
-      return $nodelist[0];
-    }
-  }
-  return undef; # Shouldn't get here
-}
-
-# normalise a node name as they have a namsespace and might not be lowercase
-sub _norm {
-  my $name = lc(shift);
-  $name =~ s/\A$NS://xms;
-  return $name;
 }
 
 

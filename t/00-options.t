@@ -99,4 +99,4 @@ is_deeply(Biber::Config->getblxoption('labelname', 'book'), $bln, "Per-type mult
 is($bibentries->entry('l1')->get_field('labelyearname'), 'year', 'Global labelyear setting' ) ;
 is( $out->get_output_entry($main,'l1'), $l1, 'Global labelyear setting - labelyear should be YEAR') ;
 
-
+unlink <*.utf8>;

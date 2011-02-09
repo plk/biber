@@ -29,14 +29,15 @@ Readonly::Scalar our $BIBLATEXML_NAMESPACE_URI => 'http://biblatex-biber.sourcef
 Readonly::Scalar our $NS => 'bib';
 
 # Handlers for field types
+# The names of these have nothing to do whatever with the biblatex field types
+# They just started out copying them - they are categories of this specific
+# data source date types
 my %handlers = (
                 'date'     => \&_date,
                 'list'     => \&_list,
-                'literal'  => \&_literal,
                 'name'     => \&_name,
                 'range'    => \&_range,
                 'related'  => \&_related,
-                'special'  => \&_special,
                 'verbatim' => \&_verbatim
 );
 
@@ -268,15 +269,6 @@ sub _related {
   return;
 }
 
-# Special fields
-sub _special {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
-  # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f);
-  $bibentry->set_datafield(_norm($to), $node->textContent());
-  return;
-}
-
 # Verbatim fields
 sub _verbatim {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
@@ -293,15 +285,6 @@ sub _verbatim {
   else {
     $bibentry->set_datafield(_norm($to), $node->textContent());
   }
-  return;
-}
-
-# Literal fields
-sub _literal {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
-  # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f);
-  $bibentry->set_datafield(_norm($to), $node->textContent());
   return;
 }
 
