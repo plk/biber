@@ -1844,7 +1844,8 @@ sub fetch_data {
     my $name = $datasource->{name};
     my $datatype = $datasource->{datatype};
     my $package = 'Biber::Input::' . $type . '::' . $datatype;
-    eval "require $package";
+    eval "require $package" or
+      $logger->logdie("Error loading data source package '$package': $@");
     $logger->info("Processing $datatype format $type '$name' for section $secnum");
     @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@remaining_keys);
   }
@@ -1934,7 +1935,8 @@ sub fetch_data {
         my $name = $datasource->{name};
         my $datatype = $datasource->{datatype};
         my $package = 'Biber::Input::' . $type . '::' . $datatype;
-        eval "require $package";
+        eval "require $package" or
+          $logger->logdie("Error loading data source package '$package': $@");
         @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@remaining_keys);
       }
     }

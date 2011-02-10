@@ -223,6 +223,7 @@
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey>test1</bcf:citekey>
+    <bcf:citekey>test2</bcf:citekey>
     <bcf:sectionlist label="MAIN" type="entry"/>
     <bcf:sectionlist label="SHORTHANDS" type="shorthand">
       <bcf:filter type="field">shorthand</bcf:filter>

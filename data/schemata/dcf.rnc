@@ -1,8 +1,8 @@
-namespace dcf = "https://sourceforge.net/projects/biblatex"
+namespace dcf = "https://sourceforge.net/projects/biber"
 
 start =
   element dcf:driver-control {
-    attribute driver { "bibtex" | "biblatexml" },
+    attribute driver { "bibtex" | "biblatexml" | "ris" },
     element dcf:entry-types {
       element dcf:entry-type {
         attribute name { xsd:string },

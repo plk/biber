@@ -59,6 +59,7 @@ my $builder = $class->new(
                    'data/schemata/dcf.rng' => 'lib/Biber/dcf.rng',
                    'lib/Biber/Input/file/bibtex.dcf' => 'lib/Biber/Input/file/bibtex.dcf',
                    'lib/Biber/Input/file/biblatexml.dcf' => 'lib/Biber/Input/file/biblatexml.dcf',
+                   'lib/Biber/Input/file/ris.dcf' => 'lib/Biber/Input/file/ris.dcf',
                    'data/schemata/biblatexml.rnc' => 'lib/Biber/biblatexml.rnc',
                    'data/schemata/biblatexml.rng' => 'lib/Biber/biblatexml.rng',
                    'data/bcf.xsl' => 'lib/Biber/bcf.xsl',

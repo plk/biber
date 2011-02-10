@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../../../../data/schemata/dcf.rnc" type="compact"?>
-<dcf:driver-control driver="bibtex" xmlns:dcf="https://sourceforge.net/projects/biber">
+<dcf:driver-control driver="ris" xmlns:dcf="https://sourceforge.net/projects/biber">
   <!--
       These entry type aliases we might find in the the datasource so
       we can decide how to map and convert them into Biber::Entry objects
@@ -13,6 +13,9 @@
     </dcf:entry-type>
     <dcf:entry-type name="BILL">
       <dcf:aliasof>jurisdiction</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="BOOK">
+      <dcf:aliasof>book</dcf:aliasof>
     </dcf:entry-type>
     <dcf:entry-type name="COMP">
       <dcf:aliasof>software</dcf:aliasof>
@@ -93,7 +96,6 @@
     <dcf:field name="AU" aliasof="author"/>
     <dcf:field name="author" handler="name"/>
     <dcf:field name="A2" aliasof="editor"/>
-    <dcf:field name="editor" handler="name"/>
     <dcf:field name="A3" aliasof="editor"/>
     <dcf:field name="ED" aliasof="editor"/>
     <dcf:field name="editor" handler="name"/>
@@ -134,7 +136,6 @@
     <dcf:field name="userd" handler="verbatim"/>
     <dcf:field name="U5" aliasof="usere"/>
     <dcf:field name="usere" handler="verbatim"/>
-    <dcf:field name="L3" aliasof="literal"/>
     <dcf:field name="UR" aliasof="url"/>
     <dcf:field name="url" handler="verbatim"/>
     <dcf:field name="L1" aliasof="file"/>

@@ -19,6 +19,7 @@ use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use base 'Exporter';
 use List::AllUtils qw(first uniq);
+use XML::LibXML::Simple;
 use Readonly;
 use Data::Dump qw(dump);
 use Switch;
@@ -62,6 +63,8 @@ my $dcfxml = XML::LibXML::Simple::XMLin($dcf,
 unless ($dcfxml->{driver} eq 'ris') {
   $logger->logdie("Expected driver config type 'ris', got '" . $dcfxml->{driver} . "'");
 }
+
+
 
 =head2 extract_entries
 
@@ -116,8 +119,8 @@ sub extract_entries {
       switch ($1) {
         case 'TY'                { $e = {'TY' => $2};  }
         case 'KW'                { push @{$e->{KW}}, $2 } # amalgamate keywords
-        case 'SP'                { push @{$e->{SPEP}}, {'SP' => $2} } # amalgamate page range
-        case 'EP'                { push @{$e->{SPEP}}, {'EP' => $2} } # amalgamate page range
+        case 'SP'                { $e->{SPEP}{SP} = $2 } # amalgamate page range
+        case 'EP'                { $e->{SPEP}{EP} = $2 } # amalgamate page range
         case 'A1'                { push @{$e->{A1}}, $2 } # amalgamate names
         case 'A2'                { push @{$e->{A2}}, $2 } # amalgamate names
         case 'A3'                { push @{$e->{A3}}, $2 } # amalgamate names
@@ -134,7 +137,6 @@ sub extract_entries {
   }
   $ris->close;
   undef $ris;
-  use Data::Dump;dd($e);
 
   if ($section->is_allkeys) {
     $logger->debug("All citekeys will be used for section '$secnum'");
@@ -150,7 +152,7 @@ sub extract_entries {
 
       # If an entry has no key, ignore it and warn
       unless ($entry->{ID}) {
-        $logger->warn("Invalid or undefined RIS entry key in file '$filename', skipping ...");
+        $logger->warn("RIS entry has no ID key in file '$filename', skipping ...");
         $biber->{warnings}++;
         next;
       }
@@ -189,8 +191,6 @@ sub extract_entries {
   }
   return @rkeys;
 }
-
-
 
 
 =head2 create_entry
@@ -298,7 +298,7 @@ sub _name {
   my $names_obj = new Biber::Entry::Names;
   foreach my $name (@$names) {
     $logger->debug('Parsing RIS name');
-    if ($name =~ m|\A([^,]+)\s*,?\s*([^,]+)?\s*,?\s*([^,])?\z|xms) {
+    if ($name =~ m|\A([^,]+)\s*,?\s*([^,]+)?\s*,?\s*([^,]+)?\z|xms) {
       my $lastname = $1;
       my $firstname = $2;
       my $suffix = $3;
@@ -387,7 +387,7 @@ sub _parse_range_list {
   my $range = shift;
   my $start = $range->{SP} || '';
   my $end = $range->{EP} || '';
-  return [$start, $end];
+  return [[$start, $end]];
 }
 
 

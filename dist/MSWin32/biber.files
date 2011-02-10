@@ -6,6 +6,7 @@
 ../../data/schemata/biblatexml.rng;lib/Biber/biblatexml.rng
 ../../lib/Biber/Input/file/bibtex.dcf;lib/Biber/Input/file/bibtex.dcf
 ../../lib/Biber/Input/file/biblatexml.dcf;lib/Biber/Input/file/biblatexml.dcf
+../../lib/Biber/Input/file/ris.dcf;lib/Biber/Input/file/ris.dcf
 ../../data/bcf.xsl;lib/Biber/bcf.xsl
 ../../data/latinkeys.txt;lib/Unicode/Collate/latinkeys.txt
 C:/strawberry/perl/lib/Unicode/Collate/Locale;lib/Unicode/Collate/Locale

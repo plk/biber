@@ -20,6 +20,7 @@ use Log::Log4perl qw(:no_extra_logdie_message);
 use base 'Exporter';
 use List::AllUtils qw(first uniq);
 use XML::LibXML;
+use XML::LibXML::Simple;
 use Readonly;
 use Data::Dump qw(dump);
 
