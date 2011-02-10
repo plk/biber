@@ -26,7 +26,7 @@ start =
       attribute component { "biblatex" },
       attribute type { "global" },
       alphaothers?,
-      labelalpha,
+      labelalpha?,
       labelname,
       labelyear?,
       maxitems,

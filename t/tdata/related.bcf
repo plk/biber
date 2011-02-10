@@ -191,7 +191,7 @@
   </bcf:sorting>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file">related</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">related.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey>key1</bcf:citekey>

@@ -59,9 +59,6 @@ Usage:  biber file.bcf
 
 Options:
 
-  --allentries|-a
-      Output all entries in the database. (NB: this ignores the .bcf file.)
-
   --bblencoding|-E [encoding]
       Specify the encoding of the output .bbl file. Default is "UTF-8".
       Normally it's not necessary to set this as it's passed via biblatex
@@ -82,13 +79,6 @@ Options:
       between "base" and "full". You may need to load more macro packages
       to deal with the results of "full" (Dings, Greek characters, special
       symbols etc.)
-
-  --bibdata|-d &lt;files&gt;
-      Use &lt;files&gt; as bibliography databases (comma separated list).
-
-  --bibdatatype &lt;type&gt;
-      Format type of files specified with --bibdata|-d. Only supported type
-      currently is 'bibtex' which is the default.
 
   --bibencoding|-e [encoding]
       Specify the encoding of the bib file(s). Default is "UTF-8"

@@ -191,7 +191,7 @@
   </bcf:sorting>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file">sets</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">sets.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey type="set" members="Dynamic1,Dynamic2,Dynamic3,missing1">DynSet</bcf:citekey>
@@ -203,7 +203,7 @@
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">
-    <bcf:datasource type="file">sets</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">sets.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="1">
     <bcf:citekey>Dynamic3</bcf:citekey>

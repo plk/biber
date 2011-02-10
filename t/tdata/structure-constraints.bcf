@@ -606,7 +606,7 @@
   </bcf:structure>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file">structure-constraints</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">structure-constraints.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey>c1</bcf:citekey>

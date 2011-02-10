@@ -213,7 +213,7 @@
   </bcf:sorting>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file">uniquename</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">uniquename.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey>un1</bcf:citekey>

@@ -98,7 +98,6 @@ sub extract_entries {
     $filename = $tf->filename;
   }
   else {
-    $filename .= '.ris' unless $filename =~ /\.ris\z/xms; # Normalise filename
     my $trying_filename = $filename;
     unless ($filename = locate_biber_file($filename)) {
       $logger->logdie("Cannot find file '$trying_filename'!")

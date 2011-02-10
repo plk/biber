@@ -85,10 +85,9 @@ sub TBSIG {
 =head2 extract_entries
 
    Main data extraction routine.
-   Accepts a data source identifier (filename in this case),
-   preprocesses the file and then looks for the passed keys,
-   creating entries when it finds them and passes out an
-   array of keys it didn't find.
+   Accepts a data source identifier, preprocesses the file and then
+   looks for the passed keys, creating entries when it finds them and
+   passes out an array of keys it didn't find.
 
 =cut
 
@@ -116,7 +115,6 @@ sub extract_entries {
   else {
     # Need to get the filename even if using cache so we increment
     # the filename count for preambles at the bottom of this sub
-    $filename .= '.bib' unless $filename =~ /\.bib\z/xms; # Normalise filename
     my $trying_filename = $filename;
     unless ($filename = locate_biber_file($filename)) {
       $logger->logdie("Cannot find file '$trying_filename'!")

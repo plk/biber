@@ -214,7 +214,7 @@
   </bcf:sorting>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file">sort-case</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">sort-case.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey>CS1</bcf:citekey>

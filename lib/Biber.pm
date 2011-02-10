@@ -460,11 +460,9 @@ sub parse_ctrlfile {
   my %bibdatasources = ();
   foreach my $data (@{$bcfxml->{bibdata}}) {
     foreach my $datasource (@{$data->{datasource}}) {
-      # default datatype is bibtex
-      my $datatype = $datasource->{datatype} ? $datasource->{datatype} : 'bibtex';
       push @{$bibdatasources{$data->{section}[0]}}, { type     => $datasource->{type},
                                                       name     => $datasource->{content},
-                                                      datatype => $datatype };
+                                                      datatype => $datasource->{datatype} };
     }
   }
 

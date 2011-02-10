@@ -219,7 +219,7 @@
   </bcf:sorting>  
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file">options</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">options.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey>*</bcf:citekey>

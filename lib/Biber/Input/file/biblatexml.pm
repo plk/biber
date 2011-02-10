@@ -89,7 +89,6 @@ sub extract_entries {
   $logger->trace("Entering extract_entries()");
 
   # First make sure we can find the biblatexml file
-  $filename .= '.xml' unless $filename =~ /\.xml\z/xms; # Normalise filename
   my $trying_filename = $filename;
   unless ($filename = locate_biber_file($filename)) {
     $logger->logdie("Cannot find file '$trying_filename'!")
