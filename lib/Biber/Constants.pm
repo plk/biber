@@ -99,10 +99,7 @@ our %STRUCTURE_DATATYPES = (
 #   provide defaults in case they are missing.
 
 our %CONFIG_DEFAULT_BIBER = (
-  allentries         => 0,
   bblencoding        => 'UTF-8',
-  bibdata            =>  undef,
-  bibdatatype        => 'bibtex',
   bibencoding        => 'UTF-8',
   bblsafechars       => 0,
   bblsafecharsset    => 'extra',
