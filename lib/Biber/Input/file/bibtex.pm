@@ -279,7 +279,13 @@ sub _literal {
   return if ($to eq 'year' and $bibentry->get_datafield('year'));
   return if ($to eq 'month' and $bibentry->get_datafield('month'));
 
-  $bibentry->set_datafield($to, $value);
+  # Try to sanitise months to biblatex requirements
+  if ($to eq 'month') {
+    $bibentry->set_datafield($to, _hack_month($value));
+  }
+  else {
+    $bibentry->set_datafield($to, $value);
+  }
   return;
 }
 
@@ -741,6 +747,35 @@ sub parsename {
                         'suffix'    => $ss}
     );
 }
+
+
+# Routine to try to hack month into the right biblatex format
+# Especially since we support remote .bibs which we potentially have no control over
+my %months = (
+              'jan' => '01',
+              'feb' => '02',
+              'mar' => '03',
+              'apr' => '04',
+              'may' => '05',
+              'jun' => '06',
+              'jul' => '07',
+              'aug' => '08',
+              'sep' => '09',
+              'oct' => '10',
+              'nov' => '11',
+              'dec' => '12'
+             );
+
+sub _hack_month {
+  my $in_month = shift;
+  if ($in_month =~ m/\A\s*((?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec).*)\s*\z/i) {
+    return $months{lc(substr($1,0,3))};
+  }
+  else {
+    return $in_month;
+  }
+}
+
 
 1;
 
