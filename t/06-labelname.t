@@ -21,8 +21,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # relying on here for tests
 
 # Biblatex options
-Biber::Config->setblxoption('labelname', ['shortauthor', 'author', 'shorteditor', 'editor', 'translator']);
-Biber::Config->setblxoption('labelname', ['editor', 'translator'], 'PER_TYPE', 'book');
+Biber::Config->setblxoption('labelnamespec', ['shortauthor', 'author', 'shorteditor', 'editor', 'translator']);
+Biber::Config->setblxoption('labelnamespec', ['editor', 'translator'], 'PER_TYPE', 'book');
 
 # Now generate the information
 $biber->prepare;

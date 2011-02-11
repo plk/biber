@@ -24,6 +24,7 @@ REQUIREMENTS
     * XML::LibXML::Simple (XML::LibXML clone of XML::Simple)
     * Text::BibTeX 0.5.1 or higher (requires Config::AutoConf when
       installing - please install this first.)
+    * LWP::Simple
 
 INSTALLATION
 

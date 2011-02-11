@@ -22,7 +22,6 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('unicodebbl', 1);
 
 # Biblatex options
 Biber::Config->setblxoption('maxnames', 1);
@@ -78,13 +77,12 @@ $biber->parse_ctrlfile('uniqueness3.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('unicodebbl', 1);
 # Biblatex options
 Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('uniquename', 1);
 Biber::Config->setblxoption('uniquelist', 0);
 Biber::Config->setblxoption('singletitle', 1);
-Biber::Config->setblxoption('labelyear', [ 'year' ]);
+Biber::Config->setblxoption('labelyearspec', [ 'year' ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -106,13 +104,12 @@ $biber->parse_ctrlfile('uniqueness3.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('unicodebbl', 1);
 # Biblatex options
 Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 1);
-Biber::Config->setblxoption('labelyear', [ 'year' ]);
+Biber::Config->setblxoption('labelyearspec', [ 'year' ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -134,13 +131,12 @@ $biber->parse_ctrlfile('uniqueness3.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('unicodebbl', 1);
 # Biblatex options
 Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('uniquename', 0);
 Biber::Config->setblxoption('uniquelist', 0);
 Biber::Config->setblxoption('singletitle', 1);
-Biber::Config->setblxoption('labelyear', [ 'year' ]);
+Biber::Config->setblxoption('labelyearspec', [ 'year' ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);

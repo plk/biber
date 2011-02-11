@@ -5,6 +5,7 @@ no warnings 'utf8';
 
 use Test::More tests => 14;
 use Biber;
+use Biber::Constants;
 use Biber::Utils;
 use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
@@ -45,11 +46,13 @@ my $preamble = [
                 'String for Preamble 4'
                ];
 
-my $v = "$Biber::VERSION";
-$v .= ' (beta)' if $Biber::BETA_VERSION;
+my $v = $Biber::VERSION;
+if ($Biber::BETA_VERSION) {
+  $v .= ' (beta)';
+}
 
 my $head = qq|% \$ biblatex auxiliary file \$
-% \$ biblatex version 1.1 \$
+% \$ biblatex version $BIBLATEX_VERSION \$
 % \$ biber version $v \$
 % Do not modify the above lines!
 %

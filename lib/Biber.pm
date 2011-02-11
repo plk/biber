@@ -40,7 +40,7 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 =cut
 
 our $VERSION = '0.8';
-our $BETA_VERSION = 1; # Is this a beta version?
+our $BETA_VERSION = 0; # Is this a beta version?
 
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -460,11 +460,9 @@ sub parse_ctrlfile {
   my %bibdatasources = ();
   foreach my $data (@{$bcfxml->{bibdata}}) {
     foreach my $datasource (@{$data->{datasource}}) {
-      # default datatype is bibtex
-      my $datatype = $datasource->{datatype} ? $datasource->{datatype} : 'bibtex';
       push @{$bibdatasources{$data->{section}[0]}}, { type     => $datasource->{type},
                                                       name     => $datasource->{content},
-                                                      datatype => $datatype };
+                                                      datatype => $datasource->{datatype} };
     }
   }
 
@@ -708,7 +706,8 @@ sub process_crossrefs {
   $logger->debug("Processing explicit and implicit crossrefs for section $secnum");
 
   # Loop over cited keys and count the cross/xrefs
-  # Can't do this when parsing .bib as this would count them for potentially uncited children
+  # Can't do this when parsing entries as this would count them
+  # for potentially uncited children
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
     my $refkey;
@@ -942,10 +941,10 @@ sub process_labelname {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $lnamescheme = Biber::Config->getblxoption('labelname', $be->get_field('entrytype'));
+  my $lnamespec = Biber::Config->getblxoption('labelnamespec', $be->get_field('entrytype'));
 
   # First we set the normal labelname name
-  foreach my $ln ( @{$lnamescheme} ) {
+  foreach my $ln ( @{$lnamespec} ) {
     my $lnameopt;
     if ( $ln =~ /\Ashort(.+)\z/ ) {
       $lnameopt = $1;
@@ -962,7 +961,7 @@ sub process_labelname {
   # Then we loop again to set the labelname name for the fullhash generation code
   # This is because fullhash generation ignores SHORT* fields (section 4.2.4.1, BibLaTeX
   # manual)
-  foreach my $ln ( @{$lnamescheme} ) {
+  foreach my $ln ( @{$lnamespec} ) {
     if ( $ln =~ /\Ashort(.+)\z/ ) {
       next;
     }
@@ -996,16 +995,17 @@ sub process_labelyear {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $lyearscheme = Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'));
 
-  if ($lyearscheme) {
+  if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
+    my $lyearspec = Biber::Config->getblxoption('labelyearspec', $be->get_field('entrytype'));
+
     if (Biber::Config->getblxoption('skiplab', $be->get_field('entrytype'), $citekey)) {
       return;
     }
     # make sure we gave the correct data type:
-    $logger->logdie("Invalid value for option labelyear: $lyearscheme\n")
-      unless ref $lyearscheme eq 'ARRAY';
-    foreach my $ly ( @{$lyearscheme} ) {
+    $logger->logdie("Invalid value for option labelyear: $lyearspec\n")
+      unless ref $lyearspec eq 'ARRAY';
+    foreach my $ly ( @{$lyearspec} ) {
       if ($be->get_field($ly)) {
         $be->set_field('labelyearname', $ly);
         last;
@@ -2127,7 +2127,8 @@ sub fetch_data {
     my $name = $datasource->{name};
     my $datatype = $datasource->{datatype};
     my $package = 'Biber::Input::' . $type . '::' . $datatype;
-    eval "require $package";
+    eval "require $package" or
+      $logger->logdie("Error loading data source package '$package': $@");
     $logger->info("Processing $datatype format $type '$name' for section $secnum");
     @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@remaining_keys);
   }
@@ -2217,7 +2218,8 @@ sub fetch_data {
         my $name = $datasource->{name};
         my $datatype = $datasource->{datatype};
         my $package = 'Biber::Input::' . $type . '::' . $datatype;
-        eval "require $package";
+        eval "require $package" or
+          $logger->logdie("Error loading data source package '$package': $@");
         @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@remaining_keys);
       }
     }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../../data/schemata/bcf.rnc" type="compact"?>
 <?xml-stylesheet type="text/xsl" href="../../data/bcf.xsl"?>
-<bcf:controlfile version="1.1" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="1.2" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -39,15 +39,19 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="multivalued">
-      <bcf:key>labelname</bcf:key>
+      <bcf:key>labelnamespec</bcf:key>
       <bcf:value order="1">shortauthor</bcf:value>
       <bcf:value order="2">author</bcf:value>
       <bcf:value order="3">shorteditor</bcf:value>
       <bcf:value order="4">editor</bcf:value>
       <bcf:value order="5">translator</bcf:value>
     </bcf:option>
-    <bcf:option type="multivalued">
+    <bcf:option type="singlevalued">
       <bcf:key>labelyear</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="multivalued">
+      <bcf:key>labelyearspec</bcf:key>
       <bcf:value order="1">year</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
@@ -212,7 +216,7 @@
   </bcf:sorting>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file">encoding5</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">encoding5.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey>*</bcf:citekey>

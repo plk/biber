@@ -11,6 +11,8 @@ lib/Biber.pm
 lib/Biber/Output/Base.pm
 lib/Biber/Output/BBL.pm
 lib/Biber/Output/Test.pm
+lib/Biber/Input/file/ris.pm
+lib/Biber/Input/file/ris.dcf
 lib/Biber/Input/file/bibtex.pm
 lib/Biber/Input/file/bibtex.dcf
 lib/Biber/Input/file/biblatexml.pm

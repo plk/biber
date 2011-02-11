@@ -43,14 +43,11 @@
         <attribute name="type">
           <value>global</value>
         </attribute>
-        <optional>
-          <ref name="alphaothers"/>
-        </optional>
+        <ref name="alphaothers"/>
         <ref name="labelalpha"/>
-        <ref name="labelname"/>
-        <optional>
-          <ref name="labelyear"/>
-        </optional>
+        <ref name="labelnamespec"/>
+        <ref name="labelyear"/>
+        <ref name="labelyearspec"/>
         <ref name="maxitems"/>
         <ref name="maxnames"/>
         <ref name="minitems"/>
@@ -83,10 +80,13 @@
             <ref name="labelalpha"/>
           </optional>
           <optional>
-            <ref name="labelname"/>
+            <ref name="labelnamespec"/>
           </optional>
           <optional>
             <ref name="labelyear"/>
+          </optional>
+          <optional>
+            <ref name="labelyearspec"/>
           </optional>
           <optional>
             <ref name="singletitle"/>
@@ -708,6 +708,7 @@
                 <choice>
                   <value>bibtex</value>
                   <value>biblatexml</value>
+                  <value>ris</value>
                 </choice>
               </attribute>
             </optional>
@@ -900,10 +901,26 @@
   <define name="labelyear">
     <element name="bcf:option">
       <attribute name="type">
-        <value>multivalued</value>
+        <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
         <value>labelyear</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="labelyearspec">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>multivalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>labelyearspec</value>
       </element>
       <oneOrMore>
         <element name="bcf:value">
@@ -1064,13 +1081,13 @@
       </element>
     </element>
   </define>
-  <define name="labelname">
+  <define name="labelnamespec">
     <element name="bcf:option">
       <attribute name="type">
         <value>multivalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>labelname</value>
+        <value>labelnamespec</value>
       </element>
       <oneOrMore>
         <element name="bcf:value">

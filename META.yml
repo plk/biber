@@ -16,7 +16,7 @@ name: biblatex-biber
 provides:
   Biber:
     file: lib/Biber.pm
-    version: v0.7.4
+    version: 0.8
   Biber::Config:
     file: lib/Biber/Config.pm
   Biber::Constants:
@@ -33,6 +33,8 @@ provides:
     file: lib/Biber/Input/file/biblatexml.pm
   Biber::Input::file::bibtex:
     file: lib/Biber/Input/file/bibtex.pm
+  Biber::Input::file::ris:
+    file: lib/Biber/Input/file/ris.pm
   Biber::Internals:
     file: lib/Biber/Internals.pm
   Biber::LaTeX::Recode:
@@ -66,11 +68,13 @@ requires:
   File::Slurp::Unicode: 0
   IPC::Cmd: 0
   IPC::Run: 0
+  LWP::Simple: 0
   List::AllUtils: 0
   List::MoreUtils: 0
   Log::Log4perl: 0
   Readonly: 0
   Regexp::Common: 0
+  Switch: 0
   Text::BibTeX: 0.51
   Unicode::Collate: 0.72
   XML::LibXML::Simple: 0
@@ -78,4 +82,4 @@ requires:
   perl: v5.10.0
 resources:
   license: http://dev.perl.org/licenses/
-version: v0.7.4
+version: 0.8

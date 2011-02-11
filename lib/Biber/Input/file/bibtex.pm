@@ -30,13 +30,15 @@ my $logger = Log::Log4perl::get_logger('main');
 our $cache = {};
 
 # Handlers for field types
+# The names of these have nothing to do whatever with the biblatex field types
+# They just started out copying them - they are categories of this specific
+# data source date types
 my %handlers = (
                 'date'     => \&_date,
                 'list'     => \&_list,
                 'literal'  => \&_literal,
                 'name'     => \&_name,
                 'range'    => \&_range,
-                'special'  => \&_special,
                 'verbatim' => \&_verbatim
 );
 
@@ -83,10 +85,9 @@ sub TBSIG {
 =head2 extract_entries
 
    Main data extraction routine.
-   Accepts a data source identifier (filename in this case),
-   preprocesses the file and then looks for the passed keys,
-   creating entries when it finds them and passes out an
-   array of keys it didn't find.
+   Accepts a data source identifier, preprocesses the file and then
+   looks for the passed keys, creating entries when it finds them and
+   passes out an array of keys it didn't find.
 
 =cut
 
@@ -114,7 +115,6 @@ sub extract_entries {
   else {
     # Need to get the filename even if using cache so we increment
     # the filename count for preambles at the bottom of this sub
-    $filename .= '.bib' unless $filename =~ /\.bib\z/xms; # Normalise filename
     my $trying_filename = $filename;
     unless ($filename = locate_biber_file($filename)) {
       $logger->logdie("Cannot find file '$trying_filename'!")
@@ -268,14 +268,6 @@ sub create_entry {
 }
 
 
-# Special fields
-sub _special {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
-  my $value = decode_utf8($entry->get($f));
-  $bibentry->set_datafield($to, $value);
-  return;
-}
-
 # Literal fields
 sub _literal {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
@@ -287,7 +279,13 @@ sub _literal {
   return if ($to eq 'year' and $bibentry->get_datafield('year'));
   return if ($to eq 'month' and $bibentry->get_datafield('month'));
 
-  $bibentry->set_datafield($to, $value);
+  # Try to sanitise months to biblatex requirements
+  if ($to eq 'month') {
+    $bibentry->set_datafield($to, _hack_month($value));
+  }
+  else {
+    $bibentry->set_datafield($to, $value);
+  }
   return;
 }
 
@@ -295,7 +293,6 @@ sub _literal {
 sub _verbatim {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   my $value = decode_utf8($entry->get($f));
-
   $bibentry->set_datafield($to, $value);
   return;
 }
@@ -750,6 +747,35 @@ sub parsename {
                         'suffix'    => $ss}
     );
 }
+
+
+# Routine to try to hack month into the right biblatex format
+# Especially since we support remote .bibs which we potentially have no control over
+my %months = (
+              'jan' => '01',
+              'feb' => '02',
+              'mar' => '03',
+              'apr' => '04',
+              'may' => '05',
+              'jun' => '06',
+              'jul' => '07',
+              'aug' => '08',
+              'sep' => '09',
+              'oct' => '10',
+              'nov' => '11',
+              'dec' => '12'
+             );
+
+sub _hack_month {
+  my $in_month = shift;
+  if ($in_month =~ m/\A\s*((?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec).*)\s*\z/i) {
+    return $months{lc(substr($1,0,3))};
+  }
+  else {
+    return $in_month;
+  }
+}
+
 
 1;
 

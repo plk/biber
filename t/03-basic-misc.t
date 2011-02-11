@@ -99,7 +99,6 @@ my $murray1 = q|  \entry{murray}{article}{}
     \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
     \field{labelalpha}{Hos\textbf{+}98}
     \field{sortinit}{H}
-    \field{labelyear}{1998}
     \true{singletitle}
     \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
     \field{hyphenation}{american}
@@ -153,7 +152,6 @@ my $murray2 = q|  \entry{murray}{article}{}
     \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
     \field{labelalpha}{Hos98}
     \field{sortinit}{H}
-    \field{labelyear}{1998}
     \true{singletitle}
     \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
     \field{hyphenation}{american}
@@ -181,7 +179,6 @@ my $t1 = q|  \entry{t1}{misc}{}
     \strng{fullhash}{BB1}
     \field{labelalpha}{Bro92}
     \field{sortinit}{B}
-    \field{labelyear}{1992}
     \field{title}{Normal things {$^{3}$}}
     \field{year}{1992}
     \field{pages}{100\bibrangedash}
@@ -201,7 +198,6 @@ my $t2 = q|  \entry{t2}{misc}{}
     \strng{fullhash}{BB1}
     \field{labelalpha}{Bro94}
     \field{sortinit}{B}
-    \field{labelyear}{1994}
     \field{title}{Signs of W$\frac{o}{a}$nder}
     \field{year}{1994}
     \field{pages}{100}

@@ -21,7 +21,7 @@ our @EXPORT = qw{
 
 # Version of biblatex which this release works with. Matched against version
 # passed in control file
-Readonly::Scalar our $BIBLATEX_VERSION => '1.1';
+Readonly::Scalar our $BIBLATEX_VERSION => '1.2';
 
 # Global flags needed for sorting
 our $BIBER_SORT_FINAL = 0;
@@ -99,10 +99,7 @@ our %STRUCTURE_DATATYPES = (
 #   provide defaults in case they are missing.
 
 our %CONFIG_DEFAULT_BIBER = (
-  allentries         => 0,
   bblencoding        => 'UTF-8',
-  bibdata            =>  undef,
-  bibdatatype        => 'bibtex',
   bibencoding        => 'UTF-8',
   bblsafechars       => 0,
   bblsafecharsset    => 'extra',
@@ -126,152 +123,12 @@ our %CONFIG_DEFAULT_BIBER = (
 
 # default global options for biblatex
 # in practice these will be obtained from the control file,
-# but we need this as a fallback, just in case,
-# or when using the command-line options "-a -d <datafile>"
-# without a bcf file
+# but we need this for things not yet implemented by biblatex but expected by biber
 our %CONFIG_DEFAULT_BIBLATEX =
   (
-   alphaothers     => '\textbf{+}',
-   controlversion  => undef,
-   debug           => '0',
-   labelalpha      => '0',
-   labelname       => ['shortauthor', 'author', 'shorteditor', 'editor', 'translator'],
-   labelnumber     => '0',
-   labelyear       => [ 'year' ],
-   maxitems        => '3',
-   maxnames        => '3',
-   minitems        => '1',
-   minnames        => '1',
-   singletitle     => '0',
-   sortalphaothers => '+',
-   sortlos         => '1',
-   terseinits      => '0',
-   uniquename      => '0',
-   uniquelist      => '0',
-   useauthor       => '1',
-   useeditor       => '1',
-   useprefix       => '0',
-   usetranslator   => '0',
    displaymode     => { ALL => ["original", "romanised", "uniform", "translated"] },
-   # Now the defaults for special .bcf sections information
-   inheritance     => {
-  defaults => { content => "\n    ", inherit_all => "true", override_target => "false" },
-  inherit  => [
-                {
-                  field => [
-                    { source => "author", target => "author" },
-                    { source => "author", target => "bookauthor" },
-                  ],
-                  type_pair => [
-                    { source => "mvbook", target => "inbook" },
-                    { source => "mvbook", target => "bookinbook" },
-                    { source => "mvbook", target => "suppbook" },
-                    { source => "book", target => "inbook" },
-                    { source => "book", target => "bookinbook" },
-                    { source => "book", target => "suppbook" },
-                  ],
-                },
-                {
-                  field => [
-                    { source => "title", target => "maintitle" },
-                    { source => "subtitle", target => "mainsubtitle" },
-                    { source => "titleaddon", target => "maintitleaddon" },
-                  ],
-                  type_pair => [
-                    { source => "mvbook", target => "book" },
-                    { source => "mvbook", target => "inbook" },
-                    { source => "mvbook", target => "bookinbook" },
-                    { source => "mvbook", target => "suppbook" },
-                  ],
-                },
-                {
-                  field => [
-                    { source => "title", target => "maintitle" },
-                    { source => "subtitle", target => "mainsubtitle" },
-                    { source => "titleaddon", target => "maintitleaddon" },
-                  ],
-                  type_pair => [
-                    { source => "mvcollection", target => "collection" },
-                    { source => "mvcollection", target => "incollection" },
-                    { source => "mvcollection", target => "suppcollection" },
-                  ],
-                },
-                {
-                  field => [
-                    { source => "title", target => "maintitle" },
-                    { source => "subtitle", target => "mainsubtitle" },
-                    { source => "titleaddon", target => "maintitleaddon" },
-                  ],
-                  type_pair => [
-                    { source => "mvproceedings", target => "proceedings" },
-                    { source => "mvproceedings", target => "inproceedings" },
-                  ],
-                },
-                {
-                  field => [
-                    { source => "title", target => "maintitle" },
-                    { source => "subtitle", target => "mainsubtitle" },
-                    { source => "titleaddon", target => "maintitleaddon" },
-                  ],
-                  type_pair => [
-                    { source => "mvreference", target => "reference" },
-                    { source => "mvreference", target => "inreference" },
-                  ],
-                },
-                {
-                  field => [
-                    { source => "title", target => "booktitle" },
-                    { source => "subtitle", target => "booksubtitle" },
-                    { source => "titleaddon", target => "booktitleaddon" },
-                  ],
-                  type_pair => [
-                    { source => "book", target => "inbook" },
-                    { source => "book", target => "bookinbook" },
-                    { source => "book", target => "suppbook" },
-                  ],
-                },
-                {
-                  field => [
-                    { source => "title", target => "booktitle" },
-                    { source => "subtitle", target => "booksubtitle" },
-                    { source => "titleaddon", target => "booktitleaddon" },
-                  ],
-                  type_pair => [
-                    { source => "collection", target => "incollection" },
-                    { source => "collection", target => "suppcollection" },
-                  ],
-                },
-                {
-                  field => [
-                    { source => "title", target => "booktitle" },
-                    { source => "subtitle", target => "booksubtitle" },
-                    { source => "titleaddon", target => "booktitleaddon" },
-                  ],
-                  type_pair => [{ source => "reference", target => "inreference" }],
-                },
-                {
-                  field => [
-                    { source => "title", target => "booktitle" },
-                    { source => "subtitle", target => "booksubtitle" },
-                    { source => "titleaddon", target => "booktitleaddon" },
-                  ],
-                  type_pair => [{ source => "proceedings", target => "inproceedings" }],
-                },
-                {
-                  field => [
-                    { source => "title", target => "journaltitle" },
-                    { source => "subtitle", target => "journalsubtitle" },
-                  ],
-                  type_pair => [
-                    { source => "periodical", target => "article" },
-                    { source => "periodical", target => "suppperiodical" },
-                  ],
-                },
-              ],
-                      },
-   presort => 'mm',
-   structure => {
-  constraints => [
+   structure       =>
+ { constraints => [
                    {
                      constraint => [
                                      {
@@ -1748,63 +1605,8 @@ our %CONFIG_DEFAULT_BIBLATEX =
                    ],
                  },
                 }
-  );
+);
 
-$CONFIG_DEFAULT_BIBLATEX{sorting} =
-  [
-   [
-    {final          => undef,
-     sort_direction => undef},
-    {
-     'presort'    => {}},
-   ],
-   [
-    {final          => 1,
-     sort_direction => undef},
-    {
-     'sortkey'    => {}}
-   ],
-   [
-    {final          => undef,
-     sort_direction => undef},
-    {
-     'sortname'   => {}},
-    {
-     'author'     => {}},
-    {
-     'editor'     => {}},
-    {
-     'translator' => {}},
-    {
-     'sorttitle'  => {}},
-    {
-     'title'      => {}}
-   ],
-   [
-    {final          => undef,
-     sort_direction => undef},
-    {
-     'sortyear'   => {}},
-    {
-     'year'       => {}}
-   ],
-   [
-    {final          => undef,
-     sort_direction => undef},
-    {
-     'sorttitle'  => {}},
-    {
-     'title'      => {}}
-   ],
-   [
-    {final          => undef,
-     sort_direction => undef},
-    {
-     'volume'     => {}},
-    {
-     '0000'       => {}}
-   ]
-  ];
 
 # Set up some encoding aliases to map \inputen{c,x} encoding names to Encode
 # It seems that inputen{c,x} has a different idea of nextstep than Encode
@@ -1830,9 +1632,10 @@ our %CONFIG_SCOPE_BIBLATEX = (
   displaymode       => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   inheritance       => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   labelalpha        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labelname         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  labelnamespec     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelnumber       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelyear         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  labelyearspec     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   maxitems          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   minitems          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   maxnames          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},

@@ -28,12 +28,12 @@ sub new {
   my $class = shift;
   my $self = $class->SUPER::new($obj);
   my $ctrlver = Biber::Config->getblxoption('controlversion');
-  my $beta = $Biber::BETA_VERSION ? '(beta)' : '';
+  my $beta = $Biber::BETA_VERSION ? ' (beta)' : '';
 
   my $BBLHEAD = <<EOF;
 % \$ biblatex auxiliary file \$
 % \$ biblatex version $ctrlver \$
-% \$ biber version $Biber::VERSION $beta \$
+% \$ biber version $Biber::VERSION$beta \$
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.

@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 32;
+use Test::More tests => 31;
 
 use Biber;
 use Biber::Output::BBL;
@@ -26,7 +26,7 @@ Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('validate_structure', 1);
 
 # Biblatex options
-Biber::Config->setblxoption('labelyear', [ 'year' ]);
+Biber::Config->setblxoption('labelyearspec', [ 'year' ]);
 
 # Now generate the information
 $biber->prepare;
@@ -45,7 +45,6 @@ my $l5 = [ "Invalid format '1995-10-4' of date field 'date' in entry 'L5' - igno
            "Missing mandatory field - one of 'date, year' must be defined in entry 'L5'" ];
 my $l6 = [ "Invalid date value '1996/13/03' - ignoring its components in entry 'L6'" ];
 my $l7 = [ "Invalid date value '1996/10/35' - ignoring its components in entry 'L7'" ];
-my $l8 = [ "Invalid date value 'YYYY/january/DD' - ignoring its components in entry 'L8'" ];
 my $l11 = [ "Overwriting field 'year' with year value from field 'date' for entry 'L11'"];
 my $l12 = [ "Overwriting field 'month' with month value from field 'date' for entry 'L12'" ];
 
@@ -278,8 +277,7 @@ is_deeply($bibentries->entry('l4')->get_field('warnings'), $l4, 'Date values tes
 is_deeply($bibentries->entry('l5')->get_field('warnings'), $l5, 'Date values test 5' ) ;
 is_deeply($bibentries->entry('l6')->get_field('warnings'), $l6, 'Date values test 6' ) ;
 is_deeply($bibentries->entry('l7')->get_field('warnings'), $l7, 'Date values test 7' ) ;
-is_deeply($bibentries->entry('l8')->get_field('warnings'), $l8, 'Date values test 8' ) ;
-ok(is_undef($bibentries->entry('l8')->get_field('month')), 'Date values test 8b - MONTH undef since not integer' ) ;
+is($bibentries->entry('l8')->get_field('month'), '01', 'Date values test 8b - MONTH hacked to integer' ) ;
 ok(is_undef($bibentries->entry('l9')->get_field('warnings')), 'Date values test 9' ) ;
 ok(is_undef($bibentries->entry('l10')->get_field('warnings')), 'Date values test 10' ) ;
 is_deeply($bibentries->entry('l11')->get_field('warnings'), $l11, 'Date values test 11' );
@@ -295,7 +293,7 @@ is( $out->get_output_entry($main,'l14'), $l14, 'Date values test 14 - labelyear 
 is( $out->get_output_entry($main,'l15'), $l15, 'Date values test 15 - labelyear should be undef, no DATE or YEAR') ;
 
 # reset options and regenerate information
-Biber::Config->setblxoption('labelyear', [ 'year', 'eventyear', 'origyear' ]);
+Biber::Config->setblxoption('labelyearspec', [ 'year', 'eventyear', 'origyear' ]);
 $bibentries->entry('l17')->del_field('year');
 $bibentries->entry('l17')->del_field('month');
 $bibentries->entry('l16')->del_field('warnings');
@@ -308,7 +306,7 @@ is($bibentries->entry('l17')->get_field('labelyearname'), 'year', 'Date values t
 is($out->get_output_entry($main,'l17'), $l17, 'Date values test 17a - labelyear = YEAR value when ENDYEAR is the same and ORIGYEAR is also present' ) ;
 
 # reset options and regenerate information
-Biber::Config->setblxoption('labelyear', [ 'origyear', 'year', 'eventyear' ]);
+Biber::Config->setblxoption('labelyearspec', [ 'origyear', 'year', 'eventyear' ]);
 $bibentries->entry('l17')->del_field('year');
 $bibentries->entry('l17')->del_field('month');
 $biber->prepare;
@@ -318,7 +316,7 @@ is($bibentries->entry('l17')->get_field('labelyearname'), 'origyear', 'Date valu
 is($out->get_output_entry($main,'l17'), $l17c, 'Date values test 17c - labelyear = ORIGYEAR value when ENDORIGYEAR is the same and YEAR is also present' ) ;
 
 # reset options and regenerate information
-Biber::Config->setblxoption('labelyear', [ 'eventyear', 'year', 'origyear' ], 'PER_TYPE', 'proceedings');
+Biber::Config->setblxoption('labelyearspec', [ 'eventyear', 'year', 'origyear' ], 'PER_TYPE', 'proceedings');
 $bibentries->entry('l17')->del_field('year');
 $bibentries->entry('l17')->del_field('month');
 $biber->prepare;

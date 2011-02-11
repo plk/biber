@@ -42,7 +42,7 @@ my $string1 = q|  \entry{Elias1955}{set}{}
     \field{labelyear}{1955}
     \field{issn}{0096-1000}
     \field{journaltitle}{IRE Transactions on Information Theory}
-    \field{month}{3}
+    \field{month}{03}
     \field{number}{1}
     \field{title}{Predictive coding--I}
     \field{volume}{1}
@@ -69,7 +69,7 @@ my $string2 = q|  \entry{Elias1955a}{article}{}
     \field{sortinit}{0}
     \field{issn}{0096-1000}
     \field{journaltitle}{IRE Transactions on Information Theory}
-    \field{month}{3}
+    \field{month}{03}
     \field{number}{1}
     \field{title}{Predictive coding--I}
     \field{volume}{1}
@@ -96,7 +96,7 @@ my $string3 = q|  \entry{Elias1955b}{article}{}
     \field{sortinit}{0}
     \field{issn}{0096-1000}
     \field{journaltitle}{IRE Transactions on Information Theory}
-    \field{month}{3}
+    \field{month}{03}
     \field{number}{1}
     \field{title}{Predictive coding--II}
     \field{volume}{1}

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="../../../../data/schemata/dcf.rnc" type="compact"?>
+<dcf:driver-control driver="ris" xmlns:dcf="https://sourceforge.net/projects/biber">
+  <!--
+      These entry type aliases we might find in the the datasource so
+      we can decide how to map and convert them into Biber::Entry objects
+      We are not validating anything here, that comes later and is not
+      datasource specific
+  -->
+  <dcf:entry-types>
+    <dcf:entry-type name="ART">
+      <dcf:aliasof>artwork</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="BILL">
+      <dcf:aliasof>jurisdiction</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="BOOK">
+      <dcf:aliasof>book</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="COMP">
+      <dcf:aliasof>software</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="CONF">
+      <dcf:aliasof>proceedings</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="GEN">
+      <dcf:aliasof>misc</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="JFULL">
+      <dcf:aliasof>article</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="JOUR">
+      <dcf:aliasof>article</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="MGZN">
+      <dcf:aliasof>misc</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="MPCT">
+      <dcf:aliasof>movie</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="NEWS">
+      <dcf:aliasof>misc</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="PAMP">
+      <dcf:aliasof>misc</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="PAT">
+      <dcf:aliasof>patent</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="PCOMM">
+      <dcf:aliasof>misc</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="RPRT">
+      <dcf:aliasof>report</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="SER">
+      <dcf:aliasof>misc</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="SLIDE">
+      <dcf:aliasof>misc</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="SOUND">
+      <dcf:aliasof>audio</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="STAT">
+      <dcf:aliasof>legal</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="THES">
+      <dcf:aliasof>thesis</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="UNBILL">
+      <dcf:aliasof>jurisdiction</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="UNPB">
+      <dcf:aliasof>unpublished</dcf:aliasof>
+    </dcf:entry-type>
+  </dcf:entry-types>
+  <!--
+    These are the fields we expect to find in the the datasource so
+    we can decide how to map and convert them into Biber::Entry fields
+    This has nothing conceptually to do with the internal structure
+    setup, it's a datasource driver specific set of settings to allow
+    parsing into internal objects. It looks very similar to aspects
+    of the Biber::Structure defaults because biber/biblatex was developed
+    at first as a solely bibtex datasource project.
+  -->
+  <dcf:fields>
+    <!-- date fields -->
+    <dcf:field name="Y1" aliasof="date"/>
+    <dcf:field name="PY" aliasof="date"/>
+    <dcf:field name="date" handler="date"/>
+    <dcf:field name="Y2" aliasof="eventdate"/>
+    <dcf:field name="eventdate" handler="date"/>
+    <!-- name fields -->
+    <dcf:field name="A1" aliasof="author"/>
+    <dcf:field name="AU" aliasof="author"/>
+    <dcf:field name="author" handler="name"/>
+    <dcf:field name="A2" aliasof="editor"/>
+    <dcf:field name="A3" aliasof="editor"/>
+    <dcf:field name="ED" aliasof="editor"/>
+    <dcf:field name="editor" handler="name"/>
+    <!-- range fields -->
+    <dcf:field name="SPEP" aliasof="pages"/>
+    <dcf:field name="pages" handler="range"/>
+    <!-- verbatim fields -->
+    <dcf:field name="N1" aliasof="note"/>
+    <dcf:field name="note" handler="verbatim"/>
+    <dcf:field name="N2" aliasof="abstract"/>
+    <dcf:field name="AB" aliasof="abstract"/>
+    <dcf:field name="abstract" handler="verbatim"/>
+    <dcf:field name="JO" aliasof="journaltitle"/>
+    <dcf:field name="JF" aliasof="journaltitle"/>
+    <dcf:field name="journaltitle" handler="verbatim"/>
+    <dcf:field name="JA" aliasof="shortjournal"/>
+    <dcf:field name="shortjournal" handler="verbatim"/>
+    <dcf:field name="VL" aliasof="volume"/>
+    <dcf:field name="volume" handler="verbatim"/>
+    <dcf:field name="IS" aliasof="issue"/>
+    <dcf:field name="CP" aliasof="issue"/>
+    <dcf:field name="issue" handler="verbatim"/>
+    <dcf:field name="CY" aliasof="location"/>
+    <dcf:field name="location" aliasof="literal"/>
+    <dcf:field name="SN" aliasof="isbn"/>
+    <dcf:field name="isbn" handler="verbatim"/>
+    <dcf:field name="PB" aliasof="publisher"/>
+    <dcf:field name="publisher" handler="verbatim"/>
+    <dcf:field name="KW" aliasof="keywords"/>
+    <dcf:field name="keywords" handler="verbatim"/>
+    <dcf:field name="U1" aliasof="usera"/>
+    <dcf:field name="usera" handler="verbatim"/>
+    <dcf:field name="U2" aliasof="userb"/>
+    <dcf:field name="userb" handler="verbatim"/>
+    <dcf:field name="U3" aliasof="userc"/>
+    <dcf:field name="userc" handler="verbatim"/>
+    <dcf:field name="U4" aliasof="userd"/>
+    <dcf:field name="userd" handler="verbatim"/>
+    <dcf:field name="U5" aliasof="usere"/>
+    <dcf:field name="usere" handler="verbatim"/>
+    <dcf:field name="UR" aliasof="url"/>
+    <dcf:field name="url" handler="verbatim"/>
+    <dcf:field name="L1" aliasof="file"/>
+    <dcf:field name="file" handler="verbatim"/>
+  </dcf:fields>
+</dcf:driver-control>
+

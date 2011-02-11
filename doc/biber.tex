@@ -113,13 +113,14 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
 \item Creates entry sets dynamically and allow easily defined static entry sets,
   all processed in one pass
 \item Flexible user-customisable crossreference field inheritance
-  model\footnote{In BibLaTeX 1.2}
+  model
 \item Support for related entries, to enable generic treatment of things
   like «translated as», «reprinted as», «reprint of» etc.\footnote{In BibLaTeX 1.2}
 \item Handles very complex auto-expansion and contraction of names and
   namelists\footnote{In BibLaTeX 1.3}
 \item Extensible modular data sources architecture for ease of adding
   more data source types.
+\item Support for remote data sources
 \end{itemize}
 
 \subsection{Performance}
@@ -151,11 +152,11 @@ mentioning options below, they are referred to as
 form. As usual with such options, when the option requires an argument, the
 long form is followed by an equals sign «\verb+=+» and then the argument,
 the short form is followed by a space and then the argument. For example,
-the \verb+--bibdata|-d+ option can be given in two ways:
+the \verb+--configfile|-g+ option can be given in two ways:
 
 \begin{verbatim}
-biber --bibdata=somefile.bib
-biber -d somefile.bib
+biber --configfile=somefile.conf
+biber -g somefile.conf
 \end{verbatim}
 
 With the \verb+backend=biber+ option, \verb+biblatex+ switches its backend
@@ -189,9 +190,7 @@ chain which is given in decreasing precedence order:\\[2ex]
 
 \noindent Users do not need to care directly about the contents or format of the
 \verb+.bcf+ file as this is generated from the options which they specify
-for \verb+biblatex+. To override the \verb+.bcf+ options or to provide
-option settings when no \verb+.bcf+ file is used (see for example the
-\verb+--allentries|-a+ and \verb+--bibdata|-d+ options), users
+for \verb+biblatex+. To override the \verb+.bcf+ options, users
 may use either a configuration file or the command line to set options.
 
 The configuration file is by default called \verb+biber.conf+ but this can
@@ -213,8 +212,6 @@ see an example. Here is a config file which displays the \verb+biber+
 hard-coded defaults:
 
 \begin{verbatim}
-allentries          0
-bibdata             undef 
 bblencoding         UTF-8
 bibencoding         UTF-8
 collate             1
@@ -361,8 +358,7 @@ not for things like dates and special fields as that wouldn't make much sense.
 
 \subsubsection{Control file}\label{loc:cf}
 
-The control file is normally passed as the only argument to biber
-(unless using \verb+--allentries|-a+ and \verb+--bibdata|-d+). It is
+The control file is normally passed as the only argument to biber. It is
 searched for in the following locations, in decreasing order of
 priority:\\[2ex]
 
@@ -371,21 +367,20 @@ priority:\\[2ex]
 \hspace*{2em}Relative to current directory$\rightarrow$\\
 \hspace*{3em}Using \verb+kpsewhich+, if available
 
-\subsubsection{Database files}
+\subsubsection{Data sources}
 
-Bibliography database files are searched for in the following locations, in
-decreasing order of priority:\\[2ex]
+Bibliography data sources of type «file» are searched for in the following
+locations, in decreasing order of priority:\\[2ex]
 
 \noindent Absolute filename $\rightarrow$\\
 \hspace*{1em}In the \verb+--output_directory+, if specified$\rightarrow$\\
 \hspace*{2em}Relative to current directory$\rightarrow$\\
 \hspace*{3em}In the same directory as the control file$\rightarrow$\\
-\hspace*{4em}Using \verb+kpsewhich+, if available\\[2ex]
+\hspace*{4em}Using \verb+kpsewhich+ for supported formats, if available\\[2ex]
 
-\noindent Unless using the \verb+--bibdata|-d+ option, users usually do not
-specify explicitly the bibliography database files; they are normally
-passed in the \verb+.bcf+ control file, taken from the \verb+biblatex+
-\verb+\bibliography{}+ command arguments.
+\noindent Users do not specify explicitly the bibliography database
+files; they are passed in the \verb+.bcf+ control file, which is
+constructed from the \verb+biblatex+ \verb+\addbibresource{}+ macros.
 
 \subsection{Logfile}
 
@@ -398,10 +393,7 @@ so, if you run
 
 \noindent then the logfile will be called «\verb+test.blg+». Like the
 \verb+.bbl+ output file, it will be created in the
-\verb+--output_directory|-c+, if this option is defined. If there is
-no \verb+.bcf+ file on the command line (for example, when using the
-\verb+--allentries|-a+ and \verb+--bibdata|-d+ options), then the
-logfile name will default to «\verb+biber.blg+». You can
+\verb+--output_directory|-c+, if this option is defined. You can
 override the logfile name by using the \verb+--logfile+ option:
 
 \begin{verbatim}
