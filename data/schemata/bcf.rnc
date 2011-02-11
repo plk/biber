@@ -25,10 +25,11 @@ start =
     element bcf:options {
       attribute component { "biblatex" },
       attribute type { "global" },
-      alphaothers?,
-      labelalpha?,
-      labelname,
-      labelyear?,
+      alphaothers,
+      labelalpha,
+      labelnamespec,
+      labelyear,
+      labelyearspec,
       maxitems,
       maxnames,
       minitems,
@@ -50,8 +51,9 @@ start =
       attribute type { xsd:NCName },
       alphaothers?,
       labelalpha?,
-      labelname?,
+      labelnamespec?,
       labelyear?,
+      labelyearspec?,
       singletitle?,
       skipbib?,
       skiplab?,
@@ -368,8 +370,14 @@ labelalpha =
   }
 labelyear =
   element bcf:option {
-    attribute type { "multivalued" },
+    attribute type { "singlevalued" },
     element bcf:key { "labelyear" },
+    element bcf:value { "0" | "1" }
+  }
+labelyearspec =
+  element bcf:option {
+    attribute type { "multivalued" },
+    element bcf:key { "labelyearspec" },
     element bcf:value {
       attribute order { xsd:integer },
       xsd:NCName
@@ -435,10 +443,10 @@ sortlos =
     element bcf:key { "sortlos" },
     element bcf:value { "0" | "1" }
   }
-labelname =
+labelnamespec =
   element bcf:option {
     attribute type { "multivalued" },
-    element bcf:key { "labelname" },
+    element bcf:key { "labelnamespec" },
     element bcf:value {
       attribute order { xsd:integer },
       xsd:NCName

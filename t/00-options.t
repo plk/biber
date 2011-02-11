@@ -24,7 +24,7 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 
 # Biblatex options
-Biber::Config->setblxoption('labelyear', [ 'year' ]);
+Biber::Config->setblxoption('labelyearspec', [ 'year' ]);
 
 # Now generate the information
 $biber->prepare;
@@ -92,10 +92,10 @@ my $l1 = q|  \entry{L1}{book}{}
 |;
 
 ok(Biber::Config->getblxoption('uniquename') == 1, "Single-valued option") ;
-is_deeply(Biber::Config->getblxoption('labelname'), [ 'author' ], "Multi-valued options");
+is_deeply(Biber::Config->getblxoption('labelnamespec'), [ 'author' ], "Multi-valued options");
 ok(Biber::Config->getoption('mincrossrefs') == 88, "Setting Biber options via control file");
 ok(Biber::Config->getblxoption('useprefix', 'book') == 1 , "Per-type single-valued options");
-is_deeply(Biber::Config->getblxoption('labelname', 'book'), $bln, "Per-type multi-valued options");
+is_deeply(Biber::Config->getblxoption('labelnamespec', 'book'), $bln, "Per-type multi-valued options");
 is($bibentries->entry('l1')->get_field('labelyearname'), 'year', 'Global labelyear setting' ) ;
 is( $out->get_output_entry($main,'l1'), $l1, 'Global labelyear setting - labelyear should be YEAR') ;
 

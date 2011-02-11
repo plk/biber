@@ -26,7 +26,7 @@ Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('validate_structure', 1);
 
 # Biblatex options
-Biber::Config->setblxoption('labelyear', [ 'year' ]);
+Biber::Config->setblxoption('labelyearspec', [ 'year' ]);
 
 # Now generate the information
 $biber->prepare;
@@ -293,7 +293,7 @@ is( $out->get_output_entry($main,'l14'), $l14, 'Date values test 14 - labelyear 
 is( $out->get_output_entry($main,'l15'), $l15, 'Date values test 15 - labelyear should be undef, no DATE or YEAR') ;
 
 # reset options and regenerate information
-Biber::Config->setblxoption('labelyear', [ 'year', 'eventyear', 'origyear' ]);
+Biber::Config->setblxoption('labelyearspec', [ 'year', 'eventyear', 'origyear' ]);
 $bibentries->entry('l17')->del_field('year');
 $bibentries->entry('l17')->del_field('month');
 $bibentries->entry('l16')->del_field('warnings');
@@ -306,7 +306,7 @@ is($bibentries->entry('l17')->get_field('labelyearname'), 'year', 'Date values t
 is($out->get_output_entry($main,'l17'), $l17, 'Date values test 17a - labelyear = YEAR value when ENDYEAR is the same and ORIGYEAR is also present' ) ;
 
 # reset options and regenerate information
-Biber::Config->setblxoption('labelyear', [ 'origyear', 'year', 'eventyear' ]);
+Biber::Config->setblxoption('labelyearspec', [ 'origyear', 'year', 'eventyear' ]);
 $bibentries->entry('l17')->del_field('year');
 $bibentries->entry('l17')->del_field('month');
 $biber->prepare;
@@ -316,7 +316,7 @@ is($bibentries->entry('l17')->get_field('labelyearname'), 'origyear', 'Date valu
 is($out->get_output_entry($main,'l17'), $l17c, 'Date values test 17c - labelyear = ORIGYEAR value when ENDORIGYEAR is the same and YEAR is also present' ) ;
 
 # reset options and regenerate information
-Biber::Config->setblxoption('labelyear', [ 'eventyear', 'year', 'origyear' ], 'PER_TYPE', 'proceedings');
+Biber::Config->setblxoption('labelyearspec', [ 'eventyear', 'year', 'origyear' ], 'PER_TYPE', 'proceedings');
 $bibentries->entry('l17')->del_field('year');
 $bibentries->entry('l17')->del_field('month');
 $biber->prepare;

@@ -947,10 +947,10 @@ sub process_labelname {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $lnamescheme = Biber::Config->getblxoption('labelname', $be->get_field('entrytype'));
+  my $lnamespec = Biber::Config->getblxoption('labelnamespec', $be->get_field('entrytype'));
 
   # First we set the normal labelname name
-  foreach my $ln ( @{$lnamescheme} ) {
+  foreach my $ln ( @{$lnamespec} ) {
     my $lnameopt;
     if ( $ln =~ /\Ashort(.+)\z/ ) {
       $lnameopt = $1;
@@ -967,7 +967,7 @@ sub process_labelname {
   # Then we loop again to set the labelname name for the fullhash generation code
   # This is because fullhash generation ignores SHORT* fields (section 4.2.4.1, BibLaTeX
   # manual)
-  foreach my $ln ( @{$lnamescheme} ) {
+  foreach my $ln ( @{$lnamespec} ) {
     if ( $ln =~ /\Ashort(.+)\z/ ) {
       next;
     }
@@ -1001,16 +1001,17 @@ sub process_labelyear {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $lyearscheme = Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'));
 
-  if ($lyearscheme) {
+  if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
+    my $lyearspec = Biber::Config->getblxoption('labelyearspec', $be->get_field('entrytype'));
+
     if (Biber::Config->getblxoption('skiplab', $be->get_field('entrytype'), $citekey)) {
       return;
     }
     # make sure we gave the correct data type:
-    $logger->logdie("Invalid value for option labelyear: $lyearscheme\n")
-      unless ref $lyearscheme eq 'ARRAY';
-    foreach my $ly ( @{$lyearscheme} ) {
+    $logger->logdie("Invalid value for option labelyear: $lyearspec\n")
+      unless ref $lyearspec eq 'ARRAY';
+    foreach my $ly ( @{$lyearspec} ) {
       if ($be->get_field($ly)) {
         $be->set_field('labelyearname', $ly);
         last;

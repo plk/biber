@@ -126,11 +126,8 @@ our %CONFIG_DEFAULT_BIBER = (
 # but we need this for things not yet implemented by biblatex but expected by biber
 our %CONFIG_DEFAULT_BIBLATEX =
   (
-   labelyear       => [ 'year' ],
    displaymode     => { ALL => ["original", "romanised", "uniform", "translated"] },
-  );
-
-$CONFIG_DEFAULT_BIBLATEX{structure} =
+   structure       => 
  { constraints => [
                    {
                      constraint => [
@@ -1607,8 +1604,8 @@ $CONFIG_DEFAULT_BIBLATEX{structure} =
                      { content => "year", datatype => "literal", fieldtype => "field" },
                    ],
                  },
-                };
-
+                }
+);
 
 
 # Set up some encoding aliases to map \inputen{c,x} encoding names to Encode
@@ -1635,9 +1632,10 @@ our %CONFIG_SCOPE_BIBLATEX = (
   displaymode       => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   inheritance       => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   labelalpha        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labelname         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  labelnamespec     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelnumber       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelyear         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  labelyearspec     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   maxitems          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   minitems          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   maxnames          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
