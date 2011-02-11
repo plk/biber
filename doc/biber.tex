@@ -113,13 +113,14 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
 \item Creates entry sets dynamically and allow easily defined static entry sets,
   all processed in one pass
 \item Flexible user-customisable crossreference field inheritance
-  model\footnote{In BibLaTeX 1.2}
+  model
 \item Support for related entries, to enable generic treatment of things
   like «translated as», «reprinted as», «reprint of» etc.\footnote{In BibLaTeX 1.2}
 \item Handles very complex auto-expansion and contraction of names and
   namelists\footnote{In BibLaTeX 1.3}
 \item Extensible modular data sources architecture for ease of adding
   more data source types.
+\item Support for remote data sources
 \end{itemize}
 
 \subsection{Performance}
@@ -366,16 +367,16 @@ priority:\\[2ex]
 \hspace*{2em}Relative to current directory$\rightarrow$\\
 \hspace*{3em}Using \verb+kpsewhich+, if available
 
-\subsubsection{Database files}
+\subsubsection{Data sources}
 
-Bibliography database files are searched for in the following locations, in
-decreasing order of priority:\\[2ex]
+Bibliography data sources of type «file» are searched for in the following
+locations, in decreasing order of priority:\\[2ex]
 
 \noindent Absolute filename $\rightarrow$\\
 \hspace*{1em}In the \verb+--output_directory+, if specified$\rightarrow$\\
 \hspace*{2em}Relative to current directory$\rightarrow$\\
 \hspace*{3em}In the same directory as the control file$\rightarrow$\\
-\hspace*{4em}Using \verb+kpsewhich+, if available\\[2ex]
+\hspace*{4em}Using \verb+kpsewhich+ for supported formats, if available\\[2ex]
 
 \noindent Users do not specify explicitly the bibliography database
 files; they are passed in the \verb+.bcf+ control file, which is

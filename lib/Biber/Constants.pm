@@ -21,7 +21,7 @@ our @EXPORT = qw{
 
 # Version of biblatex which this release works with. Matched against version
 # passed in control file
-Readonly::Scalar our $BIBLATEX_VERSION => '1.1';
+Readonly::Scalar our $BIBLATEX_VERSION => '1.2';
 
 # Global flags needed for sorting
 our $BIBER_SORT_FINAL = 0;
@@ -127,7 +127,7 @@ our %CONFIG_DEFAULT_BIBER = (
 our %CONFIG_DEFAULT_BIBLATEX =
   (
    displaymode     => { ALL => ["original", "romanised", "uniform", "translated"] },
-   structure       => 
+   structure       =>
  { constraints => [
                    {
                      constraint => [

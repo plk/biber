@@ -1,7 +1,12 @@
 Revision history for Biber
 
-0.8   (unreleased)
-       * Transparently deal with remote .bibs
+0.8    11-02-2011
+       * Forces biblatex format for month field
+       * Added support for remote data sources
+       * Added experimental support for RIS data sources
+       * Took out -a and -d flags. These are no longer very useful as the increasingly
+         sophisticated biblatex options cannot be set on the command line
+         anyway and so these flags are less and less relevant
        * New inheritance model in sync with biblatex defaults
        * Bug fixes
 0.7.4  05-02-2011
