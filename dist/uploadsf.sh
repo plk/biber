@@ -46,8 +46,8 @@ scp $DOCDIR/biber.pdf philkime,biblatex-biber@frs.sourceforge.net:/home/frs/proj
 scp $BASE/Changes philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/Changes
 if [ $RELEASE != "development" ]; then
 # Perl dist tree
-scp $BASE/biblatex-biber-v*.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/biblatex-biber.tar.gz
-rm $BASE/biblatex-biber-v*.tar.gz
+scp $BASE/biblatex-biber-*.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/biblatex-biber.tar.gz
+rm $BASE/biblatex-biber-*.tar.gz
 # Make TLContrib main package (docs only)
 mkdir -p ~/Desktop/doc/biber
 cp $DOCDIR/biber.pdf ~/Desktop/doc/biber/
