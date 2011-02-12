@@ -1,5 +1,8 @@
 Revision history for Biber
 
+0.8.1  12-02-2011
+       * Small bug with default bibtex month macro support
+       * Made remote file support a little more robust (URI return codes)
 0.8    11-02-2011
        * Forces biblatex format for month field
        * Added support for remote data sources

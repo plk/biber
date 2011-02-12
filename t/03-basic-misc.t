@@ -214,7 +214,7 @@ my $Worman_N = [ 'WN1', 'WN2' ] ;
 my $Gennep = [ 'vGA1', 'vGJ1' ] ;
 
 is( $out->get_output_entry($main,'t1'), $t1, 'bbl entry with maths in title 1' ) ;
-is( $bibentries->entry('shore')->get_field('month'), '3', 'default bib month macros' ) ;
+is( $bibentries->entry('shore')->get_field('month'), '03', 'default bib month macros' ) ;
 ok( $bibentries->entry('t1')->has_keyword('primary'), 'Keywords test - 1' ) ;
 ok( $bibentries->entry('t1')->has_keyword('something'), 'Keywords test - 2' ) ;
 ok( $bibentries->entry('t1')->has_keyword('somethingelse'), 'Keywords test - 3' ) ;

@@ -39,7 +39,7 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =cut
 
-our $VERSION = '0.8';
+our $VERSION = '0.8.1';
 our $BETA_VERSION = 0; # Is this a beta version?
 
 my $logger = Log::Log4perl::get_logger('main');
@@ -1827,9 +1827,21 @@ sub fetch_data {
 
   # (Re-)define the old BibTeX month macros to what biblatex wants unless user stops this
   unless (Biber::Config->getoption('nostdmacros')) {
-    my $mi = 1;
-    foreach my $mon ('jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec') {
-      Text::BibTeX::add_macro_text($mon, $mi++);
+    my %months = ('jan' => '01',
+                  'feb' => '02',
+                  'mar' => '03',
+                  'apr' => '04',
+                  'may' => '05',
+                  'jun' => '06',
+                  'jul' => '07',
+                  'aug' => '08',
+                  'sep' => '09',
+                  'oct' => '10',
+                  'nov' => '11',
+                  'dec' => '12');
+
+    foreach my $mon (keys %months) {
+      Text::BibTeX::add_macro_text($mon, $months{$mon});
     }
   }
 
