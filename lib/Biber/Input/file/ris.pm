@@ -87,12 +87,12 @@ sub extract_entries {
   $logger->trace("Entering extract_entries()");
 
   # If it's a remote file, fetch it first
-  if ($filename =~ m/\A(?:https?|ftp):/xms) {
+  if ($filename =~ m/\A(?:https?|ftp):\/\//xms) {
     $logger->info("Data source '$filename' is a remote file - fetching ...");
     require LWP::Simple;
     require File::Temp;
     $tf = File::Temp->new(SUFFIX => '.ris');
-    unless (LWP::Simple::getstore($filename, $tf->filename) == 200) {
+    unless (LWP::Simple::is_success(LWP::Simple::getstore($filename, $tf->filename))) {
       $logger->logdie ("Could not fetch file '$filename'");
     }
     $filename = $tf->filename;

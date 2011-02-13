@@ -5,9 +5,10 @@ TODO in decreasing order of priority:
   Typed lists - entry, key, shorthand etc.
   Take out MAIN, SHORTHANDS backwards compat hacks in Biber.pm and BBL.pm
   Shorthands should be requested otherwise it's a big sorting overhead
+* merge in the "unique" branch to implement full uniquename/list
+  automation. Needs new .bbl format and biblatex support (biblatex 1.3)
+* Structure ALL fields need to be put into types where possible
 * Zotero? http://www.zotero.org/support/dev/start
   https://api.zotero.org/users/<USERID>/items/<iTEMID>?key=<APIKEY>
   gives a parseable ATOM XML with the information in
-* Structure ALL fields need to be put into types where possible
-* merge in the "unique" branch to implement full uniquename/list
-  automation. Needs new .bbl format and biblatex support (biblatex 1.3)
+
