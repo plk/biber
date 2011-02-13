@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 46;
+use Test::More tests => 48;
 
 use Biber;
 use Biber::Utils;
@@ -71,6 +71,8 @@ is($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_field('
 is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquelist - 1');
 is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquelist - 2');
 is($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_field('labelnamename'))->get_uniquelist, '1', 'Uniquelist - 3');
+is($bibentries->entry('unapa1')->get_field($bibentries->entry('unapa1')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquelist - 4');
+is($bibentries->entry('unapa2')->get_field($bibentries->entry('unapa2')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquelist - 5');
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness3.bcf');
