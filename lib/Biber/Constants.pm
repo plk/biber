@@ -107,6 +107,7 @@ our %CONFIG_DEFAULT_BIBER = (
   collate_options    => { level => 4 },
   debug              => 0,
   decodecharsset     => 'extra',
+  joins              => {inits => '~'},
   mincrossrefs       => 2,
   nolog              => 0,
   nostdmacros        => 0,

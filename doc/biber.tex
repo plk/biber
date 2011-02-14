@@ -17,7 +17,7 @@
   url={http://biblatex-biber.sourceforge.net},
   author={François Charette, Philip Kime},
   email={firmicus@ankabut.net, Philip@kime.org.uk},
-  revision={biber 0.8.1 (biblatex 1.2)},
+  revision={biber 0.8.2 (biblatex 1.2)},
   date={\today}}
 
 \hypersetup{%
@@ -220,6 +220,9 @@ collate             1
 </collate_options>
 debug               0
 fastsort            0
+<joins>
+  inits             ~
+</joins>
 mincrossrefs        2
 nolog               0
 nostdmacros         0
@@ -253,7 +256,29 @@ options by setting options in \verb+biblatex+ which will pass them to
 The \verb+--collate_options|-c+ option takes a number of key/value pairs as
 value. See section \ref{coll} for details.
 
-\subsubsection{The nosort option}
+\subsubsection{The «joins» option}
+
+The \verb+joins+ option can only be set in the config file and not on the
+command line since it represents a rather overarching typesetting decision
+which makes more sense in a user config file. This option specifies how
+to represent typographical ties in the bibliography. The only currently
+supported tie type is «inits»--that between the initials of name parts when
+using the full initials format of \verb+biblatex+ (that is, when you are
+using the \verb+biblatex+ options \verb+firstinits=true+ and
+\verb+terseinits=false+. \verb+bibtex+ is hard-coded to use the
+non-breaking space '\verb+~+' as the inter-initial tie. \verb+biber+ lets
+you use anything you like, for example '\verb+\,+' is often considered better
+typesetting style as this space is smaller than a regular space. They
+default is still '\verb+~+' for backwards compatibility with \verb+bibtex+.
+So, for example, you could put this in your \verb+biber.conf+:
+
+\begin{verbatim}
+<joins>
+  inits             \,
+</joins>
+\end{verbatim}
+
+\subsubsection{The «nosort» option}
 
 The value of the \verb+nosort+ option can only be set in the config file
 and not on the command line. This is because the values are Perl regular

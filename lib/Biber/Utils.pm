@@ -37,7 +37,7 @@ our @EXPORT = qw{ locate_biber_file makenameid stringify_hash
   normalise_string normalise_string_lite normalise_string_underscore normalise_string_sort
   reduce_array remove_outer add_outer ucinit strip_nosort
   is_def is_undef is_def_and_notnull is_def_and_null
-  is_undef_or_null is_notnull is_null normalise_utf8};
+  is_undef_or_null is_notnull is_null normalise_utf8 inits};
 
 =head1 FUNCTIONS
 
@@ -535,6 +535,22 @@ sub normalise_utf8 {
     Biber::Config->setoption('bblencoding', 'UTF-8');
   }
 }
+
+=head2 inits
+
+   Text::BibTeX hard codes the initials seperators, here we fix that
+   We depend on the fact that we always use BTJ_FORCETIE for terse ties in
+   the name parsing code
+
+=cut
+
+sub inits {
+  my $istring = shift;
+  my $sep = Biber::Config->getoption('joins')->{inits};
+  $istring =~ s/~/$sep/gxms;
+  return $istring;
+}
+
 
 =head1 AUTHOR
 

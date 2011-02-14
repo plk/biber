@@ -171,7 +171,7 @@ my $name8 =
       nameinitstring => 'Vallée_Poussin_J' } ;
 my $name9 =
    {  firstname     => 'Jean Charles Gabriel {de la}~Vallée',
-      firstname_i   => 'J.~C. G. d.~V.',
+      firstname_i   => 'J.~C.~G.~d.~V.',
       firstname_it  => 'JCGdV',
       lastname      => 'Poussin',
       lastname_i    => 'P.',
@@ -476,10 +476,10 @@ my $l11 = q|  \entry{L11}{book}{}
 
 my $l12 = q|  \entry{L12}{book}{}
     \name{labelname}{1}{%
-      {{Vall{\'e}e~Poussin}{V.~P.}{Charles Louis Xavier~Joseph}{C.~L. X.~J.}{de~la}{d.~l.}{}{}}%
+      {{Vall{\'e}e~Poussin}{V.\,P.}{Charles Louis Xavier~Joseph}{C.\,L.\,X.\,J.}{de~la}{d.\,l.}{}{}}%
     }
     \name{author}{1}{%
-      {{Vall{\'e}e~Poussin}{V.~P.}{Charles Louis Xavier~Joseph}{C.~L. X.~J.}{de~la}{d.~l.}{}{}}%
+      {{Vall{\'e}e~Poussin}{V.\,P.}{Charles Louis Xavier~Joseph}{C.\,L.\,X.\,J.}{de~la}{d.\,l.}{}{}}%
     }
     \strng{namehash}{dlVPCLXJ1}
     \strng{fullhash}{dlVPCLXJ1}
@@ -764,6 +764,7 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 
 # Biber options
 Biber::Config->setoption('bblencoding', 'latin1');
+Biber::Config->setoption('joins', {inits => '\,'});
 
 # Now generate the information
 $biber->prepare;

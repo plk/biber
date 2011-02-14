@@ -377,7 +377,8 @@ sub _gen_initials {
       push @strings, substr($str, 0, 1);
     }
   }
-  return (join('.~', @strings) . '.', join('', @strings));
+  return (join('.' . Biber::Config->getoption('joins')->{inits}, @strings) . '.',
+          join('', @strings));
 }
 
 

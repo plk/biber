@@ -632,10 +632,10 @@ sub parsename {
   $fi_f->set_text(BTN_FIRST, undef, undef, undef, '.');
   $pi_f->set_text(BTN_VON,   undef, undef, undef, '.');
   $si_f->set_text(BTN_JR,    undef, undef, undef, '.');
-  $li_f->set_options(BTN_LAST,  1, BTJ_MAYTIE, BTJ_NOTHING);
-  $fi_f->set_options(BTN_FIRST, 1, BTJ_MAYTIE, BTJ_NOTHING);
-  $pi_f->set_options(BTN_VON,   1, BTJ_MAYTIE, BTJ_NOTHING);
-  $si_f->set_options(BTN_JR,    1, BTJ_MAYTIE, BTJ_NOTHING);
+  $li_f->set_options(BTN_LAST,  1, BTJ_FORCETIE, BTJ_NOTHING);
+  $fi_f->set_options(BTN_FIRST, 1, BTJ_FORCETIE, BTJ_NOTHING);
+  $pi_f->set_options(BTN_VON,   1, BTJ_FORCETIE, BTJ_NOTHING);
+  $si_f->set_options(BTN_JR,    1, BTJ_FORCETIE, BTJ_NOTHING);
 
   # Nothing following truncated initials
   $lit_f->set_text(BTN_LAST,  undef, undef, undef, '');
@@ -647,13 +647,13 @@ sub parsename {
   $pit_f->set_options(BTN_VON,   1, BTJ_NOTHING, BTJ_NOTHING);
   $sit_f->set_options(BTN_JR,    1, BTJ_NOTHING, BTJ_NOTHING);
 
-  $gen_lastname_i    = decode_utf8($nd_name->format($li_f));
+  $gen_lastname_i    = inits(decode_utf8($nd_name->format($li_f)));
   $gen_lastname_it   = decode_utf8($nd_name->format($lit_f));
-  $gen_firstname_i   = decode_utf8($nd_name->format($fi_f));
+  $gen_firstname_i   = inits(decode_utf8($nd_name->format($fi_f)));
   $gen_firstname_it  = decode_utf8($nd_name->format($fit_f));
-  $gen_prefix_i      = decode_utf8($nd_name->format($pi_f));
+  $gen_prefix_i      = inits(decode_utf8($nd_name->format($pi_f)));
   $gen_prefix_it     = decode_utf8($nd_name->format($pit_f));
-  $gen_suffix_i      = decode_utf8($nd_name->format($si_f));
+  $gen_suffix_i      = inits(decode_utf8($nd_name->format($si_f)));
   $gen_suffix_it     = decode_utf8($nd_name->format($sit_f));
 
   # Only warn about lastnames since there should always be one

@@ -455,9 +455,10 @@ sub parsename {
         if (my $nin = $node->findnodes("./$NS:${n}initial")->get_node(1)) {
           my $ni = $nin->textContent();
           $ni =~ s/\.\z//xms; # normalise initials to without period
-          $ni =~ s/\s+/~/xms; # normalise spaces to ties
           $namec{"${n}_it"} = $ni;
           $namec{"${n}_i"} = $ni . '.';
+          my $ij = Biber::Config->getoption('joins')->{inits};
+          $namec{"${n}_i"} =~ s/\s+/$ij/xms; # normalise spaces to init join
         }
         else {
           ($namec{"${n}_i"}, $namec{"${n}_it"}) = _gen_initials(\@parts);
@@ -587,7 +588,8 @@ sub _gen_initials {
       push @strings, substr($str, 0, 1);
     }
   }
-  return (join('.~', @strings) . '.', join('', @strings));
+  return (join('.' . Biber::Config->getoption('joins')->{inits}, @strings) . '.',
+          join('', @strings));
 }
 
 # parses a range and returns a ref to an array of start and end values
