@@ -449,7 +449,6 @@ sub parsename {
         $logger->debug("Found name component '$n': " . $namec{$n});
         if (my $nin = $node->findnodes("./$NS:${n}initial")->get_node(1)) {
           my $ni = $nin->textContent();
-          $ni =~ s/\.\z//xms; # normalise initials to without period
           $namec{"${n}_i"} = [$ni];
         }
         else {
@@ -462,8 +461,6 @@ sub parsename {
         $logger->debug("Found name component '$n': $t");
         if (my $nin = $node->findnodes("./$NS:${n}initial")->get_node(1)) {
           my $ni = $nin->textContent();
-          $ni =~ s/\.\z//xms; # normalise initials to without period
-          $ni =~ s/\s+/~/xms; # normalise spaces to ties
           $namec{"${n}_i"} = [$ni];
         }
         else {
@@ -559,8 +556,7 @@ sub _join_name_parts {
   return $namestring;
 }
 
-# Passed an array ref of strings, returns an array of two strings,
-# the first is the TeX initials and the second the terse initials
+# Passed an array ref of strings, returns an array ref of initials
 sub _gen_initials {
   my $strings_ref = shift;
   my $strings;
