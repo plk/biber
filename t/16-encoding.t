@@ -20,10 +20,10 @@ Biber::Config->setoption('sortlocale', 'C');
 
 my $encode1 = q|  \entry{testŠ}{book}{}
     \name{labelname}{1}{%
-      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+      {{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+      {{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%
@@ -43,10 +43,10 @@ my $encode1 = q|  \entry{testŠ}{book}{}
 
 my $encode2 = q|  \entry{test1}{book}{}
     \name{labelname}{1}{%
-      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+      {{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+      {{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%
@@ -66,10 +66,10 @@ my $encode2 = q|  \entry{test1}{book}{}
 
 my $encode3 = q|  \entry{test1}{book}{}
     \name{labelname}{1}{%
-      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+      {{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+      {{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%
@@ -89,10 +89,10 @@ my $encode3 = q|  \entry{test1}{book}{}
 
 my $encode5 = q|  \entry{test}{book}{}
     \name{labelname}{1}{%
-      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+      {{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+      {{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%
@@ -112,10 +112,10 @@ my $encode5 = q|  \entry{test}{book}{}
 
 my $encode6 = q|  \entry{test}{book}{}
     \name{labelname}{1}{%
-      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+      {{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+      {{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%
@@ -135,10 +135,10 @@ my $encode6 = q|  \entry{test}{book}{}
 
 my $encode7 = q|  \entry{test}{book}{}
     \name{labelname}{1}{%
-      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+      {{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Encalcer}{E}{Edward}{E}{}{}{}{}}%
+      {{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%

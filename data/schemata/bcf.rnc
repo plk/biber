@@ -37,7 +37,6 @@ start =
       singletitle,
       sortalphaothers?,
       sortlos,
-      terseinits,
       uniquename,
       useauthor,
       useeditor,
@@ -332,12 +331,6 @@ filter = element bcf:filter {
 
 
 # option definitions
-terseinits =
-  element bcf:option {
-    attribute type { "singlevalued" },
-    element bcf:key { "terseinits" },
-    element bcf:value { "0" | "1" }
-  }
 useprefix =
   element bcf:option {
     attribute type { "singlevalued" },

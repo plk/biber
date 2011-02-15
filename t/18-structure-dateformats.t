@@ -50,12 +50,12 @@ my $l12 = [ "Overwriting field 'month' with month value from field 'date' for en
 
 my $l13c = q|  \entry{L13}{book}{}
     \name{labelname}{2}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
-      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{2}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
-      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Oxford}%
@@ -76,12 +76,12 @@ my $l13c = q|  \entry{L13}{book}{}
 
 my $l14 = q|  \entry{L14}{book}{}
     \name{labelname}{2}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
-      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{2}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
-      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Oxford}%
@@ -104,12 +104,12 @@ my $l14 = q|  \entry{L14}{book}{}
 
 my $l15 = q|  \entry{L15}{book}{}
     \name{labelname}{2}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
-      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{2}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
-      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Oxford}%
@@ -125,12 +125,12 @@ my $l15 = q|  \entry{L15}{book}{}
 
 my $l16 = q|  \entry{L16}{proceedings}{}
     \name{labelname}{2}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
-      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{2}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
-      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Oxford}%
@@ -151,12 +151,12 @@ my $l16 = q|  \entry{L16}{proceedings}{}
 
 my $l17 = q|  \entry{L17}{proceedings}{}
     \name{labelname}{2}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
-      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{2}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
-      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Oxford}%
@@ -191,12 +191,12 @@ my $l17 = q|  \entry{L17}{proceedings}{}
 
 my $l17c = q|  \entry{L17}{proceedings}{}
     \name{labelname}{2}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
-      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{2}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
-      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Oxford}%
@@ -230,12 +230,12 @@ my $l17c = q|  \entry{L17}{proceedings}{}
 
 my $l17e = q|  \entry{L17}{proceedings}{}
     \name{labelname}{2}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
-      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{2}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
-      {{Abrahams}{A.}{Albert}{A.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Oxford}%

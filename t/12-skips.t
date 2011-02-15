@@ -33,10 +33,10 @@ my $bibentries = $section->bibentries;
 my $set1 = q|  \entry{seta}{set}{}
     \set{set:membera,set:memberb,set:memberc}
     \name{labelname}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
@@ -55,10 +55,10 @@ my $set1 = q|  \entry{seta}{set}{}
 my $set2 = q|  \entry{set:membera}{book}{}
     \inset{seta}
     \name{labelname}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
@@ -73,10 +73,10 @@ my $set2 = q|  \entry{set:membera}{book}{}
 my $set3 = q|  \entry{set:memberb}{book}{}
     \inset{seta}
     \name{labelname}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
@@ -90,10 +90,10 @@ my $set3 = q|  \entry{set:memberb}{book}{}
 my $set4 = q|  \entry{set:memberc}{book}{}
     \inset{seta}
     \name{labelname}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
@@ -106,10 +106,10 @@ my $set4 = q|  \entry{set:memberc}{book}{}
 
 my $noset1 = q|  \entry{noseta}{book}{}
     \name{labelname}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
@@ -126,10 +126,10 @@ my $noset1 = q|  \entry{noseta}{book}{}
 
 my $noset2 = q|  \entry{nosetb}{book}{}
     \name{labelname}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
@@ -146,10 +146,10 @@ my $noset2 = q|  \entry{nosetb}{book}{}
 
 my $noset3 = q|  \entry{nosetc}{book}{}
     \name{labelname}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{DJ1}
     \strng{fullhash}{DJ1}
@@ -166,10 +166,10 @@ my $noset3 = q|  \entry{nosetc}{book}{}
 
 my $sk4 = q|  \entry{skip4}{article}{dataonly}
     \name{labelname}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Cambridge}%

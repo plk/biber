@@ -57,7 +57,6 @@
           <ref name="sortalphaothers"/>
         </optional>
         <ref name="sortlos"/>
-        <ref name="terseinits"/>
         <ref name="uniquename"/>
         <ref name="useauthor"/>
         <ref name="useeditor"/>
@@ -802,22 +801,6 @@
     </element>
   </define>
   <!-- option definitions -->
-  <define name="terseinits">
-    <element name="bcf:option">
-      <attribute name="type">
-        <value>singlevalued</value>
-      </attribute>
-      <element name="bcf:key">
-        <value>terseinits</value>
-      </element>
-      <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
-      </element>
-    </element>
-  </define>
   <define name="useprefix">
     <element name="bcf:option">
       <attribute name="type">

@@ -305,9 +305,9 @@ sub _name {
       $logger->debug("Found name component 'firstname': $firstname") if $firstname;
       $logger->debug("Found name component 'suffix': $suffix") if $suffix;
 
-      my @fni = _gen_initials([split(/\s/, $firstname)]) if $firstname;
-      my @lni = _gen_initials([split(/\s/, $lastname)]) if $lastname;
-      my @si = _gen_initials([split(/\s/, $suffix)]) if $suffix;
+      my $fni = _gen_initials([split(/\s/, $firstname)]) if $firstname;
+      my $lni = _gen_initials([split(/\s/, $lastname)]) if $lastname;
+      my $si = _gen_initials([split(/\s/, $suffix)]) if $suffix;
 
       my $namestring = '';
 
@@ -328,21 +328,18 @@ sub _name {
       # Construct $nameinitstring
       my $nameinitstr = '';
       $nameinitstr .= $lastname if $lastname;
-      $nameinitstr .= '_' . $si[1] if $suffix;
-      $nameinitstr .= '_' . $fni[1] if $firstname;
+      $nameinitstr .= '_' . join('', @$si) if $suffix;
+      $nameinitstr .= '_' . join('', @$fni) if $firstname;
       $nameinitstr =~ s/\s+/_/g;
       $nameinitstr =~ s/~/_/g;
 
       my $name_obj = Biber::Entry::Name->new(
         firstname       => $firstname || undef,
-        firstname_i     => $firstname ? $fni[0] : undef,
-        firstname_it    => $firstname ? $fni[1] : undef,
+        firstname_i     => $firstname ? $fni : undef,
         lastname        => $lastname,
-        lastname_i      => $lni[0],
-        lastname_it     => $lni[1],
+        lastname_i      => $lni,
         suffix          => $suffix || undef,
-        suffix_i        => $suffix ? $si[0] : undef,
-        suffix_it       => $suffix ? $si[1] : undef,
+        suffix_i        => $suffix ? $si : undef,
         namestring      => $namestring,
         nameinitstring  => $nameinitstr
       );
@@ -366,19 +363,18 @@ sub _name {
 # the first is the TeX initials and the second the terse initials
 sub _gen_initials {
   my $strings_ref = shift;
-  my @strings;
+  my $strings;
   foreach my $str (@$strings_ref) {
     my $chr = substr($str, 0, 1);
     # Keep diacritics with their following characters
     if ($chr =~ m/\p{Dia}/) {
-      push @strings, substr($str, 0, 2);
+      push @$strings, substr($str, 0, 2);
     }
     else {
-      push @strings, substr($str, 0, 1);
+      push @$strings, substr($str, 0, 1);
     }
   }
-  return (join('.' . Biber::Config->getoption('joins')->{inits}, @strings) . '.',
-          join('', @strings));
+  return $strings;
 }
 
 

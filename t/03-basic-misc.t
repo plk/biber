@@ -64,36 +64,36 @@ is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
 my $murray1 = q|  \entry{murray}{article}{}
     \name{labelname}{14}{%
-      {{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
-      {{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
-      {{Zhong}{Z}{Chuan-Jian}{CJ}{}{}{}{}}%
-      {{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
-      {{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
-      {{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
-      {{Londono}{L}{J.~David}{JD}{}{}{}{}}%
-      {{Green}{G}{Stephen~J.}{SJ}{}{}{}{}}%
-      {{Stokes}{S}{Jennifer~J.}{JJ}{}{}{}{}}%
-      {{Wignall}{W}{George~D.}{GD}{}{}{}{}}%
-      {{Glish}{G}{Gary~L.}{GL}{}{}{}{}}%
-      {{Porter}{P}{Marc~D.}{MD}{}{}{}{}}%
-      {{Evans}{E}{Neal~D.}{ND}{}{}{}{}}%
-      {{Murray}{M}{Royce~W.}{RW}{}{}{}{}}%
+      {{Hostetler}{H\bibinitperiod}{Michael~J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Wingate}{W\bibinitperiod}{Julia~E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      {{Zhong}{Z\bibinitperiod}{Chuan-Jian}{CJ\bibinitperiod}{}{}{}{}}%
+      {{Harris}{H\bibinitperiod}{Jay~E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      {{Vachet}{V\bibinitperiod}{Richard~W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      {{Clark}{C\bibinitperiod}{Michael~R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+      {{Londono}{L\bibinitperiod}{J.~David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Green}{G\bibinitperiod}{Stephen~J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Stokes}{S\bibinitperiod}{Jennifer~J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Wignall}{W\bibinitperiod}{George~D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Glish}{G\bibinitperiod}{Gary~L.}{G\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+      {{Porter}{P\bibinitperiod}{Marc~D.}{M\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Evans}{E\bibinitperiod}{Neal~D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Murray}{M\bibinitperiod}{Royce~W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{14}{%
-      {{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
-      {{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
-      {{Zhong}{Z}{Chuan-Jian}{CJ}{}{}{}{}}%
-      {{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
-      {{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
-      {{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
-      {{Londono}{L}{J.~David}{JD}{}{}{}{}}%
-      {{Green}{G}{Stephen~J.}{SJ}{}{}{}{}}%
-      {{Stokes}{S}{Jennifer~J.}{JJ}{}{}{}{}}%
-      {{Wignall}{W}{George~D.}{GD}{}{}{}{}}%
-      {{Glish}{G}{Gary~L.}{GL}{}{}{}{}}%
-      {{Porter}{P}{Marc~D.}{MD}{}{}{}{}}%
-      {{Evans}{E}{Neal~D.}{ND}{}{}{}{}}%
-      {{Murray}{M}{Royce~W.}{RW}{}{}{}{}}%
+      {{Hostetler}{H\bibinitperiod}{Michael~J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Wingate}{W\bibinitperiod}{Julia~E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      {{Zhong}{Z\bibinitperiod}{Chuan-Jian}{CJ\bibinitperiod}{}{}{}{}}%
+      {{Harris}{H\bibinitperiod}{Jay~E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      {{Vachet}{V\bibinitperiod}{Richard~W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      {{Clark}{C\bibinitperiod}{Michael~R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+      {{Londono}{L\bibinitperiod}{J.~David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Green}{G\bibinitperiod}{Stephen~J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Stokes}{S\bibinitperiod}{Jennifer~J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Wignall}{W\bibinitperiod}{George~D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Glish}{G\bibinitperiod}{Gary~L.}{G\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+      {{Porter}{P\bibinitperiod}{Marc~D.}{M\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Evans}{E\bibinitperiod}{Neal~D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Murray}{M\bibinitperiod}{Royce~W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{HMJ+1}
     \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
@@ -118,36 +118,36 @@ my $murray1 = q|  \entry{murray}{article}{}
 
 my $murray2 = q|  \entry{murray}{article}{}
     \name{labelname}{14}{%
-      {{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
-      {{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
-      {{Zhong}{Z}{Chuan-Jian}{CJ}{}{}{}{}}%
-      {{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
-      {{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
-      {{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
-      {{Londono}{L}{J.~David}{JD}{}{}{}{}}%
-      {{Green}{G}{Stephen~J.}{SJ}{}{}{}{}}%
-      {{Stokes}{S}{Jennifer~J.}{JJ}{}{}{}{}}%
-      {{Wignall}{W}{George~D.}{GD}{}{}{}{}}%
-      {{Glish}{G}{Gary~L.}{GL}{}{}{}{}}%
-      {{Porter}{P}{Marc~D.}{MD}{}{}{}{}}%
-      {{Evans}{E}{Neal~D.}{ND}{}{}{}{}}%
-      {{Murray}{M}{Royce~W.}{RW}{}{}{}{}}%
+      {{Hostetler}{H\bibinitperiod}{Michael~J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Wingate}{W\bibinitperiod}{Julia~E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      {{Zhong}{Z\bibinitperiod}{Chuan-Jian}{CJ\bibinitperiod}{}{}{}{}}%
+      {{Harris}{H\bibinitperiod}{Jay~E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      {{Vachet}{V\bibinitperiod}{Richard~W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      {{Clark}{C\bibinitperiod}{Michael~R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+      {{Londono}{L\bibinitperiod}{J.~David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Green}{G\bibinitperiod}{Stephen~J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Stokes}{S\bibinitperiod}{Jennifer~J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Wignall}{W\bibinitperiod}{George~D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Glish}{G\bibinitperiod}{Gary~L.}{G\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+      {{Porter}{P\bibinitperiod}{Marc~D.}{M\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Evans}{E\bibinitperiod}{Neal~D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Murray}{M\bibinitperiod}{Royce~W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{14}{%
-      {{Hostetler}{H}{Michael~J.}{MJ}{}{}{}{}}%
-      {{Wingate}{W}{Julia~E.}{JE}{}{}{}{}}%
-      {{Zhong}{Z}{Chuan-Jian}{CJ}{}{}{}{}}%
-      {{Harris}{H}{Jay~E.}{JE}{}{}{}{}}%
-      {{Vachet}{V}{Richard~W.}{RW}{}{}{}{}}%
-      {{Clark}{C}{Michael~R.}{MR}{}{}{}{}}%
-      {{Londono}{L}{J.~David}{JD}{}{}{}{}}%
-      {{Green}{G}{Stephen~J.}{SJ}{}{}{}{}}%
-      {{Stokes}{S}{Jennifer~J.}{JJ}{}{}{}{}}%
-      {{Wignall}{W}{George~D.}{GD}{}{}{}{}}%
-      {{Glish}{G}{Gary~L.}{GL}{}{}{}{}}%
-      {{Porter}{P}{Marc~D.}{MD}{}{}{}{}}%
-      {{Evans}{E}{Neal~D.}{ND}{}{}{}{}}%
-      {{Murray}{M}{Royce~W.}{RW}{}{}{}{}}%
+      {{Hostetler}{H\bibinitperiod}{Michael~J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Wingate}{W\bibinitperiod}{Julia~E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      {{Zhong}{Z\bibinitperiod}{Chuan-Jian}{CJ\bibinitperiod}{}{}{}{}}%
+      {{Harris}{H\bibinitperiod}{Jay~E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      {{Vachet}{V\bibinitperiod}{Richard~W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      {{Clark}{C\bibinitperiod}{Michael~R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+      {{Londono}{L\bibinitperiod}{J.~David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Green}{G\bibinitperiod}{Stephen~J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Stokes}{S\bibinitperiod}{Jennifer~J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Wignall}{W\bibinitperiod}{George~D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Glish}{G\bibinitperiod}{Gary~L.}{G\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+      {{Porter}{P\bibinitperiod}{Marc~D.}{M\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Evans}{E\bibinitperiod}{Neal~D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Murray}{M\bibinitperiod}{Royce~W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{HMJ+1}
     \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
@@ -172,10 +172,10 @@ my $murray2 = q|  \entry{murray}{article}{}
 
 my $t1 = q|  \entry{t1}{misc}{}
     \name{labelname}{1}{%
-      {{Brown}{B}{Bill}{B}{}{}{}{}}%
+      {{Brown}{B\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Brown}{B}{Bill}{B}{}{}{}{}}%
+      {{Brown}{B\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}
@@ -192,10 +192,10 @@ my $t1 = q|  \entry{t1}{misc}{}
 
 my $t2 = q|  \entry{t2}{misc}{}
     \name{labelname}{1}{%
-      {{Brown}{B}{Bill}{B}{}{}{}{}}%
+      {{Brown}{B\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Brown}{B}{Bill}{B}{}{}{}{}}%
+      {{Brown}{B\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}

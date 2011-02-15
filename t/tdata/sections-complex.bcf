@@ -83,10 +83,6 @@
       <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>terseinits</bcf:key>
-      <bcf:value>0</bcf:value>
-    </bcf:option>
-    <bcf:option type="singlevalued">
       <bcf:key>uniquename</bcf:key>
       <bcf:value>0</bcf:value>
     </bcf:option>

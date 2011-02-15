@@ -31,10 +31,10 @@ my $out = $biber->get_output_obj;
 my $string1 = q|  \entry{Elias1955}{set}{}
     \set{Elias1955a,Elias1955b}
     \name{labelname}{1}{%
-      {{Elias}{E.}{P.}{P.}{}{}{}{}}%
+      {{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Elias}{E.}{P.}{P.}{}{}{}{}}%
+      {{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{EP1}
     \strng{fullhash}{EP1}
@@ -59,10 +59,10 @@ my $string1 = q|  \entry{Elias1955}{set}{}
 my $string2 = q|  \entry{Elias1955a}{article}{}
     \inset{Elias1955}
     \name{labelname}{1}{%
-      {{Elias}{E.}{P.}{P.}{}{}{}{}}%
+      {{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Elias}{E.}{P.}{P.}{}{}{}{}}%
+      {{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{EP1}
     \strng{fullhash}{EP1}
@@ -86,10 +86,10 @@ my $string2 = q|  \entry{Elias1955a}{article}{}
 my $string3 = q|  \entry{Elias1955b}{article}{}
     \inset{Elias1955}
     \name{labelname}{1}{%
-      {{Elias}{E.}{P.}{P.}{}{}{}{}}%
+      {{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Elias}{E.}{P.}{P.}{}{}{}{}}%
+      {{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{EP1}
     \strng{fullhash}{EP1}

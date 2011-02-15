@@ -416,20 +416,15 @@ sub _name {
     Returns an object which internally looks a bit like this:
 
     { firstname     => 'John',
-      firstname_i   => 'J.',
-      firstname_it  => 'J',
+      firstname_i   => 'J',
       middlename    => 'Fred',
-      middlename_i  => 'F.',
-      middlename_it => 'F',
+      middlename_i  => 'F',
       lastname      => 'Doe',
-      lastname_i    => 'D.',
-      lastname_it   => 'D',
+      lastname_i    => 'D',
       prefix        => undef,
       prefix_i      => undef,
-      prefix_it     => undef,
       suffix        => undef,
       suffix_i      => undef,
-      suffix_it     => undef,
       namestring    => 'Doe, John Fred',
       nameinitstring => 'Doe_JF',
       gender         => sm
@@ -455,13 +450,10 @@ sub parsename {
         if (my $nin = $node->findnodes("./$NS:${n}initial")->get_node(1)) {
           my $ni = $nin->textContent();
           $ni =~ s/\.\z//xms; # normalise initials to without period
-          $namec{"${n}_it"} = $ni;
-          $namec{"${n}_i"} = $ni . '.';
-          my $ij = Biber::Config->getoption('joins')->{inits};
-          $namec{"${n}_i"} =~ s/\s+/$ij/xms; # normalise spaces to init join
+          $namec{"${n}_i"} = [$ni];
         }
         else {
-          ($namec{"${n}_i"}, $namec{"${n}_it"}) = _gen_initials(\@parts);
+          $namec{"${n}_i"} = _gen_initials(\@parts);
         }
       }
       # with no parts
@@ -472,11 +464,10 @@ sub parsename {
           my $ni = $nin->textContent();
           $ni =~ s/\.\z//xms; # normalise initials to without period
           $ni =~ s/\s+/~/xms; # normalise spaces to ties
-          $namec{"${n}_it"} = $ni;
-          $namec{"${n}_i"} = $ni . '.';
+          $namec{"${n}_i"} = [$ni];
         }
         else {
-          ($namec{"${n}_i"}, $namec{"${n}_it"}) = _gen_initials([$t]);
+          $namec{"${n}_i"} = _gen_initials([$t]);
         }
       }
     }
@@ -519,30 +510,25 @@ sub parsename {
 
   # Construct $nameinitstring
   my $nameinitstr = '';
-  $nameinitstr .= $namec{prefix_it} . '_' if ( $usepre and exists($namec{prefix}) );
+  $nameinitstr .= join('', @{$namec{prefix_i}}) . '_' if ( $usepre and exists($namec{prefix}) );
   $nameinitstr .= $namec{last} if exists($namec{last});
-  $nameinitstr .= '_' . $namec{suffix_it} if exists($namec{suffix});
-  $nameinitstr .= '_' . $namec{first_it} if exists($namec{first});
-  $nameinitstr .= '_' . $namec{middle_it} if exists($namec{middle});
+  $nameinitstr .= '_' . join('', @{$namec{suffix_i}}) if exists($namec{suffix});
+  $nameinitstr .= '_' . join('', @{$namec{first_i}}) if exists($namec{first});
+  $nameinitstr .= '_' . join('', @{$namec{middle_i}}) if exists($namec{middle});
   $nameinitstr =~ s/\s+/_/g;
   $nameinitstr =~ s/~/_/g;
 
   return Biber::Entry::Name->new(
     firstname       => $namec{first} // undef,
     firstname_i     => exists($namec{first}) ? $namec{first_i} : undef,
-    firstname_it    => exists($namec{first}) ? $namec{first_it} : undef,
     middlename      => $namec{middle} // undef,
     middlename_i    => exists($namec{middle}) ? $namec{middle_i} : undef,
-    middlename_it   => exists($namec{middle}) ? $namec{middle_it} : undef,
     lastname        => $namec{last} // undef,
     lastname_i      => exists($namec{last}) ? $namec{last_i} : undef,
-    lastname_it     => exists($namec{last}) ? $namec{last_it} : undef,
     prefix          => $namec{prefix} // undef,
     prefix_i        => exists($namec{prefix}) ? $namec{prefix_i} : undef,
-    prefix_it       => exists($namec{prefix}) ? $namec{prefix_it} : undef,
     suffix          => $namec{suffix} // undef,
     suffix_i        => exists($namec{suffix}) ? $namec{suffix_i} : undef,
-    suffix_it       => exists($namec{suffix}) ? $namec{suffix_it} : undef,
     namestring      => $namestring,
     nameinitstring  => $nameinitstr,
     gender          => $gender
@@ -577,19 +563,18 @@ sub _join_name_parts {
 # the first is the TeX initials and the second the terse initials
 sub _gen_initials {
   my $strings_ref = shift;
-  my @strings;
+  my $strings;
   foreach my $str (@$strings_ref) {
     my $chr = substr($str, 0, 1);
     # Keep diacritics with their following characters
     if ($chr =~ m/\p{Dia}/) {
-      push @strings, substr($str, 0, 2);
+      push @$strings, substr($str, 0, 2);
     }
     else {
-      push @strings, substr($str, 0, 1);
+      push @$strings, substr($str, 0, 1);
     }
   }
-  return (join('.' . Biber::Config->getoption('joins')->{inits}, @strings) . '.',
-          join('', @strings));
+  return $strings;
 }
 
 # parses a range and returns a ref to an array of start and end values

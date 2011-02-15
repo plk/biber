@@ -32,18 +32,18 @@ my $bibentries = $section->bibentries;
 
 my $l1 = q|  \entry{test1}{article}{}
     \name{labelname}{5}{%
-      {{Baldwin}{B.}{S.A.}{S.}{}{}{}{}}%
-      {{Fugaccia}{F.}{I.}{I.}{}{}{}{}}%
-      {{Brown}{B.}{D.R.}{D.}{}{}{}{}}%
-      {{Brown}{B.}{L.V.}{L.}{}{}{}{}}%
-      {{Scheff}{S.}{S.W.}{S.}{}{}{}{}}%
+      {{Baldwin}{B\bibinitperiod}{S.A.}{S\bibinitperiod}{}{}{}{}}%
+      {{Fugaccia}{F\bibinitperiod}{I.}{I\bibinitperiod}{}{}{}{}}%
+      {{Brown}{B\bibinitperiod}{D.R.}{D\bibinitperiod}{}{}{}{}}%
+      {{Brown}{B\bibinitperiod}{L.V.}{L\bibinitperiod}{}{}{}{}}%
+      {{Scheff}{S\bibinitperiod}{S.W.}{S\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{5}{%
-      {{Baldwin}{B.}{S.A.}{S.}{}{}{}{}}%
-      {{Fugaccia}{F.}{I.}{I.}{}{}{}{}}%
-      {{Brown}{B.}{D.R.}{D.}{}{}{}{}}%
-      {{Brown}{B.}{L.V.}{L.}{}{}{}{}}%
-      {{Scheff}{S.}{S.W.}{S.}{}{}{}{}}%
+      {{Baldwin}{B\bibinitperiod}{S.A.}{S\bibinitperiod}{}{}{}{}}%
+      {{Fugaccia}{F\bibinitperiod}{I.}{I\bibinitperiod}{}{}{}{}}%
+      {{Brown}{B\bibinitperiod}{D.R.}{D\bibinitperiod}{}{}{}{}}%
+      {{Brown}{B\bibinitperiod}{L.V.}{L\bibinitperiod}{}{}{}{}}%
+      {{Scheff}{S\bibinitperiod}{S.W.}{S\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{BS+1}
     \strng{fullhash}{BSFIBDBLSS1}
@@ -60,13 +60,13 @@ my $l1 = q|  \entry{test1}{article}{}
 
 my $l2 = q|  \entry{test2}{book}{}
     \name{labelname}{1}{%
-      {{Smith}{S.}{John}{J.}{}{}{III}{I.}}%
+      {{Smith}{S\bibinitperiod}{John}{J\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
     }
     \name{author}{1}{%
-      {{Smith}{S.}{John}{J.}{}{}{III}{I.}}%
+      {{Smith}{S\bibinitperiod}{John}{J\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
     }
     \name{editor}{1}{%
-      {{Brown}{B.}{Alan}{A.}{}{}{}{}}%
+      {{Brown}{B\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{SIJ1}
     \strng{fullhash}{SIJ1}

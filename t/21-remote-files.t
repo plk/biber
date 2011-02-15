@@ -33,16 +33,16 @@ my $bibentries = $section->bibentries;
 
 my $cu1 = q|  \entry{citeulike:8283461}{article}{}
     \name{labelname}{4}{%
-      {{Marazziti}{M.}{D.}{D.}{}{}{}{}}%
-      {{Akiskal}{A.}{H.~S.}{H.~S.}{}{}{}{}}%
-      {{Rossi}{R.}{A.}{A.}{}{}{}{}}%
-      {{Cassano}{C.}{G.~B.}{G.~B.}{}{}{}{}}%
+      {{Marazziti}{M\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
+      {{Akiskal}{A\bibinitperiod}{H.~S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+      {{Rossi}{R\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
+      {{Cassano}{C\bibinitperiod}{G.~B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{4}{%
-      {{Marazziti}{M.}{D.}{D.}{}{}{}{}}%
-      {{Akiskal}{A.}{H.~S.}{H.~S.}{}{}{}{}}%
-      {{Rossi}{R.}{A.}{A.}{}{}{}{}}%
-      {{Cassano}{C.}{G.~B.}{G.~B.}{}{}{}{}}%
+      {{Marazziti}{M\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
+      {{Akiskal}{A\bibinitperiod}{H.~S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+      {{Rossi}{R\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
+      {{Cassano}{C\bibinitperiod}{G.~B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{MD+1}
     \strng{fullhash}{MDAHSRACGB1}
@@ -68,12 +68,12 @@ my $cu1 = q|  \entry{citeulike:8283461}{article}{}
 
 my $dl1 = q|  \entry{AbdelbarH98}{article}{}
     \name{labelname}{2}{%
-      {{Abdelbar}{A.}{A.M.}{A.}{}{}{}{}}%
-      {{Hedetniemi}{H.}{S.M.}{S.}{}{}{}{}}%
+      {{Abdelbar}{A\bibinitperiod}{A.M.}{A\bibinitperiod}{}{}{}{}}%
+      {{Hedetniemi}{H\bibinitperiod}{S.M.}{S\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{2}{%
-      {{Abdelbar}{A.}{A.M.}{A.}{}{}{}{}}%
-      {{Hedetniemi}{H.}{S.M.}{S.}{}{}{}{}}%
+      {{Abdelbar}{A\bibinitperiod}{A.M.}{A\bibinitperiod}{}{}{}{}}%
+      {{Hedetniemi}{H\bibinitperiod}{S.M.}{S\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{AAHS1}
     \strng{fullhash}{AAHS1}
@@ -90,7 +90,7 @@ my $dl1 = q|  \entry{AbdelbarH98}{article}{}
 |;
 
 is( $out->get_output_entry($main,'citeulike:8283461'), $cu1, 'Fetch from citeulike') ;
-is( $out->get_output_entry($main,'AbdelbarH98'), $dl1, 'Fetch from plan bib download') ;
+is( $out->get_output_entry($main,'AbdelbarH98'), $dl1, 'Fetch from plain bib download') ;
 
 unlink <*.utf8>;
 

@@ -31,10 +31,10 @@ my $out = $biber->get_output_obj;
 my $string1 = q|  \entry{Static1}{set}{}
     \set{Static2,Static3,Static4}
     \name{labelname}{1}{%
-      {{Bumble}{B.}{Brian}{B.}{}{}{}{}}%
+      {{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Bumble}{B.}{Brian}{B.}{}{}{}{}}%
+      {{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}
@@ -50,10 +50,10 @@ my $string1 = q|  \entry{Static1}{set}{}
 my $string2 = q|  \entry{Static2}{book}{}
     \inset{Static1}
     \name{labelname}{1}{%
-      {{Bumble}{B.}{Brian}{B.}{}{}{}{}}%
+      {{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Bumble}{B.}{Brian}{B.}{}{}{}{}}%
+      {{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}
@@ -68,10 +68,10 @@ my $string2 = q|  \entry{Static2}{book}{}
 my $string3 = q|  \entry{Static3}{book}{}
     \inset{Static1}
     \name{labelname}{1}{%
-      {{Crenellation}{C.}{Clive}{C.}{}{}{}{}}%
+      {{Crenellation}{C\bibinitperiod}{Clive}{C\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Crenellation}{C.}{Clive}{C.}{}{}{}{}}%
+      {{Crenellation}{C\bibinitperiod}{Clive}{C\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{CC1}
     \strng{fullhash}{CC1}
@@ -85,10 +85,10 @@ my $string3 = q|  \entry{Static3}{book}{}
 my $string4 = q|  \entry{Static4}{book}{}
     \inset{Static1}
     \name{labelname}{1}{%
-      {{Dingle}{D.}{Derek}{D.}{}{}{}{}}%
+      {{Dingle}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Dingle}{D.}{Derek}{D.}{}{}{}{}}%
+      {{Dingle}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{DD1}
     \strng{fullhash}{DD1}
@@ -103,10 +103,10 @@ my $string4 = q|  \entry{Static4}{book}{}
 # without citation of a set it is a member of
 my $string5 = q|  \entry{Static2}{book}{}
     \name{labelname}{1}{%
-      {{Bumble}{B.}{Brian}{B.}{}{}{}{}}%
+      {{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Bumble}{B.}{Brian}{B.}{}{}{}{}}%
+      {{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}

@@ -32,10 +32,10 @@ my $bibentries = $section->bibentries;
 
 my $un1 = q|  \entry{un1}{book}{}
     \name{labelname}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Cambridge}%
@@ -57,10 +57,10 @@ my $un1 = q|  \entry{un1}{book}{}
 
 my $un2 = q|  \entry{un2}{book}{}
     \name{labelname}{1}{%
-      {{Doe}{D.}{Edward}{E.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Doe}{D.}{Edward}{E.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Cambridge}%
@@ -82,10 +82,10 @@ my $un2 = q|  \entry{un2}{book}{}
 
 my $un3 = q|  \entry{un3}{book}{}
     \name{labelname}{1}{%
-      {{Doe}{D.}{Jane}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{Jane}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Doe}{D.}{Jane}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{Jane}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Cambridge}%
@@ -107,12 +107,12 @@ my $un3 = q|  \entry{un3}{book}{}
 
 my $un4 = q|  \entry{un4}{book}{}
     \name{labelname}{2}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
-      {{Mills}{M.}{Mike}{M.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{Mills}{M\bibinitperiod}{Mike}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{2}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
-      {{Mills}{M.}{Mike}{M.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{Mills}{M\bibinitperiod}{Mike}{M\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Cambridge}%
@@ -134,14 +134,14 @@ my $un4 = q|  \entry{un4}{book}{}
 
 my $un5 = q|  \entry{un5}{book}{}
     \name{labelname}{1}{%
-      {{Chaps}{C.}{}{}{}{}{}{}}%
+      {{Chaps}{C\bibinitperiod}{}{}{}{}{}{}}%
     }
     \name{author}{2}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
-      {{Mills}{M.}{Mike}{M.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{Mills}{M\bibinitperiod}{Mike}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{shortauthor}{1}{%
-      {{Chaps}{C.}{}{}{}{}{}{}}%
+      {{Chaps}{C\bibinitperiod}{}{}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Cambridge}%

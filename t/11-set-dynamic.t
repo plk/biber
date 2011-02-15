@@ -35,10 +35,10 @@ my $out = $biber->get_output_obj;
 my $string1 = q|  \entry{DynSet}{set}{}
     \set{Dynamic1,Dynamic2,Dynamic3}
     \name{labelname}{1}{%
-      {{Dynamism}{D.}{Derek}{D.}{}{}{}{}}%
+      {{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Dynamism}{D.}{Derek}{D.}{}{}{}{}}%
+      {{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{DD1}
     \strng{fullhash}{DD1}
@@ -55,10 +55,10 @@ my $string1 = q|  \entry{DynSet}{set}{}
 my $string2 = q|  \entry{Dynamic1}{book}{}
     \inset{DynSet}
     \name{labelname}{1}{%
-      {{Dynamism}{D.}{Derek}{D.}{}{}{}{}}%
+      {{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Dynamism}{D.}{Derek}{D.}{}{}{}{}}%
+      {{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{DD1}
     \strng{fullhash}{DD1}
@@ -74,10 +74,10 @@ my $string2 = q|  \entry{Dynamic1}{book}{}
 my $string3 = q|  \entry{Dynamic2}{book}{}
     \inset{DynSet}
     \name{labelname}{1}{%
-      {{Bunting}{B.}{Brian}{B.}{}{}{}{}}%
+      {{Bunting}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Bunting}{B.}{Brian}{B.}{}{}{}{}}%
+      {{Bunting}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{BB1}
     \strng{fullhash}{BB1}
@@ -92,10 +92,10 @@ my $string3 = q|  \entry{Dynamic2}{book}{}
 my $string4 = q|  \entry{Dynamic3}{book}{}
     \inset{DynSet}
     \name{labelname}{1}{%
-      {{Regardless}{R.}{Roger}{R.}{}{}{}{}}%
+      {{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Regardless}{R.}{Roger}{R.}{}{}{}{}}%
+      {{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{RR1}
     \strng{fullhash}{RR1}
@@ -111,10 +111,10 @@ my $string4 = q|  \entry{Dynamic3}{book}{}
 # without citation of a set it is a member of
 my $string5 = q|  \entry{Dynamic3}{book}{}
     \name{labelname}{1}{%
-      {{Regardless}{R.}{Roger}{R.}{}{}{}{}}%
+      {{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Regardless}{R.}{Roger}{R.}{}{}{}{}}%
+      {{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{RR1}
     \strng{fullhash}{RR1}

@@ -538,18 +538,16 @@ sub normalise_utf8 {
 
 =head2 inits
 
-   Text::BibTeX hard codes the initials seperators, here we fix that
-   We depend on the fact that we always use BTJ_FORCETIE for terse ties in
-   the name parsing code
+   We turn the initials into an array so we can be flexible with them later
 
 =cut
 
 sub inits {
   my $istring = shift;
-  my $sep = Biber::Config->getoption('joins')->{inits};
-  $istring =~ s/~/$sep/gxms;
-  return $istring;
+  return [ split(/~/, $istring) ];
 }
+
+
 
 
 =head1 AUTHOR

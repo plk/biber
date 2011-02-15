@@ -32,283 +32,223 @@ my $main = $section->get_list('MAIN');
 my $bibentries = $section->bibentries;
 
 my $name1 =
-    { firstname      => "John",
-      firstname_i    => "J.",
-      firstname_it   => "J",
-      lastname       => "Doe",
-      lastname_i     => "D.",
-      lastname_it    => "D",
-      nameinitstring => "Doe_J",
-      namestring     => "Doe, John",
+    { firstname      => 'John',
+      firstname_i    => ['J'],
+      lastname       => 'Doe',
+      lastname_i     => ['D'],
+      nameinitstring => 'Doe_J',
+      namestring     => 'Doe, John',
       prefix         => undef,
       prefix_i       => undef,
-      prefix_it      => undef,
       strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
       suffix         => undef,
-      suffix_i       => undef,
-      suffix_it      => undef};
+      suffix_i       => undef};
 my $name2 =
-    { firstname      => "John",
-      firstname_i    => "J.",
-      firstname_it   => "J",
-      lastname       => "Doe",
-      lastname_i     => "D.",
-      lastname_it    => "D",
-      nameinitstring => "Doe_J_J",
-      namestring     => "Doe, Jr, John",
+    { firstname      => 'John',
+      firstname_i    => ['J'],
+      lastname       => 'Doe',
+      lastname_i     => ['D'],
+      nameinitstring => 'Doe_J_J',
+      namestring     => 'Doe, Jr, John',
       prefix         => undef,
       prefix_i       => undef,
-      prefix_it      => undef,
       strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => 0 },
-      suffix         => "Jr",
-      suffix_i       => "J.",
-      suffix_it      => "J" } ;
+      suffix         => 'Jr',
+      suffix_i       => ['J'] } ;
 
 
 
 my $name3 =
-    { firstname      => "Johann~Gottfried",
-      firstname_i    => "J.~G.",
-      firstname_it   => "JG",
-      lastname       => "Berlichingen zu~Hornberg",
-      lastname_i     => "B.~z.~H.",
-      lastname_it    => "BzH",
-      nameinitstring => "v_Berlichingen_zu_Hornberg_JG",
-      namestring     => "von Berlichingen zu Hornberg, Johann Gottfried",
-      prefix         => "von",
-      prefix_i       => "v.",
-      prefix_it      => "v",
+    { firstname      => 'Johann~Gottfried',
+      firstname_i    => ['J', 'G'],
+      lastname       => 'Berlichingen zu~Hornberg',
+      lastname_i     => ['B', 'z', 'H'],
+      nameinitstring => 'v_Berlichingen_zu_Hornberg_JG',
+      namestring     => 'von Berlichingen zu Hornberg, Johann Gottfried',
+      prefix         => 'von',
+      prefix_i       => ['v'],
       strip          => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
       suffix         => undef,
-      suffix_i       => undef,
-      suffix_it      => undef};
+      suffix_i       => undef};
 
 my $name4 =
-    { firstname      => "Johann~Gottfried",
-      firstname_i    => "J.~G.",
-      firstname_it   => "JG",
-      lastname       => "Berlichingen zu~Hornberg",
-      lastname_i     => "B.~z.~H.",
-      lastname_it    => "BzH",
-      nameinitstring => "Berlichingen_zu_Hornberg_JG",
-      namestring     => "von Berlichingen zu Hornberg, Johann Gottfried",
-      prefix         => "von",
-      prefix_i       => "v.",
-      prefix_it      => "v",
+    { firstname      => 'Johann~Gottfried',
+      firstname_i    => ['J', 'G'],
+      lastname       => 'Berlichingen zu~Hornberg',
+      lastname_i     => ['B', 'z', 'H'],
+      nameinitstring => 'Berlichingen_zu_Hornberg_JG',
+      namestring     => 'von Berlichingen zu Hornberg, Johann Gottfried',
+      prefix         => 'von',
+      prefix_i       => ['v'],
       strip          => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
       suffix         => undef,
-      suffix_i       => undef,
-      suffix_it      => undef};
+      suffix_i       => undef};
 
 
 my $name5 =
    {  firstname      => undef,
       firstname_i    => undef,
-      firstname_it   => undef,
-      lastname       => "Robert and Sons, Inc.",
-      lastname_i     => "R.",
-      lastname_it    => "R",
-      nameinitstring => "{Robert_and_Sons,_Inc.}",
-      namestring     => "Robert and Sons, Inc.",
+      lastname       => 'Robert and Sons, Inc.',
+      lastname_i     => ['R'],
+      nameinitstring => '{Robert_and_Sons,_Inc.}',
+      namestring     => 'Robert and Sons, Inc.',
       prefix         => undef,
       prefix_i       => undef,
-      prefix_it      => undef,
       strip          => { firstname => undef, lastname => 1, prefix => undef, suffix => undef },
       suffix         => undef,
-      suffix_i       => undef,
-      suffix_it      => undef};
+      suffix_i       => undef};
 
 
 my $name6 =
-   {  firstname => 'ʿAbdallāh',
-      firstname_i => 'A.',
-      firstname_it => 'A',
-      lastname => 'al-Ṣāliḥ',
-      lastname_i => 'Ṣ.',
-      lastname_it => 'Ṣ',
+   {  firstname      => 'ʿAbdallāh',
+      firstname_i    => ['A'],
+      lastname       => 'al-Ṣāliḥ',
+      lastname_i     => ['Ṣ'],
       prefix         => undef,
       prefix_i       => undef,
-      prefix_it      => undef,
-      suffix => undef,
-      suffix_i => undef,
-      suffix_it => undef,
-      strip => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
-      namestring => 'al-Ṣāliḥ, ʿAbdallāh',
+      suffix         => undef,
+      suffix_i       => undef,
+      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      namestring     => 'al-Ṣāliḥ, ʿAbdallāh',
       nameinitstring => 'al-Ṣāliḥ_A' } ;
 
-
 my $name7 =
-   {  firstname    => 'Jean Charles~Gabriel',
-      firstname_i  => 'J.~C.~G.',
-      firstname_it => 'JCG',
-      lastname_i   => 'V.~P.',
-      lastname_it  => 'VP',
-      lastname     => 'Vallée~Poussin',
-      prefix       => 'de~la',
-      prefix_i     => 'd.~l.',
-      prefix_it    => 'dl',
-      suffix       => undef,
-      suffix_i     => undef,
-      suffix_it    => undef,
-      strip => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
-      namestring => 'de la Vallée Poussin, Jean Charles Gabriel',
+   {  firstname      => 'Jean Charles~Gabriel',
+      firstname_i    => ['J', 'C', 'G'],
+      lastname       => 'Vallée~Poussin',
+      lastname_i     => ['V', 'P'],
+      prefix         => 'de~la',
+      prefix_i       => ['d', 'l'],
+      suffix         => undef,
+      suffix_i       => undef,
+      strip          => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
+      namestring     => 'de la Vallée Poussin, Jean Charles Gabriel',
       nameinitstring => 'dl_Vallée_Poussin_JCG' } ;
+
 my $name8 =
-   {  firstname    => 'Jean Charles Gabriel',
-      firstname_i  => 'J.',
-      firstname_it => 'J',
-      lastname     => 'Vallée~Poussin',
-      lastname_i   => 'V.~P.',
-      lastname_it  => 'VP',
-      prefix       => 'de~la',
-      prefix_i     => 'd.~l.',
-      prefix_it    => 'dl',
-      suffix       => undef,
-      suffix_i     => undef,
-      suffix_it    => undef,
-      strip => { firstname => 1, lastname => 0, prefix => 0, suffix => undef },
-      namestring => 'de la Vallée Poussin, Jean Charles Gabriel',
+   {  firstname      => 'Jean Charles Gabriel',
+      firstname_i    => ['J'],
+      lastname       => 'Vallée~Poussin',
+      lastname_i     => ['V', 'P'],
+      prefix         => 'de~la',
+      prefix_i       => ['d', 'l'],
+      suffix         => undef,
+      suffix_i       => undef,
+      strip          => { firstname => 1, lastname => 0, prefix => 0, suffix => undef },
+      namestring     => 'de la Vallée Poussin, Jean Charles Gabriel',
       nameinitstring => 'Vallée_Poussin_J' } ;
+
 my $name9 =
-   {  firstname     => 'Jean Charles Gabriel {de la}~Vallée',
-      firstname_i   => 'J.~C.~G.~d.~V.',
-      firstname_it  => 'JCGdV',
-      lastname      => 'Poussin',
-      lastname_i    => 'P.',
-      lastname_it   => 'P',
-      prefix       => undef,
-      prefix_i     =>  undef,
-      prefix_it    => undef,
-      suffix        => undef,
-      suffix_i      => undef,
-      suffix_it     => undef,
-      strip => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
-      namestring => 'Poussin, Jean Charles Gabriel {de la} Vallée',
+   {  firstname      => 'Jean Charles Gabriel {de la}~Vallée',
+      firstname_i    => ['J', 'C', 'G', 'd', 'V'],
+      lastname       => 'Poussin',
+      lastname_i     => ['P'],
+      prefix         => undef,
+      prefix_i       => undef,
+      suffix         => undef,
+      suffix_i       => undef,
+      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      namestring     => 'Poussin, Jean Charles Gabriel {de la} Vallée',
       nameinitstring => 'Poussin_JCGdV' } ;
+
 my $name10 =
-   {  firstname    => 'Jean Charles~Gabriel',
-      firstname_i  => 'J.~C.~G.',
-      firstname_it => 'JCG',
-      lastname     => 'Vallée Poussin',
-      lastname_i   => 'V.',
-      lastname_it  => 'V',
-      prefix       => 'de~la',
-      prefix_i     => 'd.~l.',
-      prefix_it    => 'dl',
-      suffix       => undef,
-      suffix_i     => undef,
-      suffix_it    => undef,
-      strip => { firstname => 0, lastname => 1, prefix => 0, suffix => undef },
-      namestring => 'de la Vallée Poussin, Jean Charles Gabriel',
+   {  firstname      => 'Jean Charles~Gabriel',
+      firstname_i    => ['J', 'C', 'G'],
+      lastname       => 'Vallée Poussin',
+      lastname_i     => ['V'],
+      prefix         => 'de~la',
+      prefix_i       => ['d', 'l'],
+      suffix         => undef,
+      suffix_i       => undef,
+      strip          => { firstname => 0, lastname => 1, prefix => 0, suffix => undef },
+      namestring     => 'de la Vallée Poussin, Jean Charles Gabriel',
       nameinitstring => '{Vallée_Poussin}_JCG' } ;
+
 my $name11 =
-   {  firstname    => 'Jean Charles Gabriel',
-      firstname_i  => 'J.',
-      firstname_it => 'J',
-      lastname     => 'Vallée Poussin',
-      lastname_i   => 'V.',
-      lastname_it  => 'V',
-      prefix       => 'de~la',
-      prefix_i     => 'd.~l.',
-      prefix_it    => 'dl',
-      suffix       => undef,
-      suffix_i     => undef,
-      suffix_it    => undef,
-      strip => { firstname => 1, lastname => 1, prefix => 0, suffix => undef },
-      namestring => 'de la Vallée Poussin, Jean Charles Gabriel',
+   {  firstname      => 'Jean Charles Gabriel',
+      firstname_i    => ['J'],
+      lastname       => 'Vallée Poussin',
+      lastname_i     => ['V'],
+      prefix         => 'de~la',
+      prefix_i       => ['d', 'l'],
+      suffix         => undef,
+      suffix_i       => undef,
+      strip          => { firstname => 1, lastname => 1, prefix => 0, suffix => undef },
+      namestring     => 'de la Vallée Poussin, Jean Charles Gabriel',
       nameinitstring => '{Vallée_Poussin}_J' } ;
 
 my $name12 =
-   {  firstname    => 'Jean Charles~Gabriel',
-      firstname_i  => 'J.~C.~G.',
-      firstname_it => 'JCG',
-      lastname      => 'Poussin',
-      lastname_i    => 'P.',
-      lastname_it   => 'P',
-      prefix       => undef,
-      prefix_i     => undef,
-      prefix_it    => undef,
-      suffix       => undef,
-      suffix_i     => undef,
-      suffix_it    => undef,
-      strip => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
-      namestring => 'Poussin, Jean Charles Gabriel',
+   {  firstname      => 'Jean Charles~Gabriel',
+      firstname_i    => ['J', 'C', 'G'],
+      lastname       => 'Poussin',
+      lastname_i     => ['P'],
+      prefix         => undef,
+      prefix_i       => undef,
+      suffix         => undef,
+      suffix_i       => undef,
+      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      namestring     => 'Poussin, Jean Charles Gabriel',
       nameinitstring => 'Poussin_JCG' } ;
+
 my $name13 =
-   {  firstname    => 'Jean~Charles',
-      firstname_i  => 'J.~C.',
-      firstname_it => 'JC',
-      lastname     => 'Poussin Lecoq',
-      lastname_i   => 'P.',
-      lastname_it  => 'P',
-      prefix       => undef,
-      prefix_i     => undef,
-      prefix_it    => undef,
-      suffix       => undef,
-      suffix_i     => undef,
-      suffix_it    => undef,
-      strip => { firstname => 0, lastname => 1, prefix => undef, suffix => undef },
-      namestring => 'Poussin Lecoq, Jean Charles',
+   {  firstname      => 'Jean~Charles',
+      firstname_i    => ['J', 'C'],
+      lastname       => 'Poussin Lecoq',
+      lastname_i     => ['P'],
+      prefix         => undef,
+      prefix_i       => undef,
+      suffix         => undef,
+      suffix_i       => undef,
+      strip          => { firstname => 0, lastname => 1, prefix => undef, suffix => undef },
+      namestring     => 'Poussin Lecoq, Jean Charles',
       nameinitstring => '{Poussin_Lecoq}_JC' } ;
+
 my $name14 =
-   {  firstname    => 'J.~C.~G.',
-      firstname_i  => 'J.~C.~G.',
-      firstname_it => 'JCG',
-      lastname     => 'Vallée~Poussin',
-      lastname_i   => 'V.~P.',
-      lastname_it  => 'VP',
-      prefix       => 'de~la',
-      prefix_i     => 'd.~l.',
-      prefix_it    => 'dl',
-      suffix       => undef,
-      suffix_i     => undef,
-      suffix_it    => undef,
-      strip => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
-      namestring => 'de la Vallée Poussin, J. C. G.',
+   {  firstname      => 'J.~C.~G.',
+      firstname_i    => ['J', 'C', 'G'],
+      lastname       => 'Vallée~Poussin',
+      lastname_i     => ['V', 'P'],
+      prefix         => 'de~la',
+      prefix_i       => ['d', 'l'],
+      suffix         => undef,
+      suffix_i       => undef,
+      strip          => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
+      namestring     => 'de la Vallée Poussin, J. C. G.',
       nameinitstring => 'dl_Vallée_Poussin_JCG' } ;
 
 my $name15 =
-   {  firstname    => 'E.~S.',
-      firstname_i  => 'E.~S.',
-      firstname_it => 'ES',
-      lastname     => 'El-{M}allah',
-      lastname_i   => 'M.',
-      lastname_it  => 'M',
-      prefix       => undef,
-      prefix_i     => undef,
-      prefix_it    => undef,
-      suffix       => undef,
-      suffix_i     => undef,
-      suffix_it    => undef,
-      strip => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
-      namestring => 'El-{M}allah, E. S.',
+   {  firstname      => 'E.~S.',
+      firstname_i    => ['E', 'S'],
+      lastname       => 'El-{M}allah',
+      lastname_i     => ['M'],
+      prefix         => undef,
+      prefix_i       => undef,
+      suffix         => undef,
+      suffix_i       => undef,
+      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      namestring     => 'El-{M}allah, E. S.',
       nameinitstring => 'El-{M}allah_ES' } ;
 
-
 my $name16 =
-   {  firstname    => 'E.~S.',
-      firstname_i  => 'E.~S.',
-      firstname_it => 'ES',
-      lastname     => '{K}ent-{B}oswell',
-      lastname_i   => 'K.-B.',
-      lastname_it  => 'KB',
-      prefix       => undef,
-      prefix_i     => undef,
-      prefix_it    => undef,
-      suffix       => undef,
-      suffix_i     => undef,
-      suffix_it    => undef,
-      strip => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
-      namestring => '{K}ent-{B}oswell, E. S.',
+   {  firstname      => 'E.~S.',
+      firstname_i    => ['E', 'S'],
+      lastname       => '{K}ent-{B}oswell',
+      lastname_i     => ['KB'],
+      prefix         => undef,
+      prefix_i       => undef,
+      suffix         => undef,
+      suffix_i       => undef,
+      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      namestring     => '{K}ent-{B}oswell, E. S.',
       nameinitstring => '{K}ent-{B}oswell_ES' } ;
 
 
 my $l1 = q|  \entry{L1}{book}{}
     \name{labelname}{1}{%
-      {{Adler}{A.}{Alfred}{A.}{}{}{}{}}%
+      {{Adler}{A\bibinitperiod}{Alfred}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Adler}{A.}{Alfred}{A.}{}{}{}{}}%
+      {{Adler}{A\bibinitperiod}{Alfred}{A\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{AA1}
     \strng{fullhash}{AA1}
@@ -319,10 +259,10 @@ my $l1 = q|  \entry{L1}{book}{}
 
 my $l2 = q|  \entry{L2}{book}{}
     \name{labelname}{1}{%
-      {{Bull}{B.}{Bertie~B.}{B.~B.}{}{}{}{}}%
+      {{Bull}{B\bibinitperiod}{Bertie~B.}{B\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Bull}{B.}{Bertie~B.}{B.~B.}{}{}{}{}}%
+      {{Bull}{B\bibinitperiod}{Bertie~B.}{B\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{BBB1}
     \strng{fullhash}{BBB1}
@@ -333,10 +273,10 @@ my $l2 = q|  \entry{L2}{book}{}
 
 my $l3 = q|  \entry{L3}{book}{}
     \name{labelname}{1}{%
-      {{Crop}{C.}{C.~Z.}{C.~Z.}{}{}{}{}}%
+      {{Crop}{C\bibinitperiod}{C.~Z.}{C\bibinitperiod\bibinitdelim Z\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Crop}{C.}{C.~Z.}{C.~Z.}{}{}{}{}}%
+      {{Crop}{C\bibinitperiod}{C.~Z.}{C\bibinitperiod\bibinitdelim Z\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{CCZ1}
     \strng{fullhash}{CCZ1}
@@ -347,10 +287,10 @@ my $l3 = q|  \entry{L3}{book}{}
 
 my $l4 = q|  \entry{L4}{book}{}
     \name{labelname}{1}{%
-      {{Decket}{D.}{Derek~D}{D.~D.}{}{}{}{}}%
+      {{Decket}{D\bibinitperiod}{Derek~D}{D\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Decket}{D.}{Derek~D}{D.~D.}{}{}{}{}}%
+      {{Decket}{D\bibinitperiod}{Derek~D}{D\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{DDD1}
     \strng{fullhash}{DDD1}
@@ -361,10 +301,10 @@ my $l4 = q|  \entry{L4}{book}{}
 
 my $l5 = q|  \entry{L5}{book}{}
     \name{labelname}{1}{%
-      {{Eel}{E.}{Egbert}{E.}{von}{v.}{}{}}%
+      {{Eel}{E\bibinitperiod}{Egbert}{E\bibinitperiod}{von}{v\bibinitperiod}{}{}}%
     }
     \name{author}{1}{%
-      {{Eel}{E.}{Egbert}{E.}{von}{v.}{}{}}%
+      {{Eel}{E\bibinitperiod}{Egbert}{E\bibinitperiod}{von}{v\bibinitperiod}{}{}}%
     }
     \strng{namehash}{vEE1}
     \strng{fullhash}{vEE1}
@@ -375,10 +315,10 @@ my $l5 = q|  \entry{L5}{book}{}
 
 my $l6 = q|  \entry{L6}{book}{}
     \name{labelname}{1}{%
-      {{Frome}{F.}{Francis}{F.}{van~der~valt}{v.~d.~v.}{}{}}%
+      {{Frome}{F\bibinitperiod}{Francis}{F\bibinitperiod}{van~der~valt}{v\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim v\bibinitperiod}{}{}}%
     }
     \name{author}{1}{%
-      {{Frome}{F.}{Francis}{F.}{van~der~valt}{v.~d.~v.}{}{}}%
+      {{Frome}{F\bibinitperiod}{Francis}{F\bibinitperiod}{van~der~valt}{v\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim v\bibinitperiod}{}{}}%
     }
     \strng{namehash}{vdvFF1}
     \strng{fullhash}{vdvFF1}
@@ -389,10 +329,10 @@ my $l6 = q|  \entry{L6}{book}{}
 
 my $l7 = q|  \entry{L7}{book}{}
     \name{labelname}{1}{%
-      {{Gloom}{G.}{Gregory~R.}{G.~R.}{van}{v.}{}{}}%
+      {{Gloom}{G\bibinitperiod}{Gregory~R.}{G\bibinitperiod\bibinitdelim R\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
     }
     \name{author}{1}{%
-      {{Gloom}{G.}{Gregory~R.}{G.~R.}{van}{v.}{}{}}%
+      {{Gloom}{G\bibinitperiod}{Gregory~R.}{G\bibinitperiod\bibinitdelim R\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
     }
     \strng{namehash}{vGGR1}
     \strng{fullhash}{vGGR1}
@@ -403,10 +343,10 @@ my $l7 = q|  \entry{L7}{book}{}
 
 my $l8 = q|  \entry{L8}{book}{}
     \name{labelname}{1}{%
-      {{Henkel}{H.}{Henry~F.}{H.~F.}{van}{v.}{}{}}%
+      {{Henkel}{H\bibinitperiod}{Henry~F.}{H\bibinitperiod\bibinitdelim F\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
     }
     \name{author}{1}{%
-      {{Henkel}{H.}{Henry~F.}{H.~F.}{van}{v.}{}{}}%
+      {{Henkel}{H\bibinitperiod}{Henry~F.}{H\bibinitperiod\bibinitdelim F\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
     }
     \strng{namehash}{vHHF1}
     \strng{fullhash}{vHHF1}
@@ -417,10 +357,10 @@ my $l8 = q|  \entry{L8}{book}{}
 
 my $l9 = q|  \entry{L9}{book}{}
     \name{labelname}{1}{%
-      {{{Iliad Ipswich}}{I.}{Ian}{I.}{}{}{}{}}%
+      {{{Iliad Ipswich}}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{{Iliad Ipswich}}{I.}{Ian}{I.}{}{}{}{}}%
+      {{{Iliad Ipswich}}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{II1}
     \strng{fullhash}{II1}
@@ -432,10 +372,10 @@ my $l9 = q|  \entry{L9}{book}{}
 
 my $l10 = q|  \entry{L10}{book}{}
     \name{labelname}{1}{%
-      {{Jolly}{J.}{James}{J.}{}{}{III}{I.}}%
+      {{Jolly}{J\bibinitperiod}{James}{J\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
     }
     \name{author}{1}{%
-      {{Jolly}{J.}{James}{J.}{}{}{III}{I.}}%
+      {{Jolly}{J\bibinitperiod}{James}{J\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
     }
     \strng{namehash}{JIJ1}
     \strng{fullhash}{JIJ1}
@@ -447,10 +387,10 @@ my $l10 = q|  \entry{L10}{book}{}
 
 my $l10a = q|  \entry{L10a}{book}{}
     \name{labelname}{1}{%
-      {{Pimentel}{P.}{Joseph~J.}{J.~J.}{}{}{Jr.}{J.}}%
+      {{Pimentel}{P\bibinitperiod}{Joseph~J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{Jr.}{J\bibinitperiod}}%
     }
     \name{author}{1}{%
-      {{Pimentel}{P.}{Joseph~J.}{J.~J.}{}{}{Jr.}{J.}}%
+      {{Pimentel}{P\bibinitperiod}{Joseph~J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{Jr.}{J\bibinitperiod}}%
     }
     \strng{namehash}{PJJJ1}
     \strng{fullhash}{PJJJ1}
@@ -462,10 +402,10 @@ my $l10a = q|  \entry{L10a}{book}{}
 
 my $l11 = q|  \entry{L11}{book}{}
     \name{labelname}{1}{%
-      {{Kluster}{K.}{Kevin}{K.}{van}{v.}{Jr.}{J.}}%
+      {{Kluster}{K\bibinitperiod}{Kevin}{K\bibinitperiod}{van}{v\bibinitperiod}{Jr.}{J\bibinitperiod}}%
     }
     \name{author}{1}{%
-      {{Kluster}{K.}{Kevin}{K.}{van}{v.}{Jr.}{J.}}%
+      {{Kluster}{K\bibinitperiod}{Kevin}{K\bibinitperiod}{van}{v\bibinitperiod}{Jr.}{J\bibinitperiod}}%
     }
     \strng{namehash}{vKJK1}
     \strng{fullhash}{vKJK1}
@@ -476,10 +416,10 @@ my $l11 = q|  \entry{L11}{book}{}
 
 my $l12 = q|  \entry{L12}{book}{}
     \name{labelname}{1}{%
-      {{Vall{\'e}e~Poussin}{V.\,P.}{Charles Louis Xavier~Joseph}{C.\,L.\,X.\,J.}{de~la}{d.\,l.}{}{}}%
+      {{Vall{\'e}e~Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles Louis Xavier~Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de~la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
     }
     \name{author}{1}{%
-      {{Vall{\'e}e~Poussin}{V.\,P.}{Charles Louis Xavier~Joseph}{C.\,L.\,X.\,J.}{de~la}{d.\,l.}{}{}}%
+      {{Vall{\'e}e~Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles Louis Xavier~Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de~la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
     }
     \strng{namehash}{dlVPCLXJ1}
     \strng{fullhash}{dlVPCLXJ1}
@@ -490,10 +430,10 @@ my $l12 = q|  \entry{L12}{book}{}
 
 my $l13 = q|  \entry{L13}{book}{}
     \name{labelname}{1}{%
-      {{Van de~Graaff}{V.~d.~G.}{R.~J.}{R.~J.}{}{}{}{}}%
+      {{Van de~Graaff}{V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod}{R.~J.}{R\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Van de~Graaff}{V.~d.~G.}{R.~J.}{R.~J.}{}{}{}{}}%
+      {{Van de~Graaff}{V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod}{R.~J.}{R\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{VdGRJ1}
     \strng{fullhash}{VdGRJ1}
@@ -504,10 +444,10 @@ my $l13 = q|  \entry{L13}{book}{}
 
 my $l14 = q|  \entry{L14}{book}{}
     \name{labelname}{1}{%
-      {{St~John-Mollusc}{S.~J.-M.}{Oliver}{O.}{}{}{}{}}%
+      {{St~John-Mollusc}{S\bibinitperiod\bibinitdelim JM\bibinitperiod}{Oliver}{O\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{St~John-Mollusc}{S.~J.-M.}{Oliver}{O.}{}{}{}{}}%
+      {{St~John-Mollusc}{S\bibinitperiod\bibinitdelim JM\bibinitperiod}{Oliver}{O\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{SJMO1}
     \strng{fullhash}{SJMO1}
@@ -518,10 +458,10 @@ my $l14 = q|  \entry{L14}{book}{}
 
 my $l15 = q|  \entry{L15}{book}{}
     \name{labelname}{1}{%
-      {{Gompel}{G.}{Roger~P.{\,}G.}{R.~P.}{van}{v.}{}{}}%
+      {{Gompel}{G\bibinitperiod}{Roger~P.{\,}G.}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
     }
     \name{author}{1}{%
-      {{Gompel}{G.}{Roger~P.{\,}G.}{R.~P.}{van}{v.}{}{}}%
+      {{Gompel}{G\bibinitperiod}{Roger~P.{\,}G.}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
     }
     \strng{namehash}{vGRP1}
     \strng{fullhash}{vGRP1}
@@ -532,10 +472,10 @@ my $l15 = q|  \entry{L15}{book}{}
 
 my $l16 = q|  \entry{L16}{book}{}
     \name{labelname}{1}{%
-      {{Gompel}{G.}{Roger~{P.\,G.}}{R.~P.}{van}{v.}{}{}}%
+      {{Gompel}{G\bibinitperiod}{Roger~{P.\,G.}}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
     }
     \name{author}{1}{%
-      {{Gompel}{G.}{Roger~{P.\,G.}}{R.~P.}{van}{v.}{}{}}%
+      {{Gompel}{G\bibinitperiod}{Roger~{P.\,G.}}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
     }
     \strng{namehash}{vGRP1}
     \strng{fullhash}{vGRP1}
@@ -546,10 +486,10 @@ my $l16 = q|  \entry{L16}{book}{}
 
 my $l17 = q|  \entry{L17}{book}{}
     \name{labelname}{1}{%
-      {{Lovecraft}{L.}{Bill~H.{\,}P.}{B.~H.}{}{}{}{}}%
+      {{Lovecraft}{L\bibinitperiod}{Bill~H.{\,}P.}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Lovecraft}{L.}{Bill~H.{\,}P.}{B.~H.}{}{}{}{}}%
+      {{Lovecraft}{L\bibinitperiod}{Bill~H.{\,}P.}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{LBH1}
     \strng{fullhash}{LBH1}
@@ -560,10 +500,10 @@ my $l17 = q|  \entry{L17}{book}{}
 
 my $l18 = q|  \entry{L18}{book}{}
     \name{labelname}{1}{%
-      {{Lovecraft}{L.}{Bill~{H.\,P.}}{B.~H.}{}{}{}{}}%
+      {{Lovecraft}{L\bibinitperiod}{Bill~{H.\,P.}}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Lovecraft}{L.}{Bill~{H.\,P.}}{B.~H.}{}{}{}{}}%
+      {{Lovecraft}{L\bibinitperiod}{Bill~{H.\,P.}}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{LBH1}
     \strng{fullhash}{LBH1}
@@ -574,10 +514,10 @@ my $l18 = q|  \entry{L18}{book}{}
 
 my $l19 = q|  \entry{L19}{book}{}
     \name{labelname}{1}{%
-      {{Mustermann}{M.}{Klaus-Peter}{K.-P.}{}{}{}{}}%
+      {{Mustermann}{M\bibinitperiod}{Klaus-Peter}{KP\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Mustermann}{M.}{Klaus-Peter}{K.-P.}{}{}{}{}}%
+      {{Mustermann}{M\bibinitperiod}{Klaus-Peter}{KP\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{MKP1}
     \strng{fullhash}{MKP1}
@@ -588,10 +528,10 @@ my $l19 = q|  \entry{L19}{book}{}
 
 my $l20 = q|  \entry{L20}{book}{}
     \name{labelname}{1}{%
-      {{Ford}{F.}{{John Henry}}{J.}{}{}{}{}}%
+      {{Ford}{F\bibinitperiod}{{John Henry}}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Ford}{F.}{{John Henry}}{J.}{}{}{}{}}%
+      {{Ford}{F\bibinitperiod}{{John Henry}}{J\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{FJ1}
     \strng{fullhash}{FJ1}
@@ -602,10 +542,10 @@ my $l20 = q|  \entry{L20}{book}{}
 
 my $l21 = q|  \entry{L21}{book}{}
     \name{labelname}{1}{%
-      {{Smith}{S.}{{\v S}omeone}{{\v S}.}{}{}{}{}}%
+      {{Smith}{S\bibinitperiod}{{\v S}omeone}{{\v S}\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Smith}{S.}{{\v S}omeone}{{\v S}.}{}{}{}{}}%
+      {{Smith}{S\bibinitperiod}{{\v S}omeone}{{\v S}\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{SS1}
     \strng{fullhash}{SS1}
@@ -616,10 +556,10 @@ my $l21 = q|  \entry{L21}{book}{}
 
 my $l22 = q|  \entry{L22}{book}{}
     \name{labelname}{1}{%
-      {{{\v S}mith}{{\v S}.}{Someone}{S.}{}{}{}{}}%
+      {{{\v S}mith}{{\v S}\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{{\v S}mith}{{\v S}.}{Someone}{S.}{}{}{}{}}%
+      {{{\v S}mith}{{\v S}\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{SS1}
     \strng{fullhash}{SS1}
@@ -631,10 +571,10 @@ my $l22 = q|  \entry{L22}{book}{}
 
 my $l23 = q|  \entry{L23}{book}{}
     \name{labelname}{1}{%
-      {{Smith}{S.}{Šomeone}{Š.}{}{}{}{}}%
+      {{Smith}{S\bibinitperiod}{Šomeone}{Š\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Smith}{S.}{Šomeone}{Š.}{}{}{}{}}%
+      {{Smith}{S\bibinitperiod}{Šomeone}{Š\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{SŠ1}
     \strng{fullhash}{SŠ1}
@@ -645,10 +585,10 @@ my $l23 = q|  \entry{L23}{book}{}
 
 my $l24 = q|  \entry{L24}{book}{}
     \name{labelname}{1}{%
-      {{Šmith}{Š.}{Someone}{S.}{}{}{}{}}%
+      {{Šmith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Šmith}{Š.}{Someone}{S.}{}{}{}{}}%
+      {{Šmith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{ŠS1}
     \strng{fullhash}{ŠS1}
@@ -659,10 +599,10 @@ my $l24 = q|  \entry{L24}{book}{}
 
 my $l25 = q|  \entry{L25}{book}{}
     \name{labelname}{1}{%
-      {{{American Psychological Association, Task Force on the Sexualization of Girls}}{A.}{}{}{}{}{}{}}%
+      {{{American Psychological Association, Task Force on the Sexualization of Girls}}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{{American Psychological Association, Task Force on the Sexualization of Girls}}{A.}{}{}{}{}{}{}}%
+      {{{American Psychological Association, Task Force on the Sexualization of Girls}}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \strng{namehash}{A1}
     \strng{fullhash}{A1}
@@ -673,10 +613,10 @@ my $l25 = q|  \entry{L25}{book}{}
 
 my $l26 = q|  \entry{L26}{book}{}
     \name{labelname}{1}{%
-      {{{Sci-Art Publishers}}{S.}{}{}{}{}{}{}}%
+      {{{Sci-Art Publishers}}{S\bibinitperiod}{}{}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{{Sci-Art Publishers}}{S.}{}{}{}{}{}{}}%
+      {{{Sci-Art Publishers}}{S\bibinitperiod}{}{}{}{}{}{}}%
     }
     \strng{namehash}{S1}
     \strng{fullhash}{S1}
@@ -698,10 +638,10 @@ my $l28 = q|  \entry{L28}{book}{}
 
 my $l29 = q|  \entry{L29}{book}{}
     \name{labelname}{1}{%
-      {{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}}{U.}{}{}{}{}{}{}}%
+      {{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}}{U\bibinitperiod}{}{}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}}{U.}{}{}{}{}{}{}}%
+      {{{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}}{U\bibinitperiod}{}{}{}{}{}{}}%
     }
     \strng{namehash}{U1}
     \strng{fullhash}{U1}
@@ -742,10 +682,10 @@ is( $out->get_output_entry($main,'l10a'), $l10a, 'Last, Suffix, First Initial.')
 is( $out->get_output_entry($main,'l11'), $l11, 'prefix Last, Suffix, First') ;
 is( $out->get_output_entry($main,'l13'), $l13, 'Last Last Last, Initial. Initial.');
 is( $out->get_output_entry($main,'l14'), $l14, 'Last Last-Last, First');
-is( $out->get_output_entry($main,'l15'), $l15, 'First F.{\,}F. Last');
-is( $out->get_output_entry($main,'l16'), $l16, 'First {F.\,F.} Last');
-is( $out->get_output_entry($main,'l17'), $l17, 'Last, First {F.\,F.}');
-is( $out->get_output_entry($main,'l18'), $l18, 'Last, First F.{\,}F.');
+is( $out->get_output_entry($main,'l15'), $l15, 'First F.{\bibinitdelim }F. Last');
+is( $out->get_output_entry($main,'l16'), $l16, 'First {F.\bibinitdelim F.} Last');
+is( $out->get_output_entry($main,'l17'), $l17, 'Last, First {F.\bibinitdelim F.}');
+is( $out->get_output_entry($main,'l18'), $l18, 'Last, First F.{\bibinitdelim }F.');
 is( $out->get_output_entry($main,'l19'), $l19, 'Firstname with hyphen');
 is( $out->get_output_entry($main,'l20'), $l20, 'Protected dual first name');
 is( $out->get_output_entry($main,'l23'), $l23, 'Unicode firstname');
@@ -764,7 +704,6 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 
 # Biber options
 Biber::Config->setoption('bblencoding', 'latin1');
-Biber::Config->setoption('joins', {inits => '\,'});
 
 # Now generate the information
 $biber->prepare;
@@ -773,7 +712,7 @@ $section = $biber->sections->get_section(0);
 $main = $section->get_list('MAIN');
 $bibentries = $section->bibentries;
 
-is($bibentries->entry('l21')->get_field($bibentries->entry('l21')->get_field('labelnamename'))->nth_element(1)->get_firstname_it, '{\v S}', 'Terseinitials 1');
+is_deeply($bibentries->entry('l21')->get_field($bibentries->entry('l21')->get_field('labelnamename'))->nth_element(1)->get_firstname_i, ['{\v S}'], 'Terseinitials 1');
 is( $out->get_output_entry($main,'l12'), $l12, 'First First First First prefix prefix Last Last') ;
 is( $out->get_output_entry($main,'l21'), $l21, 'LaTeX encoded unicode firstname');
 is( $out->get_output_entry($main,'l22'), $l22, 'LaTeX encoded unicode lastname');

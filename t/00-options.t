@@ -67,10 +67,10 @@ my $bln = [ 'author', 'editor' ];
 
 my $l1 = q|  \entry{L1}{book}{}
     \name{labelname}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Doe}{D.}{John}{J.}{}{}{}{}}%
+      {{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Oxford}%

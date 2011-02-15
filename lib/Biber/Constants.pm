@@ -21,7 +21,7 @@ our @EXPORT = qw{
 
 # Version of biblatex which this release works with. Matched against version
 # passed in control file
-Readonly::Scalar our $BIBLATEX_VERSION => '1.2';
+Readonly::Scalar our $BIBLATEX_VERSION => '1.3';
 
 # Global flags needed for sorting
 our $BIBER_SORT_FINAL = 0;
@@ -107,7 +107,6 @@ our %CONFIG_DEFAULT_BIBER = (
   collate_options    => { level => 4 },
   debug              => 0,
   decodecharsset     => 'extra',
-  joins              => {inits => '~'},
   mincrossrefs       => 2,
   nolog              => 0,
   nostdmacros        => 0,
@@ -1651,7 +1650,6 @@ our %CONFIG_SCOPE_BIBLATEX = (
   sorting           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   sortlos           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   structure         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  terseinits        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   uniquename        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   useauthor         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   useeditor         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},

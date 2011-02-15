@@ -24,7 +24,6 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
-Biber::Config->setoption('joins', {inits => '\,'});
 
 # Now generate the information
 $biber->prepare;
@@ -35,14 +34,14 @@ my $bibentries = $section->bibentries;
 
 my $l1 = q|  \entry{BulgakovRozenfeld:1983}{book}{}
     \name{labelname}{3}{%
-      {{Булгаков}{Б.}{Павел~Георгиевич}{П.}{}{}{}{}}%
-      {{Розенфельд}{Р.}{Борис~Абрамович}{Б.\,B.}{Билл}{д.}{}{}{}{}}%
-      {{Ахмедов}{А.}{Ашраф~Ахмедович}{А.\,А.}{}{}{}{}}%
+      {{Булгаков}{Б\bibinitperiod}{Павел~Георгиевич}{П\bibinitperiod}{}{}{}{}}%
+      {{Розенфельд}{Р\bibinitperiod}{Борис~Абрамович}{Б\bibinitperiod}{Билл}{д\bibinitperiod}{}{}{}{}}%
+      {{Ахмедов}{А\bibinitperiod}{Ашраф~Ахмедович}{А\bibinitperiod\bibinitdelim А\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{3}{%
-      {{Булгаков}{Б.}{Павел~Георгиевич}{П.}{}{}{}{}}%
-      {{Розенфельд}{Р.}{Борис~Абрамович}{Б.\,B.}{Билл}{д.}{}{}{}{}}%
-      {{Ахмедов}{А.}{Ашраф~Ахмедович}{А.\,А.}{}{}{}{}}%
+      {{Булгаков}{Б\bibinitperiod}{Павел~Георгиевич}{П\bibinitperiod}{}{}{}{}}%
+      {{Розенфельд}{Р\bibinitperiod}{Борис~Абрамович}{Б\bibinitperiod}{Билл}{д\bibinitperiod}{}{}{}{}}%
+      {{Ахмедов}{А\bibinitperiod}{Ашраф~Ахмедович}{А\bibinitperiod\bibinitdelim А\bibinitperiod}{}{}{}{}}%
     }
     \list{language}{1}{%
       {Russian}%
@@ -53,8 +52,8 @@ my $l1 = q|  \entry{BulgakovRozenfeld:1983}{book}{}
     \list{publisher}{1}{%
       {Наука}%
     }
-    \strng{namehash}{БПРБBдААА1}
-    \strng{fullhash}{БПРБBдААА1}
+    \strng{namehash}{БПРБдААА1}
+    \strng{fullhash}{БПРБдААА1}
     \field{sortinit}{Б}
     \field{labelyear}{1983}
     \field{eventday}{16}

@@ -41,24 +41,24 @@ sub _getnamehash {
     foreach my $n (@{$names->names}) {
       if ( $n->get_prefix and
         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-        $initstr .= $n->get_prefix_it;
+        $initstr .= join('', @{$n->get_prefix_i});
       }
-      $initstr .= $n->get_lastname_it;
+      $initstr .= join('', @{$n->get_lastname_i});
 
       if ( $n->get_suffix ) {
-        $initstr .= $n->get_suffix_it;
+        $initstr .= join('', @{$n->get_suffix_i});
       }
 
       if ( $n->get_firstname ) {
-        $initstr .= $n->get_firstname_it;
+        $initstr .= join('', @{$n->get_firstname_i});
       }
       if ( $n->get_middlename ) {
-        $initstr .= $n->get_middlename_it;
+        $initstr .= join('', @{$n->get_middlename_i});
       }
      # without useprefix, prefix is not first in the hash
      if ( $n->get_prefix and not
        Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-       $initstr .= $n->get_prefix_it;
+       $initstr .= join('', @{$n->get_prefix_i});
      }
 
     }
@@ -68,25 +68,25 @@ sub _getnamehash {
     foreach my $i ( 1 .. Biber::Config->getblxoption('minnames') ) {
       if ( $names->nth_element($i)->get_prefix and
         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey) ) {
-        $initstr .= $names->nth_element($i)->get_prefix_it;
+        $initstr .= join('', @{$names->nth_element($i)->get_prefix_i});
       }
 
       if ( $names->nth_element($i)->get_suffix ) {
-        $initstr .= $names->nth_element($i)->get_suffix_it;
+        $initstr .= join('', @{$names->nth_element($i)->get_suffix_i});
       }
 
-      $initstr .= $names->nth_element($i)->get_lastname_it;
+      $initstr .= join('', @{$names->nth_element($i)->get_lastname_i});
       if ( $names->nth_element($i)->get_firstname ) {
-        $initstr .= $names->nth_element($i)->get_firstname_it;
+        $initstr .= join('', @{$names->nth_element($i)->get_firstname_i});
       }
       if ( $names->nth_element($i)->get_middlename ) {
-        $initstr .= $names->nth_element($i)->get_middlename_it;
+        $initstr .= join('', @{$names->nth_element($i)->get_middlename_i});
       }
 
       # without useprefix, prefix is not first in the hash
       if ( $names->nth_element($i)->get_prefix and not
            Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey) ) {
-        $initstr .= $names->nth_element($i)->get_prefix_it;
+        $initstr .= join('', @{$names->nth_element($i)->get_prefix_i});
       }
       $initstr .= "+";
     }
@@ -103,26 +103,26 @@ sub _getfullhash {
   foreach my $n (@{$names->names}) {
     if ( $n->get_prefix and
       Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-      $initstr .= $n->get_prefix_it;
+      $initstr .= join('', @{$n->get_prefix_i});
     }
-    $initstr .= $n->get_lastname_it;
+    $initstr .= join('', @{$n->get_lastname_i});
 
     if ( $n->get_suffix ) {
-      $initstr .= $n->get_suffix_it;
+      $initstr .= join('', @{$n->get_suffix_i});
     }
 
     if ( $n->get_firstname ) {
-      $initstr .= $n->get_firstname_it;
+      $initstr .= join('', @{$n->get_firstname_i});
     }
 
     if ( $n->get_middlename ) {
-      $initstr .= $n->get_middlename_it;
+      $initstr .= join('', @{$n->get_middlename_i});
     }
 
     # without useprefix, prefix is not first in the hash
     if ( $n->get_prefix and not
          Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-      $initstr .= $n->get_prefix_it;
+      $initstr .= join('', @{$n->get_prefix_i});
     }
 
   }
