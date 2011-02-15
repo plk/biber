@@ -331,7 +331,8 @@ sub name_to_bbl {
   if ($self->was_stripped('lastname')) {
     $ln = Biber::Utils::add_outer($ln);
   }
-    $lni = join('\bibinitperiod\bibinitdelim ', @{$self->get_lastname_i}) . '\bibinitperiod';
+  $lni = join('\bibinitperiod\bibinitdelim ', @{$self->get_lastname_i}) . '\bibinitperiod';
+  $lni =~ s/\-/\\bibinithyphendelim /gxms;
 
   # firstname
   my $fn;
@@ -341,6 +342,7 @@ sub name_to_bbl {
       $fn = Biber::Utils::add_outer($fn);
     }
     $fni = join('\bibinitperiod\bibinitdelim ', @{$self->get_firstname_i}) . '\bibinitperiod';
+    $fni =~ s/\-/\\bibinithyphendelim /gxms;
   }
   else {
     $fn = '';
@@ -352,6 +354,7 @@ sub name_to_bbl {
   my $mni;
   if ($mn = $self->get_middlename) {
     $mni = join('\bibinitperiod\bibinitdelim ', @{$self->get_middlename_i}) . '\bibinitperiod';
+    $mni =~ s/\-/\\bibinithyphendelim /gxms;
   }
   else {
     $mn = '';
@@ -366,6 +369,7 @@ sub name_to_bbl {
       $pre = Biber::Utils::add_outer($pre);
     }
     $prei = join('\bibinitperiod\bibinitdelim ', @{$self->get_prefix_i}) . '\bibinitperiod';
+    $prei =~ s/\-/\\bibinithyphendelim /gxms;
   }
   else {
     $pre = '';
@@ -380,6 +384,7 @@ sub name_to_bbl {
       $suf = Biber::Utils::add_outer($suf);
     }
     $sufi = join('\bibinitperiod\bibinitdelim ', @{$self->get_suffix_i}) . '\bibinitperiod';
+    $sufi =~ s/\-/\\bibinithyphendelim /gxms;
   }
   else {
     $suf = '';

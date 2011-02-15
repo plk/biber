@@ -233,7 +233,7 @@ my $name16 =
    {  firstname      => 'E.~S.',
       firstname_i    => ['E', 'S'],
       lastname       => '{K}ent-{B}oswell',
-      lastname_i     => ['KB'],
+      lastname_i     => ['K-B'],
       prefix         => undef,
       prefix_i       => undef,
       suffix         => undef,
@@ -444,13 +444,13 @@ my $l13 = q|  \entry{L13}{book}{}
 
 my $l14 = q|  \entry{L14}{book}{}
     \name{labelname}{1}{%
-      {{St~John-Mollusc}{S\bibinitperiod\bibinitdelim JM\bibinitperiod}{Oliver}{O\bibinitperiod}{}{}{}{}}%
+      {{St~John-Mollusc}{S\bibinitperiod\bibinitdelim J\bibinithyphendelim M\bibinitperiod}{Oliver}{O\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{St~John-Mollusc}{S\bibinitperiod\bibinitdelim JM\bibinitperiod}{Oliver}{O\bibinitperiod}{}{}{}{}}%
+      {{St~John-Mollusc}{S\bibinitperiod\bibinitdelim J\bibinithyphendelim M\bibinitperiod}{Oliver}{O\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{SJMO1}
-    \strng{fullhash}{SJMO1}
+    \strng{namehash}{SJ-MO1}
+    \strng{fullhash}{SJ-MO1}
     \field{sortinit}{S}
   \endentry
 
@@ -514,13 +514,13 @@ my $l18 = q|  \entry{L18}{book}{}
 
 my $l19 = q|  \entry{L19}{book}{}
     \name{labelname}{1}{%
-      {{Mustermann}{M\bibinitperiod}{Klaus-Peter}{KP\bibinitperiod}{}{}{}{}}%
+      {{Mustermann}{M\bibinitperiod}{Klaus-Peter}{K\bibinithyphendelim P\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Mustermann}{M\bibinitperiod}{Klaus-Peter}{KP\bibinitperiod}{}{}{}{}}%
+      {{Mustermann}{M\bibinitperiod}{Klaus-Peter}{K\bibinithyphendelim P\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{MKP1}
-    \strng{fullhash}{MKP1}
+    \strng{namehash}{MK-P1}
+    \strng{fullhash}{MK-P1}
     \field{sortinit}{M}
   \endentry
 

@@ -66,7 +66,7 @@ my $murray1 = q|  \entry{murray}{article}{}
     \name{labelname}{14}{%
       {{Hostetler}{H\bibinitperiod}{Michael~J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       {{Wingate}{W\bibinitperiod}{Julia~E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-      {{Zhong}{Z\bibinitperiod}{Chuan-Jian}{CJ\bibinitperiod}{}{}{}{}}%
+      {{Zhong}{Z\bibinitperiod}{Chuan-Jian}{C\bibinithyphendelim J\bibinitperiod}{}{}{}{}}%
       {{Harris}{H\bibinitperiod}{Jay~E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
       {{Vachet}{V\bibinitperiod}{Richard~W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
       {{Clark}{C\bibinitperiod}{Michael~R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
@@ -82,7 +82,7 @@ my $murray1 = q|  \entry{murray}{article}{}
     \name{author}{14}{%
       {{Hostetler}{H\bibinitperiod}{Michael~J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       {{Wingate}{W\bibinitperiod}{Julia~E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-      {{Zhong}{Z\bibinitperiod}{Chuan-Jian}{CJ\bibinitperiod}{}{}{}{}}%
+      {{Zhong}{Z\bibinitperiod}{Chuan-Jian}{C\bibinithyphendelim J\bibinitperiod}{}{}{}{}}%
       {{Harris}{H\bibinitperiod}{Jay~E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
       {{Vachet}{V\bibinitperiod}{Richard~W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
       {{Clark}{C\bibinitperiod}{Michael~R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
@@ -96,7 +96,7 @@ my $murray1 = q|  \entry{murray}{article}{}
       {{Murray}{M\bibinitperiod}{Royce~W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{HMJ+1}
-    \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
+    \strng{fullhash}{HMJWJEZC-JHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
     \field{labelalpha}{Hos\textbf{+}98}
     \field{sortinit}{H}
     \count{uniquename}{0}
@@ -120,7 +120,7 @@ my $murray2 = q|  \entry{murray}{article}{}
     \name{labelname}{14}{%
       {{Hostetler}{H\bibinitperiod}{Michael~J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       {{Wingate}{W\bibinitperiod}{Julia~E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-      {{Zhong}{Z\bibinitperiod}{Chuan-Jian}{CJ\bibinitperiod}{}{}{}{}}%
+      {{Zhong}{Z\bibinitperiod}{Chuan-Jian}{C\bibinithyphendelim J\bibinitperiod}{}{}{}{}}%
       {{Harris}{H\bibinitperiod}{Jay~E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
       {{Vachet}{V\bibinitperiod}{Richard~W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
       {{Clark}{C\bibinitperiod}{Michael~R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
@@ -136,7 +136,7 @@ my $murray2 = q|  \entry{murray}{article}{}
     \name{author}{14}{%
       {{Hostetler}{H\bibinitperiod}{Michael~J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       {{Wingate}{W\bibinitperiod}{Julia~E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-      {{Zhong}{Z\bibinitperiod}{Chuan-Jian}{CJ\bibinitperiod}{}{}{}{}}%
+      {{Zhong}{Z\bibinitperiod}{Chuan-Jian}{C\bibinithyphendelim J\bibinitperiod}{}{}{}{}}%
       {{Harris}{H\bibinitperiod}{Jay~E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
       {{Vachet}{V\bibinitperiod}{Richard~W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
       {{Clark}{C\bibinitperiod}{Michael~R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
@@ -150,7 +150,7 @@ my $murray2 = q|  \entry{murray}{article}{}
       {{Murray}{M\bibinitperiod}{Royce~W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{HMJ+1}
-    \strng{fullhash}{HMJWJEZCJHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
+    \strng{fullhash}{HMJWJEZC-JHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
     \field{labelalpha}{Hos98}
     \field{sortinit}{H}
     \count{uniquename}{0}
