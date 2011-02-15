@@ -1,7 +1,7 @@
 Revision history for Biber
 
 0.8.2  14-02-2011
-       * Added inits join option
+       * Bug fixes
 0.8.1  12-02-2011
        * Small bug with default bibtex month macro support
        * Made remote file support a little more robust (URI return codes)
