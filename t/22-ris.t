@@ -60,16 +60,16 @@ my $l1 = q|  \entry{test1}{article}{}
 
 my $l2 = q|  \entry{test2}{book}{}
     \name{labelname}{1}{%
-      {{Smith}{S\bibinitperiod}{John}{J\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
+      {{Smith}{S\bibinitperiod}{John~Frederick}{J\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
     }
     \name{author}{1}{%
-      {{Smith}{S\bibinitperiod}{John}{J\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
+      {{Smith}{S\bibinitperiod}{John~Frederick}{J\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
     }
     \name{editor}{1}{%
       {{Brown}{B\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{SIJ1}
-    \strng{fullhash}{SIJ1}
+    \strng{namehash}{SIJF1}
+    \strng{fullhash}{SIJF1}
     \field{sortinit}{S}
     \count{uniquename}{0}
     \field{pages}{1\bibrangedash 20}

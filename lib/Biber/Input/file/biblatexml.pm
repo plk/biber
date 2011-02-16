@@ -530,9 +530,6 @@ sub parsename {
     );
 }
 
-
-
-
 # Joins name parts using BibTeX tie algorithm. Ties are added:
 #
 # 1. After the first part if it is less than three characters long

@@ -298,16 +298,16 @@ sub _name {
   foreach my $name (@$names) {
     $logger->debug('Parsing RIS name');
     if ($name =~ m|\A([^,]+)\s*,?\s*([^,]+)?\s*,?\s*([^,]+)?\z|xms) {
-      my $lastname = $1;
-      my $firstname = $2;
-      my $suffix = $3;
+      my $lastname = _join_name_parts(split(/\s+/, $1)) if $1;
+      my $firstname = _join_name_parts(split(/\s+/, $2)) if $2;
+      my $suffix = _join_name_parts(split(/\s+/, $3)) if $3;
       $logger->debug("Found name component 'lastname': $lastname") if $lastname;
       $logger->debug("Found name component 'firstname': $firstname") if $firstname;
       $logger->debug("Found name component 'suffix': $suffix") if $suffix;
 
-      my @fni = _gen_initials(split(/\s/, $firstname)) if $firstname;
-      my @lni = _gen_initials(split(/\s/, $lastname)) if $lastname;
-      my @si = _gen_initials(split(/\s/, $suffix)) if $suffix;
+      my @lni = _gen_initials(split(/\s/, $1)) if $lastname;
+      my @fni = _gen_initials(split(/\s/, $2)) if $firstname;
+      my @si = _gen_initials(split(/\s/, $3)) if $suffix;
 
       my $namestring = '';
 
@@ -359,6 +359,27 @@ sub _name {
 
 }
 
+# Joins name parts using BibTeX tie algorithm. Ties are added:
+#
+# 1. After the first part if it is less than three characters long
+# 2. Before the last part
+sub _join_name_parts {
+  my @parts = @_;
+  # special case - 1 part
+  if ($#parts == 0) {
+    return $parts[0];
+  }
+  # special case - 2 parts
+  if ($#parts == 1) {
+    return $parts[0] . '~' . $parts[1];
+  }
+  my $namestring = $parts[0];
+  $namestring .= length($parts[0]) < 3 ? '~' : ' ';
+  $namestring .= join(' ', @parts[1 .. ($#parts - 1)]);
+  $namestring .= '~' . $parts[$#parts];
+  return $namestring;
+}
+
 # Passed an array of strings, returns an array of initials for the strings
 sub _gen_initials {
   my @strings = @_;
@@ -368,6 +389,9 @@ sub _gen_initials {
     # replacement with macro later
     if ($str =~ m/\p{Dash}/) {
       push @strings_out, join('-', _gen_initials(split(/\p{Dash}/, $str)));
+    }
+    elsif ($str =~ m/\s/) { # name parts with spaces
+      push @strings_out, _gen_initials(split(/\s+/, $str));
     }
     else {
       my $chr = substr($str, 0, 1);
