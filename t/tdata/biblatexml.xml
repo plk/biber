@@ -5,35 +5,32 @@
     <bib:author>
       <bib:person gender="sm">
         <bib:first>
-          <bib:namepart>Павел</bib:namepart>
-          <bib:namepart>Георгиевич</bib:namepart>
+          <bib:namepart initial="П">Павел</bib:namepart>
+          <bib:namepart initial="Г">Георгиевич</bib:namepart>
         </bib:first>
-        <bib:firstinitial>П</bib:firstinitial>
         <bib:last>Булгаков</bib:last>
       </bib:person>
       <bib:person>
         <bib:first>
-          <bib:namepart>Борис</bib:namepart>
-          <bib:namepart>Абрамович</bib:namepart>
+          <bib:namepart>Борис-ZZ</bib:namepart>
+          <bib:namepart>Aбрамович</bib:namepart>
         </bib:first>
-        <bib:firstinitial>Б</bib:firstinitial>
         <bib:last>Розенфельд</bib:last>
-        <bib:middle>Билл</bib:middle>
-        <bib:middleinitial>д</bib:middleinitial>
+        <bib:middle initial="Б">Билл</bib:middle>
       </bib:person>
       <bib:person>
         <bib:first>
-          <bib:namepart>Ашраф</bib:namepart>
+          <bib:namepart initial="A">Ашраф</bib:namepart>
           <bib:namepart>Ахмедович</bib:namepart>
         </bib:first>
-        <bib:last>Ахмедов</bib:last>
+        <bib:last>Aхмедов</bib:last>
       </bib:person>
     </bib:author>
     <bib:author mode="uniform">
       <bib:person>
         <bib:first>
-          <bib:namepart>Pavel</bib:namepart>
-          <bib:namepart>G.</bib:namepart>
+          <bib:namepart initial="P">Pavel</bib:namepart>
+          <bib:namepart initial="G">G.</bib:namepart>
         </bib:first>
         <bib:last>Bulgakov</bib:last>
       </bib:person>
@@ -43,11 +40,11 @@
           <bib:namepart>A.</bib:namepart>
         </bib:first>
         <bib:last>Rozenfeld</bib:last>
-        <bib:middle>Bill</bib:middle>
+        <bib:middle initial="B">Bill</bib:middle>
       </bib:person>
       <bib:person>
         <bib:first>
-          <bib:namepart>Ashraf</bib:namepart>
+          <bib:namepart initial="A">Ashraf</bib:namepart>
           <bib:namepart>A.</bib:namepart>
         </bib:first>
         <bib:last>Akhmedov</bib:last>

@@ -15,7 +15,7 @@ chdir("t/tdata");
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
-$biber->parse_ctrlfile('names-biblatexml.bcf');
+$biber->parse_ctrlfile('biblatexml.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 
 # Options - we could set these in the control file but it's nice to see what we're
@@ -34,14 +34,14 @@ my $bibentries = $section->bibentries;
 
 my $l1 = q|  \entry{BulgakovRozenfeld:1983}{book}{}
     \name{labelname}{3}{%
-      {{Булгаков}{Б\bibinitperiod}{Павел~Георгиевич}{П\bibinitperiod}{}{}{}{}}%
-      {{Розенфельд}{Р\bibinitperiod}{Борис~Абрамович}{Б\bibinitperiod}{Билл}{д\bibinitperiod}{}{}{}{}}%
-      {{Ахмедов}{А\bibinitperiod}{Ашраф~Ахмедович}{А\bibinitperiod\bibinitdelim А\bibinitperiod}{}{}{}{}}%
+      {{Булгаков}{Б\bibinitperiod}{Павел~Георгиевич}{П\bibinitperiod\bibinitdelim Г\bibinitperiod}{}{}{}{}}%
+      {{Розенфельд}{Р\bibinitperiod}{Борис-ZZ~Aбрамович}{Б\bibinithyphendelim Z\bibinitperiod\bibinitdelim A\bibinitperiod}{Билл}{Б\bibinitperiod}{}{}{}{}}%
+      {{Aхмедов}{A\bibinitperiod}{Ашраф~Ахмедович}{А\bibinitperiod\bibinitdelim А\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{3}{%
-      {{Булгаков}{Б\bibinitperiod}{Павел~Георгиевич}{П\bibinitperiod}{}{}{}{}}%
-      {{Розенфельд}{Р\bibinitperiod}{Борис~Абрамович}{Б\bibinitperiod}{Билл}{д\bibinitperiod}{}{}{}{}}%
-      {{Ахмедов}{А\bibinitperiod}{Ашраф~Ахмедович}{А\bibinitperiod\bibinitdelim А\bibinitperiod}{}{}{}{}}%
+      {{Булгаков}{Б\bibinitperiod}{Павел~Георгиевич}{П\bibinitperiod\bibinitdelim Г\bibinitperiod}{}{}{}{}}%
+      {{Розенфельд}{Р\bibinitperiod}{Борис-ZZ~Aбрамович}{Б\bibinithyphendelim Z\bibinitperiod\bibinitdelim A\bibinitperiod}{Билл}{Б\bibinitperiod}{}{}{}{}}%
+      {{Aхмедов}{A\bibinitperiod}{Ашраф~Ахмедович}{А\bibinitperiod\bibinitdelim А\bibinitperiod}{}{}{}{}}%
     }
     \list{language}{1}{%
       {Russian}%
@@ -52,8 +52,8 @@ my $l1 = q|  \entry{BulgakovRozenfeld:1983}{book}{}
     \list{publisher}{1}{%
       {Наука}%
     }
-    \strng{namehash}{БПРБдААА1}
-    \strng{fullhash}{БПРБдААА1}
+    \strng{namehash}{БПГРБ-ZAБAАА1}
+    \strng{fullhash}{БПГРБ-ZAБAАА1}
     \field{sortinit}{Б}
     \field{labelyear}{1983}
     \field{eventday}{16}

@@ -447,24 +447,22 @@ sub parsename {
       if (my @parts = map {$_->textContent()} $nc_node->findnodes("./$NS:namepart")) {
         $namec{$n} = _join_name_parts(\@parts);
         $logger->debug("Found name component '$n': " . $namec{$n});
-        if (my $nin = $node->findnodes("./$NS:${n}initial")->get_node(1)) {
-          my $ni = $nin->textContent();
+        if (my $ni = $node->getAttribute('initial')) {
           $namec{"${n}_i"} = [$ni];
         }
         else {
-          $namec{"${n}_i"} = _gen_initials(\@parts);
+          $namec{"${n}_i"} = [_gen_initials(@parts)];
         }
       }
       # with no parts
       elsif (my $t = $nc_node->textContent()) {
         $namec{$n} = $t;
         $logger->debug("Found name component '$n': $t");
-        if (my $nin = $node->findnodes("./$NS:${n}initial")->get_node(1)) {
-          my $ni = $nin->textContent();
+        if (my $ni = $node->getAttribute('initial')) {
           $namec{"${n}_i"} = [$ni];
         }
         else {
-          $namec{"${n}_i"} = _gen_initials([$t]);
+          $namec{"${n}_i"} = [_gen_initials($t)];
         }
       }
     }
@@ -558,19 +556,26 @@ sub _join_name_parts {
 
 # Passed an array ref of strings, returns an array ref of initials
 sub _gen_initials {
-  my $strings_ref = shift;
-  my $strings;
-  foreach my $str (@$strings_ref) {
-    my $chr = substr($str, 0, 1);
-    # Keep diacritics with their following characters
-    if ($chr =~ m/\p{Dia}/) {
-      push @$strings, substr($str, 0, 2);
+  my @strings = @_;
+  my @strings_out;
+  foreach my $str (@strings) {
+    # Deal with hyphenated name parts and normalise to a '-' character for easy
+    # replacement with macro later
+    if ($str =~ m/\p{Dash}/) {
+      push @strings_out, join('-', _gen_initials(split(/\p{Dash}/, $str)));
     }
     else {
-      push @$strings, substr($str, 0, 1);
+      my $chr = substr($str, 0, 1);
+      # Keep diacritics with their following characters
+      if ($chr =~ m/\p{Dia}/) {
+        push @strings_out, substr($str, 0, 2);
+      }
+      else {
+        push @strings_out, $chr;
+      }
     }
   }
-  return $strings;
+  return @strings_out;
 }
 
 # parses a range and returns a ref to an array of start and end values

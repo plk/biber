@@ -305,9 +305,9 @@ sub _name {
       $logger->debug("Found name component 'firstname': $firstname") if $firstname;
       $logger->debug("Found name component 'suffix': $suffix") if $suffix;
 
-      my $fni = _gen_initials([split(/\s/, $firstname)]) if $firstname;
-      my $lni = _gen_initials([split(/\s/, $lastname)]) if $lastname;
-      my $si = _gen_initials([split(/\s/, $suffix)]) if $suffix;
+      my @fni = _gen_initials(split(/\s/, $firstname)) if $firstname;
+      my @lni = _gen_initials(split(/\s/, $lastname)) if $lastname;
+      my @si = _gen_initials(split(/\s/, $suffix)) if $suffix;
 
       my $namestring = '';
 
@@ -328,18 +328,18 @@ sub _name {
       # Construct $nameinitstring
       my $nameinitstr = '';
       $nameinitstr .= $lastname if $lastname;
-      $nameinitstr .= '_' . join('', @$si) if $suffix;
-      $nameinitstr .= '_' . join('', @$fni) if $firstname;
+      $nameinitstr .= '_' . join('', @si) if $suffix;
+      $nameinitstr .= '_' . join('', @fni) if $firstname;
       $nameinitstr =~ s/\s+/_/g;
       $nameinitstr =~ s/~/_/g;
 
       my $name_obj = Biber::Entry::Name->new(
         firstname       => $firstname || undef,
-        firstname_i     => $firstname ? $fni : undef,
+        firstname_i     => $firstname ? \@fni : undef,
         lastname        => $lastname,
-        lastname_i      => $lni,
+        lastname_i      => \@lni,
         suffix          => $suffix || undef,
-        suffix_i        => $suffix ? $si : undef,
+        suffix_i        => $suffix ? \@si : undef,
         namestring      => $namestring,
         nameinitstring  => $nameinitstr
       );
@@ -359,22 +359,28 @@ sub _name {
 
 }
 
-# Passed an array ref of strings, returns an array of two strings,
-# the first is the TeX initials and the second the terse initials
+# Passed an array of strings, returns an array of initials for the strings
 sub _gen_initials {
-  my $strings_ref = shift;
-  my $strings;
-  foreach my $str (@$strings_ref) {
-    my $chr = substr($str, 0, 1);
-    # Keep diacritics with their following characters
-    if ($chr =~ m/\p{Dia}/) {
-      push @$strings, substr($str, 0, 2);
+  my @strings = @_;
+  my @strings_out;
+  foreach my $str (@strings) {
+    # Deal with hyphenated name parts and normalise to a '-' character for easy
+    # replacement with macro later
+    if ($str =~ m/\p{Dash}/) {
+      push @strings_out, join('-', _gen_initials(split(/\p{Dash}/, $str)));
     }
     else {
-      push @$strings, substr($str, 0, 1);
+      my $chr = substr($str, 0, 1);
+      # Keep diacritics with their following characters
+      if ($chr =~ m/\p{Dia}/) {
+        push @strings_out, substr($str, 0, 2);
+      }
+      else {
+        push @strings_out, $chr;
+      }
     }
   }
-  return $strings;
+  return @strings_out;
 }
 
 
