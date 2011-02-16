@@ -22,7 +22,7 @@ REQUIREMENTS
     * List::AllUtils
     * Log::Log4perl
     * XML::LibXML::Simple (XML::LibXML clone of XML::Simple)
-    * Text::BibTeX 0.5.1 or higher (requires Config::AutoConf when
+    * Text::BibTeX 0.52 or higher (requires Config::AutoConf when
       installing - please install this first.)
     * LWP::Simple
 
