@@ -51,8 +51,8 @@ scp $BASE/Changes philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/
 find $DRIVERDIR -name \*.dcf | xargs -I{} cp {} ~/Desktop/
 for dcf in ~/Desktop/*.dcf
 do
-$BINDIR/make-pretty-dcsf.pl $file $XSLDIR/dcf.xsl
-scp $file.html philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/documentation/
+$BINDIR/make-pretty-dcfs.pl $dcf $XSLDIR/dcf.xsl
+scp $dcf.html philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/documentation/
 \rm -f $dcf $dcf.html
 done
 
