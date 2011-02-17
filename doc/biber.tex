@@ -53,7 +53,17 @@
 customised and sophisticated data preparation backend for \verb+biblatex+.
 Functionally, it offers a superset of \verb+bibtex+'s capabilities but is
 tightly coupled with \verb+biblatex+ and cannot be used as a stand-alone tool
-with standard \verb+.bst+ styles.
+with standard \verb+.bst+ styles. \verb+biber+'s role is to support
+\verb+biblatex+ by performing the following tasks:
+
+\begin{itemize}
+\item Parsing data from data sources
+\item Processing cross-references, entry sets, related entries
+\item Generating data for name, name list and name/year disambiguation
+\item Structural validation according to \verb+biblatex+ data model
+\item Sorting reference lists
+\item Outputting data to a \verb+.bbl+ for \verb+biblatex+ to consume
+\end{itemize}
 
 \subsection{Requirements}\label{ref:req}
 
@@ -788,6 +798,18 @@ by \verb+--nostdmacros+), it will try to turn it into the right number in
 the \verb+.bbl+. If you only use \verb+biblatex+ with your \verb+bibtex+
 data source files, you should probably make any \verb+MONTH+ fields be the
 numbers which \verb+biblatex+ expects.
+
+\subsection{Biber datasource drivers}
+
+\verb+biber+ uses a modular data source driver model to provide access
+to supported data sources. The drivers are responsible for mapping
+driver entry types and fields to the \verb+biblatex+ model. This is
+aided by a driver configuration file (\verb+.dcf+). The information in
+this file for each driver can be found in the documentation folder on
+SourceForge\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/documentation}}. This
+file shows you which handlers the driver uses for different fields and
+what certain entry types and fields are aliased to in the
+\verb+biblatex+ data model.
 
 \section{Binaries}
 
