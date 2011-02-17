@@ -1,4 +1,4 @@
-namespace dcf = "https://sourceforge.net/projects/biber"
+namespace dcf = "https://sourceforge.net/projects/biblatex-biber"
 
 start =
   element dcf:driver-control {

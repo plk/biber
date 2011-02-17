@@ -42,6 +42,7 @@ data/schemata/dcf.rng
 data/schemata/biblatexml.rnc
 data/schemata/biblatexml.rng
 data/bcf.xsl
+data/dcf.xsl
 data/latinkeys.txt
 etc/biber.conf
 t/options.t

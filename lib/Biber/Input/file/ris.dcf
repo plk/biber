@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../../../../data/schemata/dcf.rnc" type="compact"?>
-<dcf:driver-control driver="ris" xmlns:dcf="https://sourceforge.net/projects/biber">
+<?xml-stylesheet type="text/xsl" href="../../../../data/dcf.xsl"?>
+<dcf:driver-control driver="ris" xmlns:dcf="https://sourceforge.net/projects/biblatex-biber">
   <!--
       These entry type aliases we might find in the the datasource so
       we can decide how to map and convert them into Biber::Entry objects

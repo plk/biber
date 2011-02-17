@@ -8,6 +8,9 @@
 
 BASE="/Users/philkime/data/code/biblatex-biber"
 DOCDIR=$BASE/doc
+DRIVERDIR=$BASE/lib/Biber/Input/
+BINDIR=$BASE/dist
+XSLDIR=$BASE/data
 DIR=${1:-"/Users/philkime/Desktop/b"}
 RELEASE=${2:-"development"}
 export COPYFILE_DISABLE=true # no resource forks - TL doesn't like them
@@ -44,6 +47,15 @@ scp biber.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b
 scp $DOCDIR/biber.pdf philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/documentation/biber.pdf
 # Changes file
 scp $BASE/Changes philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/Changes
+# Driver control file docs
+find $DRIVERDIR -name \*.dcf | xargs -i{} cp {} ~/Desktop/
+for dcf in ~/Desktop/*.dcf
+do
+$BINDIR/make-pretty-dcsf.pl $file $XSLDIR/dcf.xsl
+scp $file.html $philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/documentation/
+\rm -f $file*
+done
+
 if [ $RELEASE != "development" ]; then
 # Perl dist tree
 scp $BASE/biblatex-biber-*.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/biblatex-biber.tar.gz
