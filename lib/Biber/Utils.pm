@@ -246,7 +246,10 @@ sub normalise_string_common {
   Smith
   {\v S}mith
 
-   we 
+  we replace macros like this to preserve their vestiges:
+
+  \v S -> v:
+  \" -> 34:
 
 =cut
 
