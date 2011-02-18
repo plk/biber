@@ -547,8 +547,8 @@ my $l21 = q|  \entry{L21}{book}{}
     \name{author}{1}{%
       {{Smith}{S\bibinitperiod}{{\v S}omeone}{{\v S}\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{SS1}
-    \strng{fullhash}{SS1}
+    \strng{namehash}{Sv:S1}
+    \strng{fullhash}{Sv:S1}
     \field{sortinit}{S}
   \endentry
 
@@ -576,8 +576,8 @@ my $l22 = q|  \entry{L22}{book}{}
     \name{author}{1}{%
       {{{\v S}mith}{{\v S}\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{SS1}
-    \strng{fullhash}{SS1}
+    \strng{namehash}{v:SS1}
+    \strng{fullhash}{v:SS1}
     \field{sortinit}{\v{S}}
   \endentry
 
@@ -678,8 +678,8 @@ my $l31 = q|  \entry{L31}{book}{}
     \name{translator}{1}{%
       {{{\~{Z}}elly}{{\~{Z}}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{ZA1}
-    \strng{fullhash}{ZA1}
+    \strng{namehash}{126:ZA1}
+    \strng{fullhash}{126:ZA1}
     \field{sortinit}{Z}
   \endentry
 

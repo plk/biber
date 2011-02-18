@@ -34,7 +34,7 @@ All functions are exported by default.
 =cut
 
 our @EXPORT = qw{ locate_biber_file makenameid stringify_hash
-  normalise_string normalise_string_lite normalise_string_underscore normalise_string_sort
+  normalise_string normalise_string_hash normalise_string_underscore normalise_string_sort
   reduce_array remove_outer add_outer ucinit strip_nosort
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name};
@@ -238,21 +238,24 @@ sub normalise_string_common {
   return $str;
 }
 
-=head2 normalise_string_lite
+=head2 normalise_string_hash
 
-  Strip LaTeX macros and other bits
+  Normalise strings used for hashes. We collapse LaTeX macros into a vestige
+  so that hashes are unique between things like:
+
+  Smith
+  {\v S}mith
+
+   we 
 
 =cut
 
-sub normalise_string_lite {
+sub normalise_string_hash {
   my $str = shift;
   return '' unless $str; # Sanitise missing data
-  $str =~ s/\\\p{L}+\s*//g; # remove tex macros
-  $str =~ s/\\[^\p{L}]+\s*//g; # remove accent macros like \"a
-  $str =~ s/[{}]//g; # Remove any brackets left
-  $str =~ s/~//g;
-  $str =~ s/\.//g;
-  $str =~ s/\s+//g;
+  $str =~ s/\\(\p{L}+)\s*/$1:/g; # remove tex macros
+  $str =~ s/\\([^\p{L}])\s*/ord($1).':'/ge; # remove accent macros like \"a
+  $str =~ s/[{}~\.\s]+//g; # Remove brackes, ties, dots, spaces
   return $str;
 }
 

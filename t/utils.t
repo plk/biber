@@ -79,5 +79,5 @@ is_deeply(\@AminusB, \@AminusBexpected, 'reduce_array') ;
 
 is(remove_outer('{Some string}'), 'Some string', 'remove_outer') ;
 
-is( normalise_string_lite('Ä.~{\c{C}}.~{\c S}.'), 'ÄCS', 'normalise_string_lite' ) ;
+is( normalise_string_hash('Ä.~{\c{C}}.~{\c S}.'), 'Äc:Cc:S', 'normalise_string_lite' ) ;
 
