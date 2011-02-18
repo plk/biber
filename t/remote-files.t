@@ -34,15 +34,15 @@ my $bibentries = $section->bibentries;
 my $cu1 = q|  \entry{citeulike:8283461}{article}{}
     \name{labelname}{4}{%
       {{Marazziti}{M\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
-      {{Akiskal}{A\bibinitperiod}{H.~S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+      {{Akiskal}{A\bibinitperiod}{H.\bibnbnamedelim S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
       {{Rossi}{R\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
-      {{Cassano}{C\bibinitperiod}{G.~B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      {{Cassano}{C\bibinitperiod}{G.\bibnbnamedelim B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{4}{%
       {{Marazziti}{M\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
-      {{Akiskal}{A\bibinitperiod}{H.~S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+      {{Akiskal}{A\bibinitperiod}{H.\bibnbnamedelim S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
       {{Rossi}{R\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
-      {{Cassano}{C\bibinitperiod}{G.~B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      {{Cassano}{C\bibinitperiod}{G.\bibnbnamedelim B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{MD+1}
     \strng{fullhash}{MDAHSRACGB1}

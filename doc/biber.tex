@@ -322,7 +322,7 @@ in names which should not be considered when sorting. Given (the default):
 </nosort>
 \end{verbatim}
 
-and the \verb+.bib+ entry:
+and the \verb+.bib+ data source entry:
 
 \begin{verbatim}
 author	   = {{al-Hasan}, ʿAlī},
@@ -512,7 +512,7 @@ reverse order at UCA level 2.
 
 \subsection{Encoding of files}
 
-\verb+biber+ takes care of reencoding the \verb+.bib+ data as
+\verb+biber+ takes care of reencoding the data source data as
 necessary. In normal use, \verb+biblatex+ passes its
 \verb+bibencoding+ option value to \verb+biber+ via the \verb+.bcf+
 file. It also passes the value of its \verb+texencoding+ option (which
@@ -523,7 +523,7 @@ using (see \verb+biblatex+ manual for details).
 \noindent \verb+biber+ performs the following tasks:
 
 \begin{enumerate}
-\item Decodes the \verb+.bib+ into UTF-8 if it is not UTF-8 already
+\item Decodes the data source into UTF-8 if it is not UTF-8 already
 \item Decodes LaTeX character macros into UTF-8 if \verb+--bblencoding|-E+
   is UTF-8
 \item Encodes the output so that the \verb+.bbl+ is in
@@ -566,16 +566,15 @@ internal LaTeX character macro decoding break \verb+inputenc+. This is
 because \verb+inputenc+ does not implement all of UTF-8, only a
 commonly used subset.
 
-An example--if you had \verb+\DJ+ in your \verb+.bib+, \verb+biber+
-decodes this correctly to «Đ» and this breaks \verb+inputenc+ because
-it doesn't understand that UTF-8 character. The real solution here is
-to switch to a TeX engine with full UTF-8 support like XeTeX or LuaTeX
-as these don't use or need \verb+inputenc+. However, you can also try
-the \verb+--bblsafechars+ option which will try to convert any UTF-8
-chars into LaTeX macros on output. The \verb+biblatex+ option
-«\verb+texencoding=ascii+» (which corresponds to the \verb+biber+
-option «\verb+--bblencoding|-E+») will automatically set
-\verb+--bblsafechars+.
+An example--if you had \verb+\DJ+ in your \verb+.bib+ data source,
+\verb+biber+ decodes this correctly to «Đ» and this breaks \verb+inputenc+
+because it doesn't understand that UTF-8 character. The real solution here
+is to switch to a TeX engine with full UTF-8 support like XeTeX or LuaTeX
+as these don't use or need \verb+inputenc+. However, you can also try the
+\verb+--bblsafechars+ option which will try to convert any UTF-8 chars into
+LaTeX macros on output. The \verb+biblatex+ option
+«\verb+texencoding=ascii+» (which corresponds to the \verb+biber+ option
+«\verb+--bblencoding|-E+») will automatically set \verb+--bblsafechars+.
 
 See also the \verb+biber --help+ output for the
 \verb+--bblsafecharsset+ option which can customise the set of
@@ -584,7 +583,7 @@ conversion characters to use.
 \minisec{Decoding for internal sorting}
 
 If your \verb+bblencoding+ is not UTF-8, and you are using some UTF-8
-equivalent LaTeX character macros in your \verb+.bib+, then some
+equivalent LaTeX character macros in your \verb+.bib+ data source, then some
 \verb+.bbl+ fields (currently only \verb+\sortinit{}+) might end up
 with invalid characters in them, according to the \verb+.bbl+
 encoding. This is because some fields must be generated from the final
@@ -648,7 +647,7 @@ to LaTeX macro conversion using the full set of conversions
 \noindent Set \verb+bibencoding+ and \verb+bblencoding+ from the
 config file or \verb+.bcf+. Use the full LaTeX macro to UTF-8
 conversion set because you have some more obscure character macros in
-your \verb+.bib+ which you want to sort correctly
+your \verb+.bib+ data source which you want to sort correctly
 
 \biberex{biber -u}
 

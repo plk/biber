@@ -327,7 +327,7 @@ sub name_to_bbl {
   my $self = shift;
 
   # lastname is always defined
-  my $ln  = $self->get_lastname;
+  my $ln  = Biber::Utils::join_name($self->get_lastname);
   if ($self->was_stripped('lastname')) {
     $ln = Biber::Utils::add_outer($ln);
   }
@@ -338,6 +338,7 @@ sub name_to_bbl {
   my $fn;
   my $fni;
   if ($fn = $self->get_firstname) {
+    $fn = Biber::Utils::join_name($fn);
     if ($self->was_stripped('firstname')) {
       $fn = Biber::Utils::add_outer($fn);
     }
@@ -353,6 +354,7 @@ sub name_to_bbl {
   my $mn;
   my $mni;
   if ($mn = $self->get_middlename) {
+    $mn = Biber::Utils::join_name($mn);
     $mni = join('\bibinitperiod\bibinitdelim ', @{$self->get_middlename_i}) . '\bibinitperiod';
     $mni =~ s/\-/\\bibinithyphendelim /gxms;
   }
@@ -365,6 +367,7 @@ sub name_to_bbl {
   my $pre;
   my $prei;
   if ($pre = $self->get_prefix) {
+    $pre = Biber::Utils::join_name($pre);
     if ($self->was_stripped('prefix')) {
       $pre = Biber::Utils::add_outer($pre);
     }
@@ -380,6 +383,7 @@ sub name_to_bbl {
   my $suf;
   my $sufi;
   if ($suf = $self->get_suffix) {
+    $suf = Biber::Utils::join_name($suf);
     if ($self->was_stripped('suffix')) {
       $suf = Biber::Utils::add_outer($suf);
     }
@@ -391,16 +395,6 @@ sub name_to_bbl {
     $sufi = '';
   }
 
-  # Can't just replace all spaces in first names with "~" as this could
-  # potentially be too long and would do nasty line-break things in LaTeX
-  # So, be a bit picky and only attach initials/protected things
-  # J. Frank -> J.~Frank
-  # {J.\,P.} Frank -> {J.\,P.}~Frank
-  $fn =~ s/(\p{Lu}\.|$RE{balanced}{-parens=>'{}'})\s+/$1~/g;
-  # Bernard H. -> Bernard~H.
-  # Bernard {H.\,P.} -> Bernard~{H.\,P.}
-  $fn =~ s/\s+(\p{Lu}\.|$RE{balanced}{-parens=>'{}'})/~$1/g;
-  $pre =~ s/\s/~/g if $pre;       # van der -> van~der
   # BIBLATEXML supports middle names
   if ($self->get_middlename) {
     return "      {{$ln}{$lni}{$fn}{$fni}{$mn}{$mni}{$pre}{$prei}{$suf}{$sufi}}%\n";

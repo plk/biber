@@ -37,7 +37,7 @@ our @EXPORT = qw{ locate_biber_file makenameid stringify_hash
   normalise_string normalise_string_lite normalise_string_underscore normalise_string_sort
   reduce_array remove_outer add_outer ucinit strip_nosort
   is_def is_undef is_def_and_notnull is_def_and_null
-  is_undef_or_null is_notnull is_null normalise_utf8 inits};
+  is_undef_or_null is_notnull is_null normalise_utf8 inits join_name};
 
 =head1 FUNCTIONS
 
@@ -240,14 +240,13 @@ sub normalise_string_common {
 
 =head2 normalise_string_lite
 
-  Removes LaTeX macros
+  Strip LaTeX macros and other bits
 
 =cut
 
 sub normalise_string_lite {
   my $str = shift;
   return '' unless $str; # Sanitise missing data
-  # First replace ties with spaces or they will be lost
   $str =~ s/\\\p{L}+\s*//g; # remove tex macros
   $str =~ s/\\[^\p{L}]+\s*//g; # remove accent macros like \"a
   $str =~ s/[{}]//g; # Remove any brackets left
@@ -539,16 +538,31 @@ sub normalise_utf8 {
 =head2 inits
 
    We turn the initials into an array so we can be flexible with them later
+   The tie here is used only so we know what to split on. We don't want to make
+   any typesetting decisions in Biber, like what to use to join initials so on
+   output to the .bbl, we only use BibLaTeX macros.
 
 =cut
 
 sub inits {
   my $istring = shift;
-  return [ split(/~/, $istring) ];
+  return [ split(/(?<!\\)~/, $istring) ];
 }
 
 
+=head2 join_name
 
+  Replace all join typsetting elements in a name part (space, ties) with BibLaTeX macros
+  so that typesetting decisions are made in BibLaTeX, not hard-coded in biber
+
+=cut
+
+sub join_name {
+  my $nstring = shift;
+  $nstring =~ s/(?<!\\\S)\s+/\\bibbnamedelim /gxms; # Don't do spaces in char macros
+  $nstring =~ s/(?<!\\)~/\\bibnbnamedelim /gxms; # Don't do '\~'
+  return $nstring;
+}
 
 =head1 AUTHOR
 
