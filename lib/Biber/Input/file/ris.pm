@@ -37,34 +37,8 @@ my %handlers = (
                 'verbatim' => \&_verbatim
 );
 
-# we assume that the driver config file is in the same dir as the driver:
-(my $vol, my $driver_path, undef) = File::Spec->splitpath( $INC{"Biber/Input/file/ris.pm"} );
-
-# Deal with the strange world of Par::Packer paths, see similar code in Biber.pm
-my $dcf;
-if ($driver_path =~ m|/par\-| and $driver_path !~ m|/inc|) { # a mangled PAR @INC path
-  $dcf = File::Spec->catpath($vol, "$driver_path/inc/lib/Biber/Input/file", 'ris.dcf');
-}
-else {
-  $dcf = File::Spec->catpath($vol, $driver_path, 'ris.dcf');
-}
-
 # Read driver config file
-my $dcfxml = XML::LibXML::Simple::XMLin($dcf,
-                                        'ForceContent' => 1,
-                                        'ForceArray' => [
-                                                         qr/\Aentry-type\z/,
-                                                         qr/\Afield\z/,
-                                                        ],
-                                        'NsStrip' => 1,
-                                        'KeyAttr' => ['name']);
-
-# Check we have the right driver
-unless ($dcfxml->{driver} eq 'ris') {
-  $logger->logdie("Expected driver config type 'ris', got '" . $dcfxml->{driver} . "'");
-}
-
-
+my $dcfxml = driver_config('ris');
 
 =head2 extract_entries
 

@@ -43,32 +43,8 @@ my %handlers = (
 );
 
 
-# we assume that the driver config file is in the same dir as the driver:
-(my $vol, my $driver_path, undef) = File::Spec->splitpath( $INC{"Biber/Input/file/bibtex.pm"} );
-
-# Deal with the strange world of Par::Packer paths, see similar code in Biber.pm
-my $dcf;
-if ($driver_path =~ m|/par\-| and $driver_path !~ m|/inc|) { # a mangled PAR @INC path
-  $dcf = File::Spec->catpath($vol, "$driver_path/inc/lib/Biber/Input/file", 'bibtex.dcf');
-}
-else {
-  $dcf = File::Spec->catpath($vol, $driver_path, 'bibtex.dcf');
-}
-
 # Read driver config file
-my $dcfxml = XML::LibXML::Simple::XMLin($dcf,
-                                        'ForceContent' => 1,
-                                        'ForceArray' => [
-                                                         qr/\Aentry-type\z/,
-                                                         qr/\Afield\z/,
-                                                        ],
-                                        'NsStrip' => 1,
-                                        'KeyAttr' => ['name']);
-
-# Check we have the right driver
-unless ($dcfxml->{driver} eq 'bibtex') {
-  $logger->logdie("Expected driver config type 'bibtex', got '" . $dcfxml->{driver} . "'");
-}
+my $dcfxml = driver_config('bibtex');
 
 =head2 TBSIG
 

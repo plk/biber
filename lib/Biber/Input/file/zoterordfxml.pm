@@ -1,4 +1,4 @@
-package Biber::Input::file::biblatexml;
+package Biber::Input::file::zoterordfxml;
 #use feature 'unicode_strings';
 use strict;
 use warnings;
@@ -26,8 +26,14 @@ use Data::Dump qw(dump);
 
 my $logger = Log::Log4perl::get_logger('main');
 
-Readonly::Scalar our $BIBLATEXML_NAMESPACE_URI => 'http://biblatex-biber.sourceforge.net/biblatexml';
-Readonly::Scalar our $NS => 'bib';
+my %PREFICES = ('z'       => 'http://www.zotero.org/namespaces/export#',
+                'foaf'    => 'http://xmlns.com/foaf/0.1/',
+                'rdf'     => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+                'dc'      => 'http://purl.org/dc/elements/1.1/',
+                'dcterms' => 'http://purl.org/dc/terms/',
+                'bib'     => 'http://purl.org/net/biblio#',
+                'prism'   => 'http://prismstandard.org/namespaces/1.2/basic/');
+%PREFICES_R = reverse %PREFICES;
 
 # Handlers for field types
 # The names of these have nothing to do whatever with the biblatex field types
@@ -43,7 +49,7 @@ my %handlers = (
 );
 
 # Read driver config file
-my $dcfxml = driver_config('biblatexml');
+my $dcfxml = driver_config('zoterordf');
 
 =head2 extract_entries
 
@@ -67,10 +73,10 @@ sub extract_entries {
 
   # If it's a remote .bib file, fetch it first
   if ($filename =~ m/\A(?:https?|ftp):\/\//xms) {
-    $logger->info("Data source '$filename' is a remote .xml - fetching ...");
+    $logger->info("Data source '$filename' is a remote .rdf - fetching ...");
     require LWP::Simple;
     require File::Temp;
-    $tf = File::Temp->new(SUFFIX => '.xml');
+    $tf = File::Temp->new(SUFFIX => '.rdf');
     unless (LWP::Simple::is_success(LWP::Simple::getstore($filename, $tf->filename))) {
       $logger->logdie ("Could not fetch file '$filename'");
     }
@@ -85,20 +91,20 @@ sub extract_entries {
     }
   }
 
-  # Set up XML parser and namespace
+  # Set up XML parser and namespaces
   my $parser = XML::LibXML->new();
-  my $bltxml = $parser->parse_file($filename)
+  my $rdfxml = $parser->parse_file($filename)
     or $logger->logcroak("Can't parse file $filename");
-  my $xpc = XML::LibXML::XPathContext->new($bltxml);
-  $xpc->registerNs($NS, $BIBLATEXML_NAMESPACE_URI);
-
-
+  my $xpc = XML::LibXML::XPathContext->new($rdfxml);
+  foreach my $ns (keys $PREFICES) {
+    $xpc->registerNs($ns, $PREFICES{$ns});
+  }
 
   if ($section->is_allkeys) {
     $logger->debug("All citekeys will be used for section '$secnum'");
     # Loop over all entries, creating objects
-    foreach my $entry ($xpc->findnodes("//$NS:entry")) {
-      $logger->debug('Parsing BibLaTeXML entry object ' . $entry->nodePath);
+    foreach my $entry ($xpc->findnodes("/rdf:RDF/*")) {
+      $logger->debug('Parsing Zotero RDF/XML entry object ' . $entry->nodePath);
       # We have to pass the datasource cased key to
       # create_entry() as this sub needs to know the original case of the
       # citation key so we can do case-insensitive key/entry comparisons
@@ -107,12 +113,12 @@ sub extract_entries {
       # Of course, with allkeys, "citation case" means "datasource entry case"
 
       # If an entry has no key, ignore it and warn
-      unless ($entry->hasAttribute('id')) {
-        $logger->warn("Invalid or undefined BibLaTeXML entry key in file '$filename', skipping ...");
+      unless ($entry->hasAttribute('rdf:about')) {
+        $logger->warn("Invalid or undefined RDF/XML rdf:about in file '$filename', skipping ...");
         $biber->{warnings}++;
         next;
       }
-      create_entry($biber, $entry->getAttribute('id'), $entry);
+      create_entry($biber, $entry->getAttribute('rdf:about'), $entry);
     }
 
     # if allkeys, push all bibdata keys into citekeys (if they are not already there)
@@ -123,22 +129,22 @@ sub extract_entries {
     # loop over all keys we're looking for and create objects
     $logger->debug('Wanted keys: ' . join(', ', @$keys));
     foreach my $wanted_key (@$keys) {
-      $logger->debug("Looking for key '$wanted_key' in BibLaTeXML file '$filename'");
+      $logger->debug("Looking for key '$wanted_key' in Zotero RDF/XML file '$filename'");
       # Cache index keys are lower-cased. This next line effectively implements
       # case insensitive citekeys
       # This will also get the first match it finds
-      if (my @entries = $xpc->findnodes("//$NS:entry[\@id='" . lc($wanted_key) . "']")) {
+      if (my @entries = $xpc->findnodes("/rdf:RDF/*[\@rdf:about='" . lc($wanted_key) . "']")) {
         my $entry;
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
           $logger->warn("Found more than one entry for key '$wanted_key' in '$filename': " .
-                       join(',', map {$_->getAttribute('id')} @entries) . ' - using the first one!');
+                       join(',', map {$_->getAttribute('rdf:about')} @entries) . ' - using the first one!');
           $biber->{warnings}++;
         }
         $entry = $entries[0];
 
-        $logger->debug("Found key '$wanted_key' in BibLaTeXML file '$filename'");
-        $logger->debug('Parsing BibLaTeXML entry object ' . $entry->nodePath);
+        $logger->debug("Found key '$wanted_key' in Zotero RDF/XML file '$filename'");
+        $logger->debug('Parsing Zotero RDF/XML entry object ' . $entry->nodePath);
         # See comment above about the importance of the case of the key
         # passed to create_entry()
         create_entry($biber, $wanted_key, $entry);
@@ -153,11 +159,10 @@ sub extract_entries {
 }
 
 
-
-
 =head2 create_entry
 
-   Create a Biber::Entry object from an entry found in a biblatexml data source
+   Create a Biber::Entry object from an entry found in a Zotero
+   RDF/XML data source
 
 =cut
 
@@ -183,7 +188,7 @@ sub create_entry {
   $bibentry->set_field('citekey', $citekey);
 
   # Set entrytype taking note of any aliases for this datasource driver
-  if (my $ealias = $dcfxml->{'entry-types'}{'entry-type'}{$entry->getAttribute('entrytype')}) {
+  if (my $ealias = $dcfxml->{'entry-types'}{'entry-type'}{$entry->findnodes('./z:itemType')->get_node(1)->textContent()}) {
     $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
     if (my $alsoset = $ealias->{alsoset}) {
       unless ($bibentry->field_exists($alsoset->{target})) {
@@ -192,12 +197,7 @@ sub create_entry {
     }
   }
   else {
-    $bibentry->set_field('entrytype', $entry->getAttribute('entrytype'));
-  }
-
-  # Some entry attributes
-  if (my $hp = $entry->getAttribute('howpublished')) {
-    $bibentry->set_datafield('howpublished', $hp);
+    $bibentry->set_field('entrytype', $entry->findnodes('./z:itemType')->get_node(1)->textContent());
   }
 
   # We put all the fields we find modulo field aliases into the object.

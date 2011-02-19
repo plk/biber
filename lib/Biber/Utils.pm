@@ -33,13 +33,51 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ locate_biber_file makenameid stringify_hash
+our @EXPORT = qw{ locate_biber_file driver_config makenameid stringify_hash
   normalise_string normalise_string_hash normalise_string_underscore normalise_string_sort
   reduce_array remove_outer add_outer ucinit strip_nosort
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name};
 
 =head1 FUNCTIONS
+
+=head2 driver_config
+
+  Returns an XML::LibXML::Simple object for an input driver config file
+
+=cut
+
+sub driver_config {
+  my $driver_name = shift;
+# we assume that the driver config file is in the same dir as the driver:
+  (my $vol, my $driver_path, undef) = File::Spec->splitpath( $INC{"Biber/Input/file/${driver_name}.pm"} );
+
+  # Deal with the strange world of Par::Packer paths, see similar code in Biber.pm
+  my $dcf;
+  if ($driver_path =~ m|/par\-| and $driver_path !~ m|/inc|) { # a mangled PAR @INC path
+    $dcf = File::Spec->catpath($vol, "$driver_path/inc/lib/Biber/Input/file", "${driver_name}.dcf");
+  }
+  else {
+    $dcf = File::Spec->catpath($vol, $driver_path, "${driver_name}.dcf");
+  }
+
+  # Read driver config file
+  my $dcfxml = XML::LibXML::Simple::XMLin($dcf,
+                                          'ForceContent' => 1,
+                                          'ForceArray' => [
+                                                           qr/\Aentry-type\z/,
+                                                           qr/\Afield\z/,
+                                                          ],
+                                          'NsStrip' => 1,
+                                          'KeyAttr' => ['name']);
+
+  # Check we have the right driver
+  unless ($dcfxml->{driver} eq $driver_name) {
+    $logger->logdie("Expected driver config type '$driver_name', got '" . $dcfxml->{driver} . "'");
+  }
+  return $dcfxml;
+}
+
 
 =head2 locate_biber_file
 

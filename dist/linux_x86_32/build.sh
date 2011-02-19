@@ -11,6 +11,8 @@
   --compress=6 \
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
+  --module=Biber::Input::file::ris \
+  --module=Biber::Input::file::zoterordfxml \
   --module=Encode::Byte \
   --module=Encode::CN \
   --module=Encode::CJKConstants \
