@@ -32,7 +32,8 @@ my %PREFICES = ('z'       => 'http://www.zotero.org/namespaces/export#',
                 'dc'      => 'http://purl.org/dc/elements/1.1/',
                 'dcterms' => 'http://purl.org/dc/terms/',
                 'bib'     => 'http://purl.org/net/biblio#',
-                'prism'   => 'http://prismstandard.org/namespaces/1.2/basic/');
+                'prism'   => 'http://prismstandard.org/namespaces/1.2/basic/',
+                'vcard'   => 'http://nwalsh.com/rdf/vCard#');
 %PREFICES_R = reverse %PREFICES;
 
 # Handlers for field types
