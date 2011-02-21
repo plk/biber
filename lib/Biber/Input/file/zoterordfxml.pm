@@ -33,7 +33,8 @@ my %PREFICES = ('z'       => 'http://www.zotero.org/namespaces/export#',
                 'dcterms' => 'http://purl.org/dc/terms/',
                 'bib'     => 'http://purl.org/net/biblio#',
                 'prism'   => 'http://prismstandard.org/namespaces/1.2/basic/',
-                'vcard'   => 'http://nwalsh.com/rdf/vCard#');
+                'vcard'   => 'http://nwalsh.com/rdf/vCard#',
+                'vcard2'  => 'http://www.w3.org/2006/vcard/ns#');
 %PREFICES_R = reverse %PREFICES;
 
 # Handlers for field types
@@ -114,10 +115,16 @@ sub extract_entries {
       # Of course, with allkeys, "citation case" means "datasource entry case"
 
       # If an entry has no key, ignore it and warn
-      unless ($entry->hasAttribute('rdf:about')) {
-        $logger->warn("Invalid or undefined RDF/XML rdf:about in file '$filename', skipping ...");
-        $biber->{warnings}++;
-        next;
+      my $key;
+      if (my $n = $entry->findnodes('./z:itemID')) {
+        $key = $n->get_node(1)->textContent();
+      }
+      else {
+        unless ($entry->hasAttribute('rdf:about')) {
+          $logger->warn("Invalid or undefined RDF/XML ID in file '$filename', skipping ...");
+          $biber->{warnings}++;
+          next;
+        }
       }
       create_entry($biber, $entry->getAttribute('rdf:about'), $entry);
     }
@@ -205,15 +212,13 @@ sub create_entry {
   # Validation happens later and is not datasource dependent
   foreach my $f (uniq map {$_->nodeName()} $entry->findnodes("*")) {
 
-    # We have to process local options as early as possible in order
-    # to make them available for things that need them like name parsing
-    if (_norm($entry->nodeName) eq 'options') {
-      if (my $node = _resolve_display_mode($biber, $entry, 'options')) {
-        $biber->process_entry_options($dskey, $node->textContent());
-      }
-    }
+# isPartOf needs to deal with series
+# publisher needs to deal with organisations
+# presentedAt: title -> eventtitle coverage -> venue
+# subject +LCC -> library, otherwise, keywords
+# Identifier + dcterms:URI -> URL, otherwise something else ...
 
-    if (my $fm = $dcfxml->{fields}{field}{_norm($f)}) {
+    if (my $fm = $dcfxml->{fields}{field}{$f}) {
       my $to = $f; # By default, field to set internally is the same as data source
       # Redirect any alias
       if (my $alias = $fm->{aliasof}) {

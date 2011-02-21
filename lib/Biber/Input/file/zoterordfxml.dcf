@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../../../../data/schemata/dcf.rnc" type="compact"?>
 <?xml-stylesheet type="text/xsl" href="../../../../data/dcf.xsl"?>
-<dcf:driver-control driver="zotero-rdfxml" xmlns:dcf="https://sourceforge.net/projects/biblatex-biber">
+<dcf:driver-control driver="zoterordfxml" xmlns:dcf="https://sourceforge.net/projects/biblatex-biber">
   <!--
       These entry type aliases we might find in the the datasource so
       we can decide how to map and convert them into Biber::Entry objects
       We are not validating anything here, that comes later and is not
       datasource specific
   -->
+
   <dcf:entry-types>
+    <dcf:entry-type name="conferencePaper">
+      <dcf:aliasof>inproceedings</dcf:aliasof>
+    </dcf:entry-type>
     <dcf:entry-type name="bookSection">
       <dcf:aliasof>inbook</dcf:aliasof>
     </dcf:entry-type>
@@ -21,8 +25,17 @@
     <dcf:entry-type name="newspaperArticle">
       <dcf:aliasof>article</dcf:aliasof>
     </dcf:entry-type>
+    <dcf:entry-type name="encyclopediaArticle">
+      <dcf:aliasof>article</dcf:aliasof>
+    </dcf:entry-type>
     <dcf:entry-type name="manuscript">
       <dcf:aliasof>unpublished</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="document">
+      <dcf:aliasof>misc</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="dictionaryEntry">
+      <dcf:aliasof>misc</dcf:aliasof>
     </dcf:entry-type>
     <dcf:entry-type name="interview">
       <dcf:aliasof>misc</dcf:aliasof>
@@ -94,14 +107,73 @@
     This has nothing conceptually to do with the internal structure
     setup, it's a datasource driver specific set of settings to allow
     parsing into internal objects.
+
   -->
   <dcf:fields>
+
+    <!-- ignored fields -->
+    <dcf:field name="z:legislativeBody" handler="ignore"/>
+    <dcf:field name="z:history" handler="ignore"/>
+    <dcf:field name="z:court" handler="ignore"/>
+    <dcf:field name="z:committee" handler="ignore"/>
+    <dcf:field name="z:assignee" handler="ignore"/>
+    <dcf:field name="z:priorityNumbers" handler="ignore"/>
+    <dcf:field name="z:references" handler="ignore"/>
+    <dcf:field name="z:legalStatus" handler="ignore"/>
+    <dcf:field name="z:codePages" handler="ignore"/>
+    <dcf:field name="z:codeVolume" handler="ignore"/>
+    <dcf:field name="z:programmingLanguage" handler="ignore"/>
+    <dcf:field name="z:system" handler="ignore"/>
+    <dcf:field name="z:network" handler="ignore"/>
+    <dcf:field name="z:runningTime" handler="ignore"/>
+    <dcf:field name="z:studio" handler="ignore"/>
+    <dcf:field name="z:audioRecordingFormat" handler="ignore"/>
+    <dcf:field name="z:videoRecordingFormat" handler="ignore"/>
+    <dcf:field name="z:scale" handler="ignore"/>
+    <dcf:field name="z:interviewMedium" handler="ignore"/>
+    <dcf:field name="z:artworkSize" handler="ignore"/>
+    <dcf:field name="z:artworkMedium" handler="ignore"/>
+    <dcf:field name="z:dateDecided" handler="ignore"/>
+    <dcf:field name="z:reporterVolume" handler="ignore"/>
+    <dcf:field name="z:libraryCatalog" handler="ignore"/>
+    <dcf:field name="dc:source" handler="ignore"/>
+    <dcf:field name="dc:rights" handler="ignore"/>
+    <dcf:field name="dcterms:issued" handler="ignore"/>
+    <dcf:field name="link:type" handler="ignore"/>
+    <dcf:field name="link:charset" handler="ignore"/>
+    <dcf:field name="dcterms:medium" handler="ignore"/>
+    <dcf:field name="dcterms:dateSubmitted" handler="ignore"/>
+    <dcf:field name="z:code" handler="ignore"/>
+    <dcf:field name="z:session" handler="ignore"/>
+    <dcf:field name="z:archive" handler="ignore"/>
+    <dcf:field name="z:genre" handler="ignore"/>
+    <dcf:field name="z:filingDate" handler="ignore"/>
+    <dcf:field name="z:issuingAuthority" handler="ignore"/>
+    <dcf:field name="z:programTitle" handler="ignore"/>
+    <dcf:field name="z:docketNumber" handler="ignore"/>
+    <dcf:field name="z:country" handler="ignore"/>
+    <dcf:field name="z:dateEnacted" handler="ignore"/>
+    <dcf:field name="z:firstPage" handler="ignore"/>
+
     <!-- special fields -->
     <dcf:field name="dcterms:isPartOf" handler="partof"/>
     <dcf:field name="dc:publisher" handler="publisher"/>
+    <dcf:field name="dc:identifier" handler="identifier"/>
+    <dcf:field name="bib:presentedAt" handler="presentedat"/>
+    <dcf:field name="dc:subject" handler="subject"/>
+
     <!-- literal fields -->
-    <dcf:field name="title" handler="literal"/>
     <dcf:field name="dc:title" aliasof="title"/>
+    <dcf:field name="z:proceedingsTitle" aliasof="title"/>
+    <dcf:field name="z:encyclopediaTitle" aliasof="title"/>
+    <dcf:field name="z:dictionaryTitle" aliasof="title"/>
+    <dcf:field name="z:websiteTitle" aliasof="title"/>
+    <dcf:field name="z:forumTitle" aliasof="title"/>
+    <dcf:field name="z:blogTitle" aliasof="title"/>
+    <dcf:field name="z:nameOfAct" aliasof="title"/>
+    <dcf:field name="z:caseName" aliasof="title"/>
+    <dcf:field name="z:meetingName" aliasof="title"/>
+    <dcf:field name="title" handler="literal"/>
 
     <!-- name fields -->
     <dcf:field name="author" handler="name"/>
@@ -113,7 +185,51 @@
     <!-- date fields -->
     <dcf:field name="date" handler="date"/>
     <dcf:field name="dc:date" aliasof="date"/>
-    <dcf:field name="dcterms:dateSubmitted" aliasof="date"/>
+
+    <!-- range fields -->
+    <dcf:field name="bib:pages" aliasof="pages"/>
+    <dcf:field name="pages" aliasof="range"/>
+
+    <!-- verbatim fields -->
+    <dcf:field name="prism:volume" aliasof="volume"/>
+    <dcf:field name="volume" handler="verbatim"/>
+    <dcf:field name="numberOfVolumes" aliasof="volumes"/>
+    <dcf:field name="volumes" handler="verbatim"/>
+    <dcf:field name="z:numPages" aliasof="pagetotal"/>
+    <dcf:field name="pagetotal" handler="verbatim"/>
+    <dcf:field name="prism:edition" aliasof="edition"/>
+    <dcf:field name="edition" handler="verbatim"/>
+    <dcf:field name="dc:description" aliasof="note"/>
+    <dcf:field name="note" handler="verbatim"/>
+    <dcf:field name="dc:alternative" aliasof="shortjournal"/>
+    <dcf:field name="shortjournal" handler="verbatim"/>
+    <dcf:field name="dcterms:abstract" aliasof="abstract"/>
+    <dcf:field name="abstract" handler="verbatim"/>
+    <dcf:field name="dc:type" aliasof="type"/>
+    <dcf:field name="type" handler="verbatim"/>
+    <dcf:field name="z:shortTitle" aliasof="shorttitle"/>
+    <dcf:field name="shorttitle" handler="verbatim"/>
+    <dcf:field name="z:bookTitle" aliasof="booktitle"/>
+    <dcf:field name="booktitle" handler="verbatim"/>
+    <dcf:field name="prism:number" aliasof="number"/>
+    <dcf:field name="z:patentNumber" aliasof="number"/>
+    <dcf:field name="z:codeNumber" aliasof="number"/>
+    <dcf:field name="z:reportNumber" aliasof="number"/>
+    <dcf:field name="z:billNumber" aliasof="number"/>
+    <dcf:field name="z:documentNumber" aliasof="number"/>
+    <dcf:field name="z:publicLawNumber" aliasof="number"/>
+    <dcf:field name="z:applicationNumber" aliasof="number"/>
+    <dcf:field name="z:episodeNumber" aliasof="number"/>
+    <dcf:field name="number" handler="verbatim"/>
+    <dcf:field name="dc:coverage" aliasof="location"/>
+    <dcf:field name="location" handler="verbatim"/>
+    <dcf:field name="z:university" aliasof="institution"/>
+    <dcf:field name="institution" handler="verbatim"/>
+    <dcf:field name="z:language" aliasof="language"/>
+    <dcf:field name="language" handler="verbatim"/>
+    <dcf:field name="z:version" aliasof="version"/>
+    <dcf:field name="version" handler="verbatim"/>
+    <dcf:field name="z:libraryCatalog" aliasof="library"/>
   </dcf:fields>
 </dcf:driver-control>
 
