@@ -111,49 +111,52 @@
   -->
   <dcf:fields>
 
-    <!-- ignored fields -->
-    <dcf:field name="z:legislativeBody" handler="ignore"/>
-    <dcf:field name="z:history" handler="ignore"/>
-    <dcf:field name="z:court" handler="ignore"/>
-    <dcf:field name="z:committee" handler="ignore"/>
-    <dcf:field name="z:assignee" handler="ignore"/>
-    <dcf:field name="z:priorityNumbers" handler="ignore"/>
-    <dcf:field name="z:references" handler="ignore"/>
-    <dcf:field name="z:legalStatus" handler="ignore"/>
-    <dcf:field name="z:codePages" handler="ignore"/>
-    <dcf:field name="z:codeVolume" handler="ignore"/>
-    <dcf:field name="z:programmingLanguage" handler="ignore"/>
-    <dcf:field name="z:system" handler="ignore"/>
-    <dcf:field name="z:network" handler="ignore"/>
-    <dcf:field name="z:runningTime" handler="ignore"/>
-    <dcf:field name="z:studio" handler="ignore"/>
-    <dcf:field name="z:audioRecordingFormat" handler="ignore"/>
-    <dcf:field name="z:videoRecordingFormat" handler="ignore"/>
-    <dcf:field name="z:scale" handler="ignore"/>
-    <dcf:field name="z:interviewMedium" handler="ignore"/>
-    <dcf:field name="z:artworkSize" handler="ignore"/>
-    <dcf:field name="z:artworkMedium" handler="ignore"/>
-    <dcf:field name="z:dateDecided" handler="ignore"/>
-    <dcf:field name="z:reporterVolume" handler="ignore"/>
-    <dcf:field name="z:libraryCatalog" handler="ignore"/>
-    <dcf:field name="dc:source" handler="ignore"/>
-    <dcf:field name="dc:rights" handler="ignore"/>
-    <dcf:field name="dcterms:issued" handler="ignore"/>
-    <dcf:field name="link:type" handler="ignore"/>
-    <dcf:field name="link:charset" handler="ignore"/>
-    <dcf:field name="dcterms:medium" handler="ignore"/>
-    <dcf:field name="dcterms:dateSubmitted" handler="ignore"/>
-    <dcf:field name="z:code" handler="ignore"/>
-    <dcf:field name="z:session" handler="ignore"/>
-    <dcf:field name="z:archive" handler="ignore"/>
-    <dcf:field name="z:genre" handler="ignore"/>
-    <dcf:field name="z:filingDate" handler="ignore"/>
-    <dcf:field name="z:issuingAuthority" handler="ignore"/>
-    <dcf:field name="z:programTitle" handler="ignore"/>
-    <dcf:field name="z:docketNumber" handler="ignore"/>
-    <dcf:field name="z:country" handler="ignore"/>
-    <dcf:field name="z:dateEnacted" handler="ignore"/>
-    <dcf:field name="z:firstPage" handler="ignore"/>
+    <!-- ignored fields 
+
+    z:legislativeBody
+    z:history
+    z:court
+    z:committee
+    z:assignee
+    z:priorityNumbers
+    z:references
+    z:legalStatus
+    z:codePages
+    z:codeVolume
+    z:programmingLanguage
+    z:system
+    z:network
+    z:runningTime
+    z:studio
+    z:audioRecordingFormat
+    z:videoRecordingFormat
+    z:scale
+    z:interviewMedium
+    z:artworkSize
+    z:artworkMedium
+    z:dateDecided
+    z:reporterVolume
+    z:libraryCatalog
+    dc:source
+    dc:rights
+    dcterms:issued
+    link:type
+    link:charset
+    dcterms:medium
+    dcterms:dateSubmitted
+    z:code
+    z:session
+    z:archive
+    z:genre
+    z:filingDate
+    z:issuingAuthority
+    z:programTitle
+    z:docketNumber
+    z:country
+    z:dateEnacted
+    z:firstPage
+
+    -->
 
     <!-- special fields -->
     <dcf:field name="dcterms:isPartOf" handler="partof"/>

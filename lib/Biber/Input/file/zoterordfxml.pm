@@ -218,27 +218,15 @@ sub create_entry {
 # subject +LCC -> library, otherwise, keywords
 # Identifier + dcterms:URI -> URL, otherwise something else ...
 
-    if (my $fm = $dcfxml->{fields}{field}{$f}) {
+    if (my $fm = $dcfxml->{fields}{field}{$f}) { # ignore fields not in .dcf
       my $to = $f; # By default, field to set internally is the same as data source
       # Redirect any alias
       if (my $alias = $fm->{aliasof}) {
         $logger->debug("Found alias '$alias' of field '$f' in entry '$dskey'");
-        # If both a field and its alias is set, warn and delete alias field
-        if ($entry->findnodes("./$NS:$alias")) {
-          # Warn as that's wrong
-          $biber->biber_warn($bibentry, "Field '$f' is aliased to field '$alias' but both are defined in entry with key '$dskey' - skipping field '$f'");
-          next;
-        }
         $fm = $dcfxml->{fields}{field}{$alias};
-        $to = "$NS:$alias"; # Field to set internally is the alias
+        $to = $alias; # Field to set internally is the alias
       }
       &{$handlers{$fm->{handler}}}($biber, $bibentry, $entry, $f, $to, $dskey);
-    }
-    # Default if no explicit way to set the field
-    else {
-      my $node = _resolve_display_mode($biber, $entry, $f);
-      my $value = $node->textContent();
-      $bibentry->set_datafield($f, $value);
     }
   }
 
