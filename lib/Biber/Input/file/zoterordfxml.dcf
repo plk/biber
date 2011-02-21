@@ -165,25 +165,12 @@
     <dcf:field name="bib:presentedAt" handler="presentedat"/>
     <dcf:field name="dc:subject" handler="subject"/>
 
-    <!-- literal fields -->
-    <dcf:field name="dc:title" aliasof="title"/>
-    <dcf:field name="z:proceedingsTitle" aliasof="title"/>
-    <dcf:field name="z:encyclopediaTitle" aliasof="title"/>
-    <dcf:field name="z:dictionaryTitle" aliasof="title"/>
-    <dcf:field name="z:websiteTitle" aliasof="title"/>
-    <dcf:field name="z:forumTitle" aliasof="title"/>
-    <dcf:field name="z:blogTitle" aliasof="title"/>
-    <dcf:field name="z:nameOfAct" aliasof="title"/>
-    <dcf:field name="z:caseName" aliasof="title"/>
-    <dcf:field name="z:meetingName" aliasof="title"/>
-    <dcf:field name="title" handler="literal"/>
-
     <!-- name fields -->
-    <dcf:field name="author" handler="name"/>
-    <dcf:field name="editor" handler="name"/>
     <dcf:field name="bib:contributors" aliasof="author"/>
     <dcf:field name="bib:authors" aliasof="author"/>
     <dcf:field name="bib:editors" aliasof="editor"/>
+    <dcf:field name="author" handler="name"/>
+    <dcf:field name="editor" handler="name"/>
 
     <!-- date fields -->
     <dcf:field name="date" handler="date"/>
@@ -194,6 +181,17 @@
     <dcf:field name="pages" aliasof="range"/>
 
     <!-- verbatim fields -->
+    <dcf:field name="dc:title" aliasof="title"/>
+    <dcf:field name="z:proceedingsTitle" aliasof="title"/>
+    <dcf:field name="z:encyclopediaTitle" aliasof="title"/>
+    <dcf:field name="z:dictionaryTitle" aliasof="title"/>
+    <dcf:field name="z:websiteTitle" aliasof="title"/>
+    <dcf:field name="z:forumTitle" aliasof="title"/>
+    <dcf:field name="z:blogTitle" aliasof="title"/>
+    <dcf:field name="z:nameOfAct" aliasof="title"/>
+    <dcf:field name="z:caseName" aliasof="title"/>
+    <dcf:field name="z:meetingName" aliasof="title"/>
+    <dcf:field name="title" handler="verbatim"/>
     <dcf:field name="prism:volume" aliasof="volume"/>
     <dcf:field name="volume" handler="verbatim"/>
     <dcf:field name="numberOfVolumes" aliasof="volumes"/>

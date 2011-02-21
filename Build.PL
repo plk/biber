@@ -33,7 +33,6 @@ my $builder = $class->new(
         'Data::Dump' => 0,
         'Data::Compare' => 0,
         'Date::Simple' => 0,
-        'DateTime::Format::W3CDTF' => 0,
         'File::Slurp::Unicode'  => 0,
         'IPC::Cmd' => 0,
         'IPC::Run' => 0,

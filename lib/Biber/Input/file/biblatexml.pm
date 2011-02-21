@@ -202,7 +202,7 @@ sub create_entry {
 
   # We put all the fields we find modulo field aliases into the object.
   # Validation happens later and is not datasource dependent
-  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes("*")) {
+  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
 
     # We have to process local options as early as possible in order
     # to make them available for things that need them like name parsing
@@ -475,9 +475,7 @@ sub parsename {
   }
 
   # Remove any trailing comma and space if, e.g. missing firstname
-  # Replace any nbspes
   $namestring =~ s/,\s+\z//xms;
-  $namestring =~ s/~/ /gxms;
 
   # Construct $nameinitstring
   my $nameinitstr = '';
@@ -487,7 +485,6 @@ sub parsename {
   $nameinitstr .= '_' . join('', @{$namec{first_i}}) if exists($namec{first});
   $nameinitstr .= '_' . join('', @{$namec{middle_i}}) if exists($namec{middle});
   $nameinitstr =~ s/\s+/_/g;
-  $nameinitstr =~ s/~/_/g;
 
   return Biber::Entry::Name->new(
     firstname       => $namec{first} // undef,
