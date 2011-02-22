@@ -14,16 +14,17 @@ use Biber::Section;
 use Biber::Structure;
 use Biber::Utils;
 use Biber::Config;
-use Encode;
+use Digest::MD5 qw( md5_hex );
 use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use base 'Exporter';
 use List::AllUtils qw(first uniq);
 use XML::LibXML;
 use XML::LibXML::Simple;
-use Readonly;
 use Data::Dump qw(dump);
 use Switch;
+
+##### This is based on Zotero 2.0.9 #####
 
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -36,7 +37,6 @@ my %PREFICES = ('z'       => 'http://www.zotero.org/namespaces/export#',
                 'prism'   => 'http://prismstandard.org/namespaces/1.2/basic/',
                 'vcard'   => 'http://nwalsh.com/rdf/vCard#',
                 'vcard2'  => 'http://www.w3.org/2006/vcard/ns#');
-%PREFICES_R = reverse %PREFICES;
 
 # Handlers for field types
 my %handlers = (
@@ -52,7 +52,7 @@ my %handlers = (
 );
 
 # Read driver config file
-my $dcfxml = driver_config('zoterordf');
+my $dcfxml = driver_config('zoterordfxml');
 
 =head2 extract_entries
 
@@ -99,7 +99,7 @@ sub extract_entries {
   my $rdfxml = $parser->parse_file($filename)
     or $logger->logcroak("Can't parse file $filename");
   my $xpc = XML::LibXML::XPathContext->new($rdfxml);
-  foreach my $ns (keys $PREFICES) {
+  foreach my $ns (keys %PREFICES) {
     $xpc->registerNs($ns, $PREFICES{$ns});
   }
 
@@ -117,8 +117,8 @@ sub extract_entries {
 
       # If an entry has no key, ignore it and warn
       my $key;
-      if (my $n = $entry->findnodes('./z:itemID')) {
-        $key = $n->get_node(1)->textContent();
+      if (my $k = $entry->findvalue('./z:itemID')) {
+        $key = $k;
       }
       else {
         unless ($entry->hasAttribute('rdf:about')) {
@@ -126,8 +126,12 @@ sub extract_entries {
           $biber->{warnings}++;
           next;
         }
+        $key = $entry->getAttribute('rdf:about');
       }
-      create_entry($biber, $entry->getAttribute('rdf:about'), $entry);
+
+      # sanitise the key for LaTeX
+      $key =~ s/\A\#//xms;
+      create_entry($biber, $key, $entry);
     }
 
     # if allkeys, push all bibdata keys into citekeys (if they are not already there)
@@ -142,7 +146,7 @@ sub extract_entries {
       # Cache index keys are lower-cased. This next line effectively implements
       # case insensitive citekeys
       # This will also get the first match it finds
-      if (my @entries = $xpc->findnodes("/rdf:RDF/*[\@rdf:about='" . lc($wanted_key) . "']")) {
+      if (my @entries = $xpc->findnodes("/rdf:RDF/*/z:itemID[text()='" . lc($wanted_key) ."']|/rdf:RDF/*[\@rdf:about='" . lc($wanted_key) . "']")) {
         my $entry;
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
@@ -197,13 +201,7 @@ sub create_entry {
   $bibentry->set_field('citekey', $citekey);
 
   # Some entries like Series which are created for crossrefs don't have z:itemType
-  my $itype;
-  if (my $n = $entry->findnodes('./z:itemType')) {
-    $itype = $n->get_node(1)->textContent();
-  }
-  else {
-    $itype = $entry->nodeName();
-  }
+  my $itype = $entry->findvalue('./z:itemType') || $entry->nodeName;
 
   # Set entrytype taking note of any aliases for this datasource driver
   if (my $ealias = $dcfxml->{'entry-types'}{'entry-type'}{$itype}) {
@@ -237,20 +235,26 @@ sub create_entry {
   $bibentry->set_field('datatype', 'zoterordfxml');
   $bibentries->add_entry($lc_key, $bibentry);
 
-  return;
+  return $bibentry; # We need to return the entry here for _partof() below
 }
 
 # Verbatim fields
 sub _verbatim {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
-  $bibentry->set_datafield($to, $entry->findnodes("./$f")->get_node(1)->textContent());
+  # Special case - libraryCatalog is used only if hasn't already been set
+  # by LCC
+  if ($f eq 'z:libraryCatalog') {
+    return if $bibentry->get_field('library');
+  }
+  $bibentry->set_datafield($to, _norm($entry->findvalue("./$f")));
   return;
 }
 
 # Range fields
 sub _range {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
-  my @values = split(/\s*,\s*/, $entry->findnodes("./$f")->get_node(1)->textContent());
+  my $values_ref;
+  my @values = split(/\s*,\s*/, $entry->findvalue("./$f"));
   # Here the "-–" contains two different chars even though they might
   # look the same in some fonts ...
   # If there is a range sep, then we set the end of the range even if it's null
@@ -278,14 +282,15 @@ sub _date {
                    (?:-(\d{2}))? # month
                    (?:-(\d{2}))? # day
                   /xms;
+  my $d = $entry->findvalue("./$f");
   if (my ($byear, $bmonth, $bday) =
-      $entry->findnodes("./$f")->get_node(1)->textContent() =~ m|\A$date_re\z|xms) {
+      $d =~ m|\A$date_re\z|xms) {
     $bibentry->set_datafield('year', $byear)      if $byear;
     $bibentry->set_datafield('month', $bmonth)    if $bmonth;
     $bibentry->set_datafield('day', $bday)        if $bday;
   }
   else {
-    $biber->biber_warn($bibentry, "Invalid format '" . $node->textContent() . "' of date field '$f' in entry '$dskey' - ignoring");
+    $biber->biber_warn($bibentry, "Invalid format '$d' of date field '$f' in entry '$dskey' - ignoring");
   }
   return;
 }
@@ -294,7 +299,7 @@ sub _date {
 sub _name {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   my $names = new Biber::Entry::Names;
-  foreach my $name ($entry->findnodes("./rdf:Seq/ref:li/foaf:Person")) {
+  foreach my $name ($entry->findnodes("./$f/rdf:Seq/rdf:li/foaf:Person")) {
     $names->add_element(parsename($name, $f));
   }
   $bibentry->set_datafield($to, $names);
@@ -310,34 +315,74 @@ sub _partof {
     return;
   }
   # create a dataonly entry for the partOf and add a crossref to it
-  my $crkey = $dskey . rand(100);
-  my $cref = create_entry($biber, $crkey, $partof->findnodes('*'));
+  my $crkey = $dskey . '_' . md5_hex($dskey);
+  my $cref = create_entry($biber, $crkey, $partof->findnodes('*')->get_node(1));
   $cref->set_datafield('options', 'dataonly');
   Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $crkey);
   Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $crkey);
   $bibentry->set_datafield('crossref', $crkey);
-  # bib:Series is a pain as it's a vague container so we have to try to guess the
-  # crossref type a bit. This correspondes mostly to the relevant parts of the
+  # crossrefs are a pain as we have to try to guess the
+  # crossref type a bit. This corresponds to the relevant parts of the
   # default inheritance setup
-  if ($cref->get_field('type') eq 'bib:Series') {
-    my $ptype = $bibentry->get_field('type');
+  if ($cref->get_field('entrytype') =~ /\Abib:/) {
+    my $ptype = $bibentry->get_field('entrytype');
     switch ($ptype) {
-      case 'book'              { $cref->set_datafield('type', 'mvbook') }
-      case 'inbook'            { $cref->set_datafield('type', 'book') }
-      case 'inproceedings'     { $cref->set_datafield('type', 'proceedings') }
+      case 'book'              { $cref->set_datafield('entrytype', 'mvbook') }
+      case 'inbook'            { $cref->set_datafield('entrytype', 'book') }
+      case 'inproceedings'     { $cref->set_datafield('entrytype', 'proceedings') }
+      case 'article'           { $cref->set_datafield('entrytype', 'periodical') }
     }
   }
   return;
 }
 
-# publisher needs to deal with organisations
-# presentedAt: title -> eventtitle coverage -> venue
-# subject +LCC -> library, otherwise, keywords
-# Identifier + dcterms:URI -> URL, otherwise something else ...
+sub _publisher {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  if (my $org = $entry->findnodes("./$f/foaf:Organization")->get_node(1)) {
+    # There is an address, set location
+    if (my $adr = $org->findnodes('./vcard:adr')->get_node(1)) {
+      $bibentry->set_datafield('location', _norm($adr->findnodes('./vcard:Address/vcard:locality/text()')));
+    }
+    # set publisher
+    if (my $adr = $org->findnodes('./foaf:name')->get_node(1)) {
+      $bibentry->set_datafield('publisher', _norm($adr->textContent()));
+    }
+  }
+  return;
+}
 
+sub _presentedat {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  if (my $conf = $entry->findnodes("./$f/bib:Conference")->get_node(1)) {
+    $bibentry->set_datafield('eventtitle', _norm($conf->findnodes('./dc:title/text()')));
+  }
+  return;
+}
 
+sub _subject {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  if (my $lib = $entry->findnodes("./$f/dcterms:LCC/rdf:value")->get_node(1)) {
+    # This overrides any z:libraryCatalog node
+    $bibentry->set_datafield('library', _norm($lib->textContent()));
+  }
+  # otherwise, we ignore the subject tags as they are no use to biblatex
+  return;
+}
 
-
+sub _identifier {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  if (my $url = $entry->findnodes("./$f/dcterms:URI/rdf:value")->get_node(1)) {
+    $bibentry->set_datafield('url', $url->textContent());
+  }
+  else {
+    foreach my $id_node ($entry->findnodes("./$f")) {
+      if ($id_node->textContent() =~ m/\A(ISSN|ISBN|DOI)\s(.+)\z/) {
+        $bibentry->set_datafield(lc($1), $2);
+      }
+    }
+  }
+  return;
+}
 
 =head2 parsename
 
@@ -370,13 +415,11 @@ sub parsename {
   my %namec;
 
   foreach my $n ('surname', 'givenname') {
-    if (my $nc_node = $node->findnodes("./foaf:$n")->get_node(1)) {
-      if (my $t = $nc_node->textContent()) {
-        $n = $nmap{$n}; # convet to bibaltex namepart name
-        $namec{$n} = $t;
-        $logger->debug("Found name component '$n': $t");
-        $namec{"${n}_i"} = [_gen_initials($t)];
-      }
+    if (my $nc = $node->findvalue("./foaf:$n")) {
+      my $bn = $nmap{$n}; # convert to biblatex namepart name
+      $namec{$bn} = $nc;
+      $logger->debug("Found name component '$bn': $nc");
+      $namec{"${bn}_i"} = [_gen_initials($nc)];
     }
   }
 
@@ -436,6 +479,13 @@ sub _gen_initials {
     }
   }
   return @strings_out;
+}
+
+# Do some sanitising on LaTeX special chars since this can't be nicely done by the parser
+sub _norm {
+  my $s = shift;
+  $s =~ s/(?<!\\)\&/\\&/gxms;
+  return $s;
 }
 
 1;

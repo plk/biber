@@ -49,7 +49,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenameid stringify_hash
 
 sub driver_config {
   my $driver_name = shift;
-# we assume that the driver config file is in the same dir as the driver:
+  # we assume that the driver config file is in the same dir as the driver:
   (my $vol, my $driver_path, undef) = File::Spec->splitpath( $INC{"Biber/Input/file/${driver_name}.pm"} );
 
   # Deal with the strange world of Par::Packer paths, see similar code in Biber.pm

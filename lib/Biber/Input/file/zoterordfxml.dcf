@@ -2,6 +2,8 @@
 <?oxygen RNGSchema="../../../../data/schemata/dcf.rnc" type="compact"?>
 <?xml-stylesheet type="text/xsl" href="../../../../data/dcf.xsl"?>
 <dcf:driver-control driver="zoterordfxml" xmlns:dcf="https://sourceforge.net/projects/biblatex-biber">
+  <!-- This is based on Zotero 2.0.9 -->
+
   <!--
       These entry type aliases we might find in the the datasource so
       we can decide how to map and convert them into Biber::Entry objects
@@ -136,7 +138,6 @@
     z:artworkMedium
     z:dateDecided
     z:reporterVolume
-    z:libraryCatalog
     dc:source
     dc:rights
     dcterms:issued
@@ -155,6 +156,15 @@
     z:country
     z:dateEnacted
     z:firstPage
+    z:interviewee
+    z:castMember
+    z:sponsor
+    z:attorneyAgent
+    z:wordsBy
+    z:cartographer
+    z:guest
+    z:reviewedAuthor
+    z:cosponsor
 
     -->
 
@@ -168,17 +178,35 @@
     <!-- name fields -->
     <dcf:field name="bib:contributors" aliasof="author"/>
     <dcf:field name="bib:authors" aliasof="author"/>
+    <dcf:field name="z:interviewers" aliasof="author"/>
+    <dcf:field name="z:directors" aliasof="author"/>
+    <dcf:field name="z:scriptwriters" aliasof="author"/>
+    <dcf:field name="z:bookAuthor" aliasof="author"/>
+    <dcf:field name="z:inventors" aliasof="author"/>
+    <dcf:field name="z:recipients" aliasof="author"/>
+    <dcf:field name="z:counsels" aliasof="author"/>
+    <dcf:field name="z:artists" aliasof="author"/>
+    <dcf:field name="z:podcasters" aliasof="author"/>
+    <dcf:field name="z:presenters" aliasof="author"/>
+    <dcf:field name="z:commenters" aliasof="author"/>
+    <dcf:field name="z:programers" aliasof="author"/>
+    <dcf:field name="z:composers" aliasof="author"/>
+    <dcf:field name="z:producers" aliasof="author"/>
+    <dcf:field name="z:performers" aliasof="author"/>
     <dcf:field name="bib:editors" aliasof="editor"/>
+    <dcf:field name="z:translators" aliasof="translator"/>
+    <dcf:field name="z:seriesEditors" aliasof="editor"/>
     <dcf:field name="author" handler="name"/>
     <dcf:field name="editor" handler="name"/>
+    <dcf:field name="translator" handler="name"/>
 
     <!-- date fields -->
-    <dcf:field name="date" handler="date"/>
     <dcf:field name="dc:date" aliasof="date"/>
+    <dcf:field name="date" handler="date"/>
 
     <!-- range fields -->
     <dcf:field name="bib:pages" aliasof="pages"/>
-    <dcf:field name="pages" aliasof="range"/>
+    <dcf:field name="pages" handler="range"/>
 
     <!-- verbatim fields -->
     <dcf:field name="dc:title" aliasof="title"/>
@@ -190,8 +218,9 @@
     <dcf:field name="z:blogTitle" aliasof="title"/>
     <dcf:field name="z:nameOfAct" aliasof="title"/>
     <dcf:field name="z:caseName" aliasof="title"/>
-    <dcf:field name="z:meetingName" aliasof="title"/>
     <dcf:field name="title" handler="verbatim"/>
+    <dcf:field name="z:meetingName" aliasof="eventtitle"/>
+    <dcf:field name="eventtitle" handler="verbatim"/>
     <dcf:field name="prism:volume" aliasof="volume"/>
     <dcf:field name="volume" handler="verbatim"/>
     <dcf:field name="numberOfVolumes" aliasof="volumes"/>
@@ -231,6 +260,7 @@
     <dcf:field name="z:version" aliasof="version"/>
     <dcf:field name="version" handler="verbatim"/>
     <dcf:field name="z:libraryCatalog" aliasof="library"/>
+    <dcf:field name="library" handler="verbatim"/>
   </dcf:fields>
 </dcf:driver-control>
 

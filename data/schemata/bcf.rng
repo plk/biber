@@ -708,6 +708,7 @@
                   <value>bibtex</value>
                   <value>biblatexml</value>
                   <value>ris</value>
+                  <value>zoterordfxml</value>
                 </choice>
               </attribute>
             </optional>
