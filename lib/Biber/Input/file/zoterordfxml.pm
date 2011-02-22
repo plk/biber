@@ -23,8 +23,10 @@ use XML::LibXML;
 use XML::LibXML::Simple;
 use Data::Dump qw(dump);
 use Switch;
+use DateTime::Format::Natural;
 
 ##### This is based on Zotero 2.0.9 #####
+# Dates format need coercing
 
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -285,17 +287,13 @@ sub _range {
 # Date fields
 sub _date {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
-  # We are not validating dates here, just syntax parsing
-  my $date_re = qr/(\d{4}) # year
-                   (?:-(\d{2}))? # month
-                   (?:-(\d{2}))? # day
-                  /xms;
   my $d = $entry->findvalue("./$f");
-  if (my ($byear, $bmonth, $bday) =
-      $d =~ m|\A$date_re\z|xms) {
-    $bibentry->set_datafield('year', $byear)      if $byear;
-    $bibentry->set_datafield('month', $bmonth)    if $bmonth;
-    $bibentry->set_datafield('day', $bday)        if $bday;
+  my $parser = DateTime::Format::Natural->new;
+  my $dt = $parser->parse_datetime($d);
+  if ($parser->success) {
+    $bibentry->set_datafield('year',  $dt->year);
+    $bibentry->set_datafield('month', $dt->month);
+    $bibentry->set_datafield('day',   $dt->day);
   }
   else {
     $biber->biber_warn($bibentry, "Invalid format '$d' of date field '$f' in entry '$dskey' - ignoring");
@@ -320,6 +318,11 @@ sub _partof {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   my $partof = $entry->findnodes("./$f")->get_node(1);
   if ($partof->hasAttribute('rdf:resource')) { # remote ISSN resources aren't much use
+    return;
+  }
+  # For 'webpage' types ('online' biblatex type), Zotero puts in a pointless
+  # empty partof z:Website container
+  if ($bibentry->get_field('entrytype') eq 'online') {
     return;
   }
   # create a dataonly entry for the partOf and add a crossref to it
@@ -350,7 +353,7 @@ sub _publisher {
     # There is an address, set location.
     # Location is a list field in bibaltex, hence the array ref
     if (my $adr = $org->findnodes('./vcard:adr')->get_node(1)) {
-      $bibentry->set_datafield('location', [ _norm($adr->findnodes('./vcard:Address/vcard:locality/text()')) ]);
+      $bibentry->set_datafield('location', [ _norm($adr->findvalue('./vcard:Address/vcard:locality')) ]);
     }
     # set publisher
     # publisher is a list field in bibaltex, hence the array ref
@@ -364,7 +367,7 @@ sub _publisher {
 sub _presentedat {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   if (my $conf = $entry->findnodes("./$f/bib:Conference")->get_node(1)) {
-    $bibentry->set_datafield('eventtitle', _norm($conf->findnodes('./dc:title/text()')));
+    $bibentry->set_datafield('eventtitle', _norm($conf->findvalue('./dc:title')));
   }
   return;
 }
@@ -494,7 +497,7 @@ sub _gen_initials {
 # Do some sanitising on LaTeX special chars since this can't be nicely done by the parser
 sub _norm {
   my $s = shift;
-  $s =~ s/(?<!\\)\&/\\&/gxms;
+  $s =~ s/(?<!\\)(\#|\&|\_|\%|\$|\^|\[|\]|\|)/\\$1/gxms;
   return $s;
 }
 
