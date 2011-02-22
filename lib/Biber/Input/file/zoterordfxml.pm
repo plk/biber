@@ -44,6 +44,7 @@ my %handlers = (
                 'date'        => \&_date,
                 'range'       => \&_range,
                 'verbatim'    => \&_verbatim,
+                'list'        => \&_list,
                 'partof'      => \&_partof,
                 'publisher'   => \&_publisher,
                 'identifier'  => \&_identifier,
@@ -238,6 +239,13 @@ sub create_entry {
   return $bibentry; # We need to return the entry here for _partof() below
 }
 
+# List fields
+sub _list {
+  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  $bibentry->set_datafield($to, [ _norm($entry->findvalue("./$f")) ]);
+  return;
+}
+
 # Verbatim fields
 sub _verbatim {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
@@ -339,13 +347,15 @@ sub _partof {
 sub _publisher {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   if (my $org = $entry->findnodes("./$f/foaf:Organization")->get_node(1)) {
-    # There is an address, set location
+    # There is an address, set location.
+    # Location is a list field in bibaltex, hence the array ref
     if (my $adr = $org->findnodes('./vcard:adr')->get_node(1)) {
-      $bibentry->set_datafield('location', _norm($adr->findnodes('./vcard:Address/vcard:locality/text()')));
+      $bibentry->set_datafield('location', [ _norm($adr->findnodes('./vcard:Address/vcard:locality/text()')) ]);
     }
     # set publisher
+    # publisher is a list field in bibaltex, hence the array ref
     if (my $adr = $org->findnodes('./foaf:name')->get_node(1)) {
-      $bibentry->set_datafield('publisher', _norm($adr->textContent()));
+      $bibentry->set_datafield('publisher', [ _norm($adr->textContent()) ]);
     }
   }
   return;

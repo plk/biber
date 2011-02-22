@@ -254,9 +254,9 @@
     <dcf:field name="dc:coverage" aliasof="location"/>
     <dcf:field name="location" handler="verbatim"/>
     <dcf:field name="z:university" aliasof="institution"/>
-    <dcf:field name="institution" handler="verbatim"/>
+    <dcf:field name="institution" handler="list"/>
     <dcf:field name="z:language" aliasof="language"/>
-    <dcf:field name="language" handler="verbatim"/>
+    <dcf:field name="language" handler="list"/>
     <dcf:field name="z:version" aliasof="version"/>
     <dcf:field name="version" handler="verbatim"/>
     <dcf:field name="z:libraryCatalog" aliasof="library"/>
