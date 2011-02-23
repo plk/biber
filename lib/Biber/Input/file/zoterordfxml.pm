@@ -118,18 +118,13 @@ sub extract_entries {
       # Of course, with allkeys, "citation case" means "datasource entry case"
 
       # If an entry has no key, ignore it and warn
-      my $key;
-      if (my $k = $entry->findvalue('./z:itemID')) {
-        $key = $k;
+      unless ($entry->hasAttribute('rdf:about')) {
+        $logger->warn("Invalid or undefined RDF/XML ID in file '$filename', skipping ...");
+        $biber->{warnings}++;
+        next;
       }
-      else {
-        unless ($entry->hasAttribute('rdf:about')) {
-          $logger->warn("Invalid or undefined RDF/XML ID in file '$filename', skipping ...");
-          $biber->{warnings}++;
-          next;
-        }
-        $key = $entry->getAttribute('rdf:about');
-      }
+
+      my $key = $entry->getAttribute('rdf:about');
 
       # sanitise the key for LaTeX
       $key =~ s/\A\#item_/item_/xms;
@@ -153,7 +148,7 @@ sub extract_entries {
       my $temp_key = $wanted_key;
       $temp_key =~ s/\Aitem_/#item_/i;
 
-      if (my @entries = $xpc->findnodes("/rdf:RDF/*/z:itemID[text()='" . lc($temp_key) ."']|/rdf:RDF/*[\@rdf:about='" . lc($temp_key) . "']")) {
+      if (my @entries = $xpc->findnodes("/rdf:RDF/*[\@rdf:about='" . lc($temp_key) . "']")) {
         my $entry;
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {

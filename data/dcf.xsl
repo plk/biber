@@ -23,11 +23,7 @@
           h2,h3,h4 {
             font-family: Arial,sans-serif;
           }
-          .key {
-            font-size: 70%;
-            padding-top: 2ex;
-          }
-          ul {
+          .plainlist {
             list-style-type: none;
             margin-left: 0;
             margin-right: 0;
@@ -64,6 +60,18 @@
       <body>
         <h2><tt>Biber</tt> Driver Control File (driver: <xsl:value-of select="/dcf:driver-control/@driver"/>)</h2>
         <hr/>
+        <h3>Description</h3>
+        <div><xsl:value-of select="/dcf:driver-control/dcf:description/dcf:overview/text()"/></div>
+        <xsl:if test="/dcf:driver-control/dcf:description/dcf:points">
+          <div>
+            <ul>
+            <xsl:for-each select="/dcf:driver-control/dcf:description/dcf:points/dcf:point">
+              <li><xsl:value-of select="./text()"/></li>
+            </xsl:for-each>
+            </ul>
+          </div>
+        </xsl:if>
+        <hr/>
         <h3>Entry types</h3>
         <table>
           <thead>
@@ -77,7 +85,7 @@
               <td><xsl:value-of select="./dcf:aliasof/text()"/></td>
               <td>
                 <xsl:if test="./dcf:alsoset">
-                  <ul>
+                  <ul class="plainlist">
                     <xsl:for-each select="./dcf:alsoset">
                       <li><xsl:value-of select="./@target"/> = <xsl:value-of select="./@value"/></li>
                     </xsl:for-each>
