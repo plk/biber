@@ -2,6 +2,9 @@
 <?oxygen RNGSchema="../../../../data/schemata/dcf.rnc" type="compact"?>
 <?xml-stylesheet type="text/xsl" href="../../../../data/dcf.xsl"?>
 <dcf:driver-control driver="ris" xmlns:dcf="https://sourceforge.net/projects/biblatex-biber">
+  <dcf:description>
+    <dcf:overview>The RIS (Research Information Systems) format is a fairly old data model which is often used as an interchange format in bibliography handling software. It is a very limited data model and this driver was written largely as a proof of concept for the biber modular data source driver architecture. It represents a very small subset of the biblatex data model and so you should probably only use it if you really have no other option.</dcf:overview>
+  </dcf:description>
   <!--
       These entry type aliases we might find in the the datasource so
       we can decide how to map and convert them into Biber::Entry objects

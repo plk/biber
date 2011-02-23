@@ -1969,8 +1969,8 @@ sub fetch_data {
 
 =head2 remove_undef_dependent
 
-    Remove undefined dependent keys from an entries using a map of
-    depedent keys to entries
+    Remove undefined dependent keys from an entry using a map of
+    dependent keys to entries
 
 =cut
 

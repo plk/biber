@@ -4,6 +4,7 @@ Things to remember when releasing new version:
 * Change version string in and content of "Changes" file
 * Change version string in doc
 * Update "TODO" file
+* Update any driver .dcf description elements which need it
 * Update main html and doc page and sync
   scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
 * Change version string in "Biber.pm"

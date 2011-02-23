@@ -7,8 +7,23 @@
           <value>bibtex</value>
           <value>biblatexml</value>
           <value>ris</value>
+          <value>zoterordfxml</value>
         </choice>
       </attribute>
+      <element name="dcf:description">
+        <element name="dcf:overview">
+          <text/>
+        </element>
+        <optional>
+          <element name="dcf:points">
+            <oneOrMore>
+              <element name="dcf:point">
+                <text/>
+              </element>
+            </oneOrMore>
+          </element>
+        </optional>
+      </element>
       <zeroOrMore>
         <element name="dcf:entry-types">
           <oneOrMore>

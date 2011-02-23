@@ -804,11 +804,21 @@ numbers which \verb+biblatex+ expects.
 to supported data sources. The drivers are responsible for mapping
 driver entry types and fields to the \verb+biblatex+ model. This is
 aided by a driver configuration file (\verb+.dcf+). The information in
-this file for each driver can be found in the documentation folder on
-SourceForge\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/documentation}}. This
+this file for each driver can be found in the driver documentation folder on
+SourceForge\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/documentation/drivers}}. This
 file shows you which handlers the driver uses for different fields and
 what certain entry types and fields are aliased to in the
-\verb+biblatex+ data model.
+\verb+biblatex+ data model. This is not fantastically useful to know
+without know what the named driver handlers do specifically but there
+is a «description» section which mentions any special handling and
+general comments on the driver. You should read the documentation for
+the drivers you use to get an idea of how \verb+biber+ handles your
+data. Data model mapping is an imprecise art
+and the drivers are where the necessarily messy parts of \verb+biber+
+live. Most data source models are not designed with typesetting in
+mind and are usually not fine-grained enough to provide the sorts of
+information that \verb+biblatex+ needs. \verb+biber+ does its best to
+suck as much meaningful information from a data source as possible.
 
 \section{Binaries}
 

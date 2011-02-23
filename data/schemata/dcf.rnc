@@ -2,7 +2,13 @@ namespace dcf = "https://sourceforge.net/projects/biblatex-biber"
 
 start =
   element dcf:driver-control {
-    attribute driver { "bibtex" | "biblatexml" | "ris" },
+    attribute driver { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" },
+    element dcf:description {
+      element dcf:overview { text },
+      element dcf:points {
+        element dcf:point { text }+
+      }?
+    },
     element dcf:entry-types {
       element dcf:entry-type {
         attribute name { xsd:string },

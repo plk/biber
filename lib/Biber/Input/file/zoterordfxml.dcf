@@ -2,15 +2,27 @@
 <?oxygen RNGSchema="../../../../data/schemata/dcf.rnc" type="compact"?>
 <?xml-stylesheet type="text/xsl" href="../../../../data/dcf.xsl"?>
 <dcf:driver-control driver="zoterordfxml" xmlns:dcf="https://sourceforge.net/projects/biblatex-biber">
-  <!-- This is based on Zotero 2.0.9 -->
+  <dcf:description>
+    <dcf:overview>The Zotero RDF/XML data source driver is based on the Zotero 2.0.9 RDF/XML output routines and data model. It is not really designed with typetting in mind and so the data model is quite a bit more coarse-grained than, for example, the bibtex driver model. Many fields are verbatim copies via a field alias but the following are handled by the driver as special cases:</dcf:overview>
+    <dcf:points>
+      <dcf:point>The biggest issue with Zotero and biblatex/biber is that it doesn't really have a notion of entry keys. The 'key' for a Zotero entry is usually one of the entry fields which is deemed to uniquely identify an entry. This means that changing the data in an entry can change the key. If there is no auto-determined key, it makes one up when exporting, usually in the format '#item_num'. This breaks LaTeX because of the hash character. You can cite such entries, just omit the '#' when you do. In general, if the Zotero 'key' is a URI or similar, it may well be completely impossible to use with biblatex/biber as it could contain all sorts of LaTeX special chars. When looking for a ZOtero key, Biber first looks for a z:ItemID value and it can't find one, then uses the auto-indentifier key mentioned above (from the 'rdf:about' attribute on the entry).</dcf:point>
+      <dcf:point>Zotero name support is fairly coarse, just family and given names. No attempt is made to parse out prefices or suffices as this would be horribly messy.</dcf:point>
+      <dcf:point>The only date field supported is 'date' (year/month/day). Date ranges are unsupported. This is because in the wild, Zotero date fields are essentially free-form text.</dcf:point>
 
+      <dcf:point>Biber will automatically create 'dataonly' crossreference parents when it encounters a Zotero 'dcterms:isPartOf' element. This means that entries will inherit fields correctly according to the defined biblatex inheritance scheme.</dcf:point>
+      <dcf:point>The biblatex 'location' field will be populated from the publisher '/vcard:adr/vcard:Address/vcard:locality' value, if it exists.</dcf:point>
+      <dcf:point>The biblatex 'eventtitle' field will be populated from the 'bib:Conference/dc:title', if it exists.</dcf:point>
+      <dcf:point>The biblatex 'library' field will be populated from the 'dcterms:LCC' value and if this does not exist, from the 'z:libraryCatalog' value, if that exists.</dcf:point>
+      <dcf:point>Biber will parse 'dc:identifier' values in order to create valid biblatex issn, isbn, doi or url fields</dcf:point>
+      <dcf:point>Biber will try to escape LaTeX special chars in fields in order to make the .bbl valid. This can't be guaranteed as many Zotero DBs contain all sorts of special chars which it is impossible to guess. Try to make your Zotero data LaTeX friendly ...</dcf:point>
+    </dcf:points>
+  </dcf:description>
   <!--
       These entry type aliases we might find in the the datasource so
       we can decide how to map and convert them into Biber::Entry objects
       We are not validating anything here, that comes later and is not
       datasource specific
   -->
-
   <dcf:entry-types>
     <dcf:entry-type name="conferencePaper">
       <dcf:aliasof>inproceedings</dcf:aliasof>
