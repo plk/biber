@@ -23,7 +23,6 @@ use XML::LibXML;
 use XML::LibXML::Simple;
 use Data::Dump qw(dump);
 use Switch;
-use DateTime::Format::Natural;
 
 ##### This is based on Zotero 2.0.9 #####
 
@@ -286,16 +285,28 @@ sub _range {
 # Date fields
 sub _date {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
-  my $d = $entry->findvalue("./$f");
-  my $parser = DateTime::Format::Natural->new;
-  my $dt = $parser->parse_datetime($d);
-  if ($parser->success) {
-    $bibentry->set_datafield('year',  $dt->year);
-    $bibentry->set_datafield('month', $dt->month);
-    $bibentry->set_datafield('day',   $dt->day);
+  my $date = $entry->findvalue("./$f");
+  # We are not validating dates here, just syntax parsing
+    my $date_re = qr/(\d{4}) # year
+                     (?:-(\d{2}))? # month
+                     (?:-(\d{2}))? # day
+                    /xms;
+  if (my ($byear, $bmonth, $bday, $r, $eyear, $emonth, $eday) =
+      $date =~ m|\A$date_re(/)?(?:$date_re)?\z|xms) {
+    $bibentry->set_datafield('year',     $byear)      if $byear;
+    $bibentry->set_datafield('month',    $bmonth)     if $bmonth;
+    $bibentry->set_datafield('day',      $bday)       if $bday;
+    $bibentry->set_datafield('endmonth', $emonth)     if $emonth;
+    $bibentry->set_datafield('endday',   $eday)       if $eday;
+    if ($r and $eyear) {        # normal range
+      $bibentry->set_datafield('endyear', $eyear);
+    }
+    elsif ($r and not $eyear) { # open ended range - endyear is defined but empty
+      $bibentry->set_datafield('endyear', '');
+    }
   }
   else {
-    $biber->biber_warn($bibentry, "Invalid format '$d' of date field '$f' in entry '$dskey' - ignoring");
+    $biber->biber_warn($bibentry, "Invalid format '$date' of date field '$f' in entry '$dskey' - ignoring");
   }
   return;
 }

@@ -111,7 +111,12 @@ my $l3 = q|  \entry{item_54}{inbook}{}
     \field{sortinit}{F}
     \field{labelyear}{1996}
     \field{booktitle}{Foucault Live: Interviews, 1961-1984}
+    \field{day}{04}
+    \field{endday}{07}
+    \field{endmonth}{04}
+    \field{endyear}{1996}
     \field{isbn}{157027018}
+    \field{month}{03}
     \field{title}{The Ethics of the Concern for Self as a Practice of Freedom}
     \field{year}{1996}
     \field{pages}{432\bibrangedash 449}
