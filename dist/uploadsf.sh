@@ -20,28 +20,43 @@ DIR=${1:-"/Users/philkime/Desktop/b"}
 RELEASE=${2:-"development"}
 export COPYFILE_DISABLE=true # no resource forks - TL doesn't like them
 
-# Create the binaries from the build farm if it doesn't exist
+# Make binary dir if it doesn't exist
+if [ ! -e $DIR ]; then
+  mkdir $DIR
+fi
+
+# Create the binaries from the build farm if they don't exist
+# Local OSX
 if [ ! -e $DIR/biber-darwin_x86_64 ]; then
-  (cd $BASE;sudo ./Build install;cd dist/darwin_x86_64;./build.sh)
+  (cd $BASE;perl ./Build.PL;sudo ./Build install;cd dist/darwin_x86_64;./build.sh)
   cp $BASE/dist/darwin_x86_64/biber-darwin_x86_64 $DIR/
 fi
+
+# Build farm WinXP
 if [ ! -e $DIR/biber-MSWIN.exe ]; then
-  ssh root@wood "start-wxp32"
-  ssh bbj-wxp32 "build-biber"
-  scp bbj-wxp32:biblatex-biber/dist/MSWin32/biber-MSWIN.exe $DIR/
-  ssh root@wood "stop-wxp32"
+  ssh root@wood "VBoxHeadless --startvm bbf-wxp32 </dev/null >/dev/null 2>&1 &"
+  sleep 5
+  ssh bbf-wxp32 "cd biblatex-biber;git pull;perl ./Build.PL;./Build install;cd dist/MSWin32;./build.bat"
+  scp bbf-wxp32:biblatex-biber/dist/MSWin32/biber-MSWIN.exe $DIR/
+  ssh root@wood "VBoxManage controlvm bbf-wxp32 savestate"
 fi
-if [ ! -e $DIR/biber-biber-linux_x86_32 ]; then
-  ssh root@wood "start-jj32"
-  ssh bbj-jj32 "build-biber"
-  scp bbj-jj32:biblatex-biber/dist/linux_x86_32/biber-linux_x86_32 $DIR/
-  ssh root@wood "stop-jj32"
+
+# Build farm Linux 32
+if [ ! -e $DIR/biber-linux_x86_32 ]; then
+  ssh root@wood "VBoxHeadless --startvm bbf-jj32 </dev/null >/dev/null 2>&1 &"
+  sleep 5
+  ssh bbf-jj32 "cd biblatex-biber;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build install;cd dist/linux_x86_32;./build.sh"
+  scp bbf-jj32:biblatex-biber/dist/linux_x86_32/biber-linux_x86_32 $DIR/
+  ssh root@wood "VBoxManage controlvm bbf-jj32 savestate"
 fi
-if [ ! -e $DIR/biber-biber-linux_x86_64 ]; then
-  ssh root@wood "start-jj64"
-  ssh bbj-jj64 "build-biber"
-  scp bbj-jj64:biblatex-biber/dist/linux_x86_64/biber-linux_x86_64 $DIR/
-  ssh root@wood "stop-jj64"
+
+# Build farm Linux 64
+if [ ! -e $DIR/biber-linux_x86_64 ]; then
+  ssh root@wood "VBoxHeadless --startvm bbf-jj64 </dev/null >/dev/null 2>&1 &"
+  sleep 5
+  ssh bbf-jj64 "cd biblatex-biber;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build install;cd dist/linux_x86_64;./build.sh"
+  scp bbf-jj64:biblatex-biber/dist/linux_x86_64/biber-linux_x86_64 $DIR/
+  ssh root@wood "VBoxManage controlvm bbf-jj64 savestate"
 fi
 
 cd $DIR
