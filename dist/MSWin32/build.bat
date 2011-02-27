@@ -21,6 +21,7 @@ COPY C:\strawberry\perl\site\bin\biber C:\WINDOWS\Temp\biber-MSWIN
 
 CALL pp ^
   --compress=6 ^
+  --module=deprecate ^
   --module=Biber::Input::file::bibtex ^
   --module=Biber::Input::file::biblatexml ^
   --module=Biber::Input::file::ris ^

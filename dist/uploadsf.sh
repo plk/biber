@@ -1,10 +1,15 @@
 #!/bin/bash
 
-# call with the directory name where these live:
+# uploadsf.sh <dir> <release>
+
+# where <dir> is where these are:
 # biber-MSWIN.exe
 # biber-darwin_x86_64
 # biber-linux_x86_32
 # biber-linux_x86_64
+
+# and <release> is a subdir of /home/frs/project/b/bi/biblatex-biber/biblatex-biber/
+# on SF
 
 BASE="/Users/philkime/data/code/biblatex-biber"
 DOCDIR=$BASE/doc
@@ -14,6 +19,30 @@ XSLDIR=$BASE/data
 DIR=${1:-"/Users/philkime/Desktop/b"}
 RELEASE=${2:-"development"}
 export COPYFILE_DISABLE=true # no resource forks - TL doesn't like them
+
+# Create the binaries from the build farm if it doesn't exist
+if [ ! -e $DIR/biber-darwin_x86_64 ]; then
+  (cd $BASE;sudo ./Build install;cd dist/darwin_x86_64;./build.sh)
+  cp $BASE/dist/darwin_x86_64/biber-darwin_x86_64 $DIR/
+fi
+if [ ! -e $DIR/biber-MSWIN.exe ]; then
+  ssh root@wood "start-wxp32"
+  ssh bbj-wxp32 "build-biber"
+  scp bbj-wxp32:biblatex-biber/dist/MSWin32/biber-MSWIN.exe $DIR/
+  ssh root@wood "stop-wxp32"
+fi
+if [ ! -e $DIR/biber-biber-linux_x86_32 ]; then
+  ssh root@wood "start-jj32"
+  ssh bbj-jj32 "build-biber"
+  scp bbj-jj32:biblatex-biber/dist/linux_x86_32/biber-linux_x86_32 $DIR/
+  ssh root@wood "stop-jj32"
+fi
+if [ ! -e $DIR/biber-biber-linux_x86_64 ]; then
+  ssh root@wood "start-jj64"
+  ssh bbj-jj64 "build-biber"
+  scp bbj-jj64:biblatex-biber/dist/linux_x86_64/biber-linux_x86_64 $DIR/
+  ssh root@wood "stop-jj64"
+fi
 
 cd $DIR
 # Windows

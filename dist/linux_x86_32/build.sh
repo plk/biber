@@ -9,6 +9,7 @@
 
 /usr/local/perl/bin/pp \
   --compress=6 \
+  --module=deprecate \
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
   --module=Biber::Input::file::ris \

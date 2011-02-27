@@ -16,6 +16,7 @@ cp /opt/local/lib/libgdbm.3.0.0.dylib /tmp/libgdbm.3.dylib
 cp /opt/local/lib/libz.1.2.5.dylib /tmp/libz.1.dylib
 
 pp --compress=6 \
+  --module=deprecate \
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
   --module=Biber::Input::file::ris \
