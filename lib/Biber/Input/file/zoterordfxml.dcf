@@ -12,7 +12,8 @@
       <dcf:point>The biblatex 'location' field will be populated from the publisher '/vcard:adr/vcard:Address/vcard:locality' value (Zotero interface 'Place'), if it exists.</dcf:point>
       <dcf:point>The biblatex 'eventtitle' field will be populated from the 'bib:presentedAt/bib:Conference/dc:title' (Zotero interface 'Conference Name'), if it exists.</dcf:point>
       <dcf:point>The biblatex 'library' field will be populated from the 'dc:subject/dcterms:LCC' value (Zotero interface 'Call Number') and if this does not exist, from the 'z:libraryCatalog' value (Zotero interface 'Library Catalog'), if that exists.</dcf:point>
-      <dcf:point>Biber will parse 'dc:identifier' values in order to create valid biblatex issn, isbn, doi or url fields</dcf:point>
+      <dcf:point>Biber will parse 'dc:identifier' values in order to create valid biblatex issn, isbn, doi or url fields.</dcf:point>
+      <dcf:point>'dc:subject' fields will become biblatex keywords. However, because 'dc:subject' may contain arbitrary text, when you refer to these in, for example, \printbibliography[keyword=...], you should wrap any messy keywords in braces, e.g. \printbibliography[keyword={some long keyword, with commas}]. biblatex will likely die if you don't as the keywords field is a CSV and intended for, well, single words.</dcf:point>
       <dcf:point>Biber will try to escape LaTeX special chars in fields in order to make the .bbl valid. This can't be guaranteed as many Zotero DBs contain all sorts of special chars which it is impossible to guess. Try to make your Zotero data LaTeX friendly ...</dcf:point>
     </dcf:points>
   </dcf:description>

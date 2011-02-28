@@ -390,7 +390,13 @@ sub _subject {
     # This overrides any z:libraryCatalog node
     $bibentry->set_datafield('library', _norm($lib->textContent()));
   }
-  # otherwise, we ignore the subject tags as they are no use to biblatex
+  elsif (my @s = $entry->findnodes("./$f")) {
+    my @kws;
+    foreach my $s (@s) {
+      push @kws, '{'.$s->textContent().'}';
+    }
+    $bibentry->set_datafield('keywords', join(',', @kws));
+  }
   return;
 }
 
