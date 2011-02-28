@@ -3,17 +3,9 @@
 <?xml-stylesheet type="text/xsl" href="../../../../data/dcf.xsl"?>
 <dcf:driver-control driver="endnotexml" xmlns:dcf="https://sourceforge.net/projects/biblatex-biber">
   <dcf:description>
-    <dcf:overview>The Zotero RDF/XML data source driver is based on the Zotero 2.0.9 RDF/XML output routines and data model. It is not really designed with typesetting in mind and so the data model is quite a bit more coarse-grained than, for example, the bibtex driver model. Many fields are verbatim copies via a field alias but the following are handled by the driver as special cases:</dcf:overview>
+    <dcf:overview>The Endnote driver is for the Endnote XML export format for versions >=X1. Endnote does not really cater properly for citation key based formats and so it does not have a user-defined unique key for entries. However, it does incrementally number the records in the export using the "rec-number" tag. You can use this as the citation key. If you might use several Endnote XML datasources, of course this would not work since the numbers are not unique to an Endnote database. So, you can prefix your citation keys with the Endnote database ID which is in every record as the "db-id" attribute of the "foreign-keys/key" tag with the "app" attribute of "EN". This database ID prefix, if used, should be seperated from the "rec-number" with a colon.</dcf:overview>
     <dcf:points>
-      <dcf:point>The biggest issue with Zotero for biblatex/biber is that it doesn't really have a notion of entry keys. The 'key' for a Zotero entry is usually one of the entry fields which is deemed to uniquely identify that entry. This means that changing the data in an entry can change the key. If there is no identifying field to use as a key, Zotero makes one when exporting, usually in the format '#item_nnnn' where 'nnnn' is the internal Zotero entry ID number. This format breaks LaTeX because of the hash character however - you can cite such entries using the auto-generated key, just omit the '#' when you do. In general, if the Zotero 'key' is a URI or similar, it may well be completely impossible to use with biblatex/biber as it could contain all sorts of LaTeX special chars. In Zotero RDF/XML, the 'key' is found in the 'rdf:about' attribute of the entry.</dcf:point>
-      <dcf:point>Zotero name support is fairly coarse, just family and given names. No attempt is made to parse out prefices or suffices as this would be horribly messy.</dcf:point>
-      <dcf:point>The only biblatex date field supported is 'date' (parsed into year/month/day fields) since Zotero doesn't allow any other sorts of date. Your dates should be basically ISO8601 standard. Biblatex date ranges are supported. See the biblatex manual about the format--it's very standard and won't cause you any problems with other applications.</dcf:point>
-      <dcf:point>Biber will automatically create 'dataonly' crossreference parents when it encounters a Zotero 'dcterms:isPartOf' element (corresponding to Zotero sections like BookPart etc.). This means that entries will inherit fields correctly according to the defined biblatex inheritance scheme.</dcf:point>
-      <dcf:point>The biblatex 'location' field will be populated from the publisher '/vcard:adr/vcard:Address/vcard:locality' value (Zotero interface 'Place'), if it exists.</dcf:point>
-      <dcf:point>The biblatex 'eventtitle' field will be populated from the 'bib:presentedAt/bib:Conference/dc:title' (Zotero interface 'Conference Name'), if it exists.</dcf:point>
-      <dcf:point>The biblatex 'library' field will be populated from the 'dc:subject/dcterms:LCC' value (Zotero interface 'Call Number') and if this does not exist, from the 'z:libraryCatalog' value (Zotero interface 'Library Catalog'), if that exists.</dcf:point>
-      <dcf:point>Biber will parse 'dc:identifier' values in order to create valid biblatex issn, isbn, doi or url fields</dcf:point>
-      <dcf:point>Biber will try to escape LaTeX special chars in fields in order to make the .bbl valid. This can't be guaranteed as many Zotero DBs contain all sorts of special chars which it is impossible to guess. Try to make your Zotero data LaTeX friendly ...</dcf:point>
+      <dcf:point>Obviously, no user-defined Endnote entry types are supported as we don't know their names ...</dcf:point>
     </dcf:points>
   </dcf:description>
   <!--
@@ -23,95 +15,137 @@
       datasource specific
   -->
   <dcf:entry-types>
-    <dcf:entry-type name="conferencePaper">
-      <dcf:aliasof>inproceedings</dcf:aliasof>
+    <dcf:entry-type name="Aggregated Database">
+      <dcf:aliasof>misc</dcf:aliasof>
     </dcf:entry-type>
-    <dcf:entry-type name="bookSection">
+    <dcf:entry-type name="Ancient Text">
+      <dcf:aliasof>misc</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Artwork">
+      <dcf:aliasof>artwork</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Audiovisual Material">
+      <dcf:aliasof>misc</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Bill">
+      <dcf:aliasof>jurisdiction</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Blog">
+      <dcf:aliasof>online</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Book">
+      <dcf:aliasof>book</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Book Section">
       <dcf:aliasof>inbook</dcf:aliasof>
     </dcf:entry-type>
-    <dcf:entry-type name="journalArticle">
-      <dcf:aliasof>article</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="magazineArticle">
-      <dcf:aliasof>periodical</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="newspaperArticle">
-      <dcf:aliasof>article</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="encyclopediaArticle">
-      <dcf:aliasof>article</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="manuscript">
-      <dcf:aliasof>unpublished</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="document">
-      <dcf:aliasof>misc</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="dictionaryEntry">
-      <dcf:aliasof>misc</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="interview">
-      <dcf:aliasof>misc</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="film">
-      <dcf:aliasof>movie</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="webpage">
-      <dcf:aliasof>online</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="note">
-      <dcf:aliasof>misc</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="attachment">
-      <dcf:aliasof>misc</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="bill">
-      <dcf:aliasof>legislation</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="case">
+    <dcf:entry-type name="Case">
       <dcf:aliasof>jurisdiction</dcf:aliasof>
     </dcf:entry-type>
-    <dcf:entry-type name="hearing">
-      <dcf:aliasof>jurisdiction</dcf:aliasof>
+    <dcf:entry-type name="Catalog">
+      <dcf:aliasof>misc</dcf:aliasof>
     </dcf:entry-type>
-    <dcf:entry-type name="statute">
-      <dcf:aliasof>legislation</dcf:aliasof>
+    <dcf:entry-type name="Chart or Table">
+      <dcf:aliasof>misc</dcf:aliasof>
     </dcf:entry-type>
-    <dcf:entry-type name="email">
-      <dcf:aliasof>letter</dcf:aliasof>
+    <dcf:entry-type name="Classical Work">
+      <dcf:aliasof>misc</dcf:aliasof>
     </dcf:entry-type>
-    <dcf:entry-type name="map">
-      <dcf:aliasof>image</dcf:aliasof>
+    <dcf:entry-type name="Computer Program">
+      <dcf:aliasof>software</dcf:aliasof>
     </dcf:entry-type>
-    <dcf:entry-type name="blogPost">
-      <dcf:aliasof>online</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="instantMessage">
-      <dcf:aliasof>letter</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="forumPost">
-      <dcf:aliasof>online</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="audioRecording">
-      <dcf:aliasof>audio</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="presentation">
+    <dcf:entry-type name="Conference Paper">
       <dcf:aliasof>inproceedings</dcf:aliasof>
     </dcf:entry-type>
-    <dcf:entry-type name="videoRecording">
-      <dcf:aliasof>video</dcf:aliasof>
+    <dcf:entry-type name="Conference Proceedings">
+      <dcf:aliasof>proceedings</dcf:aliasof>
     </dcf:entry-type>
-    <dcf:entry-type name="tvBroadcast">
+    <dcf:entry-type name="Dictionary">
       <dcf:aliasof>misc</dcf:aliasof>
     </dcf:entry-type>
-    <dcf:entry-type name="radioBroadcast">
+    <dcf:entry-type name="Edited Book">
+      <dcf:aliasof>book</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Electronic Article">
+      <dcf:aliasof>article</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Electronic Book">
+      <dcf:aliasof>book</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Encyclopedia">
       <dcf:aliasof>misc</dcf:aliasof>
     </dcf:entry-type>
-    <dcf:entry-type name="podcast">
+    <dcf:entry-type name="Equation">
+      <dcf:aliasof>misc</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Figure">
+      <dcf:aliasof>misc</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Film or Broadcast">
+      <dcf:aliasof>movie</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Government Document">
+      <dcf:aliasof>report</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Grant">
+      <dcf:aliasof>misc</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Hearing">
+      <dcf:aliasof>jurisdiction</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Journal Article">
+      <dcf:aliasof>article</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Legal Rule or Regulation">
+      <dcf:aliasof>legislation</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Magazine Article">
+      <dcf:aliasof>article</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Manuscript">
+      <dcf:aliasof>unpublished</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Map">
+      <dcf:aliasof>misc</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Newspaper Article">
+      <dcf:aliasof>article</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Online Database">
       <dcf:aliasof>online</dcf:aliasof>
     </dcf:entry-type>
-    <dcf:entry-type name="computerProgram">
-      <dcf:aliasof>software</dcf:aliasof>
+    <dcf:entry-type name="Online Multimedia">
+      <dcf:aliasof>online</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Pamphlet">
+      <dcf:aliasof>booklet</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Patent">
+      <dcf:aliasof>patent</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Personal Communication">
+      <dcf:aliasof>misc</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Report">
+      <dcf:aliasof>report</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Serial">
+      <dcf:aliasof>periodical</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Standard">
+      <dcf:aliasof>standard</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Statute">
+      <dcf:aliasof>legislation</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Thesis">
+      <dcf:aliasof>thesis</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Unpublished Work">
+      <dcf:aliasof>unpublished</dcf:aliasof>
+    </dcf:entry-type>
+    <dcf:entry-type name="Web Page">
+      <dcf:aliasof>online</dcf:aliasof>
     </dcf:entry-type>
   </dcf:entry-types>
   <!--
@@ -121,157 +155,136 @@
     setup, it's a datasource driver specific set of settings to allow
     parsing into internal objects.
 
+    The DTD for the Endnote XML format on which this driver is based can be found
+    here: http://www.endnote.com/support/ensupport.asp
+
+    The PDF help file which contains a lot of information about the data model is also
+    available on the page above.
+
   -->
   <dcf:fields>
 
     <!-- ignored fields 
 
-    z:legislativeBody
-    z:history
-    z:court
-    z:committee
-    z:assignee
-    z:priorityNumbers
-    z:references
-    z:legalStatus
-    z:codePages
-    z:codeVolume
-    z:programmingLanguage
-    z:system
-    z:network
-    z:runningTime
-    z:studio
-    z:audioRecordingFormat
-    z:videoRecordingFormat
-    z:scale
-    z:interviewMedium
-    z:artworkSize
-    z:artworkMedium
-    z:dateDecided
-    z:reporterVolume
-    dc:source
-    dc:rights
-    dcterms:issued
-    link:type
-    link:charset
-    dcterms:medium
-    dcterms:dateSubmitted
-    z:code
-    z:session
-    z:archive
-    z:genre
-    z:filingDate
-    z:issuingAuthority
-    z:programTitle
-    z:docketNumber
-    z:country
-    z:dateEnacted
-    z:firstPage
-    z:interviewee
-    z:castMember
-    z:sponsor
-    z:attorneyAgent
-    z:wordsBy
-    z:cartographer
-    z:guest
-    z:reviewedAuthor
-    z:cosponsor
+copyright-dates
+translated-authors
+translated-title
+database
+source-app
+custom1
+custom2
+custom3
+custom4
+custom5
+custom6
+custom7
+misc1
+misc2
+misc3
+rec-number (used internally, just not output)
+foreign-keys (used internally, just not output)
+ref-type (used internally, just not output)
+pdf-urls
+text-urls
+related-urls
+image-urls
+auth-address
+auth-affiliaton
+
+
+
+## periodical
+full-title
+abbr-1
+abbr-2
+abbr-3?
+
+secondary-volume
+secondary-issue
+edition
+section
+reprint-edition
+reprint-status
+keywords
+pub-location
+publisher
+orig-pub
+isbn
+accession-num
+call-num
+report-id
+coden
+electronic-resource-num
+abstract
+label
+image
+caption
+notes
+research-notes
+work-type
+reviewed-item
+availability
+remote-source
+meeting-place
+work-location
+work-extent
+pack-method
+size
+repro-ratio
+remote-database-name
+remote-database-provider
+language
+access-date
+modified-date
+
+
+
 
     -->
 
+
+
+
+
+
     <!-- special fields -->
-    <dcf:field name="dcterms:isPartOf" handler="partof"/>
-    <dcf:field name="dc:publisher" handler="publisher"/>
-    <dcf:field name="dc:identifier" handler="identifier"/>
-    <dcf:field name="bib:presentedAt" handler="presentedat"/>
-    <dcf:field name="dc:subject" handler="subject"/>
+    <dcf:field name="web-urls" alias="url"/>
+    <dcf:field name="url" handler="url"/>
+    <!-- Titles are irritatingly entry-type dependent in Endnote XML,
+         and so need a special handler
+         see "Title Fields" on p 228 or thereabouts of the help PDF -->
+    <dcf:field name="short-title" handler="title"/>
+    <dcf:field name="alt-title" handler="title"/>
+    <dcf:field name="tertiary-title" handler="title"/>
+    <dcf:field name="secondary-title" handler="title"/>
+    <dcf:field name="title" handler="title"/>
+
 
     <!-- name fields -->
-    <dcf:field name="bib:contributors" aliasof="author"/>
-    <dcf:field name="bib:authors" aliasof="author"/>
-    <dcf:field name="z:interviewers" aliasof="author"/>
-    <dcf:field name="z:directors" aliasof="author"/>
-    <dcf:field name="z:scriptwriters" aliasof="author"/>
-    <dcf:field name="z:bookAuthor" aliasof="author"/>
-    <dcf:field name="z:inventors" aliasof="author"/>
-    <dcf:field name="z:recipients" aliasof="author"/>
-    <dcf:field name="z:counsels" aliasof="author"/>
-    <dcf:field name="z:artists" aliasof="author"/>
-    <dcf:field name="z:podcasters" aliasof="author"/>
-    <dcf:field name="z:presenters" aliasof="author"/>
-    <dcf:field name="z:commenters" aliasof="author"/>
-    <dcf:field name="z:programers" aliasof="author"/>
-    <dcf:field name="z:composers" aliasof="author"/>
-    <dcf:field name="z:producers" aliasof="author"/>
-    <dcf:field name="z:performers" aliasof="author"/>
-    <dcf:field name="bib:editors" aliasof="editor"/>
-    <dcf:field name="z:translators" aliasof="translator"/>
-    <dcf:field name="z:seriesEditors" aliasof="editor"/>
+    <dcf:field name="authors" aliasof="author"/>
+    <dcf:field name="secondary-authors" aliasof="editor"/>
+    <dcf:field name="tertiary-authors" aliasof="translator"/>
+    <dcf:field name="subsidiary-authors" aliasof="commentator"/>
     <dcf:field name="author" handler="name"/>
     <dcf:field name="editor" handler="name"/>
     <dcf:field name="translator" handler="name"/>
+    <dcf:field name="commentator" handler="name"/>
 
     <!-- date fields -->
-    <dcf:field name="dc:date" aliasof="date"/>
+    <dcf:field name="year" aliasof="date"/>
+    <dcf:field name="pub-dates" aliasof="date"/>
     <dcf:field name="date" handler="date"/>
 
     <!-- range fields -->
-    <dcf:field name="bib:pages" aliasof="pages"/>
     <dcf:field name="pages" handler="range"/>
 
     <!-- verbatim fields -->
-    <dcf:field name="dc:title" aliasof="title"/>
-    <dcf:field name="z:proceedingsTitle" aliasof="title"/>
-    <dcf:field name="z:encyclopediaTitle" aliasof="title"/>
-    <dcf:field name="z:dictionaryTitle" aliasof="title"/>
-    <dcf:field name="z:websiteTitle" aliasof="title"/>
-    <dcf:field name="z:forumTitle" aliasof="title"/>
-    <dcf:field name="z:blogTitle" aliasof="title"/>
-    <dcf:field name="z:nameOfAct" aliasof="title"/>
-    <dcf:field name="z:caseName" aliasof="title"/>
-    <dcf:field name="title" handler="verbatim"/>
-    <dcf:field name="z:meetingName" aliasof="eventtitle"/>
-    <dcf:field name="eventtitle" handler="verbatim"/>
-    <dcf:field name="prism:volume" aliasof="volume"/>
-    <dcf:field name="volume" handler="verbatim"/>
-    <dcf:field name="numberOfVolumes" aliasof="volumes"/>
+    <dcf:field name="num-vols" aliasof="volumes"/>
     <dcf:field name="volumes" handler="verbatim"/>
-    <dcf:field name="z:numPages" aliasof="pagetotal"/>
-    <dcf:field name="pagetotal" handler="verbatim"/>
-    <dcf:field name="prism:edition" aliasof="edition"/>
-    <dcf:field name="edition" handler="verbatim"/>
-    <dcf:field name="dc:description" aliasof="note"/>
-    <dcf:field name="note" handler="verbatim"/>
-    <dcf:field name="dc:alternative" aliasof="shortjournal"/>
-    <dcf:field name="shortjournal" handler="verbatim"/>
-    <dcf:field name="dcterms:abstract" aliasof="abstract"/>
-    <dcf:field name="abstract" handler="verbatim"/>
-    <dcf:field name="dc:type" aliasof="type"/>
-    <dcf:field name="type" handler="verbatim"/>
-    <dcf:field name="z:shortTitle" aliasof="shorttitle"/>
-    <dcf:field name="shorttitle" handler="verbatim"/>
-    <dcf:field name="z:bookTitle" aliasof="booktitle"/>
-    <dcf:field name="booktitle" handler="verbatim"/>
-    <dcf:field name="prism:number" aliasof="number"/>
-    <dcf:field name="z:patentNumber" aliasof="number"/>
-    <dcf:field name="z:codeNumber" aliasof="number"/>
-    <dcf:field name="z:reportNumber" aliasof="number"/>
-    <dcf:field name="z:billNumber" aliasof="number"/>
-    <dcf:field name="z:documentNumber" aliasof="number"/>
-    <dcf:field name="z:publicLawNumber" aliasof="number"/>
-    <dcf:field name="z:applicationNumber" aliasof="number"/>
-    <dcf:field name="z:episodeNumber" aliasof="number"/>
+    <dcf:field name="volume" handler="verbatim"/>
     <dcf:field name="number" handler="verbatim"/>
-    <dcf:field name="dc:coverage" aliasof="location"/>
-    <dcf:field name="location" handler="verbatim"/>
-    <dcf:field name="z:university" aliasof="institution"/>
-    <dcf:field name="institution" handler="list"/>
-    <dcf:field name="z:language" aliasof="language"/>
-    <dcf:field name="language" handler="list"/>
-    <dcf:field name="z:version" aliasof="version"/>
-    <dcf:field name="version" handler="verbatim"/>
-    <dcf:field name="z:libraryCatalog" aliasof="library"/>
-    <dcf:field name="library" handler="verbatim"/>
+    <dcf:field name="issue" handler="verbatim"/>
+
   </dcf:fields>
 </dcf:driver-control>
 

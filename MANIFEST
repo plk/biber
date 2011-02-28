@@ -146,3 +146,7 @@ t/tdata/structure-constraints.bcf
 t/tdata/structure-constraints.bib
 t/tdata/ris.bcf
 t/tdata/ris1.ris
+t/tdata/zotero.rdf
+t/tdata/zoterordfxml.bcf
+t/tdata/endnote.xml
+t/tdata/endnotexml.bcf
