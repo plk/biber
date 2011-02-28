@@ -296,7 +296,7 @@ secspec =
     attribute section { xsd:integer },
     element bcf:datasource {
       attribute type { "file" },
-      attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" }?,
+      attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" }?,
       xsd:anyURI
     }*
   }?,

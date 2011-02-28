@@ -8,6 +8,7 @@
 ../../lib/Biber/Input/file/biblatexml.dcf;lib/Biber/Input/file/biblatexml.dcf
 ../../lib/Biber/Input/file/ris.dcf;lib/Biber/Input/file/ris.dcf
 ../../lib/Biber/Input/file/zoterordfxml.dcf;lib/Biber/Input/file/zoterordfxml.dcf
+../../lib/Biber/Input/file/endnotexml.dcf;lib/Biber/Input/file/endnotexml.dcf
 ../../data/bcf.xsl;lib/Biber/bcf.xsl
 ../../data/latinkeys.txt;lib/Unicode/Collate/latinkeys.txt
 C:/strawberry/perl/lib/Unicode/Collate/Locale;lib/Unicode/Collate/Locale

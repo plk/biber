@@ -709,6 +709,7 @@
                   <value>biblatexml</value>
                   <value>ris</value>
                   <value>zoterordfxml</value>
+                  <value>endnotexml</value>
                 </choice>
               </attribute>
             </optional>
