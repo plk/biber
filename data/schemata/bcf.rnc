@@ -514,13 +514,3 @@ sortalphaothers =
     }
   }
 
-## these are perl regexes
-nonsortprefixes =
-  element bcf:nonsortprefixes {
-    element bcf:item { text }+
-  }
-nonsortdiacritics =
-  element bcf:nonsortdiacritics {
-    element bcf:item { text }+
-  }
-
