@@ -6,6 +6,7 @@
     <dcf:overview>The Endnote driver is for the Endnote XML export format for versions >=X1. Endnote does not really cater properly for citation key based formats and so it does not have a user-defined unique key for entries. However, it does incrementally number the records in the export using the "rec-number" tag. You can use this as the citation key. If you might use several Endnote XML datasources, of course this would not work since the numbers are not unique to an Endnote database. So, you can prefix your citation keys with the Endnote database ID which is in every record as the "db-id" attribute of the "foreign-keys/key" tag with the "app" attribute of "EN". This database ID prefix, if used, should be seperated from the "rec-number" with a colon.</dcf:overview>
     <dcf:points>
       <dcf:point>Obviously, no user-defined Endnote entry types are supported as we don't know their names ...</dcf:point>
+      <dcf:point>Endnote has the notion of a "generic" entry-type which contains all field names but the actual entry-types you use map the fields to different names. This is a huge pain when parsing Endnote entries out of XML because the XML uses only the generic field names. So, the driver has to maintain a mapping of entry-types to field names in order to set the correct fields for biblatex. You will need to refer to the Endnote manual section "List of Reference Types" (around page 375) when reading your exported XML if you need to understand it properly.</dcf:point>
     </dcf:points>
   </dcf:description>
   <!--
@@ -190,52 +191,44 @@ related-urls
 image-urls
 auth-address
 auth-affiliaton
+access-date
+modified-date
+remote-database-name
+remote-database-provider
+secondary-volume
+secondary-issue
+image
+caption
+accession-num
+pack-method
+size
+repro-ratio
 
 
+
+electronic-resource-num
 
 ## periodical
 full-title
 abbr-1
 abbr-2
 abbr-3?
-
-secondary-volume
-secondary-issue
-edition
 section
 reprint-edition
 reprint-status
-keywords
-pub-location
-publisher
-orig-pub
-isbn
-accession-num
-call-num
 report-id
 coden
-electronic-resource-num
-abstract
 label
-image
-caption
-notes
 research-notes
 work-type
 reviewed-item
 availability
 remote-source
-meeting-place
 work-location
 work-extent
-pack-method
-size
-repro-ratio
-remote-database-name
-remote-database-provider
-language
-access-date
-modified-date
+
+
+
 
 
 
@@ -243,13 +236,11 @@ modified-date
     -->
 
 
-
-
-
-
     <!-- special fields -->
-    <dcf:field name="web-urls" alias="url"/>
+    <dcf:field name="web-urls" aliasof="url"/>
     <dcf:field name="url" handler="url"/>
+    <dcf:field name="keywords" handler="keywords"/>
+
     <!-- Titles are irritatingly entry-type dependent in Endnote XML,
          and so need a special handler
          see "Title Fields" on p 228 or thereabouts of the help PDF -->
@@ -259,6 +250,13 @@ modified-date
     <dcf:field name="secondary-title" handler="title"/>
     <dcf:field name="title" handler="title"/>
 
+    <!-- list fields -->
+    <dcf:field name="language" handler="list"/>
+    <dcf:field name="publisher" handler="list"/>
+    <dcf:field name="orig-pub" aliasof="origpublisher"/>
+    <dcf:field name="origpublisher" handler="list"/>
+    <dcf:field name="pub-location" aliasof="location"/>
+    <dcf:field name="location" handler="list"/>
 
     <!-- name fields -->
     <dcf:field name="authors" aliasof="author"/>
@@ -278,13 +276,25 @@ modified-date
     <!-- range fields -->
     <dcf:field name="pages" handler="range"/>
 
-    <!-- verbatim fields -->
+    <!-- literal fields -->
     <dcf:field name="num-vols" aliasof="volumes"/>
-    <dcf:field name="volumes" handler="verbatim"/>
-    <dcf:field name="volume" handler="verbatim"/>
-    <dcf:field name="number" handler="verbatim"/>
-    <dcf:field name="issue" handler="verbatim"/>
+    <dcf:field name="volumes" handler="literal"/>
+    <dcf:field name="volume" handler="literal"/>
+    <dcf:field name="number" handler="literal"/>
+    <dcf:field name="issue" handler="literal"/>
+    <dcf:field name="edition" handler="literal"/>
+    <dcf:field name="abstract" handler="literal"/>
+    <dcf:field name="call-num" aliasof="library"/>
+    <dcf:field name="library" handler="literal"/>
+    <dcf:field name="notes" aliasof="note"/>
+    <dcf:field name="note" handler="literal"/>
+    <dcf:field name="meeting-place" aliasof="venue"/>
+    <dcf:field name="venue" handler="literal"/>
 
+    <dcf:field name="isbn">
+      <dcf:alias aliasof="" aliasfortype=""/>
+    </dcf:field>
+    <dcf:field name="isbn" handler="literal"/>
   </dcf:fields>
 </dcf:driver-control>
 

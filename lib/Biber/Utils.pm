@@ -64,17 +64,16 @@ sub driver_config {
   # Read driver config file
   my $dcfxml = XML::LibXML::Simple::XMLin($dcf,
                                           'ForceContent' => 1,
-                                          'ForceArray' => [
-                                                           qr/\Aentry-type\z/,
-                                                           qr/\Afield\z/,
-                                                          ],
-                                          'NsStrip' => 1,
-                                          'KeyAttr' => ['name']);
+                                          'ForceArray' => [ qr/\Afield\z/,
+                                                            qr/\Aalias\z/,],
+                                          'NsStrip' => 1);
+
 
   # Check we have the right driver
   unless ($dcfxml->{driver} eq $driver_name) {
     $logger->logdie("Expected driver config type '$driver_name', got '" . $dcfxml->{driver} . "'");
   }
+  use Data::Dump;dd($dcfxml);
   return $dcfxml;
 }
 

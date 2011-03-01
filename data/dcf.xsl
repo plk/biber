@@ -46,6 +46,17 @@
             background-color: #FAF0E6;
             text-align: center;
           }
+          ul {
+            list-style-type: none;
+            margin-left: 0;
+            margin-right: 0;
+            margin-top: 0;
+            margin-bottom: 0;
+            padding-left: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-right: 0;
+          }
           table td {
             wrap: soft;
             vertical-align: text-top;
@@ -100,15 +111,43 @@
         <h3>Fields</h3>
         <table>
           <thead>
-            <tr><td>Name</td><td>Driver Handler</td><td>Alias of</td></tr>
+            <tr><td>Name</td><td>Driver Handler</td><td>Alias of</td><td>Alias for entrytype</td></tr>
           </thead>
           <tbody>
           <xsl:for-each select="/dcf:driver-control/dcf:fields/dcf:field">
             <xsl:sort select="./@name"/>
             <tr>
-              <td><xsl:value-of select="./@name"/></td>
-              <td><xsl:value-of select="./@handler"/></td>
-              <td><xsl:value-of select="./@aliasof"/></td>
+              <xsl:choose>
+                  <xsl:when test="./dcf:alias">
+                    <td><xsl:value-of select="./@name"/></td>
+                    <td><xsl:value-of select="./@handler"/></td>
+                    <td>
+                      <ul>
+                      <xsl:for-each select="./dcf:alias">
+                        <li><xsl:value-of select="./@aliasof"/></li>
+                      </xsl:for-each>
+                      </ul>
+                    </td>
+                    <td>
+                      <ul>
+                        <xsl:for-each select="./dcf:alias">
+                          <xsl:choose>
+                            <xsl:when test="./@aliasfortype">
+                              <li><xsl:value-of select="./@aliasfortype"/></li>
+                            </xsl:when>
+                            <xsl:otherwise>*</xsl:otherwise>
+                          </xsl:choose>
+                        </xsl:for-each>
+                      </ul>
+                    </td>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <td><xsl:value-of select="./@name"/></td>
+                    <td><xsl:value-of select="./@handler"/></td>
+                    <td><xsl:value-of select="./@aliasof"/></td>
+                    <td>*</td>
+                  </xsl:otherwise>
+              </xsl:choose>
             </tr>
           </xsl:for-each>
           </tbody>

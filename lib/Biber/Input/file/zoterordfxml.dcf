@@ -220,7 +220,7 @@
     <dcf:field name="bib:pages" aliasof="pages"/>
     <dcf:field name="pages" handler="range"/>
 
-    <!-- verbatim fields -->
+    <!-- literal fields -->
     <dcf:field name="dc:title" aliasof="title"/>
     <dcf:field name="z:proceedingsTitle" aliasof="title"/>
     <dcf:field name="z:encyclopediaTitle" aliasof="title"/>
@@ -230,29 +230,29 @@
     <dcf:field name="z:blogTitle" aliasof="title"/>
     <dcf:field name="z:nameOfAct" aliasof="title"/>
     <dcf:field name="z:caseName" aliasof="title"/>
-    <dcf:field name="title" handler="verbatim"/>
+    <dcf:field name="title" handler="literal"/>
     <dcf:field name="z:meetingName" aliasof="eventtitle"/>
-    <dcf:field name="eventtitle" handler="verbatim"/>
+    <dcf:field name="eventtitle" handler="literal"/>
     <dcf:field name="prism:volume" aliasof="volume"/>
-    <dcf:field name="volume" handler="verbatim"/>
+    <dcf:field name="volume" handler="literal"/>
     <dcf:field name="numberOfVolumes" aliasof="volumes"/>
-    <dcf:field name="volumes" handler="verbatim"/>
+    <dcf:field name="volumes" handler="literal"/>
     <dcf:field name="z:numPages" aliasof="pagetotal"/>
-    <dcf:field name="pagetotal" handler="verbatim"/>
+    <dcf:field name="pagetotal" handler="literal"/>
     <dcf:field name="prism:edition" aliasof="edition"/>
-    <dcf:field name="edition" handler="verbatim"/>
+    <dcf:field name="edition" handler="literal"/>
     <dcf:field name="dc:description" aliasof="note"/>
-    <dcf:field name="note" handler="verbatim"/>
+    <dcf:field name="note" handler="literal"/>
     <dcf:field name="dc:alternative" aliasof="shortjournal"/>
-    <dcf:field name="shortjournal" handler="verbatim"/>
+    <dcf:field name="shortjournal" handler="literal"/>
     <dcf:field name="dcterms:abstract" aliasof="abstract"/>
-    <dcf:field name="abstract" handler="verbatim"/>
+    <dcf:field name="abstract" handler="literal"/>
     <dcf:field name="dc:type" aliasof="type"/>
-    <dcf:field name="type" handler="verbatim"/>
+    <dcf:field name="type" handler="literal"/>
     <dcf:field name="z:shortTitle" aliasof="shorttitle"/>
-    <dcf:field name="shorttitle" handler="verbatim"/>
+    <dcf:field name="shorttitle" handler="literal"/>
     <dcf:field name="z:bookTitle" aliasof="booktitle"/>
-    <dcf:field name="booktitle" handler="verbatim"/>
+    <dcf:field name="booktitle" handler="literal"/>
     <dcf:field name="prism:number" aliasof="number"/>
     <dcf:field name="z:patentNumber" aliasof="number"/>
     <dcf:field name="z:codeNumber" aliasof="number"/>
@@ -262,17 +262,17 @@
     <dcf:field name="z:publicLawNumber" aliasof="number"/>
     <dcf:field name="z:applicationNumber" aliasof="number"/>
     <dcf:field name="z:episodeNumber" aliasof="number"/>
-    <dcf:field name="number" handler="verbatim"/>
+    <dcf:field name="number" handler="literal"/>
     <dcf:field name="dc:coverage" aliasof="location"/>
-    <dcf:field name="location" handler="verbatim"/>
+    <dcf:field name="location" handler="literal"/>
     <dcf:field name="z:university" aliasof="institution"/>
     <dcf:field name="institution" handler="list"/>
     <dcf:field name="z:language" aliasof="language"/>
     <dcf:field name="language" handler="list"/>
     <dcf:field name="z:version" aliasof="version"/>
-    <dcf:field name="version" handler="verbatim"/>
+    <dcf:field name="version" handler="literal"/>
     <dcf:field name="z:libraryCatalog" aliasof="library"/>
-    <dcf:field name="library" handler="verbatim"/>
+    <dcf:field name="library" handler="literal"/>
   </dcf:fields>
 </dcf:driver-control>
 

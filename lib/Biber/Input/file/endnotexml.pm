@@ -24,19 +24,9 @@ use XML::LibXML::Simple;
 use Data::Dump qw(dump);
 use Switch;
 
-##### This is based on Zotero 2.0.9 #####
+##### This is based on Endnote X4 #####
 
 my $logger = Log::Log4perl::get_logger('main');
-
-my %PREFICES = ('z'       => 'http://www.zotero.org/namespaces/export#',
-                'foaf'    => 'http://xmlns.com/foaf/0.1/',
-                'rdf'     => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-                'dc'      => 'http://purl.org/dc/elements/1.1/',
-                'dcterms' => 'http://purl.org/dc/terms/',
-                'bib'     => 'http://purl.org/net/biblio#',
-                'prism'   => 'http://prismstandard.org/namespaces/1.2/basic/',
-                'vcard'   => 'http://nwalsh.com/rdf/vCard#',
-                'vcard2'  => 'http://www.w3.org/2006/vcard/ns#');
 
 # Handlers for field types
 my %handlers = (
@@ -45,11 +35,7 @@ my %handlers = (
                 'range'       => \&_range,
                 'verbatim'    => \&_verbatim,
                 'list'        => \&_list,
-                'partof'      => \&_partof,
-                'publisher'   => \&_publisher,
-                'identifier'  => \&_identifier,
-                'presentedat' => \&_presentedat,
-                'subject'     => \&_subject
+                'keywords'    => \&_keywords,
 );
 
 # Read driver config file
@@ -224,13 +210,29 @@ sub create_entry {
     if (my $fm = $dcfxml->{fields}{field}{$f}) { # ignore fields not in .dcf
       my $to = $f; # By default, field to set internally is the same as data source
       # Redirect any alias
-      if (my $alias = $fm->{aliasof}) {
+      if (my $aliases = $fm->{alias}) { # complex aliases
+        foreach my $alias (@$aliases) {
+          if (my $t = $alias->{aliasfortype}) { # type-specific alias - Endnote irritatingly does this
+            if ($t eq $bibentry->get_field('entrytype')) {
+              my $a = $alias->{aliasof};
+              $logger->debug("Found alias '$a' of field '$f' for entrytype '$t' in entry '$dskey'");
+              $fm = $dcfxml->{fields}{field}{$a};
+            }
+          }
+          else {
+            my $alias = $fm->{aliasof}) { # global alias
+            $logger->debug("Found alias '$alias' of field '$f' in entry '$dskey'");
+            $fm = $dcfxml->{fields}{field}{$alias};
+          }
+        }
+      }
+      elsif (my $alias = $fm->{aliasof}) { # simple, global only alias
         $logger->debug("Found alias '$alias' of field '$f' in entry '$dskey'");
         $fm = $dcfxml->{fields}{field}{$alias};
-        $to = $alias; # Field to set internally is the alias
       }
-      &{$handlers{$fm->{handler}}}($biber, $bibentry, $entry, $f, $to, $dskey);
+      $to = $alias;             # Field to set internally is the alias
     }
+    &{$handlers{$fm->{handler}}}($biber, $bibentry, $entry, $f, $to, $dskey);
   }
 
   $bibentry->set_field('datatype', 'endnotexml');
@@ -384,13 +386,15 @@ sub _presentedat {
   return;
 }
 
-sub _subject {
+sub _keywords {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
-  if (my $lib = $entry->findnodes("./$f/dcterms:LCC/rdf:value")->get_node(1)) {
-    # This overrides any z:libraryCatalog node
-    $bibentry->set_datafield('library', _norm($lib->textContent()));
+  if (my @s = $entry->findnodes("./$f")) {
+    my @kws;
+    foreach my $s (@s) {
+      push @kws, '{'.$s->textContent().'}';
+    }
+    $bibentry->set_datafield('keywords', join(',', @kws));
   }
-  # otherwise, we ignore the subject tags as they are no use to biblatex
   return;
 }
 

@@ -43,7 +43,7 @@ my %handlers = (
                 'name'        => \&_name,
                 'date'        => \&_date,
                 'range'       => \&_range,
-                'verbatim'    => \&_verbatim,
+                'literal'     => \&_literal,
                 'list'        => \&_list,
                 'partof'      => \&_partof,
                 'publisher'   => \&_publisher,
@@ -246,8 +246,8 @@ sub _list {
   return;
 }
 
-# Verbatim fields
-sub _verbatim {
+# literal fields
+sub _literal {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   # Special case - libraryCatalog is used only if hasn't already been set
   # by LCC

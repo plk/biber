@@ -2,7 +2,7 @@ namespace dcf = "https://sourceforge.net/projects/biblatex-biber"
 
 start =
   element dcf:driver-control {
-    attribute driver { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" },
+    attribute driver { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" },
     element dcf:description {
       element dcf:overview { text },
       element dcf:points {
@@ -22,10 +22,16 @@ start =
     }*,
     element dcf:fields {
       element dcf:field {
-        attribute name { xsd:string },
-        (attribute handler { xsd:string } |
-          attribute aliasof { xsd:string }),
-        empty
-      }+
+        ((attribute name { xsd:string },
+          (attribute handler { xsd:string } |
+            (attribute aliasof { xsd:string })),
+          empty ) |
+            (attribute name { xsd:string },
+              element dcf:alias {
+                attribute aliasof { xsd:string },
+                attribute aliasfortype { xsd:string }?
+              }+
+            ))
+        }+
     }
   }

@@ -8,6 +8,7 @@
           <value>biblatexml</value>
           <value>ris</value>
           <value>zoterordfxml</value>
+          <value>endnotexml</value>
         </choice>
       </attribute>
       <element name="dcf:description">
@@ -52,18 +53,39 @@
       <element name="dcf:fields">
         <oneOrMore>
           <element name="dcf:field">
-            <attribute name="name">
-              <data type="string"/>
-            </attribute>
             <choice>
-              <attribute name="handler">
-                <data type="string"/>
-              </attribute>
-              <attribute name="aliasof">
-                <data type="string"/>
-              </attribute>
+              <group>
+                <attribute name="name">
+                  <data type="string"/>
+                </attribute>
+                <choice>
+                  <attribute name="handler">
+                    <data type="string"/>
+                  </attribute>
+                  <attribute name="aliasof">
+                    <data type="string"/>
+                  </attribute>
+                </choice>
+                <empty/>
+              </group>
+              <group>
+                <attribute name="name">
+                  <data type="string"/>
+                </attribute>
+                <oneOrMore>
+                  <element name="dcf:alias">
+                    <attribute name="aliasof">
+                      <data type="string"/>
+                    </attribute>
+                    <optional>
+                      <attribute name="aliasfortype">
+                        <data type="string"/>
+                      </attribute>
+                    </optional>
+                  </element>
+                </oneOrMore>
+              </group>
             </choice>
-            <empty/>
           </element>
         </oneOrMore>
       </element>
