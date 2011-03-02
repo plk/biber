@@ -65,7 +65,7 @@
       <dcf:aliasof>misc</dcf:aliasof>
     </dcf:entry-type>
     <dcf:entry-type name="Edited Book">
-      <dcf:aliasof>book</dcf:aliasof>
+      <dcf:aliasof>collection</dcf:aliasof>
     </dcf:entry-type>
     <dcf:entry-type name="Electronic Article">
       <dcf:aliasof>article</dcf:aliasof>
@@ -167,88 +167,58 @@
 
     <!-- ignored fields 
 
-copyright-dates
-translated-authors
-translated-title
-database
-source-app
-custom1
-custom2
-custom3
-custom4
-custom5
-custom6
-custom7
-misc1
-misc2
-misc3
-rec-number (used internally, just not output)
-foreign-keys (used internally, just not output)
-ref-type (used internally, just not output)
-pdf-urls
-text-urls
-related-urls
-image-urls
-auth-address
-auth-affiliaton
-access-date
-modified-date
-remote-database-name
-remote-database-provider
-secondary-volume
-secondary-issue
-image
-caption
-accession-num
-pack-method
-size
-repro-ratio
-
-
-
-electronic-resource-num
-
-## periodical
-full-title
-abbr-1
-abbr-2
-abbr-3?
-section
-reprint-edition
-reprint-status
-report-id
-coden
-label
-research-notes
-work-type
-reviewed-item
-availability
-remote-source
-work-location
-work-extent
-
-
-
-
-
-
+     copyright-dates
+     translated-authors
+     translated-title
+     database
+     source-app     
+     custom1
+     custom2
+     custom3
+     custom4
+     custom5
+     custom6
+     custom7
+     misc1
+     misc2
+     misc3
+     rec-number (used internally, just not output)
+     foreign-keys (used internally, just not output)
+     ref-type (used internally, just not output)
+     pdf-urls
+     text-urls
+     related-urls
+     image-urls
+     auth-address
+     auth-affiliaton
+     access-date
+     modified-date
+     remote-database-name
+     remote-database-provider
+     secondary-volume
+     secondary-issue
+     image
+     caption
+     accession-num
+     pack-method
+     size
+     repro-ratio
+     periodical (this is also secondary-title so it's not needed)
+     section
+     report-id
+     coden
+     reviewed-item
+     availability
+     remote-source
+     work-location
+     work-extent
 
     -->
-
 
     <!-- special fields -->
     <dcf:field name="web-urls" aliasof="url"/>
     <dcf:field name="url" handler="url"/>
     <dcf:field name="keywords" handler="keywords"/>
-
-    <!-- Titles are irritatingly entry-type dependent in Endnote XML,
-         and so need a special handler
-         see "Title Fields" on p 228 or thereabouts of the help PDF -->
-    <dcf:field name="short-title" handler="title"/>
-    <dcf:field name="alt-title" handler="title"/>
-    <dcf:field name="tertiary-title" handler="title"/>
-    <dcf:field name="secondary-title" handler="title"/>
-    <dcf:field name="title" handler="title"/>
 
     <!-- list fields -->
     <dcf:field name="language" handler="list"/>
@@ -259,10 +229,21 @@ work-extent
     <dcf:field name="location" handler="list"/>
 
     <!-- name fields -->
-    <dcf:field name="authors" aliasof="author"/>
-    <dcf:field name="secondary-authors" aliasof="editor"/>
-    <dcf:field name="tertiary-authors" aliasof="translator"/>
-    <dcf:field name="subsidiary-authors" aliasof="commentator"/>
+    <dcf:field name="authors">
+      <dcf:alias aliasof="author"/>
+      <dcf:alias aliasof="editor" aliasfortype="collection"/>
+    </dcf:field>
+    <dcf:field name="secondary-authors">
+      <dcf:alias aliasof="editor"/>
+    </dcf:field>
+    <dcf:field name="tertiary-authors">
+      <dcf:alias aliasof="commentator"/>
+    </dcf:field>
+    <dcf:field name="subsidiary-authors">
+      <dcf:alias aliasof="translator"/>
+    </dcf:field>
+
+
     <dcf:field name="author" handler="name"/>
     <dcf:field name="editor" handler="name"/>
     <dcf:field name="translator" handler="name"/>
@@ -280,7 +261,6 @@ work-extent
     <dcf:field name="num-vols" aliasof="volumes"/>
     <dcf:field name="volumes" handler="literal"/>
     <dcf:field name="volume" handler="literal"/>
-    <dcf:field name="number" handler="literal"/>
     <dcf:field name="issue" handler="literal"/>
     <dcf:field name="edition" handler="literal"/>
     <dcf:field name="abstract" handler="literal"/>
@@ -290,11 +270,51 @@ work-extent
     <dcf:field name="note" handler="literal"/>
     <dcf:field name="meeting-place" aliasof="venue"/>
     <dcf:field name="venue" handler="literal"/>
-
     <dcf:field name="isbn">
-      <dcf:alias aliasof="" aliasfortype=""/>
+      <dcf:alias aliasof="issn" aliasfortype="article"/>
+      <dcf:alias aliasof="number" aliasfortype="patent"/>
+      <dcf:alias aliasof="number" aliasfortype="report"/>
+      <dcf:alias aliasof="number" aliasfortype="legislation"/>
     </dcf:field>
+    <dcf:field name="number" handler="literal"/>
     <dcf:field name="isbn" handler="literal"/>
+    <dcf:field name="issn" handler="literal"/>
+    <dcf:field name="title">
+      <dcf:alias aliasof="subtitle" aliasfortype="online"/>
+    </dcf:field>
+    <dcf:field name="secondary-title">
+      <dcf:alias aliasof="subtitle"/>
+      <dcf:alias aliasof="title" aliasfortype="online"/>
+      <dcf:alias aliasof="booktitle" aliasfortype="inbook"/>
+      <dcf:alias aliasof="series" aliasfortype="book"/>
+      <dcf:alias aliasof="series" aliasfortype="unpublished"/>
+      <dcf:alias aliasof="eventtitle" aliasfortype="inproceedings"/>
+      <dcf:alias aliasof="eventtitle" aliasfortype="proceedings"/>
+      <dcf:alias aliasof="journaltitle" aliasfortype="article"/>
+    </dcf:field>
+    <dcf:field name="tertiary-title">
+      <dcf:alias aliasof="series" aliasfortype="inbook"/>
+      <dcf:alias aliasof="series" aliasfortype="proceedings"/>
+      <dcf:alias aliasof="series" aliasfortype="periodical"/>
+    </dcf:field>
+    <dcf:field name="title" handler="literal"/>
+    <dcf:field name="journaltitle" handler="literal"/>
+    <dcf:field name="booktitle" handler="literal"/>
+    <dcf:field name="subtitle" handler="literal"/>
+    <dcf:field name="eventtitle" handler="literal"/>
+    <dcf:field name="series" handler="literal"/>
+    <dcf:field name="label" handler="literal"/>
+    <dcf:field name="work-type" aliasof="type"/>
+    <dcf:field name="type" handler="literal"/>
+
+    <!-- Endnote has a "short-title" tag but it doesn't seem to be used -->
+    <dcf:field name="alt-title" aliasof="shorttitle"/>
+    <dcf:field name="shorttitle" handler="literal"/>
+
+    <!-- this is a fairly vague field in Endnote, not suitable for a strict DOI field -->
+    <dcf:field name="electronic-resource-num" aliasof="eprint"/>
+    <dcf:field name="eprint" handler="literal"/>
+
   </dcf:fields>
 </dcf:driver-control>
 

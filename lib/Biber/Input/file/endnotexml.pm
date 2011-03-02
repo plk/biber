@@ -86,9 +86,6 @@ sub extract_entries {
   my $rdfxml = $parser->parse_file($filename)
     or $logger->logcroak("Can't parse file $filename");
   my $xpc = XML::LibXML::XPathContext->new($rdfxml);
-  foreach my $ns (keys %PREFICES) {
-    $xpc->registerNs($ns, $PREFICES{$ns});
-  }
 
   if ($section->is_allkeys) {
     $logger->debug("All citekeys will be used for section '$secnum'");
@@ -111,8 +108,6 @@ sub extract_entries {
 
       my $key = $entry->getAttribute('rdf:about');
 
-      # sanitise the key for LaTeX
-      $key =~ s/\A\#item_/item_/xms;
       create_entry($biber, $key, $entry);
     }
 
@@ -205,26 +200,33 @@ sub create_entry {
 
   # We put all the fields we find modulo field aliases into the object.
   # Validation happens later and is not datasource dependent
-  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
-
-    if (my $fm = $dcfxml->{fields}{field}{$f}) { # ignore fields not in .dcf
+  # the findnodes() on the entry is complex as some fields are not at the top
+  # level of the entry, which is annoying. This is a trade-off between having special handlers
+  # for the top-level nodes and forcing the right nodes to be visible to this loop, which
+  # is what we do here as these nodes have special aliases we want visible in the .dcf. If we
+  # did it all in special handlers, it would all be invisible in the .dcf
+  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(/xml/records/record/*|/xml/records/record/titles/*|/xml/records/record/contributors/*)')) {
+    # ignore fields not in .dcf - this means "titles" and "contributors" are skipped but their
+    # children are not
+    if (my $fm = $dcfxml->{fields}{field}{$f}) {
       my $to = $f; # By default, field to set internally is the same as data source
       # Redirect any alias
       if (my $aliases = $fm->{alias}) { # complex aliases
+        my $a; # so we can log this later
         foreach my $alias (@$aliases) {
-          if (my $t = $alias->{aliasfortype}) { # type-specific alias - Endnote irritatingly does this
+          if (my $t = $alias->{aliasfortype}) { # type-specific alias - Endnote does this
             if ($t eq $bibentry->get_field('entrytype')) {
-              my $a = $alias->{aliasof};
-              $logger->debug("Found alias '$a' of field '$f' for entrytype '$t' in entry '$dskey'");
+              $a = $alias->{aliasof};
               $fm = $dcfxml->{fields}{field}{$a};
+              last;
             }
           }
           else {
-            my $alias = $fm->{aliasof}) { # global alias
-            $logger->debug("Found alias '$alias' of field '$f' in entry '$dskey'");
-            $fm = $dcfxml->{fields}{field}{$alias};
+            $a = $fm->{aliasof}) { # global alias
+            $fm = $dcfxml->{fields}{field}{$a};
           }
         }
+        $logger->debug("Found alias '$alias' of field '$f' in entry '$dskey'");
       }
       elsif (my $alias = $fm->{aliasof}) { # simple, global only alias
         $logger->debug("Found alias '$alias' of field '$f' in entry '$dskey'");
@@ -508,6 +510,17 @@ sub _gen_initials {
     }
   }
   return @strings_out;
+}
+
+# Endnote has styles in the XML ... urgh
+sub _strip_style {
+  my $node = shift;
+  if (my $sn = $node->findnodes('./style')) {
+    return $sn->get_node(1)->textContent();
+  }
+  else {
+    return $node->textContent;
+  }
 }
 
 # Do some sanitising on LaTeX special chars since this can't be nicely done by the parser
