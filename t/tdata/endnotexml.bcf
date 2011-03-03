@@ -292,7 +292,7 @@
     <bcf:datasource type="file" datatype="endnotexml">endnote.xml</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>somekey</bcf:citekey>
+    <bcf:citekey>fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:42</bcf:citekey>
     <bcf:sectionlist label="MAIN" type="entry"/>
     <bcf:sectionlist label="SHORTHANDS" type="shorthand">
       <bcf:filter type="field">shorthand</bcf:filter>

@@ -3,10 +3,11 @@
 <?xml-stylesheet type="text/xsl" href="../../../../data/dcf.xsl"?>
 <dcf:driver-control driver="endnotexml" xmlns:dcf="https://sourceforge.net/projects/biblatex-biber">
   <dcf:description>
-    <dcf:overview>The Endnote driver is for the Endnote XML export format for versions >=X1. Endnote does not really cater properly for citation key based formats and so it does not have a user-defined unique key for entries. However, it does incrementally number the records in the export using the "rec-number" tag. You can use this as the citation key. If you might use several Endnote XML datasources, of course this would not work since the numbers are not unique to an Endnote database. So, you can prefix your citation keys with the Endnote database ID which is in every record as the "db-id" attribute of the "foreign-keys/key" tag with the "app" attribute of "EN". This database ID prefix, if used, should be seperated from the "rec-number" with a colon.</dcf:overview>
+    <dcf:overview>The Endnote driver is for the Endnote XML export format for versions >=X1. Endnote does not really cater properly for citation key based formats and so it does not have a user-defined unique key for entries. However, it does incrementally number the records in the export using the "rec-number" tag and every entry has the same database ID. You should use these as the citation key in the following way: take the database ID from the "db-id" attribute of the "foreign-keys/key" tag (this tag also has an "app" attribute with value "EN"). Add a colon to this and then add the value of the "rec-number" tag. The database ID should be the same for every entry in the XML export so this is fairly simple.</dcf:overview>
     <dcf:points>
+    <dcf:point>As per the biblatex manual, date fields should be roughly ISO8601 format (e.g. "2008" or "2007-03-02") otherwise they won't be parsed correctly.</dcf:point>
       <dcf:point>Obviously, no user-defined Endnote entry types are supported as we don't know their names ...</dcf:point>
-      <dcf:point>Endnote has the notion of a "generic" entry-type which contains all field names but the actual entry-types you use map the fields to different names. This is a huge pain when parsing Endnote entries out of XML because the XML uses only the generic field names. So, the driver has to maintain a mapping of entry-types to field names in order to set the correct fields for biblatex. You will need to refer to the Endnote manual section "List of Reference Types" (around page 375) when reading your exported XML if you need to understand it properly.</dcf:point>
+      <dcf:point>Endnote has the notion of a "generic" entry-type which contains all field names but the actual entry-types you use map the fields to different names. This is a huge pain when parsing Endnote entries out of XML because the XML uses only the generic field names. So, the driver has to map entry-types to field names in order to set the correct fields for biblatex. You will need to refer to the Endnote manual section "List of Reference Types" (around page 375) when reading your exported XML if you need to understand it properly.</dcf:point>
     </dcf:points>
   </dcf:description>
   <!--
@@ -216,8 +217,6 @@
     -->
 
     <!-- special fields -->
-    <dcf:field name="web-urls" aliasof="url"/>
-    <dcf:field name="url" handler="url"/>
     <dcf:field name="keywords" handler="keywords"/>
 
     <!-- list fields -->
@@ -242,8 +241,6 @@
     <dcf:field name="subsidiary-authors">
       <dcf:alias aliasof="translator"/>
     </dcf:field>
-
-
     <dcf:field name="author" handler="name"/>
     <dcf:field name="editor" handler="name"/>
     <dcf:field name="translator" handler="name"/>
@@ -306,8 +303,9 @@
     <dcf:field name="label" handler="literal"/>
     <dcf:field name="work-type" aliasof="type"/>
     <dcf:field name="type" handler="literal"/>
+    <dcf:field name="url" handler="literal"/>
 
-    <!-- Endnote has a "short-title" tag but it doesn't seem to be used -->
+    <!-- Endnote XML has a "short-title" tag but it doesn't seem to be used -->
     <dcf:field name="alt-title" aliasof="shorttitle"/>
     <dcf:field name="shorttitle" handler="literal"/>
 

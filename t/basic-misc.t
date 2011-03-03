@@ -64,36 +64,36 @@ is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
 my $murray1 = q|  \entry{murray}{article}{}
     \name{labelname}{14}{%
-      {{Hostetler}{H\bibinitperiod}{Michael\bibnbnamedelim J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-      {{Wingate}{W\bibinitperiod}{Julia\bibnbnamedelim E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      {{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
       {{Zhong}{Z\bibinitperiod}{Chuan-Jian}{C\bibinithyphendelim J\bibinitperiod}{}{}{}{}}%
-      {{Harris}{H\bibinitperiod}{Jay\bibnbnamedelim E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-      {{Vachet}{V\bibinitperiod}{Richard\bibnbnamedelim W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
-      {{Clark}{C\bibinitperiod}{Michael\bibnbnamedelim R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
-      {{Londono}{L\bibinitperiod}{J.\bibnbnamedelim David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-      {{Green}{G\bibinitperiod}{Stephen\bibnbnamedelim J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-      {{Stokes}{S\bibinitperiod}{Jennifer\bibnbnamedelim J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-      {{Wignall}{W\bibinitperiod}{George\bibnbnamedelim D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-      {{Glish}{G\bibinitperiod}{Gary\bibnbnamedelim L.}{G\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
-      {{Porter}{P\bibinitperiod}{Marc\bibnbnamedelim D.}{M\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-      {{Evans}{E\bibinitperiod}{Neal\bibnbnamedelim D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-      {{Murray}{M\bibinitperiod}{Royce\bibnbnamedelim W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      {{Harris}{H\bibinitperiod}{Jay\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      {{Vachet}{V\bibinitperiod}{Richard\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      {{Clark}{C\bibinitperiod}{Michael\bibnamedelima R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+      {{Londono}{L\bibinitperiod}{J.\bibnamedelima David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Green}{G\bibinitperiod}{Stephen\bibnamedelima J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Stokes}{S\bibinitperiod}{Jennifer\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Wignall}{W\bibinitperiod}{George\bibnamedelima D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Glish}{G\bibinitperiod}{Gary\bibnamedelima L.}{G\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+      {{Porter}{P\bibinitperiod}{Marc\bibnamedelima D.}{M\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Evans}{E\bibinitperiod}{Neal\bibnamedelima D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Murray}{M\bibinitperiod}{Royce\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{14}{%
-      {{Hostetler}{H\bibinitperiod}{Michael\bibnbnamedelim J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-      {{Wingate}{W\bibinitperiod}{Julia\bibnbnamedelim E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      {{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
       {{Zhong}{Z\bibinitperiod}{Chuan-Jian}{C\bibinithyphendelim J\bibinitperiod}{}{}{}{}}%
-      {{Harris}{H\bibinitperiod}{Jay\bibnbnamedelim E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-      {{Vachet}{V\bibinitperiod}{Richard\bibnbnamedelim W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
-      {{Clark}{C\bibinitperiod}{Michael\bibnbnamedelim R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
-      {{Londono}{L\bibinitperiod}{J.\bibnbnamedelim David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-      {{Green}{G\bibinitperiod}{Stephen\bibnbnamedelim J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-      {{Stokes}{S\bibinitperiod}{Jennifer\bibnbnamedelim J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-      {{Wignall}{W\bibinitperiod}{George\bibnbnamedelim D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-      {{Glish}{G\bibinitperiod}{Gary\bibnbnamedelim L.}{G\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
-      {{Porter}{P\bibinitperiod}{Marc\bibnbnamedelim D.}{M\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-      {{Evans}{E\bibinitperiod}{Neal\bibnbnamedelim D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-      {{Murray}{M\bibinitperiod}{Royce\bibnbnamedelim W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      {{Harris}{H\bibinitperiod}{Jay\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      {{Vachet}{V\bibinitperiod}{Richard\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      {{Clark}{C\bibinitperiod}{Michael\bibnamedelima R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+      {{Londono}{L\bibinitperiod}{J.\bibnamedelima David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Green}{G\bibinitperiod}{Stephen\bibnamedelima J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Stokes}{S\bibinitperiod}{Jennifer\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Wignall}{W\bibinitperiod}{George\bibnamedelima D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Glish}{G\bibinitperiod}{Gary\bibnamedelima L.}{G\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+      {{Porter}{P\bibinitperiod}{Marc\bibnamedelima D.}{M\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Evans}{E\bibinitperiod}{Neal\bibnamedelima D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Murray}{M\bibinitperiod}{Royce\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{HMJ+1}
     \strng{fullhash}{HMJWJEZC-JHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}
@@ -118,36 +118,36 @@ my $murray1 = q|  \entry{murray}{article}{}
 
 my $murray2 = q|  \entry{murray}{article}{}
     \name{labelname}{14}{%
-      {{Hostetler}{H\bibinitperiod}{Michael\bibnbnamedelim J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-      {{Wingate}{W\bibinitperiod}{Julia\bibnbnamedelim E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      {{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
       {{Zhong}{Z\bibinitperiod}{Chuan-Jian}{C\bibinithyphendelim J\bibinitperiod}{}{}{}{}}%
-      {{Harris}{H\bibinitperiod}{Jay\bibnbnamedelim E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-      {{Vachet}{V\bibinitperiod}{Richard\bibnbnamedelim W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
-      {{Clark}{C\bibinitperiod}{Michael\bibnbnamedelim R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
-      {{Londono}{L\bibinitperiod}{J.\bibnbnamedelim David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-      {{Green}{G\bibinitperiod}{Stephen\bibnbnamedelim J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-      {{Stokes}{S\bibinitperiod}{Jennifer\bibnbnamedelim J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-      {{Wignall}{W\bibinitperiod}{George\bibnbnamedelim D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-      {{Glish}{G\bibinitperiod}{Gary\bibnbnamedelim L.}{G\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
-      {{Porter}{P\bibinitperiod}{Marc\bibnbnamedelim D.}{M\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-      {{Evans}{E\bibinitperiod}{Neal\bibnbnamedelim D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-      {{Murray}{M\bibinitperiod}{Royce\bibnbnamedelim W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      {{Harris}{H\bibinitperiod}{Jay\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      {{Vachet}{V\bibinitperiod}{Richard\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      {{Clark}{C\bibinitperiod}{Michael\bibnamedelima R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+      {{Londono}{L\bibinitperiod}{J.\bibnamedelima David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Green}{G\bibinitperiod}{Stephen\bibnamedelima J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Stokes}{S\bibinitperiod}{Jennifer\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Wignall}{W\bibinitperiod}{George\bibnamedelima D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Glish}{G\bibinitperiod}{Gary\bibnamedelima L.}{G\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+      {{Porter}{P\bibinitperiod}{Marc\bibnamedelima D.}{M\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Evans}{E\bibinitperiod}{Neal\bibnamedelima D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Murray}{M\bibinitperiod}{Royce\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{14}{%
-      {{Hostetler}{H\bibinitperiod}{Michael\bibnbnamedelim J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-      {{Wingate}{W\bibinitperiod}{Julia\bibnbnamedelim E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      {{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
       {{Zhong}{Z\bibinitperiod}{Chuan-Jian}{C\bibinithyphendelim J\bibinitperiod}{}{}{}{}}%
-      {{Harris}{H\bibinitperiod}{Jay\bibnbnamedelim E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-      {{Vachet}{V\bibinitperiod}{Richard\bibnbnamedelim W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
-      {{Clark}{C\bibinitperiod}{Michael\bibnbnamedelim R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
-      {{Londono}{L\bibinitperiod}{J.\bibnbnamedelim David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-      {{Green}{G\bibinitperiod}{Stephen\bibnbnamedelim J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-      {{Stokes}{S\bibinitperiod}{Jennifer\bibnbnamedelim J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-      {{Wignall}{W\bibinitperiod}{George\bibnbnamedelim D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-      {{Glish}{G\bibinitperiod}{Gary\bibnbnamedelim L.}{G\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
-      {{Porter}{P\bibinitperiod}{Marc\bibnbnamedelim D.}{M\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-      {{Evans}{E\bibinitperiod}{Neal\bibnbnamedelim D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-      {{Murray}{M\bibinitperiod}{Royce\bibnbnamedelim W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      {{Harris}{H\bibinitperiod}{Jay\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
+      {{Vachet}{V\bibinitperiod}{Richard\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+      {{Clark}{C\bibinitperiod}{Michael\bibnamedelima R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
+      {{Londono}{L\bibinitperiod}{J.\bibnamedelima David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Green}{G\bibinitperiod}{Stephen\bibnamedelima J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Stokes}{S\bibinitperiod}{Jennifer\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Wignall}{W\bibinitperiod}{George\bibnamedelima D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Glish}{G\bibinitperiod}{Gary\bibnamedelima L.}{G\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
+      {{Porter}{P\bibinitperiod}{Marc\bibnamedelima D.}{M\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Evans}{E\bibinitperiod}{Neal\bibnamedelima D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Murray}{M\bibinitperiod}{Royce\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{HMJ+1}
     \strng{fullhash}{HMJWJEZC-JHJEVRWCMRLJDGSJSJJWGDGGLPMDENDMRW1}

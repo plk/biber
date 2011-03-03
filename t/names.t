@@ -259,10 +259,10 @@ my $l1 = q|  \entry{L1}{book}{}
 
 my $l2 = q|  \entry{L2}{book}{}
     \name{labelname}{1}{%
-      {{Bull}{B\bibinitperiod}{Bertie\bibnbnamedelim B.}{B\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      {{Bull}{B\bibinitperiod}{Bertie\bibnamedelima B.}{B\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Bull}{B\bibinitperiod}{Bertie\bibnbnamedelim B.}{B\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      {{Bull}{B\bibinitperiod}{Bertie\bibnamedelima B.}{B\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{BBB1}
     \strng{fullhash}{BBB1}
@@ -273,10 +273,10 @@ my $l2 = q|  \entry{L2}{book}{}
 
 my $l3 = q|  \entry{L3}{book}{}
     \name{labelname}{1}{%
-      {{Crop}{C\bibinitperiod}{C.\bibnbnamedelim Z.}{C\bibinitperiod\bibinitdelim Z\bibinitperiod}{}{}{}{}}%
+      {{Crop}{C\bibinitperiod}{C.\bibnamedelima Z.}{C\bibinitperiod\bibinitdelim Z\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Crop}{C\bibinitperiod}{C.\bibnbnamedelim Z.}{C\bibinitperiod\bibinitdelim Z\bibinitperiod}{}{}{}{}}%
+      {{Crop}{C\bibinitperiod}{C.\bibnamedelima Z.}{C\bibinitperiod\bibinitdelim Z\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{CCZ1}
     \strng{fullhash}{CCZ1}
@@ -287,10 +287,10 @@ my $l3 = q|  \entry{L3}{book}{}
 
 my $l4 = q|  \entry{L4}{book}{}
     \name{labelname}{1}{%
-      {{Decket}{D\bibinitperiod}{Derek\bibnbnamedelim D}{D\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Decket}{D\bibinitperiod}{Derek\bibnamedelima D}{D\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Decket}{D\bibinitperiod}{Derek\bibnbnamedelim D}{D\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{Decket}{D\bibinitperiod}{Derek\bibnamedelima D}{D\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{DDD1}
     \strng{fullhash}{DDD1}
@@ -315,10 +315,10 @@ my $l5 = q|  \entry{L5}{book}{}
 
 my $l6 = q|  \entry{L6}{book}{}
     \name{labelname}{1}{%
-      {{Frome}{F\bibinitperiod}{Francis}{F\bibinitperiod}{van\bibbnamedelim der\bibnbnamedelim valt}{v\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim v\bibinitperiod}{}{}}%
+      {{Frome}{F\bibinitperiod}{Francis}{F\bibinitperiod}{van\bibnamedelimb der\bibnamedelima valt}{v\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim v\bibinitperiod}{}{}}%
     }
     \name{author}{1}{%
-      {{Frome}{F\bibinitperiod}{Francis}{F\bibinitperiod}{van\bibbnamedelim der\bibnbnamedelim valt}{v\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim v\bibinitperiod}{}{}}%
+      {{Frome}{F\bibinitperiod}{Francis}{F\bibinitperiod}{van\bibnamedelimb der\bibnamedelima valt}{v\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim v\bibinitperiod}{}{}}%
     }
     \strng{namehash}{vdvFF1}
     \strng{fullhash}{vdvFF1}
@@ -329,10 +329,10 @@ my $l6 = q|  \entry{L6}{book}{}
 
 my $l7 = q|  \entry{L7}{book}{}
     \name{labelname}{1}{%
-      {{Gloom}{G\bibinitperiod}{Gregory\bibnbnamedelim R.}{G\bibinitperiod\bibinitdelim R\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
+      {{Gloom}{G\bibinitperiod}{Gregory\bibnamedelima R.}{G\bibinitperiod\bibinitdelim R\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
     }
     \name{author}{1}{%
-      {{Gloom}{G\bibinitperiod}{Gregory\bibnbnamedelim R.}{G\bibinitperiod\bibinitdelim R\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
+      {{Gloom}{G\bibinitperiod}{Gregory\bibnamedelima R.}{G\bibinitperiod\bibinitdelim R\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
     }
     \strng{namehash}{vGGR1}
     \strng{fullhash}{vGGR1}
@@ -343,10 +343,10 @@ my $l7 = q|  \entry{L7}{book}{}
 
 my $l8 = q|  \entry{L8}{book}{}
     \name{labelname}{1}{%
-      {{Henkel}{H\bibinitperiod}{Henry\bibnbnamedelim F.}{H\bibinitperiod\bibinitdelim F\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
+      {{Henkel}{H\bibinitperiod}{Henry\bibnamedelima F.}{H\bibinitperiod\bibinitdelim F\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
     }
     \name{author}{1}{%
-      {{Henkel}{H\bibinitperiod}{Henry\bibnbnamedelim F.}{H\bibinitperiod\bibinitdelim F\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
+      {{Henkel}{H\bibinitperiod}{Henry\bibnamedelima F.}{H\bibinitperiod\bibinitdelim F\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
     }
     \strng{namehash}{vHHF1}
     \strng{fullhash}{vHHF1}
@@ -357,10 +357,10 @@ my $l8 = q|  \entry{L8}{book}{}
 
 my $l9 = q|  \entry{L9}{book}{}
     \name{labelname}{1}{%
-      {{{Iliad\bibbnamedelim Ipswich}}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
+      {{{Iliad\bibnamedelimb Ipswich}}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{{Iliad\bibbnamedelim Ipswich}}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
+      {{{Iliad\bibnamedelimb Ipswich}}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{II1}
     \strng{fullhash}{II1}
@@ -387,10 +387,10 @@ my $l10 = q|  \entry{L10}{book}{}
 
 my $l10a = q|  \entry{L10a}{book}{}
     \name{labelname}{1}{%
-      {{Pimentel}{P\bibinitperiod}{Joseph\bibnbnamedelim J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{Jr.}{J\bibinitperiod}}%
+      {{Pimentel}{P\bibinitperiod}{Joseph\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{Jr.}{J\bibinitperiod}}%
     }
     \name{author}{1}{%
-      {{Pimentel}{P\bibinitperiod}{Joseph\bibnbnamedelim J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{Jr.}{J\bibinitperiod}}%
+      {{Pimentel}{P\bibinitperiod}{Joseph\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{Jr.}{J\bibinitperiod}}%
     }
     \strng{namehash}{PJJJ1}
     \strng{fullhash}{PJJJ1}
@@ -416,10 +416,10 @@ my $l11 = q|  \entry{L11}{book}{}
 
 my $l12 = q|  \entry{L12}{book}{}
     \name{labelname}{1}{%
-      {{Vall{\'e}e\bibnbnamedelim Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles\bibbnamedelim Louis\bibbnamedelim Xavier\bibnbnamedelim Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de\bibnbnamedelim la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
+      {{Vall{\'e}e\bibnamedelima Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de\bibnamedelima la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
     }
     \name{author}{1}{%
-      {{Vall{\'e}e\bibnbnamedelim Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles\bibbnamedelim Louis\bibbnamedelim Xavier\bibnbnamedelim Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de\bibnbnamedelim la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
+      {{Vall{\'e}e\bibnamedelima Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de\bibnamedelima la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
     }
     \strng{namehash}{dlVPCLXJ1}
     \strng{fullhash}{dlVPCLXJ1}
@@ -430,10 +430,10 @@ my $l12 = q|  \entry{L12}{book}{}
 
 my $l13 = q|  \entry{L13}{book}{}
     \name{labelname}{1}{%
-      {{Van\bibbnamedelim de\bibnbnamedelim Graaff}{V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod}{R.\bibnbnamedelim J.}{R\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Van\bibnamedelimb de\bibnamedelima Graaff}{V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod}{R.\bibnamedelima J.}{R\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Van\bibbnamedelim de\bibnbnamedelim Graaff}{V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod}{R.\bibnbnamedelim J.}{R\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Van\bibnamedelimb de\bibnamedelima Graaff}{V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod}{R.\bibnamedelima J.}{R\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{VdGRJ1}
     \strng{fullhash}{VdGRJ1}
@@ -444,10 +444,10 @@ my $l13 = q|  \entry{L13}{book}{}
 
 my $l14 = q|  \entry{L14}{book}{}
     \name{labelname}{1}{%
-      {{St\bibnbnamedelim John-Mollusc}{S\bibinitperiod\bibinitdelim J\bibinithyphendelim M\bibinitperiod}{Oliver}{O\bibinitperiod}{}{}{}{}}%
+      {{St\bibnamedelima John-Mollusc}{S\bibinitperiod\bibinitdelim J\bibinithyphendelim M\bibinitperiod}{Oliver}{O\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{St\bibnbnamedelim John-Mollusc}{S\bibinitperiod\bibinitdelim J\bibinithyphendelim M\bibinitperiod}{Oliver}{O\bibinitperiod}{}{}{}{}}%
+      {{St\bibnamedelima John-Mollusc}{S\bibinitperiod\bibinitdelim J\bibinithyphendelim M\bibinitperiod}{Oliver}{O\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{SJ-MO1}
     \strng{fullhash}{SJ-MO1}
@@ -458,10 +458,10 @@ my $l14 = q|  \entry{L14}{book}{}
 
 my $l15 = q|  \entry{L15}{book}{}
     \name{labelname}{1}{%
-      {{Gompel}{G\bibinitperiod}{Roger\bibnbnamedelim P.{\,}G.}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
+      {{Gompel}{G\bibinitperiod}{Roger\bibnamedelima P.{\,}G.}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
     }
     \name{author}{1}{%
-      {{Gompel}{G\bibinitperiod}{Roger\bibnbnamedelim P.{\,}G.}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
+      {{Gompel}{G\bibinitperiod}{Roger\bibnamedelima P.{\,}G.}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
     }
     \strng{namehash}{vGRP1}
     \strng{fullhash}{vGRP1}
@@ -472,10 +472,10 @@ my $l15 = q|  \entry{L15}{book}{}
 
 my $l16 = q|  \entry{L16}{book}{}
     \name{labelname}{1}{%
-      {{Gompel}{G\bibinitperiod}{Roger\bibnbnamedelim {P.\,G.}}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
+      {{Gompel}{G\bibinitperiod}{Roger\bibnamedelima {P.\,G.}}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
     }
     \name{author}{1}{%
-      {{Gompel}{G\bibinitperiod}{Roger\bibnbnamedelim {P.\,G.}}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
+      {{Gompel}{G\bibinitperiod}{Roger\bibnamedelima {P.\,G.}}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
     }
     \strng{namehash}{vGRP1}
     \strng{fullhash}{vGRP1}
@@ -486,10 +486,10 @@ my $l16 = q|  \entry{L16}{book}{}
 
 my $l17 = q|  \entry{L17}{book}{}
     \name{labelname}{1}{%
-      {{Lovecraft}{L\bibinitperiod}{Bill\bibnbnamedelim H.{\,}P.}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
+      {{Lovecraft}{L\bibinitperiod}{Bill\bibnamedelima H.{\,}P.}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Lovecraft}{L\bibinitperiod}{Bill\bibnbnamedelim H.{\,}P.}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
+      {{Lovecraft}{L\bibinitperiod}{Bill\bibnamedelima H.{\,}P.}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{LBH1}
     \strng{fullhash}{LBH1}
@@ -500,10 +500,10 @@ my $l17 = q|  \entry{L17}{book}{}
 
 my $l18 = q|  \entry{L18}{book}{}
     \name{labelname}{1}{%
-      {{Lovecraft}{L\bibinitperiod}{Bill\bibnbnamedelim {H.\,P.}}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
+      {{Lovecraft}{L\bibinitperiod}{Bill\bibnamedelima {H.\,P.}}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Lovecraft}{L\bibinitperiod}{Bill\bibnbnamedelim {H.\,P.}}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
+      {{Lovecraft}{L\bibinitperiod}{Bill\bibnamedelima {H.\,P.}}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{LBH1}
     \strng{fullhash}{LBH1}
@@ -528,10 +528,10 @@ my $l19 = q|  \entry{L19}{book}{}
 
 my $l20 = q|  \entry{L20}{book}{}
     \name{labelname}{1}{%
-      {{Ford}{F\bibinitperiod}{{John\bibbnamedelim Henry}}{J\bibinitperiod}{}{}{}{}}%
+      {{Ford}{F\bibinitperiod}{{John\bibnamedelimb Henry}}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{Ford}{F\bibinitperiod}{{John\bibbnamedelim Henry}}{J\bibinitperiod}{}{}{}{}}%
+      {{Ford}{F\bibinitperiod}{{John\bibnamedelimb Henry}}{J\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{FJ1}
     \strng{fullhash}{FJ1}
@@ -614,10 +614,10 @@ my $l24 = q|  \entry{L24}{book}{}
 
 my $l25 = q|  \entry{L25}{book}{}
     \name{labelname}{1}{%
-      {{{American\bibbnamedelim Psychological\bibbnamedelim Association,\bibbnamedelim Task\bibbnamedelim Force\bibbnamedelim on\bibbnamedelim the\bibbnamedelim Sexualization\bibbnamedelim of\bibbnamedelim Girls}}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{{American\bibnamedelimb Psychological\bibnamedelimb Association,\bibnamedelimb Task\bibnamedelimb Force\bibnamedelimb on\bibnamedelimb the\bibnamedelimb Sexualization\bibnamedelimb of\bibnamedelimb Girls}}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{{American\bibbnamedelim Psychological\bibbnamedelim Association,\bibbnamedelim Task\bibbnamedelim Force\bibbnamedelim on\bibbnamedelim the\bibbnamedelim Sexualization\bibbnamedelim of\bibbnamedelim Girls}}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{{American\bibnamedelimb Psychological\bibnamedelimb Association,\bibnamedelimb Task\bibnamedelimb Force\bibnamedelimb on\bibnamedelimb the\bibnamedelimb Sexualization\bibnamedelimb of\bibnamedelimb Girls}}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \strng{namehash}{A1}
     \strng{fullhash}{A1}
@@ -628,10 +628,10 @@ my $l25 = q|  \entry{L25}{book}{}
 
 my $l26 = q|  \entry{L26}{book}{}
     \name{labelname}{1}{%
-      {{{Sci-Art\bibbnamedelim Publishers}}{S\bibinitperiod}{}{}{}{}{}{}}%
+      {{{Sci-Art\bibnamedelimb Publishers}}{S\bibinitperiod}{}{}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{{Sci-Art\bibbnamedelim Publishers}}{S\bibinitperiod}{}{}{}{}{}{}}%
+      {{{Sci-Art\bibnamedelimb Publishers}}{S\bibinitperiod}{}{}{}{}{}{}}%
     }
     \strng{namehash}{S1}
     \strng{fullhash}{S1}
@@ -653,10 +653,10 @@ my $l28 = q|  \entry{L28}{book}{}
 
 my $l29 = q|  \entry{L29}{book}{}
     \name{labelname}{1}{%
-      {{{U.S.\bibbnamedelim Department\bibbnamedelim of\bibbnamedelim Health\bibbnamedelim and\bibbnamedelim Human\bibbnamedelim Services,\bibbnamedelim National\bibbnamedelim Institute\bibbnamedelim of\bibbnamedelim Mental\bibbnamedelim Health,\bibbnamedelim National\bibbnamedelim Heart,\bibbnamedelim Lung\bibbnamedelim and\bibbnamedelim Blood\bibbnamedelim Institute}}{U\bibinitperiod}{}{}{}{}{}{}}%
+      {{{U.S.\bibnamedelimb Department\bibnamedelimb of\bibnamedelimb Health\bibnamedelimb and\bibnamedelimb Human\bibnamedelimb Services,\bibnamedelimb National\bibnamedelimb Institute\bibnamedelimb of\bibnamedelimb Mental\bibnamedelimb Health,\bibnamedelimb National\bibnamedelimb Heart,\bibnamedelimb Lung\bibnamedelimb and\bibnamedelimb Blood\bibnamedelimb Institute}}{U\bibinitperiod}{}{}{}{}{}{}}%
     }
     \name{author}{1}{%
-      {{{U.S.\bibbnamedelim Department\bibbnamedelim of\bibbnamedelim Health\bibbnamedelim and\bibbnamedelim Human\bibbnamedelim Services,\bibbnamedelim National\bibbnamedelim Institute\bibbnamedelim of\bibbnamedelim Mental\bibbnamedelim Health,\bibbnamedelim National\bibbnamedelim Heart,\bibbnamedelim Lung\bibbnamedelim and\bibbnamedelim Blood\bibbnamedelim Institute}}{U\bibinitperiod}{}{}{}{}{}{}}%
+      {{{U.S.\bibnamedelimb Department\bibnamedelimb of\bibnamedelimb Health\bibnamedelimb and\bibnamedelimb Human\bibnamedelimb Services,\bibnamedelimb National\bibnamedelimb Institute\bibnamedelimb of\bibnamedelimb Mental\bibnamedelimb Health,\bibnamedelimb National\bibnamedelimb Heart,\bibnamedelimb Lung\bibnamedelimb and\bibnamedelimb Blood\bibnamedelimb Institute}}{U\bibinitperiod}{}{}{}{}{}{}}%
     }
     \strng{namehash}{U1}
     \strng{fullhash}{U1}

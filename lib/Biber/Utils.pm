@@ -73,7 +73,6 @@ sub driver_config {
   unless ($dcfxml->{driver} eq $driver_name) {
     $logger->logdie("Expected driver config type '$driver_name', got '" . $dcfxml->{driver} . "'");
   }
-  use Data::Dump;dd($dcfxml);
   return $dcfxml;
 }
 
@@ -602,8 +601,8 @@ sub inits {
 
 sub join_name {
   my $nstring = shift;
-  $nstring =~ s/(?<!\\\S)\s+/\\bibbnamedelim /gxms; # Don't do spaces in char macros
-  $nstring =~ s/(?<!\\)~/\\bibnbnamedelim /gxms; # Don't do '\~'
+  $nstring =~ s/(?<!\\\S)\s+/\\bibnamedelimb /gxms; # Don't do spaces in char macros
+  $nstring =~ s/(?<!\\)~/\\bibnamedelima /gxms; # Don't do '\~'
   return $nstring;
 }
 
