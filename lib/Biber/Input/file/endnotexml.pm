@@ -205,34 +205,36 @@ sub create_entry {
   # for the top-level nodes and forcing the right nodes to be visible to this loop, which
   # is what we do here as these nodes have special aliases we want visible in the .dcf. If we
   # did it all in special handlers, it would all be invisible in the .dcf
-  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(/xml/records/record/*|/xml/records/record/titles/*|/xml/records/record/contributors/*|/xml/records/record/urls/web-urls/*|/xml/records/record/dates/*)')) {
+  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./titles/*|./contributors/*|./urls/web-urls/*|./dates/*)')) {
     # ignore fields not in .dcf - this means "titles", "contributors" "urls/web-urls" are
     # skipped but their children are not
     if (my $fm = $dcfxml->{fields}{field}{$f}) {
       my $to = $f; # By default, field to set internally is the same as data source
       # Redirect any alias
-      my $a; # so we can log this later
       if (my $aliases = $fm->{alias}) { # complex aliases
         foreach my $alias (@$aliases) {
           if (my $t = $alias->{aliasfortype}) { # type-specific alias - Endnote does this
             if ($t eq $bibentry->get_field('entrytype')) {
-              $a = $alias->{aliasof};
+              my $a = $alias->{aliasof};
               $fm = $dcfxml->{fields}{field}{$a};
+              $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
+              $to = $a;  # Field to set internally is the alias
               last;
             }
           }
           else {
-            $a = $alias->{aliasof}; # global alias
+            my $a = $alias->{aliasof}; # global alias
             $fm = $dcfxml->{fields}{field}{$a};
+            $to = $a;  # Field to set internally is the alias
+            $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
           }
         }
-        $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
       }
-      elsif ($a = $fm->{aliasof}) { # simple, global only alias
+      elsif (my $a = $fm->{aliasof}) { # simple, global only alias
         $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
         $fm = $dcfxml->{fields}{field}{$a};
+        $to = $a;  # Field to set internally is the alias
       }
-      $to = $a;             # Field to set internally is the alias
       &{$handlers{$fm->{handler}}}($biber, $bibentry, $entry, $f, $to, $dskey);
     }
   }
@@ -261,7 +263,7 @@ sub _literal {
 sub _range {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   my $values_ref;
-  my @values = split(/\s*,\s*/, $entry->findvalue("./$f"));
+  my @values = split(/\s*,\s*/, _norm($entry->findvalue("./$f")));
   # Here the "-–" contains two different chars even though they might
   # look the same in some fonts ...
   # If there is a range sep, then we set the end of the range even if it's null
@@ -333,7 +335,7 @@ sub _name {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   my $names = new Biber::Entry::Names;
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $dskey);
-  foreach my $name ($entry->findnodes("./$f/*")) {
+  foreach my $name ($entry->findnodes("./contributors/$f/*")) {
     $names->add_element(parsename($name, $f, {useprefix => $useprefix}));
   }
   $bibentry->set_datafield($to, $names);
@@ -491,10 +493,10 @@ sub parsename {
     $s_f->set_options(BTN_JR,    0, BTJ_MAYTIE, BTJ_NOTHING);
 
     # Generate name parts
-    my $lastname  = decode_utf8($name->format($l_f));
-    my $firstname = decode_utf8($name->format($f_f));
-    my $prefix    = decode_utf8($name->format($p_f));
-    my $suffix    = decode_utf8($name->format($s_f));
+    my $lastname  = $name->format($l_f);
+    my $firstname = $name->format($f_f);
+    my $prefix    = $name->format($p_f);
+    my $suffix    = $name->format($s_f);
 
     # Variables to hold the Text::BibTeX::NameFormat generated initials string
     my $gen_lastname_i;
@@ -527,10 +529,10 @@ sub parsename {
     $pi_f->set_options(BTN_VON,   1, BTJ_FORCETIE, BTJ_NOTHING);
     $si_f->set_options(BTN_JR,    1, BTJ_FORCETIE, BTJ_NOTHING);
 
-    $gen_lastname_i    = inits(decode_utf8($nd_name->format($li_f)));
-    $gen_firstname_i   = inits(decode_utf8($nd_name->format($fi_f)));
-    $gen_prefix_i      = inits(decode_utf8($nd_name->format($pi_f)));
-    $gen_suffix_i      = inits(decode_utf8($nd_name->format($si_f)));
+    $gen_lastname_i    = inits($nd_name->format($li_f));
+    $gen_firstname_i   = inits($nd_name->format($fi_f));
+    $gen_prefix_i      = inits($nd_name->format($pi_f));
+    $gen_suffix_i      = inits($nd_name->format($si_f));
 
     # Only warn about lastnames since there should always be one
     $logger->warn("Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
@@ -630,26 +632,12 @@ sub _gen_initials {
 # Do some sanitising on LaTeX special chars since this can't be nicely done by the parser
 sub _norm {
   my $t = shift;
+  return undef unless $t;
   $t =~ s/(?<!\\)(\#|\&|\_|\%|\$|\^|\[|\]|\|)/\\$1/gxms;
   $t =~ s/\A[\n\s]+//xms;
   $t =~ s/[\n\s]+\z//xms;
   return $t;
 }
-
-# sub _norm {
-#   my $node = shift;
-#   if (my $sn = $node->findnodes('./style')) {
-#     my $t = $sn->get_node(1)->textContent();
-#     $t =~ s/(?<!\\)(\#|\&|\_|\%|\$|\^|\[|\]|\|)/\\$1/gxms;
-#     return $t;
-#   }
-#   else {
-#     my $t = $node->textContent;
-#     $t =~ s/(?<!\\)(\#|\&|\_|\%|\$|\^|\[|\]|\|)/\\$1/gxms;
-#     return $t;
-#   }
-# }
-
 
 1;
 
