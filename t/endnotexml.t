@@ -3,8 +3,8 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More skip_all => 'Endnote XML not working yet';
-#use Test::More tests => 1;
+#use Test::More skip_all => 'Endnote XML not working yet';
+use Test::More tests => 1;
 
 use Biber;
 use Biber::Output::BBL;

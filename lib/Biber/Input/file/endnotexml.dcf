@@ -267,16 +267,15 @@
     <dcf:field name="note" handler="literal"/>
     <dcf:field name="meeting-place" aliasof="venue"/>
     <dcf:field name="venue" handler="literal"/>
-    <dcf:field name="isbn">
+    <dcf:field name="isbn" handler="literal">
       <dcf:alias aliasof="issn" aliasfortype="article"/>
       <dcf:alias aliasof="number" aliasfortype="patent"/>
       <dcf:alias aliasof="number" aliasfortype="report"/>
       <dcf:alias aliasof="number" aliasfortype="legislation"/>
     </dcf:field>
     <dcf:field name="number" handler="literal"/>
-    <dcf:field name="isbn" handler="literal"/>
     <dcf:field name="issn" handler="literal"/>
-    <dcf:field name="title">
+    <dcf:field name="title" handler="literal">
       <dcf:alias aliasof="subtitle" aliasfortype="online"/>
     </dcf:field>
     <dcf:field name="secondary-title">
@@ -294,7 +293,6 @@
       <dcf:alias aliasof="series" aliasfortype="proceedings"/>
       <dcf:alias aliasof="series" aliasfortype="periodical"/>
     </dcf:field>
-    <dcf:field name="title" handler="literal"/>
     <dcf:field name="journaltitle" handler="literal"/>
     <dcf:field name="booktitle" handler="literal"/>
     <dcf:field name="subtitle" handler="literal"/>

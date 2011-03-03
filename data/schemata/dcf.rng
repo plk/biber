@@ -86,7 +86,7 @@
                  vary between entrytypes (i.e. are global aliases). This is the most
                  common case. For field aliases which are entrytype specific (Endnote
                  does this, for example), see type 3 below.
-              3. A name->aliasof(+aliasfortype) mapping, giving multiple field mappings for
+              3. A name->aliasof(+aliasfortype), giving multiple field mappings for
                  "name". You can specifiy a global mapping like type 2 above by leaving out
                  the "aliasfortype" attribute. You must use this form when you need to
                  specifiy more than one alias mapping for the same name, meaning that
@@ -94,7 +94,17 @@
                  field in the data source maps to biblatex's "isbn" except when it's in a
                  journal article entry and then it should map to biblatex's "issn", you need
                  this form. This may seem like a stupid example but it's exactly what Endnote
-                 does in its XML format export. See the .dcf for the Endnote XML driver
+                 does in its XML format export.
+                 You can also supply a "handler" attribute in this form as the "name"
+                 may well be the same as a type 1 entry and this is not allowed. You need
+                 to do this in the case mentioned above because "isbn" points directly
+                 to a handler (type 1) and also there is a type 3 case for mapping
+                 isbn to other fields for some entrytypes. Since you can't have
+                 <dcf:field name="isbn"/> twice (XML::LibXML::Simple will rightly complain)
+                 you can put the handler attribute on the type 3 tag and remove the type 1
+                 case since this will still go to {name => 'name', handler => 'handler'} in
+                 the XML::LibXML::Simple parse.
+                 See the title and isbn fields in .dcf for the Endnote XML driver
             -->
             <choice>
               <group>
@@ -119,8 +129,13 @@
                 <attribute name="name">
                   <data type="string"/>
                 </attribute>
-                <oneOrMore>
+                <optional>
                   <!-- type 3 above -->
+                  <attribute name="handler">
+                    <data type="string"/>
+                  </attribute>
+                </optional>
+                <oneOrMore>
                   <element name="dcf:alias">
                     <attribute name="aliasof">
                       <data type="string"/>

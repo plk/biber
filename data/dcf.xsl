@@ -145,7 +145,7 @@
                     <td><xsl:value-of select="./@name"/></td>
                     <td><xsl:value-of select="./@handler"/></td>
                     <td><xsl:value-of select="./@aliasof"/></td>
-                    <td>*</td>
+                    <td><xsl:if test="not(./@handler)">*</xsl:if></td>
                   </xsl:otherwise>
               </xsl:choose>
             </tr>
