@@ -392,31 +392,32 @@ sub parsename {
       if ($node->hasAttribute($n)) {
         my $np = $node->getAttribute($n);
         if ($n eq 'last-name') {
-          $namec{last} = $n;
-          $namec{last_i} = [_gen_initials($n)];
+          $namec{last} = $np;
+          $namec{last_i} = [_gen_initials($np)];
         }
         elsif ($n eq 'first-name') {
-          $namec{first} = $n;
-          $namec{first_i} = [_gen_initials($n)];
+          $namec{first} = $np;
+          $namec{first_i} = [_gen_initials($np)];
         }
         elsif ($n eq 'suffix') {
-          $namec{suffix} = $n;
-          $namec{suffix_i} = [_gen_initials($n)];
+          $namec{suffix} = $np;
+          $namec{suffix_i} = [_gen_initials($np)];
         }
         elsif ($n eq 'corp-name') {
-          $namec{last} = $n;
-          $namec{last_i} = [_gen_initials($n)];
+          $namec{last} = $np;
+          $namec{last_i} = [_gen_initials($np)];
         }
         elsif ($n eq 'initials') {
-          $namec{first_i} = $n;
+          $namec{first_i} = $np;
         }
         elsif ($n eq 'middle-initial') {
-          $namec{middle} = $n;
-          $n =~ s/\s*\.//g;
-          $namec{middle_i} = $n;
+          my $mi = $np;
+          $mi =~ s/\s*\.//g;
+          $namec{middle} = $np;
+          $namec{middle_i} = [ $mi ];
         }
         elsif ($n eq 'title' or $n eq 'salutation') {
-          $namec{first} = "$n " . $namec{first};
+          $namec{first} = "$np " . $namec{first};
         }
       }
     }

@@ -395,7 +395,7 @@ sub name_to_bbl {
     $sufi = '';
   }
 
-  # BIBLATEXML supports middle names
+  # Some data sources support middle names
   if ($self->get_middlename) {
     return "      {{$ln}{$lni}{$fn}{$fni}{$mn}{$mni}{$pre}{$prei}{$suf}{$sufi}}%\n";
   }
