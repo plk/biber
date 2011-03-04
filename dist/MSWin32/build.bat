@@ -26,6 +26,7 @@ CALL pp ^
   --module=Biber::Input::file::biblatexml ^
   --module=Biber::Input::file::ris ^
   --module=Biber::Input::file::zoterordfxml ^
+  --module=Biber::Input::file::endnotexml ^
   --module=Encode::Byte ^
   --module=Encode::CN ^
   --module=Encode::CJKConstants ^
