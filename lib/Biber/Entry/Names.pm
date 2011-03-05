@@ -21,6 +21,20 @@ sub new {
 }
 
 
+=head2 TO_JSON
+
+   Serialiser for JSON::XS::encode
+
+=cut
+
+sub TO_JSON {
+  my $self = shift;
+  foreach $n (@$self){
+    $json->{$k} = $v;
+  }
+  return [ map {$_} @$self ];
+}
+
 =head2 notnull
 
     Test for an empty object

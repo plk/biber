@@ -34,6 +34,25 @@ sub new {
   return $self;
 }
 
+
+=head2 TO_JSON
+
+   Serialiser for JSON::XS::encode
+
+=cut
+
+sub TO_JSON {
+  my $self = shift;
+  my $json;
+  while (my ($k, $v) = each(%{$self->{datafields}})) {
+    $json->{$k} = $v;
+  }
+  while (my ($k, $v) = each(%{$self->{derivedfields}})) {
+    $json->{$k} = $v;
+  }
+  return $json;
+}
+
 =head2 clone
 
     Clone a Biber::Entry object and return a copy

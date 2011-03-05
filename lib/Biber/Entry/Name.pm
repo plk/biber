@@ -46,6 +46,21 @@ sub new {
   }
 }
 
+=head2 TO_JSON
+
+   Serialiser for JSON::XS::encode
+
+=cut
+
+sub TO_JSON {
+  my $self = shift;
+  my $json;
+  while (my ($k, $v) = each(%{$self})) {
+    $json->{$k} = $v;
+  }
+  return $json;
+}
+
 =head2 notnull
 
     Test for an empty object

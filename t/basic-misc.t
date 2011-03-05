@@ -209,7 +209,6 @@ my $t2 = q|  \entry{t2}{misc}{}
 
 |;
 
-
 my $Worman_N = [ 'WN1', 'WN2' ] ;
 my $Gennep = [ 'vGA1', 'vGJ1' ] ;
 
@@ -237,5 +236,9 @@ $main = $section->get_list('MAIN');
 $out = $biber->get_output_obj;
 
 is( $out->get_output_entry($main,'murray'), $murray2, 'bbl with > maxnames, empty alphaothers' ) ;
+# This would be how to test JSON output if necessary
+# require JSON::XS;
+# my $json = JSON::XS->new->indent->utf8->canonical->convert_blessed->allow_blessed->allow_nonref;
+# is( $json->encode($bibentries->entry('murray')), $j1, 'JSON representation' ) ;
 
 unlink <*.utf8>;
