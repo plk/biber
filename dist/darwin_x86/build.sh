@@ -45,7 +45,7 @@ pp --compress=6 \
   --link=/opt/local/lib/libexslt.0.dylib \
   --addlist=biber.files \
   --cachedeps=scancache \
-  --output=biber-darwin_x86_64 \
+  --output=biber-darwin_x86 \
   /tmp/biber-darwin
 
 \rm -f /tmp/biber-darwin

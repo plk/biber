@@ -4,7 +4,7 @@
 
 # where <dir> is where these are:
 # biber-MSWIN.exe
-# biber-darwin_x86_64
+# biber-darwin_x86
 # biber-linux_x86_32
 # biber-linux_x86_64
 
@@ -26,10 +26,13 @@ if [ ! -e $DIR ]; then
 fi
 
 # Create the binaries from the build farm if they don't exist
-# Local OSX
-if [ ! -e $DIR/biber-darwin_x86_64 ]; then
-  (cd $BASE;perl ./Build.PL;sudo ./Build install;cd dist/darwin_x86_64;./build.sh)
-  cp $BASE/dist/darwin_x86_64/biber-darwin_x86_64 $DIR/
+# Build farm OSX universal 32/64 intel
+if [ ! -e $DIR/biber-darwin_x86 ]; then
+  ssh root@wood "VBoxHeadless --startvm bbf-osx32 </dev/null >/dev/null 2>&1 &"
+  sleep 5
+  ssh bbf-osx32 "cd biblatex-biber;git pull;perl ./Build.PL;./Build install;cd dist/darwin_x86;./build.sh"
+  scp bbf-osx32:biblatex-biber/dist/darwin_x86/biber-darwin_x86 $DIR/
+  ssh root@wood "VBoxManage controlvm bbf-osx32 savestate"
 fi
 
 # Build farm WinXP
@@ -67,12 +70,12 @@ chmod +x biber.exe
 scp biber-MSWIN.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN.zip
 \rm biber-MSWIN.zip biber.exe
 # OSX
-cp biber-darwin_x86_64 biber
+cp biber-darwin_x86 biber
 chmod +x biber
-tar cf biber-darwin_x86_64.tar biber
-gzip biber-darwin_x86_64.tar
-scp biber-darwin_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber-darwin_x86_64.tar.gz
-\rm biber-darwin_x86_64.tar.gz biber
+tar cf biber-darwin_x86.tar biber
+gzip biber-darwin_x86.tar
+scp biber-darwin_x86.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber-darwin_x86.tar.gz
+\rm biber-darwin_x86.tar.gz biber
 # Linux 32-bit
 cp biber-linux_x86_32 biber
 chmod +x biber
