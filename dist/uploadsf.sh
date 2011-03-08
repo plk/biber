@@ -30,7 +30,7 @@ fi
 if [ ! -e $DIR/biber-darwin_x86 ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-osx32 </dev/null >/dev/null 2>&1 &"
   sleep 5
-  ssh bbf-osx32 "cd biblatex-biber;git pull;perl ./Build.PL;./Build install;cd dist/darwin_x86;./build.sh"
+  ssh bbf-osx32 "cd biblatex-biber;git pull;perl ./Build.PL;sudo ./Build install;cd dist/darwin_x86;./build.sh"
   scp bbf-osx32:biblatex-biber/dist/darwin_x86/biber-darwin_x86 $DIR/
   ssh root@wood "VBoxManage controlvm bbf-osx32 savestate"
 fi
