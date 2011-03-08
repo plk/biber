@@ -182,7 +182,7 @@ my $t1 = q|  \entry{t1}{misc}{}
     \field{labelalpha}{Bro92}
     \field{sortinit}{B}
     \count{uniquename}{0}
-    \field{title}{Normal things {$^{3}$}}
+    \field{title}{90\% of Normal things {$^{3}$}}
     \field{year}{1992}
     \field{pages}{100\bibrangedash}
     \keyw{primary, something,somethingelse}

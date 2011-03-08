@@ -260,7 +260,7 @@ sub _literal {
     $bibentry->set_datafield($to, _hack_month($value));
   }
   else {
-    $bibentry->set_datafield($to, $value);
+    $bibentry->set_datafield($to, _norm($value));
   }
   return;
 }
@@ -269,7 +269,7 @@ sub _literal {
 sub _verbatim {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   my $value = decode_utf8($entry->get($f));
-  $bibentry->set_datafield($to, $value);
+  $bibentry->set_datafield($to, _norm($value));
   return;
 }
 
@@ -711,6 +711,12 @@ sub _hack_month {
   }
 }
 
+# Do some sanitising on LaTeX special chars in literals and verbatims
+sub _norm {
+  my $s = shift;
+  $s =~ s/(?<!\\)(\#|\&|\_|\%|\[|\]|\|)/\\$1/gxms;
+  return $s;
+}
 
 1;
 
