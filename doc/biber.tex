@@ -20,7 +20,7 @@
   url={http://biblatex-biber.sourceforge.net},
   author={François Charette, Philip Kime},
   email={firmicus@ankabut.net, Philip@kime.org.uk},
-  revision={biber 0.8.3 (biblatex 1.3)},
+  revision={biber 0.8.3 (biblatex 1.2b)},
   date={\today}}
 
 \hypersetup{%
@@ -873,14 +873,23 @@ directory/folder and then run the current binary again.
 
 \subsection{Binary Architectures}
 
-Binaries are available for the following architectures:
+Binaries are available for many architectures. These are the core
+architectures which are developed for and which are regularly updated on
+SourceForge:
 
 \begin{itemize}
 \item \verb+linux_x86_32+ --- Linux x86 32-bit (built on Ubuntu 9.04)
 \item \verb+linux_x86_64+ --- Linux x86 64-bit (built on Ubuntu 9.04)
 \item \verb+MSWin+ --- Windows. Should work on 32 or 64 bit (built on XP)
-\item \verb+darwin_x86_64+ --- OSX Intel 64-bit (built on OSX 10.6)
+\item \verb+darwin_x86+ --- OSX Intel 32/64-bit universal (built on OSX 10.6)
 \end{itemize}
+
+\noindent In addition, \verb+biber+ is included in TeXLive which provides
+binaries for many more architectures than I am able to provide regularly.
+The downside is that these other architectures probably won't be quite so
+up to date but they shouldn't be that far behind. If you want to run
+development versions, you'll either have to run one of the core supported
+architectures or use the perl source version.
 
 \subsection{Installing}
 
@@ -944,9 +953,9 @@ Perl version. For this, you will need to have a recent Perl,
 preferably 5.12 at least with the following modules:
 
 \begin{itemize}
+\item All \verb+biber+ pre-requisites
 \item \verb+PAR+
 \item \verb+PAR::Packer+
-\item All \verb+biber+ pre-requisites
 \end{itemize}
 
 \noindent You should have the latest CPAN versions of all required modules
@@ -1029,4 +1038,20 @@ before packing the binary. This is required as otherwise a spurious
 error is reported to the user on first run of the binary due to a name
 collision when it unpacks itself.
 
+\subsubsection{Testing a binary build}
+You can test a binary that you have created by copying it to a machine
+which preferably doesn't have perl at all on it. Running the binary with no
+arguments will unpack it in the background and display the help. To really
+test it, run LaTeX (using \verb+biblatex+) on a simple test file named,
+say, «\verb+test.tex+» and then run
+
+\begin{verbatim}
+biber test --convert_control
+\end{verbatim}
+
+\noindent This option will run an XSLT transform on the \verb+.bcf+ and
+leave an HTML representation of it in the same directory as the
+\verb+.bcf+. This is a good test to make sure that the linking of the XML
+and XSLT etc. libraries worked which is one of the most tricky parts of the
+build process.
 \end{document}
