@@ -22,7 +22,7 @@ use List::AllUtils qw(first uniq);
 use XML::LibXML;
 use XML::LibXML::Simple;
 use Data::Dump qw(dump);
-use Text::BibTeX 0.52 qw(:nameparts :joinmethods :metatypes);
+use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
 use Text::BibTeX::NameFormat;
 
