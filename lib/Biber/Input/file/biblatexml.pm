@@ -242,7 +242,6 @@ sub create_entry {
   return;
 }
 
-
 # Related entries
 sub _related {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
