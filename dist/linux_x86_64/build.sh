@@ -4,6 +4,10 @@
 # resolves any symlinks but names the packed lib the same as the link name. This is
 # a good thing.
 
+# Had to add /etc/ld.so.conf.d/biber.conf and put "/usr/local/perl/lib" in there
+# and then run "sudo ldconfig" so that libbtparse.so is found. Doesn't really make
+# a difference to the build, just the running of Text::BibTeX itself
+
 # Have to explicitly include the Input* modules as the names of these are dynamically
 # constructed in the code so Par::Packer can't auto-detect them
 # Added libz as some linux distros like SUSE 11.3 have a slightly older zlib
