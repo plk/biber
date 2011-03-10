@@ -44,6 +44,16 @@ if [ ! -e $DIR/biber-MSWIN.exe ]; then
   ssh root@wood "VBoxManage controlvm bbf-wxp32 savestate"
 fi
 
+# Build farm cygwin
+if [ ! -e $DIR/biber-cygwin32 ]; then
+  ssh root@wood "VBoxHeadless --startvm bbf-wxp32 </dev/null >/dev/null 2>&1 &"
+  sleep 5
+  # We have to move aside the windows libbtparse.dll otherwise it's picked up by cygwin
+  ssh bbf-wxp32 ". bin/set-biber-cyg-build-env.sh;mv /cygdrive/c/WINDOWS/libbtparse.dll /cygdrive/c/WINDOWS/libbtparse.dll.DIS;cd biblatex-biber;git pull;perl ./Build.PL;./Build install;cd dist/cygwin32;./build.sh;mv /cygdrive/c/WINDOWS/libbtparse.dll.DIS /cygdrive/c/WINDOWS/libbtparse.dll"
+  scp bbf-wxp32:biblatex-biber/dist/cygwin32/biber-cygwin32 $DIR/
+  ssh root@wood "VBoxManage controlvm bbf-wxp32 savestate"
+fi
+
 # Build farm Linux 32
 if [ ! -e $DIR/biber-linux_x86_32 ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-jj32 </dev/null >/dev/null 2>&1 &"
