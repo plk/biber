@@ -55,7 +55,7 @@ if [ ! -e $DIR/biber-darwin_x86_i386 ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-osx32 </dev/null >/dev/null 2>&1 &"
   sleep 4
   ssh bbf-osx32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build install;cd dist/darwin_x86_i386;\\rm -f biber-darwin_x86_i386;./build.sh"
-  scp bbf-osx32:biblatex-biber/dist/darwin_x86/biber-darwin_x86_i386 $DIR/
+  scp bbf-osx32:biblatex-biber/dist/darwin_x86_i386/biber-darwin_x86_i386 $DIR/
   ssh root@wood "VBoxManage controlvm bbf-osx32 savestate"
 fi
 
@@ -102,7 +102,7 @@ fi
 
 # Stop here if JUSTBUILD is set
 if [ "$JUSTBUILD" = "1" ]; then
-  echo "JUSTBUILD is set, won't upload anything";
+  echo "JUSTBUILD is set, will not upload anything";
   exit 0;
 fi
 
