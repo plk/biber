@@ -38,7 +38,7 @@ fi
 # Create the binaries from the build farm if they don't exist
 
 # Local machine 64-bit OSX SL build
-if [ ! -e $DIR/biber-darwin_x64_64 ]; then
+if [ ! -e $DIR/biber-darwin_x86_64 ]; then
   cd $BASE
   git checkout $BRANCH;
   git pull
@@ -108,46 +108,64 @@ fi
 
 cd $DIR
 # OSX 64-bit
-cp biber-darwin_x86_64 biber
-chmod +x biber
-tar cf biber-darwin_x86_64.tar biber
-gzip biber-darwin_x86_64.tar
-scp biber-darwin_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber-darwin_x86_64.tar.gz
-\rm biber-darwin_x86_64.tar.gz biber
+if [ -e $DIR/biber-darwin_x86_64 ]; then
+  cp biber-darwin_x86_64 biber
+  chmod +x biber
+  tar cf biber-darwin_x86_64.tar biber
+  gzip biber-darwin_x86_64.tar
+  scp biber-darwin_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber-darwin_x86_64.tar.gz
+  \rm biber-darwin_x86_64.tar.gz biber
+fi
+
 # OSX 32-bit universal
-cp biber-darwin_i386 biber
-chmod +x biber
-tar cf biber-darwin_i386.tar biber
-gzip biber-darwin_i386.tar
-scp biber-darwin_i386.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber-darwin_i386.tar.gz
-\rm biber-darwin_i386.tar.gz biber
+if [ -e $DIR/biber-darwin_x86_i386 ]; then
+  cp biber-darwin_i386 biber
+  chmod +x biber
+  tar cf biber-darwin_i386.tar biber
+  gzip biber-darwin_i386.tar
+  scp biber-darwin_i386.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber-darwin_i386.tar.gz
+  \rm biber-darwin_i386.tar.gz biber
+fi
+
 # Windows
-cp biber-MSWIN.exe biber.exe
-chmod +x biber.exe
-/usr/bin/zip biber-MSWIN.zip biber.exe
-scp biber-MSWIN.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN.zip
-\rm biber-MSWIN.zip biber.exe
-# cygwin
-cp biber-cygwin32 biber
-chmod +x biber
-tar cf biber-cygwin32.tar biber
-gzip biber-cygwin32.tar
-scp biber-cygwin32.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Cygwin/biber-cygwin32.tar.gz
-\rm biber-cygwin32.tar.gz biber
+if [ -e $DIR/biber-MSWIN.exe ]; then
+  cp biber-MSWIN.exe biber.exe
+  chmod +x biber.exe
+  /usr/bin/zip biber-MSWIN.zip biber.exe
+  scp biber-MSWIN.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN.zip
+  \rm biber-MSWIN.zip biber.exe
+fi
+
+# Cygwin
+if [ -e $DIR/biber-cygwin32 ]; then
+  cp biber-cygwin32 biber
+  chmod +x biber
+  tar cf biber-cygwin32.tar biber
+  gzip biber-cygwin32.tar
+  scp biber-cygwin32.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Cygwin/biber-cygwin32.tar.gz
+  \rm biber-cygwin32.tar.gz biber
+fi
+
 # Linux 32-bit
-cp biber-linux_x86_32 biber
-chmod +x biber
-tar cf biber-linux_x86_32.tar biber
-gzip biber-linux_x86_32.tar
-scp biber-linux_x86_32.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux_32bit/biber-linux_x86_32.tar.gz
-\rm biber-linux_x86_32.tar.gz biber
+if [ -e $DIR/biber-linux_x86_32 ]; then
+  cp biber-linux_x86_32 biber
+  chmod +x biber
+  tar cf biber-linux_x86_32.tar biber
+  gzip biber-linux_x86_32.tar
+  scp biber-linux_x86_32.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux_32bit/biber-linux_x86_32.tar.gz
+  \rm biber-linux_x86_32.tar.gz biber
+fi
+
 # Linux 64-bit
-cp biber-linux_x86_64 biber
-chmod +x biber
-tar cf biber-linux_x86_64.tar biber
-gzip biber-linux_x86_64.tar
-scp biber-linux_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux_64bit/biber-linux_x86_64.tar.gz
-\rm biber-linux_x86_64.tar.gz biber
+if [ -e $DIR/biber-linux_x86_64 ]; then
+  cp biber-linux_x86_64 biber
+  chmod +x biber
+  tar cf biber-linux_x86_64.tar biber
+  gzip biber-linux_x86_64.tar
+  scp biber-linux_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux_64bit/biber-linux_x86_64.tar.gz
+  \rm biber-linux_x86_64.tar.gz biber
+fi
+
 # Doc
 scp $DOCDIR/biber.pdf philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/documentation/biber.pdf
 # Changes file
