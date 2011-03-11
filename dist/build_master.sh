@@ -24,7 +24,7 @@ DIR=${1:-"/Users/philkime/Desktop/b"}
 RELEASE=${2:-"development"}
 BRANCH=${3:-"dev"}
 JUSTBUILD=${4:-"0"}
-export COPYFILE_DISABLE=true # no resource forks - TLContrib upload doesn't like them
+export COPYFILE_DISABLE=true # no resource forks in archives - non-macs don't like them
 
 echo "** Checking out branch '$BRANCH' on farm servers **"
 echo "** If this is not correct, Ctrl-C now **"
@@ -140,12 +140,4 @@ if [ $RELEASE != "development" ]; then
 # Perl dist tree
 scp $BASE/biblatex-biber-*.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/biblatex-biber.tar.gz
 rm $BASE/biblatex-biber-*.tar.gz
-# Make TLContrib main package (docs only)
-mkdir -p ~/Desktop/doc/biber
-cp $DOCDIR/biber.pdf ~/Desktop/doc/biber/
-\rm -f ~/Desktop/doc/.DS_Store
-\rm -f ~/Desktop/doc/biber/.DS_Store
-tar cvf ~/Desktop/biber.tar -C ~/Desktop doc
-gzip ~/Desktop/biber.tar
-\rm -rf ~/Desktop/doc
 fi
