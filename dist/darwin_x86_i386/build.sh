@@ -8,6 +8,11 @@
 # through the link name break. So, we copy them to the link names first and
 # and package those
 
+# This is build on a Snow Leopard box with a completely 32-bit macports install.
+# To get a 32-bit macports install, you have to do a clean install of macports
+# and then before installing any ports, set build_arch to "i386" (usually means just
+# uncommenting this line) in /opt/local/etc/macports/macports.conf
+
 # Have to explicitly include the Input* modules as the names of these are dynamically
 # constructed in the code so Par::Packer can't auto-detect them
 
@@ -45,7 +50,7 @@ pp --compress=6 \
   --link=/opt/local/lib/libexslt.0.dylib \
   --addlist=biber.files \
   --cachedeps=scancache \
-  --output=biber-darwin_x86 \
+  --output=biber-darwin_x86_i386 \
   /tmp/biber-darwin
 
 \rm -f /tmp/biber-darwin

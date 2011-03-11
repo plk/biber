@@ -11,10 +11,12 @@
 # Have to explicitly include the Input* modules as the names of these are dynamically
 # constructed in the code so Par::Packer can't auto-detect them
 
-cp /usr/local/bin/biber /tmp/biber-cygwin
+cp /opt/local/bin/biber /tmp/biber-darwin
+cp /opt/local/lib/libgdbm.3.0.0.dylib /tmp/libgdbm.3.dylib
+cp /opt/local/lib/libz.1.2.5.dylib /tmp/libz.1.dylib
 
 pp --compress=6 \
-#  --module=deprecate \ # add this back in when cygwin has perl 5.12+
+  --module=deprecate \
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
   --module=Biber::Input::file::ris \
@@ -34,17 +36,18 @@ pp --compress=6 \
   --module=Encode::TW \
   --module=Encode::Unicode \
   --module=Encode::Unicode::UTF7 \
-  --link=/usr/bin/cygz.dll \
-  --link=/usr/bin/cyggcrypt-11.dll \
-  --link=/usr/bin/cygiconv-2.dll \
-  --link=/usr/bin/cyggpg-error-0.dll \
-  --link=/usr/local/bin/libbtparse.dll \
-  --link=/usr/bin/cygxml2-2.dll \
-  --link=/usr/bin/cygxslt-1.dll \
-  --link=/usr/bin/cygexslt-0.dll \
+  --link=/tmp/libz.1.dylib \
+  --link=/opt/local/lib/libiconv.2.dylib \
+  --link=/opt/local/lib/libbtparse.dylib \
+  --link=/opt/local/lib/libxml2.2.dylib \
+  --link=/opt/local/lib/libxslt.1.dylib \
+  --link=/tmp/libgdbm.3.dylib \
+  --link=/opt/local/lib/libexslt.0.dylib \
   --addlist=biber.files \
   --cachedeps=scancache \
-  --output=biber-cygwin32 \
-  /tmp/biber-cygwin
+  --output=biber-darwin_x86_64 \
+  /tmp/biber-darwin
 
-\rm -f /tmp/biber-cygwin
+\rm -f /tmp/biber-darwin
+\rm -f /tmp/libgdbm.3.dylib
+\rm -f /tmp/libz.1.dylib
