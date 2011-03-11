@@ -11,10 +11,11 @@
 # Have to explicitly include the Input* modules as the names of these are dynamically
 # constructed in the code so Par::Packer can't auto-detect them
 
+#  --module=deprecate \ # add this back in when cygwin has perl 5.12+
+
 cp /usr/local/bin/biber /tmp/biber-cygwin
 
 pp --compress=6 \
-#  --module=deprecate \ # add this back in when cygwin has perl 5.12+
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
   --module=Biber::Input::file::ris \
