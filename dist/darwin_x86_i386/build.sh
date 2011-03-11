@@ -13,6 +13,12 @@
 # and then before installing any ports, set build_arch to "i386" (usually means just
 # uncommenting this line) in /opt/local/etc/macports/macports.conf
 
+# 10.6 built binaries don't work on 10.5, see here:
+# http://developer.apple.com/library/mac/#releasenotes/DeveloperTools/RN-dyld/_index.html
+# have to set this in /opt/local/etc/macports/macports.conf (undocumented)
+# macosx_deployment_target         10.5
+# This forces command-line flags to point to the 10.5 SDK for builds
+
 # Have to explicitly include the Input* modules as the names of these are dynamically
 # constructed in the code so Par::Packer can't auto-detect them
 
