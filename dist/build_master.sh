@@ -119,12 +119,12 @@ fi
 
 # OSX 32-bit universal
 if [ -e $DIR/biber-darwin_x86_i386 ]; then
-  cp biber-darwin_i386 biber
+  cp biber-darwin_x86_i386 biber
   chmod +x biber
-  tar cf biber-darwin_i386.tar biber
-  gzip biber-darwin_i386.tar
-  scp biber-darwin_i386.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber-darwin_i386.tar.gz
-  \rm biber-darwin_i386.tar.gz biber
+  tar cf biber-darwin_x86_i386.tar biber
+  gzip biber-darwin_x86_i386.tar
+  scp biber-darwin_x86_i386.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber-darwin_x86_i386.tar.gz
+  \rm biber-darwin_x86_i386.tar.gz biber
 fi
 
 # Windows
