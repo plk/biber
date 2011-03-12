@@ -10,7 +10,7 @@
 \usepackage{booktabs}
 \setmainfont[Ligatures=TeX]{TeXGyrePagella}
 \setsansfont[Ligatures=TeX]{TexGyreHeros}
-\setmonofont[Ligatures=TeX]{TeXGyreCursor}
+\setmonofont[Ligatures=NoCommon]{TeXGyreCursor}
 
 \MakeAutoQuote{«}{»}
 
@@ -1074,16 +1074,46 @@ binary\footnote{\url{http://par.perl.org/wiki/FAQ}, section entitled «My
 You can test a binary that you have created by copying it to a machine
 which preferably doesn't have perl at all on it. Running the binary with no
 arguments will unpack it in the background and display the help. To really
-test it, run LaTeX (using \verb+biblatex+) on a simple test file named,
-say, «\verb+test.tex+» and then run
+test it without having LaTeX available, get the two quick test files from
+SourceForge\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/testfiles}},
+put them in a directory and run \verb+biber+ in that directory like this:
 
 \begin{verbatim}
 biber --convert_control test
 \end{verbatim}
 
-\noindent This option will run an XSLT transform on the \verb+.bcf+ and
-leave an HTML representation of it in the same directory as the
-\verb+.bcf+. This is a good test to make sure that the linking of the XML
-and XSLT etc. libraries worked which is one of the most tricky parts of the
-build process.
+\noindent This will run \verb+biber+ normally on the test files plus it
+will also perform an XSLT transform on the \verb+.bcf+ and
+leave an HTML representation of it in the same directory thus testing the
+links to the XML and XSLT libraries as well as the bibtex parsing
+libraries. The output should look something like this (may be differences
+of \verb+biber+ version and locale of course but there should be no errors
+or warnings).
+
+\begin{verbatim}
+INFO - This is biber 0.8.3 (beta)
+INFO - Logfile is 'test.blg'
+INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'
+INFO - Reading test.bcf
+INFO - Using all citekeys in bib section 0
+INFO - Processing bib section 0
+INFO - Processing bibtex format file 'test.bib' for section 0
+INFO - Decoding LaTeX character macros into UTF-8
+INFO - Sorting list 'MAIN' keys
+INFO - No sort tailoring available for locale 'en_GB.UTF-8'
+INFO - Sorting list 'SHORTHANDS' keys
+INFO - No sort tailoring available for locale 'en_GB.UTF-8'
+INFO - Writing 'test.bbl' with encoding 'UTF-8'
+INFO - Output to test.bbl
+\end{verbatim}
+
+\noindent There should now be these new files in the directory:
+
+\begin{verbatim}
+test.bcf.html
+test.blg
+test.bbl
+\end{verbatim}
+
+
 \end{document}
