@@ -15,14 +15,14 @@ REQUIREMENTS
   should be automatically installed during the install process described
   below.
 
-    * Unicode::Collate 0.72 or higher
+    * Unicode::Collate 0.73 or higher
     * IPC::Cmd and IPC::Run
     * File::Slurp::Unicode
     * Readonly (but Readonly::XS is highly recommended for performance reasons)
     * List::AllUtils
     * Log::Log4perl
     * XML::LibXML::Simple (XML::LibXML clone of XML::Simple)
-    * Text::BibTeX 0.52 or higher (requires Config::AutoConf when
+    * Text::BibTeX 0.53 or higher (requires Config::AutoConf when
       installing - please install this first.)
     * LWP::Simple
 
@@ -49,7 +49,6 @@ SUPPORT AND DOCUMENTATION
   You can also find documentation for the included modules with the perldoc command:
 
       perldoc Biber
-      perldoc LaTeX::Decode
       etc.
 
   More information, bugfix releases, forums and bug tracker are available at:
