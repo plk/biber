@@ -37,34 +37,8 @@ my %handlers = (
                 'verbatim' => \&_verbatim
 );
 
-# we assume that the driver config file is in the same dir as the driver:
-(my $vol, my $driver_path, undef) = File::Spec->splitpath( $INC{"Biber/Input/file/ris.pm"} );
-
-# Deal with the strange world of Par::Packer paths, see similar code in Biber.pm
-my $dcf;
-if ($driver_path =~ m|/par\-| and $driver_path !~ m|/inc|) { # a mangled PAR @INC path
-  $dcf = File::Spec->catpath($vol, "$driver_path/inc/lib/Biber/Input/file", 'ris.dcf');
-}
-else {
-  $dcf = File::Spec->catpath($vol, $driver_path, 'ris.dcf');
-}
-
 # Read driver config file
-my $dcfxml = XML::LibXML::Simple::XMLin($dcf,
-                                        'ForceContent' => 1,
-                                        'ForceArray' => [
-                                                         qr/\Aentry-type\z/,
-                                                         qr/\Afield\z/,
-                                                        ],
-                                        'NsStrip' => 1,
-                                        'KeyAttr' => ['name']);
-
-# Check we have the right driver
-unless ($dcfxml->{driver} eq 'ris') {
-  $logger->logdie("Expected driver config type 'ris', got '" . $dcfxml->{driver} . "'");
-}
-
-
+my $dcfxml = driver_config('ris');
 
 =head2 extract_entries
 
@@ -298,16 +272,16 @@ sub _name {
   foreach my $name (@$names) {
     $logger->debug('Parsing RIS name');
     if ($name =~ m|\A([^,]+)\s*,?\s*([^,]+)?\s*,?\s*([^,]+)?\z|xms) {
-      my $lastname = $1;
-      my $firstname = $2;
-      my $suffix = $3;
+      my $lastname = _join_name_parts(split(/\s+/, $1)) if $1;
+      my $firstname = _join_name_parts(split(/\s+/, $2)) if $2;
+      my $suffix = _join_name_parts(split(/\s+/, $3)) if $3;
       $logger->debug("Found name component 'lastname': $lastname") if $lastname;
       $logger->debug("Found name component 'firstname': $firstname") if $firstname;
       $logger->debug("Found name component 'suffix': $suffix") if $suffix;
 
-      my @fni = _gen_initials([split(/\s/, $firstname)]) if $firstname;
-      my @lni = _gen_initials([split(/\s/, $lastname)]) if $lastname;
-      my @si = _gen_initials([split(/\s/, $suffix)]) if $suffix;
+      my @lni = _gen_initials(split(/\s/, $1)) if $lastname;
+      my @fni = _gen_initials(split(/\s/, $2)) if $firstname;
+      my @si = _gen_initials(split(/\s/, $3)) if $suffix;
 
       my $namestring = '';
 
@@ -328,21 +302,18 @@ sub _name {
       # Construct $nameinitstring
       my $nameinitstr = '';
       $nameinitstr .= $lastname if $lastname;
-      $nameinitstr .= '_' . $si[1] if $suffix;
-      $nameinitstr .= '_' . $fni[1] if $firstname;
+      $nameinitstr .= '_' . join('', @si) if $suffix;
+      $nameinitstr .= '_' . join('', @fni) if $firstname;
       $nameinitstr =~ s/\s+/_/g;
       $nameinitstr =~ s/~/_/g;
 
       my $name_obj = Biber::Entry::Name->new(
         firstname       => $firstname || undef,
-        firstname_i     => $firstname ? $fni[0] : undef,
-        firstname_it    => $firstname ? $fni[1] : undef,
+        firstname_i     => $firstname ? \@fni : undef,
         lastname        => $lastname,
-        lastname_i      => $lni[0],
-        lastname_it     => $lni[1],
+        lastname_i      => \@lni,
         suffix          => $suffix || undef,
-        suffix_i        => $suffix ? $si[0] : undef,
-        suffix_it       => $suffix ? $si[1] : undef,
+        suffix_i        => $suffix ? \@si : undef,
         namestring      => $namestring,
         nameinitstring  => $nameinitstr
       );
@@ -362,23 +333,52 @@ sub _name {
 
 }
 
-# Passed an array ref of strings, returns an array of two strings,
-# the first is the TeX initials and the second the terse initials
+# Joins name parts using BibTeX tie algorithm. Ties are added:
+#
+# 1. After the first part if it is less than three characters long
+# 2. Before the last part
+sub _join_name_parts {
+  my @parts = @_;
+  # special case - 1 part
+  if ($#parts == 0) {
+    return $parts[0];
+  }
+  # special case - 2 parts
+  if ($#parts == 1) {
+    return $parts[0] . '~' . $parts[1];
+  }
+  my $namestring = $parts[0];
+  $namestring .= length($parts[0]) < 3 ? '~' : ' ';
+  $namestring .= join(' ', @parts[1 .. ($#parts - 1)]);
+  $namestring .= '~' . $parts[$#parts];
+  return $namestring;
+}
+
+# Passed an array of strings, returns an array of initials for the strings
 sub _gen_initials {
-  my $strings_ref = shift;
-  my @strings;
-  foreach my $str (@$strings_ref) {
-    my $chr = substr($str, 0, 1);
-    # Keep diacritics with their following characters
-    if ($chr =~ m/\p{Dia}/) {
-      push @strings, substr($str, 0, 2);
+  my @strings = @_;
+  my @strings_out;
+  foreach my $str (@strings) {
+    # Deal with hyphenated name parts and normalise to a '-' character for easy
+    # replacement with macro later
+    if ($str =~ m/\p{Dash}/) {
+      push @strings_out, join('-', _gen_initials(split(/\p{Dash}/, $str)));
+    }
+    elsif ($str =~ m/\s/) { # name parts with spaces
+      push @strings_out, _gen_initials(split(/\s+/, $str));
     }
     else {
-      push @strings, substr($str, 0, 1);
+      my $chr = substr($str, 0, 1);
+      # Keep diacritics with their following characters
+      if ($chr =~ m/\p{Dia}/) {
+        push @strings_out, substr($str, 0, 2);
+      }
+      else {
+        push @strings_out, $chr;
+      }
     }
   }
-  return (join('.' . Biber::Config->getoption('joins')->{inits}, @strings) . '.',
-          join('', @strings));
+  return @strings_out;
 }
 
 

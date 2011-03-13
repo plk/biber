@@ -4,6 +4,7 @@ Things to remember when releasing new version:
 * Change version string in and content of "Changes" file
 * Change version string in doc
 * Update "TODO" file
+* Update any driver .dcf description elements which need it
 * Update main html and doc page and sync
   scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
 * Change version string in "Biber.pm"
@@ -14,7 +15,3 @@ Things to remember when releasing new version:
 * Commit and tag with version number
 * Build binaries from release and upload to SF, associate new defaults if necessary
 * Update SF main page, news, add new README in web interface at root, if needed
-* Update TL contrib with new binaries (main TL biber .tar.gz is created by
-  uploadsf script run above)
-* Upload to CTAN
-  Build dist then unpack and repack to .zip

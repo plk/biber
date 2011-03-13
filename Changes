@@ -1,5 +1,10 @@
 Revision history for Biber
 
+0.8.3  (unreleased)
+       * Added cygwin binary build and 32-bit 10.5 OSX binary
+       * Moved normal/terse initials generation into macros in bltx where
+         they should be
+       * Bug fixes
 0.8.2  14-02-2011
        * Bug fixes
 0.8.1  12-02-2011

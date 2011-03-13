@@ -47,15 +47,11 @@
 <br/>
 
 <pre>
-Usage:  biber file.bcf
+Usage:  biber [options] file.bcf
+
         Creates file.bbl using control file file.bcf (.bcf extension is optional)
-
-        biber -d foo.bib file.bcf
-        Creates file.bbl from entries in foo.bib and the data sources
-        listed in file.bcf
-
-        biber -d foo.bib,bar.bib -a
-        Creates foo.bbl from all entries in foo.bib and bar.bib. No .bcf used
+        Normaly use with biblatex requires no options as they are all set in
+        biblatex and passed via the .bcf file
 
 Options:
 

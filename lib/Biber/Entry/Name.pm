@@ -25,19 +25,14 @@ sub new {
     foreach my $attr (qw/gender
                          lastname
                          lastname_i
-                         lastname_it
                          firstname
                          firstname_i
-                         firstname_it
                          middlename
                          middlename_i
-                         middlename_it
                          prefix
                          prefix_i
-                         prefix_it
                          suffix
                          suffix_i
-                         suffix_it
                          namestring
                          nameinitstring
                          strip/) {
@@ -49,6 +44,21 @@ sub new {
   } else {
     return bless {}, $class;
   }
+}
+
+=head2 TO_JSON
+
+   Serialiser for JSON::XS::encode
+
+=cut
+
+sub TO_JSON {
+  my $self = shift;
+  my $json;
+  while (my ($k, $v) = each(%{$self})) {
+    $json->{$k} = $v;
+  }
+  return $json;
 }
 
 =head2 notnull
@@ -110,17 +120,6 @@ sub get_firstname_i {
   return $self->{firstname_i};
 }
 
-=head2 get_firstname_it
-
-    Get firstname terse initials for a Biber::Entry::Name object
-
-=cut
-
-sub get_firstname_it {
-  my $self = shift;
-  return $self->{firstname_it};
-}
-
 
 =head2 set_middlename
 
@@ -154,17 +153,6 @@ sub get_middlename {
 sub get_middlename_i {
   my $self = shift;
   return $self->{middlename_i};
-}
-
-=head2 get_middlename_it
-
-    Get middlename terse initials for a Biber::Entry::Name object
-
-=cut
-
-sub get_middlename_it {
-  my $self = shift;
-  return $self->{middlename_it};
 }
 
 
@@ -202,17 +190,6 @@ sub get_lastname_i {
   return $self->{lastname_i};
 }
 
-=head2 get_lastname_it
-
-    Get lastname terse initials for a Biber::Entry::Name object
-
-=cut
-
-sub get_lastname_it {
-  my $self = shift;
-  return $self->{lastname_it};
-}
-
 
 =head2 set_suffix
 
@@ -248,17 +225,6 @@ sub get_suffix_i {
   return $self->{suffix_i};
 }
 
-=head2 get_suffix_it
-
-    Get suffix terse initials for a Biber::Entry::Name object
-
-=cut
-
-sub get_suffix_it {
-  my $self = shift;
-  return $self->{suffix_it};
-}
-
 
 =head2 set_prefix
 
@@ -292,17 +258,6 @@ sub get_prefix {
 sub get_prefix_i {
   my $self = shift;
   return $self->{prefix_i};
-}
-
-=head2 get_prefix_it
-
-    Get prefix terse initials for a Biber::Entry::Name object
-
-=cut
-
-sub get_prefix_it {
-  my $self = shift;
-  return $self->{prefix_it};
 }
 
 
@@ -387,20 +342,23 @@ sub name_to_bbl {
   my $self = shift;
 
   # lastname is always defined
-  my $ln  = $self->get_lastname;
+  my $ln  = Biber::Utils::join_name($self->get_lastname);
   if ($self->was_stripped('lastname')) {
     $ln = Biber::Utils::add_outer($ln);
   }
-    my $lni = Biber::Config->getblxoption('terseinits') ? $self->get_lastname_it : $self->get_lastname_i;
+  $lni = join('\bibinitperiod\bibinitdelim ', @{$self->get_lastname_i}) . '\bibinitperiod';
+  $lni =~ s/\-/\\bibinithyphendelim /gxms;
 
   # firstname
   my $fn;
   my $fni;
   if ($fn = $self->get_firstname) {
+    $fn = Biber::Utils::join_name($fn);
     if ($self->was_stripped('firstname')) {
       $fn = Biber::Utils::add_outer($fn);
     }
-    $fni = Biber::Config->getblxoption('terseinits') ? $self->get_firstname_it : $self->get_firstname_i;
+    $fni = join('\bibinitperiod\bibinitdelim ', @{$self->get_firstname_i}) . '\bibinitperiod';
+    $fni =~ s/\-/\\bibinithyphendelim /gxms;
   }
   else {
     $fn = '';
@@ -411,7 +369,9 @@ sub name_to_bbl {
   my $mn;
   my $mni;
   if ($mn = $self->get_middlename) {
-    $mni = Biber::Config->getblxoption('terseinits') ? $self->get_middlename_it : $self->get_middlename_i;
+    $mn = Biber::Utils::join_name($mn);
+    $mni = join('\bibinitperiod\bibinitdelim ', @{$self->get_middlename_i}) . '\bibinitperiod';
+    $mni =~ s/\-/\\bibinithyphendelim /gxms;
   }
   else {
     $mn = '';
@@ -422,10 +382,12 @@ sub name_to_bbl {
   my $pre;
   my $prei;
   if ($pre = $self->get_prefix) {
+    $pre = Biber::Utils::join_name($pre);
     if ($self->was_stripped('prefix')) {
       $pre = Biber::Utils::add_outer($pre);
     }
-    $prei = Biber::Config->getblxoption('terseinits') ? $self->get_prefix_it : $self->get_prefix_i;
+    $prei = join('\bibinitperiod\bibinitdelim ', @{$self->get_prefix_i}) . '\bibinitperiod';
+    $prei =~ s/\-/\\bibinithyphendelim /gxms;
   }
   else {
     $pre = '';
@@ -436,27 +398,19 @@ sub name_to_bbl {
   my $suf;
   my $sufi;
   if ($suf = $self->get_suffix) {
+    $suf = Biber::Utils::join_name($suf);
     if ($self->was_stripped('suffix')) {
       $suf = Biber::Utils::add_outer($suf);
     }
-    $sufi = Biber::Config->getblxoption('terseinits') ? $self->get_suffix_it : $self->get_suffix_i;
+    $sufi = join('\bibinitperiod\bibinitdelim ', @{$self->get_suffix_i}) . '\bibinitperiod';
+    $sufi =~ s/\-/\\bibinithyphendelim /gxms;
   }
   else {
     $suf = '';
     $sufi = '';
   }
 
-  # Can't just replace all spaces in first names with "~" as this could
-  # potentially be too long and would do nasty line-break things in LaTeX
-  # So, be a bit picky and only attach initials/protected things
-  # J. Frank -> J.~Frank
-  # {J.\,P.} Frank -> {J.\,P.}~Frank
-  $fn =~ s/(\p{Lu}\.|$RE{balanced}{-parens=>'{}'})\s+/$1~/g;
-  # Bernard H. -> Bernard~H.
-  # Bernard {H.\,P.} -> Bernard~{H.\,P.}
-  $fn =~ s/\s+(\p{Lu}\.|$RE{balanced}{-parens=>'{}'})/~$1/g;
-  $pre =~ s/\s/~/g if $pre;       # van der -> van~der
-  # BIBLATEXML supports middle names
+  # Some data sources support middle names
   if ($self->get_middlename) {
     return "      {{$ln}{$lni}{$fn}{$fni}{$mn}{$mni}{$pre}{$prei}{$suf}{$sufi}}%\n";
   }

@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../../../../data/schemata/dcf.rnc" type="compact"?>
-<dcf:driver-control driver="bibtex" xmlns:dcf="https://sourceforge.net/projects/biber">
+<?xml-stylesheet type="text/xsl" href="../../../../data/dcf.xsl"?>
+<dcf:driver-control driver="bibtex" xmlns:dcf="https://sourceforge.net/projects/biblatex-biber">
+  <dcf:description>
+    <dcf:overview>The bibtex driver is currently the most functional driver as historically, it was the first. As a result, there is a fairly clean mapping from bibtex data source fields to the biblatex data model. So, there are no currently no limitations of bibtex data sources with respect to the currently biblatex functionality. There are things which the bibtex data model cannot handle at all which are part of the planned biblatex roadmap:</dcf:overview>
+    <dcf:points>
+    <dcf:point>Per-name settings (useprefix, gender)</dcf:point>
+    <dcf:point>Arbitrary name parts (middle names, for example)</dcf:point>
+    <dcf:point>Complex data field structures</dcf:point>
+    </dcf:points>
+  </dcf:description>
   <!--
       These entry type aliases we might find in the the datasource so
       we can decide how to map and convert them into Biber::Entry objects

@@ -42,32 +42,8 @@ my %handlers = (
                 'verbatim' => \&_verbatim
 );
 
-# we assume that the driver config file is in the same dir as the driver:
-(my $vol, my $driver_path, undef) = File::Spec->splitpath( $INC{"Biber/Input/file/biblatexml.pm"} );
-
-# Deal with the strange world of Par::Packer paths, see similar code in Biber.pm
-my $dcf;
-if ($driver_path =~ m|/par\-| and $driver_path !~ m|/inc|) { # a mangled PAR @INC path
-  $dcf = File::Spec->catpath($vol, "$driver_path/inc/lib/Biber/Input/file", 'biblatexml.dcf');
-}
-else {
-  $dcf = File::Spec->catpath($vol, $driver_path, 'biblatexml.dcf');
-}
-
 # Read driver config file
-my $dcfxml = XML::LibXML::Simple::XMLin($dcf,
-                                        'ForceContent' => 1,
-                                        'ForceArray' => [
-                                                         qr/\Aentry-type\z/,
-                                                         qr/\Afield\z/,
-                                                        ],
-                                        'NsStrip' => 1,
-                                        'KeyAttr' => ['name']);
-
-# Check we have the right driver
-unless ($dcfxml->{driver} eq 'biblatexml') {
-  $logger->logdie("Expected driver config type 'biblatexml', got '" . $dcfxml->{driver} . "'");
-}
+my $dcfxml = driver_config('biblatexml');
 
 =head2 extract_entries
 
@@ -226,7 +202,7 @@ sub create_entry {
 
   # We put all the fields we find modulo field aliases into the object.
   # Validation happens later and is not datasource dependent
-  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes("*")) {
+  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
 
     # We have to process local options as early as possible in order
     # to make them available for things that need them like name parsing
@@ -265,7 +241,6 @@ sub create_entry {
 
   return;
 }
-
 
 # Related entries
 sub _related {
@@ -416,20 +391,15 @@ sub _name {
     Returns an object which internally looks a bit like this:
 
     { firstname     => 'John',
-      firstname_i   => 'J.',
-      firstname_it  => 'J',
+      firstname_i   => 'J',
       middlename    => 'Fred',
-      middlename_i  => 'F.',
-      middlename_it => 'F',
+      middlename_i  => 'F',
       lastname      => 'Doe',
-      lastname_i    => 'D.',
-      lastname_it   => 'D',
+      lastname_i    => 'D',
       prefix        => undef,
       prefix_i      => undef,
-      prefix_it     => undef,
       suffix        => undef,
       suffix_i      => undef,
-      suffix_it     => undef,
       namestring    => 'Doe, John Fred',
       nameinitstring => 'Doe_JF',
       gender         => sm
@@ -452,31 +422,22 @@ sub parsename {
       if (my @parts = map {$_->textContent()} $nc_node->findnodes("./$NS:namepart")) {
         $namec{$n} = _join_name_parts(\@parts);
         $logger->debug("Found name component '$n': " . $namec{$n});
-        if (my $nin = $node->findnodes("./$NS:${n}initial")->get_node(1)) {
-          my $ni = $nin->textContent();
-          $ni =~ s/\.\z//xms; # normalise initials to without period
-          $namec{"${n}_it"} = $ni;
-          $namec{"${n}_i"} = $ni . '.';
-          my $ij = Biber::Config->getoption('joins')->{inits};
-          $namec{"${n}_i"} =~ s/\s+/$ij/xms; # normalise spaces to init join
+        if (my $ni = $node->getAttribute('initial')) {
+          $namec{"${n}_i"} = [$ni];
         }
         else {
-          ($namec{"${n}_i"}, $namec{"${n}_it"}) = _gen_initials(\@parts);
+          $namec{"${n}_i"} = [_gen_initials(@parts)];
         }
       }
       # with no parts
       elsif (my $t = $nc_node->textContent()) {
         $namec{$n} = $t;
         $logger->debug("Found name component '$n': $t");
-        if (my $nin = $node->findnodes("./$NS:${n}initial")->get_node(1)) {
-          my $ni = $nin->textContent();
-          $ni =~ s/\.\z//xms; # normalise initials to without period
-          $ni =~ s/\s+/~/xms; # normalise spaces to ties
-          $namec{"${n}_it"} = $ni;
-          $namec{"${n}_i"} = $ni . '.';
+        if (my $ni = $node->getAttribute('initial')) {
+          $namec{"${n}_i"} = [$ni];
         }
         else {
-          ($namec{"${n}_i"}, $namec{"${n}_it"}) = _gen_initials([$t]);
+          $namec{"${n}_i"} = [_gen_initials($t)];
         }
       }
     }
@@ -513,44 +474,33 @@ sub parsename {
   }
 
   # Remove any trailing comma and space if, e.g. missing firstname
-  # Replace any nbspes
   $namestring =~ s/,\s+\z//xms;
-  $namestring =~ s/~/ /gxms;
 
   # Construct $nameinitstring
   my $nameinitstr = '';
-  $nameinitstr .= $namec{prefix_it} . '_' if ( $usepre and exists($namec{prefix}) );
+  $nameinitstr .= join('', @{$namec{prefix_i}}) . '_' if ( $usepre and exists($namec{prefix}) );
   $nameinitstr .= $namec{last} if exists($namec{last});
-  $nameinitstr .= '_' . $namec{suffix_it} if exists($namec{suffix});
-  $nameinitstr .= '_' . $namec{first_it} if exists($namec{first});
-  $nameinitstr .= '_' . $namec{middle_it} if exists($namec{middle});
+  $nameinitstr .= '_' . join('', @{$namec{suffix_i}}) if exists($namec{suffix});
+  $nameinitstr .= '_' . join('', @{$namec{first_i}}) if exists($namec{first});
+  $nameinitstr .= '_' . join('', @{$namec{middle_i}}) if exists($namec{middle});
   $nameinitstr =~ s/\s+/_/g;
-  $nameinitstr =~ s/~/_/g;
 
   return Biber::Entry::Name->new(
     firstname       => $namec{first} // undef,
     firstname_i     => exists($namec{first}) ? $namec{first_i} : undef,
-    firstname_it    => exists($namec{first}) ? $namec{first_it} : undef,
     middlename      => $namec{middle} // undef,
     middlename_i    => exists($namec{middle}) ? $namec{middle_i} : undef,
-    middlename_it   => exists($namec{middle}) ? $namec{middle_it} : undef,
     lastname        => $namec{last} // undef,
     lastname_i      => exists($namec{last}) ? $namec{last_i} : undef,
-    lastname_it     => exists($namec{last}) ? $namec{last_it} : undef,
     prefix          => $namec{prefix} // undef,
     prefix_i        => exists($namec{prefix}) ? $namec{prefix_i} : undef,
-    prefix_it       => exists($namec{prefix}) ? $namec{prefix_it} : undef,
     suffix          => $namec{suffix} // undef,
     suffix_i        => exists($namec{suffix}) ? $namec{suffix_i} : undef,
-    suffix_it       => exists($namec{suffix}) ? $namec{suffix_it} : undef,
     namestring      => $namestring,
     nameinitstring  => $nameinitstr,
     gender          => $gender
     );
 }
-
-
-
 
 # Joins name parts using BibTeX tie algorithm. Ties are added:
 #
@@ -573,23 +523,28 @@ sub _join_name_parts {
   return $namestring;
 }
 
-# Passed an array ref of strings, returns an array of two strings,
-# the first is the TeX initials and the second the terse initials
+# Passed an array ref of strings, returns an array ref of initials
 sub _gen_initials {
-  my $strings_ref = shift;
-  my @strings;
-  foreach my $str (@$strings_ref) {
-    my $chr = substr($str, 0, 1);
-    # Keep diacritics with their following characters
-    if ($chr =~ m/\p{Dia}/) {
-      push @strings, substr($str, 0, 2);
+  my @strings = @_;
+  my @strings_out;
+  foreach my $str (@strings) {
+    # Deal with hyphenated name parts and normalise to a '-' character for easy
+    # replacement with macro later
+    if ($str =~ m/\p{Dash}/) {
+      push @strings_out, join('-', _gen_initials(split(/\p{Dash}/, $str)));
     }
     else {
-      push @strings, substr($str, 0, 1);
+      my $chr = substr($str, 0, 1);
+      # Keep diacritics with their following characters
+      if ($chr =~ m/\p{Dia}/) {
+        push @strings_out, substr($str, 0, 2);
+      }
+      else {
+        push @strings_out, $chr;
+      }
     }
   }
-  return (join('.' . Biber::Config->getoption('joins')->{inits}, @strings) . '.',
-          join('', @strings));
+  return @strings_out;
 }
 
 # parses a range and returns a ref to an array of start and end values
