@@ -35,13 +35,13 @@
       <dcf:aliasof>article</dcf:aliasof>
     </dcf:entry-type>
     <dcf:entry-type name="magazineArticle">
-      <dcf:aliasof>periodical</dcf:aliasof>
+      <dcf:aliasof>article</dcf:aliasof>
     </dcf:entry-type>
     <dcf:entry-type name="newspaperArticle">
       <dcf:aliasof>article</dcf:aliasof>
     </dcf:entry-type>
     <dcf:entry-type name="encyclopediaArticle">
-      <dcf:aliasof>article</dcf:aliasof>
+      <dcf:aliasof>inreference</dcf:aliasof>
     </dcf:entry-type>
     <dcf:entry-type name="manuscript">
       <dcf:aliasof>unpublished</dcf:aliasof>
@@ -50,7 +50,7 @@
       <dcf:aliasof>misc</dcf:aliasof>
     </dcf:entry-type>
     <dcf:entry-type name="dictionaryEntry">
-      <dcf:aliasof>misc</dcf:aliasof>
+      <dcf:aliasof>inreference</dcf:aliasof>
     </dcf:entry-type>
     <dcf:entry-type name="interview">
       <dcf:aliasof>misc</dcf:aliasof>

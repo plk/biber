@@ -65,7 +65,7 @@
       <dcf:aliasof>proceedings</dcf:aliasof>
     </dcf:entry-type>
     <dcf:entry-type name="Dictionary">
-      <dcf:aliasof>misc</dcf:aliasof>
+      <dcf:aliasof>inreference</dcf:aliasof>
     </dcf:entry-type>
     <dcf:entry-type name="Edited Book">
       <dcf:aliasof>collection</dcf:aliasof>
@@ -77,7 +77,7 @@
       <dcf:aliasof>book</dcf:aliasof>
     </dcf:entry-type>
     <dcf:entry-type name="Encyclopedia">
-      <dcf:aliasof>misc</dcf:aliasof>
+      <dcf:aliasof>reference</dcf:aliasof>
     </dcf:entry-type>
     <dcf:entry-type name="Equation">
       <dcf:aliasof>misc</dcf:aliasof>
@@ -128,7 +128,7 @@
       <dcf:aliasof>patent</dcf:aliasof>
     </dcf:entry-type>
     <dcf:entry-type name="Personal Communication">
-      <dcf:aliasof>misc</dcf:aliasof>
+      <dcf:aliasof>letter</dcf:aliasof>
     </dcf:entry-type>
     <dcf:entry-type name="Report">
       <dcf:aliasof>report</dcf:aliasof>
