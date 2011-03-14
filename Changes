@@ -2,7 +2,7 @@ Revision history for Biber
 
 0.8.3  14-03-2011
        * Biber now in TexLive
-       * Added cygwin binary build and 32-bit 10.5 OSX binary
+       * Added several new binary builds
        * All name part and element formatting is now abstracted into macros
          so that it can be controlled via biblatex.
        * Much more documentation on binary builds for packagers
