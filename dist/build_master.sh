@@ -2,13 +2,7 @@
 
 # build_master.sh <dir> <release> <branch> <justbuild>
 
-# <dir> is where these are:
-# biber-MSWIN.exe
-# biber-cygwin32
-# biber-darwin_x86
-# biber-linux_x86_32
-# biber-linux_x86_64
-
+# <dir> is where the binaries are
 # <release> is a SF subdir of /home/frs/project/b/bi/biblatex-biber/biblatex-biber/
 # <branch> is a git branch to checkout on the build farm servers
 # <justbuild> is a boolean which says to just build and stop without uploading
@@ -152,7 +146,7 @@ if [ -e $DIR/biber-linux_x86_32 ]; then
   chmod +x biber
   tar cf biber-linux_x86_32.tar biber
   gzip biber-linux_x86_32.tar
-  scp biber-linux_x86_32.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux_32bit/biber-linux_x86_32.tar.gz
+  scp biber-linux_x86_32.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux/biber-linux_x86_32.tar.gz
   \rm biber-linux_x86_32.tar.gz biber
 fi
 
@@ -162,7 +156,7 @@ if [ -e $DIR/biber-linux_x86_64 ]; then
   chmod +x biber
   tar cf biber-linux_x86_64.tar biber
   gzip biber-linux_x86_64.tar
-  scp biber-linux_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux_64bit/biber-linux_x86_64.tar.gz
+  scp biber-linux_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux/biber-linux_x86_64.tar.gz
   \rm biber-linux_x86_64.tar.gz biber
 fi
 
