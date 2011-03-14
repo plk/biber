@@ -8,11 +8,17 @@
 \usepackage{fontspec}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{fixfoot}
 \setmainfont[Ligatures=TeX]{TeXGyrePagella}
 \setsansfont[Ligatures=TeX]{TexGyreHeros}
 \setmonofont[Ligatures=NoCommon]{TeXGyreCursor}
 
 \MakeAutoQuote{«}{»}
+
+\DeclareFixedFootnote{\tpb}{Binary maintained by third party. See README in
+  binary download directory for this platform for support/contact
+  details. Usually, the binary maintainer is also the binary build
+  provider for TexLive.}
 
 \titlepage{%
   title={biber},
@@ -129,10 +135,11 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
   all processed in one pass
 \item Flexible user-customisable crossreference field inheritance
   model
+\item Handles complex auto-expansion and contraction of names and
+  namelists\footnote{Coming in BibLaTeX 1.4}
 \item Support for related entries, to enable generic treatment of things
-  like «translated as», «reprinted as», «reprint of» etc.\footnote{In BibLaTeX 1.2}
-\item Handles very complex auto-expansion and contraction of names and
-  namelists\footnote{In BibLaTeX 1.3}
+  like «translated as», «reprinted as», «reprint of»
+  etc.\footnote{Coming in BibLaTeX 1.5}
 \item Extensible modular data sources architecture for ease of adding
   more data source types.
 \item Support for remote data sources
@@ -820,7 +827,7 @@ and the drivers are where the necessarily messy parts of \verb+biber+
 live. Most data source models are not designed with typesetting in
 mind and are usually not fine-grained enough to provide the sorts of
 information that \verb+biblatex+ needs. \verb+biber+ does its best to
-suck as much meaningful information from a data source as possible.
+obtain as much meaningful information from a data source as possible.
 
 \section{Binaries}\label{binaries}
 
@@ -864,7 +871,7 @@ places to look (where \verb+*+ can vary depending on username:
 
 \begin{itemize}
 \item \verb+/var/folders/*/*/-Tmp-/+ (OSX, local GUI login shell)
-\item \verb+/var/tmp/+ (OSX, remote ssh login shell)
+\item \verb+/var/tmp/+ (OSX (remote ssh login shell), Unix)
 \item \verb+/tmp/+ (Linux)
 \item \verb+C:\Documents and Settings\<username>\Local Settings\Temp+ (Windows/Cygwin)
 \item \verb+C:\Windows\Temp+ (Windows)
@@ -884,8 +891,9 @@ Binaries are available for many architectures.
 \item \verb+cygwin32+
 \item \verb+darwin_x86_64+
 \item \verb+darwin_x86_i386+
-\item \verb+freebsd+
-\item \verb+solaris_x86+
+\item \verb+freebsd_x86+\tpb
+\item \verb+freebsd_amd64+\tpb
+\item \verb+solaris_x86+\tpb
 \end{itemize}
 
 \noindent In addition, \verb+biber+ is included in TeXLive which provides
