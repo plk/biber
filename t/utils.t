@@ -30,10 +30,11 @@ is(File::Spec->canonpath(locate_biber_file('t/tdata/examples.bib')), File::Spec-
 
 # The \cM* is there because if cygwin picks up miktex kpsewhich, it will return a path
 # with a Ctrl-M on the end
+# Testing using a file guaranteed to be installed with any latex install
 SKIP: {
   skip "No LaTeX installation", 1 unless can_run('kpsewhich');
   # using kpsewhich
-  like(File::Spec->canonpath(locate_biber_file('biblatex-examples.bib')), qr|[/\\]bibtex[/\\]bib[/\\]biblatex[/\\]biblatex-examples\.bib\cM*\z|, 'File location - 4');
+  like(File::Spec->canonpath(locate_biber_file('plain.tex')), qr|plain.tex\cM*\z|, 'File location - 4');
     }
 
 # In output_directory
