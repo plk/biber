@@ -28,10 +28,12 @@ is(File::Spec->canonpath(locate_biber_file('t/tdata/general1.bcf')), File::Spec-
 Biber::Config->set_ctrlfile_path('t/tdata/general1.bcf');
 is(File::Spec->canonpath(locate_biber_file('t/tdata/examples.bib')), File::Spec->canonpath('t/tdata/examples.bib'), 'File location - 3');
 
+# The \cM* is there because if cygwin picks up miktex kpsewhich, it will return a path
+# with a Ctrl-M on the end
 SKIP: {
   skip "No LaTeX installation", 1 unless can_run('kpsewhich');
   # using kpsewhich
-  like(File::Spec->canonpath(locate_biber_file('biblatex-examples.bib')), qr|[/\\]bibtex[/\\]bib[/\\]biblatex[/\\]biblatex-examples\.bib\z|, 'File location - 4');
+  like(File::Spec->canonpath(locate_biber_file('biblatex-examples.bib')), qr|[/\\]bibtex[/\\]bib[/\\]biblatex[/\\]biblatex-examples\.bib\cM*\z|, 'File location - 4');
     }
 
 # In output_directory
