@@ -31,17 +31,13 @@ fi
 
 # Create the binaries from the build farm if they don't exist
 
-# Local machine 64-bit OSX SL build
+# Build farm OSX 64-bit intel
 if [ ! -e $DIR/biber-darwin_x86_64 ]; then
-  cd $BASE
-  git checkout $BRANCH;
-  git pull
-  perl ./Build.PL
-  sudo ./Build install
-  cd dist/darwin_x86_64
-  rm -f biber-darwin_x86_64
-  ./build.sh
-  cp biber-darwin_x86_64 $DIR/
+  ssh root@wood "VBoxHeadless --startvm bbf-osx10.6 </dev/null >/dev/null 2>&1 &"
+  sleep 4
+  ssh bbf-osx10.6 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build install;cd dist/darwin_x86_64;\\rm -f biber-darwin_x86_64;./build.sh"
+  scp bbf-osx10.6:biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64 $DIR/
+  ssh root@wood "VBoxManage controlvm bbf-osx10.6 savestate"
 fi
 
 # Build farm OSX 32-bit intel (universal)
