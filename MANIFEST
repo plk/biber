@@ -65,6 +65,7 @@ t/sort-order.t
 t/sort-uc.t
 t/sort-case.t
 t/configfile.t
+t/remote-files.t
 t/set-legacy.t
 t/set-static.t
 t/set-dynamic.t
@@ -79,11 +80,14 @@ t/bibtex-aliases.t
 t/structure-constraints.t
 t/related-entries.t
 t/sortlists.t
+t/endnotexml.t
+t/zoterordfxml.t
 t/pod-coverage.t
 t/pod.t
 t/tdata/papers.bib
 t/tdata/definitions.bib
 t/tdata/options.bcf
+t/tdata/remote-files.bcf
 t/tdata/encoding1.bcf
 t/tdata/encoding2.bcf
 t/tdata/encoding3.bcf
