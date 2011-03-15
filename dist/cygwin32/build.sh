@@ -45,7 +45,7 @@ pp --compress=6 \
   --link=/usr/bin/cygexslt-0.dll \
   --addlist=biber.files \
   --cachedeps=scancache \
-  --output=biber-cygwin32 \
+  --output=biber-cygwin32.exe \
   /tmp/biber-cygwin
 
 \rm -f /tmp/biber-cygwin

@@ -63,12 +63,12 @@ fi
 # Build farm cygwin
 # We run "Build realclean" at the end as we are using the same tree for
 # win and cygwin builds
-if [ ! -e $DIR/biber-cygwin32 ]; then
+if [ ! -e $DIR/biber-cygwin32.exe ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-wxp32 </dev/null >/dev/null 2>&1 &"
   sleep 4
   # We have to move aside the windows libbtparse.dll otherwise it's picked up by cygwin
   ssh bbf-wxp32 ". bin/set-biber-cyg-build-env.sh;mv /cygdrive/c/WINDOWS/libbtparse.dll /cygdrive/c/WINDOWS/libbtparse.dll.DIS;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/cygwin32;\\rm -f biber-cygwin32;./build.sh;mv /cygdrive/c/WINDOWS/libbtparse.dll.DIS /cygdrive/c/WINDOWS/libbtparse.dll;cd ~/biblatex-biber;./Build realclean"
-  scp bbf-wxp32:biblatex-biber/dist/cygwin32/biber-cygwin32 $DIR/
+  scp bbf-wxp32:biblatex-biber/dist/cygwin32/biber-cygwin32.exe $DIR/
   ssh root@wood "VBoxManage controlvm bbf-wxp32 savestate"
 fi
 
@@ -127,13 +127,13 @@ if [ -e $DIR/biber-MSWIN.exe ]; then
 fi
 
 # Cygwin
-if [ -e $DIR/biber-cygwin32 ]; then
-  cp biber-cygwin32 biber
-  chmod +x biber
-  tar cf biber-cygwin32.tar biber
+if [ -e $DIR/biber-cygwin32.exe ]; then
+  cp biber-cygwin32.exe biber.exe
+  chmod +x biber.exe
+  tar cf biber-cygwin32.tar biber.exe
   gzip biber-cygwin32.tar
   scp biber-cygwin32.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Cygwin/biber-cygwin32.tar.gz
-  \rm biber-cygwin32.tar.gz biber
+  \rm biber-cygwin32.tar.gz biber.exe
 fi
 
 # Linux 32-bit
