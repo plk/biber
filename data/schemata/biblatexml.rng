@@ -1524,29 +1524,14 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <interleave>
           <ref name="first"/>
           <optional>
-            <ref name="firstinitial"/>
-          </optional>
-          <optional>
             <ref name="prefix"/>
-          </optional>
-          <optional>
-            <ref name="prefixinitial"/>
           </optional>
           <optional>
             <ref name="middle"/>
           </optional>
-          <optional>
-            <ref name="middleinitial"/>
-          </optional>
           <ref name="last"/>
           <optional>
-            <ref name="lastinitial"/>
-          </optional>
-          <optional>
             <ref name="suffix"/>
-          </optional>
-          <optional>
-            <ref name="suffixinitial"/>
           </optional>
         </interleave>
       </choice>
@@ -1568,68 +1553,66 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       </attribute>
     </optional>
   </define>
+  <define name="att.init">
+    <attribute name="initial"/>
+  </define>
   <define name="first">
     <element name="first">
+      <optional>
+        <ref name="att.init"/>
+      </optional>
       <choice>
         <text/>
         <oneOrMore>
           <ref name="namepart"/>
         </oneOrMore>
       </choice>
-    </element>
-  </define>
-  <define name="firstinitial">
-    <element name="firstinitial">
-      <text/>
     </element>
   </define>
   <define name="last">
     <element name="last">
+      <optional>
+        <ref name="att.init"/>
+      </optional>
       <choice>
         <text/>
         <oneOrMore>
           <ref name="namepart"/>
         </oneOrMore>
       </choice>
-    </element>
-  </define>
-  <define name="lastinitial">
-    <element name="lastinitial">
-      <text/>
     </element>
   </define>
   <define name="middle">
     <element name="middle">
+      <optional>
+        <ref name="att.init"/>
+      </optional>
       <choice>
         <text/>
         <oneOrMore>
           <ref name="namepart"/>
         </oneOrMore>
       </choice>
-    </element>
-  </define>
-  <define name="middleinitial">
-    <element name="middleinitial">
-      <text/>
     </element>
   </define>
   <define name="prefix">
     <element name="prefix">
+      <optional>
+        <ref name="att.init"/>
+      </optional>
       <choice>
         <text/>
         <oneOrMore>
           <ref name="namepart"/>
         </oneOrMore>
       </choice>
-    </element>
-  </define>
-  <define name="prefixinitial">
-    <element name="prefixinitial">
-      <text/>
     </element>
   </define>
   <define name="suffix">
     <element name="suffix">
+      <optional>
+        <ref name="att.init"/>
+      </optional>
       <choice>
         <text/>
         <oneOrMore>
@@ -1638,13 +1621,11 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       </choice>
     </element>
   </define>
-  <define name="suffixinitial">
-    <element name="suffixinitial">
-      <text/>
-    </element>
-  </define>
   <define name="namepart">
     <element name="namepart">
+      <optional>
+        <ref name="att.init"/>
+      </optional>
       <text/>
     </element>
   </define>

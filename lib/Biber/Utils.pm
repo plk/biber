@@ -33,13 +33,49 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ locate_biber_file makenameid stringify_hash
-  normalise_string normalise_string_lite normalise_string_underscore normalise_string_sort
+our @EXPORT = qw{ locate_biber_file driver_config makenameid stringify_hash
+  normalise_string normalise_string_hash normalise_string_underscore normalise_string_sort
   reduce_array remove_outer add_outer ucinit strip_nosort
   is_def is_undef is_def_and_notnull is_def_and_null
-  is_undef_or_null is_notnull is_null normalise_utf8};
+  is_undef_or_null is_notnull is_null normalise_utf8 inits join_name};
 
 =head1 FUNCTIONS
+
+=head2 driver_config
+
+  Returns an XML::LibXML::Simple object for an input driver config file
+
+=cut
+
+sub driver_config {
+  my $driver_name = shift;
+  # we assume that the driver config file is in the same dir as the driver:
+  (my $vol, my $driver_path, undef) = File::Spec->splitpath( $INC{"Biber/Input/file/${driver_name}.pm"} );
+
+  # Deal with the strange world of Par::Packer paths, see similar code in Biber.pm
+  my $dcf;
+  if ($driver_path =~ m|/par\-| and $driver_path !~ m|/inc|) { # a mangled PAR @INC path
+    $dcf = File::Spec->catpath($vol, "$driver_path/inc/lib/Biber/Input/file", "${driver_name}.dcf");
+  }
+  else {
+    $dcf = File::Spec->catpath($vol, $driver_path, "${driver_name}.dcf");
+  }
+
+  # Read driver config file
+  my $dcfxml = XML::LibXML::Simple::XMLin($dcf,
+                                          'ForceContent' => 1,
+                                          'ForceArray' => [ qr/\Afield\z/,
+                                                            qr/\Aalias\z/,],
+                                          'NsStrip' => 1);
+
+
+  # Check we have the right driver
+  unless ($dcfxml->{driver} eq $driver_name) {
+    $logger->logdie("Expected driver config type '$driver_name', got '" . $dcfxml->{driver} . "'");
+  }
+  return $dcfxml;
+}
+
 
 =head2 locate_biber_file
 
@@ -238,22 +274,27 @@ sub normalise_string_common {
   return $str;
 }
 
-=head2 normalise_string_lite
+=head2 normalise_string_hash
 
-  Removes LaTeX macros
+  Normalise strings used for hashes. We collapse LaTeX macros into a vestige
+  so that hashes are unique between things like:
+
+  Smith
+  {\v S}mith
+
+  we replace macros like this to preserve their vestiges:
+
+  \v S -> v:
+  \" -> 34:
 
 =cut
 
-sub normalise_string_lite {
+sub normalise_string_hash {
   my $str = shift;
   return '' unless $str; # Sanitise missing data
-  # First replace ties with spaces or they will be lost
-  $str =~ s/\\\p{L}+\s*//g; # remove tex macros
-  $str =~ s/\\[^\p{L}]+\s*//g; # remove accent macros like \"a
-  $str =~ s/[{}]//g; # Remove any brackets left
-  $str =~ s/~//g;
-  $str =~ s/\.//g;
-  $str =~ s/\s+//g;
+  $str =~ s/\\(\p{L}+)\s*/$1:/g; # remove tex macros
+  $str =~ s/\\([^\p{L}])\s*/ord($1).':'/ge; # remove accent macros like \"a
+  $str =~ s/[{}~\.\s]+//g; # Remove brackes, ties, dots, spaces
   return $str;
 }
 
@@ -534,6 +575,35 @@ sub normalise_utf8 {
       Biber::Config->getoption('bblencoding') =~ m/\Autf-?8\z/xmsi) {
     Biber::Config->setoption('bblencoding', 'UTF-8');
   }
+}
+
+=head2 inits
+
+   We turn the initials into an array so we can be flexible with them later
+   The tie here is used only so we know what to split on. We don't want to make
+   any typesetting decisions in Biber, like what to use to join initials so on
+   output to the .bbl, we only use BibLaTeX macros.
+
+=cut
+
+sub inits {
+  my $istring = shift;
+  return [ split(/(?<!\\)~/, $istring) ];
+}
+
+
+=head2 join_name
+
+  Replace all join typsetting elements in a name part (space, ties) with BibLaTeX macros
+  so that typesetting decisions are made in BibLaTeX, not hard-coded in biber
+
+=cut
+
+sub join_name {
+  my $nstring = shift;
+  $nstring =~ s/(?<!\\\S)\s+/\\bibnamedelimb /gxms; # Don't do spaces in char macros
+  $nstring =~ s/(?<!\\)~/\\bibnamedelima /gxms; # Don't do '\~'
+  return $nstring;
 }
 
 =head1 AUTHOR

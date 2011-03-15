@@ -39,7 +39,7 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =cut
 
-our $VERSION = '0.8.1';
+our $VERSION = '0.8.3';
 our $BETA_VERSION = 0; # Is this a beta version?
 
 my $logger = Log::Log4perl::get_logger('main');
@@ -1936,7 +1936,7 @@ sub sort_list {
       or $logger->logcarp("Problem with Unicode::Collate options: $@");
 
     # Tailor the collation object and report differences from defaults for locale
-    # Have to do this in ->change method a ->new can croak with conflicting tailoring
+    # Have to do this in ->change method as ->new can croak with conflicting tailoring
     # for locales which enforce certain tailorings
     my %coll_changed = $Collator->change( %{$collopts} );
     while (my ($k, $v) = each %coll_changed) {
@@ -1944,7 +1944,7 @@ sub sort_list {
       # is undef in this hash and we don't care about such things
       next unless defined($coll_changed{$k});
       if ($coll_changed{$k} ne $collopts->{$k}) {
-        $logger->warn("Overriding locale '$coll_locale' default tailoring '$k = $v' with '$k = " . $collopts->{$k} . "'");
+        $logger->info("Overriding locale '$coll_locale' default tailoring '$k = $v' with '$k = " . $collopts->{$k} . "'");
       }
     }
 
@@ -2253,8 +2253,8 @@ sub fetch_data {
 
 =head2 remove_undef_dependent
 
-    Remove undefined dependent keys from an entries using a map of
-    depedent keys to entries
+    Remove undefined dependent keys from an entry using a map of
+    dependent keys to entries
 
 =cut
 

@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../../../../data/schemata/dcf.rnc" type="compact"?>
-<dcf:driver-control driver="biblatexml" xmlns:dcf="https://sourceforge.net/projects/biber">
-  <!--
-      These entry type aliases we might find in the the datasource so
-      Since biblatexml is specifically for biblatex, there should be no need
-      for entrytype aliases - a biblatexml file should have only what biblatex expects
-  -->
-
-  <!--
-      Field handlers
-  -->
+<?xml-stylesheet type="text/xsl" href="../../../../data/dcf.xsl"?>
+<dcf:driver-control driver="biblatexml" xmlns:dcf="https://sourceforge.net/projects/biblatex-biber">
+  <dcf:description>
+    <dcf:overview>The biblatexml driver is still alpha. It should require no aliases as it is designed as a one to one mapping to the biblatex internal data model.</dcf:overview>
+  </dcf:description>
   <dcf:fields>
+    <!-- special fields -->
+    <dcf:field name="related" handler="related"/>
     <!-- date fields -->
     <dcf:field name="date" handler="date"/>
     <!-- list fields -->
@@ -104,8 +101,6 @@
     <dcf:field name="part" handler="verbatim"/>
     <dcf:field name="presort" handler="verbatim"/>
     <dcf:field name="pubstate" handler="verbatim"/>
-    <dcf:field name="related" handler="verbatim"/>
-    <dcf:field name="relatedtype" handler="verbatim"/>
     <dcf:field name="series" handler="verbatim"/>
     <dcf:field name="shorthand" handler="verbatim"/>
     <dcf:field name="shorthandintro" handler="verbatim"/>

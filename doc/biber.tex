@@ -1,3 +1,6 @@
+% To make this maximally compatible with older PDF readers, it uses
+% PDF 1.4 and TeXGyre fonts
+\pdfminorversion=4
 \documentclass{ltxdockit}
 \usepackage[british]{babel}
 \usepackage[strict=true,autostyle=true]{csquotes}
@@ -5,11 +8,17 @@
 \usepackage{fontspec}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{fixfoot}
 \setmainfont[Ligatures=TeX]{TeXGyrePagella}
-\setsansfont[Ligatures=TeX]{Arial}
-\setmonofont[Ligatures=TeX]{Courier New}
+\setsansfont[Ligatures=TeX]{TexGyreHeros}
+\setmonofont[Ligatures=NoCommon]{TeXGyreCursor}
 
 \MakeAutoQuote{«}{»}
+
+\DeclareFixedFootnote{\tpb}{Binary maintained by third party. See README in
+  binary download directory for this platform for support/contact
+  details. Usually, the binary maintainer is also the binary build
+  provider for TexLive.}
 
 \titlepage{%
   title={biber},
@@ -17,7 +26,7 @@
   url={http://biblatex-biber.sourceforge.net},
   author={François Charette, Philip Kime},
   email={firmicus@ankabut.net, Philip@kime.org.uk},
-  revision={biber 0.8.1 (biblatex 1.2)},
+  revision={biber 0.8.3 (biblatex 1.3)},
   date={\today}}
 
 \hypersetup{%
@@ -50,27 +59,39 @@
 customised and sophisticated data preparation backend for \verb+biblatex+.
 Functionally, it offers a superset of \verb+bibtex+'s capabilities but is
 tightly coupled with \verb+biblatex+ and cannot be used as a stand-alone tool
-with standard \verb+.bst+ styles.
+with standard \verb+.bst+ styles. \verb+biber+'s role is to support
+\verb+biblatex+ by performing the following tasks:
+
+\begin{itemize}
+\item Parsing data from data sources
+\item Processing cross-references, entry sets, related entries
+\item Generating data for name, name list and name/year disambiguation
+\item Structural validation according to \verb+biblatex+ data model
+\item Sorting reference lists
+\item Outputting data to a \verb+.bbl+ for \verb+biblatex+ to consume
+\end{itemize}
 
 \subsection{Requirements}\label{ref:req}
 
-\verb+biber+ is distributed in two ways. There is a Perl source
-version which requires you to have a working Perl installation
+\verb+biber+ is part of TeXLive. The first annual TexLive distribution
+which includes \verb+biber+ is TeXLive 2011 but it was available for TexLive
+2010 via the usual update methods from March 2010.
+
+\verb+biber+ is developed on
+SourceForge\footnote{\url{http://sourceforge.net/projects/biblatex-biber/}}
+and this is the primary location for development releases, forums and
+bugfixes etc. It is included into TeXLive from the SourceForge releases.
+
+\verb+biber+ is a Perl application which relies heavily on quite a few
+modules. It is packaged as a stand-alone binary using the excellent
+\verb+PAR::Packer+ module which can pack an entire perl tree plus
+dependencies into one file which acts as a virtual stand-alone binary and
+is indistinguishable from such to the end user. You can also simply
+download the perl source and run it as a normal perl program
+which requires you to have a working Perl installation
 (preferably version 5.12 but no less than 5.10) and the ability to
-install the pre-requisite modules. Also provided are binaries for
-major OSes built with the Perl \verb+PAR::Packer+ module and utilities.
-
-Currently there are binaries available for:
-
-\begin{itemize}
-\item OSX Intel 64-bit
-\item Windows
-\item Linux 32-bit
-\item Linux 64-bit
-\end{itemize}
-
-These should work on any fairly recent OS version. Both binaries and
-Perl source are available on SourceForge\footnote{\url{http://sourceforge.net/projects/biblatex-biber/}}.
+install the pre-requisite modules. Binaries are also available, see
+section \ref{binaries}.
 
 \subsection{License}
 
@@ -114,10 +135,11 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
   all processed in one pass
 \item Flexible user-customisable crossreference field inheritance
   model
+\item Handles complex auto-expansion and contraction of names and
+  namelists\footnote{Coming in BibLaTeX 1.4}
 \item Support for related entries, to enable generic treatment of things
-  like «translated as», «reprinted as», «reprint of» etc.\footnote{In BibLaTeX 1.2}
-\item Handles very complex auto-expansion and contraction of names and
-  namelists\footnote{In BibLaTeX 1.3}
+  like «translated as», «reprinted as», «reprint of»
+  etc.\footnote{Coming in BibLaTeX 1.5}
 \item Extensible modular data sources architecture for ease of adding
   more data source types.
 \item Support for remote data sources
@@ -253,7 +275,7 @@ options by setting options in \verb+biblatex+ which will pass them to
 The \verb+--collate_options|-c+ option takes a number of key/value pairs as
 value. See section \ref{coll} for details.
 
-\subsubsection{The nosort option}
+\subsubsection{The «nosort» option}
 
 The value of the \verb+nosort+ option can only be set in the config file
 and not on the command line. This is because the values are Perl regular
@@ -319,7 +341,7 @@ in names which should not be considered when sorting. Given (the default):
 </nosort>
 \end{verbatim}
 
-and the \verb+.bib+ entry:
+and the \verb+.bib+ data source entry:
 
 \begin{verbatim}
 author	   = {{al-Hasan}, ʿAlī},
@@ -509,7 +531,7 @@ reverse order at UCA level 2.
 
 \subsection{Encoding of files}
 
-\verb+biber+ takes care of reencoding the \verb+.bib+ data as
+\verb+biber+ takes care of reencoding the data source data as
 necessary. In normal use, \verb+biblatex+ passes its
 \verb+bibencoding+ option value to \verb+biber+ via the \verb+.bcf+
 file. It also passes the value of its \verb+texencoding+ option (which
@@ -520,7 +542,7 @@ using (see \verb+biblatex+ manual for details).
 \noindent \verb+biber+ performs the following tasks:
 
 \begin{enumerate}
-\item Decodes the \verb+.bib+ into UTF-8 if it is not UTF-8 already
+\item Decodes the data source into UTF-8 if it is not UTF-8 already
 \item Decodes LaTeX character macros into UTF-8 if \verb+--bblencoding|-E+
   is UTF-8
 \item Encodes the output so that the \verb+.bbl+ is in
@@ -563,16 +585,15 @@ internal LaTeX character macro decoding break \verb+inputenc+. This is
 because \verb+inputenc+ does not implement all of UTF-8, only a
 commonly used subset.
 
-An example--if you had \verb+\DJ+ in your \verb+.bib+, \verb+biber+
-decodes this correctly to «Đ» and this breaks \verb+inputenc+ because
-it doesn't understand that UTF-8 character. The real solution here is
-to switch to a TeX engine with full UTF-8 support like XeTeX or LuaTeX
-as these don't use or need \verb+inputenc+. However, you can also try
-the \verb+--bblsafechars+ option which will try to convert any UTF-8
-chars into LaTeX macros on output. The \verb+biblatex+ option
-«\verb+texencoding=ascii+» (which corresponds to the \verb+biber+
-option «\verb+--bblencoding|-E+») will automatically set
-\verb+--bblsafechars+.
+An example--if you had \verb+\DJ+ in your \verb+.bib+ data source,
+\verb+biber+ decodes this correctly to «Đ» and this breaks \verb+inputenc+
+because it doesn't understand that UTF-8 character. The real solution here
+is to switch to a TeX engine with full UTF-8 support like XeTeX or LuaTeX
+as these don't use or need \verb+inputenc+. However, you can also try the
+\verb+--bblsafechars+ option which will try to convert any UTF-8 chars into
+LaTeX macros on output. The \verb+biblatex+ option
+«\verb+texencoding=ascii+» (which corresponds to the \verb+biber+ option
+«\verb+--bblencoding|-E+») will automatically set \verb+--bblsafechars+.
 
 See also the \verb+biber --help+ output for the
 \verb+--bblsafecharsset+ option which can customise the set of
@@ -581,7 +602,7 @@ conversion characters to use.
 \minisec{Decoding for internal sorting}
 
 If your \verb+bblencoding+ is not UTF-8, and you are using some UTF-8
-equivalent LaTeX character macros in your \verb+.bib+, then some
+equivalent LaTeX character macros in your \verb+.bib+ data source, then some
 \verb+.bbl+ fields (currently only \verb+\sortinit{}+) might end up
 with invalid characters in them, according to the \verb+.bbl+
 encoding. This is because some fields must be generated from the final
@@ -645,7 +666,7 @@ to LaTeX macro conversion using the full set of conversions
 \noindent Set \verb+bibencoding+ and \verb+bblencoding+ from the
 config file or \verb+.bcf+. Use the full LaTeX macro to UTF-8
 conversion set because you have some more obscure character macros in
-your \verb+.bib+ which you want to sort correctly
+your \verb+.bib+ data source which you want to sort correctly
 
 \biberex{biber -u}
 
@@ -786,7 +807,29 @@ the \verb+.bbl+. If you only use \verb+biblatex+ with your \verb+bibtex+
 data source files, you should probably make any \verb+MONTH+ fields be the
 numbers which \verb+biblatex+ expects.
 
-\section{Binaries}
+\subsection{Biber datasource drivers}
+
+\verb+biber+ uses a modular data source driver model to provide access
+to supported data sources. The drivers are responsible for mapping
+driver entry types and fields to the \verb+biblatex+ model. This is
+aided by a driver configuration file (\verb+.dcf+). The information in
+this file for each driver can be found in the driver documentation folder on
+SourceForge\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/documentation/drivers}}. This
+file shows you which handlers the driver uses for different fields and
+what certain entry types and fields are aliased to in the
+\verb+biblatex+ data model. This is not fantastically useful to know
+without know what the named driver handlers do specifically but there
+is a «description» section which mentions any special handling and
+general comments on the driver. You should read the documentation for
+the drivers you use to get an idea of how \verb+biber+ handles your
+data. Data model mapping is an imprecise art
+and the drivers are where the necessarily messy parts of \verb+biber+
+live. Most data source models are not designed with typesetting in
+mind and are usually not fine-grained enough to provide the sorts of
+information that \verb+biblatex+ needs. \verb+biber+ does its best to
+obtain as much meaningful information from a data source as possible.
+
+\section{Binaries}\label{binaries}
 
 The binary distributions of biber are made using the Perl \verb+PAR::Packer+
 module. They can be used as a normal binary but have some behaviour which
@@ -828,9 +871,9 @@ places to look (where \verb+*+ can vary depending on username:
 
 \begin{itemize}
 \item \verb+/var/folders/*/*/-Tmp-/+ (OSX, local GUI login shell)
-\item \verb+/var/tmp/+ (OSX, remote ssh login shell)
+\item \verb+/var/tmp/+ (OSX (remote ssh login shell), Unix)
 \item \verb+/tmp/+ (Linux)
-\item \verb+C:\Documents and Settings\<username>\Local Settings\Temp+ (Windows)
+\item \verb+C:\Documents and Settings\<username>\Local Settings\Temp+ (Windows/Cygwin)
 \item \verb+C:\Windows\Temp+ (Windows)
 \end{itemize}
 
@@ -839,14 +882,26 @@ directory/folder and then run the current binary again.
 
 \subsection{Binary Architectures}
 
-Binaries are available for the following architectures:
+Binaries are available for many architectures.
 
 \begin{itemize}
-\item \verb+linux_x86_32+ --- Linux x86 32-bit (built on Ubuntu 9.04)
-\item \verb+linux_x86_64+ --- Linux x86 64-bit (built on Ubuntu 9.04)
-\item \verb+MSWin+ --- Windows. Should work on 32 or 64 bit (built on XP)
-\item \verb+darwin_x86_64+ --- OSX Intel 64-bit (built on OSX 10.6)
+\item \verb+linux_x86_32+
+\item \verb+linux_x86_64+
+\item \verb+MSWin32+
+\item \verb+cygwin32+
+\item \verb+darwin_x86_64+
+\item \verb+darwin_x86_i386+
+\item \verb+freebsd_x86+\tpb
+\item \verb+freebsd_amd64+\tpb
+\item \verb+solaris_x86+\tpb
 \end{itemize}
+
+\noindent In addition, \verb+biber+ is included in TeXLive which provides
+binaries for more architectures than I am able to provide regularly.
+The downside is that these other architectures probably won't be quite so
+up to date but they shouldn't be that far behind. If you want to run
+development versions, you'll either have to run one of the core supported
+architectures or use the perl source version.
 
 \subsection{Installing}
 
@@ -910,9 +965,8 @@ Perl version. For this, you will need to have a recent Perl,
 preferably 5.12 at least with the following modules:
 
 \begin{itemize}
-\item \verb+PAR+
-\item \verb+PAR::Packer+
 \item All \verb+biber+ pre-requisites
+\item \verb+PAR::Packer+ and all dependencies
 \end{itemize}
 
 \noindent You should have the latest CPAN versions of all required modules
@@ -994,5 +1048,58 @@ as these include a step to copy the main \verb+biber+ script to a new name
 before packing the binary. This is required as otherwise a spurious
 error is reported to the user on first run of the binary due to a name
 collision when it unpacks itself.
+
+See the \verb+PAR+ wiki
+page\footnote{\url{http://par.perl.org/wiki/Main_Page}} for FAQs and help
+on building with \verb+PAR::Packer+. Take special note of the FAQs on
+including libraries with the packed
+binary\footnote{\url{http://par.perl.org/wiki/FAQ}, section entitled «My
+  PAR executable needs some dynamic libraries»}.
+
+\subsubsection{Testing a binary build}
+You can test a binary that you have created by copying it to a machine
+which preferably doesn't have perl at all on it. Running the binary with no
+arguments will unpack it in the background and display the help. To really
+test it without having LaTeX available, get the two quick test files from
+SourceForge\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/testfiles}},
+put them in a directory and run \verb+biber+ in that directory like this:
+
+\begin{verbatim}
+biber --convert_control test
+\end{verbatim}
+
+\noindent This will run \verb+biber+ normally on the test files plus it
+will also perform an XSLT transform on the \verb+.bcf+ and
+leave an HTML representation of it in the same directory thus testing the
+links to the XML and XSLT libraries as well as the bibtex parsing
+libraries. The output should look something like this (may be differences
+of \verb+biber+ version and locale of course but there should be no errors
+or warnings).
+
+\begin{verbatim}
+INFO - This is biber 0.8.3 (beta)
+INFO - Logfile is 'test.blg'
+INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'
+INFO - Reading test.bcf
+INFO - Using all citekeys in bib section 0
+INFO - Processing bib section 0
+INFO - Processing bibtex format file 'test.bib' for section 0
+INFO - Decoding LaTeX character macros into UTF-8
+INFO - Sorting list 'MAIN' keys
+INFO - No sort tailoring available for locale 'en_GB.UTF-8'
+INFO - Sorting list 'SHORTHANDS' keys
+INFO - No sort tailoring available for locale 'en_GB.UTF-8'
+INFO - Writing 'test.bbl' with encoding 'UTF-8'
+INFO - Output to test.bbl
+\end{verbatim}
+
+\noindent There should now be these new files in the directory:
+
+\begin{verbatim}
+test.bcf.html
+test.blg
+test.bbl
+\end{verbatim}
+
 
 \end{document}

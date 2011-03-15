@@ -15,17 +15,6 @@ REQUIREMENTS
   should be automatically installed during the install process described
   below.
 
-    * Unicode::Collate 0.72 or higher
-    * IPC::Cmd and IPC::Run
-    * File::Slurp::Unicode
-    * Readonly (but Readonly::XS is highly recommended for performance reasons)
-    * List::AllUtils
-    * Log::Log4perl
-    * XML::LibXML::Simple (XML::LibXML clone of XML::Simple)
-    * Text::BibTeX 0.5.1 or higher (requires Config::AutoConf when
-      installing - please install this first.)
-    * LWP::Simple
-
 INSTALLATION
 
   Binaries are available for most common architectures but if you wish
@@ -36,6 +25,10 @@ INSTALLATION
     ./Build test         [optional but recommended]
     ./Build install
 
+  This process will report any missing modules which can be installed by:
+
+    ./Build installdeps
+
 SUPPORT AND DOCUMENTATION
 
   After installing, biber --help will give you the basic documentation.
@@ -43,13 +36,9 @@ SUPPORT AND DOCUMENTATION
 
   https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/documentation/
 
-  Biber also comes with the utility script latex2utf8 to convert files with
-  LaTeX encoding to UTF-8.
-
   You can also find documentation for the included modules with the perldoc command:
 
       perldoc Biber
-      perldoc LaTeX::Decode
       etc.
 
   More information, bugfix releases, forums and bug tracker are available at:

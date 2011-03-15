@@ -226,31 +226,22 @@ sortname = element sortname { attlist.name?, att.mode?, (text | person+) }
 person = element person {
     attlist.person,
     ( text | (first &
-              firstinitial? &
               prefix? &
-              prefixinitial? &
               middle? &
-              middleinitial? &
               last &
-              lastinitial? &
-              suffix? &
-              suffixinitial?) )
+              suffix? ) )
   }
 attlist.person |=
   attribute id { text }?,
   att.gender?,
   attribute useprefix { "yes" | "no" }?
-first = element first { (text | namepart+) }
-firstinitial = element firstinitial { text }
-last = element last { (text | namepart+) }
-lastinitial = element lastinitial { text }
-middle = element middle { (text | namepart+) }
-middleinitial = element middleinitial { text }
-prefix = element prefix { (text | namepart+) }
-prefixinitial = element prefixinitial { text }
-suffix = element suffix { (text | namepart+) }
-suffixinitial = element suffixinitial { text }
-namepart = element namepart { text }
+att.init = attribute initial { text }
+first = element first { att.init?, (text | namepart+) }
+last = element last { att.init?, (text | namepart+) }
+middle = element middle { att.init?, (text | namepart+) }
+prefix = element prefix { att.init?, (text | namepart+) }
+suffix = element suffix { att.init?, (text | namepart+) }
+namepart = element namepart { att.init?, text }
 keywords = element keywords { list {xsd:string+} | item+ }
 related = element related {
     element item {

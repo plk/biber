@@ -37,7 +37,6 @@ start =
       singletitle,
       sortalphaothers?,
       sortlos,
-      terseinits,
       uniquename,
       useauthor,
       useeditor,
@@ -297,7 +296,7 @@ secspec =
     attribute section { xsd:integer },
     element bcf:datasource {
       attribute type { "file" },
-      attribute datatype { "bibtex" | "biblatexml" | "ris" }?,
+      attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" }?,
       xsd:anyURI
     }*
   }?,
@@ -332,12 +331,6 @@ filter = element bcf:filter {
 
 
 # option definitions
-terseinits =
-  element bcf:option {
-    attribute type { "singlevalued" },
-    element bcf:key { "terseinits" },
-    element bcf:value { "0" | "1" }
-  }
 useprefix =
   element bcf:option {
     attribute type { "singlevalued" },
@@ -519,15 +512,5 @@ sortalphaothers =
     element bcf:value {
       xsd:normalizedString { pattern = "\S+" }
     }
-  }
-
-## these are perl regexes
-nonsortprefixes =
-  element bcf:nonsortprefixes {
-    element bcf:item { text }+
-  }
-nonsortdiacritics =
-  element bcf:nonsortdiacritics {
-    element bcf:item { text }+
   }
 

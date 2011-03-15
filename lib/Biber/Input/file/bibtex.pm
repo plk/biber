@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use Carp;
 
-use Text::BibTeX 0.50 qw(:nameparts :joinmethods :metatypes);
+use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
 use Text::BibTeX::NameFormat;
 use Biber::Constants;
@@ -43,32 +43,8 @@ my %handlers = (
 );
 
 
-# we assume that the driver config file is in the same dir as the driver:
-(my $vol, my $driver_path, undef) = File::Spec->splitpath( $INC{"Biber/Input/file/bibtex.pm"} );
-
-# Deal with the strange world of Par::Packer paths, see similar code in Biber.pm
-my $dcf;
-if ($driver_path =~ m|/par\-| and $driver_path !~ m|/inc|) { # a mangled PAR @INC path
-  $dcf = File::Spec->catpath($vol, "$driver_path/inc/lib/Biber/Input/file", 'bibtex.dcf');
-}
-else {
-  $dcf = File::Spec->catpath($vol, $driver_path, 'bibtex.dcf');
-}
-
 # Read driver config file
-my $dcfxml = XML::LibXML::Simple::XMLin($dcf,
-                                        'ForceContent' => 1,
-                                        'ForceArray' => [
-                                                         qr/\Aentry-type\z/,
-                                                         qr/\Afield\z/,
-                                                        ],
-                                        'NsStrip' => 1,
-                                        'KeyAttr' => ['name']);
-
-# Check we have the right driver
-unless ($dcfxml->{driver} eq 'bibtex') {
-  $logger->logdie("Expected driver config type 'bibtex', got '" . $dcfxml->{driver} . "'");
-}
+my $dcfxml = driver_config('bibtex');
 
 =head2 TBSIG
 
@@ -284,7 +260,7 @@ sub _literal {
     $bibentry->set_datafield($to, _hack_month($value));
   }
   else {
-    $bibentry->set_datafield($to, $value);
+    $bibentry->set_datafield($to, _norm($value));
   }
   return;
 }
@@ -293,7 +269,7 @@ sub _literal {
 sub _verbatim {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   my $value = decode_utf8($entry->get($f));
-  $bibentry->set_datafield($to, $value);
+  $bibentry->set_datafield($to, _norm($value));
   return;
 }
 
@@ -545,16 +521,12 @@ sub preprocess_file {
 
     { firstname     => 'John',
       firstname_i   => 'J.',
-      firstname_it  => 'J',
       lastname      => 'Doe',
       lastname_i    => 'D.',
-      lastname_it   => 'D',
       prefix        => undef,
       prefix_i      => undef,
-      prefix_it     => undef,
       suffix        => undef,
       suffix_i      => undef,
-      suffix_it     => undef,
       namestring    => 'Doe, John',
       nameinitstring => 'Doe_J',
       strip          => {'firstname' => 0,
@@ -595,16 +567,11 @@ sub parsename {
   my $prefix    = decode_utf8($name->format($p_f));
   my $suffix    = decode_utf8($name->format($s_f));
 
-  # Variables to hold either the Text::BibTeX::NameFormat generated initials
-  # or our own generated ones in case we are using a broken version of Text::BibTeX
+  # Variables to hold the Text::BibTeX::NameFormat generated initials string
   my $gen_lastname_i;
-  my $gen_lastname_it;
   my $gen_firstname_i;
-  my $gen_firstname_it;
   my $gen_prefix_i;
-  my $gen_prefix_it;
   my $gen_suffix_i;
-  my $gen_suffix_it;
 
   # Use a copy of $name so that when we generate the
   # initials, we do so without certain things. This is easier than trying
@@ -621,40 +588,20 @@ sub parsename {
   my $pi_f = new Text::BibTeX::NameFormat('v', 1);
   my $si_f = new Text::BibTeX::NameFormat('j', 1);
 
-  # Truncated initials formats
-  my $lit_f = new Text::BibTeX::NameFormat('l', 1);
-  my $fit_f = new Text::BibTeX::NameFormat('f', 1);
-  my $pit_f = new Text::BibTeX::NameFormat('v', 1);
-  my $sit_f = new Text::BibTeX::NameFormat('j', 1);
+  # Initials generated with forced tie so we can make an array
+  $li_f->set_text(BTN_LAST,  undef, undef, undef, '');
+  $fi_f->set_text(BTN_FIRST, undef, undef, undef, '');
+  $pi_f->set_text(BTN_VON,   undef, undef, undef, '');
+  $si_f->set_text(BTN_JR,    undef, undef, undef, '');
+  $li_f->set_options(BTN_LAST,  1, BTJ_FORCETIE, BTJ_NOTHING);
+  $fi_f->set_options(BTN_FIRST, 1, BTJ_FORCETIE, BTJ_NOTHING);
+  $pi_f->set_options(BTN_VON,   1, BTJ_FORCETIE, BTJ_NOTHING);
+  $si_f->set_options(BTN_JR,    1, BTJ_FORCETIE, BTJ_NOTHING);
 
-  # Period following normal initials
-  $li_f->set_text(BTN_LAST,  undef, undef, undef, '.');
-  $fi_f->set_text(BTN_FIRST, undef, undef, undef, '.');
-  $pi_f->set_text(BTN_VON,   undef, undef, undef, '.');
-  $si_f->set_text(BTN_JR,    undef, undef, undef, '.');
-  $li_f->set_options(BTN_LAST,  1, BTJ_MAYTIE, BTJ_NOTHING);
-  $fi_f->set_options(BTN_FIRST, 1, BTJ_MAYTIE, BTJ_NOTHING);
-  $pi_f->set_options(BTN_VON,   1, BTJ_MAYTIE, BTJ_NOTHING);
-  $si_f->set_options(BTN_JR,    1, BTJ_MAYTIE, BTJ_NOTHING);
-
-  # Nothing following truncated initials
-  $lit_f->set_text(BTN_LAST,  undef, undef, undef, '');
-  $fit_f->set_text(BTN_FIRST, undef, undef, undef, '');
-  $pit_f->set_text(BTN_VON,   undef, undef, undef, '');
-  $sit_f->set_text(BTN_JR,    undef, undef, undef, '');
-  $lit_f->set_options(BTN_LAST,  1, BTJ_NOTHING, BTJ_NOTHING);
-  $fit_f->set_options(BTN_FIRST, 1, BTJ_NOTHING, BTJ_NOTHING);
-  $pit_f->set_options(BTN_VON,   1, BTJ_NOTHING, BTJ_NOTHING);
-  $sit_f->set_options(BTN_JR,    1, BTJ_NOTHING, BTJ_NOTHING);
-
-  $gen_lastname_i    = decode_utf8($nd_name->format($li_f));
-  $gen_lastname_it   = decode_utf8($nd_name->format($lit_f));
-  $gen_firstname_i   = decode_utf8($nd_name->format($fi_f));
-  $gen_firstname_it  = decode_utf8($nd_name->format($fit_f));
-  $gen_prefix_i      = decode_utf8($nd_name->format($pi_f));
-  $gen_prefix_it     = decode_utf8($nd_name->format($pit_f));
-  $gen_suffix_i      = decode_utf8($nd_name->format($si_f));
-  $gen_suffix_it     = decode_utf8($nd_name->format($sit_f));
+  $gen_lastname_i    = inits(decode_utf8($nd_name->format($li_f)));
+  $gen_firstname_i   = inits(decode_utf8($nd_name->format($fi_f)));
+  $gen_prefix_i      = inits(decode_utf8($nd_name->format($pi_f)));
+  $gen_suffix_i      = inits(decode_utf8($nd_name->format($si_f)));
 
   # Only warn about lastnames since there should always be one
   $logger->warn("Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
@@ -664,10 +611,8 @@ sub parsename {
   my $ps;
   my $prefix_stripped;
   my $prefix_i;
-  my $prefix_it;
   if ($prefix) {
     $prefix_i        = $gen_prefix_i;
-    $prefix_it       = $gen_prefix_it;
     $prefix_stripped = remove_outer($prefix);
     $ps = $prefix ne $prefix_stripped ? 1 : 0;
     $namestring .= "$prefix_stripped ";
@@ -676,10 +621,8 @@ sub parsename {
   my $ls;
   my $lastname_stripped;
   my $lastname_i;
-  my $lastname_it;
   if ($lastname) {
     $lastname_i        = $gen_lastname_i;
-    $lastname_it       = $gen_lastname_it;
     $lastname_stripped = remove_outer($lastname);
     $ls = $lastname ne $lastname_stripped ? 1 : 0;
     $namestring .= "$lastname_stripped, ";
@@ -688,10 +631,8 @@ sub parsename {
   my $ss;
   my $suffix_stripped;
   my $suffix_i;
-  my $suffix_it;
   if ($suffix) {
     $suffix_i        = $gen_suffix_i;
-    $suffix_it       = $gen_suffix_it;
     $suffix_stripped = remove_outer($suffix);
     $ss = $suffix ne $suffix_stripped ? 1 : 0;
     $namestring .= "$suffix_stripped, ";
@@ -700,10 +641,8 @@ sub parsename {
   my $fs;
   my $firstname_stripped;
   my $firstname_i;
-  my $firstname_it;
   if ($firstname) {
     $firstname_i        = $gen_firstname_i;
-    $firstname_it       = $gen_firstname_it;
     $firstname_stripped = remove_outer($firstname);
     $fs = $firstname ne $firstname_stripped ? 1 : 0;
     $namestring .= "$firstname_stripped";
@@ -716,10 +655,10 @@ sub parsename {
 
   # Construct $nameinitstring
   my $nameinitstr = '';
-  $nameinitstr .= $prefix_it . '_' if ( $usepre and $prefix );
+  $nameinitstr .= join('', @$prefix_i) . '_' if ( $usepre and $prefix );
   $nameinitstr .= $lastname if $lastname;
-  $nameinitstr .= '_' . $suffix_it if $suffix;
-  $nameinitstr .= '_' . $firstname_it if $firstname;
+  $nameinitstr .= '_' . join('', @$suffix_i) if $suffix;
+  $nameinitstr .= '_' . join('', @$firstname_i) if $firstname;
   $nameinitstr =~ s/\s+/_/g;
   $nameinitstr =~ s/~/_/g;
 
@@ -729,16 +668,12 @@ sub parsename {
   return Biber::Entry::Name->new(
     firstname       => $firstname      eq '' ? undef : $firstname_stripped,
     firstname_i     => $firstname      eq '' ? undef : $firstname_i,
-    firstname_it    => $firstname      eq '' ? undef : $firstname_it,
     lastname        => $lastname       eq '' ? undef : $lastname_stripped,
     lastname_i      => $lastname       eq '' ? undef : $lastname_i,
-    lastname_it     => $lastname       eq '' ? undef : $lastname_it,
     prefix          => $prefix         eq '' ? undef : $prefix_stripped,
     prefix_i        => $prefix         eq '' ? undef : $prefix_i,
-    prefix_it       => $prefix         eq '' ? undef : $prefix_it,
     suffix          => $suffix         eq '' ? undef : $suffix_stripped,
     suffix_i        => $suffix         eq '' ? undef : $suffix_i,
-    suffix_it       => $suffix         eq '' ? undef : $suffix_it,
     namestring      => $namestring,
     nameinitstring  => $nameinitstr,
     strip           => {'firstname' => $fs,
@@ -776,6 +711,12 @@ sub _hack_month {
   }
 }
 
+# Do some sanitising on LaTeX special chars in literals and verbatims
+sub _norm {
+  my $s = shift;
+  $s =~ s/(?<!\\)(\#|\&|\_|\%|\[|\]|\|)/\\$1/gxms;
+  return $s;
+}
 
 1;
 
