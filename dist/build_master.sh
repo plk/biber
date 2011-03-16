@@ -32,19 +32,23 @@ fi
 # Create the binaries from the build farm if they don't exist
 
 # Build farm OSX 64-bit intel
+# ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
+# time difference is too great between boots
 if [ ! -e $DIR/biber-darwin_x86_64 ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-osx10.6 </dev/null >/dev/null 2>&1 &"
   sleep 4
-  ssh bbf-osx10.6 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build install;cd dist/darwin_x86_64;\\rm -f biber-darwin_x86_64;./build.sh"
+  ssh bbf-osx10.6 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build install;cd dist/darwin_x86_64;\\rm -f biber-darwin_x86_64;./build.sh"
   scp bbf-osx10.6:biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64 $DIR/
   ssh root@wood "VBoxManage controlvm bbf-osx10.6 savestate"
 fi
 
 # Build farm OSX 32-bit intel (universal)
+# ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
+# time difference is too great between boots
 if [ ! -e $DIR/biber-darwin_x86_i386 ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-osx10.5 </dev/null >/dev/null 2>&1 &"
   sleep 4
-  ssh bbf-osx10.5 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build install;cd dist/darwin_x86_i386;\\rm -f biber-darwin_x86_i386;./build.sh"
+  ssh bbf-osx10.5 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build install;cd dist/darwin_x86_i386;\\rm -f biber-darwin_x86_i386;./build.sh"
   scp bbf-osx10.5:biblatex-biber/dist/darwin_x86_i386/biber-darwin_x86_i386 $DIR/
   ssh root@wood "VBoxManage controlvm bbf-osx10.5 savestate"
 fi
