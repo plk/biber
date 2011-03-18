@@ -170,7 +170,7 @@ my $murray2 = q|  \entry{murray}{article}{}
 
 |;
 
-my $t1 = q|  \entry{t1}{misc}{}
+my $t1 = q+  \entry{t1}{misc}{}
     \name{labelname}{1}{%
       {{Brown}{B\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
     }
@@ -182,13 +182,13 @@ my $t1 = q|  \entry{t1}{misc}{}
     \field{labelalpha}{Bro92}
     \field{sortinit}{B}
     \count{uniquename}{0}
-    \field{title}{90\% of Normal things {$^{3}$}}
+    \field{title}{10\% of [100] and 90\% of $Normal_2$ | \& \# things {$^{3}$}}
     \field{year}{1992}
     \field{pages}{100\bibrangedash}
     \keyw{primary, something,somethingelse}
   \endentry
 
-|;
++;
 
 my $t2 = q|  \entry{t2}{misc}{}
     \name{labelname}{1}{%

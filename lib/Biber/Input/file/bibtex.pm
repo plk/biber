@@ -714,7 +714,7 @@ sub _hack_month {
 # Do some sanitising on LaTeX special chars in literals and verbatims
 sub _norm {
   my $s = shift;
-  $s =~ s/(?<!\\)(\#|\&|\_|\%|\[|\]|\|)/\\$1/gxms;
+  $s =~ s/(?<!\\)(\&|\%|\#)/\\$1/gxms;
   return $s;
 }
 
