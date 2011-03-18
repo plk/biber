@@ -515,7 +515,7 @@ sub _gen_initials {
 # Do some sanitising on LaTeX special chars since this can't be nicely done by the parser
 sub _norm {
   my $s = shift;
-  $s =~ s/(?<!\\)(\#|\&|\_|\%|\$|\^|\[|\]|\|)/\\$1/gxms;
+  $s =~ s/(?<!\\)(\#|\&|\%|\$|\^|\_)/\\$1/gxms;
   return $s;
 }
 
