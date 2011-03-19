@@ -24,6 +24,7 @@ my $builder = $class->new(
        'Test::More'   => 0,
     },
     add_to_cleanup      => [ 'biber-*' ],
+    configure_requires => { 'Module::Build' => 0.38 },
     build_requires => {
         'Config::AutoConf' => '0.15',
         'ExtUtils::LibBuilder' => '0.02'

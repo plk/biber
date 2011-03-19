@@ -13,6 +13,8 @@ mkdir -p /tmp/sftree/binaries/FreeBSD
 mkdir -p /tmp/sftree/binaries/OSX_Intel
 mkdir -p /tmp/sftree/binaries/Windows
 
+chmod -R 777 /tmp/sftree
+
 scp -r /tmp/sftree philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$1
 
 \rm -rf /tmp/sftree

@@ -11,12 +11,13 @@ Things to remember when releasing new version:
   version, if necessary.
 * "perl Build.PL" and "Build dist" to update YAML/JSON
 * Commit and tag with version number
-* Build binaries from release and upload to SF, associate new defaults if necessary
 * Create a new empty version tree for new version, use the dist/empty_tree.sh script:
-  empty_tree.sh development
-* Update main html and doc page and sync
-  scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
+  empty_tree.sh <version>
+* Build binaries from release and upload to SF to new version folder
 * Update SF main page, news, add new README in web interface at root, if needed
 * Inform builders of binaries to update
 * Rename current to version, new version to current
+* Update main html and doc page and sync
+  scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
+* Associate new defaults with new binaries
 * Mail to ctan@dante.de after binary people have updated
