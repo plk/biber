@@ -34,64 +34,105 @@ fi
 # Build farm OSX 64-bit intel
 # ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
 # time difference is too great between boots
-if [ ! -e $DIR/biber-darwin_x86_64 ]; then
+if [ ! -e $DIR/biber-darwin_x86_64.tar.gz ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-osx10.6 </dev/null >/dev/null 2>&1 &"
   sleep 4
   ssh bbf-osx10.6 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build install;cd dist/darwin_x86_64;\\rm -f biber-darwin_x86_64;./build.sh"
   scp bbf-osx10.6:biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64 $DIR/
   ssh root@wood "VBoxManage controlvm bbf-osx10.6 savestate"
+  cd $DIR
+  mv biber-darwin_x86_64 biber
+  chmod +x biber
+  tar cf biber-darwin_x86_64.tar biber
+  gzip biber-darwin_x86_64.tar
+  \rm biber
+  cd $BASE
 fi
 
 # Build farm OSX 32-bit intel (universal)
 # ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
 # time difference is too great between boots
-if [ ! -e $DIR/biber-darwin_x86_i386 ]; then
+if [ ! -e $DIR/biber-darwin_x86_i386.tar.gz ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-osx10.5 </dev/null >/dev/null 2>&1 &"
   sleep 4
   ssh bbf-osx10.5 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build install;cd dist/darwin_x86_i386;\\rm -f biber-darwin_x86_i386;./build.sh"
   scp bbf-osx10.5:biblatex-biber/dist/darwin_x86_i386/biber-darwin_x86_i386 $DIR/
   ssh root@wood "VBoxManage controlvm bbf-osx10.5 savestate"
+  cd $DIR
+  mv biber-darwin_x86_i386 biber
+  chmod +x biber
+  tar cf biber-darwin_x86_i386.tar biber
+  gzip biber-darwin_x86_i386.tar
+  \rm biber
+  cd $BASE
 fi
 
 # Build farm WinXP
 # We run "Build realclean" at the end as we are using the same tree for
 # win and cygwin builds
-if [ ! -e $DIR/biber-MSWIN.exe ]; then
+if [ ! -e $DIR/biber-MSWIN.zip ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-wxp32 </dev/null >/dev/null 2>&1 &"
   sleep 4
   ssh bbf-wxp32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWin32;\\rm -f biber-MSWIN.exe;./build.bat;cd ~/biblatex-biber;./Build realclean"
   scp bbf-wxp32:biblatex-biber/dist/MSWin32/biber-MSWIN.exe $DIR/
   ssh root@wood "VBoxManage controlvm bbf-wxp32 savestate"
+  cd $DIR
+  mv biber-MSWIN.exe biber.exe
+  chmod +x biber.exe
+  /usr/bin/zip biber-MSWIN.zip biber.exe
+  \rm biber.exe
+  cd $BASE
 fi
 
 # Build farm cygwin
 # We run "Build realclean" at the end as we are using the same tree for
 # win and cygwin builds
-if [ ! -e $DIR/biber-cygwin32.exe ]; then
+if [ ! -e $DIR/biber-cygwin32.tar.gz ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-wxp32 </dev/null >/dev/null 2>&1 &"
   sleep 4
   # We have to move aside the windows libbtparse.dll otherwise it's picked up by cygwin
   ssh bbf-wxp32 ". bin/set-biber-cyg-build-env.sh;mv /cygdrive/c/WINDOWS/libbtparse.dll /cygdrive/c/WINDOWS/libbtparse.dll.DIS;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/cygwin32;\\rm -f biber-cygwin32;./build.sh;mv /cygdrive/c/WINDOWS/libbtparse.dll.DIS /cygdrive/c/WINDOWS/libbtparse.dll;cd ~/biblatex-biber;./Build realclean"
   scp bbf-wxp32:biblatex-biber/dist/cygwin32/biber-cygwin32.exe $DIR/
   ssh root@wood "VBoxManage controlvm bbf-wxp32 savestate"
+  cd $DIR
+  mv biber-cygwin32.exe biber.exe
+  chmod +x biber.exe
+  tar cf biber-cygwin32.tar biber.exe
+  gzip biber-cygwin32.tar
+  \rm biber.exe
+  cd $BASE
 fi
 
 # Build farm Linux 32
-if [ ! -e $DIR/biber-linux_x86_32 ]; then
+if [ ! -e $DIR/biber-linux_x86_32.tar.gz ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-jj32 </dev/null >/dev/null 2>&1 &"
   sleep 4
   ssh bbf-jj32 "cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build install;cd dist/linux_x86_32;\\rm -f biber-linux_x86_32;./build.sh"
   scp bbf-jj32:biblatex-biber/dist/linux_x86_32/biber-linux_x86_32 $DIR/
   ssh root@wood "VBoxManage controlvm bbf-jj32 savestate"
+  cd $DIR
+  mv biber-linux_x86_32 biber
+  chmod +x biber
+  tar cf biber-linux_x86_32.tar biber
+  gzip biber-linux_x86_32.tar
+  \rm biber
+  cd $BASE
 fi
 
 # Build farm Linux 64
-if [ ! -e $DIR/biber-linux_x86_64 ]; then
+if [ ! -e $DIR/biber-linux_x86_64.tar.gz ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-jj64 </dev/null >/dev/null 2>&1 &"
   sleep 4
   ssh bbf-jj64 "cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build install;cd dist/linux_x86_64;\\rm -f biber-linux_x86_64;./build.sh"
   scp bbf-jj64:biblatex-biber/dist/linux_x86_64/biber-linux_x86_64 $DIR/
   ssh root@wood "VBoxManage controlvm bbf-jj64 savestate"
+  cd $DIR
+  mv biber-linux_x86_64 biber
+  chmod +x biber
+  tar cf biber-linux_x86_64.tar biber
+  gzip biber-linux_x86_64.tar
+  \rm biber
+  cd $BASE
 fi
 
 # Stop here if JUSTBUILD is set
@@ -102,62 +143,33 @@ fi
 
 cd $DIR
 # OSX 64-bit
-if [ -e $DIR/biber-darwin_x86_64 ]; then
-  cp biber-darwin_x86_64 biber
-  chmod +x biber
-  tar cf biber-darwin_x86_64.tar biber
-  gzip biber-darwin_x86_64.tar
+if [ -e $DIR/biber-darwin_x86_64.tar.gz ]; then
   scp biber-darwin_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber-darwin_x86_64.tar.gz
-  \rm biber-darwin_x86_64.tar.gz biber
 fi
 
 # OSX 32-bit universal
-if [ -e $DIR/biber-darwin_x86_i386 ]; then
-  cp biber-darwin_x86_i386 biber
-  chmod +x biber
-  tar cf biber-darwin_x86_i386.tar biber
-  gzip biber-darwin_x86_i386.tar
+if [ -e $DIR/biber-darwin_x86_i386.tar.gz ]; then
   scp biber-darwin_x86_i386.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber-darwin_x86_i386.tar.gz
-  \rm biber-darwin_x86_i386.tar.gz biber
 fi
 
 # Windows
-if [ -e $DIR/biber-MSWIN.exe ]; then
-  cp biber-MSWIN.exe biber.exe
-  chmod +x biber.exe
-  /usr/bin/zip biber-MSWIN.zip biber.exe
+if [ -e $DIR/biber-MSWIN.zip ]; then
   scp biber-MSWIN.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN.zip
-  \rm biber-MSWIN.zip biber.exe
 fi
 
 # Cygwin
-if [ -e $DIR/biber-cygwin32.exe ]; then
-  cp biber-cygwin32.exe biber.exe
-  chmod +x biber.exe
-  tar cf biber-cygwin32.tar biber.exe
-  gzip biber-cygwin32.tar
+if [ -e $DIR/biber-cygwin32.tar.gz ]; then
   scp biber-cygwin32.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Cygwin/biber-cygwin32.tar.gz
-  \rm biber-cygwin32.tar.gz biber.exe
 fi
 
 # Linux 32-bit
-if [ -e $DIR/biber-linux_x86_32 ]; then
-  cp biber-linux_x86_32 biber
-  chmod +x biber
-  tar cf biber-linux_x86_32.tar biber
-  gzip biber-linux_x86_32.tar
+if [ -e $DIR/biber-linux_x86_32.tar.gz ]; then
   scp biber-linux_x86_32.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux/biber-linux_x86_32.tar.gz
-  \rm biber-linux_x86_32.tar.gz biber
 fi
 
 # Linux 64-bit
-if [ -e $DIR/biber-linux_x86_64 ]; then
-  cp biber-linux_x86_64 biber
-  chmod +x biber
-  tar cf biber-linux_x86_64.tar biber
-  gzip biber-linux_x86_64.tar
+if [ -e $DIR/biber-linux_x86_64.tar.gz ]; then
   scp biber-linux_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux/biber-linux_x86_64.tar.gz
-  \rm biber-linux_x86_64.tar.gz biber
 fi
 
 # Doc

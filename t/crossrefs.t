@@ -49,7 +49,7 @@ my $cr1 = q|  \entry{cr1}{inbook}{}
     \field{sortinit}{G}
     \field{labelyear}{1974}
     \field{booktitle}{Graphs of the Continent}
-    \strng{crossref}{crm}
+    \strng{crossref}{cr_m}
     \field{eprintclass}{SOMECLASS}
     \field{eprinttype}{SomEPrFiX}
     \field{origyear}{1955}
@@ -81,7 +81,7 @@ my $cr2 = q|  \entry{cr2}{inbook}{}
     \field{sortinit}{F}
     \field{labelyear}{1974}
     \field{booktitle}{Graphs of the Continent}
-    \strng{crossref}{crm}
+    \strng{crossref}{cr_m}
     \field{origyear}{1943}
     \field{title}{Fabulous Fourier Forms}
     \field{year}{1974}
@@ -92,7 +92,7 @@ my $cr2 = q|  \entry{cr2}{inbook}{}
 
 # This is included as it is crossrefed >= mincrossrefs times
 # Notice lack of labelname and hashes because the only name is EDITOR and useeditor is false
-my $crm = q|  \entry{crm}{book}{}
+my $cr_m = q|  \entry{cr_m}{book}{}
     \name{editor}{1}{}{%
       {{}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
     }
@@ -412,7 +412,7 @@ my $mcr = q|  \entry{mcr}{inbook}{}
 
 is($out->get_output_entry($main0,'cr1'), $cr1, 'crossref test 1');
 is($out->get_output_entry($main0,'cr2'), $cr2, 'crossref test 2');
-is($out->get_output_entry($main0,'crm'), $crm, 'crossref test 3');
+is($out->get_output_entry($main0,'cr_m'), $cr_m, 'crossref test 3');
 is($out->get_output_entry($main0,'cr3'), $cr3, 'crossref test 4');
 is($out->get_output_entry($main0,'crt'), $crt, 'crossref test 5');
 is($out->get_output_entry($main0,'cr4'), $cr4, 'crossref test 6');
