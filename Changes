@@ -1,5 +1,7 @@
 Revision history for Biber
 
+0.8.4  19-03-2011
+       * Bug fixes (wrong escaping of "[", "_" and "]" in .bbl)
 0.8.3  14-03-2011
        * Biber now in TexLive
        * Added several new binary builds
