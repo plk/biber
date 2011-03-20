@@ -1051,9 +1051,10 @@ sub process_hashes {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $namehash = ''; # biblatex namehash field (manual, section 4.2.4.1)
-  my $fullhash = ''; # biblatex fullhash field (manual, section 4.2.4.1)
+  my $namehash = ''; # biblatex namehash field (manual, section 4.2.3)
+  my $fullhash = ''; # biblatex fullhash field (manual, section 4.2.3)
   my $nameid   = '';
+  my $fullid   = '';
 
   # namehash is generated from the labelname
   if (my $lname = $be->get_field('labelnamename')) {
@@ -1065,8 +1066,9 @@ sub process_hashes {
   # fullhash is generated from the labelname but ignores SHORT* fields and
   # maxnames/minnames settings
   if (my $lnamefh = $be->get_field('labelnamenamefullhash')) {
-    if ($be->get_field($lnamefh)) {
-      $fullhash .= $self->_getfullhash($citekey, $be->get_field($lnamefh));
+    if (my $lnfh = $be->get_field($lnamefh)) {
+      $fullhash .= $self->_getfullhash($citekey, $lnfh);
+      $fullid .= makenameid($lnfh);
     }
   }
 
@@ -1077,21 +1079,23 @@ sub process_hashes {
   # AUTHOR = {Fred Grimble and Bill Bullter} = "FGBB"
   # AUTHOR = {Frank Garby and Brian Blunkley} = "FGBB"
 
-  my $hashsuffix = 1;
+  my $namehashsuffix = 1;
+  my $fullhashsuffix = 1;
 
+  # namehash
   # First, check to see if we've already seen this exact name before
   if (Biber::Config->get_namehashcount($namehash, $nameid)) {
     # If we have, our suffix is already known
-    $hashsuffix = Biber::Config->get_namehashcount($namehash, $nameid);
+    $namehashsuffix = Biber::Config->get_namehashcount($namehash, $nameid);
   }
-  # Otherwise, if the namehash already exists, we'll make a new entry with a new suffix
+  # Otherwise, if the namehash already exists, make a new entry with a new suffix
   elsif (Biber::Config->namehashexists($namehash)) {
-    # Count the suffixes already defined ...
+    # Count the suffices already defined ...
     my $count = Biber::Config->get_numofnamehashes($namehash);
     # ... add one to the number ...
-    $hashsuffix = $count + 1;
+    $namehashsuffix = $count + 1;
     # ... and define a new suffix for that name
-    Biber::Config->set_namehashcount($namehash, $nameid, $hashsuffix);
+    Biber::Config->set_namehashcount($namehash, $nameid, $namehashsuffix);
   }
   # No entry for the namehash at all so make a new one, a new name and suffix
   else {
@@ -1099,9 +1103,31 @@ sub process_hashes {
     Biber::Config->set_namehashcount($namehash, $nameid, 1);
   }
 
+  # fullhash
+  # First, check to see if we've already seen this exact name before
+  if (Biber::Config->get_fullhashcount($fullhash, $fullid)) {
+    # If we have, our suffix is already known
+    $fullhashsuffix = Biber::Config->get_fullhashcount($fullhash, $fullid);
+  }
+  # Otherwise, if the fullhash already exists, we'll make a new entry with a new suffix
+  elsif (Biber::Config->fullhashexists($fullhash)) {
+    # Count the suffices already defined ...
+    my $count = Biber::Config->get_numoffullhashes($fullhash);
+    # ... add one to the number ...
+    $fullhashsuffix = $count + 1;
+    # ... and define a new suffix for that name
+    Biber::Config->set_fullhashcount($fullhash, $fullid, $fullhashsuffix);
+  }
+  # No entry for the namehash at all so make a new one, a new name and suffix
+  else {
+    Biber::Config->del_fullhash($fullhash);
+    Biber::Config->set_fullhashcount($fullhash, $fullid, 1);
+  }
+
+
   # Now append the suffices, making the hashes unique
-  $namehash .= $hashsuffix;
-  $fullhash .= $hashsuffix;
+  $namehash .= $namehashsuffix;
+  $fullhash .= $fullhashsuffix;
 
   # Set the hashes
   $be->set_field('namehash', $namehash);

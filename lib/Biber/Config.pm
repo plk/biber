@@ -34,12 +34,14 @@ Biber::Config - Configuration items which need to be saved across the
 our $CONFIG;
 $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{seennamehash} = {};
+$CONFIG->{state}{seenfullhash} = {};
 $CONFIG->{state}{keycase} = {};
 
-# namehashcount holds a hash of namehashes and 
+# namehashcount/fullhashcount hold a hash of namehashes and
 # occurences of unique names that generate the hash. For example:
 # {AA => { Adams_A => 1, Allport_A => 2 }}
 $CONFIG->{state}{namehashcount} = {};
+$CONFIG->{state}{fullhashcount} = {};
 
 # uniquenamecount holds a hash of lastnames and lastname/initials which point to a list
 # of name(hashes) which contain them
@@ -71,8 +73,10 @@ sub _init {
   $CONFIG->{options}{biblatex}{PER_ENTRY} = {};
   $CONFIG->{state}{control_file_location} = '';
   $CONFIG->{state}{seennamehash} = {};
+  $CONFIG->{state}{seenfullhash} = {};
   $CONFIG->{state}{crossrefkeys} = {};
   $CONFIG->{state}{namehashcount} = {};
+  $CONFIG->{state}{fullhashcount} = {};
   $CONFIG->{state}{uniquenamecount} = {};
   $CONFIG->{state}{seen_nameyear_extrayear} = {};
   $CONFIG->{state}{seen_extrayear} = {};
@@ -782,6 +786,123 @@ sub incr_seennamehash {
   shift; # class method so don't care about class name
   my $hash = shift;
   $CONFIG->{state}{seennamehash}{$hash}++;
+  return;
+}
+
+
+#============================
+#       fullhashcount
+#============================
+
+
+=head2 get_numoffullhashes
+
+    Get the number of full hashes
+
+    Biber::Config->get_numoffullhashes($hash);
+
+=cut
+
+sub get_numoffullhashes {
+  shift; # class method so don't care about class name
+  my $hash = shift;
+  return scalar keys %{$CONFIG->{state}{fullhashcount}{$hash}};
+}
+
+=head2 fullhashexists
+
+    Check if there is an entry for a fullhash
+
+    Biber::Config->fullhashexists($hash);
+
+=cut
+
+sub fullhashexists {
+  shift; # class method so don't care about class name
+  my $hash = shift;
+  return exists($CONFIG->{state}{fullhashcount}{$hash}) ? 1 : 0;
+}
+
+
+=head2 get_fullhashcount
+
+    Get the count of a full hash and name id
+
+    Biber::Config->get_fullhashcount($hash, $id);
+
+=cut
+
+sub get_fullhashcount {
+  shift; # class method so don't care about class name
+  my ($hash, $id) = @_;
+  return $CONFIG->{state}{fullhashcount}{$hash}{$id};
+}
+
+=head2 set_fullhashcount
+
+    Set the count of a fullhash and name id
+
+    Biber::Config->set_fullhashcount($hash, $id, $num);
+
+=cut
+
+sub set_fullhashcount {
+  shift; # class method so don't care about class name
+  my ($hash, $id, $num) = @_;
+  $CONFIG->{state}{fullhashcount}{$hash}{$id} = $num;
+  return;
+}
+
+
+=head2 del_fullhash
+
+    Delete the count information for a full hash
+
+    Biber::Config->del_fullhashcount($hash);
+
+=cut
+
+sub del_fullhash {
+  shift; # class method so don't care about class name
+  my $hash = shift;
+  if (exists($CONFIG->{state}{fullhashcount}{$hash})) {
+    delete $CONFIG->{state}{fullhashcount}{$hash};
+  }
+  return;
+}
+
+#============================
+#       seenfullhash
+#============================
+
+
+=head2 get_seenfullhash
+
+    Get the count of a seen full hash
+
+    Biber::Config->get_seenfullhash($hash);
+
+=cut
+
+sub get_seenfullhash {
+  shift; # class method so don't care about class name
+  my $hash = shift;
+  return $CONFIG->{state}{seenfullhash}{$hash};
+}
+
+
+=head2 incr_seenfullhash
+
+    Increment the count of a seen ful hash
+
+    Biber::Config->incr_seenfullhash($hash);
+
+=cut
+
+sub incr_seenfullhash {
+  shift; # class method so don't care about class name
+  my $hash = shift;
+  $CONFIG->{state}{seenfullhash}{$hash}++;
   return;
 }
 

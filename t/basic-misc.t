@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 15;
+use Test::More tests => 17;
 
 use Biber;
 use Biber::Output::BBL;
@@ -28,9 +28,9 @@ my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $main = $section->get_list('MAIN');
 my @keys = sort $section->get_citekeys;
-my @citedkeys = sort qw{ murray t1 kant:ku kant:kpv t2 shore};
+my @citedkeys = sort qw{ anon1 anon2 murray t1 kant:ku kant:kpv t2 shore};
 
-my @allkeys = sort qw{ stdmodel aristotle:poetics vazques-de-parga t1
+my @allkeys = sort qw{ anon1 anon2 stdmodel aristotle:poetics vazques-de-parga t1
 gonzalez averroes/bland laufenberg westfahl:frontier knuth:ct:a kastenholz
 averroes/hannes iliad luzzatto malinowski sorace knuth:ct:d britannica
 nietzsche:historie stdmodel:weinberg knuth:ct:b baez/article knuth:ct:e itzhaki
@@ -209,6 +209,56 @@ my $t2 = q|  \entry{t2}{misc}{}
 
 |;
 
+my $anon1 = q|  \entry{anon1}{unpublished}{}
+    \name{labelname}{1}{%
+      {{XAnony}{X\bibinitperiod}{}{}{}{}{}{}}%
+    }
+    \name{author}{1}{%
+      {{AnonymousX}{A\bibinitperiod}{}{}{}{}{}{}}%
+    }
+    \name{shortauthor}{1}{%
+      {{XAnony}{X\bibinitperiod}{}{}{}{}{}{}}%
+    }
+    \strng{namehash}{X1}
+    \strng{fullhash}{A1}
+    \field{labelalpha}{XAn35}
+    \field{sortinit}{A}
+    \count{uniquename}{0}
+    \true{singletitle}
+    \field{hyphenation}{USenglish}
+    \field{shorttitle}{Shorttitle}
+    \field{title}{Title1}
+    \field{year}{1835}
+    \keyw{arc}
+  \endentry
+
+|;
+
+my $anon2 = q|  \entry{anon2}{unpublished}{}
+    \name{labelname}{1}{%
+      {{YAnony}{Y\bibinitperiod}{}{}{}{}{}{}}%
+    }
+    \name{author}{1}{%
+      {{AnonymousY}{A\bibinitperiod}{}{}{}{}{}{}}%
+    }
+    \name{shortauthor}{1}{%
+      {{YAnony}{Y\bibinitperiod}{}{}{}{}{}{}}%
+    }
+    \strng{namehash}{Y1}
+    \strng{fullhash}{A2}
+    \field{labelalpha}{YAn39}
+    \field{sortinit}{A}
+    \count{uniquename}{0}
+    \true{singletitle}
+    \field{hyphenation}{USenglish}
+    \field{shorttitle}{Shorttitle}
+    \field{title}{Title2}
+    \field{year}{1839}
+    \keyw{arc}
+  \endentry
+
+|;
+
 my $Worman_N = [ 'WN1', 'WN2' ] ;
 my $Gennep = [ 'vGA1', 'vGJ1' ] ;
 
@@ -236,6 +286,12 @@ $main = $section->get_list('MAIN');
 $out = $biber->get_output_obj;
 
 is( $out->get_output_entry($main,'murray'), $murray2, 'bbl with > maxnames, empty alphaothers' ) ;
+
+# Make sure namehash and fullhash are seperately generated
+is( $out->get_output_entry($main,'anon1'), $anon1, 'namehash/fullhash 1' ) ;
+is( $out->get_output_entry($main,'anon2'), $anon2, 'namehash/fullhash 2' ) ;
+
+
 # This would be how to test JSON output if necessary
 # require JSON::XS;
 # my $json = JSON::XS->new->indent->utf8->canonical->convert_blessed->allow_blessed->allow_nonref;
