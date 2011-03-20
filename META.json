@@ -55,7 +55,7 @@
    "provides" : {
       "Biber" : {
          "file" : "lib/Biber.pm",
-         "version" : "v0.8.3"
+         "version" : "v0.8.4"
       },
       "Biber::Config" : {
          "file" : "lib/Biber/Config.pm",
@@ -152,5 +152,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "v0.8.3"
+   "version" : "v0.8.4"
 }

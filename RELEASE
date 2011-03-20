@@ -5,17 +5,19 @@ Things to remember when releasing new version:
 * Change version string in doc
 * Update "TODO" file
 * Update any driver .dcf description elements which need it
-* Update main html and doc page and sync
-  scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
 * Change version string in "Biber.pm"
 * Change beta version flag in "Biber.pm" if necessary
 * Change $BIBLATEX_VERSION in Constants.pm to match appropriate biblatex
   version, if necessary.
 * "perl Build.PL" and "Build dist" to update YAML/JSON
 * Commit and tag with version number
-* Build binaries from release and upload to SF, associate new defaults if necessary
-* To create a new empty version tree, use the dist/empty_tree.sh script:
-  empty_tree.sh development
+* Create a new empty version tree for new version, use the dist/empty_tree.sh script:
+  empty_tree.sh <version>
+* Build binaries from release and upload to SF to new version folder
 * Update SF main page, news, add new README in web interface at root, if needed
 * Inform builders of binaries to update
+* Rename current to version, new version to current
+* Update main html and doc page and sync
+  scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
+* Associate new defaults with new binaries
 * Mail to ctan@dante.de after binary people have updated
