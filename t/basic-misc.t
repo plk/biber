@@ -70,7 +70,7 @@ my $murray1 = q|  \entry{murray}{article}{}
       {{uniquename=0}{Harris}{H\bibinitperiod}{Jay\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
       {{uniquename=0}{Vachet}{V\bibinitperiod}{Richard\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
       {{uniquename=0}{Clark}{C\bibinitperiod}{Michael\bibnamedelima R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Londono}{L\bibinitperiod}{J.\bibnamedelima David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Londono}{L\bibinitperiod}{J.\bibnamedelimi David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
       {{uniquename=0}{Green}{G\bibinitperiod}{Stephen\bibnamedelima J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       {{uniquename=0}{Stokes}{S\bibinitperiod}{Jennifer\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       {{uniquename=0}{Wignall}{W\bibinitperiod}{George\bibnamedelima D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
@@ -86,7 +86,7 @@ my $murray1 = q|  \entry{murray}{article}{}
       {{}{Harris}{H\bibinitperiod}{Jay\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
       {{}{Vachet}{V\bibinitperiod}{Richard\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
       {{}{Clark}{C\bibinitperiod}{Michael\bibnamedelima R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
-      {{}{Londono}{L\bibinitperiod}{J.\bibnamedelima David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{}{Londono}{L\bibinitperiod}{J.\bibnamedelimi David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
       {{}{Green}{G\bibinitperiod}{Stephen\bibnamedelima J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       {{}{Stokes}{S\bibinitperiod}{Jennifer\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       {{}{Wignall}{W\bibinitperiod}{George\bibnamedelima D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
@@ -123,7 +123,7 @@ my $murray2 = q|  \entry{murray}{article}{}
       {{uniquename=0}{Harris}{H\bibinitperiod}{Jay\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
       {{uniquename=0}{Vachet}{V\bibinitperiod}{Richard\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
       {{uniquename=0}{Clark}{C\bibinitperiod}{Michael\bibnamedelima R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Londono}{L\bibinitperiod}{J.\bibnamedelima David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Londono}{L\bibinitperiod}{J.\bibnamedelimi David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
       {{uniquename=0}{Green}{G\bibinitperiod}{Stephen\bibnamedelima J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       {{uniquename=0}{Stokes}{S\bibinitperiod}{Jennifer\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       {{uniquename=0}{Wignall}{W\bibinitperiod}{George\bibnamedelima D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
@@ -139,7 +139,7 @@ my $murray2 = q|  \entry{murray}{article}{}
       {{}{Harris}{H\bibinitperiod}{Jay\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
       {{}{Vachet}{V\bibinitperiod}{Richard\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
       {{}{Clark}{C\bibinitperiod}{Michael\bibnamedelima R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
-      {{}{Londono}{L\bibinitperiod}{J.\bibnamedelima David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      {{}{Londono}{L\bibinitperiod}{J.\bibnamedelimi David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
       {{}{Green}{G\bibinitperiod}{Stephen\bibnamedelima J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       {{}{Stokes}{S\bibinitperiod}{Jennifer\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       {{}{Wignall}{W\bibinitperiod}{George\bibnamedelima D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%

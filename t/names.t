@@ -273,10 +273,10 @@ my $l2 = q|  \entry{L2}{book}{}
 
 my $l3 = q|  \entry{L3}{book}{}
     \name{labelname}{1}{}{%
-      {{}{Crop}{C\bibinitperiod}{C.\bibnamedelima Z.}{C\bibinitperiod\bibinitdelim Z\bibinitperiod}{}{}{}{}}%
+      {{}{Crop}{C\bibinitperiod}{C.\bibnamedelimi Z.}{C\bibinitperiod\bibinitdelim Z\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Crop}{C\bibinitperiod}{C.\bibnamedelima Z.}{C\bibinitperiod\bibinitdelim Z\bibinitperiod}{}{}{}{}}%
+      {{}{Crop}{C\bibinitperiod}{C.\bibnamedelimi Z.}{C\bibinitperiod\bibinitdelim Z\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{CCZ1}
     \strng{fullhash}{CCZ1}
@@ -430,10 +430,10 @@ my $l12 = q|  \entry{L12}{book}{}
 
 my $l13 = q|  \entry{L13}{book}{}
     \name{labelname}{1}{}{%
-      {{}{Van\bibnamedelimb de\bibnamedelima Graaff}{V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod}{R.\bibnamedelima J.}{R\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{}{Van\bibnamedelimb de\bibnamedelima Graaff}{V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod}{R.\bibnamedelimi J.}{R\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Van\bibnamedelimb de\bibnamedelima Graaff}{V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod}{R.\bibnamedelima J.}{R\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{}{Van\bibnamedelimb de\bibnamedelima Graaff}{V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod}{R.\bibnamedelimi J.}{R\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{VdGRJ1}
     \strng{fullhash}{VdGRJ1}
@@ -653,10 +653,10 @@ my $l28 = q|  \entry{L28}{book}{}
 
 my $l29 = q|  \entry{L29}{book}{}
     \name{labelname}{1}{}{%
-      {{}{{U.S.\bibnamedelimb Department\bibnamedelimb of\bibnamedelimb Health\bibnamedelimb and\bibnamedelimb Human\bibnamedelimb Services,\bibnamedelimb National\bibnamedelimb Institute\bibnamedelimb of\bibnamedelimb Mental\bibnamedelimb Health,\bibnamedelimb National\bibnamedelimb Heart,\bibnamedelimb Lung\bibnamedelimb and\bibnamedelimb Blood\bibnamedelimb Institute}}{U\bibinitperiod}{}{}{}{}{}{}}%
+      {{}{{U.S.\bibnamedelimi Department\bibnamedelimb of\bibnamedelimb Health\bibnamedelimb and\bibnamedelimb Human\bibnamedelimb Services,\bibnamedelimb National\bibnamedelimb Institute\bibnamedelimb of\bibnamedelimb Mental\bibnamedelimb Health,\bibnamedelimb National\bibnamedelimb Heart,\bibnamedelimb Lung\bibnamedelimb and\bibnamedelimb Blood\bibnamedelimb Institute}}{U\bibinitperiod}{}{}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{{U.S.\bibnamedelimb Department\bibnamedelimb of\bibnamedelimb Health\bibnamedelimb and\bibnamedelimb Human\bibnamedelimb Services,\bibnamedelimb National\bibnamedelimb Institute\bibnamedelimb of\bibnamedelimb Mental\bibnamedelimb Health,\bibnamedelimb National\bibnamedelimb Heart,\bibnamedelimb Lung\bibnamedelimb and\bibnamedelimb Blood\bibnamedelimb Institute}}{U\bibinitperiod}{}{}{}{}{}{}}%
+      {{}{{U.S.\bibnamedelimi Department\bibnamedelimb of\bibnamedelimb Health\bibnamedelimb and\bibnamedelimb Human\bibnamedelimb Services,\bibnamedelimb National\bibnamedelimb Institute\bibnamedelimb of\bibnamedelimb Mental\bibnamedelimb Health,\bibnamedelimb National\bibnamedelimb Heart,\bibnamedelimb Lung\bibnamedelimb and\bibnamedelimb Blood\bibnamedelimb Institute}}{U\bibinitperiod}{}{}{}{}{}{}}%
     }
     \strng{namehash}{U1}
     \strng{fullhash}{U1}
