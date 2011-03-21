@@ -33,12 +33,12 @@ my $bibentries = $section->bibentries;
 my $l1 = q|  \entry{fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:42}{article}{}
     \name{labelname}{3}{%
       {{Alegria}{A\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
-      {{Perez}{P\bibinitperiod}{D.\bibnamedelima J.}{D\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Perez}{P\bibinitperiod}{D.\bibnamedelimi J.}{D\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       {{Williams}{W\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{3}{%
       {{Alegria}{A\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
-      {{Perez}{P\bibinitperiod}{D.\bibnamedelima J.}{D\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{Perez}{P\bibinitperiod}{D.\bibnamedelimi J.}{D\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       {{Williams}{W\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
     }
     \list{language}{1}{%

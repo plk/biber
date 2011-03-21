@@ -603,6 +603,8 @@ sub join_name {
   my $nstring = shift;
   $nstring =~ s/(?<!\\\S)\s+/\\bibnamedelimb /gxms; # Don't do spaces in char macros
   $nstring =~ s/(?<!\\)~/\\bibnamedelima /gxms; # Don't do '\~'
+  # Special delim after name parts ending in period
+  $nstring =~ s/(?<=\.)\\bibnamedelim[ab]/\\bibnamedelimi/gxms;
   return $nstring;
 }
 
