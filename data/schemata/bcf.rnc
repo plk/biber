@@ -37,6 +37,7 @@ start =
       singletitle,
       sortalphaothers?,
       sortlos,
+      uniquelist,
       uniquename,
       useauthor,
       useeditor,
@@ -58,6 +59,7 @@ start =
       skiplab?,
       skiplos?,
       sortalphaothers?,
+      uniquelist?,
       uniquename?,
       useauthor?,
       useeditor?,
@@ -398,6 +400,12 @@ skiplos =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "skiplos" },
+    element bcf:value { "0" | "1" }
+  }
+uniquelist =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "uniquelist" },
     element bcf:value { "0" | "1" }
   }
 uniquename =

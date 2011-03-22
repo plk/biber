@@ -57,6 +57,7 @@
           <ref name="sortalphaothers"/>
         </optional>
         <ref name="sortlos"/>
+        <ref name="uniquelist"/>
         <ref name="uniquename"/>
         <ref name="useauthor"/>
         <ref name="useeditor"/>
@@ -101,6 +102,9 @@
           </optional>
           <optional>
             <ref name="sortalphaothers"/>
+          </optional>
+          <optional>
+            <ref name="uniquelist"/>
           </optional>
           <optional>
             <ref name="uniquename"/>
@@ -972,6 +976,22 @@
       </attribute>
       <element name="bcf:key">
         <value>skiplos</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="uniquelist">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>uniquelist</value>
       </element>
       <element name="bcf:value">
         <choice>
