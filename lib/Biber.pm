@@ -1568,6 +1568,7 @@ sub create_uniquelist_info {
       if (my $lname = $be->get_field('labelnamename')) {
         my $liststring = '';
         foreach my $name (@{$be->get_field($lname)->names}) {
+          next if $name->get_namestring eq 'others'; # Don't count explicit "et al"
           my $lastname   = $name->get_lastname;
           my $nameinitstring = $name->get_nameinitstring;
           my $namestring = $name->get_namestring;
@@ -1621,7 +1622,9 @@ sub generate_uniquelist {
         my $liststring = '';
         my $namefield = $be->get_field($lname);
 
+
         foreach my $name (@{$namefield->names}) {
+          next if $name->get_namestring eq 'others'; # Don't count explicit "et al"
           my $lastname   = $name->get_lastname;
           my $nameinitstring = $name->get_nameinitstring;
           my $namestring = $name->get_namestring;
