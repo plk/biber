@@ -634,7 +634,6 @@ sub _gen_initials {
 sub _norm {
   my $t = shift;
   return undef unless $t;
-  $t =~ s/(?<!\\)(\#|\&|\%|\$|\^|\_)/\\$1/gxms;
   $t =~ s/\A[\n\s]+//xms;
   $t =~ s/[\n\s]+\z//xms;
   return $t;

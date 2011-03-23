@@ -242,7 +242,7 @@ sub create_entry {
 # List fields
 sub _list {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
-  $bibentry->set_datafield($to, [ _norm($entry->findvalue("./$f")) ]);
+  $bibentry->set_datafield($to, [ $entry->findvalue("./$f") ]);
   return;
 }
 
@@ -254,7 +254,7 @@ sub _literal {
   if ($f eq 'z:libraryCatalog') {
     return if $bibentry->get_field('library');
   }
-  $bibentry->set_datafield($to, _norm($entry->findvalue("./$f")));
+  $bibentry->set_datafield($to, $entry->findvalue("./$f"));
   return;
 }
 
@@ -365,12 +365,12 @@ sub _publisher {
     # There is an address, set location.
     # Location is a list field in bibaltex, hence the array ref
     if (my $adr = $org->findnodes('./vcard:adr')->get_node(1)) {
-      $bibentry->set_datafield('location', [ _norm($adr->findvalue('./vcard:Address/vcard:locality')) ]);
+      $bibentry->set_datafield('location', [ $adr->findvalue('./vcard:Address/vcard:locality') ]);
     }
     # set publisher
     # publisher is a list field in bibaltex, hence the array ref
     if (my $adr = $org->findnodes('./foaf:name')->get_node(1)) {
-      $bibentry->set_datafield('publisher', [ _norm($adr->textContent()) ]);
+      $bibentry->set_datafield('publisher', [ $adr->textContent() ]);
     }
   }
   return;
@@ -379,7 +379,7 @@ sub _publisher {
 sub _presentedat {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   if (my $conf = $entry->findnodes("./$f/bib:Conference")->get_node(1)) {
-    $bibentry->set_datafield('eventtitle', _norm($conf->findvalue('./dc:title')));
+    $bibentry->set_datafield('eventtitle', $conf->findvalue('./dc:title'));
   }
   return;
 }
@@ -388,7 +388,7 @@ sub _subject {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   if (my $lib = $entry->findnodes("./$f/dcterms:LCC/rdf:value")->get_node(1)) {
     # This overrides any z:libraryCatalog node
-    $bibentry->set_datafield('library', _norm($lib->textContent()));
+    $bibentry->set_datafield('library', $lib->textContent());
   }
   elsif (my @s = $entry->findnodes("./$f")) {
     my @kws;
@@ -510,13 +510,6 @@ sub _gen_initials {
     }
   }
   return @strings_out;
-}
-
-# Do some sanitising on LaTeX special chars since this can't be nicely done by the parser
-sub _norm {
-  my $s = shift;
-  $s =~ s/(?<!\\)(\#|\&|\%|\$|\^|\_)/\\$1/gxms;
-  return $s;
 }
 
 1;

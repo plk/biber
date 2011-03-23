@@ -83,13 +83,21 @@ sub set_output_target_file {
 =cut
 
 sub _printfield {
-  my ($self, $field, $str) = @_;
+  my ($be, $field, $str) = @_;
   my $field_type = 'field';
   # crossref and xref are of type 'strng' in the .bbl
   if (lc($field) eq 'crossref' or
       lc($field) eq 'xref') {
     $field_type = 'strng';
   }
+
+  # auto-escape TeX special chars if:
+  # * The entry is not a bibtex entry (no auto-escaping for bibtex data)
+  # * It's not a strng field
+  if ($field_type ne 'strng' and $be->get_field('datatype') ne 'bibtex') {
+    $str =~ s/(?<!\\)(\#|\&|\%)/\\$1/gxms;
+  }
+
   if (Biber::Config->getoption('wraplines')) {
     ## 12 is the length of '  \field{}{}' or '  \strng{}{}'
     if ( 12 + length($field) + length($str) > 2*$Text::Wrap::columns ) {
@@ -306,7 +314,7 @@ sub set_output_entry {
         next if ($lfield eq 'xref' and
                  not $section->has_citekey($be->get_field('xref')));
       }
-      $acc .= $self->_printfield( $lfield, $be->get_field($lfield) );
+      $acc .= _printfield($be, $lfield, $be->get_field($lfield) );
     }
   }
 
