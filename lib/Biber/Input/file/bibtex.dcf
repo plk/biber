@@ -3,11 +3,9 @@
 <?xml-stylesheet type="text/xsl" href="../../../../data/dcf.xsl"?>
 <dcf:driver-control driver="bibtex" xmlns:dcf="https://sourceforge.net/projects/biblatex-biber">
   <dcf:description>
-    <dcf:overview>The bibtex driver is currently the most functional driver as historically, it was the first. As a result, there is a fairly clean mapping from bibtex data source fields to the biblatex data model. So, there are no currently no limitations of bibtex data sources with respect to the currently biblatex functionality. There are things which the bibtex data model cannot handle at all which are part of the planned biblatex roadmap:</dcf:overview>
+    <dcf:overview>The bibtex driver is currently the most functional driver as historically, it was the first. As a result, there is a fairly clean mapping from bibtex data source fields to the biblatex data model. So, there are no currently no limitations of bibtex data sources with respect to the currently biblatex functionality. Some things to note:</dcf:overview>
     <dcf:points>
-    <dcf:point>Per-name settings (useprefix, gender)</dcf:point>
-    <dcf:point>Arbitrary name parts (middle names, for example)</dcf:point>
-    <dcf:point>Complex data field structures</dcf:point>
+      <dcf:point>Biber does not try to escape any TeX special characters in your data source. This is by design as it causes more problems than it fixes. You should escape any characters in your data which would cause problems.</dcf:point>
     </dcf:points>
   </dcf:description>
   <!--
