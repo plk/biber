@@ -72,10 +72,12 @@ fi
 # Build farm WinXP
 # We run "Build realclean" at the end as we are using the same tree for
 # win and cygwin builds
+# DON'T FORGET THAT installdeps WON'T WORK FOR STRAWBERRY INSIDE CYGWIN
+# SO YOU HAVE TO INSTALL MODULE UPDATES MANUALLY
 if [ ! -e $DIR/biber-MSWIN.zip ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-wxp32 </dev/null >/dev/null 2>&1 &"
   sleep 10
-  ssh bbf-wxp32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build installdeps;./Build install;cd dist/MSWin32;./build.bat;cd ~/biblatex-biber;./Build realclean"
+  ssh bbf-wxp32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWin32;./build.bat;cd ~/biblatex-biber;./Build realclean"
   scp bbf-wxp32:biblatex-biber/dist/MSWin32/biber-MSWIN.exe $DIR/
   ssh bbf-wxp32 "\\rm -f biblatex-biber/dist/MSWin32/biber-MSWIN.exe"
   ssh root@wood "VBoxManage controlvm bbf-wxp32 savestate"
@@ -83,7 +85,7 @@ if [ ! -e $DIR/biber-MSWIN.zip ]; then
   mv biber-MSWIN.exe biber.exe
   chmod +x biber.exe
   /usr/bin/zip biber-MSWIN.zip biber.exe
-  rm -f biber.exe
+  \rm -f biber.exe
   cd $BASE
 fi
 
@@ -103,7 +105,7 @@ if [ ! -e $DIR/biber-cygwin32.tar.gz ]; then
   chmod +x biber.exe
   tar cf biber-cygwin32.tar biber.exe
   gzip biber-cygwin32.tar
-  rm -f biber.exe
+  \rm -f biber.exe
   cd $BASE
 fi
 
