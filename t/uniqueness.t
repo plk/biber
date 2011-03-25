@@ -52,7 +52,6 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('unicodebbl', 1);
 # Biblatex options
-Biber::Config->setblxoption('maxnames', 2);
 Biber::Config->setblxoption('uniquename', 1);
 Biber::Config->setblxoption('uniquelist', 1);
 # Now generate the information
@@ -82,7 +81,6 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 # Biblatex options
-Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('uniquename', 1);
 Biber::Config->setblxoption('uniquelist', 0);
 Biber::Config->setblxoption('singletitle', 1);
@@ -109,7 +107,6 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 # Biblatex options
-Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 1);
@@ -136,7 +133,6 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 # Biblatex options
-Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('uniquename', 0);
 Biber::Config->setblxoption('uniquelist', 0);
 Biber::Config->setblxoption('singletitle', 1);
