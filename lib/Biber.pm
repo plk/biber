@@ -354,7 +354,8 @@ sub parse_ctrlfile {
       # Global options
       if (lc($bcfopts->{type}) eq 'global') {
         foreach my $bcfopt (@{$bcfopts->{option}}) {
-          unless (defined(Biber::Config->getcmdlineoption($bcfopt->{key}{content}))) { # already set on cmd line
+          # unless already explicitly set from cmdline/config file
+          unless (Biber::Config->isexplicitoption($bcfopt->{key}{content})) {
             if (lc($bcfopt->{type}) eq 'singlevalued') {
               Biber::Config->setoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content});
             }

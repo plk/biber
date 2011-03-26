@@ -86,12 +86,11 @@ bugfixes etc. It is included into TeXLive from the SourceForge releases.
 modules. It is packaged as a stand-alone binary using the excellent
 \verb+PAR::Packer+ module which can pack an entire perl tree plus
 dependencies into one file which acts as a virtual stand-alone binary and
-is indistinguishable from such to the end user. You can also simply
-download the perl source and run it as a normal perl program
-which requires you to have a working Perl installation
-(preferably version 5.12 but no less than 5.10) and the ability to
-install the pre-requisite modules. Binaries are also available, see
-section \ref{binaries}.
+is indistinguishable from such to the end user---see section
+\ref{binaries}. You can also simply download the perl source and run it as
+a normal perl program which requires you to have a working Perl
+installation (preferably version 5.12 but no less than 5.10) and the
+ability to install the pre-requisite modules.
 
 \subsection{License}
 
@@ -206,14 +205,15 @@ biber test
 chain which is given in decreasing precedence order:\\[2ex]
 
 \noindent command line options $\rightarrow$\\
-\hspace*{1em}\verb+.bcf+ file$\rightarrow$\\
-\hspace*{2em}\verb+biber.conf+ file $\rightarrow$\\
+\hspace*{1em}\verb+biber.conf+ file $\rightarrow$\\
+\hspace*{2em}\verb+.bcf+ file$\rightarrow$\\
 \hspace*{3em}\verb+biber+ hard-coded defaults\\[2ex]
 
 \noindent Users do not need to care directly about the contents or format of the
 \verb+.bcf+ file as this is generated from the options which they specify
-for \verb+biblatex+. To override the \verb+.bcf+ options, users
-may use either a configuration file or the command line to set options.
+for \verb+biblatex+. The config file is a place to set commonly used
+command-line options and also to set options which cannot be set on the
+command line.
 
 The configuration file is by default called \verb+biber.conf+ but this can
 be changed using the \verb+--configfile|-g+ option. Unless
@@ -225,7 +225,7 @@ looked for in the following places, in decreasing order of preference:\\[2ex]
 \hspace*{2em}\verb+$XDG_CONFIG_HOME/biber/biber.conf+ $\rightarrow$\\
 \hspace*{3em}\verb+$HOME/Library/biber/biber.conf+ (Mac OSX only)\\
 \hspace*{3em}\verb+$APPDATA/biber.conf+ (Windows only) $\rightarrow$\\
-\hspace*{4em}the output of \verb+kpsewhich biber.conf+ (if available on the
+\hspace*{4em}the output of «\verb+kpsewhich biber.conf+» (if available on the
 system)\\[2ex]
 
 \noindent The config file format is a very flexible one which allows users to specify
@@ -478,17 +478,21 @@ used to locate an OS locale definition to use for the collation. This
 may or may not be correctly tailored, depending on the locale and the OS.\\[1ex]
 
 \noindent Collation is by default case sensitive. You can turn this
-off using the \verb+biber+ option \verb+--sortcase=false+ or from
-\verb+biblatex+ using its option \verb+sortcase=false+.\\[1ex]
+off globally using the \verb+biber+ option \verb+--sortcase=false+ or from
+\verb+biblatex+ using its option \verb+sortcase=false+. The option can also
+be defined per-field so you can sort some fields case sensitively and
+others case insensitively. See the \verb+biblatex+ manual.\\[1ex]
 
-\noindent\verb+--collate|-C+ by default collates uppercase before
-lower. You can reverse this using the \verb+biber+ option \verb+--sortupper=false+
-or from \verb+biblatex+ by using its option \verb+sortupper=false+. Be
-aware though that some locales rightly enforce a particular setting for
-this (for example, Danish). You will be able to override it but
-\verb+biber+ will warn you if you do. \verb+sortupper+ has no effect when
-using \verb+--fastsort|-f+--you are at the mercy of what your OS
-locale does.\\[1ex]
+\noindent \verb+--collate|-C+ by default collates uppercase before lower.
+You can reverse this globally for all sorting using the \verb+biber+ option
+\verb+--sortupper=false+ or from \verb+biblatex+ by using its option
+\verb+sortupper=false+. The option can also be defined per-field so you can
+sort some fields uppercase before lower and others lower before upper. See the
+\verb+biblatex+ manual. Be aware though that some locales rightly enforce a
+particular setting for this (for example, Danish). You will be able to
+override it but \verb+biber+ will warn you if you do. \verb+sortupper+ has
+no effect when using \verb+--fastsort|-f+--you are at the mercy of what
+your OS locale does.\\[1ex]
 
 There are in fact many options to \verb+Unicode::Collate+
 which can tailor the collation in various ways in
@@ -553,10 +557,10 @@ using (see \verb+biblatex+ manual for details).
 \end{enumerate}
 
 \noindent Normally, you do not need to set the encoding options on the
-\verb+biber+ command line as they are passed in the \verb+.bcf+ via
-the information in your \verb+biblatex+ environment. However, you can
-override the \verb+.bcf+ settings with the command line or config
-file. The resource chain for encoding settings is, in decreasing order
+\verb+biber+ command line as they are passed in the \verb+.bcf+ via the
+information in your \verb+biblatex+ environment. However, you can override
+the \verb+.bcf+ settings with the command line. The resource chain for
+encoding settings is, in decreasing order
 of preference:\\[2ex]
 
 \noindent\verb+--bibencoding|-e+ and \verb+--bblencoding|-E+ $\rightarrow$\\
@@ -686,13 +690,6 @@ customise the data source driver config in order to define their own
 entry type/field aliases so that there is more flexibility in mapping
 data source entry type/fields to internal \verb+biblatex+ types/fields.
 
-Currently it is not possible to automatically expand name lists to their
-minimally unique truncation which is required by some styles (APA for
-example). This is quite a hard problem, a solution to which is implemented
-in an experimental \verb+biber+ branch but which also needs \verb+biblatex+
-support, envisaged for version 2.x. It requires an enhanced \verb+.bbl+
-format, amongst other things.
-
 \subsection{Editor Integration}
 
 Here is some information on how to integrate \verb+biber+ into some of the
@@ -790,7 +787,7 @@ select the Typesetting tab and then add a new Processing Tool as in Figure
 
 \subsection{BibTeX macros and the MONTH field}
 
-\verb+BibTeX+ defines automatically macros for month abbreviations
+\verb+BibTeX+ defines macros for month abbreviations
 like «\verb+jan+», «\verb+feb+» etc. \verb+biber+ also does this,
 defining them as numbers since that is what \verb+biblatex+ wants. In
 case you are also defining these yourself (although if you are only
@@ -818,7 +815,7 @@ SourceForge\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/
 file shows you which handlers the driver uses for different fields and
 what certain entry types and fields are aliased to in the
 \verb+biblatex+ data model. This is not fantastically useful to know
-without know what the named driver handlers do specifically but there
+without knowing also what the named driver handlers do specifically but there
 is a «description» section which mentions any special handling and
 general comments on the driver. You should read the documentation for
 the drivers you use to get an idea of how \verb+biber+ handles your
@@ -837,8 +834,7 @@ is worth noting:
 
 \begin{itemize}
 \item Don't be worried by the size of the binaries. \verb+PAR::Packer+ essentially
-  constructs a self-extracting archive which unpacks the needed files first
-  and so the binaries look larger than what actually runs in memory.
+  constructs a self-extracting archive which unpacks the needed files first.
 \item On the first run of a new version (that is, with a specific hash),
   they actually unpack themselves to a temporary location which varies by
   operating system. This unpacking can take a little while and only happens
@@ -882,7 +878,8 @@ directory/folder and then run the current binary again.
 
 \subsection{Binary Architectures}
 
-Binaries are available for many architectures.
+Binaries are available for many architectures, directly on SourceForge and
+also via TeXLive:
 
 \begin{itemize}
 \item \verb+linux_x86_32+
@@ -896,12 +893,11 @@ Binaries are available for many architectures.
 \item \verb+solaris_x86+\tpb
 \end{itemize}
 
-\noindent In addition, \verb+biber+ is included in TeXLive which provides
-binaries for more architectures than I am able to provide regularly.
-The downside is that these other architectures probably won't be quite so
-up to date but they shouldn't be that far behind. If you want to run
-development versions, you'll either have to run one of the core supported
-architectures or use the perl source version.
+\noindent If you want to run development versions, they are usually only
+regularly updated for the core architectures which are not flagged as
+third-party built above. If you want to regularly run the latest
+development version, you should probably git clone the relevant branch and
+run \verb+biber+ as a pure perl program directly.
 
 \subsection{Installing}
 
@@ -997,7 +993,7 @@ follows\footnote{On UNIXequse systems, you may need to specify a full
 \end{itemize}
 
 \noindent This leaves a binary called «\verb+biber-<arch>+» (also with
-a «\verb+.exe+» extension on Windows) in your current directory.
+a «\verb+.exe+» extension on Windows/Cygwin) in your current directory.
 The tricky part is constructing the information for the build
 script. There are two things that need to be configured, both of
 which are required by the \verb+PAR::Packer+ module:
@@ -1036,7 +1032,7 @@ define these two things as part of constructing new build scripts:
 
 \noindent The \verb+--link+ options can be a little tricky
 sometimes. It is usually best to build without them once and then run
-\verb+ldd+ (or Windows equivalent) on the binary to see which
+\verb+ldd+ (or OS equivalent) on the binary to see which
 version/location of a library you should link to. You can also try
 just running the binary and it should complain about missing libraries
 and where it expected to find them. Put this path into the
@@ -1058,7 +1054,7 @@ binary\footnote{\url{http://par.perl.org/wiki/FAQ}, section entitled «My
 
 \subsubsection{Testing a binary build}
 You can test a binary that you have created by copying it to a machine
-which preferably doesn't have perl at all on it. Running the binary with no
+which preferably doesn't have \verb+perl+ at all on it. Running the binary with no
 arguments will unpack it in the background and display the help. To really
 test it without having LaTeX available, get the two quick test files from
 SourceForge\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/testfiles}},
@@ -1071,13 +1067,13 @@ biber --convert_control test
 \noindent This will run \verb+biber+ normally on the test files plus it
 will also perform an XSLT transform on the \verb+.bcf+ and
 leave an HTML representation of it in the same directory thus testing the
-links to the XML and XSLT libraries as well as the bibtex parsing
+links to the XML and XSLT libraries as well as the \verb+bibtex+ parsing
 libraries. The output should look something like this (may be differences
 of \verb+biber+ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is biber 0.8.4
+INFO - This is biber 0.9
 INFO - Logfile is 'test.blg'
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'
 INFO - Reading test.bcf

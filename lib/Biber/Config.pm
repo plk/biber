@@ -128,17 +128,19 @@ sub _initopts {
     }
   }
 
-  # Config file overrides defaults for biber
-  my %BIBER_CONFIG = (%CONFIG_DEFAULT_BIBER, %LOCALCONF);
-
-  # Set options internally from config for biber options
-  foreach (keys %BIBER_CONFIG) {
-    Biber::Config->setoption($_, $BIBER_CONFIG{$_});
+  # Set hard-coded biber option defaults
+  foreach (keys %CONFIG_DEFAULT_BIBER) {
+    Biber::Config->setoption($_, $CONFIG_DEFAULT_BIBER{$_});
   }
 
-  # Set options internally from config for biblatex options
+  # Set hard-coded biblatex option defaults
   foreach (keys %CONFIG_DEFAULT_BIBLATEX) {
     Biber::Config->setblxoption($_, $CONFIG_DEFAULT_BIBLATEX{$_});
+  }
+
+  # Set options from config file.
+  foreach (keys %LOCALCONF) {
+    Biber::Config->setconfigfileoption($_, $LOCALCONF{$_});
   }
 
   return;
@@ -348,17 +350,63 @@ sub setcmdlineoption {
   return;
 }
 
-=head2 getcmdlineoption
+=head2 setconfigfileoption
 
-    Get a Biber command lineoption
+    Store a Biber config-file option
 
 =cut
 
-sub getcmdlineoption {
+sub setconfigfileoption {
+  shift; # class method so don't care about class name
+  my ($opt, $val) = @_;
+  # Config file options are also options ...
+  $CONFIG->{options}{biber}{$opt} = $CONFIG->{configfileoptions}{$opt} = $val;
+  return;
+}
+
+
+=head2 iscmdlineoption
+
+    Check if an option is explicitly set by user on the command
+    line
+
+=cut
+
+sub iscmdlineoption {
   shift; # class method so don't care about class name
   my $opt = shift;
-  return $CONFIG->{cmdlineoptions}{$opt};
+  return 1 if defined($CONFIG->{cmdlineoptions}{$opt});
+  return 0;
 }
+
+=head2 isconfigfileoption
+
+    Check if an option is explicitly set by user in their
+    config file
+
+=cut
+
+sub isconfigfileoption {
+  shift; # class method so don't care about class name
+  my $opt = shift;
+  return 1 if defined($CONFIG->{configfileoptions}{$opt});
+  return 0;
+}
+
+=head2 isexplicitoption
+
+    Check if an option is explicitly set by user on the command
+    line or in the config file
+
+=cut
+
+sub isexplicitoption {
+  my $self = shift;
+  my $opt = shift;
+  return 1 if ($self->iscmdlineoption($opt) || $self->isconfigfileoption($opt));
+  return 0;
+}
+
 
 #################################
 # BibLaTeX options static methods
