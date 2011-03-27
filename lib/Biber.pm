@@ -30,6 +30,7 @@ use Config::General qw( ParseConfig );
 use Data::Dump;
 use Data::Compare;
 use Text::BibTeX qw(:macrosubs);
+use Switch;
 
 =encoding utf-8
 
@@ -1434,13 +1435,6 @@ sub create_uniquename_info {
     if (my $un = Biber::Config->getblxoption('uniquename', $bee)) {
       $logger->trace("Generating uniquename information for '$citekey'");
 
-      # Shortcut here - if uniquename is 3 or 4 in .bcf, this means, always
-      # provide initials/names regardless of local maxnames so we don't need
-      # to do any of the stuff below
-      if ($un == 3 or $un == 4) {
-        next;
-      }
-
       my $namehash = $be->get_field('namehash');
       if (my $lname = $be->get_field('labelnamename')) {
 
@@ -1467,8 +1461,8 @@ sub create_uniquename_info {
 
         foreach my $name (@{$be->get_field($lname)->names}) {
           # We don't want to record disambiguation information for any names
-          # that are hidden by a maxnames/uniquelist limit
-          unless ($name->get_index > $localmaxnames) {
+          # that are hidden by a maxnames/uniquelist limit unless uniquename=3 or 4
+          unless ($name->get_index > $localmaxnames and $un < 3) {
             my $lastname   = $name->get_lastname;
             my $nameinitstring = $name->get_nameinitstring;
             my $namestring = $name->get_namestring;
@@ -1521,20 +1515,8 @@ sub generate_uniquename {
           my $namestring = $name->get_namestring;
 
 
-          # If uniquename is 3, force inits
-          if ($un == 3) {
-            $name->set_uniquename(1);
-          }
-          # If uniquename is 4, force full name
-          elsif ($un == 4) {
-            $name->set_uniquename(2);
-          }
-
-          # *** Bear in mind that below here in this conditional chain,
-          # *** $un can only be 0, 1 or 2
-
           # If there is one entry (hash) for the lastname, then it's unique
-          elsif (Biber::Config->get_numofuniquenames($lastname) == 1) {
+          if (Biber::Config->get_numofuniquenames($lastname) == 1) {
             $name->set_uniquename(0);
           }
           # Otherwise, if there is one entry (hash) for the lastname plus initials,
@@ -1545,7 +1527,14 @@ sub generate_uniquename {
           # Otherwise the name needs to be full to make it unique
           # but restrict to uniquename biblatex option maximum
           elsif (Biber::Config->get_numofuniquenames($namestring) == 1) {
-            $name->set_uniquename($un)
+            my $run;
+            switch ($un) {
+              case '1' {$run = 1}
+              case '2' {$run = 2}
+              case '3' {$run = 1}
+              case '4' {$run = 2}
+            }
+            $name->set_uniquename($run)
           }
           # Otherwise, if there is more than one entry (hash) for the full name,
           # then set to 0 since nothing will uniqueify this name and it's just
