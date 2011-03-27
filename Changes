@@ -1,6 +1,8 @@
 Revision history for Biber
 
 0.9    29-03-2011
+       * No longer auto-escapes any TeX markup in bibtex data sources. This
+         is fraught with danger and is a mess. Best not to do it at all.
        * Supports biblatex \bibnamedelimi macro
        * Implementation of uniquename and uniquelist options for biblatex 1.4+
 0.8.4  19-03-2011

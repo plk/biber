@@ -162,7 +162,16 @@ the development in 2009.
 
 \section{Use}
 
-Firstly, running \verb+biber --help+ will display all options and a brief
+Firstly, please note that \verb+biber+ will \emph{not} attempt to sanitise
+the content of \verb+bibtex+ data sources. That is, don't expect it to
+auto-escape any TeX special characters like «\verb+&+» or «\verb+%+» which
+it finds in, for example, your \verb+TITLE+ fields. It used to do this in
+earlier versions in some cases but as of version 0.9, it doesn't because
+it's fraught with problems and leads to inconsistent expectations and
+behaviour between different data source types. In your \verb+bibtex+ data
+sources, please make sure your entries are legal TeX code.
+
+Running \verb+biber --help+ will display all options and a brief
 description of each. This is the most useful brief source of usage
 information. \verb+biber+ returns an exit code of 0 on success or 1 if
 there was an error.
