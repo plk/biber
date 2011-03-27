@@ -1552,7 +1552,8 @@ sub generate_uniquename {
           # misleading to expand it
           elsif (Biber::Config->get_numofuniquenames($namestring) > 1) {
             $name->set_uniquename(0);
-          } else {
+          }
+          else {
             $name->set_uniquename(0);
           }
         }
