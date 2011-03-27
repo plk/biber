@@ -193,6 +193,8 @@ scp $dcf.html philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi
 \rm -f $dcf $dcf.html
 done
 
+cd $BASE
+./Build dist
 scp $BASE/biblatex-biber-*.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/biblatex-biber.tar.gz
 rm $BASE/biblatex-biber-*.tar.gz
 
