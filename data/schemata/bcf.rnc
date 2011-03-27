@@ -408,6 +408,11 @@ uniquelist =
     element bcf:key { "uniquelist" },
     element bcf:value { "0" | "1" }
   }
+# 0 = do not provide uniquename information
+# 1 = disambiguate with initials, only up to maxnames/uniquelist
+# 2 = disambiguate with full name or initials, only up to maxnames/uniquelist
+# 3 = always give initials
+# 4 = always give full name
 uniquename =
   element bcf:option {
     attribute type { "singlevalued" },
