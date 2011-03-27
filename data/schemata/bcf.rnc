@@ -412,7 +412,7 @@ uniquename =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "uniquename" },
-    element bcf:value { "0" | "1" | "2" }
+    element bcf:value { "0" | "1" | "2" | "3" | "4" }
   }
 maxitems =
   element bcf:option {

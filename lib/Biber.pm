@@ -1431,8 +1431,16 @@ sub create_uniquename_info {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
     next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
-    if (Biber::Config->getblxoption('uniquename', $bee)) {
+    if (my $un = Biber::Config->getblxoption('uniquename', $bee)) {
       $logger->trace("Generating uniquename information for '$citekey'");
+
+      # Shortcut here - if uniquename is 3 or 4 in .bcf, this means, always
+      # provide initials/names regardless of local maxnames so we don't need
+      # to do any of the stuff below
+      if ($un == 3 or $un == 4) {
+        next;
+      }
+
       my $namehash = $be->get_field('namehash');
       if (my $lname = $be->get_field('labelnamename')) {
 
@@ -1512,8 +1520,21 @@ sub generate_uniquename {
           my $nameinitstring = $name->get_nameinitstring;
           my $namestring = $name->get_namestring;
 
+
+          # If uniquename is 3, force inits
+          if ($un == 3) {
+            $name->set_uniquename(1);
+          }
+          # If uniquename is 4, force full name
+          elsif ($un == 4) {
+            $name->set_uniquename(2);
+          }
+
+          # *** Bear in mind that below here in this conditional chain,
+          # *** $un can only be 0, 1 or 2
+
           # If there is one entry (hash) for the lastname, then it's unique
-          if (Biber::Config->get_numofuniquenames($lastname) == 1) {
+          elsif (Biber::Config->get_numofuniquenames($lastname) == 1) {
             $name->set_uniquename(0);
           }
           # Otherwise, if there is one entry (hash) for the lastname plus initials,
@@ -1522,10 +1543,9 @@ sub generate_uniquename {
             $name->set_uniquename(1);
           }
           # Otherwise the name needs to be full to make it unique
-          # but restrict to uniquename bibaltex option maximum
-
+          # but restrict to uniquename biblatex option maximum
           elsif (Biber::Config->get_numofuniquenames($namestring) == 1) {
-            $name->set_uniquename($un);
+            $name->set_uniquename($un)
           }
           # Otherwise, if there is more than one entry (hash) for the full name,
           # then set to 0 since nothing will uniqueify this name and it's just

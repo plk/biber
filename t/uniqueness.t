@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 49;
+use Test::More tests => 59;
 
 use Biber;
 use Biber::Utils;
@@ -151,5 +151,48 @@ is($main->get_extraalphadata('ey5'), '1', 'Extrayear - 17');
 is($main->get_extraalphadata('ey6'), '2', 'Extrayear - 18');
 ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'Singletitle - 7');
 ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'Singletitle - 8');
+
+
+# Testing uniquename = 3
+$biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile('uniqueness1.bcf');
+$biber->set_output_obj(Biber::Output::BBL->new());
+# Biber options
+Biber::Config->setoption('fastsort', 1);
+# Biblatex options
+Biber::Config->setblxoption('uniquename', 3);
+Biber::Config->setblxoption('uniquelist', 1);
+# Now generate the information
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
+$main = $section->get_list('MAIN');
+
+is($bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Forced init expansion - 1');
+is($bibentries->entry('un2')->get_field($bibentries->entry('un2')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Forced init expansion - 2');
+is($bibentries->entry('un5')->get_field($bibentries->entry('un5')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Forced init expansion - 3');
+is($bibentries->entry('un3')->get_field($bibentries->entry('un2')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Forced init expansion - 4');
+is($bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Forced init expansion - 5');
+
+# Testing uniquename = 4
+$biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile('uniqueness1.bcf');
+$biber->set_output_obj(Biber::Output::BBL->new());
+# Biber options
+Biber::Config->setoption('fastsort', 1);
+# Biblatex options
+Biber::Config->setblxoption('uniquename', 4);
+Biber::Config->setblxoption('uniquelist', 1);
+# Now generate the information
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
+$main = $section->get_list('MAIN');
+
+is($bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Forced name expansion - 1');
+is($bibentries->entry('un2')->get_field($bibentries->entry('un2')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Forced name expansion - 2');
+is($bibentries->entry('un5')->get_field($bibentries->entry('un5')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Forced name expansion - 3');
+is($bibentries->entry('un3')->get_field($bibentries->entry('un2')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Forced name expansion - 4');
+is($bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Forced name expansion - 5');
 
 unlink <*.utf8>;
