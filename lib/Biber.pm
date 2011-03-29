@@ -1514,7 +1514,6 @@ sub generate_uniquename {
           my $nameinitstring = $name->get_nameinitstring;
           my $namestring = $name->get_namestring;
 
-
           # If there is one entry (hash) for the lastname, then it's unique
           if (Biber::Config->get_numofuniquenames($lastname) == 1) {
             $name->set_uniquename(0);
@@ -1523,6 +1522,14 @@ sub generate_uniquename {
           # then it needs the initials to make it unique
           elsif (Biber::Config->get_numofuniquenames($nameinitstring) == 1) {
             $name->set_uniquename(1);
+          }
+          # Otherwise, if there is more than one entry (hash) for the lastname plus
+          # initials and we are restricted to disambiguating with inits (uniquename=1 or 3),
+          # then set to 0 as the initials don't disambiguate and it's misleading to
+          # expand to initials
+          elsif (Biber::Config->get_numofuniquenames($nameinitstring) > 1 and
+                 ($un == 1 or $un == 3)) {
+            $name->set_uniquename(0);
           }
           # Otherwise the name needs to be full to make it unique
           # but restrict to uniquename biblatex option maximum
