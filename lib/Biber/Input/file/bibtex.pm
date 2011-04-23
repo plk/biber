@@ -20,6 +20,7 @@ use Biber::Utils;
 use Biber::Config;
 use Encode;
 use File::Spec;
+use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use base 'Exporter';
 use List::AllUtils qw(first);
@@ -81,7 +82,6 @@ sub extract_entries {
   if ($filename =~ m/\A(?:https?|ftp):\/\//xms) {
     $logger->info("Data source '$filename' is a remote .bib - fetching ...");
     require LWP::Simple;
-    require File::Temp;
     $tf = File::Temp->new(SUFFIX => '.bib');
     unless (LWP::Simple::is_success(LWP::Simple::getstore($filename, $tf->filename))) {
       $logger->logdie ("Could not fetch file '$filename'");
@@ -455,8 +455,6 @@ sub cache_data {
 
   $bib->close; # If we don't do this, we can't unlink the temp file on Windows
 
-  unlink $pfilename if -e $pfilename;
-
   return;
 }
 
@@ -472,18 +470,12 @@ sub preprocess_file {
   my $secnum = $biber->get_current_section;
   my $section = $biber->sections->get_section($secnum);
 
-  my $ufilename;
-
-  # Put the outfile into the output directory if specified
-  # This allows us to work when the .bib is in a directory we have no
-  # write permission to.
-  if (my $outdir = Biber::Config->getoption('output_directory')) {
-    (undef, undef, my $fn) = File::Spec->splitpath($filename);
-    $ufilename = File::Spec->catfile($outdir, "${fn}_$$.utf8")
-  }
-  else {
-    $ufilename = "${filename}_$$.utf8";
-  }
+  # Put the utf8 encoded file into the global biber tempdir
+  # We have to do this in case we can't write to the location of the
+  # .bib file
+  my $td = $biber->biber_tempdir;
+  (undef, undef, my $fn) = File::Spec->splitpath($filename);
+  my $ufilename = File::Spec->catfile($td->dirname, "${fn}_$$.utf8");
 
   # bib encoding is not UTF-8
   if (Biber::Config->getoption('bibencoding') ne 'UTF-8') {

@@ -220,4 +220,3 @@ is( $out->get_output_entry($main,'caf8e34be07426ae7127c1b4829983c1'), $kck4, 'Re
 is( $out->get_output_entry($main,'key4'), undef, 'Related entry test 8' ) ;
 is_deeply([$shs->get_keys], ['key1', 'key2', 'key3'], 'Related entry test 9');
 
-unlink <*.utf8>;

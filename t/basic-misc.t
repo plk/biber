@@ -292,4 +292,3 @@ is( $out->get_output_entry($main,'anon2'), $anon2, 'namehash/fullhash 2' ) ;
 # my $json = JSON::XS->new->indent->utf8->canonical->convert_blessed->allow_blessed->allow_nonref;
 # is( $json->encode($bibentries->entry('murray')), $j1, 'JSON representation' ) ;
 
-unlink <*.utf8>;

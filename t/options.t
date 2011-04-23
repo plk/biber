@@ -97,5 +97,3 @@ ok(Biber::Config->getblxoption('useprefix', 'book') == 1 , "Per-type single-valu
 is_deeply(Biber::Config->getblxoption('labelnamespec', 'book'), $bln, "Per-type multi-valued options");
 is($bibentries->entry('l1')->get_field('labelyearname'), 'year', 'Global labelyear setting' ) ;
 is( $out->get_output_entry($main,'l1'), $l1, 'Global labelyear setting - labelyear should be YEAR') ;
-
-unlink <*.utf8>;

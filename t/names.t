@@ -754,4 +754,3 @@ is( $out->get_output_entry($main,'l21'), $l21, 'LaTeX encoded unicode firstname'
 is( $out->get_output_entry($main,'l22'), $l22, 'LaTeX encoded unicode lastname');
 is( $out->get_output_entry($main,'l31'), $l31, 'LaTeX encoded unicode lastname with tie char');
 
-unlink <*.utf8>;

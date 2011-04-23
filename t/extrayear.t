@@ -52,4 +52,3 @@ ok(is_undef($main->get_extrayeardata('gennep')), 'Entry gennep - different from 
 ok(is_undef($main->get_extrayeardata('ly1')), 'Date range means no extrayear - 1');
 ok(is_undef($main->get_extrayeardata('ly2')), 'Date range means no extrayear - 2');
 
-unlink <*.utf8>;

@@ -135,4 +135,3 @@ is($out->get_output_entry($main0,'Dynamic3', 1), $string5, 'Dynamic set test 5')
 is_deeply([$sh0->get_keys], ['DynSet'], 'Dynamic set skiplos 1');
 is_deeply([$sh1->get_keys], ['Dynamic3'], 'Dynamic set skiplos 2');
 
-unlink <*.utf8>;

@@ -204,4 +204,3 @@ is($out->get_output_entry($main,'noseta'), $noset1, 'Not a set member - extrayea
 is($out->get_output_entry($main,'nosetb'), $noset2, 'Not a set member - extrayear continues from set 2');
 is($out->get_output_entry($main,'nosetc'), $noset3, 'Not a set member - extrayear continues from set 3');
 
-unlink <*.utf8>;

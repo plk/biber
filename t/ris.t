@@ -79,5 +79,3 @@ my $l2 = q|  \entry{test2}{book}{}
 is( $out->get_output_entry($main,'test1'), $l1, 'Basic RIS test - 1') ;
 is( $out->get_output_entry($main,'test2'), $l2, 'Basic RIS test - 2') ;
 
-unlink <*.utf8>;
-

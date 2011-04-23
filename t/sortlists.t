@@ -35,4 +35,3 @@ is_deeply([$section->get_list('lnamef3')->get_keys], ['K1', 'K2'], 'List - name 
 is_deeply([$section->get_list('lnamef4')->get_keys], ['K3'], 'List - name order (filtered) - 4');
 is_deeply([$section->get_list('lnamef5')->get_keys], ['K1', 'K3'], 'List - name order (filtered) - 5');
 
-unlink <*.utf8>;

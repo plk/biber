@@ -90,5 +90,4 @@ my $dl1 = q|  \entry{AbdelbarH98}{article}{}
 is( $out->get_output_entry($main,'citeulike:8283461'), $cu1, 'Fetch from citeulike') ;
 is( $out->get_output_entry($main,'AbdelbarH98'), $dl1, 'Fetch from plain bib download') ;
 
-unlink <*.utf8>;
 

@@ -126,4 +126,3 @@ is($out->get_output_entry($main,'Static3'), $string3, 'Static set test 3');
 is($out->get_output_entry($main,'Static4'), $string4, 'Static set test 4');
 is($out->get_output_entry($main,'Static2', 1), $string5, 'Static set test 5');
 
-unlink <*.utf8>;

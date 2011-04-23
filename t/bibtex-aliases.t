@@ -42,4 +42,3 @@ is($bibentries->entry('alias2')->get_field('entrytype'), 'misc', 'Alias - 5' );
 is_deeply($bibentries->entry('alias2')->get_field('warnings'), $w1, 'Alias - 6' ) ;
 is($bibentries->entry('alias2')->get_field('school'), undef, 'Alias - 7' );
 
-unlink <*.utf8>;

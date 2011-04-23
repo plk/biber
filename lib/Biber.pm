@@ -6,6 +6,7 @@ use Carp;
 use Encode;
 use File::Copy;
 use File::Spec;
+use File::Temp;
 use IO::File;
 use IPC::Cmd qw( can_run run );
 use POSIX qw( locale_h ); # for sorting with built-in "sort"
@@ -81,6 +82,9 @@ sub new {
     }
   }
 
+  # Add a reference to a global temp dir we might use for various things
+  $self->{TEMPDIR} = File::Temp->newdir();
+
   return $self;
 }
 
@@ -100,6 +104,19 @@ sub biber_warn {
   $entry->add_warning($warning);
   $self->{warnings}++;
   return;
+}
+
+=head2 biber_tempdir
+
+    my $sections= $biber->biber_tempdir
+
+    Returns a File::Temp directory object for use in various things
+
+=cut
+
+sub biber_tempdir {
+  my $self = shift;
+  return $self->{TEMPDIR};
 }
 
 

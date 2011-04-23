@@ -77,5 +77,3 @@ my $l1 = q|  \entry{BulgakovRozenfeld:1983}{book}{}
 |;
 
 is( $out->get_output_entry($main, 'bulgakovrozenfeld:1983'), $l1, 'Basic BibLaTeXML test - 1') ;
-
-unlink <*.utf8>;

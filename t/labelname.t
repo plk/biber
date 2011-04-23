@@ -36,6 +36,3 @@ my $ted = 'editor';
 is($bibentries->entry('angenendtsa')->get_field('labelnamename'), $sa, 'global shortauthor' );
 is($bibentries->entry('stdmodel')->get_field('labelnamename'), $a, 'global author' );
 is($bibentries->entry('aristotle:anima')->get_field('labelnamename'), $ted, 'type-specific editor' );
-
-
-unlink <*.utf8>;

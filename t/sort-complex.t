@@ -188,4 +188,3 @@ is_deeply([ $main->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'citeorder - 1');
 # label)
 is_deeply([ $shs->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'citeorder - 2');
 
-unlink <*.utf8>;

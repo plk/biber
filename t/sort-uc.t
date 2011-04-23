@@ -101,4 +101,3 @@ $main->set_sortscheme($S);
 $biber->prepare;
 is_deeply([$main->get_keys], ['LS3', 'LS4','LS2','LS1'], 'sortcase locally false, upper_before_lower locally false');
 
-unlink <*.utf8>;

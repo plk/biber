@@ -130,5 +130,3 @@ my $l3 = q|  \entry{item_54}{inbook}{}
 is( $out->get_output_entry($main, 'http://0-muse.jhu.edu.pugwash.lib.warwick.ac.uk:80/journals/theory_and_event/v005/5.3ranciere.html'), $l1, 'Basic Zotero RDF/XML test - 1') ;
 is( $out->get_output_entry($main, 'urn:isbn:0713990023'), $l2, 'Basic Zotero RDF/XML test - 2') ;
 is( $out->get_output_entry($main, 'item_54'), $l3, 'Basic Zotero RDF/XML test - 3') ;
-
-unlink <*.utf8>;

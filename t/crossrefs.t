@@ -431,4 +431,3 @@ is($out->get_output_entry($main0,'mxr'), $mxr, 'missing xref test');
 is($out->get_output_entry($main0,'mcr'), $mcr, 'missing crossef test');
 is($section1->has_citekey('crn'), 0,'mincrossrefs reset between sections');
 
-unlink <*.utf8>;

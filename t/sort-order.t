@@ -515,4 +515,3 @@ $biber->prepare;
 $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L1A','L1','L1B','L2','L3','L4','L5','L7','L6','L9','L8'], 'nosort 1');
 
-unlink <*.utf8>;

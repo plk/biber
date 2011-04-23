@@ -49,4 +49,3 @@ $section = $biber->sections->get_section(0);
 $main = $section->get_list('MAIN');
 is_deeply([$main->get_keys], ['CS3','CS2','CS1'], 'U::C case - 2');
 
-unlink <*.utf8>;

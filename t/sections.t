@@ -95,4 +95,3 @@ is($out->get_output_section(1)->number, '1', 'Checking output sections - 2');
 is($out->get_output_section(2)->number, '2', 'Checking output sections - 3');
 is($out->get_output_head, $head, 'Preamble output check with bblsafechars');
 
-unlink <*.utf8>;

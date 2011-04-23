@@ -200,4 +200,3 @@ is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('la
 is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_element(4)->get_uniquename, '1', 'Forced name expansion - 7');
 is($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Forced name expansion - 8');
 
-unlink <*.utf8>;
