@@ -472,7 +472,18 @@ sub preprocess_file {
   my $secnum = $biber->get_current_section;
   my $section = $biber->sections->get_section($secnum);
 
-  my $ufilename = "${filename}_$$.utf8";
+  my $ufilename;
+
+  # Put the outfile into the output directory if specified
+  # This allows us to work when the .bib is in a directory we have no
+  # write permission to.
+  if (my $outdir = Biber::Config->getoption('output_directory')) {
+    (undef, undef, my $fn) = File::Spec->splitpath($filename);
+    $ufilename = File::Spec->catfile($outdir, "${fn}_$$.utf8")
+  }
+  else {
+    $ufilename = "${filename}_$$.utf8";
+  }
 
   # bib encoding is not UTF-8
   if (Biber::Config->getoption('bibencoding') ne 'UTF-8') {
@@ -485,7 +496,8 @@ sub preprocess_file {
 
   }
   else {
-    File::Copy::copy($filename, $ufilename);
+    File::Copy::copy($filename, $ufilename)
+        or $logger->logdie("Can't write $ufilename");
   }
 
   # Decode LaTeX to UTF8 if output is UTF-8
