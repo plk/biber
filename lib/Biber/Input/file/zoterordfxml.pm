@@ -75,12 +75,14 @@ sub extract_entries {
           # used it
   $logger->trace("Entering extract_entries()");
 
-  # If it's a remote .bib file, fetch it first
+  # If it's a remote data file, fetch it first
   if ($filename =~ m/\A(?:https?|ftp):\/\//xms) {
     $logger->info("Data source '$filename' is a remote .rdf - fetching ...");
     require LWP::Simple;
     require File::Temp;
-    $tf = File::Temp->new(SUFFIX => '.rdf');
+    $tf = File::Temp->new(TEMPLATE => 'biber_remote_data_source_XXXXX',
+                          DIR => $biber->biber_tempdir,
+                          SUFFIX => '.rdf');
     unless (LWP::Simple::is_success(LWP::Simple::getstore($filename, $tf->filename))) {
       $logger->logdie ("Could not fetch file '$filename'");
     }
