@@ -55,7 +55,7 @@
    "provides" : {
       "Biber" : {
          "file" : "lib/Biber.pm",
-         "version" : "0.9"
+         "version" : "v0.9.1"
       },
       "Biber::Config" : {
          "file" : "lib/Biber/Config.pm",
