@@ -4,6 +4,7 @@ Revision history for Biber
        * Made temp files all use a global temp dir.
        * Moved temp .utf8 conversions use temp dir so biber works using
          .bib files which are in non-writable locations.
+       * Added back an info log message about finding data sources (Lyx compat)
 0.9    29-03-2011
        * No longer auto-escapes any TeX markup in bibtex data sources. This
          is fraught with danger and is a mess. Best not to do it at all.

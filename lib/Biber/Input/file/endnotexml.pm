@@ -85,6 +85,9 @@ sub extract_entries {
     }
   }
 
+  # Log that we found a data file
+  $logger->info("Found endnotexml data file '$filename'");
+
   # Set up XML parser and namespaces
   my $parser = XML::LibXML->new();
   my $enxml = $parser->parse_file($filename)

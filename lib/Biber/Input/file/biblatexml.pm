@@ -87,6 +87,9 @@ sub extract_entries {
     }
   }
 
+  # Log that we found a data file
+  $logger->info("Found biblatexml data file '$filename'");
+
   # Set up XML parser and namespace
   my $parser = XML::LibXML->new();
   my $bltxml = $parser->parse_file($filename)

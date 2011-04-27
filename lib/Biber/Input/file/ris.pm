@@ -80,6 +80,9 @@ sub extract_entries {
     }
   }
 
+  # Log that we found a data file
+  $logger->info("Found ris data file '$filename'");
+
   # pre-process into something a little more sensible, dealing with the multi-line
   # fields in RIS
   require IO::File;

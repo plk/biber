@@ -99,6 +99,9 @@ sub extract_entries {
     }
   }
 
+  # Log that we found a data file
+  $logger->info("Found bibtex data file '$filename'");
+
   # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
   if (Biber::Config->getoption('quiet')) {
     open OLDERR, '>&', \*STDERR;
