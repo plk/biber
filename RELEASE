@@ -3,6 +3,7 @@ Things to remember when releasing new version:
 * Change content, if necessary, of README
 * Change version string in and content of "Changes" file
 * Change version string in doc
+* Update main html and doc page 
 * Update "TODO" file
 * Update any driver .dcf description elements which need it
 * Change version string in "Biber.pm"
@@ -17,7 +18,6 @@ Things to remember when releasing new version:
 * Update SF main page, news, add new README in web interface at root, if needed
 * Inform builders of binaries to update
 * Rename current to version, new version to current
-* Update main html and doc page and sync
-  scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
+* scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
 * Associate new defaults with new binaries
 * Mail to ctan@dante.de after binary people have updated
