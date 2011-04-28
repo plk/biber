@@ -1,6 +1,6 @@
 Revision history for Biber
 
-0.9.1  (unreleased)
+0.9.1  29-04-2011
        * Made temp files all use a global temp dir.
        * Moved temp .utf8 conversions use temp dir so biber works using
          .bib files which are in non-writable locations.
