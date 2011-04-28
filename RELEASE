@@ -15,9 +15,9 @@ Things to remember when releasing new version:
 * Create a new empty version tree for new version, use the dist/empty_tree.sh script:
   empty_tree.sh <version>
 * Build binaries from release and upload to SF to new version folder
-* Update SF main page, news, add new README in web interface at root, if needed
 * Inform builders of binaries to update
 * Rename current to version, new version to current
-* scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
 * Associate new defaults with new binaries
+* scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
+* Update SF main page, news, add new README in web interface at root, if needed
 * Mail to ctan@dante.de after binary people have updated
