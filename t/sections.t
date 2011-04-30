@@ -20,6 +20,7 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # relying on here for tests
 
 # Biber options
+Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('bblsafechars', 1);
 

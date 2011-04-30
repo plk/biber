@@ -14,6 +14,7 @@ chdir("t/tdata");
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
 Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('sortlocale', 'C');
 $biber->parse_ctrlfile("general1.bcf");
 $biber->set_output_obj(Biber::Output::BBL->new());
 

@@ -21,6 +21,7 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 
 # Biber options
 Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('sortlocale', 'C');
 
 # Biblatex options
 Biber::Config->setblxoption('labelalpha', 1);

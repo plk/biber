@@ -21,6 +21,7 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # relying on here for tests
 Biber::Config->setoption('sortcase', 1);
 Biber::Config->setoption('sortupper', 1);
+Biber::Config->setoption('sortlocale', 'C');
 
 $S =  [
                                                 [

@@ -21,6 +21,7 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 
 # Biber options
 Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('validate_structure', 1);
 
 # Now generate the information
