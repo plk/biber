@@ -2156,7 +2156,7 @@ sub prepare {
     2: Datasource name
     3: Reference to an array of cite keys to look for
 
-    and returns an array of the cite keys it didn't find in the datasource
+    and returns an array of the cite keys it did not find in the datasource
 
 =cut
 
