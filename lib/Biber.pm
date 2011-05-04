@@ -1,6 +1,7 @@
 package Biber;
 use strict;
 use warnings;
+use feature 'switch';
 #use feature 'unicode_strings';
 use Carp;
 use Encode;
@@ -31,7 +32,6 @@ use Config::General qw( ParseConfig );
 use Data::Dump;
 use Data::Compare;
 use Text::BibTeX qw(:macrosubs);
-use Switch;
 
 =encoding utf-8
 
@@ -41,8 +41,8 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =cut
 
-our $VERSION = '0.9.1';
-our $BETA_VERSION = 0; # Is this a beta version?
+our $VERSION = '0.9.2';
+our $BETA_VERSION = 1; # Is this a beta version?
 
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -1552,11 +1552,11 @@ sub generate_uniquename {
           # but restrict to uniquename biblatex option maximum
           elsif (Biber::Config->get_numofuniquenames($namestring) == 1) {
             my $run;
-            switch ($un) {
-              case '1' {$run = 1}
-              case '2' {$run = 2}
-              case '3' {$run = 1}
-              case '4' {$run = 2}
+            given ($un) {
+              when ('1') {$run = 1}
+              when ('2') {$run = 2}
+              when ('3') {$run = 1}
+              when ('4') {$run = 2}
             }
             $name->set_uniquename($run)
           }

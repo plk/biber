@@ -1,4 +1,5 @@
 package Biber::Input::file::ris;
+use feature 'switch';
 #use feature 'unicode_strings';
 use strict;
 use warnings;
@@ -22,7 +23,6 @@ use List::AllUtils qw(first uniq);
 use XML::LibXML::Simple;
 use Readonly;
 use Data::Dump qw(dump);
-use Switch;
 
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -94,19 +94,19 @@ sub extract_entries {
   while(<$ris>) {
     if (m/\A([A-Z][A-Z0-9])\s\s\-\s*(.+)?\n\z/xms) {
       $last_tag = $1;
-      switch ($1) {
-        case 'TY'                { $e = {'TY' => $2};  }
-        case 'KW'                { push @{$e->{KW}}, $2 } # amalgamate keywords
-        case 'SP'                { $e->{SPEP}{SP} = $2 } # amalgamate page range
-        case 'EP'                { $e->{SPEP}{EP} = $2 } # amalgamate page range
-        case 'A1'                { push @{$e->{A1}}, $2 } # amalgamate names
-        case 'A2'                { push @{$e->{A2}}, $2 } # amalgamate names
-        case 'A3'                { push @{$e->{A3}}, $2 } # amalgamate names
-        case 'AU'                { push @{$e->{AU}}, $2 } # amalgamate names
-        case 'ED'                { push @{$e->{ED}}, $2 } # amalgamate names
-        case 'ER'                { $e->{KW} = join(',', @{$e->{KW}});
+      given ($1) {
+        when ('TY')              { $e = {'TY' => $2} }
+        when ('KW')              { push @{$e->{KW}}, $2 } # amalgamate keywords
+        when ('SP')              { $e->{SPEP}{SP} = $2 }  # amalgamate page range
+        when ('EP')              { $e->{SPEP}{EP} = $2 }  # amalgamate page range
+        when ('A1')              { push @{$e->{A1}}, $2 } # amalgamate names
+        when ('A2')              { push @{$e->{A2}}, $2 } # amalgamate names
+        when ('A3')              { push @{$e->{A3}}, $2 } # amalgamate names
+        when ('AU')              { push @{$e->{AU}}, $2 } # amalgamate names
+        when ('ED')              { push @{$e->{ED}}, $2 } # amalgamate names
+        when ('ER')              { $e->{KW} = join(',', @{$e->{KW}});
                                    push @ris_entries, $e }
-        else                     { $e->{$1} = $2 }
+        default                  { $e->{$1} = $2 }
       }
     }
     elsif (m/\A(.+)\n\z/xms) { # Deal with stupid line continuations

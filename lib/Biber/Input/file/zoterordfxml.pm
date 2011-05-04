@@ -1,4 +1,5 @@
 package Biber::Input::file::zoterordfxml;
+use feature 'switch';
 #use feature 'unicode_strings';
 use strict;
 use warnings;
@@ -22,7 +23,6 @@ use List::AllUtils qw(first uniq);
 use XML::LibXML;
 use XML::LibXML::Simple;
 use Data::Dump qw(dump);
-use Switch;
 
 ##### This is based on Zotero 2.0.9 #####
 
@@ -354,11 +354,11 @@ sub _partof {
   # default inheritance setup
   if ($cref->get_field('entrytype') =~ /\Abib:/) {
     my $ptype = $bibentry->get_field('entrytype');
-    switch ($ptype) {
-      case 'book'              { $cref->set_datafield('entrytype', 'mvbook') }
-      case 'inbook'            { $cref->set_datafield('entrytype', 'book') }
-      case 'inproceedings'     { $cref->set_datafield('entrytype', 'proceedings') }
-      case 'article'           { $cref->set_datafield('entrytype', 'periodical') }
+    given ($ptype) {
+      when ('book')            { $cref->set_datafield('entrytype', 'mvbook') }
+      when ('inbook')          { $cref->set_datafield('entrytype', 'book') }
+      when ('inproceedings')   { $cref->set_datafield('entrytype', 'proceedings') }
+      when ('article')         { $cref->set_datafield('entrytype', 'periodical') }
     }
   }
   return;
