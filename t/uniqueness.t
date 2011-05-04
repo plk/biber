@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 65;
+use Test::More tests => 69;
 
 use Biber;
 use Biber::Utils;
@@ -74,6 +74,14 @@ is($bibentries->entry('unapa1')->get_field($bibentries->entry('unapa1')->get_fie
 is($bibentries->entry('unapa2')->get_field($bibentries->entry('unapa2')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquelist - 5');
 is($bibentries->entry('others1')->get_field($bibentries->entry('others1')->get_field('labelnamename'))->get_uniquelist, '2', 'Uniquelist - 6');
 
+# These next two should have uniquelist 1 as they are identical author lists and so can't
+# be disambiguated (and shouldn't be).
+is($bibentries->entry('unall1')->get_field($bibentries->entry('unall1')->get_field('labelnamename'))->get_uniquelist, '1', 'Uniquelist - 7');
+is($bibentries->entry('unall2')->get_field($bibentries->entry('unall2')->get_field('labelnamename'))->get_uniquelist, '1', 'Uniquelist - 8');
+
+# These next two should have uniquelist 5/6 as they need disambiguating in place 5
+is($bibentries->entry('unall3')->get_field($bibentries->entry('unall3')->get_field('labelnamename'))->get_uniquelist, '5', 'Uniquelist - 9');
+is($bibentries->entry('unall4')->get_field($bibentries->entry('unall4')->get_field('labelnamename'))->get_uniquelist, '6', 'Uniquelist - 10');
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness3.bcf');

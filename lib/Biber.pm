@@ -1657,7 +1657,6 @@ sub generate_uniquelist {
         my $liststring = '';
         my $namefield = $be->get_field($lname);
 
-
         foreach my $name (@{$namefield->names}) {
           next if $name->get_namestring eq 'others'; # Don't count explicit "et al"
           my $lastname   = $name->get_lastname;
