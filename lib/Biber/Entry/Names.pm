@@ -83,9 +83,10 @@ sub reset_uniquelist {
 
 sub set_uniquelist {
   my $self = shift;
-  my $uniquelist = shift;
+  my $liststring = shift;
+  my $uniquelist = $self->count_uniquelist($liststring);
   my $currval = $self->{uniquelist};
-  # Set modified flag to positive if we changes something
+  # Set modified flag to positive if we changed something
   if (not defined($currval) or $currval != $uniquelist) {
     Biber::Config->set_unul_changed(1);
   }

@@ -1678,13 +1678,14 @@ sub generate_uniquelist {
           elsif ($name->get_uniquename == 2) {
             $liststring .= $namestring . '|';
           }
-          # list is unique
+          # list is unique after this many names so we set uniquelist to this point
           if (Biber::Config->get_uniquelistcount($liststring) == 1) {
             last;
           }
         }
         $logger->trace("Setting uniquelist for '$citekey' using '$liststring'");
-        $namefield->set_uniquelist($namefield->count_uniquelist($liststring));
+        $logger->trace("Uniquelist count for '$citekey' is '" . Biber::Config->get_uniquelistcount($liststring) . "'");
+        $namefield->set_uniquelist($liststring);
       }
     }
   }
