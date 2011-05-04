@@ -1,4 +1,5 @@
 package Biber::Internals;
+use feature ':5.10';
 #use feature 'unicode_strings';
 
 use strict;

@@ -1,4 +1,5 @@
 package Biber::Config;
+use feature ':5.10';
 #use feature 'unicode_strings';
 use Biber::Constants;
 use IPC::Cmd qw( can_run run );

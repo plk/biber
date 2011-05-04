@@ -1,4 +1,5 @@
 package Biber::Input::file::endnotexml;
+use feature ':5.10';
 #use feature 'unicode_strings';
 use strict;
 use warnings;

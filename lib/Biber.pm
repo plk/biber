@@ -1,7 +1,7 @@
 package Biber;
 use strict;
 use warnings;
-use feature 'switch';
+use feature ':5.10';
 #use feature 'unicode_strings';
 use Carp;
 use Encode;

@@ -1,4 +1,5 @@
 package Biber::Structure;
+use feature ':5.10';
 #use feature 'unicode_strings';
 
 use List::Util qw( first );

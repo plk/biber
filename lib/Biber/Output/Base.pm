@@ -1,4 +1,5 @@
 package Biber::Output::Base;
+use feature ':5.10';
 #use feature 'unicode_strings';
 
 use Biber::Entry;

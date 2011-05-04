@@ -1,5 +1,5 @@
 package Biber::Input::file::ris;
-use feature 'switch';
+use feature ':5.10';
 #use feature 'unicode_strings';
 use strict;
 use warnings;
