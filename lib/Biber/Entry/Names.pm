@@ -94,7 +94,7 @@ sub set_uniquelist {
   # for the complete list as this means they are the same list
   if (defined(Biber::Config->get_final_uniquelistcount($liststring)) and
       Biber::Config->get_final_uniquelistcount($liststring) > 1) {
-    $self->{uniquelist} = 1;
+    $self->{uniquelist} = Biber::Config->getblxoption('minnames');
   }
   else {
     $self->{uniquelist} = $uniquelist;
