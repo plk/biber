@@ -90,13 +90,14 @@ sub set_uniquelist {
   if (not defined($currval) or $currval != $uniquelist) {
     Biber::Config->set_unul_changed(1);
   }
+  return if $uniquelist == 1; # No disambiguation needed as the list is unique
+                              # in the first position
   # No point disambiguating with uniquelist lists which have the same count
   # for the complete list as this means they are the same list. So, if this
   # is the case, don't set uniquelist at all.
-  unless (defined(Biber::Config->get_final_uniquelistcount($liststring)) and
-      Biber::Config->get_final_uniquelistcount($liststring) > 1) {
-    $self->{uniquelist} = $uniquelist;
-  }
+  return if (defined(Biber::Config->get_final_uniquelistcount($liststring)) and
+             Biber::Config->get_final_uniquelistcount($liststring) > 1);
+  $self->{uniquelist} = $uniquelist;
   return;
 }
 
