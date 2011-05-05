@@ -38,6 +38,8 @@ $CONFIG->{state}{seennamehash} = {};
 $CONFIG->{state}{seenfullhash} = {};
 $CONFIG->{state}{seenname} = {};
 $CONFIG->{state}{keycase} = {};
+$CONFIG->{state}{uniquelistcount} = {};
+$CONFIG->{state}{final_uniquelistcount} = {};
 
 # Boolean to say whether uniquename/uniquelist information has changed
 # Default is true so that uniquename/uniquelist processing starts
@@ -749,6 +751,7 @@ sub get_uniquelistcount {
   return $CONFIG->{state}{uniquelistcount}{$liststring};
 }
 
+
 =head2 add_uniquelistcount
 
     Incremenent the count for a list part to the data for a namehash
@@ -764,9 +767,40 @@ sub add_uniquelistcount {
   return;
 }
 
+=head2 add_final_uniquelistcount
+
+    Incremenent the count for a complete list to the data for a namehash
+
+    Biber::Config->add_final_uniquelistcount($liststring);
+
+=cut
+
+sub add_final_uniquelistcount {
+  shift; # class method so don't care about class name
+  my $liststring = shift;
+  $CONFIG->{state}{final_uniquelistcount}{$liststring}++;
+  return;
+}
+
+
+=head2 get_final_uniquelistcount
+
+    Get the number of uniquelist entries for a full list
+
+    Biber::Config->get_final_uniquelistcount($namelist);
+
+=cut
+
+sub get_final_uniquelistcount {
+  shift; # class method so don't care about class name
+  my $liststring = shift;
+  return $CONFIG->{state}{final_uniquelistcount}{$liststring};
+}
+
+
 =head2 reset_uniquelistcount
 
-    Reset the count for a list part to the data for a namehash
+    Reset the count for list parts and complete lists
 
     Biber::Config->reset_uniquelistcount;
 
@@ -775,6 +809,7 @@ sub add_uniquelistcount {
 sub reset_uniquelistcount {
   shift; # class method so don't care about class name
   $CONFIG->{state}{uniquelistcount} = {};
+  $CONFIG->{state}{final_uniquelistcount} = {};
   return;
 }
 

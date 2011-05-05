@@ -1625,6 +1625,13 @@ sub create_uniquelist_info {
           }
           Biber::Config->add_uniquelistcount($liststring);
         }
+        # We need to know the list uniqueness counts for the whole list seperately otherwise
+        # we will falsely "disambiguate" idential name lists from each other by setting
+        # uniquelist to the full list because every part of each list will have more than
+        # one count. We therefore need to distinguish counts which are of the final, complete
+        # list of names. If there is more than one count for these, (meaning that there are
+        # two or more identical name lists), we don't expand them at all as there is no point.
+        Biber::Config->add_final_uniquelistcount($liststring);
       }
     }
   }

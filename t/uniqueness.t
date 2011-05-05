@@ -72,7 +72,7 @@ is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('la
 is($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_field('labelnamename'))->get_uniquelist, '1', 'Uniquelist - 3');
 is($bibentries->entry('unapa1')->get_field($bibentries->entry('unapa1')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquelist - 4');
 is($bibentries->entry('unapa2')->get_field($bibentries->entry('unapa2')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquelist - 5');
-is($bibentries->entry('others1')->get_field($bibentries->entry('others1')->get_field('labelnamename'))->get_uniquelist, '2', 'Uniquelist - 6');
+is($bibentries->entry('others1')->get_field($bibentries->entry('others1')->get_field('labelnamename'))->get_uniquelist, '1', 'Uniquelist - 6');
 
 # These next two should have uniquelist 1 as they are identical author lists and so can't
 # be disambiguated (and shouldn't be).
