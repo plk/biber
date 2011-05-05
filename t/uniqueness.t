@@ -72,12 +72,12 @@ is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('la
 is($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_field('labelnamename'))->get_uniquelist, '1', 'Uniquelist - 3');
 is($bibentries->entry('unapa1')->get_field($bibentries->entry('unapa1')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquelist - 4');
 is($bibentries->entry('unapa2')->get_field($bibentries->entry('unapa2')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquelist - 5');
-is($bibentries->entry('others1')->get_field($bibentries->entry('others1')->get_field('labelnamename'))->get_uniquelist, '1', 'Uniquelist - 6');
+ok(is_undef($bibentries->entry('others1')->get_field($bibentries->entry('others1')->get_field('labelnamename'))->get_uniquelist, 'Uniquelist - 6'));
 
-# These next two should have uniquelist 1 as they are identical author lists and so can't
-# be disambiguated (and shouldn't be).
-is($bibentries->entry('unall1')->get_field($bibentries->entry('unall1')->get_field('labelnamename'))->get_uniquelist, '1', 'Uniquelist - 7');
-is($bibentries->entry('unall2')->get_field($bibentries->entry('unall2')->get_field('labelnamename'))->get_uniquelist, '1', 'Uniquelist - 8');
+# These next two should have uniquelist undef as they are identical author lists and so
+# can't be disambiguated (and shouldn't be).
+ok(is_undef($bibentries->entry('unall1')->get_field($bibentries->entry('unall1')->get_field('labelnamename'))->get_uniquelist, 'Uniquelist - 7'));
+ok(is_undef($bibentries->entry('unall2')->get_field($bibentries->entry('unall2')->get_field('labelnamename'))->get_uniquelist, 'Uniquelist - 8'));
 
 # These next two should have uniquelist 5/6 as they need disambiguating in place 5
 is($bibentries->entry('unall3')->get_field($bibentries->entry('unall3')->get_field('labelnamename'))->get_uniquelist, '5', 'Uniquelist - 9');

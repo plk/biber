@@ -91,12 +91,10 @@ sub set_uniquelist {
     Biber::Config->set_unul_changed(1);
   }
   # No point disambiguating with uniquelist lists which have the same count
-  # for the complete list as this means they are the same list
-  if (defined(Biber::Config->get_final_uniquelistcount($liststring)) and
+  # for the complete list as this means they are the same list. So, if this
+  # is the case, don't set uniquelist at all.
+  unless (defined(Biber::Config->get_final_uniquelistcount($liststring)) and
       Biber::Config->get_final_uniquelistcount($liststring) > 1) {
-    $self->{uniquelist} = Biber::Config->getblxoption('minnames');
-  }
-  else {
     $self->{uniquelist} = $uniquelist;
   }
   return;
