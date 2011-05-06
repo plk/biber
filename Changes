@@ -2,6 +2,7 @@ Revision history for Biber
 
 0.9.2  (unreleased)
        * Internal changes for perl 5.14
+       * Bug fixes for uniquelist processing
 0.9.1  29-04-2011
        * Made temp files all use a global temp dir.
        * Moved temp .utf8 conversions use temp dir so biber works using
