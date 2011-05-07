@@ -43,7 +43,6 @@
             "Log::Log4perl" : 0,
             "Readonly" : 0,
             "Regexp::Common" : 0,
-            "Switch" : 0,
             "Text::BibTeX" : "0.55",
             "Unicode::Collate" : "0.74",
             "XML::LibXML::Simple" : 0,
@@ -55,7 +54,7 @@
    "provides" : {
       "Biber" : {
          "file" : "lib/Biber.pm",
-         "version" : "v0.9.1"
+         "version" : "v0.9.2"
       },
       "Biber::Config" : {
          "file" : "lib/Biber/Config.pm",
@@ -152,5 +151,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "v0.9.1"
+   "version" : "v0.9.2"
 }
