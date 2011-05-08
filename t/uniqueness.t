@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 69;
+use Test::More tests => 72;
 
 use Biber;
 use Biber::Utils;
@@ -69,19 +69,25 @@ is($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_field('
 
 is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquelist - 1');
 is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquelist - 2');
-ok(is_undef($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_field('labelnamename'))->get_uniquelist, 'Uniquelist - 3'));
+ok(is_undef($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_field('labelnamename'))->get_uniquelist), 'Uniquelist - 3');
 is($bibentries->entry('unapa1')->get_field($bibentries->entry('unapa1')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquelist - 4');
 is($bibentries->entry('unapa2')->get_field($bibentries->entry('unapa2')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquelist - 5');
-ok(is_undef($bibentries->entry('others1')->get_field($bibentries->entry('others1')->get_field('labelnamename'))->get_uniquelist, 'Uniquelist - 6'));
+ok(is_undef($bibentries->entry('others1')->get_field($bibentries->entry('others1')->get_field('labelnamename'))->get_uniquelist), 'Uniquelist - 6');
 
 # These next two should have uniquelist undef as they are identical author lists and so
 # can't be disambiguated (and shouldn't be).
-ok(is_undef($bibentries->entry('unall1')->get_field($bibentries->entry('unall1')->get_field('labelnamename'))->get_uniquelist, 'Uniquelist - 7'));
-ok(is_undef($bibentries->entry('unall2')->get_field($bibentries->entry('unall2')->get_field('labelnamename'))->get_uniquelist, 'Uniquelist - 8'));
+ok(is_undef($bibentries->entry('unall1')->get_field($bibentries->entry('unall1')->get_field('labelnamename'))->get_uniquelist), 'Uniquelist - 7');
+ok(is_undef($bibentries->entry('unall2')->get_field($bibentries->entry('unall2')->get_field('labelnamename'))->get_uniquelist), 'Uniquelist - 8');
+
+# These all should have uniquelist=5 as even though two are identical, they still both
+# need disambiguating from the other one which differs in fifth place
+is($bibentries->entry('unall5')->get_field($bibentries->entry('unall5')->get_field('labelnamename'))->get_uniquelist, '5', 'Uniquelist - 9');
+is($bibentries->entry('unall6')->get_field($bibentries->entry('unall6')->get_field('labelnamename'))->get_uniquelist, '5', 'Uniquelist - 10');
+is($bibentries->entry('unall7')->get_field($bibentries->entry('unall7')->get_field('labelnamename'))->get_uniquelist, '5', 'Uniquelist - 11');
 
 # These next two should have uniquelist 5/6 as they need disambiguating in place 5
-is($bibentries->entry('unall3')->get_field($bibentries->entry('unall3')->get_field('labelnamename'))->get_uniquelist, '5', 'Uniquelist - 9');
-is($bibentries->entry('unall4')->get_field($bibentries->entry('unall4')->get_field('labelnamename'))->get_uniquelist, '6', 'Uniquelist - 10');
+is($bibentries->entry('unall3')->get_field($bibentries->entry('unall3')->get_field('labelnamename'))->get_uniquelist, '5', 'Uniquelist - 12');
+is($bibentries->entry('unall4')->get_field($bibentries->entry('unall4')->get_field('labelnamename'))->get_uniquelist, '6', 'Uniquelist - 13');
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness3.bcf');
