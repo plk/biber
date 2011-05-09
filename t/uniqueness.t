@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 72;
+use Test::More tests => 73;
 
 use Biber;
 use Biber::Utils;
@@ -84,10 +84,12 @@ ok(is_undef($bibentries->entry('unall2')->get_field($bibentries->entry('unall2')
 is($bibentries->entry('unall5')->get_field($bibentries->entry('unall5')->get_field('labelnamename'))->get_uniquelist, '5', 'Uniquelist - 9');
 is($bibentries->entry('unall6')->get_field($bibentries->entry('unall6')->get_field('labelnamename'))->get_uniquelist, '5', 'Uniquelist - 10');
 is($bibentries->entry('unall7')->get_field($bibentries->entry('unall7')->get_field('labelnamename'))->get_uniquelist, '5', 'Uniquelist - 11');
+# Superset of unall5 and unall6, should have ul=6
+is($bibentries->entry('unall8')->get_field($bibentries->entry('unall8')->get_field('labelnamename'))->get_uniquelist, '6', 'Uniquelist - 12');
 
 # These next two should have uniquelist 5/6 as they need disambiguating in place 5
-is($bibentries->entry('unall3')->get_field($bibentries->entry('unall3')->get_field('labelnamename'))->get_uniquelist, '5', 'Uniquelist - 12');
-is($bibentries->entry('unall4')->get_field($bibentries->entry('unall4')->get_field('labelnamename'))->get_uniquelist, '6', 'Uniquelist - 13');
+is($bibentries->entry('unall3')->get_field($bibentries->entry('unall3')->get_field('labelnamename'))->get_uniquelist, '5', 'Uniquelist - 13');
+is($bibentries->entry('unall4')->get_field($bibentries->entry('unall4')->get_field('labelnamename'))->get_uniquelist, '6', 'Uniquelist - 14');
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness3.bcf');

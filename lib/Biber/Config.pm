@@ -751,7 +751,6 @@ sub get_uniquelistcount {
   return $CONFIG->{state}{uniquelistcount}{$liststring};
 }
 
-
 =head2 add_uniquelistcount
 
     Incremenent the count for a list part to the data for a namehash
