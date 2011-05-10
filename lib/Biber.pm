@@ -1601,7 +1601,7 @@ sub create_uniquelist_info {
       my $namehash = $be->get_field('namehash');
 
       if (my $lname = $be->get_field('labelnamename')) {
-        my $liststring = '';
+        my $liststring = [];
         foreach my $name (@{$be->get_field($lname)->names}) {
           next if $name->get_namestring eq 'others'; # Don't count explicit "et al"
           my $lastname   = $name->get_lastname;
@@ -1609,21 +1609,21 @@ sub create_uniquelist_info {
           my $namestring = $name->get_namestring;
           # uniquename is not set so generate uniquelist based on just lastname
           if (not defined($name->get_uniquename)) {
-            $liststring .= $lastname . '|';
+            push @$liststring, $lastname;
           }
           # uniquename indicates unique with just lastname
           elsif ($name->get_uniquename == 0) {
-            $liststring .= $lastname . '|';
+            push @$liststring, $lastname;
           }
           # uniquename indicates unique with lastname with initials
           elsif ($name->get_uniquename == 1) {
-            $liststring .= $nameinitstring . '|';
+            push @$liststring, $nameinitstring;
           }
           # uniquename indicates unique with full name
           elsif ($name->get_uniquename == 2) {
-            $liststring .= $namestring . '|';
+            push @$liststring, $namestring;
           }
-          Biber::Config->add_uniquelistcount($liststring);
+          Biber::Config->add_uniquelistcount($citekey, $liststring);
         }
         # We need to know the list uniqueness counts for the whole list seperately otherwise
         # we will falsely "disambiguate" idential name lists from each other by setting
@@ -1631,7 +1631,7 @@ sub create_uniquelist_info {
         # one count. We therefore need to distinguish counts which are of the final, complete
         # list of names. If there is more than one count for these, (meaning that there are
         # two or more identical name lists), we don't expand them at all as there is no point.
-        Biber::Config->add_final_uniquelistcount($liststring);
+        Biber::Config->add_uniquelistcount($citekey, $liststring, 1);
       }
     }
   }
@@ -1661,7 +1661,7 @@ sub generate_uniquelist {
       my $namehash = $be->get_field('namehash');
 
       if (my $lname = $be->get_field('labelnamename')) {
-        my $liststring = '';
+        my $liststring = [];
         my $namefield = $be->get_field($lname);
 
         foreach my $name (@{$namefield->names}) {
@@ -1671,19 +1671,19 @@ sub generate_uniquelist {
           my $namestring = $name->get_namestring;
           # uniquename is not set so generate uniquelist based on just lastname
           if (not defined($name->get_uniquename)) {
-            $liststring .= $lastname . '|';
+            push @$liststring, $lastname;
           }
           # uniquename indicates unique with just lastname
           elsif ($name->get_uniquename == 0) {
-            $liststring .= $lastname . '|';
+            push @$liststring, $lastname;
           }
           # uniquename indicates unique with lastname with initials
           elsif ($name->get_uniquename == 1) {
-            $liststring .= $nameinitstring . '|';
+            push @$liststring, $nameinitstring;
           }
           # uniquename indicates unique with full name
           elsif ($name->get_uniquename == 2) {
-            $liststring .= $namestring . '|';
+            push @$liststring, $namestring;
           }
           # list is unique after this many names so we set uniquelist to this point
           if (Biber::Config->get_uniquelistcount($liststring) == 1) {

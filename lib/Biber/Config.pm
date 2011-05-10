@@ -39,7 +39,6 @@ $CONFIG->{state}{seenfullhash} = {};
 $CONFIG->{state}{seenname} = {};
 $CONFIG->{state}{keycase} = {};
 $CONFIG->{state}{uniquelistcount} = {};
-$CONFIG->{state}{final_uniquelistcount} = {};
 
 # Boolean to say whether uniquename/uniquelist information has changed
 # Default is true so that uniquename/uniquelist processing starts
@@ -89,6 +88,7 @@ sub _init {
   $CONFIG->{state}{namehashcount} = {};
   $CONFIG->{state}{fullhashcount} = {};
   $CONFIG->{state}{uniquenamecount} = {};
+  $CONFIG->{state}{uniquelistcount} = {};
   $CONFIG->{state}{seen_nameyear_extrayear} = {};
   $CONFIG->{state}{seen_extrayear} = {};
   $CONFIG->{state}{seen_nameyear_extraalpha} = {};
@@ -748,7 +748,7 @@ sub incr_seen_nameyear_extraalpha {
 sub get_uniquelistcount {
   shift; # class method so don't care about class name
   my $liststring = shift;
-  return $CONFIG->{state}{uniquelistcount}{$liststring};
+  return $CONFIG->{state}{uniquelistcount}{bylist}{join("\x{10FFFD}", @$liststring)};
 }
 
 =head2 add_uniquelistcount
@@ -761,23 +761,14 @@ sub get_uniquelistcount {
 
 sub add_uniquelistcount {
   shift; # class method so don't care about class name
-  my $liststring = shift;
-  $CONFIG->{state}{uniquelistcount}{$liststring}++;
-  return;
-}
-
-=head2 add_final_uniquelistcount
-
-    Incremenent the count for a complete list to the data for a namehash
-
-    Biber::Config->add_final_uniquelistcount($liststring);
-
-=cut
-
-sub add_final_uniquelistcount {
-  shift; # class method so don't care about class name
-  my $liststring = shift;
-  $CONFIG->{state}{final_uniquelistcount}{$liststring}++;
+  my ($citekey, $liststring, $final) = @_;
+  $CONFIG->{state}{uniquelistcount}{bykey}{$citekey} = $liststring;
+  if ($final) {
+    $CONFIG->{state}{uniquelistcount}{bylist}{final}{join("\x{10FFFD}", @$liststring)}++;
+  }
+  else {
+    $CONFIG->{state}{uniquelistcount}{bylist}{join("\x{10FFFD}", @$liststring)}++;
+  }
   return;
 }
 
@@ -793,7 +784,7 @@ sub add_final_uniquelistcount {
 sub get_final_uniquelistcount {
   shift; # class method so don't care about class name
   my $liststring = shift;
-  return $CONFIG->{state}{final_uniquelistcount}{$liststring};
+  return $CONFIG->{state}{uniquelistcount}{bylist}{final}{join("\x{10FFFD}", @$liststring)};
 }
 
 

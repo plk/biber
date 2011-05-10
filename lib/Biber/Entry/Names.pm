@@ -122,9 +122,7 @@ sub get_uniquelist {
 sub count_uniquelist {
   my $self = shift;
   my $liststring = shift;
-  $liststring =~ s/\|\z//xms;
-  my @liststring_array = split(/\|/, $liststring);
-  return $#liststring_array + 1;
+  return $#$liststring + 1;
 }
 
 =head2 add_element
