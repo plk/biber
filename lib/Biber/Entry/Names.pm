@@ -4,6 +4,8 @@ use feature ':5.10';
 
 use Data::Dump;
 use Biber::Config;
+use Log::Log4perl qw( :no_extra_logdie_message );
+my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
 
@@ -83,8 +85,8 @@ sub reset_uniquelist {
 
 sub set_uniquelist {
   my $self = shift;
-  my $liststring = shift;
-  my $uniquelist = $self->count_uniquelist($liststring);
+  my $namelist = shift;
+  my $uniquelist = $self->count_uniquelist($namelist);
   my $currval = $self->{uniquelist};
   # Set modified flag to positive if we changed something
   if (not defined($currval) or $currval != $uniquelist) {
@@ -92,11 +94,26 @@ sub set_uniquelist {
   }
   return if $uniquelist == 1; # No disambiguation needed as the list is unique
                               # in the first position
+
+  # Special case.
   # No point disambiguating with uniquelist lists which have the same count
   # for the complete list as this means they are the same list. So, if this
-  # is the case, don't set uniquelist at all.
-  return if (defined(Biber::Config->get_final_uniquelistcount($liststring)) and
-             Biber::Config->get_final_uniquelistcount($liststring) > 1);
+  # is the case, don't set uniquelist at all. BUT, only do this if there is nothing
+  # else which these identical lists need disambiguating from:
+  #
+  # * Assume last index of list is x
+  # * Must not be any other list identical apart from position x
+  # * Must not be any other list identical up to position x but also longer
+
+ return if (
+            # if final count > 1 (identical lists)
+            Biber::Config->get_final_uniquelistcount($namelist) > 1 and
+            # nothing differs from $namelist in last place
+            not Biber::Config->list_differs_last($namelist) and
+            # nothing else is the same to last position but is longer
+            not Biber::Config->list_differs_superset($namelist)
+           );
+
   $self->{uniquelist} = $uniquelist;
   return;
 }
@@ -121,8 +138,8 @@ sub get_uniquelist {
 
 sub count_uniquelist {
   my $self = shift;
-  my $liststring = shift;
-  return $#$liststring + 1;
+  my $namelist = shift;
+  return $#$namelist + 1;
 }
 
 =head2 add_element

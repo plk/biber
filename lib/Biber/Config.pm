@@ -5,6 +5,7 @@ use Biber::Constants;
 use IPC::Cmd qw( can_run run );
 use Cwd qw( abs_path );
 use Config::General qw( ParseConfig );
+use Data::Compare;
 use Data::Dump;
 use Carp;
 use List::AllUtils qw(first);
@@ -747,8 +748,8 @@ sub incr_seen_nameyear_extraalpha {
 
 sub get_uniquelistcount {
   shift; # class method so don't care about class name
-  my $liststring = shift;
-  return $CONFIG->{state}{uniquelistcount}{bylist}{join("\x{10FFFD}", @$liststring)};
+  my $namelist = shift;
+  return $CONFIG->{state}{uniquelistcount}{bylist}{join("\x{10FFFD}", @$namelist)};
 }
 
 =head2 add_uniquelistcount
@@ -761,13 +762,12 @@ sub get_uniquelistcount {
 
 sub add_uniquelistcount {
   shift; # class method so don't care about class name
-  my ($citekey, $liststring, $final) = @_;
-  $CONFIG->{state}{uniquelistcount}{bykey}{$citekey} = $liststring;
+  my ($namelist, $final) = @_;
   if ($final) {
-    $CONFIG->{state}{uniquelistcount}{bylist}{final}{join("\x{10FFFD}", @$liststring)}++;
+    $CONFIG->{state}{uniquelistcount}{bylist}{final}{join("\x{10FFFD}", @$namelist)}++;
   }
   else {
-    $CONFIG->{state}{uniquelistcount}{bylist}{join("\x{10FFFD}", @$liststring)}++;
+    $CONFIG->{state}{uniquelistcount}{bylist}{join("\x{10FFFD}", @$namelist)}++;
   }
   return;
 }
@@ -783,8 +783,9 @@ sub add_uniquelistcount {
 
 sub get_final_uniquelistcount {
   shift; # class method so don't care about class name
-  my $liststring = shift;
-  return $CONFIG->{state}{uniquelistcount}{bylist}{final}{join("\x{10FFFD}", @$liststring)};
+  my $namelist = shift;
+  my $c = $CONFIG->{state}{uniquelistcount}{bylist}{final}{join("\x{10FFFD}", @$namelist)};
+  return defined($c) ? $c : 0;
 }
 
 
@@ -801,6 +802,82 @@ sub reset_uniquelistcount {
   $CONFIG->{state}{uniquelistcount} = {};
   $CONFIG->{state}{final_uniquelistcount} = {};
   return;
+}
+
+=head2 list_differs_last
+
+    Returns true if some list differs from passed list in its last place
+
+    list_differs_last([a, b, c]) = 1
+
+    if there is another list like any of these:
+
+    [a, b, d]
+    [a, b, d, e]
+
+    Biber::Config->list_differs_last($namelist)
+
+=cut
+
+sub list_differs_last {
+  shift; # class method so don't care about class name
+  my $list = shift;
+  my @list_one = @$list;
+  my $list_last = pop @list_one;
+
+  # Loop over all final lists, looking for ones which match up to
+  # length of list to check minus 1 but which differ in the last place of the
+  # list to check.
+  foreach my $l_s (keys %{$CONFIG->{state}{uniquelistcount}{bylist}{final}}) {
+    my @l = split("\x{10FFFD}", $l_s);
+    # If list is shorter than the list we are checking, it's irrelevant
+    next unless $#l >= $#$list;
+    # get the list elements up to length of the list we are checking
+    my @ln = @l[0 .. $#$list];
+    # pop off the last element which is the potential point of difference
+    my $ln_last = pop @ln;
+    if (Compare(\@list_one, \@ln) and ($list_last ne $ln_last)) {
+      $logger->trace("list_differs_last() returning true: (" . join(',', @list_one) . " vs " . join(',', @ln) . " -> $list_last vs $ln_last)");
+      return 1;
+    }
+  }
+  return 0;
+}
+
+=head2 list_differs_superset
+
+    Returns true if some list differs from passed list by being
+    identical to the list up to the end of the list but also
+    by having extra elements after this
+
+    list_differs_superset([a, b, c]) = 1
+
+    if there is another list like any of these:
+
+    [a, b, c, d]
+    [a, b, c, d, e]
+
+    Biber::Config->list_differs_superset($namelist)
+
+=cut
+
+sub list_differs_superset {
+  shift; # class method so don't care about class name
+  my $list = shift;
+  # Loop over all final lists, looking for ones which match up to
+  # length of list to check but which differ after this length
+  foreach my $l_s (keys %{$CONFIG->{state}{uniquelistcount}{bylist}{final}}) {
+    my @l = split("\x{10FFFD}", $l_s);
+    # If list is not longer than the list we are checking, it's irrelevant
+    next unless $#l > $#$list;
+    # get the list elements up to length of the list we are checking
+    my @ln = @l[0 .. $#$list];
+    if (Compare($list, \@ln)) {
+      $logger->trace("list_differs_superset() returning true: (" . join(',', @$list) . " vs " . join(',', @l) . ")");
+      return 1;
+    }
+  }
+  return 0;
 }
 
 

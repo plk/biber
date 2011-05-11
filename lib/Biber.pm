@@ -1601,7 +1601,7 @@ sub create_uniquelist_info {
       my $namehash = $be->get_field('namehash');
 
       if (my $lname = $be->get_field('labelnamename')) {
-        my $liststring = [];
+        my $namelist = [];
         foreach my $name (@{$be->get_field($lname)->names}) {
           next if $name->get_namestring eq 'others'; # Don't count explicit "et al"
           my $lastname   = $name->get_lastname;
@@ -1609,21 +1609,21 @@ sub create_uniquelist_info {
           my $namestring = $name->get_namestring;
           # uniquename is not set so generate uniquelist based on just lastname
           if (not defined($name->get_uniquename)) {
-            push @$liststring, $lastname;
+            push @$namelist, $lastname;
           }
           # uniquename indicates unique with just lastname
           elsif ($name->get_uniquename == 0) {
-            push @$liststring, $lastname;
+            push @$namelist, $lastname;
           }
           # uniquename indicates unique with lastname with initials
           elsif ($name->get_uniquename == 1) {
-            push @$liststring, $nameinitstring;
+            push @$namelist, $nameinitstring;
           }
           # uniquename indicates unique with full name
           elsif ($name->get_uniquename == 2) {
-            push @$liststring, $namestring;
+            push @$namelist, $namestring;
           }
-          Biber::Config->add_uniquelistcount($citekey, $liststring);
+          Biber::Config->add_uniquelistcount($namelist);
         }
         # We need to know the list uniqueness counts for the whole list seperately otherwise
         # we will falsely "disambiguate" idential name lists from each other by setting
@@ -1631,7 +1631,7 @@ sub create_uniquelist_info {
         # one count. We therefore need to distinguish counts which are of the final, complete
         # list of names. If there is more than one count for these, (meaning that there are
         # two or more identical name lists), we don't expand them at all as there is no point.
-        Biber::Config->add_uniquelistcount($citekey, $liststring, 1);
+        Biber::Config->add_uniquelistcount($namelist, 1);
       }
     }
   }
@@ -1661,7 +1661,7 @@ sub generate_uniquelist {
       my $namehash = $be->get_field('namehash');
 
       if (my $lname = $be->get_field('labelnamename')) {
-        my $liststring = [];
+        my $namelist = [];
         my $namefield = $be->get_field($lname);
 
         foreach my $name (@{$namefield->names}) {
@@ -1671,28 +1671,28 @@ sub generate_uniquelist {
           my $namestring = $name->get_namestring;
           # uniquename is not set so generate uniquelist based on just lastname
           if (not defined($name->get_uniquename)) {
-            push @$liststring, $lastname;
+            push @$namelist, $lastname;
           }
           # uniquename indicates unique with just lastname
           elsif ($name->get_uniquename == 0) {
-            push @$liststring, $lastname;
+            push @$namelist, $lastname;
           }
           # uniquename indicates unique with lastname with initials
           elsif ($name->get_uniquename == 1) {
-            push @$liststring, $nameinitstring;
+            push @$namelist, $nameinitstring;
           }
           # uniquename indicates unique with full name
           elsif ($name->get_uniquename == 2) {
-            push @$liststring, $namestring;
+            push @$namelist, $namestring;
           }
           # list is unique after this many names so we set uniquelist to this point
-          if (Biber::Config->get_uniquelistcount($liststring) == 1) {
+          if (Biber::Config->get_uniquelistcount($namelist) == 1) {
             last;
           }
         }
-        $logger->trace("Setting uniquelist for '$citekey' using '$liststring'");
-        $logger->trace("Uniquelist count for '$citekey' is '" . Biber::Config->get_uniquelistcount($liststring) . "'");
-        $namefield->set_uniquelist($liststring);
+        $logger->trace("Setting uniquelist for '$citekey' using " . join(',', @$namelist));
+        $logger->trace("Uniquelist count for '$citekey' is '" . Biber::Config->get_final_uniquelistcount($namelist) . "'");
+        $namefield->set_uniquelist($namelist);
       }
     }
   }
