@@ -59,6 +59,7 @@
         <ref name="sortlos"/>
         <ref name="uniquelist"/>
         <ref name="uniquename"/>
+        <ref name="uniquenamescope"/>
         <ref name="useauthor"/>
         <ref name="useeditor"/>
         <ref name="useprefix"/>
@@ -108,6 +109,9 @@
           </optional>
           <optional>
             <ref name="uniquename"/>
+          </optional>
+          <optional>
+            <ref name="uniquenamescope"/>
           </optional>
           <optional>
             <ref name="useauthor"/>
@@ -1001,6 +1005,13 @@
       </element>
     </element>
   </define>
+  <!--
+    0 = do not provide uniquename information
+    1 = disambiguate with initials, only up to maxnames/uniquelist
+    2 = disambiguate with full name or initials, only up to maxnames/uniquelist
+    3 = always give initials
+    4 = always give full name
+  -->
   <define name="uniquename">
     <element name="bcf:option">
       <attribute name="type">
@@ -1016,6 +1027,26 @@
           <value>2</value>
           <value>3</value>
           <value>4</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <!--
+    0 = global uniquename disambiguation
+    1 = global except for within a name list ("name list" scope)
+  -->
+  <define name="uniquenamescope">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>uniquenamescope</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
         </choice>
       </element>
     </element>

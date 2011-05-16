@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 75;
+use Test::More tests => 85;
 
 use Biber;
 use Biber::Utils;
@@ -51,6 +51,7 @@ $biber->parse_ctrlfile('uniqueness2.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
 Biber::Config->setblxoption('uniquename', 1);
 Biber::Config->setblxoption('uniquelist', 1);
@@ -93,11 +94,44 @@ is($bibentries->entry('unall10')->get_field($bibentries->entry('unall10')->get_f
 is($bibentries->entry('unall3')->get_field($bibentries->entry('unall3')->get_field('labelnamename'))->get_uniquelist, '5', 'Uniquelist - 15');
 is($bibentries->entry('unall4')->get_field($bibentries->entry('unall4')->get_field('labelnamename'))->get_uniquelist, '6', 'Uniquelist - 16');
 
+
+$biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile('uniqueness4.bcf');
+$biber->set_output_obj(Biber::Output::BBL->new());
+# Biber options
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('sortlocale', 'C');
+# Biblatex options
+Biber::Config->setblxoption('maxnames', 5);
+Biber::Config->setblxoption('uniquename', 2);
+Biber::Config->setblxoption('uniquenamescope', 1);
+Biber::Config->setblxoption('uniquelist', 0);
+Biber::Config->setblxoption('singletitle', 0);
+Biber::Config->setblxoption('labelyearspec', [ 'year' ]);
+# Now generate the information
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
+$main = $section->get_list('MAIN');
+
+is($bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquenamesope - 1');
+is($bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamesope - 2');
+is($bibentries->entry('un2')->get_field($bibentries->entry('un2')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquenamesope - 3');
+is($bibentries->entry('un2')->get_field($bibentries->entry('un2')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '1', 'Uniquenamesope - 4');
+is($bibentries->entry('un3')->get_field($bibentries->entry('un3')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquenamesope - 5');
+is($bibentries->entry('un3')->get_field($bibentries->entry('un3')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamesope - 6');
+is($bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquenamesope - 7');
+is($bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamesope - 8');
+is($bibentries->entry('un5')->get_field($bibentries->entry('un4')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquenamesope - 9');
+is($bibentries->entry('un5')->get_field($bibentries->entry('un4')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamesope - 10');
+
+
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness3.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
 Biber::Config->setblxoption('uniquename', 1);
 Biber::Config->setblxoption('uniquelist', 0);
@@ -124,6 +158,7 @@ $biber->parse_ctrlfile('uniqueness3.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 1);
@@ -150,6 +185,7 @@ $biber->parse_ctrlfile('uniqueness3.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
 Biber::Config->setblxoption('uniquename', 0);
 Biber::Config->setblxoption('uniquelist', 0);
@@ -177,6 +213,7 @@ $biber->parse_ctrlfile('uniqueness2.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
 Biber::Config->setblxoption('uniquename', 3);
 Biber::Config->setblxoption('uniquelist', 1);
@@ -201,6 +238,7 @@ $biber->parse_ctrlfile('uniqueness2.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
 Biber::Config->setblxoption('uniquename', 4);
 Biber::Config->setblxoption('uniquelist', 1);

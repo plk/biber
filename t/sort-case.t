@@ -39,6 +39,7 @@ is_deeply([$main->get_keys], ['CS1','CS3','CS2'], 'U::C case - 1');
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('sort-case.bcf');
+
 $biber->set_output_obj(Biber::Output::BBL->new());
 
 # Global here is sortcase=0, sortupper=1
