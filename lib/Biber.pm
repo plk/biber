@@ -1481,7 +1481,7 @@ sub create_uniquename_info {
         my $names = $be->get_field($lname)->names;
         foreach my $name (@$names) {
 
-          # For uniquename 4 and 5 settings
+          # For uniquename 5 (sparseinit) and 6 (sparsefull) settings
           if ($name->get_index <= $localmaxnames) {
             push @$lastnames, $name->get_lastname;
           }
