@@ -1473,21 +1473,25 @@ sub create_uniquename_info {
         #
         # Anything which has more than one combination for both of these would
         # be uniquename = 2 unless even the full name doesn't disambiguate
-        # and then it is left at uniquename=0
+        # and then it is left at uniquename = 0
 
         # For the uniquenamescope feature, we need to record the lastnames
         my $lastnames = [];
 
         my $names = $be->get_field($lname)->names;
         foreach my $name (@$names) {
+
+          # For the uniquenamescope feature
+          if ($name->get_index <= $localmaxnames) {
+            push @$lastnames, $name->get_lastname;
+          }
+
           # We don't want to record disambiguation information for any names
           # that are hidden by a maxnames/uniquelist limit unless uniquename=3 or 4
-          unless ($name->get_index > $localmaxnames and $un < 3) {
-            my $lastname   = $name->get_lastname;
+          if ($name->get_index <= $localmaxnames or $un > 2) {
+            my $lastname       = $name->get_lastname;
             my $nameinitstring = $name->get_nameinitstring;
-            my $namestring = $name->get_namestring;
-
-            push @$lastnames, $lastname; # For the uniquenamescope feature
+            my $namestring     = $name->get_namestring;
 
             # Record a uniqueness information entry for the lastname showing that
             # this lastname has been seen in this name
