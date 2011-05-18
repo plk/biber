@@ -103,7 +103,7 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
 Biber::Config->setblxoption('maxnames', 3);
-Biber::Config->setblxoption('uniquename', 4);
+Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquenamescope', 1);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 0);
