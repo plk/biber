@@ -39,7 +39,6 @@ start =
       sortlos,
       uniquelist,
       uniquename,
-      uniquenamescope,
       useauthor,
       useeditor,
       useprefix,
@@ -62,7 +61,6 @@ start =
       sortalphaothers?,
       uniquelist?,
       uniquename?,
-      uniquenamescope?,
       useauthor?,
       useeditor?,
       useprefix?,
@@ -413,21 +411,15 @@ uniquelist =
 # 0 = do not provide uniquename information
 # 1 = disambiguate with initials, only up to maxnames/uniquelist
 # 2 = disambiguate with full name or initials, only up to maxnames/uniquelist
-# 3 = always give initials
-# 4 = always give full name
+# 3 = disambiguate with initials, ignore maxnames/uniquelist
+# 4 = disambiguate with full name or initials, ignore maxnames/uniquelist
+# 5 = disambiguate with initials, only between identical lists in different entries
+# 6 = disambiguate with full name or initials, only between identical lists in different entries
 uniquename =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "uniquename" },
-    element bcf:value { "0" | "1" | "2" | "3" | "4" }
-  }
-# 0 = global uniquename disambiguation
-# 1 = global except for within a name list ("name list" scope)
-uniquenamescope =
-  element bcf:option {
-    attribute type { "singlevalued" },
-    element bcf:key { "uniquenamescope" },
-    element bcf:value { "0" | "1" }
+    element bcf:value { "0" | "1" | "2" | "3" | "4" | "5" | "6" }
   }
 maxitems =
   element bcf:option {

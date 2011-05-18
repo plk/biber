@@ -1475,20 +1475,21 @@ sub create_uniquename_info {
         # be uniquename = 2 unless even the full name doesn't disambiguate
         # and then it is left at uniquename = 0
 
-        # For the uniquenamescope feature, we need to record the lastnames
+        # For uniquename = 5 (sparseinit) or 6 (sparsefull), we need to record the lastnames
         my $lastnames = [];
 
         my $names = $be->get_field($lname)->names;
         foreach my $name (@$names) {
 
-          # For the uniquenamescope feature
+          # For uniquename 4 and 5 settings
           if ($name->get_index <= $localmaxnames) {
             push @$lastnames, $name->get_lastname;
           }
 
           # We don't want to record disambiguation information for any names
-          # that are hidden by a maxnames/uniquelist limit unless uniquename=3 or 4
-          if ($name->get_index <= $localmaxnames or $un > 2) {
+          # that are hidden by a maxnames/uniquelist limit unless
+          # uniquename = 3 (allinit) or 4 (allfull)
+          if ($name->get_index <= $localmaxnames or $un == 3 or $un == 4) {
             my $lastname       = $name->get_lastname;
             my $nameinitstring = $name->get_nameinitstring;
             my $namestring     = $name->get_namestring;
@@ -1506,11 +1507,11 @@ sub create_uniquename_info {
             Biber::Config->add_uniquenamecount($namestring, $namestring);
           }
         }
-        # Information for the uniquenamescope feature
+        # Information for uniquename = 5 (sparseinit) and 6 (sparsefull)
         # Every lastname records the list of lastnames in which it occurs
         # Using this information later, we can choose to not set uniquename
         # if a name only needs disambiguating from other names in the same list
-        if (Biber::Config->getblxoption('uniquenamescope', $bee) == 1) {
+        if ($un == 5 or $un == 6) {
           foreach my $name (@$names) {
             my $lastname = $name->get_lastname;
             Biber::Config->add_lastnamelistcount($lastname, $lastnames, $citekey);
@@ -1551,41 +1552,43 @@ sub generate_uniquename {
 
           # If there is one entry for the lastname, then it's unique
           if (Biber::Config->get_numofuniquenames($lastname) == 1) {
-            $name->set_uniquename(0, $bee);
+            $name->set_uniquename(0, $un);
           }
           # Otherwise, if there is one entry for the lastname plus initials,
           # then it needs the initials to make it unique
           elsif (Biber::Config->get_numofuniquenames($nameinitstring) == 1) {
-            $name->set_uniquename(1, $bee);
+            $name->set_uniquename(1, $un);
           }
           # Otherwise, if there is more than one entry for the lastname plus
-          # initials and we are restricted to disambiguating with inits (uniquename=1 or 3),
+          # initials and we are restricted to disambiguating with inits (uniquename=1,3,5),
           # then set to 0 as the initials don't disambiguate and it's misleading to
           # expand to initials
           elsif (Biber::Config->get_numofuniquenames($nameinitstring) > 1 and
-                 ($un == 1 or $un == 3)) {
-            $name->set_uniquename(0, $bee);
+                 ($un == 1 or $un == 3 or $un == 5)) {
+            $name->set_uniquename(0, $un);
           }
           # Otherwise the name needs to be full to make it unique
           # but restrict to uniquename biblatex option maximum
           elsif (Biber::Config->get_numofuniquenames($namestring) == 1) {
             my $run;
             given ($un) {
-              when ('1') {$run = 1}
-              when ('2') {$run = 2}
-              when ('3') {$run = 1}
-              when ('4') {$run = 2}
+              when ('1') {$run = 1} # init
+              when ('2') {$run = 2} # full
+              when ('3') {$run = 1} # allinit
+              when ('4') {$run = 2} # allfull
+              when ('5') {$run = 1} # sparseinit
+              when ('6') {$run = 2} # sparsefull
             }
-            $name->set_uniquename($run, $bee)
+            $name->set_uniquename($run, $un)
           }
           # Otherwise, if there is more than one entry (hash) for the full name,
           # then set to 0 since nothing will uniqueify this name and it's just
           # misleading to expand it
           elsif (Biber::Config->get_numofuniquenames($namestring) > 1) {
-            $name->set_uniquename(0, $bee);
+            $name->set_uniquename(0, $un);
           }
           else {
-            $name->set_uniquename(0, $bee);
+            $name->set_uniquename(0, $un);
           }
         }
       }

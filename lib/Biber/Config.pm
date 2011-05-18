@@ -43,11 +43,11 @@ $CONFIG->{state}{keycase} = {};
 # For the uniquelist feature. Records the number of times a name list occurs in all entries
 $CONFIG->{state}{uniquelistcount} = {};
 
-# For the uniquenamescope feature. Records a count how many times a lastname occurs in
+# For uniquename = 5 or 6. Records a count how many times a lastname occurs in
 # a list of lastnames
 $CONFIG->{state}{lastnamelistcount} = {};
 
-# For the uniquenamescope feature. Records which lastnames occured in which lastname lists
+# For uniquename = 5 or 6. Records which lastnames occured in which lastname lists
 # in which keys. Used to prevent incrementing the count of lastname lists in which a
 # lastname occurs when there are two identical lastnames in the same list since we only
 # care about lastname occuring in different lastname lists (that is, lastname lists
@@ -756,7 +756,7 @@ sub incr_seen_nameyear_extraalpha {
 =head2 add_lastnamelistcount
 
     Increment the count of lastname only namelists in which the name occurs
-    Used for the uniquenamescope feature
+    Used for uniquename = 5 (sparseinit) or 6 (sparsefull)
 
     Biber::Config->add_namelistcount($namestring, $namelist);
 
@@ -778,7 +778,7 @@ sub add_lastnamelistcount {
 =head2 get_lastnamelistcount
 
     Get the count of lastname only namelists in which the name occurs
-    Used for the uniquenamescope feature
+    Used for uniquename = 5 or 6
 
     Biber::Config->get_namelistcount($namestring);
 

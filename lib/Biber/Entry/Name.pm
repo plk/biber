@@ -135,13 +135,13 @@ sub reset_uniquename {
 =cut
 
 sub set_uniquename {
-  my ($self, $uniquename, $bee) = @_;
+  my ($self, $uniquename, $un) = @_;
   my $currval = $self->{uniquename};
   my $lastname = $self->get_lastname;
 
-  # sparse global uniquename scope - ignore uniquename for any names
+  # uniquename = 5 or 6 - ignore uniquename for any names
   # which don't occur in more than one identical list of visible last names
-  if (Biber::Config->getblxoption('uniquenamescope', $bee) == 1) {
+  if ($un == 5 or $un == 6) {
     unless (first {$_ > 1} values %{Biber::Config->get_lastnamelistcount($lastname)}) {
       $uniquename = 0;
     }
