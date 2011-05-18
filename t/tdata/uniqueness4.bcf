@@ -231,6 +231,18 @@
     <bcf:citekey>us5</bcf:citekey>
     <bcf:citekey>us6</bcf:citekey>
     <bcf:citekey>us7</bcf:citekey>
+    <bcf:citekey>us8</bcf:citekey>
+    <bcf:citekey>us9</bcf:citekey>
+    <bcf:citekey>us10</bcf:citekey>
+    <bcf:citekey>us11</bcf:citekey>
+    <bcf:citekey>us12</bcf:citekey>
+    <bcf:citekey>us13</bcf:citekey>
+    <bcf:citekey>us14</bcf:citekey>
+    <bcf:citekey>us15</bcf:citekey>
+    <bcf:citekey>us16</bcf:citekey>
+    <bcf:citekey>us17</bcf:citekey>
+    <bcf:citekey>us18</bcf:citekey>
+    <bcf:citekey>us19</bcf:citekey>
     <bcf:sectionlist label="MAIN" type="entry"/>
     <bcf:sectionlist label="SHORTHANDS" type="shorthand">
       <bcf:filter type="field">shorthand</bcf:filter>

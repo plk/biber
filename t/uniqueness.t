@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 102;
+use Test::More tests => 120;
 
 use Biber;
 use Biber::Utils;
@@ -102,10 +102,10 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
-Biber::Config->setblxoption('maxnames', 5);
+Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquenamescope', 1);
-Biber::Config->setblxoption('uniquelist', 0);
+Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 0);
 Biber::Config->setblxoption('labelyearspec', [ 'year' ]);
 # Now generate the information
@@ -128,9 +128,9 @@ is($bibentries->entry('us6')->get_field($bibentries->entry('us6')->get_field('la
 is($bibentries->entry('us6')->get_field($bibentries->entry('us6')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquenamescope - 12');
 is($bibentries->entry('us7')->get_field($bibentries->entry('us7')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquenamescope - 13');
 is($bibentries->entry('us7')->get_field($bibentries->entry('us7')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamescope - 14');
-is($bibentries->entry('us8')->get_field($bibentries->entry('us8')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquenamescope - 15');
+is($bibentries->entry('us8')->get_field($bibentries->entry('us8')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquenamescope - 15');
 is($bibentries->entry('us8')->get_field($bibentries->entry('us8')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamescope - 16');
-is($bibentries->entry('us9')->get_field($bibentries->entry('us9')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquenamescope - 17');
+is($bibentries->entry('us9')->get_field($bibentries->entry('us9')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquenamescope - 17');
 is($bibentries->entry('us9')->get_field($bibentries->entry('us9')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamescope - 18');
 is($bibentries->entry('us10')->get_field($bibentries->entry('us10')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquenamescope - 19');
 is($bibentries->entry('us10')->get_field($bibentries->entry('us10')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '1', 'Uniquenamescope - 20');
@@ -140,6 +140,25 @@ is($bibentries->entry('us12')->get_field($bibentries->entry('us12')->get_field('
 is($bibentries->entry('us12')->get_field($bibentries->entry('us12')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamescope - 24');
 is($bibentries->entry('us13')->get_field($bibentries->entry('us13')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquenamescope - 25');
 is($bibentries->entry('us13')->get_field($bibentries->entry('us13')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamescope - 26');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquenamescope - 27');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '2', 'Uniquenamescope - 28');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquenamescope - 29');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquenamescope - 30');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '2', 'Uniquenamescope - 31');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquenamescope - 32');
+is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquenamescope - 33');
+is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamescope - 34');
+is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquenamescope - 35');
+is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquenamescope - 36');
+is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquenamescope - 36');
+is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamescope - 37');
+is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquenamescope - 38');
+is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_element(4)->get_uniquename, '0', 'Uniquenamescope - 39');
+is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->get_uniquelist, '4', 'Uniquenamescope - 40');
+is($bibentries->entry('us18')->get_field($bibentries->entry('us18')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquenamescope - 41');
+is($bibentries->entry('us19')->get_field($bibentries->entry('us19')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquenamescope - 42');
+ok(is_undef($bibentries->entry('us18')->get_field($bibentries->entry('us18')->get_field('labelnamename'))->get_uniquelist), 'Uniquenamescope - 43');
+ok(is_undef($bibentries->entry('us19')->get_field($bibentries->entry('us19')->get_field('labelnamename'))->get_uniquelist), 'Uniquenamescope - 44');
 
 
 

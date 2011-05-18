@@ -48,13 +48,13 @@
 
 
 
-% J. Jingle and Irate
+% Jingle and Irate
 @ARTICLE{us8,
   AUTHOR      = {Jeremy Jingle and Otto Irate},
   YEAR        = {1982}
 }
 
-% K. Jingle and Montle
+% Jingle and Montle
 @ARTICLE{us9,
   AUTHOR      = {Kevin Jingle and Barbara Montle},
   YEAR        = {1989}
@@ -77,13 +77,13 @@
 
 
 
-% S. Slip and Brass
+% Simon Slip and Brass
 @ARTICLE{us12,
   AUTHOR      = {Simon Slip and Bertie Brass},
   YEAR        = {1989}
 }
 
-% H. Slip and Brass
+% Steven Slip and Brass
 @ARTICLE{us13,
   AUTHOR      = {Steven Slip and Bertie Brass},
   YEAR        = {1989}
@@ -91,7 +91,40 @@
 
 
 
+% maxnames is 3 in the test so these will be the "same list" and need disambiguating
+% P. Gurgle, Martin Splonk, Remdial et al
+@ARTICLE{us14,
+  AUTHOR      = {Peter Gurgle and Martin Splonk and Leigh Remedial and Trevor Argue},
+  YEAR        = {1989}
+}
+
+% A. Gurgle, Michael Splonk and Remdial
+@ARTICLE{us15,
+  AUTHOR      = {Alan Gurgle and Michael Splonk and Leigh Remedial},
+  YEAR        = {1989}
+}
 
 
+% uniquelist should be set
+@ARTICLE{us16,
+  AUTHOR = {AAA and BBB and CCC},
+  YEAR   = {1902}
+}
 
+@ARTICLE{us17,
+  AUTHOR = {AAA and BBB and CCC and DDD},
+  YEAR   = {1906}
+}
+
+% uniquelist won't be set as the lists are disambiguated by initials because
+% maxnames truncates them to length=3
+@ARTICLE{us18,
+  AUTHOR = {a. AAA and BBB and CCC},
+  YEAR   = {1902}
+}
+
+@ARTICLE{us19,
+  AUTHOR = {b. AAA and BBB and CCC and DDD},
+  YEAR   = {1906}
+}
 

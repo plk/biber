@@ -39,7 +39,20 @@ $CONFIG->{state}{seennamehash} = {};
 $CONFIG->{state}{seenfullhash} = {};
 $CONFIG->{state}{seenname} = {};
 $CONFIG->{state}{keycase} = {};
+
+# For the uniquelist feature. Records the number of times a name list occurs in all entries
 $CONFIG->{state}{uniquelistcount} = {};
+
+# For the uniquenamescope feature. Records a count how many times a lastname occurs in
+# a list of lastnames
+$CONFIG->{state}{lastnamelistcount} = {};
+
+# For the uniquenamescope feature. Records which lastnames occured in which lastname lists
+# in which keys. Used to prevent incrementing the count of lastname lists in which a
+# lastname occurs when there are two identical lastnames in the same list since we only
+# care about lastname occuring in different lastname lists (that is, lastname lists
+# in different entries)
+$CONFIG->{state}{listinkey} = {};
 
 # Boolean to say whether uniquename/uniquelist information has changed
 # Default is true so that uniquename/uniquelist processing starts
@@ -90,6 +103,8 @@ sub _init {
   $CONFIG->{state}{fullhashcount} = {};
   $CONFIG->{state}{uniquenamecount} = {};
   $CONFIG->{state}{uniquelistcount} = {};
+  $CONFIG->{state}{lastnamelistcount} = {};
+  $CONFIG->{state}{listinkey} = {};
   $CONFIG->{state}{seen_nameyear_extrayear} = {};
   $CONFIG->{state}{seen_extrayear} = {};
   $CONFIG->{state}{seen_nameyear_extraalpha} = {};
@@ -733,6 +748,49 @@ sub incr_seen_nameyear_extraalpha {
   return;
 }
 
+#============================
+#       lastnamelistcount
+#============================
+
+
+=head2 add_lastnamelistcount
+
+    Increment the count of lastname only namelists in which the name occurs
+    Used for the uniquenamescope feature
+
+    Biber::Config->add_namelistcount($namestring, $namelist);
+
+=cut
+
+sub add_lastnamelistcount {
+  shift; # class method so don't care about class name
+  my ($lastname, $lastnamelist, $citekey) = @_;
+  # Avoid incrementing the count for lastnames occuring more than once in the same list
+  # (that is, in the same entry)
+  # We only care about names occuring more than once in different lists
+  unless ($CONFIG->{state}{listinkey}{$citekey}{$lastname}{join("\x{10FFFD}", @$lastnamelist)}) {
+    $CONFIG->{state}{lastnamelistcount}{$lastname}{join("\x{10FFFD}", @$lastnamelist)}++;
+    $CONFIG->{state}{listinkey}{$citekey}{$lastname}{join("\x{10FFFD}", @$lastnamelist)}++;
+  }
+  return;
+}
+
+=head2 get_lastnamelistcount
+
+    Get the count of lastname only namelists in which the name occurs
+    Used for the uniquenamescope feature
+
+    Biber::Config->get_namelistcount($namestring);
+
+=cut
+
+sub get_lastnamelistcount {
+  shift; # class method so don't care about class name
+  my $lastname = shift;
+  return $CONFIG->{state}{lastnamelistcount}{$lastname};
+}
+
+
 
 #============================
 #       uniquelistcount
@@ -887,44 +945,44 @@ sub list_differs_superset {
 
 =head2 get_numofuniquenames
 
-    Get the number of uniquenames entries for a name
+    Get the number of uniquenames entries for a namepart
 
-    Biber::Config->get_numofuniquenames($name);
+    Biber::Config->get_numofuniquenames($namepart);
 
 =cut
 
 sub get_numofuniquenames {
   shift; # class method so don't care about class name
-  my $name = shift;
-  return $#{$CONFIG->{state}{uniquenamecount}{$name}} + 1;
+  my $namepart = shift;
+  return $#{$CONFIG->{state}{uniquenamecount}{$namepart}} + 1;
 }
 
 =head2 add_uniquenamecount
 
-    Add a hash to the list of name(hashes) which have the name part in it
+    Add a name part to the list of names which have the name part in it
 
-    Biber::Config->add_uniquenamecount($name, $hash);
+    Biber::Config->add_uniquenamecount($namepart, $name);
 
 =cut
 
 sub add_uniquenamecount {
   shift; # class method so don't care about class name
-  my $namestring = shift;
-  my $hash = shift;
-  # name(hash) already recorded as containing namestring
-  if (first {$hash eq $_} @{$CONFIG->{state}{uniquenamecount}{$namestring}}) {
+  my $namepart = shift;
+  my $name = shift;
+  # name already recorded as containing namestring
+  if (first {$name eq $_} @{$CONFIG->{state}{uniquenamecount}{$namepart}}) {
     return;
   }
-  # Record name(hash) as containing namestring
+  # Record name as containing namepart
   else {
-    push @{$CONFIG->{state}{uniquenamecount}{$namestring}}, $hash;
+    push @{$CONFIG->{state}{uniquenamecount}{$namepart}}, $name;
   }
   return;
 }
 
 =head2 reset_uniquenamecount
 
-    Reset the list of name(hashes) which have the name part in it
+    Reset the list of names which have the name part in it
 
     Biber::Config->reset_uniquenamecount;
 
@@ -939,17 +997,17 @@ sub reset_uniquenamecount {
 
 =head2 _get_uniquename
 
-    Get the uniquename hash of a lastname/hash combination
+    Get the list of names which contain a namepart
     Mainly for use in tests
 
-    Biber::Config->get_uniquename($name);
+    Biber::Config->get_uniquename($namepart);
 
 =cut
 
 sub _get_uniquename {
   shift; # class method so don't care about class name
-  my $name = shift;
-  my @list = sort @{$CONFIG->{state}{uniquenamecount}{$name}};
+  my $namepart = shift;
+  my @list = sort @{$CONFIG->{state}{uniquenamecount}{$namepart}};
   return \@list;
 }
 

@@ -5,6 +5,9 @@ use feature ':5.10';
 use Regexp::Common qw( balanced );
 use Biber::Config;
 use Data::Dump qw( pp );
+use Log::Log4perl qw( :no_extra_logdie_message );
+use List::Util qw( first );
+my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
 
@@ -132,10 +135,19 @@ sub reset_uniquename {
 =cut
 
 sub set_uniquename {
-  my $self = shift;
-  my $uniquename = shift;
+  my ($self, $uniquename, $bee) = @_;
   my $currval = $self->{uniquename};
-  # Set modified flag to positive if we changes something
+  my $lastname = $self->get_lastname;
+
+  # sparse global uniquename scope - ignore uniquename for any names
+  # which don't occur in more than one identical list of visible last names
+  if (Biber::Config->getblxoption('uniquenamescope', $bee) == 1) {
+    unless (first {$_ > 1} values %{Biber::Config->get_lastnamelistcount($lastname)}) {
+      $uniquename = 0;
+    }
+  }
+
+  # Set modified flag to positive if we change something
   if (not defined($currval) or $currval != $uniquename) {
     Biber::Config->set_unul_changed(1);
   }
