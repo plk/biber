@@ -1454,14 +1454,15 @@ sub create_uniquename_info {
 
       if (my $lname = $be->get_field('labelnamename')) {
 
-        # First find out the maxnames setting for this namelist.
-        my $ul = -1;            # Not set
+        # Set the index limit beyond which we don't look for disambiguating information
+        my $ul = -1; # Not set
         if (defined($be->get_field($lname)->get_uniquelist)) {
+          # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
           $ul = $be->get_field($lname)->get_uniquelist;
         }
-        my $mn = Biber::Config->getblxoption('maxnames');
-        # Set the index limit beyond which we don't look for disambiguating information
-        my $localmaxnames = $ul > $mn ? $ul : $mn;
+        my $maxn = Biber::Config->getblxoption('maxnames');
+        my $minn = Biber::Config->getblxoption('minnames');
+        my $localmaxnames = $ul > $maxn ? $ul : $maxn;
 
         # Note that we don't determine if a name is unique here -
         # we can't, were still processing entries at this point.
@@ -1470,6 +1471,7 @@ sub create_uniquename_info {
         # lastname and how many names contain this (uniquename = 0)
         # lastnames+initials and how many names contain this (uniquename = 1)
         # Full name and how many names contain this (uniquename = 2)
+        # How many unique lastname lists contain the lastname (uniquename = 5 or 6)
         #
         # Anything which has more than one combination for both of these would
         # be uniquename = 2 unless even the full name doesn't disambiguate

@@ -92,8 +92,11 @@ sub set_uniquelist {
   if (not defined($currval) or $currval != $uniquelist) {
     Biber::Config->set_unul_changed(1);
   }
+
   return if $uniquelist == 1; # No disambiguation needed as the list is unique
                               # in the first position
+  # $uniquelist cannot be undef or 0 either since every list occurs at least once
+  # This guarantees that uniquelist, when it exists, is >1
 
   # Special case.
   # No point disambiguating with uniquelist lists which have the same count

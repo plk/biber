@@ -731,15 +731,6 @@ sub _namestring {
   my $truncated = 0;
   my $truncnames = dclone($names);
 
-  # perform truncation according to options minnames, maxnames and uniquelist (if
-  # requested)
-  my $ul = -1;
-  if (defined($names->get_uniquelist)) {
-    $ul = $names->get_uniquelist;
-  }
-  my $mn = Biber::Config->getblxoption('maxnames');
-  my $minn = Biber::Config->getblxoption('minnames');
-  my $localmaxnames = $ul > $mn ? $ul : $mn;
   # These should be symbols which can't appear in names
   # This means, symbols which normalise_string_sort strips out
   my $nsi    = '_';          # name separator, internal
@@ -747,11 +738,19 @@ sub _namestring {
   # Guaranteed to sort after everything else as it's the last legal Unicode code point
   my $trunc = "\x{10FFFD}";  # sort string for "et al" truncated name
 
-  if ( $names->count_elements > $localmaxnames ) {
+  # perform truncation according to options minnames, maxnames and uniquelist (if
+  # requested)
+  my $ul;
+  if (defined($names->get_uniquelist)) {
+    $ul = $names->get_uniquelist;
+  }
+  my $maxn = Biber::Config->getblxoption('maxnames');
+  my $minn = Biber::Config->getblxoption('minnames');
+  if ( $names->count_elements > $maxn ) {
     $truncated = 1;
     # truncate to the uniquelist point if uniquelist is requested
-    if (Biber::Config->getblxoption('uniquelist', $be->get_field('entrytype'))) {
-      $truncnames = $truncnames->first_n_elements($localmaxnames);
+    if ($ul) {
+      $truncnames = $truncnames->first_n_elements($ul);
     }
     # otherwise truncate to minnames
     else {
