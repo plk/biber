@@ -36,67 +36,62 @@ sub _getnamehash {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
   my $initstr = '';
   my $maxn = Biber::Config->getblxoption('maxnames');
   my $minn = Biber::Config->getblxoption('minnames');
+  my $truncated = 0;
+  my $truncnames = dclone($names);
 
-  my $num_names = $names->count_elements;
-  my $namelist = $names->names;
-
-  if ( $num_names <= $maxn ) {    # 1 to maxname names
-    foreach my $n (@$namelist) {
-      if ( $n->get_prefix and
-        Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-        $initstr .= join('', @{$n->get_prefix_i});
-      }
-      $initstr .= join('', @{$n->get_lastname_i});
-
-      if ( $n->get_suffix ) {
-        $initstr .= join('', @{$n->get_suffix_i});
-      }
-
-      if ( $n->get_firstname ) {
-        $initstr .= join('', @{$n->get_firstname_i});
-      }
-      if ( $n->get_middlename ) {
-        $initstr .= join('', @{$n->get_middlename_i});
-      }
-     # without useprefix, prefix is not first in the hash
-     if ( $n->get_prefix and not
-       Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-       $initstr .= join('', @{$n->get_prefix_i});
-     }
-
+  # Since namehash is the hash of the visible name,
+  # perform truncation according to options minnames, maxnames and uniquelist (if
+  # requested)
+  my $ul;
+  if (defined($names->get_uniquelist)) {
+    $ul = $names->get_uniquelist;
+  }
+  if ( $names->count_elements > $maxn ) {
+    # truncate to the uniquelist point if uniquelist is requested
+    if ($ul) {
+      $truncnames = $truncnames->first_n_elements($ul);
+      # Since uniquelist can be larger than maxnames, it's only truncated
+      # if uniquelist is shorter than the full name list
+      $truncated = 1 if $ul < $names->count_elements;
+    }
+    # otherwise truncate to minnames
+    else {
+      $truncnames = $truncnames->first_n_elements($minn);
+      $truncated = 1;
     }
   }
-  # > maxname names: only take initials of first getblxoption('minnames', $citekey)
-  else {
-    foreach my $i ( 1 .. $minn ) {
-      if ( $names->nth_element($i)->get_prefix and
-        Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey) ) {
-        $initstr .= join('', @{$names->nth_element($i)->get_prefix_i});
-      }
 
-      if ( $names->nth_element($i)->get_suffix ) {
-        $initstr .= join('', @{$names->nth_element($i)->get_suffix_i});
-      }
-
-      $initstr .= join('', @{$names->nth_element($i)->get_lastname_i});
-      if ( $names->nth_element($i)->get_firstname ) {
-        $initstr .= join('', @{$names->nth_element($i)->get_firstname_i});
-      }
-      if ( $names->nth_element($i)->get_middlename ) {
-        $initstr .= join('', @{$names->nth_element($i)->get_middlename_i});
-      }
-
-      # without useprefix, prefix is not first in the hash
-      if ( $names->nth_element($i)->get_prefix and not
-           Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey) ) {
-        $initstr .= join('', @{$names->nth_element($i)->get_prefix_i});
-      }
-      $initstr .= "+";
+  foreach my $n (@{$truncnames->names}) {
+    if ( $n->get_prefix and
+         Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
+      $initstr .= join('', @{$n->get_prefix_i});
     }
+    $initstr .= join('', @{$n->get_lastname_i});
+
+    if ( $n->get_suffix ) {
+      $initstr .= join('', @{$n->get_suffix_i});
+    }
+
+    if ( $n->get_firstname ) {
+      $initstr .= join('', @{$n->get_firstname_i});
+    }
+    if ( $n->get_middlename ) {
+      $initstr .= join('', @{$n->get_middlename_i});
+    }
+    # without useprefix, prefix is not first in the hash
+    if ( $n->get_prefix and not
+         Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
+      $initstr .= join('', @{$n->get_prefix_i});
+    }
+
   }
+
+  $initstr .= "+" if $truncated;
+
   return normalise_string_hash($initstr);
 }
 
@@ -752,14 +747,18 @@ sub _namestring {
   my $maxn = Biber::Config->getblxoption('maxnames');
   my $minn = Biber::Config->getblxoption('minnames');
   if ( $names->count_elements > $maxn ) {
-    $truncated = 1;
+
     # truncate to the uniquelist point if uniquelist is requested
     if ($ul) {
       $truncnames = $truncnames->first_n_elements($ul);
+      # Since uniquelist can be larger than maxnames, it's only truncated
+      # if uniquelist is shorter than the full name list
+      $truncated = 1 if $ul < $names->count_elements;
     }
     # otherwise truncate to minnames
     else {
       $truncnames = $truncnames->first_n_elements($minn);
+      $truncated = 1;
     }
   }
 
