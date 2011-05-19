@@ -37,9 +37,14 @@ sub _getnamehash {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $initstr = '';
+  my $maxn = Biber::Config->getblxoption('maxnames');
+  my $minn = Biber::Config->getblxoption('minnames');
 
-  if ( $names->count_elements <= Biber::Config->getblxoption('maxnames') ) {    # 1 to maxname names
-    foreach my $n (@{$names->names}) {
+  my $num_names = $names->count_elements;
+  my $namelist = $names->names;
+
+  if ( $num_names <= $maxn ) {    # 1 to maxname names
+    foreach my $n (@$namelist) {
       if ( $n->get_prefix and
         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
         $initstr .= join('', @{$n->get_prefix_i});
@@ -66,7 +71,7 @@ sub _getnamehash {
   }
   # > maxname names: only take initials of first getblxoption('minnames', $citekey)
   else {
-    foreach my $i ( 1 .. Biber::Config->getblxoption('minnames') ) {
+    foreach my $i ( 1 .. $minn ) {
       if ( $names->nth_element($i)->get_prefix and
         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey) ) {
         $initstr .= join('', @{$names->nth_element($i)->get_prefix_i});
