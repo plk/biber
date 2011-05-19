@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 120;
+use Test::More tests => 121;
 
 use Biber;
 use Biber::Utils;
@@ -45,6 +45,28 @@ is($bibentries->entry('un6')->get_field('namehash'), 'AJ+1', 'Namehash and fullh
 is($bibentries->entry('un6')->get_field('fullhash'), 'AJBM1', 'Namehash and fullhash different due to maxnames setting - 2');
 is($bibentries->entry('un7')->get_field('namehash'), 'C1', 'Fullnamshash ignores SHORT* names - 1');
 is($bibentries->entry('un7')->get_field('fullhash'), 'AJBM1', 'Fullnamshash ignores SHORT* names - 2');
+
+
+#############################################################################
+
+$biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile('uniqueness1.bcf');
+$biber->set_output_obj(Biber::Output::BBL->new());
+# Biber options
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('sortlocale', 'C');
+# Biblatex options
+Biber::Config->setblxoption('maxnames', 3);
+Biber::Config->setblxoption('minnames', 3);
+Biber::Config->setblxoption('uniquename', 1);
+Biber::Config->setblxoption('uniquelist', 0);
+# Now generate the information
+$biber->prepare;
+$bibentries = $biber->sections->get_section('0')->bibentries;
+
+is($bibentries->entry('test2')->get_field($bibentries->entry('test2')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename 0 due to minnames truncation');
+
+#############################################################################
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness2.bcf');
@@ -94,6 +116,7 @@ is($bibentries->entry('unall10')->get_field($bibentries->entry('unall10')->get_f
 is($bibentries->entry('unall3')->get_field($bibentries->entry('unall3')->get_field('labelnamename'))->get_uniquelist, '5', 'Uniquelist - 15');
 is($bibentries->entry('unall4')->get_field($bibentries->entry('unall4')->get_field('labelnamename'))->get_uniquelist, '6', 'Uniquelist - 16');
 
+#############################################################################
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness4.bcf');
@@ -159,7 +182,7 @@ is($bibentries->entry('us19')->get_field($bibentries->entry('us19')->get_field('
 ok(is_undef($bibentries->entry('us18')->get_field($bibentries->entry('us18')->get_field('labelnamename'))->get_uniquelist), 'Uniquenamescope - 43');
 ok(is_undef($bibentries->entry('us19')->get_field($bibentries->entry('us19')->get_field('labelnamename'))->get_uniquelist), 'Uniquenamescope - 44');
 
-
+#############################################################################
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness3.bcf');
@@ -188,6 +211,8 @@ ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'Singletitle -
 ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'Singletitle - 2');
 ok(is_undef($bibentries->entry('ey5')->get_field('singletitle')), 'Singletitle - 3');
 
+#############################################################################
+
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness3.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
@@ -215,6 +240,8 @@ is($bibentries->entry('ey1')->get_field('singletitle'), '1', 'Singletitle - 4');
 is($bibentries->entry('ey2')->get_field('singletitle'), '1', 'Singletitle - 5');
 is($bibentries->entry('ey5')->get_field('singletitle'), '1', 'Singletitle - 6');
 
+#############################################################################
+
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness3.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
@@ -241,6 +268,7 @@ is($main->get_extraalphadata('ey6'), '2', 'Extrayear - 18');
 ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'Singletitle - 7');
 ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'Singletitle - 8');
 
+#############################################################################
 
 # Testing uniquename = 3
 $biber = Biber->new(noconf => 1);
@@ -266,6 +294,8 @@ is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('la
 is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '1', 'Forced init expansion - 6');
 is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_element(4)->get_uniquename, '1', 'Forced init expansion - 7');
 is($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Forced init expansion - 8');
+
+#############################################################################
 
 # Testing uniquename = 4
 $biber = Biber->new(noconf => 1);
