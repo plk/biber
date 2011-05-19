@@ -1441,8 +1441,8 @@ sub create_uniquename_info {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
 
-  # Reset uniquename information as we have to generate it again because uniquelist
-  # information might have changed
+  # Reset uniquename information as we have to generate it
+  # again because uniquelist information might have changed
   Biber::Config->reset_uniquenamecount;
 
   foreach my $citekey ( $section->get_citekeys ) {
@@ -1455,14 +1455,13 @@ sub create_uniquename_info {
       if (my $lname = $be->get_field('labelnamename')) {
 
         # Set the index limit beyond which we don't look for disambiguating information
-        my $ul = -1; # Not set
+        my $ul = undef; # Not set
         if (defined($be->get_field($lname)->get_uniquelist)) {
           # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
           $ul = $be->get_field($lname)->get_uniquelist;
         }
         my $maxn = Biber::Config->getblxoption('maxnames');
         my $minn = Biber::Config->getblxoption('minnames');
-        my $localmaxnames = $ul > $maxn ? $ul : $maxn;
 
         # Note that we don't determine if a name is unique here -
         # we can't, were still processing entries at this point.
@@ -1480,19 +1479,27 @@ sub create_uniquename_info {
         # For uniquename = 5 (sparseinit) or 6 (sparsefull), we need to record the lastnames
         my $lastnames = [];
 
-        my $names = $be->get_field($lname)->names;
+        my $nl = $be->get_field($lname);
+        my $num_names = $nl->count_elements;
+        my $names = $nl->names;
         foreach my $name (@$names) {
 
-          # We don't want to record disambiguation information for any names
-          # that are hidden by a maxnames/uniquelist limit unless
+          # We want to record disambiguation information when:
           # uniquename = 3 (allinit) or 4 (allfull)
-          if ($name->get_index <= $localmaxnames or $un == 3 or $un == 4) {
+          # Uniquelist is set and a name appears before the uniquelist truncation
+          # Uniquelist is not set and a name list is shorter than the maxnames truncation
+          # Uniquelist is not set, a name list is longer than the maxnames truncation
+          #   and the name appears before the minnames truncation
+          if ($un == 3 or $un == 4 or
+              ($ul and $name->get_index <= $ul) or
+              $num_names <= $maxn or
+              $name->get_index <= $minn) { # implicitly, $nl->count_elements > $maxn here
             my $lastname       = $name->get_lastname;
             my $nameinitstring = $name->get_nameinitstring;
             my $namestring     = $name->get_namestring;
 
-            # For uniquename 5 (sparseinit) and 6 (sparsefull) settings
-            if ($un ==5 or $un == 6) {
+            # For uniquename 5 (sparseinit) and 6 (sparsefull)
+            if ($un == 5 or $un == 6) {
               push @$lastnames, $name->get_lastname;
             }
 

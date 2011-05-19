@@ -758,7 +758,7 @@ sub incr_seen_nameyear_extraalpha {
     Increment the count of lastname only namelists in which the name occurs
     Used for uniquename = 5 (sparseinit) or 6 (sparsefull)
 
-    Biber::Config->add_namelistcount($namestring, $namelist);
+    Biber::Config->add_lastnamelistcount($lastname, $lastnamelist, $citekey);
 
 =cut
 
@@ -780,7 +780,7 @@ sub add_lastnamelistcount {
     Get the count of lastname only namelists in which the name occurs
     Used for uniquename = 5 or 6
 
-    Biber::Config->get_namelistcount($namestring);
+    Biber::Config->get_lastnamelistcount($lastname);
 
 =cut
 
@@ -789,6 +789,21 @@ sub get_lastnamelistcount {
   my $lastname = shift;
   return $CONFIG->{state}{lastnamelistcount}{$lastname};
 }
+
+=head2 reset_lastnamelistcount
+
+    Reset the count of lastname only namelists in which the name occurs
+
+    Biber::Config->reset_lastnamelistcount
+
+=cut
+
+sub reset_lastnamelistcount {
+  shift; # class method so don't care about class name
+  $CONFIG->{state}{lastnamelistcount} = {};
+  return;
+}
+
 
 
 

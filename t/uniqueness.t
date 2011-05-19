@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 121;
+use Test::More tests => 133;
 
 use Biber;
 use Biber::Utils;
@@ -56,8 +56,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
-Biber::Config->setblxoption('maxnames', 3);
-Biber::Config->setblxoption('minnames', 3);
+Biber::Config->setblxoption('maxnames', 2);
+Biber::Config->setblxoption('minnames', 1);
 Biber::Config->setblxoption('uniquename', 1);
 Biber::Config->setblxoption('uniquelist', 0);
 # Now generate the information
@@ -126,6 +126,7 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
 Biber::Config->setblxoption('maxnames', 3);
+Biber::Config->setblxoption('minnames', 3);
 Biber::Config->setblxoption('uniquename', 6);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 0);
@@ -162,12 +163,15 @@ is($bibentries->entry('us12')->get_field($bibentries->entry('us12')->get_field('
 is($bibentries->entry('us12')->get_field($bibentries->entry('us12')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamescope - 24');
 is($bibentries->entry('us13')->get_field($bibentries->entry('us13')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquenamescope - 25');
 is($bibentries->entry('us13')->get_field($bibentries->entry('us13')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamescope - 26');
+
+# maxnames/minnames is 3 in the test so these will be the "same list" and need disambiguating
 is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquenamescope - 27');
 is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '2', 'Uniquenamescope - 28');
 is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquenamescope - 29');
 is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquenamescope - 30');
 is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '2', 'Uniquenamescope - 31');
 is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquenamescope - 32');
+
 is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquenamescope - 33');
 is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamescope - 34');
 is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquenamescope - 35');
@@ -181,6 +185,71 @@ is($bibentries->entry('us18')->get_field($bibentries->entry('us18')->get_field('
 is($bibentries->entry('us19')->get_field($bibentries->entry('us19')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquenamescope - 42');
 ok(is_undef($bibentries->entry('us18')->get_field($bibentries->entry('us18')->get_field('labelnamename'))->get_uniquelist), 'Uniquenamescope - 43');
 ok(is_undef($bibentries->entry('us19')->get_field($bibentries->entry('us19')->get_field('labelnamename'))->get_uniquelist), 'Uniquenamescope - 44');
+
+#############################################################################
+
+$biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile('uniqueness4.bcf');
+$biber->set_output_obj(Biber::Output::BBL->new());
+# Biber options
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('sortlocale', 'C');
+# Biblatex options
+Biber::Config->setblxoption('maxnames', 3);
+Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('uniquename', 6);
+Biber::Config->setblxoption('uniquelist', 1);
+Biber::Config->setblxoption('singletitle', 0);
+Biber::Config->setblxoption('labelyearspec', [ 'year' ]);
+# Now generate the information
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
+$main = $section->get_list('MAIN');
+
+
+# maxnames/minnames = 3/1 so these will not truncate to the same list (since
+# us15 would not be truncated at all) and they therfore would not need disambiguating with
+# uniquename = 5 or 6
+
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquenamescope - 45');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamescope - 46');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquenamescope - 47');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquenamescope - 48');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamescope - 49');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquenamescope - 50');
+
+#############################################################################
+
+$biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile('uniqueness4.bcf');
+$biber->set_output_obj(Biber::Output::BBL->new());
+# Biber options
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('sortlocale', 'C');
+# Biblatex options
+Biber::Config->setblxoption('maxnames', 2);
+Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('uniquename', 6);
+Biber::Config->setblxoption('uniquelist', 1);
+Biber::Config->setblxoption('singletitle', 0);
+Biber::Config->setblxoption('labelyearspec', [ 'year' ]);
+# Now generate the information
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
+$main = $section->get_list('MAIN');
+
+# maxnames/minnames = 2/1 so list are the same and need disambiguating but only in the first
+# name as the others are not visible
+
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquenamescope - 51');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamescope - 52');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquenamescope - 53');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquenamescope - 54');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquenamescope - 55');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquenamescope - 56');
+
 
 #############################################################################
 
