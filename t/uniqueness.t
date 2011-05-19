@@ -299,12 +299,12 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $section->get_list('MAIN');
 
-ok(is_undef($main->get_extraalphadata('ey1')), 'Extrayear - 7');
-ok(is_undef($main->get_extraalphadata('ey2')), 'Extrayear - 8');
-is($main->get_extraalphadata('ey3'), '1', 'Extrayear - 9');
-is($main->get_extraalphadata('ey4'), '2', 'Extrayear - 10');
-ok(is_undef($main->get_extraalphadata('ey5')), 'Extrayear - 11');
-ok(is_undef($main->get_extraalphadata('ey6')), 'Extrayear - 12');
+ok(is_undef($main->get_extrayeardata('ey1')), 'Extrayear - 7');
+ok(is_undef($main->get_extrayeardata('ey2')), 'Extrayear - 8');
+is($main->get_extrayeardata('ey3'), '1', 'Extrayear - 9');
+is($main->get_extrayeardata('ey4'), '2', 'Extrayear - 10');
+ok(is_undef($main->get_extrayeardata('ey5')), 'Extrayear - 11');
+ok(is_undef($main->get_extrayeardata('ey6')), 'Extrayear - 12');
 is($bibentries->entry('ey1')->get_field('singletitle'), '1', 'Singletitle - 4');
 is($bibentries->entry('ey2')->get_field('singletitle'), '1', 'Singletitle - 5');
 is($bibentries->entry('ey5')->get_field('singletitle'), '1', 'Singletitle - 6');
@@ -328,12 +328,12 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $section->get_list('MAIN');
 
-is($main->get_extraalphadata('ey1'), '1', 'Extrayear - 13');
-is($main->get_extraalphadata('ey2'), '2', 'Extrayear - 14');
-is($main->get_extraalphadata('ey3'), '1', 'Extrayear - 15');
-is($main->get_extraalphadata('ey4'), '2', 'Extrayear - 16');
-is($main->get_extraalphadata('ey5'), '1', 'Extrayear - 17');
-is($main->get_extraalphadata('ey6'), '2', 'Extrayear - 18');
+is($main->get_extrayeardata('ey1'), '1', 'Extrayear - 13');
+is($main->get_extrayeardata('ey2'), '2', 'Extrayear - 14');
+is($main->get_extrayeardata('ey3'), '1', 'Extrayear - 15');
+is($main->get_extrayeardata('ey4'), '2', 'Extrayear - 16');
+is($main->get_extrayeardata('ey5'), '1', 'Extrayear - 17');
+is($main->get_extrayeardata('ey6'), '2', 'Extrayear - 18');
 ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'Singletitle - 7');
 ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'Singletitle - 8');
 
