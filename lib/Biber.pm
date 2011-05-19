@@ -838,21 +838,22 @@ sub validate_structure {
   }
 }
 
-=head2 process_entries
+=head2 process_entries_pre
 
     Main processing operations, to generate metadata and entry information
     This method is automatically called by C<prepare>.
-    Here we parse names, generate the "namehash" and the strings for
+    Here we generate the "namehash" and the strings for
     "labelname", "labelyear", "labelalpha", "sortstrings", etc.
+    Runs prior to uniqueness processing
 
 =cut
 
-sub process_entries {
+sub process_entries_pre {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   foreach my $citekey ( $section->get_citekeys ) {
-    $logger->debug("Postprocessing entry '$citekey' from section $secnum");
+    $logger->debug("Postprocessing entry '$citekey' from section $secnum (before uniqueness)");
 
     # process "set" entries:
     $self->process_sets($citekey);
@@ -863,8 +864,8 @@ sub process_entries {
     # generate labelyear name
     $self->process_labelyear($citekey);
 
-    # generate namehash,fullhash
-    $self->process_hashes($citekey);
+    # generate fullhash
+    $self->process_fullhash($citekey);
 
     # generate labelalpha information
     $self->process_labelalpha($citekey);
@@ -874,10 +875,36 @@ sub process_entries {
 
   }
 
-  $logger->debug("Finished processing entries in section $secnum");
+  $logger->debug("Finished processing entries in section $secnum (before uniqueness)");
 
   return;
 }
+
+=head2 process_entries_post
+
+    More processing operations, to generate things which require uniqueness
+    information like namehash
+    Runs after  uniqueness processing
+
+=cut
+
+sub process_entries_post {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  foreach my $citekey ( $section->get_citekeys ) {
+    $logger->debug("Postprocessing entry '$citekey' from section $secnum (after uniqueness)");
+
+    # generate namehash
+    $self->process_namehash($citekey);
+
+  }
+
+  $logger->debug("Finished processing entries in section $secnum (after uniqueness)");
+
+  return;
+}
+
 
 =head2 process_sets
 
@@ -1051,21 +1078,89 @@ sub process_labelyear {
   }
 }
 
-=head2 process_hashes
+=head2 process_fullhash
 
-    Generate namehash and fullhash
+    Generate fullhash
 
 =cut
 
-sub process_hashes {
+sub process_fullhash {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $namehash = ''; # biblatex namehash field (manual, section 4.2.3)
-  my $fullhash = ''; # biblatex fullhash field (manual, section 4.2.3)
+  my $fullhash = ''; # biblatex fullhash field
+  my $fullid   = '';
+
+  # fullhash is generated from the labelname but ignores SHORT* fields and
+  # maxnames/minnames settings
+  if (my $lnamefh = $be->get_field('labelnamenamefullhash')) {
+    if (my $lnfh = $be->get_field($lnamefh)) {
+      $fullhash .= $self->_getfullhash($citekey, $lnfh);
+      $fullid .= makenameid($lnfh);
+    }
+  }
+
+  # After the initial generation of fullhash, we have to append
+  # a suffix as it must be unique. It is possible that different entries have
+  # the same hashes at this stage. For example:
+
+  # AUTHOR = {Fred Grimble and Bill Bullter} = "FGBB"
+  # AUTHOR = {Frank Garby and Brian Blunkley} = "FGBB"
+
+  my $fullhashsuffix = 1;
+
+  # First, check to see if we've already seen this exact name before
+  if (Biber::Config->get_fullhashcount($fullhash, $fullid)) {
+    # If we have, our suffix is already known
+    $fullhashsuffix = Biber::Config->get_fullhashcount($fullhash, $fullid);
+  }
+  # Otherwise, if the fullhash already exists, we'll make a new entry with a new suffix
+  elsif (Biber::Config->fullhashexists($fullhash)) {
+    # Count the suffices already defined ...
+    my $count = Biber::Config->get_numoffullhashes($fullhash);
+    # ... add one to the number ...
+    $fullhashsuffix = $count + 1;
+    # ... and define a new suffix for that name
+    Biber::Config->set_fullhashcount($fullhash, $fullid, $fullhashsuffix);
+  }
+  # No entry for the namehash at all so make a new one, a new name and suffix
+  else {
+    Biber::Config->del_fullhash($fullhash);
+    Biber::Config->set_fullhashcount($fullhash, $fullid, 1);
+  }
+
+
+  # Now append the suffix, making the hash unique
+  $fullhash .= $fullhashsuffix;
+
+  # Set the hash
+  $be->set_field('fullhash', $fullhash);
+
+  # Don't add to disambiguation data if skiplab is set
+  unless (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+    Biber::Config->incr_seennamehash($fullhash);
+  }
+
+  return;
+}
+
+=head2 process_namehash
+
+    Generate namehash
+
+=cut
+
+sub process_namehash {
+  my $self = shift;
+  my $citekey = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
+  my $namehash = ''; # biblatex namehash field
   my $nameid   = '';
   my $fullid   = '';
 
@@ -1076,16 +1171,8 @@ sub process_hashes {
       $nameid .= makenameid($ln);
     }
   }
-  # fullhash is generated from the labelname but ignores SHORT* fields and
-  # maxnames/minnames settings
-  if (my $lnamefh = $be->get_field('labelnamenamefullhash')) {
-    if (my $lnfh = $be->get_field($lnamefh)) {
-      $fullhash .= $self->_getfullhash($citekey, $lnfh);
-      $fullid .= makenameid($lnfh);
-    }
-  }
 
-  # After the initial generation of namehash and fullhash, we have to append
+  # After the initial generation of namehash, we have to append
   # a suffix as they must be unique. It is possible that different entries have
   # the same hashes at this stage. For example:
 
@@ -1093,7 +1180,6 @@ sub process_hashes {
   # AUTHOR = {Frank Garby and Brian Blunkley} = "FGBB"
 
   my $namehashsuffix = 1;
-  my $fullhashsuffix = 1;
 
   # namehash
   # First, check to see if we've already seen this exact name before
@@ -1116,41 +1202,15 @@ sub process_hashes {
     Biber::Config->set_namehashcount($namehash, $nameid, 1);
   }
 
-  # fullhash
-  # First, check to see if we've already seen this exact name before
-  if (Biber::Config->get_fullhashcount($fullhash, $fullid)) {
-    # If we have, our suffix is already known
-    $fullhashsuffix = Biber::Config->get_fullhashcount($fullhash, $fullid);
-  }
-  # Otherwise, if the fullhash already exists, we'll make a new entry with a new suffix
-  elsif (Biber::Config->fullhashexists($fullhash)) {
-    # Count the suffices already defined ...
-    my $count = Biber::Config->get_numoffullhashes($fullhash);
-    # ... add one to the number ...
-    $fullhashsuffix = $count + 1;
-    # ... and define a new suffix for that name
-    Biber::Config->set_fullhashcount($fullhash, $fullid, $fullhashsuffix);
-  }
-  # No entry for the namehash at all so make a new one, a new name and suffix
-  else {
-    Biber::Config->del_fullhash($fullhash);
-    Biber::Config->set_fullhashcount($fullhash, $fullid, 1);
-  }
-
-
-  # Now append the suffices, making the hashes unique
+  # Now append the suffix, making the hash unique
   $namehash .= $namehashsuffix;
-  $fullhash .= $fullhashsuffix;
 
   # Set the hashes
   $be->set_field('namehash', $namehash);
-  $be->set_field('fullhash', $fullhash);
 
-  # Don't add to disambiguation data if skiplab is set
-  unless (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
-    Biber::Config->incr_seennamehash($fullhash);
-  }
+  return;
 }
+
 
 
 =head2 process_labelalpha
@@ -2161,8 +2221,9 @@ sub prepare {
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
     $self->process_crossrefs;            # Process crossrefs/sets
     $self->validate_structure;           # Check bib structure
-    $self->process_entries;              # Main entry processing loop
+    $self->process_entries_pre;          # Main entry processing loop, part 1
     $self->uniqueness;                   # Here we generate uniqueness information
+    $self->process_entries_post;         # Main entry processing loop, part 2
     $self->create_extras_st_info;        # Generate singltitle/extras* information
     $self->process_lists;                # process the output lists (sort and filtering)
     $self->generate_singletitle;         # Generate singletitle field if requested
