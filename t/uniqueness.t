@@ -270,12 +270,12 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $section->get_list('MAIN');
 
-is($main->get_extraalphadata('ey1'), '1', 'Extrayear - 1');
-is($main->get_extraalphadata('ey2'), '2', 'Extrayear - 2');
-is($main->get_extraalphadata('ey3'), '1', 'Extrayear - 3');
-is($main->get_extraalphadata('ey4'), '2', 'Extrayear - 4');
-is($main->get_extraalphadata('ey5'), '1', 'Extrayear - 5');
-is($main->get_extraalphadata('ey6'), '2', 'Extrayear - 6');
+is($main->get_extrayeardata('ey1'), '1', 'Extrayear - 1');
+is($main->get_extrayeardata('ey2'), '2', 'Extrayear - 2');
+is($main->get_extrayeardata('ey3'), '1', 'Extrayear - 3');
+is($main->get_extrayeardata('ey4'), '2', 'Extrayear - 4');
+is($main->get_extrayeardata('ey5'), '1', 'Extrayear - 5');
+is($main->get_extrayeardata('ey6'), '2', 'Extrayear - 6');
 ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'Singletitle - 1');
 ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'Singletitle - 2');
 ok(is_undef($bibentries->entry('ey5')->get_field('singletitle')), 'Singletitle - 3');
