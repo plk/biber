@@ -7,9 +7,11 @@ REQUIREMENTS
   These requirements only apply if you are installing the perl version.
   We also provide PAR::Packer generated binaries for most common OSes.
 
-  Biber is written in Perl. Version 5.12 is recommended if you are running
+  Biber is written in Perl. Version 5.14 is required if you are running
   the perl source version as it has the best Unicode implementation of any
-  Perl version so far.
+  Perl version so far and biber has been optimised for this version. This
+  may seem draconian but since 90% of users use the binary distributions,
+  it makes development a lot easier.
 
   In addition Biber requires a number of CPAN modules, which if missing
   should be automatically installed during the install process described
