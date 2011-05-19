@@ -1483,11 +1483,6 @@ sub create_uniquename_info {
         my $names = $be->get_field($lname)->names;
         foreach my $name (@$names) {
 
-          # For uniquename 5 (sparseinit) and 6 (sparsefull) settings
-          if ($name->get_index <= $localmaxnames) {
-            push @$lastnames, $name->get_lastname;
-          }
-
           # We don't want to record disambiguation information for any names
           # that are hidden by a maxnames/uniquelist limit unless
           # uniquename = 3 (allinit) or 4 (allfull)
@@ -1495,6 +1490,11 @@ sub create_uniquename_info {
             my $lastname       = $name->get_lastname;
             my $nameinitstring = $name->get_nameinitstring;
             my $namestring     = $name->get_namestring;
+
+            # For uniquename 5 (sparseinit) and 6 (sparsefull) settings
+            if ($un ==5 or $un == 6) {
+              push @$lastnames, $name->get_lastname;
+            }
 
             # Record a uniqueness information entry for the lastname showing that
             # this lastname has been seen in this name
