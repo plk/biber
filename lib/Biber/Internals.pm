@@ -50,7 +50,10 @@ sub _getnamehash {
   if (defined($names->get_uniquelist)) {
     $ul = $names->get_uniquelist;
   }
-  if ( $names->count_elements > $maxn ) {
+
+  # If name list was truncated in bib with "and others", this overrides maxnames
+  my $morenames = ($names->last_element->get_namestring eq 'others') ? 1 : 0;
+  if ( $morenames or $names->count_elements > $maxn ) {
     # truncate to the uniquelist point if uniquelist is requested
     if ($ul) {
       $truncnames = $truncnames->first_n_elements($ul);
@@ -142,9 +145,10 @@ sub _getlabel {
   my $maxnames = Biber::Config->getblxoption('maxnames');
   my $minnames = Biber::Config->getblxoption('minnames');
   my $label = '';
-  my $sortlabel = ''; # This contains sortalphaothers instead of alphaothers, if defined
+  # This contains sortalphaothers instead of alphaothers, if defined
   # This is needed in cases where alphaothers is something like
   # '\textasteriskcentered' which would mess up sorting.
+  my $sortlabel = '';
 
   my @lastnames = map { strip_nosort(normalise_string($_->get_lastname), $namefield) } @{$names->names};
   my @prefices  = map { $_->get_prefix } @{$names->names};
@@ -730,6 +734,8 @@ sub _namestring {
   my $str = '';
   my $truncated = 0;
   my $truncnames = dclone($names);
+  my $maxn = Biber::Config->getblxoption('maxnames');
+  my $minn = Biber::Config->getblxoption('minnames');
 
   # These should be symbols which can't appear in names
   # This means, symbols which normalise_string_sort strips out
@@ -744,9 +750,10 @@ sub _namestring {
   if (defined($names->get_uniquelist)) {
     $ul = $names->get_uniquelist;
   }
-  my $maxn = Biber::Config->getblxoption('maxnames');
-  my $minn = Biber::Config->getblxoption('minnames');
-  if ( $names->count_elements > $maxn ) {
+
+  # If name list was truncated in bib with "and others", this overrides maxnames
+  my $morenames = ($names->last_element->get_namestring eq 'others') ? 1 : 0;
+  if ( $morenames or $names->count_elements > $maxn ) {
 
     # truncate to the uniquelist point if uniquelist is requested
     if ($ul) {

@@ -92,7 +92,7 @@ my $sc3 = q|  \entry{L4}{book}{}
     \list{publisher}{1}{%
       {Another press}%
     }
-    \strng{namehash}{DJo1}
+    \strng{namehash}{DJ+1}
     \strng{fullhash}{DJo1}
     \field{labelalpha}{Doe\textbf{+}95}
     \field{sortinit}{D}

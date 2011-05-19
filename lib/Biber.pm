@@ -1542,16 +1542,22 @@ sub create_uniquename_info {
         my $nl = $be->get_field($lname);
         my $num_names = $nl->count_elements;
         my $names = $nl->names;
+        # If name list was truncated in bib with "and others", this overrides maxnames
+        my $morenames = ($nl->last_element->get_namestring eq 'others') ? 1 : 0;
+
         foreach my $name (@$names) {
 
           # We want to record disambiguation information when:
           # uniquename = 3 (allinit) or 4 (allfull)
           # Uniquelist is set and a name appears before the uniquelist truncation
+          # Uniquelist is not set and the entry has an explicit "and others" at the end
+          #   since this means that every name is less than maxnames by definition
           # Uniquelist is not set and a name list is shorter than the maxnames truncation
           # Uniquelist is not set, a name list is longer than the maxnames truncation
           #   and the name appears before the minnames truncation
           if ($un == 3 or $un == 4 or
               ($ul and $name->get_index <= $ul) or
+              $morenames or
               $num_names <= $maxn or
               $name->get_index <= $minn) { # implicitly, $nl->count_elements > $maxn here
             my $lastname       = $name->get_lastname;
