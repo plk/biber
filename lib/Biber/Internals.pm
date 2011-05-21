@@ -54,6 +54,7 @@ sub _getnamehash {
   # If name list was truncated in bib with "and others", this overrides maxnames
   my $morenames = ($names->last_element->get_namestring eq 'others') ? 1 : 0;
   if ( $morenames or $names->count_elements > $maxn ) {
+
     # truncate to the uniquelist point if uniquelist is requested
     if ($ul) {
       $truncnames = $truncnames->first_n_elements($ul);
@@ -753,20 +754,21 @@ sub _namestring {
 
   # If name list was truncated in bib with "and others", this overrides maxnames
   my $morenames = ($names->last_element->get_namestring eq 'others') ? 1 : 0;
-  if ( $morenames or $names->count_elements > $maxn ) {
 
-    # truncate to the uniquelist point if uniquelist is requested
-    if ($ul) {
-      $truncnames = $truncnames->first_n_elements($ul);
-      # Since uniquelist can be larger than maxnames, it's only truncated
-      # if uniquelist is shorter than the full name list
-      $truncated = 1 if $ul < $names->count_elements;
-    }
+  # truncate to the uniquelist point if uniquelist is requested
+  # We know at this stage that if uniquelist is set, there are more than maxnames
+  # names. We also know that uniquelist > minnames because it is s further disambiguation
+  # on top of minnames so can't be less as you can't disambiguate by losing information
+  if ($ul) {
+    $truncnames = $truncnames->first_n_elements($ul);
+    # Since uniquelist can be larger than maxnames, it's only truncated
+    # if uniquelist is shorter than the full name list
+    $truncated = 1 if $ul < $names->count_elements;
+  }
+  elsif ( $morenames or $names->count_elements > $maxn ) {
     # otherwise truncate to minnames
-    else {
-      $truncnames = $truncnames->first_n_elements($minn);
-      $truncated = 1;
-    }
+    $truncnames = $truncnames->first_n_elements($minn);
+    $truncated = 1;
   }
 
   my $prefix_opt = Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey);

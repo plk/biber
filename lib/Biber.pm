@@ -1460,13 +1460,11 @@ sub uniqueness {
   #    } else { return }
 
   # uniquelist can never do anything to a list shorter than maxnames because:
-  # * Shortenng a list can't make it unique, you need to add something
+  # * Shortening a list can't make it unique
   # * You can't lengthen it if the list is shorter than maxnames because there
   #   is no more information to add that you don't already have.
   # uniquelist cannot be less than minnames as the list is either unambiguous
   # at minnames or it isn't and uniquelist needs more information by adding items
-
-
 
   # Set a flag for first uniquelist pass. This is a special case as we always want to run
   # at least one uniquelist pass if requested, regardless of unul_done global flag.
@@ -1716,6 +1714,7 @@ sub create_uniquelist_info {
         my $namelist = [];
         foreach my $name (@{$nl->names}) {
           next if $name->get_namestring eq 'others'; # Don't count explicit "et al"
+
           my $lastname   = $name->get_lastname;
           my $nameinitstring = $name->get_nameinitstring;
           my $namestring = $name->get_namestring;
@@ -1785,6 +1784,7 @@ sub generate_uniquelist {
 
         foreach my $name (@{$namefield->names}) {
           next if $name->get_namestring eq 'others'; # Don't count explicit "et al"
+
           my $lastname   = $name->get_lastname;
           my $nameinitstring = $name->get_nameinitstring;
           my $namestring = $name->get_namestring;

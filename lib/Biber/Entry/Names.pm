@@ -88,16 +88,20 @@ sub set_uniquelist {
   my $namelist = shift;
   my $uniquelist = $self->count_uniquelist($namelist);
   my $currval = $self->{uniquelist};
+  my $minn = Biber::Config->getblxoption('minnames');
 
   # Set modified flag to positive if we changed something
   if (not defined($currval) or $currval != $uniquelist) {
     Biber::Config->set_unul_changed(1);
   }
 
-  # No disambiguation needed as the list is unique in the first position
+  # No disambiguation needed if uniquelist is <= minnames as this makes no sense
+  # - we will just use minnames as the truncation point and it's misleading to set
+  # uniquelist since this implies that disambiguation beyond minnames was needed.
   # $uniquelist cannot be undef or 0 either since every list occurs at least once
-  # This guarantees that uniquelist, when it exists, is >1
-  return if $uniquelist == 1;
+  # This guarantees that uniquelist, when it exists, is >1 because minnames cannot
+  # be less than 1
+  return if $uniquelist <= $minn;
 
   # Special case.
   # No point disambiguating with uniquelist lists which have the same count
