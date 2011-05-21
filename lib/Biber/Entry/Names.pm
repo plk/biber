@@ -88,15 +88,16 @@ sub set_uniquelist {
   my $namelist = shift;
   my $uniquelist = $self->count_uniquelist($namelist);
   my $currval = $self->{uniquelist};
+
   # Set modified flag to positive if we changed something
   if (not defined($currval) or $currval != $uniquelist) {
     Biber::Config->set_unul_changed(1);
   }
 
-  return if $uniquelist == 1; # No disambiguation needed as the list is unique
-                              # in the first position
+  # No disambiguation needed as the list is unique in the first position
   # $uniquelist cannot be undef or 0 either since every list occurs at least once
   # This guarantees that uniquelist, when it exists, is >1
+  return if $uniquelist == 1;
 
   # Special case.
   # No point disambiguating with uniquelist lists which have the same count
@@ -107,15 +108,14 @@ sub set_uniquelist {
   # * Assume last index of list is x
   # * Must not be any other list identical apart from position x
   # * Must not be any other list identical up to position x but also longer
-
- return if (
-            # if final count > 1 (identical lists)
-            Biber::Config->get_final_uniquelistcount($namelist) > 1 and
-            # nothing differs from $namelist in last place
-            not Biber::Config->list_differs_last($namelist) and
-            # nothing else is the same to last position but is longer
-            not Biber::Config->list_differs_superset($namelist)
-           );
+  return if (
+             # if final count > 1 (identical lists)
+             Biber::Config->get_final_uniquelistcount($namelist) > 1 and
+             # nothing differs from $namelist in last place
+             not Biber::Config->list_differs_last($namelist) and
+             # nothing else is the same to last position but is longer
+             not Biber::Config->list_differs_superset($namelist)
+            );
 
   $self->{uniquelist} = $uniquelist;
   return;

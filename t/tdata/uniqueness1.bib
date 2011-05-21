@@ -1,46 +1,35 @@
-% [name, namelist], maxnames = * -> uniquename => 2 uniquelist => 1
-% [namelist, name], maxnames = * -> uniquename => 2 uniquelist => 1
 @ARTICLE{un1,
   AUTHOR	    = {John AAA},
   YEAR		    = {1994},
 }
 
-% [name, namelist], maxnames = * -> uniquename => 2 uniquelist => 1
-% [namelist, name], maxnames = * -> uniquename => 2 uniquelist => 1
 @ARTICLE{un2,
   AUTHOR	    = {J. AAA},
   YEAR		    = {1999},
 }
 
-% [name, namelist], maxnames = * -> uniquename => 1 uniquelist => 1
-% [namelist, name], maxnames = * -> uniquename => 1 uniquelist => 1
 @ARTICLE{un3,
   AUTHOR	    = {K. AAA},
   YEAR		    = {1939},
 }
 
-% [name, namelist], maxnames = * -> uniquename => 1 uniquelist => 1
-% [namelist, name], maxnames = * -> uniquename => 1 uniquelist => 1
 @ARTICLE{un4,
   AUTHOR	    = {Edward AAA},
   YEAR		    = {1934},
 }
-% [name, namelist], maxnames = * -> uniquename => 2 uniquelist => 1
-% [namelist, name], maxnames = * -> uniquename => 2 uniquelist => 1
+
 @ARTICLE{un5,
   AUTHOR	    = {Jane AAA},
   YEAR		    = {1983},
 }
 
-% [name, namelist], maxnames = 1 -> uniquename => 2,0 uniquelist => 1
-% [namelist, name], maxnames = 1 -> uniquename => 2,0 uniquelist => 1
+% uniquelist not set because it's not ambiguous with un1 with max/minnames=1 because
+% un1 is "AAA" and un6 is "AAA et al".
 @ARTICLE{un6,
   AUTHOR	    = {John AAA and Mike BBB},
   YEAR		    = {1921},
 }
 
-% [name, namelist], maxnames = 1 -> uniquename => 2,0 uniquelist => 1
-% [namelist, name], maxnames = 1 -> uniquename => 2,0 uniquelist => 1
 @ARTICLE{un7,
   SHORTAUTHOR = {Chaps},
   AUTHOR	    = {John AAA and Mike BBB},

@@ -1692,6 +1692,7 @@ sub create_uniquelist_info {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
+  my $maxn = Biber::Config->getblxoption('maxnames');
 
   # Reset uniquelist information as we have to generate it again because uniquename
   # information might have changed
@@ -1705,8 +1706,15 @@ sub create_uniquelist_info {
       $logger->trace("Generating uniquelist information for '$citekey'");
 
       if (my $lname = $be->get_field('labelnamename')) {
+        my $nl = $be->get_field($lname);
+
+        # We don't need to set uniquelist at all if the namelist isn't longer than
+        # maxnames because then, even if it's ambiguous, there isn't any extra
+        # information to use to make it potentially unambiguous with uniquelist.
+        next unless $nl->count_elements > $maxn;
+
         my $namelist = [];
-        foreach my $name (@{$be->get_field($lname)->names}) {
+        foreach my $name (@{$nl->names}) {
           next if $name->get_namestring eq 'others'; # Don't count explicit "et al"
           my $lastname   = $name->get_lastname;
           my $nameinitstring = $name->get_nameinitstring;
@@ -1755,6 +1763,7 @@ sub generate_uniquelist {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
+  my $maxn = Biber::Config->getblxoption('maxnames');
 
   foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
@@ -1764,6 +1773,13 @@ sub generate_uniquelist {
       $logger->trace("Creating uniquelist for '$citekey'");
 
       if (my $lname = $be->get_field('labelnamename')) {
+        my $nl = $be->get_field($lname);
+
+        # We don't need to set uniquelist at all if the namelist isn't longer than
+        # maxnames because then, even if it's ambiguous, there isn't any extra
+        # information to use to make it potentially unambiguous with uniquelist.
+        next unless $nl->count_elements > $maxn;
+
         my $namelist = [];
         my $namefield = $be->get_field($lname);
 

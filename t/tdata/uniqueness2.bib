@@ -42,13 +42,15 @@
 }
 
 % First namelist is subset of second, ul=5 and ul=6 respectively
+% if maxnames was 5 or more, both would be ul=0 as no disambiguation would
+% be necessary since unall4 would have "et al" on the end
 @BOOK{unall3,
-  AUTHOR    = {Name111 and Name222 and Name333 and Name444 and Name555},
+  AUTHOR    = {A111 and A222 and A333 and A444 and A555},
   YEAR      = {2011}
 }
 
 @BOOK{unall4,
-  AUTHOR    = {Name111 and Name222 and Name333 and Name444 and Name555 and Name666},
+  AUTHOR    = {A111 and A222 and A333 and A444 and A555 and A666},
   YEAR      = {2011}
 }
 
@@ -74,7 +76,8 @@
   YEAR      = {2010}
 }
 
-% Two lists with same authors, one differing in being a superset
+% Two lists with same authors, one differing in being a superset. maxnames/minnames=1
+% so the truncations are ambiguous, hence uniquelist is needed.
 % ul=5
 @BOOK{unall8,
   AUTHOR    = {Name1111 and Name2222 and Name3333 and Name4444 and Name5555},
