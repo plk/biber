@@ -4,32 +4,24 @@ support.
 
 REQUIREMENTS
 
-  These requirements only apply if you are installing the perl version.
-  We also provide PAR::Packer generated binaries for most common OSes.
+  Biber is written in Perl with the aim of providing a
+  customised and sophisticated data preparation backend for biblatex.
 
-  Biber is written in Perl. Version 5.14 is required if you are running
-  the perl source version as it has the best Unicode implementation of any
-  Perl version so far and biber has been optimised for this version. This
-  may seem draconian but since 90% of users use the binary distributions,
-  it makes development a lot easier.
+  You do not need to install Perl use biber--binaries
+  are provided for many operating systems via the main TeX
+  distributions (TeXLive, MacTeX, MiKTeX) and also via download from SourceForge.
 
-  In addition Biber requires a number of CPAN modules, which if missing
-  should be automatically installed during the install process described
-  below.
+  You only need a Perl installation to use biber in one of the following
+  cases:
 
-INSTALLATION
+  * A binary version is not available for your OS/platform
+  * You wish to keep up with all of the bleeding-edge git commits before
+    they are packaged into a binary.
 
-  Binaries are available for most common architectures but if you wish
-  to install the perl source version, run the following commands:
-
-    perl Build.PL
-    ./Build
-    ./Build test         [optional but recommended]
-    ./Build install
-
-  This process will report any missing modules which can be installed by:
-
-    ./Build installdeps
+  For the vast majority of users, using the latest binary for the
+  OS/platform you are using will be what you want to do. For details on the
+  requirements for installing the Perl program version, please see the
+  biber PDF documentation.
 
 SUPPORT AND DOCUMENTATION
 
@@ -37,11 +29,6 @@ SUPPORT AND DOCUMENTATION
   The latest PDF documentation can be found here:
 
   https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/documentation/
-
-  You can also find documentation for the included modules with the perldoc command:
-
-      perldoc Biber
-      etc.
 
   More information, bugfix releases, forums and bug tracker are available at:
 
@@ -57,7 +44,7 @@ BUGS
 
 COPYRIGHT AND LICENCE
 
-  Copyright (C) 2009–2011 François Charette and Philip Kime
+  Copyright (C) 2009--2011 François Charette and Philip Kime
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of either:
