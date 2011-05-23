@@ -17,7 +17,6 @@ use Regexp::Common qw( balanced );
 use re 'eval';
 use base 'Exporter';
 use Log::Log4perl qw(:no_extra_logdie_message);
-
 my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
@@ -132,15 +131,24 @@ sub locate_biber_file {
 
   # File is in kpse path
   if (can_run('kpsewhich')) {
+    $logger->debug("Looking for file '$filename' via kpsewhich");
+    $logger->debug(`kpsewhich $filename`);
     my $found;
-    scalar run( command => [ 'kpsewhich', $filename ],
-                verbose => 0,
-                buffer => \$found );
+    unless (run( command => [ 'kpsewhich', $filename ],
+                 verbose => 0,
+                 buffer => \$found )) {
+      $logger->warn("'kpsewhich $filename' returned an error!");
+    }
+    $logger->trace("kpsewhich returned '$found'");
     if ($found) {
+      $logger->debug("Found '$filename' via kpsewhich");
       chomp $found;
       $found =~ s/\cM\z//xms; # kpsewhich in cygwin/windows sometimes returns ^M at the end
       # filename can be UTF-8 and run() isn't clever with UTF-8
       return decode_utf8($found);
+    }
+    else {
+      $logger->debug("Could not find '$filename' via kpsewhich");
     }
   }
   return undef;
