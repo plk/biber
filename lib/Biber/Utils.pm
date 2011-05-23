@@ -138,6 +138,7 @@ sub locate_biber_file {
                 buffer => \$found );
     if ($found) {
       chomp $found;
+      $found =~ s/\cM\z//xms; # kpsewhich in cygwin/windows sometimes returns ^M at the end
       # filename can be UTF-8 and run() isn't clever with UTF-8
       return decode_utf8($found);
     }
