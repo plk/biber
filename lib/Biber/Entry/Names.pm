@@ -98,8 +98,8 @@ sub set_uniquelist {
   # No disambiguation needed if uniquelist is <= minnames as this makes no sense
   # - we will just use minnames as the truncation point and it's misleading to set
   # uniquelist since this implies that disambiguation beyond minnames was needed.
-  # $uniquelist cannot be undef or 0 either since every list occurs at least once
-  # This guarantees that uniquelist, when it exists, is >1 because minnames cannot
+  # $uniquelist cannot be undef or 0 either since every list occurs at least once.
+  # This guarantees that uniquelist, when set, is >1 because minnames cannot
   # be less than 1
   return if $uniquelist <= $minn;
 
