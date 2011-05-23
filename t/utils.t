@@ -10,7 +10,7 @@ use Biber::Entry::Names;
 use Biber::Utils;
 use Biber::LaTeX::Recode;
 use Log::Log4perl qw(:easy);
-use IPC::Cmd qw( can_run run );
+use IPC::Cmd qw( can_run );
 use Cwd;
 my $cwd = getcwd;
 

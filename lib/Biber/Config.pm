@@ -2,7 +2,8 @@ package Biber::Config;
 use feature ':5.10';
 #use feature 'unicode_strings';
 use Biber::Constants;
-use IPC::Cmd qw( can_run run );
+use IPC::Cmd qw( can_run );
+use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
 use Cwd qw( abs_path );
 use Config::General qw( ParseConfig );
 use Data::Compare;
@@ -194,23 +195,34 @@ sub config_file {
   my $biberconf;
   if ( -f $BIBER_CONF_NAME ) {
     $biberconf = abs_path($BIBER_CONF_NAME);
-  } elsif ( -f File::Spec->catfile($ENV{HOME}, ".$BIBER_CONF_NAME" ) ) {
+  }
+  elsif ( -f File::Spec->catfile($ENV{HOME}, ".$BIBER_CONF_NAME" ) ) {
     $biberconf = File::Spec->catfile($ENV{HOME}, ".$BIBER_CONF_NAME" );
-  } elsif ( defined $ENV{XDG_CONFIG_HOME} and
+  }
+  elsif ( defined $ENV{XDG_CONFIG_HOME} and
     -f File::Spec->catfile($ENV{XDG_CONFIG_HOME}, "biber", $BIBER_CONF_NAME) ) {
     $biberconf = File::Spec->catfile($ENV{XDG_CONFIG_HOME}, "biber", $BIBER_CONF_NAME);
-  } elsif ( $^O =~ /(?:Mac|darwin)/ and
+  }
+  elsif ( $^O =~ /(?:Mac|darwin)/ and
     -f File::Spec->catfile($ENV{HOME}, "Library", "biber", $BIBER_CONF_NAME) ) {
     $biberconf = File::Spec->catfile($ENV{HOME}, "Library", "biber", $BIBER_CONF_NAME);
-  } elsif ( $^O =~ /Win/ and
+  }
+  elsif ( $^O =~ /Win/ and
     defined $ENV{APPDATA} and
     -f File::Spec->catfile($ENV{APPDATA}, "biber", $BIBER_CONF_NAME) ) {
     $biberconf = File::Spec->catfile($ENV{APPDATA}, "biber", $BIBER_CONF_NAME);
-  } elsif ( can_run('kpsewhich') ) {
-    scalar run( command => [ 'kpsewhich', $BIBER_CONF_NAME ],
-      verbose => 0,
-      buffer => \$biberconf );
-  } else {
+  }
+  elsif ( can_run('kpsewhich') ) {
+    my $biberconf;
+    my $err;
+    run3  [ 'kpsewhich', $BIBER_CONF_NAME ], \undef, \$biberconf, \$err, { return_if_system_error => 1};
+    if ($?) {
+      $logger->warn("kpsewhich returned error: $err ($!)");
+    }
+    chomp $biberconf;
+    $biberconf =~ s/\cM\z//xms; # kpsewhich in cygwin sometimes returns ^M at the end
+  }
+  else {
     $biberconf = undef;
   }
   return $biberconf;

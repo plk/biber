@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 140;
+use Test::More tests => 142;
 
 use Biber;
 use Biber::Utils;
@@ -225,7 +225,7 @@ Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
 Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('minnames', 1);
-Biber::Config->setblxoption('uniquename', 5);
+Biber::Config->setblxoption('uniquename', 6);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 0);
 Biber::Config->setblxoption('labelyearspec', [ 'year' ]);
@@ -237,7 +237,7 @@ $main = $section->get_list('MAIN');
 
 
 # maxnames/minnames = 3/1 so these will not truncate to the same list (since
-# us15 would not be truncated at all) and they therfore would not need disambiguating with
+# us15 would not be truncated at all) and they therefore would not need disambiguating with
 # uniquename = 5 or 6
 is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 46');
 is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 47');
@@ -249,8 +249,10 @@ is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('
 #
 is($bibentries->entry('us20')->get_field($bibentries->entry('us20')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 52');
 is($bibentries->entry('us21')->get_field($bibentries->entry('us21')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 53');
-is($bibentries->entry('us22')->get_field($bibentries->entry('us22')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 54');
-is($bibentries->entry('us22')->get_field($bibentries->entry('us22')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 55');
+is($bibentries->entry('us22')->get_field($bibentries->entry('us22')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 54');
+is($bibentries->entry('us23')->get_field($bibentries->entry('us23')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename sparse - 55');
+is($bibentries->entry('us24')->get_field($bibentries->entry('us24')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename sparse - 56');
+is($bibentries->entry('us25')->get_field($bibentries->entry('us25')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 57');
 
 #############################################################################
 
@@ -276,12 +278,12 @@ $main = $section->get_list('MAIN');
 # maxnames/minnames = 2/1 so list are the same and need disambiguating but only in the first
 # name as the others are not visible
 
-is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename sparse - 56');
-is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 57');
-is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 58');
-is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename sparse - 59');
-is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 60');
-is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 61');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename sparse - 58');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 59');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 60');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename sparse - 61');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 62');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 63');
 
 
 #############################################################################

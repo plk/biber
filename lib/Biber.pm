@@ -9,7 +9,6 @@ use File::Copy;
 use File::Spec;
 use File::Temp;
 use IO::File;
-use IPC::Cmd qw( can_run run );
 use POSIX qw( locale_h ); # for sorting with built-in "sort"
 use Cwd qw( abs_path );
 use Biber::Config;
@@ -1566,7 +1565,7 @@ sub create_uniquename_info {
               ($ul and $name->get_index <= $ul) or
               $morenames or
               $num_names <= $maxn or
-              $name->get_index <= $minn) { # implicitly, $nl->count_elements > $maxn here
+              $name->get_index <= $minn) { # implicitly, $num_names > $maxn here
             my $lastname       = $name->get_lastname;
             my $nameinitstring = $name->get_nameinitstring;
             my $namestring     = $name->get_namestring;

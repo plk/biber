@@ -8,7 +8,8 @@ use Carp;
 use Encode;
 use File::Find;
 use File::Spec;
-use IPC::Cmd qw( can_run run );
+use IPC::Cmd qw( can_run );
+use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
 use List::Util qw( first );
 use Biber::Constants;
 use Biber::LaTeX::Recode;
@@ -132,25 +133,18 @@ sub locate_biber_file {
   # File is in kpse path
   if (can_run('kpsewhich')) {
     $logger->debug("Looking for file '$filename' via kpsewhich");
-    $logger->debug(`kpsewhich $filename`);
     my $found;
-
-    # Don't try to use IPC::Run under Windows as when PAR::Packer'd, this just
-    # doesnt' work for really complicated reasons to do with IPC::Run::Win32Pump
-    if ($^O =~ /\Amswin/i) {
-      $found = qx(kpsewhich $filename);
-    }
-    else {
-      run(command => [ 'kpsewhich', $filename ],
-          verbose => 0,
-          buffer  => \$found);
+    my $err;
+    run3  [ 'kpsewhich', $filename ], \undef, \$found, \$err, { return_if_system_error => 1};
+    if ($?) {
+      $logger->warn("kpsewhich returned error: $err ($!)");
     }
     $logger->trace("kpsewhich returned '$found'");
     if ($found) {
       $logger->debug("Found '$filename' via kpsewhich");
       chomp $found;
       $found =~ s/\cM\z//xms; # kpsewhich in cygwin sometimes returns ^M at the end
-      # filename can be UTF-8 and run() isn't clever with UTF-8
+      # filename can be UTF-8 and run3() isn't clever with UTF-8
       return decode_utf8($found);
     }
     else {
