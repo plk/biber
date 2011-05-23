@@ -239,7 +239,6 @@ $main = $section->get_list('MAIN');
 # maxnames/minnames = 3/1 so these will not truncate to the same list (since
 # us15 would not be truncated at all) and they therfore would not need disambiguating with
 # uniquename = 5 or 6
-
 is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 46');
 is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 47');
 is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 48');

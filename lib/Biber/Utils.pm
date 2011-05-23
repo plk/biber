@@ -134,16 +134,22 @@ sub locate_biber_file {
     $logger->debug("Looking for file '$filename' via kpsewhich");
     $logger->debug(`kpsewhich $filename`);
     my $found;
-    unless (run( command => [ 'kpsewhich', $filename ],
-                 verbose => 0,
-                 buffer => \$found )) {
-      $logger->warn("'kpsewhich $filename' returned an error!");
+
+    # Don't try to use IPC::Run under Windows as when PAR::Packer'd, this just
+    # doesnt' work for really complicated reasons to do with IPC::Run::Win32Pump
+    if ($^O =~ /\Amswin/i) {
+      $found = qx(kpsewhich $filename);
+    }
+    else {
+      run(command => [ 'kpsewhich', $filename ],
+          verbose => 0,
+          buffer  => \$found);
     }
     $logger->trace("kpsewhich returned '$found'");
     if ($found) {
       $logger->debug("Found '$filename' via kpsewhich");
       chomp $found;
-      $found =~ s/\cM\z//xms; # kpsewhich in cygwin/windows sometimes returns ^M at the end
+      $found =~ s/\cM\z//xms; # kpsewhich in cygwin sometimes returns ^M at the end
       # filename can be UTF-8 and run() isn't clever with UTF-8
       return decode_utf8($found);
     }
