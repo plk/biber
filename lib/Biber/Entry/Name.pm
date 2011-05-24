@@ -141,11 +141,11 @@ sub set_uniquename {
 
   # uniquename = 5 or 6 - ignore uniquename for any names
   # which don't occur in more than one identical list of visible last names
-  if ($un == 5 or $un == 6) {
-    unless (first {$_ > 1} values %{Biber::Config->get_lastnamelistcount($lastname)}) {
-      $uniquename = 0;
-    }
-  }
+  # if ($un == 5 or $un == 6) {
+  #   unless (first {$_ > 1} values %{Biber::Config->get_lastnamelistcount($lastname)}) {
+  #     $uniquename = 0;
+  #   }
+  # }
 
   # Set modified flag to positive if we change something
   if (not defined($currval) or $currval != $uniquename) {

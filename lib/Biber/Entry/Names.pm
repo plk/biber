@@ -75,7 +75,6 @@ sub reset_uniquelist {
   return;
 }
 
-
 =head2 set_uniquelist
 
     Add a uniquelist count to the Biber::Entry::Names object

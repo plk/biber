@@ -1491,6 +1491,7 @@ sub uniqueness {
       last; # uniquename/uniquelist disambiguation is finished as nothing changed
     }
   }
+  Biber::Config->dump;
   return;
 }
 
@@ -1542,16 +1543,19 @@ sub create_uniquename_info {
         # be uniquename = 2 unless even the full name doesn't disambiguate
         # and then it is left at uniquename = 0
 
-        # For uniquename = 5 (sparseinit) or 6 (sparsefull), we need to record the lastnames
-        my $lastnames = [];
-
         my $nl = $be->get_field($lname);
         my $num_names = $nl->count_elements;
         my $names = $nl->names;
         # If name list was truncated in bib with "and others", this overrides maxnames
         my $morenames = ($nl->last_element->get_namestring eq 'others') ? 1 : 0;
 
+        my @truncnames;
+        my @lastnames;
+
         foreach my $name (@$names) {
+
+          # First construct the list of names to work with
+          # We also construct the lastname list for $un=5 or $un=6
 
           # We want to record disambiguation information when:
           # uniquename = 3 (allinit) or 4 (allfull)
@@ -1566,37 +1570,46 @@ sub create_uniquename_info {
               $morenames or
               $num_names <= $maxn or
               $name->get_index <= $minn) { # implicitly, $num_names > $maxn here
-            my $lastname       = $name->get_lastname;
-            my $nameinitstring = $name->get_nameinitstring;
-            my $namestring     = $name->get_namestring;
 
-            # For uniquename 5 (sparseinit) and 6 (sparsefull)
-            if ($un == 5 or $un == 6) {
-              push @$lastnames, $name->get_lastname;
-            }
-
-            # Record a uniqueness information entry for the lastname showing that
-            # this lastname has been seen in this name
-            Biber::Config->add_uniquenamecount($lastname, $namestring);
-
-            # Record a uniqueness information entry for the lastname+initials showing that
-            # this lastname_initials has been seen in this name
-            Biber::Config->add_uniquenamecount($nameinitstring, $namestring);
-
-            # Record a uniqueness information entry for the fullname
-            # showing that this fullname has been seen in this name
-            Biber::Config->add_uniquenamecount($namestring, $namestring);
+            push @truncnames, $name;
+            push @lastnames, $name->get_lastname if ($un == 5 or $un == 6);
           }
         }
-        # Information for uniquename = 5 (sparseinit) and 6 (sparsefull)
-        # Every lastname records the list of lastnames in which it occurs
-        # Using this information later, we can choose to not set uniquename
-        # if a name only needs disambiguating from other names in the same list
+
+        # Information for sparseinit ($un=5) or sparsefull ($un=6)
+        my $lastnames_string;
         if ($un == 5 or $un == 6) {
-          foreach my $name (@$names) {
-            my $lastname = $name->get_lastname;
-            Biber::Config->add_lastnamelistcount($lastname, $lastnames, $citekey);
+          $lastnames_string = join("\x{10FFFD}", @lastnames);
+          if (@lastnames < $num_names or
+              $morenames) {
+            $lastnames_string .= "\x{10FFFD}et al"; # if truncated, record this
           }
+        }
+
+        foreach my $name (@truncnames) {
+          my $lastname       = $name->get_lastname;
+          my $nameinitstring = $name->get_nameinitstring;
+          my $namestring     = $name->get_namestring;
+
+          my $namecontext;
+          if ($un == 5 or $un == 6) {
+            $namecontext = $lastnames_string;
+          }
+          else {
+            $namecontext = $namestring;
+          }
+
+          # Record a uniqueness information entry for the lastname showing that
+          # this lastname has been seen in this name context
+          Biber::Config->add_uniquenamecount($lastname, $namecontext);
+
+          # Record a uniqueness information entry for the lastname+initials showing that
+          # this lastname_initials has been seen in this name context
+          Biber::Config->add_uniquenamecount($nameinitstring, $namecontext);
+
+          # Record a uniqueness information entry for the fullname
+          # showing that this fullname has been seen in this name context
+          Biber::Config->add_uniquenamecount($namestring, $namecontext);
         }
       }
     }
@@ -1626,7 +1639,9 @@ sub generate_uniquename {
       $logger->trace("Setting uniquename for '$citekey'");
 
       if (my $lname = $be->get_field('labelnamename')) {
-        foreach my $name (@{$be->get_field($lname)->names}) {
+        my $nl = $be->get_field($lname);
+
+        foreach my $name (@{$nl->names}) {
           my $lastname   = $name->get_lastname;
           my $nameinitstring = $name->get_nameinitstring;
           my $namestring = $name->get_namestring;

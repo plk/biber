@@ -776,13 +776,13 @@ sub incr_seen_nameyear_extraalpha {
 
 sub add_lastnamelistcount {
   shift; # class method so don't care about class name
-  my ($lastname, $lastnamelist, $citekey) = @_;
+  my ($lastname, $lastnames, $citekey) = @_;
   # Avoid incrementing the count for lastnames occuring more than once in the same list
   # (that is, in the same entry)
   # We only care about names occuring more than once in different lists
-  unless ($CONFIG->{state}{listinkey}{$citekey}{$lastname}{join("\x{10FFFD}", @$lastnamelist)}) {
-    $CONFIG->{state}{lastnamelistcount}{$lastname}{join("\x{10FFFD}", @$lastnamelist)}++;
-    $CONFIG->{state}{listinkey}{$citekey}{$lastname}{join("\x{10FFFD}", @$lastnamelist)}++;
+  unless ($CONFIG->{state}{listinkey}{$citekey}{$lastname}{$lastnames}) {
+    $CONFIG->{state}{lastnamelistcount}{$lastname}{$lastnames}++;
+    $CONFIG->{state}{listinkey}{$citekey}{$lastname}{$lastnames}++;
   }
   return;
 }
@@ -972,40 +972,65 @@ sub list_differs_superset {
 
 =head2 get_numofuniquenames
 
-    Get the number of uniquenames entries for a namepart
+    Get the number of uniquenames entries for a name
 
-    Biber::Config->get_numofuniquenames($namepart);
+    Biber::Config->get_numofuniquenames($name);
 
 =cut
 
 sub get_numofuniquenames {
   shift; # class method so don't care about class name
-  my $namepart = shift;
-  return $#{$CONFIG->{state}{uniquenamecount}{$namepart}} + 1;
+  my $name = shift;
+#  return $#{$CONFIG->{state}{uniquenamecount}{$name}} + 1;
+  return scalar keys %{$CONFIG->{state}{uniquenamecount}{$name}};
 }
 
 =head2 add_uniquenamecount
 
-    Add a name part to the list of names which have the name part in it
+    Add a name to the list of name contexts which have the name in it
 
-    Biber::Config->add_uniquenamecount($namepart, $name);
+    Biber::Config->add_uniquenamecount($name, $namecontext);
 
 =cut
 
 sub add_uniquenamecount {
-  shift; # class method so don't care about class name
-  my $namepart = shift;
-  my $name = shift;
-  # name already recorded as containing namestring
-  if (first {$name eq $_} @{$CONFIG->{state}{uniquenamecount}{$namepart}}) {
+  shift;                 # class method so don't care about class name
+  my ($name, $namecontext) = @_;
+  # namecontext already recorded as containing name
+  if ($CONFIG->{state}{uniquenamecount}{$name}{$namecontext}) {
     return;
   }
-  # Record name as containing namepart
+  # increment count
   else {
-    push @{$CONFIG->{state}{uniquenamecount}{$namepart}}, $name;
+    $CONFIG->{state}{uniquenamecount}{$name}{$namecontext}++;
   }
   return;
 }
+
+# sub add_uniquenamecount {
+#   shift;                 # class method so don't care about class name
+#   my ($name, $namecontext, $sparse) = @_;
+#   # namecontext already recorded as containing name
+#   if ($sparse) {
+#     if ($CONFIG->{state}{uniquenamecount}{$name}{$namecontext}) {
+#       return;
+#     }
+#     # increment count
+#     else {
+#       $CONFIG->{state}{uniquenamecount}{$name}{$namecontext}++;
+#     }
+#   }
+#   else {
+#     if (first {$namecontext eq $_} @{$CONFIG->{state}{uniquenamecount}{$name}}) {
+#       return;
+#     }
+#     # Record namecontext as containing name
+#     else {
+#       push @{$CONFIG->{state}{uniquenamecount}{$name}}, $namecontext;
+#     }
+#   }
+#   return;
+# }
 
 =head2 reset_uniquenamecount
 
@@ -1024,17 +1049,17 @@ sub reset_uniquenamecount {
 
 =head2 _get_uniquename
 
-    Get the list of names which contain a namepart
+    Get the list of name contexts which contain a name
     Mainly for use in tests
 
-    Biber::Config->get_uniquename($namepart);
+    Biber::Config->get_uniquename($name);
 
 =cut
 
 sub _get_uniquename {
   shift; # class method so don't care about class name
-  my $namepart = shift;
-  my @list = sort @{$CONFIG->{state}{uniquenamecount}{$namepart}};
+  my $name = shift;
+  my @list = sort @{$CONFIG->{state}{uniquenamecount}{$name}};
   return \@list;
 }
 
