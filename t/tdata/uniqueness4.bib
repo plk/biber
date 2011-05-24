@@ -122,16 +122,15 @@
   YEAR   = {1906}
 }
 
-% uniquelist won't be set as the lists are disambiguated by initials because
-% maxnames truncates them to length=3
-% Different lists so no disambiguation (AAA and BBB and CCC, AAA and BBB and CCC et al)
+% uniquelist won't be set as us18 is "AAAA and BBBB and CCCC" and us19 is "AAAA and BBBB and CCCC et al"
+% So, AAAA won't be disambiguated either.
 @ARTICLE{us18,
-  AUTHOR = {a. AAA and BBB and CCC},
+  AUTHOR = {a. AAAA and BBBB and CCCC},
   YEAR   = {1902}
 }
 
 @ARTICLE{us19,
-  AUTHOR = {b. AAA and BBB and CCC and DDD},
+  AUTHOR = {b. AAAA and BBBB and CCCC and DDDD},
   YEAR   = {1906}
 }
 

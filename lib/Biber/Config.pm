@@ -44,16 +44,12 @@ $CONFIG->{state}{keycase} = {};
 # For the uniquelist feature. Records the number of times a name list occurs in all entries
 $CONFIG->{state}{uniquelistcount} = {};
 
-# For uniquename = 5 or 6. Records a count how many times a lastname occurs in
-# a list of lastnames
-$CONFIG->{state}{lastnamelistcount} = {};
-
 # For uniquename = 5 or 6. Records which lastnames occured in which lastname lists
 # in which keys. Used to prevent incrementing the count of lastname lists in which a
 # lastname occurs when there are two identical lastnames in the same list since we only
 # care about lastname occuring in different lastname lists (that is, lastname lists
 # in different entries)
-$CONFIG->{state}{listinkey} = {};
+$CONFIG->{state}{sparseuniquenamecount} = {};
 
 # Boolean to say whether uniquename/uniquelist information has changed
 # Default is true so that uniquename/uniquelist processing starts
@@ -103,9 +99,8 @@ sub _init {
   $CONFIG->{state}{namehashcount} = {};
   $CONFIG->{state}{fullhashcount} = {};
   $CONFIG->{state}{uniquenamecount} = {};
+  $CONFIG->{state}{sparseuniquenamecount} = {};
   $CONFIG->{state}{uniquelistcount} = {};
-  $CONFIG->{state}{lastnamelistcount} = {};
-  $CONFIG->{state}{listinkey} = {};
   $CONFIG->{state}{seen_nameyear_extrayear} = {};
   $CONFIG->{state}{seen_extrayear} = {};
   $CONFIG->{state}{seen_nameyear_extraalpha} = {};
@@ -761,65 +756,6 @@ sub incr_seen_nameyear_extraalpha {
 }
 
 #============================
-#       lastnamelistcount
-#============================
-
-
-=head2 add_lastnamelistcount
-
-    Increment the count of lastname only namelists in which the name occurs
-    Used for uniquename = 5 (sparseinit) or 6 (sparsefull)
-
-    Biber::Config->add_lastnamelistcount($lastname, $lastnamelist, $citekey);
-
-=cut
-
-sub add_lastnamelistcount {
-  shift; # class method so don't care about class name
-  my ($lastname, $lastnames, $citekey) = @_;
-  # Avoid incrementing the count for lastnames occuring more than once in the same list
-  # (that is, in the same entry)
-  # We only care about names occuring more than once in different lists
-  unless ($CONFIG->{state}{listinkey}{$citekey}{$lastname}{$lastnames}) {
-    $CONFIG->{state}{lastnamelistcount}{$lastname}{$lastnames}++;
-    $CONFIG->{state}{listinkey}{$citekey}{$lastname}{$lastnames}++;
-  }
-  return;
-}
-
-=head2 get_lastnamelistcount
-
-    Get the count of lastname only namelists in which the name occurs
-    Used for uniquename = 5 or 6
-
-    Biber::Config->get_lastnamelistcount($lastname);
-
-=cut
-
-sub get_lastnamelistcount {
-  shift; # class method so don't care about class name
-  my $lastname = shift;
-  return $CONFIG->{state}{lastnamelistcount}{$lastname};
-}
-
-=head2 reset_lastnamelistcount
-
-    Reset the count of lastname only namelists in which the name occurs
-
-    Biber::Config->reset_lastnamelistcount
-
-=cut
-
-sub reset_lastnamelistcount {
-  shift; # class method so don't care about class name
-  $CONFIG->{state}{lastnamelistcount} = {};
-  return;
-}
-
-
-
-
-#============================
 #       uniquelistcount
 #============================
 
@@ -981,8 +917,16 @@ sub list_differs_superset {
 sub get_numofuniquenames {
   shift; # class method so don't care about class name
   my $name = shift;
-#  return $#{$CONFIG->{state}{uniquenamecount}{$name}} + 1;
-  return scalar keys %{$CONFIG->{state}{uniquenamecount}{$name}};
+  my $namecontext = shift;
+  if (defined($namecontext)) {
+    return $CONFIG->{state}{uniquenamecount}{$name}{$namecontext};
+    $logger->trace("get_numofuniquenames() returning $return for NAME='$name' and NAMECONTEXT='$namecontext'");
+  }
+  else {
+    my $return = scalar keys %{$CONFIG->{state}{uniquenamecount}{$name}};
+    $logger->trace("get_numofuniquenames() returning $return for NAME='$name'");
+    return $return;
+  }
 }
 
 =head2 add_uniquenamecount
@@ -994,43 +938,27 @@ sub get_numofuniquenames {
 =cut
 
 sub add_uniquenamecount {
-  shift;                 # class method so don't care about class name
-  my ($name, $namecontext) = @_;
-  # namecontext already recorded as containing name
-  if ($CONFIG->{state}{uniquenamecount}{$name}{$namecontext}) {
-    return;
+  shift; # class method so don't care about class name
+  my ($name, $namecontext, $un, $citekey) = @_;
+  # Skip repeats within a name list for non-global (sparse) disambiguation
+  if ($un == 5 or $un == 6) {
+    if (defined($CONFIG->{state}{sparseuniquenamecount}{$citekey}{$name}{$namecontext})) {
+      return;
+    }
+    else {
+      $CONFIG->{state}{sparseuniquenamecount}{$citekey}{$name}{$namecontext}++;
+    }
+  }
+  else { # skip repeats for global (non sparse) disambiguation
+    if (defined($CONFIG->{state}{uniquenamecount}{$name}{$namecontext})) {
+      return;
+    }
   }
   # increment count
-  else {
-    $CONFIG->{state}{uniquenamecount}{$name}{$namecontext}++;
-  }
+  $CONFIG->{state}{uniquenamecount}{$name}{$namecontext}++;
   return;
 }
 
-# sub add_uniquenamecount {
-#   shift;                 # class method so don't care about class name
-#   my ($name, $namecontext, $sparse) = @_;
-#   # namecontext already recorded as containing name
-#   if ($sparse) {
-#     if ($CONFIG->{state}{uniquenamecount}{$name}{$namecontext}) {
-#       return;
-#     }
-#     # increment count
-#     else {
-#       $CONFIG->{state}{uniquenamecount}{$name}{$namecontext}++;
-#     }
-#   }
-#   else {
-#     if (first {$namecontext eq $_} @{$CONFIG->{state}{uniquenamecount}{$name}}) {
-#       return;
-#     }
-#     # Record namecontext as containing name
-#     else {
-#       push @{$CONFIG->{state}{uniquenamecount}{$name}}, $namecontext;
-#     }
-#   }
-#   return;
-# }
 
 =head2 reset_uniquenamecount
 
@@ -1043,9 +971,9 @@ sub add_uniquenamecount {
 sub reset_uniquenamecount {
   shift; # class method so don't care about class name
   $CONFIG->{state}{uniquenamecount} = {};
+  $CONFIG->{state}{sparseuniquenamecount} = {};
   return;
 }
-
 
 =head2 _get_uniquename
 
@@ -1059,7 +987,7 @@ sub reset_uniquenamecount {
 sub _get_uniquename {
   shift; # class method so don't care about class name
   my $name = shift;
-  my @list = sort @{$CONFIG->{state}{uniquenamecount}{$name}};
+  my @list = sort keys %{$CONFIG->{state}{uniquenamecount}{$name}};
   return \@list;
 }
 

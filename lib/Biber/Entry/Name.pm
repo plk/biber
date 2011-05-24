@@ -114,18 +114,6 @@ sub get_index {
   return $self->{index};
 }
 
-=head2 reset_uniquename
-
-    Reset uniquename to undef for a Biber::Entry::Name object
-
-=cut
-
-sub reset_uniquename {
-  my $self = shift;
-  delete $self->{uniquename};
-  return;
-}
-
 
 =head2 set_uniquename
 
@@ -135,22 +123,15 @@ sub reset_uniquename {
 =cut
 
 sub set_uniquename {
-  my ($self, $uniquename, $un) = @_;
+  my ($self, $uniquename) = @_;
   my $currval = $self->{uniquename};
   my $lastname = $self->get_lastname;
-
-  # uniquename = 5 or 6 - ignore uniquename for any names
-  # which don't occur in more than one identical list of visible last names
-  # if ($un == 5 or $un == 6) {
-  #   unless (first {$_ > 1} values %{Biber::Config->get_lastnamelistcount($lastname)}) {
-  #     $uniquename = 0;
-  #   }
-  # }
 
   # Set modified flag to positive if we change something
   if (not defined($currval) or $currval != $uniquename) {
     Biber::Config->set_unul_changed(1);
   }
+  $logger->trace('Setting uniquename for "' . $self->get_namestring . '" to ' . $uniquename);
   $self->{uniquename} = $uniquename;
   return;
 }
@@ -165,6 +146,47 @@ sub get_uniquename {
   my $self = shift;
   return $self->{uniquename};
 }
+
+=head2 reset_uniquename
+
+    Reset uniquename for a Biber::Entry::Name object
+
+=cut
+
+sub reset_uniquename {
+  my $self = shift;
+  $self->{uniquename} = 0;
+  return;
+}
+
+
+=head2 set_lastnames_string
+
+    Set the string of lastnames in which the name occurs.
+    Used to track uniquename=5 or 6
+
+=cut
+
+sub set_lastnames_string {
+  my ($self, $val) = @_;
+  $self->{lastnames_string} = $val;
+  return;
+}
+
+
+=head2 get_lastnames_string
+
+    Get the string of lastnames in which the name occurs.
+    Used to track uniquename=5 or 6
+
+=cut
+
+sub get_lastnames_string {
+  my $self = shift;
+  return $self->{lastnames_string};
+}
+
+
 
 =head2 set_firstname
 
