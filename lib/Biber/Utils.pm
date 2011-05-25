@@ -137,7 +137,7 @@ sub locate_biber_file {
     my $err;
     run3  [ 'kpsewhich', $filename ], \undef, \$found, \$err, { return_if_system_error => 1};
     if ($?) {
-      $logger->warn("kpsewhich returned error: $err ($!)");
+      $logger->debug("kpsewhich returned error: $err ($!)");
     }
     $logger->trace("kpsewhich returned '$found'");
     if ($found) {
