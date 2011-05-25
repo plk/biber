@@ -943,10 +943,6 @@ sub add_uniquenamecount {
     return if defined($CONFIG->{state}{sparseuniquenamecount}{$citekey}{$name}{$namecontext});
     $CONFIG->{state}{sparseuniquenamecount}{$citekey}{$name}{$namecontext}++;
   }
-  else {
-    # Skip repeats for global (non sparse) disambiguation
-    return if defined($CONFIG->{state}{uniquenamecount}{$name}{$namecontext});
-  }
   # increment count
   $CONFIG->{state}{uniquenamecount}{$name}{$namecontext}++;
   return;
