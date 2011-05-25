@@ -88,6 +88,7 @@ sub set_uniquelist {
   my $uniquelist = $self->count_uniquelist($namelist);
   my $currval = $self->{uniquelist};
   my $minn = Biber::Config->getblxoption('minnames');
+  my $maxn = Biber::Config->getblxoption('maxnames');
 
   # Set modified flag to positive if we changed something
   if (not defined($currval) or $currval != $uniquelist) {
@@ -96,6 +97,10 @@ sub set_uniquelist {
 
   # Special case $uniquelist <=1 is meaningless
   return if $uniquelist <= 1;
+
+  # Don't set uniquelist unless the list is longer than maxnames as it was therefore
+  # never truncated to minnames in the first place and uniquelist is a "local minnames"
+  return unless $self->count_elements > $maxn;
 
   # No disambiguation needed if uniquelist is <= minnames as this makes no sense
   # since it implies that disambiguation beyond minnames was needed.
@@ -106,7 +111,6 @@ sub set_uniquelist {
   # $uniquelist cannot be undef or 0 either since every list occurs at least once.
   # This guarantees that uniquelist, when set, is >1 because minnames cannot
   # be <1
-
   return if $uniquelist <= $minn and not $minn == $self->count_elements;
 
   # Special case.

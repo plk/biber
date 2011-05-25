@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 148;
+use Test::More tests => 150;
 
 use Biber;
 use Biber::Utils;
@@ -73,7 +73,7 @@ $main = $section->get_list('MAIN');
 # Hashes the same as uniquelist expansion expands to the whole list
 is($bibentries->entry('unall3')->get_field('namehash'), 'AAAAA1', 'Namehash and fullhash - 5');
 is($bibentries->entry('unall3')->get_field('fullhash'), 'AAAAA1', 'Namehash and fullhash - 6');
-is($bibentries->entry('unall3')->get_field($bibentries->entry('unall3')->get_field('labelnamename'))->get_uniquelist, '5', 'Uniquelist edgecase - 1');
+ok(is_undef($bibentries->entry('unall3')->get_field($bibentries->entry('unall3')->get_field('labelnamename'))->get_uniquelist), 'Uniquelist edgecase - 1');
 is($bibentries->entry('unall4')->get_field($bibentries->entry('unall4')->get_field('labelnamename'))->get_uniquelist, '6', 'Uniquelist edgecase - 2');
 
 #############################################################################
@@ -206,7 +206,7 @@ is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('
 is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 33');
 is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 34');
 is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 35');
-is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquename sparse - 36');
+ok(is_undef($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->get_uniquelist), 'Uniquename sparse - 36');
 is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 37');
 is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 38');
 is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 39');
@@ -214,7 +214,7 @@ is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('
 is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->get_uniquelist, '4', 'Uniquename sparse - 41');
 is($bibentries->entry('us18')->get_field($bibentries->entry('us18')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 42');
 is($bibentries->entry('us19')->get_field($bibentries->entry('us19')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 43');
-is($bibentries->entry('us18')->get_field($bibentries->entry('us18')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquename sparse - 44');
+ok(is_undef($bibentries->entry('us18')->get_field($bibentries->entry('us18')->get_field('labelnamename'))->get_uniquelist), 'Uniquename sparse - 44');
 is($bibentries->entry('us19')->get_field($bibentries->entry('us19')->get_field('labelnamename'))->get_uniquelist, '4', 'Uniquename sparse - 45');
 
 #############################################################################
@@ -290,6 +290,8 @@ is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('
 is($bibentries->entry('us26')->get_field($bibentries->entry('us26')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename sparse - 64');
 is($bibentries->entry('us27')->get_field($bibentries->entry('us27')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename sparse - 65');
 is($bibentries->entry('us28')->get_field($bibentries->entry('us28')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename sparse - 66');
+is($bibentries->entry('us29')->get_field($bibentries->entry('us29')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename sparse - 67');
+is($bibentries->entry('us30')->get_field($bibentries->entry('us30')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename sparse - 68');
 
 #############################################################################
 

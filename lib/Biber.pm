@@ -1499,6 +1499,41 @@ sub uniqueness {
 
     Gather the uniquename information as we look through the names
 
+    What is happening in here is the following:
+    We are registering the number of occurences of each name, name+init and fullname
+    within a specific context. For example, the context is "global" with uniquename < 5
+    and "name list" for uniquename=5 or 6. The keys we store to count this are the most specific
+    information for the context, so, for uniquename < 5, this is the full name and for
+    uniquename=5 or 6, this is the complete list of full names. These keys have values in a hash
+    which are ignored. They serve only to accumulate repeated occurences with the context
+    and we don't care about this and so the values are a useful sinkhole for such repetition.
+
+    For example, if we find in the global context a lastname "Smith" in two different entries
+    under the same form "Alan Smith", the data structure will look like:
+
+    {Smith}->{global}->{Alan Smith} = 2
+
+    We don't care about the value as this means that there are 2 "Alan Smith"s in the global
+    context which need disambiguating identically anyway. So, we just count the keys for the
+    lastname "Smith" in the global context to see how ambiguous the lastname itself is. This
+    would be "1" and so "Alan Smith" would get uniquename=0 because it's unambiguous as just
+    "Smith".
+
+    The same goes for "sparse" list context disambiguation for uniquename=5 or 6.
+    For example, if we had the lastname "Smith" to disambiguate in two entries with labelname
+    "John Smith and Alan Jones", the data structure would look like:
+
+    {Smith}->{Smith+Jones}->{John Smith+Alan Jones} = 2
+
+    Again, counting the keys of the context for the lastname gives us "1" which means we
+    have uniquename=0 for "John Smith" in both entries because it's the same list. This also works
+    for repeated names in the same list "John Smith and Bert Smith". Disambiguating "Smith" in this:
+
+    {Smith}->{Smith+Smith}->{John Smith+Bert Smith} = 2
+
+    So both "John Smith" and "Bert Smith" in this entry get uniquename=0 (of course, as long as
+    there are no other "X Smith and Y Smith" entries where X != "John" or Y != "Bert").
+
 =cut
 
 sub create_uniquename_info {
@@ -1533,9 +1568,9 @@ sub create_uniquename_info {
         # we can't, were still processing entries at this point.
         # Here we are just recording seen combinations of:
         #
-        # lastname and how many name contexts contain this (uniquename = 0)
-        # lastnames+initials and how many name contexts contain this (uniquename = 1)
-        # Full name and how many name contexts contain this (uniquename = 2)
+        # lastname and how many name context keys contain this (uniquename = 0)
+        # lastnames+initials and how many name context keys contain this (uniquename = 1)
+        # Full name and how many name context keys contain this (uniquename = 2)
         #
         # A name context can be either a complete single name or a list of names
         # depending on whether uniquename=sparse* or not
@@ -1552,10 +1587,11 @@ sub create_uniquename_info {
 
         my @truncnames;
         my @lastnames;
+        my @fullnames;
 
         foreach my $name (@$names) {
           # First construct the list of names to work with
-          # We also construct the lastname list for $un=5 or $un=6
+          # We also construct the disambiguation lists for $un=5 or $un=6
 
           # We want to record disambiguation information when:
           # uniquename = 3 (allinit) or 4 (allfull)
@@ -1572,17 +1608,23 @@ sub create_uniquename_info {
               $name->get_index <= $minn) { # implicitly, $num_names > $maxn here
 
             push @truncnames, $name;
-            push @lastnames, $name->get_lastname if ($un == 5 or $un == 6);
+            if ($un == 5 or $un == 6) {
+              push @lastnames, $name->get_lastname;
+              push @fullnames, $name->get_namestring;
+            }
           }
         }
 
         # Information for sparseinit ($un=5) or sparsefull ($un=6)
         my $lastnames_string;
+        my $fullnames_string;
         if ($un == 5 or $un == 6) {
           $lastnames_string = join("\x{10FFFD}", @lastnames);
+          $fullnames_string = join("\x{10FFFD}", @fullnames);
           if ($#lastnames + 1 < $num_names or
               $morenames) {
             $lastnames_string .= "\x{10FFFD}et al"; # if truncated, record this
+            $fullnames_string .= "\x{10FFFD}et al"; # if truncated, record this
           }
         }
 
@@ -1591,26 +1633,29 @@ sub create_uniquename_info {
           my $nameinitstring = $name->get_nameinitstring;
           my $namestring     = $name->get_namestring;
           my $namecontext;
+          my $key;
 
           if ($un == 5 or $un == 6) {
             $namecontext = $lastnames_string;
-            $name->set_lastnames_string($lastnames_string);
+            $key = $fullnames_string;
+            $name->set_sparse_info($lastnames_string, $fullnames_string);
           }
           else {
-            $namecontext = $namestring;
+            $namecontext = 'global';
+            $key = $namestring;
           }
 
           # Record a uniqueness information entry for the lastname showing that
           # this lastname has been seen in this name context
-          Biber::Config->add_uniquenamecount($lastname, $namecontext, $un, $citekey);
+          Biber::Config->add_uniquenamecount($lastname, $namecontext, $key);
 
           # Record a uniqueness information entry for the lastname+initials showing that
           # this lastname_initials has been seen in this name context
-          Biber::Config->add_uniquenamecount($nameinitstring, $namecontext, $un, $citekey);
+          Biber::Config->add_uniquenamecount($nameinitstring, $namecontext, $key);
 
           # Record a uniqueness information entry for the fullname
           # showing that this fullname has been seen in this name context
-          Biber::Config->add_uniquenamecount($namestring, $namecontext, $un, $citekey);
+          Biber::Config->add_uniquenamecount($namestring, $namecontext, $key);
         }
       }
     }
@@ -1676,28 +1721,32 @@ sub generate_uniquename {
           my $lastname   = $name->get_lastname;
           my $nameinitstring = $name->get_nameinitstring;
           my $namestring = $name->get_namestring;
-          my $namecontext = $name->get_lastnames_string; # $un=5 and 6
+          my $namecontext = 'global'; # default
+          my $key;
+          if ($un == 5 or $un == 6) {
+           ($namecontext, $key) = $name->get_sparse_info; # $un=5 and 6
+          }
 
           # If there is one entry for the lastname, then it's unique
-          if (Biber::Config->get_numofuniquenames($lastname, $namecontext) == 1) {
+          if (Biber::Config->get_numofuniquenames($lastname, $namecontext, $key) == 1) {
             $name->set_uniquename(0);
           }
           # Otherwise, if there is one entry for the lastname plus initials,
           # then it needs the initials to make it unique
-          elsif (Biber::Config->get_numofuniquenames($nameinitstring, $namecontext) == 1) {
+          elsif (Biber::Config->get_numofuniquenames($nameinitstring, $namecontext, $key) == 1) {
             $name->set_uniquename(1);
           }
           # Otherwise, if there is more than one entry for the lastname plus
           # initials and we are restricted to disambiguating with inits (uniquename=1,3,5),
           # then set to 0 as the initials don't disambiguate and it's misleading to
           # expand to initials
-          elsif (Biber::Config->get_numofuniquenames($nameinitstring, $namecontext) > 1 and
+          elsif (Biber::Config->get_numofuniquenames($nameinitstring, $namecontext, $key) > 1 and
                  ($un == 1 or $un == 3 or $un == 5)) {
             $name->set_uniquename(0);
           }
           # Otherwise the name needs to be full to make it unique
           # but restrict to uniquename biblatex option maximum
-          elsif (Biber::Config->get_numofuniquenames($namestring, $namecontext) == 1) {
+          elsif (Biber::Config->get_numofuniquenames($namestring, $namecontext, $key) == 1) {
             my $run;
             given ($un) {
               when ('1') {$run = 1} # init
@@ -1712,7 +1761,7 @@ sub generate_uniquename {
           # Otherwise, if there is more than one entry (hash) for the full name,
           # then set to 0 since nothing will uniqueify this name and it's just
           # misleading to expand it
-          elsif (Biber::Config->get_numofuniquenames($namestring, $namecontext) > 1) {
+          elsif (Biber::Config->get_numofuniquenames($namestring, $namecontext, $key) > 1) {
             $name->set_uniquename(0);
           }
           else {

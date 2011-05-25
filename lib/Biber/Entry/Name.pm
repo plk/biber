@@ -160,30 +160,31 @@ sub reset_uniquename {
 }
 
 
-=head2 set_lastnames_string
+=head2 set_sparse_info
 
-    Set the string of lastnames in which the name occurs.
+    Set the string of lastnames and string of fullnames
     Used to track uniquename=5 or 6
 
 =cut
 
-sub set_lastnames_string {
-  my ($self, $val) = @_;
-  $self->{lastnames_string} = $val;
+sub set_sparse_info {
+  my ($self, $lns, $fns) = @_;
+  $self->{lastnames_string} = $lns;
+  $self->{fullnames_string} = $fns;
   return;
 }
 
 
-=head2 get_lastnames_string
+=head2 get_sparse_info
 
-    Get the string of lastnames in which the name occurs.
+    Get the string of lastnames and string of fullnames
     Used to track uniquename=5 or 6
 
 =cut
 
-sub get_lastnames_string {
+sub get_sparse_info {
   my $self = shift;
-  return $self->{lastnames_string};
+  return ($self->{lastnames_string}, $self->{fullnames_string});
 }
 
 

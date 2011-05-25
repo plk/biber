@@ -913,17 +913,11 @@ sub list_differs_superset {
 
 sub get_numofuniquenames {
   shift; # class method so don't care about class name
-  my $name = shift;
-  my $namecontext = shift;
-  if (defined($namecontext)) {
-    return $CONFIG->{state}{uniquenamecount}{$name}{$namecontext};
-    $logger->trace("get_numofuniquenames() returning $return for NAME='$name' and NAMECONTEXT='$namecontext'");
-  }
-  else {
-    my $return = scalar keys %{$CONFIG->{state}{uniquenamecount}{$name}};
-    $logger->trace("get_numofuniquenames() returning $return for NAME='$name'");
-    return $return;
-  }
+  my ($name, $namecontext, $key) = @_;
+  $key = '' unless $key; # default for the tracing so we don't get an undef string warning
+  my $return = scalar keys %{$CONFIG->{state}{uniquenamecount}{$name}{$namecontext}};
+  $logger->trace("get_numofuniquenames() returning $return for NAME='$name' and NAMECONTEXT='$namecontext' and KEY='$key'");
+  return $return;
 }
 
 =head2 add_uniquenamecount
@@ -936,15 +930,9 @@ sub get_numofuniquenames {
 
 sub add_uniquenamecount {
   shift; # class method so don't care about class name
-  my ($name, $namecontext, $un, $citekey) = @_;
+  my ($name, $namecontext, $key) = @_;
 
-  if ($un == 5 or $un == 6) {
-    # Skip repeats within a name list for non-global (sparse) disambiguation
-    return if defined($CONFIG->{state}{sparseuniquenamecount}{$citekey}{$name}{$namecontext});
-    $CONFIG->{state}{sparseuniquenamecount}{$citekey}{$name}{$namecontext}++;
-  }
-  # increment count
-  $CONFIG->{state}{uniquenamecount}{$name}{$namecontext}++;
+  $CONFIG->{state}{uniquenamecount}{$name}{$namecontext}{$key}++;
   return;
 }
 
@@ -974,8 +962,8 @@ sub reset_uniquenamecount {
 
 sub _get_uniquename {
   shift; # class method so don't care about class name
-  my $name = shift;
-  my @list = sort keys %{$CONFIG->{state}{uniquenamecount}{$name}};
+  my ($name, $namecontext) = @_;
+  my @list = sort keys %{$CONFIG->{state}{uniquenamecount}{$name}{$namecontext}};
   return \@list;
 }
 
