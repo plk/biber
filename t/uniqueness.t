@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 145;
+use Test::More tests => 148;
 
 use Biber;
 use Biber::Utils;
@@ -287,7 +287,9 @@ is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('
 is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename sparse - 61');
 is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 62');
 is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 63');
-
+is($bibentries->entry('us26')->get_field($bibentries->entry('us26')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename sparse - 64');
+is($bibentries->entry('us27')->get_field($bibentries->entry('us27')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename sparse - 65');
+is($bibentries->entry('us28')->get_field($bibentries->entry('us28')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename sparse - 66');
 
 #############################################################################
 
