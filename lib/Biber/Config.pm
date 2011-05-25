@@ -937,25 +937,20 @@ sub get_numofuniquenames {
 sub add_uniquenamecount {
   shift; # class method so don't care about class name
   my ($name, $namecontext, $un, $citekey) = @_;
-  # Skip repeats within a name list for non-global (sparse) disambiguation
+
   if ($un == 5 or $un == 6) {
-    if (defined($CONFIG->{state}{sparseuniquenamecount}{$citekey}{$name}{$namecontext})) {
-      return;
-    }
-    else {
-      $CONFIG->{state}{sparseuniquenamecount}{$citekey}{$name}{$namecontext}++;
-    }
+    # Skip repeats within a name list for non-global (sparse) disambiguation
+    return if defined($CONFIG->{state}{sparseuniquenamecount}{$citekey}{$name}{$namecontext});
+    $CONFIG->{state}{sparseuniquenamecount}{$citekey}{$name}{$namecontext}++;
   }
-  else { # skip repeats for global (non sparse) disambiguation
-    if (defined($CONFIG->{state}{uniquenamecount}{$name}{$namecontext})) {
-      return;
-    }
+  else {
+    # Skip repeats for global (non sparse) disambiguation
+    return if defined($CONFIG->{state}{uniquenamecount}{$name}{$namecontext});
   }
   # increment count
   $CONFIG->{state}{uniquenamecount}{$name}{$namecontext}++;
   return;
 }
-
 
 =head2 reset_uniquenamecount
 

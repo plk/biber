@@ -883,7 +883,7 @@ sub process_entries_pre {
 
     More processing operations, to generate things which require uniqueness
     information like namehash
-    Runs after  uniqueness processing
+    Runs after uniqueness processing
 
 =cut
 
@@ -1533,10 +1533,12 @@ sub create_uniquename_info {
         # we can't, were still processing entries at this point.
         # Here we are just recording seen combinations of:
         #
-        # lastname and how many names contain this (uniquename = 0)
-        # lastnames+initials and how many names contain this (uniquename = 1)
-        # Full name and how many names contain this (uniquename = 2)
-        # How many unique lastname lists contain the lastname (uniquename = 5 or 6)
+        # lastname and how many name contexts contain this (uniquename = 0)
+        # lastnames+initials and how many name contexts contain this (uniquename = 1)
+        # Full name and how many name contexts contain this (uniquename = 2)
+        #
+        # A name context can be either a complete single name or a list of names
+        # depending on whether uniquename=sparse* or not
         #
         # Anything which has more than one combination for both of these would
         # be uniquename = 2 unless even the full name doesn't disambiguate
@@ -1578,7 +1580,7 @@ sub create_uniquename_info {
         my $lastnames_string;
         if ($un == 5 or $un == 6) {
           $lastnames_string = join("\x{10FFFD}", @lastnames);
-          if (@lastnames < $num_names or
+          if ($#lastnames + 1 < $num_names or
               $morenames) {
             $lastnames_string .= "\x{10FFFD}et al"; # if truncated, record this
           }
