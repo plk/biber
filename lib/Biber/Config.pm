@@ -211,9 +211,6 @@ sub config_file {
     my $biberconf;
     my $err;
     run3  [ 'kpsewhich', $BIBER_CONF_NAME ], \undef, \$biberconf, \$err, { return_if_system_error => 1};
-    if ($?) {
-      $logger->warn("kpsewhich returned error: $err ($!)");
-    }
     chomp $biberconf;
     $biberconf =~ s/\cM\z//xms; # kpsewhich in cygwin sometimes returns ^M at the end
   }
