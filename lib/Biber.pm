@@ -1750,10 +1750,13 @@ sub create_uniquelist_info {
       if (my $lname = $be->get_field('labelnamename')) {
         my $nl = $be->get_field($lname);
 
-        # We don't need to set uniquelist at all if the namelist isn't longer than
+        # We don't need to set uniquelist at all if the namelist is less than
         # maxnames because then, even if it's ambiguous, there isn't any extra
         # information to use to make it potentially unambiguous with uniquelist.
-        next unless $nl->count_elements > $maxn;
+        # Note that we might want to set uniquelist if listlength = maxnames as
+        # nothing after maxnames counts as information too (when disambiguating
+        # from other lists which are the same up to maxnames but longer than maxnames)
+        next unless $nl->count_elements >= $maxn;
 
         my $namelist = [];
         foreach my $name (@{$nl->names}) {
@@ -1818,10 +1821,13 @@ sub generate_uniquelist {
       if (my $lname = $be->get_field('labelnamename')) {
         my $nl = $be->get_field($lname);
 
-        # We don't need to set uniquelist at all if the namelist isn't longer than
+        # We don't need to set uniquelist at all if the namelist is less than
         # maxnames because then, even if it's ambiguous, there isn't any extra
         # information to use to make it potentially unambiguous with uniquelist.
-        next unless $nl->count_elements > $maxn;
+        # Note that we might want to set uniquelist if listlength = maxnames as
+        # nothing after maxnames counts as information too (when disambiguating
+        # from other lists which are the same up to maxnames but longer than maxnames)
+        next unless $nl->count_elements >= $maxn;
 
         my $namelist = [];
         my $namefield = $be->get_field($lname);

@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 142;
+use Test::More tests => 145;
 
 use Biber;
 use Biber::Utils;
@@ -42,11 +42,12 @@ is($bibentries->entry('un2')->get_field($bibentries->entry('un2')->get_field('la
 is($bibentries->entry('un5')->get_field($bibentries->entry('un5')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename requiring full name expansion - 3');
 is($bibentries->entry('un3')->get_field($bibentries->entry('un2')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename requiring initials name expansion - 1');
 is($bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename requiring initials name expansion - 2');
-is($bibentries->entry('un6')->get_field('namehash'), 'AJ+1', 'Namehash and fullhash - 1');
+is($bibentries->entry('un6')->get_field('namehash'), 'AJBM1', 'Namehash and fullhash - 1');
 is($bibentries->entry('un6')->get_field('fullhash'), 'AJBM1', 'Namehash and fullhash - 2');
 is($bibentries->entry('un7')->get_field('namehash'), 'C1', 'Fullnamshash ignores SHORT* names - 1');
 is($bibentries->entry('un7')->get_field('fullhash'), 'AJBM1', 'Fullnamshash ignores SHORT* names - 2');
-ok(is_undef($bibentries->entry('un6')->get_field($bibentries->entry('un6')->get_field('labelnamename'))->get_uniquelist), 'Uniquelist not needed - 1');
+is($bibentries->entry('test1')->get_field('namehash'), 'SP+1', 'Namehash and fullhash - 3');
+is($bibentries->entry('test1')->get_field('fullhash'), 'SPJBBP1', 'Namehash and fullhash - 4');
 
 #############################################################################
 
@@ -58,7 +59,7 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 
 # Biblatex options
-Biber::Config->setblxoption('maxnames', 1);
+Biber::Config->setblxoption('maxnames', 5);
 Biber::Config->setblxoption('minnames', 1);
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 1);
@@ -70,8 +71,10 @@ $bibentries = $section->bibentries;
 $main = $section->get_list('MAIN');
 
 # Hashes the same as uniquelist expansion expands to the whole list
-is($bibentries->entry('unall3')->get_field('namehash'), 'AAAAA1', 'Namehash and fullhash - 3');
-is($bibentries->entry('unall3')->get_field('fullhash'), 'AAAAA1', 'Namehash and fullhash - 4');
+is($bibentries->entry('unall3')->get_field('namehash'), 'AAAAA1', 'Namehash and fullhash - 5');
+is($bibentries->entry('unall3')->get_field('fullhash'), 'AAAAA1', 'Namehash and fullhash - 6');
+is($bibentries->entry('unall3')->get_field($bibentries->entry('unall3')->get_field('labelnamename'))->get_uniquelist, '5', 'Uniquelist edgecase - 1');
+is($bibentries->entry('unall4')->get_field($bibentries->entry('unall4')->get_field('labelnamename'))->get_uniquelist, '6', 'Uniquelist edgecase - 2');
 
 #############################################################################
 
@@ -203,16 +206,16 @@ is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('
 is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 33');
 is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 34');
 is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 35');
-ok(is_undef($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->get_uniquelist), 'Uniquename sparse - 36');
+is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquename sparse - 36');
 is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 37');
 is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 38');
 is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 39');
 is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_element(4)->get_uniquename, '0', 'Uniquename sparse - 40');
-ok(is_undef($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->get_uniquelist), 'Uniquename sparse - 41');
+is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->get_uniquelist, '4', 'Uniquename sparse - 41');
 is($bibentries->entry('us18')->get_field($bibentries->entry('us18')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 42');
 is($bibentries->entry('us19')->get_field($bibentries->entry('us19')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 43');
-ok(is_undef($bibentries->entry('us18')->get_field($bibentries->entry('us18')->get_field('labelnamename'))->get_uniquelist), 'Uniquename sparse - 44');
-ok(is_undef($bibentries->entry('us19')->get_field($bibentries->entry('us19')->get_field('labelnamename'))->get_uniquelist), 'Uniquename sparse - 45');
+is($bibentries->entry('us18')->get_field($bibentries->entry('us18')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquename sparse - 44');
+is($bibentries->entry('us19')->get_field($bibentries->entry('us19')->get_field('labelnamename'))->get_uniquelist, '4', 'Uniquename sparse - 45');
 
 #############################################################################
 

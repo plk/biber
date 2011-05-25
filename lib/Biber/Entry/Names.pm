@@ -94,13 +94,20 @@ sub set_uniquelist {
     Biber::Config->set_unul_changed(1);
   }
 
+  # Special case $uniquelist <=1 is meaningless
+  return if $uniquelist <= 1;
+
   # No disambiguation needed if uniquelist is <= minnames as this makes no sense
-  # - we will just use minnames as the truncation point and it's misleading to set
-  # uniquelist since this implies that disambiguation beyond minnames was needed.
+  # since it implies that disambiguation beyond minnames was needed.
+  # This doesn't apply when the list length is minnames as maxmanes therefore
+  # (since it can't be less than minnames) could also be the same as the list length
+  # and this is a special case where we need to preserve uniquelist (see comments in
+  # create_uniquelist_info())
   # $uniquelist cannot be undef or 0 either since every list occurs at least once.
   # This guarantees that uniquelist, when set, is >1 because minnames cannot
-  # be less than 1
-  return if $uniquelist <= $minn;
+  # be <1
+
+  return if $uniquelist <= $minn and not $minn == $self->count_elements;
 
   # Special case.
   # No point disambiguating with uniquelist lists which have the same count

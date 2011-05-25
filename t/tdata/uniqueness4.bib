@@ -103,15 +103,14 @@
   YEAR        = {1989}
 }
 
-% Gurgle, Splonk and Remdial
+% Gurgle, Splonk and Remedial
 @ARTICLE{us15,
   AUTHOR      = {Alan Gurgle and Michael Splonk and Leigh Remedial},
   YEAR        = {1989}
 }
 
 
-% uniquelist should not be set as us16 is "AAA and BBB and CCC" and us17 is
-% "AAA and BBB and CCC et al" due to max/minnames
+% $ul = 3 and 4
 @ARTICLE{us16,
   AUTHOR = {AAA and BBB and CCC},
   YEAR   = {1902}
@@ -122,8 +121,8 @@
   YEAR   = {1906}
 }
 
-% uniquelist won't be set as us18 is "AAAA and BBBB and CCCC" and us19 is "AAAA and BBBB and CCCC et al"
-% So, AAAA won't be disambiguated either.
+% $ul = 3 and 4
+% AAAA won't be disambiguated since the lists are therefore different
 @ARTICLE{us18,
   AUTHOR = {a. AAAA and BBBB and CCCC},
   YEAR   = {1902}
