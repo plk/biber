@@ -110,15 +110,16 @@ sub set_output_entry {
   # labelname will have different things attached than the raw name
   my $lnn = $be->get_field('labelnamename'); # save name of labelname field
   my $name_others_deleted = '';
+  my $plo; # per-list options
 
   if (my $ln = $be->get_field('labelname')) {
-    my @plo; # per-list options
+    my @plo;
 
     # Add uniquelist, if defined
     if (my $ul = $ln->get_uniquelist){
       push @plo, "uniquelist=$ul";
     }
-    my $plo =join(',', @plo);
+    $plo =join(',', @plo);
 
     if ( $ln->last_element->get_namestring eq 'others' ) {
       $acc .= "    \\true{morelabelname}\n";
@@ -150,6 +151,8 @@ sub set_output_entry {
         $nf->del_last_element;
       }
       my $total = $nf->count_elements;
+      # Copy perl-list options to the actual labelname too
+      $plo = '' unless (defined($lnn) and $namefield eq $lnn);
       $acc .= "    \\name{$namefield}{$total}{}{%\n";
       foreach my $n (@{$nf->names}) {
         $acc .= $n->name_to_bbl;

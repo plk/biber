@@ -168,23 +168,21 @@ sub reset_uniquename {
 =cut
 
 sub set_sparse_info {
-  my ($self, $lns, $fns) = @_;
+  my ($self, $lns) = @_;
   $self->{lastnames_string} = $lns;
-  $self->{fullnames_string} = $fns;
   return;
 }
 
 
 =head2 get_sparse_info
 
-    Get the string of lastnames and string of fullnames
-    Used to track uniquename=5 or 6
+    Get the name context used to track uniquename=5 or 6
 
 =cut
 
 sub get_sparse_info {
   my $self = shift;
-  return ($self->{lastnames_string}, $self->{fullnames_string});
+  return $self->{lastnames_string};
 }
 
 

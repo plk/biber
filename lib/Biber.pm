@@ -1638,7 +1638,7 @@ sub create_uniquename_info {
           if ($un == 5 or $un == 6) {
             $namecontext = $lastnames_string;
             $key = $fullnames_string;
-            $name->set_sparse_info($lastnames_string, $fullnames_string);
+            $name->set_sparse_info($lastnames_string);
           }
           else {
             $namecontext = 'global';
@@ -1722,31 +1722,30 @@ sub generate_uniquename {
           my $nameinitstring = $name->get_nameinitstring;
           my $namestring = $name->get_namestring;
           my $namecontext = 'global'; # default
-          my $key;
           if ($un == 5 or $un == 6) {
-           ($namecontext, $key) = $name->get_sparse_info; # $un=5 and 6
+            $namecontext = $name->get_sparse_info; # $un=5 and 6
           }
 
           # If there is one entry for the lastname, then it's unique
-          if (Biber::Config->get_numofuniquenames($lastname, $namecontext, $key) == 1) {
+          if (Biber::Config->get_numofuniquenames($lastname, $namecontext) == 1) {
             $name->set_uniquename(0);
           }
           # Otherwise, if there is one entry for the lastname plus initials,
           # then it needs the initials to make it unique
-          elsif (Biber::Config->get_numofuniquenames($nameinitstring, $namecontext, $key) == 1) {
+          elsif (Biber::Config->get_numofuniquenames($nameinitstring, $namecontext) == 1) {
             $name->set_uniquename(1);
           }
           # Otherwise, if there is more than one entry for the lastname plus
           # initials and we are restricted to disambiguating with inits (uniquename=1,3,5),
           # then set to 0 as the initials don't disambiguate and it's misleading to
           # expand to initials
-          elsif (Biber::Config->get_numofuniquenames($nameinitstring, $namecontext, $key) > 1 and
+          elsif (Biber::Config->get_numofuniquenames($nameinitstring, $namecontext) > 1 and
                  ($un == 1 or $un == 3 or $un == 5)) {
             $name->set_uniquename(0);
           }
           # Otherwise the name needs to be full to make it unique
           # but restrict to uniquename biblatex option maximum
-          elsif (Biber::Config->get_numofuniquenames($namestring, $namecontext, $key) == 1) {
+          elsif (Biber::Config->get_numofuniquenames($namestring, $namecontext) == 1) {
             my $run;
             given ($un) {
               when ('1') {$run = 1} # init
@@ -1761,7 +1760,7 @@ sub generate_uniquename {
           # Otherwise, if there is more than one entry (hash) for the full name,
           # then set to 0 since nothing will uniqueify this name and it's just
           # misleading to expand it
-          elsif (Biber::Config->get_numofuniquenames($namestring, $namecontext, $key) > 1) {
+          elsif (Biber::Config->get_numofuniquenames($namestring, $namecontext) > 1) {
             $name->set_uniquename(0);
           }
           else {
@@ -1786,6 +1785,7 @@ sub create_uniquelist_info {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $maxn = Biber::Config->getblxoption('maxnames');
+  my $minn = Biber::Config->getblxoption('minnames');
 
   # Reset uniquelist information as we have to generate it again because uniquename
   # information might have changed
@@ -1800,8 +1800,8 @@ sub create_uniquelist_info {
 
       if (my $lname = $be->get_field('labelnamename')) {
         my $nl = $be->get_field($lname);
-
         my $namelist = [];
+
         foreach my $name (@{$nl->names}) {
           next if $name->get_namestring eq 'others'; # Don't count explicit "et al"
 

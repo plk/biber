@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 17;
+use Test::More tests => 18;
 
 use Biber;
 use Biber::Output::BBL;
@@ -22,6 +22,10 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('fastsort', 1);
+Biber::Config->setblxoption('uniquelist', 1);
+Biber::Config->setblxoption('maxnames', 3);
+Biber::Config->setblxoption('minnames', 1);
+
 
 # Now generate the information
 $biber->prepare;
@@ -29,7 +33,7 @@ my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $main = $section->get_list('MAIN');
 my @keys = sort $section->get_citekeys;
-my @citedkeys = sort qw{ anon1 anon2 murray t1 kant:ku kant:kpv t2 shore};
+my @citedkeys = sort qw{ anon1 anon2 murray t1 kant:ku kant:kpv t2 shore u1 u2};
 
 my @allkeys = sort qw{ anon1 anon2 stdmodel aristotle:poetics vazques-de-parga t1
 gonzalez averroes/bland laufenberg westfahl:frontier knuth:ct:a kastenholz
@@ -42,7 +46,33 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 } ;
+set:yoon maron coleridge tvonb t2 u1 u2 } ;
+
+my $u1 = q|  \entry{u1}{misc}{}
+    \name{labelname}{4}{uniquelist=4}{%
+      {{uniquename=0}{AAA}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{uniquename=0}{BBB}{B\bibinitperiod}{}{}{}{}{}{}}%
+      {{uniquename=0}{CCC}{C\bibinitperiod}{}{}{}{}{}{}}%
+      {{uniquename=0}{DDD}{D\bibinitperiod}{}{}{}{}{}{}}%
+    }
+    \name{author}{4}{uniquelist=4}{%
+      {{}{AAA}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{}{BBB}{B\bibinitperiod}{}{}{}{}{}{}}%
+      {{}{CCC}{C\bibinitperiod}{}{}{}{}{}{}}%
+      {{}{DDD}{D\bibinitperiod}{}{}{}{}{}{}}%
+    }
+    \strng{namehash}{ABCD1}
+    \strng{fullhash}{ABCD1}
+    \field{labelalpha}{AAA\textbf{+}00}
+    \field{sortinit}{A}
+    \true{singletitle}
+    \field{title}{A title}
+    \field{year}{2000}
+  \endentry
+
+|;
+
+is( $out->get_output_entry($main, 'u1'), $u1, 'uniquelist 1' ) ;
 
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 is_deeply( [ $section->get_list('SHORTHANDS')->get_keys ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
@@ -269,6 +299,7 @@ is_deeply( Biber::Config->_get_uniquename('Gennep', 'global'), $Gennep, 'uniquen
 is( $out->get_output_entry($main,'murray'), $murray1, 'bbl with > maxnames' ) ;
 is( $out->get_output_entry($main,'missing1'), "  \\missing{missing1}\n", 'missing citekey 1' ) ;
 is( $out->get_output_entry($main,'missing2'), "  \\missing{missing2}\n", 'missing citekey 2' ) ;
+
 
 Biber::Config->setblxoption('alphaothers', '');
 Biber::Config->setblxoption('sortalphaothers', '');

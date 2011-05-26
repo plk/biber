@@ -44,13 +44,6 @@ $CONFIG->{state}{keycase} = {};
 # For the uniquelist feature. Records the number of times a name list occurs in all entries
 $CONFIG->{state}{uniquelistcount} = {};
 
-# For uniquename = 5 or 6. Records which lastnames occured in which lastname lists
-# in which keys. Used to prevent incrementing the count of lastname lists in which a
-# lastname occurs when there are two identical lastnames in the same list since we only
-# care about lastname occuring in different lastname lists (that is, lastname lists
-# in different entries)
-$CONFIG->{state}{sparseuniquenamecount} = {};
-
 # Boolean to say whether uniquename/uniquelist information has changed
 # Default is true so that uniquename/uniquelist processing starts
 $CONFIG->{state}{unulchanged} = 1;
@@ -99,7 +92,6 @@ sub _init {
   $CONFIG->{state}{namehashcount} = {};
   $CONFIG->{state}{fullhashcount} = {};
   $CONFIG->{state}{uniquenamecount} = {};
-  $CONFIG->{state}{sparseuniquenamecount} = {};
   $CONFIG->{state}{uniquelistcount} = {};
   $CONFIG->{state}{seen_nameyear_extrayear} = {};
   $CONFIG->{state}{seen_extrayear} = {};
@@ -818,7 +810,6 @@ sub get_final_uniquelistcount {
 sub reset_uniquelistcount {
   shift; # class method so don't care about class name
   $CONFIG->{state}{uniquelistcount} = {};
-  $CONFIG->{state}{final_uniquelistcount} = {};
   return;
 }
 
@@ -916,7 +907,7 @@ sub get_numofuniquenames {
   my ($name, $namecontext, $key) = @_;
   $key = '' unless $key; # default for the tracing so we don't get an undef string warning
   my $return = scalar keys %{$CONFIG->{state}{uniquenamecount}{$name}{$namecontext}};
-  $logger->trace("get_numofuniquenames() returning $return for NAME='$name' and NAMECONTEXT='$namecontext' and KEY='$key'");
+  $logger->trace("get_numofuniquenames() returning $return for NAME='$name' and NAMECONTEXT='$namecontext'");
   return $return;
 }
 
@@ -947,7 +938,6 @@ sub add_uniquenamecount {
 sub reset_uniquenamecount {
   shift; # class method so don't care about class name
   $CONFIG->{state}{uniquenamecount} = {};
-  $CONFIG->{state}{sparseuniquenamecount} = {};
   return;
 }
 
