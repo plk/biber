@@ -55,9 +55,11 @@ $CONFIG->{state}{unulchanged} = 1;
 $CONFIG->{state}{namehashcount} = {};
 $CONFIG->{state}{fullhashcount} = {};
 
-# uniquenamecount holds a hash of lastnames and lastname/initials which point to a list
-# of name(hashes) which contain them
+# uniquenamecount holds a hash of lastnames and lastname/initials
 $CONFIG->{state}{uniquenamecount} = {};
+# Same as uniquenamecount but for all names, regardless of visibility. Needed to track
+# uniquelist
+$CONFIG->{state}{uniquenamecount_all} = {};
 # Counter for tracking name/year combinations for extrayear
 $CONFIG->{state}{seen_nameyear_extrayear} = {};
 # Counter for the actual extrayear value
@@ -92,6 +94,7 @@ sub _init {
   $CONFIG->{state}{namehashcount} = {};
   $CONFIG->{state}{fullhashcount} = {};
   $CONFIG->{state}{uniquenamecount} = {};
+  $CONFIG->{state}{uniquenamecount_all} = {};
   $CONFIG->{state}{uniquelistcount} = {};
   $CONFIG->{state}{seen_nameyear_extrayear} = {};
   $CONFIG->{state}{seen_extrayear} = {};
@@ -896,7 +899,7 @@ sub list_differs_superset {
 
 =head2 get_numofuniquenames
 
-    Get the number of uniquenames entries for a name
+    Get the number of uniquenames entries for a visible name
 
     Biber::Config->get_numofuniquenames($name);
 
@@ -911,9 +914,28 @@ sub get_numofuniquenames {
   return $return;
 }
 
+=head2 get_numofuniquenames_all
+
+    Get the number of uniquenames entries for a name
+
+    Biber::Config->get_numofuniquenames_all($name);
+
+=cut
+
+sub get_numofuniquenames_all {
+  shift; # class method so don't care about class name
+  my ($name, $namecontext, $key) = @_;
+  $key = '' unless $key; # default for the tracing so we don't get an undef string warning
+  my $return = scalar keys %{$CONFIG->{state}{uniquenamecount_all}{$name}{$namecontext}};
+  $logger->trace("get_numofuniquenames_all() returning $return for NAME='$name' and NAMECONTEXT='$namecontext'");
+  return $return;
+}
+
+
 =head2 add_uniquenamecount
 
     Add a name to the list of name contexts which have the name in it
+    (only called for visible names)
 
     Biber::Config->add_uniquenamecount($name, $namecontext);
 
@@ -922,8 +944,23 @@ sub get_numofuniquenames {
 sub add_uniquenamecount {
   shift; # class method so don't care about class name
   my ($name, $namecontext, $key) = @_;
-
   $CONFIG->{state}{uniquenamecount}{$name}{$namecontext}{$key}++;
+  return;
+}
+
+=head2 add_uniquenamecount_all
+
+    Add a name to the list of name contexts which have the name in it
+    (called for all names)
+
+    Biber::Config->add_uniquenamecount_all($name, $namecontext);
+
+=cut
+
+sub add_uniquenamecount_all {
+  shift; # class method so don't care about class name
+  my ($name, $namecontext, $key) = @_;
+  $CONFIG->{state}{uniquenamecount_all}{$name}{$namecontext}{$key}++;
   return;
 }
 

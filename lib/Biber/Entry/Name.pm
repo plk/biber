@@ -117,7 +117,7 @@ sub get_index {
 
 =head2 set_uniquename
 
-    Set uniquename for a Biber::Entry::Name object
+    Set uniquename for a visible Biber::Entry::Name object
     Sets global flag to say that some uniquename value has changed
 
 =cut
@@ -125,7 +125,6 @@ sub get_index {
 sub set_uniquename {
   my ($self, $uniquename) = @_;
   my $currval = $self->{uniquename};
-  my $lastname = $self->get_lastname;
 
   # Set modified flag to positive if we change something
   if (not defined($currval) or $currval != $uniquename) {
@@ -136,9 +135,24 @@ sub set_uniquename {
   return;
 }
 
+=head2 set_uniquename_all
+
+    Set uniquename for a Biber::Entry::Name object
+
+=cut
+
+sub set_uniquename_all {
+  my ($self, $uniquename) = @_;
+
+  $logger->trace('Setting uniquename_all for "' . $self->get_namestring . '" to ' . $uniquename);
+  $self->{uniquename_all} = $uniquename;
+  return;
+}
+
+
 =head2 get_uniquename
 
-    Get uniquename for a Biber::Entry::Name object
+    Get uniquename for a visible Biber::Entry::Name object
 
 =cut
 
@@ -146,6 +160,18 @@ sub get_uniquename {
   my $self = shift;
   return $self->{uniquename};
 }
+
+=head2 get_uniquename_all
+
+    Get uniquename for a Biber::Entry::Name object
+
+=cut
+
+sub get_uniquename_all {
+  my $self = shift;
+  return $self->{uniquename_all};
+}
+
 
 =head2 reset_uniquename
 
