@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 150;
+use Test::More tests => 159;
 
 use Biber;
 use Biber::Utils;
@@ -148,6 +148,36 @@ is($bibentries->entry('unall3')->get_field($bibentries->entry('unall3')->get_fie
 is($bibentries->entry('unall4')->get_field($bibentries->entry('unall4')->get_field('labelnamename'))->get_uniquelist, '6', 'Uniquelist - 16');
 
 #############################################################################
+
+$biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile('uniqueness1.bcf');
+$biber->set_output_obj(Biber::Output::BBL->new());
+# Biber options
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('sortlocale', 'C');
+# Biblatex options
+Biber::Config->setblxoption('maxnames', 1);
+Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('uniquename', 2);
+Biber::Config->setblxoption('uniquelist', 1);
+# Now generate the information
+$biber->prepare;
+$bibentries = $biber->sections->get_section('0')->bibentries;
+
+is($bibentries->entry('test3')->get_field($bibentries->entry('test3')->get_field('labelnamename'))->get_uniquelist, '2', 'Uniquelist - 17');
+is($bibentries->entry('test3')->get_field($bibentries->entry('test3')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename - 9');
+is($bibentries->entry('test3')->get_field($bibentries->entry('test3')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '2', 'Uniquename - 10');
+
+is($bibentries->entry('test4')->get_field($bibentries->entry('test4')->get_field('labelnamename'))->get_uniquelist, '2', 'Uniquelist - 18');
+is($bibentries->entry('test4')->get_field($bibentries->entry('test4')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename - 11');
+is($bibentries->entry('test4')->get_field($bibentries->entry('test4')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '2', 'Uniquename - 12');
+
+is($bibentries->entry('test5')->get_field($bibentries->entry('test5')->get_field('labelnamename'))->get_uniquelist, '2', 'Uniquelist - 19');
+is($bibentries->entry('test5')->get_field($bibentries->entry('test5')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename - 13');
+is($bibentries->entry('test5')->get_field($bibentries->entry('test5')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '1', 'Uniquename - 14');
+
+#############################################################################
+
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness4.bcf');
