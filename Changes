@@ -1,14 +1,17 @@
 Revision history for Biber
 
 0.9.3  (unreleased)
-       * Bugfixes for uniqueness features
        * New sparseinit and sparsefull uniquename options
+       * Major revamp of uniqueness code
+       * Moved to new external process calling module because IPC::Run
+         doesn't work on Windows in packed binaries (kpsewhich was
+         returning nothing).
 0.9.2  09-03-2011
        * Some internal changes for perl 5.14
        * Bug fixes for uniquelist processing
 0.9.1  29-04-2011
        * Made temp files all use a global temp dir.
-       * Moved temp .utf8 conversions use temp dir so biber works using
+       * Moved temp .utf8 conversions to temp dir so biber works using
          .bib files which are in non-writable locations.
        * Added back an info log message about finding data sources (Lyx compat)
 0.9    29-03-2011
