@@ -816,6 +816,46 @@ sub reset_uniquelistcount {
   return;
 }
 
+=head2 list_differs_nth
+
+    Returns true if some other list differs at passed nth place
+    and is at least as long
+
+    list_differs_nth([a, b, c, d, e], 3) = 1
+
+    if there is another list like any of these:
+
+    [a, b, d, e, f]
+    [a, b, e, z, z, y]
+
+    Biber::Config->list_differs_nth($namelist, $n)
+
+=cut
+
+sub list_differs_nth {
+  shift; # class method so don't care about class name
+  my ($list, $n) = @_;
+  my @list_one = @$list;
+  # Loop over all final lists, looking for ones which match:
+  # * up to n - 1
+  # * differ at $n
+  # * are at least as long
+  foreach my $l_s (keys %{$CONFIG->{state}{uniquelistcount}{bylist}{final}}) {
+    my @l = split("\x{10FFFD}", $l_s);
+    # If list is shorter than the list we are checking, it's irrelevant
+    next unless $#l >= $#$list;
+    # If list matches at $n, it's irrelevant;
+    next if ($list_one[$n-1] eq $l[$n-1]);
+    # If list doesn't match up to $n - 1, it's irrelevant
+    next unless Compare([@list_one[0 .. $n-2]], [@l[0 .. $n-2]]);
+    $logger->trace("list_differs_nth() returning true: " . join(',', @list_one) . " vs " . join(',', @l));
+    return 1;
+  }
+  return 0;
+}
+
+
+
 =head2 list_differs_last
 
     Returns true if some list differs from passed list in its last place

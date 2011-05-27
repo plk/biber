@@ -86,6 +86,7 @@ sub set_uniquelist {
   my $self = shift;
   my $namelist = shift;
   my $uniquelist = $self->count_uniquelist($namelist);
+  my $num_names = $self->count_elements;
   my $currval = $self->{uniquelist};
   my $minn = Biber::Config->getblxoption('minnames');
   my $maxn = Biber::Config->getblxoption('maxnames');
@@ -130,6 +131,29 @@ sub set_uniquelist {
              # nothing else is the same to last position but is longer
              not Biber::Config->list_differs_superset($namelist)
             );
+
+  # If there are more names than uniquelist, reduce it by one unless
+  # there is another list which differs at uniquelist and is at least as long
+  # so we get:
+  #
+  # AAA and BBB and CCC
+  # AAA and BBB and CCC et al
+  #
+  # instead of
+  #
+  # AAA and BBB and CCC
+  # AAA and BBB and CCC and DDD et al
+  #
+  # BUT, we also want
+  #
+  # AAA and BBB and CCC
+  # AAA and BBB and CCC and DDD et al
+  # AAA and BBB and CCC and EEE et al
+
+  if ($num_names > $uniquelist and
+      not Biber::Config->list_differs_nth($namelist, $uniquelist)) {
+    $uniquelist--;
+  }
 
   $self->{uniquelist} = $uniquelist;
   return;
