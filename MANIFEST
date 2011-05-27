@@ -143,6 +143,7 @@ t/tdata/uniqueness1.bib
 t/tdata/uniqueness2.bib
 t/tdata/uniqueness3.bib
 t/tdata/uniqueness4.bib
+t/tdata/uniqueness5.bib
 t/tdata/sort-case.bib
 t/tdata/examples.bib
 t/tdata/biber-test.conf
@@ -156,6 +157,7 @@ t/tdata/uniqueness1.bcf
 t/tdata/uniqueness2.bcf
 t/tdata/uniqueness3.bcf
 t/tdata/uniqueness4.bcf
+t/tdata/uniqueness5.bcf
 t/tdata/bibtex-aliases.bcf
 t/tdata/bibtex-aliases.bib
 t/tdata/structure-constraints.bcf
