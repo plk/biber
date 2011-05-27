@@ -1,5 +1,6 @@
 TODO in decreasing order of priority:
 
+* When cygwin on perl 5.14, change build script (deprecated module)
 * When biblatex implements related entries, take out reprinttitle
 * Generalised \printbibliography system
   Typed lists - entry, key, shorthand etc.

@@ -7,18 +7,10 @@
 # which then don't have the right names and so things that link to them
 # through the link name break. So, we copy them to the link names first and
 # and package those
-
-# This is build on a Snow Leopard box with a completely 32-bit macports install.
-# To get a 32-bit macports install, you have to do a clean install of macports
-# and then before installing any ports, set build_arch to "i386" (usually means just
-# uncommenting this line) in /opt/local/etc/macports/macports.conf
-
-# 10.6 built binaries don't work on 10.5, see here:
-# http://developer.apple.com/library/mac/#releasenotes/DeveloperTools/RN-dyld/_index.html
-# have to set this in /opt/local/etc/macports/macports.conf (undocumented)
-# macosx_deployment_target         10.5
-# This forces command-line flags to point to the 10.5 SDK for builds
-
+#
+# Don't try to build 32-bit 10.5 binaries on >10.5 by manipulating macports
+# flags and SDKs. It doesn't work. You need a real 10.5 box/VM
+#
 # Have to explicitly include the Input* modules as the names of these are dynamically
 # constructed in the code so Par::Packer can't auto-detect them
 
