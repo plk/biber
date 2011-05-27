@@ -1702,11 +1702,10 @@ sub generate_uniquename {
 
       if (my $lname = $be->get_field('labelnamename')) {
         # Set the index limit beyond which we don't look for disambiguating information
-        my $ul = undef; # Not set
-        if (defined($be->get_field($lname)->get_uniquelist)) {
-          # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
-          $ul = $be->get_field($lname)->get_uniquelist;
-        }
+
+        # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
+        my $ul = $be->get_field($lname)->get_uniquelist;
+
         my $maxn = Biber::Config->getblxoption('maxnames');
         my $minn = Biber::Config->getblxoption('minnames');
 
@@ -1845,12 +1844,14 @@ sub create_uniquelist_info {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
     next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
-    if (Biber::Config->getblxoption('uniquelist', $bee)) {
+    if (my $ul = Biber::Config->getblxoption('uniquelist', $bee)) {
       $logger->trace("Generating uniquelist information for '$citekey'");
 
       if (my $lname = $be->get_field('labelnamename')) {
         my $nl = $be->get_field($lname);
+        my $num_names = $nl->count_elements;
         my $namelist = [];
+        my $ulstrict_namelist = [];
 
         foreach my $name (@{$nl->names}) {
           next if $name->get_namestring eq 'others'; # Don't count explicit "et al"
@@ -1858,22 +1859,38 @@ sub create_uniquelist_info {
           my $lastname   = $name->get_lastname;
           my $nameinitstring = $name->get_nameinitstring;
           my $namestring = $name->get_namestring;
+          my $ulstrictflag = 0;
+
+          # uniquelist = "strict"
+          if ($ul == 2) {
+          # strict uniquename, we set based on the max/minnames list
+            if ($num_names > $maxn and
+                $name->get_index <= $minn) {
+              $ulstrictflag = 1;
+            }
+          }
+
           # uniquename is not set so generate uniquelist based on just lastname
           if (not defined($name->get_uniquename_all)) {
             push @$namelist, $lastname;
+            push @$ulstrict_namelist, $lastname if $ulstrictflag;
           }
           # uniquename indicates unique with just lastname
           elsif ($name->get_uniquename_all == 0) {
             push @$namelist, $lastname;
+            push @$ulstrict_namelist, $lastname if $ulstrictflag;
           }
           # uniquename indicates unique with lastname with initials
           elsif ($name->get_uniquename_all == 1) {
             push @$namelist, $nameinitstring;
+            push @$ulstrict_namelist, $nameinitstring if $ulstrictflag;
           }
           # uniquename indicates unique with full name
           elsif ($name->get_uniquename_all == 2) {
             push @$namelist, $namestring;
+            push @$ulstrict_namelist, $namestring if $ulstrictflag;
           }
+
           Biber::Config->add_uniquelistcount($namelist);
         }
         # We need to know the list uniqueness counts for the whole list seperately otherwise
@@ -1882,7 +1899,10 @@ sub create_uniquelist_info {
         # one count. We therefore need to distinguish counts which are of the final, complete
         # list of names. If there is more than one count for these, (meaning that there are
         # two or more identical name lists), we don't expand them at all as there is no point.
-        Biber::Config->add_uniquelistcount($namelist, 1);
+        Biber::Config->add_uniquelistcount_final($namelist);
+
+        # Add count for strict uniquelist
+        Biber::Config->add_uniquelistcount_strict($ulstrict_namelist, $be->get_field('labelyear'), $namelist);
       }
     }
   }
@@ -1903,26 +1923,27 @@ sub generate_uniquelist {
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $maxn = Biber::Config->getblxoption('maxnames');
+  my $minn = Biber::Config->getblxoption('minnames');
 
-  foreach my $citekey ( $section->get_citekeys ) {
+LOOP:  foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
     next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
-    if (Biber::Config->getblxoption('uniquelist', $bee)) {
+    if (my $ul = Biber::Config->getblxoption('uniquelist', $bee)) {
       $logger->trace("Creating uniquelist for '$citekey'");
 
       if (my $lname = $be->get_field('labelnamename')) {
         my $nl = $be->get_field($lname);
-
         my $namelist = [];
-        my $namefield = $be->get_field($lname);
+        my $num_names = $nl->count_elements;
 
-        foreach my $name (@{$namefield->names}) {
+        foreach my $name (@{$nl->names}) {
           next if $name->get_namestring eq 'others'; # Don't count explicit "et al"
 
           my $lastname   = $name->get_lastname;
           my $nameinitstring = $name->get_nameinitstring;
           my $namestring = $name->get_namestring;
+
           # uniquename is not set so generate uniquelist based on just lastname
           if (not defined($name->get_uniquename_all)) {
             push @$namelist, $lastname;
@@ -1939,14 +1960,27 @@ sub generate_uniquelist {
           elsif ($name->get_uniquename_all == 2) {
             push @$namelist, $namestring;
           }
-          # list is unique after this many names so we set uniquelist to this point
-          if (Biber::Config->get_uniquelistcount($namelist) == 1) {
+
+          # Normal uniquelist disambiguation - we completely disambiguate name lists
+          # regardless of any year disambiguation.
+          if ($ul == 1 and
+              Biber::Config->get_uniquelistcount($namelist) == 1) {
+            # list is unique after this many names so we set uniquelist to this point
             last;
+          }
+          elsif ($ul == 2 and
+                 $num_names > $maxn and
+                 $name->get_index <= $minn and
+                 Biber::Config->get_uniquelistcount_strict($namelist, $be->get_field('labelyear')) == 1) {
+            # uniquelist should not be set at all because there are no other entries with
+            # the same max/minnames visible list and different years to disambiguate from
+            $logger->trace("Not setting strict uniquelist for '$citekey'");
+            next LOOP;
           }
         }
         $logger->trace("Setting uniquelist for '$citekey' using " . join(',', @$namelist));
-        $logger->trace("Uniquelist count for '$citekey' is '" . Biber::Config->get_final_uniquelistcount($namelist) . "'");
-        $namefield->set_uniquelist($namelist);
+        $logger->trace("Uniquelist count for '$citekey' is '" . Biber::Config->get_uniquelistcount_final($namelist) . "'");
+        $nl->set_uniquelist($namelist);
       }
     }
   }

@@ -402,11 +402,14 @@ skiplos =
     element bcf:key { "skiplos" },
     element bcf:value { "0" | "1" }
   }
+# 0 = do not provide uniquelist information
+# 1 = disambiguate lists regardless of year
+# 2 = disambiguate lists only when year is the same
 uniquelist =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "uniquelist" },
-    element bcf:value { "0" | "1" }
+    element bcf:value { "0" | "1" | "2" }
   }
 # 0 = do not provide uniquename information
 # 1 = disambiguate with initials, only up to maxnames/uniquelist

@@ -985,6 +985,11 @@
       </element>
     </element>
   </define>
+  <!--
+    0 = do not provide uniquelist information
+    1 = disambiguate lists regardless of year
+    2 = disambiguate lists only when year is the same
+  -->
   <define name="uniquelist">
     <element name="bcf:option">
       <attribute name="type">
@@ -997,6 +1002,7 @@
         <choice>
           <value>0</value>
           <value>1</value>
+          <value>2</value>
         </choice>
       </element>
     </element>

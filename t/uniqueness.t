@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 161;
+use Test::More tests => 168;
 
 use Biber;
 use Biber::Utils;
@@ -331,6 +331,36 @@ is($bibentries->entry('us29')->get_field($bibentries->entry('us29')->get_field('
 is($bibentries->entry('us30')->get_field($bibentries->entry('us30')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename sparse - 68');
 
 #############################################################################
+
+$biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile('uniqueness5.bcf');
+$biber->set_output_obj(Biber::Output::BBL->new());
+# Biber options
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('sortlocale', 'C');
+# Biblatex options
+Biber::Config->setblxoption('maxnames', 1);
+Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('uniquename', 2);
+Biber::Config->setblxoption('uniquelist', 2);
+Biber::Config->setblxoption('singletitle', 0);
+Biber::Config->setblxoption('labelyearspec', [ 'year' ]);
+# Now generate the information
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
+$main = $section->get_list('MAIN');
+
+ok(is_undef($bibentries->entry('uls1')->get_field($bibentries->entry('uls1')->get_field('labelnamename'))->get_uniquelist), 'Uniquelist strict - 1');
+ok(is_undef($bibentries->entry('uls2')->get_field($bibentries->entry('uls2')->get_field('labelnamename'))->get_uniquelist), 'Uniquelist strict - 2');
+is($bibentries->entry('uls3')->get_field($bibentries->entry('uls3')->get_field('labelnamename'))->get_uniquelist, '2', 'Uniquelist strict - 3');
+is($bibentries->entry('uls4')->get_field($bibentries->entry('uls4')->get_field('labelnamename'))->get_uniquelist, '2', 'Uniquelist strict - 4');
+is($bibentries->entry('uls5')->get_field($bibentries->entry('uls5')->get_field('labelnamename'))->get_uniquelist, '2', 'Uniquelist strict - 5');
+is($bibentries->entry('uls6')->get_field($bibentries->entry('uls6')->get_field('labelnamename'))->get_uniquelist, '2', 'Uniquelist strict - 6');
+ok(is_undef($bibentries->entry('uls7')->get_field($bibentries->entry('uls7')->get_field('labelnamename'))->get_uniquelist), 'Uniquelist strict - 7');
+
+#############################################################################
+
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness3.bcf');

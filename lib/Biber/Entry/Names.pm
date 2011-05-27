@@ -125,7 +125,7 @@ sub set_uniquelist {
   # * Must not be any other list identical up to position x but also longer
   return if (
              # if final count > 1 (identical lists)
-             Biber::Config->get_final_uniquelistcount($namelist) > 1 and
+             Biber::Config->get_uniquelistcount_final($namelist) > 1 and
              # nothing differs from $namelist in last place
              not Biber::Config->list_differs_last($namelist) and
              # nothing else is the same to last position but is longer

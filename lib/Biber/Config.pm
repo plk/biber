@@ -762,12 +762,12 @@ sub incr_seen_nameyear_extraalpha {
 sub get_uniquelistcount {
   shift; # class method so don't care about class name
   my $namelist = shift;
-  return $CONFIG->{state}{uniquelistcount}{bylist}{join("\x{10FFFD}", @$namelist)};
+  return $CONFIG->{state}{uniquelistcount}{global}{join("\x{10FFFD}", @$namelist)};
 }
 
 =head2 add_uniquelistcount
 
-    Incremenent the count for a list part to the data for a namehash
+    Incremenent the count for a list part to the data for a name
 
     Biber::Config->add_uniquelistcount($liststring);
 
@@ -775,30 +775,73 @@ sub get_uniquelistcount {
 
 sub add_uniquelistcount {
   shift; # class method so don't care about class name
-  my ($namelist, $final) = @_;
-  if ($final) {
-    $CONFIG->{state}{uniquelistcount}{bylist}{final}{join("\x{10FFFD}", @$namelist)}++;
-  }
-  else {
-    $CONFIG->{state}{uniquelistcount}{bylist}{join("\x{10FFFD}", @$namelist)}++;
-  }
+  my $namelist = shift;
+  $CONFIG->{state}{uniquelistcount}{global}{join("\x{10FFFD}", @$namelist)}++;
+  return;
+}
+
+=head2 add_uniquelistcount_final
+
+    Incremenent the count for a complete list to the data for a name
+
+    Biber::Config->add_uniquelistcount_final($liststring);
+
+=cut
+
+sub add_uniquelistcount_final {
+  shift; # class method so don't care about class name
+  my $namelist = shift;
+  $CONFIG->{state}{uniquelistcount}{global}{final}{join("\x{10FFFD}", @$namelist)}++;
   return;
 }
 
 
-=head2 get_final_uniquelistcount
+=head2 add_uniquelistcount_strict
 
-    Get the number of uniquelist entries for a full list
+    Incremenent the count for a list and year to the data for a name
+    Used to track uniquelist = "strict"
 
-    Biber::Config->get_final_uniquelistcount($namelist);
+    Biber::Config->add_uniquelistcount_strict($liststring, $year);
 
 =cut
 
-sub get_final_uniquelistcount {
+sub add_uniquelistcount_strict {
+  shift; # class method so don't care about class name
+  my ($strictnamelist, $year, $namelist) = @_;
+  $CONFIG->{state}{uniquelistcount}{strict}{join("\x{10FFFD}", @$strictnamelist)}{$year // '0'}{join("\x{10FFFD}", @$namelist)}++;
+  return;
+}
+
+=head2 get_uniquelistcount_strict
+
+    Get the count for a list and year to the data for a name
+    Used to track uniquelist = "strict"
+
+    Biber::Config->get_uniquelistcount_strict($liststring);
+
+=cut
+
+sub get_uniquelistcount_strict {
+  shift; # class method so don't care about class name
+  my ($strictnamelist, $year) = @_;
+  return scalar keys %{$CONFIG->{state}{uniquelistcount}{strict}{join("\x{10FFFD}", @$strictnamelist)}{$year}};
+}
+
+
+
+=head2 get_uniquelistcount_final
+
+    Get the number of uniquelist entries for a full list
+
+    Biber::Config->get_uniquelistcount_final($namelist);
+
+=cut
+
+sub get_uniquelistcount_final {
   shift; # class method so don't care about class name
   my $namelist = shift;
-  my $c = $CONFIG->{state}{uniquelistcount}{bylist}{final}{join("\x{10FFFD}", @$namelist)};
-  return defined($c) ? $c : 0;
+  my $c = $CONFIG->{state}{uniquelistcount}{global}{final}{join("\x{10FFFD}", @$namelist)};
+  return $c // 0;
 }
 
 
@@ -840,7 +883,7 @@ sub list_differs_nth {
   # * up to n - 1
   # * differ at $n
   # * are at least as long
-  foreach my $l_s (keys %{$CONFIG->{state}{uniquelistcount}{bylist}{final}}) {
+  foreach my $l_s (keys %{$CONFIG->{state}{uniquelistcount}{global}{final}}) {
     my @l = split("\x{10FFFD}", $l_s);
     # If list is shorter than the list we are checking, it's irrelevant
     next unless $#l >= $#$list;
@@ -880,7 +923,7 @@ sub list_differs_last {
   # Loop over all final lists, looking for ones which match up to
   # length of list to check minus 1 but which differ in the last place of the
   # list to check.
-  foreach my $l_s (keys %{$CONFIG->{state}{uniquelistcount}{bylist}{final}}) {
+  foreach my $l_s (keys %{$CONFIG->{state}{uniquelistcount}{global}{final}}) {
     my @l = split("\x{10FFFD}", $l_s);
     # If list is shorter than the list we are checking, it's irrelevant
     next unless $#l >= $#$list;
@@ -918,7 +961,7 @@ sub list_differs_superset {
   my $list = shift;
   # Loop over all final lists, looking for ones which match up to
   # length of list to check but which differ after this length
-  foreach my $l_s (keys %{$CONFIG->{state}{uniquelistcount}{bylist}{final}}) {
+  foreach my $l_s (keys %{$CONFIG->{state}{uniquelistcount}{global}{final}}) {
     my @l = split("\x{10FFFD}", $l_s);
     # If list is not longer than the list we are checking, it's irrelevant
     next unless $#l > $#$list;
