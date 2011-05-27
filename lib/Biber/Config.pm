@@ -808,6 +808,7 @@ sub add_uniquelistcount_final {
 sub add_uniquelistcount_strict {
   shift; # class method so don't care about class name
   my ($strictnamelist, $year, $namelist) = @_;
+  # Allow year a default in case labelname is undef
   $CONFIG->{state}{uniquelistcount}{strict}{join("\x{10FFFD}", @$strictnamelist)}{$year // '0'}{join("\x{10FFFD}", @$namelist)}++;
   return;
 }
