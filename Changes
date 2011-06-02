@@ -1,7 +1,8 @@
 Revision history for Biber
 
-0.9.3  (unreleased)
-       * New sparseinit and sparsefull uniquename options
+0.9.3  05-06-2011
+       * New mininit and minfull uniquename options
+       * New mindate uniquelist option
        * Major revamp of uniqueness code
        * Moved to new external process calling module because IPC::Run
          doesn't work on Windows in packed binaries (kpsewhich was
