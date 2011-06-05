@@ -795,36 +795,36 @@ sub add_uniquelistcount_final {
 }
 
 
-=head2 add_uniquelistcount_strict
+=head2 add_uniquelistcount_minyear
 
     Incremenent the count for a list and year to the data for a name
-    Used to track uniquelist = "strict"
+    Used to track uniquelist = minyear
 
-    Biber::Config->add_uniquelistcount_strict($liststring, $year);
+    Biber::Config->add_uniquelistcount_minyear($minyearliststring, $year, $namelist);
 
 =cut
 
-sub add_uniquelistcount_strict {
+sub add_uniquelistcount_minyear {
   shift; # class method so don't care about class name
-  my ($strictnamelist, $year, $namelist) = @_;
+  my ($minyearnamelist, $year, $namelist) = @_;
   # Allow year a default in case labelname is undef
-  $CONFIG->{state}{uniquelistcount}{strict}{join("\x{10FFFD}", @$strictnamelist)}{$year // '0'}{join("\x{10FFFD}", @$namelist)}++;
+  $CONFIG->{state}{uniquelistcount}{minyear}{join("\x{10FFFD}", @$minyearnamelist)}{$year // '0'}{join("\x{10FFFD}", @$namelist)}++;
   return;
 }
 
-=head2 get_uniquelistcount_strict
+=head2 get_uniquelistcount_minyear
 
     Get the count for a list and year to the data for a name
-    Used to track uniquelist = "strict"
+    Used to track uniquelist = minyear
 
-    Biber::Config->get_uniquelistcount_strict($liststring);
+    Biber::Config->get_uniquelistcount_minyear($minyearliststring, $year);
 
 =cut
 
-sub get_uniquelistcount_strict {
+sub get_uniquelistcount_minyear {
   shift; # class method so don't care about class name
-  my ($strictnamelist, $year) = @_;
-  return scalar keys %{$CONFIG->{state}{uniquelistcount}{strict}{join("\x{10FFFD}", @$strictnamelist)}{$year}};
+  my ($minyearnamelist, $year) = @_;
+  return scalar keys %{$CONFIG->{state}{uniquelistcount}{minyear}{join("\x{10FFFD}", @$minyearnamelist)}{$year}};
 }
 
 

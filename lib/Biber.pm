@@ -1867,7 +1867,7 @@ sub create_uniquelist_info {
         my $nl = $be->get_field($lname);
         my $num_names = $nl->count_elements;
         my $namelist = [];
-        my $ulstrict_namelist = [];
+        my $ulminyear_namelist = [];
 
         foreach my $name (@{$nl->names}) {
           next if $name->get_namestring eq 'others'; # Don't count explicit "et al"
@@ -1875,36 +1875,36 @@ sub create_uniquelist_info {
           my $lastname   = $name->get_lastname;
           my $nameinitstring = $name->get_nameinitstring;
           my $namestring = $name->get_namestring;
-          my $ulstrictflag = 0;
+          my $ulminyearflag = 0;
 
-          # uniquelist = "strict"
+          # uniquelist = minyear
           if ($ul == 2) {
-          # strict uniquename, we set based on the max/minnames list
+          # minyear uniquename, we set based on the max/minnames list
             if ($num_names > $maxn and
                 $name->get_index <= $minn) {
-              $ulstrictflag = 1;
+              $ulminyearflag = 1;
             }
           }
 
           # uniquename is not set so generate uniquelist based on just lastname
           if (not defined($name->get_uniquename_all)) {
             push @$namelist, $lastname;
-            push @$ulstrict_namelist, $lastname if $ulstrictflag;
+            push @$ulminyear_namelist, $lastname if $ulminyearflag;
           }
           # uniquename indicates unique with just lastname
           elsif ($name->get_uniquename_all == 0) {
             push @$namelist, $lastname;
-            push @$ulstrict_namelist, $lastname if $ulstrictflag;
+            push @$ulminyear_namelist, $lastname if $ulminyearflag;
           }
           # uniquename indicates unique with lastname with initials
           elsif ($name->get_uniquename_all == 1) {
             push @$namelist, $nameinitstring;
-            push @$ulstrict_namelist, $nameinitstring if $ulstrictflag;
+            push @$ulminyear_namelist, $nameinitstring if $ulminyearflag;
           }
           # uniquename indicates unique with full name
           elsif ($name->get_uniquename_all == 2) {
             push @$namelist, $namestring;
-            push @$ulstrict_namelist, $namestring if $ulstrictflag;
+            push @$ulminyear_namelist, $namestring if $ulminyearflag;
           }
 
           Biber::Config->add_uniquelistcount($namelist);
@@ -1917,9 +1917,9 @@ sub create_uniquelist_info {
         # two or more identical name lists), we don't expand them at all as there is no point.
         Biber::Config->add_uniquelistcount_final($namelist);
 
-        # Add count for strict uniquelist
-        unless (Compare($ulstrict_namelist, [])) {
-          Biber::Config->add_uniquelistcount_strict($ulstrict_namelist, $be->get_field('labelyear'), $namelist);
+        # Add count for uniquelist=minyear
+        unless (Compare($ulminyear_namelist, [])) {
+          Biber::Config->add_uniquelistcount_minyear($ulminyear_namelist, $be->get_field('labelyear'), $namelist);
         }
       }
     }
@@ -1979,19 +1979,19 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
             push @$namelist, $namestring;
           }
 
-          # With uniquelist=strict, uniquelist should not be set at all if there are
+          # With uniquelist=minyear, uniquelist should not be set at all if there are
           # no other entries with the same max/minnames visible list and different years
           # to disambiguate from
           if ($ul == 2 and
               $num_names > $maxn and
               $name->get_index <= $minn and
-              Biber::Config->get_uniquelistcount_strict($namelist, $be->get_field('labelyear')) == 1) {
-            $logger->trace("Not setting strict uniquelist for '$citekey'");
+              Biber::Config->get_uniquelistcount_minyear($namelist, $be->get_field('labelyear')) == 1) {
+            $logger->trace("Not setting uniquelist=minyear for '$citekey'");
             next LOOP;
           }
 
           # list is unique after this many names so we set uniquelist to this point
-          # Even if uniquelist=strict, we record normal uniquelist information if
+          # Even if uniquelist=minyear, we record normal uniquelist information if
           # we didn't skip this key in the test above
           if (Biber::Config->get_uniquelistcount($namelist) == 1) {
             last;
