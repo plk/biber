@@ -1519,7 +1519,7 @@ sub uniqueness {
     would be "1" and so "Alan Smith" would get uniquename=0 because it's unambiguous as just
     "Smith".
 
-    The same goes for "sparse" list context disambiguation for uniquename=5 or 6.
+    The same goes for "minimal" list context disambiguation for uniquename=5 or 6.
     For example, if we had the lastname "Smith" to disambiguate in two entries with labelname
     "John Smith and Alan Jones", the data structure would look like:
 
@@ -1573,7 +1573,7 @@ sub create_uniquename_info {
         # Full name and how many name context keys contain this (uniquename = 2)
         #
         # A name context can be either a complete single name or a list of names
-        # depending on whether uniquename=sparse* or not
+        # depending on whether uniquename=min* or not
         #
         # Anything which has more than one combination for both of these would
         # be uniquename = 2 unless even the full name doesn't disambiguate
@@ -1588,6 +1588,7 @@ sub create_uniquename_info {
         my @truncnames;
         my @lastnames;
         my @fullnames;
+        my @initnames;
 
         foreach my $name (@$names) {
           # We need to track two types of uniquename disambiguation here:
@@ -1617,14 +1618,25 @@ sub create_uniquename_info {
             if ($un == 5 or $un == 6) {
               push @lastnames, $name->get_lastname;
               push @fullnames, $name->get_namestring;
+              push @initnames, $name->get_nameinitstring;
             }
           }
         }
 
-        # Information for sparseinit ($un=5) or sparsefull ($un=6)
+        # Information for mininit ($un=5) or minfull ($un=6)
         my $lastnames_string;
         my $fullnames_string;
-        if ($un == 5 or $un == 6) {
+        my $initnames_string;
+        if ($un == 5) {
+          $lastnames_string = join("\x{10FFFD}", @lastnames);
+          $initnames_string = join("\x{10FFFD}", @initnames);
+          if ($#lastnames + 1 < $num_names or
+              $morenames) {
+            $lastnames_string .= "\x{10FFFD}et al"; # if truncated, record this
+            $initnames_string .= "\x{10FFFD}et al"; # if truncated, record this
+          }
+        }
+        elsif ($un == 6) {
           $lastnames_string = join("\x{10FFFD}", @lastnames);
           $fullnames_string = join("\x{10FFFD}", @fullnames);
           if ($#lastnames + 1 < $num_names or
@@ -1651,10 +1663,15 @@ sub create_uniquename_info {
               $namecontext = 'global';
               $key = $namestring;
             }
-            when ([5,6]) {
+            when (5) {
+              $namecontext = $lastnames_string;
+              $key = $initnames_string;
+              $name->set_minimal_info($lastnames_string);
+            }
+            when (6) {
               $namecontext = $lastnames_string;
               $key = $fullnames_string;
-              $name->set_sparse_info($lastnames_string);
+              $name->set_minimal_info($lastnames_string);
             }
           }
 
@@ -1744,30 +1761,32 @@ sub generate_uniquename {
           my $namestring = $name->get_namestring;
           my $namecontext = 'global'; # default
           if ($un == 5 or $un == 6) {
-            $namecontext = $name->get_sparse_info; # $un=5 and 6
+            $namecontext = $name->get_minimal_info; # $un=5 and 6
           }
 
           if (first {Compare($_, $name)} @truncnames) {
 
-            # If there is one entry for the lastname, then it's unique
+            # If there is one key for the lastname, then it's unique using just lastname
+            # because either:
+            # * There are no other identical lastnames
+            # * All identical lastnames have a lastname+init ($un=5) or fullname ($un=6)
+            #   which is identical and therefore can't be disambiguated any further anyway
             if (Biber::Config->get_numofuniquenames($lastname, $namecontext) == 1) {
               $name->set_uniquename(0);
             }
-            # Otherwise, if there is one entry for the lastname plus initials,
-            # then it needs the initials to make it unique
+            # Otherwise, if there is one key for the lastname+inits, then it's unique
+            # using initials because either:
+            # * There are no other identical lastname+inits
+            # * All identical lastname+inits have a fullname ($un=6) which is identical
+            #   and therefore can't be disambiguated any further anyway
             elsif (Biber::Config->get_numofuniquenames($nameinitstring, $namecontext) == 1) {
               $name->set_uniquename(1);
             }
-            # Otherwise, if there is more than one entry for the lastname plus
-            # initials and we are restricted to disambiguating with inits (uniquename=1,3,5),
-            # then set to 0 as the initials don't disambiguate and it's misleading to
-            # expand to initials
-            elsif (Biber::Config->get_numofuniquenames($nameinitstring, $namecontext) > 1 and
-                   ($un == 1 or $un == 3 or $un == 5)) {
-              $name->set_uniquename(0);
-            }
-            # Otherwise the name needs to be full to make it unique
-            # but restrict to uniquename biblatex option maximum
+            # Otherwise if there is one key for the fullname, then it's unique using
+            # the fullname because:
+            # * There are no other identical full names
+            #
+            # But restrict to uniquename biblatex option maximum
             elsif (Biber::Config->get_numofuniquenames($namestring, $namecontext) == 1) {
               my $run;
               given ($un) {
@@ -1775,17 +1794,14 @@ sub generate_uniquename {
                 when (2) {$run = 2} # full
                 when (3) {$run = 1} # allinit
                 when (4) {$run = 2} # allfull
-                when (5) {$run = 1} # sparseinit
-                when (6) {$run = 2} # sparsefull
+                when (5) {$run = 1} # mininit
+                when (6) {$run = 2} # minfull
               }
               $name->set_uniquename($run)
             }
-            # Otherwise, if there is more than one entry (hash) for the full name,
-            # then set to 0 since nothing will uniqueify this name and it's just
+            # Otherwise, there must be more than one key for the full name,
+            # so set to 0 since nothing will uniqueify this name and it's just
             # misleading to expand it
-            elsif (Biber::Config->get_numofuniquenames($namestring, $namecontext) > 1) {
-              $name->set_uniquename(0);
-            }
             else {
               $name->set_uniquename(0);
             }
@@ -1799,10 +1815,6 @@ sub generate_uniquename {
             elsif (Biber::Config->get_numofuniquenames_all($nameinitstring, $namecontext) == 1) {
               $name->set_uniquename_all(1);
             }
-            elsif (Biber::Config->get_numofuniquenames_all($nameinitstring, $namecontext) > 1 and
-                   ($un == 1 or $un == 3 or $un == 5)) {
-              $name->set_uniquename_all(0);
-            }
             elsif (Biber::Config->get_numofuniquenames_all($namestring, $namecontext) == 1) {
               my $run;
               given ($un) {
@@ -1810,13 +1822,10 @@ sub generate_uniquename {
                 when (2) {$run = 2} # full
                 when (3) {$run = 1} # allinit
                 when (4) {$run = 2} # allfull
-                when (5) {$run = 1} # sparseinit
-                when (6) {$run = 2} # sparsefull
+                when (5) {$run = 1} # mininit
+                when (6) {$run = 2} # minfull
               }
               $name->set_uniquename_all($run)
-            }
-            elsif (Biber::Config->get_numofuniquenames_all($namestring, $namecontext) > 1) {
-              $name->set_uniquename_all(0);
             }
             else {
               $name->set_uniquename_all(0);

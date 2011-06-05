@@ -186,27 +186,27 @@ sub reset_uniquename {
 }
 
 
-=head2 set_sparse_info
+=head2 set_minimal_info
 
     Set the string of lastnames and string of fullnames
     Used to track uniquename=5 or 6
 
 =cut
 
-sub set_sparse_info {
+sub set_minimal_info {
   my ($self, $lns) = @_;
   $self->{lastnames_string} = $lns;
   return;
 }
 
 
-=head2 get_sparse_info
+=head2 get_minimal_info
 
     Get the name context used to track uniquename=5 or 6
 
 =cut
 
-sub get_sparse_info {
+sub get_minimal_info {
   my $self = shift;
   return $self->{lastnames_string};
 }
