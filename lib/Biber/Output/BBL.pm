@@ -180,7 +180,7 @@ sub set_output_entry {
 
   # first output copy in labelname
   # This is essentially doing the same thing twice but in the future,
-  # labelname will have different things attached than the raw name
+  # labelname may have different things attached than the raw name
   my $lnn = $be->get_field('labelnamename'); # save name of labelname field
   my $name_others_deleted = '';
   my $plo = ''; # per-list options

@@ -541,6 +541,7 @@ sub name_to_bbl {
   }
 
   # Generate uniquename if uniquename is requested
+  # uniquename will only be defined for labelname
   if (defined($self->get_uniquename)) {
     push @pno, 'uniquename=' . $self->get_uniquename;
   }
