@@ -39,11 +39,11 @@ my $l1 = q|  \entry{test1}{article}{}
       {{uniquename=0}{Scheff}{S\bibinitperiod}{S.W.}{S\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{5}{}{%
-      {{}{Baldwin}{B\bibinitperiod}{S.A.}{S\bibinitperiod}{}{}{}{}}%
-      {{}{Fugaccia}{F\bibinitperiod}{I.}{I\bibinitperiod}{}{}{}{}}%
-      {{}{Brown}{B\bibinitperiod}{D.R.}{D\bibinitperiod}{}{}{}{}}%
-      {{}{Brown}{B\bibinitperiod}{L.V.}{L\bibinitperiod}{}{}{}{}}%
-      {{}{Scheff}{S\bibinitperiod}{S.W.}{S\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Baldwin}{B\bibinitperiod}{S.A.}{S\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Fugaccia}{F\bibinitperiod}{I.}{I\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Brown}{B\bibinitperiod}{D.R.}{D\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Brown}{B\bibinitperiod}{L.V.}{L\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Scheff}{S\bibinitperiod}{S.W.}{S\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{BS+1}
     \strng{fullhash}{BSFIBDBLSS1}
@@ -62,7 +62,7 @@ my $l2 = q|  \entry{test2}{book}{}
       {{uniquename=0}{Smith}{S\bibinitperiod}{John\bibnamedelima Frederick}{J\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
     }
     \name{author}{1}{}{%
-      {{}{Smith}{S\bibinitperiod}{John\bibnamedelima Frederick}{J\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
+      {{uniquename=0}{Smith}{S\bibinitperiod}{John\bibnamedelima Frederick}{J\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
     }
     \name{editor}{1}{}{%
       {{}{Brown}{B\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%

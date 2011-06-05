@@ -131,7 +131,7 @@ sub set_output_entry {
     my $total = $ln->count_elements;
     $acc .= "    \\name{labelname}{$total}{$plo}{%\n";
     foreach my $n (@{$ln->names}) {
-      $acc .= $n->name_to_bbl('labelname_special');
+      $acc .= $n->name_to_bbl;
     }
     $acc .= "    }\n";
   }

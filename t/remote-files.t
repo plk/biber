@@ -39,10 +39,10 @@ my $cu1 = q|  \entry{citeulike:8283461}{article}{}
       {{uniquename=0}{Cassano}{C\bibinitperiod}{G.\bibnamedelimi B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{4}{}{%
-      {{}{Marazziti}{M\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
-      {{}{Akiskal}{A\bibinitperiod}{H.\bibnamedelimi S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
-      {{}{Rossi}{R\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
-      {{}{Cassano}{C\bibinitperiod}{G.\bibnamedelimi B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Marazziti}{M\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Akiskal}{A\bibinitperiod}{H.\bibnamedelimi S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Rossi}{R\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Cassano}{C\bibinitperiod}{G.\bibnamedelimi B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{MD+1}
     \strng{fullhash}{MDAHSRACGB1}
@@ -71,8 +71,8 @@ my $dl1 = q|  \entry{AbdelbarH98}{article}{}
       {{uniquename=0}{Hedetniemi}{H\bibinitperiod}{S.M.}{S\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{2}{}{%
-      {{}{Abdelbar}{A\bibinitperiod}{A.M.}{A\bibinitperiod}{}{}{}{}}%
-      {{}{Hedetniemi}{H\bibinitperiod}{S.M.}{S\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Abdelbar}{A\bibinitperiod}{A.M.}{A\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Hedetniemi}{H\bibinitperiod}{S.M.}{S\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{AAHS1}
     \strng{fullhash}{AAHS1}

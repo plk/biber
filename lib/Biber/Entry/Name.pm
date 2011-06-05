@@ -466,12 +466,8 @@ sub get_nameinitstring {
 =cut
 
 sub name_to_bbl {
-  my $self = shift;
-  my $arg = shift;
-  my $ln_special = 0;
-  if (defined($arg) and ($arg eq 'labelname_special')) {
-    $ln_special = 1;
-  }
+  my ($self, $arg) = @_;
+
   my @pno; # per-name options
   my $pno; # per-name options final string
 
@@ -545,7 +541,7 @@ sub name_to_bbl {
   }
 
   # Generate uniquename if uniquename is requested
-  if ($ln_special and defined($self->get_uniquename)) {
+  if (defined($self->get_uniquename)) {
     push @pno, 'uniquename=' . $self->get_uniquename;
   }
   $pno = join(',', @pno);

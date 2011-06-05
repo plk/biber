@@ -23,7 +23,7 @@ my $encode1 = q|  \entry{testŠ}{book}{}
       {{uniquename=0}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%
@@ -45,7 +45,7 @@ my $encode2 = q|  \entry{test1}{book}{}
       {{uniquename=0}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%
@@ -67,7 +67,7 @@ my $encode3 = q|  \entry{test1}{book}{}
       {{uniquename=0}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%
@@ -89,7 +89,7 @@ my $encode5 = q|  \entry{test}{book}{}
       {{uniquename=0}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%
@@ -111,7 +111,7 @@ my $encode6 = q|  \entry{test}{book}{}
       {{uniquename=0}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%
@@ -133,7 +133,7 @@ my $encode7 = q|  \entry{test}{book}{}
       {{uniquename=0}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%
