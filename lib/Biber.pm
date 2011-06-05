@@ -1641,14 +1641,21 @@ sub create_uniquename_info {
           my $namecontext;
           my $key;
 
-          if ($un == 5 or $un == 6) {
-            $namecontext = $lastnames_string;
-            $key = $fullnames_string;
-            $name->set_sparse_info($lastnames_string);
-          }
-          else {
-            $namecontext = 'global';
-            $key = $namestring;
+          # Context and key depend on the uniquename setting
+          given ($un) {
+            when ([1,3]) {
+              $namecontext = 'global';
+              $key = $nameinitstring;
+            }
+            when ([2,4]) {
+              $namecontext = 'global';
+              $key = $namestring;
+            }
+            when ([5,6]) {
+              $namecontext = $lastnames_string;
+              $key = $fullnames_string;
+              $name->set_sparse_info($lastnames_string);
+            }
           }
 
           if (first {Compare($_, $name)} @truncnames) {
@@ -1764,12 +1771,12 @@ sub generate_uniquename {
             elsif (Biber::Config->get_numofuniquenames($namestring, $namecontext) == 1) {
               my $run;
               given ($un) {
-                when ('1') {$run = 1} # init
-                when ('2') {$run = 2} # full
-                when ('3') {$run = 1} # allinit
-                when ('4') {$run = 2} # allfull
-                when ('5') {$run = 1} # sparseinit
-                when ('6') {$run = 2} # sparsefull
+                when (1) {$run = 1} # init
+                when (2) {$run = 2} # full
+                when (3) {$run = 1} # allinit
+                when (4) {$run = 2} # allfull
+                when (5) {$run = 1} # sparseinit
+                when (6) {$run = 2} # sparsefull
               }
               $name->set_uniquename($run)
             }
@@ -1799,12 +1806,12 @@ sub generate_uniquename {
             elsif (Biber::Config->get_numofuniquenames_all($namestring, $namecontext) == 1) {
               my $run;
               given ($un) {
-                when ('1') {$run = 1} # init
-                when ('2') {$run = 2} # full
-                when ('3') {$run = 1} # allinit
-                when ('4') {$run = 2} # allfull
-                when ('5') {$run = 1} # sparseinit
-                when ('6') {$run = 2} # sparsefull
+                when (1) {$run = 1} # init
+                when (2) {$run = 2} # full
+                when (3) {$run = 1} # allinit
+                when (4) {$run = 2} # allfull
+                when (5) {$run = 1} # sparseinit
+                when (6) {$run = 2} # sparsefull
               }
               $name->set_uniquename_all($run)
             }

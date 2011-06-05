@@ -285,8 +285,8 @@ my $anon2 = q|  \entry{anon2}{unpublished}{}
 
 |;
 
-my $Worman_N = [ 'Worman, Nana', 'Worman, Nancy' ] ;
-my $Gennep = [ 'van Gennep, Arnold', 'van Gennep, Jean' ] ;
+my $Worman_N = [ 'Worman_N' ] ;
+my $Gennep = [ 'v_Gennep_A', 'v_Gennep_J' ] ;
 
 is( $out->get_output_entry($main,'t1'), $t1, 'bbl entry with maths in title 1' ) ;
 is( $bibentries->entry('shore')->get_field('month'), '03', 'default bib month macros' ) ;

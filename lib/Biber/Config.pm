@@ -78,8 +78,7 @@ $CONFIG->{state}{datafiles} = [];
 
 =head2 _init
 
-    Reset internal hashes to defaults. This is needed for tests when
-    prepare() is used more than once
+    Reset internal hashes to defaults.
 
 =cut
 
@@ -1059,6 +1058,7 @@ sub add_uniquenamecount_all {
 sub reset_uniquenamecount {
   shift; # class method so don't care about class name
   $CONFIG->{state}{uniquenamecount} = {};
+  $CONFIG->{state}{uniquenamecount_all} = {};
   return;
 }
 

@@ -545,12 +545,10 @@ sub name_to_bbl {
   }
 
   # Generate uniquename if uniquename is requested
-  # This only happens for \name{labelname} pseudo-name lists
   if ($ln_special and defined($self->get_uniquename)) {
     push @pno, 'uniquename=' . $self->get_uniquename;
   }
   $pno = join(',', @pno);
-  # BIBLATEXML supports middle names
   # Some data sources support middle names
   if ($self->get_middlename) {
     return "      {{$pno}{$ln}{$lni}{$fn}{$fni}{$mn}{$mni}{$pre}{$prei}{$suf}{$sufi}}%\n";

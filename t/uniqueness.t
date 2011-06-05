@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 174;
+use Test::More tests => 182;
 
 use Biber;
 use Biber::Utils;
@@ -48,6 +48,36 @@ is($bibentries->entry('un7')->get_field('namehash'), 'C1', 'Fullnamshash ignores
 is($bibentries->entry('un7')->get_field('fullhash'), 'AJBM1', 'Fullnamshash ignores SHORT* names - 2');
 is($bibentries->entry('test1')->get_field('namehash'), 'SP+1', 'Namehash and fullhash - 3');
 is($bibentries->entry('test1')->get_field('fullhash'), 'SPJBBP1', 'Namehash and fullhash - 4');
+is($bibentries->entry('untf1')->get_field($bibentries->entry('untf1')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '2', 'Uniquename with full and repeat - 1');
+is($bibentries->entry('untf2')->get_field($bibentries->entry('untf2')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '2', 'Uniquename with full and repeat - 2');
+is($bibentries->entry('untf3')->get_field($bibentries->entry('untf3')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '2', 'Uniquename with full and repeat - 3');
+
+#############################################################################
+
+$biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile('uniqueness1.bcf');
+$biber->set_output_obj(Biber::Output::BBL->new());
+# Biber options
+Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('sortlocale', 'C');
+
+# Biblatex options
+Biber::Config->setblxoption('maxnames', 1);
+Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('uniquename', 1);
+Biber::Config->setblxoption('uniquelist', 1);
+
+# Now generate the information
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
+$main = $section->get_list('MAIN');
+
+is($bibentries->entry('unt1')->get_field($bibentries->entry('unt1')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '1', 'Uniquename with inits and repeat - 1');
+is($bibentries->entry('unt2')->get_field($bibentries->entry('unt2')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '1', 'Uniquename with inits and repeat - 2');
+is($bibentries->entry('unt3')->get_field($bibentries->entry('unt3')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '1', 'Uniquename with inits and repeat - 3');
+is($bibentries->entry('unt4')->get_field($bibentries->entry('unt4')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename with inits and repeat - 4');
+is($bibentries->entry('unt5')->get_field($bibentries->entry('unt5')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename with inits and repeat - 5');
 
 #############################################################################
 
@@ -184,7 +214,6 @@ is($bibentries->entry('test5')->get_field($bibentries->entry('test5')->get_field
 is($bibentries->entry('test5')->get_field($bibentries->entry('test5')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '1', 'Uniquename - 14');
 
 #############################################################################
-
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness4.bcf');
@@ -389,7 +418,6 @@ ok(is_undef($bibentries->entry('uls12')->get_field($bibentries->entry('uls12')->
 
 
 #############################################################################
-
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness3.bcf');
