@@ -38,7 +38,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenameid stringify_hash
   normalise_string normalise_string_hash normalise_string_underscore normalise_string_sort
   reduce_array remove_outer add_outer ucinit strip_nosort
   is_def is_undef is_def_and_notnull is_def_and_null
-  is_undef_or_null is_notnull is_null normalise_utf8 inits join_name};
+  is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output};
 
 =head1 FUNCTIONS
 
@@ -173,7 +173,7 @@ sub makenameid {
 
 =head2 latex_recode_output
 
-  Tries to convert UTF-8 to TeX macros in passes string
+  Tries to convert UTF-8 to TeX macros in passed string
 
 =cut
 
