@@ -4,7 +4,7 @@
       "François Charette <firmicus@gmx.net>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.110580",
+   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.110440",
    "license" : [
       "perl_5"
    ],
@@ -44,7 +44,7 @@
             "Readonly" : 0,
             "Regexp::Common" : 0,
             "Text::BibTeX" : "0.55",
-            "Unicode::Collate" : "0.74",
+            "Unicode::Collate" : "0.76",
             "XML::LibXML::Simple" : 0,
             "XML::LibXSLT" : 0,
             "perl" : "v5.10.0"
@@ -54,7 +54,7 @@
    "provides" : {
       "Biber" : {
          "file" : "lib/Biber.pm",
-         "version" : "v0.9.3"
+         "version" : "v0.9.4"
       },
       "Biber::Config" : {
          "file" : "lib/Biber/Config.pm",

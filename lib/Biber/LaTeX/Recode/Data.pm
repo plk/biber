@@ -26,12 +26,6 @@ our @EXPORT    = qw[ %ACCENTS           %ACCENTS_R
                                         $DINGS_RE_R
                   ];
 
-
-# In general, the ordering of these matters because of the reverse() calls. The more common
-# macro variants should come after the less common for the same Unicode char (e.g. \l after
-# \textbarl because when reversed, the later one overrides and we want to minimise the characters
-# which need special macro packages.
-
 our %ACCENTS = (
     chr(0x60) => "\x{300}", #`
     chr(0x27) => "\x{301}", #'
@@ -134,7 +128,17 @@ our %WORDMACROS = (
     oe                   => "\x{0153}"
 );
 
+# There are some duplicates in the hash. reverse() doesn't predicatably deal with this.
+# reverse() is fast so let's use it and deal with the few exceptions, explicitly setting what
+# we want
 our %WORDMACROS_R = reverse %WORDMACROS;
+$WORDMACROS_R{"\x{00A9}"} = 'copyright';
+$WORDMACROS_R{"\x{00B6}"} = 'P';
+$WORDMACROS_R{"\x{00B7}"} = 'textperiodcentered';
+$WORDMACROS_R{"\x{00DE}"} = 'TH';
+$WORDMACROS_R{"\x{00FE}"} = 'th';
+$WORDMACROS_R{"\x{0127}"} = 'texthbar';
+$WORDMACROS_R{"\x{0142}"} = 'l';
 
 our %WORDMACROSEXTRA = (
     textTbar            => "\x{0166}",
@@ -290,7 +294,30 @@ our %WORDMACROSEXTRA = (
     textlengthmark      => "\x{02D0}"
 );
 
-our %WORDMACROSEXTDA_R = reverse %WORDMACROSEXTRA;
+# There are some duplicates in the hash. reverse() doesn't predicatably deal with this.
+# reverse() is fast so let's use it and deal with the few exceptions, explicitly setting what
+# we want
+our %WORDMACROSEXTRA_R = reverse %WORDMACROSEXTRA;
+$WORDMACROSEXTRA_R{"\x{0167}"} = 'texttstroke';
+$WORDMACROSEXTRA_R{"\x{0188}"} = 'texthtc';
+$WORDMACROSEXTRA_R{"\x{0195}"} = 'hv';
+$WORDMACROSEXTRA_R{"\x{0199}"} = 'texthtk';
+$WORDMACROSEXTRA_R{"\x{01A5}"} = 'texthtp';
+$WORDMACROSEXTRA_R{"\x{01A9}"} = 'ESH';
+$WORDMACROSEXTRA_R{"\x{01AD}"} = 'texthtt';
+$WORDMACROSEXTRA_R{"\x{0253}"} = 'texthtb';
+$WORDMACROSEXTRA_R{"\x{0254}"} = 'textopeno';
+$WORDMACROSEXTRA_R{"\x{0256}"} = 'textrtaild';
+$WORDMACROSEXTRA_R{"\x{0257}"} = 'texthtd';
+$WORDMACROSEXTRA_R{"\x{025B}"} = 'textepsilon';
+$WORDMACROSEXTRA_R{"\x{0263}"} = 'textgamma';
+$WORDMACROSEXTRA_R{"\x{0269}"} = 'textiota';
+$WORDMACROSEXTRA_R{"\x{0272}"} = 'textnhookleft';
+$WORDMACROSEXTRA_R{"\x{0288}"} = 'texttretroflexhook';
+$WORDMACROSEXTRA_R{"\x{028B}"} = 'textvhook';
+$WORDMACROSEXTRA_R{"\x{0292}"} = 'textyogh';
+$WORDMACROSEXTRA_R{"\x{02A7}"} = 'texttesh';
+$WORDMACROSEXTRA_R{"\x{02BF}"} = 'ayn';
 
 our %DIACRITICS = (
     r => "\x{030A}",
@@ -376,7 +403,13 @@ our %DIACRITICSEXTRA = (
     sliding               => "\x{0362}"
 );
 
+# There are some duplicates in the hash. reverse() doesn't predicatably deal with this.
+# reverse() is fast so let's use it and deal with the few exceptions, explicitly setting what
+# we want
 our %DIACRITICSEXTRA_R = reverse %DIACRITICSEXTRA;
+$DIACRITICSEXTRA_R{"\x{0320}"} = 'textsubminus';
+$DIACRITICSEXTRA_R{"\x{032E}"} = 'textundertie';
+$DIACRITICSEXTRA_R{"\x{034A}"} = 'textoverw';
 
 our %PUNCTUATION = (
     textendash         => "\x{2013}",
@@ -676,7 +709,16 @@ our %SYMBOLS = (
     tone1             => "\x{02E9}"
 );
 
+# There are some duplicates in the hash. reverse() doesn't predicatably deal with this.
+# reverse() is fast so let's use it and deal with the few exceptions, explicitly setting what
+# we want
 our %SYMBOLS_R = reverse %SYMBOLS;
+$SYMBOLS_R{"\x{00F7}"} = 'div';
+$SYMBOLS_R{"\x{00D7}"} = 'times';
+$SYMBOLS_R{"\x{00AC}"} = 'lnot';
+$SYMBOLS_R{"\x{00B1}"} = 'pm';
+$SYMBOLS_R{"\x{00B5}"} = 'mu';
+$SYMBOLS_R{"\x{20AC}"} = 'euro';
 
 our %DINGS = (
     '21' => "\x{2701}",
