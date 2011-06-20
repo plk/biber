@@ -134,6 +134,86 @@ sub _getfullhash {
   return normalise_string_hash($initstr);
 }
 
+##################
+# label generation
+##################
+
+our $dispatch_label = {
+  'author:lastname'            =>  [\&_label_author,           ['lastname']],
+  'author:firstname'           =>  [\&_label_author,           ['firstname']],
+  'author:prefix'              =>  [\&_label_author,           ['prefix']],
+  'bookauthor:lastname'        =>  [\&_label_bookauthor,       ['lastname']],
+  'bookauthor:firstname'       =>  [\&_label_bookauthor,       ['firstname']],
+  'bookauthor:prefix'          =>  [\&_label_bookauthor,       ['prefix']],
+  'editor:lastname'            =>  [\&_label_editor,           ['lastname']],
+  'editor:firstname'           =>  [\&_label_editor,           ['firstname']],
+  'editor:prefix'              =>  [\&_label_editor,           ['prefix']],
+  'translator:lastname'        =>  [\&_label_translator,       ['lastname']],
+  'translator:firstname'       =>  [\&_label_translator,       ['firstname']],
+  'translator:prefix'          =>  [\&_label_translator,       ['prefix']],
+  'labelname:lastname'         =>  [\&_label_labelname,        ['lastname']],
+  'labelname:firstname'        =>  [\&_label_labelname,        ['firstname']],
+  'labelname:prefix'           =>  [\&_label_labelname,        ['prefix']],
+  'labelyear'                  =>  [\&_label_labelyear,        []],
+  'origyear'                   =>  [\&_label_origyear,         []],
+  'title'                      =>  [\&_label_title,            []],
+  'year'                       =>  [\&_label_year,             []],
+};
+
+# Main label loop
+sub _generatelabelinfo {
+  my ($self, $citekey, $list, $labeltemplate) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $label;
+  foreach my $label (@{$labeltemplate}) {
+    my $l = $self->_labelitem($label, $citekey);
+    $label .= $l;
+  }
+  return $l;
+}
+
+# Process labelitem
+sub _labelitem {
+  my ($self, $labelitem, $citekey) = @_;
+  my $labelpart;
+  foreach my $labelpart (@$labelitem) {
+    my ($labelpartname, $labelpartattributes) = %$labelpart;
+    $labelpart .= $self->_dispatch_label($labelpartname, $citekey, $labelpartattributes);
+  }
+  return $labelpart;
+}
+
+# Main label dispatch method
+sub _dispatch_label {
+  my ($self, $labelfield, $citekey, $labelelementattributes) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $code_ref;
+  my $code_args_ref;
+
+  # if the field is not found in the dispatch table, assume it's a literal string
+  unless (exists($dispatch_label->{$labelfield})) {
+    $code_ref = \&_label_literal;
+    $code_args_ref = [$labelfield];
+  }
+  else { # real sorting field
+    $code_ref = ${$dispatch_label->{$labelfield}}[0];
+    $code_args_ref  = ${$dispatch_label->{$labelfield}}[1];
+  }
+  return &{$code_ref}($self, $citekey, $labelelementattributes, $code_args_ref);
+}
+
+
+##############################################
+# Label dispatch routines
+##############################################
+
+# _label_literal
+
+
 sub _genlabel {
   my ($self, $citekey, $namefield) = @_;
   my $secnum = $self->get_current_section;
@@ -351,7 +431,6 @@ sub _generatesortinfo {
         require Biber::LaTeX::Recode;
         my $initd = Biber::LaTeX::Recode::latex_encode($init,
                                                        scheme => Biber::Config->getoption('bblsafecharsset'));
-        # warn only on second sorting pass to avoid user confusion
         $logger->warn("The character '$init' cannot be encoded in '$bblenc'. sortinit will be set to macro '$initd' for entry '$citekey'");
         $self->{warnings}++;
         $init = $initd;
