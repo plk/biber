@@ -19,7 +19,7 @@ Biber::Entry::Name
 
     Initialize a Biber::Entry::Name object, optionally with key=>value arguments.
 
-    Ex: Biber::Entry::Name->new( lastname="Bolzmann" firstname=>"Anna Maria" prefix => "von" )
+    Ex: Biber::Entry::Name->new( lastname=>"Bolzmann", firstname=>"Anna Maria", prefix => "von" )
 
 =cut
 

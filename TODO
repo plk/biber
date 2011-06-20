@@ -1,5 +1,6 @@
 TODO in decreasing order of priority:
 
+* Take out labelalphatemplate defaults when biblatex implements it
 * When cygwin on perl 5.14, change build script (deprecated module)
 * When biblatex implements related entries, take out reprinttitle
 * Generalised \printbibliography system
@@ -7,8 +8,32 @@ TODO in decreasing order of priority:
   Take out MAIN, SHORTHANDS backwards compat hacks in Biber.pm and BBL.pm
   Shorthands should be requested otherwise it's a big sorting overhead
 * Structure ALL fields need to be put into types where possible
+* Displaymodes should not be optional in schema and control parse when implemented
 * Change Zotero driver when 2.2 comes out with real keys
 * Zotero ATOM API? http://www.zotero.org/support/dev/start
   https://api.zotero.org/users/<USERID>/items/<ITEMID>?key=<APIKEY>
   gives a parseable ATOM XML with the information but it's ugly
   https://api.zotero.org/users/<USERID>/items?key=<APIKEY> give all entries
+
+
+
+  #   1. If there is only one name and no prefix, first 3 chars of lastname
+  #   2. If there is only one name with prefix, first char of prefix and first 2 chars of lastname
+  #   3. If there is more than one name and name has no prefix, first char of each lastname
+  #      (up to minnames)
+  #   4. If there is more than one name and name has prefix, first char of prefix plus
+  #      first char of each lastname (up to minnames)
+
+  # Conditions on certain fields like *:prefix need another check to see if the relevant
+  # option is defined (useprefix, for example)
+
+  # Test for per-type labelalphatemplate
+
+# SF feature request
+<bcf:labelalphatemplate>
+  <bcf:label order="1">
+    <bcf:labelitem>
+      <bcf:labelpart length="v" maxlength="6" side="left">labelname:lastname</bcf:labelpart>
+    </bcf:labelitem>
+</bcf:labelalphatemplate>
+

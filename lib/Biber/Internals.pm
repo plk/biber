@@ -134,7 +134,7 @@ sub _getfullhash {
   return normalise_string_hash($initstr);
 }
 
-sub _getlabel {
+sub _genlabel {
   my ($self, $citekey, $namefield) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -164,7 +164,8 @@ sub _getlabel {
   if ($morenames or ($numnames > $maxnames)) {
     $nametrunc = 1;
     $loopnames = $minnames; # Only look at $minnames names if we are truncating ...
-  } else {
+  }
+  else {
     $loopnames = $numnames; # ... otherwise look at all names
   }
 

@@ -75,6 +75,30 @@ start =
       }+
     }?,
 
+    # labelalpha template specification
+    element bcf:labelalphatemplate {
+      attribute type { xsd:string }?, # per-type?
+      element bcf:label {
+        attribute order { xsd:integer },
+        element bcf:labelitem {
+          element bcf:condition {          
+            attribute field { xsd:string },
+            attribute type { "count" | "defined" | "undefined" },
+            attribute operator { "equals" | "lessthan" | "greaterthan" }?,
+            attribute value { xsd:string }?,
+            empty
+          }*,
+          element bcf:labelpart {          
+            attribute length { xsd:integer | "v" }?,
+            attribute side { "left" | "right" }?,
+            attribute maxlength { xsd:integer }?,
+            attribute count { xsd:integer | "minnames" | "maxnames" }?,
+            xsd:string
+          }+
+        }+
+      }+
+    }?,
+
     # Cross-reference inheritance specifications
     element bcf:inheritance {
       # Defaults

@@ -127,6 +127,82 @@ our %CONFIG_DEFAULT_BIBER = (
 # but we need this for things not yet implemented by biblatex but expected by biber
 our %CONFIG_DEFAULT_BIBLATEX =
   (
+   labelalphatemplate => {
+                          label => [
+                                    {
+                                     labelitem => [
+                                                   {
+                                                    labelpart => { content => "shorthand" } },
+                                                   {
+                                                    labelpart => { content => "label" } },
+                                                   {
+                                                    condition => [
+                                                                  {
+                                                                   field    => ["labelname:lastname"],
+                                                                   operator => "equals",
+                                                                   type     => "count",
+                                                                   value    => [1],
+                                                                  },
+                                                                  {
+                                                                   field => ["labelname:prefix"], type => "undefined" },
+                                                                 ],
+                                                    labelpart => { content => "labelname:lastname", length => 3, side => "left" },
+                                                   },
+                                                   {
+                                                    condition => [
+                                                                  {
+                                                                   field    => ["labelname:lastname"],
+                                                                   operator => "equals",
+                                                                   type     => "count",
+                                                                   value    => [1],
+                                                                  },
+                                                                  {
+                                                                   field => ["labelname:prefix"], type => "defined" },
+                                                                 ],
+                                                    labelpart => [
+                                                                  {
+                                                                   content => "labelname:prefix", length => 1, side => "left" },
+                                                                  {
+                                                                   content => "labelname:lastname", length => 2, side => "left" },
+                                                                 ],
+                                                   },
+                                                   {
+                                                    condition => { field => ["labelname:prefix"], type => "undefined" },
+                                                    labelpart => {
+                                                                  content => "labelname:lastname",
+                                                                  count   => "minnames",
+                                                                  length  => 1,
+                                                                  side    => "left",
+                                                                 },
+                                                   },
+                                                   {
+                                                    condition => { field => ["labelname:prefix"], type => "defined" },
+                                                    labelpart => [
+                                                                  {
+                                                                   content => "labelname:prefix",
+                                                                   count   => "minnames",
+                                                                   length  => 1,
+                                                                   side    => "left",
+                                                                  },
+                                                                  {
+                                                                   content => "labelname:lastname",
+                                                                   count   => "minnames",
+                                                                   length  => 1,
+                                                                   side    => "left",
+                                                                  },
+                                                                 ],
+                                                   },
+                                                  ],
+                                     order => 1,
+                                    },
+                                    {
+                                     labelitem => {
+                                                   labelpart => { content => "year", length => 2, side => "right" },
+                                                  },
+                                     order => 2,
+                                    },
+                                   ],
+                         },
    displaymode     => { ALL => ["original", "romanised", "uniform", "translated"] },
    structure       =>
  { constraints => [

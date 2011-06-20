@@ -428,6 +428,17 @@ sub parse_ctrlfile {
     Biber::Config->setblxoption('displaymode', $dms);
   }
 
+  # LABELALPHATEMPLATE
+  if (my $type = $bcfxml->{labelalphatemplate}{type}) {
+    Biber::Config->setblxoption('labelalphatemplate', $bcfxml->{labelalphatemplate});
+  }
+  else {
+    Biber::Config->setblxoption('labelalphatemplate',
+                                $bcfxml->{labelalphatemplate},
+                                'PER_TYPE',
+                                $type);
+  }
+
   # INHERITANCE schemes for crossreferences (always global)
   Biber::Config->setblxoption('inheritance', $bcfxml->{inheritance});
 
@@ -1233,16 +1244,16 @@ sub process_labelalpha {
     my $label;
     my $sortlabel;
 
-    if ( $be->get_field('shorthand') ) {
-      $sortlabel = $label = $be->get_field('shorthand');
+    if ( my $sh = $be->get_field('shorthand') ) {
+      $sortlabel = $label = $sh;
     }
     else {
-      if ( $be->get_field('label') ) {
-        $sortlabel = $label = $be->get_field('label');
+      if ( my $lab = $be->get_field('label') ) {
+        $sortlabel = $label = $lab;
       }
-      elsif ( $be->get_field('labelnamename') and $be->get_field($be->get_field('labelnamename'))) {
-        ( $label, $sortlabel ) =
-          @{ $self->_getlabel( $citekey, $be->get_field('labelnamename') ) };
+      elsif ( my $lnn = $be->get_field('labelnamename') and
+              $be->get_field($be->get_field('labelnamename'))) {
+        ( $label, $sortlabel ) = @{ $self->_genlabel( $citekey, $lnn ) };
       }
       else {
         $sortlabel = $label = '';
