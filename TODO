@@ -24,16 +24,11 @@ TODO in decreasing order of priority:
   #   4. If there is more than one name and name has prefix, first char of prefix plus
   #      first char of each lastname (up to minnames)
 
-  # Conditions on certain fields like *:prefix need another check to see if the relevant
-  # option is defined (useprefix, for example)
-
   # Test for per-type labelalphatemplate
 
 # SF feature request
 <bcf:labelalphatemplate>
   <bcf:label order="1">
-    <bcf:labelitem>
-      <bcf:labelpart length="v" maxlength="6" side="left">labelname:lastname</bcf:labelpart>
-    </bcf:labelitem>
+    <bcf:labelpart length="v" maxlength="6" side="left">labelname:lastname</bcf:labelpart>
 </bcf:labelalphatemplate>
 

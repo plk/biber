@@ -159,76 +159,49 @@
             </attribute>
           </optional>
           <oneOrMore>
+            <!-- per-type? -->
             <element name="bcf:label">
               <attribute name="order">
                 <data type="integer"/>
               </attribute>
               <oneOrMore>
-                <element name="bcf:labelitem">
-                  <zeroOrMore>
-                    <element name="bcf:condition">
-                      <attribute name="field">
-                        <data type="string"/>
-                      </attribute>
-                      <attribute name="type">
-                        <choice>
-                          <value>count</value>
-                          <value>defined</value>
-                          <value>undefined</value>
-                        </choice>
-                      </attribute>
-                      <optional>
-                        <attribute name="operator">
-                          <choice>
-                            <value>equals</value>
-                            <value>lessthan</value>
-                            <value>greaterthan</value>
-                          </choice>
-                        </attribute>
-                      </optional>
-                      <optional>
-                        <attribute name="value">
-                          <data type="string"/>
-                        </attribute>
-                      </optional>
-                      <empty/>
-                    </element>
-                  </zeroOrMore>
-                  <oneOrMore>
-                    <element name="bcf:labelpart">
-                      <optional>
-                        <attribute name="length">
-                          <choice>
-                            <data type="integer"/>
-                            <value>v</value>
-                          </choice>
-                        </attribute>
-                      </optional>
-                      <optional>
-                        <attribute name="side">
-                          <choice>
-                            <value>left</value>
-                            <value>right</value>
-                          </choice>
-                        </attribute>
-                      </optional>
-                      <optional>
-                        <attribute name="maxlength">
-                          <data type="integer"/>
-                        </attribute>
-                      </optional>
-                      <optional>
-                        <attribute name="count">
-                          <choice>
-                            <data type="integer"/>
-                            <value>minnames</value>
-                            <value>maxnames</value>
-                          </choice>
-                        </attribute>
-                      </optional>
-                      <data type="string"/>
-                    </element>
-                  </oneOrMore>
+                <element name="bcf:labelpart">
+                  <optional>
+                    <attribute name="substring_width">
+                      <choice>
+                        <data type="integer"/>
+                        <value>v</value>
+                      </choice>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="substring_side">
+                      <choice>
+                        <value>left</value>
+                        <value>right</value>
+                      </choice>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="substring_maxlength">
+                      <data type="integer"/>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="ifcount">
+                      <data type="integer"/>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="count">
+                      <choice>
+                        <data type="integer"/>
+                        <value>minnames</value>
+                        <value>maxnames</value>
+                      </choice>
+                    </attribute>
+                  </optional>
+                  <data type="string"/>
                 </element>
               </oneOrMore>
             </element>

@@ -350,6 +350,8 @@ sub parse_ctrlfile {
                                                            qr/\Aentrytype\z/,
                                                            qr/\Adatetype\z/,
                                                            qr/\Asectionlist\z/,
+                                                           qr/\Alabel(?:part)?\z/,
+                                                           qr/\Acondition\z/,
                                                            qr/\A(?:or)?filter\z/,
                                                           ],
                                           'NsStrip' => 1,

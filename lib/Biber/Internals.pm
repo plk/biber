@@ -151,59 +151,53 @@ our $dispatch_label = {
   'translator:lastname'        =>  [\&_label_translator,       ['lastname']],
   'translator:firstname'       =>  [\&_label_translator,       ['firstname']],
   'translator:prefix'          =>  [\&_label_translator,       ['prefix']],
+  'label'                      =>  [\&_label_label,            []],
   'labelname:lastname'         =>  [\&_label_labelname,        ['lastname']],
   'labelname:firstname'        =>  [\&_label_labelname,        ['firstname']],
   'labelname:prefix'           =>  [\&_label_labelname,        ['prefix']],
   'labelyear'                  =>  [\&_label_labelyear,        []],
   'origyear'                   =>  [\&_label_origyear,         []],
+  'shorthand'                  =>  [\&_label_shorthand,        []],
   'title'                      =>  [\&_label_title,            []],
   'year'                       =>  [\&_label_year,             []],
 };
 
 # Main label loop
 sub _generatelabelinfo {
-  my ($self, $citekey, $list, $labeltemplate) = @_;
+  my ($self, $citekey, $labeltemplate) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $label;
-  foreach my $label (@{$labeltemplate}) {
-    my $l = $self->_labelitem($label, $citekey);
-    $label .= $l;
+  foreach my $labelpart (sort {$a->{order} <=> $b->{order}} @{$labeltemplate->{label}}) {
+    $label .= $self->_dispatch_label($labelpart->{labelpart}, $citekey);
   }
-  return $l;
-}
-
-# Process labelitem
-sub _labelitem {
-  my ($self, $labelitem, $citekey) = @_;
-  my $labelpart;
-  foreach my $labelpart (@$labelitem) {
-    my ($labelpartname, $labelpartattributes) = %$labelpart;
-    $labelpart .= $self->_dispatch_label($labelpartname, $citekey, $labelpartattributes);
-  }
-  return $labelpart;
+  return $label;
 }
 
 # Main label dispatch method
 sub _dispatch_label {
-  my ($self, $labelfield, $citekey, $labelelementattributes) = @_;
+  my ($self, $labelpart, $citekey) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $code_ref;
   my $code_args_ref;
+  my $lp;
 
-  # if the field is not found in the dispatch table, assume it's a literal string
-  unless (exists($dispatch_label->{$labelfield})) {
-    $code_ref = \&_label_literal;
-    $code_args_ref = [$labelfield];
+  foreach my $part (@{$labelpart->{labelpart}}) {
+    # if the field is not found in the dispatch table, assume it's a literal string
+    unless (exists($dispatch_label->{$part->{content}})) {
+      $code_ref = \&_label_literal;
+      $code_args_ref = [$part->{content}];
+    }
+    else { # real label field
+      $code_ref = ${$dispatch_label->{$part->{content}}}[0];
+      $code_args_ref = ${$dispatch_label->{$part->{content}}}[1];
+    }
+    $lp .= &{$code_ref}($self, $citekey, $code_args_ref, $part);
   }
-  else { # real sorting field
-    $code_ref = ${$dispatch_label->{$labelfield}}[0];
-    $code_args_ref  = ${$dispatch_label->{$labelfield}}[1];
-  }
-  return &{$code_ref}($self, $citekey, $labelelementattributes, $code_args_ref);
+  return $lp;
 }
 
 
@@ -211,7 +205,41 @@ sub _dispatch_label {
 # Label dispatch routines
 ##############################################
 
-# _label_literal
+sub _label_literal {
+  my ($self, $citekey, $args, $labelattrs) = @_;
+  my $string = $args->[0]; # get literal string
+  return _process_label_attributes($string, $labelattrs);
+}
+
+# lastname should in corporate prefix as single char, and useprefix test
+
+
+
+
+
+
+
+
+# Modify label string according to some attributes
+sub _process_label_attributes {
+  my ($field_string, $labelattrs) = @_;
+  return $field_string unless $labelattrs;
+  # process substring
+  if ($labelattrs->{substring_width} or
+      $labelattrs->{substring_side}) {
+    my $subs_offset = 0;
+    my $default_substring_width = 1;
+    my $default_substring_side = 'left';
+    my $subs_width = ($labelattrs->{substring_width} or $default_substring_width);
+    my $subs_side = ($labelattrs->{substring_side} or $default_substring_side);
+    if ($subs_side eq 'right') {
+      $subs_offset = 0 - $subs_width;
+    }
+    $field_string = substr( $field_string, $subs_offset, $subs_width );
+  }
+  return $field_string;
+}
+
 
 
 sub _genlabel {

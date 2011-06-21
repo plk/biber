@@ -80,21 +80,13 @@ start =
       attribute type { xsd:string }?, # per-type?
       element bcf:label {
         attribute order { xsd:integer },
-        element bcf:labelitem {
-          element bcf:condition {          
-            attribute field { xsd:string },
-            attribute type { "count" | "defined" | "undefined" },
-            attribute operator { "equals" | "lessthan" | "greaterthan" }?,
-            attribute value { xsd:string }?,
-            empty
-          }*,
-          element bcf:labelpart {          
-            attribute length { xsd:integer | "v" }?,
-            attribute side { "left" | "right" }?,
-            attribute maxlength { xsd:integer }?,
-            attribute count { xsd:integer | "minnames" | "maxnames" }?,
-            xsd:string
-          }+
+        element bcf:labelpart {          
+          attribute substring_width { xsd:integer | "v" }?,
+          attribute substring_side { "left" | "right" }?,
+          attribute substring_maxlength { xsd:integer }?,
+          attribute ifcount { xsd:integer }?,
+          attribute count { xsd:integer | "minnames" | "maxnames" }?,
+          xsd:string
         }+
       }+
     }?,

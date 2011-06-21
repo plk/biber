@@ -122,37 +122,13 @@
   <!-- LABELALPHA TEMPLATE -->
   <bcf:labelalphatemplate>
     <bcf:label order="1">
-      <bcf:labelitem>
-        <bcf:labelpart>shorthand</bcf:labelpart>
-      </bcf:labelitem>
-      <bcf:labelitem>
-        <bcf:labelpart>label</bcf:labelpart>
-      </bcf:labelitem>
-      <bcf:labelitem>
-        <bcf:condition field="labelname:lastname" type="count" operator="equals" value="1"/>
-        <bcf:condition field="labelname:prefix" type="undefined"/>
-        <bcf:labelpart length="3" side="left">labelname:lastname</bcf:labelpart>
-      </bcf:labelitem>
-      <bcf:labelitem>
-        <bcf:condition field="labelname:lastname" type="count" operator="equals" value="1"/>
-        <bcf:condition field="labelname:prefix" type="defined"/>
-        <bcf:labelpart length="1" side="left">labelname:prefix</bcf:labelpart>
-        <bcf:labelpart length="2" side="left">labelname:lastname</bcf:labelpart>
-      </bcf:labelitem>
-      <bcf:labelitem>
-        <bcf:condition field="labelname:prefix" type="undefined"/>
-        <bcf:labelpart count="minnames" length="1" side="left">labelname:lastname</bcf:labelpart>
-      </bcf:labelitem>
-      <bcf:labelitem>
-        <bcf:condition field="labelname:prefix" type="defined"/>
-        <bcf:labelpart count="minnames" length="1" side="left">labelname:prefix</bcf:labelpart>
-        <bcf:labelpart count="minnames" length="1" side="left">labelname:lastname</bcf:labelpart>
-      </bcf:labelitem>
+      <bcf:labelpart>shorthand</bcf:labelpart>
+      <bcf:labelpart>label</bcf:labelpart>
+      <bcf:labelpart substring_width="3" substring_side="left" ifcount="1">labelname:lastname</bcf:labelpart>
+      <bcf:labelpart count="minnames" substring_width="1" substring_side="left">labelname:lastname</bcf:labelpart>
     </bcf:label>
     <bcf:label order="2">
-      <bcf:labelitem>
-        <bcf:labelpart length="2" side="right">year</bcf:labelpart>
-      </bcf:labelitem>
+      <bcf:labelpart substring_width="2" substring_side="right">year</bcf:labelpart>
     </bcf:label>
   </bcf:labelalphatemplate>
   <!-- INHERITANCE -->
