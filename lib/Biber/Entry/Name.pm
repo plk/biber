@@ -212,6 +212,17 @@ sub get_minimal_info {
 }
 
 
+=head2 get_namepart
+
+    Get a namepart by passed name
+
+=cut
+
+sub get_namepart {
+  my ($self, $namepart) = @_;
+  return $self->{$namepart};
+}
+
 
 =head2 set_firstname
 

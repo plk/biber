@@ -135,13 +135,13 @@ our %CONFIG_DEFAULT_BIBLATEX =
                                   { content => "label" },
                                   {
                                     content => "labelname:lastname",
-                                    ifcount => 1,
+                                    iflistcount => 1,
                                     substring_side => "left",
                                     substring_width => 3,
                                   },
                                   {
                                     content => "labelname:lastname",
-                                    count => "minnames",
+                                    listcount => "minnames",
                                     substring_side => "left",
                                     substring_width => 1,
                                   },

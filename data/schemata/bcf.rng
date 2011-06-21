@@ -188,12 +188,12 @@
                     </attribute>
                   </optional>
                   <optional>
-                    <attribute name="ifcount">
+                    <attribute name="iflistcount">
                       <data type="integer"/>
                     </attribute>
                   </optional>
                   <optional>
-                    <attribute name="count">
+                    <attribute name="listcount">
                       <choice>
                         <data type="integer"/>
                         <value>minnames</value>

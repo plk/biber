@@ -139,22 +139,17 @@ sub _getfullhash {
 ##################
 
 our $dispatch_label = {
-  'author:lastname'            =>  [\&_label_author,           ['lastname']],
-  'author:firstname'           =>  [\&_label_author,           ['firstname']],
-  'author:prefix'              =>  [\&_label_author,           ['prefix']],
-  'bookauthor:lastname'        =>  [\&_label_bookauthor,       ['lastname']],
-  'bookauthor:firstname'       =>  [\&_label_bookauthor,       ['firstname']],
-  'bookauthor:prefix'          =>  [\&_label_bookauthor,       ['prefix']],
-  'editor:lastname'            =>  [\&_label_editor,           ['lastname']],
-  'editor:firstname'           =>  [\&_label_editor,           ['firstname']],
-  'editor:prefix'              =>  [\&_label_editor,           ['prefix']],
-  'translator:lastname'        =>  [\&_label_translator,       ['lastname']],
-  'translator:firstname'       =>  [\&_label_translator,       ['firstname']],
-  'translator:prefix'          =>  [\&_label_translator,       ['prefix']],
+  'author:lastname'            =>  [\&_label_name,             ['author', 'lastname']],
+  'author:firstname'           =>  [\&_label_name,             ['author', 'firstname']],
+  'bookauthor:lastname'        =>  [\&_label_name,             ['bookauthor', 'lastname']],
+  'bookauthor:firstname'       =>  [\&_label_name,             ['bookauthor''firstname']],
+  'editor:lastname'            =>  [\&_label_name,             ['editor', 'lastname']],
+  'editor:firstname'           =>  [\&_label_name,             ['editor''firstname']],
+  'translator:lastname'        =>  [\&_label_name,             ['translator', 'lastname']],
+  'translator:firstname'       =>  [\&_label_name,             ['translator''firstname']],
   'label'                      =>  [\&_label_label,            []],
   'labelname:lastname'         =>  [\&_label_labelname,        ['lastname']],
   'labelname:firstname'        =>  [\&_label_labelname,        ['firstname']],
-  'labelname:prefix'           =>  [\&_label_labelname,        ['prefix']],
   'labelyear'                  =>  [\&_label_labelyear,        []],
   'origyear'                   =>  [\&_label_origyear,         []],
   'shorthand'                  =>  [\&_label_shorthand,        []],
@@ -181,11 +176,27 @@ sub _dispatch_label {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
+  my $struc = Biber::Config->get_structure;
   my $code_ref;
   my $code_args_ref;
   my $lp;
 
   foreach my $part (@{$labelpart->{labelpart}}) {
+    # Deal with various tests
+    if (my $ic = $part->{iflistcount}) {
+      # Get just field name of name:namepart specifications
+      my ($f, undef) = split(/:/, $part->{content});
+    }
+    if (first {$_ eq $f} @{$struc->get_field_type('name')} or
+       $f eq 'labelname') {
+      my $name = $be->get_field($f);
+      next unless $name->count_elements == $ic;
+    }
+    elsif ($struc->get_field_type('list')) {
+      my $list = $be->get_field($f);
+      next unless @$#list == 0;
+    }
+
     # if the field is not found in the dispatch table, assume it's a literal string
     unless (exists($dispatch_label->{$part->{content}})) {
       $code_ref = \&_label_literal;
@@ -201,9 +212,9 @@ sub _dispatch_label {
 }
 
 
-##############################################
+#########################
 # Label dispatch routines
-##############################################
+#########################
 
 sub _label_literal {
   my ($self, $citekey, $args, $labelattrs) = @_;
@@ -211,9 +222,81 @@ sub _label_literal {
   return _process_label_attributes($string, $labelattrs);
 }
 
-# lastname should in corporate prefix as single char, and useprefix test
+sub _label_labelname {
+  my ($self, $citekey, $args, $labelattrs) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  # re-direct to the right label routine for the labelname
+  if (my $ln = $be->get_field('labelnamename')) {
+    return $self->_dispatch_label($ln, $citekey);
+  }
+  else {
+    return '';
+  }
+}
 
+sub _label_name {
+  my ($self, $citekey, $args, $labelattrs) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $useprefix = Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey);
+  my $alphaothers = Biber::Config->getblxoption('alphaothers', $be->get_field('entrytype'));
+  my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->get_field('entrytype'));
+  my $maxnames = Biber::Config->getblxoption('maxnames');
+  my $minnames = Biber::Config->getblxoption('minnames');
+  my $namename = $args->[0];
+  my $namepartname = $args->[1];
+  my $acc;
 
+  if (Biber::Config->getblxoption("use$namename", $be->get_field('entrytype'), $citekey) and
+    $be->get_field($namename)) {
+    my $names = $be->get_field($namename);
+    my $numnames  = $names->count_elements;
+    my @nameparts = map { strip_nosort(normalise_string($_->get_namepart($namepartname)), $namename) } @{$names->names};
+    my @prefices  = map { $_->get_prefix } @{$names->names};
+
+    # If name list was truncated in bib with "and others", this overrides maxnames
+    my $morenames = ($names->last_element->get_namestring eq 'others') ? 1 : 0;
+    my $nametrunc;
+    my $loopnames;
+
+    # listcount needs doing something with here
+
+    # loopnames is the number of names to loop over in the name list when constructing the label
+    if ($morenames or ($numnames > $maxnames)) {
+      $nametrunc = 1;
+      $loopnames = $minnames; # Only look at $minnames names if we are truncating ...
+    }
+    else {
+      $loopnames = $numnames; # ... otherwise look at all names
+    }
+
+    for (my $i=0; $i<$loopnames; $i++) {
+      $label .= substr($prefices[$i] , 0, 1) if ($useprefix and $prefices[$i]);
+      $label .= substr($lastnames[$i], 0, $loopnames == 1 ? (($useprefix and $prefices[$i]) ? 2 : 3) : 1);
+    }
+
+    $sortlabel = $label;
+
+    # Add alphaothers if name list is truncated
+    if ($nametrunc) {
+      $label .= $alphaothers;
+      $sortlabel .= $sortalphaothers;
+    }
+
+#    return [$label, $sortlabel];
+#  }
+
+    $acc .= _process_label_attributes($np, $labelattrs);
+
+    return $acc;
+  }
+  else {
+    return '';
+  }
+}
 
 
 
