@@ -194,11 +194,7 @@
                   </optional>
                   <optional>
                     <attribute name="listcount">
-                      <choice>
-                        <data type="integer"/>
-                        <value>minnames</value>
-                        <value>maxnames</value>
-                      </choice>
+                      <data type="integer"/>
                     </attribute>
                   </optional>
                   <data type="string"/>

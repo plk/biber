@@ -1245,37 +1245,8 @@ sub process_labelalpha {
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
     my $label;
     my $sortlabel;
+    ( $label, $sortlabel ) = @{ $self->_genlabel($citekey) };
 
-    if ( my $sh = $be->get_field('shorthand') ) {
-      $sortlabel = $label = $sh;
-    }
-    else {
-      if ( my $lab = $be->get_field('label') ) {
-        $sortlabel = $label = $lab;
-      }
-      elsif ( my $lnn = $be->get_field('labelnamename') and
-              $be->get_field($be->get_field('labelnamename'))) {
-        ( $label, $sortlabel ) = @{ $self->_genlabel( $citekey, $lnn ) };
-      }
-      else {
-        $sortlabel = $label = '';
-      }
-
-      # biblatex manual says "publication year"
-      if ( my $year = $be->get_field('year') ) {
-        my $yr;
-        # Make "in press" years look nice in alpha styles
-        if ($year =~ m/\A\s*in\s*press\s*\z/ixms) {
-          $yr = 'ip';
-        }
-        # Normal year
-        else {
-          $yr = substr $year, 2, 2;
-        }
-        $label     .= $yr;
-        $sortlabel .= $yr;
-      }
-    }
     $be->set_field('labelalpha', $label);
     $be->set_field('sortlabelalpha', $sortlabel);
   }

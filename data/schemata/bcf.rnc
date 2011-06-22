@@ -85,7 +85,7 @@ start =
           attribute substring_side { "left" | "right" }?,
           attribute substring_maxlength { xsd:integer }?,
           attribute iflistcount { xsd:integer }?,
-          attribute listcount { xsd:integer | "minnames" | "maxnames" }?,
+          attribute listcount { xsd:integer }?,
           xsd:string
         }+
       }+
