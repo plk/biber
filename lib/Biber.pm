@@ -2019,7 +2019,7 @@ sub create_extras_st_info {
 
     my $name_string;
     # For tracking name/year combinations, use shorthand only if it exists and we
-    # are using labelyear
+    # are using labelalpha
     if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) and
          $be->get_field('shorthand')) {
       $name_string = $be->get_field('shorthand');
