@@ -481,68 +481,6 @@ sub _process_label_attributes {
 }
 
 
-
-# sub _genlabel {
-#   my ($self, $citekey, $namefield) = @_;
-#   my $secnum = $self->get_current_section;
-#   my $section = $self->sections->get_section($secnum);
-#   my $be = $section->bibentry($citekey);
-#   my $names = $be->get_field($namefield);
-#   my $alphaothers = Biber::Config->getblxoption('alphaothers', $be->get_field('entrytype'));
-#   my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->get_field('entrytype'));
-#   my $useprefix = Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey);
-#   my $maxnames = Biber::Config->getblxoption('maxnames');
-#   my $minnames = Biber::Config->getblxoption('minnames');
-#   my $label = '';
-#   # This contains sortalphaothers instead of alphaothers, if defined
-#   # This is needed in cases where alphaothers is something like
-#   # '\textasteriskcentered' which would mess up sorting.
-#   my $sortlabel = '';
-
-#   my @lastnames = map { strip_nosort(normalise_string($_->get_lastname), $namefield) } @{$names->names};
-#   my @prefices  = map { $_->get_prefix } @{$names->names};
-#   my $numnames  = $names->count_elements;
-
-#   # If name list was truncated in bib with "and others", this overrides maxnames
-#   my $morenames = ($names->last_element->get_namestring eq 'others') ? 1 : 0;
-#   my $nametrunc;
-#   my $loopnames;
-
-#   # loopnames is the number of names to loop over in the name list when constructing the label
-#   if ($morenames or ($numnames > $maxnames)) {
-#     $nametrunc = 1;
-#     $loopnames = $minnames; # Only look at $minnames names if we are truncating ...
-#   }
-#   else {
-#     $loopnames = $numnames; # ... otherwise look at all names
-#   }
-
-#   # Now loop over the name list, grabbing a substring of each surname
-#   # The substring length depends on whether we are using prefices and also whether
-#   # we have truncated to one name:
-#   #   1. If there is only one name
-#   #      1. label string is first 3 chars of surname if there is no prefix
-#   #      2. label string is first char of prefix plus first 2 chars of surname if there is a prefix
-#   #   2. If there is more than one name
-#   #      1.  label string is first char of each surname (up to minnames) if there is no prefix
-#   #      2.  label string is first char of prefix plus first char of each surname (up to minnames)
-#   #          if there is a prefix
-#   for (my $i=0; $i<$loopnames; $i++) {
-#     $label .= substr($prefices[$i] , 0, 1) if ($useprefix and $prefices[$i]);
-#     $label .= substr($lastnames[$i], 0, $loopnames == 1 ? (($useprefix and $prefices[$i]) ? 2 : 3) : 1);
-#   }
-
-#   $sortlabel = $label;
-
-#   # Add alphaothers if name list is truncated
-#   if ($nametrunc) {
-#     $label .= $alphaothers;
-#     $sortlabel .= $sortalphaothers;
-#   }
-
-#   return [$label, $sortlabel];
-# }
-
 #########
 # Sorting
 #########

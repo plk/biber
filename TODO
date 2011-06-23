@@ -15,10 +15,3 @@ TODO in decreasing order of priority:
   gives a parseable ATOM XML with the information but it's ugly
   https://api.zotero.org/users/<USERID>/items?key=<APIKEY> give all entries
 
-
-# SF feature request
-<bcf:labelalphatemplate>
-  <bcf:label order="1">
-    <bcf:labelpart substring_width="v" substring_width_max="6" side="left">labelname:lastname</bcf:labelpart>
-</bcf:labelalphatemplate>
-

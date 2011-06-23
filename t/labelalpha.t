@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 74;
+use Test::More tests => 77;
 
 use Biber;
 use Biber::Utils;
@@ -123,8 +123,8 @@ is($main->get_extraalphadata('l7'), '2', 'maxnames=2 minnames=2 entry L7 extraal
 is($bibentries->entry('l8')->get_field('sortlabelalpha'), 'Sha85', 'maxnames=2 minnames=2 entry L8 labelalpha');
 ok(is_undef($main->get_extraalphadata('l8')), 'maxnames=2 minnames=2 entry L8 extraalpha');
 is($bibentries->entry('l12')->get_field('sortlabelalpha'), 'vRvB22', 'prefix labelalpha 2');
-is($bibentries->entry('l13')->get_field('sortlabelalpha'), 'vRavBi-', 'per-type labelalpha 1');
-is($bibentries->entry('l14')->get_field('sortlabelalpha'), 'Alabel-', 'per-type labelalpha 2');
+is($bibentries->entry('l13')->get_field('sortlabelalpha'), 'vRavBi-ks', 'per-type labelalpha 1');
+is($bibentries->entry('l14')->get_field('sortlabelalpha'), 'Alabel-ks', 'per-type labelalpha 2');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('maxnames', 3);
@@ -158,3 +158,21 @@ ok(is_undef($main->get_extraalphadata('l7')), 'maxnames=3 minnames=1 entry L7 ex
 is($bibentries->entry('l8')->get_field('sortlabelalpha'), 'Sha85', 'maxnames=3 minnames=1 entry L8 labelalpha');
 ok(is_undef($main->get_extraalphadata('l8')), 'maxnames=3 minnames=1 entry L8 extraalpha');
 
+# reset options and regenerate information
+Biber::Config->setblxoption('maxnames', 4);
+Biber::Config->setblxoption('minnames', 4);
+
+for (my $i=1; $i<9; $i++) {
+  $bibentries->entry("l$i")->del_field('sortlabelalpha');
+  $bibentries->entry("l$i")->del_field('labelalpha');
+  $main->set_extraalphadata("l$i", undef);
+}
+
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$main = $section->get_list('MAIN');
+$bibentries = $section->bibentries;
+
+is($bibentries->entry('l15')->get_field('sortlabelalpha'), 'AccBrClimbe', 'labelalpha disambiguation 1');
+is($bibentries->entry('l16')->get_field('sortlabelalpha'), 'AccBoClimbi', 'labelalpha disambiguation 2');
+is($bibentries->entry('l17')->get_field('sortlabelalpha'), 'AckBoClimbi', 'labelalpha disambiguation 3');

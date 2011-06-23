@@ -139,6 +139,14 @@
     <bcf:labelelement order="2">
       <bcf:labelpart>-</bcf:labelpart>
     </bcf:labelelement>
+    <bcf:labelelement order="2">
+      <bcf:labelpart substring_width="2" substring_side="right">title</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="unpublished">
+    <bcf:labelelement order="1">
+      <bcf:labelpart substring_width="v" substring_width_max="3" substring_side="left">labelname</bcf:labelpart>
+    </bcf:labelelement>
   </bcf:labelalphatemplate>
   <!-- INHERITANCE -->
   <bcf:inheritance>
@@ -271,6 +279,9 @@
     <bcf:citekey>L12</bcf:citekey>
     <bcf:citekey>L13</bcf:citekey>
     <bcf:citekey>L14</bcf:citekey>
+    <bcf:citekey>L15</bcf:citekey>
+    <bcf:citekey>L16</bcf:citekey>
+    <bcf:citekey>L17</bcf:citekey>
     <bcf:citekey>knuth:ct</bcf:citekey>
     <bcf:citekey>knuth:ct:a</bcf:citekey>
     <bcf:citekey>knuth:ct:b</bcf:citekey>
