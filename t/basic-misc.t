@@ -63,7 +63,7 @@ my $u1 = q|  \entry{u1}{misc}{}
     }
     \strng{namehash}{ABCD1}
     \strng{fullhash}{ABCD1}
-    \field{labelalpha}{AAA\textbf{+}00}
+    \field{labelalpha}{ABCD00}
     \field{sortinit}{A}
     \true{singletitle}
     \field{title}{A title}

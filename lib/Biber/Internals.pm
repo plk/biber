@@ -189,13 +189,39 @@ sub _labelpart {
 
   foreach my $part (@$labelpart) {
     # Deal with various tests
+    # iflistcount only uses this label template part if the list it is applied to is a certain
+    # length
     if (my $ic = $part->{iflistcount}) {
       my $f = $part->{content};
       if (first {$_ eq $f} @{$struc->get_field_type('name')} or
           $f eq 'labelname') {
-        my $name = $be->get_field($f);
+        my $name = $be->get_field($f) || next; # just in case there is no labelname etc.
         my $total_names = $name->count_elements;
-        my $visible_names = $total_names > $maxnames ? $minnames : $total_names;
+
+        # Allow for explicit "and others" for purposes of labels,
+        # this is length one less because "and others" is handled by
+        # alphaothers. Otherwise for "John Doe and others" you get
+        # "D+" instead of "Doe+" etc.
+        if ($name->last_element->get_namestring eq 'others') {
+          $total_names--;
+        }
+
+        my $visible_names;
+        my $ul;
+        if (defined($name->get_uniquelist)) {
+          $ul = $name->get_uniquelist;
+        }
+
+        if ($ul) {
+          $visible_names = $ul;
+        }
+        elsif ($total_names > $maxnames) {
+          $visible_names = $minnames;
+        }
+        else {
+          $visible_names = $total_names;
+        }
+
         next unless $visible_names == $ic;
       }
       elsif ($struc->get_field_type('list')) {
@@ -329,7 +355,16 @@ sub _label_name {
   # '\textasteriskcentered' which would mess up sorting.
   my $sortacc;
 
-  if (Biber::Config->getblxoption("use$namename", $be->get_field('entrytype'), $citekey) and
+  # Account for labelname set to short* when testing use* options
+  my $lnameopt;
+  if ( $namename =~ /\Ashort(.+)\z/ ) {
+    $lnameopt = $1;
+  }
+  else {
+    $lnameopt = $namename;
+  }
+
+  if (Biber::Config->getblxoption("use$lnameopt", $be->get_field('entrytype'), $citekey) and
     $be->get_field($namename)) {
     my $names = $be->get_field($namename);
     my $numnames  = $names->count_elements;

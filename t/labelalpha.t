@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 70;
+use Test::More tests => 72;
 
 use Biber;
 use Biber::Utils;
@@ -53,6 +53,7 @@ is($bibentries->entry('l8')->get_field('sortlabelalpha'), 'Sha85', 'maxnames=1 m
 ok(is_undef($main->get_extraalphadata('l8')), 'maxnames=1 minnames=1 entry L8 extraalpha');
 ok(is_undef($main->get_extraalphadata('l9')), 'L9 extraalpha unset due to shorthand');
 ok(is_undef($main->get_extraalphadata('l10')), 'L10 extraalpha unset due to shorthand');
+is($bibentries->entry('l11')->get_field('sortlabelalpha'), 'vRan22', 'prefix labelalpha 1');
 is($main->get_extraalphadata('knuth:ct'), '1', 'YEAR with range needs label differentiating from individual volumes - 1');
 is($main->get_extraalphadata('knuth:ct:a'), '2', 'YEAR with range needs label differentiating from individual volumes - 2');
 is($main->get_extraalphadata('knuth:ct:b'), '1', 'YEAR with range needs label differentiating from individual volumes - 3');
@@ -121,6 +122,8 @@ is($bibentries->entry('l7')->get_field('sortlabelalpha'), 'DS+95', 'maxnames=2 m
 is($main->get_extraalphadata('l7'), '2', 'maxnames=2 minnames=2 entry L7 extraalpha');
 is($bibentries->entry('l8')->get_field('sortlabelalpha'), 'Sha85', 'maxnames=2 minnames=2 entry L8 labelalpha');
 ok(is_undef($main->get_extraalphadata('l8')), 'maxnames=2 minnames=2 entry L8 extraalpha');
+is($bibentries->entry('l12')->get_field('sortlabelalpha'), 'vRvB22', 'prefix labelalpha 2');
+
 
 # reset options and regenerate information
 Biber::Config->setblxoption('maxnames', 3);

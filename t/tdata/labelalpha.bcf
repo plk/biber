@@ -100,7 +100,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useprefix</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>usetranslator</bcf:key>
@@ -258,6 +258,8 @@
     <bcf:citekey>L8</bcf:citekey>
     <bcf:citekey>L9</bcf:citekey>
     <bcf:citekey>L10</bcf:citekey>
+    <bcf:citekey>L11</bcf:citekey>
+    <bcf:citekey>L12</bcf:citekey>
     <bcf:citekey>knuth:ct</bcf:citekey>
     <bcf:citekey>knuth:ct:a</bcf:citekey>
     <bcf:citekey>knuth:ct:b</bcf:citekey>
