@@ -150,7 +150,7 @@
           </oneOrMore>
         </element>
       </optional>
-      <optional>
+      <zeroOrMore>
         <!-- labelalpha template specification -->
         <element name="bcf:labelalphatemplate">
           <optional>
@@ -183,6 +183,11 @@
                     </attribute>
                   </optional>
                   <optional>
+                    <attribute name="substring_width_max">
+                      <data type="integer"/>
+                    </attribute>
+                  </optional>
+                  <optional>
                     <attribute name="substring_side">
                       <choice>
                         <value>left</value>
@@ -211,7 +216,7 @@
             </element>
           </oneOrMore>
         </element>
-      </optional>
+      </zeroOrMore>
       <!-- Cross-reference inheritance specifications -->
       <element name="bcf:inheritance">
         <!-- Defaults -->

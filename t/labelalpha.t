@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 72;
+use Test::More tests => 74;
 
 use Biber;
 use Biber::Utils;
@@ -123,7 +123,8 @@ is($main->get_extraalphadata('l7'), '2', 'maxnames=2 minnames=2 entry L7 extraal
 is($bibentries->entry('l8')->get_field('sortlabelalpha'), 'Sha85', 'maxnames=2 minnames=2 entry L8 labelalpha');
 ok(is_undef($main->get_extraalphadata('l8')), 'maxnames=2 minnames=2 entry L8 extraalpha');
 is($bibentries->entry('l12')->get_field('sortlabelalpha'), 'vRvB22', 'prefix labelalpha 2');
-
+is($bibentries->entry('l13')->get_field('sortlabelalpha'), 'vRavBi-', 'per-type labelalpha 1');
+is($bibentries->entry('l14')->get_field('sortlabelalpha'), 'Alabel-', 'per-type labelalpha 2');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('maxnames', 3);

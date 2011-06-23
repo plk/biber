@@ -131,6 +131,15 @@
       <bcf:labelpart substring_width="2" substring_side="right">year</bcf:labelpart>
     </bcf:labelelement>
   </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="misc">
+    <bcf:labelelement order="1">
+      <bcf:labelpart>label</bcf:labelpart>
+      <bcf:labelpart substring_width="2" substring_side="left">labelname</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="2">
+      <bcf:labelpart>-</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
   <!-- INHERITANCE -->
   <bcf:inheritance>
     <bcf:defaults inherit_all="true" override_target="false">
@@ -260,6 +269,8 @@
     <bcf:citekey>L10</bcf:citekey>
     <bcf:citekey>L11</bcf:citekey>
     <bcf:citekey>L12</bcf:citekey>
+    <bcf:citekey>L13</bcf:citekey>
+    <bcf:citekey>L14</bcf:citekey>
     <bcf:citekey>knuth:ct</bcf:citekey>
     <bcf:citekey>knuth:ct:a</bcf:citekey>
     <bcf:citekey>knuth:ct:b</bcf:citekey>

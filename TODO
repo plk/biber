@@ -1,6 +1,6 @@
 TODO in decreasing order of priority:
 
-* Take out labelalphatemplate defaults when biblatex implements it
+* Take out labelalphatemplate defaults, optional in rnc/rng and parsing when biblatex implements it
 * When cygwin on perl 5.14, change build script (deprecated module)
 * When biblatex implements related entries, take out reprinttitle
 * Generalised \printbibliography system
@@ -16,19 +16,9 @@ TODO in decreasing order of priority:
   https://api.zotero.org/users/<USERID>/items?key=<APIKEY> give all entries
 
 
-
-  #   1. If there is only one name and no prefix, first 3 chars of lastname
-  #   2. If there is only one name with prefix, first char of prefix and first 2 chars of lastname
-  #   3. If there is more than one name and name has no prefix, first char of each lastname
-  #      (up to minnames)
-  #   4. If there is more than one name and name has prefix, first char of prefix plus
-  #      first char of each lastname (up to minnames)
-
-  # Test for per-type labelalphatemplate
-
 # SF feature request
 <bcf:labelalphatemplate>
   <bcf:label order="1">
-    <bcf:labelpart length="v" maxlength="6" side="left">labelname:lastname</bcf:labelpart>
+    <bcf:labelpart substring_width="v" substring_width_max="6" side="left">labelname:lastname</bcf:labelpart>
 </bcf:labelalphatemplate>
 

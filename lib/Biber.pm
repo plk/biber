@@ -350,7 +350,7 @@ sub parse_ctrlfile {
                                                            qr/\Aentrytype\z/,
                                                            qr/\Adatetype\z/,
                                                            qr/\Asectionlist\z/,
-                                                           qr/\Alabel(?:part|element)\z/,
+                                                           qr/\Alabel(?:part|element|alphatemplate)\z/,
                                                            qr/\Acondition\z/,
                                                            qr/\A(?:or)?filter\z/,
                                                           ],
@@ -434,15 +434,17 @@ sub parse_ctrlfile {
   # TODO This should not be optional any more when biblatex implements this so take
   # out this conditional
   if (exists($bcfxml->{labelalphatemplate})) {
-    my $latype = $bcfxml->{labelalphatemplate}{type};
-    if ($latype eq 'global') {
-      Biber::Config->setblxoption('labelalphatemplate', $bcfxml->{labelalphatemplate});
-    }
-    else {
-      Biber::Config->setblxoption('labelalphatemplate',
-                                  $bcfxml->{labelalphatemplate},
-                                  'PER_TYPE',
-                                  $latype);
+    foreach my $t (@{$bcfxml->{labelalphatemplate}}) {
+      my $latype = $t->{type};
+      if ($latype eq 'global') {
+        Biber::Config->setblxoption('labelalphatemplate', $t);
+      }
+      else {
+        Biber::Config->setblxoption('labelalphatemplate',
+                                    $t,
+                                    'PER_TYPE',
+                                    $latype);
+      }
     }
   }
 

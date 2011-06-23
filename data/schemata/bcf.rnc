@@ -83,6 +83,7 @@ start =
         element bcf:labelpart {          
           attribute final { "0" | "1" }?,
           attribute substring_width { xsd:integer | "v" }?,
+          attribute substring_width_max { xsd:integer }?,
           attribute substring_side { "left" | "right" }?,
           attribute substring_maxlength { xsd:integer }?,
           attribute iflistcount { xsd:integer }?,
@@ -90,7 +91,7 @@ start =
           xsd:string
         }+
       }+
-    }?,
+    }*,
 
     # Cross-reference inheritance specifications
     element bcf:inheritance {
