@@ -163,11 +163,13 @@ sub _genlabel {
   my $labelalphatemplate = Biber::Config->getblxoption('labelalphatemplate', $be->get_field('entrytype'));
   my $label;
   my $slabel;
+  $LABEL_FINAL = 0; # reset final shortcut
 
-  foreach my $labelpart (sort {$a->{order} <=> $b->{order}} @{$labelalphatemplate->{label}}) {
+  foreach my $labelpart (sort {$a->{order} <=> $b->{order}} @{$labelalphatemplate->{labelelement}}) {
     my $ret = _labelpart($self, $labelpart->{labelpart}, $citekey);
     $label .= $ret->[0];
     $slabel .= $ret->[1];
+    last if $LABEL_FINAL;
   }
 
   return [ $label, $slabel ];
@@ -205,8 +207,11 @@ sub _labelpart {
     $lp .= $ret->[0];
     $slp .= $ret->[1];
 
-    # We use the first one to return something;
-    last if $ret->[0];
+    # We use the first one to return something
+    if ($ret->[0]) {
+      $LABEL_FINAL = 1 if $part->{final};
+      last;
+    }
   }
 
   return [ $lp, $slp ];
@@ -336,6 +341,11 @@ sub _label_name {
     my $nametrunc;
     my $loopnames;
 
+    my $ul;
+    if (defined($names->get_uniquelist)) {
+      $ul = $names->get_uniquelist;
+    }
+
     # loopnames is the number of names to loop over in the name list when constructing the label
     if (my $lc = $labelattrs->{listcount}) {
       if ($lc > $numnames) { # cap at numnames, of course
@@ -343,9 +353,15 @@ sub _label_name {
       }
       $loopnames = $lc; # Only look as many names as specified
     }
+    elsif ($ul) {
+      $loopnames = $ul;
+      # Since uniquelist can be larger than maxnames, it's only truncated
+      # if uniquelist is shorter than the full name list
+      $nametrunc = 1 if $ul < $numnames;
+    }
     elsif ($morenames or ($numnames > $maxnames)) {
+      $loopnames = $minnames; # Only look at $minnames names if no uniquelist set
       $nametrunc = 1;
-      $loopnames = $minnames; # Only look at $minnames names if we are truncating ...
     }
     else {
       $loopnames = $numnames; # ... otherwise look at all names
@@ -1054,7 +1070,7 @@ sub _namestring {
 
   # truncate to the uniquelist point if uniquelist is requested
   # We know at this stage that if uniquelist is set, there are more than maxnames
-  # names. We also know that uniquelist > minnames because it is s further disambiguation
+  # names. We also know that uniquelist > minnames because it is a further disambiguation
   # on top of minnames so can't be less as you can't disambiguate by losing information
   if ($ul) {
     $truncnames = $truncnames->first_n_elements($ul);

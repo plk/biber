@@ -78,9 +78,10 @@ start =
     # labelalpha template specification
     element bcf:labelalphatemplate {
       attribute type { xsd:string }?, # per-type?
-      element bcf:label {
+      element bcf:labelelement {
         attribute order { xsd:integer },
         element bcf:labelpart {          
+          attribute final { "0" | "1" }?,
           attribute substring_width { xsd:integer | "v" }?,
           attribute substring_side { "left" | "right" }?,
           attribute substring_maxlength { xsd:integer }?,

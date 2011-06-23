@@ -160,12 +160,20 @@
           </optional>
           <oneOrMore>
             <!-- per-type? -->
-            <element name="bcf:label">
+            <element name="bcf:labelelement">
               <attribute name="order">
                 <data type="integer"/>
               </attribute>
               <oneOrMore>
                 <element name="bcf:labelpart">
+                  <optional>
+                    <attribute name="final">
+                      <choice>
+                        <value>0</value>
+                        <value>1</value>
+                      </choice>
+                    </attribute>
+                  </optional>
                   <optional>
                     <attribute name="substring_width">
                       <choice>

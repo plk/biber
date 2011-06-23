@@ -18,6 +18,7 @@ our @EXPORT = qw{
   $BIBLATEX_VERSION
   $BIBER_SORT_FINAL
   $BIBER_SORT_NULL
+  $LABEL_FINAL
   };
 
 # Version of biblatex which this release works with. Matched against version
@@ -128,33 +129,30 @@ our %CONFIG_DEFAULT_BIBER = (
 our %CONFIG_DEFAULT_BIBLATEX =
   (
    labelalphatemplate => {
-                            label => [
-                              {
-                                labelpart => [
-                                  { content => "shorthand" },
-                                  { content => "label" },
-                                  {
-                                    content => "labelname",
-                                    iflistcount => 1,
-                                    substring_side => "left",
-                                    substring_width => 3,
-                                  },
-                                  {
-                                    content => "labelname",
-                                    substring_side => "left",
-                                    substring_width => 1,
-                                  },
-                                ],
-                                order => 1,
-                              },
-                              {
-                                labelpart => [
-                                  { content => "year", substring_side => "right", substring_width => 2 },
-                                ],
-                                order => 2,
-                              },
-                            ],
-                          },
+  labelelement => [
+             {
+               labelpart => [
+                 { content => "shorthand", final => 1 },
+                 { content => "label" },
+                 {
+                   content         => "labelname",
+                   iflistcount     => 1,
+                   substring_side  => "left",
+                   substring_width => 3,
+                 },
+                 { content => "labelname", substring_side => "left", substring_width => 1 },
+               ],
+               order => 1,
+             },
+             {
+               labelpart => [
+                 { content => "year", substring_side => "right", substring_width => 2 },
+               ],
+               order => 2,
+             },
+           ],
+  type  => "global",
+},
    displaymode     => { ALL => ["original", "romanised", "uniform", "translated"] },
    structure       =>
  { constraints => [

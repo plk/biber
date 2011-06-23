@@ -350,7 +350,7 @@ sub parse_ctrlfile {
                                                            qr/\Aentrytype\z/,
                                                            qr/\Adatetype\z/,
                                                            qr/\Asectionlist\z/,
-                                                           qr/\Alabel(?:part)?\z/,
+                                                           qr/\Alabel(?:part|element)\z/,
                                                            qr/\Acondition\z/,
                                                            qr/\A(?:or)?filter\z/,
                                                           ],
@@ -420,7 +420,7 @@ sub parse_ctrlfile {
   }
 
   # DISPLAYMODES
-  # This should not be optional any more when biblatex implements this so take
+  # TODO This should not be optional any more when biblatex implements this so take
   # out this conditional
   if (exists($bcfxml->{displaymodes})) {
     my $dms;
@@ -431,14 +431,19 @@ sub parse_ctrlfile {
   }
 
   # LABELALPHATEMPLATE
-  if (my $type = $bcfxml->{labelalphatemplate}{type}) {
-    Biber::Config->setblxoption('labelalphatemplate', $bcfxml->{labelalphatemplate});
-  }
-  else {
-    Biber::Config->setblxoption('labelalphatemplate',
-                                $bcfxml->{labelalphatemplate},
-                                'PER_TYPE',
-                                $type);
+  # TODO This should not be optional any more when biblatex implements this so take
+  # out this conditional
+  if (exists($bcfxml->{labelalphatemplate})) {
+    my $latype = $bcfxml->{labelalphatemplate}{type};
+    if ($latype eq 'global') {
+      Biber::Config->setblxoption('labelalphatemplate', $bcfxml->{labelalphatemplate});
+    }
+    else {
+      Biber::Config->setblxoption('labelalphatemplate',
+                                  $bcfxml->{labelalphatemplate},
+                                  'PER_TYPE',
+                                  $latype);
+    }
   }
 
   # INHERITANCE schemes for crossreferences (always global)
@@ -879,9 +884,6 @@ sub process_entries_pre {
     # generate fullhash
     $self->process_fullhash($citekey);
 
-    # generate labelalpha information
-    $self->process_labelalpha($citekey);
-
     # push entry-specific presort fields into the presort state
     $self->process_presort($citekey);
 
@@ -906,6 +908,9 @@ sub process_entries_post {
   my $section = $self->sections->get_section($secnum);
   foreach my $citekey ( $section->get_citekeys ) {
     $logger->debug("Postprocessing entry '$citekey' from section $secnum (after uniqueness)");
+
+    # generate labelalpha information
+    $self->process_labelalpha($citekey);
 
     # generate namehash
     $self->process_namehash($citekey);
@@ -2018,8 +2023,7 @@ sub create_extras_st_info {
     # * Don't increment if skiplab is set
 
     my $name_string;
-    # For tracking name/year combinations, use shorthand only if it exists and we
-    # are using labelalpha
+    # For labelalpha, use the shorthand instead of the name, if defined
     if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) and
          $be->get_field('shorthand')) {
       $name_string = $be->get_field('shorthand');
@@ -2098,6 +2102,7 @@ sub generate_extra {
   my $sortscheme = $list->get_sortscheme;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+
   Biber::Config->reset_seen_extra(); # Since this sub is per-list, have to reset the
                                      # extra* counters per list
   # This loop critically depends on the order of the citekeys which
