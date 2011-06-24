@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="schemata/bcf.rnc" type="compact"?>
 <?xml-stylesheet type="text/xsl" href="bcf.xsl"?>
-<bcf:controlfile version="1.3" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="1.6" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -115,6 +115,29 @@
       <bcf:mode>original</bcf:mode>
     </bcf:displaymode>
   </bcf:displaymodes>
+  <bcf:labelalphatemplate type="global">
+    <bcf:labelelement order="1">
+      <bcf:labelpart final="1">shorthand</bcf:labelpart>
+      <bcf:labelpart>label</bcf:labelpart>
+      <bcf:labelpart substring_width="3" substring_side="left" ifnamecount="1">labelname</bcf:labelpart>
+      <bcf:labelpart substring_width="1" substring_side="left">labelname</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="2">
+      <bcf:labelpart substring_width="2" substring_side="right">year</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="misc">
+    <bcf:labelelement order="1">
+      <bcf:labelpart>label</bcf:labelpart>
+      <bcf:labelpart substring_width="2" substring_side="left" namecount="1">labelname</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="2">
+      <bcf:labelpart>-</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="3">
+      <bcf:labelpart substring_width="2" substring_side="right">title</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
   <bcf:inheritance>
     <bcf:defaults inherit_all="true" override_target="false">
     </bcf:defaults>

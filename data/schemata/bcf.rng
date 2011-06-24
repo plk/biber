@@ -201,12 +201,12 @@
                     </attribute>
                   </optional>
                   <optional>
-                    <attribute name="iflistcount">
+                    <attribute name="ifnamecount">
                       <data type="integer"/>
                     </attribute>
                   </optional>
                   <optional>
-                    <attribute name="listcount">
+                    <attribute name="namecount">
                       <data type="integer"/>
                     </attribute>
                   </optional>

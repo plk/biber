@@ -122,9 +122,10 @@ is($bibentries->entry('l7')->get_field('sortlabelalpha'), 'DS+95', 'maxnames=2 m
 is($main->get_extraalphadata('l7'), '2', 'maxnames=2 minnames=2 entry L7 extraalpha');
 is($bibentries->entry('l8')->get_field('sortlabelalpha'), 'Sha85', 'maxnames=2 minnames=2 entry L8 labelalpha');
 ok(is_undef($main->get_extraalphadata('l8')), 'maxnames=2 minnames=2 entry L8 extraalpha');
-is($bibentries->entry('l12')->get_field('sortlabelalpha'), 'vRvB22', 'prefix labelalpha 2');
-is($bibentries->entry('l13')->get_field('sortlabelalpha'), 'vRavBi-ks', 'per-type labelalpha 1');
-is($bibentries->entry('l14')->get_field('sortlabelalpha'), 'Alabel-ks', 'per-type labelalpha 2');
+is($bibentries->entry('l12')->get_field('sortlabelalpha'), 'vRvB2', 'prefix labelalpha 2');
+# only the first name in the list is in the label due to listcount=1
+is($bibentries->entry('l13')->get_field('sortlabelalpha'), 'vRa-ksUnV', 'per-type labelalpha 1');
+is($bibentries->entry('l14')->get_field('sortlabelalpha'), 'Alabel-ksUnW', 'per-type labelalpha 2');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('maxnames', 3);

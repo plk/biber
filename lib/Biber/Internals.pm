@@ -139,18 +139,42 @@ sub _getfullhash {
 ##################
 
 our $dispatch_label = {
+  'afterword'         =>  [\&_label_name,             ['afterword']],
+  'annotator'         =>  [\&_label_name,             ['annotator']],
   'author'            =>  [\&_label_name,             ['author']],
   'bookauthor'        =>  [\&_label_name,             ['bookauthor']],
   'booktitle'         =>  [\&_label_title,            ['booktitle']],
+  'commentator'       =>  [\&_label_name,             ['commentator']],
   'editor'            =>  [\&_label_name,             ['editor']],
-  'translator'        =>  [\&_label_name,             ['translator']],
+  'editora'           =>  [\&_label_name,             ['editora']],
+  'editorb'           =>  [\&_label_name,             ['editorb']],
+  'editorc'           =>  [\&_label_name,             ['editorc']],
+  'eventday'          =>  [\&_label_day,              ['eventday']],
+  'eventmonth'        =>  [\&_label_month,            ['eventmonth']],
+  'eventyear'         =>  [\&_label_year,             ['eventyear']],
+  'day'               =>  [\&_label_day,              ['day']],
+  'foreword'          =>  [\&_label_name,             ['foreword']],
+  'holder'            =>  [\&_label_name,             ['holder']],
+  'introduction'      =>  [\&_label_name,             ['introduction']],
+  'journaltitle'      =>  [\&_label_title,            ['journaltitle']],
   'label'             =>  [\&_label_label,            []],
   'labelname'         =>  [\&_label_labelname,        []],
   'labelyear'         =>  [\&_label_labelyear,        []],
+  'maintitle'         =>  [\&_label_title,            ['maintitle']],
+  'month'             =>  [\&_label_month,            ['month']],
+  'namea'             =>  [\&_label_name,             ['namea']],
+  'nameb'             =>  [\&_label_name,             ['nameb']],
+  'namec'             =>  [\&_label_name,             ['namec']],
+  'origday'           =>  [\&_label_day,              ['origday']],
+  'origmonth'         =>  [\&_label_month,            ['origmonth']],
   'origyear'          =>  [\&_label_year,             ['origyear']],
   'origtitle'         =>  [\&_label_title,            ['origtitle']],
   'shorthand'         =>  [\&_label_shorthand,        []],
   'title'             =>  [\&_label_title,            ['title']],
+  'translator'        =>  [\&_label_name,             ['translator']],
+  'urlday'            =>  [\&_label_day,              ['urlday']],
+  'urlmonth'          =>  [\&_label_month,            ['urlmonth']],
+  'urlyear'           =>  [\&_label_year,             ['urlyear']],
   'year'              =>  [\&_label_year,             ['year']],
 };
 
@@ -191,7 +215,7 @@ sub _labelpart {
     # Deal with various tests
     # iflistcount only uses this label template part if the list it is applied to is a certain
     # length
-    if (my $ic = $part->{iflistcount}) {
+    if (my $ic = $part->{ifnamecount}) {
       my $f = $part->{content};
       if (first {$_ eq $f} @{$struc->get_field_type('name')} or
           $f eq 'labelname') {
@@ -223,10 +247,6 @@ sub _labelpart {
         }
 
         next unless $visible_names == $ic;
-      }
-      elsif ($struc->get_field_type('list')) {
-        my $list = $be->get_field($f);
-        next unless @$#list == 0;
       }
     }
     my $ret = _dispatch_label($self, $part, $citekey);
@@ -273,26 +293,21 @@ sub _dispatch_label {
 # Label dispatch routines
 #########################
 
-sub _label_literal {
-  my ($self, $citekey, $args, $labelattrs) = @_;
-  my $string = $args->[0]; # get literal string
-  my $ps = _process_label_attributes($self, $string, $labelattrs);
-  return [$ps, $ps];
-}
-
-sub _label_shorthand {
+sub _label_day {
   my ($self, $citekey, $args, $labelattrs) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  if (my $f = $be->get_field('shorthand')) {
-    my $s = _process_label_attributes($self, $f, $labelattrs, 'shorthand');
-    return [$s, $s];
+  my $day = $args->[0];
+  if (my $f = $be->get_field($day)) {
+    my $y = _process_label_attributes($self, $f, $labelattrs, $day);
+    return [$y, $y];
   }
   else {
     return ['', ''];
   }
 }
+
 
 sub _label_label {
   my ($self, $citekey, $args, $labelattrs) = @_;
@@ -332,6 +347,28 @@ sub _label_labelname {
   if (my $lnn = $be->get_field('labelnamename')) {
     $args->[0] = $lnn;
     return $self->_label_name($citekey, $args, $labelattrs);
+  }
+  else {
+    return ['', ''];
+  }
+}
+
+sub _label_literal {
+  my ($self, $citekey, $args, $labelattrs) = @_;
+  my $string = $args->[0]; # get literal string
+  my $ps = _process_label_attributes($self, $string, $labelattrs);
+  return [$ps, $ps];
+}
+
+sub _label_month {
+  my ($self, $citekey, $args, $labelattrs) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $month = $args->[0];
+  if (my $f = $be->get_field($month)) {
+    my $y = _process_label_attributes($self, $f, $labelattrs, $month);
+    return [$y, $y];
   }
   else {
     return ['', ''];
@@ -382,7 +419,7 @@ sub _label_name {
     }
 
     # loopnames is the number of names to loop over in the name list when constructing the label
-    if (my $lc = $labelattrs->{listcount}) {
+    if (my $lc = $labelattrs->{namecount}) {
       if ($lc > $numnames) { # cap at numnames, of course
         $lc = $numnames;
       }
@@ -416,6 +453,20 @@ sub _label_name {
     }
 
     return [$acc, $sortacc];
+  }
+  else {
+    return ['', ''];
+  }
+}
+
+sub _label_shorthand {
+  my ($self, $citekey, $args, $labelattrs) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  if (my $f = $be->get_field('shorthand')) {
+    my $s = _process_label_attributes($self, $f, $labelattrs, 'shorthand');
+    return [$s, $s];
   }
   else {
     return ['', ''];
@@ -485,18 +536,16 @@ sub _process_label_attributes {
       # Look to the index of the longest string or the explicit max width if set
       my $maxlen = $labelattrs->{substring_width_max} || max map {length($_)} @strings;
       for (my $i = 1;$i <= $maxlen ; $i++) {
-        # using side-effect, not return of map()
-        map {
+        foreach my $map (map { my $s = substr($_, 0, $i); $substr_cache{$s}++; [$_, $s] } @strings) {
           # only set cache if it's not already set (which means disambiguation is finished for
           # this string). Also, if we've reached the $maxlen of the string and it's still not
           # set, then set to the $maxlen of the string
-          if (not $lcache->{$_->[0]} and 
+          if (not $lcache->{$map->[0]} and 
               ($i == $maxlen or
-               (not $lcache->{$_->[0]} and $substr_cache{$_->[1]} < 2))) {
-            $lcache->{$_->[0]} = $_->[1]
+               (not $lcache->{$map->[0]} and $substr_cache{$map->[1]} < 2))) {
+            $lcache->{$map->[0]} = $map->[1]
           }
         }
-          map { my $s = substr($_, 0, $i); $substr_cache{$s}++; [$_, $s] } @strings;
       }
       $field_string = $lcache->{$field_string};
       $logger->debug("Creating label disambiguation cache for '$field' " .
