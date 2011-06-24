@@ -9,7 +9,7 @@ use Biber;
 use Biber::Utils;
 use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
-Log::Log4perl->easy_init($ERROR);
+Log::Log4perl->easy_init($TRACE);
 chdir("t/tdata");
 
 # Set up Biber object

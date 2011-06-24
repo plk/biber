@@ -276,7 +276,7 @@ sub _dispatch_label {
 sub _label_literal {
   my ($self, $citekey, $args, $labelattrs) = @_;
   my $string = $args->[0]; # get literal string
-  my $ps = _process_label_attributes($string, $labelattrs);
+  my $ps = _process_label_attributes($self, $string, $labelattrs);
   return [$ps, $ps];
 }
 
@@ -286,7 +286,7 @@ sub _label_shorthand {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   if (my $f = $be->get_field('shorthand')) {
-    my $s = _process_label_attributes($f, $labelattrs);
+    my $s = _process_label_attributes($self, $f, $labelattrs, 'shorthand');
     return [$s, $s];
   }
   else {
@@ -300,7 +300,7 @@ sub _label_label {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   if (my $f = $be->get_field('label')) {
-    my $l = _process_label_attributes($f, $labelattrs);
+    my $l = _process_label_attributes($self, $f, $labelattrs, 'label');
     return [$l, $l];
   }
   else {
@@ -404,7 +404,7 @@ sub _label_name {
 
     for (my $i=0; $i<$loopnames; $i++) {
       $acc .= substr($prefices[$i] , 0, 1) if ($useprefix and $prefices[$i]);
-      $acc .= _process_label_attributes($lastnames[$i], $labelattrs);
+      $acc .= _process_label_attributes($self, $lastnames[$i], $labelattrs, $namename, 'lastname');
     }
 
     $sortacc = $acc;
@@ -429,7 +429,7 @@ sub _label_title {
   my $title = $args->[0];
   my $be = $section->bibentry($citekey);
   if (my $f = $be->get_field($title)) {
-    my $t = _process_label_attributes($f, $labelattrs);
+    my $t = _process_label_attributes($self, $f, $labelattrs, $title);
     return [$t, $t];
   }
   else {
@@ -445,7 +445,7 @@ sub _label_year {
   my $be = $section->bibentry($citekey);
   my $year = $args->[0];
   if (my $f = $be->get_field($year)) {
-    my $y = _process_label_attributes($f, $labelattrs);
+    my $y = _process_label_attributes($self, $f, $labelattrs, $year);
 
     # Make "in press" years look nice in alpha styles
     if ($f =~ m/\A\s*in\s*press\s*\z/ixms) {
@@ -459,13 +459,47 @@ sub _label_year {
 }
 
 
+# Label generation utilities
 
 # Modify label string according to some attributes
 sub _process_label_attributes {
-  my ($field_string, $labelattrs) = @_;
+  my ($self, $field_string, $labelattrs, $field, $namepart) = @_;
   return $field_string unless $labelattrs;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  # disambiguated width
+  if ($labelattrs->{substring_width} and
+      $labelattrs->{substring_width} eq 'v'
+      and $field) {
+    # Use the cache if there is one
+    if (my $lcache = $section->get_label_cache($field)) {
+      $logger->debug("Using label disambiguation cache for '$field' in section $secnum");
+      $field_string = $lcache->{$field_string};
+    }
+    else {
+      my %substr_cache = ();
+      my $lcache = {};
+      my @strings = uniq map {my $f = $section->bibentry($_)->get_field($field);
+                         $namepart ? map {$_->get_namepart($namepart)} @{$f->names} : $f
+                       } $section->get_citekeys;
+      for (my $i = 1;$i <= max map {length($_)} @strings ; $i++) {
+        # using side-effect, not return of map()
+        map { $lcache->{$_->[0]} = $_->[1]
+                if not $lcache->{$_->[0]} and $substr_cache{$_->[1]} < 2 }
+          map { my $s = substr($_, 0, $i); $substr_cache{$s}++; [$_, $s] } @strings;
+      }
+      $field_string = $lcache->{$field_string};
+      $logger->debug("Creating label disambiguation cache for '$field' " .
+                     ($namepart ? "($namepart) " : '') .
+                     "in section $secnum");
+      $logger->trace("Label disambiguation cache for '$field' " .
+                     ($namepart ? "($namepart) " : '') .
+                     "in section $secnum:\n " . Data::Dump::pp($lcache));
+      $section->set_label_cache($field, $lcache);
+    }
+  }
   # process substring
-  if ($labelattrs->{substring_width} or
+  elsif ($labelattrs->{substring_width} or
       $labelattrs->{substring_side}) {
     my $subs_offset = 0;
     my $default_substring_width = 1;

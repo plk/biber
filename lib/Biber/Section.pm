@@ -28,6 +28,7 @@ sub new {
   $self->{dkeys} = {};
   $self->{orig_order_citekeys} = [];
   $self->{undef_citekeys} = [];
+  $self->{label_cache} = {};
   return $self;
 }
 
@@ -212,6 +213,30 @@ sub del_citekeys {
   $self->{orig_order_citekeys} = [ ];
   return;
 }
+
+=head2 set_label_cache
+
+    Sets the label disambiguation cache for a field
+
+=cut
+
+sub set_label_cache {
+  my ($self, $field, $cache) = @_;
+  $self->{label_cache}{$field} = $cache;
+  return;
+}
+
+=head2 get_label_cache
+
+    Gets the label disambiguation cache for a field
+
+=cut
+
+sub get_label_cache {
+  my ($self, $field) = @_;
+  return $self->{label_cache}{$field};
+}
+
 
 
 =head2 set_dynamic_set
