@@ -9,7 +9,7 @@ use Biber;
 use Biber::Utils;
 use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
-Log::Log4perl->easy_init($TRACE);
+Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata");
 
 # Set up Biber object
@@ -173,6 +173,6 @@ $section = $biber->sections->get_section(0);
 $main = $section->get_list('MAIN');
 $bibentries = $section->bibentries;
 
-is($bibentries->entry('l15')->get_field('sortlabelalpha'), 'AccBrClimbe', 'labelalpha disambiguation 1');
-is($bibentries->entry('l16')->get_field('sortlabelalpha'), 'AccBoClimbi', 'labelalpha disambiguation 2');
-is($bibentries->entry('l17')->get_field('sortlabelalpha'), 'AckBoClimbi', 'labelalpha disambiguation 3');
+is($bibentries->entry('l15')->get_field('sortlabelalpha'), 'AccBrClim', 'labelalpha disambiguation 1');
+is($bibentries->entry('l16')->get_field('sortlabelalpha'), 'AccBoClim', 'labelalpha disambiguation 2');
+is($bibentries->entry('l17')->get_field('sortlabelalpha'), 'AckBoClim', 'labelalpha disambiguation 3');

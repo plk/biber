@@ -145,7 +145,7 @@
   </bcf:labelalphatemplate>
   <bcf:labelalphatemplate type="unpublished">
     <bcf:labelelement order="1">
-      <bcf:labelpart substring_width="v" substring_width_max="3" substring_side="left">labelname</bcf:labelpart>
+      <bcf:labelpart substring_width="v" substring_width_max="4" substring_side="left">labelname</bcf:labelpart>
     </bcf:labelelement>
   </bcf:labelalphatemplate>
   <!-- INHERITANCE -->

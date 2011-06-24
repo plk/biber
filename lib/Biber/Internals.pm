@@ -467,7 +467,7 @@ sub _process_label_attributes {
   return $field_string unless $labelattrs;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  # disambiguated width
+  # dynamically disambiguated width
   if ($labelattrs->{substring_width} and
       $labelattrs->{substring_width} eq 'v'
       and $field) {
@@ -482,10 +482,20 @@ sub _process_label_attributes {
       my @strings = uniq map {my $f = $section->bibentry($_)->get_field($field);
                          $namepart ? map {$_->get_namepart($namepart)} @{$f->names} : $f
                        } $section->get_citekeys;
-      for (my $i = 1;$i <= max map {length($_)} @strings ; $i++) {
+      # Look to the index of the longest string or the explicit max width if set
+      my $maxlen = $labelattrs->{substring_width_max} || max map {length($_)} @strings;
+      for (my $i = 1;$i <= $maxlen ; $i++) {
         # using side-effect, not return of map()
-        map { $lcache->{$_->[0]} = $_->[1]
-                if not $lcache->{$_->[0]} and $substr_cache{$_->[1]} < 2 }
+        map {
+          # only set cache if it's not already set (which means disambiguation is finished for
+          # this string). Also, if we've reached the $maxlen of the string and it's still not
+          # set, then set to the $maxlen of the string
+          if (not $lcache->{$_->[0]} and 
+              ($i == $maxlen or
+               (not $lcache->{$_->[0]} and $substr_cache{$_->[1]} < 2))) {
+            $lcache->{$_->[0]} = $_->[1]
+          }
+        }
           map { my $s = substr($_, 0, $i); $substr_cache{$s}++; [$_, $s] } @strings;
       }
       $field_string = $lcache->{$field_string};
@@ -498,7 +508,7 @@ sub _process_label_attributes {
       $section->set_label_cache($field, $lcache);
     }
   }
-  # process substring
+  # static substring width
   elsif ($labelattrs->{substring_width} or
       $labelattrs->{substring_side}) {
     my $subs_offset = 0;
