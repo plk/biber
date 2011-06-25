@@ -917,6 +917,8 @@ sub process_entries_post {
     # generate namehash
     $self->process_namehash($citekey);
 
+    # generate per-name hashes
+#    $self->process_pername_hashes($citekey);
   }
 
   $logger->debug("Finished processing entries in section $secnum (after uniqueness)");
@@ -1229,6 +1231,72 @@ sub process_namehash {
 
   return;
 }
+
+
+=head2 process_pername_hashes
+
+    Generate per_name_hashes
+
+=cut
+
+# sub process_pername_hashes {
+#   my $self = shift;
+#   my $citekey = shift;
+#   my $secnum = $self->get_current_section;
+#   my $section = $self->sections->get_section($secnum);
+#   my $be = $section->bibentry($citekey);
+#   my $bee = $be->get_field('entrytype');
+#   my $struc = Biber::Config->get_structure;
+
+#   foreach my $pn (@{$struc->get_field_type('name')}) {
+#     my $n = $be->get_field($pn) or next;
+
+#   }
+
+
+#   # After the initial generation of fullhash, we have to append
+#   # a suffix as it must be unique. It is possible that different entries have
+#   # the same hashes at this stage. For example:
+
+#   # AUTHOR = {Fred Grimble and Bill Bullter} = "FGBB"
+#   # AUTHOR = {Frank Garby and Brian Blunkley} = "FGBB"
+
+#   my $fullhashsuffix = 1;
+
+#   # First, check to see if we've already seen this exact name before
+#   if (Biber::Config->get_fullhashcount($fullhash, $fullid)) {
+#     # If we have, our suffix is already known
+#     $fullhashsuffix = Biber::Config->get_fullhashcount($fullhash, $fullid);
+#   }
+#   # Otherwise, if the fullhash already exists, we'll make a new entry with a new suffix
+#   elsif (Biber::Config->fullhashexists($fullhash)) {
+#     # Count the suffices already defined ...
+#     my $count = Biber::Config->get_numoffullhashes($fullhash);
+#     # ... add one to the number ...
+#     $fullhashsuffix = $count + 1;
+#     # ... and define a new suffix for that name
+#     Biber::Config->set_fullhashcount($fullhash, $fullid, $fullhashsuffix);
+#   }
+#   # No entry for the namehash at all so make a new one, a new name and suffix
+#   else {
+#     Biber::Config->del_fullhash($fullhash);
+#     Biber::Config->set_fullhashcount($fullhash, $fullid, 1);
+#   }
+
+
+#   # Now append the suffix, making the hash unique
+#   $fullhash .= $fullhashsuffix;
+
+#   # Set the hash
+#   $be->set_field('fullhash', $fullhash);
+
+#   # Don't add to disambiguation data if skiplab is set
+#   unless (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+#     Biber::Config->incr_seennamehash($fullhash);
+#   }
+
+#   return;
+# }
 
 
 

@@ -24,7 +24,6 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 
 # Biblatex options
-Biber::Config->setblxoption('labelalpha', 1);
 Biber::Config->setblxoption('labelyear', undef);
 
 # Now generate the information

@@ -31,6 +31,7 @@ $S =  [
                                                      ];
 Biber::Config->setblxoption('sorting', {default => $S});
 Biber::Config->setblxoption('labelyear', undef);
+Biber::Config->setblxoption('labelalpha', 0);
 
 # (re)generate informtion based on option settings
 $biber->prepare;

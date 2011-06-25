@@ -136,7 +136,6 @@
       <bcf:mode>original</bcf:mode>
     </bcf:displaymode>
   </bcf:displaymodes>
-  <!-- CROSSREF -->
   <bcf:inheritance>
     <bcf:defaults inherit_all="true" override_target="false">
     </bcf:defaults>
