@@ -34,13 +34,13 @@ my $bibentries = $section->bibentries;
 my $set1 = q|  \entry{seta}{set}{}
     \set{set:membera,set:memberb,set:memberc}
     \name{labelname}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{DJ1}
-    \strng{fullhash}{DJ1}
+    \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+    \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
     \field{labelalpha}{Doe10}
     \field{sortinit}{D}
     \field{extrayear}{1}
@@ -56,13 +56,13 @@ my $set1 = q|  \entry{seta}{set}{}
 my $set2 = q|  \entry{set:membera}{book}{}
     \inset{seta}
     \name{labelname}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{DJ1}
-    \strng{fullhash}{DJ1}
+    \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+    \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
     \field{sortinit}{D}
     \field{title}{Set Member A}
     \field{year}{2010}
@@ -74,13 +74,13 @@ my $set2 = q|  \entry{set:membera}{book}{}
 my $set3 = q|  \entry{set:memberb}{book}{}
     \inset{seta}
     \name{labelname}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{DJ1}
-    \strng{fullhash}{DJ1}
+    \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+    \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
     \field{sortinit}{D}
     \field{title}{Set Member B}
     \field{year}{2010}
@@ -91,13 +91,13 @@ my $set3 = q|  \entry{set:memberb}{book}{}
 my $set4 = q|  \entry{set:memberc}{book}{}
     \inset{seta}
     \name{labelname}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{DJ1}
-    \strng{fullhash}{DJ1}
+    \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+    \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
     \field{sortinit}{D}
     \field{title}{Set Member C}
     \field{year}{2010}
@@ -107,13 +107,13 @@ my $set4 = q|  \entry{set:memberc}{book}{}
 
 my $noset1 = q|  \entry{noseta}{book}{}
     \name{labelname}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{DJ1}
-    \strng{fullhash}{DJ1}
+    \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+    \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
     \field{labelalpha}{Doe10}
     \field{sortinit}{D}
     \field{extrayear}{2}
@@ -127,13 +127,13 @@ my $noset1 = q|  \entry{noseta}{book}{}
 
 my $noset2 = q|  \entry{nosetb}{book}{}
     \name{labelname}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{DJ1}
-    \strng{fullhash}{DJ1}
+    \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+    \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
     \field{labelalpha}{Doe10}
     \field{sortinit}{D}
     \field{extrayear}{3}
@@ -147,13 +147,13 @@ my $noset2 = q|  \entry{nosetb}{book}{}
 
 my $noset3 = q|  \entry{nosetc}{book}{}
     \name{labelname}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{DJ1}
-    \strng{fullhash}{DJ1}
+    \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+    \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
     \field{labelalpha}{Doe10}
     \field{sortinit}{D}
     \field{extrayear}{4}
@@ -167,10 +167,10 @@ my $noset3 = q|  \entry{nosetc}{book}{}
 
 my $sk4 = q|  \entry{skip4}{article}{dataonly}
     \name{labelname}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Cambridge}%
@@ -178,8 +178,8 @@ my $sk4 = q|  \entry{skip4}{article}{dataonly}
     \list{publisher}{1}{%
       {A press}%
     }
-    \strng{namehash}{DJ1}
-    \strng{fullhash}{DJ1}
+    \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+    \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
     \field{sortinit}{D}
     \field{shorthand}{AWS}
     \field{title}{Algorithms Which Sort}

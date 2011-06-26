@@ -42,12 +42,12 @@ is($bibentries->entry('un2')->get_field($bibentries->entry('un2')->get_field('la
 is($bibentries->entry('un5')->get_field($bibentries->entry('un5')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename requiring full name expansion - 3');
 is($bibentries->entry('un3')->get_field($bibentries->entry('un2')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename requiring initials name expansion - 1');
 is($bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename requiring initials name expansion - 2');
-is($bibentries->entry('un6')->get_field('namehash'), 'AJBM1', 'Namehash and fullhash - 1');
-is($bibentries->entry('un6')->get_field('fullhash'), 'AJBM1', 'Namehash and fullhash - 2');
-is($bibentries->entry('un7')->get_field('namehash'), 'C1', 'Fullnamshash ignores SHORT* names - 1');
-is($bibentries->entry('un7')->get_field('fullhash'), 'AJBM1', 'Fullnamshash ignores SHORT* names - 2');
-is($bibentries->entry('test1')->get_field('namehash'), 'SP+1', 'Namehash and fullhash - 3');
-is($bibentries->entry('test1')->get_field('fullhash'), 'SPJBBP1', 'Namehash and fullhash - 4');
+is($bibentries->entry('un6')->get_field('namehash'), 'f8169a157f8d9209961157b8d23902db', 'Namehash and fullhash - 1');
+is($bibentries->entry('un6')->get_field('fullhash'), 'f8169a157f8d9209961157b8d23902db', 'Namehash and fullhash - 2');
+is($bibentries->entry('un7')->get_field('namehash'), 'b33fbd3f3349d1536dbcc14664f2cbbd', 'Fullnamshash ignores SHORT* names - 1');
+is($bibentries->entry('un7')->get_field('fullhash'), 'f8169a157f8d9209961157b8d23902db', 'Fullnamshash ignores SHORT* names - 2');
+is($bibentries->entry('test1')->get_field('namehash'), '07df5c892ba1452776abee0a867591f2', 'Namehash and fullhash - 3');
+is($bibentries->entry('test1')->get_field('fullhash'), '637292dd2997a74c91847f1ec5081a46', 'Namehash and fullhash - 4');
 is($bibentries->entry('untf1')->get_field($bibentries->entry('untf1')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '2', 'Uniquename with full and repeat - 1');
 is($bibentries->entry('untf2')->get_field($bibentries->entry('untf2')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '2', 'Uniquename with full and repeat - 2');
 is($bibentries->entry('untf3')->get_field($bibentries->entry('untf3')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '2', 'Uniquename with full and repeat - 3');
@@ -101,8 +101,8 @@ $bibentries = $section->bibentries;
 $main = $section->get_list('MAIN');
 
 # Hashes the same as uniquelist expansion expands to the whole list
-is($bibentries->entry('unall3')->get_field('namehash'), 'AAAAA1', 'Namehash and fullhash - 5');
-is($bibentries->entry('unall3')->get_field('fullhash'), 'AAAAA1', 'Namehash and fullhash - 6');
+is($bibentries->entry('unall3')->get_field('namehash'), 'f1c5973adbc2e674fa4d98164c9ba5d5', 'Namehash and fullhash - 5');
+is($bibentries->entry('unall3')->get_field('fullhash'), 'f1c5973adbc2e674fa4d98164c9ba5d5', 'Namehash and fullhash - 6');
 ok(is_undef($bibentries->entry('unall3')->get_field($bibentries->entry('unall3')->get_field('labelnamename'))->get_uniquelist), 'Uniquelist edgecase - 1');
 is($bibentries->entry('unall4')->get_field($bibentries->entry('unall4')->get_field('labelnamename'))->get_uniquelist, '6', 'Uniquelist edgecase - 2');
 

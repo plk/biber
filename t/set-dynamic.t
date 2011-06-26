@@ -36,13 +36,13 @@ my $out = $biber->get_output_obj;
 my $string1 = q|  \entry{DynSet}{set}{}
     \set{Dynamic1,Dynamic2,Dynamic3}
     \name{labelname}{1}{}{%
-      {{hash=D1}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
+      {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=D1}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
+      {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{DD1}
-    \strng{fullhash}{DD1}
+    \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
+    \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
     \field{sortinit}{0}
     \field{labelyear}{2002}
     \field{annotation}{Some Dynamic Note}
@@ -56,13 +56,13 @@ my $string1 = q|  \entry{DynSet}{set}{}
 my $string2 = q|  \entry{Dynamic1}{book}{}
     \inset{DynSet}
     \name{labelname}{1}{}{%
-      {{hash=D1}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
+      {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=D1}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
+      {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{DD1}
-    \strng{fullhash}{DD1}
+    \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
+    \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
     \field{sortinit}{0}
     \field{annotation}{Some Dynamic Note}
     \field{shorthand}{d1}
@@ -75,13 +75,13 @@ my $string2 = q|  \entry{Dynamic1}{book}{}
 my $string3 = q|  \entry{Dynamic2}{book}{}
     \inset{DynSet}
     \name{labelname}{1}{}{%
-      {{hash=B1}{Bunting}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
+      {{hash=894a5fe6de820f5dcce84a65581667f4}{Bunting}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=B1}{Bunting}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
+      {{hash=894a5fe6de820f5dcce84a65581667f4}{Bunting}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{BB1}
-    \strng{fullhash}{BB1}
+    \strng{namehash}{894a5fe6de820f5dcce84a65581667f4}
+    \strng{fullhash}{894a5fe6de820f5dcce84a65581667f4}
     \field{sortinit}{0}
     \field{shorthand}{d2}
     \field{title}{Beautiful Birthdays}
@@ -93,13 +93,13 @@ my $string3 = q|  \entry{Dynamic2}{book}{}
 my $string4 = q|  \entry{Dynamic3}{book}{}
     \inset{DynSet}
     \name{labelname}{1}{}{%
-      {{hash=R1}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
+      {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=R1}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
+      {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{RR1}
-    \strng{fullhash}{RR1}
+    \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+    \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
     \field{sortinit}{0}
     \field{shorthand}{d3}
     \field{title}{Reckless Ravishings}
@@ -112,13 +112,13 @@ my $string4 = q|  \entry{Dynamic3}{book}{}
 # without citation of a set it is a member of
 my $string5 = q|  \entry{Dynamic3}{book}{}
     \name{labelname}{1}{}{%
-      {{hash=R1}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
+      {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=R1}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
+      {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{RR1}
-    \strng{fullhash}{RR1}
+    \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+    \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
     \field{sortinit}{0}
     \field{labelyear}{2000}
     \field{shorthand}{d3}

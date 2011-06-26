@@ -32,13 +32,14 @@ Biber::Internals - Internal methods for processing the bibliographic data
 
 my $logger = Log::Log4perl::get_logger('main');
 
+
 sub _getnamehash {
   my ($self, $citekey, $names) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $initstr = '';
+  my $hashkey = '';
   my $maxn = Biber::Config->getblxoption('maxnames');
   my $minn = Biber::Config->getblxoption('minnames');
   my $truncated = 0;
@@ -73,109 +74,107 @@ sub _getnamehash {
   foreach my $n (@{$truncnames->names}) {
     if ( $n->get_prefix and
          Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
-      $initstr .= join('', @{$n->get_prefix_i});
+      $hashkey .= $n->get_prefix;
     }
-    $initstr .= join('', @{$n->get_lastname_i});
+    $hashkey .= $n->get_lastname;
 
     if ( $n->get_suffix ) {
-      $initstr .= join('', @{$n->get_suffix_i});
+      $hashkey .= $n->get_suffix;
     }
 
     if ( $n->get_firstname ) {
-      $initstr .= join('', @{$n->get_firstname_i});
+      $hashkey .= $n->get_firstname;
     }
     if ( $n->get_middlename ) {
-      $initstr .= join('', @{$n->get_middlename_i});
+      $hashkey .= $n->get_middlename;
     }
+
     # without useprefix, prefix is not first in the hash
     if ( $n->get_prefix and not
          Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
-      $initstr .= join('', @{$n->get_prefix_i});
+      $hashkey .= $n->get_prefix;
     }
 
   }
 
-  $initstr .= "+" if $truncated;
+  $hashkey .= "+" if $truncated;
 
-  return normalise_string_hash($initstr);
+  # Digest::MD5 can't deal with straight UTF8 so encode it first
+  return md5_hex(encode_utf8($hashkey));
 }
+
 
 sub _getfullhash {
   my ($self, $citekey, $names) = @_;
-  my $initstr = '';
+  my $hashkey = '';
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   foreach my $n (@{$names->names}) {
-    if ( $n->get_prefix and
+    if ( my $p = $n->get_prefix and
       Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-      $initstr .= join('', @{$n->get_prefix_i});
+      $hashkey .= $p;
     }
-    $initstr .= join('', @{$n->get_lastname_i});
+    $hashkey .= $n->get_lastname;
 
     if ( $n->get_suffix ) {
-      $initstr .= join('', @{$n->get_suffix_i});
+      $hashkey .= $n->get_suffix;
     }
 
     if ( $n->get_firstname ) {
-      $initstr .= join('', @{$n->get_firstname_i});
+      $hashkey .= $n->get_firstname;
     }
 
     if ( $n->get_middlename ) {
-      $initstr .= join('', @{$n->get_middlename_i});
+      $hashkey .= $n->get_middlename;
     }
 
     # without useprefix, prefix is not first in the hash
-    if ( $n->get_prefix and not
+    if ( my $p = $n->get_prefix and not
          Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-      $initstr .= join('', @{$n->get_prefix_i});
+      $hashkey .= $p;
     }
 
   }
-  return normalise_string_hash($initstr);
-}
 
+  # Digest::MD5 can't deal with straight UTF8 so encode it first
+  return md5_hex(encode_utf8($hashkey));
+}
 
 
 sub _getpnhash {
   my ($self, $citekey, $n) = @_;
-  my $initstr = '';
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
+  my $hashkey = '';
 
-  if ( $n->get_prefix and
+  if ( my $p = $n->get_prefix and
        Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-    $initstr .= join('', @{$n->get_prefix_i});
+    $hashkey .= $p;
   }
-  $initstr .= join('', @{$n->get_lastname_i});
+  $hashkey .= $n->get_lastname;
 
   if ( $n->get_suffix ) {
-    $initstr .= join('', @{$n->get_suffix_i});
+    $hashkey .= $n->get_suffix;
   }
 
   if ( $n->get_firstname ) {
-    given ($n->get_uniquename_all) {
-      when (2) {
-        $initstr .= $n->get_firstname;
-      }
-      when (1) {
-        $initstr .= join('', @{$n->get_firstname_i});
-      }
-    }
+    $hashkey .= $n->get_firstname;
   }
 
   if ( $n->get_middlename ) {
-    $initstr .= join('', @{$n->get_middlename_i});
+    $hashkey .= $n->get_middlename;
   }
 
   # without useprefix, prefix is not first in the hash
   if ( $n->get_prefix and not
        Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-    $initstr .= join('', @{$n->get_prefix_i});
+    $hashkey .= $n->get_prefix;
   }
 
-  return normalise_string_hash($initstr);
+  # Digest::MD5 can't deal with straight UTF8 so encode it first
+  return md5_hex(encode_utf8($hashkey));
 }
 
 

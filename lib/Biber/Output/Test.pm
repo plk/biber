@@ -177,9 +177,9 @@ sub set_output_entry {
   }
 
   my $namehash = $be->get_field('namehash');
-  $acc .= "    \\strng{namehash}{$namehash}\n";
+  $acc .= "    \\strng{namehash}{$namehash}\n" if $namehash;
   my $fullhash = $be->get_field('fullhash');
-  $acc .= "    \\strng{fullhash}{$fullhash}\n";
+  $acc .= "    \\strng{fullhash}{$fullhash}\n" if $fullhash;
 
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
     # Might not have been set due to skiplab/dataonly

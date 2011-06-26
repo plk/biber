@@ -1111,54 +1111,14 @@ sub process_fullhash {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $bee = $be->get_field('entrytype');
-  my $fullhash = ''; # biblatex fullhash field
-  my $fullid   = '';
 
   # fullhash is generated from the labelname but ignores SHORT* fields and
   # maxnames/minnames settings
   if (my $lnamefh = $be->get_field('labelnamenamefullhash')) {
     if (my $lnfh = $be->get_field($lnamefh)) {
-      $fullhash .= $self->_getfullhash($citekey, $lnfh);
-      $fullid .= makenamesid($lnfh);
+      $be->set_field('fullhash', $self->_getfullhash($citekey, $lnfh));
     }
   }
-
-  # After the initial generation of fullhash, we have to append
-  # a suffix as it must be unique. It is possible that different entries have
-  # the same hashes at this stage. For example:
-
-  # AUTHOR = {Fred Grimble and Bill Bullter} = "FGBB"
-  # AUTHOR = {Frank Garby and Brian Blunkley} = "FGBB"
-
-  my $fullhashsuffix = 1;
-
-  # First, check to see if we've already seen this exact name before
-  if (my $fh = Biber::Config->get_fullhashcount($fullhash, $fullid)) {
-    # If we have, our suffix is already known
-    $fullhashsuffix = $fh;
-  }
-  # Otherwise, if the fullhash already exists, we'll make a new entry with a new suffix
-  elsif (Biber::Config->fullhashexists($fullhash)) {
-    # Count the suffices already defined ...
-    my $count = Biber::Config->get_numoffullhashes($fullhash);
-    # ... add one to the number ...
-    $fullhashsuffix = $count + 1;
-    # ... and define a new suffix for that name
-    Biber::Config->set_fullhashcount($fullhash, $fullid, $fullhashsuffix);
-  }
-  # No entry for the namehash at all so make a new one, a new name and suffix
-  else {
-    Biber::Config->del_fullhash($fullhash);
-    Biber::Config->set_fullhashcount($fullhash, $fullid, 1);
-  }
-
-
-  # Now append the suffix, making the hash unique
-  $fullhash .= $fullhashsuffix;
-
-  # Set the hash
-  $be->set_field('fullhash', $fullhash);
 
   return;
 }
@@ -1169,60 +1129,20 @@ sub process_fullhash {
 
 =cut
 
+
 sub process_namehash {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $bee = $be->get_field('entrytype');
-  my $namehash = ''; # biblatex namehash field
-  my $nameid   = '';
-  my $fullid   = '';
 
   # namehash is generated from the labelname
   if (my $lname = $be->get_field('labelnamename')) {
     if (my $ln = $be->get_field($lname)) {
-      $namehash .= $self->_getnamehash($citekey, $ln);
-      $nameid .= makenamesid($ln);
+      $be->set_field('namehash', $self->_getnamehash($citekey, $ln));
     }
   }
-
-  # After the initial generation of namehash, we have to append
-  # a suffix as they must be unique. It is possible that different entries have
-  # the same hashes at this stage. For example:
-
-  # AUTHOR = {Fred Grimble and Bill Bullter} = "FGBB"
-  # AUTHOR = {Frank Garby and Brian Blunkley} = "FGBB"
-
-  my $namehashsuffix = 1;
-
-  # namehash
-  # First, check to see if we've already seen this exact name before
-  if (my $nh = Biber::Config->get_namehashcount($namehash, $nameid)) {
-    # If we have, our suffix is already known
-    $namehashsuffix = $nh;
-  }
-  # Otherwise, if the namehash already exists, make a new entry with a new suffix
-  elsif (Biber::Config->namehashexists($namehash)) {
-    # Count the suffices already defined ...
-    my $count = Biber::Config->get_numofnamehashes($namehash);
-    # ... add one to the number ...
-    $namehashsuffix = $count + 1;
-    # ... and define a new suffix for that name
-    Biber::Config->set_namehashcount($namehash, $nameid, $namehashsuffix);
-  }
-  # No entry for the namehash at all so make a new one, a new name and suffix
-  else {
-    Biber::Config->del_namehash($namehash);
-    Biber::Config->set_namehashcount($namehash, $nameid, 1);
-  }
-
-  # Now append the suffix, making the hash unique
-  $namehash .= $namehashsuffix;
-
-  # Set the hashes
-  $be->set_field('namehash', $namehash);
 
   return;
 }
@@ -1240,49 +1160,12 @@ sub process_pername_hashes {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $bee = $be->get_field('entrytype');
   my $struc = Biber::Config->get_structure;
 
   foreach my $pn (@{$struc->get_field_type('name')}) {
     my $names = $be->get_field($pn) or next;
     foreach my $n (@{$names->names}) {
-      my $namehash = $self->_getpnhash($citekey, $n);
-      my $nameid = makenameid($n);
-
-      # After the initial generation of hash, we have to append
-      # a suffix as it must be unique. It is possible that different entries have
-      # the same hashes at this stage. For example:
-
-      # Fred Grimble = FG
-      # Frank Garby  = FG
-
-      my $pnhashsuffix = 1;
-
-      # First, check to see if we've already seen this exact name before
-      if (my $h = Biber::Config->get_pnhashcount($namehash, $nameid)) {
-        # If we have, our suffix is already known
-        $pnhashsuffix = $h;
-      }
-      # Otherwise, if the fullhash already exists, we'll make a new entry with a new suffix
-      elsif (Biber::Config->pnhashexists($namehash)) {
-        # Count the suffices already defined ...
-        my $count = Biber::Config->get_numofpnhashes($namehash);
-        # ... add one to the number ...
-        $pnhashsuffix = $count + 1;
-        # ... and define a new suffix for that name
-        Biber::Config->set_pnhashcount($namehash, $nameid, $pnhashsuffix);
-      }
-      # No entry for the namehash at all so make a new one, a new name and suffix
-      else {
-        Biber::Config->del_pnhash($namehash);
-        Biber::Config->set_pnhashcount($namehash, $nameid, 1);
-      }
-
-      # Now append the suffix, making the hash unique
-      $namehash .= $pnhashsuffix;
-
-      # Set the hash
-      $n->set_hash($namehash);
+      $n->set_hash($self->_getpnhash($citekey, $n));
     }
   }
 

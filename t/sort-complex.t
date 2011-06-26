@@ -79,11 +79,11 @@ my $sc = [
 my $sc3 = q|  \entry{L4}{book}{}
     \true{morelabelname}
     \name{labelname}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \true{moreauthor}
     \name{author}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Cambridge}%
@@ -91,8 +91,8 @@ my $sc3 = q|  \entry{L4}{book}{}
     \list{publisher}{1}{%
       {Another press}%
     }
-    \strng{namehash}{DJ+1}
-    \strng{fullhash}{DJo1}
+    \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
+    \strng{fullhash}{87609df1206b0e30f838d9a26ec69169}
     \field{labelalpha}{Doe\textbf{+}95}
     \field{sortinit}{D}
     \field{extraalpha}{2}
@@ -104,10 +104,10 @@ my $sc3 = q|  \entry{L4}{book}{}
 
 my $sc4 = q|  \entry{L1}{book}{}
     \name{labelname}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Cambridge}%
@@ -115,8 +115,8 @@ my $sc4 = q|  \entry{L1}{book}{}
     \list{publisher}{1}{%
       {A press}%
     }
-    \strng{namehash}{DJ1}
-    \strng{fullhash}{DJ1}
+    \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+    \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
     \field{labelalpha}{Doe95}
     \field{sortinit}{D}
     \field{extraalpha}{1}
@@ -128,10 +128,10 @@ my $sc4 = q|  \entry{L1}{book}{}
 
 my $sc5 = q|  \entry{L2}{book}{}
     \name{labelname}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Cambridge}%
@@ -139,8 +139,8 @@ my $sc5 = q|  \entry{L2}{book}{}
     \list{publisher}{1}{%
       {A press}%
     }
-    \strng{namehash}{DJ1}
-    \strng{fullhash}{DJ1}
+    \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+    \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
     \field{labelalpha}{Doe95}
     \field{sortinit}{D}
     \field{extraalpha}{3}
@@ -152,10 +152,10 @@ my $sc5 = q|  \entry{L2}{book}{}
 
 my $sc6 = q|  \entry{L3}{book}{}
     \name{labelname}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Cambridge}%
@@ -163,8 +163,8 @@ my $sc6 = q|  \entry{L3}{book}{}
     \list{publisher}{1}{%
       {A press}%
     }
-    \strng{namehash}{DJ1}
-    \strng{fullhash}{DJ1}
+    \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+    \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
     \field{labelalpha}{Doe95}
     \field{sortinit}{D}
     \field{extraalpha}{2}

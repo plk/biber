@@ -32,17 +32,17 @@ my $bibentries = $section->bibentries;
 
 my $l1 = q|  \entry{http://0-muse.jhu.edu.pugwash.lib.warwick.ac.uk:80/journals/theory_and_event/v005/5.3ranciere.html}{article}{}
     \name{labelname}{1}{}{%
-      {{hash=R1}{Rancière}{R\bibinitperiod}{Jacques}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=2d6c91380dc6798fd8219e73cf91f468}{Rancière}{R\bibinitperiod}{Jacques}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=R1}{Rancière}{R\bibinitperiod}{Jacques}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=2d6c91380dc6798fd8219e73cf91f468}{Rancière}{R\bibinitperiod}{Jacques}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{translator}{2}{}{%
-      {{hash=P1}{Panagia}{P\bibinitperiod}{Davide}{D\bibinitperiod}{}{}{}{}}%
-      {{hash=B1}{Bowlby}{B\bibinitperiod}{Rachel}{R\bibinitperiod}{}{}{}{}}%
+      {{hash=c95c30a625fdc9f3e9339afb92cf7161}{Panagia}{P\bibinitperiod}{Davide}{D\bibinitperiod}{}{}{}{}}%
+      {{hash=2e68c1ae590a37eeceab55f5594589f7}{Bowlby}{B\bibinitperiod}{Rachel}{R\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{RJ1}
-    \strng{fullhash}{RJ1}
+    \strng{namehash}{2d6c91380dc6798fd8219e73cf91f468}
+    \strng{fullhash}{2d6c91380dc6798fd8219e73cf91f468}
     \field{sortinit}{R}
     \field{labelyear}{2001}
     \field{issn}{1092-311X}
@@ -63,10 +63,10 @@ my $l1 = q|  \entry{http://0-muse.jhu.edu.pugwash.lib.warwick.ac.uk:80/journals/
 
 my $l2 = q|  \entry{urn:isbn:0713990023}{book}{}
     \name{labelname}{1}{}{%
-      {{hash=F1}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=984e5967448051538555a64aac11ed21}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=F1}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=984e5967448051538555a64aac11ed21}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {London}%
@@ -74,8 +74,8 @@ my $l2 = q|  \entry{urn:isbn:0713990023}{book}{}
     \list{publisher}{1}{%
       {Allen Lane}%
     }
-    \strng{namehash}{FM1}
-    \strng{fullhash}{FM1}
+    \strng{namehash}{984e5967448051538555a64aac11ed21}
+    \strng{fullhash}{984e5967448051538555a64aac11ed21}
     \field{sortinit}{F}
     \field{labelyear}{1988}
     \field{isbn}{0713990023}
@@ -90,17 +90,17 @@ my $l2 = q|  \entry{urn:isbn:0713990023}{book}{}
 
 my $l3 = q|  \entry{item_54}{inbook}{}
     \name{labelname}{1}{}{%
-      {{hash=F1}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=984e5967448051538555a64aac11ed21}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{hash=F1}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=984e5967448051538555a64aac11ed21}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{1}{}{%
-      {{hash=L1}{Lotringer}{L\bibinitperiod}{Sylvère}{S\bibinitperiod}{}{}{}{}}%
+      {{hash=59e41b906187fcc9bff2bddd24f99eca}{Lotringer}{L\bibinitperiod}{Sylvère}{S\bibinitperiod}{}{}{}{}}%
     }
     \name{translator}{2}{}{%
-      {{hash=H1}{Hochroth}{H\bibinitperiod}{Lysa}{L\bibinitperiod}{}{}{}{}}%
-      {{hash=J1}{Johnston}{J\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=0826582066ef5e3af124decf97f18d39}{Hochroth}{H\bibinitperiod}{Lysa}{L\bibinitperiod}{}{}{}{}}%
+      {{hash=d3cb970ad9fd48a90099fc50aec54981}{Johnston}{J\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {New York}%
@@ -108,8 +108,8 @@ my $l3 = q|  \entry{item_54}{inbook}{}
     \list{publisher}{1}{%
       {Semiotext(e)}%
     }
-    \strng{namehash}{FM1}
-    \strng{fullhash}{FM1}
+    \strng{namehash}{984e5967448051538555a64aac11ed21}
+    \strng{fullhash}{984e5967448051538555a64aac11ed21}
     \field{sortinit}{F}
     \field{labelyear}{1996}
     \field{booktitle}{Foucault Live: Interviews, 1961-1984}

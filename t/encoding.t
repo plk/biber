@@ -20,16 +20,16 @@ Biber::Config->setoption('sortlocale', 'C');
 
 my $encode1 = q|  \entry{testŠ}{book}{}
     \name{labelname}{1}{}{%
-      {{uniquename=0,hash=E1}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{uniquename=0,hash=E1}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%
     }
-    \strng{namehash}{EE1}
-    \strng{fullhash}{EE1}
+    \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
+    \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
     \field{labelalpha}{Enc99}
     \field{sortinit}{E}
     \field{labelyear}{1999}
@@ -42,16 +42,16 @@ my $encode1 = q|  \entry{testŠ}{book}{}
 
 my $encode2 = q|  \entry{test1}{book}{}
     \name{labelname}{1}{}{%
-      {{uniquename=0,hash=E1}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{uniquename=0,hash=E1}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%
     }
-    \strng{namehash}{EE1}
-    \strng{fullhash}{EE1}
+    \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
+    \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
     \field{labelalpha}{Enc99}
     \field{sortinit}{E}
     \field{labelyear}{1999}
@@ -64,16 +64,16 @@ my $encode2 = q|  \entry{test1}{book}{}
 
 my $encode3 = q|  \entry{test1}{book}{}
     \name{labelname}{1}{}{%
-      {{uniquename=0,hash=E1}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{uniquename=0,hash=E1}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%
     }
-    \strng{namehash}{EE1}
-    \strng{fullhash}{EE1}
+    \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
+    \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
     \field{labelalpha}{Enc99}
     \field{sortinit}{E}
     \field{labelyear}{1999}
@@ -86,16 +86,16 @@ my $encode3 = q|  \entry{test1}{book}{}
 
 my $encode5 = q|  \entry{test}{book}{}
     \name{labelname}{1}{}{%
-      {{uniquename=0,hash=E1}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{uniquename=0,hash=E1}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%
     }
-    \strng{namehash}{EE1}
-    \strng{fullhash}{EE1}
+    \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
+    \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
     \field{labelalpha}{Enc99}
     \field{sortinit}{E}
     \field{labelyear}{1999}
@@ -108,16 +108,16 @@ my $encode5 = q|  \entry{test}{book}{}
 
 my $encode6 = q|  \entry{test}{book}{}
     \name{labelname}{1}{}{%
-      {{uniquename=0,hash=E1}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{uniquename=0,hash=E1}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%
     }
-    \strng{namehash}{EE1}
-    \strng{fullhash}{EE1}
+    \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
+    \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
     \field{labelalpha}{Enc99}
     \field{sortinit}{E}
     \field{labelyear}{1999}
@@ -130,16 +130,16 @@ my $encode6 = q|  \entry{test}{book}{}
 
 my $encode7 = q|  \entry{test}{book}{}
     \name{labelname}{1}{}{%
-      {{uniquename=0,hash=E1}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{uniquename=0,hash=E1}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {A press}%
     }
-    \strng{namehash}{EE1}
-    \strng{fullhash}{EE1}
+    \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
+    \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
     \field{labelalpha}{Enc99}
     \field{sortinit}{E}
     \field{labelyear}{1999}

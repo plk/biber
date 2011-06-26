@@ -32,21 +32,21 @@ my $bibentries = $section->bibentries;
 
 my $l1 = q|  \entry{test1}{article}{}
     \name{labelname}{5}{}{%
-      {{uniquename=0,hash=B1}{Baldwin}{B\bibinitperiod}{S.A.}{S\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0,hash=F1}{Fugaccia}{F\bibinitperiod}{I.}{I\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0,hash=B2}{Brown}{B\bibinitperiod}{D.R.}{D\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0,hash=B3}{Brown}{B\bibinitperiod}{L.V.}{L\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0,hash=S1}{Scheff}{S\bibinitperiod}{S.W.}{S\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=35fb6a7132629790580cd2c9c0a5ab87}{Baldwin}{B\bibinitperiod}{S.A.}{S\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=f8b1ae371652de603e137e413b55de78}{Fugaccia}{F\bibinitperiod}{I.}{I\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=86957f40459ed948ee1b4ff0ec7740f6}{Brown}{B\bibinitperiod}{D.R.}{D\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=baf6c971e311fa61ec2f75e93531016e}{Brown}{B\bibinitperiod}{L.V.}{L\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=bd289ff4276c0fc8c16a49161011c5da}{Scheff}{S\bibinitperiod}{S.W.}{S\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{5}{}{%
-      {{uniquename=0,hash=B1}{Baldwin}{B\bibinitperiod}{S.A.}{S\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0,hash=F1}{Fugaccia}{F\bibinitperiod}{I.}{I\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0,hash=B2}{Brown}{B\bibinitperiod}{D.R.}{D\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0,hash=B3}{Brown}{B\bibinitperiod}{L.V.}{L\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0,hash=S1}{Scheff}{S\bibinitperiod}{S.W.}{S\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=35fb6a7132629790580cd2c9c0a5ab87}{Baldwin}{B\bibinitperiod}{S.A.}{S\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=f8b1ae371652de603e137e413b55de78}{Fugaccia}{F\bibinitperiod}{I.}{I\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=86957f40459ed948ee1b4ff0ec7740f6}{Brown}{B\bibinitperiod}{D.R.}{D\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=baf6c971e311fa61ec2f75e93531016e}{Brown}{B\bibinitperiod}{L.V.}{L\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=bd289ff4276c0fc8c16a49161011c5da}{Scheff}{S\bibinitperiod}{S.W.}{S\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{BS+1}
-    \strng{fullhash}{BSFIBDBLSS1}
+    \strng{namehash}{deae9fead6c78a99d3f38159b0710b1f}
+    \strng{fullhash}{bde87bef9bb3834837786f78acfebc54}
     \field{sortinit}{B}
     \field{abstract}{Adult Fisher 344 rats were subjected to a unilateral impact to the dorsal cortex above the hippocampus at 3.5 m/sec with a 2 mm cortical depression. This caused severe cortical damage and neuronal loss in hippocampus subfields CA1, CA3 and hilus. Breakdown of the blood-brain barrier (BBB) was assessed by injecting the protein horseradish peroxidase (HRP) 5 minutes prior to or at various times following injury (5 minutes, 1, 2, 6, 12 hours, 1, 2, 5, and 10 days). Animals were killed 1 hour after HRP injection and brain sections were reacted with diaminobenzidine to visualize extravascular accumulation of the protein. Maximum staining occurred in animals injected with HRP 5 minutes prior to or 5 minutes after cortical contusion. Staining at these time points was observed in the ipsilateral hippocampus. Some modest staining occurred in the dorsal contralateral cortex near the superior sagittal sinus. Cortical HRP stain gradually decreased at increasing time intervals postinjury. By 10 days, no HRP stain was observed in any area of the brain. In the ipsilateral hippocampus, HRP stain was absent by 3 hours postinjury and remained so at the 6- and 12- hour time points. Surprisingly, HRP stain was again observed in the ipsilateral hippocampus 1 and 2 days following cortical contusion, indicating a biphasic opening of the BBB following head trauma and a possible second wave of secondary brain damage days after the contusion injury. These data indicate regions not initially destroyed by cortical impact, but evidencing BBB breach, may be accessible to neurotrophic factors administered intravenously both immediately and days after brain trauma.}
     \field{journaltitle}{J.Neurosurg.}
@@ -59,16 +59,16 @@ my $l1 = q|  \entry{test1}{article}{}
 
 my $l2 = q|  \entry{test2}{book}{}
     \name{labelname}{1}{}{%
-      {{uniquename=0,hash=SI1}{Smith}{S\bibinitperiod}{John\bibnamedelima Frederick}{J\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
+      {{uniquename=0,hash=f2574dc91f1242eb0e7507a71730631b}{Smith}{S\bibinitperiod}{John\bibnamedelima Frederick}{J\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
     }
     \name{author}{1}{}{%
-      {{uniquename=0,hash=SI1}{Smith}{S\bibinitperiod}{John\bibnamedelima Frederick}{J\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
+      {{uniquename=0,hash=f2574dc91f1242eb0e7507a71730631b}{Smith}{S\bibinitperiod}{John\bibnamedelima Frederick}{J\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
     }
     \name{editor}{1}{}{%
-      {{hash=B4}{Brown}{B\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=c889e5c69d0c445e8f3bb0fe1ea7a19c}{Brown}{B\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{SIJF1}
-    \strng{fullhash}{SIJF1}
+    \strng{namehash}{f2574dc91f1242eb0e7507a71730631b}
+    \strng{fullhash}{f2574dc91f1242eb0e7507a71730631b}
     \field{sortinit}{S}
     \field{pages}{1\bibrangedash 20}
     \keyw{keyword}
