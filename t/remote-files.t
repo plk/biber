@@ -33,16 +33,16 @@ my $bibentries = $section->bibentries;
 
 my $cu1 = q|  \entry{citeulike:8283461}{article}{}
     \name{labelname}{4}{}{%
-      {{uniquename=0}{Marazziti}{M\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Akiskal}{A\bibinitperiod}{H.\bibnamedelimi S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Rossi}{R\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Cassano}{C\bibinitperiod}{G.\bibnamedelimi B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=M1}{Marazziti}{M\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=A1}{Akiskal}{A\bibinitperiod}{H.\bibnamedelimi S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=R1}{Rossi}{R\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=C1}{Cassano}{C\bibinitperiod}{G.\bibnamedelimi B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{4}{}{%
-      {{uniquename=0}{Marazziti}{M\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Akiskal}{A\bibinitperiod}{H.\bibnamedelimi S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Rossi}{R\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Cassano}{C\bibinitperiod}{G.\bibnamedelimi B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=M1}{Marazziti}{M\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=A1}{Akiskal}{A\bibinitperiod}{H.\bibnamedelimi S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=R1}{Rossi}{R\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=C1}{Cassano}{C\bibinitperiod}{G.\bibnamedelimi B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{MD+1}
     \strng{fullhash}{MDAHSRACGB1}
@@ -67,12 +67,12 @@ my $cu1 = q|  \entry{citeulike:8283461}{article}{}
 
 my $dl1 = q|  \entry{AbdelbarH98}{article}{}
     \name{labelname}{2}{}{%
-      {{uniquename=0}{Abdelbar}{A\bibinitperiod}{A.M.}{A\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Hedetniemi}{H\bibinitperiod}{S.M.}{S\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=A2}{Abdelbar}{A\bibinitperiod}{A.M.}{A\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=H1}{Hedetniemi}{H\bibinitperiod}{S.M.}{S\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{2}{}{%
-      {{uniquename=0}{Abdelbar}{A\bibinitperiod}{A.M.}{A\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Hedetniemi}{H\bibinitperiod}{S.M.}{S\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=A2}{Abdelbar}{A\bibinitperiod}{A.M.}{A\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=H1}{Hedetniemi}{H\bibinitperiod}{S.M.}{S\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{AAHS1}
     \strng{fullhash}{AAHS1}

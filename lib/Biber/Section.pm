@@ -24,11 +24,11 @@ sub new {
   $self->{bibentries} = new Biber::Entries;
   $self->{allkeys} = 0;
   $self->{citekeys} = [];
+  $self->{labelcache} = {};
   $self->{sortcache} = [];
   $self->{dkeys} = {};
   $self->{orig_order_citekeys} = [];
   $self->{undef_citekeys} = [];
-  $self->{label_cache} = {};
   return $self;
 }
 
@@ -214,27 +214,27 @@ sub del_citekeys {
   return;
 }
 
-=head2 set_label_cache
+=head2 set_labelcache
 
     Sets the label disambiguation cache for a field
 
 =cut
 
-sub set_label_cache {
+sub set_labelcache {
   my ($self, $field, $cache) = @_;
-  $self->{label_cache}{$field} = $cache;
+  $self->{labelcache}{$field} = $cache;
   return;
 }
 
-=head2 get_label_cache
+=head2 get_labelcache
 
     Gets the label disambiguation cache for a field
 
 =cut
 
-sub get_label_cache {
+sub get_labelcache {
   my ($self, $field) = @_;
-  return $self->{label_cache}{$field};
+  return $self->{labelcache}{$field};
 }
 
 
@@ -425,15 +425,16 @@ sub get_sort_cache {
   return $self->{sortcache};
 }
 
-=head2 reset_sort_cache
+=head2 reset_caches
 
-    Reset the sort cache
+    Reset the section caches
 
 =cut
 
-sub reset_sort_cache {
+sub reset_caches {
   my $self = shift;
   $self->{sortcache} = [];
+  $self->{labelcache} = {};
   return;
 }
 

@@ -48,12 +48,12 @@ $CONFIG->{state}{uniquelistcount} = {};
 # Default is true so that uniquename/uniquelist processing starts
 $CONFIG->{state}{unulchanged} = 1;
 
-# namehashcount holds a hash of namehashes and 
-# namehashcount/fullhashcount hold a hash of namehashes and
-# occurences of unique names that generate the hash. For example:
+# *hashcount hold a hash of namehashes to counts of name IDs which generate the hash
+# For example:
 # {AA => { Adams_A => 1, Allport_A => 2 }}
 $CONFIG->{state}{namehashcount} = {};
 $CONFIG->{state}{fullhashcount} = {};
+$CONFIG->{state}{pnhashcount} = {};
 
 # uniquenamecount holds a hash of lastnames and lastname/initials
 $CONFIG->{state}{uniquenamecount} = {};
@@ -92,6 +92,7 @@ sub _init {
   $CONFIG->{state}{crossrefkeys} = {};
   $CONFIG->{state}{namehashcount} = {};
   $CONFIG->{state}{fullhashcount} = {};
+  $CONFIG->{state}{pnhashcount} = {};
   $CONFIG->{state}{uniquenamecount} = {};
   $CONFIG->{state}{uniquenamecount_all} = {};
   $CONFIG->{state}{uniquelistcount} = {};
@@ -1192,6 +1193,87 @@ sub incr_seennamehash {
   shift; # class method so don't care about class name
   my $hash = shift;
   $CONFIG->{state}{seennamehash}{$hash}++;
+  return;
+}
+
+#============================
+#       pnhashcount
+#============================
+
+
+=head2 set_pnhashcount
+
+    Set the count of a pnhash and name id
+
+    Biber::Config->set_pnhashcount($hash, $id, $num);
+
+=cut
+
+sub set_pnhashcount {
+  shift; # class method so don't care about class name
+  my ($hash, $id, $num) = @_;
+  $CONFIG->{state}{pnhashcount}{$hash}{$id} = $num;
+  return;
+}
+
+=head2 get_pnhashcount
+
+    Get the count of a per-name hash and name id
+
+    Biber::Config->get_pnhashcount($hash, $id);
+
+=cut
+
+sub get_pnhashcount {
+  shift; # class method so don't care about class name
+  my ($hash, $id) = @_;
+  return $CONFIG->{state}{pnhashcount}{$hash}{$id};
+}
+
+=head2 pnhashexists
+
+    Check if there is an entry for a pnhash
+
+    Biber::Config->pnhashexists($hash);
+
+=cut
+
+sub pnhashexists {
+  shift; # class method so don't care about class name
+  my $hash = shift;
+  return exists($CONFIG->{state}{pnhashcount}{$hash}) ? 1 : 0;
+}
+
+
+=head2 get_numofpnhashes
+
+    Get the number of pn hashes
+
+    Biber::Config->get_numofpnhashes($hash);
+
+=cut
+
+sub get_numofpnhashes {
+  shift; # class method so don't care about class name
+  my $hash = shift;
+  return scalar keys %{$CONFIG->{state}{pnhashcount}{$hash}};
+}
+
+
+=head2 del_pnhash
+
+    Delete the count information for a per-name hash
+
+    Biber::Config->del_pnhashcount($hash);
+
+=cut
+
+sub del_pnhash {
+  shift; # class method so don't care about class name
+  my $hash = shift;
+  if (exists($CONFIG->{state}{pnhashcount}{$hash})) {
+    delete $CONFIG->{state}{pnhashcount}{$hash};
+  }
   return;
 }
 

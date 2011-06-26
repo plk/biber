@@ -14,4 +14,4 @@ TODO in decreasing order of priority:
   https://api.zotero.org/users/<USERID>/items/<ITEMID>?key=<APIKEY>
   gives a parseable ATOM XML with the information but it's ugly
   https://api.zotero.org/users/<USERID>/items?key=<APIKEY> give all entries
-
+* uniquename needs changing everywhere if middlename is implemented

@@ -33,10 +33,10 @@ my $bibentries = $section->bibentries;
 
 my $k1 = q|  \entry{key1}{article}{}
     \name{labelname}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{hash=A1}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{hash=A1}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \strng{namehash}{A1}
     \strng{fullhash}{A1}
@@ -57,10 +57,10 @@ my $k1 = q|  \entry{key1}{article}{}
 
 my $k2 = q|  \entry{key2}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{hash=A1}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{hash=A1}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Location}%
@@ -86,10 +86,10 @@ my $k2 = q|  \entry{key2}{inbook}{}
 
 my $k3 = q|  \entry{key3}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{hash=A1}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{hash=A1}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Location}%
@@ -115,10 +115,10 @@ my $k3 = q|  \entry{key3}{inbook}{}
 
 my $kck1 = q|  \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
     \name{labelname}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{hash=A1}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{hash=A1}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \strng{namehash}{A1}
     \strng{fullhash}{A1}
@@ -136,10 +136,10 @@ my $kck1 = q|  \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
 
 my $kck2 = q|  \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
     \name{labelname}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{hash=A1}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{hash=A1}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Location}%
@@ -161,10 +161,10 @@ my $kck2 = q|  \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
 
 my $kck3 = q|  \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
     \name{labelname}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{hash=A1}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{hash=A1}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Location}%
@@ -186,10 +186,10 @@ my $kck3 = q|  \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
 
 my $kck4 = q|  \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly}
     \name{labelname}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{hash=A1}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+      {{hash=A1}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Location}%

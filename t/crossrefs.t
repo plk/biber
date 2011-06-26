@@ -34,13 +34,13 @@ my $out = $biber->get_output_obj;
 # crossref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $cr1 = q|  \entry{cr1}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Gullam}{G\bibinitperiod}{Graham}{G\bibinitperiod}{}{}{}{}}%
+      {{hash=G1}{Gullam}{G\bibinitperiod}{Graham}{G\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Gullam}{G\bibinitperiod}{Graham}{G\bibinitperiod}{}{}{}{}}%
+      {{hash=G1}{Gullam}{G\bibinitperiod}{Graham}{G\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{1}{}{%
-      {{}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
+      {{hash=E1}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Grimble}%
@@ -63,13 +63,13 @@ my $cr1 = q|  \entry{cr1}{inbook}{}
 # crossref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $cr2 = q|  \entry{cr2}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Fumble}{F\bibinitperiod}{Frederick}{F\bibinitperiod}{}{}{}{}}%
+      {{hash=F1}{Fumble}{F\bibinitperiod}{Frederick}{F\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Fumble}{F\bibinitperiod}{Frederick}{F\bibinitperiod}{}{}{}{}}%
+      {{hash=F1}{Fumble}{F\bibinitperiod}{Frederick}{F\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{1}{}{%
-      {{}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
+      {{hash=E1}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{institution}{1}{%
       {Institution}%
@@ -95,7 +95,7 @@ my $cr2 = q|  \entry{cr2}{inbook}{}
 # Notice lack of labelname and hashes because the only name is EDITOR and useeditor is false
 my $cr_m = q|  \entry{cr_m}{book}{}
     \name{editor}{1}{}{%
-      {{}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
+      {{hash=E1}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Grimble}%
@@ -113,13 +113,13 @@ my $cr_m = q|  \entry{cr_m}{book}{}
 # crossref field is included as the parent is cited
 my $cr3 = q|  \entry{cr3}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Aptitude}{A\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=A1}{Aptitude}{A\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Aptitude}{A\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=A1}{Aptitude}{A\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{1}{}{%
-      {{}{Monkley}{M\bibinitperiod}{Mark}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=M1}{Monkley}{M\bibinitperiod}{Mark}{M\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Rancour}%
@@ -142,7 +142,7 @@ my $cr3 = q|  \entry{cr3}{inbook}{}
 # cited as normal
 my $crt = q|  \entry{crt}{book}{}
     \name{editor}{1}{}{%
-      {{}{Monkley}{M\bibinitperiod}{Mark}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=M1}{Monkley}{M\bibinitperiod}{Mark}{M\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Rancour}%
@@ -160,13 +160,13 @@ my $crt = q|  \entry{crt}{book}{}
 # various event fields inherited correctly
 my $cr6 = q|  \entry{cr6}{inproceedings}{}
     \name{labelname}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
+      {{hash=A2}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
+      {{hash=A2}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{1}{}{%
-      {{}{Editor}{E\bibinitperiod}{}{}{}{}{}{}}%
+      {{hash=E2}{Editor}{E\bibinitperiod}{}{}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Address}%
@@ -194,13 +194,13 @@ my $cr6 = q|  \entry{cr6}{inproceedings}{}
 # Special fields inherited correctly
 my $cr7 = q|  \entry{cr7}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
+      {{hash=A2}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
+      {{hash=A2}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
     }
     \name{bookauthor}{1}{}{%
-      {{}{Bookauthor}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
+      {{hash=B1}{Bookauthor}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Publisher of proceeding}%
@@ -225,10 +225,10 @@ my $cr7 = q|  \entry{cr7}{inbook}{}
 # Default inheritance supressed except for specified
 my $cr8 = q|  \entry{cr8}{incollection}{}
     \name{labelname}{1}{}{%
-      {{}{Smith}{S\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
+      {{hash=S1}{Smith}{S\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Smith}{S\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
+      {{hash=S1}{Smith}{S\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{SF1}
     \strng{fullhash}{SF1}
@@ -245,10 +245,10 @@ my $cr8 = q|  \entry{cr8}{incollection}{}
 # xref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $xr1 = q|  \entry{xr1}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Zentrum}{Z\bibinitperiod}{Zoe}{Z\bibinitperiod}{}{}{}{}}%
+      {{hash=Z1}{Zentrum}{Z\bibinitperiod}{Zoe}{Z\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Zentrum}{Z\bibinitperiod}{Zoe}{Z\bibinitperiod}{}{}{}{}}%
+      {{hash=Z1}{Zentrum}{Z\bibinitperiod}{Zoe}{Z\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{ZZ1}
     \strng{fullhash}{ZZ1}
@@ -263,10 +263,10 @@ my $xr1 = q|  \entry{xr1}{inbook}{}
 # xref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $xr2 = q|  \entry{xr2}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Instant}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
+      {{hash=I1}{Instant}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Instant}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
+      {{hash=I1}{Instant}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{II1}
     \strng{fullhash}{II1}
@@ -282,7 +282,7 @@ my $xr2 = q|  \entry{xr2}{inbook}{}
 # Notice lack of labelname and hashes because the only name is EDITOR and useeditor is false
 my $xrm = q|  \entry{xrm}{book}{}
     \name{editor}{1}{}{%
-      {{}{Prendergast}{P\bibinitperiod}{Peter}{P\bibinitperiod}{}{}{}{}}%
+      {{hash=P1}{Prendergast}{P\bibinitperiod}{Peter}{P\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Mainstream}%
@@ -300,10 +300,10 @@ my $xrm = q|  \entry{xrm}{book}{}
 # xref field is included as the parent is cited
 my $xr3 = q|  \entry{xr3}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Normal}{N\bibinitperiod}{Norman}{N\bibinitperiod}{}{}{}{}}%
+      {{hash=N1}{Normal}{N\bibinitperiod}{Norman}{N\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Normal}{N\bibinitperiod}{Norman}{N\bibinitperiod}{}{}{}{}}%
+      {{hash=N1}{Normal}{N\bibinitperiod}{Norman}{N\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{NN1}
     \strng{fullhash}{NN1}
@@ -318,7 +318,7 @@ my $xr3 = q|  \entry{xr3}{inbook}{}
 # cited as normal
 my $xrt = q|  \entry{xrt}{book}{}
     \name{editor}{1}{}{%
-      {{}{Lunders}{L\bibinitperiod}{Lucy}{L\bibinitperiod}{}{}{}{}}%
+      {{hash=L1}{Lunders}{L\bibinitperiod}{Lucy}{L\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Middling}%
@@ -336,13 +336,13 @@ my $xrt = q|  \entry{xrt}{book}{}
 # No crossref field as parent is not cited (mincrossrefs < 2)
 my $cr4 = q|  \entry{cr4}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Mumble}{M\bibinitperiod}{Morris}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=M2}{Mumble}{M\bibinitperiod}{Morris}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Mumble}{M\bibinitperiod}{Morris}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=M2}{Mumble}{M\bibinitperiod}{Morris}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{1}{}{%
-      {{}{Jermain}{J\bibinitperiod}{Jeremy}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=J1}{Jermain}{J\bibinitperiod}{Jeremy}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Pillsbury}%
@@ -362,10 +362,10 @@ my $cr4 = q|  \entry{cr4}{inbook}{}
 # No crossref field as parent is not cited (mincrossrefs < 2)
 my $xr4 = q|  \entry{xr4}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=M3}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=M3}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{MM2}
     \strng{fullhash}{MM2}
@@ -380,10 +380,10 @@ my $xr4 = q|  \entry{xr4}{inbook}{}
 # So these two should have no xref/crossref data in them
 my $mxr = q|  \entry{mxr}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=M3}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=M3}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{MM2}
     \strng{fullhash}{MM2}
@@ -396,10 +396,10 @@ my $mxr = q|  \entry{mxr}{inbook}{}
 
 my $mcr = q|  \entry{mcr}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=M3}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=M3}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{MM2}
     \strng{fullhash}{MM2}

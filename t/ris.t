@@ -32,18 +32,18 @@ my $bibentries = $section->bibentries;
 
 my $l1 = q|  \entry{test1}{article}{}
     \name{labelname}{5}{}{%
-      {{uniquename=0}{Baldwin}{B\bibinitperiod}{S.A.}{S\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Fugaccia}{F\bibinitperiod}{I.}{I\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Brown}{B\bibinitperiod}{D.R.}{D\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Brown}{B\bibinitperiod}{L.V.}{L\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Scheff}{S\bibinitperiod}{S.W.}{S\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=B1}{Baldwin}{B\bibinitperiod}{S.A.}{S\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=F1}{Fugaccia}{F\bibinitperiod}{I.}{I\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=B2}{Brown}{B\bibinitperiod}{D.R.}{D\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=B3}{Brown}{B\bibinitperiod}{L.V.}{L\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=S1}{Scheff}{S\bibinitperiod}{S.W.}{S\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{5}{}{%
-      {{uniquename=0}{Baldwin}{B\bibinitperiod}{S.A.}{S\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Fugaccia}{F\bibinitperiod}{I.}{I\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Brown}{B\bibinitperiod}{D.R.}{D\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Brown}{B\bibinitperiod}{L.V.}{L\bibinitperiod}{}{}{}{}}%
-      {{uniquename=0}{Scheff}{S\bibinitperiod}{S.W.}{S\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=B1}{Baldwin}{B\bibinitperiod}{S.A.}{S\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=F1}{Fugaccia}{F\bibinitperiod}{I.}{I\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=B2}{Brown}{B\bibinitperiod}{D.R.}{D\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=B3}{Brown}{B\bibinitperiod}{L.V.}{L\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=S1}{Scheff}{S\bibinitperiod}{S.W.}{S\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{BS+1}
     \strng{fullhash}{BSFIBDBLSS1}
@@ -59,13 +59,13 @@ my $l1 = q|  \entry{test1}{article}{}
 
 my $l2 = q|  \entry{test2}{book}{}
     \name{labelname}{1}{}{%
-      {{uniquename=0}{Smith}{S\bibinitperiod}{John\bibnamedelima Frederick}{J\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
+      {{uniquename=0,hash=SI1}{Smith}{S\bibinitperiod}{John\bibnamedelima Frederick}{J\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
     }
     \name{author}{1}{}{%
-      {{uniquename=0}{Smith}{S\bibinitperiod}{John\bibnamedelima Frederick}{J\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
+      {{uniquename=0,hash=SI1}{Smith}{S\bibinitperiod}{John\bibnamedelima Frederick}{J\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
     }
     \name{editor}{1}{}{%
-      {{}{Brown}{B\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=B4}{Brown}{B\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{SIJF1}
     \strng{fullhash}{SIJF1}

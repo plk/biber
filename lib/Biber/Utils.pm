@@ -34,7 +34,7 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ locate_biber_file driver_config makenameid stringify_hash
+our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringify_hash
   normalise_string normalise_string_hash normalise_string_underscore normalise_string_sort
   reduce_array remove_outer add_outer ucinit strip_nosort
   is_def is_undef is_def_and_notnull is_def_and_null
@@ -154,14 +154,14 @@ sub locate_biber_file {
   return undef;
 }
 
-=head2 makenameid
+=head2 makenamesid
 
 Given a Biber::Names object, return an underscore normalised
 concatenation of all of the full name strings.
 
 =cut
 
-sub makenameid {
+sub makenamesid {
   my $names = shift;
   my @namestrings;
   foreach my $name (@{$names->names}) {
@@ -170,6 +170,19 @@ sub makenameid {
   my $tmp = join ' ', @namestrings;
   return normalise_string_underscore($tmp);
 }
+
+=head2 makenameid
+
+Given a Biber::Name object, return an underscore normalised
+concatenation of the full name strings.
+
+=cut
+
+sub makenameid {
+  my $name = shift;
+  return normalise_string_underscore($name->get_namestring);
+}
+
 
 =head2 latex_recode_output
 

@@ -79,11 +79,11 @@ my $sc = [
 my $sc3 = q|  \entry{L4}{book}{}
     \true{morelabelname}
     \name{labelname}{1}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \true{moreauthor}
     \name{author}{1}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Cambridge}%
@@ -104,10 +104,10 @@ my $sc3 = q|  \entry{L4}{book}{}
 
 my $sc4 = q|  \entry{L1}{book}{}
     \name{labelname}{1}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Cambridge}%
@@ -128,10 +128,10 @@ my $sc4 = q|  \entry{L1}{book}{}
 
 my $sc5 = q|  \entry{L2}{book}{}
     \name{labelname}{1}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Cambridge}%
@@ -152,10 +152,10 @@ my $sc5 = q|  \entry{L2}{book}{}
 
 my $sc6 = q|  \entry{L3}{book}{}
     \name{labelname}{1}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=D1}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Cambridge}%

@@ -134,6 +134,48 @@ sub _getfullhash {
   return normalise_string_hash($initstr);
 }
 
+sub _getpnhash {
+  my ($self, $citekey, $n) = @_;
+  my $initstr = '';
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+
+  if ( $n->get_prefix and
+       Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+    $initstr .= join('', @{$n->get_prefix_i});
+  }
+  $initstr .= join('', @{$n->get_lastname_i});
+
+  if ( $n->get_suffix ) {
+    $initstr .= join('', @{$n->get_suffix_i});
+  }
+
+  if ( $n->get_firstname ) {
+    given ($n->get_uniquename_all) {
+      when (2) {
+        $initstr .= $n->get_firstname;
+      }
+      when (1) {
+        $initstr .= join('', @{$n->get_firstname_i});
+      }
+    }
+  }
+
+  if ( $n->get_middlename ) {
+    $initstr .= join('', @{$n->get_middlename_i});
+  }
+
+  # without useprefix, prefix is not first in the hash
+  if ( $n->get_prefix and not
+       Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+    $initstr .= join('', @{$n->get_prefix_i});
+  }
+
+  return normalise_string_hash($initstr);
+}
+
+
 ##################
 # label generation
 ##################
@@ -523,7 +565,7 @@ sub _process_label_attributes {
       $labelattrs->{substring_width} eq 'v'
       and $field) {
     # Use the cache if there is one
-    if (my $lcache = $section->get_label_cache($field)) {
+    if (my $lcache = $section->get_labelcache($field)) {
       $logger->debug("Using label disambiguation cache for '$field' in section $secnum");
       $field_string = $lcache->{$field_string};
     }
@@ -554,7 +596,7 @@ sub _process_label_attributes {
       $logger->trace("Label disambiguation cache for '$field' " .
                      ($namepart ? "($namepart) " : '') .
                      "in section $secnum:\n " . Data::Dump::pp($lcache));
-      $section->set_label_cache($field, $lcache);
+      $section->set_labelcache($field, $lcache);
     }
   }
   # static substring width

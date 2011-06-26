@@ -90,6 +90,30 @@ sub was_stripped {
   return exists($self->{strip}) ? $self->{strip}{$part} : undef;
 }
 
+=head2 set_hash
+
+    Set a hash for the name
+
+=cut
+
+sub set_hash {
+  my ($self, $hash) = @_;
+  $self->{hash} = $hash;
+  return;
+}
+
+=head2 get_hash
+
+    Get a hash for the name
+
+=cut
+
+sub get_hash {
+  my $self = shift;
+  return $self->{hash};
+}
+
+
 
 =head2 set_index
 
@@ -552,10 +576,11 @@ sub name_to_bbl {
   }
 
   # Generate uniquename if uniquename is requested
-  # uniquename will only be defined for labelname
   if (defined($self->get_uniquename)) {
     push @pno, 'uniquename=' . $self->get_uniquename;
   }
+  # Add the name has to the options
+  push @pno, 'hash=' . $self->get_hash;
   $pno = join(',', @pno);
   # Some data sources support middle names
   if ($self->get_middlename) {

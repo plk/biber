@@ -32,14 +32,14 @@ my $bibentries = $section->bibentries;
 
 my $l1 = q|  \entry{fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:42}{article}{}
     \name{labelname}{3}{}{%
-      {{}{Alegria}{A\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
-      {{}{Perez}{P\bibinitperiod}{D.\bibnamedelimi J.}{D\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-      {{}{Williams}{W\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
+      {{hash=A1}{Alegria}{A\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=P1}{Perez}{P\bibinitperiod}{D.\bibnamedelimi J.}{D\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{hash=W1}{Williams}{W\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{3}{}{%
-      {{}{Alegria}{A\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
-      {{}{Perez}{P\bibinitperiod}{D.\bibnamedelimi J.}{D\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-      {{}{Williams}{W\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
+      {{hash=A1}{Alegria}{A\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=P1}{Perez}{P\bibinitperiod}{D.\bibnamedelimi J.}{D\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{hash=W1}{Williams}{W\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
     }
     \list{language}{1}{%
       {eng}%
@@ -75,10 +75,10 @@ Health Aff (Millwood). 2003 Sep-Oct;22(5):51-64.}
 
 my $l2 = q|  \entry{fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:47}{article}{}
     \name{labelname}{1}{}{%
-      {{}{Amico}{A\bibinitperiod}{Sir\bibnamedelimb Kevin}{K\bibinitperiod}{R}{R\bibinitperiod}{}{}{Jr}{J\bibinitperiod}}%
+      {{hash=AJR1}{Amico}{A\bibinitperiod}{Sir\bibnamedelimb Kevin}{K\bibinitperiod}{R}{R\bibinitperiod}{}{}{Jr}{J\bibinitperiod}}%
     }
     \name{author}{1}{}{%
-      {{}{Amico}{A\bibinitperiod}{Sir\bibnamedelimb Kevin}{K\bibinitperiod}{R}{R\bibinitperiod}{}{}{Jr}{J\bibinitperiod}}%
+      {{hash=AJR1}{Amico}{A\bibinitperiod}{Sir\bibnamedelimb Kevin}{K\bibinitperiod}{R}{R\bibinitperiod}{}{}{Jr}{J\bibinitperiod}}%
     }
     \list{language}{1}{%
       {eng}%

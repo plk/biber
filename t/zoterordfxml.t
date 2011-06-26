@@ -32,14 +32,14 @@ my $bibentries = $section->bibentries;
 
 my $l1 = q|  \entry{http://0-muse.jhu.edu.pugwash.lib.warwick.ac.uk:80/journals/theory_and_event/v005/5.3ranciere.html}{article}{}
     \name{labelname}{1}{}{%
-      {{}{Rancière}{R\bibinitperiod}{Jacques}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=R1}{Rancière}{R\bibinitperiod}{Jacques}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Rancière}{R\bibinitperiod}{Jacques}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=R1}{Rancière}{R\bibinitperiod}{Jacques}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{translator}{2}{}{%
-      {{}{Panagia}{P\bibinitperiod}{Davide}{D\bibinitperiod}{}{}{}{}}%
-      {{}{Bowlby}{B\bibinitperiod}{Rachel}{R\bibinitperiod}{}{}{}{}}%
+      {{hash=P1}{Panagia}{P\bibinitperiod}{Davide}{D\bibinitperiod}{}{}{}{}}%
+      {{hash=B1}{Bowlby}{B\bibinitperiod}{Rachel}{R\bibinitperiod}{}{}{}{}}%
     }
     \strng{namehash}{RJ1}
     \strng{fullhash}{RJ1}
@@ -63,10 +63,10 @@ my $l1 = q|  \entry{http://0-muse.jhu.edu.pugwash.lib.warwick.ac.uk:80/journals/
 
 my $l2 = q|  \entry{urn:isbn:0713990023}{book}{}
     \name{labelname}{1}{}{%
-      {{}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=F1}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=F1}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {London}%
@@ -90,17 +90,17 @@ my $l2 = q|  \entry{urn:isbn:0713990023}{book}{}
 
 my $l3 = q|  \entry{item_54}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=F1}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=F1}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{1}{}{%
-      {{}{Lotringer}{L\bibinitperiod}{Sylvère}{S\bibinitperiod}{}{}{}{}}%
+      {{hash=L1}{Lotringer}{L\bibinitperiod}{Sylvère}{S\bibinitperiod}{}{}{}{}}%
     }
     \name{translator}{2}{}{%
-      {{}{Hochroth}{H\bibinitperiod}{Lysa}{L\bibinitperiod}{}{}{}{}}%
-      {{}{Johnston}{J\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=H1}{Hochroth}{H\bibinitperiod}{Lysa}{L\bibinitperiod}{}{}{}{}}%
+      {{hash=J1}{Johnston}{J\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{location}{1}{%
       {New York}%

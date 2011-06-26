@@ -918,7 +918,7 @@ sub process_entries_post {
     $self->process_namehash($citekey);
 
     # generate per-name hashes
-#    $self->process_pername_hashes($citekey);
+    $self->process_pername_hashes($citekey);
   }
 
   $logger->debug("Finished processing entries in section $secnum (after uniqueness)");
@@ -1120,7 +1120,7 @@ sub process_fullhash {
   if (my $lnamefh = $be->get_field('labelnamenamefullhash')) {
     if (my $lnfh = $be->get_field($lnamefh)) {
       $fullhash .= $self->_getfullhash($citekey, $lnfh);
-      $fullid .= makenameid($lnfh);
+      $fullid .= makenamesid($lnfh);
     }
   }
 
@@ -1134,9 +1134,9 @@ sub process_fullhash {
   my $fullhashsuffix = 1;
 
   # First, check to see if we've already seen this exact name before
-  if (Biber::Config->get_fullhashcount($fullhash, $fullid)) {
+  if (my $fh = Biber::Config->get_fullhashcount($fullhash, $fullid)) {
     # If we have, our suffix is already known
-    $fullhashsuffix = Biber::Config->get_fullhashcount($fullhash, $fullid);
+    $fullhashsuffix = $fh;
   }
   # Otherwise, if the fullhash already exists, we'll make a new entry with a new suffix
   elsif (Biber::Config->fullhashexists($fullhash)) {
@@ -1189,7 +1189,7 @@ sub process_namehash {
   if (my $lname = $be->get_field('labelnamename')) {
     if (my $ln = $be->get_field($lname)) {
       $namehash .= $self->_getnamehash($citekey, $ln);
-      $nameid .= makenameid($ln);
+      $nameid .= makenamesid($ln);
     }
   }
 
@@ -1204,9 +1204,9 @@ sub process_namehash {
 
   # namehash
   # First, check to see if we've already seen this exact name before
-  if (Biber::Config->get_namehashcount($namehash, $nameid)) {
+  if (my $nh = Biber::Config->get_namehashcount($namehash, $nameid)) {
     # If we have, our suffix is already known
-    $namehashsuffix = Biber::Config->get_namehashcount($namehash, $nameid);
+    $namehashsuffix = $nh;
   }
   # Otherwise, if the namehash already exists, make a new entry with a new suffix
   elsif (Biber::Config->namehashexists($namehash)) {
@@ -1239,64 +1239,60 @@ sub process_namehash {
 
 =cut
 
-# sub process_pername_hashes {
-#   my $self = shift;
-#   my $citekey = shift;
-#   my $secnum = $self->get_current_section;
-#   my $section = $self->sections->get_section($secnum);
-#   my $be = $section->bibentry($citekey);
-#   my $bee = $be->get_field('entrytype');
-#   my $struc = Biber::Config->get_structure;
+sub process_pername_hashes {
+  my $self = shift;
+  my $citekey = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
+  my $struc = Biber::Config->get_structure;
 
-#   foreach my $pn (@{$struc->get_field_type('name')}) {
-#     my $n = $be->get_field($pn) or next;
+  foreach my $pn (@{$struc->get_field_type('name')}) {
+    my $names = $be->get_field($pn) or next;
+    foreach my $n (@{$names->names}) {
+      my $namehash = $self->_getpnhash($citekey, $n);
+      my $nameid = makenameid($n);
 
-#   }
+      # After the initial generation of hash, we have to append
+      # a suffix as it must be unique. It is possible that different entries have
+      # the same hashes at this stage. For example:
 
+      # Fred Grimble = FG
+      # Frank Garby  = FG
 
-#   # After the initial generation of fullhash, we have to append
-#   # a suffix as it must be unique. It is possible that different entries have
-#   # the same hashes at this stage. For example:
+      my $pnhashsuffix = 1;
 
-#   # AUTHOR = {Fred Grimble and Bill Bullter} = "FGBB"
-#   # AUTHOR = {Frank Garby and Brian Blunkley} = "FGBB"
+      # First, check to see if we've already seen this exact name before
+      if (my $h = Biber::Config->get_pnhashcount($namehash, $nameid)) {
+        # If we have, our suffix is already known
+        $pnhashsuffix = $h;
+      }
+      # Otherwise, if the fullhash already exists, we'll make a new entry with a new suffix
+      elsif (Biber::Config->pnhashexists($namehash)) {
+        # Count the suffices already defined ...
+        my $count = Biber::Config->get_numofpnhashes($namehash);
+        # ... add one to the number ...
+        $pnhashsuffix = $count + 1;
+        # ... and define a new suffix for that name
+        Biber::Config->set_pnhashcount($namehash, $nameid, $pnhashsuffix);
+      }
+      # No entry for the namehash at all so make a new one, a new name and suffix
+      else {
+        Biber::Config->del_pnhash($namehash);
+        Biber::Config->set_pnhashcount($namehash, $nameid, 1);
+      }
 
-#   my $fullhashsuffix = 1;
+      # Now append the suffix, making the hash unique
+      $namehash .= $pnhashsuffix;
 
-#   # First, check to see if we've already seen this exact name before
-#   if (Biber::Config->get_fullhashcount($fullhash, $fullid)) {
-#     # If we have, our suffix is already known
-#     $fullhashsuffix = Biber::Config->get_fullhashcount($fullhash, $fullid);
-#   }
-#   # Otherwise, if the fullhash already exists, we'll make a new entry with a new suffix
-#   elsif (Biber::Config->fullhashexists($fullhash)) {
-#     # Count the suffices already defined ...
-#     my $count = Biber::Config->get_numoffullhashes($fullhash);
-#     # ... add one to the number ...
-#     $fullhashsuffix = $count + 1;
-#     # ... and define a new suffix for that name
-#     Biber::Config->set_fullhashcount($fullhash, $fullid, $fullhashsuffix);
-#   }
-#   # No entry for the namehash at all so make a new one, a new name and suffix
-#   else {
-#     Biber::Config->del_fullhash($fullhash);
-#     Biber::Config->set_fullhashcount($fullhash, $fullid, 1);
-#   }
+      # Set the hash
+      $n->set_hash($namehash);
+    }
+  }
 
-
-#   # Now append the suffix, making the hash unique
-#   $fullhash .= $fullhashsuffix;
-
-#   # Set the hash
-#   $be->set_field('fullhash', $fullhash);
-
-#   # Don't add to disambiguation data if skiplab is set
-#   unless (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
-#     Biber::Config->incr_seennamehash($fullhash);
-#   }
-
-#   return;
-# }
+  return;
+}
 
 
 
@@ -2493,7 +2489,7 @@ sub prepare {
 
     $logger->info("Processing bib section $secnum");
 
-    $section->reset_sort_cache;          # Reset the the sorting cache
+    $section->reset_caches;              # Reset the the section caches (sorting, label etc.)
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->fetch_data;                   # Fetch cited key and dependent data from sources
