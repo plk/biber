@@ -71,6 +71,7 @@ sub _getnamehash {
     }
   }
 
+  # namehash obeys list truncations but not uniquename
   foreach my $n (@{$truncnames->names}) {
     if ( $n->get_prefix and
          Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
@@ -85,6 +86,7 @@ sub _getnamehash {
     if ( $n->get_firstname ) {
       $hashkey .= $n->get_firstname;
     }
+
     if ( $n->get_middlename ) {
       $hashkey .= $n->get_middlename;
     }
@@ -97,7 +99,7 @@ sub _getnamehash {
 
   }
 
-  $hashkey .= "+" if $truncated;
+  $hashkey .= '+' if $truncated;
 
   # Digest::MD5 can't deal with straight UTF8 so encode it first
   return md5_hex(encode_utf8($hashkey));
@@ -1154,6 +1156,7 @@ sub _namestring {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
   my $names = $be->get_field($field);
   my $str = '';
   my $truncated = 0;
@@ -1177,24 +1180,23 @@ sub _namestring {
 
   # If name list was truncated in bib with "and others", this overrides maxnames
   my $morenames = ($names->last_element->get_namestring eq 'others') ? 1 : 0;
-
-  # truncate to the uniquelist point if uniquelist is requested
-  # We know at this stage that if uniquelist is set, there are more than maxnames
-  # names. We also know that uniquelist > minnames because it is a further disambiguation
-  # on top of minnames so can't be less as you can't disambiguate by losing information
-  if ($ul) {
-    $truncnames = $truncnames->first_n_elements($ul);
-    # Since uniquelist can be larger than maxnames, it's only truncated
-    # if uniquelist is shorter than the full name list
-    $truncated = 1 if $ul < $names->count_elements;
+  if ( $morenames or $names->count_elements > $maxn ) {
+    # truncate to the uniquelist point if uniquelist is requested
+    # We know at this stage that if uniquelist is set, there are more than maxnames
+    # names. We also know that uniquelist > minnames because it is a further disambiguation
+    # on top of minnames so can't be less as you can't disambiguate by losing information
+    if ($ul) {
+      $truncnames = $truncnames->first_n_elements($ul);
+      # Since uniquelist can be larger than maxnames, it's only truncated
+      # if uniquelist is shorter than the full name list
+      $truncated = 1 if $ul < $names->count_elements;
+    }
+    else {
+      # otherwise truncate to minnames
+      $truncnames = $truncnames->first_n_elements($minn);
+      $truncated = 1;
+    }
   }
-  elsif ( $morenames or $names->count_elements > $maxn ) {
-    # otherwise truncate to minnames
-    $truncnames = $truncnames->first_n_elements($minn);
-    $truncated = 1;
-  }
-
-  my $prefix_opt = Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey);
 
   # We strip nosort first otherwise normalise_string_sort damages diacritics
   # We strip each individual component instead of the whole thing so we can use
@@ -1203,7 +1205,7 @@ sub _namestring {
   foreach my $n ( @{$truncnames->names} ) {
     # If useprefix is true, use prefix at start of name for sorting
     if ( $n->get_prefix and
-         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+         Biber::Config->getblxoption('useprefix', $bee, $citekey ) ) {
       $str .= normalise_string_sort($n->get_prefix, $field) . $nsi;
     }
     # Append last name
