@@ -36,7 +36,6 @@ Biber::Config - Configuration items which need to be saved across the
 # Static (class) data
 our $CONFIG;
 $CONFIG->{state}{crossrefkeys} = {};
-$CONFIG->{state}{seennamehash} = {};
 $CONFIG->{state}{seenfullhash} = {};
 $CONFIG->{state}{seenname} = {};
 $CONFIG->{state}{keycase} = {};
@@ -86,7 +85,6 @@ sub _init {
   $CONFIG->{state}{unulchanged} = 1;
   $CONFIG->{options}{biblatex}{PER_ENTRY} = {};
   $CONFIG->{state}{control_file_location} = '';
-  $CONFIG->{state}{seennamehash} = {};
   $CONFIG->{state}{seenfullhash} = {};
   $CONFIG->{state}{seenname} = {};
   $CONFIG->{state}{crossrefkeys} = {};
@@ -1161,40 +1159,6 @@ sub del_namehash {
   return;
 }
 
-#============================
-#       seennamehash
-#============================
-
-
-=head2 get_seennamehash
-
-    Get the count of a seen name hash
-
-    Biber::Config->get_seennamehash($hash);
-
-=cut
-
-sub get_seennamehash {
-  shift; # class method so don't care about class name
-  my $hash = shift;
-  return $CONFIG->{state}{seennamehash}{$hash};
-}
-
-
-=head2 incr_seennamehash
-
-    Increment the count of a seen name hash
-
-    Biber::Config->incr_seennamehash($hash);
-
-=cut
-
-sub incr_seennamehash {
-  shift; # class method so don't care about class name
-  my $hash = shift;
-  $CONFIG->{state}{seennamehash}{$hash}++;
-  return;
-}
 
 #============================
 #       pnhashcount

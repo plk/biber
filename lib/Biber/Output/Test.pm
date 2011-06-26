@@ -228,9 +228,7 @@ sub set_output_entry {
     }
   }
 
-  if ( Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'))
-    and Biber::Config->get_seennamehash($be->get_field('fullhash')) < 2 )
-  {
+  if (defined($be->get_field('singletitle'))) {
     $acc .= "    \\true{singletitle}\n";
   }
 

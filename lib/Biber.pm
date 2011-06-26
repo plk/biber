@@ -1160,11 +1160,6 @@ sub process_fullhash {
   # Set the hash
   $be->set_field('fullhash', $fullhash);
 
-  # Don't add to disambiguation data if skiplab is set
-  unless (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
-    Biber::Config->incr_seennamehash($fullhash);
-  }
-
   return;
 }
 

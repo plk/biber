@@ -12,6 +12,7 @@ $Text::Wrap::columns = 80;
 use Storable qw( dclone );
 use List::AllUtils qw( :all );
 use Log::Log4perl qw(:no_extra_logdie_message);
+use Digest::MD5 qw( md5_hex );
 use POSIX qw( locale_h ); # for lc()
 use Encode;
 use charnames ':full';
@@ -133,6 +134,8 @@ sub _getfullhash {
   }
   return normalise_string_hash($initstr);
 }
+
+
 
 sub _getpnhash {
   my ($self, $citekey, $n) = @_;
