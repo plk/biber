@@ -198,8 +198,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
                labelpart => [
                  {
                   content         => "labelname",
-                  substring_width => "vlf",
-                  substring_width_max => 4,
+                  substring_width => "vf",
                   substring_side => "left"
                  },
                ],
@@ -220,8 +219,38 @@ $section = $biber->sections->get_section(0);
 $main = $section->get_list('MAIN');
 $bibentries = $section->bibentries;
 
-is($bibentries->entry('l18')->get_field('sortlabelalpha'), 'AgChaLa', 'labelalpha disambiguation 4');
-is($bibentries->entry('l19')->get_field('sortlabelalpha'), 'AgConLe', 'labelalpha disambiguation 5');
-is($bibentries->entry('l20')->get_field('sortlabelalpha'), 'AgCouLa', 'labelalpha disambiguation 6');
+is($bibentries->entry('l18')->get_field('sortlabelalpha'), 'AgassiChangLaver', 'labelalpha disambiguation 4');
+is($bibentries->entry('l19')->get_field('sortlabelalpha'), 'AgassiConnorLendl', 'labelalpha disambiguation 5');
+is($bibentries->entry('l20')->get_field('sortlabelalpha'), 'AgassiCourieLaver', 'labelalpha disambiguation 6');
+
+# reset options and regenerate information
+Biber::Config->setblxoption('labelalphatemplate', {
+  labelelement => [
+             {
+               labelpart => [
+                 {
+                  content         => "labelname",
+                  substring_width => "vl",
+                  substring_side => "left"
+                 },
+               ],
+               order => 1,
+             },
+           ],
+  type  => "unpublished",
+});
+
+for (my $i=1; $i<23; $i++) {
+  $bibentries->entry("l$i")->del_field('sortlabelalpha');
+  $bibentries->entry("l$i")->del_field('labelalpha');
+  $main->set_extraalphadata("l$i", undef);
+}
+
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$main = $section->get_list('MAIN');
+$bibentries = $section->bibentries;
+
+
 is($bibentries->entry('l21')->get_field('sortlabelalpha'), 'BoCEdb', 'labelalpha disambiguation 7');
 is($bibentries->entry('l22')->get_field('sortlabelalpha'), 'BoCEm', 'labelalpha disambiguation 8');

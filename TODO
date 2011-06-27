@@ -1,5 +1,8 @@
 TODO in decreasing order of priority:
 
+* Take out substring_fixed_threshold default?
+* uniquelist for max/minlabelalphanames and max/minbibnames?
+* uniquename for namehash?
 * Take out labelalphatemplate defaults, optional in rnc/rng and parsing when biblatex implements it
 * When cygwin on perl 5.14, change build script (deprecated module)
 * When biblatex implements related entries, take out reprinttitle

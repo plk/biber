@@ -644,16 +644,19 @@ sub _process_label_attributes {
   return $field_string unless $labelattrs;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+
   # dynamically disambiguated width
   if ($labelattrs->{substring_width} and
-      $labelattrs->{substring_width} eq 'v' and
+      $labelattrs->{substring_width} =~ /v/ and
       $field) {
     # Use the cache if there is one
     if (my $lcache = $section->get_labelcache($field)) {
       $logger->debug("Using label disambiguation cache for '$field' in section $secnum");
-      $field_string = $lcache->{$field_string};
+      # Use the global index override if set (substring_width =~ /f/)
+      $field_string = ${$lcache->{$field_string}{data}}[$lcache->{globalindex} || $lcache->{$field_string}{index}];
     }
     else {
+      # This contains a mapping of strings to substrings of increasing lengths
       my %substr_cache = ();
       my $lcache = {};
       my @strings = uniq map {my $f = $section->bibentry($_)->get_field($field);
@@ -664,17 +667,33 @@ sub _process_label_attributes {
       my $minlen = 1;
       for (my $i = $minlen; $i <= $maxlen; $i++) {
         foreach my $map (map { my $s = substr($_, 0, $i); $substr_cache{$s}++; [$_, $s] } @strings) {
-          # only set cache if it's not already set (which means disambiguation is finished for
-          # this string). Also, if we've reached the $maxlen of the string and it's still not
-          # set, then set to the $maxlen of the string
-          if (not $lcache->{$map->[0]} and
-              ($i == $maxlen or
-               (not $lcache->{$map->[0]} and $substr_cache{$map->[1]} < 2))) {
-            $lcache->{$map->[0]} = $map->[1]
+          # We construct a list of all substrings, up to the length of the longest string
+          # or substring_width_max. Then we save the index of the list element which is
+          # the minimal disambiguation if it's not yet defined
+          push @{$lcache->{$map->[0]}{data}}, $map->[1];
+          if (not $lcache->{$map->[0]}{index} and
+              ($substr_cache{$map->[1]} < 2 or $i == $maxlen)) {
+            $lcache->{$map->[0]}{index} = length($map->[1]) - 1; # -1 to make it into an array index
           }
         }
       }
-      $field_string = $lcache->{$field_string};
+
+      # We want to use a string width for all strings equal to the longest one needed
+      # to disambiguate this list. We do this by saving an override for the minimal
+      # disambiguation length
+      if ($labelattrs->{substring_width} =~ /f/) {
+        # Get the uniqueness indices of all of the strings and strip out those
+        # which don't occur at least substring_fixed_threshold times (or 2, the default)
+        my %is;
+        foreach my $i (values %$lcache) {
+          $is{$i->{index}}++;
+        }
+        my $threshold = $labelattrs->{substring_fixed_threshold} || 2;
+        $lcache->{globalindex} = max grep {$is{$_} >= $threshold} keys %is;
+      }
+
+      # Use the global index override if set (substring_width =~ /f/)
+      $field_string = ${$lcache->{$field_string}{data}}[$lcache->{globalindex} || $lcache->{$field_string}{index}];
       $logger->debug("Creating label disambiguation cache for '$field' " .
                      ($namepart ? "($namepart) " : '') .
                      "in section $secnum");

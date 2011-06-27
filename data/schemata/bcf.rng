@@ -190,6 +190,11 @@
                     </attribute>
                   </optional>
                   <optional>
+                    <attribute name="substring_fixed_threshold">
+                      <data type="integer"/>
+                    </attribute>
+                  </optional>
+                  <optional>
                     <attribute name="substring_width_max">
                       <data type="integer"/>
                     </attribute>
