@@ -199,6 +199,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
                  {
                   content         => "labelname",
                   substring_width => "vf",
+                  substring_fixed_threshold => 2,
                   substring_side => "left"
                  },
                ],

@@ -7,6 +7,7 @@ use warnings;
 use Carp;
 use Biber::Constants;
 use Biber::Utils;
+use Data::Compare;
 use Text::Wrap;
 $Text::Wrap::columns = 80;
 use Storable qw( dclone );
@@ -106,6 +107,7 @@ sub _getnamehash {
 }
 
 # Same as _getnamehash but takes account of uniquename setting for firstname
+# It's used for extra* tracking only
 sub _getnamehash_u {
   my ($self, $citekey, $names) = @_;
   my $secnum = $self->get_current_section;
@@ -119,8 +121,7 @@ sub _getnamehash_u {
   my $truncnames = dclone($names);
 
   # Since namehash is the hash of the visible name,
-  # perform truncation according to options minnames, maxnames and uniquelist (if
-  # requested)
+  # perform truncation according to options minnames, maxnames
   my $ul;
   if (defined($names->get_uniquelist)) {
     $ul = $names->get_uniquelist;
@@ -357,15 +358,7 @@ sub _labelpart {
         }
 
         my $visible_names;
-        my $ul;
-        if (defined($name->get_uniquelist)) {
-          $ul = $name->get_uniquelist;
-        }
-
-        if ($ul) {
-          $visible_names = $ul;
-        }
-        elsif ($total_names > $maxnames) {
+        if ($total_names > $maxnames) {
           $visible_names = $minnames;
         }
         else {
@@ -539,23 +532,12 @@ sub _label_name {
     my $nametrunc;
     my $loopnames;
 
-    my $ul;
-    if (defined($names->get_uniquelist)) {
-      $ul = $names->get_uniquelist;
-    }
-
     # loopnames is the number of names to loop over in the name list when constructing the label
     if (my $lc = $labelattrs->{namecount}) {
       if ($lc > $numnames) { # cap at numnames, of course
         $lc = $numnames;
       }
       $loopnames = $lc; # Only look as many names as specified
-    }
-    elsif ($ul) {
-      $loopnames = $ul;
-      # Since uniquelist can be larger than maxnames, it's only truncated
-      # if uniquelist is shorter than the full name list
-      $nametrunc = 1 if $ul < $numnames;
     }
     elsif ($morenames or ($numnames > $maxnames)) {
       $loopnames = $minnames; # Only look at $minnames names if no uniquelist set
@@ -659,21 +641,34 @@ sub _process_label_attributes {
       # This contains a mapping of strings to substrings of increasing lengths
       my %substr_cache = ();
       my $lcache = {};
-      my @strings = uniq map {my $f = $section->bibentry($_)->get_field($field);
-                         $namepart ? map {$_->get_namepart($namepart)} @{$f->names} : $f
+      # This retains the structure of the entries for the "l" list disambiguation
+      my @strings = map {my $f = $section->bibentry($_)->get_field($field);
+                         $namepart ? [map {$_->get_namepart($namepart)} @{$f->names}] : [$f]
                        } $section->get_citekeys;
+      # flattened version of above for just per-string disambiguation
+      my @strings_f = uniq map {@$_} @strings;
       # Look to the index of the longest string or the explicit max width if set
-      my $maxlen = $labelattrs->{substring_width_max} || max map {length($_)} @strings;
+      my $maxlen = $labelattrs->{substring_width_max} || max map {length($_)} @strings_f;
       my $minlen = 1;
       for (my $i = $minlen; $i <= $maxlen; $i++) {
-        foreach my $map (map { my $s = substr($_, 0, $i); $substr_cache{$s}++; [$_, $s] } @strings) {
+        foreach my $map (map { my $s = substr($_, 0, $i); $substr_cache{$s}++; [$_, $s] } @strings_f) {
           # We construct a list of all substrings, up to the length of the longest string
           # or substring_width_max. Then we save the index of the list element which is
           # the minimal disambiguation if it's not yet defined
           push @{$lcache->{$map->[0]}{data}}, $map->[1];
           if (not $lcache->{$map->[0]}{index} and
               ($substr_cache{$map->[1]} < 2 or $i == $maxlen)) {
-            $lcache->{$map->[0]}{index} = length($map->[1]) - 1; # -1 to make it into an array index
+            if ($labelattrs->{substring_width} =~ /l/) {
+# my %os;
+# foreach my $otherstring (map {join("\x{10FFFD}", grep {$_ ne $field_string} @$_)} grep {first {$_ eq $field_string} @$_} @strings) {
+#   $os{$otherstring}++;
+# }
+
+            }
+            else {
+              # -1 to make it into a clean array index
+              $lcache->{$map->[0]}{index} = length($map->[1]) - 1;
+            }
           }
         }
       }
@@ -683,13 +678,12 @@ sub _process_label_attributes {
       # disambiguation length
       if ($labelattrs->{substring_width} =~ /f/) {
         # Get the uniqueness indices of all of the strings and strip out those
-        # which don't occur at least substring_fixed_threshold times (or 2, the default)
+        # which don't occur at least substring_fixed_threshold times
         my %is;
         foreach my $i (values %$lcache) {
           $is{$i->{index}}++;
         }
-        my $threshold = $labelattrs->{substring_fixed_threshold} || 2;
-        $lcache->{globalindex} = max grep {$is{$_} >= $threshold} keys %is;
+        $lcache->{globalindex} = max grep {$is{$_} >= $labelattrs->{substring_fixed_threshold}} keys %is;
       }
 
       # Use the global index override if set (substring_width =~ /f/)
