@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 77;
+use Test::More tests => 87;
 
 use Biber;
 use Biber::Utils;
@@ -65,7 +65,7 @@ Biber::Config->setblxoption('minlabelalphanames', 1);
 Biber::Config->setblxoption('maxnames', 2);
 Biber::Config->setblxoption('minnames', 1);
 
-for (my $i=1; $i<9; $i++) {
+for (my $i=1; $i<23; $i++) {
   $bibentries->entry("l$i")->del_field('sortlabelalpha');
   $bibentries->entry("l$i")->del_field('labelalpha');
   $main->set_extraalphadata("l$i",undef);
@@ -99,7 +99,7 @@ Biber::Config->setblxoption('minlabelalphanames', 2);
 Biber::Config->setblxoption('maxnames', 2);
 Biber::Config->setblxoption('minnames', 2);
 
-for (my $i=1; $i<9; $i++) {
+for (my $i=1; $i<23; $i++) {
   $bibentries->entry("l$i")->del_field('sortlabelalpha');
   $bibentries->entry("l$i")->del_field('labelalpha');
   $main->set_extraalphadata("l$i", undef);
@@ -137,7 +137,7 @@ Biber::Config->setblxoption('minlabelalphanames', 1);
 Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('minnames', 1);
 
-for (my $i=1; $i<9; $i++) {
+for (my $i=1; $i<23; $i++) {
   $bibentries->entry("l$i")->del_field('sortlabelalpha');
   $bibentries->entry("l$i")->del_field('labelalpha');
   $main->set_extraalphadata("l$i", undef);
@@ -171,7 +171,7 @@ Biber::Config->setblxoption('minlabelalphanames', 4);
 Biber::Config->setblxoption('maxnames', 4);
 Biber::Config->setblxoption('minnames', 4);
 
-for (my $i=1; $i<9; $i++) {
+for (my $i=1; $i<23; $i++) {
   $bibentries->entry("l$i")->del_field('sortlabelalpha');
   $bibentries->entry("l$i")->del_field('labelalpha');
   $main->set_extraalphadata("l$i", undef);
@@ -183,5 +183,45 @@ $main = $section->get_list('MAIN');
 $bibentries = $section->bibentries;
 
 is($bibentries->entry('l15')->get_field('sortlabelalpha'), 'AccBrClim', 'labelalpha disambiguation 1');
-is($bibentries->entry('l16')->get_field('sortlabelalpha'), 'AccBoClim', 'labelalpha disambiguation 2');
-is($bibentries->entry('l17')->get_field('sortlabelalpha'), 'AckBoClim', 'labelalpha disambiguation 3');
+is($bibentries->entry('l16')->get_field('sortlabelalpha'), 'AccBaClim', 'labelalpha disambiguation 2');
+is($bibentries->entry('l17')->get_field('sortlabelalpha'), 'AckBaClim', 'labelalpha disambiguation 3');
+is($bibentries->entry('l18')->get_field('sortlabelalpha'), 'AgChLa', 'labelalpha disambiguation 4');
+is($bibentries->entry('l19')->get_field('sortlabelalpha'), 'AgConLe', 'labelalpha disambiguation 5');
+is($bibentries->entry('l20')->get_field('sortlabelalpha'), 'AgCouLa', 'labelalpha disambiguation 6');
+is($bibentries->entry('l21')->get_field('sortlabelalpha'), 'BoConEdb', 'labelalpha disambiguation 7');
+is($bibentries->entry('l22')->get_field('sortlabelalpha'), 'BoConEm', 'labelalpha disambiguation 8');
+
+# reset options and regenerate information
+Biber::Config->setblxoption('labelalphatemplate', {
+  labelelement => [
+             {
+               labelpart => [
+                 {
+                  content         => "labelname",
+                  substring_width => "vlf",
+                  substring_width_max => 4,
+                  substring_side => "left"
+                 },
+               ],
+               order => 1,
+             },
+           ],
+  type  => "unpublished",
+});
+
+for (my $i=1; $i<23; $i++) {
+  $bibentries->entry("l$i")->del_field('sortlabelalpha');
+  $bibentries->entry("l$i")->del_field('labelalpha');
+  $main->set_extraalphadata("l$i", undef);
+}
+
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$main = $section->get_list('MAIN');
+$bibentries = $section->bibentries;
+
+is($bibentries->entry('l18')->get_field('sortlabelalpha'), 'AgChaLa', 'labelalpha disambiguation 4');
+is($bibentries->entry('l19')->get_field('sortlabelalpha'), 'AgConLe', 'labelalpha disambiguation 5');
+is($bibentries->entry('l20')->get_field('sortlabelalpha'), 'AgCouLa', 'labelalpha disambiguation 6');
+is($bibentries->entry('l21')->get_field('sortlabelalpha'), 'BoCEdb', 'labelalpha disambiguation 7');
+is($bibentries->entry('l22')->get_field('sortlabelalpha'), 'BoCEm', 'labelalpha disambiguation 8');

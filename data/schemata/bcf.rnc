@@ -86,7 +86,7 @@ start =
         attribute order { xsd:integer },
         element bcf:labelpart {          
           attribute final { "0" | "1" }?,
-          attribute substring_width { xsd:integer | "v" }?,
+          attribute substring_width { xsd:integer | "v" | "vl" | "vf" | "vlf" }?,
           attribute substring_width_max { xsd:integer }?,
           attribute substring_side { "left" | "right" }?,
           attribute substring_maxlength { xsd:integer }?,

@@ -183,6 +183,9 @@
                       <choice>
                         <data type="integer"/>
                         <value>v</value>
+                        <value>vl</value>
+                        <value>vf</value>
+                        <value>vlf</value>
                       </choice>
                     </attribute>
                   </optional>
