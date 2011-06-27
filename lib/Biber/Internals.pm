@@ -105,6 +105,86 @@ sub _getnamehash {
   return md5_hex(encode_utf8($hashkey));
 }
 
+# Same as _getnamehash but takes account of uniquename setting for firstname
+sub _getnamehash_u {
+  my ($self, $citekey, $names) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
+  my $hashkey = '';
+  my $maxn = Biber::Config->getblxoption('maxnames');
+  my $minn = Biber::Config->getblxoption('minnames');
+  my $truncated = 0;
+  my $truncnames = dclone($names);
+
+  # Since namehash is the hash of the visible name,
+  # perform truncation according to options minnames, maxnames and uniquelist (if
+  # requested)
+  my $ul;
+  if (defined($names->get_uniquelist)) {
+    $ul = $names->get_uniquelist;
+  }
+
+  # If name list was truncated in bib with "and others", this overrides maxnames
+  my $morenames = ($names->last_element->get_namestring eq 'others') ? 1 : 0;
+  if ( $morenames or $names->count_elements > $maxn ) {
+
+    # truncate to the uniquelist point if uniquelist is requested
+    if ($ul) {
+      $truncnames = $truncnames->first_n_elements($ul);
+      # Since uniquelist can be larger than maxnames, it's only truncated
+      # if uniquelist is shorter than the full name list
+      $truncated = 1 if $ul < $names->count_elements;
+    }
+    # otherwise truncate to minnames
+    else {
+      $truncnames = $truncnames->first_n_elements($minn);
+      $truncated = 1;
+    }
+  }
+
+  # namehash obeys list truncations but not uniquename
+  foreach my $n (@{$truncnames->names}) {
+    if ( $n->get_prefix and
+         Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
+      $hashkey .= $n->get_prefix;
+    }
+    $hashkey .= $n->get_lastname;
+
+    if ( $n->get_suffix ) {
+      $hashkey .= $n->get_suffix;
+    }
+
+    if ( $n->get_firstname ) {
+      given ($n->get_uniquename) {
+        when (2) {
+          $hashkey .= $n->get_firstname;
+        }
+        when (1) {
+          $hashkey .= join('', @{$n->get_firstname_i});
+        }
+      }
+    }
+
+    if ( $n->get_middlename ) {
+      $hashkey .= $n->get_middlename;
+    }
+
+    # without useprefix, prefix is not first in the hash
+    if ( $n->get_prefix and not
+         Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
+      $hashkey .= $n->get_prefix;
+    }
+
+  }
+
+  $hashkey .= '+' if $truncated;
+
+  # Digest::MD5 can't deal with straight UTF8 so encode it first
+  return md5_hex(encode_utf8($hashkey));
+}
+
 
 sub _getfullhash {
   my ($self, $citekey, $names) = @_;
@@ -252,8 +332,8 @@ sub _labelpart {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $struc = Biber::Config->get_structure;
-  my $maxnames = Biber::Config->getblxoption('maxnames');
-  my $minnames = Biber::Config->getblxoption('minnames');
+  my $maxnames = Biber::Config->getblxoption('maxlabelalphanames');
+  my $minnames = Biber::Config->getblxoption('minlabelalphanames');
   my $lp;
   my $slp;
 
@@ -429,8 +509,8 @@ sub _label_name {
   my $useprefix = Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey);
   my $alphaothers = Biber::Config->getblxoption('alphaothers', $be->get_field('entrytype'));
   my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->get_field('entrytype'));
-  my $maxnames = Biber::Config->getblxoption('maxnames');
-  my $minnames = Biber::Config->getblxoption('minnames');
+  my $maxnames = Biber::Config->getblxoption('maxlabelalphanames');
+  my $minnames = Biber::Config->getblxoption('minlabelalphanames');
   my $namename = $args->[0];
   my $acc;
   # This contains sortalphaothers instead of alphaothers, if defined
@@ -1146,13 +1226,12 @@ sub _process_sort_attributes {
   return $field_string;
 }
 
-# This is used for two things - to generate sorting strings and to
-# index name/year combinations for extrayear and extraalpha
+# This is used to generate sorting strings for names
 sub _namestring {
   my $self = shift;
   # $extraflag is set if we are calling this to generate strings for extra*
   # processing and therefore need to use uniquename
-  my ($citekey, $field, $extraflag) = @_;
+  my ($citekey, $field) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -1161,8 +1240,8 @@ sub _namestring {
   my $str = '';
   my $truncated = 0;
   my $truncnames = dclone($names);
-  my $maxn = Biber::Config->getblxoption('maxnames');
-  my $minn = Biber::Config->getblxoption('minnames');
+  my $maxn = Biber::Config->getblxoption('maxbibnames');
+  my $minn = Biber::Config->getblxoption('minbibnames');
 
   # These should be symbols which can't appear in names
   # This means, symbols which normalise_string_sort strips out
@@ -1210,25 +1289,10 @@ sub _namestring {
     }
     # Append last name
     $str .= normalise_string_sort($n->get_lastname, $field) . $nsi;
-    # If we're generating information for extra* processing, use uniquename
-    if ($extraflag) {
-      # Append first name only if it's needed to get a unique name ...
-      if ($n->get_firstname and $n->get_uniquename) {
-        # ... and then only the initials if uniquename=1
-        if ($n->get_uniquename == 1) {
-          $str .= normalise_string_sort(join('', @{$n->get_firstname_i}), $field) . $nsi;
-        }
-        # ... or full first name if uniquename=2
-        elsif ($n->get_uniquename == 2) {
-          $str .= normalise_string_sort($n->get_firstname, $field) . $nsi;
-        }
-      }
-    }
-    # We're generating sorting strings and so always use the full name
-    else {
-      # Append last name
-      $str .= normalise_string_sort($n->get_firstname, $field) . $nsi if $n->get_firstname;
-    }
+
+    # Append last name
+    $str .= normalise_string_sort($n->get_firstname, $field) . $nsi if $n->get_firstname;
+
     # Append suffix
     $str .= normalise_string_sort($n->get_suffix, $field) . $nsi if $n->get_suffix;
 

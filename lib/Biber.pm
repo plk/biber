@@ -1973,7 +1973,7 @@ sub create_extras_st_info {
       $name_string = $be->get_field('shorthand');
     }
     elsif (my $lnn = $be->get_field('labelnamename')) {
-      $name_string = $self->_namestring($citekey, $lnn, 1);
+      $name_string = $self->_getnamehash_u($citekey, $be->get_field($lnn));
     }
     else {
       $name_string = '';

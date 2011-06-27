@@ -1638,17 +1638,17 @@ our %CONFIG_DEFAULT_BIBLATEX =
 # Set up some encoding aliases to map \inputen{c,x} encoding names to Encode
 # It seems that inputen{c,x} has a different idea of nextstep than Encode
 # so we push it to MacRoman
-define_alias( 'ansinew'        => 'cp1252'); # inputenc alias for cp1252
-define_alias( 'applemac'       => 'MacRoman');
-define_alias( 'applemacce'     => 'MacCentralEurRoman');
-define_alias( 'next'           => 'MacRoman');
-define_alias( 'x-mac-roman'    => 'MacRoman');
-define_alias( 'x-mac-centeuro' => 'MacCentralEurRoman');
-define_alias( 'x-mac-cyrillic' => 'MacCyrillic');
-define_alias( 'x-nextstep'     => 'MacRoman');
-define_alias( 'x-ascii'        => 'ascii'); # Encode doesn't resolve this one by default
-define_alias( 'lutf8'          => 'UTF-8'); # Luatex
-define_alias( 'utf8x'          => 'UTF-8'); # UCS (old)
+define_alias('ansinew'        => 'cp1252'); # inputenc alias for cp1252
+define_alias('applemac'       => 'MacRoman');
+define_alias('applemacce'     => 'MacCentralEurRoman');
+define_alias('next'           => 'MacRoman');
+define_alias('x-mac-roman'    => 'MacRoman');
+define_alias('x-mac-centeuro' => 'MacCentralEurRoman');
+define_alias('x-mac-cyrillic' => 'MacCyrillic');
+define_alias('x-nextstep'     => 'MacRoman');
+define_alias('x-ascii'        => 'ascii'); # Encode doesn't resolve this one by default
+define_alias('lutf8'          => 'UTF-8'); # Luatex
+define_alias('utf8x'          => 'UTF-8'); # UCS (old)
 
 # Defines the scope of each of the BibLaTeX configuration options
 our %CONFIG_SCOPE_BIBLATEX = (
@@ -1666,7 +1666,11 @@ our %CONFIG_SCOPE_BIBLATEX = (
   labelyearspec      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   maxitems           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   minitems           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  maxbibnames        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  maxlabelalphanames => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   maxnames           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  minbibnames        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  minlabelalphanames => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   minnames           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   presort            => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   singletitle        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},

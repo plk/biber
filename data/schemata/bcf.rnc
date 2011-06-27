@@ -30,9 +30,13 @@ start =
       labelnamespec,
       labelyear,
       labelyearspec,
-      maxitems,
+      maxbibnames,
+      maxitems,      
+      maxlabelalphanames,
       maxnames,
-      minitems,
+      minbibnames,
+      minitems,      
+      minlabelalphanames,
       minnames,
       singletitle,
       sortalphaothers?,
@@ -448,6 +452,18 @@ maxitems =
     element bcf:key { "maxitems" },
     element bcf:value { xsd:integer }
   }
+maxbibnames =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "maxbibnames" },
+    element bcf:value { xsd:integer }
+  }
+maxlabelalphanames =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "maxlabelalphanames" },
+    element bcf:value { xsd:integer }
+  }
 maxnames =
   element bcf:option {
     attribute type { "singlevalued" },
@@ -458,6 +474,18 @@ minitems =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "minitems" },
+    element bcf:value { xsd:integer }
+  }
+minbibnames =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "minbibnames" },
+    element bcf:value { xsd:integer }
+  }
+minlabelalphanames =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "minlabelalphanames" },
     element bcf:value { xsd:integer }
   }
 minnames =

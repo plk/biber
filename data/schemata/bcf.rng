@@ -48,9 +48,13 @@
         <ref name="labelnamespec"/>
         <ref name="labelyear"/>
         <ref name="labelyearspec"/>
+        <ref name="maxbibnames"/>
         <ref name="maxitems"/>
+        <ref name="maxlabelalphanames"/>
         <ref name="maxnames"/>
+        <ref name="minbibnames"/>
         <ref name="minitems"/>
+        <ref name="minlabelalphanames"/>
         <ref name="minnames"/>
         <ref name="singletitle"/>
         <optional>
@@ -1117,6 +1121,32 @@
       </element>
     </element>
   </define>
+  <define name="maxbibnames">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>maxbibnames</value>
+      </element>
+      <element name="bcf:value">
+        <data type="integer"/>
+      </element>
+    </element>
+  </define>
+  <define name="maxlabelalphanames">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>maxlabelalphanames</value>
+      </element>
+      <element name="bcf:value">
+        <data type="integer"/>
+      </element>
+    </element>
+  </define>
   <define name="maxnames">
     <element name="bcf:option">
       <attribute name="type">
@@ -1137,6 +1167,32 @@
       </attribute>
       <element name="bcf:key">
         <value>minitems</value>
+      </element>
+      <element name="bcf:value">
+        <data type="integer"/>
+      </element>
+    </element>
+  </define>
+  <define name="minbibnames">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>minbibnames</value>
+      </element>
+      <element name="bcf:value">
+        <data type="integer"/>
+      </element>
+    </element>
+  </define>
+  <define name="minlabelalphanames">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>minlabelalphanames</value>
       </element>
       <element name="bcf:value">
         <data type="integer"/>

@@ -1143,15 +1143,17 @@ $main->set_sortscheme($S);
 $biber->prepare;
 
 is($main->get_sortdata('stdmodel')->[0], $anyvt_la, 'anyvt sort (with labelalpha)' );
-is($main->get_sortdata('murray')->[0], $anyvt_la2, 'anyvt sort (> maxnames=3 minnames=1, with labelalpha and alphaothers)' );
+is($main->get_sortdata('murray')->[0], $anyvt_la2, 'anyvt sort (> maxbibnames=3 minbibnames=1, with labelalpha and alphaothers)' );
 
-Biber::Config->setblxoption('maxnames', 2);
-Biber::Config->setblxoption('minnames', 2);
+Biber::Config->setblxoption('maxlabelalphanames', 2);
+Biber::Config->setblxoption('minlabelalphanames', 2);
+Biber::Config->setblxoption('maxbibnames', 2);
+Biber::Config->setblxoption('minbibnames', 2);
 
 # regenerate information
 $biber->prepare;
 
-is($main->get_sortdata('murray')->[0], $anyvt_la4, 'anyvt sort (> maxnames=2 minnames=2, with labelalpha and alphaothers)' );
+is($main->get_sortdata('murray')->[0], $anyvt_la4, 'anyvt sort (> maxbibnames=2 minbibnames=2, with labelalpha and alphaothers)' );
 
 Biber::Config->setblxoption('alphaothers', '');
 Biber::Config->setblxoption('sortalphaothers', '');
@@ -1159,7 +1161,7 @@ Biber::Config->setblxoption('sortalphaothers', '');
 # regenerate information
 $biber->prepare;
 
-is($main->get_sortdata('murray')->[0], $anyvt_la3, 'anyvt sort (> maxnames=2 minnames=2,with labelalpha and without alphaothers)' );
+is($main->get_sortdata('murray')->[0], $anyvt_la3, 'anyvt sort (> maxbibnames=2 minbibnames=2,with labelalpha and without alphaothers)' );
 
 Biber::Config->setblxoption('labelalpha', 0);
 $bibentries->entry('stdmodel')->del_field('labelalpha');

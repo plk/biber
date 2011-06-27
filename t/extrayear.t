@@ -27,6 +27,7 @@ Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
 Biber::Config->setblxoption('labelyear', [ 'year' ]);
 Biber::Config->setblxoption('maxnames', 1);
+Biber::Config->setblxoption('maxbibnames', 1);
 
 # Now generate the information
 $biber->prepare;
