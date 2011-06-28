@@ -270,8 +270,8 @@ sub set_output_entry {
   # The labelyear option determines whether "extrayear" is output
   if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
-    if (my $nameyear_extrayear = $be->get_field('nameyear_extrayear')) {
-      if ( Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
+    if (my $nameyear_extra = $be->get_field('nameyear_extra')) {
+      if ( Biber::Config->get_seen_nameyear_extra($nameyear_extra) > 1) {
         $acc .= "    <BDS>EXTRAYEAR</BDS>\n";
       }
     }
@@ -283,8 +283,8 @@ sub set_output_entry {
   # The labelalpha option determines whether "extraalpha" is output
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
-    if (my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha')) {
-      if ( Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
+    if (my $nameyear_extra = $be->get_field('nameyear_extra')) {
+      if ( Biber::Config->get_seen_nameyear_extra($nameyear_extra) > 1) {
         $acc .= "    <BDS>EXTRAALPHA</BDS>\n";
       }
     }

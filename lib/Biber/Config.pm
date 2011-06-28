@@ -52,13 +52,9 @@ $CONFIG->{state}{uniquenamecount} = {};
 # uniquelist
 $CONFIG->{state}{uniquenamecount_all} = {};
 # Counter for tracking name/year combinations for extrayear
-$CONFIG->{state}{seen_nameyear_extrayear} = {};
+$CONFIG->{state}{seen_nameyear_extra} = {};
 # Counter for the actual extrayear value
-$CONFIG->{state}{seen_extrayear} = {};
-# Counter for tracking name/year combinations for extraalpha
-$CONFIG->{state}{seen_nameyear_extraalpha} = {};
-# Counter for the actual extraalpha value
-$CONFIG->{state}{seen_extraalpha} = {};
+$CONFIG->{state}{seen_extra} = {};
 $CONFIG->{state}{seenkeys} = {};
 
 # Location of the control file
@@ -82,10 +78,8 @@ sub _init {
   $CONFIG->{state}{uniquenamecount} = {};
   $CONFIG->{state}{uniquenamecount_all} = {};
   $CONFIG->{state}{uniquelistcount} = {};
-  $CONFIG->{state}{seen_nameyear_extrayear} = {};
-  $CONFIG->{state}{seen_extrayear} = {};
-  $CONFIG->{state}{seen_nameyear_extraalpha} = {};
-  $CONFIG->{state}{seen_extraalpha} = {};
+  $CONFIG->{state}{seen_nameyear_extra} = {};
+  $CONFIG->{state}{seen_extra} = {};
   $CONFIG->{state}{seenkeys} = {};
   $CONFIG->{state}{keycase} = {};
   $CONFIG->{state}{datafiles} = [];
@@ -575,7 +569,7 @@ sub incr_seenname {
 
 =head2 reset_seen_extra
 
-    Reset the counters for extrayear and extraalpha
+    Reset the counters for extra*
 
     Biber::Config->reset_extra;
 
@@ -584,56 +578,55 @@ sub incr_seenname {
 sub reset_seen_extra {
   shift; # class method so don't care about class name
   my $ay = shift;
-  $CONFIG->{state}{seen_extrayear} = {};
-  $CONFIG->{state}{seen_extraalpha} = {};
+  $CONFIG->{state}{seen_extra} = {};
   return;
 }
 
 #============================
-#        seen_extrayear
+#        seen_extra
 #============================
 
-=head2 incr_seen_extrayear
+=head2 incr_seen_extra
 
-    Increment and return the counter for extrayear
+    Increment and return the counter for extra
 
-    Biber::Config->incr_seen_extrayear($ay);
+    Biber::Config->incr_seen_extra($ay);
 
 =cut
 
-sub incr_seen_extrayear {
+sub incr_seen_extra {
   shift; # class method so don't care about class name
   my $ay = shift;
-  return ++$CONFIG->{state}{seen_extrayear}{$ay};
+  return ++$CONFIG->{state}{seen_extra}{$ay};
 }
 
 
 #============================
-#       seen_nameyear_extrayear
+#         seen_nameyear_extra
 #============================
 
-=head2 get_seen_nameyear_extrayear
+=head2 get_seen_nameyear_extra
 
     Get the count of an labelname/labelyear combination for tracking
-    extrayear. It uses labelyear plus name as we need to disambiguate
+    extra*. It uses labelyear plus name as we need to disambiguate
     entries with different labelyear (like differentiating 1984--1986 from
     just 1984)
 
-    Biber::Config->get_seen_nameyear_extrayear($ny);
+    Biber::Config->get_seen_nameyear_extra($ny);
 
 =cut
 
-sub get_seen_nameyear_extrayear {
+sub get_seen_nameyear_extra {
   shift; # class method so don't care about class name
   my $ny = shift;
-  return $CONFIG->{state}{seen_nameyear_extrayear}{$ny};
+  return $CONFIG->{state}{seen_nameyear_extra}{$ny};
 }
 
-=head2 incr_seen_nameyear_extrayear
+=head2 incr_seen_nameyear_extra
 
-    Increment the count of an labelname/labelyear combination for extrayear
+    Increment the count of an labelname/labelyear combination for extra*
 
-    Biber::Config->incr_seen_nameyear_extrayear($ns, $ys);
+    Biber::Config->incr_seen_nameyear_extra($ns, $ys);
 
     We pass in the name and year strings seperately as we have to
     be careful and only increment this counter beyond 1 if there is
@@ -642,92 +635,20 @@ sub get_seen_nameyear_extrayear {
 
 =cut
 
-sub incr_seen_nameyear_extrayear {
+sub incr_seen_nameyear_extra {
   shift; # class method so don't care about class name
   my ($ns, $ys) = @_;
   $tmp = "$ns,$ys";
   # We can always increment this to 1
-  unless ($CONFIG->{state}{seen_nameyear_extrayear}{$tmp}) {
-    $CONFIG->{state}{seen_nameyear_extrayear}{$tmp}++;
+  unless ($CONFIG->{state}{seen_nameyear_extra}{$tmp}) {
+    $CONFIG->{state}{seen_nameyear_extra}{$tmp}++;
   }
   # But beyond that only if we have a labelname and labelyear in the entry since
   # this counter is used to create extrayear which doesn't mean anything for
   # entries with only one of these.
   else {
     if ($ns and $ys) {
-      $CONFIG->{state}{seen_nameyear_extrayear}{$tmp}++;
-    }
-  }
-  return;
-}
-
-#============================
-#        seen_extraalpha
-#============================
-
-=head2 incr_seen_extraalpha
-
-    Increment and return the counter for extraalpha
-
-    Biber::Config->incr_seen_extraalpha($ay);
-
-=cut
-
-sub incr_seen_extraalpha {
-  shift; # class method so don't care about class name
-  my $ay = shift;
-  return ++$CONFIG->{state}{seen_extraalpha}{$ay};
-}
-
-
-#============================
-#       seen_nameyear_extraalpha
-#============================
-
-=head2 get_seen_nameyear_extraalpha
-
-    Get the count of an labelname/labelyear combination for tracking
-    extraalpha. It uses labelyear plus name as we need to disambiguate
-    entries with different labelyear (like differentiating 1984--1986 from
-    just 1984)
-
-    Biber::Config->get_seen_nameyear_extraalpha($ny);
-
-=cut
-
-sub get_seen_nameyear_extraalpha {
-  shift; # class method so don't care about class name
-  my $ny = shift;
-  return $CONFIG->{state}{seen_nameyear_extraalpha}{$ny};
-}
-
-=head2 incr_seen_nameyear_extraalpha
-
-    Increment the count of an labelname/labelyear combination for extraalpha
-
-    Biber::Config->incr_seen_nameyear_extraalpha($ns, $ys);
-
-    We pass in the name and year strings seperately as we have to
-    be careful and only increment this counter beyond 1 if there is
-    both a name and year component. Otherwise, extraalpha gets defined for all
-    entries with no name but the same year etc.
-
-=cut
-
-sub incr_seen_nameyear_extraalpha {
-  shift; # class method so don't care about class name
-  my ($ns, $ys) = @_;
-  $tmp = "$ns,$ys";
-  # We can always increment this to 1
-  unless ($CONFIG->{state}{seen_nameyear_extraalpha}{$tmp}) {
-    $CONFIG->{state}{seen_nameyear_extraalpha}{$tmp}++;
-  }
-  # But beyond that only if we have a labelname and labelyear in the entry since
-  # this counter is used to create extraalpha which doesn't mean anything for
-  # entries with only one of these.
-  else {
-    if ($ns and $ys) {
-      $CONFIG->{state}{seen_nameyear_extraalpha}{$tmp}++;
+      $CONFIG->{state}{seen_nameyear_extra}{$tmp}++;
     }
   }
   return;

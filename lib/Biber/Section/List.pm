@@ -81,64 +81,35 @@ sub get_listdata {
   return [ $self->{sortscheme},
            $self->{keys},
            $self->{sortinitdata},
-           $self->{extraalphadata},
-           $self->{extrayeardata} ];
+           $self->{extradata}];
 }
 
-=head2 set_extrayeardata
+=head2 set_extradata
 
-    Saves extrayear field data for a key
+    Saves extra* field data for a key
 
 =cut
 
-sub set_extrayeardata {
+sub set_extradata {
   my $self = shift;
   my $key = shift;
   my $ed = shift;
   return unless defined($key);
-  $self->{extrayeardata}{lc($key)} = $ed;
+  $self->{extradata}{lc($key)} = $ed;
   return;
 }
 
-=head2 get_extrayeardata
+=head2 get_extradata
 
-    Gets the extrayear field data for a key
-
-=cut
-
-sub get_extrayeardata {
-  my $self = shift;
-  my $key = shift;
-  return unless defined($key);
-  return $self->{extrayeardata}{lc($key)};
-}
-
-=head2 set_extraalphadata
-
-    Saves extrayear field data for a key
+    Gets the extra* field data for a key
 
 =cut
 
-sub set_extraalphadata {
-  my $self = shift;
-  my $key = shift;
-  my $ed = shift;
-  return unless defined($key);
-  $self->{extraalphadata}{lc($key)} = $ed;
-  return;
-}
-
-=head2 get_extraalphadata
-
-    Gets the extraalpha field data for a key
-
-=cut
-
-sub get_extraalphadata {
+sub get_extradata {
   my $self = shift;
   my $key = shift;
   return unless defined($key);
-  return $self->{extraalphadata}{lc($key)};
+  return $self->{extradata}{lc($key)};
 }
 
 =head2 set_sortdata
@@ -324,17 +295,13 @@ sub instantiate_entry {
   }
 
   my $eys;
-  # Might not be set due to skip
-  if (my $ey = $self->get_extrayeardata($key)) {
-    $eys = "    \\field{extrayear}{$ey}\n";
-  }
-  $entry_string =~ s|^\s*<BDS>EXTRAYEAR</BDS>\n|$eys|gxms;
-
   my $eas;
   # Might not be set due to skip
-  if (my $ea = $self->get_extraalphadata($key)) {
-    $eas = "    \\field{extraalpha}{$ea}\n";
+  if (my $e = $self->get_extradata($key)) {
+    $eys = "    \\field{extrayear}{$e}\n";
+    $eas = "    \\field{extraalpha}{$e}\n";
   }
+  $entry_string =~ s|^\s*<BDS>EXTRAYEAR</BDS>\n|$eys|gxms;
   $entry_string =~ s|^\s*<BDS>EXTRAALPHA</BDS>\n|$eas|gxms;
 
   return $entry_string;

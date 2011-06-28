@@ -2,6 +2,7 @@ package Biber;
 use strict;
 use warnings;
 use feature ':5.10';
+use base 'Biber::Internals';
 #use feature 'unicode_strings';
 use Carp;
 use Encode;
@@ -10,7 +11,6 @@ use File::Spec;
 use File::Temp;
 use IO::File;
 use POSIX qw( locale_h ); # for sorting with built-in "sort"
-use Cwd qw( abs_path );
 use Biber::Config;
 use Biber::Constants;
 use List::Util qw( first );
@@ -26,7 +26,6 @@ use Biber::Structure;
 use Biber::Utils;
 use Storable qw( dclone );
 use Log::Log4perl qw( :no_extra_logdie_message );
-use base 'Biber::Internals';
 use Config::General qw( ParseConfig );
 use Data::Dump;
 use Data::Compare;
@@ -1211,14 +1210,15 @@ sub process_labelalpha {
             $sortlabel = $label = '';
           }
 
-          # biblatex manual says "publication year"
-          if ( my $year = $be->get_field('year') ) {
+          if ( my $year = $be->get_field('labelyear') ||
+               $be->get_field('year')) {
             my $yr;
             # Make "in press" years look nice in alpha styles
             if ($year =~ m/\A\s*in\s*press\s*\z/ixms) {
               $yr = 'ip';
             }
-            # Normal year
+            # Normal year - this works for date ranges too since 2 from 2 in is the
+            # start date
             else {
               $yr = substr $year, 2, 2;
             }
@@ -1227,7 +1227,7 @@ sub process_labelalpha {
           }
         }
       }
-      when (2) { # custom labelalpha which does nothing for you automatically (extraalpha)
+      when (2) { # custom labelalpha
         ( $label, $sortlabel ) = @{ $self->_genlabel_custom($citekey) };
       }
     }
@@ -1272,7 +1272,6 @@ sub process_lists {
     my $llabel = $list->get_label;
 
     # Last-ditch fallback in case we still don't have a sorting spec
-    # probably due to being called via biber with -a and -d flags
     $list->set_sortscheme(Biber::Config->getblxoption('sorting')) unless $list->get_sortscheme;
 
     $list->set_keys([ $section->get_citekeys ]);
@@ -1287,8 +1286,7 @@ sub process_lists {
     #
     # * sorted keys
     # * sortinit data
-    # * extraalpha data
-    # * extrayear data
+    # * extra* data
 
     my $cache_flag = 0;
     $logger->debug("Checking sorting cache for list '$llabel'");
@@ -1297,8 +1295,7 @@ sub process_lists {
         $logger->debug("Found sorting cache entry for '$llabel'");
         $list->set_keys($cacheitem->[1]);
         $list->set_sortinitdata($cacheitem->[2]);
-        $list->set_extraalphadata($cacheitem->[3]);
-        $list->set_extrayeardata($cacheitem->[4]);
+        $list->set_extradata($cacheitem->[3]);
         $cache_flag = 1;
         last;
       }
@@ -2024,48 +2021,27 @@ sub create_extras_st_info {
       $be->set_field('seenname', $name_string);
     }
 
-    # extrayear takes into account the labelyear which can be a range
-    my $year_string_extrayear;
+    # extra* takes into account the labelyear which can be a range
+    my $year_string_extra;
     if (my $ly = $be->get_field('labelyear')) {
-      $year_string_extrayear = $ly;
+      $year_string_extra = $ly;
     }
     elsif (my $y = $be->get_field('year')) {
-      $year_string_extrayear = $y;
+      $year_string_extra = $y;
     }
     else {
-      $year_string_extrayear = '';
-    }
-
-    # extraalpha takes into account the "year of publication" and not ranges as it
-    # only has the last two digits of the year and so can't disambiguate using ranges
-    # so, we have to track it separately to extrayear
-    my $year_string_extraalpha;
-    if (my $y = $be->get_field('year')) {
-      $year_string_extraalpha = $y;
-    }
-    else {
-      $year_string_extraalpha = '';
+      $year_string_extra = '';
     }
 
     # Don't create disambiguation data for skiplab entries
     unless (Biber::Config->getblxoption('skiplab',
                                         $be->get_field('entrytype'),
                                         $be->get_field('dskey'))) {
-      # extrayear
-      my $nameyear_string_extrayear = "$name_string,$year_string_extrayear";
-      $logger->trace("Setting nameyear_extrayear to '$nameyear_string_extrayear' for entry '$citekey'");
-      $be->set_field('nameyear_extrayear', $nameyear_string_extrayear);
-      $logger->trace("Incrementing nameyear_extrayear for '$name_string'");
-      Biber::Config->incr_seen_nameyear_extrayear($name_string, $year_string_extrayear);
-
-      # extraalpha
-      if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) == 1) {
-        my $nameyear_string_extraalpha = "$name_string,$year_string_extraalpha";
-        $logger->trace("Setting nameyear_extraalpha to '$nameyear_string_extraalpha' for entry '$citekey'");
-        $be->set_field('nameyear_extraalpha', $nameyear_string_extraalpha);
-        $logger->trace("Incrementing nameyear_extraalpha for '$name_string'");
-        Biber::Config->incr_seen_nameyear_extraalpha($name_string, $year_string_extraalpha);
-      }
+      my $nameyear_string_extra = "$name_string,$year_string_extra";
+      $logger->trace("Setting nameyear_extra to '$nameyear_string_extra' for entry '$citekey'");
+      $be->set_field('nameyear_extra', $nameyear_string_extra);
+      $logger->trace("Incrementing nameyear_extra for '$name_string'");
+      Biber::Config->incr_seen_nameyear_extra($name_string, $year_string_extra);
     }
   }
   return;
@@ -2074,7 +2050,7 @@ sub create_extras_st_info {
 
 =head2 generate_extra
 
-    Generate:
+    Generate information for:
 
       * extraalpha
       * extrayear
@@ -2098,18 +2074,13 @@ sub generate_extra {
     # Only generate extrayear and extraalpha if skiplab is not set.
     # Don't forget that skiplab is implied for set members
     unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
-      if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
-        my $nameyear_extrayear = $be->get_field('nameyear_extrayear');
-          if (Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
-            $logger->trace("nameyear_extrayear for '$nameyear_extrayear': " . Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear));
-            $list->set_extrayeardata($key, Biber::Config->incr_seen_extrayear($nameyear_extrayear));
-        }
-      }
-      if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) == 1) {
-        my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha');
-          if (Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
-            $logger->trace("nameyear_extraalpha for '$nameyear_extraalpha': " . Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha));
-            $list->set_extraalphadata($key, Biber::Config->incr_seen_extraalpha($nameyear_extraalpha));
+      if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype')) or
+          Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
+        my $nameyear_extra = $be->get_field('nameyear_extra');
+        if (Biber::Config->get_seen_nameyear_extra($nameyear_extra) > 1) {
+          $logger->trace("nameyear_extra for '$nameyear_extra': " . Biber::Config->get_seen_nameyear_extra($nameyear_extra));
+          my $ v = Biber::Config->incr_seen_extra($nameyear_extra);
+          $list->set_extradata($key, $v);
         }
       }
     }
