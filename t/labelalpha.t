@@ -53,7 +53,6 @@ is($bibentries->entry('l8')->get_field('sortlabelalpha'), 'Sha85', 'maxalphaname
 ok(is_undef($main->get_extraalphadata('l8')), 'maxalphanames=1 minalphanames=1 entry L8 extraalpha');
 ok(is_undef($main->get_extraalphadata('l9')), 'L9 extraalpha unset due to shorthand');
 ok(is_undef($main->get_extraalphadata('l10')), 'L10 extraalpha unset due to shorthand');
-is($bibentries->entry('l11')->get_field('sortlabelalpha'), 'vRan22', 'prefix labelalpha 1');
 is($main->get_extraalphadata('knuth:ct'), '1', 'YEAR with range needs label differentiating from individual volumes - 1');
 is($main->get_extraalphadata('knuth:ct:a'), '2', 'YEAR with range needs label differentiating from individual volumes - 2');
 is($main->get_extraalphadata('knuth:ct:b'), '1', 'YEAR with range needs label differentiating from individual volumes - 3');
@@ -126,10 +125,6 @@ is($bibentries->entry('l7')->get_field('sortlabelalpha'), 'DS+95', 'maxalphaname
 is($main->get_extraalphadata('l7'), '2', 'maxalphanames=2 minalphanames=2 entry L7 extraalpha');
 is($bibentries->entry('l8')->get_field('sortlabelalpha'), 'Sha85', 'maxalphanames=2 minalphanames=2 entry L8 labelalpha');
 ok(is_undef($main->get_extraalphadata('l8')), 'maxalphanames=2 minalphanames=2 entry L8 extraalpha');
-is($bibentries->entry('l12')->get_field('sortlabelalpha'), 'vRvB2', 'prefix labelalpha 2');
-# only the first name in the list is in the label due to listcount=1
-is($bibentries->entry('l13')->get_field('sortlabelalpha'), 'vRa-ksUnV', 'per-type labelalpha 1');
-is($bibentries->entry('l14')->get_field('sortlabelalpha'), 'Alabel-ksUnW', 'per-type labelalpha 2');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('maxalphanames', 3);
@@ -170,6 +165,7 @@ Biber::Config->setblxoption('maxalphanames', 4);
 Biber::Config->setblxoption('minalphanames', 4);
 Biber::Config->setblxoption('maxnames', 4);
 Biber::Config->setblxoption('minnames', 4);
+Biber::Config->setblxoption('labelalpha', 2);
 
 for (my $i=1; $i<23; $i++) {
   $bibentries->entry("l$i")->del_field('sortlabelalpha');
@@ -182,6 +178,11 @@ $section = $biber->sections->get_section(0);
 $main = $section->get_list('MAIN');
 $bibentries = $section->bibentries;
 
+is($bibentries->entry('l11')->get_field('sortlabelalpha'), 'vRan22', 'prefix labelalpha 1');
+is($bibentries->entry('l12')->get_field('sortlabelalpha'), 'vRvB2', 'prefix labelalpha 2');
+# only the first name in the list is in the label due to listcount=1
+is($bibentries->entry('l13')->get_field('sortlabelalpha'), 'vRa-ksUnV', 'per-type labelalpha 1');
+is($bibentries->entry('l14')->get_field('sortlabelalpha'), 'Alabel-ksUnW', 'per-type labelalpha 2');
 is($bibentries->entry('l15')->get_field('sortlabelalpha'), 'AccBrClim', 'labelalpha disambiguation 1');
 is($bibentries->entry('l16')->get_field('sortlabelalpha'), 'AccBaClim', 'labelalpha disambiguation 2');
 is($bibentries->entry('l17')->get_field('sortlabelalpha'), 'AckBaClim', 'labelalpha disambiguation 3');

@@ -74,8 +74,8 @@ $CONFIG->{state}{datafiles} = [];
 =cut
 
 sub _init {
-  $CONFIG->{state}{unulchanged} = 1;
   $CONFIG->{options}{biblatex}{PER_ENTRY} = {};
+  $CONFIG->{state}{unulchanged} = 1;
   $CONFIG->{state}{control_file_location} = '';
   $CONFIG->{state}{seenname} = {};
   $CONFIG->{state}{crossrefkeys} = {};

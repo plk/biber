@@ -384,7 +384,7 @@ labelalpha =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "labelalpha" },
-    element bcf:value { "0" | "1" }
+    element bcf:value { "0" | "1" | "2" }
   }
 labelyear =
   element bcf:option {

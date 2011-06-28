@@ -1191,10 +1191,46 @@ sub process_labelalpha {
   if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
     return;
   }
-  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
+  if ( my $la = Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
     my $label;
     my $sortlabel;
-    ( $label, $sortlabel ) = @{ $self->_genlabel($citekey) };
+    given ($la) {
+      when (1) { # default builtin labelalpha which uses extraalpha
+        if ( $be->get_field('shorthand') ) {
+          $sortlabel = $label = $be->get_field('shorthand');
+        }
+        else {
+          if ( $be->get_field('label') ) {
+            $sortlabel = $label = $be->get_field('label');
+          }
+          elsif ( $be->get_field('labelnamename') and $be->get_field($be->get_field('labelnamename'))) {
+            ( $label, $sortlabel ) =
+              @{ $self->_genlabel( $citekey, $be->get_field('labelnamename') ) };
+          }
+          else {
+            $sortlabel = $label = '';
+          }
+
+          # biblatex manual says "publication year"
+          if ( my $year = $be->get_field('year') ) {
+            my $yr;
+            # Make "in press" years look nice in alpha styles
+            if ($year =~ m/\A\s*in\s*press\s*\z/ixms) {
+              $yr = 'ip';
+            }
+            # Normal year
+            else {
+              $yr = substr $year, 2, 2;
+            }
+            $label     .= $yr;
+            $sortlabel .= $yr;
+          }
+        }
+      }
+      when (2) { # custom labelalpha which does nothing for you automatically (extraalpha)
+        ( $label, $sortlabel ) = @{ $self->_genlabel_custom($citekey) };
+      }
+    }
 
     $be->set_field('labelalpha', $label);
     $be->set_field('sortlabelalpha', $sortlabel);
@@ -1968,7 +2004,7 @@ sub create_extras_st_info {
 
     my $name_string;
     # For labelalpha, use the shorthand instead of the name, if defined
-    if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) and
+    if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) == 1 and
          $be->get_field('shorthand')) {
       $name_string = $be->get_field('shorthand');
     }
@@ -2015,16 +2051,21 @@ sub create_extras_st_info {
     unless (Biber::Config->getblxoption('skiplab',
                                         $be->get_field('entrytype'),
                                         $be->get_field('dskey'))) {
+      # extrayear
       my $nameyear_string_extrayear = "$name_string,$year_string_extrayear";
       $logger->trace("Setting nameyear_extrayear to '$nameyear_string_extrayear' for entry '$citekey'");
       $be->set_field('nameyear_extrayear', $nameyear_string_extrayear);
       $logger->trace("Incrementing nameyear_extrayear for '$name_string'");
       Biber::Config->incr_seen_nameyear_extrayear($name_string, $year_string_extrayear);
-      my $nameyear_string_extraalpha = "$name_string,$year_string_extraalpha";
-      $logger->trace("Setting nameyear_extraalpha to '$nameyear_string_extraalpha' for entry '$citekey'");
-      $be->set_field('nameyear_extraalpha', $nameyear_string_extraalpha);
-      $logger->trace("Incrementing nameyear_extraalpha for '$name_string'");
-      Biber::Config->incr_seen_nameyear_extraalpha($name_string, $year_string_extraalpha);
+
+      # extraalpha
+      if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) == 1) {
+        my $nameyear_string_extraalpha = "$name_string,$year_string_extraalpha";
+        $logger->trace("Setting nameyear_extraalpha to '$nameyear_string_extraalpha' for entry '$citekey'");
+        $be->set_field('nameyear_extraalpha', $nameyear_string_extraalpha);
+        $logger->trace("Incrementing nameyear_extraalpha for '$name_string'");
+        Biber::Config->incr_seen_nameyear_extraalpha($name_string, $year_string_extraalpha);
+      }
     }
   }
   return;
@@ -2064,7 +2105,7 @@ sub generate_extra {
             $list->set_extrayeardata($key, Biber::Config->incr_seen_extrayear($nameyear_extrayear));
         }
       }
-      if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
+      if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) == 1) {
         my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha');
           if (Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
             $logger->trace("nameyear_extraalpha for '$nameyear_extraalpha': " . Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha));
