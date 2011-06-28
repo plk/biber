@@ -1992,10 +1992,10 @@ sub create_extras_st_info {
     $logger->trace("Creating extra*/singletitle information for '$citekey'");
 
     # This is all used to generate extrayear/extralpha and the rules for this are:
-    # * Generate labelname/year combination for tracking extrayear
+    # * Generate labelname/year combination for tracking extra*
     # * If there is no labelname to use, use empty string
     # * If there is no labelyear to use, use empty string
-    # * Don't increment the seennameyear count if either name or year string is empty
+    # * Don't increment the seen_nameyear count if either name or year string is empty
     #   (see code in incr_nameyear method).
     # * Don't increment if skiplab is set
 
