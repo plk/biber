@@ -30,13 +30,13 @@ start =
       labelnamespec,
       labelyear,
       labelyearspec,
+      maxalphanames,
       maxbibnames,
       maxitems,      
-      maxlabelalphanames,
       maxnames,
+      minalphanames,
       minbibnames,
       minitems,      
-      minlabelalphanames,
       minnames,
       singletitle,
       sortalphaothers?,
@@ -86,7 +86,7 @@ start =
         attribute order { xsd:integer },
         element bcf:labelpart {          
           attribute final { "0" | "1" }?,
-          attribute substring_width { xsd:integer | "v" | "vl" | "vf" | "vlf" }?,
+          attribute substring_width { xsd:integer | "n" | "l" | "nf" | "lf" }?,
           attribute substring_fixed_threshold { xsd:integer }?,
           attribute substring_width_max { xsd:integer }?,
           attribute substring_side { "left" | "right" }?,
@@ -459,10 +459,10 @@ maxbibnames =
     element bcf:key { "maxbibnames" },
     element bcf:value { xsd:integer }
   }
-maxlabelalphanames =
+maxalphanames =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "maxlabelalphanames" },
+    element bcf:key { "maxalphanames" },
     element bcf:value { xsd:integer }
   }
 maxnames =
@@ -483,10 +483,10 @@ minbibnames =
     element bcf:key { "minbibnames" },
     element bcf:value { xsd:integer }
   }
-minlabelalphanames =
+minalphanames =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "minlabelalphanames" },
+    element bcf:key { "minalphanames" },
     element bcf:value { xsd:integer }
   }
 minnames =

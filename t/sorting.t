@@ -1145,8 +1145,8 @@ $biber->prepare;
 is($main->get_sortdata('stdmodel')->[0], $anyvt_la, 'anyvt sort (with labelalpha)' );
 is($main->get_sortdata('murray')->[0], $anyvt_la2, 'anyvt sort (> maxbibnames=3 minbibnames=1, with labelalpha and alphaothers)' );
 
-Biber::Config->setblxoption('maxlabelalphanames', 2);
-Biber::Config->setblxoption('minlabelalphanames', 2);
+Biber::Config->setblxoption('maxalphanames', 2);
+Biber::Config->setblxoption('minalphanames', 2);
 Biber::Config->setblxoption('maxbibnames', 2);
 Biber::Config->setblxoption('minbibnames', 2);
 

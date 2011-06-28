@@ -48,13 +48,13 @@
         <ref name="labelnamespec"/>
         <ref name="labelyear"/>
         <ref name="labelyearspec"/>
+        <ref name="maxalphanames"/>
         <ref name="maxbibnames"/>
         <ref name="maxitems"/>
-        <ref name="maxlabelalphanames"/>
         <ref name="maxnames"/>
+        <ref name="minalphanames"/>
         <ref name="minbibnames"/>
         <ref name="minitems"/>
-        <ref name="minlabelalphanames"/>
         <ref name="minnames"/>
         <ref name="singletitle"/>
         <optional>
@@ -182,10 +182,10 @@
                     <attribute name="substring_width">
                       <choice>
                         <data type="integer"/>
-                        <value>v</value>
-                        <value>vl</value>
-                        <value>vf</value>
-                        <value>vlf</value>
+                        <value>n</value>
+                        <value>l</value>
+                        <value>nf</value>
+                        <value>lf</value>
                       </choice>
                     </attribute>
                   </optional>
@@ -1142,13 +1142,13 @@
       </element>
     </element>
   </define>
-  <define name="maxlabelalphanames">
+  <define name="maxalphanames">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>maxlabelalphanames</value>
+        <value>maxalphanames</value>
       </element>
       <element name="bcf:value">
         <data type="integer"/>
@@ -1194,13 +1194,13 @@
       </element>
     </element>
   </define>
-  <define name="minlabelalphanames">
+  <define name="minalphanames">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>minlabelalphanames</value>
+        <value>minalphanames</value>
       </element>
       <element name="bcf:value">
         <data type="integer"/>

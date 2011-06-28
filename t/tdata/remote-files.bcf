@@ -51,6 +51,10 @@
       <bcf:value order="1">year</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
+      <bcf:key>maxalphanames</bcf:key>
+      <bcf:value>3</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
       <bcf:key>maxbibnames</bcf:key>
       <bcf:value>3</bcf:value>
     </bcf:option>
@@ -59,12 +63,12 @@
       <bcf:value>3</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>maxlabelalphanames</bcf:key>
+      <bcf:key>maxnames</bcf:key>
       <bcf:value>3</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>maxnames</bcf:key>
-      <bcf:value>3</bcf:value>
+      <bcf:key>minalphanames</bcf:key>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>minbibnames</bcf:key>
@@ -72,10 +76,6 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>minitems</bcf:key>
-      <bcf:value>1</bcf:value>
-    </bcf:option>
-    <bcf:option type="singlevalued">
-      <bcf:key>minlabelalphanames</bcf:key>
       <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
