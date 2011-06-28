@@ -1,8 +1,8 @@
 TODO in decreasing order of priority:
 
+* list disambiguation for la
 * document new la stuff for la=1, extraalpha/year/singletitle are regenerated for every list
   dynamically. Custom labelalpha counters are not. autoinc field
-* uniquelist for max/minbibnames only when equal to max/minnames
 * Take out labelalphatemplate defaults, optional in rnc/rng and parsing when biblatex implements it
 * When cygwin on perl 5.14, change build script (deprecated module)
 * When biblatex implements related entries, take out reprinttitle

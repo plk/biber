@@ -47,8 +47,7 @@ sub _getnamehash {
   my $truncnames = dclone($names);
 
   # Since namehash is the hash of the visible name,
-  # perform truncation according to options minnames, maxnames and uniquelist (if
-  # requested)
+  # perform truncation according to options minnames, maxnames
   my $ul;
   if (defined($names->get_uniquelist)) {
     $ul = $names->get_uniquelist;
@@ -1336,8 +1335,8 @@ sub _namestring {
   # Guaranteed to sort after everything else as it's the last legal Unicode code point
   my $trunc = "\x{10FFFD}";  # sort string for "et al" truncated name
 
-  # perform truncation according to options minnames, maxnames and uniquelist (if
-  # requested)
+  # Since namehash is the hash of the visible name,
+  # perform truncation according to options minnames, maxnames
   my $ul;
   if (defined($names->get_uniquelist)) {
     $ul = $names->get_uniquelist;
@@ -1346,11 +1345,15 @@ sub _namestring {
   # If name list was truncated in bib with "and others", this overrides maxnames
   my $morenames = ($names->last_element->get_namestring eq 'others') ? 1 : 0;
   if ( $morenames or $names->count_elements > $maxn ) {
-    # truncate to the uniquelist point if uniquelist is requested
+    # truncate to the uniquelist point if uniquelist is requested and max/minbibnames
+    # is equal to max/minnames because in this case the user can expect that the bibliography
+    # is sorted according to the citation truncations.
     # We know at this stage that if uniquelist is set, there are more than maxnames
     # names. We also know that uniquelist > minnames because it is a further disambiguation
     # on top of minnames so can't be less as you can't disambiguate by losing information
-    if ($ul) {
+    if ($ul and
+       $maxn == Biber::Config->getblxoption('maxnames') and
+       $minn == Biber::Config->getblxoption('minnames')) {
       $truncnames = $truncnames->first_n_elements($ul);
       # Since uniquelist can be larger than maxnames, it's only truncated
       # if uniquelist is shorter than the full name list
