@@ -745,8 +745,7 @@ sub _process_label_attributes {
                           } $section->get_citekeys;
         # Look to the index of the longest string or the explicit max width if set
         my $maxlen = $labelattrs->{substring_width_max} || max map {length($_)} @strings;
-        my $minlen = 1;
-        for (my $i = $minlen; $i <= $maxlen; $i++) {
+        for (my $i = 1; $i <= $maxlen; $i++) {
           foreach my $map (map { my $s = substr($_, 0, $i); $substr_cache{$s}++; [$_, $s] } @strings) {
             # We construct a list of all substrings, up to the length of the longest string
             # or substring_width_max. Then we save the index of the list element which is
@@ -802,7 +801,29 @@ sub _process_label_attributes {
       #   my @strings = map {my $f = $section->bibentry($_)->get_field($field);
       #                      $namepart ? [map {$_->get_namepart($namepart)} @{$f->names}] : [$f]
       #                     } $section->get_citekeys;
-        
+
+
+
+# my @strings = (['Agassi', 'Chang',   'Laver']
+#                ['Agassi', 'Connors', 'Lendl'],
+#                ['Agassi', 'Courier', 'Laver'],
+#                ['Borg',   'Connors', 'Edberg'],
+#                ['Borg',   'Connors', 'Emerson']);
+
+# my %substr_cache = ();
+# my $ml = max map {$#$_} @strings;
+# foreach my $list (@strings) {
+#   for ($i = 0; $i <= $#$list; $i++) {
+#     my @col = map {$_->[$i]} @strings;
+#     foreach my $map (map { my $s = substr($_, 0, $i); $substr_cache{$s}++; [$_, $s] } @col) {
+
+#     }
+#   }
+
+# }
+
+
+
 
 
       # }
