@@ -149,11 +149,14 @@
     <bcf:labelelement order="3">
       <bcf:labelpart substring_width="1">origday</bcf:labelpart>
     </bcf:labelelement>
+    <bcf:labelelement order="4">
+      <bcf:labelpart>extrayear</bcf:labelpart>
+    </bcf:labelelement>
   </bcf:labelalphatemplate>
   <bcf:labelalphatemplate type="misc">
     <bcf:labelelement order="1">
       <bcf:labelpart>label</bcf:labelpart>
-      <bcf:labelpart substring_width="2" namecount ="1" substring_side="left">labelname</bcf:labelpart>
+      <bcf:labelpart substring_width="2" namecount="1" substring_side="left">labelname</bcf:labelpart>
     </bcf:labelelement>
     <bcf:labelelement order="2">
       <bcf:labelpart>-</bcf:labelpart>
@@ -304,6 +307,7 @@
     <bcf:citekey>L15</bcf:citekey>
     <bcf:citekey>L16</bcf:citekey>
     <bcf:citekey>L17</bcf:citekey>
+    <bcf:citekey>L17a</bcf:citekey>
     <bcf:citekey>L18</bcf:citekey>
     <bcf:citekey>L19</bcf:citekey>
     <bcf:citekey>L20</bcf:citekey>

@@ -339,6 +339,7 @@ our $dispatch_label = {
   'eventday'          =>  [\&_label_day,              ['eventday']],
   'eventmonth'        =>  [\&_label_month,            ['eventmonth']],
   'eventyear'         =>  [\&_label_year,             ['eventyear']],
+  'extrayear'         =>  [\&_label_extrayear,        []],
   'day'               =>  [\&_label_day,              ['day']],
   'foreword'          =>  [\&_label_name,             ['foreword']],
   'holder'            =>  [\&_label_name,             ['holder']],
@@ -487,6 +488,19 @@ sub _label_day {
   }
 }
 
+sub _label_extrayear {
+  my ($self, $citekey, $args, $labelattrs) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
+    # This can't and shouldn't be generated here, it's done later during list construction
+    return ['<BDS>EXTRAYEAR</BDS>', '<BDS>EXTRAYEAR</BDS>'];
+  }
+  else {
+    return ['', ''];
+  }
+}
 
 sub _label_label {
   my ($self, $citekey, $args, $labelattrs) = @_;

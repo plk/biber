@@ -199,7 +199,7 @@ sub set_output_entry {
     if (my $ey = $be->get_field('extrayear')) {
       my $nameyear_extra = $be->get_field('nameyear_extra');
       if ( Biber::Config->get_seen_nameyear_extra($nameyear_extra) > 1) {
-        $acc .= "    \\field{extrayear}{$ey}\n";
+        $acc .= "    <BDS>EXTRAYEAR</BDS>\n";
       }
     }
     if (my $ly = $be->get_field('labelyear')) {
@@ -214,7 +214,7 @@ sub set_output_entry {
     if (my $ea = $be->get_field('extraalpha')) {
       my $nameyear_extra = $be->get_field('nameyear_extra');
       if ( Biber::Config->get_seen_nameyear_extra($nameyear_extra) > 1) {
-        $acc .= "    \\field{extraalpha}{$ea}\n";
+        $acc .= "    <BDS>EXTRAALPHA</BDS>\n";
       }
     }
   }

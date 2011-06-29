@@ -994,10 +994,10 @@ sub process_sets {
 
     We can retreive the actual labelname value later with:
 
-    $entry->get_field($entry->get_field('labelnamename))
+    $entry->get_field($entry->get_field('labelnamename'))
 
-    It's neat this way as we often need to know what the labelname field is
-    as well as it's actual string value
+    It is neat this way as we often need to know what the labelname field is
+    as well as its actual string value
 
 =cut
 
@@ -1241,7 +1241,7 @@ sub process_labelalpha {
 =head2 process_presort
 
     Put presort fields for an entry into the main Biber bltx state
-    so that it's all available in the same place since this can be
+    so that it is all available in the same place since this can be
     set per-type and globally too.
 
 =cut

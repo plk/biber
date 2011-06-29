@@ -268,7 +268,7 @@ sub get_keys {
   Do any dynamic information replacement for information
   which varies in an entry between lists. This is information which
   needs to be output to the .bbl for an entry but which is a property
-  of the sorting list and not the entry per se so it can't be stored
+  of the sorting list and not the entry per se so it cannot be stored
   statically in the entry and must be pulled from the specific list
   when outputting the entry.
 

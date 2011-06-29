@@ -281,7 +281,8 @@ sub set_output_entry {
   }
 
   # The labelalpha option determines whether "extraalpha" is output
-  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
+  # For labelalpha=2, we don't use extraalpha, it's all done by custom label
+  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) == 1) {
     # Might not have been set due to skiplab/dataonly
     if (my $nameyear_extra = $be->get_field('nameyear_extra')) {
       if ( Biber::Config->get_seen_nameyear_extra($nameyear_extra) > 1) {
