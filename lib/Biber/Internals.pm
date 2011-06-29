@@ -329,6 +329,7 @@ our $dispatch_label = {
   'afterword'         =>  [\&_label_name,             ['afterword']],
   'annotator'         =>  [\&_label_name,             ['annotator']],
   'author'            =>  [\&_label_name,             ['author']],
+  'autoinc'           =>  [\&_label_autoinc,          []],
   'bookauthor'        =>  [\&_label_name,             ['bookauthor']],
   'booktitle'         =>  [\&_label_title,            ['booktitle']],
   'commentator'       =>  [\&_label_name,             ['commentator']],
@@ -473,6 +474,24 @@ sub _dispatch_label {
 # Label dispatch routines
 #########################
 
+sub _label_autoinc {
+  my ($self, $citekey, $args, $labelattrs) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $format = $labelattrs->{format} || 'alpha';
+  # This can't and shouldn't be generated here, it's done later during list construction
+  if ($format eq 'alpha') {
+    return ['<BDS>LAAUTOA</BDS>', '<BDS>LAAUTOA</BDS>'];
+  }
+  elsif ($format eq 'int') {
+    return ['<BDS>LAAUTOI</BDS>', '<BDS>LAAUTOI</BDS>'];
+  }
+  else {
+    return ['', ''];
+  }
+}
+
 sub _label_day {
   my ($self, $citekey, $args, $labelattrs) = @_;
   my $secnum = $self->get_current_section;
@@ -500,7 +519,7 @@ sub _label_extrayear {
       return ['<BDS>LAEXTRAYEARA</BDS>', '<BDS>LAEXTRAYEARA</BDS>'];
     }
     elsif ($format eq 'int') {
-      return ['<BDS>LAEXTRAYEARN</BDS>', '<BDS>LAEXTRAYEARN</BDS>'];
+      return ['<BDS>LAEXTRAYEARI</BDS>', '<BDS>LAEXTRAYEARI</BDS>'];
     }
   }
   else {

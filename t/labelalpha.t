@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 89;
+use Test::More tests => 90;
 
 use Biber;
 use Biber::Utils;
@@ -211,7 +211,8 @@ is($bibentries->entry('l12')->get_field('sortlabelalpha'), 'vRvB2', 'prefix labe
 is($bibentries->entry('l13')->get_field('sortlabelalpha'), 'vRa-ksUnV', 'per-type labelalpha 1');
 is($bibentries->entry('l14')->get_field('sortlabelalpha'), 'Alabel-ksUnW', 'per-type labelalpha 2');
 is($bibentries->entry('l15')->get_field('sortlabelalpha'), 'AccBrClim', 'labelalpha disambiguation 1');
-is($bibentries->entry('l16')->get_field('sortlabelalpha'), 'AccBaClim', 'labelalpha disambiguation 2');
+is($bibentries->entry('l16')->get_field('sortlabelalpha'), 'AccBaClima', 'labelalpha disambiguation 2');
+is($bibentries->entry('l16a')->get_field('sortlabelalpha'), 'AccBaClimb', 'labelalpha disambiguation 2a');
 is($bibentries->entry('l17')->get_field('sortlabelalpha'), 'AckBaClim<BDS>LAEXTRAYEARA</BDS>', 'labelalpha disambiguation 3');
 is($main->get_extradata('l17a'), '2', 'custom labelalpha extrayear 1');
 is($out->get_output_entry($main, 'l17a'), $l17a, 'custom labelalpha extrayear 2');

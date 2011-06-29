@@ -178,6 +178,14 @@
       <bcf:labelpart format="alpha">extrayear</bcf:labelpart>
     </bcf:labelelement>
   </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="booklet">
+    <bcf:labelelement order="1">
+      <bcf:labelpart substring_width="n" substring_width_max="4" substring_side="left">labelname</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="2">
+      <bcf:labelpart format="alpha">autoinc</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
   <!-- INHERITANCE -->
   <bcf:inheritance>
     <bcf:defaults inherit_all="true" override_target="false">
@@ -311,6 +319,7 @@
     <bcf:citekey>L14</bcf:citekey>
     <bcf:citekey>L15</bcf:citekey>
     <bcf:citekey>L16</bcf:citekey>
+    <bcf:citekey>L16a</bcf:citekey>
     <bcf:citekey>L17</bcf:citekey>
     <bcf:citekey>L17a</bcf:citekey>
     <bcf:citekey>L18</bcf:citekey>

@@ -2,6 +2,7 @@ package Biber::Section::List;
 use feature ':5.10';
 #use feature 'unicode_strings';
 use Biber::Utils;
+use Biber::Constants;
 use List::Util qw( first );
 
 =encoding utf-8
@@ -296,7 +297,8 @@ sub instantiate_entry {
 
   my $eys;
   my $eas;
-  my $e = $self->get_extradata($key);
+  # Want an empty string in the replacements below if this is not set
+  my $e = $self->get_extradata($key) || '';
   # Might not be set due to skip
   if ($e) {
     $eys = "    \\field{extrayear}{$e}\n";
@@ -304,9 +306,12 @@ sub instantiate_entry {
   }
   $entry_string =~ s|^\s*<BDS>EXTRAYEAR</BDS>\n|$eys|gxms;
   $entry_string =~ s|^\s*<BDS>EXTRAALPHA</BDS>\n|$eas|gxms;
-  $entry_string =~ s|<BDS>LAEXTRAYEARN</BDS>|$e|gxms;
-  my %ntol; @ntol{(1 .. 26)} = ('a' .. 'z');
-  $entry_string =~ s|<BDS>LAEXTRAYEARA</BDS>|$ntol{$e}|gxms;
+
+  # These to data strings allow users to insert the extrayear value into a
+  # labelalpha in either numeric or alphabetic form
+  $entry_string =~ s|<BDS>LAEXTRAYEARI</BDS>|$e|gxms;
+  my $ea = $NTOL{$e} || ''; # to avoid uninitialised warnings in s///
+  $entry_string =~ s|<BDS>LAEXTRAYEARA</BDS>|$ea|gxms;
 
   return $entry_string;
 }

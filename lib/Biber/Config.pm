@@ -39,6 +39,9 @@ $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{seenname} = {};
 $CONFIG->{state}{keycase} = {};
 
+# Disambiguation data for labelalpha. Used for labelalphatemplate autoinc method
+$CONFIG->{state}{ladisambiguation} = {};
+
 # For the uniquelist feature. Records the number of times a name list occurs in all entries
 $CONFIG->{state}{uniquelistcount} = {};
 
@@ -75,6 +78,7 @@ sub _init {
   $CONFIG->{state}{control_file_location} = '';
   $CONFIG->{state}{seenname} = {};
   $CONFIG->{state}{crossrefkeys} = {};
+  $CONFIG->{state}{ladisambiguation} = {};
   $CONFIG->{state}{uniquenamecount} = {};
   $CONFIG->{state}{uniquenamecount_all} = {};
   $CONFIG->{state}{uniquelistcount} = {};
@@ -471,6 +475,42 @@ sub getblxoption {
 ##############################
 # Biber state static methods
 ##############################
+
+#============================
+#  labelalpha disambiguation
+#============================
+
+=head2 incr_la_disambiguation
+
+    Increment a counter to say we have seen this labelalpha
+
+    Biber::Config->incr_la_disambiguation($la);
+
+=cut
+
+sub incr_la_disambiguation {
+  shift; # class method so don't care about class name
+  my ($la, $citekey) = @_;
+  push @{$CONFIG->{state}{ladisambiguation}{$la}}, $citekey;
+  return;
+}
+
+
+=head2 get_la_disambiguation
+
+    Get the disambiguation counter for this labelalpha
+
+    Biber::Config->get_la_disambiguation($la);
+
+=cut
+
+sub get_la_disambiguation {
+  shift; # class method so don't care about class name
+  my $la = shift;
+  return $CONFIG->{state}{ladisambiguation}{$la};
+}
+
+
 
 #============================
 #        seenkey

@@ -13,7 +13,7 @@ use IO::File;
 use POSIX qw( locale_h ); # for sorting with built-in "sort"
 use Biber::Config;
 use Biber::Constants;
-use List::Util qw( first );
+use List::AllUtils qw( :all );
 use Digest::MD5 qw( md5_hex );
 use Biber::Internals;
 use Biber::Entries;
@@ -913,6 +913,14 @@ sub process_entries_post {
     # generate labelalpha information
     $self->process_labelalpha($citekey);
 
+    # generate labelalpha disambiguation
+    # This is different to extrayear disambiguation in that
+    # it disambiguates the labelalphas themselves. This is useful
+    # if the labelalphas are not <name><year> because in such a case
+    # the counters for extrayear aren't much use because they are
+    # designed for a <name><year> disambiguation.
+    $self->process_labelalpha_disambiguation($citekey);
+
     # generate namehash
     $self->process_namehash($citekey);
 
@@ -923,6 +931,48 @@ sub process_entries_post {
   $logger->debug("Finished processing entries in section $secnum (after uniqueness)");
 
   return;
+}
+
+=head2 process_labelalpha_autoinc
+
+    Instantiate any labelalpha autoinc data
+    This late-bound data doesn't depend on sorting order so it can be
+    instantiated here rather than just before list output.
+
+=cut
+
+sub process_labelalpha_autoinc {
+  my $self = shift;
+  my $citekey = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  foreach my $citekey ( $section->get_citekeys ) {
+    $logger->debug("Instantiating any labelalpha template autoincrements for '$citekey' from section $secnum");
+    my $be = $section->bibentry($citekey);
+    my $bee = $be->get_field('entrytype');
+    if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) == 2) {
+      if (my $la = $be->get_field('labelalpha')) {
+        my $sla = $be->get_field('sortlabelalpha');
+        my $lad = Biber::Config->get_la_disambiguation($la);
+        $logger->trace("labelalpha autoinc disambiguation data for '$la': " . Data::Dump::pp($lad));
+        my $auto = '';
+        if ($#$lad > 0) {     # If some disambiguation needs doing ...
+          $auto = first_index {$_ eq $citekey} @$lad;
+          $auto++;              # convert from 0-base
+        }
+        $la =~ s|<BDS>LAAUTOI</BDS>|$auto|gxms;
+        $sla =~ s|<BDS>LAAUTOI</BDS>|$auto|gxms;
+
+        my $autoa = $NTOL{$auto} || ''; # to avoid uninitialised warnings in s///
+        $la =~ s|<BDS>LAAUTOA</BDS>|$autoa|gxms;
+        $sla =~ s|<BDS>LAAUTOA</BDS>|$autoa|gxms;
+
+        # re-set labelalpha and sortlabelalpha
+        $be->set_field('labelalpha', $la);
+        $be->set_field('sortlabelalpha', $sla);
+      }
+    }
+  }
 }
 
 
@@ -1236,6 +1286,27 @@ sub process_labelalpha {
     $be->set_field('sortlabelalpha', $sortlabel);
   }
 }
+
+=head2 process_labelalpha_disambiguation
+
+    Generate the labelalpha disambiguation data
+
+=cut
+
+sub process_labelalpha_disambiguation {
+  my $self = shift;
+  my $citekey = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
+  if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) == 2) {
+    if (my $la = $be->get_field('labelalpha')) {
+      Biber::Config->incr_la_disambiguation($la, $citekey);
+    }
+  }
+}
+
 
 
 =head2 process_presort
@@ -2037,11 +2108,14 @@ sub create_extras_st_info {
     unless (Biber::Config->getblxoption('skiplab',
                                         $be->get_field('entrytype'),
                                         $be->get_field('dskey'))) {
-      my $nameyear_string_extra = "$name_string,$year_string_extra";
-      $logger->trace("Setting nameyear_extra to '$nameyear_string_extra' for entry '$citekey'");
-      $be->set_field('nameyear_extra', $nameyear_string_extra);
-      $logger->trace("Incrementing nameyear_extra for '$name_string'");
-      Biber::Config->incr_seen_nameyear_extra($name_string, $year_string_extra);
+      if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype')) or
+          Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
+        my $nameyear_string_extra = "$name_string,$year_string_extra";
+        $logger->trace("Setting nameyear_extra to '$nameyear_string_extra' for entry '$citekey'");
+        $be->set_field('nameyear_extra', $nameyear_string_extra);
+        $logger->trace("Incrementing nameyear_extra for '$name_string'");
+        Biber::Config->incr_seen_nameyear_extra($name_string, $year_string_extra);
+      }
     }
   }
   return;
@@ -2389,6 +2463,7 @@ sub prepare {
     $self->process_entries_pre;          # Main entry processing loop, part 1
     $self->uniqueness;                   # Here we generate uniqueness information
     $self->process_entries_post;         # Main entry processing loop, part 2
+    $self->process_labelalpha_autoinc;   # Instantiate labelalpha template autoincrements
     $self->create_extras_st_info;        # Generate singltitle/extras* information
     $self->process_lists;                # process the output lists (sort and filtering)
     $self->generate_singletitle;         # Generate singletitle field if requested
