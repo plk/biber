@@ -296,13 +296,17 @@ sub instantiate_entry {
 
   my $eys;
   my $eas;
+  my $e = $self->get_extradata($key);
   # Might not be set due to skip
-  if (my $e = $self->get_extradata($key)) {
+  if ($e) {
     $eys = "    \\field{extrayear}{$e}\n";
     $eas = "    \\field{extraalpha}{$e}\n";
   }
   $entry_string =~ s|^\s*<BDS>EXTRAYEAR</BDS>\n|$eys|gxms;
   $entry_string =~ s|^\s*<BDS>EXTRAALPHA</BDS>\n|$eas|gxms;
+  $entry_string =~ s|<BDS>LAEXTRAYEARN</BDS>|$e|gxms;
+  my %ntol; @ntol{(1 .. 26)} = ('a' .. 'z');
+  $entry_string =~ s|<BDS>LAEXTRAYEARA</BDS>|$ntol{$e}|gxms;
 
   return $entry_string;
 }

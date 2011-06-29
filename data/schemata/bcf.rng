@@ -179,6 +179,14 @@
                     </attribute>
                   </optional>
                   <optional>
+                    <attribute name="format">
+                      <choice>
+                        <value>alpha</value>
+                        <value>int</value>
+                      </choice>
+                    </attribute>
+                  </optional>
+                  <optional>
                     <attribute name="substring_width">
                       <choice>
                         <data type="integer"/>

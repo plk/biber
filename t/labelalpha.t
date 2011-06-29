@@ -166,6 +166,7 @@ Biber::Config->setblxoption('minalphanames', 4);
 Biber::Config->setblxoption('maxnames', 4);
 Biber::Config->setblxoption('minnames', 4);
 Biber::Config->setblxoption('labelalpha', 2);
+Biber::Config->setblxoption('labelyear', 1);
 
 for (my $i=1; $i<23; $i++) {
   $bibentries->entry("l$i")->del_field('sortlabelalpha');
@@ -174,9 +175,35 @@ for (my $i=1; $i<23; $i++) {
 }
 
 $biber->prepare;
+my $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
 $main = $section->get_list('MAIN');
 $bibentries = $section->bibentries;
+
+# Testing replacement of <BDS>LAEXTRAYEAR</BDS> in labelalpha
+# This happens right before output so it has to be tested with a .bbl fragment
+my $l17a = q|  \entry{L17a}{report}{}
+    \name{labelname}{3}{}{%
+      {{hash=d24fdb53ddc36086f32a53bd667f115c}{Ackkerman}{A\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=0bb9b47c5e9a5d1356e7ee1ca0a5d41c}{Baff}{B\bibinitperiod}{Bert}{B\bibinitperiod}{}{}{}{}}%
+      {{hash=05e4d4d51407576d03ce0c4552b25a8b}{Climbi}{C\bibinitperiod}{Clive}{C\bibinitperiod}{}{}{}{}}%
+    }
+    \name{author}{3}{}{%
+      {{hash=d24fdb53ddc36086f32a53bd667f115c}{Ackkerman}{A\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=0bb9b47c5e9a5d1356e7ee1ca0a5d41c}{Baff}{B\bibinitperiod}{Bert}{B\bibinitperiod}{}{}{}{}}%
+      {{hash=05e4d4d51407576d03ce0c4552b25a8b}{Climbi}{C\bibinitperiod}{Clive}{C\bibinitperiod}{}{}{}{}}%
+    }
+    \strng{namehash}{da1620b372726a7dff893adbcd7acb92}
+    \strng{fullhash}{da1620b372726a7dff893adbcd7acb92}
+    \field{labelalpha}{AckBaClimb}
+    \field{sortinit}{A}
+    \field{extrayear}{2}
+    \field{labelyear}{1911}
+    \field{title}{Title2}
+    \field{year}{1911}
+  \endentry
+
+|;
 
 is($bibentries->entry('l11')->get_field('sortlabelalpha'), 'vRan22', 'prefix labelalpha 1');
 is($bibentries->entry('l12')->get_field('sortlabelalpha'), 'vRvB2', 'prefix labelalpha 2');
@@ -185,9 +212,9 @@ is($bibentries->entry('l13')->get_field('sortlabelalpha'), 'vRa-ksUnV', 'per-typ
 is($bibentries->entry('l14')->get_field('sortlabelalpha'), 'Alabel-ksUnW', 'per-type labelalpha 2');
 is($bibentries->entry('l15')->get_field('sortlabelalpha'), 'AccBrClim', 'labelalpha disambiguation 1');
 is($bibentries->entry('l16')->get_field('sortlabelalpha'), 'AccBaClim', 'labelalpha disambiguation 2');
-is($bibentries->entry('l17')->get_field('sortlabelalpha'), 'AckBaClim', 'labelalpha disambiguation 3');
-is($main->get_extradata('l17'), '1', 'custom labelalpha extrayear 1');
-is($main->get_extradata('l17a'), '2', 'custom labelalpha extrayear 2');
+is($bibentries->entry('l17')->get_field('sortlabelalpha'), 'AckBaClim<BDS>LAEXTRAYEARA</BDS>', 'labelalpha disambiguation 3');
+is($main->get_extradata('l17a'), '2', 'custom labelalpha extrayear 1');
+is($out->get_output_entry($main, 'l17a'), $l17a, 'custom labelalpha extrayear 2');
 is($bibentries->entry('l18')->get_field('sortlabelalpha'), 'AgChLa', 'labelalpha disambiguation 4');
 is($bibentries->entry('l19')->get_field('sortlabelalpha'), 'AgConLe', 'labelalpha disambiguation 5');
 is($bibentries->entry('l20')->get_field('sortlabelalpha'), 'AgCouLa', 'labelalpha disambiguation 6');

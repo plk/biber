@@ -493,9 +493,15 @@ sub _label_extrayear {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
+  my $format = $labelattrs->{format} || 'alpha';
   if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
     # This can't and shouldn't be generated here, it's done later during list construction
-    return ['<BDS>EXTRAYEAR</BDS>', '<BDS>EXTRAYEAR</BDS>'];
+    if ($format eq 'alpha') {
+      return ['<BDS>LAEXTRAYEARA</BDS>', '<BDS>LAEXTRAYEARA</BDS>'];
+    }
+    elsif ($format eq 'int') {
+      return ['<BDS>LAEXTRAYEARN</BDS>', '<BDS>LAEXTRAYEARN</BDS>'];
+    }
   }
   else {
     return ['', ''];
