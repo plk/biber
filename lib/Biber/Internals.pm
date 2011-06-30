@@ -751,8 +751,8 @@ sub _process_label_attributes {
             # or substring_width_max. Then we save the index of the list element which is
             # the minimal disambiguation if it's not yet defined
             push @{$lcache->{$map->[0]}{data}}, $map->[1];
-            if (not $lcache->{$map->[0]}{index} and
-                ($substr_cache{$map->[1]} < 2 or $i == $maxlen)) {
+            if (not exists($lcache->{$map->[0]}{index}) and
+                ($substr_cache{$map->[1]} == 1 or $i == $maxlen)) {
               # -1 to make it into a clean array index
               $lcache->{$map->[0]}{index} = length($map->[1]) - 1;
             }
@@ -803,24 +803,6 @@ sub _process_label_attributes {
       #                     } $section->get_citekeys;
 
 
-
-# my @strings = (['Agassi', 'Chang',   'Laver']
-#                ['Agassi', 'Connors', 'Lendl'],
-#                ['Agassi', 'Courier', 'Laver'],
-#                ['Borg',   'Connors', 'Edberg'],
-#                ['Borg',   'Connors', 'Emerson']);
-
-# my %substr_cache = ();
-# my $ml = max map {$#$_} @strings;
-# foreach my $list (@strings) {
-#   for ($i = 0; $i <= $#$list; $i++) {
-#     my @col = map {$_->[$i]} @strings;
-#     foreach my $map (map { my $s = substr($_, 0, $i); $substr_cache{$s}++; [$_, $s] } @col) {
-
-#     }
-#   }
-
-# }
 
 
 
