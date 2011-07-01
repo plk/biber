@@ -826,6 +826,77 @@ sub _process_label_attributes {
   return $field_string;
 }
 
+# This turns a list of label strings:
+# (
+#  ['Agassi', 'Chang',   'Laver', 'bob'],
+#  ['Agassi', 'Connors', 'Lendl'],
+#  ['Agassi', 'Courier', 'Laver'],
+#  ['Borg',   'Connors', 'Edberg'],
+#  ['Borg',   'Connors', 'Emerson']
+# )
+#
+# firstly into the equivalence context:
+# (
+#   ["", "Agassi", "AgassiChang", "AgassiChangLaver"],
+#   ["", "Agassi", "AgassiConnors"],
+#   ["", "Agassi", "AgassiCourier"],
+#   ["", "Borg", "BorgConnors"],
+#   ["", "Borg", "BorgConnors"],
+# )
+#
+# and finally, using this, into a disambiguated list of the same
+# strings.
+#
+# (
+#  ['A', 'Ch',  'L',  'b'],
+#  ['A', 'Con', 'L',  ''],
+#  ['A', 'Cou', 'L',  ''],
+#  ['B', 'C',   'Ed', ''],
+#  ['B', 'C',   'Em', '']
+# )
+#
+sub _label_listdisambiguation {
+  my $strings = shift;
+  my @equiv_class = map {my $acc; [map {$acc .= $_} ('', @$_[0 .. $#$_ - 1])]} @$strings;
+  my $ml = max map {$#$_} @$strings;
+  my $lcache = [];
+  for (my $i = 0; $i <= $ml; $i++) {
+    my %substr_cache = ();
+    my @col = map {$_->[$i]} @$strings;
+    my %seen = ();
+    my $maxlen = max map {length($_)} @col;
+    for (my $k = 0; $k <= $#col; $k++) {
+      for (my $j = 1; $j <= $maxlen; $j++) {
+        my $s = substr($col[$k], 0, $j);
+        $substr_cache{$equiv_class[$k]->[$i]}{$s}++;
+      }
+    }
+
+    for (my $j = 1; $j <= $maxlen; $j++) {
+      for (my $k = 0; $k <= $#col; $k++) {
+        my $s = substr($col[$k], 0, $j);
+        # We need the items from @col which are in the same equivalance class  as the current
+        # @col item
+        my @col_eq = @col[indexes {$equiv_class[$k]->[$i] eq $_} map {$_->[$i]} @equiv_class];
+        # Then we count the items in this slice of @col to see if it's the same size
+        # as the substring cache count for this substring. If it is, we can stop here.
+        # It would be more obvious to look for the first substring with count == 1 but
+        # we can't do that because this requires using uniq to trim @col and we can do that
+        # because we need to keep the indexes into $strings the same dimensions as @equiv_class
+        if (not $lcache->[$k][$i] and
+            ($substr_cache{$equiv_class[$k]->[$i]}{$s} == scalar(grep {$_ eq $col[$k] } @col_eq) or
+             $j == $maxlen)) {
+          # -1 to make it into a clean array index
+          # If we reach the end of the list, it the same as using the first index
+          my $l = ($j == $maxlen) ? 0 : length($s) - 1;
+          $lcache->[$k][$i] = $s;
+        }
+      }
+    }
+  }
+  return $lcache;
+}
+
 
 #########
 # Sorting
