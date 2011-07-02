@@ -342,7 +342,7 @@ sub _name {
   my $names = new Biber::Entry::Names;
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $dskey);
   foreach my $name ($entry->findnodes("./contributors/$f/*")) {
-    $names->add_element(parsename($name, $f, {useprefix => $useprefix}));
+    $names->add_name(parsename($name, $f, {useprefix => $useprefix}));
   }
   $bibentry->set_datafield($to, $names);
   return;

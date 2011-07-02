@@ -322,7 +322,7 @@ sub _name {
         namestring      => $namestring,
         nameinitstring  => $nameinitstr
       );
-      $names_obj->add_element($name_obj);
+      $names_obj->add_name($name_obj);
       $bibentry->set_datafield($to, $names_obj);
 
       # Special case

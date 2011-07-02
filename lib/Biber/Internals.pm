@@ -54,19 +54,19 @@ sub _getnamehash {
   }
 
   # If name list was truncated in bib with "and others", this overrides maxnames
-  my $morenames = ($names->last_element->get_namestring eq 'others') ? 1 : 0;
-  if ( $morenames or $names->count_elements > $maxn ) {
+  my $morenames = ($names->last_name->get_namestring eq 'others') ? 1 : 0;
+  if ( $morenames or $names->count_names > $maxn ) {
 
     # truncate to the uniquelist point if uniquelist is requested
     if ($ul) {
-      $truncnames = $truncnames->first_n_elements($ul);
+      $truncnames = $truncnames->first_n_names($ul);
       # Since uniquelist can be larger than maxnames, it's only truncated
       # if uniquelist is shorter than the full name list
-      $truncated = 1 if $ul < $names->count_elements;
+      $truncated = 1 if $ul < $names->count_names;
     }
     # otherwise truncate to minnames
     else {
-      $truncnames = $truncnames->first_n_elements($minn);
+      $truncnames = $truncnames->first_n_names($minn);
       $truncated = 1;
     }
   }
@@ -127,19 +127,19 @@ sub _getnamehash_u {
   }
 
   # If name list was truncated in bib with "and others", this overrides maxnames
-  my $morenames = ($names->last_element->get_namestring eq 'others') ? 1 : 0;
-  if ( $morenames or $names->count_elements > $maxn ) {
+  my $morenames = ($names->last_name->get_namestring eq 'others') ? 1 : 0;
+  if ( $morenames or $names->count_names > $maxn ) {
 
     # truncate to the uniquelist point if uniquelist is requested
     if ($ul) {
-      $truncnames = $truncnames->first_n_elements($ul);
+      $truncnames = $truncnames->first_n_names($ul);
       # Since uniquelist can be larger than maxnames, it's only truncated
       # if uniquelist is shorter than the full name list
-      $truncated = 1 if $ul < $names->count_elements;
+      $truncated = 1 if $ul < $names->count_names;
     }
     # otherwise truncate to minnames
     else {
-      $truncnames = $truncnames->first_n_elements($minn);
+      $truncnames = $truncnames->first_n_names($minn);
       $truncated = 1;
     }
   }
@@ -280,10 +280,10 @@ sub _genlabel {
 
   my @lastnames = map { strip_nosort(normalise_string($_->get_lastname), $namefield) } @{$names->names};
   my @prefices  = map { $_->get_prefix } @{$names->names};
-  my $numnames  = $names->count_elements;
+  my $numnames  = $names->count_names;
 
   # If name list was truncated in bib with "and others", this overrides maxnames
-  my $morenames = ($names->last_element->get_namestring eq 'others') ? 1 : 0;
+  my $morenames = ($names->last_name->get_namestring eq 'others') ? 1 : 0;
   my $nametrunc;
   my $loopnames;
 
@@ -409,13 +409,13 @@ sub _labelpart {
       if (first {$_ eq $f} @{$struc->get_field_type('name')} or
           $f eq 'labelname') {
         my $name = $be->get_field($f) || next; # just in case there is no labelname etc.
-        my $total_names = $name->count_elements;
+        my $total_names = $name->count_names;
 
         # Allow for explicit "and others" for purposes of labels,
         # this is length one less because "and others" is handled by
         # alphaothers. Otherwise for "John Doe and others" you get
         # "D+" instead of "Doe+" etc.
-        if ($name->last_element->get_namestring eq 'others') {
+        if ($name->last_name->get_namestring eq 'others') {
           $total_names--;
         }
 
@@ -622,12 +622,12 @@ sub _label_name {
   if (Biber::Config->getblxoption("use$lnameopt", $be->get_field('entrytype'), $citekey) and
     $be->get_field($namename)) {
     my $names = $be->get_field($namename);
-    my $numnames  = $names->count_elements;
+    my $numnames  = $names->count_names;
     my @lastnames = map { strip_nosort(normalise_string($_->get_lastname), $namename) } @{$names->names};
     my @prefices  = map { $_->get_prefix } @{$names->names};
 
     # If name list was truncated in bib with "and others", this overrides maxnames
-    my $morenames = ($names->last_element->get_namestring eq 'others') ? 1 : 0;
+    my $morenames = ($names->last_name->get_namestring eq 'others') ? 1 : 0;
     my $nametrunc;
     my $loopnames;
 
@@ -639,7 +639,7 @@ sub _label_name {
       $loopnames = $lc; # Only look as many names as specified
     }
     elsif ($morenames or ($numnames > $maxnames)) {
-      $loopnames = $minnames; # Only look at $minnames names if no uniquelist set
+      $loopnames = $minnames; # Only look at $minnames names if > $maxnames
       $nametrunc = 1;
     }
     else {
@@ -648,7 +648,7 @@ sub _label_name {
 
     for (my $i=0; $i<$loopnames; $i++) {
       $acc .= substr($prefices[$i] , 0, 1) if ($useprefix and $prefices[$i]);
-      $acc .= _process_label_attributes($self, $citekey, $lastnames[$i], $labelattrs, $namename, 'lastname');
+      $acc .= _process_label_attributes($self, $citekey, $lastnames[$i], $labelattrs, $namename, 'lastname', $i);
     }
 
     $sortacc = $acc;
@@ -721,14 +721,16 @@ sub _label_year {
 
 # Modify label string according to some attributes
 sub _process_label_attributes {
-  my ($self, $citekey, $field_string, $labelattrs, $field, $namepart) = @_;
+  my ($self, $citekey, $field_string, $labelattrs, $field, $namepart, $index) = @_;
   return $field_string unless $labelattrs;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+  my @citekeys = $section->get_citekeys;
+  my $nindex = first_index {$_ eq $citekey} @citekeys;
 
   if ($labelattrs->{substring_width}) {
     # dynamically disambiguated width (individual name disambiguation)
-    if ($labelattrs->{substring_width} =~ /n/ and $field) {
+    if ($labelattrs->{substring_width} =~ /v/ and $field) {
       # Use the cache if there is one
       if (my $lcache = $section->get_labelcache($field)) {
         $logger->debug("Using label disambiguation cache (name) for '$field' in section $secnum");
@@ -742,7 +744,7 @@ sub _process_label_attributes {
         # This ends up as a flat list due to array interpolation
         my @strings = uniq map {my $f = $section->bibentry($_)->get_field($field);
                            $namepart ? map {$_->get_namepart($namepart)} @{$f->names} : $f
-                          } $section->get_citekeys;
+                          } @citekeys;
         # Look to the index of the longest string or the explicit max width if set
         my $maxlen = $labelattrs->{substring_width_max} || max map {length($_)} @strings;
         for (my $i = 1; $i <= $maxlen; $i++) {
@@ -785,30 +787,27 @@ sub _process_label_attributes {
     }
     # dynamically disambiguated width (list disambiguation)
     elsif ($labelattrs->{substring_width} =~ /l/ and $field) {
-      # my $f = $section->bibentry($citekey)->get_field($field);
-      # my $in = $namepart ? [map {$_->get_namepart($namepart)} @{$f->names}] : [$f];
-      # # Use the cache if there is one
-      # if (my $lcache = $section->get_labelcache($field)) {
-      #   $logger->debug("Using label disambiguation cache (list) for '$field' in section $secnum");
-      #   # Use the global index override if set (substring_width =~ /f/)
-      #   $field_string = ${$lcache->{$field_string}{data}}[$lcache->{globalindex} || $lcache->{$field_string}{index}];
-      # }
-      # else {
-      #   # This contains a mapping of strings to substrings of increasing lengths
-      #   my %substr_cache = ();
-      #   my $lcache = {};
-      #   # This retains the structure of the entries for the "l" list disambiguation
-      #   my @strings = map {my $f = $section->bibentry($_)->get_field($field);
-      #                      $namepart ? [map {$_->get_namepart($namepart)} @{$f->names}] : [$f]
-      #                     } $section->get_citekeys;
+      # Use the cache if there is one
+      if (my $lcache = $section->get_labelcache($field)) {
+        $logger->debug("Using label disambiguation cache (list) for '$field' in section $secnum");
+        $field_string = $lcache->{data}[$nindex][$index];
+      }
+      else {
+        # This retains the structure of the entries for the "l" list disambiguation
+        my $strings = [map {my $f = $section->bibentry($_)->get_field($field);
+                            $namepart ? [map {$_->get_namepart($namepart)} @{$f->names}] : [$f]
+                          } @citekeys];
+        my $lcache = _label_listdisambiguation($strings);
+        $field_string = $lcache->{data}[$nindex][$index];
 
-
-
-
-
-
-
-      # }
+        $logger->debug("Creating label disambiguation (list) cache for '$field' " .
+                       ($namepart ? "($namepart) " : '') .
+                       "in section $secnum");
+        $logger->trace("Label disambiguation (list) cache for '$field' " .
+                       ($namepart ? "($namepart) " : '') .
+                       "in section $secnum:\n " . Data::Dump::pp($lcache));
+        $section->set_labelcache($field, $lcache);
+      }
     }
     # static substring width
     else {
@@ -847,24 +846,36 @@ sub _process_label_attributes {
 # and finally, using this, into a disambiguated list of the same
 # strings.
 #
-# (
-#  ['A', 'Ch',  'L',  'b'],
-#  ['A', 'Con', 'L',  ''],
-#  ['A', 'Cou', 'L',  ''],
-#  ['B', 'C',   'Ed', ''],
-#  ['B', 'C',   'Em', '']
-# )
+# { data => [
+#            ['A', 'Ch',  'L',  'b'],
+#            ['A', 'Con', 'L',  ''],
+#            ['A', 'Cou', 'L',  ''],
+#            ['B', 'C',   'Ed', ''],
+#            ['B', 'C',   'Em', '']
+#           ],
+#  globalindex => 3
+# }
 #
+
 sub _label_listdisambiguation {
   my $strings = shift;
-  my @equiv_class = map {my $acc; [map {$acc .= $_} ('', @$_[0 .. $#$_ - 1])]} @$strings;
+  # normalise to the same length
   my $ml = max map {$#$_} @$strings;
-  my $lcache = [];
+  foreach my $row (@$strings) {
+    for (my $i = 0; $i <= $ml; $i++) {
+      $row->[$i] = $row->[$i] // '';
+    }
+  }
+
+  my @equiv_class = map {my $acc; [map {$acc .= $_} ('', @$_[0 .. $#$_ - 1])]} @$strings;
+  my $lcache = {};
   for (my $i = 0; $i <= $ml; $i++) {
+    # This contains a mapping of equivalance classes to strings to substrings of
+    # increasing lengths
     my %substr_cache = ();
     my @col = map {$_->[$i]} @$strings;
     my %seen = ();
-    my $maxlen = max map {length($_)} @col;
+    my $maxlen = max map {length} @col;
     for (my $k = 0; $k <= $#col; $k++) {
       for (my $j = 1; $j <= $maxlen; $j++) {
         my $s = substr($col[$k], 0, $j);
@@ -883,17 +894,16 @@ sub _label_listdisambiguation {
         # It would be more obvious to look for the first substring with count == 1 but
         # we can't do that because this requires using uniq to trim @col and we can do that
         # because we need to keep the indexes into $strings the same dimensions as @equiv_class
-        if (not $lcache->[$k][$i] and
+        if (not $lcache->{data}[$k][$i] and
             ($substr_cache{$equiv_class[$k]->[$i]}{$s} == scalar(grep {$_ eq $col[$k] } @col_eq) or
              $j == $maxlen)) {
-          # -1 to make it into a clean array index
-          # If we reach the end of the list, it the same as using the first index
-          my $l = ($j == $maxlen) ? 0 : length($s) - 1;
-          $lcache->[$k][$i] = $s;
+          $lcache->{data}[$k][$i] = $s;
         }
       }
     }
   }
+  # Set globalindex (length of the longest disambiguation)
+  $lcache->{globalindex} = max map {max map {length} @$_} @{$lcache->{data}};
   return $lcache;
 }
 
@@ -1456,8 +1466,8 @@ sub _namestring {
   }
 
   # If name list was truncated in bib with "and others", this overrides maxnames
-  my $morenames = ($names->last_element->get_namestring eq 'others') ? 1 : 0;
-  if ( $morenames or $names->count_elements > $maxn ) {
+  my $morenames = ($names->last_name->get_namestring eq 'others') ? 1 : 0;
+  if ( $morenames or $names->count_names > $maxn ) {
     # truncate to the uniquelist point if uniquelist is requested and max/minbibnames
     # is equal to max/minnames because in this case the user can expect that the bibliography
     # is sorted according to the citation truncations.
@@ -1467,14 +1477,14 @@ sub _namestring {
     if ($ul and
        $maxn == Biber::Config->getblxoption('maxnames') and
        $minn == Biber::Config->getblxoption('minnames')) {
-      $truncnames = $truncnames->first_n_elements($ul);
+      $truncnames = $truncnames->first_n_names($ul);
       # Since uniquelist can be larger than maxnames, it's only truncated
       # if uniquelist is shorter than the full name list
-      $truncated = 1 if $ul < $names->count_elements;
+      $truncated = 1 if $ul < $names->count_names;
     }
     else {
       # otherwise truncate to minnames
-      $truncnames = $truncnames->first_n_elements($minn);
+      $truncnames = $truncnames->first_n_names($minn);
       $truncated = 1;
     }
   }

@@ -162,17 +162,17 @@
       <bcf:labelpart substring_width="2" substring_side="right">title</bcf:labelpart>
     </bcf:labelelement>
     <bcf:labelelement order="4">
-      <bcf:labelpart substring_width="n">title</bcf:labelpart>
+      <bcf:labelpart substring_width="v">title</bcf:labelpart>
     </bcf:labelelement>
   </bcf:labelalphatemplate>
   <bcf:labelalphatemplate type="unpublished">
     <bcf:labelelement order="1">
-      <bcf:labelpart substring_width="n" substring_width_max="4" substring_side="left">labelname</bcf:labelpart>
+      <bcf:labelpart substring_width="v" substring_width_max="4" substring_side="left">labelname</bcf:labelpart>
     </bcf:labelelement>
   </bcf:labelalphatemplate>
   <bcf:labelalphatemplate type="report">
     <bcf:labelelement order="1">
-      <bcf:labelpart substring_width="n" substring_width_max="4" substring_side="left">labelname</bcf:labelpart>
+      <bcf:labelpart substring_width="v" substring_width_max="4" substring_side="left">labelname</bcf:labelpart>
     </bcf:labelelement>
     <bcf:labelelement order="2">
       <bcf:labelpart format="alpha">extrayear</bcf:labelpart>
@@ -180,7 +180,7 @@
   </bcf:labelalphatemplate>
   <bcf:labelalphatemplate type="booklet">
     <bcf:labelelement order="1">
-      <bcf:labelpart substring_width="n" substring_width_max="4" substring_side="left">labelname</bcf:labelpart>
+      <bcf:labelpart substring_width="v" substring_width_max="4" substring_side="left">labelname</bcf:labelpart>
     </bcf:labelelement>
     <bcf:labelelement order="2">
       <bcf:labelpart format="alpha">autoinc</bcf:labelpart>

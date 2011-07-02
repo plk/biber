@@ -1,5 +1,5 @@
 * TODO labelalphatemplate implementation
-  * list disambiguation for la
+  * list disambiguation for la - loopnames in strings, uninit error
   * Document new la stuff for la=1, extraalpha/year/singletitle are regenerated for every list dynamically. format for counters
   * Take out labelalphatemplate defaults, optional in rnc/rng and parsing when biblatex implements it
   * Moving over to the new labelalpha code means taking out la=1 completely and also removing

@@ -190,10 +190,9 @@
                     <attribute name="substring_width">
                       <choice>
                         <data type="integer"/>
-                        <value>n</value>
+                        <value>v</value>
                         <value>l</value>
-                        <value>nf</value>
-                        <value>lf</value>
+                        <value>vf</value>
                       </choice>
                     </attribute>
                   </optional>

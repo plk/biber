@@ -321,7 +321,7 @@ sub _name {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   my $names = new Biber::Entry::Names;
   foreach my $name ($entry->findnodes("./$f/rdf:Seq/rdf:li/foaf:Person")) {
-    $names->add_element(parsename($name, $f));
+    $names->add_name(parsename($name, $f));
   }
   $bibentry->set_datafield($to, $names);
   return;

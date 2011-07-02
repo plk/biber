@@ -229,7 +229,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
                labelpart => [
                  {
                   content         => "labelname",
-                  substring_width => "nf",
+                  substring_width => "vf",
                   substring_fixed_threshold => 2,
                   substring_side => "left"
                  },
@@ -238,7 +238,8 @@ Biber::Config->setblxoption('labelalphatemplate', {
              },
            ],
   type  => "unpublished",
-});
+}, 'PER_TYPE', 'unpublished');
+
 
 for (my $i=1; $i<23; $i++) {
   $bibentries->entry("l$i")->del_field('sortlabelalpha');
@@ -270,7 +271,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
              },
            ],
   type  => "unpublished",
-});
+}, 'PER_TYPE', 'unpublished');
 
 for (my $i=1; $i<23; $i++) {
   $bibentries->entry("l$i")->del_field('sortlabelalpha');
@@ -284,5 +285,6 @@ $main = $section->get_list('MAIN');
 $bibentries = $section->bibentries;
 
 
-is($bibentries->entry('l21')->get_field('sortlabelalpha'), 'BoCEdb', 'labelalpha disambiguation 7');
-is($bibentries->entry('l22')->get_field('sortlabelalpha'), 'BoCEm', 'labelalpha disambiguation 8');
+is($bibentries->entry('l21')->get_field('sortlabelalpha'), 'BCEd', 'labelalpha disambiguation 7');
+is($bibentries->entry('l22')->get_field('sortlabelalpha'), 'BCEm', 'labelalpha disambiguation 8');
+

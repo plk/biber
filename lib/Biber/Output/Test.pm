@@ -121,14 +121,14 @@ sub set_output_entry {
     }
     $plo =join(',', @plo);
 
-    if ( $ln->last_element->get_namestring eq 'others' ) {
+    if ( $ln->last_name->get_namestring eq 'others' ) {
       $acc .= "    \\true{morelabelname}\n";
-      $ln->del_last_element;
+      $ln->del_last_name;
       # record that we have deleted "others" from labelname field
       # we will need this below
       $name_others_deleted = $lnn;
     }
-    my $total = $ln->count_elements;
+    my $total = $ln->count_names;
     $acc .= "    \\name{labelname}{$total}{$plo}{%\n";
     foreach my $n (@{$ln->names}) {
       $acc .= $n->name_to_bbl;
@@ -146,11 +146,11 @@ sub set_output_entry {
         $acc .= "    \\true{more$namefield}\n";
       }
       # otherwise delete and add the boolean
-      elsif ($nf->last_element->get_namestring eq 'others') {
+      elsif ($nf->last_name->get_namestring eq 'others') {
         $acc .= "    \\true{more$namefield}\n";
-        $nf->del_last_element;
+        $nf->del_last_name;
       }
-      my $total = $nf->count_elements;
+      my $total = $nf->count_names;
       # Copy perl-list options to the actual labelname too
       $plo = '' unless (defined($lnn) and $namefield eq $lnn);
       $acc .= "    \\name{$namefield}{$total}{}{%\n";

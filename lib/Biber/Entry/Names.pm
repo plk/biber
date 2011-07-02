@@ -86,7 +86,7 @@ sub set_uniquelist {
   my $self = shift;
   my $namelist = shift;
   my $uniquelist = $self->count_uniquelist($namelist);
-  my $num_names = $self->count_elements;
+  my $num_names = $self->count_names;
   my $currval = $self->{uniquelist};
   my $minn = Biber::Config->getblxoption('minnames');
   my $maxn = Biber::Config->getblxoption('maxnames');
@@ -101,7 +101,7 @@ sub set_uniquelist {
 
   # Don't set uniquelist unless the list is longer than maxnames as it was therefore
   # never truncated to minnames in the first place and uniquelist is a "local minnames"
-  return unless $self->count_elements > $maxn;
+  return unless $self->count_names > $maxn;
 
   # No disambiguation needed if uniquelist is <= minnames as this makes no sense
   # since it implies that disambiguation beyond minnames was needed.
@@ -112,7 +112,7 @@ sub set_uniquelist {
   # $uniquelist cannot be undef or 0 either since every list occurs at least once.
   # This guarantees that uniquelist, when set, is >1 because minnames cannot
   # be <1
-  return if $uniquelist <= $minn and not $minn == $self->count_elements;
+  return if $uniquelist <= $minn and not $minn == $self->count_names;
 
   # Special case.
   # No point disambiguating with uniquelist lists which have the same count
@@ -183,14 +183,14 @@ sub count_uniquelist {
   return $#$namelist + 1;
 }
 
-=head2 add_element
+=head2 add_name
 
     Add a Biber::Entry::Name object to the Biber::Entry::Names
     object
 
 =cut
 
-sub add_element {
+sub add_name {
   my $self = shift;
   my $name_obj = shift;
   push @{$self->{namelist}}, $name_obj;
@@ -198,37 +198,37 @@ sub add_element {
   return;
 }
 
-=head2 count_elements
+=head2 count_names
 
     Returns the number of Biber::Entry::Name objects in the object
 
 =cut
 
-sub count_elements {
+sub count_names {
   my $self = shift;
   return scalar @{$self->{namelist}};
 }
 
-=head2 nth_element
+=head2 nth_name
 
     Returns the nth Biber::Entry::Name object in the object
 
 =cut
 
-sub nth_element {
+sub nth_name {
   my $self = shift;
   my $n = shift;
   return $self->{namelist}[$n-1];
 }
 
-=head2 first_n_elements
+=head2 first_n_names
 
     Returns a new Biber::Entry::Names object containing only
     the first n entries of $self
 
 =cut
 
-sub first_n_elements {
+sub first_n_names {
   my $self = shift;
   my $n = shift;
   my $uniquelist =  $self->{uniquelist};
@@ -237,25 +237,25 @@ sub first_n_elements {
     Biber::Entry::Names;
 }
 
-=head2 del_last_element
+=head2 del_last_name
 
     Deletes the last Biber::Entry::Name object in the object
 
 =cut
 
-sub del_last_element {
+sub del_last_name {
   my $self = shift;
   pop(@{$self->{namelist}}); # Don't want the return value of this!
   return;
 }
 
-=head2 last_element
+=head2 last_name
 
     Returns the last Biber::Entry::Name object in the object
 
 =cut
 
-sub last_element {
+sub last_name {
   my $self = shift;
   return $self->{namelist}[-1];
 }
