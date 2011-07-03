@@ -136,7 +136,7 @@
       <bcf:labelpart final="1">shorthand</bcf:labelpart>
       <bcf:labelpart>label</bcf:labelpart>
       <bcf:labelpart substring_width="3" substring_side="left" ifnamecount="1">labelname</bcf:labelpart>
-      <bcf:labelpart substring_width="1" substring_side="left">labelname</bcf:labelpart>
+      <bcf:labelpart substring_width="1" substring_side="left" namecount="2">labelname</bcf:labelpart>
     </bcf:labelelement>
     <bcf:labelelement order="2">
       <bcf:labelpart substring_width="2" substring_side="right">year</bcf:labelpart>
@@ -145,7 +145,7 @@
   <bcf:labelalphatemplate type="misc">
     <bcf:labelelement order="1">
       <bcf:labelpart>label</bcf:labelpart>
-      <bcf:labelpart substring_width="2" substring_side="left" namecount="1">labelname</bcf:labelpart>
+      <bcf:labelpart substring_width="vf" substring_fixed_threshold="2">labelname</bcf:labelpart>
     </bcf:labelelement>
     <bcf:labelelement order="2">
       <bcf:labelpart>-</bcf:labelpart>
