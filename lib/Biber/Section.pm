@@ -24,7 +24,8 @@ sub new {
   $self->{bibentries} = new Biber::Entries;
   $self->{allkeys} = 0;
   $self->{citekeys} = [];
-  $self->{labelcache} = {};
+  $self->{labelcache_l} = {};
+  $self->{labelcache_v} = {};
   $self->{sortcache} = [];
   $self->{dkeys} = {};
   $self->{orig_order_citekeys} = [];
@@ -214,27 +215,51 @@ sub del_citekeys {
   return;
 }
 
-=head2 set_labelcache
 
-    Sets the label disambiguation cache for a field
+=head2 set_labelcache_v
+
+    Sets the variable label disambiguation cache for a field
 
 =cut
 
-sub set_labelcache {
+sub set_labelcache_v {
   my ($self, $field, $cache) = @_;
-  $self->{labelcache}{$field} = $cache;
+  $self->{labelcache_v}{$field} = $cache;
   return;
 }
 
-=head2 get_labelcache
+=head2 get_labelcache_v
 
-    Gets the label disambiguation cache for a field
+    Gets the variable label disambiguation cache for a field
 
 =cut
 
-sub get_labelcache {
+sub get_labelcache_v {
   my ($self, $field) = @_;
-  return $self->{labelcache}{$field};
+  return $self->{labelcache_v}{$field};
+}
+
+=head2 set_labelcache_l
+
+    Sets the list label disambiguation cache for a field
+
+=cut
+
+sub set_labelcache_l {
+  my ($self, $field, $cache) = @_;
+  $self->{labelcache_l}{$field} = $cache;
+  return;
+}
+
+=head2 get_labelcache_l
+
+    Gets the list label disambiguation cache for a field
+
+=cut
+
+sub get_labelcache_l {
+  my ($self, $field) = @_;
+  return $self->{labelcache_l}{$field};
 }
 
 
@@ -434,7 +459,8 @@ sub get_sort_cache {
 sub reset_caches {
   my $self = shift;
   $self->{sortcache} = [];
-  $self->{labelcache} = {};
+  $self->{labelcache_l} = {};
+  $self->{labelcache_v} = {};
   return;
 }
 

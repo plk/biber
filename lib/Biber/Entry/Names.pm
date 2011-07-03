@@ -281,7 +281,7 @@ sub nth_name {
 sub first_n_names {
   my $self = shift;
   my $n = shift;
-  return [ splice(@{$self->{namelist}}, 0, $n) ];
+  return [ @{$self->{namelist}}[0 .. $n-1] ];
 }
 
 =head2 del_last_name

@@ -10,7 +10,6 @@ use Biber::Utils;
 use Data::Compare;
 use Text::Wrap;
 $Text::Wrap::columns = 80;
-use Storable qw( dclone );
 use List::AllUtils qw( :all );
 use Log::Log4perl qw(:no_extra_logdie_message);
 use Digest::MD5 qw( md5_hex );
@@ -45,10 +44,9 @@ sub _getnamehash {
   my $minn = Biber::Config->getblxoption('minnames');
   my $count = $names->count_names;
   my $visible = $names->get_visible;
-  my $truncnames = dclone($names);
 
   # namehash obeys list truncations but not uniquename
-  foreach my $n (@{$truncnames->first_n_names($visible)}) {
+  foreach my $n (@{$names->first_n_names($visible)}) {
     if ( $n->get_prefix and
          Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
       $hashkey .= $n->get_prefix;
@@ -94,10 +92,9 @@ sub _getnamehash_u {
   my $minn = Biber::Config->getblxoption('minnames');
   my $count = $names->count_names;
   my $visible = $names->get_visible;
-  my $truncnames = dclone($names);
 
   # namehash obeys list truncations but not uniquename
-  foreach my $n (@{$truncnames->first_n_names($visible)}) {
+  foreach my $n (@{$names->first_n_names($visible)}) {
     if ( $n->get_prefix and
          Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
       $hashkey .= $n->get_prefix;
@@ -575,12 +572,9 @@ sub _label_name {
     $be->get_field($namename)) {
     my $names = $be->get_field($namename);
     my $numnames  = $names->count_names;
+    my $visibility = $names->get_visible_bib;
     my @lastnames = map { strip_nosort(normalise_string($_->get_lastname), $namename) } @{$names->names};
     my @prefices  = map { $_->get_prefix } @{$names->names};
-
-    # If name list was truncated in bib with "and others", this overrides maxnames
-    my $morenames = ($names->last_name->get_namestring eq 'others') ? 1 : 0;
-    my $nametrunc;
     my $loopnames;
 
     # loopnames is the number of names to loop over in the name list when constructing the label
@@ -590,15 +584,11 @@ sub _label_name {
       }
       $loopnames = $lc; # Only look as many names as specified
     }
-    elsif ($morenames or ($numnames > $maxnames)) {
-      $loopnames = $minnames; # Only look at $minnames names if > $maxnames
-      $nametrunc = 1;
-    }
     else {
-      $loopnames = $numnames; # ... otherwise look at all names
+      $loopnames = $visibility; # Else use bib visibility
     }
 
-    for (my $i=0; $i<$loopnames; $i++) {
+    for (my $i = 0; $i < $loopnames; $i++) {
       $acc .= substr($prefices[$i] , 0, 1) if ($useprefix and $prefices[$i]);
       $acc .= _process_label_attributes($self, $citekey, $lastnames[$i], $labelattrs, $namename, 'lastname', $i);
     }
@@ -606,7 +596,7 @@ sub _label_name {
     $sortacc = $acc;
 
     # Add alphaothers if name list is truncated
-    if ($nametrunc) {
+    if ($numnames > $loopnames) {
       $acc .= $alphaothers;
       $sortacc .= $sortalphaothers;
     }
@@ -672,9 +662,12 @@ sub _label_year {
 # Label generation utilities
 
 # Modify label string according to some attributes
+# We use different caches for the "v" and "l" schemes because they have a different format
+# internally and interfere with each other between resets in prepare() otherwise
 sub _process_label_attributes {
   my ($self, $citekey, $field_string, $labelattrs, $field, $namepart, $index) = @_;
   return $field_string unless $labelattrs;
+
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my @citekeys = $section->get_citekeys;
@@ -684,10 +677,10 @@ sub _process_label_attributes {
     # dynamically disambiguated width (individual name disambiguation)
     if ($labelattrs->{substring_width} =~ /v/ and $field) {
       # Use the cache if there is one
-      if (my $lcache = $section->get_labelcache($field)) {
+      if (my $lcache = $section->get_labelcache_v($field)) {
         $logger->debug("Using label disambiguation cache (name) for '$field' in section $secnum");
         # Use the global index override if set (substring_width =~ /f/)
-        $field_string = ${$lcache->{$field_string}{data}}[$lcache->{globalindex} || $lcache->{$field_string}{index}];
+        $field_string = ${$lcache->{$field_string}{data}}[$lcache->{globalindex} ||$lcache->{$field_string}{index}];
       }
       else {
         # This contains a mapping of strings to substrings of increasing lengths
@@ -697,6 +690,9 @@ sub _process_label_attributes {
         my @strings = uniq map {my $f = $section->bibentry($_)->get_field($field);
                            $namepart ? map {$_->get_namepart($namepart)} @{$f->names} : $f
                           } @citekeys;
+        # my @strings = uniq map {my $f = $section->bibentry($_)->get_field($field);
+        #                    $namepart ? map {$_->get_namepart($namepart)} @{$f->first_n_names($f->get_visible_bib)} : $f
+        #                   } @citekeys;
         # Look to the index of the longest string or the explicit max width if set
         my $maxlen = $labelattrs->{substring_width_max} || max map {length($_)} @strings;
         for (my $i = 1; $i <= $maxlen; $i++) {
@@ -734,13 +730,13 @@ sub _process_label_attributes {
         $logger->trace("Label disambiguation cache for '$field' " .
                        ($namepart ? "($namepart) " : '') .
                        "in section $secnum:\n " . Data::Dump::pp($lcache));
-        $section->set_labelcache($field, $lcache);
+        $section->set_labelcache_v($field, $lcache);
       }
     }
     # dynamically disambiguated width (list disambiguation)
     elsif ($labelattrs->{substring_width} =~ /l/ and $field) {
       # Use the cache if there is one
-      if (my $lcache = $section->get_labelcache($field)) {
+      if (my $lcache = $section->get_labelcache_l($field)) {
         $logger->debug("Using label disambiguation cache (list) for '$field' in section $secnum");
         $field_string = $lcache->{data}[$nindex][$index];
       }
@@ -749,16 +745,19 @@ sub _process_label_attributes {
         my $strings = [map {my $f = $section->bibentry($_)->get_field($field);
                             $namepart ? [map {$_->get_namepart($namepart)} @{$f->names}] : [$f]
                           } @citekeys];
+        # my $strings = [map {my $f = $section->bibentry($_)->get_field($field);
+        #                     $namepart ? [map {$_->get_namepart($namepart)} @{$f->first_n_names($f->get_visible_bib)}] : [$f]
+        #                   } @citekeys];
         my $lcache = _label_listdisambiguation($strings);
-        $field_string = $lcache->{data}[$nindex][$index];
 
+        $field_string = $lcache->{data}[$nindex][$index];
         $logger->debug("Creating label disambiguation (list) cache for '$field' " .
                        ($namepart ? "($namepart) " : '') .
                        "in section $secnum");
         $logger->trace("Label disambiguation (list) cache for '$field' " .
                        ($namepart ? "($namepart) " : '') .
                        "in section $secnum:\n " . Data::Dump::pp($lcache));
-        $section->set_labelcache($field, $lcache);
+        $section->set_labelcache_l($field, $lcache);
       }
     }
     # static substring width
@@ -805,7 +804,6 @@ sub _process_label_attributes {
 #            ['B', 'C',   'Ed', ''],
 #            ['B', 'C',   'Em', '']
 #           ],
-#  globalindex => 3
 # }
 #
 
@@ -854,8 +852,6 @@ sub _label_listdisambiguation {
       }
     }
   }
-  # Set globalindex (length of the longest disambiguation)
-  $lcache->{globalindex} = max map {max map {length} @$_} @{$lcache->{data}};
   return $lcache;
 }
 
@@ -1396,7 +1392,6 @@ sub _namestring {
   my $bee = $be->get_field('entrytype');
   my $names = $be->get_field($field);
   my $str = '';
-  my $truncnames = dclone($names);
   my $maxn = Biber::Config->getblxoption('maxbibnames');
   my $minn = Biber::Config->getblxoption('minbibnames');
   my $count = $names->count_names;
@@ -1413,7 +1408,7 @@ sub _namestring {
   # We strip each individual component instead of the whole thing so we can use
   # as name separators things which would otherwise be stripped. This way we
   # guarantee that the separators are never in names
-  foreach my $n (@{$truncnames->first_n_names($visible)}) {
+  foreach my $n (@{$names->first_n_names($visible)}) {
     # If useprefix is true, use prefix at start of name for sorting
     if ( $n->get_prefix and
          Biber::Config->getblxoption('useprefix', $bee, $citekey ) ) {

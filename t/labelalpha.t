@@ -207,8 +207,8 @@ my $l17a = q|  \entry{L17a}{report}{}
 
 is($bibentries->entry('l11')->get_field('sortlabelalpha'), 'vRan22', 'prefix labelalpha 1');
 is($bibentries->entry('l12')->get_field('sortlabelalpha'), 'vRvB2', 'prefix labelalpha 2');
-# only the first name in the list is in the label due to listcount=1
-is($bibentries->entry('l13')->get_field('sortlabelalpha'), 'vRa-ksUnV', 'per-type labelalpha 1');
+# only the first name in the list is in the label due to namecount=1
+is($bibentries->entry('l13')->get_field('sortlabelalpha'), 'vRa+-ksUnV', 'per-type labelalpha 1');
 is($bibentries->entry('l14')->get_field('sortlabelalpha'), 'Alabel-ksUnW', 'per-type labelalpha 2');
 is($bibentries->entry('l15')->get_field('sortlabelalpha'), 'AccBrClim', 'labelalpha disambiguation 1');
 is($bibentries->entry('l16')->get_field('sortlabelalpha'), 'AccBaClima', 'labelalpha disambiguation 2');
