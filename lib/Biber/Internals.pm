@@ -688,11 +688,9 @@ sub _process_label_attributes {
         my $lcache = {};
         # This ends up as a flat list due to array interpolation
         my @strings = uniq map {my $f = $section->bibentry($_)->get_field($field);
-                           $namepart ? map {$_->get_namepart($namepart)} @{$f->names} : $f
+                           $namepart ? map {$_->get_namepart($namepart)} @{$f->first_n_names($f->get_visible_bib)} : $f
                           } @citekeys;
-        # my @strings = uniq map {my $f = $section->bibentry($_)->get_field($field);
-        #                    $namepart ? map {$_->get_namepart($namepart)} @{$f->first_n_names($f->get_visible_bib)} : $f
-        #                   } @citekeys;
+
         # Look to the index of the longest string or the explicit max width if set
         my $maxlen = $labelattrs->{substring_width_max} || max map {length($_)} @strings;
         for (my $i = 1; $i <= $maxlen; $i++) {
@@ -743,11 +741,8 @@ sub _process_label_attributes {
       else {
         # This retains the structure of the entries for the "l" list disambiguation
         my $strings = [map {my $f = $section->bibentry($_)->get_field($field);
-                            $namepart ? [map {$_->get_namepart($namepart)} @{$f->names}] : [$f]
+                            $namepart ? [map {$_->get_namepart($namepart)} @{$f->first_n_names($f->get_visible_bib)}] : [$f]
                           } @citekeys];
-        # my $strings = [map {my $f = $section->bibentry($_)->get_field($field);
-        #                     $namepart ? [map {$_->get_namepart($namepart)} @{$f->first_n_names($f->get_visible_bib)}] : [$f]
-        #                   } @citekeys];
         my $lcache = _label_listdisambiguation($strings);
 
         $field_string = $lcache->{data}[$nindex][$index];

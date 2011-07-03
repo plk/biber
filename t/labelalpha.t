@@ -64,10 +64,10 @@ Biber::Config->setblxoption('minalphanames', 1);
 Biber::Config->setblxoption('maxnames', 2);
 Biber::Config->setblxoption('minnames', 1);
 
-for (my $i=1; $i<23; $i++) {
-  $bibentries->entry("l$i")->del_field('sortlabelalpha');
-  $bibentries->entry("l$i")->del_field('labelalpha');
-  $main->set_extradata("l$i",undef);
+foreach my $k ($section->get_citekeys) {
+  $bibentries->entry($k)->del_field('sortlabelalpha');
+  $bibentries->entry($k)->del_field('labelalpha');
+  $main->set_extradata($k, undef);
 }
 
 $biber->prepare;
@@ -98,10 +98,10 @@ Biber::Config->setblxoption('minalphanames', 2);
 Biber::Config->setblxoption('maxnames', 2);
 Biber::Config->setblxoption('minnames', 2);
 
-for (my $i=1; $i<23; $i++) {
-  $bibentries->entry("l$i")->del_field('sortlabelalpha');
-  $bibentries->entry("l$i")->del_field('labelalpha');
-  $main->set_extradata("l$i", undef);
+foreach my $k ($section->get_citekeys) {
+  $bibentries->entry($k)->del_field('sortlabelalpha');
+  $bibentries->entry($k)->del_field('labelalpha');
+  $main->set_extradata($k, undef);
 }
 
 $biber->prepare;
@@ -132,10 +132,10 @@ Biber::Config->setblxoption('minalphanames', 1);
 Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('minnames', 1);
 
-for (my $i=1; $i<23; $i++) {
-  $bibentries->entry("l$i")->del_field('sortlabelalpha');
-  $bibentries->entry("l$i")->del_field('labelalpha');
-  $main->set_extradata("l$i", undef);
+foreach my $k ($section->get_citekeys) {
+  $bibentries->entry($k)->del_field('sortlabelalpha');
+  $bibentries->entry($k)->del_field('labelalpha');
+  $main->set_extradata($k, undef);
 }
 
 $biber->prepare;
@@ -168,10 +168,10 @@ Biber::Config->setblxoption('minnames', 4);
 Biber::Config->setblxoption('labelalpha', 2);
 Biber::Config->setblxoption('labelyear', 1);
 
-for (my $i=1; $i<23; $i++) {
-  $bibentries->entry("l$i")->del_field('sortlabelalpha');
-  $bibentries->entry("l$i")->del_field('labelalpha');
-  $main->set_extradata("l$i", undef);
+foreach my $k ($section->get_citekeys) {
+  $bibentries->entry($k)->del_field('sortlabelalpha');
+  $bibentries->entry($k)->del_field('labelalpha');
+  $main->set_extradata($k, undef);
 }
 
 $biber->prepare;
@@ -241,10 +241,10 @@ Biber::Config->setblxoption('labelalphatemplate', {
 }, 'PER_TYPE', 'unpublished');
 
 
-for (my $i=1; $i<23; $i++) {
-  $bibentries->entry("l$i")->del_field('sortlabelalpha');
-  $bibentries->entry("l$i")->del_field('labelalpha');
-  $main->set_extradata("l$i", undef);
+foreach my $k ($section->get_citekeys) {
+  $bibentries->entry($k)->del_field('sortlabelalpha');
+  $bibentries->entry($k)->del_field('labelalpha');
+  $main->set_extradata($k, undef);
 }
 
 $biber->prepare;
@@ -273,10 +273,10 @@ Biber::Config->setblxoption('labelalphatemplate', {
   type  => "unpublished",
 }, 'PER_TYPE', 'unpublished');
 
-for (my $i=1; $i<23; $i++) {
-  $bibentries->entry("l$i")->del_field('sortlabelalpha');
-  $bibentries->entry("l$i")->del_field('labelalpha');
-  $main->set_extradata("l$i", undef);
+foreach my $k ($section->get_citekeys) {
+  $bibentries->entry($k)->del_field('sortlabelalpha');
+  $bibentries->entry($k)->del_field('labelalpha');
+  $main->set_extradata($k, undef);
 }
 
 $biber->prepare;

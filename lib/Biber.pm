@@ -910,9 +910,6 @@ sub process_entries_post {
   foreach my $citekey ( $section->get_citekeys ) {
     $logger->debug("Postprocessing entry '$citekey' from section $secnum (after uniqueness)");
 
-    # generate visible name information.
-    $self->process_visible_names($citekey);
-
     # generate labelalpha information
     $self->process_labelalpha($citekey);
 
@@ -1234,48 +1231,52 @@ sub process_pername_hashes {
 
 sub process_visible_names {
   my $self = shift;
-  my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $struc = Biber::Config->get_structure;
-  my $be = $section->bibentry($citekey);
-  my $bee = $be->get_field('entrytype');
   my $maxn = Biber::Config->getblxoption('maxnames');
   my $minn = Biber::Config->getblxoption('minnames');
   my $maxbn = Biber::Config->getblxoption('maxbibnames');
   my $minbn = Biber::Config->getblxoption('minbibnames');
 
-  foreach my $n (@{$struc->get_field_type('name')}) {
-    next unless my $names = $be->get_field($n);
+  foreach my $citekey ( $section->get_citekeys ) {
+    $logger->debug("Postprocessing visible names for key '$citekey'");
+    my $be = $section->bibentry($citekey);
 
-    my $count = $names->count_names;
-    my $visible_names;
-    my $visible_names_bib;
+    foreach my $n (@{$struc->get_field_type('name')}) {
+      next unless my $names = $be->get_field($n);
 
-    # If name list was truncated in bib with "and others", this overrides maxnames
-    my $morenames = ($names->last_name->get_namestring eq 'others') ? 1 : 0;
+      my $count = $names->count_names;
+      my $visible_names;
+      my $visible_names_bib;
 
-    # visibility index if uniquelist, if set, otherwise, minnames
-    if ( $morenames or $count > $maxn ) {
-      # Visibiliy to the uniquelist point if uniquelist is requested and max/minbibnames
-      # is equal to max/minnames because in this case the user can expect that the bibliography
-      # is sorted according to the citation truncations.
-      # We know at this stage that if uniquelist is set, there are more than maxnames
-      # names. We also know that uniquelist > minnames because it is a further disambiguation
-      # on top of minnames so can't be less as you can't disambiguate by losing information
-      if ($maxn == $maxbn and $minn == $minbn) {
-        $visible_names = $visible_names_bib = $names->get_uniquelist // $minn;
+      # If name list was truncated in bib with "and others", this overrides maxnames
+      my $morenames = ($names->last_name->get_namestring eq 'others') ? 1 : 0;
+
+      # visibility index if uniquelist, if set, otherwise, minnames
+      if ( $morenames or $count > $maxn ) {
+        # Visibiliy to the uniquelist point if uniquelist is requested and max/minbibnames
+        # is equal to max/minnames because in this case the user can expect that the bibliography
+        # is sorted according to the citation truncations.
+        # We know at this stage that if uniquelist is set, there are more than maxnames
+        # names. We also know that uniquelist > minnames because it is a further disambiguation
+        # on top of minnames so can't be less as you can't disambiguate by losing information
+        if ($maxn == $maxbn and $minn == $minbn) {
+          $visible_names = $visible_names_bib = $names->get_uniquelist // $minn;
+        }
+        else {
+          $visible_names = $names->get_uniquelist // $minn;
+          $visible_names_bib = $minbn;
+        }
       }
-      else {
-        $visible_names = $names->get_uniquelist // $minn;
-        $visible_names_bib = $minbn;
+      else {                    # visibility is simply the full list
+        $visible_names = $visible_names_bib = $count;
       }
+      $logger->trace("Setting visible names for key '$citekey' to '$visible_names'");
+      $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
+      $names->set_visible($visible_names);
+      $names->set_visible_bib($visible_names_bib);
     }
-    else { # visibility is simply the full list
-      $visible_names = $visible_names_bib = $count;
-    }
-    $names->set_visible($visible_names);
-    $names->set_visible_bib($visible_names_bib);
   }
 }
 
@@ -2519,6 +2520,7 @@ sub prepare {
     $self->validate_structure;           # Check bib structure
     $self->process_entries_pre;          # Main entry processing loop, part 1
     $self->uniqueness;                   # Here we generate uniqueness information
+    $self->process_visible_names;        # Generate visible names information for all entries
     $self->process_entries_post;         # Main entry processing loop, part 2
     $self->process_labelalpha_autoinc;   # Instantiate labelalpha template autoincrements
     $self->create_extras_st_info;        # Generate singltitle/extras* information
