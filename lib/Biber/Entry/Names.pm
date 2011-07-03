@@ -5,6 +5,7 @@ use feature ':5.10';
 use Data::Dump;
 use Biber::Config;
 use Log::Log4perl qw( :no_extra_logdie_message );
+use Storable qw( dclone );
 my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
@@ -183,6 +184,55 @@ sub count_uniquelist {
   return $#$namelist + 1;
 }
 
+=head2 set_visible
+
+    Set the number of visible names as per the different uniquelist, max/minnames etc
+
+=cut
+
+sub set_visible {
+  my $self = shift;
+  my $visibility = shift;
+  $self->{visibility} = $visibility;
+  return
+}
+
+=head2 set_visible_bib
+
+    Set the number of bib visible names as per the different uniquelist, max/minnames etc
+
+=cut
+
+sub set_visible_bib {
+  my $self = shift;
+  my $visibility = shift;
+  $self->{visibility_bib} = $visibility;
+  return
+}
+
+=head2 get_visible
+
+    Get the number of visible names as per the different uniquelist, max/minnames etc
+
+=cut
+
+sub get_visible {
+  my $self = shift;
+  return $self->{visibility};
+}
+
+=head2 get_visible_bib
+
+    Get the number of bib visible names as per the different uniquelist, max/minnames etc
+
+=cut
+
+sub get_visible_bib {
+  my $self = shift;
+  return $self->{visibility_bib};
+}
+
+
 =head2 add_name
 
     Add a Biber::Entry::Name object to the Biber::Entry::Names
@@ -223,7 +273,7 @@ sub nth_name {
 
 =head2 first_n_names
 
-    Returns a new Biber::Entry::Names object containing only
+    Returns an array ref of Biber::Entry::Name objects containing only
     the first n entries of $self
 
 =cut
@@ -231,10 +281,7 @@ sub nth_name {
 sub first_n_names {
   my $self = shift;
   my $n = shift;
-  my $uniquelist =  $self->{uniquelist};
-  my $newnames =  [ splice(@{$self->{namelist}}, 0, $n) ];
-  return bless  {'uniquelist' => $uniquelist, 'namelist' => $newnames},
-    Biber::Entry::Names;
+  return [ splice(@{$self->{namelist}}, 0, $n) ];
 }
 
 =head2 del_last_name

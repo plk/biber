@@ -43,36 +43,12 @@ sub _getnamehash {
   my $hashkey = '';
   my $maxn = Biber::Config->getblxoption('maxnames');
   my $minn = Biber::Config->getblxoption('minnames');
-  my $truncated = 0;
+  my $count = $names->count_names;
+  my $visible = $names->get_visible;
   my $truncnames = dclone($names);
 
-  # Since namehash is the hash of the visible name,
-  # perform truncation according to options minnames, maxnames
-  my $ul;
-  if (defined($names->get_uniquelist)) {
-    $ul = $names->get_uniquelist;
-  }
-
-  # If name list was truncated in bib with "and others", this overrides maxnames
-  my $morenames = ($names->last_name->get_namestring eq 'others') ? 1 : 0;
-  if ( $morenames or $names->count_names > $maxn ) {
-
-    # truncate to the uniquelist point if uniquelist is requested
-    if ($ul) {
-      $truncnames = $truncnames->first_n_names($ul);
-      # Since uniquelist can be larger than maxnames, it's only truncated
-      # if uniquelist is shorter than the full name list
-      $truncated = 1 if $ul < $names->count_names;
-    }
-    # otherwise truncate to minnames
-    else {
-      $truncnames = $truncnames->first_n_names($minn);
-      $truncated = 1;
-    }
-  }
-
   # namehash obeys list truncations but not uniquename
-  foreach my $n (@{$truncnames->names}) {
+  foreach my $n (@{$truncnames->first_n_names($visible)}) {
     if ( $n->get_prefix and
          Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
       $hashkey .= $n->get_prefix;
@@ -99,7 +75,7 @@ sub _getnamehash {
 
   }
 
-  $hashkey .= '+' if $truncated;
+  $hashkey .= '+' if $visible < $count; # name list was truncated
 
   # Digest::MD5 can't deal with straight UTF8 so encode it first
   return md5_hex(encode_utf8($hashkey));
@@ -116,36 +92,12 @@ sub _getnamehash_u {
   my $hashkey = '';
   my $maxn = Biber::Config->getblxoption('maxnames');
   my $minn = Biber::Config->getblxoption('minnames');
-  my $truncated = 0;
+  my $count = $names->count_names;
+  my $visible = $names->get_visible;
   my $truncnames = dclone($names);
 
-  # Since namehash is the hash of the visible name,
-  # perform truncation according to options minnames, maxnames
-  my $ul;
-  if (defined($names->get_uniquelist)) {
-    $ul = $names->get_uniquelist;
-  }
-
-  # If name list was truncated in bib with "and others", this overrides maxnames
-  my $morenames = ($names->last_name->get_namestring eq 'others') ? 1 : 0;
-  if ( $morenames or $names->count_names > $maxn ) {
-
-    # truncate to the uniquelist point if uniquelist is requested
-    if ($ul) {
-      $truncnames = $truncnames->first_n_names($ul);
-      # Since uniquelist can be larger than maxnames, it's only truncated
-      # if uniquelist is shorter than the full name list
-      $truncated = 1 if $ul < $names->count_names;
-    }
-    # otherwise truncate to minnames
-    else {
-      $truncnames = $truncnames->first_n_names($minn);
-      $truncated = 1;
-    }
-  }
-
   # namehash obeys list truncations but not uniquename
-  foreach my $n (@{$truncnames->names}) {
+  foreach my $n (@{$truncnames->first_n_names($visible)}) {
     if ( $n->get_prefix and
          Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
       $hashkey .= $n->get_prefix;
@@ -179,7 +131,7 @@ sub _getnamehash_u {
 
   }
 
-  $hashkey .= '+' if $truncated;
+  $hashkey .= '+' if $visible < $count; # name list was truncated
 
   # Digest::MD5 can't deal with straight UTF8 so encode it first
   return md5_hex(encode_utf8($hashkey));
@@ -1437,8 +1389,6 @@ sub _process_sort_attributes {
 # This is used to generate sorting strings for names
 sub _namestring {
   my $self = shift;
-  # $extraflag is set if we are calling this to generate strings for extra*
-  # processing and therefore need to use uniquename
   my ($citekey, $field) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -1446,10 +1396,11 @@ sub _namestring {
   my $bee = $be->get_field('entrytype');
   my $names = $be->get_field($field);
   my $str = '';
-  my $truncated = 0;
   my $truncnames = dclone($names);
   my $maxn = Biber::Config->getblxoption('maxbibnames');
   my $minn = Biber::Config->getblxoption('minbibnames');
+  my $count = $names->count_names;
+  my $visible = $names->get_visible_bib; # get visibility for bib - can be different to cite
 
   # These should be symbols which can't appear in names
   # This means, symbols which normalise_string_sort strips out
@@ -1458,42 +1409,11 @@ sub _namestring {
   # Guaranteed to sort after everything else as it's the last legal Unicode code point
   my $trunc = "\x{10FFFD}";  # sort string for "et al" truncated name
 
-  # Since namehash is the hash of the visible name,
-  # perform truncation according to options minnames, maxnames
-  my $ul;
-  if (defined($names->get_uniquelist)) {
-    $ul = $names->get_uniquelist;
-  }
-
-  # If name list was truncated in bib with "and others", this overrides maxnames
-  my $morenames = ($names->last_name->get_namestring eq 'others') ? 1 : 0;
-  if ( $morenames or $names->count_names > $maxn ) {
-    # truncate to the uniquelist point if uniquelist is requested and max/minbibnames
-    # is equal to max/minnames because in this case the user can expect that the bibliography
-    # is sorted according to the citation truncations.
-    # We know at this stage that if uniquelist is set, there are more than maxnames
-    # names. We also know that uniquelist > minnames because it is a further disambiguation
-    # on top of minnames so can't be less as you can't disambiguate by losing information
-    if ($ul and
-       $maxn == Biber::Config->getblxoption('maxnames') and
-       $minn == Biber::Config->getblxoption('minnames')) {
-      $truncnames = $truncnames->first_n_names($ul);
-      # Since uniquelist can be larger than maxnames, it's only truncated
-      # if uniquelist is shorter than the full name list
-      $truncated = 1 if $ul < $names->count_names;
-    }
-    else {
-      # otherwise truncate to minnames
-      $truncnames = $truncnames->first_n_names($minn);
-      $truncated = 1;
-    }
-  }
-
   # We strip nosort first otherwise normalise_string_sort damages diacritics
   # We strip each individual component instead of the whole thing so we can use
   # as name separators things which would otherwise be stripped. This way we
   # guarantee that the separators are never in names
-  foreach my $n ( @{$truncnames->names} ) {
+  foreach my $n (@{$truncnames->first_n_names($visible)}) {
     # If useprefix is true, use prefix at start of name for sorting
     if ( $n->get_prefix and
          Biber::Config->getblxoption('useprefix', $bee, $citekey ) ) {
@@ -1520,7 +1440,8 @@ sub _namestring {
 
   $str =~ s/\s+\Q$nse\E/$nse/gxms;   # Remove any whitespace before external separator
   $str =~ s/\Q$nse\E\z//xms;         # strip final external separator as we are finished
-  $str .= "$nse$trunc" if $truncated;
+
+  $str .= "$nse$trunc" if $visible < $count; # name list was truncated
   return $str;
 }
 

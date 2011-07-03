@@ -726,7 +726,7 @@ is( $out->get_output_entry($main,'l23'), $l23, 'Unicode firstname');
 is( $out->get_output_entry($main,'l24'), $l24, 'Unicode lastname');
 is( $out->get_output_entry($main,'l25'), $l25, 'Single string name');
 is( $out->get_output_entry($main,'l26'), $l26, 'Hyphen at brace level <> 0');
-is($section->bibentry('l27')->get_field('author')->count_elements, 1, 'Bad name with 3 commas');
+is($section->bibentry('l27')->get_field('author')->count_names, 1, 'Bad name with 3 commas');
 is( $out->get_output_entry($main,'l28'), $l28, 'Bad name with consecutive commas');
 is( $out->get_output_entry($main,'l29'), $l29, 'Escaped name with 3 commas');
 
@@ -746,7 +746,7 @@ $section = $biber->sections->get_section(0);
 $main = $section->get_list('MAIN');
 $bibentries = $section->bibentries;
 
-is_deeply($bibentries->entry('l21')->get_field($bibentries->entry('l21')->get_field('labelnamename'))->nth_element(1)->get_firstname_i, ['{\v S}'], 'Terseinitials 1');
+is_deeply($bibentries->entry('l21')->get_field($bibentries->entry('l21')->get_field('labelnamename'))->nth_name(1)->get_firstname_i, ['{\v S}'], 'Terseinitials 1');
 is( $out->get_output_entry($main,'l12'), $l12, 'First First First First prefix prefix Last Last') ;
 is( $out->get_output_entry($main,'l21'), $l21, 'LaTeX encoded unicode firstname');
 is( $out->get_output_entry($main,'l22'), $l22, 'LaTeX encoded unicode lastname');
