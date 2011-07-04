@@ -252,9 +252,9 @@ $section = $biber->sections->get_section(0);
 $main = $section->get_list('MAIN');
 $bibentries = $section->bibentries;
 
-is($bibentries->entry('l18')->get_field('sortlabelalpha'), 'AgassiChangLaver', 'labelalpha disambiguation 4');
-is($bibentries->entry('l19')->get_field('sortlabelalpha'), 'AgassiConnorLendl', 'labelalpha disambiguation 5');
-is($bibentries->entry('l20')->get_field('sortlabelalpha'), 'AgassiCourieLaver', 'labelalpha disambiguation 6');
+is($bibentries->entry('l18')->get_field('sortlabelalpha'), 'AgaChaLaver', 'labelalpha disambiguation 4');
+is($bibentries->entry('l19')->get_field('sortlabelalpha'), 'AgaConLendl', 'labelalpha disambiguation 5');
+is($bibentries->entry('l20')->get_field('sortlabelalpha'), 'AgaCouLaver', 'labelalpha disambiguation 6');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelalphatemplate', {
