@@ -193,15 +193,15 @@ sub set_output_entry {
     }
     $plo = join(',', @plo);
 
-    if ( $ln->last_element->get_namestring eq 'others' ) {
+    if ( $ln->last_name->get_namestring eq 'others' ) {
       $acc .= "    \\true{morelabelname}\n";
-      $ln->del_last_element;
+      $ln->del_last_name;
 
       # record that we have deleted "others" from labelname field
       # we will need this below
       $name_others_deleted = $lnn;
     }
-    my $total = $ln->count_elements;
+    my $total = $ln->count_names;
     $acc .= "    \\name{labelname}{$total}{$plo}{%\n";
     foreach my $n (@{$ln->names}) {
       $acc .= $n->name_to_bbl;
@@ -220,11 +220,11 @@ sub set_output_entry {
         $acc .= "    \\true{more$namefield}\n";
       }
       # otherwise delete and add the boolean
-      elsif ($nf->last_element->get_namestring eq 'others') {
+      elsif ($nf->last_name->get_namestring eq 'others') {
         $acc .= "    \\true{more$namefield}\n";
-        $nf->del_last_element;
+        $nf->del_last_name;
       }
-      my $total = $nf->count_elements;
+      my $total = $nf->count_names;
       # Copy perl-list options to the actual labelname too
       $plo = '' unless (defined($lnn) and $namefield eq $lnn);
       $acc .= "    \\name{$namefield}{$total}{$plo}{%\n";
@@ -252,9 +252,9 @@ sub set_output_entry {
   }
 
   my $namehash = $be->get_field('namehash');
-  $acc .= "    \\strng{namehash}{$namehash}\n";
+  $acc .= "    \\strng{namehash}{$namehash}\n" if $namehash;
   my $fullhash = $be->get_field('fullhash');
-  $acc .= "    \\strng{fullhash}{$fullhash}\n";
+  $acc .= "    \\strng{fullhash}{$fullhash}\n" if $fullhash;
 
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
     # Might not have been set due to skiplab/dataonly
@@ -270,8 +270,8 @@ sub set_output_entry {
   # The labelyear option determines whether "extrayear" is output
   if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
-    if (my $nameyear_extrayear = $be->get_field('nameyear_extrayear')) {
-      if ( Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
+    if (my $nameyear_extra = $be->get_field('nameyear_extra')) {
+      if ( Biber::Config->get_seen_nameyear_extra($nameyear_extra) > 1) {
         $acc .= "    <BDS>EXTRAYEAR</BDS>\n";
       }
     }
@@ -281,10 +281,11 @@ sub set_output_entry {
   }
 
   # The labelalpha option determines whether "extraalpha" is output
-  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
+  # For labelalpha=2, we don't use extraalpha, it's all done by custom label
+  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) == 1) {
     # Might not have been set due to skiplab/dataonly
-    if (my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha')) {
-      if ( Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
+    if (my $nameyear_extra = $be->get_field('nameyear_extra')) {
+      if ( Biber::Config->get_seen_nameyear_extra($nameyear_extra) > 1) {
         $acc .= "    <BDS>EXTRAALPHA</BDS>\n";
       }
     }

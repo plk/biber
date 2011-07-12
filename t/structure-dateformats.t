@@ -50,18 +50,18 @@ my $l12 = [ "Overwriting field 'month' with month value from field 'date' for en
 
 my $l13c = q|  \entry{L13}{book}{}
     \name{labelname}{2}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      {{}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{2}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      {{}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Oxford}%
     }
-    \strng{namehash}{DJAA1}
-    \strng{fullhash}{DJAA1}
+    \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
+    \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
     \field{sortinit}{D}
     \field{extrayear}{3}
     \field{labelyear}{1996}
@@ -76,18 +76,18 @@ my $l13c = q|  \entry{L13}{book}{}
 
 my $l14 = q|  \entry{L14}{book}{}
     \name{labelname}{2}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      {{}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{2}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      {{}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Oxford}%
     }
-    \strng{namehash}{DJAA1}
-    \strng{fullhash}{DJAA1}
+    \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
+    \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
     \field{sortinit}{D}
     \field{extrayear}{4}
     \field{labelyear}{1996}
@@ -104,18 +104,18 @@ my $l14 = q|  \entry{L14}{book}{}
 
 my $l15 = q|  \entry{L15}{book}{}
     \name{labelname}{2}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      {{}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{2}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      {{}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Oxford}%
     }
-    \strng{namehash}{DJAA1}
-    \strng{fullhash}{DJAA1}
+    \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
+    \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
     \field{sortinit}{D}
     \field{title}{Title 2}
     \warn{\item Missing mandatory field - one of 'date, year' must be defined in entry 'L15'}
@@ -125,18 +125,18 @@ my $l15 = q|  \entry{L15}{book}{}
 
 my $l16 = q|  \entry{L16}{proceedings}{}
     \name{labelname}{2}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      {{}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{2}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      {{}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Oxford}%
     }
-    \strng{namehash}{DJAA1}
-    \strng{fullhash}{DJAA1}
+    \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
+    \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
     \field{sortinit}{D}
     \field{extrayear}{6}
     \field{labelyear}{1996}
@@ -151,18 +151,18 @@ my $l16 = q|  \entry{L16}{proceedings}{}
 
 my $l17 = q|  \entry{L17}{proceedings}{}
     \name{labelname}{2}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      {{}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{2}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      {{}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Oxford}%
     }
-    \strng{namehash}{DJAA1}
-    \strng{fullhash}{DJAA1}
+    \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
+    \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
     \field{sortinit}{D}
     \field{extrayear}{5}
     \field{labelyear}{1996}
@@ -191,18 +191,18 @@ my $l17 = q|  \entry{L17}{proceedings}{}
 
 my $l17c = q|  \entry{L17}{proceedings}{}
     \name{labelname}{2}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      {{}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{2}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      {{}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Oxford}%
     }
-    \strng{namehash}{DJAA1}
-    \strng{fullhash}{DJAA1}
+    \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
+    \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
     \field{sortinit}{D}
     \field{labelyear}{1998}
     \field{day}{10}
@@ -230,18 +230,18 @@ my $l17c = q|  \entry{L17}{proceedings}{}
 
 my $l17e = q|  \entry{L17}{proceedings}{}
     \name{labelname}{2}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      {{}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{2}{}{%
-      {{}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      {{}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Oxford}%
     }
-    \strng{namehash}{DJAA1}
-    \strng{fullhash}{DJAA1}
+    \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
+    \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
     \field{sortinit}{D}
     \field{labelyear}{1998\bibdatedash 2004}
     \field{day}{10}

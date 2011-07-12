@@ -343,7 +343,7 @@ sub _name {
       }
     }
 
-    $names->add_element(parsename($name, $f, {useprefix => $useprefix}));
+    $names->add_name(parsename($name, $f, {useprefix => $useprefix}));
   }
   $bibentry->set_datafield($to, $names);
   return;

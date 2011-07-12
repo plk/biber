@@ -36,7 +36,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labelalpha</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="multivalued">
       <bcf:key>labelnamespec</bcf:key>
@@ -55,12 +55,28 @@
       <bcf:value order="1">year</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
+      <bcf:key>maxalphanames</bcf:key>
+      <bcf:value>3</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>maxbibnames</bcf:key>
+      <bcf:value>3</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
       <bcf:key>maxitems</bcf:key>
       <bcf:value>3</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxnames</bcf:key>
       <bcf:value>3</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>minalphanames</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>minbibnames</bcf:key>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>minitems</bcf:key>
@@ -100,7 +116,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useprefix</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>usetranslator</bcf:key>
@@ -119,7 +135,58 @@
       <bcf:value>0</bcf:value>
     </bcf:option>
   </bcf:options>
-  <!-- CROSSREF -->
+  <!-- LABELALPHA TEMPLATE -->
+  <bcf:labelalphatemplate type="global">
+    <bcf:labelelement order="1">
+      <bcf:labelpart final="1">shorthand</bcf:labelpart>
+      <bcf:labelpart>label</bcf:labelpart>
+      <bcf:labelpart substring_width="3" substring_side="left" ifnamecount="1">labelname</bcf:labelpart>
+      <bcf:labelpart substring_width="1" substring_side="left">labelname</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="2">
+      <bcf:labelpart substring_width="2" substring_side="right">year</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="3">
+      <bcf:labelpart substring_width="1">origday</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="misc">
+    <bcf:labelelement order="1">
+      <bcf:labelpart>label</bcf:labelpart>
+      <bcf:labelpart substring_width="2" namecount="1" substring_side="left">labelname</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="2">
+      <bcf:labelpart>-</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="3">
+      <bcf:labelpart substring_width="2" substring_side="right">title</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="4">
+      <bcf:labelpart substring_width="v">title</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="unpublished">
+    <bcf:labelelement order="1">
+      <bcf:labelpart substring_width="v" substring_width_max="4" substring_side="left">labelname</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="report">
+    <bcf:labelelement order="1">
+      <bcf:labelpart substring_width="v" substring_width_max="4" substring_side="left">labelname</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="2">
+      <bcf:labelpart format="alpha">extrayear</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="booklet">
+    <bcf:labelelement order="1">
+      <bcf:labelpart substring_width="v" substring_width_max="4" substring_side="left">labelname</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="2">
+      <bcf:labelpart format="alpha">autoinc</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
+  <!-- INHERITANCE -->
   <bcf:inheritance>
     <bcf:defaults inherit_all="true" override_target="false">
     </bcf:defaults>
@@ -246,6 +313,20 @@
     <bcf:citekey>L8</bcf:citekey>
     <bcf:citekey>L9</bcf:citekey>
     <bcf:citekey>L10</bcf:citekey>
+    <bcf:citekey>L11</bcf:citekey>
+    <bcf:citekey>L12</bcf:citekey>
+    <bcf:citekey>L13</bcf:citekey>
+    <bcf:citekey>L14</bcf:citekey>
+    <bcf:citekey>L15</bcf:citekey>
+    <bcf:citekey>L16</bcf:citekey>
+    <bcf:citekey>L16a</bcf:citekey>
+    <bcf:citekey>L17</bcf:citekey>
+    <bcf:citekey>L17a</bcf:citekey>
+    <bcf:citekey>L18</bcf:citekey>
+    <bcf:citekey>L19</bcf:citekey>
+    <bcf:citekey>L20</bcf:citekey>
+    <bcf:citekey>L21</bcf:citekey>
+    <bcf:citekey>L22</bcf:citekey>
     <bcf:citekey>knuth:ct</bcf:citekey>
     <bcf:citekey>knuth:ct:a</bcf:citekey>
     <bcf:citekey>knuth:ct:b</bcf:citekey>

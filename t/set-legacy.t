@@ -32,13 +32,13 @@ my $out = $biber->get_output_obj;
 my $string1 = q|  \entry{Elias1955}{set}{}
     \set{Elias1955a,Elias1955b}
     \name{labelname}{1}{}{%
-      {{}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
+      {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
+      {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{EP1}
-    \strng{fullhash}{EP1}
+    \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
+    \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
     \field{sortinit}{0}
     \field{labelyear}{1955}
     \field{issn}{0096-1000}
@@ -60,13 +60,13 @@ my $string1 = q|  \entry{Elias1955}{set}{}
 my $string2 = q|  \entry{Elias1955a}{article}{}
     \inset{Elias1955}
     \name{labelname}{1}{}{%
-      {{}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
+      {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
+      {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{EP1}
-    \strng{fullhash}{EP1}
+    \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
+    \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
     \field{sortinit}{0}
     \field{issn}{0096-1000}
     \field{journaltitle}{IRE Transactions on Information Theory}
@@ -87,13 +87,13 @@ my $string2 = q|  \entry{Elias1955a}{article}{}
 my $string3 = q|  \entry{Elias1955b}{article}{}
     \inset{Elias1955}
     \name{labelname}{1}{}{%
-      {{}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
+      {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
+      {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{EP1}
-    \strng{fullhash}{EP1}
+    \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
+    \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
     \field{sortinit}{0}
     \field{issn}{0096-1000}
     \field{journaltitle}{IRE Transactions on Information Theory}

@@ -5,7 +5,7 @@ MANIFEST
 META.yml
 README
 THANKS
-TODO
+TODO.org
 bin/biber
 lib/Biber.pm
 lib/Biber/Output/Base.pm

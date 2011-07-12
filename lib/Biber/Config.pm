@@ -36,10 +36,11 @@ Biber::Config - Configuration items which need to be saved across the
 # Static (class) data
 our $CONFIG;
 $CONFIG->{state}{crossrefkeys} = {};
-$CONFIG->{state}{seennamehash} = {};
-$CONFIG->{state}{seenfullhash} = {};
 $CONFIG->{state}{seenname} = {};
 $CONFIG->{state}{keycase} = {};
+
+# Disambiguation data for labelalpha. Used for labelalphatemplate autoinc method
+$CONFIG->{state}{ladisambiguation} = {};
 
 # For the uniquelist feature. Records the number of times a name list occurs in all entries
 $CONFIG->{state}{uniquelistcount} = {};
@@ -48,26 +49,15 @@ $CONFIG->{state}{uniquelistcount} = {};
 # Default is true so that uniquename/uniquelist processing starts
 $CONFIG->{state}{unulchanged} = 1;
 
-# namehashcount holds a hash of namehashes and 
-# namehashcount/fullhashcount hold a hash of namehashes and
-# occurences of unique names that generate the hash. For example:
-# {AA => { Adams_A => 1, Allport_A => 2 }}
-$CONFIG->{state}{namehashcount} = {};
-$CONFIG->{state}{fullhashcount} = {};
-
 # uniquenamecount holds a hash of lastnames and lastname/initials
 $CONFIG->{state}{uniquenamecount} = {};
 # Same as uniquenamecount but for all names, regardless of visibility. Needed to track
 # uniquelist
 $CONFIG->{state}{uniquenamecount_all} = {};
 # Counter for tracking name/year combinations for extrayear
-$CONFIG->{state}{seen_nameyear_extrayear} = {};
+$CONFIG->{state}{seen_nameyear_extra} = {};
 # Counter for the actual extrayear value
-$CONFIG->{state}{seen_extrayear} = {};
-# Counter for tracking name/year combinations for extraalpha
-$CONFIG->{state}{seen_nameyear_extraalpha} = {};
-# Counter for the actual extraalpha value
-$CONFIG->{state}{seen_extraalpha} = {};
+$CONFIG->{state}{seen_extra} = {};
 $CONFIG->{state}{seenkeys} = {};
 
 # Location of the control file
@@ -83,22 +73,17 @@ $CONFIG->{state}{datafiles} = [];
 =cut
 
 sub _init {
-  $CONFIG->{state}{unulchanged} = 1;
   $CONFIG->{options}{biblatex}{PER_ENTRY} = {};
+  $CONFIG->{state}{unulchanged} = 1;
   $CONFIG->{state}{control_file_location} = '';
-  $CONFIG->{state}{seennamehash} = {};
-  $CONFIG->{state}{seenfullhash} = {};
   $CONFIG->{state}{seenname} = {};
   $CONFIG->{state}{crossrefkeys} = {};
-  $CONFIG->{state}{namehashcount} = {};
-  $CONFIG->{state}{fullhashcount} = {};
+  $CONFIG->{state}{ladisambiguation} = {};
   $CONFIG->{state}{uniquenamecount} = {};
   $CONFIG->{state}{uniquenamecount_all} = {};
   $CONFIG->{state}{uniquelistcount} = {};
-  $CONFIG->{state}{seen_nameyear_extrayear} = {};
-  $CONFIG->{state}{seen_extrayear} = {};
-  $CONFIG->{state}{seen_nameyear_extraalpha} = {};
-  $CONFIG->{state}{seen_extraalpha} = {};
+  $CONFIG->{state}{seen_nameyear_extra} = {};
+  $CONFIG->{state}{seen_extra} = {};
   $CONFIG->{state}{seenkeys} = {};
   $CONFIG->{state}{keycase} = {};
   $CONFIG->{state}{datafiles} = [];
@@ -492,6 +477,42 @@ sub getblxoption {
 ##############################
 
 #============================
+#  labelalpha disambiguation
+#============================
+
+=head2 incr_la_disambiguation
+
+    Increment a counter to say we have seen this labelalpha
+
+    Biber::Config->incr_la_disambiguation($la);
+
+=cut
+
+sub incr_la_disambiguation {
+  shift; # class method so don't care about class name
+  my ($la, $citekey) = @_;
+  push @{$CONFIG->{state}{ladisambiguation}{$la}}, $citekey;
+  return;
+}
+
+
+=head2 get_la_disambiguation
+
+    Get the disambiguation counter for this labelalpha
+
+    Biber::Config->get_la_disambiguation($la);
+
+=cut
+
+sub get_la_disambiguation {
+  shift; # class method so don't care about class name
+  my $la = shift;
+  return $CONFIG->{state}{ladisambiguation}{$la};
+}
+
+
+
+#============================
 #        seenkey
 #============================
 
@@ -588,7 +609,7 @@ sub incr_seenname {
 
 =head2 reset_seen_extra
 
-    Reset the counters for extrayear and extraalpha
+    Reset the counters for extra*
 
     Biber::Config->reset_extra;
 
@@ -597,56 +618,55 @@ sub incr_seenname {
 sub reset_seen_extra {
   shift; # class method so don't care about class name
   my $ay = shift;
-  $CONFIG->{state}{seen_extrayear} = {};
-  $CONFIG->{state}{seen_extraalpha} = {};
+  $CONFIG->{state}{seen_extra} = {};
   return;
 }
 
 #============================
-#        seen_extrayear
+#        seen_extra
 #============================
 
-=head2 incr_seen_extrayear
+=head2 incr_seen_extra
 
-    Increment and return the counter for extrayear
+    Increment and return the counter for extra
 
-    Biber::Config->incr_seen_extrayear($ay);
+    Biber::Config->incr_seen_extra($ay);
 
 =cut
 
-sub incr_seen_extrayear {
+sub incr_seen_extra {
   shift; # class method so don't care about class name
   my $ay = shift;
-  return ++$CONFIG->{state}{seen_extrayear}{$ay};
+  return ++$CONFIG->{state}{seen_extra}{$ay};
 }
 
 
 #============================
-#       seen_nameyear_extrayear
+#         seen_nameyear_extra
 #============================
 
-=head2 get_seen_nameyear_extrayear
+=head2 get_seen_nameyear_extra
 
     Get the count of an labelname/labelyear combination for tracking
-    extrayear. It uses labelyear plus name as we need to disambiguate
+    extra*. It uses labelyear plus name as we need to disambiguate
     entries with different labelyear (like differentiating 1984--1986 from
     just 1984)
 
-    Biber::Config->get_seen_nameyear_extrayear($ny);
+    Biber::Config->get_seen_nameyear_extra($ny);
 
 =cut
 
-sub get_seen_nameyear_extrayear {
+sub get_seen_nameyear_extra {
   shift; # class method so don't care about class name
   my $ny = shift;
-  return $CONFIG->{state}{seen_nameyear_extrayear}{$ny};
+  return $CONFIG->{state}{seen_nameyear_extra}{$ny};
 }
 
-=head2 incr_seen_nameyear_extrayear
+=head2 incr_seen_nameyear_extra
 
-    Increment the count of an labelname/labelyear combination for extrayear
+    Increment the count of an labelname/labelyear combination for extra*
 
-    Biber::Config->incr_seen_nameyear_extrayear($ns, $ys);
+    Biber::Config->incr_seen_nameyear_extra($ns, $ys);
 
     We pass in the name and year strings seperately as we have to
     be careful and only increment this counter beyond 1 if there is
@@ -655,92 +675,20 @@ sub get_seen_nameyear_extrayear {
 
 =cut
 
-sub incr_seen_nameyear_extrayear {
+sub incr_seen_nameyear_extra {
   shift; # class method so don't care about class name
   my ($ns, $ys) = @_;
   $tmp = "$ns,$ys";
   # We can always increment this to 1
-  unless ($CONFIG->{state}{seen_nameyear_extrayear}{$tmp}) {
-    $CONFIG->{state}{seen_nameyear_extrayear}{$tmp}++;
+  unless ($CONFIG->{state}{seen_nameyear_extra}{$tmp}) {
+    $CONFIG->{state}{seen_nameyear_extra}{$tmp}++;
   }
   # But beyond that only if we have a labelname and labelyear in the entry since
   # this counter is used to create extrayear which doesn't mean anything for
   # entries with only one of these.
   else {
     if ($ns and $ys) {
-      $CONFIG->{state}{seen_nameyear_extrayear}{$tmp}++;
-    }
-  }
-  return;
-}
-
-#============================
-#        seen_extraalpha
-#============================
-
-=head2 incr_seen_extraalpha
-
-    Increment and return the counter for extraalpha
-
-    Biber::Config->incr_seen_extraalpha($ay);
-
-=cut
-
-sub incr_seen_extraalpha {
-  shift; # class method so don't care about class name
-  my $ay = shift;
-  return ++$CONFIG->{state}{seen_extraalpha}{$ay};
-}
-
-
-#============================
-#       seen_nameyear_extraalpha
-#============================
-
-=head2 get_seen_nameyear_extraalpha
-
-    Get the count of an labelname/labelyear combination for tracking
-    extraalpha. It uses labelyear plus name as we need to disambiguate
-    entries with different labelyear (like differentiating 1984--1986 from
-    just 1984)
-
-    Biber::Config->get_seen_nameyear_extraalpha($ny);
-
-=cut
-
-sub get_seen_nameyear_extraalpha {
-  shift; # class method so don't care about class name
-  my $ny = shift;
-  return $CONFIG->{state}{seen_nameyear_extraalpha}{$ny};
-}
-
-=head2 incr_seen_nameyear_extraalpha
-
-    Increment the count of an labelname/labelyear combination for extraalpha
-
-    Biber::Config->incr_seen_nameyear_extraalpha($ns, $ys);
-
-    We pass in the name and year strings seperately as we have to
-    be careful and only increment this counter beyond 1 if there is
-    both a name and year component. Otherwise, extraalpha gets defined for all
-    entries with no name but the same year etc.
-
-=cut
-
-sub incr_seen_nameyear_extraalpha {
-  shift; # class method so don't care about class name
-  my ($ns, $ys) = @_;
-  $tmp = "$ns,$ys";
-  # We can always increment this to 1
-  unless ($CONFIG->{state}{seen_nameyear_extraalpha}{$tmp}) {
-    $CONFIG->{state}{seen_nameyear_extraalpha}{$tmp}++;
-  }
-  # But beyond that only if we have a labelname and labelyear in the entry since
-  # this counter is used to create extraalpha which doesn't mean anything for
-  # entries with only one of these.
-  else {
-    if ($ns and $ys) {
-      $CONFIG->{state}{seen_nameyear_extraalpha}{$tmp}++;
+      $CONFIG->{state}{seen_nameyear_extra}{$tmp}++;
     }
   }
   return;
@@ -1076,240 +1024,6 @@ sub _get_uniquename {
   my ($name, $namecontext) = @_;
   my @list = sort keys %{$CONFIG->{state}{uniquenamecount}{$name}{$namecontext}};
   return \@list;
-}
-
-
-#============================
-#       namehashcount
-#============================
-
-
-=head2 get_numofnamehashes
-
-    Get the number of name hashes
-
-    Biber::Config->get_numofnamehashes($hash);
-
-=cut
-
-sub get_numofnamehashes {
-  shift; # class method so don't care about class name
-  my $hash = shift;
-  return scalar keys %{$CONFIG->{state}{namehashcount}{$hash}};
-}
-
-=head2 namehashexists
-
-    Check if there is an entry for a namehash
-
-    Biber::Config->namehashexists($hash);
-
-=cut
-
-sub namehashexists {
-  shift; # class method so don't care about class name
-  my $hash = shift;
-  return exists($CONFIG->{state}{namehashcount}{$hash}) ? 1 : 0;
-}
-
-
-=head2 get_namehashcount
-
-    Get the count of a name hash and name id
-
-    Biber::Config->get_namehashcount($hash, $id);
-
-=cut
-
-sub get_namehashcount {
-  shift; # class method so don't care about class name
-  my ($hash, $id) = @_;
-  return $CONFIG->{state}{namehashcount}{$hash}{$id};
-}
-
-=head2 set_namehashcount
-
-    Set the count of a name hash and name id
-
-    Biber::Config->set_namehashcount($hash, $id, $num);
-
-=cut
-
-sub set_namehashcount {
-  shift; # class method so don't care about class name
-  my ($hash, $id, $num) = @_;
-  $CONFIG->{state}{namehashcount}{$hash}{$id} = $num;
-  return;
-}
-
-
-=head2 del_namehash
-
-    Delete the count information for a name hash
-
-    Biber::Config->del_namehashcount($hash);
-
-=cut
-
-sub del_namehash {
-  shift; # class method so don't care about class name
-  my $hash = shift;
-  if (exists($CONFIG->{state}{namehashcount}{$hash})) {
-    delete $CONFIG->{state}{namehashcount}{$hash};
-  }
-  return;
-}
-
-#============================
-#       seennamehash
-#============================
-
-
-=head2 get_seennamehash
-
-    Get the count of a seen name hash
-
-    Biber::Config->get_seennamehash($hash);
-
-=cut
-
-sub get_seennamehash {
-  shift; # class method so don't care about class name
-  my $hash = shift;
-  return $CONFIG->{state}{seennamehash}{$hash};
-}
-
-
-=head2 incr_seennamehash
-
-    Increment the count of a seen name hash
-
-    Biber::Config->incr_seennamehash($hash);
-
-=cut
-
-sub incr_seennamehash {
-  shift; # class method so don't care about class name
-  my $hash = shift;
-  $CONFIG->{state}{seennamehash}{$hash}++;
-  return;
-}
-
-
-#============================
-#       fullhashcount
-#============================
-
-
-=head2 get_numoffullhashes
-
-    Get the number of full hashes
-
-    Biber::Config->get_numoffullhashes($hash);
-
-=cut
-
-sub get_numoffullhashes {
-  shift; # class method so don't care about class name
-  my $hash = shift;
-  return scalar keys %{$CONFIG->{state}{fullhashcount}{$hash}};
-}
-
-=head2 fullhashexists
-
-    Check if there is an entry for a fullhash
-
-    Biber::Config->fullhashexists($hash);
-
-=cut
-
-sub fullhashexists {
-  shift; # class method so don't care about class name
-  my $hash = shift;
-  return exists($CONFIG->{state}{fullhashcount}{$hash}) ? 1 : 0;
-}
-
-
-=head2 get_fullhashcount
-
-    Get the count of a full hash and name id
-
-    Biber::Config->get_fullhashcount($hash, $id);
-
-=cut
-
-sub get_fullhashcount {
-  shift; # class method so don't care about class name
-  my ($hash, $id) = @_;
-  return $CONFIG->{state}{fullhashcount}{$hash}{$id};
-}
-
-=head2 set_fullhashcount
-
-    Set the count of a fullhash and name id
-
-    Biber::Config->set_fullhashcount($hash, $id, $num);
-
-=cut
-
-sub set_fullhashcount {
-  shift; # class method so don't care about class name
-  my ($hash, $id, $num) = @_;
-  $CONFIG->{state}{fullhashcount}{$hash}{$id} = $num;
-  return;
-}
-
-
-=head2 del_fullhash
-
-    Delete the count information for a full hash
-
-    Biber::Config->del_fullhashcount($hash);
-
-=cut
-
-sub del_fullhash {
-  shift; # class method so don't care about class name
-  my $hash = shift;
-  if (exists($CONFIG->{state}{fullhashcount}{$hash})) {
-    delete $CONFIG->{state}{fullhashcount}{$hash};
-  }
-  return;
-}
-
-#============================
-#       seenfullhash
-#============================
-
-
-=head2 get_seenfullhash
-
-    Get the count of a seen full hash
-
-    Biber::Config->get_seenfullhash($hash);
-
-=cut
-
-sub get_seenfullhash {
-  shift; # class method so don't care about class name
-  my $hash = shift;
-  return $CONFIG->{state}{seenfullhash}{$hash};
-}
-
-
-=head2 incr_seenfullhash
-
-    Increment the count of a seen ful hash
-
-    Biber::Config->incr_seenfullhash($hash);
-
-=cut
-
-sub incr_seenfullhash {
-  shift; # class method so don't care about class name
-  my $hash = shift;
-  $CONFIG->{state}{seenfullhash}{$hash}++;
-  return;
 }
 
 

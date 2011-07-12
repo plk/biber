@@ -34,19 +34,19 @@ my $out = $biber->get_output_obj;
 # crossref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $cr1 = q|  \entry{cr1}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Gullam}{G\bibinitperiod}{Graham}{G\bibinitperiod}{}{}{}{}}%
+      {{hash=121b6dc164b5b619c81c670fbd823f12}{Gullam}{G\bibinitperiod}{Graham}{G\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Gullam}{G\bibinitperiod}{Graham}{G\bibinitperiod}{}{}{}{}}%
+      {{hash=121b6dc164b5b619c81c670fbd823f12}{Gullam}{G\bibinitperiod}{Graham}{G\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{1}{}{%
-      {{}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
+      {{hash=c129df5593fdaa7475548811bfbb227d}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Grimble}%
     }
-    \strng{namehash}{GG1}
-    \strng{fullhash}{GG1}
+    \strng{namehash}{121b6dc164b5b619c81c670fbd823f12}
+    \strng{fullhash}{121b6dc164b5b619c81c670fbd823f12}
     \field{sortinit}{G}
     \field{labelyear}{1974}
     \field{booktitle}{Graphs of the Continent}
@@ -63,13 +63,13 @@ my $cr1 = q|  \entry{cr1}{inbook}{}
 # crossref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $cr2 = q|  \entry{cr2}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Fumble}{F\bibinitperiod}{Frederick}{F\bibinitperiod}{}{}{}{}}%
+      {{hash=2d51a96bc0a6804995b3a9ff350c3384}{Fumble}{F\bibinitperiod}{Frederick}{F\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Fumble}{F\bibinitperiod}{Frederick}{F\bibinitperiod}{}{}{}{}}%
+      {{hash=2d51a96bc0a6804995b3a9ff350c3384}{Fumble}{F\bibinitperiod}{Frederick}{F\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{1}{}{%
-      {{}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
+      {{hash=c129df5593fdaa7475548811bfbb227d}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{institution}{1}{%
       {Institution}%
@@ -77,8 +77,8 @@ my $cr2 = q|  \entry{cr2}{inbook}{}
     \list{publisher}{1}{%
       {Grimble}%
     }
-    \strng{namehash}{FF1}
-    \strng{fullhash}{FF1}
+    \strng{namehash}{2d51a96bc0a6804995b3a9ff350c3384}
+    \strng{fullhash}{2d51a96bc0a6804995b3a9ff350c3384}
     \field{sortinit}{F}
     \field{labelyear}{1974}
     \field{booktitle}{Graphs of the Continent}
@@ -95,13 +95,11 @@ my $cr2 = q|  \entry{cr2}{inbook}{}
 # Notice lack of labelname and hashes because the only name is EDITOR and useeditor is false
 my $cr_m = q|  \entry{cr_m}{book}{}
     \name{editor}{1}{}{%
-      {{}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
+      {{hash=c129df5593fdaa7475548811bfbb227d}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Grimble}%
     }
-    \strng{namehash}{1}
-    \strng{fullhash}{1}
     \field{sortinit}{G}
     \field{labelyear}{1974}
     \field{title}{Graphs of the Continent}
@@ -113,19 +111,19 @@ my $cr_m = q|  \entry{cr_m}{book}{}
 # crossref field is included as the parent is cited
 my $cr3 = q|  \entry{cr3}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Aptitude}{A\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=2baf676a220704f6914223aefccaaa88}{Aptitude}{A\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Aptitude}{A\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
+      {{hash=2baf676a220704f6914223aefccaaa88}{Aptitude}{A\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{1}{}{%
-      {{}{Monkley}{M\bibinitperiod}{Mark}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=a1f5c22413396d599ec766725b226735}{Monkley}{M\bibinitperiod}{Mark}{M\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Rancour}%
     }
-    \strng{namehash}{AA1}
-    \strng{fullhash}{AA1}
+    \strng{namehash}{2baf676a220704f6914223aefccaaa88}
+    \strng{fullhash}{2baf676a220704f6914223aefccaaa88}
     \field{sortinit}{A}
     \field{labelyear}{1996}
     \field{booktitle}{Beasts of the Burbling Burns}
@@ -142,13 +140,11 @@ my $cr3 = q|  \entry{cr3}{inbook}{}
 # cited as normal
 my $crt = q|  \entry{crt}{book}{}
     \name{editor}{1}{}{%
-      {{}{Monkley}{M\bibinitperiod}{Mark}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=a1f5c22413396d599ec766725b226735}{Monkley}{M\bibinitperiod}{Mark}{M\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Rancour}%
     }
-    \strng{namehash}{1}
-    \strng{fullhash}{1}
     \field{sortinit}{B}
     \field{labelyear}{1996}
     \field{title}{Beasts of the Burbling Burns}
@@ -160,19 +156,19 @@ my $crt = q|  \entry{crt}{book}{}
 # various event fields inherited correctly
 my $cr6 = q|  \entry{cr6}{inproceedings}{}
     \name{labelname}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
+      {{hash=8ab39ee68c55046dc1f05d657fcefed9}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
+      {{hash=8ab39ee68c55046dc1f05d657fcefed9}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{1}{}{%
-      {{}{Editor}{E\bibinitperiod}{}{}{}{}{}{}}%
+      {{hash=344a7f427fb765610ef96eb7bce95257}{Editor}{E\bibinitperiod}{}{}{}{}{}{}}%
     }
     \list{location}{1}{%
       {Address}%
     }
-    \strng{namehash}{AF1}
-    \strng{fullhash}{AF1}
+    \strng{namehash}{8ab39ee68c55046dc1f05d657fcefed9}
+    \strng{fullhash}{8ab39ee68c55046dc1f05d657fcefed9}
     \field{sortinit}{A}
     \field{labelyear}{2009}
     \field{booktitle}{Manual booktitle}
@@ -194,19 +190,19 @@ my $cr6 = q|  \entry{cr6}{inproceedings}{}
 # Special fields inherited correctly
 my $cr7 = q|  \entry{cr7}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
+      {{hash=8ab39ee68c55046dc1f05d657fcefed9}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
+      {{hash=8ab39ee68c55046dc1f05d657fcefed9}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
     }
     \name{bookauthor}{1}{}{%
-      {{}{Bookauthor}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
+      {{hash=91a1dd4aeed3c4ec29ca74c4e778be5f}{Bookauthor}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Publisher of proceeding}%
     }
-    \strng{namehash}{AF1}
-    \strng{fullhash}{AF1}
+    \strng{namehash}{8ab39ee68c55046dc1f05d657fcefed9}
+    \strng{fullhash}{8ab39ee68c55046dc1f05d657fcefed9}
     \field{sortinit}{A}
     \field{labelyear}{2010}
     \field{booksubtitle}{Book Subtitle}
@@ -225,13 +221,13 @@ my $cr7 = q|  \entry{cr7}{inbook}{}
 # Default inheritance supressed except for specified
 my $cr8 = q|  \entry{cr8}{incollection}{}
     \name{labelname}{1}{}{%
-      {{}{Smith}{S\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
+      {{hash=3d449e56eb3ca1ae80dc99a18d689795}{Smith}{S\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Smith}{S\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
+      {{hash=3d449e56eb3ca1ae80dc99a18d689795}{Smith}{S\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{SF1}
-    \strng{fullhash}{SF1}
+    \strng{namehash}{3d449e56eb3ca1ae80dc99a18d689795}
+    \strng{fullhash}{3d449e56eb3ca1ae80dc99a18d689795}
     \field{sortinit}{S}
     \field{labelyear}{2010}
     \field{booktitle}{Book Title}
@@ -245,13 +241,13 @@ my $cr8 = q|  \entry{cr8}{incollection}{}
 # xref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $xr1 = q|  \entry{xr1}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Zentrum}{Z\bibinitperiod}{Zoe}{Z\bibinitperiod}{}{}{}{}}%
+      {{hash=e0ecc4fc668ee499d1afba44e1ac064d}{Zentrum}{Z\bibinitperiod}{Zoe}{Z\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Zentrum}{Z\bibinitperiod}{Zoe}{Z\bibinitperiod}{}{}{}{}}%
+      {{hash=e0ecc4fc668ee499d1afba44e1ac064d}{Zentrum}{Z\bibinitperiod}{Zoe}{Z\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{ZZ1}
-    \strng{fullhash}{ZZ1}
+    \strng{namehash}{e0ecc4fc668ee499d1afba44e1ac064d}
+    \strng{fullhash}{e0ecc4fc668ee499d1afba44e1ac064d}
     \field{sortinit}{Z}
     \field{origyear}{1921}
     \field{title}{Moods Mildly Modified}
@@ -263,13 +259,13 @@ my $xr1 = q|  \entry{xr1}{inbook}{}
 # xref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $xr2 = q|  \entry{xr2}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Instant}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
+      {{hash=6afa09374ecfd6b394ce714d2d9709c7}{Instant}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Instant}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
+      {{hash=6afa09374ecfd6b394ce714d2d9709c7}{Instant}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{II1}
-    \strng{fullhash}{II1}
+    \strng{namehash}{6afa09374ecfd6b394ce714d2d9709c7}
+    \strng{fullhash}{6afa09374ecfd6b394ce714d2d9709c7}
     \field{sortinit}{I}
     \field{origyear}{1926}
     \field{title}{Migraines Multiplying Madly}
@@ -282,13 +278,11 @@ my $xr2 = q|  \entry{xr2}{inbook}{}
 # Notice lack of labelname and hashes because the only name is EDITOR and useeditor is false
 my $xrm = q|  \entry{xrm}{book}{}
     \name{editor}{1}{}{%
-      {{}{Prendergast}{P\bibinitperiod}{Peter}{P\bibinitperiod}{}{}{}{}}%
+      {{hash=809950f9b59ae207092b909a19dcb27b}{Prendergast}{P\bibinitperiod}{Peter}{P\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Mainstream}%
     }
-    \strng{namehash}{1}
-    \strng{fullhash}{1}
     \field{sortinit}{C}
     \field{labelyear}{1970}
     \field{title}{Calligraphy, Calisthenics, Culture}
@@ -300,13 +294,13 @@ my $xrm = q|  \entry{xrm}{book}{}
 # xref field is included as the parent is cited
 my $xr3 = q|  \entry{xr3}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Normal}{N\bibinitperiod}{Norman}{N\bibinitperiod}{}{}{}{}}%
+      {{hash=9788055665b9bb4b37c776c3f6b74f16}{Normal}{N\bibinitperiod}{Norman}{N\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Normal}{N\bibinitperiod}{Norman}{N\bibinitperiod}{}{}{}{}}%
+      {{hash=9788055665b9bb4b37c776c3f6b74f16}{Normal}{N\bibinitperiod}{Norman}{N\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{NN1}
-    \strng{fullhash}{NN1}
+    \strng{namehash}{9788055665b9bb4b37c776c3f6b74f16}
+    \strng{fullhash}{9788055665b9bb4b37c776c3f6b74f16}
     \field{sortinit}{N}
     \field{origyear}{1923}
     \field{title}{Russion Regalia Revisited}
@@ -318,13 +312,11 @@ my $xr3 = q|  \entry{xr3}{inbook}{}
 # cited as normal
 my $xrt = q|  \entry{xrt}{book}{}
     \name{editor}{1}{}{%
-      {{}{Lunders}{L\bibinitperiod}{Lucy}{L\bibinitperiod}{}{}{}{}}%
+      {{hash=bf7d6b02f3e073913e5bfe5059508dd5}{Lunders}{L\bibinitperiod}{Lucy}{L\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Middling}%
     }
-    \strng{namehash}{1}
-    \strng{fullhash}{1}
     \field{sortinit}{K}
     \field{labelyear}{1977}
     \field{title}{Kings, Cork and Calculation}
@@ -336,19 +328,19 @@ my $xrt = q|  \entry{xrt}{book}{}
 # No crossref field as parent is not cited (mincrossrefs < 2)
 my $cr4 = q|  \entry{cr4}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Mumble}{M\bibinitperiod}{Morris}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=50ef7fd3a1be33bccc5de2768b013836}{Mumble}{M\bibinitperiod}{Morris}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Mumble}{M\bibinitperiod}{Morris}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=50ef7fd3a1be33bccc5de2768b013836}{Mumble}{M\bibinitperiod}{Morris}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{editor}{1}{}{%
-      {{}{Jermain}{J\bibinitperiod}{Jeremy}{J\bibinitperiod}{}{}{}{}}%
+      {{hash=6ea89bd4958743a20b70fe17647d6af5}{Jermain}{J\bibinitperiod}{Jeremy}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Pillsbury}%
     }
-    \strng{namehash}{MM1}
-    \strng{fullhash}{MM1}
+    \strng{namehash}{50ef7fd3a1be33bccc5de2768b013836}
+    \strng{fullhash}{50ef7fd3a1be33bccc5de2768b013836}
     \field{sortinit}{M}
     \field{labelyear}{1945}
     \field{booktitle}{Vanquished, Victor, Vandal}
@@ -362,13 +354,13 @@ my $cr4 = q|  \entry{cr4}{inbook}{}
 # No crossref field as parent is not cited (mincrossrefs < 2)
 my $xr4 = q|  \entry{xr4}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=7804ffef086c0c4686c235807f5cb502}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=7804ffef086c0c4686c235807f5cb502}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{MM2}
-    \strng{fullhash}{MM2}
+    \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
+    \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
     \field{sortinit}{M}
     \field{origyear}{1933}
     \field{title}{Lumbering Lunatics}
@@ -380,13 +372,13 @@ my $xr4 = q|  \entry{xr4}{inbook}{}
 # So these two should have no xref/crossref data in them
 my $mxr = q|  \entry{mxr}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=7804ffef086c0c4686c235807f5cb502}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=7804ffef086c0c4686c235807f5cb502}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{MM2}
-    \strng{fullhash}{MM2}
+    \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
+    \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
     \field{sortinit}{M}
     \field{origyear}{1933}
     \field{title}{Lumbering Lunatics}
@@ -396,13 +388,13 @@ my $mxr = q|  \entry{mxr}{inbook}{}
 
 my $mcr = q|  \entry{mcr}{inbook}{}
     \name{labelname}{1}{}{%
-      {{}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=7804ffef086c0c4686c235807f5cb502}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=7804ffef086c0c4686c235807f5cb502}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{MM2}
-    \strng{fullhash}{MM2}
+    \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
+    \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
     \field{sortinit}{M}
     \field{origyear}{1933}
     \field{title}{Lumbering Lunatics}

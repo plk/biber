@@ -2,6 +2,8 @@ Revision history for Biber
 
 0.9.4  (unreleased)
        * Bug fixes to bblsafechars
+       * Implemented user-customisable labelalpha
+       * Implemented per-name hashes
 0.9.3  05-06-2011
        * New mininit and minfull uniquename options
        * New mindate uniquelist option

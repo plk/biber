@@ -30,9 +30,13 @@ start =
       labelnamespec,
       labelyear,
       labelyearspec,
-      maxitems,
+      maxalphanames,
+      maxbibnames,
+      maxitems,      
       maxnames,
-      minitems,
+      minalphanames,
+      minbibnames,
+      minitems,      
       minnames,
       singletitle,
       sortalphaothers?,
@@ -74,6 +78,26 @@ start =
         element bcf:mode { "original" | "uniform" | "romanised"  | "translated" }+
       }+
     }?,
+
+    # labelalpha template specification
+    element bcf:labelalphatemplate {
+      attribute type { xsd:string }?, # per-type?
+      element bcf:labelelement {
+        attribute order { xsd:integer },
+        element bcf:labelpart {          
+          attribute final { "0" | "1" }?,
+          attribute format { "alpha" | "int" }?,
+          attribute substring_width { xsd:integer | "v" | "vf" | "l" }?,
+          attribute substring_fixed_threshold { xsd:integer }?,
+          attribute substring_width_max { xsd:integer }?,
+          attribute substring_side { "left" | "right" }?,
+          attribute substring_maxlength { xsd:integer }?,
+          attribute ifnamecount { xsd:integer }?,
+          attribute namecount { xsd:integer }?,
+          xsd:string
+        }+
+      }+
+    }*,
 
     # Cross-reference inheritance specifications
     element bcf:inheritance {
@@ -361,7 +385,7 @@ labelalpha =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "labelalpha" },
-    element bcf:value { "0" | "1" }
+    element bcf:value { "0" | "1" | "2" }
   }
 labelyear =
   element bcf:option {
@@ -430,6 +454,18 @@ maxitems =
     element bcf:key { "maxitems" },
     element bcf:value { xsd:integer }
   }
+maxbibnames =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "maxbibnames" },
+    element bcf:value { xsd:integer }
+  }
+maxalphanames =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "maxalphanames" },
+    element bcf:value { xsd:integer }
+  }
 maxnames =
   element bcf:option {
     attribute type { "singlevalued" },
@@ -440,6 +476,18 @@ minitems =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "minitems" },
+    element bcf:value { xsd:integer }
+  }
+minbibnames =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "minbibnames" },
+    element bcf:value { xsd:integer }
+  }
+minalphanames =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "minalphanames" },
     element bcf:value { xsd:integer }
   }
 minnames =

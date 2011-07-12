@@ -18,7 +18,12 @@ our @EXPORT = qw{
   $BIBLATEX_VERSION
   $BIBER_SORT_FINAL
   $BIBER_SORT_NULL
+  $LABEL_FINAL
+  %NTOL
   };
+
+
+our %NTOL; @NTOL{(1 .. 52)} = ('a' .. 'z', 'A' .. 'Z'); # hash slice
 
 # Version of biblatex which this release works with. Matched against version
 # passed in control file
@@ -127,6 +132,31 @@ our %CONFIG_DEFAULT_BIBER = (
 # but we need this for things not yet implemented by biblatex but expected by biber
 our %CONFIG_DEFAULT_BIBLATEX =
   (
+   labelalphatemplate => {
+  labelelement => [
+             {
+               labelpart => [
+                 { content => "shorthand", final => 1 },
+                 { content => "label" },
+                 {
+                   content         => "labelname",
+                   iflistcount     => 1,
+                   substring_side  => "left",
+                   substring_width => 3,
+                 },
+                 { content => "labelname", substring_side => "left", substring_width => 1 },
+               ],
+               order => 1,
+             },
+             {
+               labelpart => [
+                 { content => "year", substring_side => "right", substring_width => 2 },
+               ],
+               order => 2,
+             },
+           ],
+  type  => "global",
+},
    displaymode     => { ALL => ["original", "romanised", "uniform", "translated"] },
    structure       =>
  { constraints => [
@@ -1612,52 +1642,57 @@ our %CONFIG_DEFAULT_BIBLATEX =
 # Set up some encoding aliases to map \inputen{c,x} encoding names to Encode
 # It seems that inputen{c,x} has a different idea of nextstep than Encode
 # so we push it to MacRoman
-define_alias( 'ansinew'        => 'cp1252'); # inputenc alias for cp1252
-define_alias( 'applemac'       => 'MacRoman');
-define_alias( 'applemacce'     => 'MacCentralEurRoman');
-define_alias( 'next'           => 'MacRoman');
-define_alias( 'x-mac-roman'    => 'MacRoman');
-define_alias( 'x-mac-centeuro' => 'MacCentralEurRoman');
-define_alias( 'x-mac-cyrillic' => 'MacCyrillic');
-define_alias( 'x-nextstep'     => 'MacRoman');
-define_alias( 'x-ascii'        => 'ascii'); # Encode doesn't resolve this one by default
-define_alias( 'lutf8'          => 'UTF-8'); # Luatex
-define_alias( 'utf8x'          => 'UTF-8'); # UCS (old)
+define_alias('ansinew'        => 'cp1252'); # inputenc alias for cp1252
+define_alias('applemac'       => 'MacRoman');
+define_alias('applemacce'     => 'MacCentralEurRoman');
+define_alias('next'           => 'MacRoman');
+define_alias('x-mac-roman'    => 'MacRoman');
+define_alias('x-mac-centeuro' => 'MacCentralEurRoman');
+define_alias('x-mac-cyrillic' => 'MacCyrillic');
+define_alias('x-nextstep'     => 'MacRoman');
+define_alias('x-ascii'        => 'ascii'); # Encode doesn't resolve this one by default
+define_alias('lutf8'          => 'UTF-8'); # Luatex
+define_alias('utf8x'          => 'UTF-8'); # UCS (old)
 
 # Defines the scope of each of the BibLaTeX configuration options
 our %CONFIG_SCOPE_BIBLATEX = (
-  alphaothers       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  controlversion    => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  debug             => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  dataonly          => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
-  displaymode       => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  inheritance       => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  labelalpha        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labelnamespec     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labelnumber       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labelyear         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labelyearspec     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  maxitems          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  minitems          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  maxnames          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  minnames          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  presort           => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  singletitle       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  skipbib           => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
-  skiplab           => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
-  skiplos           => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
-  sortalphaothers   => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  sortexclusion     => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 0},
-  sorting           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  sortlos           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  structure         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  uniquelist        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  uniquename        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  uniquenamescope   => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  useauthor         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  useeditor         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  useprefix         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  usetranslator     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  alphaothers        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  controlversion     => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  debug              => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  dataonly           => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
+  displaymode        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  inheritance        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  labelalpha         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  labelalphatemplate => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  labelnamespec      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  labelnumber        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  labelyear          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  labelyearspec      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  maxitems           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  minitems           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  maxbibnames        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  maxalphanames      => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  maxnames           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  minbibnames        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  minalphanames      => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  minnames           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  presort            => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  singletitle        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  skipbib            => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
+  skiplab            => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
+  skiplos            => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
+  sortalphaothers    => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  sortexclusion      => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 0},
+  sorting            => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  sortlos            => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  structure          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  uniquelist         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  uniquename         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  uniquenamescope    => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  useauthor          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  useeditor          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  useprefix          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  usetranslator      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
 );
 
 

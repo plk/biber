@@ -67,16 +67,16 @@ my $bln = [ 'author', 'editor' ];
 
 my $l1 = q|  \entry{L1}{book}{}
     \name{labelname}{1}{}{%
-      {{uniquename=0}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{uniquename=0}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
     \list{publisher}{1}{%
       {Oxford}%
     }
-    \strng{namehash}{DJ1}
-    \strng{fullhash}{DJ1}
+    \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+    \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
     \field{sortinit}{D}
     \field{labelyear}{1998}
     \field{day}{05}

@@ -32,20 +32,20 @@ my $bibentries = $section->bibentries;
 
 my $l1 = q|  \entry{fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:42}{article}{}
     \name{labelname}{3}{}{%
-      {{}{Alegria}{A\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
-      {{}{Perez}{P\bibinitperiod}{D.\bibnamedelimi J.}{D\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-      {{}{Williams}{W\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
+      {{hash=5ed7d7f80cf3fd74517bb9c96a1d6ffa}{Alegria}{A\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=418031013857fb1f059185242baea41f}{Perez}{P\bibinitperiod}{D.\bibnamedelimi J.}{D\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{hash=d016356435e41f9f216cd5ad5414be6c}{Williams}{W\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{3}{}{%
-      {{}{Alegria}{A\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
-      {{}{Perez}{P\bibinitperiod}{D.\bibnamedelimi J.}{D\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-      {{}{Williams}{W\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
+      {{hash=5ed7d7f80cf3fd74517bb9c96a1d6ffa}{Alegria}{A\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=418031013857fb1f059185242baea41f}{Perez}{P\bibinitperiod}{D.\bibnamedelimi J.}{D\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
+      {{hash=d016356435e41f9f216cd5ad5414be6c}{Williams}{W\bibinitperiod}{S.}{S\bibinitperiod}{}{}{}{}}%
     }
     \list{language}{1}{%
       {eng}%
     }
-    \strng{namehash}{AMPDJWS1}
-    \strng{fullhash}{AMPDJWS1}
+    \strng{namehash}{bb7cc58ecd32f38238f8c0ee2107e097}
+    \strng{fullhash}{bb7cc58ecd32f38238f8c0ee2107e097}
     \field{sortinit}{A}
     \field{labelyear}{2003}
     \field{abstract}{Ethnic and racial disparities in mental health are driven by social factors such as housing, education, and income. Many of these social factors are different for minorities than they are for whites. Policies that address gaps in these social factors therefore can address mental health status disparities. We analyze three policies and their impact on minorities: the Individuals with Disability Education Act, Section 8 housing vouchers, and the Earned Income Tax Credit. Two of the three policies appear to have been effective in reducing social inequalities between whites and minorities. Expansion of public policies can be the mechanism to eliminate mental health status disparities for minorities.}
@@ -75,16 +75,16 @@ Health Aff (Millwood). 2003 Sep-Oct;22(5):51-64.}
 
 my $l2 = q|  \entry{fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:47}{article}{}
     \name{labelname}{1}{}{%
-      {{}{Amico}{A\bibinitperiod}{Sir\bibnamedelimb Kevin}{K\bibinitperiod}{R}{R\bibinitperiod}{}{}{Jr}{J\bibinitperiod}}%
+      {{hash=346ad1f92291bef45511d3eb23e3df34}{Amico}{A\bibinitperiod}{Sir\bibnamedelimb Kevin}{K\bibinitperiod}{R}{R\bibinitperiod}{}{}{Jr}{J\bibinitperiod}}%
     }
     \name{author}{1}{}{%
-      {{}{Amico}{A\bibinitperiod}{Sir\bibnamedelimb Kevin}{K\bibinitperiod}{R}{R\bibinitperiod}{}{}{Jr}{J\bibinitperiod}}%
+      {{hash=346ad1f92291bef45511d3eb23e3df34}{Amico}{A\bibinitperiod}{Sir\bibnamedelimb Kevin}{K\bibinitperiod}{R}{R\bibinitperiod}{}{}{Jr}{J\bibinitperiod}}%
     }
     \list{language}{1}{%
       {eng}%
     }
-    \strng{namehash}{AJKR1}
-    \strng{fullhash}{AJKR1}
+    \strng{namehash}{346ad1f92291bef45511d3eb23e3df34}
+    \strng{fullhash}{346ad1f92291bef45511d3eb23e3df34}
     \field{sortinit}{A}
     \field{labelyear}{2009}
     \field{abstract}{Health behavior interventions delivered at point of service include those that yoke an intervention protocol with existing systems of care (e.g., clinical care, social work, or case management). Though beneficial in a number of ways, such "hosted" intervention studies may be unable to retain participants that specifically discontinue their use of the hosting service. In light of recent practices that use percent total attrition as indicative of methodological flaws, hosted interventions targeting hard-to-reach populations may be excluded from consideration in effective intervention compendiums or research synthesis because of high attrition rates that may in fact be secondary to the natural flow of service use or unrelated to differential attrition or internal design flaws. Better methods to characterize rigor are needed.}

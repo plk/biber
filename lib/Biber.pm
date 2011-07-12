@@ -2,6 +2,7 @@ package Biber;
 use strict;
 use warnings;
 use feature ':5.10';
+use base 'Biber::Internals';
 #use feature 'unicode_strings';
 use Carp;
 use Encode;
@@ -10,10 +11,9 @@ use File::Spec;
 use File::Temp;
 use IO::File;
 use POSIX qw( locale_h ); # for sorting with built-in "sort"
-use Cwd qw( abs_path );
 use Biber::Config;
 use Biber::Constants;
-use List::Util qw( first );
+use List::AllUtils qw( :all );
 use Digest::MD5 qw( md5_hex );
 use Biber::Internals;
 use Biber::Entries;
@@ -26,7 +26,6 @@ use Biber::Structure;
 use Biber::Utils;
 use Storable qw( dclone );
 use Log::Log4perl qw( :no_extra_logdie_message );
-use base 'Biber::Internals';
 use Config::General qw( ParseConfig );
 use Data::Dump;
 use Data::Compare;
@@ -350,6 +349,8 @@ sub parse_ctrlfile {
                                                            qr/\Aentrytype\z/,
                                                            qr/\Adatetype\z/,
                                                            qr/\Asectionlist\z/,
+                                                           qr/\Alabel(?:part|element|alphatemplate)\z/,
+                                                           qr/\Acondition\z/,
                                                            qr/\A(?:or)?filter\z/,
                                                           ],
                                           'NsStrip' => 1,
@@ -418,7 +419,7 @@ sub parse_ctrlfile {
   }
 
   # DISPLAYMODES
-  # This should not be optional any more when biblatex implements this so take
+  # TODO This should not be optional any more when biblatex implements this so take
   # out this conditional
   if (exists($bcfxml->{displaymodes})) {
     my $dms;
@@ -426,6 +427,24 @@ sub parse_ctrlfile {
       $dms->{$dm->{target}{content}} = [ map {$_->{content}} @{$dm->{mode}} ];
     }
     Biber::Config->setblxoption('displaymode', $dms);
+  }
+
+  # LABELALPHATEMPLATE
+  # TODO This should not be optional any more when biblatex implements this so take
+  # out this conditional
+  if (exists($bcfxml->{labelalphatemplate})) {
+    foreach my $t (@{$bcfxml->{labelalphatemplate}}) {
+      my $latype = $t->{type};
+      if ($latype eq 'global') {
+        Biber::Config->setblxoption('labelalphatemplate', $t);
+      }
+      else {
+        Biber::Config->setblxoption('labelalphatemplate',
+                                    $t,
+                                    'PER_TYPE',
+                                    $latype);
+      }
+    }
   }
 
   # INHERITANCE schemes for crossreferences (always global)
@@ -866,9 +885,6 @@ sub process_entries_pre {
     # generate fullhash
     $self->process_fullhash($citekey);
 
-    # generate labelalpha information
-    $self->process_labelalpha($citekey);
-
     # push entry-specific presort fields into the presort state
     $self->process_presort($citekey);
 
@@ -894,14 +910,69 @@ sub process_entries_post {
   foreach my $citekey ( $section->get_citekeys ) {
     $logger->debug("Postprocessing entry '$citekey' from section $secnum (after uniqueness)");
 
+    # generate labelalpha information
+    $self->process_labelalpha($citekey);
+
+    # generate labelalpha disambiguation
+    # This is different to extrayear disambiguation in that
+    # it disambiguates the labelalphas themselves. This is useful
+    # if the labelalphas are not <name><year> because in such a case
+    # the counters for extrayear aren't much use because they are
+    # designed for a <name><year> disambiguation.
+    $self->process_labelalpha_disambiguation($citekey);
+
     # generate namehash
     $self->process_namehash($citekey);
 
+    # generate per-name hashes
+    $self->process_pername_hashes($citekey);
   }
 
   $logger->debug("Finished processing entries in section $secnum (after uniqueness)");
 
   return;
+}
+
+=head2 process_labelalpha_autoinc
+
+    Instantiate any labelalpha autoinc data
+    This late-bound data doesn't depend on sorting order so it can be
+    instantiated here rather than just before list output.
+
+=cut
+
+sub process_labelalpha_autoinc {
+  my $self = shift;
+  my $citekey = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  foreach my $citekey ( $section->get_citekeys ) {
+    $logger->debug("Instantiating any labelalpha template autoincrements for '$citekey' from section $secnum");
+    my $be = $section->bibentry($citekey);
+    my $bee = $be->get_field('entrytype');
+    if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) == 2) {
+      if (my $la = $be->get_field('labelalpha')) {
+        my $sla = $be->get_field('sortlabelalpha');
+        my $lad = Biber::Config->get_la_disambiguation($la);
+        $logger->trace("labelalpha autoinc disambiguation data for '$la': " . Data::Dump::pp($lad));
+        my $auto = '';
+        if ($#$lad > 0) {     # If some disambiguation needs doing ...
+          $auto = first_index {$_ eq $citekey} @$lad;
+          $auto++;              # convert from 0-base
+        }
+        $la =~ s|<BDS>LAAUTOI</BDS>|$auto|gxms;
+        $sla =~ s|<BDS>LAAUTOI</BDS>|$auto|gxms;
+
+        my $autoa = $NTOL{$auto} || ''; # to avoid uninitialised warnings in s///
+        $la =~ s|<BDS>LAAUTOA</BDS>|$autoa|gxms;
+        $sla =~ s|<BDS>LAAUTOA</BDS>|$autoa|gxms;
+
+        # re-set labelalpha and sortlabelalpha
+        $be->set_field('labelalpha', $la);
+        $be->set_field('sortlabelalpha', $sla);
+      }
+    }
+  }
 }
 
 
@@ -973,10 +1044,10 @@ sub process_sets {
 
     We can retreive the actual labelname value later with:
 
-    $entry->get_field($entry->get_field('labelnamename))
+    $entry->get_field($entry->get_field('labelnamename'))
 
-    It's neat this way as we often need to know what the labelname field is
-    as well as it's actual string value
+    It is neat this way as we often need to know what the labelname field is
+    as well as its actual string value
 
 =cut
 
@@ -1089,58 +1160,13 @@ sub process_fullhash {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $bee = $be->get_field('entrytype');
-  my $fullhash = ''; # biblatex fullhash field
-  my $fullid   = '';
 
   # fullhash is generated from the labelname but ignores SHORT* fields and
   # maxnames/minnames settings
   if (my $lnamefh = $be->get_field('labelnamenamefullhash')) {
     if (my $lnfh = $be->get_field($lnamefh)) {
-      $fullhash .= $self->_getfullhash($citekey, $lnfh);
-      $fullid .= makenameid($lnfh);
+      $be->set_field('fullhash', $self->_getfullhash($citekey, $lnfh));
     }
-  }
-
-  # After the initial generation of fullhash, we have to append
-  # a suffix as it must be unique. It is possible that different entries have
-  # the same hashes at this stage. For example:
-
-  # AUTHOR = {Fred Grimble and Bill Bullter} = "FGBB"
-  # AUTHOR = {Frank Garby and Brian Blunkley} = "FGBB"
-
-  my $fullhashsuffix = 1;
-
-  # First, check to see if we've already seen this exact name before
-  if (Biber::Config->get_fullhashcount($fullhash, $fullid)) {
-    # If we have, our suffix is already known
-    $fullhashsuffix = Biber::Config->get_fullhashcount($fullhash, $fullid);
-  }
-  # Otherwise, if the fullhash already exists, we'll make a new entry with a new suffix
-  elsif (Biber::Config->fullhashexists($fullhash)) {
-    # Count the suffices already defined ...
-    my $count = Biber::Config->get_numoffullhashes($fullhash);
-    # ... add one to the number ...
-    $fullhashsuffix = $count + 1;
-    # ... and define a new suffix for that name
-    Biber::Config->set_fullhashcount($fullhash, $fullid, $fullhashsuffix);
-  }
-  # No entry for the namehash at all so make a new one, a new name and suffix
-  else {
-    Biber::Config->del_fullhash($fullhash);
-    Biber::Config->set_fullhashcount($fullhash, $fullid, 1);
-  }
-
-
-  # Now append the suffix, making the hash unique
-  $fullhash .= $fullhashsuffix;
-
-  # Set the hash
-  $be->set_field('fullhash', $fullhash);
-
-  # Don't add to disambiguation data if skiplab is set
-  unless (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
-    Biber::Config->incr_seennamehash($fullhash);
   }
 
   return;
@@ -1152,64 +1178,107 @@ sub process_fullhash {
 
 =cut
 
+
 sub process_namehash {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $bee = $be->get_field('entrytype');
-  my $namehash = ''; # biblatex namehash field
-  my $nameid   = '';
-  my $fullid   = '';
 
   # namehash is generated from the labelname
   if (my $lname = $be->get_field('labelnamename')) {
     if (my $ln = $be->get_field($lname)) {
-      $namehash .= $self->_getnamehash($citekey, $ln);
-      $nameid .= makenameid($ln);
+      $be->set_field('namehash', $self->_getnamehash($citekey, $ln));
     }
   }
-
-  # After the initial generation of namehash, we have to append
-  # a suffix as they must be unique. It is possible that different entries have
-  # the same hashes at this stage. For example:
-
-  # AUTHOR = {Fred Grimble and Bill Bullter} = "FGBB"
-  # AUTHOR = {Frank Garby and Brian Blunkley} = "FGBB"
-
-  my $namehashsuffix = 1;
-
-  # namehash
-  # First, check to see if we've already seen this exact name before
-  if (Biber::Config->get_namehashcount($namehash, $nameid)) {
-    # If we have, our suffix is already known
-    $namehashsuffix = Biber::Config->get_namehashcount($namehash, $nameid);
-  }
-  # Otherwise, if the namehash already exists, make a new entry with a new suffix
-  elsif (Biber::Config->namehashexists($namehash)) {
-    # Count the suffices already defined ...
-    my $count = Biber::Config->get_numofnamehashes($namehash);
-    # ... add one to the number ...
-    $namehashsuffix = $count + 1;
-    # ... and define a new suffix for that name
-    Biber::Config->set_namehashcount($namehash, $nameid, $namehashsuffix);
-  }
-  # No entry for the namehash at all so make a new one, a new name and suffix
-  else {
-    Biber::Config->del_namehash($namehash);
-    Biber::Config->set_namehashcount($namehash, $nameid, 1);
-  }
-
-  # Now append the suffix, making the hash unique
-  $namehash .= $namehashsuffix;
-
-  # Set the hashes
-  $be->set_field('namehash', $namehash);
 
   return;
 }
 
+
+=head2 process_pername_hashes
+
+    Generate per_name_hashes
+
+=cut
+
+sub process_pername_hashes {
+  my $self = shift;
+  my $citekey = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $struc = Biber::Config->get_structure;
+
+  foreach my $pn (@{$struc->get_field_type('name')}) {
+    my $names = $be->get_field($pn) or next;
+    foreach my $n (@{$names->names}) {
+      $n->set_hash($self->_getpnhash($citekey, $n));
+    }
+  }
+
+  return;
+}
+
+
+=head2 process_visible_names
+
+    Generate the visible name information.
+    This is used in various places and it's useful to have it generated in one place.
+
+=cut
+
+sub process_visible_names {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $struc = Biber::Config->get_structure;
+  my $maxn = Biber::Config->getblxoption('maxnames');
+  my $minn = Biber::Config->getblxoption('minnames');
+  my $maxbn = Biber::Config->getblxoption('maxbibnames');
+  my $minbn = Biber::Config->getblxoption('minbibnames');
+
+  foreach my $citekey ( $section->get_citekeys ) {
+    $logger->debug("Postprocessing visible names for key '$citekey'");
+    my $be = $section->bibentry($citekey);
+
+    foreach my $n (@{$struc->get_field_type('name')}) {
+      next unless my $names = $be->get_field($n);
+
+      my $count = $names->count_names;
+      my $visible_names;
+      my $visible_names_bib;
+
+      # If name list was truncated in bib with "and others", this overrides maxnames
+      my $morenames = ($names->last_name->get_namestring eq 'others') ? 1 : 0;
+
+      # visibility index if uniquelist, if set, otherwise, minnames
+      if ( $morenames or $count > $maxn ) {
+        # Visibiliy to the uniquelist point if uniquelist is requested and max/minbibnames
+        # is equal to max/minnames because in this case the user can expect that the bibliography
+        # is sorted according to the citation truncations.
+        # We know at this stage that if uniquelist is set, there are more than maxnames
+        # names. We also know that uniquelist > minnames because it is a further disambiguation
+        # on top of minnames so can't be less as you can't disambiguate by losing information
+        if ($maxn == $maxbn and $minn == $minbn) {
+          $visible_names = $visible_names_bib = $names->get_uniquelist // $minn;
+        }
+        else {
+          $visible_names = $names->get_uniquelist // $minn;
+          $visible_names_bib = $minbn;
+        }
+      }
+      else {                    # visibility is simply the full list
+        $visible_names = $visible_names_bib = $count;
+      }
+      $logger->trace("Setting visible names for key '$citekey' to '$visible_names'");
+      $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
+      $names->set_visible($visible_names);
+      $names->set_visible_bib($visible_names_bib);
+    }
+  }
+}
 
 
 =head2 process_labelalpha
@@ -1229,50 +1298,79 @@ sub process_labelalpha {
   if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
     return;
   }
-  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
+  if ( my $la = Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
     my $label;
     my $sortlabel;
-
-    if ( $be->get_field('shorthand') ) {
-      $sortlabel = $label = $be->get_field('shorthand');
-    }
-    else {
-      if ( $be->get_field('label') ) {
-        $sortlabel = $label = $be->get_field('label');
-      }
-      elsif ( $be->get_field('labelnamename') and $be->get_field($be->get_field('labelnamename'))) {
-        ( $label, $sortlabel ) =
-          @{ $self->_getlabel( $citekey, $be->get_field('labelnamename') ) };
-      }
-      else {
-        $sortlabel = $label = '';
-      }
-
-      # biblatex manual says "publication year"
-      if ( my $year = $be->get_field('year') ) {
-        my $yr;
-        # Make "in press" years look nice in alpha styles
-        if ($year =~ m/\A\s*in\s*press\s*\z/ixms) {
-          $yr = 'ip';
+    given ($la) {
+      when (1) { # default builtin labelalpha which uses extraalpha
+        if ( $be->get_field('shorthand') ) {
+          $sortlabel = $label = $be->get_field('shorthand');
         }
-        # Normal year
         else {
-          $yr = substr $year, 2, 2;
+          if ( $be->get_field('label') ) {
+            $sortlabel = $label = $be->get_field('label');
+          }
+          elsif ( $be->get_field('labelnamename') and $be->get_field($be->get_field('labelnamename'))) {
+            ( $label, $sortlabel ) =
+              @{ $self->_genlabel( $citekey, $be->get_field('labelnamename') ) };
+          }
+          else {
+            $sortlabel = $label = '';
+          }
+
+          if ( my $year = $be->get_field('labelyear') ||
+               $be->get_field('year')) {
+            my $yr;
+            # Make "in press" years look nice in alpha styles
+            if ($year =~ m/\A\s*in\s*press\s*\z/ixms) {
+              $yr = 'ip';
+            }
+            # Normal year - this works for date ranges too since 2 from 2 in is the
+            # start date
+            else {
+              $yr = substr $year, 2, 2;
+            }
+            $label     .= $yr;
+            $sortlabel .= $yr;
+          }
         }
-        $label     .= $yr;
-        $sortlabel .= $yr;
+      }
+      when (2) { # custom labelalpha
+        ( $label, $sortlabel ) = @{ $self->_genlabel_custom($citekey) };
       }
     }
+
     $be->set_field('labelalpha', $label);
     $be->set_field('sortlabelalpha', $sortlabel);
   }
 }
 
+=head2 process_labelalpha_disambiguation
+
+    Generate the labelalpha disambiguation data
+
+=cut
+
+sub process_labelalpha_disambiguation {
+  my $self = shift;
+  my $citekey = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
+  if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) == 2) {
+    if (my $la = $be->get_field('labelalpha')) {
+      Biber::Config->incr_la_disambiguation($la, $citekey);
+    }
+  }
+}
+
+
 
 =head2 process_presort
 
     Put presort fields for an entry into the main Biber bltx state
-    so that it's all available in the same place since this can be
+    so that it is all available in the same place since this can be
     set per-type and globally too.
 
 =cut
@@ -1303,7 +1401,6 @@ sub process_lists {
     my $llabel = $list->get_label;
 
     # Last-ditch fallback in case we still don't have a sorting spec
-    # probably due to being called via biber with -a and -d flags
     $list->set_sortscheme(Biber::Config->getblxoption('sorting')) unless $list->get_sortscheme;
 
     $list->set_keys([ $section->get_citekeys ]);
@@ -1318,8 +1415,7 @@ sub process_lists {
     #
     # * sorted keys
     # * sortinit data
-    # * extraalpha data
-    # * extrayear data
+    # * extra* data
 
     my $cache_flag = 0;
     $logger->debug("Checking sorting cache for list '$llabel'");
@@ -1328,8 +1424,7 @@ sub process_lists {
         $logger->debug("Found sorting cache entry for '$llabel'");
         $list->set_keys($cacheitem->[1]);
         $list->set_sortinitdata($cacheitem->[2]);
-        $list->set_extraalphadata($cacheitem->[3]);
-        $list->set_extrayeardata($cacheitem->[4]);
+        $list->set_extradata($cacheitem->[3]);
         $cache_flag = 1;
         last;
       }
@@ -1580,10 +1675,10 @@ sub create_uniquename_info {
         # and then it is left at uniquename = 0
 
         my $nl = $be->get_field($lname);
-        my $num_names = $nl->count_elements;
+        my $num_names = $nl->count_names;
         my $names = $nl->names;
         # If name list was truncated in bib with "and others", this overrides maxnames
-        my $morenames = ($nl->last_element->get_namestring eq 'others') ? 1 : 0;
+        my $morenames = ($nl->last_name->get_namestring eq 'others') ? 1 : 0;
 
         my @truncnames;
         my @lastnames;
@@ -1734,10 +1829,10 @@ sub generate_uniquename {
         my $minn = Biber::Config->getblxoption('minnames');
 
         my $nl = $be->get_field($lname);
-        my $num_names = $nl->count_elements;
+        my $num_names = $nl->count_names;
         my $names = $nl->names;
         # If name list was truncated in bib with "and others", this overrides maxnames
-        my $morenames = ($nl->last_element->get_namestring eq 'others') ? 1 : 0;
+        my $morenames = ($nl->last_name->get_namestring eq 'others') ? 1 : 0;
 
         my @truncnames;
 
@@ -1865,7 +1960,7 @@ sub create_uniquelist_info {
 
       if (my $lname = $be->get_field('labelnamename')) {
         my $nl = $be->get_field($lname);
-        my $num_names = $nl->count_elements;
+        my $num_names = $nl->count_names;
         my $namelist = [];
         my $ulminyear_namelist = [];
 
@@ -1953,7 +2048,7 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
       if (my $lname = $be->get_field('labelnamename')) {
         my $nl = $be->get_field($lname);
         my $namelist = [];
-        my $num_names = $nl->count_elements;
+        my $num_names = $nl->count_names;
 
         foreach my $name (@{$nl->names}) {
           next if $name->get_namestring eq 'others'; # Don't count explicit "et al"
@@ -2026,22 +2121,21 @@ sub create_extras_st_info {
     $logger->trace("Creating extra*/singletitle information for '$citekey'");
 
     # This is all used to generate extrayear/extralpha and the rules for this are:
-    # * Generate labelname/year combination for tracking extrayear
+    # * Generate labelname/year combination for tracking extra*
     # * If there is no labelname to use, use empty string
     # * If there is no labelyear to use, use empty string
-    # * Don't increment the seennameyear count if either name or year string is empty
+    # * Don't increment the seen_nameyear count if either name or year string is empty
     #   (see code in incr_nameyear method).
     # * Don't increment if skiplab is set
 
     my $name_string;
-    # For tracking name/year combinations, use shorthand only if it exists and we
-    # are using labelyear
-    if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) and
+    # For labelalpha, use the shorthand instead of the name, if defined
+    if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) == 1 and
          $be->get_field('shorthand')) {
       $name_string = $be->get_field('shorthand');
     }
     elsif (my $lnn = $be->get_field('labelnamename')) {
-      $name_string = $self->_namestring($citekey, $lnn, 1);
+      $name_string = $self->_getnamehash_u($citekey, $be->get_field($lnn));
     }
     else {
       $name_string = '';
@@ -2056,43 +2150,30 @@ sub create_extras_st_info {
       $be->set_field('seenname', $name_string);
     }
 
-    # extrayear takes into account the labelyear which can be a range
-    my $year_string_extrayear;
+    # extra* takes into account the labelyear which can be a range
+    my $year_string_extra;
     if (my $ly = $be->get_field('labelyear')) {
-      $year_string_extrayear = $ly;
+      $year_string_extra = $ly;
     }
     elsif (my $y = $be->get_field('year')) {
-      $year_string_extrayear = $y;
+      $year_string_extra = $y;
     }
     else {
-      $year_string_extrayear = '';
-    }
-
-    # extraalpha takes into account the "year of publication" and not ranges as it
-    # only has the last two digits of the year and so can't disambiguate using ranges
-    # so, we have to track it separately to extrayear
-    my $year_string_extraalpha;
-    if (my $y = $be->get_field('year')) {
-      $year_string_extraalpha = $y;
-    }
-    else {
-      $year_string_extraalpha = '';
+      $year_string_extra = '';
     }
 
     # Don't create disambiguation data for skiplab entries
     unless (Biber::Config->getblxoption('skiplab',
                                         $be->get_field('entrytype'),
                                         $be->get_field('dskey'))) {
-      my $nameyear_string_extrayear = "$name_string,$year_string_extrayear";
-      $logger->trace("Setting nameyear_extrayear to '$nameyear_string_extrayear' for entry '$citekey'");
-      $be->set_field('nameyear_extrayear', $nameyear_string_extrayear);
-      $logger->trace("Incrementing nameyear_extrayear for '$name_string'");
-      Biber::Config->incr_seen_nameyear_extrayear($name_string, $year_string_extrayear);
-      my $nameyear_string_extraalpha = "$name_string,$year_string_extraalpha";
-      $logger->trace("Setting nameyear_extraalpha to '$nameyear_string_extraalpha' for entry '$citekey'");
-      $be->set_field('nameyear_extraalpha', $nameyear_string_extraalpha);
-      $logger->trace("Incrementing nameyear_extraalpha for '$name_string'");
-      Biber::Config->incr_seen_nameyear_extraalpha($name_string, $year_string_extraalpha);
+      if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype')) or
+          Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
+        my $nameyear_string_extra = "$name_string,$year_string_extra";
+        $logger->trace("Setting nameyear_extra to '$nameyear_string_extra' for entry '$citekey'");
+        $be->set_field('nameyear_extra', $nameyear_string_extra);
+        $logger->trace("Incrementing nameyear_extra for '$name_string'");
+        Biber::Config->incr_seen_nameyear_extra($name_string, $year_string_extra);
+      }
     }
   }
   return;
@@ -2101,7 +2182,7 @@ sub create_extras_st_info {
 
 =head2 generate_extra
 
-    Generate:
+    Generate information for:
 
       * extraalpha
       * extrayear
@@ -2114,6 +2195,7 @@ sub generate_extra {
   my $sortscheme = $list->get_sortscheme;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+
   Biber::Config->reset_seen_extra(); # Since this sub is per-list, have to reset the
                                      # extra* counters per list
   # This loop critically depends on the order of the citekeys which
@@ -2124,18 +2206,13 @@ sub generate_extra {
     # Only generate extrayear and extraalpha if skiplab is not set.
     # Don't forget that skiplab is implied for set members
     unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
-      if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
-        my $nameyear_extrayear = $be->get_field('nameyear_extrayear');
-          if (Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear) > 1) {
-            $logger->trace("nameyear_extrayear for '$nameyear_extrayear': " . Biber::Config->get_seen_nameyear_extrayear($nameyear_extrayear));
-            $list->set_extrayeardata($key, Biber::Config->incr_seen_extrayear($nameyear_extrayear));
-        }
-      }
-      if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
-        my $nameyear_extraalpha = $be->get_field('nameyear_extraalpha');
-          if (Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha) > 1) {
-            $logger->trace("nameyear_extraalpha for '$nameyear_extraalpha': " . Biber::Config->get_seen_nameyear_extraalpha($nameyear_extraalpha));
-            $list->set_extraalphadata($key, Biber::Config->incr_seen_extraalpha($nameyear_extraalpha));
+      if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype')) or
+          Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
+        my $nameyear_extra = $be->get_field('nameyear_extra');
+        if (Biber::Config->get_seen_nameyear_extra($nameyear_extra) > 1) {
+          $logger->trace("nameyear_extra for '$nameyear_extra': " . Biber::Config->get_seen_nameyear_extra($nameyear_extra));
+          my $ v = Biber::Config->incr_seen_extra($nameyear_extra);
+          $list->set_extradata($key, $v);
         }
       }
     }
@@ -2434,7 +2511,7 @@ sub prepare {
 
     $logger->info("Processing bib section $secnum");
 
-    $section->reset_sort_cache;          # Reset the the sorting cache
+    $section->reset_caches;              # Reset the the section caches (sorting, label etc.)
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->fetch_data;                   # Fetch cited key and dependent data from sources
@@ -2443,7 +2520,9 @@ sub prepare {
     $self->validate_structure;           # Check bib structure
     $self->process_entries_pre;          # Main entry processing loop, part 1
     $self->uniqueness;                   # Here we generate uniqueness information
+    $self->process_visible_names;        # Generate visible names information for all entries
     $self->process_entries_post;         # Main entry processing loop, part 2
+    $self->process_labelalpha_autoinc;   # Instantiate labelalpha template autoincrements
     $self->create_extras_st_info;        # Generate singltitle/extras* information
     $self->process_lists;                # process the output lists (sort and filtering)
     $self->generate_singletitle;         # Generate singletitle field if requested

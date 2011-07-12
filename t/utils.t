@@ -71,7 +71,7 @@ my $names = bless {namelist => [
     (bless { namestring => 'Maksjdakj, Nsjahdajsdhj', nameinitstring => 'Maksjdakj, N'  }, 'Biber::Entry::Name')
 ]}, 'Biber::Entry::Names';
 
-is( makenameid($names), 'Äskdjksdj_Bsadk_Cklsjd_von_Üsakdjskd_Vsajd_Wàsdjh_Xaskldjdd_Yajsdajks_Z_Maksjdakj_Nsjahdajsdhj', 'makenameid' );
+is( makenamesid($names), 'Äskdjksdj_Bsadk_Cklsjd_von_Üsakdjskd_Vsajd_Wàsdjh_Xaskldjdd_Yajsdajks_Z_Maksjdakj_Nsjahdajsdhj', 'makenameid' );
 
 my @arrayA = qw/ a b c d e f c /;
 my @arrayB = qw/ c e /;

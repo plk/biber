@@ -37,20 +37,20 @@ my $bibentries = $section->bibentries;
 my $main = $section->get_list('MAIN');
 
 # Basic uniquename and hash testing
-is($bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename requiring full name expansion - 1');
-is($bibentries->entry('un2')->get_field($bibentries->entry('un2')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename requiring full name expansion - 2');
-is($bibentries->entry('un5')->get_field($bibentries->entry('un5')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename requiring full name expansion - 3');
-is($bibentries->entry('un3')->get_field($bibentries->entry('un2')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename requiring initials name expansion - 1');
-is($bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename requiring initials name expansion - 2');
-is($bibentries->entry('un6')->get_field('namehash'), 'AJBM1', 'Namehash and fullhash - 1');
-is($bibentries->entry('un6')->get_field('fullhash'), 'AJBM1', 'Namehash and fullhash - 2');
-is($bibentries->entry('un7')->get_field('namehash'), 'C1', 'Fullnamshash ignores SHORT* names - 1');
-is($bibentries->entry('un7')->get_field('fullhash'), 'AJBM1', 'Fullnamshash ignores SHORT* names - 2');
-is($bibentries->entry('test1')->get_field('namehash'), 'SP+1', 'Namehash and fullhash - 3');
-is($bibentries->entry('test1')->get_field('fullhash'), 'SPJBBP1', 'Namehash and fullhash - 4');
-is($bibentries->entry('untf1')->get_field($bibentries->entry('untf1')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '2', 'Uniquename with full and repeat - 1');
-is($bibentries->entry('untf2')->get_field($bibentries->entry('untf2')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '2', 'Uniquename with full and repeat - 2');
-is($bibentries->entry('untf3')->get_field($bibentries->entry('untf3')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '2', 'Uniquename with full and repeat - 3');
+is($bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '2', 'Uniquename requiring full name expansion - 1');
+is($bibentries->entry('un2')->get_field($bibentries->entry('un2')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '2', 'Uniquename requiring full name expansion - 2');
+is($bibentries->entry('un5')->get_field($bibentries->entry('un5')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '2', 'Uniquename requiring full name expansion - 3');
+is($bibentries->entry('un3')->get_field($bibentries->entry('un2')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '1', 'Uniquename requiring initials name expansion - 1');
+is($bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '1', 'Uniquename requiring initials name expansion - 2');
+is($bibentries->entry('un6')->get_field('namehash'), 'f8169a157f8d9209961157b8d23902db', 'Namehash and fullhash - 1');
+is($bibentries->entry('un6')->get_field('fullhash'), 'f8169a157f8d9209961157b8d23902db', 'Namehash and fullhash - 2');
+is($bibentries->entry('un7')->get_field('namehash'), 'b33fbd3f3349d1536dbcc14664f2cbbd', 'Fullnamshash ignores SHORT* names - 1');
+is($bibentries->entry('un7')->get_field('fullhash'), 'f8169a157f8d9209961157b8d23902db', 'Fullnamshash ignores SHORT* names - 2');
+is($bibentries->entry('test1')->get_field('namehash'), '07df5c892ba1452776abee0a867591f2', 'Namehash and fullhash - 3');
+is($bibentries->entry('test1')->get_field('fullhash'), '637292dd2997a74c91847f1ec5081a46', 'Namehash and fullhash - 4');
+is($bibentries->entry('untf1')->get_field($bibentries->entry('untf1')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '2', 'Uniquename with full and repeat - 1');
+is($bibentries->entry('untf2')->get_field($bibentries->entry('untf2')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '2', 'Uniquename with full and repeat - 2');
+is($bibentries->entry('untf3')->get_field($bibentries->entry('untf3')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '2', 'Uniquename with full and repeat - 3');
 
 #############################################################################
 
@@ -73,11 +73,11 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $section->get_list('MAIN');
 
-is($bibentries->entry('unt1')->get_field($bibentries->entry('unt1')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '1', 'Uniquename with inits and repeat - 1');
-is($bibentries->entry('unt2')->get_field($bibentries->entry('unt2')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '1', 'Uniquename with inits and repeat - 2');
-is($bibentries->entry('unt3')->get_field($bibentries->entry('unt3')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '1', 'Uniquename with inits and repeat - 3');
-is($bibentries->entry('unt4')->get_field($bibentries->entry('unt4')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename with inits and repeat - 4');
-is($bibentries->entry('unt5')->get_field($bibentries->entry('unt5')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename with inits and repeat - 5');
+is($bibentries->entry('unt1')->get_field($bibentries->entry('unt1')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '1', 'Uniquename with inits and repeat - 1');
+is($bibentries->entry('unt2')->get_field($bibentries->entry('unt2')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '1', 'Uniquename with inits and repeat - 2');
+is($bibentries->entry('unt3')->get_field($bibentries->entry('unt3')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '1', 'Uniquename with inits and repeat - 3');
+is($bibentries->entry('unt4')->get_field($bibentries->entry('unt4')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename with inits and repeat - 4');
+is($bibentries->entry('unt5')->get_field($bibentries->entry('unt5')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename with inits and repeat - 5');
 
 #############################################################################
 
@@ -101,8 +101,8 @@ $bibentries = $section->bibentries;
 $main = $section->get_list('MAIN');
 
 # Hashes the same as uniquelist expansion expands to the whole list
-is($bibentries->entry('unall3')->get_field('namehash'), 'AAAAA1', 'Namehash and fullhash - 5');
-is($bibentries->entry('unall3')->get_field('fullhash'), 'AAAAA1', 'Namehash and fullhash - 6');
+is($bibentries->entry('unall3')->get_field('namehash'), 'f1c5973adbc2e674fa4d98164c9ba5d5', 'Namehash and fullhash - 5');
+is($bibentries->entry('unall3')->get_field('fullhash'), 'f1c5973adbc2e674fa4d98164c9ba5d5', 'Namehash and fullhash - 6');
 ok(is_undef($bibentries->entry('unall3')->get_field($bibentries->entry('unall3')->get_field('labelnamename'))->get_uniquelist), 'Uniquelist edgecase - 1');
 is($bibentries->entry('unall4')->get_field($bibentries->entry('unall4')->get_field('labelnamename'))->get_uniquelist, '6', 'Uniquelist edgecase - 2');
 
@@ -123,7 +123,7 @@ Biber::Config->setblxoption('uniquelist', 0);
 $biber->prepare;
 $bibentries = $biber->sections->get_section('0')->bibentries;
 
-is($bibentries->entry('test2')->get_field($bibentries->entry('test2')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename 0 due to minnames truncation');
+is($bibentries->entry('test2')->get_field($bibentries->entry('test2')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename 0 due to minnames truncation');
 
 #############################################################################
 
@@ -142,14 +142,14 @@ Biber::Config->setblxoption('minnames', 1);
 $biber->prepare;
 $bibentries = $biber->sections->get_section('0')->bibentries;
 
-is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename - 1');
-is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename - 2');
-is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '1', 'Uniquename - 3');
-is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename - 4');
-is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename - 5');
-is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '1', 'Uniquename - 6');
-is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_element(4)->get_uniquename, '0', 'Uniquename - 7');
-is($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename - 8');
+is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename - 1');
+is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename - 2');
+is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_name(3)->get_uniquename, '1', 'Uniquename - 3');
+is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename - 4');
+is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename - 5');
+is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_name(3)->get_uniquename, '1', 'Uniquename - 6');
+is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_name(4)->get_uniquename, '0', 'Uniquename - 7');
+is($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename - 8');
 
 is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquelist - 1');
 is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->get_uniquelist, '3', 'Uniquelist - 2');
@@ -202,16 +202,16 @@ $biber->prepare;
 $bibentries = $biber->sections->get_section('0')->bibentries;
 
 is($bibentries->entry('test3')->get_field($bibentries->entry('test3')->get_field('labelnamename'))->get_uniquelist, '2', 'Uniquelist - 19');
-is($bibentries->entry('test3')->get_field($bibentries->entry('test3')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename - 9');
-is($bibentries->entry('test3')->get_field($bibentries->entry('test3')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '2', 'Uniquename - 10');
+is($bibentries->entry('test3')->get_field($bibentries->entry('test3')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename - 9');
+is($bibentries->entry('test3')->get_field($bibentries->entry('test3')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '2', 'Uniquename - 10');
 
 is($bibentries->entry('test4')->get_field($bibentries->entry('test4')->get_field('labelnamename'))->get_uniquelist, '2', 'Uniquelist - 20');
-is($bibentries->entry('test4')->get_field($bibentries->entry('test4')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename - 11');
-is($bibentries->entry('test4')->get_field($bibentries->entry('test4')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '2', 'Uniquename - 12');
+is($bibentries->entry('test4')->get_field($bibentries->entry('test4')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename - 11');
+is($bibentries->entry('test4')->get_field($bibentries->entry('test4')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '2', 'Uniquename - 12');
 
 is($bibentries->entry('test5')->get_field($bibentries->entry('test5')->get_field('labelnamename'))->get_uniquelist, '2', 'Uniquelist - 21');
-is($bibentries->entry('test5')->get_field($bibentries->entry('test5')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename - 13');
-is($bibentries->entry('test5')->get_field($bibentries->entry('test5')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '1', 'Uniquename - 14');
+is($bibentries->entry('test5')->get_field($bibentries->entry('test5')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename - 13');
+is($bibentries->entry('test5')->get_field($bibentries->entry('test5')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '1', 'Uniquename - 14');
 
 #############################################################################
 
@@ -234,52 +234,52 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $section->get_list('MAIN');
 
-is($bibentries->entry('us1')->get_field($bibentries->entry('us1')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 1');
-is($bibentries->entry('us1')->get_field($bibentries->entry('us1')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 2');
-is($bibentries->entry('us2')->get_field($bibentries->entry('us2')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 3');
-is($bibentries->entry('us2')->get_field($bibentries->entry('us2')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 4');
-is($bibentries->entry('us3')->get_field($bibentries->entry('us3')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 5');
-is($bibentries->entry('us3')->get_field($bibentries->entry('us3')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 6');
-is($bibentries->entry('us4')->get_field($bibentries->entry('us4')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 7');
-is($bibentries->entry('us4')->get_field($bibentries->entry('us4')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 8');
-is($bibentries->entry('us5')->get_field($bibentries->entry('us5')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 9');
-is($bibentries->entry('us6')->get_field($bibentries->entry('us6')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 10');
-is($bibentries->entry('us6')->get_field($bibentries->entry('us6')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 11');
-is($bibentries->entry('us6')->get_field($bibentries->entry('us6')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 12');
-is($bibentries->entry('us7')->get_field($bibentries->entry('us7')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 13');
-is($bibentries->entry('us7')->get_field($bibentries->entry('us7')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 14');
-is($bibentries->entry('us8')->get_field($bibentries->entry('us8')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 15');
-is($bibentries->entry('us8')->get_field($bibentries->entry('us8')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 16');
-is($bibentries->entry('us9')->get_field($bibentries->entry('us9')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 17');
-is($bibentries->entry('us9')->get_field($bibentries->entry('us9')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 18');
-is($bibentries->entry('us10')->get_field($bibentries->entry('us10')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename sparse - 19');
-is($bibentries->entry('us10')->get_field($bibentries->entry('us10')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '1', 'Uniquename sparse - 20');
-is($bibentries->entry('us11')->get_field($bibentries->entry('us11')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename sparse - 21');
-is($bibentries->entry('us11')->get_field($bibentries->entry('us11')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '1', 'Uniquename sparse - 22');
-is($bibentries->entry('us12')->get_field($bibentries->entry('us12')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename sparse - 23');
-is($bibentries->entry('us12')->get_field($bibentries->entry('us12')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 24');
-is($bibentries->entry('us13')->get_field($bibentries->entry('us13')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename sparse - 25');
-is($bibentries->entry('us13')->get_field($bibentries->entry('us13')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 26');
+is($bibentries->entry('us1')->get_field($bibentries->entry('us1')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 1');
+is($bibentries->entry('us1')->get_field($bibentries->entry('us1')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 2');
+is($bibentries->entry('us2')->get_field($bibentries->entry('us2')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 3');
+is($bibentries->entry('us2')->get_field($bibentries->entry('us2')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 4');
+is($bibentries->entry('us3')->get_field($bibentries->entry('us3')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 5');
+is($bibentries->entry('us3')->get_field($bibentries->entry('us3')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 6');
+is($bibentries->entry('us4')->get_field($bibentries->entry('us4')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 7');
+is($bibentries->entry('us4')->get_field($bibentries->entry('us4')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 8');
+is($bibentries->entry('us5')->get_field($bibentries->entry('us5')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 9');
+is($bibentries->entry('us6')->get_field($bibentries->entry('us6')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 10');
+is($bibentries->entry('us6')->get_field($bibentries->entry('us6')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 11');
+is($bibentries->entry('us6')->get_field($bibentries->entry('us6')->get_field('labelnamename'))->nth_name(3)->get_uniquename, '0', 'Uniquename sparse - 12');
+is($bibentries->entry('us7')->get_field($bibentries->entry('us7')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 13');
+is($bibentries->entry('us7')->get_field($bibentries->entry('us7')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 14');
+is($bibentries->entry('us8')->get_field($bibentries->entry('us8')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 15');
+is($bibentries->entry('us8')->get_field($bibentries->entry('us8')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 16');
+is($bibentries->entry('us9')->get_field($bibentries->entry('us9')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 17');
+is($bibentries->entry('us9')->get_field($bibentries->entry('us9')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 18');
+is($bibentries->entry('us10')->get_field($bibentries->entry('us10')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '1', 'Uniquename sparse - 19');
+is($bibentries->entry('us10')->get_field($bibentries->entry('us10')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '1', 'Uniquename sparse - 20');
+is($bibentries->entry('us11')->get_field($bibentries->entry('us11')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '1', 'Uniquename sparse - 21');
+is($bibentries->entry('us11')->get_field($bibentries->entry('us11')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '1', 'Uniquename sparse - 22');
+is($bibentries->entry('us12')->get_field($bibentries->entry('us12')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '2', 'Uniquename sparse - 23');
+is($bibentries->entry('us12')->get_field($bibentries->entry('us12')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 24');
+is($bibentries->entry('us13')->get_field($bibentries->entry('us13')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '2', 'Uniquename sparse - 25');
+is($bibentries->entry('us13')->get_field($bibentries->entry('us13')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 26');
 
 # maxnames/minnames is 3 in but us14 is still "et al" so it's a "different list
-is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 27');
-is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 28');
-is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 29');
-is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 30');
-is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 31');
-is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 32');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 27');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 28');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_name(3)->get_uniquename, '0', 'Uniquename sparse - 29');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 30');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 31');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_name(3)->get_uniquename, '0', 'Uniquename sparse - 32');
 
-is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 33');
-is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 34');
-is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 35');
+is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 33');
+is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 34');
+is($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->nth_name(3)->get_uniquename, '0', 'Uniquename sparse - 35');
 ok(is_undef($bibentries->entry('us16')->get_field($bibentries->entry('us16')->get_field('labelnamename'))->get_uniquelist), 'Uniquename sparse - 36');
-is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 37');
-is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 38');
-is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 39');
-is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_element(4)->get_uniquename, '0', 'Uniquename sparse - 40');
+is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 37');
+is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 38');
+is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_name(3)->get_uniquename, '0', 'Uniquename sparse - 39');
+is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->nth_name(4)->get_uniquename, '0', 'Uniquename sparse - 40');
 is($bibentries->entry('us17')->get_field($bibentries->entry('us17')->get_field('labelnamename'))->get_uniquelist, '4', 'Uniquename sparse - 41');
-is($bibentries->entry('us18')->get_field($bibentries->entry('us18')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 42');
-is($bibentries->entry('us19')->get_field($bibentries->entry('us19')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 43');
+is($bibentries->entry('us18')->get_field($bibentries->entry('us18')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 42');
+is($bibentries->entry('us19')->get_field($bibentries->entry('us19')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 43');
 ok(is_undef($bibentries->entry('us18')->get_field($bibentries->entry('us18')->get_field('labelnamename'))->get_uniquelist), 'Uniquename sparse - 44');
 is($bibentries->entry('us19')->get_field($bibentries->entry('us19')->get_field('labelnamename'))->get_uniquelist, '4', 'Uniquename sparse - 45');
 
@@ -308,20 +308,20 @@ $main = $section->get_list('MAIN');
 # maxnames/minnames = 3/1 so these will not truncate to the same list (since
 # us15 would not be truncated at all) and they therefore would not need disambiguating with
 # uniquename = 5 or 6
-is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 46');
-is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 47');
-is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 48');
-is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 49');
-is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 50');
-is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 51');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 46');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 47');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_name(3)->get_uniquename, '0', 'Uniquename sparse - 48');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 49');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 50');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_name(3)->get_uniquename, '0', 'Uniquename sparse - 51');
 
 #
-is($bibentries->entry('us20')->get_field($bibentries->entry('us20')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 52');
-is($bibentries->entry('us21')->get_field($bibentries->entry('us21')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Uniquename sparse - 53');
-is($bibentries->entry('us22')->get_field($bibentries->entry('us22')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 54');
-is($bibentries->entry('us23')->get_field($bibentries->entry('us23')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename sparse - 55');
-is($bibentries->entry('us24')->get_field($bibentries->entry('us24')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename sparse - 56');
-is($bibentries->entry('us25')->get_field($bibentries->entry('us25')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 57');
+is($bibentries->entry('us20')->get_field($bibentries->entry('us20')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 52');
+is($bibentries->entry('us21')->get_field($bibentries->entry('us21')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 53');
+is($bibentries->entry('us22')->get_field($bibentries->entry('us22')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 54');
+is($bibentries->entry('us23')->get_field($bibentries->entry('us23')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '2', 'Uniquename sparse - 55');
+is($bibentries->entry('us24')->get_field($bibentries->entry('us24')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '2', 'Uniquename sparse - 56');
+is($bibentries->entry('us25')->get_field($bibentries->entry('us25')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 57');
 
 #############################################################################
 
@@ -347,17 +347,17 @@ $main = $section->get_list('MAIN');
 # maxnames/minnames = 2/1 so list are the same and need disambiguating but only in the first
 # name as the others are not visible
 
-is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename sparse - 58');
-is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 59');
-is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 60');
-is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename sparse - 61');
-is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Uniquename sparse - 62');
-is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '0', 'Uniquename sparse - 63');
-is($bibentries->entry('us26')->get_field($bibentries->entry('us26')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename sparse - 64');
-is($bibentries->entry('us27')->get_field($bibentries->entry('us27')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename sparse - 65');
-is($bibentries->entry('us28')->get_field($bibentries->entry('us28')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Uniquename sparse - 66');
-is($bibentries->entry('us29')->get_field($bibentries->entry('us29')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename sparse - 67');
-is($bibentries->entry('us30')->get_field($bibentries->entry('us30')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Uniquename sparse - 68');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '1', 'Uniquename sparse - 58');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 59');
+is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_name(3)->get_uniquename, '0', 'Uniquename sparse - 60');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '1', 'Uniquename sparse - 61');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 62');
+is($bibentries->entry('us15')->get_field($bibentries->entry('us15')->get_field('labelnamename'))->nth_name(3)->get_uniquename, '0', 'Uniquename sparse - 63');
+is($bibentries->entry('us26')->get_field($bibentries->entry('us26')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '1', 'Uniquename sparse - 64');
+is($bibentries->entry('us27')->get_field($bibentries->entry('us27')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '2', 'Uniquename sparse - 65');
+is($bibentries->entry('us28')->get_field($bibentries->entry('us28')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '2', 'Uniquename sparse - 66');
+is($bibentries->entry('us29')->get_field($bibentries->entry('us29')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '1', 'Uniquename sparse - 67');
+is($bibentries->entry('us30')->get_field($bibentries->entry('us30')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '1', 'Uniquename sparse - 68');
 
 #############################################################################
 
@@ -436,12 +436,12 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $section->get_list('MAIN');
 
-is($main->get_extrayeardata('ey1'), '1', 'Extrayear - 1');
-is($main->get_extrayeardata('ey2'), '2', 'Extrayear - 2');
-is($main->get_extrayeardata('ey3'), '1', 'Extrayear - 3');
-is($main->get_extrayeardata('ey4'), '2', 'Extrayear - 4');
-is($main->get_extrayeardata('ey5'), '1', 'Extrayear - 5');
-is($main->get_extrayeardata('ey6'), '2', 'Extrayear - 6');
+is($main->get_extradata('ey1'), '1', 'Extrayear - 1');
+is($main->get_extradata('ey2'), '2', 'Extrayear - 2');
+is($main->get_extradata('ey3'), '1', 'Extrayear - 3');
+is($main->get_extradata('ey4'), '2', 'Extrayear - 4');
+is($main->get_extradata('ey5'), '1', 'Extrayear - 5');
+is($main->get_extradata('ey6'), '2', 'Extrayear - 6');
 ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'Singletitle - 1');
 ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'Singletitle - 2');
 ok(is_undef($bibentries->entry('ey5')->get_field('singletitle')), 'Singletitle - 3');
@@ -465,12 +465,12 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $section->get_list('MAIN');
 
-ok(is_undef($main->get_extrayeardata('ey1')), 'Extrayear - 7');
-ok(is_undef($main->get_extrayeardata('ey2')), 'Extrayear - 8');
-is($main->get_extrayeardata('ey3'), '1', 'Extrayear - 9');
-is($main->get_extrayeardata('ey4'), '2', 'Extrayear - 10');
-ok(is_undef($main->get_extrayeardata('ey5')), 'Extrayear - 11');
-ok(is_undef($main->get_extrayeardata('ey6')), 'Extrayear - 12');
+ok(is_undef($main->get_extradata('ey1')), 'Extrayear - 7');
+ok(is_undef($main->get_extradata('ey2')), 'Extrayear - 8');
+is($main->get_extradata('ey3'), '1', 'Extrayear - 9');
+is($main->get_extradata('ey4'), '2', 'Extrayear - 10');
+ok(is_undef($main->get_extradata('ey5')), 'Extrayear - 11');
+ok(is_undef($main->get_extradata('ey6')), 'Extrayear - 12');
 is($bibentries->entry('ey1')->get_field('singletitle'), '1', 'Singletitle - 4');
 is($bibentries->entry('ey2')->get_field('singletitle'), '1', 'Singletitle - 5');
 is($bibentries->entry('ey5')->get_field('singletitle'), '1', 'Singletitle - 6');
@@ -494,12 +494,12 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $section->get_list('MAIN');
 
-is($main->get_extrayeardata('ey1'), '1', 'Extrayear - 13');
-is($main->get_extrayeardata('ey2'), '2', 'Extrayear - 14');
-is($main->get_extrayeardata('ey3'), '1', 'Extrayear - 15');
-is($main->get_extrayeardata('ey4'), '2', 'Extrayear - 16');
-is($main->get_extrayeardata('ey5'), '1', 'Extrayear - 17');
-is($main->get_extrayeardata('ey6'), '2', 'Extrayear - 18');
+is($main->get_extradata('ey1'), '1', 'Extrayear - 13');
+is($main->get_extradata('ey2'), '2', 'Extrayear - 14');
+is($main->get_extradata('ey3'), '1', 'Extrayear - 15');
+is($main->get_extradata('ey4'), '2', 'Extrayear - 16');
+is($main->get_extradata('ey5'), '1', 'Extrayear - 17');
+is($main->get_extradata('ey6'), '2', 'Extrayear - 18');
 ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'Singletitle - 7');
 ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'Singletitle - 8');
 
@@ -521,14 +521,14 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $section->get_list('MAIN');
 
-is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Forced init expansion - 1');
-is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Forced init expansion - 2');
-is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '1', 'Forced init expansion - 3');
-is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '0', 'Forced init expansion - 4');
-is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Forced init expansion - 5');
-is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '1', 'Forced init expansion - 6');
-is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_element(4)->get_uniquename, '1', 'Forced init expansion - 7');
-is($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Forced init expansion - 8');
+is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Forced init expansion - 1');
+is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Forced init expansion - 2');
+is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_name(3)->get_uniquename, '1', 'Forced init expansion - 3');
+is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Forced init expansion - 4');
+is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Forced init expansion - 5');
+is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_name(3)->get_uniquename, '1', 'Forced init expansion - 6');
+is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_name(4)->get_uniquename, '1', 'Forced init expansion - 7');
+is($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '1', 'Forced init expansion - 8');
 
 #############################################################################
 
@@ -548,12 +548,12 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $section->get_list('MAIN');
 
-is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Forced name expansion - 1');
-is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Forced name expansion - 2');
-is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '1', 'Forced name expansion - 3');
-is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '2', 'Forced name expansion - 4');
-is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_element(2)->get_uniquename, '0', 'Forced name expansion - 5');
-is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_element(3)->get_uniquename, '1', 'Forced name expansion - 6');
-is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_element(4)->get_uniquename, '1', 'Forced name expansion - 7');
-is($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_field('labelnamename'))->nth_element(1)->get_uniquename, '1', 'Forced name expansion - 8');
+is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '2', 'Forced name expansion - 1');
+is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Forced name expansion - 2');
+is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_field('labelnamename'))->nth_name(3)->get_uniquename, '1', 'Forced name expansion - 3');
+is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '2', 'Forced name expansion - 4');
+is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Forced name expansion - 5');
+is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_name(3)->get_uniquename, '1', 'Forced name expansion - 6');
+is($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_field('labelnamename'))->nth_name(4)->get_uniquename, '1', 'Forced name expansion - 7');
+is($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '1', 'Forced name expansion - 8');
 

@@ -48,8 +48,12 @@
         <ref name="labelnamespec"/>
         <ref name="labelyear"/>
         <ref name="labelyearspec"/>
+        <ref name="maxalphanames"/>
+        <ref name="maxbibnames"/>
         <ref name="maxitems"/>
         <ref name="maxnames"/>
+        <ref name="minalphanames"/>
+        <ref name="minbibnames"/>
         <ref name="minitems"/>
         <ref name="minnames"/>
         <ref name="singletitle"/>
@@ -150,6 +154,88 @@
           </oneOrMore>
         </element>
       </optional>
+      <zeroOrMore>
+        <!-- labelalpha template specification -->
+        <element name="bcf:labelalphatemplate">
+          <optional>
+            <attribute name="type">
+              <data type="string"/>
+            </attribute>
+          </optional>
+          <oneOrMore>
+            <!-- per-type? -->
+            <element name="bcf:labelelement">
+              <attribute name="order">
+                <data type="integer"/>
+              </attribute>
+              <oneOrMore>
+                <element name="bcf:labelpart">
+                  <optional>
+                    <attribute name="final">
+                      <choice>
+                        <value>0</value>
+                        <value>1</value>
+                      </choice>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="format">
+                      <choice>
+                        <value>alpha</value>
+                        <value>int</value>
+                      </choice>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="substring_width">
+                      <choice>
+                        <data type="integer"/>
+                        <value>v</value>
+                        <value>l</value>
+                        <value>vf</value>
+                      </choice>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="substring_fixed_threshold">
+                      <data type="integer"/>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="substring_width_max">
+                      <data type="integer"/>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="substring_side">
+                      <choice>
+                        <value>left</value>
+                        <value>right</value>
+                      </choice>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="substring_maxlength">
+                      <data type="integer"/>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="ifnamecount">
+                      <data type="integer"/>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="namecount">
+                      <data type="integer"/>
+                    </attribute>
+                  </optional>
+                  <data type="string"/>
+                </element>
+              </oneOrMore>
+            </element>
+          </oneOrMore>
+        </element>
+      </zeroOrMore>
       <!-- Cross-reference inheritance specifications -->
       <element name="bcf:inheritance">
         <!-- Defaults -->
@@ -883,6 +969,7 @@
         <choice>
           <value>0</value>
           <value>1</value>
+          <value>2</value>
         </choice>
       </element>
     </element>
@@ -1050,6 +1137,32 @@
       </element>
     </element>
   </define>
+  <define name="maxbibnames">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>maxbibnames</value>
+      </element>
+      <element name="bcf:value">
+        <data type="integer"/>
+      </element>
+    </element>
+  </define>
+  <define name="maxalphanames">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>maxalphanames</value>
+      </element>
+      <element name="bcf:value">
+        <data type="integer"/>
+      </element>
+    </element>
+  </define>
   <define name="maxnames">
     <element name="bcf:option">
       <attribute name="type">
@@ -1070,6 +1183,32 @@
       </attribute>
       <element name="bcf:key">
         <value>minitems</value>
+      </element>
+      <element name="bcf:value">
+        <data type="integer"/>
+      </element>
+    </element>
+  </define>
+  <define name="minbibnames">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>minbibnames</value>
+      </element>
+      <element name="bcf:value">
+        <data type="integer"/>
+      </element>
+    </element>
+  </define>
+  <define name="minalphanames">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>minalphanames</value>
       </element>
       <element name="bcf:value">
         <data type="integer"/>
