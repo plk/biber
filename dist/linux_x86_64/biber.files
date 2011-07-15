@@ -11,7 +11,7 @@
 ../../lib/Biber/Input/file/ris.dcf;lib/Biber/Input/file/ris.dcf
 ../../data/bcf.xsl;lib/Biber/bcf.xsl
 ../../data/latinkeys.txt;lib/Unicode/Collate/latinkeys.txt
-/usr/local/perl/lib/5.14.0/Unicode/Collate/Locale;lib/Unicode/Collate/Locale
-/usr/local/perl/lib/5.14.0/Unicode/Collate/CJK;lib/Unicode/Collate/CJK
-/usr/local/perl/lib/5.14.0/Unicode/Collate/allkeys.txt;lib/Unicode/Collate/allkeys.txt
-/usr/local/perl/lib/5.14.0/Unicode/Collate/keys.txt;lib/Unicode/Collate/keys.txt
+/usr/local/perl/lib/5.14.1/Unicode/Collate/Locale;lib/Unicode/Collate/Locale
+/usr/local/perl/lib/5.14.1/Unicode/Collate/CJK;lib/Unicode/Collate/CJK
+/usr/local/perl/lib/5.14.1/Unicode/Collate/allkeys.txt;lib/Unicode/Collate/allkeys.txt
+/usr/local/perl/lib/5.14.1/Unicode/Collate/keys.txt;lib/Unicode/Collate/keys.txt

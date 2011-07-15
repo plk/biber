@@ -11,8 +11,8 @@
 ../../lib/Biber/Input/file/ris.dcf;lib/Biber/Input/file/ris.dcf
 ../../data/bcf.xsl;lib/Biber/bcf.xsl
 ../../data/latinkeys.txt;lib/Unicode/Collate/latinkeys.txt
-/opt/local/lib/perl5/5.14.0/darwin-thread-multi-2level/Unicode/Collate/Locale;lib/Unicode/Collate/Locale
-/opt/local/lib/perl5/5.14.0/darwin-thread-multi-2level/Unicode/Collate/CJK;lib/Unicode/Collate/CJK
-/opt/local/lib/perl5/5.14.0/darwin-thread-multi-2level/Unicode/Collate/allkeys.txt;lib/Unicode/Collate/allkeys.txt
-/opt/local/lib/perl5/5.14.0/darwin-thread-multi-2level/Unicode/Collate/keys.txt;lib/Unicode/Collate/keys.txt
+/opt/local/lib/perl5/5.14.1/darwin-thread-multi-2level/Unicode/Collate/Locale;lib/Unicode/Collate/Locale
+/opt/local/lib/perl5/5.14.1/darwin-thread-multi-2level/Unicode/Collate/CJK;lib/Unicode/Collate/CJK
+/opt/local/lib/perl5/5.14.1/darwin-thread-multi-2level/Unicode/Collate/allkeys.txt;lib/Unicode/Collate/allkeys.txt
+/opt/local/lib/perl5/5.14.1/darwin-thread-multi-2level/Unicode/Collate/keys.txt;lib/Unicode/Collate/keys.txt
 
