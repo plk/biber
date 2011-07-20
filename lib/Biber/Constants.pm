@@ -132,8 +132,7 @@ our %CONFIG_DEFAULT_BIBER = (
 # but we need this for things not yet implemented by biblatex but expected by biber
 our %CONFIG_DEFAULT_BIBLATEX =
   (
-   rangeendmax        => 'all',
-   rangeendmin        => 'all',
+   rangeend        => 'none',
    labelalphatemplate => {
   labelelement => [
              {
@@ -1679,8 +1678,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
   minalphanames      => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   minnames           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   presort            => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  rangeendmax        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  rangeendmin        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  rangeend           => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   singletitle        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   skipbib            => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
   skiplab            => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},

@@ -79,6 +79,8 @@ is_deeply( [ $section->get_list('SHORTHANDS')->get_keys ], [ 'kant:kpv', 'kant:k
 
 # reset some options and re-generate information
 
+Biber::Config->setblxoption('rangeend', '2');
+
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()
 $section->del_citekeys;
@@ -232,7 +234,7 @@ my $t2 = q|  \entry{t2}{misc}{}
     \field{sortinit}{B}
     \field{title}{Signs of W$\frac{o}{a}$nder}
     \field{year}{1994}
-    \field{pages}{100}
+    \field{pages}{100\bibrangedash 08}
   \endentry
 
 |;
@@ -256,6 +258,7 @@ my $anon1 = q|  \entry{anon1}{unpublished}{}
     \field{shorttitle}{Shorttitle}
     \field{title}{Title1}
     \field{year}{1835}
+    \field{pages}{111\bibrangedash 8}
     \keyw{arc}
   \endentry
 
@@ -280,6 +283,7 @@ my $anon2 = q|  \entry{anon2}{unpublished}{}
     \field{shorttitle}{Shorttitle}
     \field{title}{Title2}
     \field{year}{1839}
+    \field{pages}{1176\bibrangedash 276}
     \keyw{arc}
   \endentry
 
@@ -303,6 +307,7 @@ is( $out->get_output_entry($main,'missing2'), "  \\missing{missing2}\n", 'missin
 
 Biber::Config->setblxoption('alphaothers', '');
 Biber::Config->setblxoption('sortalphaothers', '');
+Biber::Config->setblxoption('rangeend', 'auto');
 
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()
