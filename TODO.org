@@ -1,6 +1,5 @@
+* TODO When biblatex implements rangeend, take out defaults and make sure default is "none", take out optional rangeend in schema
 * TODO labelalphatemplate implementation
-  * list disambiguation for la - loopnames in strings, uninit error
-  * Document new la stuff for la=1, extraalpha/year/singletitle are regenerated for every list dynamically. format for counters
   * Take out labelalphatemplate defaults, optional in rnc/rng and parsing when biblatex implements it
   * Moving over to the new labelalpha code means taking out la=1 completely and also removing
     extraalpha which will be dealt with in the new la template code instead.
