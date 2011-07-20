@@ -1451,7 +1451,7 @@ sub process_lists {
 KEYLOOP: foreach my $k ($list->get_keys) {
         # Filter out skiplos entries as a special case in 'shorthand' type lists
         if ($list->get_type eq 'shorthand') {
-          next if Biber::Config->getblxoption('skiplos', $section->bibentry($k), $k);
+          next if Biber::Config->getblxoption('skiplos', $section->bibentry($k)->get_field('entrytype'), $k);
         }
 
         $logger->debug("Checking key '$k' in list '$llabel' against list filters");
