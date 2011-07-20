@@ -329,11 +329,22 @@ sub set_output_entry {
       # range_end can be be empty for open-ended range or undef
       my @pr;
       foreach my $f (@$rf) {
-        if (defined($f->[1])) {
-          push @pr, $f->[0] . '\bibrangedash' . ($f->[1] ? ' ' . $f->[1] : '');
+        my $rb = $f->[0];
+        if (defined($f->[1])) { # Is there a range end?
+          my $re;
+          # First get the range-end options
+          my $remax = Biber::Config->getblxoption('rangeendmax', $be->get_field('entrytype'));
+          my $remin = Biber::Config->getblxoption('rangeendmin', $be->get_field('entrytype'));
+          if ($remax eq 'all') { # default, just use the whole range-end
+            $re = $f->[1];
+          }
+          else {
+            
+          }
+          push @pr, $rb . '\bibrangedash' . ($re ? " $re" : '');
         }
         else {
-          push @pr, $f->[0];
+          push @pr, $rb;
         }
       }
       my $bbl_rf = join(', ', @pr);
