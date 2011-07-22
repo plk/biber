@@ -1,6 +1,7 @@
 Revision history for Biber
 
 0.9.4  (unreleased)
+       * Implemented rangeend option
        * Bug fixes to bblsafechars
        * Implemented user-customisable labelalpha
        * Implemented per-name hashes
