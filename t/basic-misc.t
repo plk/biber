@@ -79,8 +79,6 @@ is_deeply( [ $section->get_list('SHORTHANDS')->get_keys ], [ 'kant:kpv', 'kant:k
 
 # reset some options and re-generate information
 
-Biber::Config->setblxoption('rangeend', '2');
-
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()
 $section->del_citekeys;
@@ -307,7 +305,6 @@ is( $out->get_output_entry($main,'missing2'), "  \\missing{missing2}\n", 'missin
 
 Biber::Config->setblxoption('alphaothers', '');
 Biber::Config->setblxoption('sortalphaothers', '');
-Biber::Config->setblxoption('rangeend', 'auto');
 
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()
