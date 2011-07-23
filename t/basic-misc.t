@@ -234,7 +234,7 @@ my $t2 = q|  \entry{t2}{misc}{}
     \field{sortinit}{B}
     \field{title}{Signs of W$\frac{o}{a}$nder}
     \field{year}{1994}
-    \field{pages}{100\bibrangedash 08}
+    \field{pages}{100\bibrangedash 108}
   \endentry
 
 |;
@@ -258,7 +258,7 @@ my $anon1 = q|  \entry{anon1}{unpublished}{}
     \field{shorttitle}{Shorttitle}
     \field{title}{Title1}
     \field{year}{1835}
-    \field{pages}{111\bibrangedash 8}
+    \field{pages}{111\bibrangedash 118}
     \keyw{arc}
   \endentry
 
@@ -283,7 +283,7 @@ my $anon2 = q|  \entry{anon2}{unpublished}{}
     \field{shorttitle}{Shorttitle}
     \field{title}{Title2}
     \field{year}{1839}
-    \field{pages}{1176\bibrangedash 276}
+    \field{pages}{1176\bibrangedash 1276}
     \keyw{arc}
   \endentry
 

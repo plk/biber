@@ -38,7 +38,6 @@ start =
       minbibnames,
       minitems,      
       minnames,
-      rangeend?,
       singletitle,
       sortalphaothers?,
       sortlos,
@@ -59,7 +58,6 @@ start =
       labelnamespec?,
       labelyear?,
       labelyearspec?,
-      rangeend?,
       singletitle?,
       skipbib?,
       skiplab?,
@@ -403,12 +401,6 @@ labelyearspec =
       attribute order { xsd:integer },
       xsd:NCName
     }+
-  }
-rangeend =
-  element bcf:option {
-    attribute type { "singlevalued" },
-    element bcf:key { "rangeend" },
-    element bcf:value { xsd:integer | "auto" | "none" }
   }
 singletitle =
   element bcf:option {

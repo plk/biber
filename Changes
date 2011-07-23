@@ -1,7 +1,7 @@
 Revision history for Biber
 
 0.9.4  (unreleased)
-       * Implemented rangeend option
+       * Made the relevant places depend on max{alpha,bib}names
        * Bug fixes to bblsafechars
        * Implemented user-customisable labelalpha
        * Implemented per-name hashes

@@ -330,38 +330,11 @@ sub set_output_entry {
       # range_end can be be empty for open-ended range or undef
       my @pr;
       foreach my $f (@$rf) {
-        my $rb = $f->[0];
-        if (defined($f->[1])) { # Is there a range end?
-          my $re;
-          # First get the range-end options
-          my $reopt = Biber::Config->getblxoption('rangeend', $be->get_field('entrytype'));
-          # Default is to just use the whole range-end,
-          # same if the range start and end aren't the same length as in such a case
-          # it's not clear what to do.
-          if ($reopt eq 'none' or
-              (length($rb) != length($f->[1]))) {
-            $re = $f->[1];
-          }
-          elsif ($reopt ne 'auto') { # fixed range
-            $re = substr($f->[1], 0 - $reopt);
-          }
-          else { # auto
-            my @rb = split(//, $rb);
-            my @re = split(//, $f->[1]);
-            my $it = each_array(@rb, @re);
-            my $flag = 0;
-            while (my  ($a, $b) = $it->()) {
-              # We only skip the first consecutive identical numbers otherwise
-              # we would get "1176--2" for "1176--1276"
-              next if $a == $b and not $flag;
-              $flag = 1;
-              $re .= $b;
-            }
-          }
-          push @pr, $rb . '\bibrangedash' . ($re ? " $re" : '');
+        if (defined($f->[1])) {
+          push @pr, $f->[0] . '\bibrangedash' . ($f->[1] ? ' ' . $f->[1] : '');
         }
         else {
-          push @pr, $rb;
+          push @pr, $f->[0];
         }
       }
       my $bbl_rf = join(', ', @pr);

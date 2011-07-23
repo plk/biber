@@ -56,9 +56,6 @@
         <ref name="minbibnames"/>
         <ref name="minitems"/>
         <ref name="minnames"/>
-        <optional>
-          <ref name="rangeend"/>
-        </optional>
         <ref name="singletitle"/>
         <optional>
           <ref name="sortalphaothers"/>
@@ -94,9 +91,6 @@
           </optional>
           <optional>
             <ref name="labelyearspec"/>
-          </optional>
-          <optional>
-            <ref name="rangeend"/>
           </optional>
           <optional>
             <ref name="singletitle"/>
@@ -1012,23 +1006,6 @@
           <data type="NCName"/>
         </element>
       </oneOrMore>
-    </element>
-  </define>
-  <define name="rangeend">
-    <element name="bcf:option">
-      <attribute name="type">
-        <value>singlevalued</value>
-      </attribute>
-      <element name="bcf:key">
-        <value>rangeend</value>
-      </element>
-      <element name="bcf:value">
-        <choice>
-          <data type="integer"/>
-          <value>auto</value>
-          <value>none</value>
-        </choice>
-      </element>
     </element>
   </define>
   <define name="singletitle">
