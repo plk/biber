@@ -27,7 +27,7 @@ our %NTOL; @NTOL{(1 .. 52)} = ('a' .. 'z', 'A' .. 'Z'); # hash slice
 
 # Version of biblatex which this release works with. Matched against version
 # passed in control file
-Readonly::Scalar our $BIBLATEX_VERSION => '1.5';
+Readonly::Scalar our $BIBLATEX_VERSION => '1.6';
 
 # Global flags needed for sorting
 our $BIBER_SORT_FINAL = 0;
