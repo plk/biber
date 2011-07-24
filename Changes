@@ -1,9 +1,10 @@
 Revision history for Biber
 
-0.9.4  (unreleased)
-       * Made the relevant places depend on max{alpha,bib}names
+0.9.4  25-07-2011
+       * Made the relevant places depend on max/min{alpha,bib}names instead of
+         just max/minnames.
        * Bug fixes to bblsafechars
-       * Implemented user-customisable labelalpha
+       * Implemented user-customisable labelalpha (not yet in biblatex)
        * Implemented per-name hashes
 0.9.3  05-06-2011
        * New mininit and minfull uniquename options
