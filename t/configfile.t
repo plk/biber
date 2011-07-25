@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More tests => 8;
 use Biber;
 use Cwd qw(getcwd);
 use File::Spec;
@@ -12,6 +12,7 @@ chdir('t/tdata');
 my %colloptsA = ( level => 3, table => '/home/user/data/otherkeys.txt' );
 my %nosort = (author => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ],
               translator => q/[\x{2bf}\x{2018}]/ );
+my %ignore = ( bibtex => [ 'abstract', 'usera' ], ris => 'N2' );
 
 # Set up Biber object
 my $biberA = Biber->new( configfile => 'biber-test.conf', mincrossrefs => 7 );
@@ -24,3 +25,4 @@ is_deeply(Biber::Config->getoption('collate_options'), \%colloptsA, 'Options 4 -
 is_deeply(Biber::Config->getoption('nosort'), \%nosort, 'Options 5 - from config file');
 is_deeply(Biber::Config->getoption('sortcase'), 0, 'Options 6 - from .bcf');
 is(Biber::Config->getoption('decodecharsset'), 'extra', 'Options 7 - from defaults');
+is_deeply(Biber::Config->getoption('ignore'), \%ignore, 'Options 8 - from config file');
