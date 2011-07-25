@@ -283,23 +283,41 @@ value. See section \ref{coll} for details.
 
 \subsubsection{The «ignore» option}
 
-The value of the \verb+ignore+ option can only be set in the config
-file and not on the command line as it has potentially complex
-structure. This config section allows you to specify which fields a
-particular data source driver is to ignore when reading the data. This
-ignoring is done \emph{before} processing any data source field
-aliases, that is, they are specified as the data source specific field
-names. For example, to completely ignore the «abstract» field and the
-«usera» field in \verb+bibtex+ data sources and also the «N2» field in
-\verb+ris+ data sources, put the following in your \verb+biber.conf+:
+The value of the \verb+ignore+ option can only be set in the config file
+and not on the command line as it has potentially complex structure. This
+option allows you to specify which entry type and field combinations in a
+particular data source driver should be ignored when reading the data.
+Effectively, this option makes it as if the data source did not contain the
+specified fields. This ignoring is done logically \emph{before} processing
+any data source or user defined field or entry type aliases, that is, field
+and entry type names for this option are specified as the data source
+specific field names/entry types. For example, to completely ignore the
+«abstract» field in all entry types and the «usera» and «userb» fields in
+\verb+misc+ entry types in \verb+bibtex+ data sources and also the
+«N2»\footnote{Which maps to the biblatex «abstract» field via the ris
+  driver.} field in all entry types in \verb+ris+ data sources, put the
+following in your \verb+biber.conf+:
 
 \begin{verbatim}
 <ignore>
-  bibtex abstract
-  bibtex usera
-  ris    N2
+  <bibtex>
+    * abstract
+    misc usera
+    misc userb
+  </bibtex>
+  <ris>
+    * N2  
+  </ris>
 </ignore>
 \end{verbatim}
+
+\noindent An entry type specific option for a data source overrides the
+global default «\verb+*+» which means «all entry types». So, in the above
+example, for \verb+bibtex+ data sources, \verb+misc+ entry types only ignore
+«usera» and «userb» whereas all other entry types ignore «abstract» fields.
+The option sections immediately inside the «\verb+<ignore></ignore>+» section must be
+named exactly after a valid biber data source driver (see section \ref{dcf}).
+The field and entry type names are not case sensitive for this option.
 
 \subsubsection{The «nosort» option}
 
@@ -830,7 +848,7 @@ the \verb+.bbl+. If you only use \verb+biblatex+ with your \verb+bibtex+
 data source files, you should probably make any \verb+MONTH+ fields be the
 numbers which \verb+biblatex+ expects.
 
-\subsection{Biber datasource drivers}
+\subsection{Biber data source drivers}\label{dcf}
 
 \verb+biber+ uses a modular data source driver model to provide access
 to supported data sources. The drivers are responsible for mapping
@@ -851,6 +869,14 @@ live. Most data source models are not designed with typesetting in
 mind and are usually not fine-grained enough to provide the sorts of
 information that \verb+biblatex+ needs. \verb+biber+ does its best to
 obtain as much meaningful information from a data source as possible.
+Currently supported data sources drivers are:
+
+\begin{itemize}
+\item \verb+bibtex+ --- BibTeX data files
+\item \verb+endnotexml+ --- Endnote XML export format, version $\geq$ Endnote X1
+\item \verb+ris+ --- Research Information Systems format
+\item \verb+zoterordfxml+ --- Zotero RDF XML format, version 2.0.9
+\end{itemize}
 
 \section{Binaries}\label{binaries}
 

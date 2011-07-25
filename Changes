@@ -1,7 +1,9 @@
 Revision history for Biber
 
-0.9.4  25-07-2011
-       * Implemented ignore option to ignore certain fields in entries on input
+0.9.4  26-07-2011
+       * New "alias" option to allow user field/entry type aliasing in
+         addition to .dcf settings
+       * New "ignore" option to ignore certain field/entry type combinations
        * Made the relevant places depend on max/min{alpha,bib}names instead of
          just max/minnames.
        * Bug fixes to bblsafechars

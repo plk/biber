@@ -12,7 +12,7 @@ chdir('t/tdata');
 my %colloptsA = ( level => 3, table => '/home/user/data/otherkeys.txt' );
 my %nosort = (author => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ],
               translator => q/[\x{2bf}\x{2018}]/ );
-my %ignore = ( bibtex => [ 'abstract', 'usera' ], ris => 'N2' );
+my %ignore = ( bibtex => { '*' => 'ABSTRACT', 'misc' => 'USERA' }, ris => { '*' => 'N2' } );
 
 # Set up Biber object
 my $biberA = Biber->new( configfile => 'biber-test.conf', mincrossrefs => 7 );

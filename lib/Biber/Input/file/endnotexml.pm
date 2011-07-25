@@ -214,11 +214,15 @@ sub create_entry {
   foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./titles/*|./contributors/*|./urls/web-urls/*|./dates/*)')) {
 
     # First skip any fields we are configured to ignore
-    my $ignore = Biber::Config->getoption('ignore');
-    if (my $ig = $ignore->{endnotexml}) {
-      # Config::General can't force arrays per option and don't want to set this globally
-      $ig = [ $ig ] unless ref($ig) eq 'ARRAY';
-      next if first {$_ eq $f} @$ig;
+    # Notice that the ignore is based on the canonical entrytype and field name
+    if (defined(Biber::Config->getoption('ignore'))) {
+      if (my $ignore = Biber::Config->getoption('ignore')->{endnotexml}) {
+        if (my $ig = $ignore->{lc($itype)} || $ignore->{'*'}) {
+          # Config::General can't force arrays per option and don't want to set this globally
+          $ig = [ $ig ] unless ref($ig) eq 'ARRAY';
+          next if first {lc($_) eq lc($f)} @$ig;
+        }
+      }
     }
 
     # ignore fields not in .dcf - this means "titles", "contributors" "urls/web-urls" are

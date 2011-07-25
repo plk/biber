@@ -210,6 +210,19 @@ sub create_entry {
   # Validation happens later and is not datasource dependent
   foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
 
+
+    # First skip any fields we are configured to ignore
+    # Notice that the ignore is based on the canonical entrytype and field name
+    if (defined(Biber::Config->getoption('ignore'))) {
+      if (my $ignore = Biber::Config->getoption('ignore')->{biblatexml}) {
+        if (my $ig = $ignore->{lc($entry->getAttribute('entrytype'))} || $ignore->{'*'}) {
+          # Config::General can't force arrays per option and don't want to set this globally
+          $ig = [ $ig ] unless ref($ig) eq 'ARRAY';
+          next if first {lc($_) eq lc($f)} @$ig;
+        }
+      }
+    }
+
     # We have to process local options as early as possible in order
     # to make them available for things that need them like name parsing
     if (_norm($entry->nodeName) eq 'options') {
