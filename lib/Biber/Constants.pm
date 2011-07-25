@@ -99,10 +99,8 @@ our %STRUCTURE_DATATYPES = (
                             integer => qr/\A\d+\z/xms
 );
 
-# In general, these defaults are for two reasons:
-# * If there is no .bcf to set these options (-a and -d flags for example)
-# * New features which are not implemented in .bcf by biblatex yet and so we have
-#   provide defaults in case they are missing.
+# Biber option defaults. Not really needed since they are passed by .bcf but
+# useful to know the format. Also needed for options not yet passed in .bcf by biblatex
 
 our %CONFIG_DEFAULT_BIBER = (
   bblencoding        => 'UTF-8',

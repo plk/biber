@@ -212,6 +212,15 @@ sub create_entry {
     # We put all the fields we find modulo field aliases into the object
     # validation happens later and is not datasource dependent
     foreach my $f ($entry->fieldlist) {
+
+      # First skip any fields we are configured to ignore
+      my $ignore = Biber::Config->getoption('ignore');
+      if (my $ig = $ignore->{bibtex}) {
+        # Config::General can't force arrays per option and don't want to set this globally
+        $ig = [ $ig ] unless ref($ig) eq 'ARRAY';
+        next if first {$_ eq $f} @$ig;
+      }
+
       # We have to process local options as early as possible in order
       # to make them available for things that need them like parsename()
       if ($f eq 'options') {

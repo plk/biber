@@ -212,6 +212,15 @@ sub create_entry {
   # is what we do here as these nodes have special aliases we want visible in the .dcf. If we
   # did it all in special handlers, it would all be invisible in the .dcf
   foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./titles/*|./contributors/*|./urls/web-urls/*|./dates/*)')) {
+
+    # First skip any fields we are configured to ignore
+    my $ignore = Biber::Config->getoption('ignore');
+    if (my $ig = $ignore->{endnotexml}) {
+      # Config::General can't force arrays per option and don't want to set this globally
+      $ig = [ $ig ] unless ref($ig) eq 'ARRAY';
+      next if first {$_ eq $f} @$ig;
+    }
+
     # ignore fields not in .dcf - this means "titles", "contributors" "urls/web-urls" are
     # skipped but their children are not
     if (my $fm = $dcfxml->{fields}{field}{$f}) {

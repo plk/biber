@@ -237,7 +237,7 @@ system)\\[2ex]
 \noindent The config file format is a very flexible one which allows users to specify
 options in most common formats, even mixed in the same file. It's easier to
 see an example. Here is a config file which displays the \verb+biber+
-hard-coded defaults:
+defaults:
 
 \begin{verbatim}
 bblencoding         UTF-8
@@ -280,6 +280,26 @@ options by setting options in \verb+biblatex+ which will pass them to
 
 The \verb+--collate_options|-c+ option takes a number of key/value pairs as
 value. See section \ref{coll} for details.
+
+\subsubsection{The «ignore» option}
+
+The value of the \verb+ignore+ option can only be set in the config
+file and not on the command line as it has potentially complex
+structure. This config section allows you to specify which fields a
+particular data source driver is to ignore when reading the data. This
+ignoring is done \emph{before} processing any data source field
+aliases, that is, they are specified as the data source specific field
+names. For example, to completely ignore the «abstract» field and the
+«usera» field in \verb+bibtex+ data sources and also the «N2» field in
+\verb+ris+ data sources, put the following in your \verb+biber.conf+:
+
+\begin{verbatim}
+<ignore>
+  bibtex abstract
+  bibtex usera
+  ris    N2
+</ignore>
+\end{verbatim}
 
 \subsubsection{The «nosort» option}
 

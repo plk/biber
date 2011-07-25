@@ -26,7 +26,6 @@ use Biber::Structure;
 use Biber::Utils;
 use Storable qw( dclone );
 use Log::Log4perl qw( :no_extra_logdie_message );
-use Config::General qw( ParseConfig );
 use Data::Dump;
 use Data::Compare;
 use Text::BibTeX qw(:macrosubs);

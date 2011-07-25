@@ -1,6 +1,7 @@
 Revision history for Biber
 
 0.9.4  25-07-2011
+       * Implemented ignore option to ignore certain fields in entries on input
        * Made the relevant places depend on max/min{alpha,bib}names instead of
          just max/minnames.
        * Bug fixes to bblsafechars

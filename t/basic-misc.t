@@ -3,9 +3,10 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 18;
+use Test::More tests => 20;
 
 use Biber;
+use Biber::Utils;
 use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
 Log::Log4perl->easy_init($ERROR);
@@ -25,7 +26,7 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('minnames', 1);
-
+Biber::Config->setoption('ignore', { bibtex => ["abstract", "usera"] });
 
 # Now generate the information
 $biber->prepare;
@@ -46,7 +47,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 } ;
+set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 } ;
 
 my $u1 = q|  \entry{u1}{misc}{}
     \name{labelname}{4}{uniquelist=4}{%
@@ -287,6 +288,11 @@ my $anon2 = q|  \entry{anon2}{unpublished}{}
 
 |;
 
+my $i1 = q||;
+
+my $i2 = q||;
+
+
 my $Worman_N = [ 'Worman_N' ] ;
 my $Gennep = [ 'v_Gennep_A', 'v_Gennep_J' ] ;
 
@@ -320,6 +326,9 @@ is( $out->get_output_entry($main,'murray'), $murray2, 'bbl with > maxnames, empt
 is( $out->get_output_entry($main,'anon1'), $anon1, 'namehash/fullhash 1' ) ;
 is( $out->get_output_entry($main,'anon2'), $anon2, 'namehash/fullhash 2' ) ;
 
+# Testing ignore of abstract and usera
+ok(is_undef($bibentries->entry('i1')->get_field('abstract')), 'ignore 1' );
+ok(is_undef($bibentries->entry('i2')->get_field('usera')), 'ignore 2' );
 
 # This would be how to test JSON output if necessary
 # require JSON::XS;
