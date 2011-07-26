@@ -254,7 +254,7 @@ our $dispatch_label = {
 };
 
 # Main label loop
-sub _genlabel_custom {
+sub _genlabel {
   my ($self, $citekey) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -271,8 +271,6 @@ sub _genlabel_custom {
     last if $LABEL_FINAL;
   }
 
-  # set a marker for extraalpha
-  $be->set_field('extraalpha', '<BDS>EXTRAALPHA</BDS>');
   return [ $label, $slabel ];
 }
 
@@ -750,7 +748,7 @@ sub _label_listdisambiguation {
     for (my $j = 1; $j <= $maxlen; $j++) {
       for (my $k = 0; $k <= $#col; $k++) {
         my $s = substr($col[$k], 0, $j);
-        # We need the items from @col which are in the same equivalance class  as the current
+        # We need the items from @col which are in the same equivalance class as the current
         # @col item
         my @col_eq = @col[indexes {$equiv_class[$k]->[$i] eq $_} map {$_->[$i]} @equiv_class];
         # Then we count the items in this slice of @col to see if it's the same size

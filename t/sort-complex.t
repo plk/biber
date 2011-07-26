@@ -33,8 +33,6 @@ my $main = $section->get_list('MAIN');
 my $shs = $section->get_list('SHORTHANDS');
 my $out = $biber->get_output_obj;
 
-isa_ok($biber, "Biber");
-
 my $sc = [
            [
             {},
@@ -76,7 +74,7 @@ my $sc = [
            ],
           ];
 
-my $sc3 = q|  \entry{L4}{book}{}
+my $l4 = q|  \entry{L4}{book}{}
     \true{morelabelname}
     \name{labelname}{1}{}{%
       {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
@@ -102,7 +100,7 @@ my $sc3 = q|  \entry{L4}{book}{}
 
 |;
 
-my $sc4 = q|  \entry{L1}{book}{}
+my $l1 = q|  \entry{L1}{book}{}
     \name{labelname}{1}{}{%
       {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
@@ -126,7 +124,7 @@ my $sc4 = q|  \entry{L1}{book}{}
 
 |;
 
-my $sc5 = q|  \entry{L2}{book}{}
+my $l2 = q|  \entry{L2}{book}{}
     \name{labelname}{1}{}{%
       {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
@@ -150,7 +148,7 @@ my $sc5 = q|  \entry{L2}{book}{}
 
 |;
 
-my $sc6 = q|  \entry{L3}{book}{}
+my $l3 = q|  \entry{L3}{book}{}
     \name{labelname}{1}{}{%
       {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
     }
@@ -174,11 +172,38 @@ my $sc6 = q|  \entry{L3}{book}{}
 
 |;
 
+my $l5 = q|  \entry{L5}{book}{}
+    \true{morelabelname}
+    \name{labelname}{1}{}{%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+    }
+    \true{moreauthor}
+    \name{author}{1}{}{%
+      {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+    }
+    \list{location}{1}{%
+      {Cambridge}%
+    }
+    \list{publisher}{1}{%
+      {Another press}%
+    }
+    \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
+    \strng{fullhash}{87609df1206b0e30f838d9a26ec69169}
+    \field{labelalpha}{Doe\textbf{+}95}
+    \field{sortinit}{D}
+    \field{extraalpha}{1}
+    \field{title}{Some other title about sorting}
+    \field{year}{1995}
+  \endentry
+
+|;
+
 is_deeply( $main->get_sortscheme , $sc, 'sort scheme');
-is( $out->get_output_entry($main,'l4'), $sc3, '\alphaothers set by "and others"');
-is( $out->get_output_entry($main,'l1'), $sc4, '2-pass - labelalpha after title');
-is( $out->get_output_entry($main,'l2'), $sc5, '2-pass - labelalpha after title');
-is( $out->get_output_entry($main,'l3'), $sc6, '2-pass - labelalpha after title');
+is( $out->get_output_entry($main,'l4'), $l4, '\alphaothers set by "and others"');
+is( $out->get_output_entry($main,'l1'), $l1, 'bbl test 1');
+is( $out->get_output_entry($main,'l2'), $l2, 'bbl test 2');
+is( $out->get_output_entry($main,'l3'), $l3, 'bbl test 3');
+is( $out->get_output_entry($main,'l5'), $l5, 'bbl test 4');
 is_deeply([ $main->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'citeorder - 1');
 
 # This should be the same as $main citeorder as both $main and $shs use same

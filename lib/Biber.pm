@@ -912,19 +912,21 @@ sub process_entries_post {
     # generate labelalpha information
     $self->process_labelalpha($citekey);
 
-    # generate labelalpha disambiguation
-    # This is different to extrayear disambiguation in that
-    # it disambiguates the labelalphas themselves. This is useful
-    # if the labelalphas are not <name><year> because in such a case
-    # the counters for extrayear aren't much use because they are
-    # designed for a <name><year> disambiguation.
-    $self->process_labelalpha_disambiguation($citekey);
+    # generate information for tracking extraalpha
+    $self->process_extraalpha($citekey);
+
+    # generate information for tracking extrayear
+    $self->process_extrayear($citekey);
+
+    # generate information for tracking singletitle
+    $self->process_singletitle($citekey);
 
     # generate namehash
     $self->process_namehash($citekey);
 
     # generate per-name hashes
     $self->process_pername_hashes($citekey);
+
   }
 
   $logger->debug("Finished processing entries in section $secnum (after uniqueness)");
@@ -932,41 +934,99 @@ sub process_entries_post {
   return;
 }
 
-=head2 process_labelalpha_autoinc
 
-    Instantiate any labelalpha autoinc data (extraalpha, basically)
-    This late-bound data does not depend on sorting order so it can be
-    instantiated here rather than just before list output.
+=head2 process_singletitle
+
+    Track seen name combination for generation of singletitle
 
 =cut
 
-sub process_labelalpha_autoinc {
+sub process_singletitle {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  foreach my $citekey ( $section->get_citekeys ) {
-    $logger->debug("Instantiating any labelalpha template autoincrements for '$citekey' from section $secnum");
-    my $be = $section->bibentry($citekey);
-    my $bee = $be->get_field('entrytype');
-    if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
-      if (my $ea = $be->get_field('extraalpha')) {
-        my $la = $be->get_field('labelalpha');
-        my $lad = Biber::Config->get_la_disambiguation($la);
-        $logger->trace("labelalpha autoinc disambiguation data for '$la': " . Data::Dump::pp($lad));
-        my $auto = '';
-        if ($#$lad > 0) {     # If some disambiguation needs doing ...
-          $auto = first_index {$_ eq $citekey} @$lad;
-          $auto++;              # convert from 0-base
-        }
+  my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
+  $logger->trace("Creating singletitle information for '$citekey'");
 
-        $ea =~ s|<BDS>EXTRAALPHA</BDS>|$auto|gxms;
+  my $name_string;
+  if (my $lnn = $be->get_field('labelnamename')) {
+    $name_string = $self->_getnamehash_u($citekey, $be->get_field($lnn));
+  }
+  else {
+    $name_string = '';
+  }
 
-        # re-set extraalpha
-        $be->set_field('extraalpha', $ea);
-      }
+  # Only generate this information if singletitle option is requested and there is a
+  # labelname
+  if ($name_string and
+      Biber::Config->getblxoption('singletitle', $bee)) {
+    Biber::Config->incr_seenname($name_string);
+    $logger->trace("Setting seenname for '$citekey' to '$name_string'");
+    $be->set_field('seenname', $name_string);
+  }
+  return;
+}
+
+
+
+=head2 process_extrayear
+
+    Track labelname/year combination for generation of extrayear
+
+=cut
+
+sub process_extrayear {
+  my $self = shift;
+  my $citekey = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
+  $logger->trace("Creating extrayear information for '$citekey'");
+
+  # This is all used to generate extrayear and the rules for this are:
+  # * Generate labelname/year combination for tracking extrayear
+  # * If there is no labelname to use, use empty string
+  # * If there is no labelyear to use, use empty string
+  # * Don't increment the seen_nameyear count if either name or year string is empty
+  #   (see code in incr_nameyear method).
+  # * Don't increment if skiplab is set
+
+  my $name_string;
+  if (my $lnn = $be->get_field('labelnamename')) {
+    $name_string = $self->_getnamehash_u($citekey, $be->get_field($lnn));
+  }
+  else {
+    $name_string = '';
+  }
+
+  # extrayear takes into account the labelyear which can be a range
+  my $year_string_extra;
+  if (my $ly = $be->get_field('labelyear')) {
+    $year_string_extra = $ly;
+  }
+  elsif (my $y = $be->get_field('year')) {
+    $year_string_extra = $y;
+  }
+  else {
+    $year_string_extra = '';
+  }
+
+  # Don't create disambiguation data for skiplab entries
+  unless (Biber::Config->getblxoption('skiplab',
+                                      $be->get_field('entrytype'),
+                                      $be->get_field('dskey'))) {
+    if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
+      my $nameyear_string_extra = "$name_string,$year_string_extra";
+      $logger->trace("Setting nameyear_extra to '$nameyear_string_extra' for entry '$citekey'");
+      $be->set_field('nameyear_extra', $nameyear_string_extra);
+      $logger->trace("Incrementing nameyear_extra for '$name_string'");
+      Biber::Config->incr_seen_nameyear_extra($name_string, $year_string_extra);
     }
   }
+  return;
 }
 
 
@@ -1308,19 +1368,19 @@ sub process_labelalpha {
   if ( my $la = Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
     my $label;
     my $sortlabel;
-    ( $label, $sortlabel ) = @{ $self->_genlabel_custom($citekey) };
+    ( $label, $sortlabel ) = @{ $self->_genlabel($citekey) };
     $be->set_field('labelalpha', $label);
     $be->set_field('sortlabelalpha', $sortlabel);
   }
 }
 
-=head2 process_labelalpha_disambiguation
+=head2 process_extraalpha
 
-    Generate the labelalpha disambiguation data
+    Generate the extraalpha information
 
 =cut
 
-sub process_labelalpha_disambiguation {
+sub process_extraalpha {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
@@ -1329,7 +1389,7 @@ sub process_labelalpha_disambiguation {
   my $bee = $be->get_field('entrytype');
   if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
     if (my $la = $be->get_field('labelalpha')) {
-      Biber::Config->incr_la_disambiguation($la, $citekey);
+      Biber::Config->incr_la_disambiguation($la);
     }
   }
 }
@@ -1393,7 +1453,8 @@ sub process_lists {
         $logger->debug("Found sorting cache entry for '$llabel'");
         $list->set_keys($cacheitem->[1]);
         $list->set_sortinitdata($cacheitem->[2]);
-        $list->set_extradata($cacheitem->[3]);
+        $list->set_extrayeardata($cacheitem->[3]);
+        $list->set_extraalphadata($cacheitem->[4]);
         $cache_flag = 1;
         last;
       }
@@ -2072,83 +2133,6 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
 }
 
 
-=head2 create_extras_st_info
-
-    Track labelname for generation of singletitle
-    Track labelname/year combination for generation of extra* fields
-
-=cut
-
-sub create_extras_st_info {
-  my $self = shift;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-  foreach my $citekey ( $section->get_citekeys ) {
-    my $be = $bibentries->entry($citekey);
-    my $bee = $be->get_field('entrytype');
-    $logger->trace("Creating extra*/singletitle information for '$citekey'");
-
-    # This is all used to generate extrayear/extralpha and the rules for this are:
-    # * Generate labelname/year combination for tracking extra*
-    # * If there is no labelname to use, use empty string
-    # * If there is no labelyear to use, use empty string
-    # * Don't increment the seen_nameyear count if either name or year string is empty
-    #   (see code in incr_nameyear method).
-    # * Don't increment if skiplab is set
-
-    my $name_string;
-    # For labelalpha, use the shorthand instead of the name, if defined
-    if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) == 1 and
-         $be->get_field('shorthand')) {
-      $name_string = $be->get_field('shorthand');
-    }
-    elsif (my $lnn = $be->get_field('labelnamename')) {
-      $name_string = $self->_getnamehash_u($citekey, $be->get_field($lnn));
-    }
-    else {
-      $name_string = '';
-    }
-
-    # Only generate this information if singletitle option is requested and there is a
-    # labelname
-    if ($name_string and
-        Biber::Config->getblxoption('singletitle', $bee)) {
-      Biber::Config->incr_seenname($name_string);
-      $logger->trace("Setting seenname for '$citekey' to '$name_string'");
-      $be->set_field('seenname', $name_string);
-    }
-
-    # extra* takes into account the labelyear which can be a range
-    my $year_string_extra;
-    if (my $ly = $be->get_field('labelyear')) {
-      $year_string_extra = $ly;
-    }
-    elsif (my $y = $be->get_field('year')) {
-      $year_string_extra = $y;
-    }
-    else {
-      $year_string_extra = '';
-    }
-
-    # Don't create disambiguation data for skiplab entries
-    unless (Biber::Config->getblxoption('skiplab',
-                                        $be->get_field('entrytype'),
-                                        $be->get_field('dskey'))) {
-      if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype')) or
-          Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
-        my $nameyear_string_extra = "$name_string,$year_string_extra";
-        $logger->trace("Setting nameyear_extra to '$nameyear_string_extra' for entry '$citekey'");
-        $be->set_field('nameyear_extra', $nameyear_string_extra);
-        $logger->trace("Incrementing nameyear_extra for '$name_string'");
-        Biber::Config->incr_seen_nameyear_extra($name_string, $year_string_extra);
-      }
-    }
-  }
-  return;
-}
-
-
 =head2 generate_extra
 
     Generate information for:
@@ -2168,20 +2152,29 @@ sub generate_extra {
   Biber::Config->reset_seen_extra(); # Since this sub is per-list, have to reset the
                                      # extra* counters per list
   # This loop critically depends on the order of the citekeys which
-  # is why we have to do a first sorting pass before this
+  # is why we have to do sorting before this
   foreach my $key ($list->get_keys) {
     my $be = $section->bibentry($key);
     my $bee = $be->get_field('entrytype');
     # Only generate extrayear and extraalpha if skiplab is not set.
     # Don't forget that skiplab is implied for set members
     unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
-      if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype')) or
-          Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
+      # extrayear
+      if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
         my $nameyear_extra = $be->get_field('nameyear_extra');
         if (Biber::Config->get_seen_nameyear_extra($nameyear_extra) > 1) {
           $logger->trace("nameyear_extra for '$nameyear_extra': " . Biber::Config->get_seen_nameyear_extra($nameyear_extra));
-          my $ v = Biber::Config->incr_seen_extra($nameyear_extra);
-          $list->set_extradata($key, $v);
+          my $v = Biber::Config->incr_seen_extrayear($nameyear_extra);
+          $list->set_extrayeardata($key, $v);
+        }
+      }
+      # extraalpha
+      if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
+        my $la = $be->get_field('labelalpha');
+        if (Biber::Config->get_la_disambiguation($la) > 1) {
+          $logger->trace("labelalpha disambiguartion for '$la': " . Biber::Config->get_la_disambiguation($la));
+          my $v = Biber::Config->incr_seen_extraalpha($la);
+          $list->set_extraalphadata($key, $v);
         }
       }
     }
@@ -2491,8 +2484,6 @@ sub prepare {
     $self->uniqueness;                   # Here we generate uniqueness information
     $self->process_visible_names;        # Generate visible names information for all entries
     $self->process_entries_post;         # Main entry processing loop, part 2
-    $self->process_labelalpha_autoinc;   # Instantiate labelalpha template autoincrements
-    $self->create_extras_st_info;        # Generate singltitle/extras* information
     $self->process_lists;                # process the output lists (sort and filtering)
     $self->generate_singletitle;         # Generate singletitle field if requested
     $self->create_output_section;        # Generate and push the section output into the

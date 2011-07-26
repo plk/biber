@@ -82,35 +82,64 @@ sub get_listdata {
   return [ $self->{sortscheme},
            $self->{keys},
            $self->{sortinitdata},
-           $self->{extradata}];
+           $self->{extrayeardata},
+           $self->{extraalphadata}];
 }
 
-=head2 set_extradata
+=head2 set_extrayeardata
 
-    Saves extra* field data for a key
+    Saves extrayear field data for a key
 
 =cut
 
-sub set_extradata {
+sub set_extrayeardata {
   my $self = shift;
   my $key = shift;
   my $ed = shift;
   return unless defined($key);
-  $self->{extradata}{lc($key)} = $ed;
+  $self->{extrayeardata}{lc($key)} = $ed;
   return;
 }
 
-=head2 get_extradata
+=head2 get_extrayeardata
 
-    Gets the extra* field data for a key
+    Gets the extrayear field data for a key
 
 =cut
 
-sub get_extradata {
+sub get_extrayeardata {
   my $self = shift;
   my $key = shift;
   return unless defined($key);
-  return $self->{extradata}{lc($key)};
+  return $self->{extrayeardata}{lc($key)};
+}
+
+=head2 set_extraalphadata
+
+    Saves extraalpha field data for a key
+
+=cut
+
+sub set_extraalphadata {
+  my $self = shift;
+  my $key = shift;
+  my $ed = shift;
+  return unless defined($key);
+  $self->{extraalphadata}{lc($key)} = $ed;
+  return;
+}
+
+=head2 get_extraalphadata
+
+    Gets the extraalpha field data for a key
+
+=cut
+
+sub get_extraalphadata {
+  my $self = shift;
+  my $key = shift;
+  return unless defined($key);
+  return $self->{extraalphadata}{lc($key)};
 }
 
 =head2 set_sortdata
@@ -289,21 +318,26 @@ sub instantiate_entry {
 
   my $entry_string = $$entry;
 
+  # sortinit
   my $sid = $self->get_sortinitdata($key);
   if (defined($sid)) {
     my $si = "\\field{sortinit}{$sid}";
     $entry_string =~ s|<BDS>SORTINIT</BDS>|$si|gxms;
   }
 
+  # extrayear
   my $eys;
-  my $eas;
-  # Want an empty string in the replacements below if this is not set
-  my $e = $self->get_extradata($key) || '';
-  # Might not be set due to skip
-  if ($e) {
+  if (my $e = $self->get_extrayeardata($key)) {
     $eys = "    \\field{extrayear}{$e}\n";
+    $entry_string =~ s|^\s*<BDS>EXTRAYEAR</BDS>\n|$eys|gxms;
   }
-  $entry_string =~ s|^\s*<BDS>EXTRAYEAR</BDS>\n|$eys|gxms;
+
+  # extraalpha
+  my $eas;
+  if (my $e = $self->get_extraalphadata($key)) {
+    $eas = "    \\field{extraalpha}{$e}\n";
+    $entry_string =~ s|^\s*<BDS>EXTRAALPHA</BDS>\n|$eas|gxms;
+  }
 
   return $entry_string;
 }

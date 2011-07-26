@@ -57,7 +57,9 @@ $CONFIG->{state}{uniquenamecount_all} = {};
 # Counter for tracking name/year combinations for extrayear
 $CONFIG->{state}{seen_nameyear_extra} = {};
 # Counter for the actual extrayear value
-$CONFIG->{state}{seen_extra} = {};
+$CONFIG->{state}{seen_extrayear} = {};
+# Counter for the actual extraalpha value
+$CONFIG->{state}{seen_extraalpha} = {};
 $CONFIG->{state}{seenkeys} = {};
 
 # Location of the control file
@@ -83,7 +85,8 @@ sub _init {
   $CONFIG->{state}{uniquenamecount_all} = {};
   $CONFIG->{state}{uniquelistcount} = {};
   $CONFIG->{state}{seen_nameyear_extra} = {};
-  $CONFIG->{state}{seen_extra} = {};
+  $CONFIG->{state}{seen_extrayear} = {};
+  $CONFIG->{state}{seen_extrayearalpha} = {};
   $CONFIG->{state}{seenkeys} = {};
   $CONFIG->{state}{keycase} = {};
   $CONFIG->{state}{datafiles} = [];
@@ -490,8 +493,8 @@ sub getblxoption {
 
 sub incr_la_disambiguation {
   shift; # class method so don't care about class name
-  my ($la, $citekey) = @_;
-  push @{$CONFIG->{state}{ladisambiguation}{$la}}, $citekey;
+  my $la = shift;
+  $CONFIG->{state}{ladisambiguation}{$la}++;
   return;
 }
 
@@ -618,32 +621,41 @@ sub incr_seenname {
 sub reset_seen_extra {
   shift; # class method so don't care about class name
   my $ay = shift;
-  $CONFIG->{state}{seen_extra} = {};
+  $CONFIG->{state}{seen_extrayear} = {};
+  $CONFIG->{state}{seen_extraalpha} = {};
   return;
 }
 
-#============================
-#        seen_extra
-#============================
 
-=head2 incr_seen_extra
+=head2 incr_seen_extrayear
 
-    Increment and return the counter for extra
+    Increment and return the counter for extrayear
 
-    Biber::Config->incr_seen_extra($ay);
+    Biber::Config->incr_seen_extrayear($ay);
 
 =cut
 
-sub incr_seen_extra {
+sub incr_seen_extrayear {
   shift; # class method so don't care about class name
-  my $ay = shift;
-  return ++$CONFIG->{state}{seen_extra}{$ay};
+  my $ey = shift;
+  return ++$CONFIG->{state}{seen_extrayear}{$ey};
 }
 
 
-#============================
-#         seen_nameyear_extra
-#============================
+=head2 incr_seen_extraalpha
+
+    Increment and return the counter for extraalpha
+
+    Biber::Config->incr_seen_extraalpha($ay);
+
+=cut
+
+sub incr_seen_extraalpha {
+  shift; # class method so don't care about class name
+  my $ea = shift;
+  return ++$CONFIG->{state}{seen_extraalpha}{$ea};
+}
+
 
 =head2 get_seen_nameyear_extra
 

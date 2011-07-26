@@ -284,9 +284,10 @@ sub set_output_entry {
   # The labelalpha option determines whether "extraalpha" is output
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
-    my $ea = $be->get_field('extraalpha');
-    unless ($ea eq '<BDS>EXTRAALPHA</BDS>') {
-      $acc .= "    \\field{extraalpha}{$ea}\n";
+    if (my $la = $be->get_field('labelalpha')) {
+      if (Biber::Config->get_la_disambiguation($la) > 1) {
+        $acc .= "    <BDS>EXTRAALPHA</BDS>\n";
+      }
     }
   }
 
