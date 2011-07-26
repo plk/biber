@@ -198,6 +198,14 @@ sub create_entry {
   $bibentry->set_field('dskey', $dskey);
   $bibentry->set_field('citekey', $citekey);
 
+  # Get a reference to the map option, if it exists
+  my $user_map;
+  if (defined(Biber::Config->getoption('map'))) {
+    if (defined(Biber::Config->getoption('map')->{ris})) {
+      $user_map = Biber::Config->getoption('map')->{ris};
+    }
+  }
+
   # Set entrytype taking note of any aliases for this datasource driver
   if (my $ealias = $dcfxml->{'entry-types'}{'entry-type'}{$entry->{TY}}) {
     $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
@@ -213,16 +221,18 @@ sub create_entry {
 
   # We put all the fields we find modulo field aliases into the object.
   # Validation happens later and is not datasource dependent
-  foreach my $f (keys %$entry) {
+FLOOP:  foreach my $f (keys %$entry) {
 
     # First skip any fields we are configured to ignore
     # Notice that the ignore is based on the canonical entrytype and field name
-    if (defined(Biber::Config->getoption('ignore'))) {
-      if (my $ignore = Biber::Config->getoption('ignore')->{ris}) {
-        if (my $ig = $ignore->{lc($entry->{TY})} || $ignore->{'*'}) {
-          # Config::General can't force arrays per option and don't want to set this globally
-          $ig = [ $ig ] unless ref($ig) eq 'ARRAY';
-          next if first {lc($_) eq lc($f)} @$ig;
+    if ($user_map) {
+      if (my $fields = $user_map->{field}) {
+        if (my $fieldmap = $fields->{lc($entry->{TY})} || $fields->{'*'}) {
+          while (my ($from, $to) = each %$fieldmap) {
+            if (lc($from) eq lc($f) and lc($to) eq 'null') {
+              next FLOOP;
+            }
+          }
         }
       }
     }

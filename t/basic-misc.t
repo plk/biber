@@ -28,7 +28,22 @@ Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('minnames', 1);
 Biber::Config->setblxoption('maxalphanames', 3);
 Biber::Config->setblxoption('minalphanames', 1);
-Biber::Config->setoption('ignore', { bibtex => { '*' => 'ABSTRACT', 'misc' => 'USERA' }});
+Biber::Config->setoption('map',   {
+    bibtex => {
+      entrytype => { conversation => "CUSTOMA" },
+      field => {
+        "*" => {
+          abstract => "NULL",
+          conductor => "NAMEA",
+          gps => "USERA",
+          split => { pubmedid => { eprinttype => "ORIGFIELD", target => "EPRINT" } },
+        },
+        "misc" => { usera => "NULL" },
+      },
+    },
+  });
+
+
 
 # Now generate the information
 $biber->prepare;

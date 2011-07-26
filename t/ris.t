@@ -22,7 +22,7 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
-Biber::Config->setoption('ignore', { ris => { '*' => 'N2' } }); # skip abstract
+Biber::Config->setoption('map',   { ris => { field => { "*" => { n2 => "NULL" } }}} );
 
 # Now generate the information
 $biber->prepare;
