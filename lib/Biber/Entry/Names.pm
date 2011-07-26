@@ -210,6 +210,20 @@ sub set_visible_bib {
   return
 }
 
+=head2 set_visible_alpha
+
+    Set the number of alpha visible names as per the different uniquelist, max/minnalphanames etc
+
+=cut
+
+sub set_visible_alpha {
+  my $self = shift;
+  my $visibility = shift;
+  $self->{visibility_alpha} = $visibility;
+  return
+}
+
+
 =head2 get_visible
 
     Get the number of visible names as per the different uniquelist, max/minnames etc
@@ -231,6 +245,18 @@ sub get_visible_bib {
   my $self = shift;
   return $self->{visibility_bib};
 }
+
+=head2 get_visible_alpha
+
+    Get the number of alpha visible names as per the different uniquelist, max/minalphanames etc
+
+=cut
+
+sub get_visible_alpha {
+  my $self = shift;
+  return $self->{visibility_alpha};
+}
+
 
 
 =head2 add_name

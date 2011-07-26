@@ -19,11 +19,7 @@ our @EXPORT = qw{
   $BIBER_SORT_FINAL
   $BIBER_SORT_NULL
   $LABEL_FINAL
-  %NTOL
   };
-
-
-our %NTOL; @NTOL{(1 .. 52)} = ('a' .. 'z', 'A' .. 'Z'); # hash slice
 
 # Version of biblatex which this release works with. Matched against version
 # passed in control file

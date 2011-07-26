@@ -302,16 +302,8 @@ sub instantiate_entry {
   # Might not be set due to skip
   if ($e) {
     $eys = "    \\field{extrayear}{$e}\n";
-    $eas = "    \\field{extraalpha}{$e}\n";
   }
   $entry_string =~ s|^\s*<BDS>EXTRAYEAR</BDS>\n|$eys|gxms;
-  $entry_string =~ s|^\s*<BDS>EXTRAALPHA</BDS>\n|$eas|gxms;
-
-  # These to data strings allow users to insert the extrayear value into a
-  # labelalpha in either numeric or alphabetic form
-  $entry_string =~ s|<BDS>LAEXTRAYEARI</BDS>|$e|gxms;
-  my $ea = $NTOL{$e} || ''; # to avoid uninitialised warnings in s///
-  $entry_string =~ s|<BDS>LAEXTRAYEARA</BDS>|$ea|gxms;
 
   return $entry_string;
 }

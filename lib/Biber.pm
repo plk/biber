@@ -934,8 +934,8 @@ sub process_entries_post {
 
 =head2 process_labelalpha_autoinc
 
-    Instantiate any labelalpha autoinc data
-    This late-bound data doesn't depend on sorting order so it can be
+    Instantiate any labelalpha autoinc data (extraalpha, basically)
+    This late-bound data does not depend on sorting order so it can be
     instantiated here rather than just before list output.
 
 =cut
@@ -949,9 +949,9 @@ sub process_labelalpha_autoinc {
     $logger->debug("Instantiating any labelalpha template autoincrements for '$citekey' from section $secnum");
     my $be = $section->bibentry($citekey);
     my $bee = $be->get_field('entrytype');
-    if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) == 2) {
-      if (my $la = $be->get_field('labelalpha')) {
-        my $sla = $be->get_field('sortlabelalpha');
+    if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
+      if (my $ea = $be->get_field('extraalpha')) {
+        my $la = $be->get_field('labelalpha');
         my $lad = Biber::Config->get_la_disambiguation($la);
         $logger->trace("labelalpha autoinc disambiguation data for '$la': " . Data::Dump::pp($lad));
         my $auto = '';
@@ -959,16 +959,11 @@ sub process_labelalpha_autoinc {
           $auto = first_index {$_ eq $citekey} @$lad;
           $auto++;              # convert from 0-base
         }
-        $la =~ s|<BDS>LAAUTOI</BDS>|$auto|gxms;
-        $sla =~ s|<BDS>LAAUTOI</BDS>|$auto|gxms;
 
-        my $autoa = $NTOL{$auto} || ''; # to avoid uninitialised warnings in s///
-        $la =~ s|<BDS>LAAUTOA</BDS>|$autoa|gxms;
-        $sla =~ s|<BDS>LAAUTOA</BDS>|$autoa|gxms;
+        $ea =~ s|<BDS>EXTRAALPHA</BDS>|$auto|gxms;
 
-        # re-set labelalpha and sortlabelalpha
-        $be->set_field('labelalpha', $la);
-        $be->set_field('sortlabelalpha', $sla);
+        # re-set extraalpha
+        $be->set_field('extraalpha', $ea);
       }
     }
   }
@@ -1224,7 +1219,7 @@ sub process_pername_hashes {
 =head2 process_visible_names
 
     Generate the visible name information.
-    This is used in various places and it's useful to have it generated in one place.
+    This is used in various places and it is useful to have it generated in one place.
 
 =cut
 
@@ -1237,6 +1232,8 @@ sub process_visible_names {
   my $minn = Biber::Config->getblxoption('minnames');
   my $maxbn = Biber::Config->getblxoption('maxbibnames');
   my $minbn = Biber::Config->getblxoption('minbibnames');
+  my $maxan = Biber::Config->getblxoption('maxalphanames');
+  my $minan = Biber::Config->getblxoption('minalphanames');
 
   foreach my $citekey ( $section->get_citekeys ) {
     $logger->debug("Postprocessing visible names for key '$citekey'");
@@ -1248,11 +1245,20 @@ sub process_visible_names {
       my $count = $names->count_names;
       my $visible_names;
       my $visible_names_bib;
+      my $visible_names_alpha;
 
       # If name list was truncated in bib with "and others", this overrides maxnames
       my $morenames = ($names->last_name->get_namestring eq 'others') ? 1 : 0;
 
-      # visibility index if uniquelist, if set, otherwise, minnames
+      # max/minalphanames doesn't care about uniquelist - labels are just labels
+      if ( $morenames or $count > $maxan ) {
+        $visible_names_alpha = $minan;
+      }
+      else {
+        $visible_names_alpha = $count;
+      }
+
+      # max/minnames and max/minbibnames
       if ( $morenames or $count > $maxn ) {
         # Visibiliy to the uniquelist point if uniquelist is requested and max/minbibnames
         # is equal to max/minnames because in this case the user can expect that the bibliography
@@ -1268,13 +1274,15 @@ sub process_visible_names {
           $visible_names_bib = $minbn;
         }
       }
-      else {                    # visibility is simply the full list
+      else { # visibility is simply the full list
         $visible_names = $visible_names_bib = $count;
       }
       $logger->trace("Setting visible names for key '$citekey' to '$visible_names'");
       $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
+      $logger->trace("Setting visible names (alpha) for key '$citekey' to '$visible_names_alpha'");
       $names->set_visible($visible_names);
       $names->set_visible_bib($visible_names_bib);
+      $names->set_visible_alpha($visible_names_alpha);
     }
   }
 }
@@ -1300,45 +1308,7 @@ sub process_labelalpha {
   if ( my $la = Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
     my $label;
     my $sortlabel;
-    given ($la) {
-      when (1) { # default builtin labelalpha which uses extraalpha
-        if ( $be->get_field('shorthand') ) {
-          $sortlabel = $label = $be->get_field('shorthand');
-        }
-        else {
-          if ( $be->get_field('label') ) {
-            $sortlabel = $label = $be->get_field('label');
-          }
-          elsif ( $be->get_field('labelnamename') and $be->get_field($be->get_field('labelnamename'))) {
-            ( $label, $sortlabel ) =
-              @{ $self->_genlabel( $citekey, $be->get_field('labelnamename') ) };
-          }
-          else {
-            $sortlabel = $label = '';
-          }
-
-          if ( my $year = $be->get_field('labelyear') ||
-               $be->get_field('year')) {
-            my $yr;
-            # Make "in press" years look nice in alpha styles
-            if ($year =~ m/\A\s*in\s*press\s*\z/ixms) {
-              $yr = 'ip';
-            }
-            # Normal year - this works for date ranges too since 2 from 2 in is the
-            # start date
-            else {
-              $yr = substr $year, 2, 2;
-            }
-            $label     .= $yr;
-            $sortlabel .= $yr;
-          }
-        }
-      }
-      when (2) { # custom labelalpha
-        ( $label, $sortlabel ) = @{ $self->_genlabel_custom($citekey) };
-      }
-    }
-
+    ( $label, $sortlabel ) = @{ $self->_genlabel_custom($citekey) };
     $be->set_field('labelalpha', $label);
     $be->set_field('sortlabelalpha', $sortlabel);
   }
@@ -1357,7 +1327,7 @@ sub process_labelalpha_disambiguation {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) == 2) {
+  if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
     if (my $la = $be->get_field('labelalpha')) {
       Biber::Config->incr_la_disambiguation($la, $citekey);
     }

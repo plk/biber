@@ -209,67 +209,6 @@ sub _getpnhash {
 }
 
 
-# Default (labelalpha = 1) label generation
-sub _genlabel {
-  my ($self, $citekey, $namefield) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  my $names = $be->get_field($namefield);
-  my $alphaothers = Biber::Config->getblxoption('alphaothers', $be->get_field('entrytype'));
-  my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->get_field('entrytype'));
-  my $useprefix = Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey);
-  my $maxnames = Biber::Config->getblxoption('maxalphanames');
-  my $minnames = Biber::Config->getblxoption('minalphanames');
-  my $label = '';
-  # This contains sortalphaothers instead of alphaothers, if defined
-  # This is needed in cases where alphaothers is something like
-  # '\textasteriskcentered' which would mess up sorting.
-  my $sortlabel = '';
-
-  my @lastnames = map { strip_nosort(normalise_string($_->get_lastname), $namefield) } @{$names->names};
-  my @prefices  = map { $_->get_prefix } @{$names->names};
-  my $numnames  = $names->count_names;
-
-  # If name list was truncated in bib with "and others", this overrides maxnames
-  my $morenames = ($names->last_name->get_namestring eq 'others') ? 1 : 0;
-  my $nametrunc;
-  my $loopnames;
-
-  # loopnames is the number of names to loop over in the name list when constructing the label
-  if ($morenames or ($numnames > $maxnames)) {
-    $nametrunc = 1;
-    $loopnames = $minnames; # Only look at $minnames names if we are truncating ...
-  } else {
-    $loopnames = $numnames; # ... otherwise look at all names
-  }
-
-  # Now loop over the name list, grabbing a substring of each surname
-  # The substring length depends on whether we are using prefices and also whether
-  # we have truncated to one name:
-  #   1. If there is only one name
-  #      1. label string is first 3 chars of surname if there is no prefix
-  #      2. label string is first char of prefix plus first 2 chars of surname if there is a prefix
-  #   2. If there is more than one name
-  #      1.  label string is first char of each surname (up to minnames) if there is no prefix
-  #      2.  label string is first char of prefix plus first char of each surname (up to minnames)
-  #          if there is a prefix
-  for (my $i=0; $i<$loopnames; $i++) {
-    $label .= substr($prefices[$i] , 0, 1) if ($useprefix and $prefices[$i]);
-    $label .= substr($lastnames[$i], 0, $loopnames == 1 ? (($useprefix and $prefices[$i]) ? 2 : 3) : 1);
-  }
-
-  $sortlabel = $label;
-
-  # Add alphaothers if name list is truncated
-  if ($nametrunc) {
-    $label .= $alphaothers;
-    $sortlabel .= $sortalphaothers;
-  }
-
-  return [$label, $sortlabel];
-}
-
 #########################
 # custom label generation (labelalpha = 2)
 #########################
@@ -278,7 +217,6 @@ our $dispatch_label = {
   'afterword'         =>  [\&_label_name,             ['afterword']],
   'annotator'         =>  [\&_label_name,             ['annotator']],
   'author'            =>  [\&_label_name,             ['author']],
-  'autoinc'           =>  [\&_label_autoinc,          []],
   'bookauthor'        =>  [\&_label_name,             ['bookauthor']],
   'booktitle'         =>  [\&_label_title,            ['booktitle']],
   'commentator'       =>  [\&_label_name,             ['commentator']],
@@ -289,7 +227,6 @@ our $dispatch_label = {
   'eventday'          =>  [\&_label_day,              ['eventday']],
   'eventmonth'        =>  [\&_label_month,            ['eventmonth']],
   'eventyear'         =>  [\&_label_year,             ['eventyear']],
-  'extrayear'         =>  [\&_label_extrayear,        []],
   'day'               =>  [\&_label_day,              ['day']],
   'foreword'          =>  [\&_label_name,             ['foreword']],
   'holder'            =>  [\&_label_name,             ['holder']],
@@ -334,6 +271,8 @@ sub _genlabel_custom {
     last if $LABEL_FINAL;
   }
 
+  # set a marker for extraalpha
+  $be->set_field('extraalpha', '<BDS>EXTRAALPHA</BDS>');
   return [ $label, $slabel ];
 }
 
@@ -423,24 +362,6 @@ sub _dispatch_label {
 # Label dispatch routines
 #########################
 
-sub _label_autoinc {
-  my ($self, $citekey, $args, $labelattrs) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  my $format = $labelattrs->{format} || 'alpha';
-  # This can't and shouldn't be generated here, it's done later during list construction
-  if ($format eq 'alpha') {
-    return ['<BDS>LAAUTOA</BDS>', '<BDS>LAAUTOA</BDS>'];
-  }
-  elsif ($format eq 'int') {
-    return ['<BDS>LAAUTOI</BDS>', '<BDS>LAAUTOI</BDS>'];
-  }
-  else {
-    return ['', ''];
-  }
-}
-
 sub _label_day {
   my ($self, $citekey, $args, $labelattrs) = @_;
   my $secnum = $self->get_current_section;
@@ -450,26 +371,6 @@ sub _label_day {
   if (my $f = $be->get_field($day)) {
     my $y = _process_label_attributes($self, $citekey, $f, $labelattrs, $day);
     return [$y, $y];
-  }
-  else {
-    return ['', ''];
-  }
-}
-
-sub _label_extrayear {
-  my ($self, $citekey, $args, $labelattrs) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  my $format = $labelattrs->{format} || 'alpha';
-  if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
-    # This can't and shouldn't be generated here, it's done later during list construction
-    if ($format eq 'alpha') {
-      return ['<BDS>LAEXTRAYEARA</BDS>', '<BDS>LAEXTRAYEARA</BDS>'];
-    }
-    elsif ($format eq 'int') {
-      return ['<BDS>LAEXTRAYEARI</BDS>', '<BDS>LAEXTRAYEARI</BDS>'];
-    }
   }
   else {
     return ['', ''];
@@ -520,11 +421,11 @@ sub _label_labelname {
   }
 }
 
+# literal string - don't post-process this, there is no point
 sub _label_literal {
   my ($self, $citekey, $args, $labelattrs) = @_;
-  my $string = $args->[0]; # get literal string
-  my $ps = _process_label_attributes($self, $citekey, $string, $labelattrs);
-  return [$ps, $ps];
+  my $string = $args->[0];
+  return [$string, $string];
 }
 
 sub _label_month {
@@ -550,8 +451,6 @@ sub _label_name {
   my $useprefix = Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey);
   my $alphaothers = Biber::Config->getblxoption('alphaothers', $be->get_field('entrytype'));
   my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->get_field('entrytype'));
-  my $maxnames = Biber::Config->getblxoption('maxalphanames');
-  my $minnames = Biber::Config->getblxoption('minalphanames');
   my $namename = $args->[0];
   my $acc;
   # This contains sortalphaothers instead of alphaothers, if defined
@@ -572,7 +471,8 @@ sub _label_name {
     $be->get_field($namename)) {
     my $names = $be->get_field($namename);
     my $numnames  = $names->count_names;
-    my $visibility = $names->get_visible_bib;
+    my $visibility = $names->get_visible_alpha;
+
     my @lastnames = map { strip_nosort(normalise_string($_->get_lastname), $namename) } @{$names->names};
     my @prefices  = map { $_->get_prefix } @{$names->names};
     my $loopnames;
@@ -667,13 +567,12 @@ sub _label_year {
 sub _process_label_attributes {
   my ($self, $citekey, $field_string, $labelattrs, $field, $namepart, $index) = @_;
   return $field_string unless $labelattrs;
-
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my @citekeys = $section->get_citekeys;
   my $nindex = first_index {$_ eq $citekey} @citekeys;
 
-  if ($labelattrs->{substring_width}) {
+  if (defined($labelattrs->{substring_width})) {
     # dynamically disambiguated width (individual name disambiguation)
     if ($labelattrs->{substring_width} =~ /v/ and $field) {
       # Use the cache if there is one
@@ -686,8 +585,18 @@ sub _process_label_attributes {
         # This contains a mapping of strings to substrings of increasing lengths
         my %substr_cache = ();
         my $lcache = {};
-        my %indices = map {my $f = $section->bibentry($_)->get_field($field);
-                           $namepart ? map {($_->get_namepart($namepart) => $_->get_index)} @{$f->first_n_names($f->get_visible_bib)} : ($f => 0) } @citekeys;
+        my %indices = map {
+                           if (my $f = $section->bibentry($_)->get_field($field)) {
+                             defined($namepart) ?
+                               map {
+                                    if (my $np = $_->get_namepart($namepart)) {
+                                      ($np => $_->get_index);
+                                    }
+                                   } @{$f->first_n_names($f->get_visible_alpha)}
+                                     : ($f => 0);
+                           }
+                          } @citekeys;
+
         # This ends up as a flat list due to array interpolation
         my @strings = uniq keys %indices;
 
@@ -751,7 +660,7 @@ sub _process_label_attributes {
       else {
         # This retains the structure of the entries for the "l" list disambiguation
         my $strings = [map {my $f = $section->bibentry($_)->get_field($field);
-                            $namepart ? [map {$_->get_namepart($namepart)} @{$f->first_n_names($f->get_visible_bib)}] : [$f]
+                            $namepart ? [map {$_->get_namepart($namepart)} @{$f->first_n_names($f->get_visible_alpha)}] : [$f]
                           } @citekeys];
         my $lcache = _label_listdisambiguation($strings);
 

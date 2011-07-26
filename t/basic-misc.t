@@ -26,6 +26,8 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('maxalphanames', 3);
+Biber::Config->setblxoption('minalphanames', 1);
 Biber::Config->setoption('ignore', { bibtex => { '*' => 'ABSTRACT', 'misc' => 'USERA' }});
 
 # Now generate the information
