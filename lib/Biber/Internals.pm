@@ -583,17 +583,21 @@ sub _process_label_attributes {
         # This contains a mapping of strings to substrings of increasing lengths
         my %substr_cache = ();
         my $lcache = {};
-        my %indices = map {
-                           if (my $f = $section->bibentry($_)->get_field($field)) {
-                             defined($namepart) ?
-                               map {
-                                    if (my $np = $_->get_namepart($namepart)) {
-                                      ($np => $_->get_index);
-                                    }
-                                   } @{$f->first_n_names($f->get_visible_alpha)}
-                                     : ($f => 0);
-                           }
-                          } @citekeys;
+
+        # Get the indices of each field (or namepart) we are dealing with
+        my %indices;
+        foreach my $key (@citekeys) {
+          if (my $f = $section->bibentry($key)->get_field($field)) {
+            if ($namepart) {
+              foreach my $n (@{$f->first_n_names($f->get_visible_alpha)}) {
+               $indices{$n->get_namepart($namepart)} = $n->get_index;
+              }
+            }
+            else {
+              $indices{$f} = 0;
+            }
+          }
+        }
 
         # This ends up as a flat list due to array interpolation
         my @strings = uniq keys %indices;
