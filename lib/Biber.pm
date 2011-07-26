@@ -1003,15 +1003,15 @@ sub process_extrayear {
   }
 
   # extrayear takes into account the labelyear which can be a range
-  my $year_string_extra;
+  my $year_string;
   if (my $ly = $be->get_field('labelyear')) {
-    $year_string_extra = $ly;
+    $year_string = $ly;
   }
   elsif (my $y = $be->get_field('year')) {
-    $year_string_extra = $y;
+    $year_string = $y;
   }
   else {
-    $year_string_extra = '';
+    $year_string = '';
   }
 
   # Don't create disambiguation data for skiplab entries
@@ -1019,11 +1019,11 @@ sub process_extrayear {
                                       $be->get_field('entrytype'),
                                       $be->get_field('dskey'))) {
     if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
-      my $nameyear_string_extra = "$name_string,$year_string_extra";
-      $logger->trace("Setting nameyear_extra to '$nameyear_string_extra' for entry '$citekey'");
-      $be->set_field('nameyear_extra', $nameyear_string_extra);
-      $logger->trace("Incrementing nameyear_extra for '$name_string'");
-      Biber::Config->incr_seen_nameyear_extra($name_string, $year_string_extra);
+      my $nameyear_string = "$name_string,$year_string";
+      $logger->trace("Setting nameyear to '$nameyear_string' for entry '$citekey'");
+      $be->set_field('nameyear', $nameyear_string);
+      $logger->trace("Incrementing nameyear for '$name_string'");
+      Biber::Config->incr_seen_nameyear($name_string, $year_string);
     }
   }
   return;
@@ -2161,10 +2161,10 @@ sub generate_extra {
     unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
       # extrayear
       if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
-        my $nameyear_extra = $be->get_field('nameyear_extra');
-        if (Biber::Config->get_seen_nameyear_extra($nameyear_extra) > 1) {
-          $logger->trace("nameyear_extra for '$nameyear_extra': " . Biber::Config->get_seen_nameyear_extra($nameyear_extra));
-          my $v = Biber::Config->incr_seen_extrayear($nameyear_extra);
+        my $nameyear = $be->get_field('nameyear');
+        if (Biber::Config->get_seen_nameyear($nameyear) > 1) {
+          $logger->trace("nameyear for '$nameyear': " . Biber::Config->get_seen_nameyear($nameyear));
+          my $v = Biber::Config->incr_seen_extrayear($nameyear);
           $list->set_extrayeardata($key, $v);
         }
       }
@@ -2185,7 +2185,7 @@ sub generate_extra {
 =head2 generate_singletitle
 
     Generate the singletitle field, if requested. The information for generating
-    this is gathered in create_extras_st_info()
+    this is gathered in process_singletitle()
 
 =cut
 

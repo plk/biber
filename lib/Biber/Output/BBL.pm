@@ -271,8 +271,8 @@ sub set_output_entry {
   # The labelyear option determines whether "extrayear" is output
   if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
-    if (my $nameyear_extra = $be->get_field('nameyear_extra')) {
-      if ( Biber::Config->get_seen_nameyear_extra($nameyear_extra) > 1) {
+    if (my $nameyear = $be->get_field('nameyear')) {
+      if ( Biber::Config->get_seen_nameyear($nameyear) > 1) {
         $acc .= "    <BDS>EXTRAYEAR</BDS>\n";
       }
     }
