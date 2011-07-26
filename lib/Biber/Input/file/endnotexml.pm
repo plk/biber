@@ -235,8 +235,8 @@ sub create_entry {
           if (my $t = $alias->{aliasfortype}) { # type-specific alias - Endnote does this
             if ($t eq $bibentry->get_field('entrytype')) {
               my $a = $alias->{aliasof};
-              $fm = $dcfxml->{fields}{field}{$a};
               $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
+              $fm = $dcfxml->{fields}{field}{$a};
               $to = $a;  # Field to set internally is the alias
               last;
             }
@@ -246,6 +246,14 @@ sub create_entry {
             $fm = $dcfxml->{fields}{field}{$a};
             $to = $a;  # Field to set internally is the alias
             $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
+          }
+
+          # Deal with additional fields to split information into (one->many map)
+          if (my $alsoset = $alias->{alsoset}) {
+            unless ($bibentry->field_exists($alsoset->{target})) {
+              my $val = $alsoset->{value} // $f; # defaults to original field name if no value
+              $bibentry->set_field($alsoset->{target}, $val);
+            }
           }
         }
       }

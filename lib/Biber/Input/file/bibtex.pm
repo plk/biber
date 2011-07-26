@@ -234,8 +234,32 @@ sub create_entry {
 
       if (my $fm = $dcfxml->{fields}{field}{$f}) {
         my $to = $f; # By default, field to set internally is the same as data source
+
         # Redirect any alias
-        if (my $alias = $fm->{aliasof}) {
+        if (my $aliases = $fm->{alias}) { # complex aliases with alsoset clauses
+          foreach my $alias (@$aliases) {
+            if (my $a = $alias->{aliasof}) {
+              $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
+              # If both a field and its alias is set, warn and delete alias field
+              if ($entry->exists($a)) {
+                # Warn as that's wrong
+                $biber->biber_warn($bibentry, "Field '$f' is aliased to field '$a' but both are defined in entry with key '$dskey' - skipping field '$f'");
+                next;
+              }
+              $fm = $dcfxml->{fields}{field}{$a};
+              $to = $a; # Field to set internally is the alias
+            }
+
+            # Deal with additional fields to split information into (one->many map)
+            if (my $alsoset = $alias->{alsoset}) {
+              unless ($bibentry->field_exists($alsoset->{target})) {
+                my $val = $alsoset->{value} // $f; # defaults to original field name if no value
+                $bibentry->set_field($alsoset->{target}, $val);
+              }
+            }
+          }
+        }
+        elsif (my $alias = $fm->{aliasof}) { # simple alias
           $logger->debug("Found alias '$alias' of field '$f' in entry '$dskey'");
           # If both a field and its alias is set, warn and delete alias field
           if ($entry->exists($alias)) {
@@ -246,6 +270,8 @@ sub create_entry {
           $fm = $dcfxml->{fields}{field}{$alias};
           $to = $alias; # Field to set internally is the alias
         }
+
+        # Now run any defined handler
         &{$handlers{$fm->{handler}}}($biber, $bibentry, $entry, $f, $to, $dskey);
       }
       # Default if no explicit way to set the field
