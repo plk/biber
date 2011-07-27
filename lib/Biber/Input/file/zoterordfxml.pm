@@ -301,6 +301,7 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
       $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
     }
   }
+  # No alias
   else {
     $bibentry->set_field('entrytype', $itype);
   }
@@ -420,13 +421,18 @@ sub _partof {
   # crossrefs are a pain as we have to try to guess the
   # crossref type a bit. This corresponds to the relevant parts of the
   # default inheritance setup
+  # This is a bit messy as we have to map from zotero entrytypes to biblatex data model types
+  # because entrytypes are set after fields so bibaltex datatypes are not set yet.
+  # The crossref entry isn't processed later so we have to set the real entrytype here.
   if ($cref->get_field('entrytype') =~ /\Abib:/) {
-    my $ptype = $bibentry->get_field('entrytype');
-    given ($ptype) {
-      when ('book')            { $cref->set_datafield('entrytype', 'mvbook') }
-      when ('inbook')          { $cref->set_datafield('entrytype', 'book') }
-      when ('inproceedings')   { $cref->set_datafield('entrytype', 'proceedings') }
-      when ('article')         { $cref->set_datafield('entrytype', 'periodical') }
+    given (lc($itype)) {
+      when ('book')            { $cref->set_field('entrytype', 'mvbook') }
+      when ('booksection')     { $cref->set_field('entrytype', 'book') }
+      when ('conferencepaper') { $cref->set_field('entrytype', 'proceedings') }
+      when ('presentation')    { $cref->set_field('entrytype', 'proceedings') }
+      when ('journalarticle')  { $cref->set_field('entrytype', 'periodical') }
+      when ('magazinearticle') { $cref->set_field('entrytype', 'periodical') }
+      when ('newspaperarticle'){ $cref->set_field('entrytype', 'periodical') }
     }
   }
   return;

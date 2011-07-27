@@ -206,7 +206,7 @@ sub create_entry {
 
     # We put all the fields we find modulo field aliases into the object
     # validation happens later and is not datasource dependent
-FLOOP:    foreach my $f ($entry->fieldlist) {
+FLOOP:  foreach my $f ($entry->fieldlist) {
 
       # First skip any fields we are configured to ignore
       # Notice that the ignore is based on the canonical entrytype and field name
