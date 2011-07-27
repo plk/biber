@@ -245,23 +245,16 @@ FLOOP:  foreach my $f (keys %$entry) {
           else {
             my $a = $alias->{aliasof}; # global alias
             $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
-            # If both a field and its alias is set, warn and delete alias field
-            if ($entry->{$a}) {
-              # Warn as that's wrong
-              $biber->biber_warn($bibentry, "Field '$f' is aliased to field '$a' but both are defined in entry with key '$dskey' - skipping field '$f'");
-              next;
-            }
             $fm = $dcfxml->{fields}{field}{$a};
             $to = $a; # Field to set internally is the alias
           }
 
           # Deal with additional fields to split information into (one->many map)
-          if (my $alsoset = $alias->{alsoset}) {
-            unless ($bibentry->field_exists($alsoset->{target})) {
-              my $val = $alsoset->{value} // $f; # defaults to original field name if no value
-              $bibentry->set_datafield($alsoset->{target}, $val);
-            }
+          foreach my $alsoset (@{$alias->{alsoset}}) {
+            my $val = $alsoset->{value} // $f; # defaults to original field name if no value
+            $bibentry->set_datafield($alsoset->{target}, $val);
           }
+
         }
       }
       elsif (my $alias = $fm->{aliasof}) { # simple alias

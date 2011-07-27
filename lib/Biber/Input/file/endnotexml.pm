@@ -249,11 +249,9 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
           }
 
           # Deal with additional fields to split information into (one->many map)
-          if (my $alsoset = $alias->{alsoset}) {
-            unless ($bibentry->field_exists($alsoset->{target})) {
-              my $val = $alsoset->{value} // $f; # defaults to original field name if no value
-              $bibentry->set_datafield($alsoset->{target}, $val);
-            }
+          foreach my $alsoset (@{$alias->{alsoset}}) {
+            my $val = $alsoset->{value} // $f; # defaults to original field name if no value
+            $bibentry->set_datafield($alsoset->{target}, $val);
           }
         }
       }

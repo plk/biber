@@ -205,6 +205,14 @@ sub create_entry {
   # Validation happens later and is not datasource dependent
 FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
 
+    # We have to process local options as early as possible in order
+    # to make them available for things that need them like name parsing
+    if (_norm($entry->nodeName) eq 'options') {
+      if (my $node = _resolve_display_mode($biber, $entry, 'options')) {
+        $biber->process_entry_options($dskey, $node->textContent());
+      }
+    }
+
     # First skip any fields we are configured to ignore
     # Notice that the ignore is based on the canonical entrytype and field name
     if ($user_map and my $fields = $user_map->{field}) {
@@ -219,14 +227,6 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
             }
           }
         }
-      }
-    }
-
-    # We have to process local options as early as possible in order
-    # to make them available for things that need them like name parsing
-    if (_norm($entry->nodeName) eq 'options') {
-      if (my $node = _resolve_display_mode($biber, $entry, 'options')) {
-        $biber->process_entry_options($dskey, $node->textContent());
       }
     }
 
@@ -247,33 +247,19 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
           else {
             my $a = $alias->{aliasof}; # Global alias
             $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
-            # If both a field and its alias is set, warn and delete alias field
-            if ($entry->findnodes("./$NS:$alias")) {
-              # Warn as that's wrong
-              $biber->biber_warn($bibentry, "Field '$f' is aliased to field '$a' but both are defined in entry with key '$dskey' - skipping field '$f'");
-              next;
-            }
             $fm = $dcfxml->{fields}{field}{$a};
             $to = "$NS:$a"; # Field to set internally is the alias
           }
 
           # Deal with additional fields to split information into (one->many map)
-          if (my $alsoset = $alias->{alsoset}) {
-            unless ($bibentry->field_exists($alsoset->{target})) {
-              my $val = $alsoset->{value} // $f; # defaults to original field name if no value
-              $bibentry->set_datafield($alsoset->{target}, $val);
-            }
+          foreach my $alsoset (@{$alias->{alsoset}}) {
+            my $val = $alsoset->{value} // $f; # defaults to original field name if no value
+            $bibentry->set_datafield($alsoset->{target}, $val);
           }
         }
       }
       elsif (my $alias = $fm->{aliasof}) { # simple alias
         $logger->debug("Found alias '$alias' of field '$f' in entry '$dskey'");
-        # If both a field and its alias is set, warn and delete alias field
-        if ($entry->findnodes("./$NS:$alias")) {
-          # Warn as that's wrong
-          $biber->biber_warn($bibentry, "Field '$f' is aliased to field '$alias' but both are defined in entry with key '$dskey' - skipping field '$f'");
-          next;
-        }
         $fm = $dcfxml->{fields}{field}{$alias};
         $to = "$NS:$alias"; # Field to set internally is the alias
       }

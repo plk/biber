@@ -31,13 +31,14 @@ Biber::Config->setblxoption('minalphanames', 1);
 Biber::Config->setoption('map',   {
     bibtex => {
       field => {
-        "*" => {
-          abstract => "BMAP_NULL",
-          conductor => "NAMEA",
-          gps => "USERA",
-          split => { pubmedid => { eprinttype => "ORIGFIELD", target => "EPRINT" } },
+        abstract => "BMAP_NULL",
+        conductor => "NAMEA",
+        gps => "USERA",
+        pubmedid => {
+          BMAP_TARGET => 'EPRINT',
+          alsoset => { EPRINTTYPE => { bmap_value => "BMAP_ORIGFIELD" } }
         },
-        "MISC" => { usera => "BMAP_NULL" },
+        USERA => { bmap_pertype => "MISC", bmap_target => "BMAP_NULL" },
       },
     },
   });
