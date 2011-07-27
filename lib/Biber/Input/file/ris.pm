@@ -19,7 +19,7 @@ use Encode;
 use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use base 'Exporter';
-use List::AllUtils qw(first uniq);
+use List::AllUtils qw( :all );
 use XML::LibXML::Simple;
 use Readonly;
 use Data::Dump qw(dump);
@@ -227,10 +227,15 @@ FLOOP:  foreach my $f (keys %$entry) {
     # Notice that the ignore is based on the canonical entrytype and field name
     if ($user_map) {
       if (my $fields = $user_map->{field}) {
-        if (my $fieldmap = $fields->{lc($entry->{TY})} || $fields->{'*'}) {
-          while (my ($from, $to) = each %$fieldmap) {
-            if (lc($from) eq lc($f) and lc($to) eq 'null') {
-              next FLOOP;
+        # This seems messy but we have to be able to compare the field keys case
+        # insensitively, otherwise we could just do:
+        # $fieldmap = #$fields->{lc($entry->type)} || $fields->{'*'}
+        if (my $fieldkey = firstval {lc($_) eq lc($entry->{TY}) || $_ eq '*'} keys %$fields) {
+          if (my $fieldmap = $fields->{$fieldkey}) {
+            while (my ($from, $to) = each %$fieldmap) {
+              if (lc($from) eq lc($f) and lc($to) eq 'null') {
+                next FLOOP;
+              }
             }
           }
         }

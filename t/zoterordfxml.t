@@ -15,6 +15,15 @@ chdir("t/tdata");
 my $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('zoterordfxml.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
+Biber::Config->setoption('map',   {
+    bibtex => {
+      field => {
+        "journalArticle" => { "dc:subject" => "NULL" },
+        "book" => { "dc:subject" => "NULL" },
+        "bookSection" => { "dc:subject" => "NULL" },
+      },
+    },
+  });
 
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
@@ -56,7 +65,6 @@ my $l1 = q|  \entry{http://0-muse.jhu.edu.pugwash.lib.warwick.ac.uk:80/journals/
     \verb{url}
     \verb http://0-muse.jhu.edu.pugwash.lib.warwick.ac.uk:80/journals/theory_and_event/v005/5.3ranciere.html
     \endverb
-    \keyw{{creator: Rancière},{Kant, Immanuel},{Rancière}}
   \endentry
 
 |;
@@ -83,7 +91,6 @@ my $l2 = q|  \entry{urn:isbn:0713990023}{book}{}
     \field{pagetotal}{279}
     \field{title}{The History of Sexuality volume 3: The Care of the Self}
     \field{year}{1988}
-    \keyw{{creator: Foucault}}
   \endentry
 
 |;
@@ -122,7 +129,6 @@ my $l3 = q|  \entry{item_54}{inbook}{}
     \field{title}{The Ethics of the Concern for Self as a Practice of Freedom}
     \field{year}{1996}
     \field{pages}{432\bibrangedash 449}
-    \keyw{{creator: Foucault},{Foucault}}
   \endentry
 
 |;

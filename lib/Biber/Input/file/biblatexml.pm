@@ -19,7 +19,7 @@ use Encode;
 use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use base 'Exporter';
-use List::AllUtils qw(first uniq);
+use List::AllUtils qw( :all );
 use XML::LibXML;
 use XML::LibXML::Simple;
 use Readonly;
@@ -188,6 +188,14 @@ sub create_entry {
   $bibentry->set_field('dskey', $dskey);
   $bibentry->set_field('citekey', $citekey);
 
+  # Get a reference to the map option, if it exists
+  my $user_map;
+  if (defined(Biber::Config->getoption('map'))) {
+    if (defined(Biber::Config->getoption('map')->{bibtex})) {
+      $user_map = Biber::Config->getoption('map')->{bibtex};
+    }
+  }
+
   # Set entrytype taking note of any aliases for this datasource driver
   if (my $ealias = $dcfxml->{'entry-types'}{'entry-type'}{$entry->getAttribute('entrytype')}) {
     $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
@@ -208,17 +216,23 @@ sub create_entry {
 
   # We put all the fields we find modulo field aliases into the object.
   # Validation happens later and is not datasource dependent
-  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
-
+FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
 
     # First skip any fields we are configured to ignore
     # Notice that the ignore is based on the canonical entrytype and field name
-    if (defined(Biber::Config->getoption('ignore'))) {
-      if (my $ignore = Biber::Config->getoption('ignore')->{biblatexml}) {
-        if (my $ig = $ignore->{lc($entry->getAttribute('entrytype'))} || $ignore->{'*'}) {
-          # Config::General can't force arrays per option and don't want to set this globally
-          $ig = [ $ig ] unless ref($ig) eq 'ARRAY';
-          next if first {lc($_) eq lc($f)} @$ig;
+    if ($user_map) {
+      if (my $fields = $user_map->{field}) {
+        # This seems messy but we have to be able to compare the field keys case
+        # insensitively, otherwise we could just do:
+        # $fieldmap = #$fields->{lc($entry->type)} || $fields->{'*'}
+        if (my $fieldkey = firstval {lc($_) eq lc($entry->getAttribute('entrytype')) || $_ eq '*'} keys %$fields) {
+          if (my $fieldmap = $fields->{$fieldkey}) {
+            while (my ($from, $to) = each %$fieldmap) {
+              if (_norm($from) eq _norm($f) and lc($to) eq 'null') {
+                next FLOOP;
+              }
+            }
+          }
         }
       }
     }

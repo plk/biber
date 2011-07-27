@@ -16,6 +16,13 @@ chdir("t/tdata");
 my $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('biblatexml.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
+Biber::Config->setoption('map',   {
+    bibtex => {
+      field => {
+        "BOOK" => { "bib:series" => "NULL" },
+      },
+    },
+  });
 
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
@@ -31,6 +38,7 @@ my $section = $biber->sections->get_section(0);
 my $main = $section->get_list('MAIN');
 my $bibentries = $section->bibentries;
 
+# the bib:series field is ignored as per the map above
 my $l1 = q|  \entry{BulgakovRozenfeld:1983}{book}{}
     \name{labelname}{3}{}{%
       {{hash=7b4da3df896da456361ae44dc651770a}{Булгаков}{Б\bibinitperiod}{Павел\bibnamedelima Георгиевич}{П\bibinitperiod\bibinitdelim Г\bibinitperiod}{}{}{}{}}%
@@ -65,7 +73,6 @@ my $l1 = q|  \entry{BulgakovRozenfeld:1983}{book}{}
     \field{origmonth}{04}
     \field{origyear}{1985}
     \field{pagetotal}{240}
-    \field{series}{Научно-биографическая литература}
     \field{title}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
     \field{urlday}{01}
     \field{urlendyear}{}

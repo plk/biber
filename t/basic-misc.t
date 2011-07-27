@@ -38,7 +38,7 @@ Biber::Config->setoption('map',   {
           gps => "USERA",
           split => { pubmedid => { eprinttype => "ORIGFIELD", target => "EPRINT" } },
         },
-        "misc" => { usera => "NULL" },
+        "MISC" => { usera => "NULL" },
       },
     },
   });

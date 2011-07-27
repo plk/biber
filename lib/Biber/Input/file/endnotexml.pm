@@ -19,7 +19,7 @@ use Digest::MD5 qw( md5_hex );
 use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use base 'Exporter';
-use List::AllUtils qw(first uniq);
+use List::AllUtils qw( :all );
 use XML::LibXML;
 use XML::LibXML::Simple;
 use Data::Dump qw(dump);
@@ -189,6 +189,14 @@ sub create_entry {
   $bibentry->set_field('dskey', $dskey);
   $bibentry->set_field('citekey', $citekey);
 
+  # Get a reference to the map option, if it exists
+  my $user_map;
+  if (defined(Biber::Config->getoption('map'))) {
+    if (defined(Biber::Config->getoption('map')->{bibtex})) {
+      $user_map = Biber::Config->getoption('map')->{bibtex};
+    }
+  }
+
   my $itype = $entry->findvalue('./ref-type/@name');
 
   # Set entrytype taking note of any aliases for this datasource driver
@@ -211,16 +219,23 @@ sub create_entry {
   # for the top-level nodes and forcing the right nodes to be visible to this loop, which
   # is what we do here as these nodes have special aliases we want visible in the .dcf. If we
   # did it all in special handlers, it would all be invisible in the .dcf
-  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./titles/*|./contributors/*|./urls/web-urls/*|./dates/*)')) {
+FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./titles/*|./contributors/*|./urls/web-urls/*|./dates/*)')) {
 
     # First skip any fields we are configured to ignore
     # Notice that the ignore is based on the canonical entrytype and field name
-    if (defined(Biber::Config->getoption('ignore'))) {
-      if (my $ignore = Biber::Config->getoption('ignore')->{endnotexml}) {
-        if (my $ig = $ignore->{lc($itype)} || $ignore->{'*'}) {
-          # Config::General can't force arrays per option and don't want to set this globally
-          $ig = [ $ig ] unless ref($ig) eq 'ARRAY';
-          next if first {lc($_) eq lc($f)} @$ig;
+    if ($user_map) {
+      if (my $fields = $user_map->{field}) {
+        # This seems messy but we have to be able to compare the field keys case
+        # insensitively, otherwise we could just do:
+        # $fieldmap = #$fields->{lc($entry->type)} || $fields->{'*'}
+        if (my $fieldkey = firstval {lc($_) eq lc($itype) || $_ eq '*'} keys %$fields) {
+          if (my $fieldmap = $fields->{$fieldkey}) {
+            while (my ($from, $to) = each %$fieldmap) {
+              if (lc($from) eq lc($f) and lc($to) eq 'null') {
+                next FLOOP;
+              }
+            }
+          }
         }
       }
     }

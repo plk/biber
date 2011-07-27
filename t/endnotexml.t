@@ -22,6 +22,13 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('map',   {
+    bibtex => {
+      field => {
+        "*" => { abstract => "NULL" },
+      },
+    },
+  });
 
 # Now generate the information
 $biber->prepare;
@@ -48,7 +55,6 @@ my $l1 = q|  \entry{fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:42}{article}{}
     \strng{fullhash}{bb7cc58ecd32f38238f8c0ee2107e097}
     \field{sortinit}{A}
     \field{labelyear}{2003}
-    \field{abstract}{Ethnic and racial disparities in mental health are driven by social factors such as housing, education, and income. Many of these social factors are different for minorities than they are for whites. Policies that address gaps in these social factors therefore can address mental health status disparities. We analyze three policies and their impact on minorities: the Individuals with Disability Education Act, Section 8 housing vouchers, and the Earned Income Tax Credit. Two of the three policies appear to have been effective in reducing social inequalities between whites and minorities. Expansion of public policies can be the mechanism to eliminate mental health status disparities for minorities.}
     \field{edition}{2003/10/01}
     \field{issn}{0278-2715 (Print)}
     \field{journaltitle}{Health Aff (Millwood)}
@@ -87,7 +93,6 @@ my $l2 = q|  \entry{fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:47}{article}{}
     \strng{fullhash}{346ad1f92291bef45511d3eb23e3df34}
     \field{sortinit}{A}
     \field{labelyear}{2009}
-    \field{abstract}{Health behavior interventions delivered at point of service include those that yoke an intervention protocol with existing systems of care (e.g., clinical care, social work, or case management). Though beneficial in a number of ways, such "hosted" intervention studies may be unable to retain participants that specifically discontinue their use of the hosting service. In light of recent practices that use percent total attrition as indicative of methodological flaws, hosted interventions targeting hard-to-reach populations may be excluded from consideration in effective intervention compendiums or research synthesis because of high attrition rates that may in fact be secondary to the natural flow of service use or unrelated to differential attrition or internal design flaws. Better methods to characterize rigor are needed.}
     \field{day}{14}
     \field{edition}{2009/07/18}
     \field{issn}{1541-0048 (Electronic)}

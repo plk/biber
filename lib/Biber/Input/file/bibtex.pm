@@ -24,7 +24,7 @@ use File::Spec;
 use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use base 'Exporter';
-use List::AllUtils qw(first);
+use List::AllUtils qw( :all );
 use XML::LibXML::Simple;
 
 my $logger = Log::Log4perl::get_logger('main');
@@ -225,10 +225,15 @@ FLOOP:    foreach my $f ($entry->fieldlist) {
       # Notice that the ignore is based on the canonical entrytype and field name
       if ($user_map) {
         if (my $fields = $user_map->{field}) {
-          if (my $fieldmap = $fields->{lc($entry->type)} || $fields->{'*'}) {
-            while (my ($from, $to) = each %$fieldmap) {
-              if (lc($from) eq lc($f) and lc($to) eq 'null') {
-                next FLOOP;
+          # This seems messy but we have to be able to compare the field keys case
+          # insensitively, otherwise we could just do:
+          # $fieldmap = #$fields->{lc($entry->type)} || $fields->{'*'}
+          if (my $fieldkey = firstval {lc($_) eq lc($entry->type) || $_ eq '*'} keys %$fields) {
+            if (my $fieldmap = $fields->{$fieldkey}) {
+              while (my ($from, $to) = each %$fieldmap) {
+                if (lc($from) eq lc($f) and lc($to) eq 'null') {
+                  next FLOOP;
+                }
               }
             }
           }
