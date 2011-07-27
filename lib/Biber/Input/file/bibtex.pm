@@ -205,7 +205,7 @@ sub create_entry {
   if ( $entry->metatype == BTE_REGULAR ) {
 
     # Set entrytype taking note of any aliases for this datasource driver
-    if (my $ealias = $dcfxml->{'entry-types'}{'entry-type'}{$entry->type}) {
+    if (my $ealias = $dcfxml->{entrytypes}{entrytype}{$entry->type}) {
       $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
       if (my $alsoset = $ealias->{alsoset}) {
         unless ($bibentry->field_exists($alsoset->{target})) {

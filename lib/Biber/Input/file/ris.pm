@@ -207,7 +207,7 @@ sub create_entry {
   }
 
   # Set entrytype taking note of any aliases for this datasource driver
-  if (my $ealias = $dcfxml->{'entry-types'}{'entry-type'}{$entry->{TY}}) {
+  if (my $ealias = $dcfxml->{entrytypes}{entrytype}{$entry->{TY}}) {
     $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
     if (my $alsoset = $ealias->{alsoset}) {
       unless ($bibentry->field_exists($alsoset->{target})) {

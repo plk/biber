@@ -218,7 +218,7 @@ sub create_entry {
   my $itype = $entry->findvalue('./z:itemType') || $entry->nodeName;
 
   # Set entrytype taking note of any aliases for this datasource driver
-  if (my $ealias = $dcfxml->{'entry-types'}{'entry-type'}{$itype}) {
+  if (my $ealias = $dcfxml->{entrytypes}{entrytype}{$itype}) {
     $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
     if (my $alsoset = $ealias->{alsoset}) {
       unless ($bibentry->field_exists($alsoset->{target})) {

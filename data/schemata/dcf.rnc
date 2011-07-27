@@ -19,8 +19,8 @@ start =
       }?
     },
     # Mappings of data source entrytypes to biblatex entry types
-    element dcf:entry-types {
-      element dcf:entry-type {
+    element dcf:entrytypes {
+      element dcf:entrytype {
         # Name of the entrytype in the data source
         attribute name { xsd:string },
         # Name of the entrytype in biblatex

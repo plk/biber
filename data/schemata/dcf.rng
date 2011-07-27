@@ -40,9 +40,9 @@
       </element>
       <zeroOrMore>
         <!-- Mappings of data source entrytypes to biblatex entry types -->
-        <element name="dcf:entry-types">
+        <element name="dcf:entrytypes">
           <oneOrMore>
-            <element name="dcf:entry-type">
+            <element name="dcf:entrytype">
               <!-- Name of the entrytype in the data source -->
               <attribute name="name">
                 <data type="string"/>

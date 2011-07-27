@@ -14,29 +14,29 @@
       We are not validating anything here, that comes later and is not
       datasource specific
   -->
-  <dcf:entry-types>
-    <dcf:entry-type name="conference">
+  <dcf:entrytypes>
+    <dcf:entrytype name="conference">
       <dcf:aliasof>inproceedings</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="electronic">
+    </dcf:entrytype>
+    <dcf:entrytype name="electronic">
       <dcf:aliasof>online</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="www">
+    </dcf:entrytype>
+    <dcf:entrytype name="www">
       <dcf:aliasof>online</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="mastersthesis">
+    </dcf:entrytype>
+    <dcf:entrytype name="mastersthesis">
       <dcf:aliasof>thesis</dcf:aliasof>
       <dcf:alsoset target="type" value="mathesis"/>
-    </dcf:entry-type>
-    <dcf:entry-type name="phdthesis">
+    </dcf:entrytype>
+    <dcf:entrytype name="phdthesis">
       <dcf:aliasof>thesis</dcf:aliasof>
       <dcf:alsoset target="type" value="phdthesis"/>
-    </dcf:entry-type>
-    <dcf:entry-type name="techreport">
+    </dcf:entrytype>
+    <dcf:entrytype name="techreport">
       <dcf:aliasof>report</dcf:aliasof>
       <dcf:alsoset target="type" value="techreport"/>
-    </dcf:entry-type>
-  </dcf:entry-types>
+    </dcf:entrytype>
+  </dcf:entrytypes>
   <!--
     These are the fields we expect to find in the the datasource so
     we can decide how to map and convert them into Biber::Entry fields

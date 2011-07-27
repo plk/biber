@@ -11,74 +11,74 @@
       We are not validating anything here, that comes later and is not
       datasource specific
   -->
-  <dcf:entry-types>
-    <dcf:entry-type name="ART">
+  <dcf:entrytypes>
+    <dcf:entrytype name="ART">
       <dcf:aliasof>artwork</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="BILL">
+    </dcf:entrytype>
+    <dcf:entrytype name="BILL">
       <dcf:aliasof>jurisdiction</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="BOOK">
+    </dcf:entrytype>
+    <dcf:entrytype name="BOOK">
       <dcf:aliasof>book</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="COMP">
+    </dcf:entrytype>
+    <dcf:entrytype name="COMP">
       <dcf:aliasof>software</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="CONF">
+    </dcf:entrytype>
+    <dcf:entrytype name="CONF">
       <dcf:aliasof>proceedings</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="GEN">
+    </dcf:entrytype>
+    <dcf:entrytype name="GEN">
       <dcf:aliasof>misc</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="JFULL">
+    </dcf:entrytype>
+    <dcf:entrytype name="JFULL">
       <dcf:aliasof>article</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="JOUR">
+    </dcf:entrytype>
+    <dcf:entrytype name="JOUR">
       <dcf:aliasof>article</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="MGZN">
+    </dcf:entrytype>
+    <dcf:entrytype name="MGZN">
       <dcf:aliasof>misc</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="MPCT">
+    </dcf:entrytype>
+    <dcf:entrytype name="MPCT">
       <dcf:aliasof>movie</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="NEWS">
+    </dcf:entrytype>
+    <dcf:entrytype name="NEWS">
       <dcf:aliasof>misc</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="PAMP">
+    </dcf:entrytype>
+    <dcf:entrytype name="PAMP">
       <dcf:aliasof>misc</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="PAT">
+    </dcf:entrytype>
+    <dcf:entrytype name="PAT">
       <dcf:aliasof>patent</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="PCOMM">
+    </dcf:entrytype>
+    <dcf:entrytype name="PCOMM">
       <dcf:aliasof>misc</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="RPRT">
+    </dcf:entrytype>
+    <dcf:entrytype name="RPRT">
       <dcf:aliasof>report</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="SER">
+    </dcf:entrytype>
+    <dcf:entrytype name="SER">
       <dcf:aliasof>misc</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="SLIDE">
+    </dcf:entrytype>
+    <dcf:entrytype name="SLIDE">
       <dcf:aliasof>misc</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="SOUND">
+    </dcf:entrytype>
+    <dcf:entrytype name="SOUND">
       <dcf:aliasof>audio</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="STAT">
+    </dcf:entrytype>
+    <dcf:entrytype name="STAT">
       <dcf:aliasof>legal</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="THES">
+    </dcf:entrytype>
+    <dcf:entrytype name="THES">
       <dcf:aliasof>thesis</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="UNBILL">
+    </dcf:entrytype>
+    <dcf:entrytype name="UNBILL">
       <dcf:aliasof>jurisdiction</dcf:aliasof>
-    </dcf:entry-type>
-    <dcf:entry-type name="UNPB">
+    </dcf:entrytype>
+    <dcf:entrytype name="UNPB">
       <dcf:aliasof>unpublished</dcf:aliasof>
-    </dcf:entry-type>
-  </dcf:entry-types>
+    </dcf:entrytype>
+  </dcf:entrytypes>
   <!--
     These are the fields we expect to find in the the datasource so
     we can decide how to map and convert them into Biber::Entry fields
