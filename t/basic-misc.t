@@ -30,15 +30,14 @@ Biber::Config->setblxoption('maxalphanames', 3);
 Biber::Config->setblxoption('minalphanames', 1);
 Biber::Config->setoption('map',   {
     bibtex => {
-      entrytype => { conversation => "CUSTOMA" },
       field => {
         "*" => {
-          abstract => "NULL",
+          abstract => "BMAP_NULL",
           conductor => "NAMEA",
           gps => "USERA",
           split => { pubmedid => { eprinttype => "ORIGFIELD", target => "EPRINT" } },
         },
-        "MISC" => { usera => "NULL" },
+        "MISC" => { usera => "BMAP_NULL" },
       },
     },
   });

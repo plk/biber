@@ -232,7 +232,7 @@
     <!-- name fields -->
     <dcf:field name="authors">
       <dcf:alias aliasof="author"/>
-      <dcf:alias aliasof="editor" aliasfortype="collection"/>
+      <dcf:alias aliasof="editor" aliasfortype="Edited Book"/>
     </dcf:field>
     <dcf:field name="secondary-authors">
       <dcf:alias aliasof="editor"/>
@@ -270,29 +270,44 @@
     <dcf:field name="meeting-place" aliasof="venue"/>
     <dcf:field name="venue" handler="literal"/>
     <dcf:field name="isbn" handler="literal">
-      <dcf:alias aliasof="issn" aliasfortype="article"/>
-      <dcf:alias aliasof="number" aliasfortype="patent"/>
-      <dcf:alias aliasof="number" aliasfortype="report"/>
-      <dcf:alias aliasof="number" aliasfortype="legislation"/>
+      <dcf:alias aliasof="issn" aliasfortype="Electronic Article"/>
+      <dcf:alias aliasof="issn" aliasfortype="Journal Article"/>
+      <dcf:alias aliasof="issn" aliasfortype="Magazine Article"/>
+      <dcf:alias aliasof="issn" aliasfortype="Newspaper Article"/>
+      <dcf:alias aliasof="number" aliasfortype="Patent"/>
+      <dcf:alias aliasof="number" aliasfortype="Report"/>
+      <dcf:alias aliasof="number" aliasfortype="Government Document"/>
+      <dcf:alias aliasof="number" aliasfortype="Legal Rule or Regulation"/>
     </dcf:field>
     <dcf:field name="number" handler="literal"/>
     <dcf:field name="issn" handler="literal"/>
     <dcf:field name="title" handler="literal">
-      <dcf:alias aliasof="subtitle" aliasfortype="online"/>
+      <dcf:alias aliasof="title" aliasfortype="Blog"/>
+      <dcf:alias aliasof="title" aliasfortype="Online Database"/>
+      <dcf:alias aliasof="title" aliasfortype="Online Multimedia"/>
+      <dcf:alias aliasof="title" aliasfortype="Web Page"/>
     </dcf:field>
     <dcf:field name="secondary-title">
       <dcf:alias aliasof="subtitle"/>
-      <dcf:alias aliasof="title" aliasfortype="online"/>
-      <dcf:alias aliasof="booktitle" aliasfortype="inbook"/>
-      <dcf:alias aliasof="series" aliasfortype="book"/>
-      <dcf:alias aliasof="series" aliasfortype="unpublished"/>
-      <dcf:alias aliasof="eventtitle" aliasfortype="inproceedings"/>
-      <dcf:alias aliasof="eventtitle" aliasfortype="proceedings"/>
-      <dcf:alias aliasof="journaltitle" aliasfortype="article"/>
+      <dcf:alias aliasof="title" aliasfortype="Blog"/>
+      <dcf:alias aliasof="title" aliasfortype="Online Database"/>
+      <dcf:alias aliasof="title" aliasfortype="Online Multimedia"/>
+      <dcf:alias aliasof="title" aliasfortype="Web Page"/>
+      <dcf:alias aliasof="booktitle" aliasfortype="Book Section"/>
+      <dcf:alias aliasof="series" aliasfortype="Book"/>
+      <dcf:alias aliasof="series" aliasfortype="Electronic Book"/>
+      <dcf:alias aliasof="series" aliasfortype="Manuscript"/>
+      <dcf:alias aliasof="series" aliasfortype="Unpublished Work"/>
+      <dcf:alias aliasof="eventtitle" aliasfortype="Conference Paper"/>
+      <dcf:alias aliasof="eventtitle" aliasfortype="Conference Proceedings"/>
+      <dcf:alias aliasof="journaltitle" aliasfortype="Electronic Article"/>
+      <dcf:alias aliasof="journaltitle" aliasfortype="Journal Article"/>
+      <dcf:alias aliasof="journaltitle" aliasfortype="Magazine Article"/>
+      <dcf:alias aliasof="journaltitle" aliasfortype="Newspaper Article"/>
     </dcf:field>
     <dcf:field name="tertiary-title">
-      <dcf:alias aliasof="series" aliasfortype="inbook"/>
-      <dcf:alias aliasof="series" aliasfortype="proceedings"/>
+      <dcf:alias aliasof="booktitle" aliasfortype="Book Section"/>
+      <dcf:alias aliasof="series" aliasfortype="Conference Proceedings"/>
       <dcf:alias aliasof="series" aliasfortype="periodical"/>
     </dcf:field>
     <dcf:field name="journaltitle" handler="literal"/>

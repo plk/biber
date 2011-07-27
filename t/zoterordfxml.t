@@ -16,11 +16,11 @@ my $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('zoterordfxml.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('map',   {
-    bibtex => {
+    zoterordfxml => {
       field => {
-        "journalArticle" => { "dc:subject" => "NULL" },
-        "book" => { "dc:subject" => "NULL" },
-        "bookSection" => { "dc:subject" => "NULL" },
+        "journalArticle" => { "dc:subject" => "BMAP_NULL" },
+        "book" => { "dc:subject" => "BMAP_NULL" },
+        "bookSection" => { "dc:subject" => "BMAP_NULL" },
       },
     },
   });

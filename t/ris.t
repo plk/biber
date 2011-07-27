@@ -22,7 +22,18 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
-Biber::Config->setoption('map',   { ris => { field => { "*" => { n2 => "NULL" } }}} );
+Biber::Config->setoption('map',{
+  ris => {
+    entrytype => {
+      JOUR => { bmap_target => "REPORT" },
+      BOOK => {
+        alsoset => {
+          keywords => { bmap_value => "somevalue" },
+        },
+        bmap_target => "mapbook",
+      },
+    },
+    field => { "*" => { n2 => "BMAP_NULL" } }}} );
 
 # Now generate the information
 $biber->prepare;
@@ -31,7 +42,7 @@ my $section = $biber->sections->get_section(0);
 my $main = $section->get_list('MAIN');
 my $bibentries = $section->bibentries;
 
-my $l1 = q|  \entry{test1}{article}{}
+my $l1 = q|  \entry{test1}{report}{}
     \name{labelname}{5}{}{%
       {{uniquename=0,hash=35fb6a7132629790580cd2c9c0a5ab87}{Baldwin}{B\bibinitperiod}{S.A.}{S\bibinitperiod}{}{}{}{}}%
       {{uniquename=0,hash=f8b1ae371652de603e137e413b55de78}{Fugaccia}{F\bibinitperiod}{I.}{I\bibinitperiod}{}{}{}{}}%
@@ -57,7 +68,7 @@ my $l1 = q|  \entry{test1}{article}{}
 
 |;
 
-my $l2 = q|  \entry{test2}{book}{}
+my $l2 = q|  \entry{test2}{mapbook}{}
     \name{labelname}{1}{}{%
       {{uniquename=0,hash=f2574dc91f1242eb0e7507a71730631b}{Smith}{S\bibinitperiod}{John\bibnamedelima Frederick}{J\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
     }
@@ -71,7 +82,8 @@ my $l2 = q|  \entry{test2}{book}{}
     \strng{fullhash}{f2574dc91f1242eb0e7507a71730631b}
     \field{sortinit}{S}
     \field{pages}{1\bibrangedash 20}
-    \keyw{keyword}
+    \keyw{somevalue}
+    \warn{\item Overwriting existing field 'keywords' during aliasing of entrytype 'BOOK' to 'mapbook'}
   \endentry
 
 |;

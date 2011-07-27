@@ -79,6 +79,8 @@ start =
              attribute handler { xsd:string }?,
               element dcf:alias {
                 attribute aliasof { xsd:string },
+                # The entrytype value here is the type in the original data source
+                # not the biblatex type
                 attribute aliasfortype { xsd:string }?,
                 # Any other fields to create when resolving this alias
                 element dcf:alsoset {

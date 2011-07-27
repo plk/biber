@@ -13,19 +13,29 @@ my %colloptsA = ( level => 3, table => '/home/user/data/otherkeys.txt' );
 my %nosort = (author => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ],
               translator => q/[\x{2bf}\x{2018}]/ );
 my %map = ( bibtex => {
-      entrytype => { conversation => "CUSTOMA" },
+      entrytype => {
+        CHAT => { bmap_target => "CUSTOMB" },
+        CONVERSATION => {
+          alsoset => {
+            VERBA => { bmap_value => "BMAP_ORIGENTRYTYPE" },
+            VERBB => { bmap_value => "somevalue2" },
+          },
+          bmap_target => "CUSTOMA",
+        },
+      },
       field => {
         "*" => {
-          abstract => "NULL",
+          abstract => "BMAP_NULL",
           conductor => "NAMEA",
           gps => "USERA",
-          split => { pubmedid => { eprinttype => "ORIGFIELD", target => "EPRINT" } },
+          split => {
+            pubmedid => { bmap_field => "EPRINT", eprinttype => "BMAP_ORIGFIELD" },
+          },
         },
         "misc" => { usera => "NULL" },
       },
     },
     ris => { field => { "*" => { n2 => "NULL" } } });
-
 
 # Set up Biber object
 my $biberA = Biber->new( configfile => 'biber-test.conf', mincrossrefs => 7 );

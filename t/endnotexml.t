@@ -23,9 +23,17 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('map',   {
-    bibtex => {
+    endnotexml => {
+      entrytype => {
+        "Journal Article" => {
+          alsoset => {
+            usera => { bmap_value => "BMAP_ORIGENTRYTYPE" },
+          },
+          bmap_target => "report",
+        },
+      },
       field => {
-        "*" => { abstract => "NULL" },
+        "*" => { abstract => "BMAP_NULL" },
       },
     },
   });
@@ -37,7 +45,9 @@ my $section = $biber->sections->get_section(0);
 my $main = $section->get_list('MAIN');
 my $bibentries = $section->bibentries;
 
-my $l1 = q|  \entry{fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:42}{article}{}
+# Mapped to "report" via user mapping to test user mappings
+# Also created "usera" with original entrytype
+my $l1 = q|  \entry{fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:42}{report}{}
     \name{labelname}{3}{}{%
       {{hash=5ed7d7f80cf3fd74517bb9c96a1d6ffa}{Alegria}{A\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
       {{hash=418031013857fb1f059185242baea41f}{Perez}{P\bibinitperiod}{D.\bibnamedelimi J.}{D\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
@@ -70,6 +80,7 @@ Health affairs (Project Hope)
 Health Aff (Millwood). 2003 Sep-Oct;22(5):51-64.}
     \field{number}{5}
     \field{title}{The role of public policies in reducing mental health status disparities for people of color}
+    \field{usera}{journal article}
     \field{volume}{22}
     \field{year}{2003}
     \field{pages}{51\bibrangedash 64}
@@ -79,7 +90,7 @@ Health Aff (Millwood). 2003 Sep-Oct;22(5):51-64.}
 
 |;
 
-my $l2 = q|  \entry{fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:47}{article}{}
+my $l2 = q|  \entry{fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:47}{report}{}
     \name{labelname}{1}{}{%
       {{hash=346ad1f92291bef45511d3eb23e3df34}{Amico}{A\bibinitperiod}{Sir\bibnamedelimb Kevin}{K\bibinitperiod}{R}{R\bibinitperiod}{}{}{Jr}{J\bibinitperiod}}%
     }
@@ -106,6 +117,7 @@ Am J Public Health. 2009 Sep;99(9):1567-75. Epub 2009 Jul 16.}
     \field{number}{9}
     \field{shorttitle}{PTA}
     \field{title}{Percent total attrition: a poor metric for study rigor in hosted intervention designs}
+    \field{usera}{journal article}
     \field{volume}{99}
     \field{year}{2009}
     \field{pages}{1567\bibrangedash 75}

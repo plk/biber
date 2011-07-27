@@ -66,7 +66,8 @@ sub driver_config {
   my $dcfxml = XML::LibXML::Simple::XMLin($dcf,
                                           'ForceContent' => 1,
                                           'ForceArray' => [ qr/\Afield\z/,
-                                                            qr/\Aalias\z/,],
+                                                            qr/\Aalias\z/,
+                                                            qr/\Aalsoset\z/],
                                           'NsStrip' => 1);
 
 

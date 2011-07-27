@@ -145,6 +145,10 @@
                       <data type="string"/>
                     </attribute>
                     <optional>
+                      <!--
+                        The entrytype value here is the type in the original data source
+                        not the biblatex type
+                      -->
                       <attribute name="aliasfortype">
                         <data type="string"/>
                       </attribute>
