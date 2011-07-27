@@ -261,6 +261,11 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
               if (lc($t) eq lc($entry->type)) {
                 my $a = $alias->{aliasof};
                 $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
+                # If both a field and its alias is set, warn and delete alias field
+                if ($entry->exists($a)) {
+                  $biber->biber_warn($bibentry, "Field '$f' is aliased to field '$a' but both are defined in entry with key '$dskey' - skipping alias");
+                  next;
+                }
                 $fm = $dcfxml->{fields}{field}{$a};
                 $to = $a;  # Field to set internally is the alias
                 last;
@@ -269,12 +274,22 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
             else {
               my $a = $alias->{aliasof}; # global alias
               $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
+              # If both a field and its alias is set, warn and delete alias field
+              if ($entry->exists($a)) {
+                $biber->biber_warn($bibentry, "Field '$f' is aliased to field '$a' but both are defined in entry with key '$dskey' - skipping alias");
+                next;
+              }
               $fm = $dcfxml->{fields}{field}{$a};
               $to = $a; # Field to set internally is the alias
             }
 
             # Deal with additional fields to split information into (one->many map)
             foreach my $alsoset (@{$alias->{alsoset}}) {
+              # If both a field and an alsoset field are set, warn and ignore alsoset
+              if ($entry->exists($alsoset->{target})) {
+                $biber->biber_warn($bibentry, "Field '" . $alsoset->{target}. "' is supposed to be additionally set but it already exists - ignoring");
+                next;
+              }
               my $val = $alsoset->{value} // $f; # defaults to original field name if no value
               $bibentry->set_datafield($alsoset->{target}, $val);
             }
@@ -340,6 +355,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
 
   return;
 }
+
 
 
 # Literal fields

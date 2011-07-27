@@ -17,6 +17,7 @@
       <dcf:point>'dc:subject' fields will become biblatex keywords. However, because 'dc:subject' may contain arbitrary text, when you refer to these in, for example, \printbibliography[keyword=...], you should wrap any messy keywords in braces, e.g. \printbibliography[keyword={some long keyword, with commas}]. biblatex will likely die if you don't as the keywords field is a CSV and intended for, well, single words.</dcf:point>
       <dcf:point>Biber will try to escape LaTeX special chars in fields in order to make the .bbl valid. This can't be guaranteed as many Zotero DBs contain all sorts of special chars which it is impossible to guess. Try to make your Zotero data LaTeX friendly ...</dcf:point>
     </dcf:points>
+    <dcf:point>There are no warnings when field aliasing (mapping) stomps on existing fields. Reliable warnings are pretty much impossible to implement because of the disparity between the data models involved. The result when you try to alias a field X (zotero RDF data model) to field Y (biblatex data model) is unpredictable when field Y is also mapped via another source model field. Generally, the latest setting of field Y will win.</dcf:point>
   </dcf:description>
   <!--
       These entry type aliases we might find in the the datasource so

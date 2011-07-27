@@ -10,6 +10,7 @@
       <dcf:point>As per the biblatex manual, date fields should be roughly ISO8601 format (e.g. "2008" or "2007-03-02") otherwise they won't be parsed correctly.</dcf:point>
       <dcf:point>Obviously, no user-defined Endnote entry types are supported as we don't know their names ...</dcf:point>
       <dcf:point>Endnote has the notion of a "generic" entrytype which contains all field names but the actual entrytypes you use map the fields to different names. This is a huge pain when parsing Endnote entries out of XML because the XML uses only the generic field names. So, the driver has to map entrytypes to field names in order to set the correct fields for biblatex. You will need to refer to the Endnote manual section "List of Reference Types" (around page 375) when reading your exported XML if you need to understand it properly.</dcf:point>
+      <dcf:point>There are no warnings when field aliasing (mapping) stomps on existing fields. Reliable warnings are pretty much impossible to implement because of the disparity between the data models involved. The result when you try to alias a field X (endnote data model) to field Y (biblatex data model) is unpredictable when field Y is also mapped via another source model field. Generally, the latest setting of field Y will win.</dcf:point>
     </dcf:points>
   </dcf:description>
   <!--

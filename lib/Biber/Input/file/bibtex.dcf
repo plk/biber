@@ -6,6 +6,7 @@
     <dcf:overview>The bibtex driver is currently the most functional driver as historically, it was the first. As a result, there is a fairly clean mapping from bibtex data source fields to the biblatex data model. So, there are no currently no limitations of bibtex data sources with respect to the currently biblatex functionality. Some things to note:</dcf:overview>
     <dcf:points>
       <dcf:point>Biber does not try to escape any TeX special characters in your data source. This is by design as it causes more problems than it fixes. You should escape any characters in your data which would cause problems.</dcf:point>
+      <dcf:point>Since field aliases and one-to-many aliases have pretty much the same domain and range with this driver (because the bibtex driver is very close the internal bibaltex data model), it provides some more sanity-check warnings when trying to alias fields to already existing fields.</dcf:point>
     </dcf:points>
   </dcf:description>
   <!--

@@ -1,4 +1,3 @@
-* TODO Document new map option and mention that a ->X alias and an X field will give unpredictable results
 * TODO When cygwin on perl 5.14, change build script (deprecated module)
 
 * TODO labelalphatemplate implementation
