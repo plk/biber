@@ -232,8 +232,8 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
       # Redirect any alias
       if (my $aliases = $fm->{alias}) { # complex aliases
         foreach my $alias (@$aliases) {
-          if (my $t = $alias->{aliasfortype}) { # type-specific alias - Endnote does this
-            if ($t eq $itype) {
+          if (my $t = $alias->{aliasfortype}) { # type-specific alias
+            if (lc($t) eq lc($itype)) {
               my $a = $alias->{aliasof};
               $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
               $fm = $dcfxml->{fields}{field}{$a};
@@ -243,9 +243,9 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
           }
           else {
             my $a = $alias->{aliasof}; # global alias
+            $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
             $fm = $dcfxml->{fields}{field}{$a};
             $to = $a;  # Field to set internally is the alias
-            $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
           }
 
           # Deal with additional fields to split information into (one->many map)

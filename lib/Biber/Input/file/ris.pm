@@ -233,7 +233,17 @@ FLOOP:  foreach my $f (keys %$entry) {
       # Redirect any alias
       if (my $aliases = $fm->{alias}) { # complex aliases with alsoset clauses
         foreach my $alias (@$aliases) {
-          if (my $a = $alias->{aliasof}) {
+          if (my $t = $alias->{aliasfortype}) { # type-specific alias
+            if (lc($t) eq lc($entry->{TY})) {
+              my $a = $alias->{aliasof};
+              $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
+              $fm = $dcfxml->{fields}{field}{$a};
+              $to = $a; # Field to set internally is the alias
+              last;
+            }
+          }
+          else {
+            my $a = $alias->{aliasof}; # global alias
             $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
             # If both a field and its alias is set, warn and delete alias field
             if ($entry->{$a}) {
