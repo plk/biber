@@ -450,6 +450,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "shorttitle" },
                        { content => "sortkey" },
                        { content => "sortname" },
+                       { content => "sortshorthand" },
                        { content => "sorttitle" },
                        { content => "sortyear" },
                        { content => "usera" },
@@ -1581,6 +1582,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        content     => "sortname",
                        datatype    => "name",
                        fieldtype   => "list",
+                       skip_output => "true",
+                     },
+                     {
+                       content     => "sortshorthand",
+                       datatype    => "literal",
+                       fieldtype   => "field",
                        skip_output => "true",
                      },
                      {

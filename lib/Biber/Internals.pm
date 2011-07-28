@@ -837,6 +837,7 @@ our $dispatch_sorting = {
   'shorttitle'      =>  [\&_sort_title,         ['shorttitle']],
   'sortkey'         =>  [\&_sort_sortkey,       []],
   'sortname'        =>  [\&_sort_sortname,      []],
+  'sortshorthand'   =>  [\&_sort_sortshorthand, []],
   'sorttitle'       =>  [\&_sort_title,         ['sorttitle']],
   'sortyear'        =>  [\&_sort_year,          ['sortyear']],
   'subtitle'        =>  [\&_sort_title,         ['subtitle']],
@@ -1191,6 +1192,15 @@ sub _sort_sortname {
   else {
     return '';
   }
+}
+
+sub _sort_sortshorthand {
+  my ($self, $citekey, $sortelementattributes) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $string = $be->get_field('sortshorthand') // '';
+  return _process_sort_attributes($string, $sortelementattributes);
 }
 
 # This is a meta-sub which uses the optional arguments to the dispatch code

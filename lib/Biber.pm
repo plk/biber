@@ -393,7 +393,8 @@ sub parse_ctrlfile {
         foreach my $bcfopt (@{$bcfopts->{option}}) {
           if (lc($bcfopt->{type}) eq 'singlevalued') {
             Biber::Config->setblxoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content});
-          } elsif (lc($bcfopt->{type}) eq 'multivalued') {
+          }
+          elsif (lc($bcfopt->{type}) eq 'multivalued') {
             Biber::Config->setblxoption($bcfopt->{key}{content},
               [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ]);
           }
@@ -406,7 +407,8 @@ sub parse_ctrlfile {
         foreach my $bcfopt (@{$bcfopts->{option}}) {
           if (lc($bcfopt->{type}) eq 'singlevalued') {
             Biber::Config->setblxoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content}, 'PER_TYPE', $entrytype);
-          } elsif (lc($bcfopt->{type}) eq 'multivalued') {
+          }
+          elsif (lc($bcfopt->{type}) eq 'multivalued') {
             Biber::Config->setblxoption($bcfopt->{key}{content},
               [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ],
               'PER_TYPE',
@@ -568,7 +570,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     unless ($bib_section->get_list('SHORTHANDS')) {
       my $los = Biber::Section::List->new(label => 'SHORTHANDS');
       if (Biber::Config->getblxoption('sortlos')) {
-        $los->set_sortscheme([ [ {}, {'shorthand'     => {}} ] ]);
+        $los->set_sortscheme([
+                              [ {'final' => 1},
+                                {'sortshorthand'    => {}}
+                              ],
+                              [ {}, {'shorthand'     => {}} ] ]);
         $los->add_filter('field', 'shorthand');
       }
       else {
@@ -1451,6 +1457,7 @@ sub process_lists {
     foreach my $cacheitem (@{$section->get_sort_cache}) {
       if (Compare($list->get_sortscheme, $cacheitem->[0])) {
         $logger->debug("Found sorting cache entry for '$llabel'");
+        $logger->trace("Sorting list cache for list '$llabel':\n-------------------\n" . Data::Dump::pp($list->get_sortscheme) . "\n-------------------\n");
         $list->set_keys($cacheitem->[1]);
         $list->set_sortinitdata($cacheitem->[2]);
         $list->set_extrayeardata($cacheitem->[3]);
@@ -2238,7 +2245,7 @@ sub sort_list {
     $logger->debug("$k => " . $list->get_sortdata($k)->[0] . "\n");
   }
 
-  $logger->trace("Sorting with scheme\n-------------------\n" . Data::Dump::pp($sortscheme) . "\n-------------------\n");
+  $logger->trace("Sorting list '$llabel' with scheme\n-------------------\n" . Data::Dump::pp($sortscheme) . "\n-------------------\n");
 
   # Set up locale. Order of priority is:
   # 1. locale value passed to Unicode::Collate::Locale->new() (Unicode::Collate sorts only)

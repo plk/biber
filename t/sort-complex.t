@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 8;
+use Test::More tests => 9;
 
 use Biber;
 use Biber::Output::BBL;
@@ -22,6 +22,14 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
+# Want to ignore SHORTHAND* fields for the first few tests
+Biber::Config->setoption('map', {
+   bibtex => {
+      field => {
+        shorthand => "BMAP_NULL",
+        sortshorthand => "BMAP_NULL"
+      },
+    }});
 
 # Biblatex options
 Biber::Config->setblxoption('labelyear', undef);
@@ -33,7 +41,8 @@ my $main = $section->get_list('MAIN');
 my $shs = $section->get_list('SHORTHANDS');
 my $out = $biber->get_output_obj;
 
-my $sc = [
+
+my $ss = [
            [
             {},
             {'presort'    => {}}
@@ -198,18 +207,35 @@ my $l5 = q|  \entry{L5}{book}{}
 
 |;
 
-is_deeply( $main->get_sortscheme , $sc, 'sort scheme');
+is_deeply( $main->get_sortscheme , $ss, 'sort scheme');
 is( $out->get_output_entry($main,'l4'), $l4, '\alphaothers set by "and others"');
 is( $out->get_output_entry($main,'l1'), $l1, 'bbl test 1');
 is( $out->get_output_entry($main,'l2'), $l2, 'bbl test 2');
 is( $out->get_output_entry($main,'l3'), $l3, 'bbl test 3');
 is( $out->get_output_entry($main,'l5'), $l5, 'bbl test 4');
-is_deeply([ $main->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'citeorder - 1');
+is_deeply([ $main->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'sortorder - 1');
 
 # This should be the same as $main citeorder as both $main and $shs use same
 # global sort spec. $shs should also get the keys from the sort cache as a result.
 # Can't do the usual SHORTHAND filter on SHORTHAND field in .bcf as adding SHORTHAND
 # fields to the entries changes the sort order of $main (as SHORTHAND overrides the default
 # label)
-is_deeply([ $shs->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'citeorder - 2');
+is_deeply([ $shs->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'sortorder - 2');
 
+# reset options and regenerate information
+Biber::Config->setoption('map', undef); # no longer ignore shorthand*
+# Have to set the sortscheme for the shorthand list explicitly as the sortlos option is processed
+# during control file parsing so it won't be done automatically here. This is only a problem
+# in tests where we want to change sortlos and re-run
+$section->get_list('SHORTHANDS')->set_sortscheme([
+                              [ {'final' => 1},
+                                {'sortshorthand'    => {}}
+                              ],
+                              [ {}, {'shorthand'     => {}} ] ]);
+
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$shs = $section->get_list('SHORTHANDS');
+
+# Sort by shorthand
+is_deeply([ $shs->get_keys ], ['L1', 'L2', 'L3', 'L4', 'L5'], 'sortorder - 3');
