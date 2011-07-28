@@ -225,8 +225,10 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
     my $from;
     my $to;
     if ($user_map and
-        my $field = firstval {lc($_) eq lc($f)} keys %{$user_map->{field}}) {
-      my $to_map = $user_map->{field}{$field};
+        my $field = firstval {lc($_) eq lc($f)} (keys %{$user_map->{field}},
+                                                 keys %{$user_map->{globalfield}})) {
+      # next line short-circuit OR enforces per-type before global field mappings
+      my $to_map = $user_map->{field}{$field} || $user_map->{globalfield}{$field};
       $from = $dcfxml->{fields}{field}{$f}; # handler information still comes from .dcf
 
       if (ref($to_map) eq 'HASH') { # complex field map

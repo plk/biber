@@ -26,17 +26,19 @@ my %map = (
           bmap_target => "CUSTOMA",
         },
       },
-      field => {
+      globalfield => {
         abstract => "BMAP_NULL",
         conductor => "NAMEA",
         gps => "USERA",
         participant => "NAMEA",
         userb => "USERC",
+      },
+      field => {
         PUBMEDID => {
           alsoset => { eprinttype => "BMAP_ORIGFIELD", userd => "something" },
           bmap_target => "EPRINT",
         },
-        USERB => { bmap_pertype => "MISC", bmap_target => "BMAP_NULL" },
+        userb => { bmap_pertype => "MISC", bmap_target => "BMAP_NULL" },
       },
     },
     endnotexml => {
