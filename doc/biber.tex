@@ -9,6 +9,8 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{fixfoot}
+\usepackage{color}
+\usepackage{listings}
 \setmainfont[Ligatures=TeX]{TeXGyrePagella}
 \setsansfont[Ligatures=TeX]{TexGyreHeros}
 \setmonofont[Ligatures=NoCommon]{TeXGyreCursor}
@@ -45,7 +47,7 @@
 \def\biberex#1{\hbox{\hspace{-4em}\texttt{\small \detokenize{#1}}}}
 
 \begin{document}
-
+\definecolor{grey}{rgb}{0.7,0.7,0.7}
 \printtitlepage
 \tableofcontents
 
@@ -283,6 +285,14 @@ value. See section \ref{coll} for details.
 
 \subsubsection{The «map» option}
 
+The supplied data source drivers implement a default mapping from
+data source entrytypes and fields into the \verb+biblatex+ data model. If
+you want to override or augment the driver mappings you can use the
+\verb+map+ option which makes it possible to, for example, have a data
+source with non-standard entrytypes or fields and to have these
+automatically mapped into valid \verb+biblatex+ data types without
+modifying your data source.
+
 The \verb+map+ option can only be set in the config file
 and not on the command line as it has a complex structure. This
 option allows you to perform various data source mapping (aliasing)
@@ -299,19 +309,322 @@ tasks:
   to null, effectively removing them from the input stream.
 \end{itemize}
 
-\noindent This functionality makes it possible to, for example, have a
-data source with non-standard entrytypes or fields and to have these
-automatically mapped into valid \verb+biblatex+ data types without
-modifying your data source.
+\noindent The format of the \verb+map+ option in the
+config file is described below. Items in \textcolor{red}{red} are not
+literal, they are descriptive meta-values which are explained in the
+accompanying text. Items in \textcolor{blue}{blue} are optional within
+their parent section. The entire \verb+map+ option is not case sensitive
+but the example below use uppercase in places for clarity. The general
+structure is:
 
-\noindent An entry type specific option for a data source overrides the
-global default «\verb+*+» which means «all entry types». So, in the above
-example, for \verb+bibtex+ data sources, \verb+misc+ entry types only ignore
-«usera» and «userb» whereas all other entry types ignore «abstract» fields.
-The option sections immediately inside the «\verb+<ignore></ignore>+» section must be
-named exactly after a valid biber data source driver (see section \ref{dcf}).
-The field and entry type names are not case sensitive for this option.
+\lstset{showspaces=false}
+\begin{lstlisting}[escapechar=+,mathescape=true]
+<map>
+  <+\textcolor{red}{driver1}+>
+       ...
+  </+\textcolor{red}{driver1}+>
+       $\vdots$
+  <+\textcolor{red}{drivern}+>
+       ...
+  </+\textcolor{red}{drivern}+>
+</map>
+\end{lstlisting}
 
+\noindent Here, \textcolor{red}{\texttt{driver1}}\ldots
+\textcolor{red}{\texttt{drivern}} are the names of valid \verb+biber+ data
+source drivers (see section \ref{dcf}). Reserved tokens with special meanings for
+this option have the prefix «\verb+BMAP_+» and are described below. Each
+driver section contains one or more of the following subsections:
+
+\begin{itemize}
+\item Entrytype mapping
+\item Simple global field mapping
+\item Extended global field mapping
+\item Entrytype specific field mapping
+\end{itemize}
+
+\minisec{Entrytype mapping}
+
+\lstset{showspaces=false}
+\begin{lstlisting}[escapechar=+,mathescape=true]
+<entrytype +\textcolor{red}{source-entrytype}+>
+  BMAP_TARGET +\textcolor{red}{target-entrytype}+
+  +\textcolor{blue}{<alsoset>}+
+    +\textcolor{red}{target-field1 target-value1}+
+       $\vdots$
+    +\textcolor{red}{target-fieldn target-valuen}+
+  +\textcolor{blue}{</alsoset>}+
+</entrytype>
+\end{lstlisting}
+
+\noindent An \verb+entrytype+ specification maps the data source
+entrytype \textcolor{red}{\texttt{source-entrytype}} into the \verb+biblatex+
+entrytype \textcolor{red}{\texttt{target-entrytype}}. The literal string \verb+BMAP_TARGET+
+is a constant and must be used to specify the target entrytype. The
+\textcolor{blue}{\texttt{alsoset}} section is optional and specifies one
+or more \textcolor{red}{\texttt{target-field}}s to set in the entry, along
+with their \textcolor{red}{\texttt{target-value}}s. The literal token
+\verb+BMAP_ORIGENTRYTYPE+ can be used as the
+\textcolor{red}{\texttt{target-value}} and it resolves to the data source
+entrytype name. For example:
+
+\lstset{showspaces=false}
+\begin{lstlisting}[escapechar=+,mathescape=true]
+<map>
+  <bibtex>
+    <entrytype CONVERSATION>
+      BMAP_TARGET CUSTOMA
+      <alsoset>
+        USERA  BMAP_ORIGENTRYTYPE
+        NOTE "Auto-created this field"
+      </alsoset>
+    </entrytype>
+    <entrytype RECORD>
+      BMAP_TARGET MUSIC
+    </entrytype>
+  </bibtex>
+</map>
+\end{lstlisting}
+
+\noindent This would turn a \verb+CONVERSATION+ entrytype in all
+\verb+bibtex+ data sources into a \verb+CUSTOMA+ entrytype
+and would automatically set the \verb+USERA+ field in the entry to
+«conversation» and the \verb+NOTE+ field to «Auto-created this field». It
+also turns a \verb+RECORD+ entrytype into a \verb+MUSIC+ entrytype.
+\bigskip
+\minisec{Simple global field mapping}
+
+\lstset{showspaces=false}
+\begin{lstlisting}[escapechar=+,mathescape=true]
+<globalfield>
+  +\textcolor{red}{source-field1 target-field1}+
+                 $\vdots$
+  +\textcolor{red}{source-fieldn target-fieldn}+
+</globalfield>
+\end{lstlisting}
+
+\noindent This section maps data source fields to \verb+biblatex+ fields,
+regardless of the entrytypes in which they occur (hence «global»). You may
+use the special \textcolor{red}{\texttt{target-field}} constant \verb+BMAP_NULL+
+to map a field to null, that is, to ignore it. This essentially has the
+effect of treating the field as if it did not exist in the data source. For
+example (to add to the previous example, so that you can see a more
+complete mapping example. The previously discussed example settings are greyed):
+
+{\color{grey}
+\lstset{showspaces=false}
+\begin{lstlisting}[escapechar=+,mathescape=true]
+<map>
+  <bibtex>
+    <entrytype CONVERSATION>
+      BMAP_TARGET CUSTOMA
+      <alsoset>
+        USERA  BMAP_ORIGENTRYTYPE
+        NOTE "Auto-created this field"
+      </alsoset>
+    </entrytype>
+    <entrytype RECORD>
+      BMAP_TARGET MUSIC
+    </entrytype>
+    +\textcolor{black}{<globalfield>}+
+      +\textcolor{black}{ABSTRACT BMAP\_NULL}+
+      +\textcolor{black}{PARTICIPANT NAMEA}+
+    +\textcolor{black}{</globalfield>}+
+  </bibtex>
+  +\textcolor{black}{<ris>}+
+    +\textcolor{black}{N2 BMAP\_NULL}+
+  +\textcolor{black}{</ris>}+
+</map>
+\end{lstlisting}
+}
+
+\noindent Here, we have specified that we should ignore (map to
+\verb+BMAP_NULL+) any \verb+ABSTRACT+ fields and that we should map all
+\verb+PARTICIPANT+ fields to the \verb+NAMEA+ field. We have also specified
+that we should ignore the \verb+N2+ field in \verb+ris+ data sources (this
+is often used for abstracts in RIS).
+\bigskip
+\minisec{Extended Global field mapping}
+
+\lstset{showspaces=false}
+\begin{lstlisting}[escapechar=+,mathescape=true]
+<globalfield +\textcolor{red}{source-field}+>
+  BMAP_TARGET +\textcolor{red}{target-field}+
+  +\textcolor{blue}{<alsoset>}+
+    +\textcolor{red}{target-field1 target-value1}+
+               $\vdots$
+    +\textcolor{red}{target-fieldn target-valuen}+
+  +\textcolor{blue}{</alsoset>}+
+</globalfield>
+\end{lstlisting}
+
+\noindent Unlike the simple global mapping, this form maps only one
+\textcolor{red}{\texttt{source-field}}. You must specify the
+\textcolor{red}{\texttt{target-field}} using the constant
+\verb+BMAP_TARGET+. The \textcolor{blue}{\texttt{alsoset}} section is
+optional and specifies one or more \textcolor{red}{\texttt{target-field}}s
+to set in the entry, along with their
+\textcolor{red}{\texttt{target-value}}s. The literal token
+\verb+BMAP_ORIGFIELD+ can be used as the
+\textcolor{red}{\texttt{target-value}} and it resolves to the data source
+field name. Continuing our example configuration:
+
+{\color{grey}
+\lstset{showspaces=false}
+\begin{lstlisting}[escapechar=+,mathescape=true]
+<map>
+  <bibtex>
+    <entrytype CONVERSATION>
+      BMAP_TARGET CUSTOMA
+      <alsoset>
+        USERA  BMAP_ORIGENTRYTYPE
+        NOTE "Auto-created this field"
+      </alsoset>
+    </entrytype>
+    <entrytype RECORD>
+      BMAP_TARGET MUSIC
+    </entrytype>
+    <globalfield>
+      ABSTRACT BMAP_NULL
+      PARTICIPANT NAMEA
+    </globalfield>
+    +\textcolor{black}{<globalfield PUBMEDID>}+
+       +\textcolor{black}{BMAP\_TARGET  EPRINT}+
+      +\textcolor{black}{<alsoset>}+
+        +\textcolor{black}{EPRINTTYPE BMAP\_ORIGFIELD}+
+        +\textcolor{black}{NOTE "Auto-created this field"}+
+      +\textcolor{black}{</alsoset>}+
+    +\textcolor{black}{</globalfield>}+
+  </bibtex>
+  <ris>
+    N2 BMAP_NULL
+  </ris>
+</map>
+\end{lstlisting}
+}
+
+\noindent Here, in all entries, the \verb+PUBMEDID+ field becomes the
+\verb+EPRINT+ field and the \verb+EPRINTTYPE+ field is set to «pubmedid».
+The \verb+NOTE+ field is set to «Auto-created this field».
+\bigskip
+\minisec{Entrytype specific field mapping}
+
+\lstset{showspaces=false}
+\begin{lstlisting}[escapechar=+,mathescape=true]
+<field +\textcolor{red}{source-field}+>
+  BMAP_PERTYPE +\textcolor{red}{source-entrytype1}+
+                 $\vdots$
+  BMAP_PERTYPE +\textcolor{red}{source-entrytypen}+
+  BMAP_TARGET +\textcolor{red}{target-field}+
+  +\textcolor{blue}{<alsoset>}+
+    +\textcolor{red}{target-field1 target-value1}+
+                 $\vdots$
+    +\textcolor{red}{target-fieldn target-valuen}+
+  +\textcolor{blue}{</alsoset>}+
+</field>
+\end{lstlisting}
+
+\noindent Here we map the data source
+\textcolor{red}{\texttt{source-field}} to the
+\textcolor{red}{\texttt{target-field}} but only if it occurs within one of
+the data source entrytypes \textcolor{red}{\texttt{source-entrytype1}}
+\ldots\linebreak\textcolor{red}{\texttt{source-entrytypen}}. The source
+entrytype restrictions must be specified using the \verb+BMAP_PERTYPE+
+token. The target field must be specified using the \verb+BMAP_TARGET+
+token. The \textcolor{blue}{\texttt{alsoset}} section is optional and
+specifies one or more \textcolor{red}{\texttt{target-field}}s to set in the
+entry, along with their \textcolor{red}{\texttt{target-value}}s. The
+literal token \verb+BMAP_ORIGFIELD+ can be used as the
+\textcolor{red}{\texttt{target-value}} and it resolves to the data source
+field name. Continuing the example:
+
+{\color{grey}
+\lstset{showspaces=false}
+\begin{lstlisting}[escapechar=+,mathescape=true]
+<map>
+  <bibtex>
+    <entrytype CONVERSATION>
+      BMAP_TARGET CUSTOMA
+      <alsoset>
+        USERA  BMAP_ORIGENTRYTYPE
+        NOTE "Auto-created this field"
+      </alsoset>
+    </entrytype>
+    <entrytype RECORD>
+      BMAP_TARGET MUSIC
+    </entrytype>
+    <globalfield>
+      ABSTRACT BMAP_NULL
+      PARTICIPANT NAMEA
+    </globalfield>
+    <globalfield PUBMEDID>
+       BMAP_TARGET  EPRINT
+      <alsoset>
+        EPRINTTYPE BMAP_ORIGFIELD
+        NOTE "Auto-created this field"
+      </alsoset>
+    </globalfield>
+    +\textcolor{black}{<field NOTE>}+
+      +\textcolor{black}{BMAP\_PERTYPE ARTICLE}+
+      +\textcolor{black}{BMAP\_PERTYPE BOOK}+
+      +\textcolor{black}{BMAP\_TARGET BMAP\_NULL}+
+      +\textcolor{black}{<alsoset>}+
+        +\textcolor{black}{ADDENDUM "A string"}+
+      +\textcolor{black}{</alsoset>}+
+    +\textcolor{black}{</field>}+
+  </bibtex>
+  <ris>
+    N2 BMAP_NULL
+  </ris>
+</map>
+\end{lstlisting}
+}
+
+\noindent Here we have specified that within data
+source entrytypes \verb+ARTICLE+ and \verb+BOOK+, the field \verb+NOTE+
+should be ignored and the \verb+ADDENDUM+ field should be set to «A
+string».
+
+Please note that the data source entrytypes and fields are \emph{not}
+necessarily the same as in the \verb+biblatex+ data model. The definitive
+guide to the \verb+biblatex+ data model is the \verb+biblatex+
+documentation. It is certainly the case that for \verb+bibtex+ data
+sources, there is a large degree of congruence between the data source
+entrytypes and fields and the \verb+biblatex+ data model because
+\verb+biblatex+ grew out of \verb+bibtex+. However, for other data sources
+like \verb+ris+, \verb+endnotexml+ and \verb+zoterordfxml+, the source
+entrytypes and fields are usually very differently modelled and named. For
+example, here is how to drop the «subject» fields from various entrytypes
+in Zotero XML RDF format data sources:
+
+\lstset{showspaces=false}
+\begin{lstlisting}[escapechar=+,mathescape=true]
+<map>
+  <zoterordfxml>
+    <field "dc:subject">
+      BMAP_PERTYPE journalArticle
+      BMAP_PERTYPE book
+      BMAP_PERTYPE bookSection
+      BMAP_TARGET BMAP_NULL
+    </field>
+  </zoterordfxml>
+</map>
+\end{lstlisting}
+
+\noindent Or here, mapping journal articles into \verb+REPORT+ entries for
+Endnote XML format data sources.
+
+\lstset{showspaces=false}
+\begin{lstlisting}[escapechar=+,mathescape=true]
+<map>
+  <endnotexml>
+    <entrytype "journal Article">
+      BMAP_TARGET REPORT
+    </entrytype>
+  </endnotexml>
+</map>
+\end{lstlisting}
+\bigskip
 \subsubsection{The «nosort» option}
 
 The value of the \verb+nosort+ option can only be set in the config file
@@ -618,7 +931,7 @@ this occurs.
 \noindent This decoding is very useful but take note of the following
 two scenarios, which relate to each of the two situations in which
 LaTeX macro decoding occurs:
-
+\bigskip
 \minisec{Decoding when output is UTF-8}
 If you are using PDFLaTeX and \verb+\usepackage[utf8]{inputenc}+, it
 is possible that the UTF-8 characters resulting from \verb+biber+'s
@@ -639,7 +952,7 @@ LaTeX macros on output. The \verb+biblatex+ option
 See also the \verb+biber --help+ output for the
 \verb+--bblsafecharsset+ option which can customise the set of
 conversion characters to use.
-
+\bigskip
 \minisec{Decoding for internal sorting}
 
 If your \verb+bblencoding+ is not UTF-8, and you are using some UTF-8

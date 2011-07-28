@@ -59,7 +59,7 @@ is($bibentries->entry('alias4')->get_field('verba'), 'conversation', 'Alias - 10
 is($bibentries->entry('alias4')->get_field('verbb'), 'somevalue', 'Alias - 11' );
 is($bibentries->entry('alias4')->get_field('eprint'), 'anid', 'Alias - 12' );
 is($bibentries->entry('alias4')->get_field('eprinttype'), 'pubmedid', 'Alias - 13' );
-is($bibentries->entry('alias4')->get_field('userd'), 'something', 'Alias - 14' );
+is($bibentries->entry('alias4')->get_field('userd'), 'some string of things', 'Alias - 14' );
 is($bibentries->entry('alias4')->get_field('pubmedid'), undef, 'Alias - 15' );
 is($bibentries->entry('alias4')->get_field('namea')->nth_name(1)->get_firstname, 'Sam', 'Alias - 16' );
 is_deeply($bibentries->entry('alias4')->get_field('warnings'), $w2, 'Alias - 17' ) ;
