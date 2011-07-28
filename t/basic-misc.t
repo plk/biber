@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 20;
+use Test::More tests => 21;
 
 use Biber;
 use Biber::Utils;
@@ -331,7 +331,9 @@ is( $out->get_output_entry($main,'anon2'), $anon2, 'namehash/fullhash 2' ) ;
 
 # Testing of user field map ignores
 ok(is_undef($bibentries->entry('i1')->get_field('abstract')), 'ignore 1' );
-ok(is_undef($bibentries->entry('i2')->get_field('usera')), 'ignore 2' );
+ok(is_undef($bibentries->entry('i2')->get_field('userb')), 'ignore 2' );
+# Checking that the "misc" type-specific mapping to null takes precedence over global userb->userc
+ok(is_undef($bibentries->entry('i2')->get_field('userc')), 'ignore 3' );
 
 # This would be how to test JSON output if necessary
 # require JSON::XS;

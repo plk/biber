@@ -31,11 +31,12 @@ my %map = (
         conductor => "NAMEA",
         gps => "USERA",
         participant => "NAMEA",
+        userb => "USERC",
         PUBMEDID => {
           alsoset => { eprinttype => "BMAP_ORIGFIELD", userd => "something" },
           bmap_target => "EPRINT",
         },
-        USERA => { bmap_pertype => "MISC", bmap_target => "BMAP_NULL" },
+        USERB => { bmap_pertype => "MISC", bmap_target => "BMAP_NULL" },
       },
     },
     endnotexml => {

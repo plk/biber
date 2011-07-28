@@ -281,35 +281,28 @@ options by setting options in \verb+biblatex+ which will pass them to
 The \verb+--collate_options|-c+ option takes a number of key/value pairs as
 value. See section \ref{coll} for details.
 
-\subsubsection{The «ignore» option}
+\subsubsection{The «map» option}
 
-The value of the \verb+ignore+ option can only be set in the config file
-and not on the command line as it has potentially complex structure. This
-option allows you to specify which entry type and field combinations in a
-particular data source driver should be ignored when reading the data.
-Effectively, this option makes it as if the data source did not contain the
-specified fields. This ignoring is done logically \emph{before} processing
-any data source or user defined field or entry type aliases, that is, field
-and entry type names for this option are specified as the data source
-specific field names/entry types. For example, to completely ignore the
-«abstract» field in all entry types and the «usera» and «userb» fields in
-\verb+misc+ entry types in \verb+bibtex+ data sources and also the
-«N2»\footnote{Which maps to the biblatex «abstract» field via the ris
-  driver.} field in all entry types in \verb+ris+ data sources, put the
-following in your \verb+biber.conf+:
+The \verb+map+ option can only be set in the config file
+and not on the command line as it has a complex structure. This
+option allows you to perform various data source mapping (aliasing)
+tasks:
 
-\begin{verbatim}
-<ignore>
-  <bibtex>
-    * abstract
-    misc usera
-    misc userb
-  </bibtex>
-  <ris>
-    * N2  
-  </ris>
-</ignore>
-\end{verbatim}
+\begin{itemize}
+\item Map data source entrytypes to \verb+biblatex+ entrytypes,
+  optionally also adding new fields to the entry.
+\item Map data source fields to \verb+biblatex+ fields,
+  optionally also adding new fields to the entry. This is basically a
+  one$\rightarrow$many field mapping. You can also limit field
+  mappings to specific data source entrytypes.
+\item As a special case of the above, you can map data source fields
+  to null, effectively removing them from the input stream.
+\end{itemize}
+
+\noindent This functionality makes it possible to, for example, have a
+data source with non-standard entrytypes or fields and to have these
+automatically mapped into valid \verb+biblatex+ data types without
+modifying your data source.
 
 \noindent An entry type specific option for a data source overrides the
 global default «\verb+*+» which means «all entry types». So, in the above
