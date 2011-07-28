@@ -213,57 +213,10 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
       }
     }
 
-    # First skip any fields we are configured to ignore
-    # Notice that the ignore is based on the canonical entrytype and field name
-    if ($user_map and my $fields = $user_map->{field}) {
-      # This seems messy but we have to be able to compare the field keys case
-      # insensitively, otherwise we could just do:
-      # $fieldmap = #$fields->{lc($entry->type)} || $fields->{'*'}
-      if (my $fieldkey = firstval {lc($_) eq lc($entry->getAttribute('entrytype')) || $_ eq '*'} keys %$fields) {
-        if (my $fieldmap = $fields->{$fieldkey}) {
-          while (my ($from, $to) = each %$fieldmap) {
-            if (_norm($from) eq _norm($f) and lc($to) eq 'bmap_null') {
-              next FLOOP;
-            }
-          }
-        }
-      }
-    }
-
     if (my $fm = $dcfxml->{fields}{field}{_norm($f)}) {
-      my $to = $f; # By default, field to set internally is the same as data source
-      # Redirect any alias
-      if (my $aliases = $fm->{alias}) { # complex aliases with alsoset clauses
-        foreach my $alias (@$aliases) {
-          if (my $t = $alias->{aliasfortype}) { # type-specific alias
-            if (lc($t) eq lc($entry->getAttribute('entrytype'))) {
-              my $a = $alias->{aliasof};
-              $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
-              $fm = $dcfxml->{fields}{field}{$a};
-              $to = $a;         # Field to set internally is the alias
-              last;
-            }
-          }
-          else {
-            my $a = $alias->{aliasof}; # Global alias
-            $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
-            $fm = $dcfxml->{fields}{field}{$a};
-            $to = "$NS:$a"; # Field to set internally is the alias
-          }
-
-          # Deal with additional fields to split information into (one->many map)
-          foreach my $alsoset (@{$alias->{alsoset}}) {
-            my $val = $alsoset->{value} // $f; # defaults to original field name if no value
-            $bibentry->set_datafield($alsoset->{target}, $val);
-          }
-        }
-      }
-      elsif (my $alias = $fm->{aliasof}) { # simple alias
-        $logger->debug("Found alias '$alias' of field '$f' in entry '$dskey'");
-        $fm = $dcfxml->{fields}{field}{$alias};
-        $to = "$NS:$alias"; # Field to set internally is the alias
-      }
-      &{$handlers{$fm->{handler}}}($biber, $bibentry, $entry, $f, $to, $dskey);
+      # No aliases processed here as this data source is supposed to be a 1:1 mapping
+      # of the biblatex data model
+      &{$handlers{$fm->{handler}}}($biber, $bibentry, $entry, $f, $f, $dskey);
     }
     # Default if no explicit way to set the field
     else {
@@ -273,44 +226,7 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
     }
   }
 
-  # Set entrytype taking note of any user aliases or aliases for this datasource driver
-  # This is here so that any field alsosets take precedence over fields in the data source
-
-  # User aliases take precedence
-  if (my $eta = firstval {lc($_) eq lc($entry->getAttribute('entrytype'))} keys %{$user_map->{entrytype}}) {
-    my $from = lc($entry->getAttribute('entrytype'));
-    my $to = $user_map->{entrytype}{$eta};
-    if (ref($to) eq 'HASH') {   # complex entrytype map
-      $bibentry->set_field('entrytype', lc($to->{bmap_target}));
-      while (my ($from_as, $to_as) = each %{$to->{alsoset}}) { # any extra fields to set?
-        if ($bibentry->field_exists(lc($from_as))) {
-          $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->getAttribute('entrytype') . "' to '" . lc($to->{bmap_target}) . "'");
-        }
-        # Deal with special "BMAP_ORIGENTRYTYPE" token
-        my $to_val = lc($to_as->{bmap_value}) eq 'bmap_origentrytype' ?
-          $from : $to_as->{bmap_value};
-        $bibentry->set_datafield(lc($from_as), $to_val);
-      }
-    }
-    else { # simple entrytype map
-      $bibentry->set_field('entrytype', lc($to));
-    }
-  }
-  # Driver aliases
-  elsif (my $ealias = $dcfxml->{entrytypes}{entrytype}{$entry->getAttribute('entrytype')}) {
-    $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
-    foreach my $alsoset (@{$ealias->{alsoset}}) {
-      if ($bibentry->field_exists(lc($alsoset->{target}))) {
-        $biber->biber_warn($bibentry, "Overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '" . $entry->getAttribute('entrytype') . "' to '" . lc($ealias->{aliasof}{content}) . "'");
-      }
-      $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
-    }
-  }
-  # No alias
-  else {
-    $bibentry->set_field('entrytype', $entry->getAttribute('entrytype'));
-  }
-
+  $bibentry->set_field('entrytype', $entry->getAttribute('entrytype'));
   $bibentry->set_field('datatype', 'biblatexml');
   $bibentries->add_entry($lc_key, $bibentry);
 

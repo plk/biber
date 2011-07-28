@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 12;
+use Test::More tests => 17;
 
 use Biber;
 use Biber::Output::BBL;
@@ -12,7 +12,7 @@ Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata") ;
 
 # Set up Biber object
-my $biber = Biber->new(noconf => 1);
+my $biber = Biber->new( configfile => 'biber-test.conf');
 $biber->parse_ctrlfile('bibtex-aliases.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 
@@ -23,22 +23,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('validate_structure', 1);
-Biber::Config->setoption('map',   {
-    bibtex => {
-      entrytype => {
-        CHAT => { bmap_target => "CUSTOMB" },
-        CONVERSATION => {
-          alsoset => {
-            VERBA => { bmap_value => "BMAP_ORIGENTRYTYPE" },
-            VERBB => { bmap_value => "somevalue" },
-            VERBC => { bmap_value => "somevalue" },
-          },
-          bmap_target => "CUSTOMA",
-        },
-      },
-    },
-  });
 
+# THERE IS A CONFIG FILE BEING READ TO TEST USER MAPS TOO!
 
 # Now generate the information
 $biber->prepare;
@@ -46,13 +32,17 @@ $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 
-my $w1 = ["Field 'school' is aliased to field 'institution' but both are defined in entry with key 'alias2' - skipping field 'school'",
+my $w1 = [
+          "Field 'school' is aliased to field 'institution' but both are defined in entry with key 'alias2' - skipping alias",
           "Entry 'alias2' - invalid entry type 'thing' - defaulting to 'misc'",
-          "Entry 'alias2' - invalid field 'institution' for entrytype 'misc'"
+          "Entry 'alias2' - invalid field 'institution' for entrytype 'misc'",
 ];
 
-my $w2 = ["Overwriting existing field 'VERBC' during aliasing of entrytype 'conversation' to 'customa'",
+my $w2 = ["Overwriting existing field 'verbc' during aliasing of entrytype 'conversation' to 'customa'",
           "Entry 'alias4' - invalid field 'author' for entrytype 'customa'",
+          "Entry 'alias4' - invalid field 'eprint' for entrytype 'customa'",
+          "Entry 'alias4' - invalid field 'eprinttype' for entrytype 'customa'",
+          "Entry 'alias4' - invalid field 'namea' for entrytype 'customa'",
           "Entry 'alias4' - invalid field 'title' for entrytype 'customa'",
 ];
 
@@ -67,4 +57,9 @@ is($bibentries->entry('alias3')->get_field('entrytype'), 'customb', 'Alias - 8' 
 is($bibentries->entry('alias4')->get_field('entrytype'), 'customa', 'Alias - 9' );
 is($bibentries->entry('alias4')->get_field('verba'), 'conversation', 'Alias - 10' );
 is($bibentries->entry('alias4')->get_field('verbb'), 'somevalue', 'Alias - 11' );
-is_deeply($bibentries->entry('alias4')->get_field('warnings'), $w2, 'Alias - 12' ) ;
+is($bibentries->entry('alias4')->get_field('eprint'), 'anid', 'Alias - 12' );
+is($bibentries->entry('alias4')->get_field('eprinttype'), 'pubmedid', 'Alias - 13' );
+is($bibentries->entry('alias4')->get_field('userd'), 'something', 'Alias - 14' );
+is($bibentries->entry('alias4')->get_field('pubmedid'), undef, 'Alias - 15' );
+is($bibentries->entry('alias4')->get_field('namea')->nth_name(1)->get_firstname, 'Sam', 'Alias - 16' );
+is_deeply($bibentries->entry('alias4')->get_field('warnings'), $w2, 'Alias - 17' ) ;

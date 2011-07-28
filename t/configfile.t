@@ -12,30 +12,56 @@ chdir('t/tdata');
 my %colloptsA = ( level => 3, table => '/home/user/data/otherkeys.txt' );
 my %nosort = (author => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ],
               translator => q/[\x{2bf}\x{2018}]/ );
-my %map = ( bibtex => {
+
+my %map = (
+   bibtex => {
       entrytype => {
         CHAT => { bmap_target => "CUSTOMB" },
         CONVERSATION => {
           alsoset => {
-            VERBA => { bmap_value => "BMAP_ORIGENTRYTYPE" },
-            VERBB => { bmap_value => "somevalue2" },
+            verba => "BMAP_ORIGENTRYTYPE",
+            verbb => "somevalue",
+            verbc => "somevalue",
           },
           bmap_target => "CUSTOMA",
         },
       },
       field => {
-        "*" => {
-          abstract => "BMAP_NULL",
-          conductor => "NAMEA",
-          gps => "USERA",
-          split => {
-            pubmedid => { bmap_field => "EPRINT", eprinttype => "BMAP_ORIGFIELD" },
-          },
+        abstract => "BMAP_NULL",
+        conductor => "NAMEA",
+        gps => "USERA",
+        participant => "NAMEA",
+        PUBMEDID => {
+          alsoset => { eprinttype => "BMAP_ORIGFIELD", userd => "something" },
+          bmap_target => "EPRINT",
         },
-        "misc" => { usera => "NULL" },
+        USERA => { bmap_pertype => "MISC", bmap_target => "BMAP_NULL" },
       },
     },
-    ris => { field => { "*" => { n2 => "NULL" } } });
+    endnotexml => {
+      entrytype => {
+        "journal Article" => {
+          alsoset => { usera => "BMAP_ORIGENTRYTYPE" },
+          bmap_target => "REPORT",
+        },
+      },
+      field => { abstract => "BMAP_NULL" },
+    },
+    ris => {
+      entrytype => {
+        BOOK => { alsoset => { keywords => "somevalue" }, bmap_target => "MAPBOOK" },
+        JOUR => { bmap_target => "REPORT" },
+      },
+      field => { n2 => "BMAP_NULL" },
+    },
+    zoterordfxml => {
+      field => {
+        "dc:subject" => {
+          bmap_pertype => ["journalArticle", "book", "bookSection"],
+          bmap_target  => "BMAP_NULL",
+        },
+      },
+    });
 
 # Set up Biber object
 my $biberA = Biber->new( configfile => 'biber-test.conf', mincrossrefs => 7 );

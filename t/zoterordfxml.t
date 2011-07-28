@@ -12,18 +12,11 @@ Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata");
 
 # Set up Biber object
-my $biber = Biber->new(noconf => 1);
+my $biber = Biber->new( configfile => 'biber-test.conf');
 $biber->parse_ctrlfile('zoterordfxml.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
-Biber::Config->setoption('map',   {
-    zoterordfxml => {
-      field => {
-        "journalArticle" => { "dc:subject" => "BMAP_NULL" },
-        "book" => { "dc:subject" => "BMAP_NULL" },
-        "bookSection" => { "dc:subject" => "BMAP_NULL" },
-      },
-    },
-  });
+
+# THERE IS A CONFIG FILE BEING READ TO TEST USER MAPS TOO!
 
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests

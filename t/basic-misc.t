@@ -13,7 +13,7 @@ Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata");
 
 # Set up Biber object
-my $biber = Biber->new(noconf => 1);
+my $biber = Biber->new( configfile => 'biber-test.conf');
 $biber->parse_ctrlfile("general2.bcf");
 $biber->set_output_obj(Biber::Output::BBL->new());
 
@@ -28,22 +28,8 @@ Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('minnames', 1);
 Biber::Config->setblxoption('maxalphanames', 3);
 Biber::Config->setblxoption('minalphanames', 1);
-Biber::Config->setoption('map',   {
-    bibtex => {
-      field => {
-        abstract => "BMAP_NULL",
-        conductor => "NAMEA",
-        gps => "USERA",
-        pubmedid => {
-          BMAP_TARGET => 'EPRINT',
-          alsoset => { EPRINTTYPE => { bmap_value => "BMAP_ORIGFIELD" } }
-        },
-        USERA => { bmap_pertype => "MISC", bmap_target => "BMAP_NULL" },
-      },
-    },
-  });
 
-
+# THERE IS A CONFIG FILE BEING READ TO TEST USER MAPS TOO!
 
 # Now generate the information
 $biber->prepare;
@@ -343,7 +329,7 @@ is( $out->get_output_entry($main,'murray'), $murray2, 'bbl with > maxnames, empt
 is( $out->get_output_entry($main,'anon1'), $anon1, 'namehash/fullhash 1' ) ;
 is( $out->get_output_entry($main,'anon2'), $anon2, 'namehash/fullhash 2' ) ;
 
-# Testing ignore of abstract and usera
+# Testing of user field map ignores
 ok(is_undef($bibentries->entry('i1')->get_field('abstract')), 'ignore 1' );
 ok(is_undef($bibentries->entry('i2')->get_field('usera')), 'ignore 2' );
 

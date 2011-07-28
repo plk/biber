@@ -12,7 +12,7 @@ Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata");
 
 # Set up Biber object
-my $biber = Biber->new(noconf => 1);
+my $biber = Biber->new( configfile => 'biber-test.conf');
 $biber->parse_ctrlfile('endnotexml.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 
@@ -22,21 +22,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
-Biber::Config->setoption('map',   {
-    endnotexml => {
-      entrytype => {
-        "Journal Article" => {
-          alsoset => {
-            usera => { bmap_value => "BMAP_ORIGENTRYTYPE" },
-          },
-          bmap_target => "report",
-        },
-      },
-      field => {
-        "*" => { abstract => "BMAP_NULL" },
-      },
-    },
-  });
+
+# THERE IS A CONFIG FILE BEING READ TO TEST USER MAPS TOO!
 
 # Now generate the information
 $biber->prepare;

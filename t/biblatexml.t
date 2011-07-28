@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 2;
+use Test::More tests => 1;
 
 use Biber;
 use Biber::Output::BBL;
@@ -15,22 +15,6 @@ chdir("t/tdata");
 my $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('biblatexml.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
-Biber::Config->setoption('map',   {
-    biblatexml => {
-      entrytype => {
-        BOOK => {
-          alsoset => {
-            VERBA => { bmap_value => "BMAP_ORIGENTRYTYPE" },
-            PAGETOTAL => { bmap_value => "999" },
-          },
-          bmap_target => "mapbook",
-        },
-      },
-      field => {
-        "BOOK" => { "bib:series" => "BMAP_NULL" },
-      },
-    },
-  });
 
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
@@ -46,9 +30,7 @@ my $section = $biber->sections->get_section(0);
 my $main = $section->get_list('MAIN');
 my $bibentries = $section->bibentries;
 
-# the bib:series field is ignored as per the map above
-# weird entrytype to test user-defined maps (also verba and pagetotal set via this)
-my $l1 = q|  \entry{BulgakovRozenfeld:1983}{mapbook}{}
+my $l1 = q|  \entry{BulgakovRozenfeld:1983}{book}{}
     \name{labelname}{3}{}{%
       {{hash=7b4da3df896da456361ae44dc651770a}{Булгаков}{Б\bibinitperiod}{Павел\bibnamedelima Георгиевич}{П\bibinitperiod\bibinitdelim Г\bibinitperiod}{}{}{}{}}%
       {{hash=ee55ff3b0e4268cfb193143e86c283a9}{Розенфельд}{Р\bibinitperiod}{Борис-ZZ\bibnamedelima Aбрамович}{Б\bibinithyphendelim Z\bibinitperiod\bibinitdelim A\bibinitperiod}{Билл}{Б\bibinitperiod}{}{}{}{}}%
@@ -81,22 +63,16 @@ my $l1 = q|  \entry{BulgakovRozenfeld:1983}{mapbook}{}
     \field{origday}{02}
     \field{origmonth}{04}
     \field{origyear}{1985}
-    \field{pagetotal}{999}
+    \field{pagetotal}{240}
+    \field{series}{Научно-биографическая литература}
     \field{title}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
     \field{urlday}{01}
     \field{urlendyear}{}
     \field{urlmonth}{07}
     \field{urlyear}{1991}
     \field{year}{1983}
-    \verb{verba}
-    \verb book
-    \endverb
-    \warn{\item Overwriting existing field 'PAGETOTAL' during aliasing of entrytype 'book' to 'mapbook'}
   \endentry
 
 |;
 
-my $w1 = ["Overwriting existing field 'PAGETOTAL' during aliasing of entrytype 'book' to 'mapbook'"];
-
 is( $out->get_output_entry($main, 'bulgakovrozenfeld:1983'), $l1, 'Basic BibLaTeXML test - 1') ;
-is_deeply($bibentries->entry('bulgakovrozenfeld:1983')->get_field('warnings'), $w1, 'User-defined map test 1' ) ;

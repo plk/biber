@@ -215,47 +215,64 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
         $biber->process_entry_options($dskey, $value);
       }
 
-      # First skip any fields we are configured to ignore
-      # Notice that the ignore is based on the canonical entrytype and field name
-      # This seems messy but we have to be able to compare the field keys case
-      # insensitively, otherwise we could just do:
-      # $fieldmap = #$fields->{lc($entry->type)} || $fields->{'*'}
-
-      # user field map
-      my $fm;
+      # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE
+      my $from;
+      my $to;
       if ($user_map and
-          my $from = firstval {lc($_) eq lc($f)} keys %{$user_map->{field}}) {
-        my $to = $user_map->{fields}{$from};
-        if (ref($to) eq 'HASH') { # complex field map
-          # If it's a global alias or a per-type alias which matches
-          if (not defined($to->{bmap_pertype}) or
-              (defined($to->{bmap_pertype}) and
-               $to->{bmap_pertype} eq lc($entry->type))) {
+          my $field = firstval {lc($_) eq lc($f)} keys %{$user_map->{field}}) {
+        my $to_map = $user_map->{field}{$field};
+        $from = $dcfxml->{fields}{field}{$f}; # handler information still comes from .dcf
 
+        if (ref($to_map) eq 'HASH') { # complex field map
+          $from = $dcfxml->{fields}{field}{lc($to_map->{bmap_target})};
+          $to = lc($to_map->{bmap_target});
 
+          # Canonicalise pertype, can be a list Config::General is not clever enough
+          # to do this, annoyingly
+          if (defined($to_map->{bmap_pertype}) and
+             ref($to_map->{bmap_pertype}) ne 'ARRAY') {
+            $to_map->{bmap_pertype} = [ $to_map->{bmap_pertype} ];
+          }
+          # If it's a global alias or a per-type alias which matches.
+          if (not defined($to_map->{bmap_pertype}) or
+              (defined($to_map->{bmap_pertype}) and
+               first {lc($_) eq lc($entry->type)} @{$to_map->{bmap_pertype}})) {
 
-            if (lc($to->{bmap_target}) eq 'bmap_null') { # fields to ignore
+            # Deal with alsoset one->many maps
+            while (my ($from_as, $to_as) = each %{$to_map->{alsoset}}) {
+              if ($bibentry->field_exists(lc($from_as))) {
+                $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of field '$from' to '$to'");
+              }
+              # Deal with special "BMAP_ORIGFIELD" token
+              my $to_val = lc($to_as) eq 'bmap_origfield' ? $f : $to_as;
+              $bibentry->set_datafield(lc($from_as), $to_val);
+            }
+
+            # map fields to targets
+            if (lc($to_map->{bmap_target}) eq 'bmap_null') { # fields to ignore
               next FLOOP;
             }
           }
         }
         else { # simple field map
-          $to = lc($to);
+          $to = lc($to_map);
           if ($to eq 'bmap_null') { # fields to ignore
             next FLOOP;
           }
-          $fm = $dcfxml->{fields}{field}{$to};
+          else { # normal simple field map
+            $from = $dcfxml->{fields}{field}{$to};
+          }
         }
 
         # Now run any defined handler
-        &{$handlers{$fm->{handler}}}($biber, $bibentry, $entry, $f, $to, $dskey);
+        &{$handlers{$from->{handler}}}($biber, $bibentry, $entry, $f, $to, $dskey);
       }
-      # driver field map
-      elsif ($fm = $dcfxml->{fields}{field}{$f}) {
-        my $to = $f; # By default, field to set internally is the same as data source
+      # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
+      elsif ($from = $dcfxml->{fields}{field}{$f}) {
+        $to = $f; # By default, field to set internally is the same as data source
 
         # Redirect any alias
-        if (my $aliases = $fm->{alias}) { # complex aliases with alsoset clauses
+        if (my $aliases = $from->{alias}) { # complex aliases with alsoset clauses
           foreach my $alias (@$aliases) {
             if (my $t = $alias->{aliasfortype}) { # type-specific alias
               if (lc($t) eq lc($entry->type)) {
@@ -266,7 +283,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
                   $biber->biber_warn($bibentry, "Field '$f' is aliased to field '$a' but both are defined in entry with key '$dskey' - skipping alias");
                   next;
                 }
-                $fm = $dcfxml->{fields}{field}{$a};
+                $from = $dcfxml->{fields}{field}{$a};
                 $to = $a;  # Field to set internally is the alias
                 last;
               }
@@ -279,7 +296,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
                 $biber->biber_warn($bibentry, "Field '$f' is aliased to field '$a' but both are defined in entry with key '$dskey' - skipping alias");
                 next;
               }
-              $fm = $dcfxml->{fields}{field}{$a};
+              $from = $dcfxml->{fields}{field}{$a};
               $to = $a; # Field to set internally is the alias
             }
 
@@ -295,14 +312,18 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
             }
           }
         }
-        elsif (my $alias = $fm->{aliasof}) { # simple alias
+        elsif (my $alias = $from->{aliasof}) { # simple alias
           $logger->debug("Found alias '$alias' of field '$f' in entry '$dskey'");
-          $fm = $dcfxml->{fields}{field}{$alias};
+          if ($entry->exists($alias)) {
+            $biber->biber_warn($bibentry, "Field '$f' is aliased to field '$alias' but both are defined in entry with key '$dskey' - skipping alias");
+            next;
+          }
+          $from = $dcfxml->{fields}{field}{$alias};
           $to = $alias; # Field to set internally is the alias
         }
 
         # Now run any defined handler
-        &{$handlers{$fm->{handler}}}($biber, $bibentry, $entry, $f, $to, $dskey);
+        &{$handlers{$from->{handler}}}($biber, $bibentry, $entry, $f, $to, $dskey);
       }
       # Default if no explicit way to set the field
       else {
@@ -320,13 +341,13 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
       my $to = $user_map->{entrytype}{$eta};
       if (ref($to) eq 'HASH') { # complex entrytype map
         $bibentry->set_field('entrytype', lc($to->{bmap_target}));
-        while (my ($from_as, $to_as) = each %{$to->{alsoset}}) { # any extra fields to set?
+        while (my ($from_as, $to_as) = each %{$to->{alsoset}}) {
           if ($bibentry->field_exists(lc($from_as))) {
             $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->type . "' to '" . lc($to->{bmap_target}) . "'");
           }
           # Deal with special "BMAP_ORIGENTRYTYPE" token
-          my $to_val = lc($to_as->{bmap_value}) eq 'bmap_origentrytype' ?
-            $from : $to_as->{bmap_value};
+          my $to_val = lc($to_as) eq 'bmap_origentrytype' ?
+            $from : $to_as;
           $bibentry->set_datafield(lc($from_as), $to_val);
         }
       }
