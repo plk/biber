@@ -25,7 +25,7 @@ Biber::Config->setoption('sortlocale', 'C');
 # Want to ignore SHORTHAND* fields for the first few tests
 Biber::Config->setoption('map', {
    bibtex => {
-      field => {
+      globalfield => {
         shorthand => "BMAP_NULL",
         sortshorthand => "BMAP_NULL"
       },
