@@ -9,10 +9,10 @@ use Biber::Constants;
 use Biber::Utils;
 use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
-Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata");
 
 my $biber = Biber->new(noconf => 1);
+#Log::Log4perl->easy_init($TRACE);
 $biber->parse_ctrlfile('sections.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 

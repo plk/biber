@@ -8,11 +8,11 @@ use Test::More tests => 40;
 use Biber;
 use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
-Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata");
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
+#Log::Log4perl->easy_init($TRACE);
 $biber->parse_ctrlfile("general1.bcf");
 $biber->set_output_obj(Biber::Output::BBL->new());
 

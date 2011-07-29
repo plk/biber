@@ -8,11 +8,11 @@ use Test::More tests => 17;
 use Biber;
 use Biber::Output::BBL;
 use Log::Log4perl qw(:easy);
-Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata") ;
 
 # Set up Biber object
 my $biber = Biber->new( configfile => 'biber-test.conf');
+#Log::Log4perl->easy_init($TRACE);
 $biber->parse_ctrlfile('bibtex-aliases.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 

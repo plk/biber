@@ -14,8 +14,8 @@ use IPC::Cmd qw( can_run );
 use Cwd;
 my $cwd = getcwd;
 
-Log::Log4perl->easy_init($ERROR);
 my $biber = Biber->new(noconf => 1);
+#Log::Log4perl->easy_init($TRACE);
 
 # File locating
 # Using File::Spec->canonpath() to normalise path separators so these tests work

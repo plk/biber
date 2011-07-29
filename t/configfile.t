@@ -6,7 +6,7 @@ use Biber;
 use Cwd qw(getcwd);
 use File::Spec;
 use Log::Log4perl qw(:easy);
-Log::Log4perl->easy_init($ERROR);
+#Log::Log4perl->easy_init($TRACE);
 chdir('t/tdata');
 
 my %colloptsA = ( level => 3, table => '/home/user/data/otherkeys.txt' );

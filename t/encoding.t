@@ -10,11 +10,11 @@ use Biber::Utils;
 use Biber::Output::Test;
 use Encode;
 use Log::Log4perl qw(:easy);
-Log::Log4perl->easy_init($ERROR);
 chdir("t/tdata");
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
+#Log::Log4perl->easy_init($TRACE);
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 
