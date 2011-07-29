@@ -59,8 +59,8 @@ GetOptions(
 
 #--------------------------------------------------
 
-our $VERSION = $Biber::VERSION;
-our $BETA_VERSION = $Biber::BETA_VERSION;
+our $VERSION = $Biber::Config::VERSION;
+our $BETA_VERSION = $Biber::Config::BETA_VERSION;
 
 if (exists $opts->{'help'}) {
   print usage();
@@ -95,126 +95,26 @@ if ($opts->{U}) {
   delete $opts->{U};
 }
 
-# Sanitise user-specified log name
-$opts->{logfile} =~ s/\.blg\z//xms if $opts->{logfile};
-
 # Create Biber object, passing command-line options
-Log::Log4perl->easy_init($INFO); # early init of logger so we can log things in the next call
 my $biber = Biber->new(%$opts);
-
-# Set log file name
-my $biberlog;
-if (my $log = Biber::Config->getoption('logfile')) { # user specified logfile name
-  $biberlog = $log . '.blg';
-}
-elsif (not @ARGV) {
-  $biberlog = 'biber.blg'; # default if no .bcf file specified
-}
-else { # set log to jobname.blg
-  my $bcf = $ARGV[0];
-  $bcf =~ s/\.bcf\z//xms;
-  $biberlog = $bcf . '.blg';
-}
-
-# prepend output directory for log, if specified
-if (my $outdir = Biber::Config->getoption('output_directory')) {
-  $biberlog = File::Spec->catfile($outdir, $biberlog);
-}
-
-# Setting the logging level of Log::Log4perl
-my $LOGLEVEL;
-if (Biber::Config->getoption('trace')) {
-  $LOGLEVEL = 'TRACE'
-} elsif (Biber::Config->getoption('debug')) {
-  $LOGLEVEL = 'DEBUG'
-} elsif (Biber::Config->getoption('quiet')) {
-  $LOGLEVEL = 'ERROR'
-} else {
-  $LOGLEVEL = 'INFO'
-}
-
-my $LOGLEVEL_F;
-my $LOG_MAIN;
-if (Biber::Config->getoption('nolog')) {
-  $LOG_MAIN = 'Screen';
-  $LOGLEVEL_F = 'OFF'
-} else {
-  $LOG_MAIN = 'Logfile, Screen';
-  $LOGLEVEL_F = $LOGLEVEL
-}
-
-my $LOGLEVEL_S;
-if (Biber::Config->getoption('onlylog')) {
-  $LOGLEVEL_S = 'OFF'
-} else {
-  # Max screen loglevel is INFO
-  if (Biber::Config->getoption('quiet')) {
-    $LOGLEVEL_S = 'ERROR';
-  }
-  else {
-    $LOGLEVEL_S = 'INFO';
-  }
-}
-
-# configuration "file" for Log::Log4perl
-my $l4pconf = qq(
-    log4perl.category.main                             = $LOGLEVEL, $LOG_MAIN
-    log4perl.category.screen                           = $LOGLEVEL_S, Screen
-
-    log4perl.appender.Screen                           = Log::Log4perl::Appender::Screen
-    log4perl.appender.Screen.utf8                      = 1
-    log4perl.appender.Screen.Threshold                 = $LOGLEVEL_S
-    log4perl.appender.Screen.stderr                    = 0
-    log4perl.appender.Screen.layout                    = Log::Log4perl::Layout::SimpleLayout
-);
-
-# Only want a logfile appender if --nolog isn't set
-if ($LOGLEVEL_F ne 'OFF') {
-  $l4pconf .= qq(
-    log4perl.category.logfile                          = $LOGLEVEL_F, Logfile
-    log4perl.appender.Logfile                          = Log::Log4perl::Appender::File
-    log4perl.appender.Logfile.utf8                     = 1
-    log4perl.appender.Logfile.Threshold                = $LOGLEVEL_F
-    log4perl.appender.Logfile.filename                 = $biberlog
-    log4perl.appender.Logfile.mode                     = clobber
-    log4perl.appender.Logfile.layout                   = Log::Log4perl::Layout::PatternLayout
-    log4perl.appender.Logfile.layout.ConversionPattern = [%r] %F{1}:%L> %p - %m%n
-);
-}
-
-Log::Log4perl->init(\$l4pconf);
 
 # get the logger object
 my $logger  = Log::Log4perl::get_logger('main');
 my $screen  = Log::Log4perl::get_logger('screen');
 my $logfile = Log::Log4perl::get_logger('logfile');
 
-my $vn = $VERSION;
-$vn .= ' (beta)' if $BETA_VERSION;
-
-$logger->info("This is biber $vn") unless Biber::Config->getoption('nolog');
-$logger->info("Logfile is '$biberlog'") unless Biber::Config->getoption('nolog');
-
-my $ctrlfile;
 my $bblfile;
 
 my $time_string = strftime "%a %b %e, %Y, %H:%M:%S", localtime;
-
-$logfile->info("=== Biber version $vn");
 $logfile->info("=== $time_string");
 
-if (Biber::Config->getoption('debug')) {
-  $screen->info("DEBUG mode: all messages are logged to '$biberlog'")
-}
-
-$ctrlfile = $ARGV[0] or croak usage();
-$ctrlfile .= '.bcf' unless $ctrlfile =~ m/\.bcf$/;
+my $bcf = Biber::Config->getoption('bcf');
 
 if (Biber::Config->getoption('outfile')) {
   $bblfile = Biber::Config->getoption('outfile')
 }
 else {
-  $bblfile = $ctrlfile;
+  $bblfile = $bcf;
   $bblfile =~ s/bcf$/bbl/;
 }
 
@@ -225,7 +125,7 @@ if (my $outdir = Biber::Config->getoption('output_directory')) {
 }
 
 # parse the .bcf control file
-$biber->parse_ctrlfile($ctrlfile);
+$biber->parse_ctrlfile($bcf);
 
 # Postprocess biber options now that they are all read from the various places
 Biber::Config->postprocess_biber_opts;

@@ -6,8 +6,7 @@ Things to remember when releasing new version:
 * Update main html and doc page 
 * Update "TODO" file
 * Update any driver .dcf description elements which need it
-* Change version string in "Biber.pm"
-* Change beta version flag in "Biber.pm" if necessary
+* Change version string and beta flag in "Config.pm"
 * Change $BIBLATEX_VERSION in Constants.pm to match appropriate biblatex
   version, if necessary.
 * "perl Build.PL" and "Build dist" to update YAML/JSON

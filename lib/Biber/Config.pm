@@ -11,7 +11,13 @@ use Data::Dump;
 use Carp;
 use List::AllUtils qw(first);
 use Log::Log4perl qw( :no_extra_logdie_message );
-my $logger = Log::Log4perl::get_logger('main');
+
+our $VERSION = '0.9.4';
+our $BETA_VERSION = 0; # Is this a beta version?
+
+our $logger  = Log::Log4perl::get_logger('main');
+our $screen  = Log::Log4perl::get_logger('screen');
+our $logfile = Log::Log4perl::get_logger('logfile');
 
 =encoding utf-8
 
@@ -102,27 +108,26 @@ sub _init {
 
 sub _initopts {
   shift; # class method so don't care about class name
-  my $conffile = shift;
-  my $noconf = shift;
+  my $opts = shift;
   my %LOCALCONF = ();
 
   # For testing, need to be able to force ignore of conf file in case user
   # already has one which interferes with test settings.
-  unless ($noconf) {
+  unless (defined($opts->{noconf})) {
     # if a config file was given as cmd-line arg, it overrides all other
     # config file locations
-    unless ( defined $conffile and -f $conffile ) {
-      $conffile = config_file();
+    unless ( defined($opts->{configfile}) and -f $opts->{configfile} ) {
+      $opts->{configfile} = config_file();
     }
 
-    if (defined $conffile) {
-      $logger->info("Using config file: $conffile");
+    # Can't use logcroak here because logging isn't initialised yet
+    if (defined($opts->{configfile})) {
       %LOCALCONF = ParseConfig(-LowerCaseNames => 1,
                                -MergeDuplicateBlocks => 1,
                                -AllowMultiOptions => 1,
-                               -ConfigFile => $conffile,
+                               -ConfigFile => $opts->{configfile},
                                -UTF8 => 1) or
-        $logger->logcarp("Failure to read config file " . $conffile . "\n $@");
+        croak("Failed to read biber config file '" . $opts->{configfile} . "'\n $@");
     }
   }
 
@@ -139,6 +144,119 @@ sub _initopts {
   # Set options from config file.
   foreach (keys %LOCALCONF) {
     Biber::Config->setconfigfileoption($_, $LOCALCONF{$_});
+  }
+
+  # Command-line overrides everything else
+  foreach (keys %$opts) {
+    Biber::Config->setcmdlineoption($_, $opts->{$_});
+  }
+
+  # Set control file name. In a conditional as @ARGV might not be set in tests
+  if (my $bcf = $ARGV[0]) {         # ARGV is ok even in a module
+    $bcf .= '.bcf' unless $bcf =~ m/\.bcf$/;
+    Biber::Config->setoption('bcf', $bcf); # only referenced in biber program
+  }
+
+  # Set log file name
+  my $biberlog;
+  if (my $log = Biber::Config->getoption('logfile')) { # user specified logfile name
+    # Sanitise user-specified log name
+    $log =~ s/\.blg\z//xms;
+    $biberlog = $log . '.blg';
+  }
+  elsif (not @ARGV) { # default if no .bcf file specified - mainly in tests
+    $biberlog = 'biber.blg';
+  }
+  else {                        # set log to \jobname.blg
+    my $bcf = $ARGV[0];         # ARGV is ok even in a module
+    # Sanitise control file name
+    $bcf =~ s/\.bcf\z//xms;
+    $biberlog = $bcf . '.blg';
+  }
+
+  # prepend output directory for log, if specified
+  if (my $outdir = Biber::Config->getoption('output_directory')) {
+    $biberlog = File::Spec->catfile($outdir, $biberlog);
+  }
+
+  # Setting up Log::Log4perl
+  my $LOGLEVEL;
+  if (Biber::Config->getoption('trace')) {
+    $LOGLEVEL = 'TRACE'
+  }
+  elsif (Biber::Config->getoption('debug')) {
+    $LOGLEVEL = 'DEBUG'
+  }
+  elsif (Biber::Config->getoption('quiet')) {
+    $LOGLEVEL = 'ERROR'
+  }
+  else {
+    $LOGLEVEL = 'INFO'
+  }
+
+  my $LOGLEVEL_F;
+  my $LOG_MAIN;
+  if (Biber::Config->getoption('nolog')) {
+    $LOG_MAIN = 'Screen';
+    $LOGLEVEL_F = 'OFF'
+  }
+  else {
+    $LOG_MAIN = 'Logfile, Screen';
+    $LOGLEVEL_F = $LOGLEVEL
+  }
+
+  my $LOGLEVEL_S;
+  if (Biber::Config->getoption('onlylog')) {
+    $LOGLEVEL_S = 'OFF'
+  }
+  else {
+    # Max screen loglevel is INFO
+    if (Biber::Config->getoption('quiet')) {
+      $LOGLEVEL_S = 'ERROR';
+    }
+    else {
+      $LOGLEVEL_S = 'INFO';
+    }
+  }
+
+  # configuration "file" for Log::Log4perl
+  my $l4pconf = qq|
+    log4perl.category.main                             = $LOGLEVEL, $LOG_MAIN
+    log4perl.category.screen                           = $LOGLEVEL_S, Screen
+
+    log4perl.appender.Screen                           = Log::Log4perl::Appender::Screen
+    log4perl.appender.Screen.utf8                      = 1
+    log4perl.appender.Screen.Threshold                 = $LOGLEVEL_S
+    log4perl.appender.Screen.stderr                    = 0
+    log4perl.appender.Screen.layout                    = Log::Log4perl::Layout::SimpleLayout
+|;
+
+  # Only want a logfile appender if --nolog isn't set
+  if ($LOGLEVEL_F ne 'OFF') {
+    $l4pconf .= qq|
+    log4perl.category.logfile                          = $LOGLEVEL_F, Logfile
+    log4perl.appender.Logfile                          = Log::Log4perl::Appender::File
+    log4perl.appender.Logfile.utf8                     = 1
+    log4perl.appender.Logfile.Threshold                = $LOGLEVEL_F
+    log4perl.appender.Logfile.filename                 = $biberlog
+    log4perl.appender.Logfile.mode                     = clobber
+    log4perl.appender.Logfile.layout                   = Log::Log4perl::Layout::PatternLayout
+    log4perl.appender.Logfile.layout.ConversionPattern = [%r] %F{1}:%L> %p - %m%n
+|;
+  }
+
+  Log::Log4perl->init(\$l4pconf);
+
+  my $vn = $VERSION;
+  $vn .= ' (beta)' if $BETA_VERSION;
+
+  $logger->info("This is biber $vn") unless Biber::Config->getoption('nolog');
+
+  $logger->info("Config file is '" . $opts->{configfile} . "'") if $opts->{configfile};
+  $logger->info("Logfile is '$biberlog'") unless Biber::Config->getoption('nolog');
+
+  if (Biber::Config->getoption('debug')) {
+    $screen->info("DEBUG mode: all messages are logged to '$biberlog'")
   }
 
   return;

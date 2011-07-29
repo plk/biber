@@ -47,8 +47,8 @@ my $preamble = [
                 'String for Preamble 4'
                ];
 
-my $v = $Biber::VERSION;
-if ($Biber::BETA_VERSION) {
+my $v = $Biber::Config::VERSION;
+if ($Biber::Config::BETA_VERSION) {
   $v .= ' (beta)';
 }
 

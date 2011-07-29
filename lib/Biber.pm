@@ -38,9 +38,6 @@ Biber - main module for biber, a bibtex replacement for users of biblatex
 
 =cut
 
-our $VERSION = '0.9.4';
-our $BETA_VERSION = 0; # Is this a beta version?
-
 my $logger = Log::Log4perl::get_logger('main');
 
 
@@ -66,19 +63,7 @@ sub new {
   my ($class, %opts) = @_;
   my $self = bless {}, $class;
 
-  # Set up config object from config file and defaults
-  if (defined $opts{configfile}) {
-    Biber::Config->_initopts( $opts{configfile} );
-  }
-  else {
-    Biber::Config->_initopts(undef, $opts{noconf});
-  }
-  # Command-line overrides everything else
-  if (%opts) {
-    foreach (keys %opts) {
-      Biber::Config->setcmdlineoption($_, $opts{$_});
-    }
-  }
+  Biber::Config->_initopts( \%opts );
 
   # Add a reference to a global temp dir we might use for various things
   $self->{TEMPDIR} = File::Temp->newdir();
@@ -258,13 +243,13 @@ sub parse_ctrlfile {
       eval { $CFxmlschema->validate($CFxp) };
       if (ref($@)) {
         $logger->debug( $@->dump() );
-        $logger->logdie("BibLaTeX control file \"$ctrl_file_path\" failed to validate\n$@");
+        $logger->logdie("BibLaTeX control file '$ctrl_file_path' failed to validate\n$@");
       }
       elsif ($@) {
-        $logger->logdie("BibLaTeX control file \"$ctrl_file_path\" failed to validate\n$@");
+        $logger->logdie("BibLaTeX control file '$ctrl_file_path' failed to validate\n$@");
       }
       else {
-        $logger->info("BibLaTeX control file \"$ctrl_file_path\" validates");
+        $logger->info("BibLaTeX control file '$ctrl_file_path' validates");
       }
     }
     undef $CFxmlparser;
@@ -316,7 +301,7 @@ sub parse_ctrlfile {
   my $ctrl = new IO::File "<$ctrl_file_path"
     or $logger->logdie("Cannot open $ctrl_file_path: $!");
 
-  $logger->info("Reading $ctrl_file_path");
+  $logger->info("Reading '$ctrl_file_path'");
 
   # Read control file
   require XML::LibXML::Simple;
