@@ -37,7 +37,7 @@ fi
 if [ ! -e $DIR/biber-darwin_x86_64.tar.gz ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-osx10.6 </dev/null >/dev/null 2>&1 &"
   sleep 10
-  ssh bbf-osx10.6 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_64;./build.sh"
+  ssh bbf-osx10.6 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_64;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp bbf-osx10.6:biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64 $DIR/
   ssh bbf-osx10.6 "\\rm -f biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64"
   ssh root@wood "VBoxManage controlvm bbf-osx10.6 savestate"
@@ -56,7 +56,7 @@ fi
 if [ ! -e $DIR/biber-darwin_x86_i386.tar.gz ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-osx10.5 </dev/null >/dev/null 2>&1 &"
   sleep 10
-  ssh bbf-osx10.5 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_i386;./build.sh"
+  ssh bbf-osx10.5 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_i386;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp bbf-osx10.5:biblatex-biber/dist/darwin_x86_i386/biber-darwin_x86_i386 $DIR/
   ssh bbf-osx10.5 "\\rm -f biblatex-biber/dist/darwin_x86_i386/biber-darwin_x86_i386"
   ssh root@wood "VBoxManage controlvm bbf-osx10.5 savestate"
@@ -113,7 +113,7 @@ fi
 if [ ! -e $DIR/biber-linux_x86_32.tar.gz ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-jj32 </dev/null >/dev/null 2>&1 &"
   sleep 10
-  ssh bbf-jj32 "cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_32;./build.sh"
+  ssh bbf-jj32 "cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_32;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp bbf-jj32:biblatex-biber/dist/linux_x86_32/biber-linux_x86_32 $DIR/
   ssh bbf-jj32 "\\rm -f biblatex-biber/dist/linux_x86_32/biber-linux_x86_32"
   ssh root@wood "VBoxManage controlvm bbf-jj32 savestate"
@@ -130,7 +130,7 @@ fi
 if [ ! -e $DIR/biber-linux_x86_64.tar.gz ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-jj64 </dev/null >/dev/null 2>&1 &"
   sleep 10
-  ssh bbf-jj64 "cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_64;./build.sh"
+  ssh bbf-jj64 "cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_64;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp bbf-jj64:biblatex-biber/dist/linux_x86_64/biber-linux_x86_64 $DIR/
   ssh bbf-jj64 "\\rm -f biblatex-biber/dist/linux_x86_64/biber-linux_x86_64"
   ssh root@wood "VBoxManage controlvm bbf-jj64 savestate"
