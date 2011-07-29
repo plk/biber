@@ -12,7 +12,7 @@ chdir("t/tdata") ;
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
-#Log::Log4perl->easy_init($TRACE);
+Log::Log4perl->easy_init($ERROR);
 $biber->parse_ctrlfile('sort-complex.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 
@@ -37,6 +37,7 @@ Biber::Config->setblxoption('labelyear', undef);
 # Now generate the information
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
+my $bibentries = $section->bibentries;
 my $main = $section->get_list('MAIN');
 my $shs = $section->get_list('SHORTHANDS');
 my $out = $biber->get_output_obj;
@@ -207,6 +208,7 @@ my $l5 = q|  \entry{L5}{book}{}
 
 |;
 
+
 is_deeply( $main->get_sortscheme , $ss, 'sort scheme');
 is( $out->get_output_entry($main,'l4'), $l4, '\alphaothers set by "and others"');
 is( $out->get_output_entry($main,'l1'), $l1, 'bbl test 1');
@@ -227,15 +229,22 @@ Biber::Config->setoption('map', undef); # no longer ignore shorthand*
 # Have to set the sortscheme for the shorthand list explicitly as the sortlos option is processed
 # during control file parsing so it won't be done automatically here. This is only a problem
 # in tests where we want to change sortlos and re-run
-$section->get_list('SHORTHANDS')->set_sortscheme([
-                              [ {'final' => 1},
-                                {'sortshorthand'    => {}}
-                              ],
-                              [ {}, {'shorthand'     => {}} ] ]);
+$shs->set_sortscheme([
+                      [ {'final' => 1},
+                        {'sortshorthand'    => {}}
+                      ],
+                      [ {}, {'shorthand'     => {}} ] ]);
+$main->set_sortscheme([
+                       [ {'final' => 1},
+                         {'shorthand'    => {}}
+                       ]]);
+
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $shs = $section->get_list('SHORTHANDS');
+$main = $section->get_list('MAIN');
 
 # Sort by shorthand
 is_deeply([ $shs->get_keys ], ['L1', 'L2', 'L3', 'L4', 'L5'], 'sortorder - 3');
+

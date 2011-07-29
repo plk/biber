@@ -15,7 +15,7 @@ use Cwd;
 my $cwd = getcwd;
 
 my $biber = Biber->new(noconf => 1);
-#Log::Log4perl->easy_init($TRACE);
+Log::Log4perl->easy_init($ERROR);
 
 # File locating
 # Using File::Spec->canonpath() to normalise path separators so these tests work

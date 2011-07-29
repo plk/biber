@@ -928,7 +928,7 @@ sub _generatesortinfo {
 
     # Strip off the prefix
     $ss =~ s/\A$pre$sorting_sep+//;
-    my $init = substr $ss, 0, 1;
+    my $init = substr normalise_string($ss), 0, 1;
 
     # Now check if this sortinit is valid in the bblencoding. If not, warn
     # and replace with a suitable value

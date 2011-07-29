@@ -12,7 +12,7 @@ use Log::Log4perl qw(:easy);
 chdir("t/tdata");
 
 my $biber = Biber->new(noconf => 1);
-#Log::Log4perl->easy_init($TRACE);
+Log::Log4perl->easy_init($ERROR);
 $biber->parse_ctrlfile('sections.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 
@@ -80,6 +80,8 @@ String for Preamble 4%
 
 |;
 
+my $tail = qq||;
+
 is_deeply($biber->get_preamble, $preamble, 'Preamble for all sections');
 is($section0->bibentry('sect1')->get_field('note'), 'value1', 'Section 0 macro test');
 # If macros were not reset between sections, this would give a macro redef error
@@ -95,4 +97,3 @@ is($out->get_output_section(0)->number, '0', 'Checking output sections - 1');
 is($out->get_output_section(1)->number, '1', 'Checking output sections - 2');
 is($out->get_output_section(2)->number, '2', 'Checking output sections - 3');
 is($out->get_output_head, $head, 'Preamble output check with bblsafechars');
-

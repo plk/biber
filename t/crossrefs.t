@@ -12,7 +12,7 @@ chdir("t/tdata") ;
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
-#Log::Log4perl->easy_init($TRACE);
+Log::Log4perl->easy_init($ERROR);
 $biber->parse_ctrlfile('crossrefs.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
 

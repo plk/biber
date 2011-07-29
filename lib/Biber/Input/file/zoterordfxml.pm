@@ -205,6 +205,11 @@ sub create_entry {
   # We record the original keys of both the datasource and citation. They may differ in case.
   $bibentry->set_field('dskey', $dskey);
   $bibentry->set_field('citekey', $citekey);
+  # We also record the datasource key in original case in the section object
+  # because there are certain places which need this
+  # (for example shorthand list output) which need to output the key in the
+  # right case but which have no access to entry objects
+  $section->add_dskey($dskey);
 
   # Get a reference to the map option, if it exists
   my $user_map;

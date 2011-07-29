@@ -431,7 +431,11 @@ sub output {
           print $target $entry_string or $logger->logdie("Failure to write list element to $target_string: $!");
         }
         elsif ($listtype eq 'shorthand') {
-          print $target "    \\key{$k}\n" or $logger->logdie("Failure to write list element to $target_string: $!");
+          # We have completely lost the case of the keys by this point so find them again
+          # We have no access here to the entry objects which is why we saved them in the
+          # section object in the driver ...
+          my $casekey = $section->get_dskey($k);
+          print $target "    \\key{$casekey}\n" or $logger->logdie("Failure to write list element to $target_string: $!");
         }
       }
 

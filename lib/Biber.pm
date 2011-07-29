@@ -2443,7 +2443,6 @@ sub sort_list {
   foreach my $k (@keys) {
     $logger->debug("$k => " . $list->get_sortdata($k)->[0] . "\n");
   }
-
   $list->set_keys([ @keys ]);
 
   return;

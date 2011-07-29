@@ -25,6 +25,7 @@ sub new {
   $self->{allkeys} = 0;
   $self->{citekeys} = [];
   $self->{labelcache_l} = {};
+  $self->{dskeycache} = [];
   $self->{labelcache_v} = {};
   $self->{sortcache} = [];
   $self->{dkeys} = {};
@@ -424,6 +425,32 @@ sub get_list {
   return undef;
 }
 
+=head2 add_dskey
+
+    Adds a data source cased key to the object
+
+=cut
+
+sub add_dskey {
+  my $self = shift;
+  my $dskey = shift;
+  push @{$self->{dskeycache}}, $dskey;
+  return;
+}
+
+=head2 get_dskey
+
+    Gets the original data source cased key
+
+=cut
+
+sub get_dskey {
+  my $self = shift;
+  my $key = shift;
+  return first {lc($_) eq lc($key)} @{$self->{dskeycache}};
+}
+
+
 =head2 add_sort_cache
 
     Adds a scheme/keys pair to the sort cache:
@@ -461,6 +488,7 @@ sub reset_caches {
   $self->{sortcache} = [];
   $self->{labelcache_l} = {};
   $self->{labelcache_v} = {};
+  $self->{dskeycache} = [];
   return;
 }
 

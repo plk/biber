@@ -320,7 +320,11 @@ sub output {
         }
         elsif ($listtype eq 'shorthand') {
           next if Biber::Config->getblxoption('skiplos', $section->bibentry($k), $k);
-          print $target $k;
+          # We have completely lost the case of the keys by this point so find them again
+          # We have no access here to the entry objects which is why we saved them in the
+          # section object in the driver ...
+          my $casekey = $section->get_dskey($k);
+          print $target $casekey;
         }
       }
     }
