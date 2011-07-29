@@ -1,5 +1,5 @@
 {
-   "abstract" : "main module for biber, a bibtex replacement for users of biblatex",
+   "abstract" : "Biber is a much-augmented bibtex replacement for biblatex users",
    "author" : [
       "François Charette <firmicus@gmx.net>"
    ],
@@ -54,11 +54,11 @@
    "provides" : {
       "Biber" : {
          "file" : "lib/Biber.pm",
-         "version" : "v0.9.4"
+         "version" : 0
       },
       "Biber::Config" : {
          "file" : "lib/Biber/Config.pm",
-         "version" : 0
+         "version" : "v0.9.4"
       },
       "Biber::Constants" : {
          "file" : "lib/Biber/Constants.pm",

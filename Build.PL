@@ -19,7 +19,8 @@ my $builder = $class->new(
     dist_name           => 'biblatex-biber',
     license             => 'perl',
     dist_author         => 'François Charette <firmicus@gmx.net>',
-    dist_version_from   => 'lib/Biber.pm',
+    dist_abstract       => 'Biber is a much-augmented bibtex replacement for biblatex users',
+    dist_version_from   => 'lib/Biber/Config.pm',
     build_recommends => {
        'Test::More'   => 0,
     },
