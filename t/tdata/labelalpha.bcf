@@ -141,6 +141,20 @@
       <bcf:labelpart final="1">shorthand</bcf:labelpart>
       <bcf:labelpart>label</bcf:labelpart>
       <bcf:labelpart substring_width="3" substring_side="left" ifnamecount="1">labelname</bcf:labelpart>
+      <bcf:labelpart substring_width="1" substring_side="left" substring_compound="1">labelname</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="2">
+      <bcf:labelpart substring_width="2" substring_side="right">year</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="3">
+      <bcf:labelpart substring_width="1">origday</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="customa">
+    <bcf:labelelement order="1">
+      <bcf:labelpart final="1">shorthand</bcf:labelpart>
+      <bcf:labelpart>label</bcf:labelpart>
+      <bcf:labelpart substring_width="3" substring_side="left" ifnamecount="1">labelname</bcf:labelpart>
       <bcf:labelpart substring_width="1" substring_side="left">labelname</bcf:labelpart>
     </bcf:labelelement>
     <bcf:labelelement order="2">
@@ -294,7 +308,7 @@
   </bcf:sorting>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file" datatype="bibtex">labelalpha.bib</bcf:datasource>
+   <bcf:datasource type="file" datatype="bibtex">labelalpha.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey>L1</bcf:citekey>
@@ -329,6 +343,8 @@
     <bcf:citekey>Schmidt2007a</bcf:citekey>
     <bcf:citekey>Schnee2007</bcf:citekey>
     <bcf:citekey>Schnee2007a</bcf:citekey>
+    <bcf:citekey>LDN1</bcf:citekey>
+    <bcf:citekey>LDN2</bcf:citekey>
     <bcf:sectionlist label="MAIN" type="entry"/>
     <bcf:sectionlist label="SHORTHANDS" type="shorthand">
       <bcf:filter type="field">shorthand</bcf:filter>

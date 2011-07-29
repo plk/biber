@@ -86,12 +86,12 @@ start =
         attribute order { xsd:integer },
         element bcf:labelpart {          
           attribute final { "0" | "1" }?,
-          attribute format { "alpha" | "int" }?,
           attribute substring_width { xsd:integer | "v" | "vf" | "l" }?,
           attribute substring_fixed_threshold { xsd:integer }?,
           attribute substring_width_max { xsd:integer }?,
           attribute substring_side { "left" | "right" }?,
           attribute substring_maxlength { xsd:integer }?,
+          attribute substring_compound { "0" | "1" }?,
           attribute ifnamecount { xsd:integer }?,
           attribute namecount { xsd:integer }?,
           xsd:string

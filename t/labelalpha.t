@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 99;
+use Test::More tests => 101;
 
 use Biber;
 use Biber::Utils;
@@ -159,6 +159,8 @@ is($bibentries->entry('l7')->get_field('sortlabelalpha'), 'DSJ95', 'maxalphaname
 ok(is_undef($main->get_extraalphadata('l7')), 'maxalphanames=3 minalphanames=1 entry L7 extraalpha');
 is($bibentries->entry('l8')->get_field('sortlabelalpha'), 'Sha85', 'maxalphanames=3 minalphanames=1 entry L8 labelalpha');
 ok(is_undef($main->get_extraalphadata('l8')), 'maxalphanames=3 minalphanames=1 entry L8 extraalpha');
+is($bibentries->entry('ldn1')->get_field('sortlabelalpha'), 'VUR89', 'Testing compound lastnames 1');
+is($bibentries->entry('ldn2')->get_field('sortlabelalpha'), 'VU45', 'Testing compound lastnames 2');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('maxalphanames', 4);

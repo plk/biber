@@ -138,7 +138,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                    substring_side  => "left",
                    substring_width => 3,
                  },
-                 { content => "labelname", substring_side => "left", substring_width => 1 },
+                 { content => "labelname", substring_side => "left", substring_width => 1, substring_compound => 1 },
                ],
                order => 1,
              },

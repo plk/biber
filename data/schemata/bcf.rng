@@ -179,14 +179,6 @@
                     </attribute>
                   </optional>
                   <optional>
-                    <attribute name="format">
-                      <choice>
-                        <value>alpha</value>
-                        <value>int</value>
-                      </choice>
-                    </attribute>
-                  </optional>
-                  <optional>
                     <attribute name="substring_width">
                       <choice>
                         <data type="integer"/>
@@ -217,6 +209,14 @@
                   <optional>
                     <attribute name="substring_maxlength">
                       <data type="integer"/>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="substring_compound">
+                      <choice>
+                        <value>0</value>
+                        <value>1</value>
+                      </choice>
                     </attribute>
                   </optional>
                   <optional>

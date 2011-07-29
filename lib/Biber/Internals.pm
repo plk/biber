@@ -686,7 +686,18 @@ sub _process_label_attributes {
       if ($subs_side eq 'right') {
         $subs_offset = 0 - $subs_width;
       }
-      $field_string = substr( $field_string, $subs_offset, $subs_width );
+
+      # If desired, do the substring on all part of compound strings (strings with internal spaces)
+      if ($labelattrs->{substring_compound}) {
+        my $tmpstring;
+        foreach my $part (split(/\s+/, $field_string)) {
+          $tmpstring .= substr( $part, $subs_offset, $subs_width );
+        }
+        $field_string = $tmpstring;
+      }
+      else {
+        $field_string = substr( $field_string, $subs_offset, $subs_width );
+      }
     }
   }
   return $field_string;
