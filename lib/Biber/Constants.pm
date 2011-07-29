@@ -134,7 +134,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                  { content => "label" },
                  {
                    content         => "labelname",
-                   iflistcount     => 1,
+                   ifnamecount     => 1,
                    substring_side  => "left",
                    substring_width => 3,
                  },

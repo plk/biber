@@ -288,7 +288,7 @@ sub _labelpart {
 
   foreach my $part (@$labelpart) {
     # Deal with various tests
-    # iflistcount only uses this label template part if the list it is applied to is a certain
+    # ifnamecount only uses this label template part if the list it is applied to is a certain
     # length
     if (my $ic = $part->{ifnamecount}) {
       my $f = $part->{content};

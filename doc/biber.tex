@@ -536,7 +536,11 @@ specifies one or more \textcolor{red}{\texttt{target-field}}s to set in the
 entry, along with their \textcolor{red}{\texttt{target-value}}s. The
 literal token \verb+BMAP_ORIGFIELD+ can be used as the
 \textcolor{red}{\texttt{target-value}} and it resolves to the data source
-field name. Continuing the example:
+field name. If there is a global field mapping and also an entrytype
+specific mapping which both apply to the same field, the more specific has
+precedence. This is so you can, for example, choose to map a field globally
+in one way but deal with it another way in certain entrytypes. Continuing
+the example: 
 
 {\color{grey}
 \lstset{showspaces=false}
