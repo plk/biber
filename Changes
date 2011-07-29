@@ -5,7 +5,7 @@ Revision history for Biber
        * New "map" option to allow user field/entry type mapping (aliasing) in
          addition to .dcf settings
        * Made the relevant places depend on max/min{alpha,bib}names instead of
-         just max/minnames.
+         just max/minnames
        * Bug fixes to bblsafechars
        * Implemented user-customisable labelalpha (not yet in biblatex)
        * Implemented per-name hashes
