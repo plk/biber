@@ -99,6 +99,7 @@ if ($opts->{U}) {
 $opts->{logfile} =~ s/\.blg\z//xms if $opts->{logfile};
 
 # Create Biber object, passing command-line options
+Log::Log4perl->easy_init($INFO); # early init of logger so we can log things in the next call
 my $biber = Biber->new(%$opts);
 
 # Set log file name
@@ -181,10 +182,10 @@ if ($LOGLEVEL_F ne 'OFF') {
 );
 }
 
-Log::Log4perl::init(\$l4pconf) ;
+Log::Log4perl->init(\$l4pconf);
 
 # get the logger object
-my $logger  = Log::Log4perl::get_logger('main') ;
+my $logger  = Log::Log4perl::get_logger('main');
 my $screen  = Log::Log4perl::get_logger('screen');
 my $logfile = Log::Log4perl::get_logger('logfile');
 

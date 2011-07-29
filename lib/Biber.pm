@@ -69,7 +69,8 @@ sub new {
   # Set up config object from config file and defaults
   if (defined $opts{configfile}) {
     Biber::Config->_initopts( $opts{configfile} );
-  } else {
+  }
+  else {
     Biber::Config->_initopts(undef, $opts{noconf});
   }
   # Command-line overrides everything else

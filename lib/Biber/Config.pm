@@ -116,6 +116,7 @@ sub _initopts {
     }
 
     if (defined $conffile) {
+      $logger->info("Using config file: $conffile");
       %LOCALCONF = ParseConfig(-LowerCaseNames => 1,
                                -MergeDuplicateBlocks => 1,
                                -AllowMultiOptions => 1,
