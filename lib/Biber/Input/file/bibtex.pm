@@ -243,7 +243,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
             # Deal with alsoset one->many maps
             while (my ($from_as, $to_as) = each %{$to_map->{alsoset}}) {
               if ($bibentry->field_exists(lc($from_as))) {
-                $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of field '$from' to '$to'");
+                $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of field '" . lc($field) . "' to '$to'");
               }
               # Deal with special "BMAP_ORIGFIELD" token
               my $to_val = lc($to_as) eq 'bmap_origfield' ? $f : $to_as;
