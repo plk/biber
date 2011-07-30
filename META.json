@@ -4,7 +4,7 @@
       "François Charette <firmicus@gmx.net>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.110440",
+   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.110930001",
    "license" : [
       "perl_5"
    ],
