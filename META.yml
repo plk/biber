@@ -101,7 +101,7 @@ requires:
   Readonly: 0
   Regexp::Common: 0
   Text::BibTeX: 0.55
-  Unicode::Collate: 0.77
+  Unicode::Collate: 0.78
   XML::LibXML::Simple: 0
   XML::LibXSLT: 0
   perl: v5.10.0
