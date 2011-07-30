@@ -217,12 +217,10 @@ is( $out->get_output_entry($main,'l3'), $l3, 'bbl test 3');
 is( $out->get_output_entry($main,'l5'), $l5, 'bbl test 4');
 is_deeply([ $main->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'sortorder - 1');
 
-# This should be the same as $main citeorder as both $main and $shs use same
-# global sort spec. $shs should also get the keys from the sort cache as a result.
-# Can't do the usual SHORTHAND filter on SHORTHAND field in .bcf as adding SHORTHAND
-# fields to the entries changes the sort order of $main (as SHORTHAND overrides the default
-# label)
-is_deeply([ $shs->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'sortorder - 2');
+# This would be the same as $main citeorder as both $main and $shs use same
+# global sort spec but here it's null because we've removed all shorthands using a map
+# above and the filter for the SHORTHANDS list only uses entries with SHORTHAND fields ...
+is_deeply([ $shs->get_keys ], [], 'sortorder - 2');
 
 # reset options and regenerate information
 Biber::Config->setoption('map', undef); # no longer ignore shorthand*

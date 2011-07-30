@@ -56,6 +56,7 @@ t/ris.t
 t/utils.t
 t/basic-misc.t
 t/extrayear.t
+t/full.t
 t/labelalpha.t
 t/sorting.t
 t/labelname.t
@@ -100,6 +101,9 @@ t/tdata/encoding3.bib
 t/tdata/encoding4.bib
 t/tdata/encoding5.bib
 t/tdata/encoding6.bib
+t/tdata/full.bib
+t/tdata/full.bcf
+t/tdata/full1.bbl
 t/tdata/crossrefs.bib
 t/tdata/crossrefs.bcf
 t/tdata/sections.bcf

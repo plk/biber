@@ -1,6 +1,7 @@
 !*.bib
 !*.aux
 !*.bcf
+!*.bbl
 MYMETA.yml
 MYMETA.json
 

@@ -48,7 +48,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labelyear</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="multivalued">
       <bcf:key>labelyearspec</bcf:key>
@@ -88,7 +88,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>singletitle</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortalphaothers</bcf:key>
@@ -96,7 +96,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortlos</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquelist</bcf:key>
@@ -104,7 +104,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquename</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useauthor</bcf:key>
@@ -112,27 +112,15 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useeditor</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useprefix</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>usetranslator</bcf:key>
-      <bcf:value>0</bcf:value>
-    </bcf:option>
-  </bcf:options>
-  <bcf:options component="biblatex" type="collection">
-    <bcf:option type="multivalued">
-      <bcf:key>labelnamespec</bcf:key>
-      <bcf:value order="1">shorteditor</bcf:value>
-      <bcf:value order="2">editor</bcf:value>
-      <bcf:value order="3">translator</bcf:value>
-    </bcf:option>
-    <bcf:option type="singlevalued">
-      <bcf:key>useeditor</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
   </bcf:options>
   <!-- LABELALPHA TEMPLATE -->
@@ -226,17 +214,16 @@
       <bcf:field source="subtitle" target="journalsubtitle"/>
     </bcf:inherit>
   </bcf:inheritance>
-  <!-- SORTING -->
   <bcf:sorting>
     <bcf:presort>mm</bcf:presort>
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="2" final="1">
-      <bcf:sortitem order="1">sortkey</bcf:sortitem>
+      <bcf:sortitem order="1">shorthand</bcf:sortitem>
     </bcf:sort>
-    <bcf:sort order="3">
-      <bcf:sortitem order="1">labelalpha</bcf:sortitem>
+    <bcf:sort order="3" final="1">
+      <bcf:sortitem order="1">sortkey</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="4">
       <bcf:sortitem order="1">sortname</bcf:sortitem>
@@ -247,32 +234,27 @@
       <bcf:sortitem order="6">title</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="5">
-      <bcf:sortitem order="1">sortyear</bcf:sortitem>
-      <bcf:sortitem order="2">year</bcf:sortitem>
-    </bcf:sort>
-    <bcf:sort order="6">
       <bcf:sortitem order="1">sorttitle</bcf:sortitem>
       <bcf:sortitem order="2">title</bcf:sortitem>
     </bcf:sort>
+    <bcf:sort order="6">
+      <bcf:sortitem order="1">sortyear</bcf:sortitem>
+      <bcf:sortitem order="2">year</bcf:sortitem>
+    </bcf:sort>
     <bcf:sort order="7">
-      <bcf:sortitem order="1" pad_side="left" pad_width="4" pad_char="0">volume</bcf:sortitem>
+      <bcf:sortitem order="1">volume</bcf:sortitem>
       <bcf:sortitem order="2">0000</bcf:sortitem>
     </bcf:sort>
   </bcf:sorting>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file" datatype="bibtex">sort.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">full.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>L1</bcf:citekey>
-    <bcf:citekey>L2</bcf:citekey>
-    <bcf:citekey>L3</bcf:citekey>
-    <bcf:citekey>L4</bcf:citekey>
-    <bcf:citekey>L5</bcf:citekey>
+    <bcf:citekey>F1</bcf:citekey>
     <bcf:sectionlist label="MAIN" type="entry"/>
     <bcf:sectionlist label="SHORTHANDS" type="shorthand">
       <bcf:filter type="field">shorthand</bcf:filter>
     </bcf:sectionlist>
   </bcf:section>
 </bcf:controlfile>
-
