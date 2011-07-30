@@ -73,7 +73,7 @@ my $l2 = q|  \entry{test2}{mapbook}{}
     \field{sortinit}{S}
     \field{pages}{1\bibrangedash 20}
     \keyw{somevalue}
-    \warn{\item Overwriting existing field 'keywords' during aliasing of entrytype 'BOOK' to 'mapbook'}
+    \warn{\item Overwriting existing field 'keywords' during aliasing of entrytype 'BOOK' to 'mapbook' in entry 'test2'}
   \endentry
 
 |;

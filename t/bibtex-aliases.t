@@ -38,7 +38,7 @@ my $w1 = [
           "Entry 'alias2' - invalid field 'institution' for entrytype 'misc'",
 ];
 
-my $w2 = ["Overwriting existing field 'verbc' during aliasing of entrytype 'conversation' to 'customa'",
+my $w2 = ["Overwriting existing field 'verbc' during aliasing of entrytype 'conversation' to 'customa' in entry 'alias4'",
           "Entry 'alias4' - invalid field 'author' for entrytype 'customa'",
           "Entry 'alias4' - invalid field 'eprint' for entrytype 'customa'",
           "Entry 'alias4' - invalid field 'eprinttype' for entrytype 'customa'",

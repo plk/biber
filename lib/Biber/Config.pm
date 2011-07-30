@@ -165,7 +165,7 @@ sub _initopts {
     $biberlog = $log . '.blg';
   }
   elsif (not @ARGV) { # default if no .bcf file specified - mainly in tests
-    $biberlog = 'biber.blg';
+    Biber::Config->setoption('nolog', 1);
   }
   else {                        # set log to \jobname.blg
     my $bcf = $ARGV[0];         # ARGV is ok even in a module
