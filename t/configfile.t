@@ -15,6 +15,7 @@ my %nosort = (author => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ],
 
 my %map = (
    bibtex => {
+      bmap_overwrite => 1,
       entrytype => {
         CHAT => { bmap_target => "CUSTOMB" },
         CONVERSATION => {
@@ -45,6 +46,7 @@ my %map = (
       },
     },
     endnotexml => {
+      bmap_overwrite => 1,
       entrytype => {
         "journal Article" => {
           alsoset => { usera => "BMAP_ORIGENTRYTYPE" },
@@ -54,6 +56,7 @@ my %map = (
       field => { abstract => "BMAP_NULL" },
     },
     ris => {
+      bmap_overwrite => 0,
       entrytype => {
         BOOK => { alsoset => { keywords => "somevalue" }, bmap_target => "MAPBOOK" },
         JOUR => { bmap_target => "REPORT" },
@@ -61,6 +64,7 @@ my %map = (
       field => { n2 => "BMAP_NULL" },
     },
     zoterordfxml => {
+      bmap_overwrite => 1,
       field => {
         "dc:subject" => {
           bmap_pertype => ["journalArticle", "book", "bookSection"],

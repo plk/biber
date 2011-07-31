@@ -72,8 +72,8 @@ my $l2 = q|  \entry{test2}{mapbook}{}
     \strng{fullhash}{f2574dc91f1242eb0e7507a71730631b}
     \field{sortinit}{S}
     \field{pages}{1\bibrangedash 20}
-    \keyw{somevalue}
-    \warn{\item Overwriting existing field 'keywords' during aliasing of entrytype 'BOOK' to 'mapbook' in entry 'test2'}
+    \keyw{keyword}
+    \warn{\item Not overwriting existing field 'keywords' during aliasing of entrytype 'BOOK' to 'mapbook' in entry 'test2'}
   \endentry
 
 |;

@@ -314,17 +314,21 @@ config file is described below. Items in \textcolor{red}{red} are not
 literal, they are descriptive meta-values which are explained in the
 accompanying text. Items in \textcolor{blue}{blue} are optional within
 their parent section. The entire \verb+map+ option is not case sensitive
-but the example below use uppercase in places for clarity. The general
-structure is:
+\emph{apart from the angle-bracketed section names which must be
+  lower-cased as shown}. The examples below use uppercase for variable names
+and setting in places, for clarity. The general structure is:
 
 \lstset{showspaces=false}
 \begin{lstlisting}[escapechar=+,mathescape=true]
 <map>
   <+\textcolor{red}{driver1}+>
+    +\textcolor{blue}{BMAP\_OVERWRITE 1|0}+
        ...
   </+\textcolor{red}{driver1}+>
+    +\textcolor{blue}{BMAP\_OVERWRITE 1|0}+
        $\vdots$
   <+\textcolor{red}{drivern}+>
+    +\textcolor{blue}{BMAP\_OVERWRITE 1|0}+
        ...
   </+\textcolor{red}{drivern}+>
 </map>
@@ -366,12 +370,19 @@ or more \textcolor{red}{\texttt{target-field}}s to set in the entry, along
 with their \textcolor{red}{\texttt{target-value}}s. The literal token
 \verb+BMAP_ORIGENTRYTYPE+ can be used as the
 \textcolor{red}{\texttt{target-value}} and it resolves to the data source
-entrytype name. For example:
+entrytype name. If the option \textcolor{blue}{\texttt{BMAP\_OVERWRITE}} is
+true (set to «1»), then any existing fields which the
+\textcolor{blue}{\texttt{alsoset}} section mentions will be overwritten. If
+this option is missing or false (set to «0»), then the field will not be
+set and the existing field value will remain. In both cases, warnings will
+be issued about the conflicting field, saying whether it will be
+overwritten or not. An example:
 
 \lstset{showspaces=false}
 \begin{lstlisting}[escapechar=+,mathescape=true]
 <map>
   <bibtex>
+    BMAP_OVERWRITE 1
     <entrytype CONVERSATION>
       BMAP_TARGET CUSTOMA
       <alsoset>
@@ -389,8 +400,9 @@ entrytype name. For example:
 \noindent This would turn a \verb+CONVERSATION+ entrytype in all
 \verb+bibtex+ data sources into a \verb+CUSTOMA+ entrytype
 and would automatically set the \verb+USERA+ field in the entry to
-«conversation» and the \verb+NOTE+ field to «Auto-created this field». It
-also turns a \verb+RECORD+ entrytype into a \verb+MUSIC+ entrytype.
+«conversation» and the \verb+NOTE+ field to «Auto-created this field». The
+\verb+USERA+ and \verb+NOTE+ fields will be overwritten if present in the
+entry. Also, the example turns a \verb+RECORD+ entrytype into a \verb+MUSIC+ entrytype.
 \bigskip
 \minisec{Simple global field mapping}
 
@@ -416,6 +428,7 @@ complete mapping example. The previously discussed example settings are greyed):
 \begin{lstlisting}[escapechar=+,mathescape=true]
 <map>
   <bibtex>
+    BMAP_OVERWRITE 1
     <entrytype CONVERSATION>
       BMAP_TARGET CUSTOMA
       <alsoset>
@@ -474,6 +487,7 @@ field name. Continuing our example configuration:
 \begin{lstlisting}[escapechar=+,mathescape=true]
 <map>
   <bibtex>
+    BMAP_OVERWRITE 1
     <entrytype CONVERSATION>
       BMAP_TARGET CUSTOMA
       <alsoset>
@@ -547,6 +561,7 @@ the example:
 \begin{lstlisting}[escapechar=+,mathescape=true]
 <map>
   <bibtex>
+    BMAP_OVERWRITE 1
     <entrytype CONVERSATION>
       BMAP_TARGET CUSTOMA
       <alsoset>

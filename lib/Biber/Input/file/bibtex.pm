@@ -248,7 +248,13 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
             # Deal with alsoset one->many maps
             while (my ($from_as, $to_as) = each %{$to_map->{alsoset}}) {
               if ($bibentry->field_exists(lc($from_as))) {
-                $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of field '" . lc($field) . "' to '$to' in entry '$dskey'");
+                if ($user_map->{bmap_overwrite}) {
+                  $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of field '" . lc($field) . "' to '$to' in entry '$dskey'");
+                }
+                else {
+                  $biber->biber_warn($bibentry, "Not overwriting existing field '$from_as' during aliasing of field '" . lc($field) . "' to '$to' in entry '$dskey'");
+                  next;
+                }
               }
               # Deal with special "BMAP_ORIGFIELD" token
               my $to_val = lc($to_as) eq 'bmap_origfield' ? $f : $to_as;
@@ -350,7 +356,13 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
         $bibentry->set_field('entrytype', lc($to->{bmap_target}));
         while (my ($from_as, $to_as) = each %{$to->{alsoset}}) {
           if ($bibentry->field_exists(lc($from_as))) {
-            $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->type . "' to '" . lc($to->{bmap_target}) . "' in entry '$dskey'");
+            if ($user_map->{bmap_overwrite}) {
+              $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->type . "' to '" . lc($to->{bmap_target}) . "' in entry '$dskey'");
+            }
+            else {
+              $biber->biber_warn($bibentry, "Not overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->type . "' to '" . lc($to->{bmap_target}) . "' in entry '$dskey'");
+              next;
+            }
           }
           # Deal with special "BMAP_ORIGENTRYTYPE" token
           my $to_val = lc($to_as) eq 'bmap_origentrytype' ?
@@ -366,8 +378,10 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
     elsif (my $ealias = $dcfxml->{entrytypes}{entrytype}{lc($entry->type)}) {
       $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
       foreach my $alsoset (@{$ealias->{alsoset}}) {
+        # drivers never overwrite existing fields
         if ($bibentry->field_exists(lc($alsoset->{target}))) {
-          $biber->biber_warn($bibentry, "Overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '" . $entry->type . "' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$dskey'");
+          $biber->biber_warn($bibentry, "Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '" . $entry->type . "' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$dskey'");
+          next;
         }
         $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
       }
