@@ -12,8 +12,8 @@ use Carp;
 use List::AllUtils qw(first);
 use Log::Log4perl qw( :no_extra_logdie_message );
 
-our $VERSION = '0.9.4';
-our $BETA_VERSION = 0; # Is this a beta version?
+our $VERSION = '0.9.5';
+our $BETA_VERSION = 1; # Is this a beta version?
 
 our $logger  = Log::Log4perl::get_logger('main');
 our $screen  = Log::Log4perl::get_logger('screen');

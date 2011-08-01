@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 13;
+use Test::More tests => 14;
 
 use Biber;
 use Biber::Output::BBL;
@@ -21,15 +21,6 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # relying on here for tests
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
-
-# citeorder (sorting=none)
-$S =  [
-                                                      [
-                                                       {},
-                                                       {'citeorder'    => {}}
-                                                      ]
-                                                     ];
-Biber::Config->setblxoption('sorting', {default => $S});
 Biber::Config->setblxoption('labelyear', undef);
 Biber::Config->setblxoption('labelalpha', 0);
 
@@ -516,4 +507,23 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L1A','L1','L1B','L2','L3','L4','L5','L7','L6','L9','L8'], 'nosort 1');
+
+# Testing special case of sorting=none and allkeys because in this case "citeorder" means
+# bib order
+$S =  [
+                                                      [
+                                                       {},
+                                                       {'citeorder'    => {}}
+                                                      ]
+                                                     ];
+
+$main->set_sortscheme($S);
+# Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
+# Otherwise, we have citekeys and allkeys which confuses fetch_data()
+$section->del_citekeys;
+$section->allkeys;
+$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+is_deeply([$main->get_keys], ['L1','L1A','L1B','L2','L3','L4','L5','L6','L7','L8','L9'], 'sorting=none and allkeys');
 

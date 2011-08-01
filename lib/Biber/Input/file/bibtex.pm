@@ -132,7 +132,12 @@ sub extract_entries {
     }
 
     # if allkeys, push all bibdata keys into citekeys (if they are not already there)
-    $section->add_citekeys($section->bibentries->sorted_keys);
+    # We are using the special "orig_key_order" array which is used to deal with the
+    # sitiation when sorting=non and allkeys is set. We need an array rather than the
+    # keys from the bibentries hash because we need to preserver the original order of
+    # the .bib as in this case the sorting sub "citeorder" means "bib order" as there are
+    # no explicitly cited keys
+    $section->add_citekeys(@{$cache->{orig_key_order}{$filename}});
     $logger->debug("Added all citekeys to section '$secnum': " . join(', ', $section->get_citekeys));
   }
   else {
@@ -606,6 +611,10 @@ sub cache_data {
     # Cache the entry so we don't have to read the file again on next pass.
     # Two reasons - So we avoid T::B macro redef warnings and speed
     $cache->{data}{$filename}{lc($dskey)} = $entry;
+    # We do this as otherwise we have no way of determining the origing .bib entry order
+    # We need this in order to do sorting=none + allkeys because in this case, there is no
+    # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
+    push @{$cache->{orig_key_order}{$filename}}, $dskey;
     $logger->debug("Cached Text::BibTeX entry for key '$dskey' from bibtex file '$filename'");
   }
 

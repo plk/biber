@@ -39,7 +39,7 @@ my $main = $section->get_list('MAIN');
 my @keys = sort $section->get_citekeys;
 my @citedkeys = sort qw{ anon1 anon2 murray t1 kant:ku kant:kpv t2 shore u1 u2};
 
-my @allkeys = sort qw{ anon1 anon2 stdmodel aristotle:poetics vazques-de-parga t1
+my @allkeys = sort map {lc()} qw{ anon1 anon2 stdmodel aristotle:poetics vazques-de-parga t1
 gonzalez averroes/bland laufenberg westfahl:frontier knuth:ct:a kastenholz
 averroes/hannes iliad luzzatto malinowski sorace knuth:ct:d britannica
 nietzsche:historie stdmodel:weinberg knuth:ct:b baez/article knuth:ct:e itzhaki
@@ -93,7 +93,7 @@ my $bibentries = $section->bibentries;
 
 $out = $biber->get_output_obj;
 
-@keys = sort $section->get_citekeys;
+@keys = sort map {lc()} $section->get_citekeys;
 
 is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 

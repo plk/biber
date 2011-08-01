@@ -29,7 +29,7 @@ $S =  [
                                                  {'author'     => {}},
                                                 ],
                                                ];
-Biber::Config->setblxoption('sorting', {default => $S});
+Biber::Config->setblxoption('sorting', $S);
 
 $biber->prepare;
 my $section = $biber->sections->get_section(0);

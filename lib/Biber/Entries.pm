@@ -58,18 +58,6 @@ sub entry {
   return $self->{$citekey};
 }
 
-=head2 sorted_keys
-
-    Returns a sorted array of Biber::Entry object keys
-
-=cut
-
-sub sorted_keys {
-  my $self = shift;
-  use locale;
-  return sort keys %$self;
-}
-
 =head2 add_entry
 
     Adds a Biber::Entry to the Biber::Entries object
@@ -79,8 +67,7 @@ sub sorted_keys {
 sub add_entry {
   my $self = shift;
   my ($key, $entry) = @_;
-  $key = lc($key);
-  $self->{$key} = $entry;
+  $self->{lc($key)} = $entry;
   return;
 }
 

@@ -25,6 +25,7 @@ use Readonly;
 use Data::Dump qw(dump);
 
 my $logger = Log::Log4perl::get_logger('main');
+my $orig_key_order = {};
 
 # Handlers for field types
 # The names of these have nothing to do whatever with the biblatex field types
@@ -134,11 +135,20 @@ sub extract_entries {
         $biber->{warnings}++;
         next;
       }
+      # We do this as otherwise we have no way of determining the origing .bib entry order
+      # We need this in order to do sorting=none + allkeys because in this case, there is no
+      # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
+      push @{$orig_key_order->{$filename}}, $entry->{ID};
       create_entry($biber, $entry->{ID}, $entry);
     }
 
     # if allkeys, push all bibdata keys into citekeys (if they are not already there)
-    $section->add_citekeys($section->bibentries->sorted_keys);
+    # We are using the special "orig_key_order" array which is used to deal with the
+    # sitiation when sorting=non and allkeys is set. We need an array rather than the
+    # keys from the bibentries hash because we need to preserver the original order of
+    # the .bib as in this case the sorting sub "citeorder" means "bib order" as there are
+    # no explicitly cited keys
+    $section->add_citekeys(@{$orig_key_order->{$filename}});
     $logger->debug("Added all citekeys to section '$secnum': " . join(', ', $section->get_citekeys));
   }
   else {

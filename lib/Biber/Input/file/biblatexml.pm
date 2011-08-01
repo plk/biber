@@ -26,6 +26,7 @@ use Readonly;
 use Data::Dump qw(dump);
 
 my $logger = Log::Log4perl::get_logger('main');
+my $orig_key_order = {};
 
 Readonly::Scalar our $BIBLATEXML_NAMESPACE_URI => 'http://biblatex-biber.sourceforge.net/biblatexml';
 Readonly::Scalar our $NS => 'bib';
@@ -80,7 +81,7 @@ sub extract_entries {
     $filename = $tf->filename;
   }
   else {
-    # Need to get the filename even if using cache so we increment
+    # Need to get the filename so we increment
     # the filename count for preambles at the bottom of this sub
     my $trying_filename = $filename;
     unless ($filename = locate_biber_file($filename)) {
@@ -119,10 +120,19 @@ sub extract_entries {
         next;
       }
       create_entry($biber, $entry->getAttribute('id'), $entry);
+      # We do this as otherwise we have no way of determining the origing .bib entry order
+      # We need this in order to do sorting=none + allkeys because in this case, there is no
+      # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
+      push @{$orig_key_order->{$filename}}, $entry->getAttribute('id');
     }
 
     # if allkeys, push all bibdata keys into citekeys (if they are not already there)
-    $section->add_citekeys($section->bibentries->sorted_keys);
+    # We are using the special "orig_key_order" array which is used to deal with the
+    # sitiation when sorting=non and allkeys is set. We need an array rather than the
+    # keys from the bibentries hash because we need to preserver the original order of
+    # the .bib as in this case the sorting sub "citeorder" means "bib order" as there are
+    # no explicitly cited keys
+    $section->add_citekeys(@{$orig_key_order->{$filename}});
     $logger->debug("Added all citekeys to section '$secnum': " . join(', ', $section->get_citekeys));
   }
   else {
