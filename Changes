@@ -1,5 +1,7 @@
 Revision history for Biber
 
+0.9.5  (unreleased beta)
+       * Fixed issue with sorting=none and \nocite{*}
 0.9.4  30-07-2011
        * Added support for "SORTSHORTHAND" field
        * New "map" option to allow user field/entry type mapping (aliasing) in
