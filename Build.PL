@@ -46,7 +46,7 @@ my $builder = $class->new(
         'Unicode::Collate' => '0.78',
         'XML::LibXML::Simple' => 0,
         'XML::LibXSLT' => 0,
-        'Text::BibTeX' => '0.59',
+        'Text::BibTeX' => '0.60',
         'LWP::Simple' => 0,
         'perl' => '5.10.0'
     },
