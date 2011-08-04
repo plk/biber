@@ -15,8 +15,12 @@ Things to remember when releasing new version:
   empty_tree.sh <version>
 * Build binaries from release and upload to SF to new version folder
 * Inform builders of binaries to update
-* Rename current to version, new version to current
+* Move "current" symlink:
+  ssh -t philkime,biblatex-biber@shell.sourceforge.net create
+  cd /home/frs/project/b/bi/biblatex-biber/biblatex-biber
+  ln -sf <version> current
 * Associate new defaults with new binaries
 * scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
 * Update SF main page, news, add new README in web interface at root, if needed
 * Mail to ctan@dante.de and karl@freefriends.org
+
