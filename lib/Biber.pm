@@ -1300,7 +1300,25 @@ sub process_visible_names {
       my $visible_names_alpha;
 
       # If name list was truncated in bib with "and others", this overrides maxnames
-      my $morenames = ($names->last_name->get_namestring eq 'others') ? 1 : 0;
+      # and potentially, all minnames too. Why minnames? Because imagine we have this:
+      #
+      # John Smith and others
+      #
+      # and minnames=3. Then visibility will be set to 3 but there aren't 3 names to
+      # get information from so most name methods will operate on undef and die. So, in such
+      # a case, set minnames to $count for this sub. This is triggered when $count <= $minn.
+      # Why not just < $minn? Because at this point, the "and others" pseudo-name still exists
+      # in the Biber::Entry::Names object (it's not deleted until the output driver). So we have
+      # to account here for the fact that for $morenames=1, $count is at this point one more than it
+      # should be.
+      my $morenames;
+      if ($names->last_name->get_namestring eq 'others') {
+        $morenames = 1;
+        $minan = $minbn = $minn = $count - 1 if $count <= $minn;
+      }
+      else {
+        $morenames = 0;
+      }
 
       # max/minalphanames doesn't care about uniquelist - labels are just labels
       if ( $morenames or $count > $maxan ) {

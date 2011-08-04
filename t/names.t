@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 49;
+use Test::More tests => 52;
 
 use Biber;
 use Biber::Input::file::bibtex;
@@ -23,6 +23,7 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setblxoption('minnames', 3);
 
 # Now generate the information
 $biber->prepare;
@@ -729,6 +730,12 @@ is( $out->get_output_entry($main,'l26'), $l26, 'Hyphen at brace level <> 0');
 is($section->bibentry('l27')->get_field('author')->count_names, 1, 'Bad name with 3 commas');
 is( $out->get_output_entry($main,'l28'), $l28, 'Bad name with consecutive commas');
 is( $out->get_output_entry($main,'l29'), $l29, 'Escaped name with 3 commas');
+
+# Checking visibility
+# Count does not include the "and others" as this "name" is delete in the output driver
+is($bibentries->entry('v1')->get_field($bibentries->entry('v1')->get_field('labelnamename'))->count_names, '2', 'Name count for "and others" - 1');
+is($bibentries->entry('v1')->get_field($bibentries->entry('v1')->get_field('labelnamename'))->get_visible, '2', 'Visibility for "and others" - 1');
+is($bibentries->entry('v2')->get_field($bibentries->entry('v2')->get_field('labelnamename'))->get_visible, '1', 'Visibility for "and others" - 2');
 
 # A few tests depend set to non UTF-8 output
 # Have to use a new biber object when trying to change encoding as this isn't
