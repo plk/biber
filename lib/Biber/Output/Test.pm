@@ -157,7 +157,7 @@ sub set_output_entry {
 
   foreach my $listfield (@{$struc->get_field_type('list')}) {
     if ( my $lf = $be->get_field($listfield) ) {
-      if ( $be->get_field($listfield)->[-1] eq 'others' ) {
+      if ( lc($be->get_field($listfield)->[-1]) eq 'others' ) {
         $acc .= "    \\true{more$listfield}\n";
         pop @$lf; # remove the last element in the array
       };
