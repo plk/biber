@@ -100,7 +100,7 @@ my $l4 = q|  \entry{L4}{book}{}
       {Another press}%
     }
     \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
-    \strng{fullhash}{87609df1206b0e30f838d9a26ec69169}
+    \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}
     \field{labelalpha}{Doe\textbf{+}95}
     \field{sortinit}{D}
     \field{extraalpha}{2}
@@ -198,7 +198,7 @@ my $l5 = q|  \entry{L5}{book}{}
       {Another press}%
     }
     \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
-    \strng{fullhash}{87609df1206b0e30f838d9a26ec69169}
+    \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}
     \field{labelalpha}{Doe\textbf{+}95}
     \field{sortinit}{D}
     \field{extraalpha}{1}

@@ -73,8 +73,12 @@ sub _getnamehash {
 
   }
 
-  $hashkey .= '+' if $visible < $count; # name list was truncated
+  # name list was truncated
+  if ($visible < $count or $names->get_morenames) {
+    $hashkey .= '+';
+  }
 
+  $logger->trace("Creating MD5 namehash using '$hashkey'");
   # Digest::MD5 can't deal with straight UTF8 so encode it first
   return md5_hex(encode_utf8($hashkey));
 }
@@ -128,8 +132,12 @@ sub _getnamehash_u {
 
   }
 
-  $hashkey .= '+' if $visible < $count; # name list was truncated
+  # name list was truncated
+  if ($visible < $count or $names->get_morenames) {
+    $hashkey .= '+';
+  }
 
+  $logger->trace("Creating MD5 namehash_u using '$hashkey'");
   # Digest::MD5 can't deal with straight UTF8 so encode it first
   return md5_hex(encode_utf8($hashkey));
 }
@@ -168,6 +176,12 @@ sub _getfullhash {
 
   }
 
+  # If we had an "and others"
+  if ($names->get_morenames) {
+    $hashkey .= '+'
+  }
+
+  $logger->trace("Creating MD5 fullhash using '$hashkey'");
   # Digest::MD5 can't deal with straight UTF8 so encode it first
   return md5_hex(encode_utf8($hashkey));
 }
@@ -204,6 +218,7 @@ sub _getpnhash {
     $hashkey .= $n->get_prefix;
   }
 
+  $logger->trace("Creating MD5 pnhash using '$hashkey'");
   # Digest::MD5 can't deal with straight UTF8 so encode it first
   return md5_hex(encode_utf8($hashkey));
 }
@@ -296,15 +311,6 @@ sub _labelpart {
           $f eq 'labelname') {
         my $name = $be->get_field($f) || next; # just in case there is no labelname etc.
         my $total_names = $name->count_names;
-
-        # Allow for explicit "and others" for purposes of labels,
-        # this is length one less because "and others" is handled by
-        # alphaothers. Otherwise for "John Doe and others" you get
-        # "D+" instead of "Doe+" etc.
-        if ($name->last_name->get_namestring eq 'others') {
-          $total_names--;
-        }
-
         my $visible_names;
         if ($total_names > $maxnames) {
           $visible_names = $minnames;
@@ -494,7 +500,7 @@ sub _label_name {
     $sortacc = $acc;
 
     # Add alphaothers if name list is truncated
-    if ($numnames > $loopnames) {
+    if ($numnames > $loopnames or $names->get_morenames) {
       $acc .= $alphaothers;
       $sortacc .= $sortalphaothers;
     }

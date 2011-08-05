@@ -386,6 +386,12 @@ sub _name {
   foreach my $name ($node->findnodes("./$NS:person")) {
     $names->add_name(parsename($name, $f, {useprefix => $useprefix}));
   }
+
+  # Deal with explicit "moreenames" in data source
+  if ($node->getAttribute('morenames')) {
+    $names->set_morenames;
+  }
+
   $bibentry->set_datafield(_norm($to), $names);
   return;
 }

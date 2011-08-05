@@ -2,7 +2,7 @@
 <?oxygen RNGSchema="../../data/schemata/biblatexml.rnc" type="compact"?>
 <bib:entries xmlns:bib="http://biblatex-biber.sourceforge.net/biblatexml">
   <bib:entry id="BulgakovRozenfeld:1983" entrytype="book">
-    <bib:author>
+    <bib:author morenames="1">
       <bib:person gender="sm">
         <bib:first>
           <bib:namepart initial="П">Павел</bib:namepart>
@@ -26,7 +26,7 @@
         <bib:last>Aхмедов</bib:last>
       </bib:person>
     </bib:author>
-    <bib:author mode="uniform">
+    <bib:author mode="uniform" morenames="1">
       <bib:person>
         <bib:first>
           <bib:namepart initial="P">Pavel</bib:namepart>

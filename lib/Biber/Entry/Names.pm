@@ -274,6 +274,31 @@ sub add_name {
   return;
 }
 
+=head2 set_morenames
+
+    Sets a flag to say that we had a "and others" in the data
+
+=cut
+
+sub set_morenames {
+  my $self = shift;
+  $self->{morenames} = 1;
+  return;
+}
+
+=head2 get_morenames
+
+    Gets the morenames flag
+
+=cut
+
+sub get_morenames {
+  my $self = shift;
+  return $self->{morenames} ? 1 : 0;
+}
+
+
+
 =head2 count_names
 
     Returns the number of Biber::Entry::Name objects in the object

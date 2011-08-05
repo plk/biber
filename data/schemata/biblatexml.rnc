@@ -208,7 +208,7 @@ script = element script { script.list | itemscript+ }
 origscript = element origscript { script.list | itemscript+ }
 itemscript = element item { script.list }
 # NAME LISTS
-attlist.name = attribute class { "sub" | "vol" | "main" }?, att.gender?, att.lists?
+attlist.name = attribute class { "sub" | "vol" | "main" }?, att.gender?, att.lists?, attribute morenames {"1"}?
 att.gender = attribute gender { "sf" | "sm" | "sn" | "pf" | "pm" | "pn" | "pp" }
 author = element author { attlist.name?, att.mode?, ( text | person+ ) }
 editor = element editor { attlist.name?, att.mode?, (text | person+) }

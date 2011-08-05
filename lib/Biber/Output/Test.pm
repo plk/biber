@@ -121,13 +121,11 @@ sub set_output_entry {
     }
     $plo =join(',', @plo);
 
-    if ( $ln->last_name->get_namestring eq 'others' ) {
+    # Did we have "and others" in the data?
+    if ( $ln->get_morenames ) {
       $acc .= "    \\true{morelabelname}\n";
-      $ln->del_last_name;
-      # record that we have deleted "others" from labelname field
-      # we will need this below
-      $name_others_deleted = $lnn;
     }
+
     my $total = $ln->count_names;
     $acc .= "    \\name{labelname}{$total}{$plo}{%\n";
     foreach my $n (@{$ln->names}) {
@@ -140,16 +138,12 @@ sub set_output_entry {
   foreach my $namefield (@{$struc->get_field_type('name')}) {
     next if $struc->is_field_type('skipout', $namefield);
     if ( my $nf = $be->get_field($namefield) ) {
-      # If this name is labelname, we've already deleted the "others"
-      # so just add the boolean
-      if ($name_others_deleted eq $namefield) {
+
+      # Did we have "and others" in the data?
+      if ( $nf->get_morenames ) {
         $acc .= "    \\true{more$namefield}\n";
       }
-      # otherwise delete and add the boolean
-      elsif ($nf->last_name->get_namestring eq 'others') {
-        $acc .= "    \\true{more$namefield}\n";
-        $nf->del_last_name;
-      }
+
       my $total = $nf->count_names;
       # Copy perl-list options to the actual labelname too
       $plo = '' unless (defined($lnn) and $namefield eq $lnn);

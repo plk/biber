@@ -1306,15 +1306,11 @@ sub process_visible_names {
       #
       # and minnames=3. Then visibility will be set to 3 but there aren't 3 names to
       # get information from so most name methods will operate on undef and die. So, in such
-      # a case, set minnames to $count for this sub. This is triggered when $count <= $minn.
-      # Why not just < $minn? Because at this point, the "and others" pseudo-name still exists
-      # in the Biber::Entry::Names object (it's not deleted until the output driver). So we have
-      # to account here for the fact that for $morenames=1, $count is at this point one more than it
-      # should be.
+      # a case, set minnames to $count for this sub.
       my $morenames;
-      if ($names->last_name->get_namestring eq 'others') {
+      if ($names->get_morenames) {
         $morenames = 1;
-        $minan = $minbn = $minn = $count - 1 if $count <= $minn;
+        $minan = $minbn = $minn = $count if $count < $minn;
       }
       else {
         $morenames = 0;
@@ -1719,7 +1715,7 @@ sub create_uniquename_info {
         my $num_names = $nl->count_names;
         my $names = $nl->names;
         # If name list was truncated in bib with "and others", this overrides maxnames
-        my $morenames = ($nl->last_name->get_namestring eq 'others') ? 1 : 0;
+        my $morenames = $nl->get_morenames ? 1 : 0;
 
         my @truncnames;
         my @lastnames;
@@ -1873,7 +1869,7 @@ sub generate_uniquename {
         my $num_names = $nl->count_names;
         my $names = $nl->names;
         # If name list was truncated in bib with "and others", this overrides maxnames
-        my $morenames = ($nl->last_name->get_namestring eq 'others') ? 1 : 0;
+        my $morenames = ($nl->get_morenames) ? 1 : 0;
 
         my @truncnames;
 
@@ -2006,7 +2002,6 @@ sub create_uniquelist_info {
         my $ulminyear_namelist = [];
 
         foreach my $name (@{$nl->names}) {
-          next if $name->get_namestring eq 'others'; # Don't count explicit "et al"
 
           my $lastname   = $name->get_lastname;
           my $nameinitstring = $name->get_nameinitstring;
@@ -2092,7 +2087,6 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
         my $num_names = $nl->count_names;
 
         foreach my $name (@{$nl->names}) {
-          next if $name->get_namestring eq 'others'; # Don't count explicit "et al"
 
           my $lastname   = $name->get_lastname;
           my $nameinitstring = $name->get_nameinitstring;

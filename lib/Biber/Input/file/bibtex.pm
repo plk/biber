@@ -498,7 +498,16 @@ sub _name {
       }
     }
 
-    $names->add_name(parsename($name, $f, {useprefix => $useprefix}));
+    my $no = parsename($name, $f, {useprefix => $useprefix});
+
+    # Deal with "and others" in data source
+    if (lc($no->get_namestring) eq 'others') {
+      $names->set_morenames;
+    }
+    else {
+      $names->add_name($no);
+    }
+
   }
   $bibentry->set_datafield($to, $names);
   return;

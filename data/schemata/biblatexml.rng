@@ -1294,6 +1294,11 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <optional>
       <ref name="att.lists"/>
     </optional>
+    <optional>
+      <attribute name="morenames">
+        <value>1</value>
+      </attribute>
+    </optional>
   </define>
   <define name="att.gender">
     <attribute name="gender">
