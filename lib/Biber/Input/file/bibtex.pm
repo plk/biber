@@ -591,8 +591,8 @@ sub cache_data {
 
   my $bib = Text::BibTeX::File->new( $pfilename, '<' )
     or $logger->logdie("Cannot create Text::BibTeX::File object from $pfilename: $!");
-  while ( my $entry = new Text::BibTeX::Entry $bib ) {
 
+  while ( my $entry = new Text::BibTeX::Entry $bib ) {
     if ( $entry->metatype == BTE_PREAMBLE ) {
       push @{$cache->{preamble}{$filename}}, decode_utf8($entry->value);
       next;
@@ -675,7 +675,6 @@ sub preprocess_file {
     $logger->info('Decoding LaTeX character macros into UTF-8');
     $buf = Biber::LaTeX::Recode::latex_decode($buf, strip_outer_braces => 1,
                                               scheme => Biber::Config->getoption('decodecharsset'));
-
     File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
         or $logger->logdie("Can't write $ufilename");
   }
