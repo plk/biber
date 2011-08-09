@@ -1,16 +1,17 @@
-* TODO When cygwin on perl 5.14, change build script (deprecated module)
-
+* TODO Perl 5.14
+  * Get windows and cygwin installed with modules, test builds
+  * Change build script (deprecated module) in cygwin build
+  * Change perl version requirements in doc
+  * strings pragma and array/hash refs
 * TODO labelalphatemplate implementation
   * Take out labelalphatemplate defaults, optional in rnc/rng and parsing when biblatex implements it
 * TODO When biblatex implements related entries, take out reprinttitle
-
 * TODO Generalised \printbibliography system
   * Typed lists - entry, key, shorthand etc.
   * Take out MAIN, SHORTHANDS backwards compat hacks in Biber.pm and BBL.pm
   * Shorthands should be requested otherwise it's a big sorting overhead
 
 * TODO Structure ALL fields need to be put into types where possible
-
 * TODO Displaymodes should not be optional in schema and control parse when implemented
 
 * TODO Zotero data sources

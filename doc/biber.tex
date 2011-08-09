@@ -1049,16 +1049,6 @@ your \verb+.bib+ data source which you want to sort correctly
 
 \noindent Shortcut alias for \verb+biber --bblencoding=UTF-8+
 
-\subsection{Limitations}
-
-Currently, users are restricted to a one-one mapping from datasource
-entry types/fields to the \verb+biblatex+ supported entry type/fields.
-This is mitigated a little by the type/field aliases which
-\verb+biblatex+ supports. In the future, users will be able to
-customise the data source driver config in order to define their own
-entry type/field aliases so that there is more flexibility in mapping
-data source entry type/fields to internal \verb+biblatex+ types/fields.
-
 \subsection{Editor Integration}
 
 Here is some information on how to integrate \verb+biber+ into some of the
@@ -1211,7 +1201,7 @@ modules. It is packaged as a stand-alone binary using the excellent
 dependencies into one file which acts as a stand-alone binary and is
 indistinguishable from such to the end user. You can also simply download
 the \verb+Perl+ source and run it as a normal \verb+Perl+ program which
-requires you to have a working \verb+Perl+ 5.14 installation and the
+requires you to have a working \verb+Perl+ 5.10+ installation and the
 ability to install the pre-requisite modules. You would typically only do
 this if you wanted to keep up with all the bleeding-edge git commits before
 they had been packaged as a binary. Almost all users will not want to do
@@ -1254,7 +1244,7 @@ varies from OS to OS. The cache name is:\\[1ex]
 \verb+par-<username>\cache-<hash>+ (Windows)\\[1ex]
 
 \noindent The temp location is not always obvious but these are sensible
-places to look (where \verb+*+ can vary depending on username:
+places to look (where \verb+*+ can vary depending on username):
 
 \begin{itemize}
 \item \verb+/var/folders/*/*/*/+ (OSX, local GUI login shell)
@@ -1348,7 +1338,7 @@ linux» if unsure about this. There are many pages about this, for example:
 \subsection{Building}
 
 Instructions for those who want/need to build an executable from the
-\verb+Perl+ version. For this, you will need to have \verb+Perl+ 5.14 with
+\verb+Perl+ version. For this, you will need to have \verb+Perl+ 5.10+ with
 the following modules:
 
 \begin{itemize}
