@@ -68,8 +68,8 @@ Options:
       Try to convert UTF-8 chars into LaTeX macros when writing the .bbl
       This can prevent unknown char errors when using PDFLaTeX and inputenc
       as this doesn't understand all of UTF-8. Note, it is better to switch
-      to XeTeX or LuaTeX to avoid this situation. Without argument uses a
-      generous set of conversions.
+      to XeTeX or LuaTeX to avoid this situation. By default uses the
+      --bblsafecharsset "extra" set of characters.
 
   --bblsafecharsset=base|extra|full
       The set of characters included in the conversion routine for
