@@ -1442,7 +1442,7 @@ SourceForge\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/
 put them in a directory and run \verb+biber+ in that directory like this:
 
 \begin{verbatim}
-biber --convert_control test
+biber --validate_control --convert_control test
 \end{verbatim}
 
 \noindent This will run \verb+biber+ normally on the test files plus it
@@ -1454,13 +1454,15 @@ of \verb+biber+ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is biber 0.9
+INFO - This is biber 0.9.5
 INFO - Logfile is 'test.blg'
+INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'
-INFO - Reading test.bcf
-INFO - Using all citekeys in bib section 0
+INFO - Reading 'test.bcf'
+INFO - Found 1 citekeys in bib section 0
 INFO - Processing bib section 0
-INFO - Processing bibtex format file 'test.bib' for section 0
+INFO - Looking for bibtex format file 'test.bib' for section 0
+INFO - Found bibtex data file 'test.bib'
 INFO - Decoding LaTeX character macros into UTF-8
 INFO - Sorting list 'MAIN' keys
 INFO - No sort tailoring available for locale 'en_GB.UTF-8'
