@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use constant {
   EXIT_OK => 0,
-  EXIT_ERROR => 1
+  EXIT_ERROR => 2
 };
 
 # no warnings 'utf8';
@@ -53,17 +53,14 @@ GetOptions(
            'validate_structure|V',
            'version|v',
            'wraplines|w'
-          ) or pod2usage(EXIT_ERROR);
-
-# pod2usage(1) if $help;
-# pod2usage(-exitstatus => 0, -verbose => 2) if $man;
+          ) or pod2usage(-verbose => 0,
+                         -exitval => EXIT_ERROR);
 
 our $VERSION = $Biber::Config::VERSION;
 our $BETA_VERSION = $Biber::Config::BETA_VERSION;
 
 if (exists $opts->{'help'}) {
-  print usage();
-  exit EXIT_OK;
+  pod2usage(-exitval => EXIT_OK);
 }
 
 if (exists $opts->{'version'}) {
@@ -73,8 +70,8 @@ if (exists $opts->{'version'}) {
 
 # Catch this situation early
 unless (@ARGV) {
-  print STDERR usage();
-  exit EXIT_ERROR;
+  pod2usage(-verbose => 0,
+            -exitval => EXIT_ERROR);
 }
 
 # Sanitise collate option if fastsort is specified
@@ -205,153 +202,6 @@ sub version {
   return "$v\n";
 }
 
-sub usage {
-  qq{
-Usage:  biber [options] file.bcf
-
-        Creates file.bbl using control file file.bcf (.bcf extension is optional)
-        Normaly use with biblatex requires no options as they are all set in
-        biblatex and passed via the .bcf file
-
-Options:
-
-  --bblencoding|-E [encoding]
-      Specify the encoding of the output .bbl file. Default is "UTF-8".
-      Normally it's not necessary to set this as it's passed via biblatex
-      from the inputenc package setting.
-      See "perldoc Encode::Supported" for a list of supported encodings.
-
-  --bblsafechars
-      Try to convert UTF-8 chars into LaTeX macros when writing the .bbl
-      This can prevent unknown char errors when using PDFLaTeX and inputenc
-      as this doesn't understand all of UTF-8. Note, it is better to switch
-      to XeTeX or LuaTeX to avoid this situation. By default uses the
-      --bblsafecharsset "extra" set of characters.
-
-  --bblsafecharsset=base|extra|full
-      The set of characters included in the conversion routine for
-      --bblsafechars. Set to "full" to try harder with a much
-      larger set or "base" to use a minimal set. Default is "extra" which is
-      between "base" and "full". You may need to load more macro packages
-      to deal with the results of "full" (Dings, Greek characters, special
-      symbols etc.)
-
-  --bibencoding|-e [encoding]
-      Specify the encoding of the bib file(s). Default is "UTF-8"
-      Normally it's not necessary to set this as it's passed via the
-      .bcf file from biblatex's setting of the same name.
-      See "perldoc Encode::Supported" for a list of supported encodings.
-
-  --collate|-C
-      Sort with Unicode::Collate instead of the built-in sort function.
-      This is the default.
-
-  --collate_options|-c [options]
-      Options to pass to the Unicode::Collate object used for sorting
-      (default is 'level => "2", table => "latinkeys.txt"').
-      See "perldoc Unicode::Collate" for details.
-
-  --configfile|-g <file>
-      Use <file> as configuration file for Biber.
-      The default is the first file found among
-      "biber.conf" in the current directory, "\$HOME/.biber.conf",
-      or else the output of "kpsewhich biber.conf".
-
-  --convert_control
-      Converts the .bcf control file into html using an XSLT transform. Can
-      be useful for debugging. File is named by appending \".html\"
-      to .bcf file.
-
-  --decodecharsset=base|extra|full
-      The set of characters included in the conversion routine when decoding
-      LaTeX macros into UTF-8 (which happens when --bblencoding|-E is set to
-      UTF-8) Set to "full" to try harder with a much larger set or "base" to
-      use a minimal set. Default is "extra" which is between "base" and "full".
-      You may want to try "full" if you want, for example, to sort more
-      obscure UTF-8 characters in the .bib
-
-  --debug|-D
-      Turn on debugging for biber.
-
-  --fastsort|-f
-      Use Perl’s sort instead of Unicode::Collate for sorting. Also uses
-      OS locale definitions (which may be broken for some languages ...)
-
-  --help|-h
-      Show this help message.
-
-  --logfile <file>
-      Use <file>.blg as the name of the logfile
-
-  --mincrossrefs|-m <n>
-      Set threshold for crossrefs.
-
-  --noconf
-      Don't look for a configfile
-
-  --nolog
-      Do not write any logfile.
-
-  --nostdmacros
-      Don't automatically define any standard macros like month abbreviations.
-      If you also define these yourself, this option can be used to suppress
-      macro redefinition warnings.
-
-  --onlylog
-      Do not write any message to screen.
-
-  --outfile|-O <file>
-      Output to <file> instead of <basename>.bbl
-      <file> is relative to --output_directory, if set (absolute
-      paths in this case are stripped to filename only). <file> can
-      be absolute if --output_directory is not set.
-
-  --output_directory <d>
-      Files (.bbl and .log) are output to directory <d> instead
-      of the current directory. Input files are also looked for in <d>
-      before current directory.
-
-  --quiet|-q
-      Log only errors
-
-  --sortcase=true|false
-      Case-sensitive sorting (default is true)
-
-  --sortlocale|-l [locale]
-      Set the locale to be used for sorting.  With default sorting
-      (--collate|-C), the locale is used to add CLDR 
-      tailoring to the sort (if available for the locale). With
-      --fastsort|-f this sets the OS locale for sorting.
-
-  --sortupper=true|false
-      Whether to sort uppercase before lowercase when using
-      default sorting (--collate|-C). When
-      using --fastsort|-f, your OS collation locale determines
-      this and this option is ignored. (default is true)
-
-  -u
-      Alias for --bibencoding=UTF-8.
-
-  -U
-      Alias for --bblencoding=UTF-8.
-
-  --validate_control
-      Schema validate the .bcf biblatex control file.
-
-  --validate_structure|-V
-      Validate various aspects of the bib entries
-
-  --version|-v
-      Display version number.
-
-  --wraplines|-w
-      Wrap lines in the .bbl file.
-
-Bug reports, forum and downloads at:
-  https://sourceforge.net/projects/biblatex-biber
-\n}
-}
-
 __END__
 
 =pod
@@ -366,9 +216,9 @@ C<biber> - A bibtex replacement for users of biblatex
 
 biber [options] file[.bcf]
 
-  Creates "file.bbl" using control file "file.bcf" (".bcf" extension is optional)
-  Normaly use with biblatex requires no options as they are all set in
-  biblatex and passed via the ".bcf" file
+  Creates "file.bbl" using control file "file.bcf" (".bcf" extension is
+  optional). Normaly use with biblatex requires no options as they are
+  all set in biblatex and passed via the ".bcf" file
 
   Please run "biber --help" for option details
 
@@ -406,7 +256,7 @@ symbols etc.)
 
 =item B<--bibencoding|-e [encoding]>
 
-Specify the encoding of the bib file(s). Default is "UTF-8"
+Specify the encoding of the data source file(s). Default is "UTF-8"
 Normally it's not necessary to set this as it's passed via the
 .bcf file from biblatex's setting of the same name.
 See "perldoc Encode::Supported" for a list of supported encodings.
@@ -461,7 +311,7 @@ Show this help message.
 
 Use F<file.blg> as the name of the logfile
 
-<--mincrossrefs|-m [number]>
+=item B<--mincrossrefs|-m [number]>
 
 Set threshold for crossrefs.
 

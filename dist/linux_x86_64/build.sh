@@ -21,6 +21,8 @@
   --module=Biber::Input::file::ris \
   --module=Biber::Input::file::zoterordfxml \
   --module=Biber::Input::file::endnotexml \
+  --module=Pod::Simple::TranscodeSmart \
+  --module=Pod::Simple::TranscodeDumb \
   --module=Encode::Byte \
   --module=Encode::CN \
   --module=Encode::CJKConstants \
