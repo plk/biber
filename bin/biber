@@ -1,12 +1,15 @@
 #!/usr/bin/perl
+
+use feature ':5.10';
+#use 5.014001;
 use strict;
 use warnings;
+
 use constant {
   EXIT_OK => 0,
   EXIT_ERROR => 2
 };
 
-# no warnings 'utf8';
 use Carp;
 use IPC::Cmd qw( can_run run );
 use Log::Log4perl qw(:no_extra_logdie_message);
@@ -56,15 +59,14 @@ GetOptions(
           ) or pod2usage(-verbose => 0,
                          -exitval => EXIT_ERROR);
 
-our $VERSION = $Biber::Config::VERSION;
-our $BETA_VERSION = $Biber::Config::BETA_VERSION;
-
 if (exists $opts->{'help'}) {
   pod2usage(-exitval => EXIT_OK);
 }
 
 if (exists $opts->{'version'}) {
-  print version();
+  my $v = "biber version: $Biber::Config::VERSION";
+  $v .= ' (beta)' if $Biber::Config::BETA_VERSION;
+  say "$v";
   exit EXIT_OK;
 }
 
@@ -141,16 +143,6 @@ if (Biber::Config->getoption('trace')) {
 
 # Set the output class. Should be a subclass of Biber::Output::Base
 $biber->set_output_obj(Biber::Output::BBL->new());
-
-if (Biber::Config->getoption('trace')) {
-  $logger->trace("\n###########################################################\n",
-    "############# Dump of post-parse config object: ###########\n",
-    Data::Dump::pp($Biber::Config::CONFIG), "\n",
-    "############# Dump of post-parse biber object: ############\n",
-    $biber->_stringdump,
-    "\n###########################################################")
-}
-
 # Do all the real work
 $biber->prepare;
 
@@ -170,8 +162,6 @@ $bbloutput->set_output_target_file($bblfile);
 # Write the output to the target
 $bbloutput->output;
 
-###
-
 # display warnings/errors summary, like BibTeX's format
 # unless in quiet mode and exit
 unless (Biber::Config->getoption('quiet')) {
@@ -187,20 +177,14 @@ unless (Biber::Config->getoption('quiet')) {
   elsif (defined($biber->{warnings})) {
     if ($biber->{warnings} == 1) {
       print "(There was 1 warning)\n";
-    } elsif ($biber->{warnings} > 1) {
+    }
+    elsif ($biber->{warnings} > 1) {
       print "(There were ", $biber->{warnings}, " warnings)\n";
     }
     exit EXIT_OK;
   }
 }
 
-#======================================================
-
-sub version {
-  my $v = "biber version: $VERSION";
-  $v .= ' (beta)' if $BETA_VERSION;
-  return "$v\n";
-}
 
 __END__
 
@@ -415,5 +399,3 @@ but without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
 =cut
-
-# vim: set tabstop=2 shiftwidth=2 expandtab:

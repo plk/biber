@@ -1,9 +1,11 @@
 package Biber::Utils;
 use feature ':5.10';
-#use feature 'unicode_strings';
-
+#use 5.014001;
 use strict;
 use warnings;
+use re 'eval';
+use base 'Exporter';
+
 use Carp;
 use Encode;
 use File::Find;
@@ -15,8 +17,6 @@ use Biber::Constants;
 use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
 use Regexp::Common qw( balanced );
-use re 'eval';
-use base 'Exporter';
 use Log::Log4perl qw(:no_extra_logdie_message);
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -632,6 +632,10 @@ sub join_name {
   return $nstring;
 }
 
+1;
+
+__END__
+
 =head1 AUTHOR
 
 François Charette, C<< <firmicus at gmx.net> >>
@@ -654,7 +658,3 @@ but without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
 =cut
-
-1;
-
-# vim: set tabstop=2 shiftwidth=2 expandtab:

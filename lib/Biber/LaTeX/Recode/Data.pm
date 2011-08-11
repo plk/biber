@@ -1,9 +1,10 @@
 package Biber::LaTeX::Recode::Data;
 use feature ':5.10';
-#use feature 'unicode_strings';
+#use 5.014001;
 use strict;
 use warnings;
 use base qw(Exporter);
+
 our @EXPORT    = qw[ %ACCENTS           %ACCENTS_R
                      %WORDMACROS        %WORDMACROS_R
                      %DIACRITICS        %DIACRITICS_R
@@ -1026,6 +1027,9 @@ $SUPERCMD_RE_R    = qr{$SUPERCMD_RE_R};
 our $DINGS_RE_R = join('|', keys %DINGS_R);
 $DINGS_RE_R    = qr{$DINGS_RE_R};
 
+1;
+
+__END__
 
 =head1 AUTHOR
 
@@ -1056,7 +1060,3 @@ but without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
 =cut
-
-1;
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:

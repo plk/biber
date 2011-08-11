@@ -1,8 +1,9 @@
 package Biber::Constants;
 use feature ':5.10';
-#use feature 'unicode_strings';
+#use 5.014001;
 use strict;
 use warnings;
+
 use Encode::Alias;
 use Readonly;
 
@@ -1731,5 +1732,3 @@ but without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
 =cut
-
-# vim: set tabstop=2 shiftwidth=2 expandtab:

@@ -1,6 +1,8 @@
 package Biber::Output::Base;
 use feature ':5.10';
-#use feature 'unicode_strings';
+#use 5.014001;
+use strict;
+use warnings;
 
 use Biber::Entry;
 use IO::File;
@@ -282,7 +284,8 @@ sub output {
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     print $target "SECTION: $secnum\n\n";
-    foreach my $list (@{$self->get_output_section($secnum)->get_lists}) {
+    my $section = $self->get_output_section($secnum);
+    foreach my $list (@{$section->get_lists}) {
       my $listlabel = $list->get_label;
       my $listtype = $list->get_type;
       print $target "  LIST: $listlabel\n\n";
@@ -306,6 +309,10 @@ sub output {
   return;
 }
 
+1;
+
+__END__
+
 =head1 AUTHORS
 
 François Charette, C<< <firmicus at gmx.net> >>
@@ -328,8 +335,3 @@ but without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
 =cut
-
-1;
-
-# vim: set tabstop=2 shiftwidth=2 expandtab:
-

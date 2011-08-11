@@ -1,9 +1,9 @@
 package Biber::Internals;
 use feature ':5.10';
-#use feature 'unicode_strings';
-
+#use 5.014001;
 use strict;
 use warnings;
+
 use Carp;
 use Biber::Constants;
 use Biber::Utils;
@@ -15,9 +15,6 @@ use Log::Log4perl qw(:no_extra_logdie_message);
 use Digest::MD5 qw( md5_hex );
 use POSIX qw( locale_h ); # for lc()
 use Encode;
-use charnames ':full';
-use Unicode::Normalize;
-use utf8;
 
 =encoding utf-8
 
@@ -1473,6 +1470,9 @@ sub process_entry_options {
   }
 }
 
+1;
+
+__END__
 
 =head1 AUTHOR
 
@@ -1496,7 +1496,3 @@ but without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
 =cut
-
-1;
-
-# vim: set tabstop=2 shiftwidth=2 expandtab:

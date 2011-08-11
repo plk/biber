@@ -1,6 +1,8 @@
 package Biber::Output::Test;
 use feature ':5.10';
-#use feature 'unicode_strings';
+#use 5.014001;
+use strict;
+use warnings;
 use base 'Biber::Output::Base';
 
 use Biber::Config;
@@ -327,6 +329,9 @@ sub output {
   return;
 }
 
+1;
+
+__END__
 
 =head1 AUTHORS
 
@@ -350,8 +355,3 @@ but without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
 =cut
-
-1;
-
-# vim: set tabstop=2 shiftwidth=2 expandtab:
-

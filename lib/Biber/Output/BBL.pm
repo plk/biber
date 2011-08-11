@@ -1,6 +1,8 @@
 package Biber::Output::BBL;
 use feature ':5.10';
-#use feature 'unicode_strings';
+#use 5.014001;
+use strict;
+use warnings;
 use base 'Biber::Output::Base';
 
 use Biber::Config;
@@ -28,6 +30,7 @@ Biber::Output::BBL - class for Biber output of .bbl
 
 sub new {
   my $class = shift;
+  my $obj = shift;
   my $self = $class->SUPER::new($obj);
   my $ctrlver = Biber::Config->getblxoption('controlversion');
   my $beta = $Biber::Config::BETA_VERSION ? ' (beta)' : '';
@@ -449,6 +452,9 @@ sub output {
   return;
 }
 
+1;
+
+__END__
 
 =head1 AUTHORS
 
@@ -472,8 +478,3 @@ but without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
 =cut
-
-1;
-
-# vim: set tabstop=2 shiftwidth=2 expandtab:
-

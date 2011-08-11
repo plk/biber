@@ -1,10 +1,12 @@
 package Biber::Input::file::zoterordfxml;
 use feature ':5.10';
+#use 5.014001;
 #use feature 'unicode_strings';
 use strict;
 use warnings;
-use Carp;
+use base 'Exporter';
 
+use Carp;
 use Biber::Constants;
 use Biber::Entries;
 use Biber::Entry;
@@ -18,7 +20,6 @@ use Biber::Config;
 use Digest::MD5 qw( md5_hex );
 use File::Spec;
 use Log::Log4perl qw(:no_extra_logdie_message);
-use base 'Exporter';
 use List::AllUtils qw( :all );
 use XML::LibXML;
 use XML::LibXML::Simple;
@@ -706,5 +707,3 @@ but without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
 =cut
-
-# vim: set tabstop=2 shiftwidth=2 expandtab:

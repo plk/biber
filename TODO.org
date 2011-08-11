@@ -1,7 +1,5 @@
 * TODO Perl 5.14
-  * Change 'use feature ':5.10';' to 'use 5.014001;' in all files
-  * Uncomment 'use feature 'unicode_strings';' in all files and put
-    under 'use <version>' line
+  * Remove 'use feature ':5.10';', uncomment 'use 5.014001;' in all files
   * Get windows and cygwin installed with modules, test builds
   * Change build script (deprecated module) in cygwin build
   * Change perl version requirements in doc

@@ -1,16 +1,15 @@
 package Biber::LaTeX::Recode;
 use feature ':5.10';
-#use feature 'unicode_strings';
+#use 5.014001;
 use strict;
 use warnings;
-no warnings 'utf8';
+use base qw(Exporter);
+
 use Unicode::Normalize;
 use Biber::LaTeX::Recode::Data;
 use Exporter;
-use base qw(Exporter);
 use Carp;
 
-our $VERSION = '0.1';
 our @EXPORT  = qw(latex_encode latex_decode);
 
 =encoding utf-8
@@ -18,10 +17,6 @@ our @EXPORT  = qw(latex_encode latex_decode);
 =head1 NAME
 
 Biber::LaTeX::Recode - Encode/Decode chars to/from UTF-8/lacros in LaTeX
-
-=head1 VERSION
-
-Version 0.01
 
 =head1 SYNOPSIS
 
@@ -296,6 +291,9 @@ sub _get_diac_last_r {
     }
 }
 
+1;
+
+__END__
 
 =head1 AUTHOR
 
@@ -321,8 +319,3 @@ but without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
 =cut
-
-1;
-
-# vim: set tabstop=4 shiftwidth=4 expandtab:
-

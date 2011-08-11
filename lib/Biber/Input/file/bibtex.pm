@@ -1,11 +1,12 @@
 package Biber::Input::file::bibtex;
 use feature ':5.10';
-#use feature 'unicode_strings';
-use sigtrap qw(handler TBSIG SEGV);
+#use 5.014001;
 use strict;
 use warnings;
-use Carp;
+use sigtrap qw(handler TBSIG SEGV);
+use base 'Exporter';
 
+use Carp;
 use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
 use Text::BibTeX::NameFormat;
@@ -23,7 +24,6 @@ use Encode;
 use File::Spec;
 use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
-use base 'Exporter';
 use List::AllUtils qw( :all );
 use XML::LibXML::Simple;
 
@@ -927,5 +927,3 @@ but without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
 =cut
-
-# vim: set tabstop=2 shiftwidth=2 expandtab:

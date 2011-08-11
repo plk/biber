@@ -1,6 +1,8 @@
 package Biber::Entry::Name;
 use feature ':5.10';
-#use feature 'unicode_strings';
+#use 5.014001;
+use strict;
+use warnings;
 
 use Regexp::Common qw( balanced );
 use Biber::Config;
@@ -507,6 +509,7 @@ sub name_to_bbl {
   my $pno; # per-name options final string
 
   # lastname is always defined
+  my $lni;
   my $ln  = Biber::Utils::join_name($self->get_lastname);
   if ($self->was_stripped('lastname')) {
     $ln = Biber::Utils::add_outer($ln);
@@ -603,6 +606,9 @@ sub dump {
   return pp($self);
 }
 
+1;
+
+__END__
 
 =head1 AUTHORS
 
@@ -626,7 +632,3 @@ but without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
 =cut
-
-1;
-
-# vim: set tabstop=2 shiftwidth=2 expandtab:

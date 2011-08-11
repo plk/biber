@@ -1,6 +1,7 @@
 package Biber::Config;
 use feature ':5.10';
-#use feature 'unicode_strings';
+#use 5.014001;
+
 use Biber::Constants;
 use IPC::Cmd qw( can_run );
 use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
@@ -1325,6 +1326,10 @@ sub dump {
   dd($CONFIG);
 }
 
+1;
+
+__END__
+
 =head1 AUTHORS
 
 François Charette, C<< <firmicus at gmx.net> >>
@@ -1347,7 +1352,3 @@ but without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
 =cut
-
-1;
-
-# vim: set tabstop=2 shiftwidth=2 expandtab:

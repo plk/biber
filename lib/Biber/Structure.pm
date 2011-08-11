@@ -1,6 +1,8 @@
 package Biber::Structure;
 use feature ':5.10';
-#use feature 'unicode_strings';
+#use 5.014001;
+use strict;
+use warnings;
 
 use List::Util qw( first );
 use Biber::Utils;
@@ -500,6 +502,10 @@ sub dump {
   return pp($self);
 }
 
+1;
+
+__END__
+
 =head1 AUTHORS
 
 François Charette, C<< <firmicus at gmx.net> >>
@@ -522,6 +528,3 @@ but without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
 =cut
-
-
-1;

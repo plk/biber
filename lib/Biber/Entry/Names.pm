@@ -1,6 +1,8 @@
 package Biber::Entry::Names;
 use feature ':5.10';
-#use feature 'unicode_strings';
+#use 5.014001;
+use strict;
+use warnings;
 
 use Data::Dump;
 use Biber::Config;
@@ -32,13 +34,13 @@ sub new {
 
 =cut
 
-sub TO_JSON {
-  my $self = shift;
-  foreach $n (@$self){
-    $json->{$k} = $v;
-  }
-  return [ map {$_} @$self ];
-}
+# sub TO_JSON {
+#   my $self = shift;
+#   foreach my $n (@$self){
+#     $json->{$k} = $v;
+#   }
+#   return [ map {$_} @$self ];
+# }
 
 =head2 notnull
 
@@ -370,6 +372,10 @@ sub dump {
   return;
 }
 
+1;
+
+__END__
+
 =head1 AUTHORS
 
 François Charette, C<< <firmicus at gmx.net> >>
@@ -392,7 +398,3 @@ but without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
 =cut
-
-1;
-
-# vim: set tabstop=2 shiftwidth=2 expandtab:
