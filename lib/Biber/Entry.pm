@@ -332,8 +332,7 @@ sub inherit_from {
           next unless $parent->field_exists($field->{source});
           $processed{$field->{source}} = 1;
           # localise defaults according to field, if specified
-          my $field_override_target = $field->{override_target}
-            if $field->{override_target};
+          my $field_override_target = $field->{override_target} // 'false';
           # Skip this field if requested
           if ($field->{skip}) {
             $processed{$field->{source}} = 1;
