@@ -649,8 +649,9 @@ sub process_setup {
   # up structure defaults in Constants.pm in case there is no .bcf
   Biber::Config->set_structure(Biber::Structure->new(Biber::Config->getblxoption('structure')));
 
-  # Force bblsafechars flag if output to ASCII
-  if (Biber::Config->getoption('bblencoding') =~ /(?:x-)?ascii/xmsi) {
+  # Force bblsafechars flag if output to ASCII and bibencoding is not ASCII
+  if (Biber::Config->getoption('bblencoding') =~ /(?:x-)?ascii/xmsi and
+      Biber::Config->getoption('bibencoding') !~ /(?:x-)?ascii/xmsi) {
     Biber::Config->setoption('bblsafechars', 1);
   }
 }
