@@ -2,7 +2,7 @@ Things to remember when releasing new version:
 
 * Change content, if necessary, of README
 * Change version string in and content of "Changes" file
-* Change version string in doc and update volatile doc info (e.g. drivers)
+* Change version string in doc and update volatile doc info
 * Update main html and doc page 
 * Update "TODO" file
 * Update any driver .dcf description elements which need it

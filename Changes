@@ -1,6 +1,7 @@
 Revision history for Biber
 
-0.9.5  (unreleased beta)
+0.9.5  18-08-2011
+       * Fixed auto-bblsafechars bug
        * refactored explicit "and others" in bibtex data sources
        * Fixed issue with sorting=none and \nocite{*}
 0.9.4  30-07-2011
