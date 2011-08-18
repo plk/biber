@@ -106,7 +106,7 @@
       },
       "Biber::LaTeX::Recode" : {
          "file" : "lib/Biber/LaTeX/Recode.pm",
-         "version" : "0.1"
+         "version" : 0
       },
       "Biber::LaTeX::Recode::Data" : {
          "file" : "lib/Biber/LaTeX/Recode/Data.pm",

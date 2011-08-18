@@ -943,8 +943,10 @@ sub _generatesortinfo {
         require Biber::LaTeX::Recode;
         my $initd = Biber::LaTeX::Recode::latex_encode($init,
                                                        scheme => Biber::Config->getoption('bblsafecharsset'));
-        $logger->warn("The character '$init' cannot be encoded in '$bblenc'. sortinit will be set to macro '$initd' for entry '$citekey'");
-        $self->{warnings}++;
+        unless ($bblenc =~ /(?:x-)?ascii/xmsi) {
+          $logger->warn("The character '$init' cannot be encoded in '$bblenc'. sortinit will be set to macro '$initd' for entry '$citekey'");
+          $self->{warnings}++;
+        }
         $init = $initd;
       }
     }

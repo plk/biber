@@ -650,7 +650,7 @@ sub process_setup {
   Biber::Config->set_structure(Biber::Structure->new(Biber::Config->getblxoption('structure')));
 
   # Force bblsafechars flag if output to ASCII
-  if (Biber::Config->getoption('bblencoding') =~ /(?:x-)ascii/xmsi) {
+  if (Biber::Config->getoption('bblencoding') =~ /(?:x-)?ascii/xmsi) {
     Biber::Config->setoption('bblsafechars', 1);
   }
 }
