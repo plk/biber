@@ -1,6 +1,7 @@
 * TODO Perl 5.14
   * Remove 'use feature ':5.10';', uncomment 'use 5.014001;' in all files
-  * Get windows and cygwin installed with modules, test builds
+  * Get windows and cygwin installed with modules, test builds, check link
+    lines in build scripts
   * Change build script (deprecated module) in cygwin build
   * Change perl version requirements in doc
   * strings pragma and array/hash refs
