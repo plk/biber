@@ -134,25 +134,38 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
 \item Flexible user-customisable crossreference field inheritance
   model
 \item Handles complex auto-expansion and contraction of names and
-  namelists
+  namelists (See section 4.11.4 of the \verb+biblatex+ manual for an excellent
+  explanation with examples, this is quite an impressive feature \ldots)
 \item Support for related entries, to enable generic treatment of things
   like «translated as», «reprinted as», «reprint of»
-  etc.\footnote{Coming in BibLaTeX 2.0}
+  etc. (\verb+biblatex+ support coming in \verb+biblatex+ 2.x)
 \item Extensible modular data sources architecture for ease of adding
-  more data source types.
+  more data source types
 \item Support for remote data sources
+\item Customisable labels (\verb+biblatex+ support coming in
+  \verb+biblatex+ 2.x)
+\item Multiple bibliography lists in the same section with different
+  sorting and filtering (\verb+biblatex+ support coming in \verb+biblatex+ 2.x)
+\item User-definable mapping and suppression of fields and entrytypes in
+  data sources. You can use this to, for example, ignore all
+  \verb+ABSTRACT+ fields completely. See section \ref{map}
+\item No more restriction to a static data model of specific fields and
+  entrytypes. (\verb+biblatex+ support coming in \verb+biblatex+ 2.x)
+\item Structural validation of the data against the data model with a
+  customisable validation model (\verb+biblatex+ support coming in
+  \verb+biblatex+ 2.x)
 \end{itemize}
 
 \subsection{Performance}
 
 \verb+biber+ can't really be compared with \verb+bibtex+ in any meaningful
 way performance-wise. \verb+biber+ is written in \verb+Perl+ and does a
-great deal more than \verb+bibtex+ which is written in C. One of
+\emph{great} deal more than \verb+bibtex+ which is written in C. One of
 \verb+biber+'s test cases is a 2150 entry, 15,000 line \verb+.bib+ file
 which references a 630 entry macros file with a resulting 160 or so page (A4)
-formatted bibliography. This takes \verb+biber+ about 100 seconds on
-average to process on a reasonable computer. This is perfectly acceptable,
-especially for a batch program \ldots
+formatted bibliography. This takes \verb+biber+ under 3 minutes to process on
+on a reasonable computer. This is perfectly acceptable, especially for a
+batch program.
 
 \subsection{Acknowledgements}
 
@@ -197,10 +210,9 @@ XML and contains many options and settings which configure how \verb+biber+
 is to process the bibliography and generate the \verb+.bbl+ file.
 
 The usual way to call \verb+biber+ is simply with the \verb+.bcf+ file
-as the only argument. The «\verb+.bcf+» extension of the control file
-is not optional. \verb+biblatex+ always outputs a control file with
-the \verb+.bcf+ extension. Specifying the «\verb+.bcf+» extension to
-\verb+biber+ \emph{is} optional. Assuming a control file called
+as the only argument. \verb+biblatex+ always writes the control file with
+a \verb+.bcf+ extension. Specifying the «\verb+.bcf+» extension to
+\verb+biber+ is optional. Assuming a control file called
 \verb+test.bcf+, the following two commands are equivalent:
 
 \begin{verbatim}
@@ -219,7 +231,7 @@ chain which is given in decreasing precedence order:\\[2ex]
 
 \noindent Users do not need to care directly about the contents or format of the
 \verb+.bcf+ file as this is generated from the options which they specify
-for \verb+biblatex+. The config file is a place to set commonly used
+via \verb+biblatex+. The config file is a place to set commonly used
 command-line options and also to set options which cannot be set on the
 command line.
 
@@ -271,11 +283,11 @@ wraplines           0
 \end{verbatim}
 
 \noindent You can see here that options with multiple key/value pairs of
-their own like\linebreak[4] \verb+--collate_options|-c+ can be specified in
+their own like\linebreak[4]\verb+--collate_options|-c+ can be specified in
 Apache config format. Please see the documentation
 for the \verb+Config::General+ \verb+Perl+
 module\footnote{\url{http://search.cpan.org/search?query=Config::General&mode=all}}
-if you really need details. In practise, if you use a config file at all
+if you really need details. In practice, if you use a config file at all
 for \verb+biber+, it will contain very little as you will usually set all
 options by setting options in \verb+biblatex+ which will pass them to
 \verb+biber+ via the \verb+.bcf+ file.
@@ -283,14 +295,17 @@ options by setting options in \verb+biblatex+ which will pass them to
 The \verb+--collate_options|-c+ option takes a number of key/value pairs as
 value. See section \ref{coll} for details.
 
-\subsubsection{The «map» option}
+\subsubsection{The «map» option}\label{map}
 
 The supplied data source drivers implement a default mapping from
-data source entrytypes and fields into the \verb+biblatex+ data model. If
+data source entrytypes and fields into the \verb+biblatex+ data
+model\footnote{The BibLaTeX data model is currently static and defined in
+  the BibLaTeX manual. In the future (BibLaTeX 2.x), the data model will be dynamically
+  defined by the user.}. If
 you want to override or augment the driver mappings you can use the
 \verb+map+ option which makes it possible to, for example, have a data
 source with non-standard entrytypes or fields and to have these
-automatically mapped into valid \verb+biblatex+ data types without
+automatically mapped into valid \verb+biblatex+ entrytypes/fields without
 modifying your data source.
 
 The \verb+map+ option can only be set in the config file
@@ -310,7 +325,8 @@ tasks:
 \end{itemize}
 
 \noindent The format of the \verb+map+ option in the
-config file is described below. Items in \textcolor{red}{red} are not
+config file is described below, followed by examples which will make
+everything clear. Items in \textcolor{red}{red} are not
 literal, they are descriptive meta-values which are explained in the
 accompanying text. Items in \textcolor{blue}{blue} are optional within
 their parent section. The entire \verb+map+ option is not case sensitive
@@ -321,21 +337,21 @@ and setting in places, for clarity. The general structure is:
 \lstset{showspaces=false}
 \begin{lstlisting}[escapechar=+,mathescape=true]
 <map>
-  <+\textcolor{red}{driver1}+>
+  <+\textcolor{red}{driver$_1$}+>
     +\textcolor{blue}{BMAP\_OVERWRITE 1|0}+
        ...
-  </+\textcolor{red}{driver1}+>
+  </+\textcolor{red}{driver$_1$}+>
     +\textcolor{blue}{BMAP\_OVERWRITE 1|0}+
        $\vdots$
-  <+\textcolor{red}{drivern}+>
+  <+\textcolor{red}{driver$_n$}+>
     +\textcolor{blue}{BMAP\_OVERWRITE 1|0}+
        ...
-  </+\textcolor{red}{drivern}+>
+  </+\textcolor{red}{driver$_n$}+>
 </map>
 \end{lstlisting}
 
-\noindent Here, \textcolor{red}{\texttt{driver1}}\ldots
-\textcolor{red}{\texttt{drivern}} are the names of valid \verb+biber+ data
+\noindent Here, \textcolor{red}{\texttt{driver$_1$}}\ldots
+\textcolor{red}{\texttt{driver$_n$}} are the names of valid \verb+biber+ data
 source drivers (see section \ref{dcf}). Reserved tokens with special meanings for
 this option have the prefix «\verb+BMAP_+» and are described below. Each
 driver section contains one or more of the following subsections:
@@ -354,9 +370,9 @@ driver section contains one or more of the following subsections:
 <entrytype +\textcolor{red}{source-entrytype}+>
   BMAP_TARGET +\textcolor{red}{target-entrytype}+
   +\textcolor{blue}{<alsoset>}+
-    +\textcolor{red}{target-field1 target-value1}+
+    +\textcolor{red}{target-field1 target-value$_1$}+
        $\vdots$
-    +\textcolor{red}{target-fieldn target-valuen}+
+    +\textcolor{red}{target-fieldn target-value$_n$}+
   +\textcolor{blue}{</alsoset>}+
 </entrytype>
 \end{lstlisting}
@@ -409,13 +425,13 @@ entry. Also, the example turns a \verb+RECORD+ entrytype into a \verb+MUSIC+ ent
 \lstset{showspaces=false}
 \begin{lstlisting}[escapechar=+,mathescape=true]
 <globalfield>
-  +\textcolor{red}{source-field1 target-field1}+
+  +\textcolor{red}{source-field1 target-field$_1$}+
                  $\vdots$
-  +\textcolor{red}{source-fieldn target-fieldn}+
+  +\textcolor{red}{source-fieldn target-field$_n$}+
 </globalfield>
 \end{lstlisting}
 
-\noindent This section maps data source fields to \verb+biblatex+ fields,
+\noindent This maps data source fields to \verb+biblatex+ fields,
 regardless of the entrytypes in which they occur (hence «global»). You may
 use the special \textcolor{red}{\texttt{target-field}} constant \verb+BMAP_NULL+
 to map a field to null, that is, to ignore it. This essentially has the
@@ -464,9 +480,9 @@ is often used for abstracts in RIS).
 <globalfield +\textcolor{red}{source-field}+>
   BMAP_TARGET +\textcolor{red}{target-field}+
   +\textcolor{blue}{<alsoset>}+
-    +\textcolor{red}{target-field1 target-value1}+
+    +\textcolor{red}{target-field1 target-value$_1$}+
                $\vdots$
-    +\textcolor{red}{target-fieldn target-valuen}+
+    +\textcolor{red}{target-fieldn target-value$_n$}+
   +\textcolor{blue}{</alsoset>}+
 </globalfield>
 \end{lstlisting}
@@ -526,14 +542,14 @@ The \verb+NOTE+ field is set to «Auto-created this field».
 \lstset{showspaces=false}
 \begin{lstlisting}[escapechar=+,mathescape=true]
 <field +\textcolor{red}{source-field}+>
-  BMAP_PERTYPE +\textcolor{red}{source-entrytype1}+
+  BMAP_PERTYPE +\textcolor{red}{source-entrytype$_1$}+
                  $\vdots$
-  BMAP_PERTYPE +\textcolor{red}{source-entrytypen}+
+  BMAP_PERTYPE +\textcolor{red}{source-entrytype$_n$}+
   BMAP_TARGET +\textcolor{red}{target-field}+
   +\textcolor{blue}{<alsoset>}+
-    +\textcolor{red}{target-field1 target-value1}+
+    +\textcolor{red}{target-field1 target-value$_1$}+
                  $\vdots$
-    +\textcolor{red}{target-fieldn target-valuen}+
+    +\textcolor{red}{target-fieldn target-value$_n$}+
   +\textcolor{blue}{</alsoset>}+
 </field>
 \end{lstlisting}
@@ -541,8 +557,8 @@ The \verb+NOTE+ field is set to «Auto-created this field».
 \noindent Here we map the data source
 \textcolor{red}{\texttt{source-field}} to the
 \textcolor{red}{\texttt{target-field}} but only if it occurs within one of
-the data source entrytypes \textcolor{red}{\texttt{source-entrytype1}}
-\ldots\linebreak\textcolor{red}{\texttt{source-entrytypen}}. The source
+the data source entrytypes \textcolor{red}{\texttt{source-entrytype$_1$}}
+\ldots\linebreak\textcolor{red}{\texttt{source-entrytype$_n$}}. The source
 entrytype restrictions must be specified using the \verb+BMAP_PERTYPE+
 token. The target field must be specified using the \verb+BMAP_TARGET+
 token. The \textcolor{blue}{\texttt{alsoset}} section is optional and
@@ -710,10 +726,10 @@ in names which should not be considered when sorting. Given (the default):
 </nosort>
 \end{verbatim}
 
-and the \verb+.bib+ data source entry:
+\noindent and the \verb+bibtex+ data source entry:
 
 \begin{verbatim}
-author	   = {{al-Hasan}, ʿAlī},
+AUTHOR = {{al-Hasan}, ʿAlī},
 \end{verbatim}
 
 \noindent the prefix «al-» and the diacritic «ʿ» will not be considered
@@ -773,7 +789,7 @@ locations, in decreasing order of priority:\\[2ex]
 \verb+ftp://+) are retrieved to a temp file and processed as normal. Users
 do not specify explicitly the bibliography database files; they are passed
 in the \verb+.bcf+ control file, which is constructed from the
-\verb+biblatex+ \verb+\addbibresource{}+ macros.
+\verb+biblatex+ «\verb+\addbibresource{}+» macros.
 
 \subsection{Logfile}
 
@@ -812,7 +828,7 @@ completely customisable set of rules which are passed in the
 collation:\\[2ex]
 
 \biberex{--collate|-C}
-  \noindent The default. This option makes \verb+biber+ use the
+  \noindent The default. This option makes \verb+biber+ use the \verb+Perl+
   \verb+Unicode::Collate+ module for collation which implements the full UCA (Unicode
   Collation Algorithm). It also has CLDR (Common Locale Data
   Repository) tailoring to deal with cases which are not covered by the
@@ -844,24 +860,24 @@ locales neither have nor need any special collation tailoring.
 
 With the \verb+--fastsort|-f+ option, the locale will be
 used to locate an OS locale definition to use for the collation. This
-may or may not be correctly tailored, depending on the locale and the OS.\\[1ex]
+may or may not be correctly tailored, depending on the locale and the OS.
 
-\noindent Collation is by default case sensitive. You can turn this
+Collation is by default case sensitive. You can turn this
 off globally using the \verb+biber+ option \verb+--sortcase=false+ or from
-\verb+biblatex+ using its option \verb+sortcase=false+. The option can also
+\verb+biblatex+ using its option\linebreak[4]\verb+sortcase=false+. The option can also
 be defined per-field so you can sort some fields case sensitively and
-others case insensitively. See the \verb+biblatex+ manual.\\[1ex]
+others case insensitively. See the \verb+biblatex+ manual.
 
-\noindent \verb+--collate|-C+ by default collates uppercase before lower.
+\verb+--collate|-C+ by default collates uppercase before lower.
 You can reverse this globally for all sorting using the \verb+biber+ option
-\verb+--sortupper=false+ or from \verb+biblatex+ by using its option
+\verb+--sortupper=false+ or from\linebreak[4]\verb+biblatex+ by using its option
 \verb+sortupper=false+. The option can also be defined per-field so you can
 sort some fields uppercase before lower and others lower before upper. See the
 \verb+biblatex+ manual. Be aware though that some locales rightly enforce a
 particular setting for this (for example, Danish). You will be able to
 override it but \verb+biber+ will warn you if you do. \verb+sortupper+ has
 no effect when using \verb+--fastsort|-f+--you are at the mercy of what
-your OS locale does.\\[1ex]
+your OS locale does.
 
 There are in fact many options to \verb+Unicode::Collate+
 which can tailor the collation in various ways in
@@ -936,7 +952,7 @@ of preference:\\[2ex]
 \hspace*{1em}\verb+biber+ config file $\rightarrow$\\
 \hspace*{2em}\verb+.bcf+ control file
 
-\subsubsection{LaTeX macro decoding}
+\subsubsection{LaTeX macro decoding}\label{ldecode}
 
 \noindent As mentioned above, \verb+biber+ sometimes converts LaTeX
 character macros into UTF-8. In fact there are two situations in which
@@ -964,13 +980,8 @@ because it doesn't understand that UTF-8 character. The real solution here
 is to switch to a TeX engine with full UTF-8 support like XeTeX or LuaTeX
 as these don't use or need \verb+inputenc+. However, you can also try the
 \verb+--bblsafechars+ option which will try to convert any UTF-8 chars into
-LaTeX macros on output. The \verb+biblatex+ option
-«\verb+texencoding=ascii+» (which corresponds to the \verb+biber+ option
-«\verb+--bblencoding|-E+») will automatically set \verb+--bblsafechars+.
-
-See also the \verb+biber --help+ output for the
-\verb+--bblsafecharsset+ option which can customise the set of
-conversion characters to use.
+LaTeX macros on output. For information on the \verb+--bblsafechars+
+option, see section \ref{lencode}.
 \bigskip
 \minisec{Decoding for internal sorting}
 
@@ -1004,29 +1015,50 @@ the char is not recognised by LaTeX due to an incomplete UTF-8
 implementation (as with \verb+inputenc+), this might also mean
 switching TeX engines to one that supports full UTF-8.
 
+\subsubsection{LaTeX macro encoding}\label{lencode}
+
+The opposite of decoding; converting UTF-8 characters into LaTeX macros.
+You can force this with the \verb+--bblsafechars+ option which will do a
+generally good job of making your \verb+.bbl+ plain ASCII. It can be useful
+in certain edge cases where your bibliography introduces characters which
+can't be handled by your main document. See section \ref{ldecode} above for
+an example such case.
+
+A common use case for LaTeX macro encoding is when the bibliography
+data source is not ASCII but the \verb+.tex+ file is and so this case
+is automated for you: if the \verb+biblatex+ option «\verb+texencoding+»
+(which corresponds to the \verb+biber+ option «\verb+--bblencoding|-E+») is
+set to an ASCII encoding («\verb+ascii+» or «\verb+x-ascii+») and
+«\verb+--bibencoding|-e+» is not ASCII, \verb+biber+ will automatically set
+\verb+--bblsafechars+.
+
+See also the \verb+biber --help+ output for the
+\verb+--bblsafecharsset+ option which can customise the set of
+conversion characters to use.
+\bigskip
 \subsubsection{Examples}
 
 \biberex{biber}
 
 \noindent Set \verb+bibencoding+ and \verb+bblencoding+ from the
-config file or \verb+.bcf+.
+config file or \verb+.bcf+
 
 \biberex{biber --bblencoding=latin2}
 
 \noindent Encode the \verb+.bbl+ as latin2, overriding the
-\verb+.bcf+.
+\verb+.bcf+
 
 \biberex{biber --bblsafechars}
 
 \noindent Set \verb+bibencoding+ and \verb+bblencoding+ from the
 config file or \verb+.bcf+. Force encoding of UTF-8 chars to LaTeX
-macros using default conversion set.
+macros using default conversion set
 
 \biberex{biber --bblencoding=ascii}
 
 \noindent Encode the \verb+.bbl+ as ascii, overriding the
 \verb+.bcf+. Automatically sets \verb+--bblsafechars+ to force UTF-8
-to LaTeX macro conversion.
+to LaTeX macro conversion
 
 \biberex{biber --bblencoding=ascii --bblsafecharsset=full}
 
@@ -1062,7 +1094,7 @@ simple to add support for \verb+biber+. Use the Emacs Customise interface to
 modify the \verb+TeX-command-list+ variable and add a \verb+Biber+ command.
 
 \begin{verbatim}
-M-x customise-variable
+M-x customize-variable
 TeX-command-list
 \end{verbatim}
 

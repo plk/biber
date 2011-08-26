@@ -646,7 +646,7 @@ sub process_setup {
   # Break structure information up into more processing-friendly formats
   # for use in verification checks later
   # This has to be here as opposed to in parse_control() so that it can pick
-  # up structure defaults in Constants.pm in case there is no .bcf
+  # up structure defaults in Constants.pm in case there is nothing in the .bcf
   Biber::Config->set_structure(Biber::Structure->new(Biber::Config->getblxoption('structure')));
 
   # Force bblsafechars flag if output to ASCII and bibencoding is not ASCII

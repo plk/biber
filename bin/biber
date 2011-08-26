@@ -366,7 +366,7 @@ Schema validate the F<.bcf> biblatex control file.
 
 =item B<--validate_structure|-V>
 
-Validate various aspects of the bib entries
+Validate the data against a data model
 
 =item B<--version|-v>
 

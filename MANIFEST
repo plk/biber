@@ -85,8 +85,6 @@ t/endnotexml.t
 t/zoterordfxml.t
 t/pod-coverage.t
 t/pod.t
-t/tdata/papers.bib
-t/tdata/definitions.bib
 t/tdata/options.bcf
 t/tdata/remote-files.bcf
 t/tdata/encoding1.bcf
