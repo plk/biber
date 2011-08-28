@@ -314,27 +314,30 @@ sub count_names {
 
 =head2 nth_name
 
-    Returns the nth Biber::Entry::Name object in the object
+    Returns the nth Biber::Entry::Name object in the object or the last one
+    if n > total names
 
 =cut
 
 sub nth_name {
   my $self = shift;
   my $n = shift;
-  return $self->{namelist}[$n-1];
+  my $size = @{$self->{namelist}};
+  return $self->{namelist}[$n > $size ? $size-1 : $n-1];
 }
 
 =head2 first_n_names
 
     Returns an array ref of Biber::Entry::Name objects containing only
-    the first n entries of $self
+    the first n Biber::Entry::Name objects or all names if n > total names
 
 =cut
 
 sub first_n_names {
   my $self = shift;
   my $n = shift;
-  return [ @{$self->{namelist}}[0 .. $n-1] ];
+  my $size = @{$self->{namelist}};
+  return [ @{$self->{namelist}}[0 .. ($n > $size ? $size-1 : $n-1)] ];
 }
 
 =head2 del_last_name

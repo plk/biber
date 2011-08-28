@@ -37,8 +37,6 @@ sub _getnamehash {
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   my $hashkey = '';
-  my $maxn = Biber::Config->getblxoption('maxnames');
-  my $minn = Biber::Config->getblxoption('minnames');
   my $count = $names->count_names;
   my $visible = $names->get_visible;
 
@@ -89,8 +87,6 @@ sub _getnamehash_u {
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   my $hashkey = '';
-  my $maxn = Biber::Config->getblxoption('maxnames');
-  my $minn = Biber::Config->getblxoption('minnames');
   my $count = $names->count_names;
   my $visible = $names->get_visible;
 
@@ -293,8 +289,8 @@ sub _labelpart {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $struc = Biber::Config->get_structure;
-  my $maxnames = Biber::Config->getblxoption('maxalphanames');
-  my $minnames = Biber::Config->getblxoption('minalphanames');
+  my $maxn = Biber::Config->getblxoption('maxalphanames');
+  my $minn = Biber::Config->getblxoption('minalphanames');
   my $lp;
   my $slp;
 
@@ -309,8 +305,8 @@ sub _labelpart {
         my $name = $be->get_field($f) || next; # just in case there is no labelname etc.
         my $total_names = $name->count_names;
         my $visible_names;
-        if ($total_names > $maxnames) {
-          $visible_names = $minnames;
+        if ($total_names > $maxn) {
+          $visible_names = $minn;
         }
         else {
           $visible_names = $total_names;
@@ -1336,8 +1332,6 @@ sub _namestring {
   my $bee = $be->get_field('entrytype');
   my $names = $be->get_field($field);
   my $str = '';
-  my $maxn = Biber::Config->getblxoption('maxbibnames');
-  my $minn = Biber::Config->getblxoption('minbibnames');
   my $count = $names->count_names;
   my $visible = $names->get_visible_bib; # get visibility for bib - can be different to cite
 

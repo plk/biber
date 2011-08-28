@@ -1,7 +1,7 @@
 Revision history for Biber
 
 0.9.6  (unreleased)
-       * 
+       * Fixed biblatex bug tracker ticket #3399744
 0.9.5  18-08-2011
        * Fixed auto-bblsafechars bug
        * refactored explicit "and others" in bibtex data sources

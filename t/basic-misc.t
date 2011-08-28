@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 23;
+use Test::More tests => 24;
 
 use Biber;
 use Biber::Utils;
@@ -29,6 +29,8 @@ Biber::Config->setblxoption('maxnames', 3);
 Biber::Config->setblxoption('minnames', 1);
 Biber::Config->setblxoption('maxalphanames', 3);
 Biber::Config->setblxoption('minalphanames', 1);
+Biber::Config->setblxoption('maxbibnames', 10);
+Biber::Config->setblxoption('minbibnames', 7);
 
 # THERE IS A CONFIG FILE BEING READ TO TEST USER MAPS TOO!
 
@@ -337,6 +339,9 @@ ok(is_undef($bibentries->entry('i2')->get_field('userb')), 'map 3' );
 is($bibentries->entry('i2')->get_field('usere'), 'a string', 'map 4' );
 # Checking that the "misc" type-specific mapping to null takes precedence over global userb->userc
 ok(is_undef($bibentries->entry('i2')->get_field('userc')), 'map 5' );
+
+# Make sure visibility doesn't exceed number of names.
+is($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_field('labelnamename'))->get_visible_bib, '3', 'bib visibility - 1');
 
 # This would be how to test JSON output if necessary
 # require JSON::XS;
