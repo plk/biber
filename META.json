@@ -58,7 +58,7 @@
       },
       "Biber::Config" : {
          "file" : "lib/Biber/Config.pm",
-         "version" : "v0.9.5"
+         "version" : "v0.9.6"
       },
       "Biber::Constants" : {
          "file" : "lib/Biber/Constants.pm",
@@ -151,5 +151,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "v0.9.5"
+   "version" : "v0.9.6"
 }

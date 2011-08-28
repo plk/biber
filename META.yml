@@ -20,7 +20,7 @@ provides:
     version: 0
   Biber::Config:
     file: lib/Biber/Config.pm
-    version: v0.9.5
+    version: v0.9.6
   Biber::Constants:
     file: lib/Biber/Constants.pm
     version: 0
@@ -107,4 +107,4 @@ requires:
   perl: v5.10.0
 resources:
   license: http://dev.perl.org/licenses/
-version: v0.9.5
+version: v0.9.6
