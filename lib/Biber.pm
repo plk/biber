@@ -1301,26 +1301,23 @@ sub process_visible_names {
       my $visible_names_bib;
       my $visible_names_alpha;
 
+      # Cap min*names for this entry at $count. Why? Because imagine we have this:
+      #
+      # John Smith and Bill Jones
+      #
+      # and min*names=3. Then visibility will be set to 3 but there aren't 3 names to
+      # get information from so looping over the visibility count would cause name methods
+      # to operate on undef at index 3 and die
+      my $l_minn = $count < $minn ? $count : $minn;
+      my $l_minan = $count < $minan ? $count : $minan;
+      my $l_minbn = $count < $minbn ? $count : $minbn;
+
       # If name list was truncated in bib with "and others", this overrides maxnames
-      # and potentially, all minnames too. Why minnames? Because imagine we have this:
-      #
-      # John Smith and others
-      #
-      # and minnames=3. Then visibility will be set to 3 but there aren't 3 names to
-      # get information from so most name methods will operate on undef and die. So, in such
-      # a case, set minnames to $count for this sub.
-      my $morenames;
-      if ($names->get_morenames) {
-        $morenames = 1;
-        $minan = $minbn = $minn = $count if $count < $minn;
-      }
-      else {
-        $morenames = 0;
-      }
+      my $morenames = $names->get_morenames ? 1 : 0;
 
       # max/minalphanames doesn't care about uniquelist - labels are just labels
       if ( $morenames or $count > $maxan ) {
-        $visible_names_alpha = $minan;
+        $visible_names_alpha = $l_minan;
       }
       else {
         $visible_names_alpha = $count;
@@ -1334,12 +1331,12 @@ sub process_visible_names {
         # We know at this stage that if uniquelist is set, there are more than maxnames
         # names. We also know that uniquelist > minnames because it is a further disambiguation
         # on top of minnames so can't be less as you can't disambiguate by losing information
-        if ($maxn == $maxbn and $minn == $minbn) {
-          $visible_names = $visible_names_bib = $names->get_uniquelist // $minn;
+        if ($maxn == $maxbn and $l_minn == $l_minbn) {
+          $visible_names = $visible_names_bib = $names->get_uniquelist // $l_minn;
         }
         else {
-          $visible_names = $names->get_uniquelist // $minn;
-          $visible_names_bib = $minbn;
+          $visible_names = $names->get_uniquelist // $l_minn;
+          $visible_names_bib = $l_minbn;
         }
       }
       else { # visibility is simply the full list
