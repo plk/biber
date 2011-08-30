@@ -231,6 +231,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
       if ($user_map and
           my $field = firstval {lc($_) eq lc($f)} (keys %{$user_map->{field}},
                                                    keys %{$user_map->{globalfield}})) {
+
         # next line short-circuit OR enforces per-type before global field mappings
         my $to_map = $user_map->{field}{$field} || $user_map->{globalfield}{$field};
         $from = $dcfxml->{fields}{field}{$f}; # handler information still comes from .dcf
@@ -261,9 +262,20 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
                   next;
                 }
               }
-              # Deal with special "BMAP_ORIGFIELD" token
-              my $to_val = lc($to_as) eq 'bmap_origfield' ? $f : $to_as;
-              $bibentry->set_datafield(lc($from_as), $to_val);
+              # Deal with special tokens
+              given (lc($to_as)) {
+                when ('bmap_origfield') {
+                  $bibentry->set_datafield(lc($from_as), $f);
+                }
+                when ('bmap_null') {
+                  $bibentry->del_datafield(lc($from_as));
+                  # 'future' delete in case it's not set yet
+                  $bibentry->block_datafield(lc($from_as));
+                }
+                default {
+                  $bibentry->set_datafield(lc($from_as), $to_as);
+                }
+              }
             }
 
             # map fields to targets

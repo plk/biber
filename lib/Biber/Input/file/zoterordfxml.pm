@@ -275,9 +275,20 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
                 next;
               }
             }
-            # Deal with special "BMAP_ORIGFIELD" token
-            my $to_val = lc($to_as) eq 'bmap_origfield' ? $f : $to_as;
-            $bibentry->set_datafield(lc($from_as), $to_val);
+            # Deal with special tokens
+            given (lc($to_as)) {
+              when ('bmap_origfield') {
+                $bibentry->set_datafield(lc($from_as), $f);
+              }
+              when ('bmap_null') {
+                $bibentry->del_datafield(lc($from_as));
+                # 'future' delete in case it's not set yet
+                $bibentry->block_datafield(lc($from_as));
+              }
+              default {
+                $bibentry->set_datafield(lc($from_as), $to_as);
+              }
+            }
           }
 
           # map fields to targets

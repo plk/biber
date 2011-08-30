@@ -42,7 +42,8 @@ my %map = (
       field => {
         userb => { bmap_pertype => "MISC",
                    bmap_target => "BMAP_NULL",
-          alsoset => { usere => "a string" },
+          alsoset => { usere => "a string",
+                       userf => "BMAP_NULL"},
                  },
       },
     },

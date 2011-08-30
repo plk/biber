@@ -405,22 +405,24 @@ driver section contains one or more of the following subsections:
 </entrytype>
 \end{lstlisting}
 
-\noindent An \verb+entrytype+ specification maps the data source
-entrytype \textcolor{red}{\texttt{source-entrytype}} into the \verb+biblatex+
-entrytype \textcolor{red}{\texttt{target-entrytype}}. The literal string \verb+BMAP_TARGET+
-is a constant and must be used to specify the target entrytype. The
-\textcolor{blue}{\texttt{alsoset}} section is optional and specifies one
-or more \textcolor{red}{\texttt{target-field}}s to set in the entry, along
-with their \textcolor{red}{\texttt{target-value}}s. The literal token
-\verb+BMAP_ORIGENTRYTYPE+ can be used as the
+\noindent An \verb+entrytype+ specification maps the data source entrytype
+\textcolor{red}{\texttt{source-entrytype}} into the \verb+biblatex+
+entrytype \textcolor{red}{\texttt{target-entrytype}}. The literal string
+\verb+BMAP_TARGET+ is a constant and must be used to specify the target
+entrytype. The \textcolor{blue}{\texttt{alsoset}} section is optional and
+specifies one or more \textcolor{red}{\texttt{target-field}}s to set in the
+entry, along with their \textcolor{red}{\texttt{target-value}}s. The
+literal token \verb+BMAP_ORIGENTRYTYPE+ can be used as the
 \textcolor{red}{\texttt{target-value}} and it resolves to the data source
-entrytype name. If the option \textcolor{blue}{\texttt{BMAP\_OVERWRITE}} is
-true (set to «1»), then any existing fields which the
-\textcolor{blue}{\texttt{alsoset}} section mentions will be overwritten. If
-this option is missing or false (set to «0»), then the field will not be
-set and the existing field value will remain. In both cases, warnings will
-be issued about the conflicting field, saying whether it will be
-overwritten or not. An example:
+entrytype name. The literal token \verb+BMAP_NULL+ can be used as the
+\textcolor{red}{\texttt{target-value}} and this serves to delete the
+\textcolor{red}{\texttt{target-field}}. If the option
+\textcolor{blue}{\texttt{BMAP\_OVERWRITE}} is true (set to «1»), then any
+existing fields which the \textcolor{blue}{\texttt{alsoset}} section
+mentions will be overwritten. If this option is missing or false (set to
+«0»), then the field will not be set and the existing field value will
+remain. In both cases, warnings will be issued about the conflicting field,
+saying whether it will be overwritten or not. An example:
 
 \lstset{showspaces=false}
 \begin{lstlisting}[escapechar=+,mathescape=true]
@@ -431,6 +433,7 @@ overwritten or not. An example:
       BMAP_TARGET CUSTOMA
       <alsoset>
         USERA  BMAP_ORIGENTRYTYPE
+        USERB  BMAP_NULL
         NOTE "Auto-created this field"
       </alsoset>
     </entrytype>
@@ -445,7 +448,8 @@ overwritten or not. An example:
 \verb+bibtex+ data sources into a \verb+CUSTOMA+ entrytype
 and would automatically set the \verb+USERA+ field in the entry to
 «conversation» and the \verb+NOTE+ field to «Auto-created this field». The
-\verb+USERA+ and \verb+NOTE+ fields will be overwritten if present in the
+\verb+USERB+ field would be deleted. The
+\verb+USERA+, \verb+USERB+ and \verb+NOTE+ fields will be overwritten if present in the
 entry. Also, the example turns a \verb+RECORD+ entrytype into a \verb+MUSIC+ entrytype.
 \bigskip
 \minisec{Simple global field mapping}

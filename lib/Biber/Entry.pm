@@ -78,6 +78,8 @@ sub clone {
     $new->{derivedfields}{dskey} = $newkey;
     $new->{derivedfields}{citekey} = $newkey;
   }
+  # de-reference and re-reference to make a copy
+  $new->{blocked_datafields} = [@{$self->{blocked_datafields}}];
   return $new;
 }
 
@@ -99,11 +101,18 @@ sub notnull {
     Only set to null if the field is a nullable one
     otherwise if value is null, remove the field
 
+    Don't set if this is a blocked field which means
+    it has been deleted and blocked from future creation
+
 =cut
 
 sub set_datafield {
   my $self = shift;
   my ($key, $val) = @_;
+  # Don't set blocked fields
+  if (first { $key eq $_ } @{$self->{blocked_datafields}}) {
+    return;
+  }
   my $struc = Biber::Config->get_structure;
   # Only set fields which are either not null or are ok to be null
   if ( $struc->is_field_type('nullok', $key) or is_notnull($val)) {
@@ -182,6 +191,20 @@ sub del_datafield {
   my $self = shift;
   my $key = shift;
   delete $self->{datafields}{$key};
+  return;
+}
+
+=head2 block_datafield
+
+    Records a datafield as being blocked so future sets won't do anything.
+    Used to "delete" a field when we haven't finished creating all fields yet.
+
+=cut
+
+sub block_datafield {
+  my $self = shift;
+  my $key = shift;
+  push @{$self->{blocked_datafields}}, $key;
   return;
 }
 

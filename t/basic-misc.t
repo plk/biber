@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 24;
+use Test::More tests => 25;
 
 use Biber;
 use Biber::Utils;
@@ -337,8 +337,10 @@ ok(is_undef($bibentries->entry('i1')->get_field('abstract')), 'map 1' );
 ok(is_undef($bibentries->entry('i1')->get_field('usere')), 'map 2' );
 ok(is_undef($bibentries->entry('i2')->get_field('userb')), 'map 3' );
 is($bibentries->entry('i2')->get_field('usere'), 'a string', 'map 4' );
+# Checking deletion of alsosets with value BMAP_NULL
+ok(is_undef($bibentries->entry('i2')->get_field('userf')), 'map 5' );
 # Checking that the "misc" type-specific mapping to null takes precedence over global userb->userc
-ok(is_undef($bibentries->entry('i2')->get_field('userc')), 'map 5' );
+ok(is_undef($bibentries->entry('i2')->get_field('userc')), 'map 6' );
 
 # Make sure visibility doesn't exceed number of names.
 is($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_field('labelnamename'))->get_visible_bib, '3', 'bib visibility - 1');
