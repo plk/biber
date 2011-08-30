@@ -154,6 +154,133 @@
           </oneOrMore>
         </element>
       </optional>
+      <optional>
+        <!-- field/entrytype mapping -->
+        <element name="bcf:sourcemap">
+          <oneOrMore>
+            <element name="bcf:maps">
+              <attribute name="datatype">
+                <choice>
+                  <value>bibtex</value>
+                  <value>biblatexml</value>
+                  <value>ris</value>
+                  <value>zoterordfxml</value>
+                  <value>endnotexml</value>
+                </choice>
+              </attribute>
+              <attribute name="overwrite">
+                <choice>
+                  <value>0</value>
+                  <value>1</value>
+                </choice>
+              </attribute>
+              <oneOrMore>
+                <element name="bcf:map">
+                  <choice>
+                    <group>
+                      <attribute name="maptype">
+                        <value>entrytype</value>
+                      </attribute>
+                      <oneOrMore>
+                        <element name="bcf:map_pair">
+                          <attribute name="source">
+                            <data type="string">
+                              <param name="minLength">1</param>
+                            </data>
+                          </attribute>
+                          <attribute name="target">
+                            <choice>
+                              <value>NULL</value>
+                              <value>ORIGENTRYTYPE</value>
+                              <data type="string">
+                                <param name="minLength">1</param>
+                              </data>
+                            </choice>
+                          </attribute>
+                          <empty/>
+                        </element>
+                      </oneOrMore>
+                      <zeroOrMore>
+                        <element name="bcf:also_set">
+                          <attribute name="field">
+                            <data type="string">
+                              <param name="minLength">1</param>
+                            </data>
+                          </attribute>
+                          <attribute name="value">
+                            <choice>
+                              <value>NULL</value>
+                              <value>ORIGFIELD</value>
+                              <data type="string">
+                                <param name="minLength">1</param>
+                              </data>
+                            </choice>
+                          </attribute>
+                          <empty/>
+                        </element>
+                      </zeroOrMore>
+                    </group>
+                    <group>
+                      <attribute name="maptype">
+                        <value>field</value>
+                      </attribute>
+                      <optional>
+                        <element name="bcf:restrict">
+                          <oneOrMore>
+                            <element name="bcf:restricttype">
+                              <data type="string">
+                                <param name="minLength">1</param>
+                              </data>
+                            </element>
+                          </oneOrMore>
+                        </element>
+                      </optional>
+                      <oneOrMore>
+                        <element name="bcf:map_pair">
+                          <attribute name="source">
+                            <data type="string">
+                              <param name="minLength">1</param>
+                            </data>
+                          </attribute>
+                          <attribute name="target">
+                            <choice>
+                              <value>NULL</value>
+                              <value>ORIGFIELD</value>
+                              <data type="string">
+                                <param name="minLength">1</param>
+                              </data>
+                            </choice>
+                          </attribute>
+                          <empty/>
+                        </element>
+                      </oneOrMore>
+                      <zeroOrMore>
+                        <element name="bcf:also_set">
+                          <attribute name="field">
+                            <data type="string">
+                              <param name="minLength">1</param>
+                            </data>
+                          </attribute>
+                          <attribute name="value">
+                            <choice>
+                              <value>NULL</value>
+                              <value>ORIGFIELD</value>
+                              <data type="string">
+                                <param name="minLength">1</param>
+                              </data>
+                            </choice>
+                          </attribute>
+                          <empty/>
+                        </element>
+                      </zeroOrMore>
+                    </group>
+                  </choice>
+                </element>
+              </oneOrMore>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
       <zeroOrMore>
         <!-- labelalpha template specification -->
         <element name="bcf:labelalphatemplate">
