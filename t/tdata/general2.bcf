@@ -123,60 +123,6 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
   </bcf:options>
-  <!-- DATA-SOURCE MAPPING -->
-  <bcf:sourcemap>
-    <bcf:maps datatype="bibtex" overwrite="1">
-      <bcf:map maptype="entrytype">
-        <bcf:map_pair source="CONVERSATION" target="CUSTOMA"/>
-        <bcf:also_set field="VERBA" value="ORIGENTRYTYPE"/>
-        <bcf:also_set field="VERBB" value="somevalue"/>
-        <bcf:also_set field="VERBC" value="somevalue"/>
-      </bcf:map>
-      <bcf:map maptype="field">
-        <bcf:map_pair source="ABSTRACT" target="NULL"/>
-        <bcf:map_pair source="CONDUCTOR" target="NAMEA"/>
-      </bcf:map>
-      <bcf:map maptype="field">
-        <bcf:map_pair source="PUBMEDID" target="EPRINT"/>
-        <bcf:also_set field="EPPRINTTYPE" value="ORIGFIELD"/>
-        <bcf:also_set field="USERD" value="Some string"/>
-      </bcf:map>
-      <bcf:map maptype="field">
-        <bcf:restrict>
-          <bcf:restricttype>MISC</bcf:restricttype>
-          <bcf:restricttype>ARTICLE</bcf:restricttype>
-        </bcf:restrict>
-        <bcf:map_pair source="USERB" target="NULL"/>
-        <bcf:also_set field="USERE" value="Some string"/>
-        <bcf:also_set field="USERF" value="NULL"/>
-      </bcf:map>
-    </bcf:maps>
-    <bcf:maps datatype="endnotexml" overwrite="1">
-      <bcf:map maptype="entrytype">
-        <bcf:map_pair source="journal Article" target="REPORT"/>
-        <bcf:also_set field="USERA" value="ORIGENTRYTYPE"/>
-      </bcf:map>
-      <bcf:map maptype="field">
-        <bcf:map_pair source="ABSTRACT" target="NULL"/>
-      </bcf:map>
-    </bcf:maps>
-    <bcf:maps datatype="ris" overwrite="0">
-      <bcf:map maptype="entrytype">
-        <bcf:map_pair source="JOUR" target="REPORT"/>
-        <bcf:also_set field="KEYWORDS" value="something"/>
-      </bcf:map>
-    </bcf:maps>
-    <bcf:maps datatype="zoterordfxml" overwrite="1">
-      <bcf:map maptype="field">
-        <bcf:restrict>
-          <bcf:restricttype>journalArticle</bcf:restricttype>
-          <bcf:restricttype>book</bcf:restricttype>
-          <bcf:restricttype>bookSection</bcf:restricttype>
-        </bcf:restrict>
-        <bcf:map_pair source="dc:subject" target="NULL"/>
-      </bcf:map>
-    </bcf:maps>
-  </bcf:sourcemap>
   <!-- LABELALPHA TEMPLATE -->
   <bcf:labelalphatemplate type="global">
     <bcf:labelelement order="1">

@@ -83,33 +83,43 @@ start =
     element bcf:sourcemap {
       element bcf:maps {
         attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" },
-        attribute overwrite { "0" | "1" },
+        attribute bmap_overwrite { "0" | "1" },
         element bcf:map {
           (
             (attribute maptype { "entrytype" },
             element bcf:map_pair {
               attribute source {xsd:string {minLength="1"}},
-              attribute target { ( "NULL" | "ORIGENTRYTYPE" | xsd:string {minLength="1"} )},
+              attribute target { xsd:string {minLength="1"} },
               empty
             }+,
             element bcf:also_set {
               attribute field {xsd:string {minLength="1"}},
-              attribute value { ( "NULL" | "ORIGFIELD" | xsd:string {minLength="1"} )},
+              ( attribute value { xsd:string {minLength="1"} } |
+                attribute bmap_null { "1"} |
+                attribute bmap_origfield { "1"} |
+                attribute bmap_origentrytype { "1"}
+              ),
               empty
             }*) |
             (attribute maptype { "field" },
-            element bcf:restrict {
-              element bcf:restricttype { xsd:string {minLength="1"} }+
-            }?,
-            element bcf:map_pair {
-              attribute source {xsd:string {minLength="1"}},
-              attribute target { ( "NULL" | "ORIGFIELD" | xsd:string {minLength="1"} )},
-              empty
-            }+,
-            element bcf:also_set {
-              attribute field {xsd:string {minLength="1"}},
-              attribute value { ( "NULL" | "ORIGFIELD" | xsd:string {minLength="1"} )},
-              empty
+             element bcf:per_type { xsd:string {minLength="1"} }*,
+             element bcf:map_pair {
+               attribute source {xsd:string {minLength="1"}},
+              ( attribute target { xsd:string {minLength="1"} } |
+                attribute bmap_null { "1"} |
+                attribute bmap_origfield { "1"} |
+                attribute bmap_origentrytype { "1"}
+              ),
+               empty
+             }+,
+             element bcf:also_set {
+               attribute field {xsd:string {minLength="1"}},
+              ( attribute value { xsd:string {minLength="1"} } |
+                attribute bmap_null { "1"} |
+                attribute bmap_origfield { "1"} |
+                attribute bmap_origentrytype { "1"}
+              ),
+               empty
             }*)
           )
         }+

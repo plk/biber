@@ -324,6 +324,11 @@ sub parse_ctrlfile {
                                                            qr/\Asort\z/,
                                                            qr/\Adisplaymode\z/,
                                                            qr/\Amode\z/,
+                                                           qr/\Amaps\z/,
+                                                           qr/\Amap\z/,
+                                                           qr/\Amap_pair\z/,
+                                                           qr/\Aalso_set\z/,
+                                                           qr/\Aper_type\z/,
                                                            qr/\Apresort\z/,
                                                            qr/\Atype_pair\z/,
                                                            qr/\Ainherit\z/,
@@ -418,6 +423,124 @@ sub parse_ctrlfile {
       }
     }
     Biber::Config->setblxoption('displaymode', $dms);
+  }
+
+  # DATASOURCE MAPPING
+  # Always optional
+  # We are limited by the internal format of the user config file version of this
+  # so we convert it into that format here since the drivers expect it.
+  if (exists($bcfxml->{sourcemap})) {
+    my $mapsopt;
+    foreach my $maps (@{$bcfxml->{sourcemap}{maps}}) {
+      $mapsopt->{$maps->{datatype}}{bmap_overwrite} = $maps->{bmap_overwrite};
+      foreach my $map (@{$maps->{map}}) {
+        given ($map->{maptype}) {
+          when ('entrytype') {
+            foreach my $map_pair (@{$map->{map_pair}}) {
+              $mapsopt->{$maps->{datatype}}{entrytype}{$map_pair->{source}}{bmap_target} = $map_pair->{target};
+              foreach my $as (@{$map->{also_set}}) {
+                my $val;
+                given ($as) {
+                  when ($as->{bmap_origentrytype}) {
+                    $val = 'bmap_origentrytype';
+                  }
+                  when ($as->{bmap_origfield}) {
+                    $val = 'bmap_origfield';
+                  }
+                  when ($as->{bmap_null}) {
+                    $val = 'bmap_null';
+                  }
+                }
+                $mapsopt->{$maps->{datatype}}{entrytype}{also_set}{$as->{field}} = $val;
+              }
+            }
+          }
+          when ('field') {
+            # "global" fields (unrestricted to particular entrytypes)
+            if (not defined($map->{per_type})) {
+              my $source;
+              foreach my $map_pair (@{$map->{map_pair}}) {
+                $source = $map_pair->{source};
+                my $target;
+                given ($map_pair) {
+                  when ($map_pair->{bmap_origentrytype}) {
+                    $target = 'bmap_origentrytype';
+                  }
+                  when ($map_pair->{bmap_origfield}) {
+                    $target = 'bmap_origfield';
+                  }
+                  when ($map_pair->{bmap_null}) {
+                    $target = 'bmap_null';
+                  }
+                }
+                # "simple" global fields
+                if (not defined($map->{also_set})) {
+                  $mapsopt->{$maps->{datatype}}{globalfield}{$source} = $target;
+                }
+                # "complex" global fields (with also_set)
+                else {
+                  $mapsopt->{$maps->{datatype}}{globalfield}{$source}{bmap_target} = $target;
+                }
+              }
+              foreach my $as (@{$map->{also_set}}) {
+                my $val;
+                given ($as) {
+                  when ($as->{bmap_origentrytype}) {
+                    $val = 'bmap_origentrytype';
+                  }
+                  when ($as->{bmap_origfield}) {
+                    $val = 'bmap_origfield';
+                  }
+                  when ($as->{bmap_null}) {
+                    $val = 'bmap_null';
+                  }
+                }
+                $mapsopt->{$maps->{datatype}}{globalfield}{$source}{also_set}{$as->{field}} = $val;
+              }
+            }
+            # type-specific field mappings
+            else {
+              my $source;
+              foreach my $map_pair (@{$map->{map_pair}}) {
+                $source = $map_pair->{source};
+                my $target;
+                given ($map_pair) {
+                  when ($map_pair->{bmap_origentrytype}) {
+                    $target = 'bmap_origentrytype';
+                  }
+                  when ($map_pair->{bmap_origfield}) {
+                    $target = 'bmap_origfield';
+                  }
+                  when ($map_pair->{bmap_null}) {
+                    $target = 'bmap_null';
+                  }
+                }
+                $mapsopt->{$maps->{datatype}}{field}{$source}{bmap_target} = $target;
+                foreach my $as (@{$map->{also_set}}) {
+                  my $val;
+                  given ($as) {
+                    when ($as->{bmap_origentrytype}) {
+                      $val = 'bmap_origentrytype';
+                    }
+                    when ($as->{bmap_origfield}) {
+                      $val = 'bmap_origfield';
+                    }
+                    when ($as->{bmap_null}) {
+                      $val = 'bmap_null';
+                    }
+                  }
+                  $mapsopt->{$maps->{datatype}}{field}{$source}{also_set}{$as->{field}} = $val;
+                }
+              }
+              foreach my $rt (@{$map->{per_type}}) {
+                push @{$mapsopt->{$maps->{datatype}}{field}{$source}{bmap_pertype}}, $rt->{content};
+              }
+            }
+          }
+        }
+      }
+    }
+    Biber::Config->setoption('map', $mapsopt);
   }
 
   # LABELALPHATEMPLATE

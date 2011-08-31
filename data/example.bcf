@@ -139,55 +139,51 @@
   </bcf:displaymodes>
   <!-- DATA-SOURCE MAPPING -->
   <bcf:sourcemap>
-    <bcf:maps datatype="bibtex" overwrite="1">
+    <bcf:maps datatype="bibtex" bmap_overwrite="1">
       <bcf:map maptype="entrytype">
         <bcf:map_pair source="CONVERSATION" target="CUSTOMA"/>
-        <bcf:also_set field="VERBA" value="ORIGENTRYTYPE"/>
+        <bcf:also_set field="VERBA" bmap_origentrytype="1"/>
         <bcf:also_set field="VERBB" value="somevalue"/>
         <bcf:also_set field="VERBC" value="somevalue"/>
       </bcf:map>
       <bcf:map maptype="field">
-        <bcf:map_pair source="ABSTRACT" target="NULL"/>
+        <bcf:map_pair source="ABSTRACT" bmap_null="1"/>
         <bcf:map_pair source="CONDUCTOR" target="NAMEA"/>
       </bcf:map>
       <bcf:map maptype="field">
         <bcf:map_pair source="PUBMEDID" target="EPRINT"/>
-        <bcf:also_set field="EPPRINTTYPE" value="ORIGFIELD"/>
+        <bcf:also_set field="EPPRINTTYPE" bmap_origfield="1"/>
         <bcf:also_set field="USERD" value="Some string"/>
       </bcf:map>
       <bcf:map maptype="field">
-        <bcf:restrict>
-          <bcf:restricttype>MISC</bcf:restricttype>
-          <bcf:restricttype>ARTICLE</bcf:restricttype>
-        </bcf:restrict>
-        <bcf:map_pair source="USERB" target="NULL"/>
+        <bcf:per_type>MISC</bcf:per_type>
+        <bcf:per_type>ARTICLE</bcf:per_type>
+        <bcf:map_pair source="USERB" bmap_null="1"/>
         <bcf:also_set field="USERE" value="Some string"/>
-        <bcf:also_set field="USERF" value="NULL"/>
+        <bcf:also_set field="USERF" bmap_null="1"/>
       </bcf:map>
     </bcf:maps>
-    <bcf:maps datatype="endnotexml" overwrite="1">
+    <bcf:maps datatype="endnotexml" bmap_overwrite="1">
       <bcf:map maptype="entrytype">
         <bcf:map_pair source="journal Article" target="REPORT"/>
-        <bcf:also_set field="USERA" value="ORIGENTRYTYPE"/>
+        <bcf:also_set field="USERA" bmap_origentrytype="1"/>
       </bcf:map>
       <bcf:map maptype="field">
-        <bcf:map_pair source="ABSTRACT" target="NULL"/>
+        <bcf:map_pair source="ABSTRACT" bmap_null="1"/>
       </bcf:map>
     </bcf:maps>
-    <bcf:maps datatype="ris" overwrite="0">
+    <bcf:maps datatype="ris" bmap_overwrite="0">
       <bcf:map maptype="entrytype">
         <bcf:map_pair source="JOUR" target="REPORT"/>
         <bcf:also_set field="KEYWORDS" value="something"/>
       </bcf:map>
     </bcf:maps>
-    <bcf:maps datatype="zoterordfxml" overwrite="1">
+    <bcf:maps datatype="zoterordfxml" bmap_overwrite="1">
       <bcf:map maptype="field">
-        <bcf:restrict>
-          <bcf:restricttype>journalArticle</bcf:restricttype>
-          <bcf:restricttype>book</bcf:restricttype>
-          <bcf:restricttype>bookSection</bcf:restricttype>
-        </bcf:restrict>
-        <bcf:map_pair source="dc:subject" target="NULL"/>
+        <bcf:per_type>journalArticle</bcf:per_type>
+        <bcf:per_type>book</bcf:per_type>
+        <bcf:per_type>bookSection</bcf:per_type>
+        <bcf:map_pair source="dc:subject" bmap_null="1"/>
       </bcf:map>
     </bcf:maps>
   </bcf:sourcemap>

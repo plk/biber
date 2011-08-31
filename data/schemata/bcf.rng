@@ -170,7 +170,7 @@
                   <value>endnotexml</value>
                 </choice>
               </attribute>
-              <attribute name="overwrite">
+              <attribute name="bmap_overwrite">
                 <choice>
                   <value>0</value>
                   <value>1</value>
@@ -191,13 +191,9 @@
                             </data>
                           </attribute>
                           <attribute name="target">
-                            <choice>
-                              <value>NULL</value>
-                              <value>ORIGENTRYTYPE</value>
-                              <data type="string">
-                                <param name="minLength">1</param>
-                              </data>
-                            </choice>
+                            <data type="string">
+                              <param name="minLength">1</param>
+                            </data>
                           </attribute>
                           <empty/>
                         </element>
@@ -209,15 +205,22 @@
                               <param name="minLength">1</param>
                             </data>
                           </attribute>
-                          <attribute name="value">
-                            <choice>
-                              <value>NULL</value>
-                              <value>ORIGFIELD</value>
+                          <choice>
+                            <attribute name="value">
                               <data type="string">
                                 <param name="minLength">1</param>
                               </data>
-                            </choice>
-                          </attribute>
+                            </attribute>
+                            <attribute name="bmap_null">
+                              <value>1</value>
+                            </attribute>
+                            <attribute name="bmap_origfield">
+                              <value>1</value>
+                            </attribute>
+                            <attribute name="bmap_origentrytype">
+                              <value>1</value>
+                            </attribute>
+                          </choice>
                           <empty/>
                         </element>
                       </zeroOrMore>
@@ -226,17 +229,13 @@
                       <attribute name="maptype">
                         <value>field</value>
                       </attribute>
-                      <optional>
-                        <element name="bcf:restrict">
-                          <oneOrMore>
-                            <element name="bcf:restricttype">
-                              <data type="string">
-                                <param name="minLength">1</param>
-                              </data>
-                            </element>
-                          </oneOrMore>
+                      <zeroOrMore>
+                        <element name="bcf:per_type">
+                          <data type="string">
+                            <param name="minLength">1</param>
+                          </data>
                         </element>
-                      </optional>
+                      </zeroOrMore>
                       <oneOrMore>
                         <element name="bcf:map_pair">
                           <attribute name="source">
@@ -244,15 +243,22 @@
                               <param name="minLength">1</param>
                             </data>
                           </attribute>
-                          <attribute name="target">
-                            <choice>
-                              <value>NULL</value>
-                              <value>ORIGFIELD</value>
+                          <choice>
+                            <attribute name="target">
                               <data type="string">
                                 <param name="minLength">1</param>
                               </data>
-                            </choice>
-                          </attribute>
+                            </attribute>
+                            <attribute name="bmap_null">
+                              <value>1</value>
+                            </attribute>
+                            <attribute name="bmap_origfield">
+                              <value>1</value>
+                            </attribute>
+                            <attribute name="bmap_origentrytype">
+                              <value>1</value>
+                            </attribute>
+                          </choice>
                           <empty/>
                         </element>
                       </oneOrMore>
@@ -263,15 +269,22 @@
                               <param name="minLength">1</param>
                             </data>
                           </attribute>
-                          <attribute name="value">
-                            <choice>
-                              <value>NULL</value>
-                              <value>ORIGFIELD</value>
+                          <choice>
+                            <attribute name="value">
                               <data type="string">
                                 <param name="minLength">1</param>
                               </data>
-                            </choice>
-                          </attribute>
+                            </attribute>
+                            <attribute name="bmap_null">
+                              <value>1</value>
+                            </attribute>
+                            <attribute name="bmap_origfield">
+                              <value>1</value>
+                            </attribute>
+                            <attribute name="bmap_origentrytype">
+                              <value>1</value>
+                            </attribute>
+                          </choice>
                           <empty/>
                         </element>
                       </zeroOrMore>
