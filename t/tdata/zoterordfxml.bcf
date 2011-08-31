@@ -135,23 +135,6 @@
       <bcf:value>0</bcf:value>
     </bcf:option>
   </bcf:options>
-  <!-- DISPLAYMODES -->
-  <bcf:displaymodes>
-    <bcf:displaymode>
-      <bcf:target>*</bcf:target>
-      <bcf:mode>original</bcf:mode>
-      <bcf:mode>romanised</bcf:mode>
-      <bcf:mode>uniform</bcf:mode>
-      <bcf:mode>translated</bcf:mode>
-    </bcf:displaymode>
-    <bcf:displaymode>
-      <bcf:target>title</bcf:target>
-      <bcf:mode>translated</bcf:mode>
-      <bcf:mode>romanised</bcf:mode>
-      <bcf:mode>uniform</bcf:mode>
-      <bcf:mode>original</bcf:mode>
-    </bcf:displaymode>
-  </bcf:displaymodes>
   <!-- CROSSREF -->
   <bcf:inheritance>
     <bcf:defaults inherit_all="true" override_target="false">

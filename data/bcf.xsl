@@ -101,20 +101,20 @@
                   <xsl:sort select="./@order"/>
                   <li>
                     <!-- left padding -->
-                    <xsl:if test="./@pad_side = 'left'">
+                    <xsl:if test="./@pad_side='left'">
                       <span class="sort_padding">
                         <xsl:call-template name='generate-string'>
-                          <xsl:with-param name='text'><xsl:value-of select="./@pad_char"/></xsl:with-param>
-                          <xsl:with-param name='count' select='./@pad_width'/>
+                          <xsl:with-param name='text' select="./@pad_char"/>
+                          <xsl:with-param name='count' select="./@pad_width"/>
                         </xsl:call-template>
                       </span>
                     </xsl:if>
                     <!-- left substring -->
-                    <xsl:if test="./@substring_side = 'left'">
+                    <xsl:if test="./@substring_side='left'">
                       <span class="sort_substring">
-                        <xsl:call-template name='generate-string'>
-                          <xsl:with-param name='text'>&gt;</xsl:with-param>
-                          <xsl:with-param name='count' select='./@substring_width'/>
+                        <xsl:call-template name="generate-string">
+                          <xsl:with-param name="text">&gt;</xsl:with-param>
+                          <xsl:with-param name="count" select="./@substring_width"/>
                         </xsl:call-template>
                       </span>
                     </xsl:if>
@@ -122,18 +122,18 @@
                     <!-- right padding -->
                     <xsl:if test="./@pad_side='right'">
                       <span class="sort_padding">
-                        <xsl:call-template name='generate-string'>
-                          <xsl:with-param name='text'><xsl:value-of select="./@pad_char"/></xsl:with-param>
-                          <xsl:with-param name='count' select='./@pad_width'/>
+                        <xsl:call-template name="generate-string">
+                          <xsl:with-param name="text" select="./@pad_char"/>
+                          <xsl:with-param name="count" select="./@pad_width"/>
                         </xsl:call-template>
                       </span>
                     </xsl:if>
                     <!-- right substring -->
                     <xsl:if test="./@substring_side='right'">
                       <span class="sort_substring">
-                        <xsl:call-template name='generate-string'>
-                          <xsl:with-param name='text'>&lt;</xsl:with-param>
-                          <xsl:with-param name='count' select='./@substring_width'/>
+                        <xsl:call-template name="generate-string">
+                          <xsl:with-param name="text">&lt;</xsl:with-param>
+                          <xsl:with-param name="count" select="./@substring_width"/>
                         </xsl:call-template>
                       </span>
                     </xsl:if>
@@ -172,6 +172,21 @@
           }
           .sort_substring {
             color: #FF9933;
+          }
+          .sort_final {
+            background-color: #FFAAAA;
+          }
+          .la_final {
+            color: #FF0000;
+          }
+          .la_substring {
+            color: #FF9933;
+          }
+          .la_compound {
+            color: #6699CC;
+          }
+          .la_namecount {
+            color: #04FF04;
           }
           .field_xor_coerce {
             color: #FF0000;
@@ -243,14 +258,14 @@
                   </xsl:when>
                   <xsl:when test="./@type='multivalued'">
                     <tr>
-                      <td><tt><xsl:value-of select="./bcf:key/text()"/></tt></td>
-                      <td><xsl:for-each select="./bcf:value">
+                      <td><xsl:value-of select="./bcf:key/text()"/></td>
+                      <td><tt><xsl:for-each select="./bcf:value">
                         <xsl:sort select="./@order"/>
                         <xsl:value-of select="./text()"/>
                         <xsl:if test="not(position()=last())">
-                          <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                          <xsl:text disable-output-escaping="yes">,&amp;nbsp;</xsl:text>
                         </xsl:if>
-                      </xsl:for-each></td>
+                      </xsl:for-each></tt></td>
                     </tr>
                   </xsl:when>
                 </xsl:choose>                
@@ -258,6 +273,118 @@
             </tbody>
           </table>
         </xsl:for-each>
+        <!-- DISPLAY MODES -->
+        <xsl:if test="/bcf:controlfile/bcf:displaymodes">
+          <hr/>
+          <h3>Display Modes</h3>
+          <table>
+            <thead>
+              <tr><td>Fields</td><td>Mode Order</td></tr>
+            </thead>
+            <tbody>
+              <xsl:for-each select="/bcf:controlfile/bcf:displaymodes/bcf:displaymode">
+                <tr>
+                  <td>
+                    <ul>
+                      <xsl:for-each select="./bcf:dtarget">
+                        <li>
+                          <xsl:value-of select="./text()"/>
+                        </li>
+                      </xsl:for-each>
+                    </ul>
+                  </td>
+                  <td><xsl:for-each select="./bcf:mode">
+                    <xsl:value-of select="./text()"/>
+                    <xsl:if test="not(position()=last())">
+                      <xsl:text disable-output-escaping="yes">,&amp;nbsp;</xsl:text>
+                    </xsl:if>
+                  </xsl:for-each></td>
+                </tr>
+              </xsl:for-each>
+            </tbody>
+          </table>
+        </xsl:if>
+        <!-- LABELALPHA TEMPLATES -->
+        <xsl:if test="/bcf:controlfile/bcf:labelalphatemplate">
+          <hr/>
+          <h3>Labelalpha Templates</h3>
+          <xsl:for-each select="/bcf:controlfile/bcf:labelalphatemplate">
+            <h4>Template for type <xsl:value-of select="./@type"/></h4>
+            <table>
+              <thead>
+                <tr>
+                  <xsl:for-each select="./bcf:labelelement">
+                    <xsl:sort select="./@order"/>
+                    <td>Part <xsl:value-of select="./@order"/></td>
+                  </xsl:for-each>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <xsl:for-each select="./bcf:labelelement">
+                    <xsl:sort select="./@order"/>
+                    <td>
+                      <ul>
+                        <xsl:for-each select="./bcf:labelpart">
+                          <li>
+                            <span>
+                              <xsl:if test="./@final='1'">
+                                <xsl:attribute name="class">la_final</xsl:attribute>
+                              </xsl:if>
+                              <xsl:if test="./@substring_compound='1'">
+                                <xsl:attribute name="class">la_compound</xsl:attribute>
+                              </xsl:if>
+                              <xsl:if test="./@ifnamecount">
+                                namecount&gt;<xsl:value-of select="./@ifnamecount"/><xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
+                              </xsl:if>
+                              <!-- left substring -->
+                              <xsl:if test="./@substring_side='left'">
+                                <span class="la_substring">
+                                  <xsl:call-template name="generate-string">
+                                    <xsl:with-param name="text">&gt;</xsl:with-param>
+                                    <xsl:with-param name="count" select="./@substring_width"/>
+                                  </xsl:call-template>
+                                </span>
+                              </xsl:if>
+                              <xsl:value-of select="./text()"/>
+                              <xsl:if test="./@namecount">
+                                <span><xsl:attribute name="class">la_namecount</xsl:attribute>=<xsl:value-of select="./@namecount"/></span>
+                              </xsl:if>
+                              <!-- right substring -->
+                              <xsl:if test="./@substring_side='right'">
+                                <span class="la_substring">
+                                  <xsl:call-template name="generate-string">
+                                    <xsl:with-param name="text">&lt;</xsl:with-param>
+                                    <xsl:with-param name="count" select="./@substring_width"/>
+                                  </xsl:call-template>
+                                </span>
+                              </xsl:if>
+                              <xsl:if test="./@substring_width='v'">
+                                <span class="la_substring">v<xsl:if test="./@substring_width_max">/<xsl:value-of select="./@substring_width_max"/></xsl:if></span>
+                              </xsl:if>
+                              <xsl:if test="./@substring_width='vf'">
+                                <span class="la_substring">vf<xsl:if test="./@substring_fixed_threshold">/<xsl:value-of select="./@substring_fixed_threshold"/></xsl:if></span>
+                              </xsl:if>
+                              <xsl:if test="./@substring_width='l'">
+                                <span class="la_substring">l</span>
+                              </xsl:if>
+                            </span>
+                          </li>
+                        </xsl:for-each>
+                      </ul>
+                    </td>
+                  </xsl:for-each>
+                </tr>
+              </tbody>
+            </table>
+          </xsl:for-each>
+          <div class="key"><u>Key</u>
+          <ul>
+            <li><b>Heading key</b>: Label parts are concatenated together in part order shown</li>
+            <li><b>Labelpart key</b>: <span class="la_final">Final label, no more parts are considered</span>. &quot;namecount&gt;n<xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>field&quot; - conditional field part, only used if there are more than n names. <span class="la_substring">Substring specification:</span> <span class="la_substring">&gt;&gt;&gt;</span>field = use three chars from left side of field, field<span class="la_substring">&lt;&lt;</span> = use two chars from right side of field, field<span class="la_substring">v/n</span> = variable-width substring, max n chars, field<span class="la_substring">vf/n</span> = variable-width substring fixed to same length as longest string occuring at least n times, field<span class="la_substring">l</span> = list scope disambiguation where the label as a whole is unique, not necessarily the individual parts. <span class="la_compound">field with compound substring extraction enabled</span>. field<span class="la_namecount">=n</span> = only use the first n names to form the labelpart</li>
+          </ul>
+          </div>
+        </xsl:if>
         <!-- INHERITANCE -->
         <xsl:if test="/bcf:controlfile/bcf:inheritance">
           <hr/>

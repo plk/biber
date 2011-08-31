@@ -132,16 +132,18 @@
         <element name="bcf:displaymodes">
           <oneOrMore>
             <element name="bcf:displaymode">
-              <element name="bcf:target">
-                <choice>
-                  <value>*</value>
-                  <data type="string">
-                    <param name="minLength">1</param>
-                  </data>
-                </choice>
-              </element>
               <oneOrMore>
-                <element name="bcf:mode">
+                <element name="bcf:dtarget">
+                  <choice>
+                    <value>*</value>
+                    <data type="string">
+                      <param name="minLength">1</param>
+                    </data>
+                  </choice>
+                </element>
+              </oneOrMore>
+              <oneOrMore>
+                <element name="bcf:dmode">
                   <choice>
                     <value>original</value>
                     <value>uniform</value>
@@ -331,11 +333,6 @@
                         <value>left</value>
                         <value>right</value>
                       </choice>
-                    </attribute>
-                  </optional>
-                  <optional>
-                    <attribute name="substring_maxlength">
-                      <data type="integer"/>
                     </attribute>
                   </optional>
                   <optional>

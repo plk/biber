@@ -318,6 +318,7 @@ sub parse_ctrlfile {
                                                            qr/\Abibdata\z/,
                                                            qr/\Adatasource\z/,
                                                            qr/\Asection\z/,
+                                                           qr/\Adtarget\z/,
                                                            qr/\Asortexclusion\z/,
                                                            qr/\Aexclusion\z/,
                                                            qr/\Asort\z/,
@@ -412,7 +413,9 @@ sub parse_ctrlfile {
   if (exists($bcfxml->{displaymodes})) {
     my $dms;
     foreach my $dm (@{$bcfxml->{displaymodes}{displaymode}}) {
-      $dms->{$dm->{target}{content}} = [ map {$_->{content}} @{$dm->{mode}} ];
+      foreach my $dt (@{$dm->{dtarget}}) {
+        $dms->{$dt->{content}} = [ map {$_->{content}} @{$dm->{dmode}} ];
+      }
     }
     Biber::Config->setblxoption('displaymode', $dms);
   }

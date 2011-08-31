@@ -49,6 +49,7 @@
     <bcf:option type="multivalued">
       <bcf:key>labelyearspec</bcf:key>
       <bcf:value order="1">year</bcf:value>
+      <bcf:value order="2">origyear</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxalphanames</bcf:key>
@@ -121,20 +122,75 @@
   </bcf:options>
   <bcf:displaymodes>
     <bcf:displaymode>
-      <bcf:target>ALL</bcf:target>
-      <bcf:mode>original</bcf:mode>
-      <bcf:mode>romanised</bcf:mode>
-      <bcf:mode>uniform</bcf:mode>
-      <bcf:mode>translated</bcf:mode>
+      <bcf:dtarget>ALL</bcf:dtarget>
+      <bcf:dmode>original</bcf:dmode>
+      <bcf:dmode>romanised</bcf:dmode>
+      <bcf:dmode>uniform</bcf:dmode>
+      <bcf:dmode>translated</bcf:dmode>
     </bcf:displaymode>
     <bcf:displaymode>
-      <bcf:target>title</bcf:target>
-      <bcf:mode>romanised</bcf:mode>
-      <bcf:mode>uniform</bcf:mode>
-      <bcf:mode>translated</bcf:mode>
-      <bcf:mode>original</bcf:mode>
+      <bcf:dtarget>title</bcf:dtarget>
+      <bcf:dtarget>booktitle</bcf:dtarget>
+      <bcf:dmode>romanised</bcf:dmode>
+      <bcf:dmode>uniform</bcf:dmode>
+      <bcf:dmode>translated</bcf:dmode>
+      <bcf:dmode>original</bcf:dmode>
     </bcf:displaymode>
   </bcf:displaymodes>
+  <!-- DATA-SOURCE MAPPING -->
+  <bcf:sourcemap>
+    <bcf:maps datatype="bibtex" overwrite="1">
+      <bcf:map maptype="entrytype">
+        <bcf:map_pair source="CONVERSATION" target="CUSTOMA"/>
+        <bcf:also_set field="VERBA" value="ORIGENTRYTYPE"/>
+        <bcf:also_set field="VERBB" value="somevalue"/>
+        <bcf:also_set field="VERBC" value="somevalue"/>
+      </bcf:map>
+      <bcf:map maptype="field">
+        <bcf:map_pair source="ABSTRACT" target="NULL"/>
+        <bcf:map_pair source="CONDUCTOR" target="NAMEA"/>
+      </bcf:map>
+      <bcf:map maptype="field">
+        <bcf:map_pair source="PUBMEDID" target="EPRINT"/>
+        <bcf:also_set field="EPPRINTTYPE" value="ORIGFIELD"/>
+        <bcf:also_set field="USERD" value="Some string"/>
+      </bcf:map>
+      <bcf:map maptype="field">
+        <bcf:restrict>
+          <bcf:restricttype>MISC</bcf:restricttype>
+          <bcf:restricttype>ARTICLE</bcf:restricttype>
+        </bcf:restrict>
+        <bcf:map_pair source="USERB" target="NULL"/>
+        <bcf:also_set field="USERE" value="Some string"/>
+        <bcf:also_set field="USERF" value="NULL"/>
+      </bcf:map>
+    </bcf:maps>
+    <bcf:maps datatype="endnotexml" overwrite="1">
+      <bcf:map maptype="entrytype">
+        <bcf:map_pair source="journal Article" target="REPORT"/>
+        <bcf:also_set field="USERA" value="ORIGENTRYTYPE"/>
+      </bcf:map>
+      <bcf:map maptype="field">
+        <bcf:map_pair source="ABSTRACT" target="NULL"/>
+      </bcf:map>
+    </bcf:maps>
+    <bcf:maps datatype="ris" overwrite="0">
+      <bcf:map maptype="entrytype">
+        <bcf:map_pair source="JOUR" target="REPORT"/>
+        <bcf:also_set field="KEYWORDS" value="something"/>
+      </bcf:map>
+    </bcf:maps>
+    <bcf:maps datatype="zoterordfxml" overwrite="1">
+      <bcf:map maptype="field">
+        <bcf:restrict>
+          <bcf:restricttype>journalArticle</bcf:restricttype>
+          <bcf:restricttype>book</bcf:restricttype>
+          <bcf:restricttype>bookSection</bcf:restricttype>
+        </bcf:restrict>
+        <bcf:map_pair source="dc:subject" target="NULL"/>
+      </bcf:map>
+    </bcf:maps>
+  </bcf:sourcemap>
   <bcf:labelalphatemplate type="global">
     <bcf:labelelement order="1">
       <bcf:labelpart final="1">shorthand</bcf:labelpart>
@@ -149,13 +205,24 @@
   <bcf:labelalphatemplate type="misc">
     <bcf:labelelement order="1">
       <bcf:labelpart>label</bcf:labelpart>
-      <bcf:labelpart substring_width="vf" substring_fixed_threshold="2">labelname</bcf:labelpart>
+      <bcf:labelpart substring_width="vf" substring_fixed_threshold="2" substring_compound="1">labelname</bcf:labelpart>
     </bcf:labelelement>
     <bcf:labelelement order="2">
       <bcf:labelpart>-</bcf:labelpart>
     </bcf:labelelement>
     <bcf:labelelement order="3">
       <bcf:labelpart substring_width="2" substring_side="right">title</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="book">
+    <bcf:labelelement order="1">
+      <bcf:labelpart>label</bcf:labelpart>
+      <bcf:labelpart substring_width="v" substring_width_max="3">labelname</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="report">
+    <bcf:labelelement order="1">
+      <bcf:labelpart substring_width="l">labelname</bcf:labelpart>
     </bcf:labelelement>
   </bcf:labelalphatemplate>
   <bcf:inheritance>
@@ -265,7 +332,7 @@
       <bcf:sortitem substring_side="right" substring_width="4" order="2">year</bcf:sortitem>
    </bcf:sort>
    <bcf:sort order="6">
-      <bcf:sortitem order="1" pad_char="0">volume</bcf:sortitem>
+      <bcf:sortitem order="1" pad_side="left" pad_width="2" pad_char="0">volume</bcf:sortitem>
       <bcf:sortitem order="2">0000</bcf:sortitem>
    </bcf:sort>
    <bcf:sort order="7">
