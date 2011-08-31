@@ -185,12 +185,12 @@
                       </attribute>
                       <oneOrMore>
                         <element name="bcf:map_pair">
-                          <attribute name="source">
+                          <attribute name="map_source">
                             <data type="string">
                               <param name="minLength">1</param>
                             </data>
                           </attribute>
-                          <attribute name="target">
+                          <attribute name="map_target">
                             <data type="string">
                               <param name="minLength">1</param>
                             </data>
@@ -200,13 +200,13 @@
                       </oneOrMore>
                       <zeroOrMore>
                         <element name="bcf:also_set">
-                          <attribute name="field">
+                          <attribute name="map_field">
                             <data type="string">
                               <param name="minLength">1</param>
                             </data>
                           </attribute>
                           <choice>
-                            <attribute name="value">
+                            <attribute name="map_value">
                               <data type="string">
                                 <param name="minLength">1</param>
                               </data>
@@ -238,13 +238,13 @@
                       </zeroOrMore>
                       <oneOrMore>
                         <element name="bcf:map_pair">
-                          <attribute name="source">
+                          <attribute name="map_source">
                             <data type="string">
                               <param name="minLength">1</param>
                             </data>
                           </attribute>
                           <choice>
-                            <attribute name="target">
+                            <attribute name="map_target">
                               <data type="string">
                                 <param name="minLength">1</param>
                               </data>
@@ -264,13 +264,13 @@
                       </oneOrMore>
                       <zeroOrMore>
                         <element name="bcf:also_set">
-                          <attribute name="field">
+                          <attribute name="map_field">
                             <data type="string">
                               <param name="minLength">1</param>
                             </data>
                           </attribute>
                           <choice>
-                            <attribute name="value">
+                            <attribute name="map_value">
                               <data type="string">
                                 <param name="minLength">1</param>
                               </data>

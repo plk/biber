@@ -88,13 +88,13 @@ start =
           (
             (attribute maptype { "entrytype" },
             element bcf:map_pair {
-              attribute source {xsd:string {minLength="1"}},
-              attribute target { xsd:string {minLength="1"} },
+              attribute map_source {xsd:string {minLength="1"}},
+              attribute map_target { xsd:string {minLength="1"} },
               empty
             }+,
             element bcf:also_set {
-              attribute field {xsd:string {minLength="1"}},
-              ( attribute value { xsd:string {minLength="1"} } |
+              attribute map_field {xsd:string {minLength="1"}},
+              ( attribute map_value { xsd:string {minLength="1"} } |
                 attribute bmap_null { "1"} |
                 attribute bmap_origfield { "1"} |
                 attribute bmap_origentrytype { "1"}
@@ -104,8 +104,8 @@ start =
             (attribute maptype { "field" },
              element bcf:per_type { xsd:string {minLength="1"} }*,
              element bcf:map_pair {
-               attribute source {xsd:string {minLength="1"}},
-              ( attribute target { xsd:string {minLength="1"} } |
+               attribute map_source {xsd:string {minLength="1"}},
+              ( attribute map_target { xsd:string {minLength="1"} } |
                 attribute bmap_null { "1"} |
                 attribute bmap_origfield { "1"} |
                 attribute bmap_origentrytype { "1"}
@@ -113,8 +113,8 @@ start =
                empty
              }+,
              element bcf:also_set {
-               attribute field {xsd:string {minLength="1"}},
-              ( attribute value { xsd:string {minLength="1"} } |
+               attribute map_field {xsd:string {minLength="1"}},
+              ( attribute map_value { xsd:string {minLength="1"} } |
                 attribute bmap_null { "1"} |
                 attribute bmap_origfield { "1"} |
                 attribute bmap_origentrytype { "1"}

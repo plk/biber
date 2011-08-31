@@ -436,42 +436,46 @@ sub parse_ctrlfile {
       foreach my $map (@{$maps->{map}}) {
         given ($map->{maptype}) {
           when ('entrytype') {
+            my $source;
             foreach my $map_pair (@{$map->{map_pair}}) {
-              $mapsopt->{$maps->{datatype}}{entrytype}{$map_pair->{source}}{bmap_target} = $map_pair->{target};
-              foreach my $as (@{$map->{also_set}}) {
-                my $val;
-                given ($as) {
-                  when ($as->{bmap_origentrytype}) {
-                    $val = 'bmap_origentrytype';
-                  }
-                  when ($as->{bmap_origfield}) {
-                    $val = 'bmap_origfield';
-                  }
-                  when ($as->{bmap_null}) {
-                    $val = 'bmap_null';
-                  }
-                }
-                $mapsopt->{$maps->{datatype}}{entrytype}{also_set}{$as->{field}} = $val;
+              $source = $map_pair->{map_source};
+              $mapsopt->{$maps->{datatype}}{entrytype}{$source}{bmap_target} = $map_pair->{map_target};
+            }
+            foreach my $as (@{$map->{also_set}}) {
+              my $val;
+              if ($as->{bmap_origentrytype}) {
+                $val = 'bmap_origentrytype';
               }
+              elsif ($as->{bmap_origfield}) {
+                $val = 'bmap_origfield';
+              }
+              elsif ($as->{bmap_null}) {
+                $val = 'bmap_null';
+              }
+              else {
+                $val = $as->{map_value};
+              }
+              $mapsopt->{$maps->{datatype}}{entrytype}{$source}{alsoset}{$as->{map_field}} = $val;
             }
           }
           when ('field') {
             # "global" fields (unrestricted to particular entrytypes)
             if (not defined($map->{per_type})) {
               my $source;
+              my $target;
               foreach my $map_pair (@{$map->{map_pair}}) {
-                $source = $map_pair->{source};
-                my $target;
-                given ($map_pair) {
-                  when ($map_pair->{bmap_origentrytype}) {
-                    $target = 'bmap_origentrytype';
-                  }
-                  when ($map_pair->{bmap_origfield}) {
-                    $target = 'bmap_origfield';
-                  }
-                  when ($map_pair->{bmap_null}) {
-                    $target = 'bmap_null';
-                  }
+                $source = $map_pair->{map_source};
+                if ($map_pair->{bmap_origentrytype}) {
+                  $target = 'bmap_origentrytype';
+                }
+                elsif ($map_pair->{bmap_origfield}) {
+                  $target = 'bmap_origfield';
+                }
+                elsif ($map_pair->{bmap_null}) {
+                  $target = 'bmap_null';
+                }
+                else {
+                  $target = $map_pair->{map_target};
                 }
                 # "simple" global fields
                 if (not defined($map->{also_set})) {
@@ -484,52 +488,55 @@ sub parse_ctrlfile {
               }
               foreach my $as (@{$map->{also_set}}) {
                 my $val;
-                given ($as) {
-                  when ($as->{bmap_origentrytype}) {
-                    $val = 'bmap_origentrytype';
-                  }
-                  when ($as->{bmap_origfield}) {
-                    $val = 'bmap_origfield';
-                  }
-                  when ($as->{bmap_null}) {
-                    $val = 'bmap_null';
-                  }
+                if ($as->{bmap_origentrytype}) {
+                  $val = 'bmap_origentrytype';
                 }
-                $mapsopt->{$maps->{datatype}}{globalfield}{$source}{also_set}{$as->{field}} = $val;
+                elsif ($as->{bmap_origfield}) {
+                  $val = 'bmap_origfield';
+                }
+                elsif ($as->{bmap_null}) {
+                  $val = 'bmap_null';
+                }
+                else {
+                  $val = $as->{map_value};
+                }
+                $mapsopt->{$maps->{datatype}}{globalfield}{$source}{alsoset}{$as->{map_field}} = $val;
               }
             }
             # type-specific field mappings
             else {
               my $source;
+              my $target;
               foreach my $map_pair (@{$map->{map_pair}}) {
-                $source = $map_pair->{source};
-                my $target;
-                given ($map_pair) {
-                  when ($map_pair->{bmap_origentrytype}) {
-                    $target = 'bmap_origentrytype';
-                  }
-                  when ($map_pair->{bmap_origfield}) {
-                    $target = 'bmap_origfield';
-                  }
-                  when ($map_pair->{bmap_null}) {
-                    $target = 'bmap_null';
-                  }
+                $source = $map_pair->{map_source};
+                if ($map_pair->{bmap_origentrytype}) {
+                  $target = 'bmap_origentrytype';
+                }
+                elsif ($map_pair->{bmap_origfield}) {
+                  $target = 'bmap_origfield';
+                }
+                elsif ($map_pair->{bmap_null}) {
+                  $target = 'bmap_null';
+                }
+                else {
+                  $target = $map_pair->{map_target};
                 }
                 $mapsopt->{$maps->{datatype}}{field}{$source}{bmap_target} = $target;
                 foreach my $as (@{$map->{also_set}}) {
                   my $val;
-                  given ($as) {
-                    when ($as->{bmap_origentrytype}) {
-                      $val = 'bmap_origentrytype';
-                    }
-                    when ($as->{bmap_origfield}) {
-                      $val = 'bmap_origfield';
-                    }
-                    when ($as->{bmap_null}) {
-                      $val = 'bmap_null';
-                    }
+                  if ($as->{bmap_origentrytype}) {
+                    $val = 'bmap_origentrytype';
                   }
-                  $mapsopt->{$maps->{datatype}}{field}{$source}{also_set}{$as->{field}} = $val;
+                  elsif ($as->{bmap_origfield}) {
+                    $val = 'bmap_origfield';
+                  }
+                  elsif ($as->{bmap_null}) {
+                    $val = 'bmap_null';
+                  }
+                  else {
+                    $val = $as->{map_value};
+                  }
+                  $mapsopt->{$maps->{datatype}}{field}{$source}{alsoset}{$as->{map_field}} = $val;
                 }
               }
               foreach my $rt (@{$map->{per_type}}) {

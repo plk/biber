@@ -32,8 +32,6 @@ Biber::Config->setblxoption('minalphanames', 1);
 Biber::Config->setblxoption('maxbibnames', 10);
 Biber::Config->setblxoption('minbibnames', 7);
 
-# THERE IS A CONFIG FILE BEING READ TO TEST USER MAPS TOO!
-
 # Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
@@ -334,7 +332,7 @@ is( $out->get_output_entry($main,'anon2'), $anon2, 'namehash/fullhash 2' ) ;
 
 # Testing of user field map ignores
 ok(is_undef($bibentries->entry('i1')->get_field('abstract')), 'map 1' );
-ok(is_undef($bibentries->entry('i1')->get_field('usere')), 'map 2' );
+is($bibentries->entry('i1')->get_field('userc'), 'test', 'map 2' );
 ok(is_undef($bibentries->entry('i2')->get_field('userb')), 'map 3' );
 is($bibentries->entry('i2')->get_field('usere'), 'a string', 'map 4' );
 # Checking deletion of alsosets with value BMAP_NULL

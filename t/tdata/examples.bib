@@ -1364,17 +1364,17 @@
 
 % Without braces round this prefixed lastname, T::B::N fails to get
 % the lastname on Windows for some reason
-@Book{hasan,
+@BOOK{hasan,
   author	   = {{al-Hasan}, ʿAlī},
   editor	   = {{al-Hasan}, ʿAlī},
   translator = {{al-Hasan}, ʿAlī},
   title		   = {Some title},
   publisher  = {Some press},
-  year		   = {2000}
+  year		   = {2000},
 }
 
 % This also tests auto-escaping of some LaTeX specials chars like "%"
-@misc{t1,
+@MISC{t1,
   KEYWORDS	= { primary, something,somethingelse},
   AUTHOR = {Bill Brown},
   TITLE = {10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}},
@@ -1383,7 +1383,7 @@
 }
 
 % SORTNAME should not be output
-@misc{t2,
+@MISC{t2,
   AUTHOR = {Bill Brown},
   SORTNAME = {Bill Brown},
   TITLE = {Signs of W$\frac{o}{a}$nder},
@@ -1391,7 +1391,7 @@
   PAGES = {100--108}
 }
 
-@misc{tvonb,
+@MISC{tvonb,
   AUTHOR = {Terrence von Bobble},
   TITLE = {Things},
   YEAR = {1997}
@@ -1417,7 +1417,7 @@
   SHORTAUTHOR = {YAnony},
   SHORTTITLE = {Shorttitle},
   KEYWORDS = {arc},
-  HYPHENATION = {USenglish}
+  HYPHENATION = {USenglish},
 }
 
 % Testing uniquelist
@@ -1440,7 +1440,8 @@
   ABSTRACT = {Some abstract %50 of which is useless},
   AUTHOR = {AAA and BBB and CCC and DDD and EEE},
   TITLE  = {A title},
-  DATE   = {2003}
+  DATE   = {2003},
+  USERB  = {test},
 }
 
 @MISC{i2,

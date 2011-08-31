@@ -32,8 +32,8 @@ my %map = (
         abstract => "BMAP_NULL",
         conductor => "NAMEA",
         gps => "USERA",
-        participant => "NAMEA",
-        userb => "USERC",
+        participant => "NAMEB",
+        userb => "USERD",
         PUBMEDID => {
           alsoset => { eprinttype => "BMAP_ORIGFIELD", userd => "some string of things" },
           bmap_target => "EPRINT",
@@ -55,7 +55,7 @@ my %map = (
           bmap_target => "REPORT",
         },
       },
-      field => { abstract => "BMAP_NULL" },
+      globalfield => { abstract => "BMAP_NULL" },
     },
     ris => {
       bmap_overwrite => 0,
@@ -63,7 +63,7 @@ my %map = (
         BOOK => { alsoset => { keywords => "somevalue" }, bmap_target => "MAPBOOK" },
         JOUR => { bmap_target => "REPORT" },
       },
-      field => { n2 => "BMAP_NULL" },
+      globalfield => { n2 => "BMAP_NULL" },
     },
     zoterordfxml => {
       bmap_overwrite => 1,
