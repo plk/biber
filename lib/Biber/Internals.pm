@@ -494,8 +494,8 @@ sub _label_name {
 
     # Add alphaothers if name list is truncated
     if ($numnames > $loopnames or $names->get_morenames) {
-      $acc .= $alphaothers;
-      $sortacc .= $sortalphaothers;
+      $acc .= $alphaothers // ''; # alphaothers can be undef
+      $sortacc .= $sortalphaothers // ''; # sortalphaothers can be undef
     }
 
     return [$acc, $sortacc];
