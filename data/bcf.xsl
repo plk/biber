@@ -167,6 +167,9 @@
             font-size: 70%;
             padding-top: 2ex;
           }
+          .map_meta {
+            color: #6699CC;
+          }
           .sort_padding {
             color: #6699CC;
           }
@@ -293,7 +296,7 @@
                       </xsl:for-each>
                     </ul>
                   </td>
-                  <td><xsl:for-each select="./bcf:mode">
+                  <td><xsl:for-each select="./bcf:dmode">
                     <xsl:value-of select="./text()"/>
                     <xsl:if test="not(position()=last())">
                       <xsl:text disable-output-escaping="yes">,&amp;nbsp;</xsl:text>
@@ -303,6 +306,115 @@
               </xsl:for-each>
             </tbody>
           </table>
+        </xsl:if>
+        <!-- DATASOURCE MAPPINGS -->
+        <xsl:if test="/bcf:controlfile/bcf:sourcemap">
+          <hr/>
+          <h3>Datasource Mappings</h3>
+          <xsl:for-each select="/bcf:controlfile/bcf:sourcemap/bcf:maps">
+            <h4>Mappings for type <xsl:value-of select="./@datatype"/>(overwrite = <xsl:value-of select="./@bmap_overwrite"/>)</h4>
+            <xsl:if test="./bcf:map/@maptype='entrytype'">
+              <h5>Entrytype Mappings</h5>
+              <table>
+                <thead>
+                  <tr><td>Mapping</td><td>Also set</td></tr>
+                </thead>
+                <tbody>
+                  <xsl:for-each select="./bcf:map[@maptype='entrytype']">
+                    <tr>
+                      <td>
+                        <ul>
+                          <xsl:for-each select="./bcf:map_pair">
+                            <li><xsl:value-of select="./@map_source"/><xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text><xsl:value-of select="./@map_target"/></li>
+                          </xsl:for-each>
+                        </ul>
+                      </td>
+                      <td>
+                        <ul>
+                          <xsl:for-each select="./bcf:also_set">
+                            <li><xsl:value-of select="./@map_field"/><xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
+                            <xsl:choose>
+                              <xsl:when test="./@bmap_origentrytype='1'">
+                                <span class="map_meta">BMAP_ORIGENTRYTYPE</span>
+                              </xsl:when>
+                              <xsl:when test="./@bmap_null='1'">
+                                <span class="map_meta">BMAP_NULL</span>
+                              </xsl:when>
+                              <xsl:otherwise>
+                                <xsl:value-of select="./@map_value"/>
+                              </xsl:otherwise>
+                            </xsl:choose>
+                            </li>
+                          </xsl:for-each>
+                        </ul>
+                      </td>
+                    </tr>
+                  </xsl:for-each>
+                </tbody>
+              </table>
+            </xsl:if>
+            <xsl:if test="./bcf:map/@maptype='field'">
+              <h5>Field Mappings</h5>
+              <table>
+                <thead>
+                  <tr><td>Mapping only for entrytypes</td><td>Mapping</td><td>Also set</td></tr>
+                </thead>
+                <tbody>
+                  <xsl:for-each select="./bcf:map[@maptype='field']">
+                    <tr>
+                      <td>
+                        <ul>
+                          <xsl:for-each select="./bcf:per_type">
+                            <li><xsl:value-of select="./text()"/></li>
+                          </xsl:for-each>
+                        </ul>
+                      </td>
+                      <td>
+                        <ul>
+                          <xsl:for-each select="./bcf:map_pair">
+                            <li><xsl:value-of select="./@map_source"/><xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
+                            <xsl:choose>
+                              <xsl:when test="./@bmap_null='1'">
+                                <span class="map_meta">BMAP_NULL</span>
+                              </xsl:when>
+                              <xsl:otherwise>
+                                <xsl:value-of select="./@map_target"/>
+                              </xsl:otherwise>
+                            </xsl:choose>
+                            </li>
+                          </xsl:for-each>
+                        </ul>
+                      </td>
+                      <td>
+                        <ul>
+                          <xsl:for-each select="./bcf:also_set">
+                            <li><xsl:value-of select="./@map_field"/><xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
+                            <xsl:choose>
+                              <xsl:when test="./@bmap_origfield='1'">
+                                <span class="map_meta">BMAP_ORIGFIELD</span>
+                              </xsl:when>
+                              <xsl:when test="./@bmap_null='1'">
+                                <span class="map_meta">BMAP_NULL</span>
+                              </xsl:when>
+                              <xsl:otherwise>
+                                <xsl:value-of select="./@map_value"/>
+                              </xsl:otherwise>
+                            </xsl:choose>
+                            </li>
+                          </xsl:for-each>
+                        </ul>
+                      </td>
+                    </tr>
+                  </xsl:for-each>
+                </tbody>
+              </table>
+            </xsl:if>
+          </xsl:for-each>
+          <div class="key"><u>Key</u>
+          <ul>
+            <li><b>Key</b>: Special mapping targets - <span class="map_meta">BMAP_NULL</span> = map to null (delete). <span class="map_meta">BMAP_ORIGENTRYTYPE</span> = map to name of the original (pre-map) entrytype. <span class="map_meta">BMAP_ORIGFIELD</span> = map to name of original (pre-map) field</li>
+          </ul>
+          </div>
         </xsl:if>
         <!-- LABELALPHA TEMPLATES -->
         <xsl:if test="/bcf:controlfile/bcf:labelalphatemplate">

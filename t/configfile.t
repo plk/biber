@@ -32,7 +32,7 @@ my %map = (
         abstract => "BMAP_NULL",
         conductor => "NAMEA",
         gps => "USERA",
-        participant => "NAMEB",
+        participant => "NAMEA",
         userb => "USERD",
         PUBMEDID => {
           alsoset => { eprinttype => "BMAP_ORIGFIELD", userd => "some string of things" },
@@ -40,6 +40,8 @@ my %map = (
         }
       },
       field => {
+        lista => { bmap_pertype => "REPORT",
+                   bmap_target => "BMAP_NULL"},
         userb => { bmap_pertype => "MISC",
                    bmap_target => "BMAP_NULL",
           alsoset => { usere => "a string",

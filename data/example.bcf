@@ -138,7 +138,6 @@
     </bcf:displaymode>
   </bcf:displaymodes>
   <!-- DATA-SOURCE MAPPING -->
-  <!-- DATA-SOURCE MAPPING -->
   <bcf:sourcemap>
     <bcf:maps datatype="bibtex" bmap_overwrite="1">
       <bcf:map maptype="entrytype">
@@ -154,12 +153,12 @@
         <bcf:map_pair map_source="ABSTRACT" bmap_null="1"/>
         <bcf:map_pair map_source="CONDUCTOR" map_target="NAMEA"/>
         <bcf:map_pair map_source="GPS" map_target="USERA"/>
-        <bcf:map_pair map_source="PARTICIPANT" map_target="NAMEB"/>
+        <bcf:map_pair map_source="PARTICIPANT" map_target="NAMEA"/>
         <bcf:map_pair map_source="USERB" map_target="USERC"/>
       </bcf:map>
       <bcf:map maptype="field">
         <bcf:map_pair map_source="PUBMEDID" map_target="EPRINT"/>
-        <bcf:also_set map_field="EPPRINTTYPE" bmap_origfield="1"/>
+        <bcf:also_set map_field="EPRINTTYPE" bmap_origfield="1"/>
         <bcf:also_set map_field="USERD" map_value="Some string of things"/>
       </bcf:map>
       <bcf:map maptype="field">
@@ -167,6 +166,10 @@
         <bcf:map_pair map_source="USERB" bmap_null="1"/>
         <bcf:also_set map_field="USERE" map_value="a string"/>
         <bcf:also_set map_field="USERF" bmap_null="1"/>
+      </bcf:map>
+      <bcf:map maptype="field">
+        <bcf:per_type>REPORT</bcf:per_type>
+        <bcf:map_pair map_source="LISTA" bmap_null="1"/>
       </bcf:map>
     </bcf:maps>
     <bcf:maps datatype="endnotexml" bmap_overwrite="1">

@@ -12,7 +12,7 @@ use Log::Log4perl qw(:easy);
 chdir("t/tdata") ;
 
 # Set up Biber object
-my $biber = Biber->new( configfile => 'biber-test.conf');
+my $biber = Biber->new( noconf => 1);
 Log::Log4perl->easy_init($ERROR);
 $biber->parse_ctrlfile('bibtex-aliases.bcf');
 $biber->set_output_obj(Biber::Output::BBL->new());
@@ -25,7 +25,7 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('validate_structure', 1);
 
-# THERE IS A CONFIG FILE BEING READ TO TEST USER MAPS TOO!
+# THERE IS A MAPPING SECTION IN THE .bcf BEING USED TO TEST USER MAPS TOO!
 
 # Now generate the information
 $biber->prepare;
@@ -39,7 +39,7 @@ my $w1 = [
           "Entry 'alias2' - invalid field 'institution' for entrytype 'misc'",
 ];
 
-my $w2 = ["Overwriting existing field 'verbc' during aliasing of entrytype 'conversation' to 'customa' in entry 'alias4'",
+my $w2 = ["Overwriting existing field 'VERBC' during aliasing of entrytype 'conversation' to 'customa' in entry 'alias4'",
           "Entry 'alias4' - invalid field 'author' for entrytype 'customa'",
           "Entry 'alias4' - invalid field 'eprint' for entrytype 'customa'",
           "Entry 'alias4' - invalid field 'eprinttype' for entrytype 'customa'",
@@ -60,7 +60,7 @@ is($bibentries->entry('alias4')->get_field('verba'), 'conversation', 'Alias - 10
 is($bibentries->entry('alias4')->get_field('verbb'), 'somevalue', 'Alias - 11' );
 is($bibentries->entry('alias4')->get_field('eprint'), 'anid', 'Alias - 12' );
 is($bibentries->entry('alias4')->get_field('eprinttype'), 'pubmedid', 'Alias - 13' );
-is($bibentries->entry('alias4')->get_field('userd'), 'some string of things', 'Alias - 14' );
+is($bibentries->entry('alias4')->get_field('userd'), 'Some string of things', 'Alias - 14' );
 is($bibentries->entry('alias4')->get_field('pubmedid'), undef, 'Alias - 15' );
 is($bibentries->entry('alias4')->get_field('namea')->nth_name(1)->get_firstname, 'Sam', 'Alias - 16' );
 is_deeply($bibentries->entry('alias4')->get_field('warnings'), $w2, 'Alias - 17' ) ;

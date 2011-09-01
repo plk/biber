@@ -446,9 +446,6 @@ sub parse_ctrlfile {
               if ($as->{bmap_origentrytype}) {
                 $val = 'bmap_origentrytype';
               }
-              elsif ($as->{bmap_origfield}) {
-                $val = 'bmap_origfield';
-              }
               elsif ($as->{bmap_null}) {
                 $val = 'bmap_null';
               }
@@ -465,13 +462,7 @@ sub parse_ctrlfile {
               my $target;
               foreach my $map_pair (@{$map->{map_pair}}) {
                 $source = $map_pair->{map_source};
-                if ($map_pair->{bmap_origentrytype}) {
-                  $target = 'bmap_origentrytype';
-                }
-                elsif ($map_pair->{bmap_origfield}) {
-                  $target = 'bmap_origfield';
-                }
-                elsif ($map_pair->{bmap_null}) {
+                if ($map_pair->{bmap_null}) {
                   $target = 'bmap_null';
                 }
                 else {
@@ -488,10 +479,7 @@ sub parse_ctrlfile {
               }
               foreach my $as (@{$map->{also_set}}) {
                 my $val;
-                if ($as->{bmap_origentrytype}) {
-                  $val = 'bmap_origentrytype';
-                }
-                elsif ($as->{bmap_origfield}) {
+                if ($as->{bmap_origfield}) {
                   $val = 'bmap_origfield';
                 }
                 elsif ($as->{bmap_null}) {
@@ -509,13 +497,7 @@ sub parse_ctrlfile {
               my $target;
               foreach my $map_pair (@{$map->{map_pair}}) {
                 $source = $map_pair->{map_source};
-                if ($map_pair->{bmap_origentrytype}) {
-                  $target = 'bmap_origentrytype';
-                }
-                elsif ($map_pair->{bmap_origfield}) {
-                  $target = 'bmap_origfield';
-                }
-                elsif ($map_pair->{bmap_null}) {
+                if ($map_pair->{bmap_null}) {
                   $target = 'bmap_null';
                 }
                 else {
@@ -524,10 +506,7 @@ sub parse_ctrlfile {
                 $mapsopt->{$maps->{datatype}}{field}{$source}{bmap_target} = $target;
                 foreach my $as (@{$map->{also_set}}) {
                   my $val;
-                  if ($as->{bmap_origentrytype}) {
-                    $val = 'bmap_origentrytype';
-                  }
-                  elsif ($as->{bmap_origfield}) {
+                  if ($as->{bmap_origfield}) {
                     $val = 'bmap_origfield';
                   }
                   elsif ($as->{bmap_null}) {

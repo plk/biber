@@ -225,63 +225,77 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
         $biber->process_entry_options($dskey, $value);
       }
 
-      # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE
+      # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf
       my $from;
       my $to;
       if ($user_map and
           my $field = firstval {lc($_) eq lc($f)} (keys %{$user_map->{field}},
                                                    keys %{$user_map->{globalfield}})) {
 
-        # next line short-circuit OR enforces per-type before global field mappings
-        my $to_map = $user_map->{field}{$field} || $user_map->{globalfield}{$field};
-        $from = $dcfxml->{fields}{field}{$f}; # handler information still comes from .dcf
+        # Enforce matching per-type mappings before global ones
+        my $to_map;
+        if (my $map = $user_map->{field}{$field}) {
+          if (exists($map->{bmap_pertype})) {
+
+            # Canonicalise pertype, can be a list Config::General is not clever enough
+            # to do this, annoyingly
+            if (ref($map->{bmap_pertype}) ne 'ARRAY') {
+              $map->{bmap_pertype} = [ $map->{bmap_pertype} ];
+            }
+
+            # Now see if the per_type conditions match
+            if (first {lc($_) eq lc($entry->type)} @{$map->{bmap_pertype}}) {
+              $to_map = $user_map->{field}{$field}
+            }
+            else {
+              $to_map = $user_map->{globalfield}{$field};
+            }
+          }
+        }
+        else {
+          $to_map = $user_map->{globalfield}{$field};
+        }
+
+        # In case per_type doesn't match and there is no global map for this field
+        next FLOOP unless defined($to_map);
+
+        # handler information still comes from .dcf
+        $from = $dcfxml->{fields}{field}{$f};
 
         if (ref($to_map) eq 'HASH') { # complex field map
           $from = $dcfxml->{fields}{field}{lc($to_map->{bmap_target})};
           $to = lc($to_map->{bmap_target});
 
-          # Canonicalise pertype, can be a list Config::General is not clever enough
-          # to do this, annoyingly
-          if (defined($to_map->{bmap_pertype}) and
-             ref($to_map->{bmap_pertype}) ne 'ARRAY') {
-            $to_map->{bmap_pertype} = [ $to_map->{bmap_pertype} ];
+          # Deal with alsoset one->many maps
+          while (my ($from_as, $to_as) = each %{$to_map->{alsoset}}) {
+            if ($bibentry->field_exists(lc($from_as))) {
+              if ($user_map->{bmap_overwrite}) {
+                $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of field '" . lc($field) . "' to '$to' in entry '$dskey'");
+              }
+              else {
+                $biber->biber_warn($bibentry, "Not overwriting existing field '$from_as' during aliasing of field '" . lc($field) . "' to '$to' in entry '$dskey'");
+                next;
+              }
+            }
+            # Deal with special tokens
+            given (lc($to_as)) {
+              when ('bmap_origfield') {
+                $bibentry->set_datafield(lc($from_as), $f);
+              }
+              when ('bmap_null') {
+                $bibentry->del_datafield(lc($from_as));
+                # 'future' delete in case it's not set yet
+                $bibentry->block_datafield(lc($from_as));
+              }
+              default {
+                $bibentry->set_datafield(lc($from_as), $to_as);
+              }
+            }
           }
-          # If it's a global alias or a per-type alias which matches.
-          if (not defined($to_map->{bmap_pertype}) or
-              (defined($to_map->{bmap_pertype}) and
-               first {lc($_) eq lc($entry->type)} @{$to_map->{bmap_pertype}})) {
 
-            # Deal with alsoset one->many maps
-            while (my ($from_as, $to_as) = each %{$to_map->{alsoset}}) {
-              if ($bibentry->field_exists(lc($from_as))) {
-                if ($user_map->{bmap_overwrite}) {
-                  $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of field '" . lc($field) . "' to '$to' in entry '$dskey'");
-                }
-                else {
-                  $biber->biber_warn($bibentry, "Not overwriting existing field '$from_as' during aliasing of field '" . lc($field) . "' to '$to' in entry '$dskey'");
-                  next;
-                }
-              }
-              # Deal with special tokens
-              given (lc($to_as)) {
-                when ('bmap_origfield') {
-                  $bibentry->set_datafield(lc($from_as), $f);
-                }
-                when ('bmap_null') {
-                  $bibentry->del_datafield(lc($from_as));
-                  # 'future' delete in case it's not set yet
-                  $bibentry->block_datafield(lc($from_as));
-                }
-                default {
-                  $bibentry->set_datafield(lc($from_as), $to_as);
-                }
-              }
-            }
-
-            # map fields to targets
-            if (lc($to_map->{bmap_target}) eq 'bmap_null') { # fields to ignore
-              next FLOOP;
-            }
+          # map fields to targets
+          if (lc($to_map->{bmap_target}) eq 'bmap_null') { # fields to ignore
+            next FLOOP;
           }
         }
         else { # simple field map
