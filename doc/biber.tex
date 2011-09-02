@@ -6,6 +6,7 @@
 \usepackage[strict=true,autostyle=true]{csquotes}
 \usepackage{ifthen}
 \usepackage{fontspec}
+\usepackage{tikz-er2}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{fixfoot}
@@ -326,15 +327,49 @@ value. See section \ref{coll} for details.
 \subsubsection{The «map» option}\label{map}
 
 The supplied data source drivers implement a default mapping from
-data source entrytypes and fields into the \verb+biblatex+ data
+data source entrytypes and fields into a default \verb+biblatex+ data
 model\footnote{The BibLaTeX data model is currently static and defined in
   the BibLaTeX manual. In the future (BibLaTeX 2.x), the data model will be dynamically
   defined by the user.}. If
 you want to override or augment the driver mappings you can use the
 \verb+map+ option which makes it possible to, for example, have a data
 source with non-standard entrytypes or fields and to have these
-automatically mapped into valid \verb+biblatex+ entrytypes/fields without
-modifying your data source.
+automatically mapped into other entrytypes/fields without
+modifying your data source. Essentially, what this does it to alter the
+source data stream which \verb+biber+ uses to build the internal
+\verb+biblatex+ data model. So, you are not constrained such that you must
+map into the \verb+biblatex+ data model. Of course, if you don't, it's
+likely that your exotic new fields will be ignored by \verb+biber+ because
+they are not valid in the \verb+biblatex+ data model. In \verb+biblatex+
+2.x, you will be able to re-define the internal \verb+biblatex+ data model
+and pass this to \verb+biber+ which will use it internally. Figure
+\ref{fig:biber-mdf} is a graphical overview of the data flow for data model
+information. In \verb+biblatex+ 2.x, the greyed static data model will be
+replaced by a dynamic data model read from the \verb+.bcf+ control file.
+Note that this figure only shows the data model flow, a huge amount of
+processing occurs between the validation of the internal model and the
+output of the \verb+.bbl+!
+
+\begin{figure}[!htpb]
+  \centering\small
+  \begin{tikzpicture}
+    \tikzstyle{every entity} = [draw=blue, fill=blue!20]
+    \tikzstyle{every isa} = [fill=green!20]
+    \tikzstyle{every relationship} = [fill=red!20]
+    \tikzstyle{every attribute} = [fill=yellow!20]
+    \node[entity] (dsfile) {Datasource};
+    \node[isa] (remap) [below of=dsfile, node distance=8em] {remap} edge [<-,dashed] (dsfile);
+    \node[entity] (conf) [below of=remap,  node distance=7em] {biber config file} edge [->,dashed] (remap);
+    \node[isa] (parser) [right of=remap, node distance=8em] {parser} edge [<-,very thick] (remap);
+    \node[isa] (validation) [right of=parser, node distance=8em] {validation} edge [<-,very thick] (parser);
+    \node[entity] (bcf) [above of=parser, node distance=8em] {.bcf control file} edge [->,dashed] (parser) edge [->,dashed] (validation);
+    \node[entity] (hard) [below of=parser, node distance=12em] {static data model} edge [->,dashed] (parser) edge [->,dashed] (validation);
+    \node[entity] (bbl) [right of=parser, node distance=16em] {.bbl file} edge [<-,very thick] (validation);
+    \node[rectangle, draw=gray, fill=grey!40, opacity=0.4, fit=(hard), inner sep=1em] {};
+  \end{tikzpicture}
+  \caption{Model data flow in \texttt{biber}}
+  \label{fig:biber-mdf}
+\end{figure}
 
 The \verb+map+ option can only be set in the config file
 and not on the command line as it has a complex structure. This
@@ -342,9 +377,9 @@ option allows you to perform various data source mapping (aliasing)
 tasks:
 
 \begin{itemize}
-\item Map data source entrytypes to \verb+biblatex+ entrytypes,
+\item Map data source entrytypes to different entrytypes,
   optionally also adding new fields to the entry.
-\item Map data source fields to \verb+biblatex+ fields,
+\item Map data source fields to different fields,
   optionally also adding new fields to the entry. This is basically a
   one$\rightarrow$many field mapping. You can also limit field
   mappings to specific data source entrytypes.
@@ -406,7 +441,7 @@ driver section contains one or more of the following subsections:
 \end{lstlisting}
 
 \noindent An \verb+entrytype+ specification maps the data source entrytype
-\textcolor{red}{\texttt{source-entrytype}} into the \verb+biblatex+
+\textcolor{red}{\texttt{source-entrytype}} into a different
 entrytype \textcolor{red}{\texttt{target-entrytype}}. The literal string
 \verb+BMAP_TARGET+ is a constant and must be used to specify the target
 entrytype. The \textcolor{blue}{\texttt{alsoset}} section is optional and
@@ -463,7 +498,7 @@ entry. Also, the example turns a \verb+RECORD+ entrytype into a \verb+MUSIC+ ent
 </globalfield>
 \end{lstlisting}
 
-\noindent This maps data source fields to \verb+biblatex+ fields,
+\noindent This maps data source fields to different fields,
 regardless of the entrytypes in which they occur (hence «global»). You may
 use the special \textcolor{red}{\texttt{target-field}} constant \verb+BMAP_NULL+
 to map a field to null, that is, to ignore it. This essentially has the
@@ -658,17 +693,11 @@ source entrytypes \verb+ARTICLE+ and \verb+BOOK+, the field \verb+NOTE+
 should be ignored and the \verb+ADDENDUM+ field should be set to «A
 string».
 
-Please note that the data source entrytypes and fields are \emph{not}
-necessarily the same as in the \verb+biblatex+ data model. The definitive
-guide to the \verb+biblatex+ data model is the \verb+biblatex+
-documentation. It is certainly the case that for \verb+bibtex+ data
-sources, there is a large degree of congruence between the data source
-entrytypes and fields and the \verb+biblatex+ data model because
-\verb+biblatex+ grew out of \verb+bibtex+. However, for other data sources
-like \verb+ris+, \verb+endnotexml+ and \verb+zoterordfxml+, the source
-entrytypes and fields are usually very differently modelled and named. For
-example, here is how to drop the «subject» fields from various entrytypes
-in Zotero XML RDF format data sources:
+For data sources other than \verb+bibtex+, (e.g. \verb+ris+,
+\verb+endnotexml+ and \verb+zoterordfxml+), the source entrytypes and
+fields are usually very differently modelled and named. For example, here
+is how to drop the «subject» fields from various entrytypes in Zotero XML
+RDF format data sources:
 
 \lstset{showspaces=false}
 \begin{lstlisting}[escapechar=+,mathescape=true]

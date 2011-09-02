@@ -5,6 +5,7 @@
   * Change build script (deprecated module) in cygwin build
   * Change perl version requirements in doc
   * strings pragma and array/hash refs
+* TODO When biblatex implements mapping, remove greyed and add line from .bcf to remap in Figure 1 in docs
 * TODO labelalphatemplate implementation
   * Take out labelalphatemplate defaults, optional in rnc/rng and parsing when biblatex implements it
 * TODO When biblatex implements related entries, take out reprinttitle
