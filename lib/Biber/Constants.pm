@@ -1691,7 +1691,6 @@ our %CONFIG_SCOPE_BIBLATEX = (
   structure          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   uniquelist         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   uniquename         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  uniquenamescope    => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   useauthor          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   useeditor          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   useprefix          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
