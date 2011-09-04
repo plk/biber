@@ -1413,10 +1413,6 @@ sub _liststring {
 
     Set per-entry options
 
-    "dataonly" is a special case and expands to "skiplab,skiplos,skipbib"
-    but only "skiplab" and "skiplos" are dealt with in Biber, "skipbib" is
-    dealt with in biblatex.
-
 =cut
 
 sub process_entry_options {
