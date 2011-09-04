@@ -1940,7 +1940,7 @@ sub create_uniquename_info {
 
           # As above but here we are collecting (separate) information for all
           # names, regardless of visibility (needed to track uniquelist)
-          if (Biber::Config->getblxoption('uniquelist', $bee)) {
+          if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
             Biber::Config->add_uniquenamecount_all($lastname, $namecontext, $key);
             Biber::Config->add_uniquenamecount_all($nameinitstring, $namecontext, $key);
             Biber::Config->add_uniquenamecount_all($namestring, $namecontext, $key);
@@ -2057,7 +2057,7 @@ sub generate_uniquename {
           }
 
           # As above but not just for visible names (needed for uniquelist)
-          if (Biber::Config->getblxoption('uniquelist', $bee)) {
+          if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
             if (Biber::Config->get_numofuniquenames_all($lastname, $namecontext) == 1) {
               $name->set_uniquename_all(0);
             }
@@ -2110,7 +2110,7 @@ sub create_uniquelist_info {
     my $minn = Biber::Config->getblxoption('minnames', $bee, $citekey);
 
     next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
-    if (my $ul = Biber::Config->getblxoption('uniquelist', $bee)) {
+    if (my $ul = Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
       $logger->trace("Generating uniquelist information for '$citekey'");
 
       if (my $lname = $be->get_field('labelnamename')) {
@@ -2197,7 +2197,7 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
     my $minn = Biber::Config->getblxoption('minnames', $bee, $citekey);
 
     next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
-    if (my $ul = Biber::Config->getblxoption('uniquelist', $bee)) {
+    if (my $ul = Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
       $logger->trace("Creating uniquelist for '$citekey'");
 
       if (my $lname = $be->get_field('labelnamename')) {

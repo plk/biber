@@ -1422,17 +1422,24 @@ sub process_entry_options {
   return unless $options;       # Just in case it's null
   my @entryoptions = split /\s*,\s*/, $options;
   foreach (@entryoptions) {
-    m/^([^=]+)=?(.+)?$/;
-    given ($2) {
-      when (not $_ or $_ eq 'true') {
-        _expand_option($1, 1, $citekey);
+    m/^([^=]+)(=?)(.+)?$/;
+    my $val;
+    if ($2) {
+      given ($3) {
+        when ('true') {
+          $val = 1;
+        }
+        when ('false') {
+          $val = 0;
+        }
+        default {
+          $val = $3;
+        }
       }
-      when ('false') {
-        _expand_option($1, 0, $citekey);
-      }
-      default {
-        _expand_option($1, $2, $citekey);
-      }
+      _expand_option($1, $val, $citekey);
+    }
+    else {
+      _expand_option($1, 1, $citekey);
     }
   }
   return;
