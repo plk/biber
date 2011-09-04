@@ -1703,28 +1703,26 @@ our %CONFIG_SCOPE_BIBLATEX = (
 # Basically, here we have to emulate relevant parts of biblatex's options processing
 # for local entry-specific options, note therefore  the presence here of some
 # options like max/mincitenames which are not passed in the .bcf
-our %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS = (
-  dataonly           => {OUTPUT => 1, INPUT => ['skiplab', 'skiplos']},
-  maxitems           => {OUTPUT => 1},
-  minitems           => {OUTPUT => 1},
-  maxbibnames        => {OUTPUT => 1},
-  minbibnames        => {OUTPUT => 1},
-  maxcitenames       => {OUTPUT => 1, INPUT => ['maxnames']},
-  mincitenames       => {OUTPUT => 1, INPUT => ['minnames']},
-  maxalphanames      => {OUTPUT => 0},
-  minalphanames      => {OUTPUT => 0},
-  maxnames           => {OUTPUT => ['maxcitenames', 'maxbibnames'],
-                         INPUT  => ['maxnames', 'maxbibnames']},
-  minnames           => {OUTPUT => ['mincitenames', 'minbibnames'],
-                         INPUT  => ['minnames', 'minbibnames']},
-  presort            => {OUTPUT => 1},
-  skipbib            => {OUTPUT => 1},
-  skiplab            => {OUTPUT => 1},
-  skiplos            => {OUTPUT => 1},
-  useauthor          => {OUTPUT => 1},
-  useeditor          => {OUTPUT => 1},
-  useprefix          => {OUTPUT => 1},
-  usetranslator      => {OUTPUT => 1},
+our %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS =  (
+  dataonly      => {OUTPUT => 1, INPUT => ['skiplab', 'skiplos']},
+  maxitems      => {OUTPUT => 1},
+  minitems      => {OUTPUT => 1},
+  maxbibnames   => {OUTPUT => 1},
+  minbibnames   => {OUTPUT => 1},
+  maxcitenames  => {OUTPUT => 1, INPUT => ['maxnames']},
+  mincitenames  => {OUTPUT => 1, INPUT => ['minnames']},
+  maxalphanames => {OUTPUT => 0},
+  minalphanames => {OUTPUT => 0},
+  maxnames      => {OUTPUT => ['maxcitenames', 'maxbibnames'], INPUT  => ['maxnames', 'maxbibnames']},
+  minnames      => {OUTPUT => ['mincitenames', 'minbibnames'], INPUT  => ['minnames', 'minbibnames']},
+  presort       => {OUTPUT => 1},
+  skipbib       => {OUTPUT => 1},
+  skiplab       => {OUTPUT => 1},
+  skiplos       => {OUTPUT => 1},
+  useauthor     => {OUTPUT => 1},
+  useeditor     => {OUTPUT => 1},
+  useprefix     => {OUTPUT => 1},
+  usetranslator => {OUTPUT => 1},
 );
 
 
