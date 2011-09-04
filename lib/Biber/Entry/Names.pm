@@ -87,12 +87,10 @@ sub reset_uniquelist {
 
 sub set_uniquelist {
   my $self = shift;
-  my $namelist = shift;
+  my ($namelist, $maxn, $minn) = @_;
   my $uniquelist = $self->count_uniquelist($namelist);
   my $num_names = $self->count_names;
   my $currval = $self->{uniquelist};
-  my $minn = Biber::Config->getblxoption('minnames');
-  my $maxn = Biber::Config->getblxoption('maxnames');
 
   # Set modified flag to positive if we changed something
   if (not defined($currval) or $currval != $uniquelist) {

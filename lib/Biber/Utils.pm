@@ -38,7 +38,8 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   normalise_string normalise_string_hash normalise_string_underscore normalise_string_sort
   reduce_array remove_outer add_outer ucinit strip_nosort
   is_def is_undef is_def_and_notnull is_def_and_null
-  is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output};
+  is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
+  filter_entry_options};
 
 =head1 FUNCTIONS
 
@@ -631,6 +632,34 @@ sub join_name {
   $nstring =~ s/(?<=\.)\\bibnamedelim[ab]/\\bibnamedelimi/gxms;
   return $nstring;
 }
+
+=head2 filter_entry_options
+
+    Remove per_entry option which biblatex doesn't care about
+
+=cut
+
+sub filter_entry_options {
+  my $options = shift;
+  return '' unless $options;
+  my @entryoptions = split /\s*,\s*/, $options;
+  my @return_options;
+  foreach (@entryoptions) {
+    m/^([^=]+)=?(.+)?$/;
+    given ($CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($1)}{OUTPUT}) {
+      when (1) {
+        push @return_options, $1 . ($2 ? "=$2" : '') ;
+      }
+      when (ref($_) eq 'ARRAY') {
+        foreach my $map (@$_) {
+          push @return_options, "$map=$2";
+        }
+      }
+    }
+  }
+  return join(',', @return_options);
+}
+
 
 1;
 

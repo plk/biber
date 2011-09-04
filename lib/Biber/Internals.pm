@@ -288,9 +288,10 @@ sub _labelpart {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
   my $struc = Biber::Config->get_structure;
-  my $maxn = Biber::Config->getblxoption('maxalphanames');
-  my $minn = Biber::Config->getblxoption('minalphanames');
+  my $maxn = Biber::Config->getblxoption('maxalphanames', $bee, $citekey);
+  my $minn = Biber::Config->getblxoption('minalphanames', $bee, $citekey);
   my $lp;
   my $slp;
 
@@ -1374,7 +1375,7 @@ sub _namestring {
   $str =~ s/\s+\Q$nse\E/$nse/gxms;   # Remove any whitespace before external separator
   $str =~ s/\Q$nse\E\z//xms;         # strip final external separator as we are finished
 
-  $str .= "$nse$trunc" if $visible < $count; # name list was truncated
+  $str .= $trunc if $visible < $count; # name list was truncated
   return $str;
 }
 
@@ -1383,6 +1384,7 @@ sub _liststring {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
   my @items = @{$be->get_field($field)};
   my $str = '';
   my $truncated = 0;
@@ -1390,23 +1392,20 @@ sub _liststring {
   # These should be symbols which can't appear in lists
   # This means, symbols which normalise_string_sort strips out
   my $lsi    = '_';          # list separator, internal
-  my $lse    = '+';          # list separator, external
   # Guaranteed to sort after everything else as it's the last legal Unicode code point
   my $trunc = "\x{10FFFD}";  # sort string for truncated list
 
   # perform truncation according to options minitems, maxitems
-  if ( $#items + 1 > Biber::Config->getblxoption('maxitems') ) {
+  if ( $#items + 1 > Biber::Config->getblxoption('maxitems', $bee, $citekey) ) {
     $truncated = 1;
-    @items = splice(@items, 0, Biber::Config->getblxoption('minitems') );
+    @items = splice(@items, 0, Biber::Config->getblxoption('minitems', $bee, $citekey) );
   }
 
   # separate the items by a string to give some structure
   $str = join($lsi, map { normalise_string_sort($_, $field)} @items);
-  $str .= $lse;
 
-  $str =~ s/\s+\Q$lse\E/$lse/gxms;
-  $str =~ s/\Q$lse\E\z//xms;
-  $str .= "$lse$trunc" if $truncated;
+  $str =~ s/\s+\z//xms;
+  $str .= $trunc if $truncated;
   return $str;
 }
 
@@ -1424,48 +1423,36 @@ sub process_entry_options {
   my $self = shift;
   my $citekey = shift;
   my $options = shift;
-  if ( $options ) { # Just in case it's null
-    my @entryoptions = split /\s*,\s*/, $options;
-    foreach (@entryoptions) {
-      m/^([^=]+)=?(.+)?$/;
-      if ( $2 and $2 eq 'false' ) {
-        if (lc($1) eq 'dataonly') {
-          Biber::Config->setblxoption('skiplab', 0, 'PER_ENTRY', $citekey);
-          Biber::Config->setblxoption('skiplos', 0, 'PER_ENTRY', $citekey);
-        }
-        else {
-          Biber::Config->setblxoption($1, 0, 'PER_ENTRY', $citekey);
-        }
+  return unless $options;       # Just in case it's null
+  my @entryoptions = split /\s*,\s*/, $options;
+  foreach (@entryoptions) {
+    m/^([^=]+)=?(.+)?$/;
+    given ($2) {
+      when (not $_ or $_ eq 'true') {
+        _expand_option($1, 1, $citekey);
       }
-      elsif ( ($2 and $2 eq 'true') or not $2) {
-        if (lc($1) eq 'dataonly') {
-          Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $citekey);
-          Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $citekey);
-        }
-        else {
-          Biber::Config->setblxoption($1, 1, 'PER_ENTRY', $citekey);
-        }
+      when ('false') {
+        _expand_option($1, 0, $citekey);
       }
-      elsif ($2) {
-        if (lc($1) eq 'dataonly') {
-          Biber::Config->setblxoption('skiplab', $2, 'PER_ENTRY', $citekey);
-          Biber::Config->setblxoption('skiplos', $2, 'PER_ENTRY', $citekey);
-        }
-        else {
-          Biber::Config->setblxoption($1, $2, 'PER_ENTRY', $citekey);
-        }
-      }
-      else {
-        if (lc($1) eq 'dataonly') {
-          Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $citekey);
-          Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $citekey);
-        }
-        else {
-          Biber::Config->setblxoption($1, 1, 'PER_ENTRY', $citekey);
-        }
+      default {
+        _expand_option($1, $2, $citekey);
       }
     }
   }
+  return;
+}
+
+sub _expand_option {
+  my ($opt, $val, $citekey) = @_;
+  if(my $map = $CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($opt)}{INPUT}) {
+    foreach my $m (@$map) {
+      Biber::Config->setblxoption($m, $val, 'PER_ENTRY', $citekey);
+    }
+  }
+  else {
+    Biber::Config->setblxoption($opt, $val, 'PER_ENTRY', $citekey);
+  }
+  return;
 }
 
 1;

@@ -1394,16 +1394,18 @@ sub process_visible_names {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $struc = Biber::Config->get_structure;
-  my $maxn = Biber::Config->getblxoption('maxnames');
-  my $minn = Biber::Config->getblxoption('minnames');
-  my $maxbn = Biber::Config->getblxoption('maxbibnames');
-  my $minbn = Biber::Config->getblxoption('minbibnames');
-  my $maxan = Biber::Config->getblxoption('maxalphanames');
-  my $minan = Biber::Config->getblxoption('minalphanames');
 
   foreach my $citekey ( $section->get_citekeys ) {
     $logger->debug("Postprocessing visible names for key '$citekey'");
     my $be = $section->bibentry($citekey);
+    my $bee = $be->get_field('entrytype');
+
+    my $maxn = Biber::Config->getblxoption('maxnames', $bee, $citekey);
+    my $minn = Biber::Config->getblxoption('minnames', $bee, $citekey);
+    my $maxbn = Biber::Config->getblxoption('maxbibnames', $bee, $citekey);
+    my $minbn = Biber::Config->getblxoption('minbibnames', $bee, $citekey);
+    my $maxan = Biber::Config->getblxoption('maxalphanames', $bee, $citekey);
+    my $minan = Biber::Config->getblxoption('minalphanames', $bee, $citekey);
 
     foreach my $n (@{$struc->get_field_type('name')}) {
       next unless my $names = $be->get_field($n);
@@ -1435,26 +1437,30 @@ sub process_visible_names {
         $visible_names_alpha = $count;
       }
 
-      # max/minnames and max/minbibnames
+      # max/minnames
       if ( $morenames or $count > $maxn ) {
-        # Visibiliy to the uniquelist point if uniquelist is requested and max/minbibnames
-        # is equal to max/minnames because in this case the user can expect that the bibliography
-        # is sorted according to the citation truncations.
+        # Visibiliy to the uniquelist point if uniquelist is requested
         # We know at this stage that if uniquelist is set, there are more than maxnames
         # names. We also know that uniquelist > minnames because it is a further disambiguation
         # on top of minnames so can't be less as you can't disambiguate by losing information
-        if ($maxn == $maxbn and $l_minn == $l_minbn) {
-          $visible_names = $visible_names_bib = $names->get_uniquelist // $l_minn;
-        }
-        else {
-          $visible_names = $names->get_uniquelist // $l_minn;
-          $visible_names_bib = $l_minbn;
-        }
+        $visible_names = $names->get_uniquelist // $l_minn;
       }
       else { # visibility is simply the full list
-        $visible_names = $visible_names_bib = $count;
+        $visible_names = $count;
       }
-      $logger->trace("Setting visible names for key '$citekey' to '$visible_names'");
+
+      # max/minbibnames
+      if ( $morenames or $count > $maxbn ) {
+        # Visibiliy to the uniquelist point if uniquelist is requested
+        # We know at this stage that if uniquelist is set, there are more than maxnames
+        # names. We also know that uniquelist > minnames because it is a further disambiguation
+        # on top of minnames so can't be less as you can't disambiguate by losing information
+        $visible_names_bib = $names->get_uniquelist // $l_minbn;
+      }
+      else { # visibility is simply the full list
+        $visible_names_bib = $count;
+      }
+
       $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
       $logger->trace("Setting visible names (alpha) for key '$citekey' to '$visible_names_alpha'");
       $names->set_visible($visible_names);
@@ -1804,8 +1810,8 @@ sub create_uniquename_info {
           # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
           $ul = $be->get_field($lname)->get_uniquelist;
         }
-        my $maxn = Biber::Config->getblxoption('maxnames');
-        my $minn = Biber::Config->getblxoption('minnames');
+        my $maxn = Biber::Config->getblxoption('maxnames', $bee, $citekey);
+        my $minn = Biber::Config->getblxoption('minnames', $bee, $citekey);
 
         # Note that we don't determine if a name is unique here -
         # we can't, were still processing entries at this point.
@@ -1973,8 +1979,8 @@ sub generate_uniquename {
         # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
         my $ul = $be->get_field($lname)->get_uniquelist;
 
-        my $maxn = Biber::Config->getblxoption('maxnames');
-        my $minn = Biber::Config->getblxoption('minnames');
+        my $maxn = Biber::Config->getblxoption('maxnames', $bee, $citekey);
+        my $minn = Biber::Config->getblxoption('minnames', $bee, $citekey);
 
         my $nl = $be->get_field($lname);
         my $num_names = $nl->count_names;
@@ -2092,8 +2098,6 @@ sub create_uniquelist_info {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
-  my $maxn = Biber::Config->getblxoption('maxnames');
-  my $minn = Biber::Config->getblxoption('minnames');
 
   # Reset uniquelist information as we have to generate it again because uniquename
   # information might have changed
@@ -2102,6 +2106,9 @@ sub create_uniquelist_info {
   foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
+    my $maxn = Biber::Config->getblxoption('maxnames', $bee, $citekey);
+    my $minn = Biber::Config->getblxoption('minnames', $bee, $citekey);
+
     next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
     if (my $ul = Biber::Config->getblxoption('uniquelist', $bee)) {
       $logger->trace("Generating uniquelist information for '$citekey'");
@@ -2182,12 +2189,13 @@ sub generate_uniquelist {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
-  my $maxn = Biber::Config->getblxoption('maxnames');
-  my $minn = Biber::Config->getblxoption('minnames');
 
 LOOP: foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
+    my $maxn = Biber::Config->getblxoption('maxnames', $bee, $citekey);
+    my $minn = Biber::Config->getblxoption('minnames', $bee, $citekey);
+
     next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
     if (my $ul = Biber::Config->getblxoption('uniquelist', $bee)) {
       $logger->trace("Creating uniquelist for '$citekey'");
@@ -2241,7 +2249,7 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
 
         $logger->trace("Setting uniquelist for '$citekey' using " . join(',', @$namelist));
         $logger->trace("Uniquelist count for '$citekey' is '" . Biber::Config->get_uniquelistcount_final($namelist) . "'");
-        $nl->set_uniquelist($namelist);
+        $nl->set_uniquelist($namelist, $maxn, $minn);
       }
     }
   }

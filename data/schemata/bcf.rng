@@ -93,6 +93,30 @@
             <ref name="labelyearspec"/>
           </optional>
           <optional>
+            <ref name="maxalphanames"/>
+          </optional>
+          <optional>
+            <ref name="maxbibnames"/>
+          </optional>
+          <optional>
+            <ref name="maxitems"/>
+          </optional>
+          <optional>
+            <ref name="maxnames"/>
+          </optional>
+          <optional>
+            <ref name="minalphanames"/>
+          </optional>
+          <optional>
+            <ref name="minbibnames"/>
+          </optional>
+          <optional>
+            <ref name="minitems"/>
+          </optional>
+          <optional>
+            <ref name="minnames"/>
+          </optional>
+          <optional>
             <ref name="singletitle"/>
           </optional>
           <optional>

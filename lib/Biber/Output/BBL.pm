@@ -165,7 +165,7 @@ sub set_output_entry {
   }
 
   if ($be->field_exists('options')) {
-    $opts = $be->get_field('options');
+    $opts = filter_entry_options($be->get_field('options'));
   }
 
   $acc .= "  \\entry{$citekey}{" . $be->get_field('entrytype') . "}{$opts}\n";

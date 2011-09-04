@@ -13,6 +13,7 @@ our @EXPORT = qw{
   %CONFIG_DEFAULT_BIBER
   %CONFIG_DEFAULT_BIBLATEX
   %CONFIG_SCOPE_BIBLATEX
+  %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS
   %NOSORT_TYPES
   %STRUCTURE_DATATYPES
   $BIBER_CONF_NAME
@@ -1670,14 +1671,14 @@ our %CONFIG_SCOPE_BIBLATEX = (
   labelnumber        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelyear          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelyearspec      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  maxitems           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  minitems           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  maxbibnames        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  maxalphanames      => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  maxnames           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  minbibnames        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  minalphanames      => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  minnames           => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  maxitems           => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  minitems           => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  maxbibnames        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  maxalphanames      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  maxnames           => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  minbibnames        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  minalphanames      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  minnames           => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   presort            => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   singletitle        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   skipbib            => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
@@ -1695,6 +1696,35 @@ our %CONFIG_SCOPE_BIBLATEX = (
   useeditor          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   useprefix          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   usetranslator      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+);
+
+# For per-entry options, what should be set when we find them and
+# what should be output to the .bbl for biblatex.
+# Basically, here we have to emulate relevant parts of biblatex's options processing
+# for local entry-specific options, note therefore  the presence here of some
+# options like max/mincitenames which are not passed in the .bcf
+our %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS = (
+  dataonly           => {OUTPUT => 1, INPUT => ['skiplab', 'skiplos']},
+  maxitems           => {OUTPUT => 1},
+  minitems           => {OUTPUT => 1},
+  maxbibnames        => {OUTPUT => 1},
+  minbibnames        => {OUTPUT => 1},
+  maxcitenames       => {OUTPUT => 1, INPUT => ['maxnames']},
+  mincitenames       => {OUTPUT => 1, INPUT => ['minnames']},
+  maxalphanames      => {OUTPUT => 0},
+  minalphanames      => {OUTPUT => 0},
+  maxnames           => {OUTPUT => ['maxcitenames', 'maxbibnames'],
+                         INPUT  => ['maxnames', 'maxbibnames']},
+  minnames           => {OUTPUT => ['mincitenames', 'minbibnames'],
+                         INPUT  => ['minnames', 'minbibnames']},
+  presort            => {OUTPUT => 1},
+  skipbib            => {OUTPUT => 1},
+  skiplab            => {OUTPUT => 1},
+  skiplos            => {OUTPUT => 1},
+  useauthor          => {OUTPUT => 1},
+  useeditor          => {OUTPUT => 1},
+  useprefix          => {OUTPUT => 1},
+  usetranslator      => {OUTPUT => 1},
 );
 
 

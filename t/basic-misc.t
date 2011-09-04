@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 25;
+use Test::More tests => 33;
 
 use Biber;
 use Biber::Utils;
@@ -53,7 +53,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 } ;
+set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 } ;
 
 my $u1 = q|  \entry{u1}{misc}{}
     \name{labelname}{4}{uniquelist=4}{%
@@ -344,6 +344,40 @@ ok(is_undef($bibentries->entry('i2')->get_field('userc')), 'map 6' );
 
 # Make sure visibility doesn't exceed number of names.
 is($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_field('labelnamename'))->get_visible_bib, '3', 'bib visibility - 1');
+
+# Testing per_type and per_entry max/min* so reset globals to defaults
+Biber::Config->setblxoption('uniquelist', 0);
+Biber::Config->setblxoption('maxnames', 3);
+Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('maxitems', 3);
+Biber::Config->setblxoption('minitems', 1);
+Biber::Config->setblxoption('maxbibnames', 3);
+Biber::Config->setblxoption('minbibnames', 1);
+Biber::Config->setblxoption('maxalphanames', 3);
+Biber::Config->setblxoption('minalphanames', 1);
+Biber::Config->setblxoption('maxnames', 1, 'PER_TYPE', 'misc');
+Biber::Config->setblxoption('maxbibnames', 2, 'PER_TYPE', 'unpublished');
+Biber::Config->setblxoption('minbibnames', 2, 'PER_TYPE', 'unpublished');
+# maxalphanames is set on tmn2 entry
+Biber::Config->setblxoption('minalphanames', 2, 'PER_TYPE', 'book');
+# minitems is set on tmn3 entry
+Biber::Config->setblxoption('maxitems', 2, 'PER_TYPE', 'unpublished');
+
+# Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
+# Otherwise, we have citekeys and allkeys which confuses fetch_data()
+$section->del_citekeys;
+$biber->prepare ;
+$section = $biber->sections->get_section(0);
+$main = $section->get_list('MAIN');
+
+is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_field('labelnamename'))->get_visible, '1', 'per_type maxnames - 1');
+is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_field('labelnamename'))->get_visible, '3', 'per_type maxnames - 2');
+is($bibentries->entry('tmn3')->get_field($bibentries->entry('tmn3')->get_field('labelnamename'))->get_visible_bib, '2', 'per_type bibnames - 3');
+is($bibentries->entry('tmn4')->get_field($bibentries->entry('tmn4')->get_field('labelnamename'))->get_visible_bib, '3', 'per_type bibnames - 4');
+is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_field('labelnamename'))->get_visible_alpha, '3', 'per_type/entry alphanames - 1');
+is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_field('labelnamename'))->get_visible_alpha, '2', 'per_type/entry alphanames - 2');
+is($biber->_liststring('tmn1', 'institution'), 'A_B_C', 'per_type/entry items - 1');
+is($biber->_liststring('tmn3', 'institution'), "A_B\x{10FFFD}", 'per_type/entry items - 2');
 
 # This would be how to test JSON output if necessary
 # require JSON::XS;

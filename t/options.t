@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 7;
+use Test::More tests => 8;
 
 use Biber;
 use Biber::Output::BBL;
@@ -91,6 +91,28 @@ my $l1 = q|  \entry{L1}{book}{}
 
 |;
 
+my $l2 = q|  \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
+    \name{labelname}{1}{}{%
+      {{uniquename=0,hash=19eec87c959944d6d9c72434a42856ba}{Edwards}{E\bibinitperiod}{Ellison}{E\bibinitperiod}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{uniquename=0,hash=19eec87c959944d6d9c72434a42856ba}{Edwards}{E\bibinitperiod}{Ellison}{E\bibinitperiod}{}{}{}{}}%
+    }
+    \list{publisher}{1}{%
+      {Oxford}%
+    }
+    \strng{namehash}{19eec87c959944d6d9c72434a42856ba}
+    \strng{fullhash}{19eec87c959944d6d9c72434a42856ba}
+    \field{sortinit}{E}
+    \field{labelyear}{1998}
+    \field{day}{05}
+    \field{month}{04}
+    \field{title}{Title 2}
+    \field{year}{1998}
+  \endentry
+
+|;
+
 ok(Biber::Config->getblxoption('uniquename') == 1, "Single-valued option") ;
 is_deeply(Biber::Config->getblxoption('labelnamespec'), [ 'author' ], "Multi-valued options");
 ok(Biber::Config->getoption('mincrossrefs') == 88, "Setting Biber options via control file");
@@ -98,3 +120,4 @@ ok(Biber::Config->getblxoption('useprefix', 'book') == 1 , "Per-type single-valu
 is_deeply(Biber::Config->getblxoption('labelnamespec', 'book'), $bln, "Per-type multi-valued options");
 is($bibentries->entry('l1')->get_field('labelyearname'), 'year', 'Global labelyear setting' ) ;
 is( $out->get_output_entry($main,'l1'), $l1, 'Global labelyear setting - labelyear should be YEAR') ;
+is( $out->get_output_entry($main,'l2'), $l2, 'Entry-local biblatex option mappings - 1') ;
