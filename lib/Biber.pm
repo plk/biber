@@ -1322,7 +1322,7 @@ sub process_fullhash {
   my $be = $section->bibentry($citekey);
 
   # fullhash is generated from the labelname but ignores SHORT* fields and
-  # maxnames/minnames settings
+  # max/mincitenames settings
   if (my $lnamefh = $be->get_field('labelnamenamefullhash')) {
     if (my $lnfh = $be->get_field($lnamefh)) {
       $be->set_field('fullhash', $self->_getfullhash($citekey, $lnfh));
@@ -1400,8 +1400,8 @@ sub process_visible_names {
     my $be = $section->bibentry($citekey);
     my $bee = $be->get_field('entrytype');
 
-    my $maxn = Biber::Config->getblxoption('maxnames', $bee, $citekey);
-    my $minn = Biber::Config->getblxoption('minnames', $bee, $citekey);
+    my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
+    my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
     my $maxbn = Biber::Config->getblxoption('maxbibnames', $bee, $citekey);
     my $minbn = Biber::Config->getblxoption('minbibnames', $bee, $citekey);
     my $maxan = Biber::Config->getblxoption('maxalphanames', $bee, $citekey);
@@ -1411,7 +1411,7 @@ sub process_visible_names {
       next unless my $names = $be->get_field($n);
 
       my $count = $names->count_names;
-      my $visible_names;
+      my $visible_names_cite;
       my $visible_names_bib;
       my $visible_names_alpha;
 
@@ -1419,14 +1419,14 @@ sub process_visible_names {
       #
       # John Smith and Bill Jones
       #
-      # and min*names=3. Then visibility will be set to 3 but there aren't 3 names to
+      # and mincitenames=3. Then visibility will be set to 3 but there aren't 3 names to
       # get information from so looping over the visibility count would cause name methods
       # to operate on undef at index 3 and die
-      my $l_minn = $count < $minn ? $count : $minn;
-      my $l_minan = $count < $minan ? $count : $minan;
+      my $l_mincn = $count < $mincn ? $count : $mincn;
       my $l_minbn = $count < $minbn ? $count : $minbn;
+      my $l_minan = $count < $minan ? $count : $minan;
 
-      # If name list was truncated in bib with "and others", this overrides maxnames
+      # If name list was truncated in bib with "and others", this overrides maxcitenames
       my $morenames = $names->get_morenames ? 1 : 0;
 
       # max/minalphanames doesn't care about uniquelist - labels are just labels
@@ -1437,33 +1437,34 @@ sub process_visible_names {
         $visible_names_alpha = $count;
       }
 
-      # max/minnames
-      if ( $morenames or $count > $maxn ) {
+      # max/mincitenames
+      if ( $morenames or $count > $maxcn ) {
         # Visibiliy to the uniquelist point if uniquelist is requested
-        # We know at this stage that if uniquelist is set, there are more than maxnames
-        # names. We also know that uniquelist > minnames because it is a further disambiguation
-        # on top of minnames so can't be less as you can't disambiguate by losing information
-        $visible_names = $names->get_uniquelist // $l_minn;
+        # We know at this stage that if uniquelist is set, there are more than maxcitenames
+        # names. We also know that uniquelist > mincitenames because it is a further disambiguation
+        # on top of mincitenames so can't be less as you can't disambiguate by losing information
+        $visible_names_cite = $names->get_uniquelist // $l_mincn;
       }
       else { # visibility is simply the full list
-        $visible_names = $count;
+        $visible_names_cite = $count;
       }
 
       # max/minbibnames
       if ( $morenames or $count > $maxbn ) {
         # Visibiliy to the uniquelist point if uniquelist is requested
-        # We know at this stage that if uniquelist is set, there are more than maxnames
-        # names. We also know that uniquelist > minnames because it is a further disambiguation
-        # on top of minnames so can't be less as you can't disambiguate by losing information
+        # We know at this stage that if uniquelist is set, there are more than maxbibnames
+        # names. We also know that uniquelist > mincitenames because it is a further disambiguation
+        # on top of mincitenames so can't be less as you can't disambiguate by losing information
         $visible_names_bib = $names->get_uniquelist // $l_minbn;
       }
       else { # visibility is simply the full list
         $visible_names_bib = $count;
       }
 
+      $logger->trace("Setting visible names (cite) for key '$citekey' to '$visible_names_cite'");
       $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
       $logger->trace("Setting visible names (alpha) for key '$citekey' to '$visible_names_alpha'");
-      $names->set_visible($visible_names);
+      $names->set_visible_cite($visible_names_cite);
       $names->set_visible_bib($visible_names_bib);
       $names->set_visible_alpha($visible_names_alpha);
     }
@@ -1707,12 +1708,12 @@ sub uniqueness {
   #      goto step 1
   #    } else { return }
 
-  # uniquelist can never do anything to a list shorter than maxnames because:
+  # uniquelist can never do anything to a list shorter than maxcitenames because:
   # * Shortening a list can't make it unique
-  # * You can't lengthen it if the list is shorter than maxnames because there
+  # * You can't lengthen it if the list is shorter than maxcitenames because there
   #   is no more information to add that you don't already have.
-  # uniquelist cannot be less than minnames as the list is either unambiguous
-  # at minnames or it isn't and uniquelist needs more information by adding items
+  # uniquelist cannot be less than mincitenames as the list is either unambiguous
+  # at mincitenames or it isn't and uniquelist needs more information by adding items
 
   # Set a flag for first uniquelist pass. This is a special case as we always want to run
   # at least one uniquelist pass if requested, regardless of unul_done global flag.
@@ -1810,8 +1811,8 @@ sub create_uniquename_info {
           # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
           $ul = $be->get_field($lname)->get_uniquelist;
         }
-        my $maxn = Biber::Config->getblxoption('maxnames', $bee, $citekey);
-        my $minn = Biber::Config->getblxoption('minnames', $bee, $citekey);
+        my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
+        my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
 
         # Note that we don't determine if a name is unique here -
         # we can't, were still processing entries at this point.
@@ -1831,7 +1832,7 @@ sub create_uniquename_info {
         my $nl = $be->get_field($lname);
         my $num_names = $nl->count_names;
         my $names = $nl->names;
-        # If name list was truncated in bib with "and others", this overrides maxnames
+        # If name list was truncated in bib with "and others", this overrides maxcitenames
         my $morenames = $nl->get_morenames ? 1 : 0;
 
         my @truncnames;
@@ -1843,7 +1844,7 @@ sub create_uniquename_info {
           # We need to track two types of uniquename disambiguation here:
           #
           # 1. Information to disambiguate visible names from visible names
-          #    where "visibility" is governed by uniquelist/max/minnames.
+          #    where "visibility" is governed by uniquelist/max/mincitenames.
           #    This is the actual "uniquename" feature information.
           # 2. Information to disambiguate all names, regardless of visibility
           #    This is needed for uniquelist because it needs to construct
@@ -1853,15 +1854,15 @@ sub create_uniquename_info {
           # uniquename = 3 (allinit) or 4 (allfull)
           # Uniquelist is set and a name appears before the uniquelist truncation
           # Uniquelist is not set and the entry has an explicit "and others" at the end
-          #   since this means that every name is less than maxnames by definition
-          # Uniquelist is not set and a name list is shorter than the maxnames truncation
-          # Uniquelist is not set, a name list is longer than the maxnames truncation
-          #   and the name appears before the minnames truncation
+          #   since this means that every name is less than maxcitenames by definition
+          # Uniquelist is not set and a name list is shorter than the maxcitenames truncation
+          # Uniquelist is not set, a name list is longer than the maxcitenames truncation
+          #   and the name appears before the mincitenames truncation
           if ($un == 3 or $un == 4 or
               ($ul and $name->get_index <= $ul) or
               $morenames or
-              $num_names <= $maxn or
-              $name->get_index <= $minn) { # implicitly, $num_names > $maxn here
+              $num_names <= $maxcn or
+              $name->get_index <= $mincn) { # implicitly, $num_names > $maxcn here
 
             push @truncnames, $name;
             if ($un == 5 or $un == 6) {
@@ -1979,13 +1980,13 @@ sub generate_uniquename {
         # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
         my $ul = $be->get_field($lname)->get_uniquelist;
 
-        my $maxn = Biber::Config->getblxoption('maxnames', $bee, $citekey);
-        my $minn = Biber::Config->getblxoption('minnames', $bee, $citekey);
+        my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
+        my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
 
         my $nl = $be->get_field($lname);
         my $num_names = $nl->count_names;
         my $names = $nl->names;
-        # If name list was truncated in bib with "and others", this overrides maxnames
+        # If name list was truncated in bib with "and others", this overrides maxcitenames
         my $morenames = ($nl->get_morenames) ? 1 : 0;
 
         my @truncnames;
@@ -1994,8 +1995,8 @@ sub generate_uniquename {
           if ($un == 3 or $un == 4 or
               ($ul and $name->get_index <= $ul) or
               $morenames or
-              $num_names <= $maxn or
-              $name->get_index <= $minn) { # implicitly, $num_names > $maxn here
+              $num_names <= $maxcn or
+              $name->get_index <= $mincn) { # implicitly, $num_names > $maxcn here
             push @truncnames, $name;
           }
           else {
@@ -2106,8 +2107,8 @@ sub create_uniquelist_info {
   foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
-    my $maxn = Biber::Config->getblxoption('maxnames', $bee, $citekey);
-    my $minn = Biber::Config->getblxoption('minnames', $bee, $citekey);
+    my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
+    my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
 
     next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
     if (my $ul = Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
@@ -2128,9 +2129,9 @@ sub create_uniquelist_info {
 
           # uniquelist = minyear
           if ($ul == 2) {
-          # minyear uniquename, we set based on the max/minnames list
-            if ($num_names > $maxn and
-                $name->get_index <= $minn) {
+          # minyear uniquename, we set based on the max/mincitenames list
+            if ($num_names > $maxcn and
+                $name->get_index <= $mincn) {
               $ulminyearflag = 1;
             }
           }
@@ -2193,8 +2194,8 @@ sub generate_uniquelist {
 LOOP: foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
-    my $maxn = Biber::Config->getblxoption('maxnames', $bee, $citekey);
-    my $minn = Biber::Config->getblxoption('minnames', $bee, $citekey);
+    my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
+    my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
 
     next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
     if (my $ul = Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
@@ -2229,11 +2230,11 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
           }
 
           # With uniquelist=minyear, uniquelist should not be set at all if there are
-          # no other entries with the same max/minnames visible list and different years
+          # no other entries with the same max/mincitenames visible list and different years
           # to disambiguate from
           if ($ul == 2 and
-              $num_names > $maxn and
-              $name->get_index <= $minn and
+              $num_names > $maxcn and
+              $name->get_index <= $mincn and
               Biber::Config->get_uniquelistcount_minyear($namelist, $be->get_field('labelyear')) == 1) {
             $logger->trace("Not setting uniquelist=minyear for '$citekey'");
             next LOOP;
@@ -2249,7 +2250,7 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
 
         $logger->trace("Setting uniquelist for '$citekey' using " . join(',', @$namelist));
         $logger->trace("Uniquelist count for '$citekey' is '" . Biber::Config->get_uniquelistcount_final($namelist) . "'");
-        $nl->set_uniquelist($namelist, $maxn, $minn);
+        $nl->set_uniquelist($namelist, $maxcn, $mincn);
       }
     }
   }

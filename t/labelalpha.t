@@ -27,7 +27,7 @@ Biber::Config->setoption('sortlocale', 'C');
 
 # Biblatex options
 Biber::Config->setblxoption('maxalphanames', 1);
-Biber::Config->setblxoption('maxnames', 1);
+Biber::Config->setblxoption('maxcitenames', 1);
 Biber::Config->setblxoption('labelyear', undef);
 
 # Now generate the information
@@ -62,8 +62,8 @@ is($main->get_extraalphadata('knuth:ct:c'), '2', 'YEAR with range needs label di
 # reset options and regenerate information
 Biber::Config->setblxoption('maxalphanames', 2);
 Biber::Config->setblxoption('minalphanames', 1);
-Biber::Config->setblxoption('maxnames', 2);
-Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('maxcitenames', 2);
+Biber::Config->setblxoption('mincitenames', 1);
 
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');
@@ -96,8 +96,8 @@ ok(is_undef($main->get_extraalphadata('l8')), 'maxalphanames=2 minalphanames=1 e
 # reset options and regenerate information
 Biber::Config->setblxoption('maxalphanames', 2);
 Biber::Config->setblxoption('minalphanames', 2);
-Biber::Config->setblxoption('maxnames', 2);
-Biber::Config->setblxoption('minnames', 2);
+Biber::Config->setblxoption('maxcitenames', 2);
+Biber::Config->setblxoption('mincitenames', 2);
 
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');
@@ -130,8 +130,8 @@ ok(is_undef($main->get_extraalphadata('l8')), 'maxalphanames=2 minalphanames=2 e
 # reset options and regenerate information
 Biber::Config->setblxoption('maxalphanames', 3);
 Biber::Config->setblxoption('minalphanames', 1);
-Biber::Config->setblxoption('maxnames', 3);
-Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('maxcitenames', 3);
+Biber::Config->setblxoption('mincitenames', 1);
 
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');
@@ -166,8 +166,8 @@ is($bibentries->entry('ldn2')->get_field('sortlabelalpha'), 'VU45', 'Testing com
 # reset options and regenerate information
 Biber::Config->setblxoption('maxalphanames', 4);
 Biber::Config->setblxoption('minalphanames', 4);
-Biber::Config->setblxoption('maxnames', 4);
-Biber::Config->setblxoption('minnames', 4);
+Biber::Config->setblxoption('maxcitenames', 4);
+Biber::Config->setblxoption('mincitenames', 4);
 Biber::Config->setblxoption('labelalpha', 1);
 Biber::Config->setblxoption('labelyear', 1);
 
@@ -271,8 +271,8 @@ is($bibentries->entry('l22')->get_field('sortlabelalpha'), 'BCEm', 'labelalpha d
 # reset options and regenerate information
 Biber::Config->setblxoption('maxalphanames', 3);
 Biber::Config->setblxoption('minalphanames', 1);
-Biber::Config->setblxoption('maxnames', 3);
-Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('maxcitenames', 3);
+Biber::Config->setblxoption('mincitenames', 1);
 
 Biber::Config->setblxoption('labelalphatemplate', {
   labelelement => [

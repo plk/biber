@@ -38,7 +38,7 @@ sub _getnamehash {
   my $bee = $be->get_field('entrytype');
   my $hashkey = '';
   my $count = $names->count_names;
-  my $visible = $names->get_visible;
+  my $visible = $names->get_visible_cite;
 
   # namehash obeys list truncations but not uniquename
   foreach my $n (@{$names->first_n_names($visible)}) {
@@ -88,7 +88,7 @@ sub _getnamehash_u {
   my $bee = $be->get_field('entrytype');
   my $hashkey = '';
   my $count = $names->count_names;
-  my $visible = $names->get_visible;
+  my $visible = $names->get_visible_cite;
 
   # namehash obeys list truncations but not uniquename
   foreach my $n (@{$names->first_n_names($visible)}) {
@@ -290,8 +290,8 @@ sub _labelpart {
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   my $struc = Biber::Config->get_structure;
-  my $maxn = Biber::Config->getblxoption('maxalphanames', $bee, $citekey);
-  my $minn = Biber::Config->getblxoption('minalphanames', $bee, $citekey);
+  my $maxan = Biber::Config->getblxoption('maxalphanames', $bee, $citekey);
+  my $minan = Biber::Config->getblxoption('minalphanames', $bee, $citekey);
   my $lp;
   my $slp;
 
@@ -306,8 +306,8 @@ sub _labelpart {
         my $name = $be->get_field($f) || next; # just in case there is no labelname etc.
         my $total_names = $name->count_names;
         my $visible_names;
-        if ($total_names > $maxn) {
-          $visible_names = $minn;
+        if ($total_names > $maxan) {
+          $visible_names = $minan;
         }
         else {
           $visible_names = $total_names;

@@ -24,7 +24,7 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
-Biber::Config->setblxoption('minnames', 3);
+Biber::Config->setblxoption('mincitenames', 3);
 
 # Now generate the information
 $biber->prepare;
@@ -735,8 +735,8 @@ is( $out->get_output_entry($main,'l29'), $l29, 'Escaped name with 3 commas');
 # Checking visibility
 # Count does not include the "and others" as this "name" is delete in the output driver
 is($bibentries->entry('v1')->get_field($bibentries->entry('v1')->get_field('labelnamename'))->count_names, '2', 'Name count for "and others" - 1');
-is($bibentries->entry('v1')->get_field($bibentries->entry('v1')->get_field('labelnamename'))->get_visible, '2', 'Visibility for "and others" - 1');
-is($bibentries->entry('v2')->get_field($bibentries->entry('v2')->get_field('labelnamename'))->get_visible, '1', 'Visibility for "and others" - 2');
+is($bibentries->entry('v1')->get_field($bibentries->entry('v1')->get_field('labelnamename'))->get_visible_cite, '2', 'Visibility for "and others" - 1');
+is($bibentries->entry('v2')->get_field($bibentries->entry('v2')->get_field('labelnamename'))->get_visible_cite, '1', 'Visibility for "and others" - 2');
 
 # A few tests depend set to non UTF-8 output
 # Have to use a new biber object when trying to change encoding as this isn't

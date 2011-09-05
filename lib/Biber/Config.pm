@@ -698,7 +698,7 @@ sub incr_seenkey {
 =head2 get_seenname
 
     Get the count of occurences of a labelname which
-    takes into account all of maxnames, uniquelist,
+    takes into account all of maxcitenames, uniquelist,
     uniquename, useprefix
 
     Biber::Config->get_seenname($name);
@@ -714,7 +714,7 @@ sub get_seenname {
 =head2 incr_seenname
 
     Increment the count of occurences of a labelname which
-    takes into account all of maxnames, uniquelist,
+    takes into account all of maxcitenames, uniquelist,
     uniquename, useprefix
 
     Biber::Config->incr_seename($name);

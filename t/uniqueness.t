@@ -26,8 +26,8 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 
 # Biblatex options
-Biber::Config->setblxoption('maxnames', 1);
-Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('maxcitenames', 1);
+Biber::Config->setblxoption('mincitenames', 1);
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 1);
 
@@ -63,8 +63,8 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 
 # Biblatex options
-Biber::Config->setblxoption('maxnames', 1);
-Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('maxcitenames', 1);
+Biber::Config->setblxoption('mincitenames', 1);
 Biber::Config->setblxoption('uniquename', 1);
 Biber::Config->setblxoption('uniquelist', 1);
 
@@ -90,8 +90,8 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 
 # Biblatex options
-Biber::Config->setblxoption('maxnames', 5);
-Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('maxcitenames', 5);
+Biber::Config->setblxoption('mincitenames', 1);
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 1);
 
@@ -116,15 +116,15 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
-Biber::Config->setblxoption('maxnames', 2);
-Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('maxcitenames', 2);
+Biber::Config->setblxoption('mincitenames', 1);
 Biber::Config->setblxoption('uniquename', 1);
 Biber::Config->setblxoption('uniquelist', 0);
 # Now generate the information
 $biber->prepare;
 $bibentries = $biber->sections->get_section('0')->bibentries;
 
-is($bibentries->entry('test2')->get_field($bibentries->entry('test2')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename 0 due to minnames truncation');
+is($bibentries->entry('test2')->get_field($bibentries->entry('test2')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename 0 due to mincitenames truncation');
 
 #############################################################################
 
@@ -137,8 +137,8 @@ Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
 Biber::Config->setblxoption('uniquename', 1);
 Biber::Config->setblxoption('uniquelist', 1);
-Biber::Config->setblxoption('maxnames', 1);
-Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('maxcitenames', 1);
+Biber::Config->setblxoption('mincitenames', 1);
 # Now generate the information
 $biber->prepare;
 $bibentries = $biber->sections->get_section('0')->bibentries;
@@ -196,8 +196,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
-Biber::Config->setblxoption('maxnames', 1);
-Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('maxcitenames', 1);
+Biber::Config->setblxoption('mincitenames', 1);
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 1);
 # Now generate the information
@@ -225,8 +225,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
-Biber::Config->setblxoption('maxnames', 3);
-Biber::Config->setblxoption('minnames', 3);
+Biber::Config->setblxoption('maxcitenames', 3);
+Biber::Config->setblxoption('mincitenames', 3);
 Biber::Config->setblxoption('uniquename', 6);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 0);
@@ -264,7 +264,7 @@ is($bibentries->entry('us12')->get_field($bibentries->entry('us12')->get_field('
 is($bibentries->entry('us13')->get_field($bibentries->entry('us13')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '2', 'Uniquename sparse - 25');
 is($bibentries->entry('us13')->get_field($bibentries->entry('us13')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 26');
 
-# maxnames/minnames is 3 in but us14 is still "et al" so it's a "different list
+# maxcitenames/mincitenames is 3 in but us14 is still "et al" so it's a "different list
 is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 27');
 is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 28');
 is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_name(3)->get_uniquename, '0', 'Uniquename sparse - 29');
@@ -295,8 +295,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
-Biber::Config->setblxoption('maxnames', 3);
-Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('maxcitenames', 3);
+Biber::Config->setblxoption('mincitenames', 1);
 Biber::Config->setblxoption('uniquename', 6);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 0);
@@ -308,7 +308,7 @@ $bibentries = $section->bibentries;
 $main = $section->get_list('MAIN');
 
 
-# maxnames/minnames = 3/1 so these will not truncate to the same list (since
+# maxcitenames/mincitenames = 3/1 so these will not truncate to the same list (since
 # us15 would not be truncated at all) and they therefore would not need disambiguating with
 # uniquename = 5 or 6
 is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 46');
@@ -335,8 +335,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
-Biber::Config->setblxoption('maxnames', 2);
-Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('maxcitenames', 2);
+Biber::Config->setblxoption('mincitenames', 1);
 Biber::Config->setblxoption('uniquename', 6);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 0);
@@ -347,7 +347,7 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $section->get_list('MAIN');
 
-# maxnames/minnames = 2/1 so list are the same and need disambiguating but only in the first
+# maxcitenames/mincitenames = 2/1 so list are the same and need disambiguating but only in the first
 # name as the others are not visible
 
 is($bibentries->entry('us14')->get_field($bibentries->entry('us14')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '1', 'Uniquename sparse - 58');
@@ -371,8 +371,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
-Biber::Config->setblxoption('maxnames', 1);
-Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('maxcitenames', 1);
+Biber::Config->setblxoption('mincitenames', 1);
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 2);
 Biber::Config->setblxoption('singletitle', 0);
@@ -400,8 +400,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
-Biber::Config->setblxoption('maxnames', 3);
-Biber::Config->setblxoption('minnames', 2);
+Biber::Config->setblxoption('maxcitenames', 3);
+Biber::Config->setblxoption('mincitenames', 2);
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 2);
 Biber::Config->setblxoption('singletitle', 0);

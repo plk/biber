@@ -87,7 +87,7 @@ sub reset_uniquelist {
 
 sub set_uniquelist {
   my $self = shift;
-  my ($namelist, $maxn, $minn) = @_;
+  my ($namelist, $maxcn, $mincn) = @_;
   my $uniquelist = $self->count_uniquelist($namelist);
   my $num_names = $self->count_names;
   my $currval = $self->{uniquelist};
@@ -100,20 +100,20 @@ sub set_uniquelist {
   # Special case $uniquelist <=1 is meaningless
   return if $uniquelist <= 1;
 
-  # Don't set uniquelist unless the list is longer than maxnames as it was therefore
-  # never truncated to minnames in the first place and uniquelist is a "local minnames"
-  return unless $self->count_names > $maxn;
+  # Don't set uniquelist unless the list is longer than maxcitenames as it was therefore
+  # never truncated to mincitenames in the first place and uniquelist is a "local mincitenames"
+  return unless $self->count_names > $maxcn;
 
-  # No disambiguation needed if uniquelist is <= minnames as this makes no sense
-  # since it implies that disambiguation beyond minnames was needed.
-  # This doesn't apply when the list length is minnames as maxmanes therefore
-  # (since it can't be less than minnames) could also be the same as the list length
+  # No disambiguation needed if uniquelist is <= mincitenames as this makes no sense
+  # since it implies that disambiguation beyond mincitenames was needed.
+  # This doesn't apply when the list length is mincitenames as maxmanes therefore
+  # (since it can't be less than mincitenames) could also be the same as the list length
   # and this is a special case where we need to preserve uniquelist (see comments in
   # create_uniquelist_info())
   # $uniquelist cannot be undef or 0 either since every list occurs at least once.
-  # This guarantees that uniquelist, when set, is >1 because minnames cannot
+  # This guarantees that uniquelist, when set, is >1 because mincitenames cannot
   # be <1
-  return if $uniquelist <= $minn and not $minn == $self->count_names;
+  return if $uniquelist <= $mincn and not $mincn == $self->count_names;
 
   # Special case.
   # No point disambiguating with uniquelist lists which have the same count
@@ -184,13 +184,13 @@ sub count_uniquelist {
   return $#$namelist + 1;
 }
 
-=head2 set_visible
+=head2 set_visible_cite
 
-    Set the number of visible names as per the different uniquelist, max/minnames etc
+    Set the number of cite visible names as per the different uniquelist, max/mincitenames etc
 
 =cut
 
-sub set_visible {
+sub set_visible_cite {
   my $self = shift;
   my $visibility = shift;
   $self->{visibility} = $visibility;
@@ -199,7 +199,7 @@ sub set_visible {
 
 =head2 set_visible_bib
 
-    Set the number of bib visible names as per the different uniquelist, max/minnames etc
+    Set the number of bib visible names as per the different uniquelist, max/minbibnames etc
 
 =cut
 
@@ -212,7 +212,7 @@ sub set_visible_bib {
 
 =head2 set_visible_alpha
 
-    Set the number of alpha visible names as per the different uniquelist, max/minnalphanames etc
+    Set the number of alpha visible names as per the different uniquelist, max/minalphanames etc
 
 =cut
 
@@ -224,20 +224,20 @@ sub set_visible_alpha {
 }
 
 
-=head2 get_visible
+=head2 get_visible_cite
 
-    Get the number of visible names as per the different uniquelist, max/minnames etc
+    Get the number of visible names as per the different uniquelist, max/mincitenames etc
 
 =cut
 
-sub get_visible {
+sub get_visible_cite {
   my $self = shift;
   return $self->{visibility};
 }
 
 =head2 get_visible_bib
 
-    Get the number of bib visible names as per the different uniquelist, max/minnames etc
+    Get the number of bib visible names as per the different uniquelist, max/minbibnames etc
 
 =cut
 

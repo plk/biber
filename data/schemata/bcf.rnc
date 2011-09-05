@@ -32,12 +32,12 @@ start =
       labelyearspec,
       maxalphanames,
       maxbibnames,
+      maxcitenames,
       maxitems,
-      maxnames,
       minalphanames,
       minbibnames,
+      mincitenames,
       minitems,
-      minnames,
       singletitle,
       sortalphaothers?,
       sortlos,
@@ -59,13 +59,13 @@ start =
       labelyear?,
       labelyearspec?,
       maxalphanames?,
+      maxcitenames?,
       maxbibnames?,
       maxitems?,
-      maxnames?,
       minalphanames?,
       minbibnames?,
+      mincitenames?,
       minitems?,
-      minnames?,
       singletitle?,
       skipbib?,
       skiplab?,
@@ -490,10 +490,10 @@ uniquelist =
     element bcf:value { "0" | "1" | "2" }
   }
 # 0 = do not provide uniquename information
-# 1 = disambiguate with initials, only up to maxnames/uniquelist
-# 2 = disambiguate with full name or initials, only up to maxnames/uniquelist
-# 3 = disambiguate with initials, ignore maxnames/uniquelist
-# 4 = disambiguate with full name or initials, ignore maxnames/uniquelist
+# 1 = disambiguate with initials, only up to maxcitenames/uniquelist
+# 2 = disambiguate with full name or initials, only up to maxcitenames/uniquelist
+# 3 = disambiguate with initials, ignore maxcitenames/uniquelist
+# 4 = disambiguate with full name or initials, ignore maxcitenames/uniquelist
 # 5 = disambiguate with initials, only between identical lists in different entries
 # 6 = disambiguate with full name or initials, only between identical lists in different entries
 uniquename =
@@ -520,10 +520,10 @@ maxalphanames =
     element bcf:key { "maxalphanames" },
     element bcf:value { xsd:integer }
   }
-maxnames =
+maxcitenames =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "maxnames" },
+    element bcf:key { "maxcitenames" },
     element bcf:value { xsd:integer }
   }
 minitems =
@@ -544,10 +544,10 @@ minalphanames =
     element bcf:key { "minalphanames" },
     element bcf:value { xsd:integer }
   }
-minnames =
+mincitenames =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "minnames" },
+    element bcf:key { "mincitenames" },
     element bcf:value { xsd:integer }
   }
 sortlos =

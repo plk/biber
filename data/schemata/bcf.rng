@@ -50,12 +50,12 @@
         <ref name="labelyearspec"/>
         <ref name="maxalphanames"/>
         <ref name="maxbibnames"/>
+        <ref name="maxcitenames"/>
         <ref name="maxitems"/>
-        <ref name="maxnames"/>
         <ref name="minalphanames"/>
         <ref name="minbibnames"/>
+        <ref name="mincitenames"/>
         <ref name="minitems"/>
-        <ref name="minnames"/>
         <ref name="singletitle"/>
         <optional>
           <ref name="sortalphaothers"/>
@@ -96,13 +96,13 @@
             <ref name="maxalphanames"/>
           </optional>
           <optional>
+            <ref name="maxcitenames"/>
+          </optional>
+          <optional>
             <ref name="maxbibnames"/>
           </optional>
           <optional>
             <ref name="maxitems"/>
-          </optional>
-          <optional>
-            <ref name="maxnames"/>
           </optional>
           <optional>
             <ref name="minalphanames"/>
@@ -111,10 +111,10 @@
             <ref name="minbibnames"/>
           </optional>
           <optional>
-            <ref name="minitems"/>
+            <ref name="mincitenames"/>
           </optional>
           <optional>
-            <ref name="minnames"/>
+            <ref name="minitems"/>
           </optional>
           <optional>
             <ref name="singletitle"/>
@@ -1256,10 +1256,10 @@
   </define>
   <!--
     0 = do not provide uniquename information
-    1 = disambiguate with initials, only up to maxnames/uniquelist
-    2 = disambiguate with full name or initials, only up to maxnames/uniquelist
-    3 = disambiguate with initials, ignore maxnames/uniquelist
-    4 = disambiguate with full name or initials, ignore maxnames/uniquelist
+    1 = disambiguate with initials, only up to maxcitenames/uniquelist
+    2 = disambiguate with full name or initials, only up to maxcitenames/uniquelist
+    3 = disambiguate with initials, ignore maxcitenames/uniquelist
+    4 = disambiguate with full name or initials, ignore maxcitenames/uniquelist
     5 = disambiguate with initials, only between identical lists in different entries
     6 = disambiguate with full name or initials, only between identical lists in different entries
   -->
@@ -1323,13 +1323,13 @@
       </element>
     </element>
   </define>
-  <define name="maxnames">
+  <define name="maxcitenames">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>maxnames</value>
+        <value>maxcitenames</value>
       </element>
       <element name="bcf:value">
         <data type="integer"/>
@@ -1375,13 +1375,13 @@
       </element>
     </element>
   </define>
-  <define name="minnames">
+  <define name="mincitenames">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>minnames</value>
+        <value>mincitenames</value>
       </element>
       <element name="bcf:value">
         <data type="integer"/>

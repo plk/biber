@@ -25,8 +25,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setblxoption('uniquelist', 1);
-Biber::Config->setblxoption('maxnames', 3);
-Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('maxcitenames', 3);
+Biber::Config->setblxoption('mincitenames', 1);
 Biber::Config->setblxoption('maxalphanames', 3);
 Biber::Config->setblxoption('minalphanames', 1);
 Biber::Config->setblxoption('maxbibnames', 10);
@@ -310,7 +310,7 @@ ok( $bibentries->entry('t1')->has_keyword('somethingelse'), 'Keywords test - 3' 
 is( $out->get_output_entry($main,'t2'), $t2, 'bbl entry with maths in title 2' ) ;
 is_deeply( Biber::Config->_get_uniquename('Worman_N', 'global'), $Worman_N, 'uniquename count 1') ;
 is_deeply( Biber::Config->_get_uniquename('Gennep', 'global'), $Gennep, 'uniquename count 2') ;
-is( $out->get_output_entry($main,'murray'), $murray1, 'bbl with > maxnames' ) ;
+is( $out->get_output_entry($main,'murray'), $murray1, 'bbl with > maxcitenames' ) ;
 is( $out->get_output_entry($main,'missing1'), "  \\missing{missing1}\n", 'missing citekey 1' ) ;
 is( $out->get_output_entry($main,'missing2'), "  \\missing{missing2}\n", 'missing citekey 2' ) ;
 
@@ -326,7 +326,7 @@ $section = $biber->sections->get_section(0);
 $main = $section->get_list('MAIN');
 $out = $biber->get_output_obj;
 
-is( $out->get_output_entry($main,'murray'), $murray2, 'bbl with > maxnames, empty alphaothers' ) ;
+is( $out->get_output_entry($main,'murray'), $murray2, 'bbl with > maxcitenames, empty alphaothers' ) ;
 
 # Make sure namehash and fullhash are seperately generated
 is( $out->get_output_entry($main,'anon1'), $anon1, 'namehash/fullhash 1' ) ;
@@ -347,15 +347,15 @@ is($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_field('labe
 
 # Testing per_type and per_entry max/min* so reset globals to defaults
 Biber::Config->setblxoption('uniquelist', 0);
-Biber::Config->setblxoption('maxnames', 3);
-Biber::Config->setblxoption('minnames', 1);
+Biber::Config->setblxoption('maxcitenames', 3);
+Biber::Config->setblxoption('mincitenames', 1);
 Biber::Config->setblxoption('maxitems', 3);
 Biber::Config->setblxoption('minitems', 1);
 Biber::Config->setblxoption('maxbibnames', 3);
 Biber::Config->setblxoption('minbibnames', 1);
 Biber::Config->setblxoption('maxalphanames', 3);
 Biber::Config->setblxoption('minalphanames', 1);
-Biber::Config->setblxoption('maxnames', 1, 'PER_TYPE', 'misc');
+Biber::Config->setblxoption('maxcitenames', 1, 'PER_TYPE', 'misc');
 Biber::Config->setblxoption('maxbibnames', 2, 'PER_TYPE', 'unpublished');
 Biber::Config->setblxoption('minbibnames', 2, 'PER_TYPE', 'unpublished');
 # maxalphanames is set on tmn2 entry
@@ -370,8 +370,8 @@ $biber->prepare ;
 $section = $biber->sections->get_section(0);
 $main = $section->get_list('MAIN');
 
-is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_field('labelnamename'))->get_visible, '1', 'per_type maxnames - 1');
-is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_field('labelnamename'))->get_visible, '3', 'per_type maxnames - 2');
+is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_field('labelnamename'))->get_visible_cite, '1', 'per_type maxcitenames - 1');
+is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_field('labelnamename'))->get_visible_cite, '3', 'per_type maxcitenames - 2');
 is($bibentries->entry('tmn3')->get_field($bibentries->entry('tmn3')->get_field('labelnamename'))->get_visible_bib, '2', 'per_type bibnames - 3');
 is($bibentries->entry('tmn4')->get_field($bibentries->entry('tmn4')->get_field('labelnamename'))->get_visible_bib, '3', 'per_type bibnames - 4');
 is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_field('labelnamename'))->get_visible_alpha, '3', 'per_type/entry alphanames - 1');
