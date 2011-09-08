@@ -275,8 +275,8 @@ The set of characters included in the conversion routine when decoding
 LaTeX macros into UTF-8 (which happens when B<--bblencoding|-E> is set to
 UTF-8) Set to "full" to try harder with a much larger set or "base" to
 use a minimal set. Default is "extra" which is between "base" and "full".
-You may want to try "full" if you want, for example, to sort more
-obscure UTF-8 characters in the F<.bib>
+You may want to try "full" if you want, for example, if you have less common
+UTF-8 characters in your data source.
 
 =item B<--debug|-D>
 
