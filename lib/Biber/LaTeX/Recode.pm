@@ -73,7 +73,7 @@ The function accepts a number of options:
     * strip_outer_braces => $bool (default 0)
         whether the outer curly braces around letters+combining marks should be
         stripped off. By default "fut{\\'e}" becomes fut{é}, to prevent something
-        like '\\textuppercase{\\'e}' to become '\\textuppercaseé'. Setting this option to
+        like '\\textuppercase{\\'e}' from becoming '\\textuppercaseé'. Setting this option to
         TRUE can be useful for instance when converting BibTeX files.
 
 =cut

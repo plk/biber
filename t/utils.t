@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 19;
+use Test::More tests => 20;
 use Biber;
 use Biber::Entry::Name;
 use Biber::Entry::Names;
@@ -56,9 +56,10 @@ is( normalise_string_underscore('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
 is( normalise_string_underscore('{Foo de Bar, Graf Ludwig}', 1), 'Foo_de_Bar_Graf_Ludwig', 'normalise_string_underscore 2');
 
 # LaTeX decoding
-is( latex_decode('Mu\d{h}ammad ibn M\=us\=a al-Khw\=arizm\={\i}'), 'Muḥammad ibn Mūsā al-Khwārizmī', 'latex decode 1');
+is( latex_decode('Mu\d{h}ammad ibn M\=us\=a al-Khw\=arizm\={\i} \r{a}'), 'Muḥammad ibn Mūsā al-Khwārizmī å', 'latex decode 1');
 is( latex_decode('\alpha'), '\alpha', 'latex decode 2'); # no greek decoding by default
 is( latex_decode('\alpha', scheme => 'full'), 'α', 'Latex decode 3'); # greek decoding with "full"
+is( latex_decode('\textless\textampersand'), '<&', 'Latex decode 4'); # checking XML encoding bits
 
 # LaTeX encoding
 is( latex_encode('Muḥammad ibn Mūsā al-Khwārizmī'), 'Mu\d{h}ammad ibn M\={u}s\={a} al-Khw\={a}rizm\={\i}', 'latex encode 1');

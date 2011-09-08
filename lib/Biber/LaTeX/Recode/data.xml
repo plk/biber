@@ -1,0 +1,879 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<texmap>
+  <accents>
+    <map><from>`</from><to>̀</to></map> <!-- 300 -->
+    <map><from>'</from><to>́</to></map> <!-- 301 -->
+    <map><from>^</from><to>̂</to></map> <!-- 302 -->
+    <map><from>~</from><to>̃</to></map> <!-- 303 -->
+    <map><from>=</from><to>̄</to></map> <!-- 304 -->
+    <map><from>.</from><to>̇</to></map>  <!-- 307 -->
+    <map><from>"</from><to>̈</to></map> <!-- 308 -->
+  </accents>
+ <wordmacros set="base">
+    <map><from>textquotedbl</from>                     <to>"</to></map>      <!-- 0022 -->
+    <map><from>texthash</from>                         <to>#</to></map>      <!-- 0023 -->
+    <map><from>textdollar</from>                       <to>$</to></map>      <!-- 0024 -->
+    <map><from>textpercent</from>                      <to>%</to></map>      <!-- 0025 -->
+    <map><from>textampersand</from>                    <to>&amp;</to></map>  <!-- 0026 -->
+    <map><from>textquotesingle</from>                  <to>'</to></map>      <!-- 0027 -->
+    <map><from>textasteriskcentered</from>             <to>*</to></map>      <!-- 002A -->
+    <map><from>textless</from>                         <to>&lt;</to></map>   <!-- 003C -->
+    <map><from>textequals</from>                       <to>=</to></map>      <!-- 003D -->
+    <map><from>textgreater</from>                      <to>&gt;</to></map>   <!-- 003E -->
+    <map><from>textbackslash</from>                    <to>\</to></map>      <!-- 005C -->
+    <map><from>textasciicircum</from>                  <to>^</to></map>      <!-- 005E -->
+    <map><from>textunderscore</from>                   <to>_</to></map>      <!-- 005F -->
+    <map><from>textasciigrave</from>                   <to>`</to></map>      <!-- 0060 -->
+    <map><from>textg</from>                            <to>g</to></map>      <!-- 0067 -->
+    <map><from>textbraceleft</from>                    <to>{</to></map>      <!-- 007B -->
+    <map><from>textbar</from>                          <to>|</to></map>      <!-- 007C -->
+    <map><from>textbraceright</from>                   <to>}</to></map>      <!-- 007D -->
+    <map><from>textasciitilde</from>                   <to>~</to></map>      <!-- 007E -->
+    <map><from>nobreakspace</from>                     <to> </to></map>      <!-- 00A0 -->
+    <map><from>textexclamdown</from>                   <to>¡</to></map>      <!-- 00A1 -->
+    <map><from>textcent</from>                         <to>¢</to></map>      <!-- 00A2 -->
+    <map><from>textsterling</from>                     <to>£</to></map>      <!-- 00A3 -->
+    <map><from preferred="1">pounds</from>             <to>£</to></map>      <!-- 00A3 -->
+    <map><from>textcurrency</from>                     <to>¤</to></map>      <!-- 00A4 -->
+    <map><from>textyen</from>                          <to>¥</to></map>      <!-- 00A5 -->
+    <map><from>textbrokenbar</from>                    <to>¦</to></map>      <!-- 00A6 -->
+    <map><from>textsection</from>                      <to>§</to></map>      <!-- 00A7 -->
+    <map><from preferred="1">S</from>                  <to>§</to></map>      <!-- 00A7 -->
+    <map><from>textasciidieresis</from>                <to>¨</to></map>      <!-- 00A8 -->
+    <map><from>textcopyright</from>                    <to>©</to></map>      <!-- 00A9 -->
+    <map><from preferred='1'>copyright</from>          <to>©</to></map>      <!-- 00A9 -->
+    <map><from>textordfeminine</from>                  <to>ª</to></map>      <!-- 00AA -->
+    <map><from>guillemotleft</from>                    <to>«</to></map>      <!-- 00AB -->
+    <map><from>textminus</from>                        <to>−</to></map>      <!-- 2212 -->
+    <map><from>textregistered</from>                   <to>®</to></map>      <!-- 00AE -->
+    <map><from>textasciimacron</from>                  <to>¯</to></map>      <!-- 00AF -->
+    <map><from>textdegree</from>                       <to>°</to></map>      <!-- 00B0 -->
+    <map><from>texttwosuperior</from>                  <to>²</to></map>      <!-- 00B2 -->
+    <map><from>textthreesuperior</from>                <to>³</to></map>      <!-- 00B3 -->
+    <map><from>textasciiacute</from>                   <to>´</to></map>      <!-- 00B4 -->
+    <map><from>textparagraph</from>                    <to>¶</to></map>      <!-- 00B6 -->
+    <map><from preferred="1">P</from>                  <to>¶</to></map>      <!-- 00B6 -->
+    <map><from>textcentereddot</from>                  <to>·</to></map>      <!-- 00B7 -->
+    <map><from preferred="1">textperiodcentered</from> <to>·</to></map>      <!-- 00B7 -->
+    <map><from>textasciicedilla</from>                 <to>¸</to></map>      <!-- 00B8 -->
+    <map><from>textonesuperior</from>                  <to>¹</to></map>      <!-- 00B9 -->
+    <map><from>textordmasculine</from>                 <to>º</to></map>      <!-- 00BA -->
+    <map><from>guillemotright</from>                   <to>»</to></map>      <!-- 00BB -->
+    <map><from>textonequarter</from>                   <to>¼</to></map>      <!-- 00BC -->
+    <map><from>textonehalf</from>                      <to>½</to></map>      <!-- 00BD -->
+    <map><from>textthreequarters</from>                <to>¾</to></map>      <!-- 00BE -->
+    <map><from>textquestiondown</from>                 <to>¿</to></map>      <!-- 00BF -->
+    <map><from>AA</from>                               <to>Å</to></map>      <!-- 00C5 -->
+    <map><from>AE</from>                               <to>Æ</to></map>      <!-- 00C6 -->
+    <map><from>DH</from>                               <to>Ð</to></map>      <!-- 00D0 -->
+    <map><from>O</from>                                <to>Ø</to></map>      <!-- 00D8 -->
+    <map><from>Thorn</from>                            <to>Þ</to></map>      <!-- 00DE -->
+    <map><from preferred="1">TH</from>                 <to>Þ</to></map>      <!-- 00DE -->
+    <map><from>ss</from>                               <to>ß</to></map>      <!-- 00DF -->
+    <map><from>aa</from>                               <to>å</to></map>      <!-- 00E5 -->
+    <map><from>ae</from>                               <to>æ</to></map>      <!-- 00E6 -->
+    <map><from>dh</from>                               <to>ð</to></map>      <!-- 00F0 -->
+    <map><from>o</from>                                <to>ø</to></map>      <!-- 00F8 -->
+    <map><from>textthorn</from>                        <to>þ</to></map>      <!-- 00FE -->
+    <map><from>textthornvari</from>                    <to>þ</to></map>      <!-- 00FE -->
+    <map><from>textthornvarii</from>                   <to>þ</to></map>      <!-- 00FE -->
+    <map><from>textthornvariii</from>                  <to>þ</to></map>      <!-- 00FE -->
+    <map><from>textthornvariv</from>                   <to>þ</to></map>      <!-- 00FE -->
+    <map><from preferred="1">th</from>                 <to>þ</to></map>      <!-- 00FE -->
+    <map><from>DJ</from>                               <to>Đ</to></map>      <!-- 0110 -->
+    <map><from preferred="1">dj</from>                 <to>đ</to></map>      <!-- 0111 -->
+    <map><from>textcrd</from>                          <to>đ</to></map>      <!-- 0111 -->
+    <map><from>textHbar</from>                         <to>Ħ</to></map>      <!-- 0126 -->
+    <map><from>textcrh</from>                          <to>ħ</to></map>      <!-- 0127 -->
+    <map><from preferred="1">texthbar</from>           <to>ħ</to></map>      <!-- 0127 -->
+    <map><from>i</from>                                <to>ı</to></map>      <!-- 0131 -->
+    <map><from>IJ</from>                               <to>Ĳ</to></map>      <!-- 0132 -->
+    <map><from>ij</from>                               <to>ĳ</to></map>      <!-- 0133 -->
+    <map><from>textkra</from>                          <to>ĸ</to></map>      <!-- 0138 -->
+    <map><from>L</from>                                <to>Ł</to></map>      <!-- 0141 -->
+    <map><from>textbarl</from>                         <to>ł</to></map>      <!-- 0142 -->
+    <map><from preferred="1">l</from>                  <to>ł</to></map>      <!-- 0142 -->
+    <map><from>NG</from>                               <to>Ŋ</to></map>      <!-- 014A -->
+    <map><from>ng</from>                               <to>ŋ</to></map>      <!-- 014B -->
+    <map><from>OE</from>                               <to>Œ</to></map>      <!-- 0152 -->
+    <map><from>oe</from>                               <to>œ</to></map>      <!-- 0153 -->
+ </wordmacros>
+ <wordmacros set="extra">
+    <map><from>textTbar</from>                         <to>Ŧ</to></map>      <!-- 0166 -->
+    <map><from preferred="1">textTstroke</from>        <to>Ŧ</to></map>      <!-- 0166 -->
+    <map><from>texttbar</from>                         <to>ŧ</to></map>      <!-- 0167 -->
+    <map><from preferred="1">texttstroke</from>        <to>ŧ</to></map>      <!-- 0167 -->
+    <map><from>textcrb</from>                          <to>ƀ</to></map>      <!-- 0180 -->
+    <map><from>textBhook</from>                        <to>Ɓ</to></map>      <!-- 0181 -->
+    <map><from>textOopen</from>                        <to>Ɔ</to></map>      <!-- 0186 -->
+    <map><from>textChook</from>                        <to>Ƈ</to></map>      <!-- 0187 -->
+    <map><from>textchook</from>                        <to>ƈ</to></map>      <!-- 0188 -->
+    <map><from preferred="1">texthtc</from>            <to>ƈ</to></map>      <!-- 0188 -->
+    <map><from>textDafrican</from>                     <to>Ɖ</to></map>      <!-- 0189 -->
+    <map><from>textDhook</from>                        <to>Ɗ</to></map>      <!-- 018A -->
+    <map><from>textEreversed</from>                    <to>Ǝ</to></map>      <!-- 018E -->
+    <map><from>textEopen</from>                        <to>Ɛ</to></map>      <!-- 0190 -->
+    <map><from>textFhook</from>                        <to>Ƒ</to></map>      <!-- 0191 -->
+    <map><from>textflorin</from>                       <to>ƒ</to></map>      <!-- 0192 -->
+    <map><from>textGammaafrican</from>                 <to>Ɣ</to></map>      <!-- 0194 -->
+    <map><from>texthvlig</from>                        <to>ƕ</to></map>      <!-- 0195 -->
+    <map><from preferred="1">hv</from>                 <to>ƕ</to></map>      <!-- 0195 -->
+    <map><from>textIotaafrican</from>                  <to>Ɩ</to></map>      <!-- 0196 -->
+    <map><from>textKhook</from>                        <to>Ƙ</to></map>      <!-- 0198 -->
+    <map><from>textkhook</from>                        <to>ƙ</to></map>      <!-- 0199 -->
+    <map><from preferred="1">texthtk</from>            <to>ƙ</to></map>      <!-- 0199 -->
+    <map><from>textcrlambda</from>                     <to>ƛ</to></map>      <!-- 019B -->
+    <map><from>textNhookleft</from>                    <to>Ɲ</to></map>      <!-- 019D -->
+    <map><from>OHORN</from>                            <to>Ơ</to></map>      <!-- 01A0 -->
+    <map><from>ohorn</from>                            <to>ơ</to></map>      <!-- 01A1 -->
+    <map><from>textPhook</from>                        <to>Ƥ</to></map>      <!-- 01A4 -->
+    <map><from>textphook</from>                        <to>ƥ</to></map>      <!-- 01A5 -->
+    <map><from preferred="1">texthtp</from>            <to>ƥ</to></map>      <!-- 01A5 -->
+    <map><from>textEsh</from>                          <to>Ʃ</to></map>      <!-- 01A9 -->
+    <map><from preferred="1">ESH</from>                <to>Ʃ</to></map>      <!-- 01A9 -->
+    <map><from>textlooptoprevesh</from>                <to>ƪ</to></map>      <!-- 01AA -->
+    <map><from>textpalhookbelow</from>                 <to>ƫ</to></map>      <!-- 01AB -->
+    <map><from>textThook</from>                        <to>Ƭ</to></map>      <!-- 01AC -->
+    <map><from>textthook</from>                        <to>ƭ</to></map>      <!-- 01AD -->
+    <map><from preferred="1">texthtt</from>            <to>ƭ</to></map>      <!-- 01AD -->
+    <map><from>textTretroflexhook</from>               <to>Ʈ</to></map>      <!-- 01AE -->
+    <map><from>UHORN</from>                            <to>Ư</to></map>      <!-- 01AF -->
+    <map><from>uhorn</from>                            <to>ư</to></map>      <!-- 01B0 -->
+    <map><from>textVhook</from>                        <to>Ʋ</to></map>      <!-- 01B2 -->
+    <map><from>textYhook</from>                        <to>Ƴ</to></map>      <!-- 01B3 -->
+    <map><from>textyhook</from>                        <to>ƴ</to></map>      <!-- 01B4 -->
+    <map><from>textEzh</from>                          <to>Ʒ</to></map>      <!-- 01B7 -->
+    <map><from>texteturned</from>                      <to>ǝ</to></map>      <!-- 01DD -->
+    <map><from>textturna</from>                        <to>ɐ</to></map>      <!-- 0250 -->
+    <map><from>textscripta</from>                      <to>ɑ</to></map>      <!-- 0251 -->
+    <map><from>textturnscripta</from>                  <to>ɒ</to></map>      <!-- 0252 -->
+    <map><from>textbhook</from>                        <to>ɓ</to></map>      <!-- 0253 -->
+    <map><from preferred="1">texthtb</from>            <to>ɓ</to></map>      <!-- 0253 -->
+    <map><from>textoopen</from>                        <to>ɔ</to></map>      <!-- 0254 -->
+    <map><from preferred="1">textopeno</from>          <to>ɔ</to></map>      <!-- 0254 -->
+    <map><from>textctc</from>                          <to>ɕ</to></map>      <!-- 0255 -->
+    <map><from>textdtail</from>                        <to>ɖ</to></map>      <!-- 0256 -->
+    <map><from preferred="1">textrtaild</from>         <to>ɖ</to></map>      <!-- 0256 -->
+    <map><from>textdhook</from>                        <to>ɗ</to></map>      <!-- 0257 -->
+    <map><from preferred="1">texthtd</from>            <to>ɗ</to></map>      <!-- 0257 -->
+    <map><from>textreve</from>                         <to>ɘ</to></map>      <!-- 0258 -->
+    <map><from>textschwa</from>                        <to>ə</to></map>      <!-- 0259 -->
+    <map><from>textrhookschwa</from>                   <to>ɚ</to></map>      <!-- 025A -->
+    <map><from>texteopen</from>                        <to>ɛ</to></map>      <!-- 025B -->
+    <map><from preferred="1">textepsilon</from>        <to>ɛ</to></map>      <!-- 025B -->
+    <map><from>textrevepsilon</from>                   <to>ɜ</to></map>      <!-- 025C -->
+    <map><from>textrhookrevepsilon</from>              <to>ɝ</to></map>      <!-- 025D -->
+    <map><from>textcloserevepsilon</from>              <to>ɞ</to></map>      <!-- 025E -->
+    <map><from>textbardotlessj</from>                  <to>ɟ</to></map>      <!-- 025F -->
+    <map><from>texthtg</from>                          <to>ɠ</to></map>      <!-- 0260 -->
+    <map><from>textscriptg</from>                      <to>ɡ</to></map>      <!-- 0261 -->
+    <map><from>textscg</from>                          <to>ɢ</to></map>      <!-- 0262 -->
+    <map><from>textgammalatinsmall</from>              <to>ɣ</to></map>      <!-- 0263 -->
+    <map><from preferred="1">textgamma</from>          <to>ɣ</to></map>      <!-- 0263 -->
+    <map><from>textramshorns</from>                    <to>ɤ</to></map>      <!-- 0264 -->
+    <map><from>textturnh</from>                        <to>ɥ</to></map>      <!-- 0265 -->
+    <map><from>texthth</from>                          <to>ɦ</to></map>      <!-- 0266 -->
+    <map><from>texththeng</from>                       <to>ɧ</to></map>      <!-- 0267 -->
+    <map><from>textbari</from>                         <to>ɨ</to></map>      <!-- 0268 -->
+    <map><from>textiotalatin</from>                    <to>ɩ</to></map>      <!-- 0269 -->
+    <map><from preferred="1">textiota</from>           <to>ɩ</to></map>      <!-- 0269 -->
+    <map><from>textsci</from>                          <to>ɪ</to></map>      <!-- 026A -->
+    <map><from>textltilde</from>                       <to>ɫ</to></map>      <!-- 026B -->
+    <map><from>textbeltl</from>                        <to>ɬ</to></map>      <!-- 026C -->
+    <map><from>textrtaill</from>                       <to>ɭ</to></map>      <!-- 026D -->
+    <map><from>textlyoghlig</from>                     <to>ɮ</to></map>      <!-- 026E -->
+    <map><from>textturnm</from>                        <to>ɯ</to></map>      <!-- 026F -->
+    <map><from>textturnmrleg</from>                    <to>ɰ</to></map>      <!-- 0270 -->
+    <map><from>textltailm</from>                       <to>ɱ</to></map>      <!-- 0271 -->
+    <map><from>textltailn</from>                       <to>ɲ</to></map>      <!-- 0272 -->
+    <map><from preferred="1">textnhookleft</from>      <to>ɲ</to></map>      <!-- 0272 -->
+    <map><from>textrtailn</from>                       <to>ɳ</to></map>      <!-- 0273 -->
+    <map><from>textscn</from>                          <to>ɴ</to></map>      <!-- 0274 -->
+    <map><from>textbaro</from>                         <to>ɵ</to></map>      <!-- 0275 -->
+    <map><from>textscoelig</from>                      <to>ɶ</to></map>      <!-- 0276 -->
+    <map><from>textcloseomega</from>                   <to>ɷ</to></map>      <!-- 0277 -->
+    <map><from>textphi</from>                          <to>ɸ</to></map>      <!-- 0278 -->
+    <map><from>textturnr</from>                        <to>ɹ</to></map>      <!-- 0279 -->
+    <map><from>textturnlonglegr</from>                 <to>ɺ</to></map>      <!-- 027A -->
+    <map><from>textturnrrtail</from>                   <to>ɻ</to></map>      <!-- 027B -->
+    <map><from>textlonglegr</from>                     <to>ɼ</to></map>      <!-- 027C -->
+    <map><from>textrtailr</from>                       <to>ɽ</to></map>      <!-- 027D -->
+    <map><from>textfishhookr</from>                    <to>ɾ</to></map>      <!-- 027E -->
+    <map><from>textlhti</from>                         <to>ɿ</to></map>      <!-- 027F -->
+    <map><from>textscr</from>                          <to>ʀ</to></map>      <!-- 0280 -->
+    <map><from>textinvscr</from>                       <to>ʁ</to></map>      <!-- 0281 -->
+    <map><from>textrtails</from>                       <to>ʂ</to></map>      <!-- 0282 -->
+    <map><from>textesh</from>                          <to>ʃ</to></map>      <!-- 0283 -->
+    <map><from>texthtbardotlessj</from>                <to>ʄ</to></map>      <!-- 0284 -->
+    <map><from>textraisevibyi</from>                   <to>ʅ</to></map>      <!-- 0285 -->
+    <map><from>textctesh</from>                        <to>ʆ</to></map>      <!-- 0286 -->
+    <map><from>textturnt</from>                        <to>ʇ</to></map>      <!-- 0287 -->
+    <map><from>textrtailt</from>                       <to>ʈ</to></map>      <!-- 0288 -->
+    <map><from preferred="1">texttretroflexhook</from> <to>ʈ</to></map>      <!-- 0288 -->
+    <map><from>textbaru</from>                         <to>ʉ</to></map>      <!-- 0289 -->
+    <map><from>textupsilon</from>                      <to>ʊ</to></map>      <!-- 028A -->
+    <map><from>textscriptv</from>                      <to>ʋ</to></map>      <!-- 028B -->
+    <map><from preferred="1">textvhook</from>          <to>ʋ</to></map>      <!-- 028B -->
+    <map><from>textturnv</from>                        <to>ʌ</to></map>      <!-- 028C -->
+    <map><from>textturnw</from>                        <to>ʍ</to></map>      <!-- 028D -->
+    <map><from>textturny</from>                        <to>ʎ</to></map>      <!-- 028E -->
+    <map><from>textscy</from>                          <to>ʏ</to></map>      <!-- 028F -->
+    <map><from>textrtailz</from>                       <to>ʐ</to></map>      <!-- 0290 -->
+    <map><from>textctz</from>                          <to>ʑ</to></map>      <!-- 0291 -->
+    <map><from>textezh</from>                          <to>ʒ</to></map>      <!-- 0292 -->
+    <map><from preferred="1">textyogh</from>           <to>ʒ</to></map>      <!-- 0292 -->
+    <map><from>textctyogh</from>                       <to>ʓ</to></map>      <!-- 0293 -->
+    <map><from>textglotstop</from>                     <to>ʔ</to></map>      <!-- 0294 -->
+    <map><from>textrevglotstop</from>                  <to>ʕ</to></map>      <!-- 0295 -->
+    <map><from>textinvglotstop</from>                  <to>ʖ</to></map>      <!-- 0296 -->
+    <map><from>textstretchc</from>                     <to>ʗ</to></map>      <!-- 0297 -->
+    <map><from>textbullseye</from>                     <to>ʘ</to></map>      <!-- 0298 -->
+    <map><from>textscb</from>                          <to>ʙ</to></map>      <!-- 0299 -->
+    <map><from>textcloseepsilon</from>                 <to>ʚ</to></map>      <!-- 029A -->
+    <map><from>texthtscg</from>                        <to>ʛ</to></map>      <!-- 029B -->
+    <map><from>textsch</from>                          <to>ʜ</to></map>      <!-- 029C -->
+    <map><from>textctj</from>                          <to>ʝ</to></map>      <!-- 029D -->
+    <map><from>textturnk</from>                        <to>ʞ</to></map>      <!-- 029E -->
+    <map><from>textscl</from>                          <to>ʟ</to></map>      <!-- 029F -->
+    <map><from>texthtq</from>                          <to>ʠ</to></map>      <!-- 02A0 -->
+    <map><from>textbarglotstop</from>                  <to>ʡ</to></map>      <!-- 02A1 -->
+    <map><from>textbarrevglotstop</from>               <to>ʢ</to></map>      <!-- 02A2 -->
+    <map><from>textdzlig</from>                        <to>ʣ</to></map>      <!-- 02A3 -->
+    <map><from>textdyoghlig</from>                     <to>ʤ</to></map>      <!-- 02A4 -->
+    <map><from>textdctzlig</from>                      <to>ʥ</to></map>      <!-- 02A5 -->
+    <map><from>texttslig</from>                        <to>ʦ</to></map>      <!-- 02A6 -->
+    <map><from>textteshlig</from>                      <to>ʧ</to></map>      <!-- 02A7 -->
+    <map><from preferred="1">texttesh</from>           <to>ʧ</to></map>      <!-- 02A7 -->
+    <map><from>texttctclig</from>                      <to>ʨ</to></map>      <!-- 02A8 -->
+    <map><from>hamza</from>                            <to>ʾ</to></map>      <!-- 02BE -->
+    <map><from>ain</from>                              <to>ʿ</to></map>      <!-- 02BF -->
+    <map><from preferred="1">ayn</from>                <to>ʿ</to></map>      <!-- 02BF -->
+    <map><from>textprimstress</from>                   <to>ˈ</to></map>      <!-- 02C8 -->
+    <map><from>textlengthmark</from>                   <to>ː</to></map>      <!-- 02D0 -->
+ </wordmacros>
+ <diacritics set="base">
+    <map><from>r</from> <to>̊</to></map>  <!-- 030A -->
+    <map><from>H</from> <to>̋</to></map>  <!-- 030B -->
+    <map><from>u</from> <to>̆</to></map>  <!-- 0306 -->
+    <map><from>v</from> <to>̌</to></map>  <!-- 030C -->
+    <map><from>G</from> <to>̏</to></map>  <!-- 030F -->
+    <map><from>M</from> <to>̢</to></map>  <!-- 0322 -->
+    <map><from>d</from> <to>̣</to></map>  <!-- 0323 -->
+    <map><from>c</from> <to>̧</to></map>  <!-- 0327 -->
+    <map><from>k</from> <to>̨</to></map>  <!-- 0328 -->
+    <map><from>b</from> <to>̱</to></map>  <!-- 0331 -->
+    <map><from>B</from> <to>̵</to></map>  <!-- 0335 -->
+    <map><from>t</from> <to>̑</to></map>  <!-- 0311 -->
+ </diacritics>
+ <diacritics set="extra">
+    <map><from>textvbaraccent</from>             <to>̍</to></map>    <!-- 030D -->
+    <map><from>textdoublevbaraccent</from>       <to>̎</to></map>    <!-- 030E -->
+    <map><from>textdotbreve</from>               <to>̐</to></map>    <!-- 0310 -->
+    <map><from>textturncommaabove</from>         <to>̒</to></map>    <!-- 0312 -->
+    <map><from>textcommaabove</from>             <to>̓</to></map>    <!-- 0313 -->
+    <map><from>textrevcommaabove</from>          <to>̔</to></map>    <!-- 0314 -->
+    <map><from>textcommaabover</from>            <to>̕</to></map>    <!-- 0315 -->
+    <map><from>textsubgrave</from>               <to>̖</to></map>    <!-- 0316 -->
+    <map><from>textsubacute</from>               <to>̗</to></map>    <!-- 0317 -->
+    <map><from>textadvancing</from>              <to>̘</to></map>    <!-- 0318 -->
+    <map><from>textretracting</from>             <to>̙</to></map>    <!-- 0319 -->
+    <map><from>textlangleabove</from>            <to>̚</to></map>    <!-- 031A -->
+    <map><from>textrighthorn</from>              <to>̛</to></map>    <!-- 031B -->
+    <map><from>textsublhalfring</from>           <to>̜</to></map>    <!-- 031C -->
+    <map><from>textraising</from>                <to>̝</to></map>    <!-- 031D -->
+    <map><from>textlowering</from>               <to>̞</to></map>    <!-- 031E -->
+    <map><from>textsubplus</from>                <to>̟</to></map>    <!-- 031F -->
+    <map><from>textsubbar</from>                 <to>̠</to></map>    <!-- 0320 -->
+    <map><from preferred="1">textsubminus</from> <to>̠</to></map>    <!-- 0320 -->
+    <map><from>textpalhookbelow</from>           <to>̡</to></map>    <!-- 0321 -->
+    <map><from>textsubumlaut</from>              <to>̤</to></map>    <!-- 0324 -->
+    <map><from>textsubring</from>                <to>̥</to></map>    <!-- 0325 -->
+    <map><from>textcommabelow</from>             <to>̦</to></map>    <!-- 0326 -->
+    <map><from>textsyllabic</from>               <to>̩</to></map>    <!-- 0329 -->
+    <map><from>textsubbridge</from>              <to>̪</to></map>    <!-- 032A -->
+    <map><from>textsubw</from>                   <to>̫</to></map>    <!-- 032B -->
+    <map><from>textsubwedge</from>               <to>̬</to></map>    <!-- 032C -->
+    <map><from>textsubcircnum</from>             <to>̭</to></map>    <!-- 032D -->
+    <map><from>textsubbreve</from>               <to>̮</to></map>    <!-- 032E -->
+    <map><from preferred="1">textundertie</from> <to>̮</to></map>    <!-- 032E -->
+    <map><from>textsubarch</from>                <to>̯</to></map>    <!-- 032F -->
+    <map><from>textsubtilde</from>               <to>̰</to></map>    <!-- 0330 -->
+    <map><from>subdoublebar</from>               <to>̳</to></map>    <!-- 0333 -->
+    <map><from>textsuperimposetilde</from>       <to>̴</to></map>    <!-- 0334 -->
+    <map><from>textlstrokethru</from>            <to>̶</to></map>    <!-- 0336 -->
+    <map><from>textsstrikethru</from>            <to>̷</to></map>    <!-- 0337 -->
+    <map><from>textlstrikethru</from>            <to≯</to></map>    <!-- 0338 -->
+    <map><from>textsubrhalfring</from>           <to>̹</to></map>    <!-- 0339 -->
+    <map><from>textinvsubbridge</from>           <to>̺</to></map>    <!-- 033A -->
+    <map><from>textsubsquare</from>              <to>̻</to></map>    <!-- 033B -->
+    <map><from>textseagull</from>                <to>̼</to></map>    <!-- 033C -->
+    <map><from>textovercross</from>              <to>̽</to></map>    <!-- 033D -->
+    <map><from>overbridge</from>                 <to>͆</to></map>    <!-- 0346 -->
+    <map><from>subdoublebar</from>               <to>͇</to></map>    <!-- 0347 -->
+    <map><from>subdoublevert</from>              <to>͈</to></map>    <!-- 0348 -->
+    <map><from>subcorner</from>                  <to>͉</to></map>    <!-- 0349 -->
+    <map><from>crtilde</from>                    <to>͊</to></map>    <!-- 034A -->
+    <map><from preferred="1">textoverw</from>    <to>͊</to></map>    <!-- 034A -->
+    <map><from>dottedtilde</from>                <to>͋</to></map>    <!-- 034B -->
+    <map><from>doubletilde</from>                <to>͌</to></map>    <!-- 034C -->
+    <map><from>spreadlips</from>                 <to>͍</to></map>    <!-- 034D -->
+    <map><from>whistle</from>                    <to>͎</to></map>    <!-- 034E -->
+    <map><from>textrightarrowhead</from>         <to>͐</to></map>    <!-- 0350 -->
+    <map><from>textlefthalfring</from>           <to>͑</to></map>    <!-- 0351 -->
+    <map><from>sublptr</from>                    <to>͔</to></map>    <!-- 0354 -->
+    <map><from>subrptr</from>                    <to>͕</to></map>    <!-- 0355 -->
+    <map><from>textrightuparrowhead</from>       <to>͖</to></map>    <!-- 0356 -->
+    <map><from>textrighthalfring</from>          <to>͗</to></map>    <!-- 0357 -->
+    <map><from>textdoublebreve</from>            <to>͝</to></map>    <!-- 035D -->
+    <map><from>textdoublemacron</from>           <to>͞</to></map>    <!-- 035E -->
+    <map><from>textdoublemacronbelow</from>      <to>͟</to></map>    <!-- 035F -->
+    <map><from>textdoubletilde</from>            <to>͠</to></map>    <!-- 0360 -->
+    <map><from>texttoptiebar</from>              <to>͡</to></map>    <!-- 0361 -->
+    <map><from>sliding</from>                    <to>͢</to></map>    <!-- 0362 -->
+ </diacritics>
+ <punctuation>
+    <map><from>textendash</from>         <to>–</to></map>    <!-- 2013 -->
+    <map><from>textemdash</from>         <to>—</to></map>   <!--  2014-->
+    <map><from>textquoteleft</from>      <to>‘</to></map>    <!-- 2018 -->
+    <map><from>textquoteright</from>     <to>’</to></map>    <!-- 2019 -->
+    <map><from>quotesinglbase</from>     <to>‚</to></map>    <!-- 201A -->
+    <map><from>textquotedblleft</from>   <to>“</to></map>    <!-- 201C -->
+    <map><from>textquotedblright</from>  <to>”</to></map>    <!-- 201D -->
+    <map><from>quotedblbase</from>       <to>„</to></map>    <!-- 201E -->
+    <map><from>dag</from>                <to>†</to></map>    <!-- 2020 -->
+    <map><from>ddag</from>               <to>‡</to></map>    <!-- 2021 -->
+    <map><from>textbullet</from>         <to>•</to></map>    <!-- 2022 -->
+    <map><from>dots</from>               <to>…</to></map>    <!-- 2026 -->
+    <map><from>textperthousand</from>    <to>‰</to></map>    <!-- 2030 -->
+    <map><from>textpertenthousand</from> <to>‱</to></map>    <!-- 2031 -->
+    <map><from>guilsinglleft</from>      <to>‹</to></map>    <!-- 2039 -->
+    <map><from>guilsinglright</from>     <to>›</to></map>    <!-- 203A -->
+    <map><from>textreferencemark</from>  <to>※</to></map>    <!-- 203B -->
+    <map><from>textinterrobang</from>    <to>‽</to></map>    <!-- 203D -->
+    <map><from>textoverline</from>       <to>‾</to></map>    <!-- 203E -->
+    <map><from>langle</from>             <to>⟨</to></map>    <!-- 27E8 -->
+    <map><from>rangle</from>             <to>⟩</to></map>    <!-- 27E9 -->
+ </punctuation>
+ <negatedsymbols>
+    <map><from>asymp</from>       <to>≭</to></map>    <!-- 226D -->
+    <map><from>lesssim</from>     <to>≴</to></map>    <!-- 2274 -->
+    <map><from>gtrsim</from>      <to>≵</to></map>    <!-- 2275 -->
+    <map><from>subset</from>      <to>⊄</to></map>    <!-- 2284 -->
+    <map><from>supset</from>      <to>⊅</to></map>    <!-- 2285 -->
+    <map><from>ni</from>          <to>∌</to></map>    <!-- 220C -->
+    <map><from>simeq</from>       <to>≄</to></map>    <!-- 2244 -->
+    <map><from>approx</from>      <to>≉</to></map>    <!-- 2249 -->
+    <map><from>equiv</from>       <to>≢</to></map>    <!-- 2262 -->
+    <map><from>preccurlyeq</from> <to>⋠</to></map>    <!-- 22E0 -->
+    <map><from>succcurlyeq</from> <to>⋡</to></map>    <!-- 22E1 -->
+    <map><from>sqsubseteq</from>  <to>⋢</to></map>    <!-- 22E2 -->
+    <map><from>sqsupseteq</from>  <to>⋣</to></map>    <!-- 22E3 -->
+ </negatedsymbols>
+ <superscripts>
+    <map><from>0</from>  <to>⁰</to></map>     <!-- 2070 -->
+    <map><from>i</from>  <to>ⁱ</to></map>     <!-- 2071 -->
+    <map><from>4</from>  <to>⁴</to></map>     <!-- 2074 -->
+    <map><from>5</from>  <to>⁵</to></map>     <!-- 2075 -->
+    <map><from>6</from>  <to>⁶</to></map>     <!-- 2076 -->
+    <map><from>7</from>  <to>⁷</to></map>     <!-- 2077 -->
+    <map><from>8</from>  <to>⁸</to></map>     <!-- 2078 -->
+    <map><from>9</from>  <to>⁹</to></map>     <!-- 2079 -->
+    <map><from>+</from>  <to>⁺</to></map>     <!-- 207A -->
+    <map><from>-</from>  <to>⁻</to></map>     <!-- 207B -->
+    <map><from>=</from>  <to>⁼</to></map>     <!-- 207C -->
+    <map><from>(</from>  <to>⁽</to></map>     <!-- 207D -->
+    <map><from>)</from>  <to>⁾</to></map>     <!-- 207E -->
+    <map><from>n</from>  <to>ⁿ</to></map>     <!-- 207F -->
+    <map><from>SM</from> <to>℠</to></map>     <!-- 2120 -->
+    <map><from>h</from>  <to>ʰ</to></map>     <!-- 02B0 -->
+    <map><from>j</from>  <to>ʲ</to></map>     <!-- 02B2 -->
+    <map><from>r</from>  <to>ʳ</to></map>     <!-- 02B3 -->
+    <map><from>w</from>  <to>ʷ</to></map>     <!-- 02B7 -->
+    <map><from>y</from>  <to>ʸ</to></map>     <!-- 02B8 -->
+ </superscripts>
+ <cmdsuperscripts>
+    <map><from>texthth</from>        <to>ʱ</to></map>  <!-- 02B1 -->
+    <map><from>textturnr</from>      <to>ʴ</to></map>  <!-- 02B4 -->
+    <map><from>textturnrrtail</from> <to>ʵ</to></map>  <!-- 02B5 -->
+    <map><from>textinvscr</from>     <to>ʶ</to></map>  <!-- 02B6 -->
+ </cmdsuperscripts>
+ <symbols>
+    <map><from>textdiv</from>             <to>÷</to></map>  <!-- 00F7 -->
+    <map><from preferred="1">div</from>   <to>÷</to></map>  <!-- 00F7 -->
+    <map><from>texttimes</from>           <to>×</to></map>  <!-- 00D7 -->
+    <map><from preferred="1">times</from> <to>×</to></map>  <!-- 00D7 -->
+    <map><from>textmu</from>              <to>µ</to></map>  <!-- 00B5 -->
+    <map><from preferred="1">mu</from>    <to>µ</to></map>  <!-- 00B5 -->
+    <map><from>textpm</from>              <to>±</to></map>  <!-- 00B1 -->
+    <map><from preferred="1">pm</from>    <to>±</to></map>  <!-- 00B1 -->
+    <map><from>textlogicalnot</from>      <to>¬</to></map>  <!-- 00AC -->
+    <map><from preferred="1">lnot</from>  <to>¬</to></map>  <!-- 00AC -->
+    <map><from>textcolonmonetary</from>   <to>₡</to></map>  <!-- 20A1 -->
+    <map><from>textlira</from>            <to>₤</to></map>  <!-- 20A4 -->
+    <map><from>textnaira</from>           <to>₦</to></map>  <!-- 20A6 -->
+    <map><from>textwon</from>             <to>₩</to></map>  <!-- 20A9 -->
+    <map><from>textdong</from>            <to>₫</to></map>  <!-- 20AB -->
+    <map><from preferred="1">euro</from>  <to>€</to></map>  <!-- 20AC -->
+    <map><from>texteuro</from>            <to>€</to></map>  <!-- 20AC -->
+    <map><from>textnumero</from>          <to>№</to></map>  <!-- 2116 -->
+    <map><from>texttrademark</from>       <to>™</to></map>  <!-- 2122 -->
+    <map><from>leftarrow</from>           <to>←</to></map>  <!-- 2190 -->
+    <map><from>uparrow</from>             <to>↑</to></map>  <!-- 2191 -->
+    <map><from>rightarrow</from>          <to>→</to></map>  <!-- 2192 -->
+    <map><from>downarrow</from>           <to>↓</to></map>  <!-- 2193 -->
+    <map><from>leftrightarrow</from>      <to>↔</to></map>  <!-- 2194 -->
+    <map><from>updownarrow</from>         <to>↕</to></map>  <!-- 2195 -->
+    <map><from>leadsto</from>             <to>↝</to></map>  <!-- 219D -->
+    <map><from>rightleftharpoons</from>   <to>⇌</to></map>  <!-- 21CC -->
+    <map><from>Rightarrow</from>          <to>⇒</to></map>  <!-- 21D2 -->
+    <map><from>Leftrightarrow</from>      <to>⇔</to></map>  <!-- 21D4 -->
+    <map><from>forall</from>              <to>∀</to></map>  <!-- 2200 -->
+    <map><from>complement</from>          <to>∁</to></map>  <!-- 2201 -->
+    <map><from>partial</from>             <to>∂</to></map>  <!-- 2202 -->
+    <map><from>exists</from>              <to>∃</to></map>  <!-- 2203 -->
+    <map><from>nexists</from>             <to>∄</to></map>  <!-- 2204 -->
+    <map><from>set</from>                 <to>∅</to></map>  <!-- 2205 -->
+    <map><from>Delta</from>               <to>∆</to></map>  <!-- 2206 -->
+    <map><from>nabla</from>               <to>∇</to></map>  <!-- 2207 -->
+    <map><from>in</from>                  <to>∈</to></map>  <!-- 2208 -->
+    <map><from>notin</from>               <to>∉</to></map>  <!-- 2209 -->
+    <map><from>ni</from>                  <to>∋</to></map>  <!-- 220B -->
+    <map><from>prod</from>                <to>∏</to></map>  <!-- 220F -->
+    <map><from>coprod</from>              <to>∐</to></map>  <!-- 2210 -->
+    <map><from>sum</from>                 <to>∑</to></map>  <!-- 2211 -->
+    <map><from>mp</from>                  <to>∓</to></map>  <!-- 2213 -->
+    <map><from>dotplus</from>             <to>∔</to></map>  <!-- 2214 -->
+    <map><from>setminus</from>            <to>∖</to></map>  <!-- 2216 -->
+    <map><from>ast</from>                 <to>∗</to></map>  <!-- 2217 -->
+    <map><from>circ</from>                <to>∘</to></map>  <!-- 2218 -->
+    <map><from>bullet</from>              <to>∙</to></map>  <!-- 2219 -->
+    <map><from>surd</from>                <to>√</to></map>  <!-- 221A -->
+    <map><from>propto</from>              <to>∝</to></map>  <!-- 221D -->
+    <map><from>infty</from>               <to>∞</to></map>  <!-- 221E -->
+    <map><from>angle</from>               <to>∠</to></map>  <!-- 2220 -->
+    <map><from>measuredangle</from>       <to>∡</to></map>  <!-- 2221 -->
+    <map><from>sphericalangle</from>      <to>∢</to></map>  <!-- 2222 -->
+    <map><from>mid</from>                 <to>∣</to></map>  <!-- 2223 -->
+    <map><from>nmid</from>                <to>∤</to></map>  <!-- 2224 -->
+    <map><from>parallel</from>            <to>∥</to></map>  <!-- 2225 -->
+    <map><from>nparallel</from>           <to>∦</to></map>  <!-- 2226 -->
+    <map><from>wedge</from>               <to>∧</to></map>  <!-- 2227 -->
+    <map><from>vee</from>                 <to>∨</to></map>  <!-- 2228 -->
+    <map><from>cap</from>                 <to>∩</to></map>  <!-- 2229 -->
+    <map><from>cup</from>                 <to>∪</to></map>  <!-- 222A -->
+    <map><from>int</from>                 <to>∫</to></map>  <!-- 222B -->
+    <map><from>iint</from>                <to>∬</to></map>  <!-- 222C -->
+    <map><from>iiint</from>               <to>∭</to></map>  <!-- 222D -->
+    <map><from>oint</from>                <to>∮</to></map>  <!-- 222E -->
+    <map><from>therefore</from>           <to>∴</to></map>  <!-- 2234 -->
+    <map><from>because</from>             <to>∵</to></map>  <!-- 2235 -->
+    <map><from>sim</from>                 <to>∼</to></map>  <!-- 223C -->
+    <map><from>backsim</from>             <to>∽</to></map>  <!-- 223D -->
+    <map><from>wr</from>                  <to>≀</to></map>  <!-- 2240 -->
+    <map><from>nsim</from>                <to>≁</to></map>  <!-- 2241 -->
+    <map><from>simeq</from>               <to>≃</to></map>  <!-- 2243 -->
+    <map><from>cong</from>                <to>≅</to></map>  <!-- 2245 -->
+    <map><from>ncong</from>               <to>≇</to></map>  <!-- 2247 -->
+    <map><from>approx</from>              <to>≈</to></map>  <!-- 2248 -->
+    <map><from>approxeq</from>            <to>≊</to></map>  <!-- 224A -->
+    <map><from>asymp</from>               <to>≍</to></map>  <!-- 224D -->
+    <map><from>Bumpeq</from>              <to>≎</to></map>  <!-- 224E -->
+    <map><from>bumpeq</from>              <to>≏</to></map>  <!-- 224F -->
+    <map><from>doteq</from>               <to>≐</to></map>  <!-- 2250 -->
+    <map><from>doteqdot</from>            <to>≑</to></map>  <!-- 2251 -->
+    <map><from>fallingdotseq</from>       <to>≒</to></map>  <!-- 2252 -->
+    <map><from>risingdotseq</from>        <to>≓</to></map>  <!-- 2253 -->
+    <map><from>eqcirc</from>              <to>≖</to></map>  <!-- 2256 -->
+    <map><from>circeq</from>              <to>≗</to></map>  <!-- 2257 -->
+    <map><from>triangleq</from>           <to>≜</to></map>  <!-- 225C -->
+    <map><from>neq</from>                 <to>≠</to></map>  <!-- 2260 -->
+    <map><from>equiv</from>               <to>≡</to></map>  <!-- 2261 -->
+    <map><from>leq</from>                 <to>≤</to></map>  <!-- 2264 -->
+    <map><from>geq</from>                 <to>≥</to></map>  <!-- 2265 -->
+    <map><from>leqq</from>                <to>≦</to></map>  <!-- 2266 -->
+    <map><from>geqq</from>                <to>≧</to></map>  <!-- 2267 -->
+    <map><from>lneqq</from>               <to>≨</to></map>  <!-- 2268 -->
+    <map><from>gneqq</from>               <to>≩</to></map>  <!-- 2269 -->
+    <map><from>ll</from>                  <to>≪</to></map>  <!-- 226A -->
+    <map><from>gg</from>                  <to>≫</to></map>  <!-- 226B -->
+    <map><from>between</from>             <to>≬</to></map>  <!-- 226C -->
+    <map><from>nless</from>               <to>≮</to></map>  <!-- 226E -->
+    <map><from>ngtr</from>                <to>≯</to></map>  <!-- 226F -->
+    <map><from>nleq</from>                <to>≰</to></map>  <!-- 2270 -->
+    <map><from>ngeq</from>                <to>≱</to></map>  <!-- 2271 -->
+    <map><from>lesssim</from>             <to>≲</to></map>  <!-- 2272 -->
+    <map><from>gtrsim</from>              <to>≳</to></map>  <!-- 2273 -->
+    <map><from>lessgtr</from>             <to>≶</to></map>  <!-- 2276 -->
+    <map><from>gtrless</from>             <to>≷</to></map>  <!-- 2277 -->
+    <map><from>prec</from>                <to>≺</to></map>  <!-- 227A -->
+    <map><from>succ</from>                <to>≻</to></map>  <!-- 227B -->
+    <map><from>preccurlyeq</from>         <to>≼</to></map>  <!-- 227C -->
+    <map><from>succcurlyeq</from>         <to>≽</to></map>  <!-- 227D -->
+    <map><from>precsim</from>             <to>≾</to></map>  <!-- 227E -->
+    <map><from>succsim</from>             <to>≿</to></map>  <!-- 227F -->
+    <map><from>nprec</from>               <to>⊀</to></map>  <!-- 2280 -->
+    <map><from>nsucc</from>               <to>⊁</to></map>  <!-- 2281 -->
+    <map><from>subset</from>              <to>⊂</to></map>  <!-- 2282 -->
+    <map><from>supset</from>              <to>⊃</to></map>  <!-- 2283 -->
+    <map><from>subseteq</from>            <to>⊆</to></map>  <!-- 2286 -->
+    <map><from>supseteq</from>            <to>⊇</to></map>  <!-- 2287 -->
+    <map><from>nsubseteq</from>           <to>⊈</to></map>  <!-- 2288 -->
+    <map><from>nsupseteq</from>           <to>⊉</to></map>  <!-- 2289 -->
+    <map><from>subsetneq</from>           <to>⊊</to></map>  <!-- 228A -->
+    <map><from>supsetneq</from>           <to>⊋</to></map>  <!-- 228B -->
+    <map><from>uplus</from>               <to>⊎</to></map>  <!-- 228E -->
+    <map><from>sqsubset</from>            <to>⊏</to></map>  <!-- 228F -->
+    <map><from>sqsupset</from>            <to>⊐</to></map>  <!-- 2290 -->
+    <map><from>sqsubseteq</from>          <to>⊑</to></map>  <!-- 2291 -->
+    <map><from>sqsupseteq</from>          <to>⊒</to></map>  <!-- 2292 -->
+    <map><from>sqcap</from>               <to>⊓</to></map>  <!-- 2293 -->
+    <map><from>sqcup</from>               <to>⊔</to></map>  <!-- 2294 -->
+    <map><from>oplus</from>               <to>⊕</to></map>  <!-- 2295 -->
+    <map><from>ominus</from>              <to>⊖</to></map>  <!-- 2296 -->
+    <map><from>otimes</from>              <to>⊗</to></map>  <!-- 2297 -->
+    <map><from>oslash</from>              <to>⊘</to></map>  <!-- 2298 -->
+    <map><from>odot</from>                <to>⊙</to></map>  <!-- 2299 -->
+    <map><from>circledcirc</from>         <to>⊚</to></map>  <!-- 229A -->
+    <map><from>circledast</from>          <to>⊛</to></map>  <!-- 229B -->
+    <map><from>circleddash</from>         <to>⊝</to></map>  <!-- 229D -->
+    <map><from>boxplus</from>             <to>⊞</to></map>  <!-- 229E -->
+    <map><from>boxminus</from>            <to>⊟</to></map>  <!-- 229F -->
+    <map><from>boxtimes</from>            <to>⊠</to></map>  <!-- 22A0 -->
+    <map><from>boxdot</from>              <to>⊡</to></map>  <!-- 22A1 -->
+    <map><from>vdash</from>               <to>⊢</to></map>  <!-- 22A2 -->
+    <map><from>dashv</from>               <to>⊣</to></map>  <!-- 22A3 -->
+    <map><from>top</from>                 <to>⊤</to></map>  <!-- 22A4 -->
+    <map><from>bot</from>                 <to>⊥</to></map>  <!-- 22A5 -->
+    <map><from>Vdash</from>               <to>⊩</to></map>  <!-- 22A9 -->
+    <map><from>Vvdash</from>              <to>⊪</to></map>  <!-- 22AA -->
+    <map><from>nVdash</from>              <to>⊮</to></map>  <!-- 22AE -->
+    <map><from>lhd</from>                 <to>⊲</to></map>  <!-- 22B2 -->
+    <map><from>rhd</from>                 <to>⊳</to></map>  <!-- 22B3 -->
+    <map><from>unlhd</from>               <to>⊴</to></map>  <!-- 22B4 -->
+    <map><from>unrhd</from>               <to>⊵</to></map>  <!-- 22B5 -->
+    <map><from>multimap</from>            <to>⊸</to></map>  <!-- 22B8 -->
+    <map><from>intercal</from>            <to>⊺</to></map>  <!-- 22BA -->
+    <map><from>veebar</from>              <to>⊻</to></map>  <!-- 22BB -->
+    <map><from>barwedge</from>            <to>⊼</to></map>  <!-- 22BC -->
+    <map><from>bigwedge</from>            <to>⋀</to></map>  <!-- 22C0 -->
+    <map><from>bigvee</from>              <to>⋁</to></map>  <!-- 22C1 -->
+    <map><from>bigcap</from>              <to>⋂</to></map>  <!-- 22C2 -->
+    <map><from>bigcup</from>              <to>⋃</to></map>  <!-- 22C3 -->
+    <map><from>diamond</from>             <to>⋄</to></map>  <!-- 22C4 -->
+    <map><from>cdot</from>                <to>⋅</to></map>  <!-- 22C5 -->
+    <map><from>star</from>                <to>⋆</to></map>  <!-- 22C6 -->
+    <map><from>divideontimes</from>       <to>⋇</to></map>  <!-- 22C7 -->
+    <map><from>bowtie</from>              <to>⋈</to></map>  <!-- 22C8 -->
+    <map><from>ltimes</from>              <to>⋉</to></map>  <!-- 22C9 -->
+    <map><from>rtimes</from>              <to>⋊</to></map>  <!-- 22CA -->
+    <map><from>leftthreetimes</from>      <to>⋋</to></map>  <!-- 22CB -->
+    <map><from>rightthreetimes</from>     <to>⋌</to></map>  <!-- 22CC -->
+    <map><from>backsimeq</from>           <to>⋍</to></map>  <!-- 22CD -->
+    <map><from>curlyvee</from>            <to>⋎</to></map>  <!-- 22CE -->
+    <map><from>curlywedge</from>          <to>⋏</to></map>  <!-- 22CF -->
+    <map><from>Subset</from>              <to>⋐</to></map>  <!-- 22D0 -->
+    <map><from>Supset</from>              <to>⋑</to></map>  <!-- 22D1 -->
+    <map><from>Cap</from>                 <to>⋒</to></map>  <!-- 22D2 -->
+    <map><from>Cup</from>                 <to>⋓</to></map>  <!-- 22D3 -->
+    <map><from>pitchfork</from>           <to>⋔</to></map>  <!-- 22D4 -->
+    <map><from>lessdot</from>             <to>⋖</to></map>  <!-- 22D6 -->
+    <map><from>gtrdot</from>              <to>⋗</to></map>  <!-- 22D7 -->
+    <map><from>lll</from>                 <to>⋘</to></map>  <!-- 22D8 -->
+    <map><from>ggg</from>                 <to>⋙</to></map>  <!-- 22D9 -->
+    <map><from>lesseqgtr</from>           <to>⋚</to></map>  <!-- 22DA -->
+    <map><from>gtreqless</from>           <to>⋛</to></map>  <!-- 22DB -->
+    <map><from>curlyeqprec</from>         <to>⋞</to></map>  <!-- 22DE -->
+    <map><from>curlyeqsucc</from>         <to>⋟</to></map>  <!-- 22DF -->
+    <map><from>lnsim</from>               <to>⋦</to></map>  <!-- 22E6 -->
+    <map><from>gnsim</from>               <to>⋧</to></map>  <!-- 22E7 -->
+    <map><from>precnsim</from>            <to>⋨</to></map>  <!-- 22E8 -->
+    <map><from>succnsim</from>            <to>⋩</to></map>  <!-- 22E9 -->
+    <map><from>ntriangleleft</from>       <to>⋪</to></map>  <!-- 22EA -->
+    <map><from>ntriangleright</from>      <to>⋫</to></map>  <!-- 22EB -->
+    <map><from>ntrianglelefteq</from>     <to>⋬</to></map>  <!-- 22EC -->
+    <map><from>ntrianglerighteq</from>    <to>⋭</to></map>  <!-- 22ED -->
+    <map><from>vdots</from>               <to>⋮</to></map>  <!-- 22EE -->
+    <map><from>cdots</from>               <to>⋯</to></map>  <!-- 22EF -->
+    <map><from>ddots</from>               <to>⋱</to></map>  <!-- 22F1 -->
+    <map><from>lceil</from>               <to>⌈</to></map>  <!-- 2308 -->
+    <map><from>rceil</from>               <to>⌉</to></map>  <!-- 2309 -->
+    <map><from>lfloor</from>              <to>⌊</to></map>  <!-- 230A -->
+    <map><from>rfloor</from>              <to>⌋</to></map>  <!-- 230B -->
+    <map><from>Box</from>                 <to>□</to></map>  <!-- 25A1 -->
+    <map><from>spadesuit</from>           <to>♠</to></map>  <!-- 2660 -->
+    <map><from>heartsuit</from>           <to>♡</to></map>  <!-- 2661 -->
+    <map><from>diamondsuit</from>         <to>♢</to></map>  <!-- 2662 -->
+    <map><from>clubsuit</from>            <to>♣</to></map>  <!-- 2663 -->
+    <map><from>flat</from>                <to>♭</to></map>  <!-- 266D -->
+    <map><from>natural</from>             <to>♮</to></map>  <!-- 266E -->
+    <map><from>sharp</from>               <to>♯</to></map>  <!-- 266F -->
+    <map><from>tone5</from>               <to>˥</to></map>  <!-- 02E5 -->
+    <map><from>tone4</from>               <to>˦</to></map>  <!-- 02E6 -->
+    <map><from>tone3</from>               <to>˧</to></map>  <!-- 02E7 -->
+    <map><from>tone2</from>               <to>˨</to></map>  <!-- 02E8 -->
+    <map><from>tone1</from>               <to>˩</to></map>  <!-- 02E9 -->
+ </symbols>
+ <dings>
+    <map><from>21</from> <to>✁</to></map>           <!-- 2701 -->
+    <map><from>22</from> <to>✂</to></map>           <!-- 2702 -->
+    <map><from>23</from> <to>✃</to></map>           <!-- 2703 -->
+    <map><from>24</from> <to>✄</to></map>           <!-- 2704 -->
+    <map><from>25</from> <to>☎</to></map>           <!-- 260E -->
+    <map><from>26</from> <to>✆</to></map>           <!-- 2706 -->
+    <map><from>27</from> <to>✇</to></map>           <!-- 2707 -->
+    <map><from>28</from> <to>✈</to></map>           <!-- 2708 -->
+    <map><from>29</from> <to>✉</to></map>           <!-- 2709 -->
+    <map><from>2A</from> <to>☛</to></map>           <!-- 261B -->
+    <map><from>2B</from> <to>☞</to></map>           <!-- 261E -->
+    <map><from>2C</from> <to>✌</to></map>           <!-- 270C -->
+    <map><from>2D</from> <to>✍</to></map>           <!-- 270D -->
+    <map><from>2E</from> <to>✎</to></map>           <!-- 270E -->
+    <map><from>2F</from> <to>✏</to></map>           <!-- 270F -->
+    <map><from>30</from> <to>✐</to></map>           <!-- 2710 -->
+    <map><from>31</from> <to>✑</to></map>           <!-- 2711 -->
+    <map><from>32</from> <to>✒</to></map>           <!-- 2712 -->
+    <map><from>33</from> <to>✓</to></map>           <!-- 2713 -->
+    <map><from>34</from> <to>✔</to></map>           <!-- 2714 -->
+    <map><from>35</from> <to>✕</to></map>           <!-- 2715 -->
+    <map><from>36</from> <to>✖</to></map>           <!-- 2716 -->
+    <map><from>37</from> <to>✗</to></map>           <!-- 2717 -->
+    <map><from>38</from> <to>✘</to></map>           <!-- 2718 -->
+    <map><from>39</from> <to>✙</to></map>           <!-- 2719 -->
+    <map><from>3A</from> <to>✚</to></map>           <!-- 271A -->
+    <map><from>3B</from> <to>✛</to></map>           <!-- 271B -->
+    <map><from>3C</from> <to>✜</to></map>           <!-- 271C -->
+    <map><from>3D</from> <to>✝</to></map>           <!-- 271D -->
+    <map><from>3E</from> <to>✞</to></map>           <!-- 271E -->
+    <map><from>3F</from> <to>✟</to></map>           <!-- 271F -->
+    <map><from>40</from> <to>✠</to></map>           <!-- 2720 -->
+    <map><from>41</from> <to>✡</to></map>           <!-- 2721 -->
+    <map><from>42</from> <to>✢</to></map>           <!-- 2722 -->
+    <map><from>43</from> <to>✣</to></map>           <!-- 2723 -->
+    <map><from>44</from> <to>✤</to></map>           <!-- 2724 -->
+    <map><from>45</from> <to>✥</to></map>           <!-- 2725 -->
+    <map><from>46</from> <to>✦</to></map>           <!-- 2726 -->
+    <map><from>47</from> <to>✧</to></map>           <!-- 2727 -->
+    <map><from>48</from> <to>★</to></map>           <!-- 2605 -->
+    <map><from>49</from> <to>✩</to></map>           <!-- 2729 -->
+    <map><from>4A</from> <to>✪</to></map>           <!-- 272A -->
+    <map><from>4B</from> <to>✫</to></map>           <!-- 272B -->
+    <map><from>4C</from> <to>✬</to></map>           <!-- 272C -->
+    <map><from>4D</from> <to>✭</to></map>           <!-- 272D -->
+    <map><from>4E</from> <to>✮</to></map>           <!-- 272E -->
+    <map><from>4F</from> <to>✯</to></map>           <!-- 272F -->
+    <map><from>50</from> <to>✰</to></map>           <!-- 2730 -->
+    <map><from>51</from> <to>✱</to></map>           <!-- 2731 -->
+    <map><from>52</from> <to>✲</to></map>           <!-- 2732 -->
+    <map><from>53</from> <to>✳</to></map>           <!-- 2733 -->
+    <map><from>54</from> <to>✴</to></map>           <!-- 2734 -->
+    <map><from>55</from> <to>✵</to></map>           <!-- 2735 -->
+    <map><from>56</from> <to>✶</to></map>           <!-- 2736 -->
+    <map><from>57</from> <to>✷</to></map>           <!-- 2737 -->
+    <map><from>58</from> <to>✸</to></map>           <!-- 2738 -->
+    <map><from>59</from> <to>✹</to></map>           <!-- 2739 -->
+    <map><from>5A</from> <to>✺</to></map>           <!-- 273A -->
+    <map><from>5B</from> <to>✻</to></map>           <!-- 273B -->
+    <map><from>5C</from> <to>✼</to></map>           <!-- 273C -->
+    <map><from>5D</from> <to>✽</to></map>           <!-- 273D -->
+    <map><from>5E</from> <to>✾</to></map>           <!-- 273E -->
+    <map><from>5F</from> <to>✿</to></map>           <!-- 273F -->
+    <map><from>60</from> <to>❀</to></map>           <!-- 2740 -->
+    <map><from>61</from> <to>❁</to></map>           <!-- 2741 -->
+    <map><from>62</from> <to>❂</to></map>           <!-- 2742 -->
+    <map><from>63</from> <to>❃</to></map>           <!-- 2743 -->
+    <map><from>64</from> <to>❄</to></map>           <!-- 2744 -->
+    <map><from>65</from> <to>❅</to></map>           <!-- 2745 -->
+    <map><from>66</from> <to>❆</to></map>           <!-- 2746 -->
+    <map><from>67</from> <to>❇</to></map>           <!-- 2747 -->
+    <map><from>68</from> <to>❈</to></map>           <!-- 2748 -->
+    <map><from>69</from> <to>❉</to></map>           <!-- 2749 -->
+    <map><from>6A</from> <to>❊</to></map>           <!-- 274A -->
+    <map><from>6B</from> <to>❋</to></map>           <!-- 274B -->
+    <map><from>6C</from> <to>●</to></map>           <!-- 25CF -->
+    <map><from>6D</from> <to>❍</to></map>           <!-- 274D -->
+    <map><from>6E</from> <to>■</to></map>           <!-- 25A0 -->
+    <map><from>6F</from> <to>❏</to></map>           <!-- 274F -->
+    <map><from>70</from> <to>❐</to></map>           <!-- 2750 -->
+    <map><from>71</from> <to>❑</to></map>           <!-- 2751 -->
+    <map><from>72</from> <to>❒</to></map>           <!-- 2752 -->
+    <map><from>73</from> <to>▲</to></map>           <!-- 25B2 -->
+    <map><from>74</from> <to>▼</to></map>           <!-- 25BC -->
+    <map><from>75</from> <to>◆</to></map>           <!-- 25C6 -->
+    <map><from>76</from> <to>❖</to></map>           <!-- 2756 -->
+    <map><from>77</from> <to>◗</to></map>           <!-- 25D7 -->
+    <map><from>78</from> <to>❘</to></map>           <!-- 2758 -->
+    <map><from>79</from> <to>❙</to></map>           <!-- 2759 -->
+    <map><from>7A</from> <to>❚</to></map>           <!-- 275A -->
+    <map><from>7B</from> <to>❛</to></map>           <!-- 275B -->
+    <map><from>7C</from> <to>❜</to></map>           <!-- 275C -->
+    <map><from>7D</from> <to>❝</to></map>           <!-- 275D -->
+    <map><from>7E</from> <to>❞</to></map>           <!-- 275E -->
+    <map><from>A1</from> <to>❡</to></map>           <!-- 2761 -->
+    <map><from>A2</from> <to>❢</to></map>           <!-- 2762 -->
+    <map><from>A3</from> <to>❣</to></map>           <!-- 2763 -->
+    <map><from>A4</from> <to>❤</to></map>           <!-- 2764 -->
+    <map><from>A5</from> <to>❥</to></map>           <!-- 2765 -->
+    <map><from>A6</from> <to>❦</to></map>           <!-- 2766 -->
+    <map><from>A7</from> <to>❧</to></map>           <!-- 2767 -->
+    <map><from>A9</from> <to>♦</to></map>           <!-- 2666 -->
+    <map><from>AA</from> <to>♥</to></map>           <!-- 2665 -->
+    <map><from>AC</from> <to>①</to></map>           <!-- 2460 -->
+    <map><from>AD</from> <to>②</to></map>           <!-- 2461 -->
+    <map><from>AE</from> <to>③</to></map>           <!-- 2462 -->
+    <map><from>AF</from> <to>④</to></map>           <!-- 2463 -->
+    <map><from>B0</from> <to>⑤</to></map>           <!-- 2464 -->
+    <map><from>B1</from> <to>⑥</to></map>           <!-- 2465 -->
+    <map><from>B2</from> <to>⑦</to></map>           <!-- 2466 -->
+    <map><from>B3</from> <to>⑧</to></map>           <!-- 2467 -->
+    <map><from>B4</from> <to>⑨</to></map>           <!-- 2468 -->
+    <map><from>B5</from> <to>⑩</to></map>           <!-- 2469 -->
+    <map><from>B6</from> <to>❶</to></map>           <!-- 2776 -->
+    <map><from>B7</from> <to>❷</to></map>           <!-- 2777 -->
+    <map><from>B8</from> <to>❸</to></map>           <!-- 2778 -->
+    <map><from>B9</from> <to>❹</to></map>           <!-- 2779 -->
+    <map><from>BA</from> <to>❺</to></map>           <!-- 277A -->
+    <map><from>BB</from> <to>❻</to></map>           <!-- 277B -->
+    <map><from>BC</from> <to>❼</to></map>           <!-- 277C -->
+    <map><from>BD</from> <to>❽</to></map>           <!-- 277D -->
+    <map><from>BE</from> <to>❾</to></map>           <!-- 277E -->
+    <map><from>BF</from> <to>❿</to></map>           <!-- 277F -->
+    <map><from>C0</from> <to>➀</to></map>           <!-- 2780 -->
+    <map><from>C1</from> <to>➁</to></map>           <!-- 2781 -->
+    <map><from>C2</from> <to>➂</to></map>           <!-- 2782 -->
+    <map><from>C3</from> <to>➃</to></map>           <!-- 2783 -->
+    <map><from>C4</from> <to>➄</to></map>           <!-- 2784 -->
+    <map><from>C5</from> <to>➅</to></map>           <!-- 2785 -->
+    <map><from>C6</from> <to>➆</to></map>           <!-- 2786 -->
+    <map><from>C7</from> <to>➇</to></map>           <!-- 2787 -->
+    <map><from>C8</from> <to>➈</to></map>           <!-- 2788 -->
+    <map><from>C9</from> <to>➉</to></map>           <!-- 2789 -->
+    <map><from>CA</from> <to>➊</to></map>           <!-- 278A -->
+    <map><from>CB</from> <to>➋</to></map>           <!-- 278B -->
+    <map><from>CC</from> <to>➌</to></map>           <!-- 278C -->
+    <map><from>CD</from> <to>➍</to></map>           <!-- 278D -->
+    <map><from>CE</from> <to>➎</to></map>           <!-- 278E -->
+    <map><from>CF</from> <to>➏</to></map>           <!-- 278F -->
+    <map><from>D0</from> <to>➐</to></map>           <!-- 2790 -->
+    <map><from>D1</from> <to>➑</to></map>           <!-- 2791 -->
+    <map><from>D2</from> <to>➒</to></map>           <!-- 2792 -->
+    <map><from>D3</from> <to>➓</to></map>           <!-- 2793 -->
+    <map><from>D4</from> <to>➔</to></map>           <!-- 2794 -->
+    <map><from>D6</from> <to>↔</to></map>           <!-- 2194 -->
+    <map><from>D7</from> <to>↕</to></map>           <!-- 2195 -->
+    <map><from>D8</from> <to>➘</to></map>           <!-- 2798 -->
+    <map><from>D9</from> <to>➙</to></map>           <!-- 2799 -->
+    <map><from>DA</from> <to>➚</to></map>           <!-- 279A -->
+    <map><from>DB</from> <to>➛</to></map>           <!-- 279B -->
+    <map><from>DC</from> <to>➜</to></map>           <!-- 279C -->
+    <map><from>DD</from> <to>➝</to></map>           <!-- 279D -->
+    <map><from>DE</from> <to>➞</to></map>           <!-- 279E -->
+    <map><from>DF</from> <to>➟</to></map>           <!-- 279F -->
+    <map><from>E0</from> <to>➠</to></map>           <!-- 27A0 -->
+    <map><from>E1</from> <to>➡</to></map>           <!-- 27A1 -->
+    <map><from>E2</from> <to>➢</to></map>           <!-- 27A2 -->
+    <map><from>E3</from> <to>➣</to></map>           <!-- 27A3 -->
+    <map><from>E4</from> <to>➤</to></map>           <!-- 27A4 -->
+    <map><from>E5</from> <to>➥</to></map>           <!-- 27A5 -->
+    <map><from>E6</from> <to>➦</to></map>           <!-- 27A6 -->
+    <map><from>E7</from> <to>➧</to></map>           <!-- 27A7 -->
+    <map><from>E8</from> <to>➨</to></map>           <!-- 27A8 -->
+    <map><from>E9</from> <to>➩</to></map>           <!-- 27A9 -->
+    <map><from>EA</from> <to>➪</to></map>           <!-- 27AA -->
+    <map><from>EB</from> <to>➫</to></map>           <!-- 27AB -->
+    <map><from>EC</from> <to>➬</to></map>           <!-- 27AC -->
+    <map><from>ED</from> <to>➭</to></map>           <!-- 27AD -->
+    <map><from>EE</from> <to>➮</to></map>           <!-- 27AE -->
+    <map><from>EF</from> <to>➯</to></map>           <!-- 27AF -->
+    <map><from>F1</from> <to>➱</to></map>           <!-- 27B1 -->
+    <map><from>F2</from> <to>➲</to></map>           <!-- 27B2 -->
+    <map><from>F3</from> <to>➳</to></map>           <!-- 27B3 -->
+    <map><from>F4</from> <to>➴</to></map>           <!-- 27B4 -->
+    <map><from>F5</from> <to>➵</to></map>           <!-- 27B5 -->
+    <map><from>F6</from> <to>➶</to></map>           <!-- 27B6 -->
+    <map><from>F7</from> <to>➷</to></map>           <!-- 27B7 -->
+    <map><from>F8</from> <to>➸</to></map>           <!-- 27B8 -->
+    <map><from>F9</from> <to>➹</to></map>           <!-- 27B9 -->
+    <map><from>FA</from> <to>➺</to></map>           <!-- 27BA -->
+    <map><from>FB</from> <to>➻</to></map>           <!-- 27BB -->
+    <map><from>FC</from> <to>➼</to></map>           <!-- 27BC -->
+    <map><from>FD</from> <to>➽</to></map>           <!-- 27BD -->
+    <map><from>FE</from> <to>➾</to></map>           <!-- 27BE -->
+  </dings>
+  <greek> 
+    <map><from>alpha</from>      <to>α</to></map>   <!-- 3B1 -->
+    <map><from>beta</from>       <to>β</to></map>   <!-- 3B2 -->
+    <map><from>gamma</from>      <to>γ</to></map>   <!-- 3B3 -->
+    <map><from>delta</from>      <to>δ</to></map>   <!-- 3B4 -->
+    <map><from>varepsilon</from> <to>ε</to></map>   <!-- 3B5 -->
+    <map><from>zeta</from>       <to>ζ</to></map>   <!-- 3B6 -->
+    <map><from>eta</from>        <to>η</to></map>   <!-- 3B7 -->
+    <map><from>vartheta</from>   <to>θ</to></map>   <!-- 3B8 -->
+    <map><from>iota</from>       <to>ι</to></map>   <!-- 3B9 -->
+    <map><from>kappa</from>      <to>κ</to></map>   <!-- 3BA -->
+    <map><from>lambda</from>     <to>λ</to></map>   <!-- 3BB -->
+    <map><from>mu</from>         <to>μ</to></map>   <!-- 3BC -->
+    <map><from>nu</from>         <to>ν</to></map>   <!-- 3BD -->
+    <map><from>xi</from>         <to>ξ</to></map>   <!-- 3BE -->
+    <map><from>omicron</from>    <to>ο</to></map>   <!-- 3BF -->
+    <map><from>pi</from>         <to>π</to></map>   <!-- 3C0 -->
+    <map><from>varrho</from>     <to>ρ</to></map>   <!-- 3C1 -->
+    <map><from>varsigma</from>   <to>ς</to></map>   <!-- 3C2 -->
+    <map><from>sigma</from>      <to>σ</to></map>   <!-- 3C3 -->
+    <map><from>tau</from>        <to>τ</to></map>   <!-- 3C4 -->
+    <map><from>upsilon</from>    <to>υ</to></map>   <!-- 3C5 -->
+    <map><from>varphi</from>     <to>φ</to></map>   <!-- 3C6 -->
+    <map><from>chi</from>        <to>χ</to></map>   <!-- 3C7 -->
+    <map><from>psi</from>        <to>ψ</to></map>   <!-- 3C8 -->
+    <map><from>omega</from>      <to>ω</to></map>   <!-- 3C9 -->
+    <map><from>Alpha</from>      <to>Α</to></map>   <!-- 391 -->
+    <map><from>Beta</from>       <to>Β</to></map>   <!-- 392 -->
+    <map><from>Gamma</from>      <to>Γ</to></map>   <!-- 393 -->
+    <map><from>Delta</from>      <to>Δ</to></map>   <!-- 394 -->
+    <map><from>Epsilon</from>    <to>Ε</to></map>   <!-- 395 -->
+    <map><from>Zeta</from>       <to>Ζ</to></map>   <!-- 396 -->
+    <map><from>Eta</from>        <to>Η</to></map>   <!-- 397 -->
+    <map><from>Theta</from>      <to>Θ</to></map>   <!-- 398 -->
+    <map><from>Iota</from>       <to>Ι</to></map>   <!-- 399 -->
+    <map><from>Kappa</from>      <to>Κ</to></map>   <!-- 39A -->
+    <map><from>Lambda</from>     <to>Λ</to></map>   <!-- 39B -->
+    <map><from>Mu</from>         <to>Μ</to></map>   <!-- 39C -->
+    <map><from>Nu</from>         <to>Ν</to></map>   <!-- 39D -->
+    <map><from>Xi</from>         <to>Ξ</to></map>   <!-- 39E -->
+    <map><from>Omicron</from>    <to>Ο</to></map>   <!-- 39F -->
+    <map><from>Pi</from>         <to>Π</to></map>   <!-- 3A0 -->
+    <map><from>Rho</from>        <to>Ρ</to></map>   <!-- 3A1 -->
+    <map><from>Sigma</from>      <to>Σ</to></map>   <!-- 3A3 -->
+    <map><from>Tau</from>        <to>Τ</to></map>   <!-- 3A4 -->
+    <map><from>Upsilon</from>    <to>Υ</to></map>   <!-- 3A5 -->
+    <map><from>Phi</from>        <to>Φ</to></map>   <!-- 3A6 -->
+    <map><from>Chi</from>        <to>Χ</to></map>   <!-- 3A7 -->
+    <map><from>Psi</from>        <to>Ψ</to></map>   <!-- 3A8 -->
+    <map><from>Omega</from>      <to>Ω</to></map>   <!-- 3A9 -->
+  </greek>
+  <encode_exclude>
+    <char>"</char>     <!-- \textquotedbl -->
+    <char>#</char>     <!-- \texthash -->
+    <char>$</char>     <!-- \textdollar -->
+    <char>%</char>     <!-- \textpercent -->
+    <char>&amp;</char> <!-- \textampersand -->
+    <char>'</char>     <!-- \textquotesingle -->
+    <char>*</char>     <!-- \textasteriskcentered -->
+    <char>&lt;</char>  <!-- \textless -->
+    <char>=</char>     <!-- \textequals -->
+    <char>&gt;</char>  <!-- \textgreater -->
+    <char>\</char>     <!-- \textbackslash -->
+    <char>^</char>     <!-- \textasciicircum -->
+    <char>_</char>     <!-- \textunderscore -->
+    <char>`</char>     <!-- \textasciigrave -->
+    <char>g</char>     <!-- \textg -->
+    <char>{</char>     <!-- \textbraceleft -->
+    <char>|</char>     <!-- \textbar -->
+    <char>}</char>     <!-- \textbraceright -->
+    <char>~</char>     <!-- \textasciitilde -->
+    <char> </char>     <!-- \nobreakspace -->
+    <char>£</char>     <!-- \textsterling -->
+    <char>±</char>     <!-- \pm -->
+    <char>µ</char>     <!-- \mu -->
+    <char>¶</char>     <!-- \P -->
+  </encode_exclude>
+</texmap>

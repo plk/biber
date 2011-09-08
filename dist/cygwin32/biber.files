@@ -9,6 +9,7 @@
 ../../lib/Biber/Input/file/zoterordfxml.dcf;lib/Biber/Input/file/zoterordfxml.dcf
 ../../lib/Biber/Input/file/endnotexml.dcf;lib/Biber/Input/file/endnotexml.dcf
 ../../lib/Biber/Input/file/ris.dcf;lib/Biber/Input/file/ris.dcf
+../../lib/Biber/LaTeX/Recode/data.xml;lib/Biber/LaTeX/Recode/data.xml
 ../../data/bcf.xsl;lib/Biber/bcf.xsl
 ../../data/latinkeys.txt;lib/Unicode/Collate/latinkeys.txt
 /usr/lib/perl5/5.10/i686-cygwin/Unicode/Collate/Locale;lib/Unicode/Collate/Locale
