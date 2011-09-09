@@ -40,12 +40,14 @@ doc/biber.tex
 doc/biber.pdf
 doc/biber-auctex.png
 doc/biber-texworks.png
+data/schemata/texmap.rnc
 data/schemata/bcf.rnc
 data/schemata/bcf.rng
 data/schemata/dcf.rnc
 data/schemata/dcf.rng
 data/schemata/biblatexml.rnc
 data/schemata/biblatexml.rng
+data/texmap.xsl
 data/bcf.xsl
 data/dcf.xsl
 data/latinkeys.txt

@@ -104,7 +104,7 @@ sub latex_decode {
         $text =~ s/\\not\\($NEG_SYMB_RE)/$NEGATEDSYMBOLS{$1}/ge;
         $text =~ s/\\textsuperscript{($SUPER_RE)}/$SUPERSCRIPTS{$1}/ge;
         $text =~ s/\\textsuperscript{\\($SUPERCMD_RE)}/$CMDSUPERSCRIPTS{$1}/ge;
-        $text =~ s/\\dings{([2-9AF][0-9A-F])}/$DINGS{$1}/ge;
+        $text =~ s/\\ding{([2-9AF][0-9A-F])}/$DINGS{$1}/ge;
     }
 
     $text =~ s/(\\[a-zA-Z]+)\\(\s+)/$1\{\}$2/g;    # \foo\ bar -> \foo{} bar
@@ -156,7 +156,7 @@ Converts LaTeX character macros to UTF-8
 =cut
 
 sub latex_encode {
-  my $text = NFD(shift);
+  my $text = shift;
   my %opts = @_;
   my $scheme    = exists $opts{scheme} ? $opts{scheme} : $DefaultScheme_e;
   croak "invalid scheme name '$scheme'"
@@ -175,14 +175,17 @@ sub latex_encode {
   my ($WORDMAC_R, $WORDMAC_RE_R) = _get_mac_r($scheme);
 
   if ( $scheme eq 'full' ) {
-    $text =~ s/($NEG_SYMB_RE_R)/"\\not\\" . $NEGATEDSYMBOLS_R{$1}/ge;
+    $text =~ s/($NEG_SYMB_RE_R)/"{\$\\not\\" . $NEGATEDSYMBOLS_R{$1} . '$}'/ge;
     $text =~ s/($SUPER_RE_R)/"\\textsuperscript{" . $SUPERSCRIPTS_R{$1} . "}"/ge;
     $text =~ s/($SUPERCMD_RE_R)/"\\textsuperscript{\\" . $CMDSUPERSCRIPTS_R{$1} . "}"/ge;
-    $text =~ s/($DINGS_RE_R)/"\\dings{" . $DINGS_R{$1} . "}"/ge;
+    $text =~ s/($DINGS_RE_R)/"\\ding{" . $DINGS_R{$1} . "}"/ge;
   }
 
-  # Accents
+  # Switch to NFD form for accents and diacritics. We need to be able to look for diacritics
+  # etc. as separate characters which is impossible in NFC form.
+  $text = NFD($text);
 
+  # Accents
   # special case such as "i\x{304}" -> '\={\i}' - "i" needs the dot removing for accents
   $text =~ s/i($ACCENTS_RE_R)/"\\" . $ACCENTS_R{$1} . "{\\i}"/ge;
 
@@ -205,6 +208,9 @@ sub latex_encode {
           }{
             "\\" . $DIAC_R{$2} . _get_diac_last_r($1,$2)
           }gex;
+
+  # Switch back to NFC form for symbols
+  $text = NFC($text);
 
   # General macros (excluding special encoding excludes)
   $text =~ s/($WORDMAC_RE_R)/"{\\" . $WORDMAC_R->{$1} . '}'/ge;

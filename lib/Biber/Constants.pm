@@ -1658,6 +1658,10 @@ define_alias('lutf8'          => 'UTF-8'); # Luatex
 define_alias('utf8x'          => 'UTF-8'); # UCS (old)
 
 # Defines the scope of each of the BibLaTeX configuration options
+#
+# PRESORT is not a "real" biblatex option passed by biblatex. It is defined
+# by the biblatex \DeclarePresort macro and is stored in here as it
+# can be global/per-type or per-entry and therefore it's natural to store it here.
 our %CONFIG_SCOPE_BIBLATEX = (
   alphaothers        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   controlversion     => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
@@ -1714,7 +1718,7 @@ our %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS =  (
   minalphanames => {OUTPUT => 0},
   maxnames      => {OUTPUT => ['maxcitenames', 'maxbibnames'], INPUT  => ['maxcitenames', 'maxbibnames']},
   minnames      => {OUTPUT => ['mincitenames', 'minbibnames'], INPUT  => ['mincitenames', 'minbibnames']},
-  presort       => {OUTPUT => 1},
+  presort       => {OUTPUT => 0},
   skipbib       => {OUTPUT => 1},
   skiplab       => {OUTPUT => 1},
   skiplos       => {OUTPUT => 1},

@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 20;
+use Test::More tests => 22;
 use Biber;
 use Biber::Entry::Name;
 use Biber::Entry::Names;
@@ -53,7 +53,7 @@ Biber::Config->setoption('bblencoding', 'UTF-8');
 is( normalise_string_underscore('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
     $§+ :-)   ', 0), 'Şecöka_Nìño', 'normalise_string_underscore 2' );
 
-is( normalise_string_underscore('{Foo de Bar, Graf Ludwig}', 1), 'Foo_de_Bar_Graf_Ludwig', 'normalise_string_underscore 2');
+is( normalise_string_underscore('{Foo de Bar, Graf Ludwig}', 1), 'Foo_de_Bar_Graf_Ludwig', 'normalise_string_underscore 3');
 
 # LaTeX decoding
 is( latex_decode('Mu\d{h}ammad ibn M\=us\=a al-Khw\=arizm\={\i} \r{a}'), 'Muḥammad ibn Mūsā al-Khwārizmī å', 'latex decode 1');
@@ -65,6 +65,8 @@ is( latex_decode('\textless\textampersand'), '<&', 'Latex decode 4'); # checking
 is( latex_encode('Muḥammad ibn Mūsā al-Khwārizmī'), 'Mu\d{h}ammad ibn M\={u}s\={a} al-Khw\={a}rizm\={\i}', 'latex encode 1');
 is( latex_encode('α'), 'α', 'latex encode 2'); # no greek encoding by default
 is( latex_encode('α', scheme => 'full'), '{$\alpha$}', 'latex encode 3'); # greek encoding with "full"
+is( latex_encode('µ', scheme => 'full'), '{$\mu$}', 'latex encode 3'); # Testing symbols
+is( latex_encode('≄', scheme => 'full'), '{$\not\simeq$}', 'latex encode 4'); # Testing negated symbols
 
 my $names = bless {namelist => [
     (bless { namestring => '\"Askdjksdj, Bsadk Cklsjd', nameinitstring => '\"Askdjksdj, BC' }, 'Biber::Entry::Name'),

@@ -18,6 +18,9 @@
 
 \MakeAutoQuote{«}{»}
 
+\gdef\biberversion{0.9.6}    % BIBER VERSION
+\gdef\biblatexversion{1.7}   % BIBLATEX VERSION
+
 % Set up tikz things
 
 \usetikzlibrary{shapes.geometric}
@@ -41,7 +44,7 @@
   url={http://biblatex-biber.sourceforge.net},
   author={François Charette, Philip Kime},
   email={firmicus@ankabut.net, Philip@kime.org.uk},
-  revision={biber 0.9.6 (biblatex 1.6)},
+  revision={biber \biberversion\ (biblatex \biblatexversion)},
   date={\today}}
 
 \hypersetup{%
@@ -1144,9 +1147,10 @@ set to an ASCII encoding («\verb+ascii+» or «\verb+x-ascii+») and
 «\verb+--bibencoding|-e+» is not ASCII, \verb+biber+ will automatically set
 \verb+--bblsafechars+.
 
-See also the \verb+biber --help+ output for the
-\verb+--bblsafecharsset+ option which can customise the set of
-conversion characters to use.
+See also the \verb+biber --help+ output for the \verb+--bblsafecharsset+
+and \linebreak[4]\verb+--decodecharsset+ options which can customise the set
+of conversion rules to use. The characters and macros which \verb+biber+
+maps during encoding and decoding are documented\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/\biberversion/documentation/utf8-macro-map.html}}.
 \bigskip
 \subsubsection{Examples}
 
@@ -1314,7 +1318,7 @@ to supported data sources. The drivers are responsible for mapping
 driver entry types and fields to the \verb+biblatex+ model. This is
 aided by a driver configuration file (\verb+.dcf+). The information in
 this file for each driver can be found in the driver documentation folder on
-SourceForge\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/documentation/drivers}}. This
+SourceForge\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/\biberversion/documentation/drivers}}. This
 file shows you which handlers the driver uses for different fields and
 what certain entry types and fields are aliased to in the
 \verb+biblatex+ data model. This is not fantastically useful to know

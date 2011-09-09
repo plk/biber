@@ -139,9 +139,9 @@ $DIAC_RE_EXTRA = qr{$DIAC_RE_EXTRA|$DIAC_RE_BASE};
 our $DIAC_RE_EXTRA_R = join('|', sort {length $b <=> length $a} keys %DIACRITICSEXTRA_R);
 $DIAC_RE_EXTRA_R = qr{$DIAC_RE_EXTRA_R|$DIAC_RE_BASE_R};
 
-our $NEG_SYMB_RE = join('|', sort keys %NEGATEDSYMBOLS);
+our $NEG_SYMB_RE = join('|', keys %NEGATEDSYMBOLS);
 $NEG_SYMB_RE    = qr{$NEG_SYMB_RE};
-our $NEG_SYMB_RE_R = join('|', sort keys %NEGATEDSYMBOLS_R);
+our $NEG_SYMB_RE_R = join('|', keys %NEGATEDSYMBOLS_R);
 $NEG_SYMB_RE_R    = qr{$NEG_SYMB_RE_R};
 
 our $SUPER_RE;

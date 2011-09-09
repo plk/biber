@@ -1,0 +1,56 @@
+start =
+  element texmap {
+    element accents {
+      map+
+    },
+    element wordmacros {
+      attribute set { "base" | "extra" | "full" }?,
+      map+
+    }+,
+    element diacritics {
+      attribute set { "base" | "extra" | "full" }?,
+      map+
+    }+,
+    element punctuation {
+      attribute set { "base" | "extra" | "full" }?,
+      map+
+    }+,
+    element symbols {
+      attribute set { "base" | "extra" | "full" }?,
+      map+
+    }+,
+    element negatedsymbols {
+      attribute set { "base" | "extra" | "full" }?,
+      map+
+    }+,
+    element superscripts {
+      attribute set { "base" | "extra" | "full" }?,
+      map+
+    }+,
+    element cmdsuperscripts {
+      attribute set { "base" | "extra" | "full" }?,
+      map+
+    }+,
+    element dings {
+      attribute set { "base" | "extra" | "full" }?,
+      map+
+    }+,
+    element greek {
+      attribute set { "base" | "extra" | "full" }?,
+      map+
+    }+,
+    element encode_exclude {
+      element char { text }+
+    }
+  }
+
+
+map = element map {
+  element from {
+    attribute preferred {"1"}?,
+    text
+  },
+  element to {
+    attribute hex { text },
+    text }
+}

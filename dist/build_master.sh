@@ -182,20 +182,28 @@ fi
 
 # Doc
 scp $DOCDIR/biber.pdf philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/documentation/biber.pdf
+
 # Changes file
 scp $BASE/Changes philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/Changes
+
 # Driver control file docs
 find $DRIVERDIR -name \*.dcf | xargs -I{} cp {} $DIR
 for dcf in $DIR/*.dcf
 do
-$BINDIR/make-pretty-dcfs.pl $dcf $XSLDIR/dcf.xsl
+$BINDIR/xsl-transform.pl $dcf $XSLDIR/dcf.xsl
 scp $dcf.html philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/documentation/drivers/
 \rm -f $dcf $dcf.html
 done
 
+# Unicode <-> LaTeX macro mapping doc
+$BINDIR/xsl-transform.pl $BASE/lib/Biber/LaTeX/Recode/data.xml $XSLDIR/texmap.xsl
+scp $BASE/lib/Biber/LaTeX/Recode/data.xml.html philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/documentation/utf8-macro-map.html
+\rm -f $BASE/lib/Biber/LaTeX/Recode/data.xml.html
+
+# source
 cd $BASE
 ./Build dist
 scp $BASE/biblatex-biber-*.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/biblatex-biber.tar.gz
-rm $BASE/biblatex-biber-*.tar.gz
+\rm -f $BASE/biblatex-biber-*.tar.gz
 
 cd $BASE
