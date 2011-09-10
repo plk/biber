@@ -1800,7 +1800,7 @@ sub create_uniquename_info {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
     next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
-    if (my $un = Biber::Config->getblxoption('uniquename', $bee)) {
+    if (my $un = Biber::Config->getblxoption('uniquename', $bee, $citekey)) {
       $logger->trace("Generating uniquename information for '$citekey'");
 
       if (my $lname = $be->get_field('labelnamename')) {
@@ -1971,7 +1971,7 @@ sub generate_uniquename {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
     next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
-    if (my $un = Biber::Config->getblxoption('uniquename', $bee)) {
+    if (my $un = Biber::Config->getblxoption('uniquename', $bee, $citekey)) {
       $logger->trace("Setting uniquename for '$citekey'");
 
       if (my $lname = $be->get_field('labelnamename')) {

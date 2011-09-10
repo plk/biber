@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 183;
+use Test::More tests => 184;
 
 use Biber;
 use Biber::Utils;
@@ -43,6 +43,7 @@ is($bibentries->entry('un2')->get_field($bibentries->entry('un2')->get_field('la
 is($bibentries->entry('un5')->get_field($bibentries->entry('un5')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '2', 'Uniquename requiring full name expansion - 3');
 is($bibentries->entry('un3')->get_field($bibentries->entry('un2')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '1', 'Uniquename requiring initials name expansion - 1');
 is($bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_field('labelnamename'))->nth_name(1)->get_uniquename, '1', 'Uniquename requiring initials name expansion - 2');
+ok(is_undef($bibentries->entry('un4a')->get_field($bibentries->entry('un4a')->get_field('labelnamename'))->nth_name(1)->get_uniquename), 'per-entry uniquename');
 is($bibentries->entry('un6')->get_field('namehash'), 'f8169a157f8d9209961157b8d23902db', 'Namehash and fullhash - 1');
 is($bibentries->entry('un6')->get_field('fullhash'), 'f8169a157f8d9209961157b8d23902db', 'Namehash and fullhash - 2');
 is($bibentries->entry('un7')->get_field('namehash'), 'b33fbd3f3349d1536dbcc14664f2cbbd', 'Fullnamshash ignores SHORT* names - 1');
