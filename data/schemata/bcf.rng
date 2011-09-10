@@ -96,10 +96,10 @@
             <ref name="maxalphanames"/>
           </optional>
           <optional>
-            <ref name="maxcitenames"/>
+            <ref name="maxbibnames"/>
           </optional>
           <optional>
-            <ref name="maxbibnames"/>
+            <ref name="maxcitenames"/>
           </optional>
           <optional>
             <ref name="maxitems"/>
