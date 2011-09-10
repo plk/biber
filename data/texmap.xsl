@@ -30,8 +30,12 @@
           .macro, .hex {
             font-family: "Courier New", Courier, monospace ;
           }
+          @font-face {
+            font-family: "Cyberbit";
+            src: url(http://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/testfiles/Cyberbit.ttf) format("truetype");
+          }
           .utf8 {
-            font-family: Monaco, "Lucida Sans Unicode";
+            font-family: Cyberbit;
           }
           .extra {
             background-color: #FFFFEE;
