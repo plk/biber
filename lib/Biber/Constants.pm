@@ -25,7 +25,7 @@ our @EXPORT = qw{
 
 # Version of biblatex which this release works with. Matched against version
 # passed in control file
-Readonly::Scalar our $BIBLATEX_VERSION => '1.6';
+Readonly::Scalar our $BIBLATEX_VERSION => '1.7';
 
 # Global flags needed for sorting
 our $BIBER_SORT_FINAL = 0;
