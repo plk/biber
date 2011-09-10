@@ -12,6 +12,7 @@
 \usepackage{fixfoot}
 \usepackage{color}
 \usepackage{listings}
+\usepackage[retainmissing]{MnSymbol}
 \setmainfont[Ligatures=TeX]{TeXGyrePagella}
 \setsansfont[Ligatures=TeX]{TexGyreHeros}
 \setmonofont[Ligatures=NoCommon]{TeXGyreCursor}
@@ -122,6 +123,7 @@ matrix for the recent versions.
 \toprule
 \verb+biber+ version & \verb+biblatex+ version\\
 \midrule
+0.9.6 & 1.7x\\
 0.9.5 & 1.6x\\
 0.9.4 & 1.5x\\
 0.9.3 & 1.5x\\
@@ -303,8 +305,58 @@ biber test
 \end{verbatim}
 
 \subsection{Options and config file}
-\verb+biber+ sets its options using the following resource 
-chain which is given in decreasing precedence order:\\[2ex]
+\verb+biblatex+ options which \verb+biber+ needs to know about are passed
+via the \verb+.bcf+ file. See Table \ref{tab:bltxopts} for the \verb+biblatex+
+options which \verb+biber+ uses and also for the scopes which are supported
+for each option. \verb+biber+ also has its own options which are set using
+the following resource chain, given in decreasing precedence order:\\[2ex]
+
+\begin{table}
+\begin{center}
+\small
+\begin{tabular}{lllll}
+\toprule
+\verb+biblatex+ option & Global & Per-type & Per-entry\\
+\midrule
+alphaothers        & \checkmark & \checkmark &  \\
+dataonly           &   &   & \checkmark\\
+inheritance        & \checkmark &   &  \\
+labelalpha         & \checkmark & \checkmark &  \\
+labelalphatemplate & \checkmark & \checkmark &  \\
+labelnamespec      & \checkmark & \checkmark &  \\
+labelnumber        & \checkmark & \checkmark &  \\
+labelyear          & \checkmark & \checkmark &  \\
+labelyearspec      & \checkmark & \checkmark &  \\
+maxalphanames      & \checkmark & \checkmark & \checkmark\\
+maxbibnames        & \checkmark & \checkmark & \checkmark\\
+maxcitenames       & \checkmark & \checkmark & \checkmark\\
+maxitems           & \checkmark & \checkmark & \checkmark\\
+minalphanames      & \checkmark & \checkmark & \checkmark\\
+minbibnames        & \checkmark & \checkmark & \checkmark\\
+mincitenames       & \checkmark & \checkmark & \checkmark\\
+minitems           & \checkmark & \checkmark & \checkmark\\
+presort            & \checkmark & \checkmark & \checkmark\\
+singletitle        & \checkmark & \checkmark &  \\
+skipbib            &   & \checkmark & \checkmark\\
+skiplab            &   & \checkmark & \checkmark\\
+skiplos            &   & \checkmark & \checkmark\\
+sortalphaothers    & \checkmark & \checkmark &  \\
+sortexclusion      &   & \checkmark &  \\
+sorting            & \checkmark &   &  \\
+sortlos            & \checkmark &   &  \\
+structure          & \checkmark &   &  \\
+uniquelist         & \checkmark & \checkmark & \checkmark\\
+uniquename         & \checkmark & \checkmark & \checkmark\\
+useauthor          & \checkmark & \checkmark & \checkmark\\
+useeditor          & \checkmark & \checkmark & \checkmark\\
+useprefix          & \checkmark & \checkmark & \checkmark\\
+usetranslator      & \checkmark & \checkmark & \checkmark\\
+\bottomrule
+\end{tabular}
+\end{center}
+\caption{\texttt{biblatex} options which \texttt{biber} uses}
+\label{tab:bltxopts}
+\end{table}
 
 \noindent command line options $\rightarrow$\\
 \hspace*{1em}\verb+biber.conf+ file $\rightarrow$\\
@@ -795,7 +847,7 @@ field types all begin with the string «\verb+type_+», see Table
 \begin{table}
 \begin{center}
 \small
-\begin{tabular}{lllll}
+\begin{tabular}{ll}
 \toprule
 Alias & Fields\\
 \midrule
