@@ -194,7 +194,6 @@ sub makenameid {
 
 sub latex_recode_output {
   my $string = shift;
-  $logger->info('Converting UTF-8 to TeX macros on output to .bbl');
   return Biber::LaTeX::Recode::latex_encode($string);
 };
 

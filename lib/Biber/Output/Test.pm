@@ -292,6 +292,7 @@ sub output {
   my $target = $self->{output_target};
 
   $logger->info("Writing output with encoding '" . Biber::Config->getoption('bblencoding') . "'");
+  $logger->info('Converting UTF-8 to TeX macros on output to .bbl') if Biber::Config->getoption('bblsafechars');
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     my $section = $self->get_output_section($secnum);

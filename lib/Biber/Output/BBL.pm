@@ -385,6 +385,7 @@ sub output {
   $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
 
   $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('bblencoding') . "'");
+  $logger->info('Converting UTF-8 to TeX macros on output to .bbl') if Biber::Config->getoption('bblsafechars');
 
   print $target $data->{HEAD} or $logger->logdie("Failure to write head to $target_string: $!");
 
