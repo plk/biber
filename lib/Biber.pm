@@ -22,6 +22,7 @@ use Biber::Entry;
 use Biber::Entry::Name;
 use Biber::Sections;
 use Biber::Section;
+use Biber::LaTeX::Recode;
 use Biber::Section::List;
 use Biber::Structure;
 use Biber::Utils;
@@ -69,6 +70,10 @@ sub new {
   # Add a reference to a global temp dir we might use for various things
   $self->{TEMPDIR} = File::Temp->newdir();
 
+  # Initialise recoding schemes
+  Biber::LaTeX::Recode->init_schemes(Biber::Config->getoption('decodecharsset'),
+                                     Biber::Config->getoption('bblsafecharsset'));
+
   return $self;
 }
 
@@ -115,6 +120,30 @@ sub biber_tempdir {
 sub sections {
   my $self = shift;
   return $self->{sections};
+}
+
+
+=head2 get_rawkeys
+
+    Returns an array ref of raw datasource keys from any datasource
+
+=cut
+
+sub get_rawkeys {
+  my $self = shift;
+  return $self->{rawkeys};
+}
+
+=head2 add_rawkey
+
+    Adds a raw datasource key to the global list of all datasource keys
+
+=cut
+
+sub add_rawkey {
+  my ($self, $key) = @_;
+  push @{$self->{rawkeys}}, $key;
+  return;
 }
 
 
@@ -755,6 +784,10 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 =cut
 
 sub process_setup {
+  my $self = shift;
+  # reset global datasource key cache
+  $self->{rawkeys} = [];
+
   # Break structure information up into more processing-friendly formats
   # for use in verification checks later
   # This has to be here as opposed to in parse_control() so that it can pick
@@ -2589,7 +2622,7 @@ sub sort_list {
 
 sub prepare {
   my $self = shift;
-  $self->process_setup;                # Place to put global pre-processing things
+  $self->process_setup;                  # Place to put global pre-processing things
   foreach my $section (@{$self->sections->get_sections}) {
     # shortcut - skip sections that don't have any keys
     next unless $section->get_citekeys or $section->is_allkeys;
@@ -2789,8 +2822,6 @@ sub fetch_data {
 
   $logger->debug("Citekeys for section '$secnum' after fetching data: " . join(', ', $section->get_citekeys));
 
-  # Reset any cache of bibtex data
-  $Biber::Input::file::bibtex::cache->{data} = undef;
   return;
 }
 
@@ -2906,9 +2937,7 @@ sub create_output_misc {
     $pa = join("%\n", @$pa);
     # Decode UTF-8 -> LaTeX macros if asked to
     if (Biber::Config->getoption('bblsafechars')) {
-      require Biber::LaTeX::Recode;
-      $pa = Biber::LaTeX::Recode::latex_encode($pa,
-                                               scheme => Biber::Config->getoption('bblsafecharsset'));
+      $pa = Biber::LaTeX::Recode::latex_encode($pa);
     }
     $output_obj->add_output_head("\\preamble{%\n$pa%\n}\n\n");
   }

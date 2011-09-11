@@ -55,18 +55,19 @@ is( normalise_string_underscore('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
 
 is( normalise_string_underscore('{Foo de Bar, Graf Ludwig}', 1), 'Foo_de_Bar_Graf_Ludwig', 'normalise_string_underscore 3');
 
-# LaTeX decoding
+# LaTeX decoding/encoding
 is( latex_decode('Mu\d{h}ammad ibn M\=us\=a al-Khw\=arizm\={\i} \r{a}'), 'Muḥammad ibn Mūsā al-Khwārizmī å', 'latex decode 1');
 is( latex_decode('\alpha'), '\alpha', 'latex decode 2'); # no greek decoding by default
-is( latex_decode('\alpha', scheme => 'full'), 'α', 'Latex decode 3'); # greek decoding with "full"
-is( latex_decode('\textless\textampersand'), '<&', 'Latex decode 4'); # checking XML encoding bits
-
-# LaTeX encoding
+is( latex_decode('\textless\textampersand'), '<&', 'Latex decode 3'); # checking XML encoding bits
 is( latex_encode('Muḥammad ibn Mūsā al-Khwārizmī'), 'Mu\d{h}ammad ibn M\={u}s\={a} al-Khw\={a}rizm\={\i}', 'latex encode 1');
-is( latex_encode('α'), 'α', 'latex encode 2'); # no greek encoding by default
-is( latex_encode('α', scheme => 'full'), '{$\alpha$}', 'latex encode 3'); # greek encoding with "full"
-is( latex_encode('µ', scheme => 'full'), '{$\mu$}', 'latex encode 3'); # Testing symbols
-is( latex_encode('≄', scheme => 'full'), '{$\not\simeq$}', 'latex encode 4'); # Testing negated symbols
+is( latex_encode('α'), 'α', 'latex encode 1'); # no greek encoding by default
+
+Biber::LaTeX::Recode->init_schemes('full', 'full'); # Need to do this to reset
+
+is( latex_decode('\alpha'), 'α', 'Latex decode 4'); # greek decoding with "full"
+is( latex_encode('α'), '{$\alpha$}', 'latex encode 2'); # greek encoding with "full"
+is( latex_encode('µ'), '{$\mu$}', 'latex encode 3'); # Testing symbols
+is( latex_encode('≄'), '{$\not\simeq$}', 'latex encode 4'); # Testing negated symbols
 
 my $names = bless {namelist => [
     (bless { namestring => '\"Askdjksdj, Bsadk Cklsjd', nameinitstring => '\"Askdjksdj, BC' }, 'Biber::Entry::Name'),

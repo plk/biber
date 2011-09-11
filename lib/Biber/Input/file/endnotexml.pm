@@ -115,6 +115,15 @@ sub extract_entries {
         next;
       }
 
+      # If we've already seen this key, ignore it and warn
+      if  (first {$_ eq $entry->findvalue('./rec-number')} @{$biber->get_rawkeys}) {
+        $logger->warn("Duplicate entry key: '". $entry->findvalue('./rec-number') . "' in file '$filename', skipping ...");
+        next;
+      }
+      else {
+        $biber->add_rawkey($entry->findvalue('./rec-number'));
+      }
+
       my $dbdid = $entry->findvalue('./foreign-keys/key/@dbd-id');
       my $key = $entry->findvalue('./rec-number');
 
@@ -150,10 +159,10 @@ sub extract_entries {
         my $entry;
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
-          $logger->warn("Found more than one entry for key '$wanted_key' in '$dbid:$num' - using the first one!");
+          $logger->warn("Found more than one entry for key '$wanted_key' in '$dbid:$num' - using the last one!");
           $biber->{warnings}++;
         }
-        $entry = $entries[0];
+        $entry = $entries[$#entries];
 
         $logger->debug("Found key '$wanted_key' in Endnote XML file '$filename'");
         $logger->debug('Parsing Endnote XML entry object ' . $entry->nodePath);

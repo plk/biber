@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?oxygen RNGSchema="../../../../data/schemata/texmap.rnc" type="compact"?>
+<?oxygen RNGSchema="../../../data/schemata/texmap.rnc" type="compact"?>
 <?xml-stylesheet type="text/xsl" href="../../../../data/texmap.xsl"?>
 <texmap>
-  <accents>
+  <accents set="base">
     <map><from>`</from><to hex="300">̀</to></map>
     <map><from>'</from><to hex="301">́</to></map>
     <map><from>^</from><to hex="302">̂</to></map>
@@ -11,7 +11,7 @@
     <map><from>.</from><to hex="307">̇</to></map>
     <map><from>"</from><to hex="308">̈</to></map>
   </accents>
- <wordmacros set="base">
+  <wordmacros set="base">
     <map><from>textquotedbl</from>                     <to hex="22">"</to></map>
     <map><from>texthash</from>                         <to hex="23">#</to></map>
     <map><from>textdollar</from>                       <to hex="24">$</to></map>
@@ -99,8 +99,6 @@
     <map><from>ng</from>                               <to hex="14B">ŋ</to></map>
     <map><from>OE</from>                               <to hex="152">Œ</to></map>
     <map><from>oe</from>                               <to hex="153">œ</to></map>
- </wordmacros>
- <wordmacros set="extra">
     <map><from>textTbar</from>                         <to hex="166">Ŧ</to></map>
     <map><from preferred="1">textTstroke</from>        <to hex="166">Ŧ</to></map>
     <map><from>texttbar</from>                         <to hex="167">ŧ</to></map>
@@ -254,20 +252,18 @@
     <map><from>textlengthmark</from>                   <to hex="2D0">ː</to></map>
  </wordmacros>
  <diacritics set="base">
-    <map><from>r</from> <to hex="30A">̊</to></map>
-    <map><from>H</from> <to hex="30B">̋</to></map>
-    <map><from>u</from> <to hex="306">̆</to></map>
-    <map><from>v</from> <to hex="30C">̌</to></map>
-    <map><from>G</from> <to hex="30F">̏</to></map>
-    <map><from>M</from> <to hex="322">̢</to></map>
-    <map><from>d</from> <to hex="323">̣</to></map>
-    <map><from>c</from> <to hex="327">̧</to></map>
-    <map><from>k</from> <to hex="328">̨</to></map>
-    <map><from>b</from> <to hex="331">̱</to></map>
-    <map><from>B</from> <to hex="335">̵</to></map>
-    <map><from>t</from> <to hex="311">̑</to></map>
- </diacritics>
- <diacritics set="extra">
+    <map><from>r</from>                          <to hex="30A">̊</to></map>
+    <map><from>H</from>                          <to hex="30B">̋</to></map>
+    <map><from>u</from>                          <to hex="306">̆</to></map>
+    <map><from>v</from>                          <to hex="30C">̌</to></map>
+    <map><from>G</from>                          <to hex="30F">̏</to></map>
+    <map><from>M</from>                          <to hex="322">̢</to></map>
+    <map><from>d</from>                          <to hex="323">̣</to></map>
+    <map><from>c</from>                          <to hex="327">̧</to></map>
+    <map><from>k</from>                          <to hex="328">̨</to></map>
+    <map><from>b</from>                          <to hex="331">̱</to></map>
+    <map><from>B</from>                          <to hex="335">̵</to></map>
+    <map><from>t</from>                          <to hex="311">̑</to></map>
     <map><from>textvbaraccent</from>             <to hex="30D">̍</to></map>
     <map><from>textdoublevbaraccent</from>       <to hex="30E">̎</to></map>
     <map><from>textdotbreve</from>               <to hex="310">̐</to></map>
@@ -333,7 +329,7 @@
     <map><from>texttoptiebar</from>              <to hex="361">͡</to></map>
     <map><from>sliding</from>                    <to hex="362">͢</to></map>
  </diacritics>
- <punctuation>
+ <punctuation set="full">
     <map><from>textendash</from>         <to hex="2013">–</to></map>
     <map><from>textemdash</from>         <to hex="2014">—</to></map>
     <map><from>textquoteleft</from>      <to hex="2018">‘</to></map>
@@ -356,7 +352,7 @@
     <map><from>langle</from>             <to hex="27E8">⟨</to></map>
     <map><from>rangle</from>             <to hex="27E9">⟩</to></map>
  </punctuation>
- <symbols>
+ <symbols set ="full">
     <map><from>textdiv</from>             <to hex="F7">÷</to></map>
     <map><from preferred="1">div</from>   <to hex="F7">÷</to></map>
     <map><from>texttimes</from>           <to hex="D7">×</to></map>
@@ -572,7 +568,7 @@
     <map><from>tone2</from>               <to hex="2E8">˨</to></map>
     <map><from>tone1</from>               <to hex="2E9">˩</to></map>
  </symbols>
- <negatedsymbols>
+ <negatedsymbols set="full">
     <map><from>asymp</from>       <to hex="226D">≭</to></map>
     <map><from>lesssim</from>     <to hex="2274">≴</to></map>
     <map><from>gtrsim</from>      <to hex="2275">≵</to></map>
@@ -587,7 +583,7 @@
     <map><from>sqsubseteq</from>  <to hex="22E2">⋢</to></map>
     <map><from>sqsupseteq</from>  <to hex="22E3">⋣</to></map>
  </negatedsymbols>
- <superscripts>
+ <superscripts set="full">
     <map><from>0</from>  <to hex="2070">⁰</to></map>
     <map><from>i</from>  <to hex="2071">ⁱ</to></map>
     <map><from>4</from>  <to hex="2074">⁴</to></map>
@@ -609,13 +605,13 @@
     <map><from>w</from>  <to hex="2B7">ʷ</to></map>
     <map><from>y</from>  <to hex="2B8">ʸ</to></map>
  </superscripts>
- <cmdsuperscripts>
+ <cmdsuperscripts set="full">
     <map><from>texthth</from>        <to hex="2B1">ʱ</to></map>
     <map><from>textturnr</from>      <to hex="2B4">ʴ</to></map>
     <map><from>textturnrrtail</from> <to hex="2B5">ʵ</to></map>
     <map><from>textinvscr</from>     <to hex="2B6">ʶ</to></map>
  </cmdsuperscripts>
- <dings>
+ <dings set="full">
     <map><from>21</from> <to hex="2701">✁</to></map>
     <map><from>22</from> <to hex="2702">✂</to></map>
     <map><from>23</from> <to hex="2703">✃</to></map>
@@ -801,7 +797,7 @@
     <map><from>FD</from> <to hex="27BD">➽</to></map>
     <map><from>FE</from> <to hex="27BE">➾</to></map>
   </dings>
-  <greek> 
+  <greek set="full">
     <map><from>alpha</from>      <to hex="3B1">α</to></map>
     <map><from>beta</from>       <to hex="3B2">β</to></map>
     <map><from>gamma</from>      <to hex="3B3">γ</to></map>

@@ -195,9 +195,7 @@ sub makenameid {
 sub latex_recode_output {
   my $string = shift;
   $logger->info('Converting UTF-8 to TeX macros on output to .bbl');
-  require Biber::LaTeX::Recode;
-  return Biber::LaTeX::Recode::latex_encode($string,
-                                            scheme => Biber::Config->getoption('bblsafecharsset'));
+  return Biber::LaTeX::Recode::latex_encode($string);
 };
 
 =head2 strip_nosort

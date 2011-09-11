@@ -746,6 +746,9 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 
 # Biber options
 Biber::Config->setoption('bblencoding', 'latin1');
+# If you change the encoding options, you have to re-read the T::B data from the datasource
+# This won't happen unless you invalidate the T::B cache.
+Biber::Input::file::bibtex->init_cache;
 
 # Now generate the information
 $biber->prepare;

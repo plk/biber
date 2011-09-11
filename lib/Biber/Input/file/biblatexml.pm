@@ -119,6 +119,16 @@ sub extract_entries {
         $biber->{warnings}++;
         next;
       }
+
+      # If we've already seen this key, ignore it and warn
+      if  (first {$_ eq $entry->getAttribute('id')} @{$biber->get_rawkeys}) {
+        $logger->warn("Duplicate entry key: '". $entry->getAttribute('id') . "' in file '$filename', skipping ...");
+        next;
+      }
+      else {
+        $biber->add_rawkey($entry->getAttribute('id'));
+      }
+
       create_entry($biber, $entry->getAttribute('id'), $entry);
       # We do this as otherwise we have no way of determining the origing .bib entry order
       # We need this in order to do sorting=none + allkeys because in this case, there is no
@@ -148,10 +158,10 @@ sub extract_entries {
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
           $logger->warn("Found more than one entry for key '$wanted_key' in '$filename': " .
-                       join(',', map {$_->getAttribute('id')} @entries) . ' - using the first one!');
+                       join(',', map {$_->getAttribute('id')} @entries) . ' - using the last one!');
           $biber->{warnings}++;
         }
-        $entry = $entries[0];
+        $entry = $entries[$#entries];
 
         $logger->debug("Found key '$wanted_key' in BibLaTeXML file '$filename'");
         $logger->debug('Parsing BibLaTeXML entry object ' . $entry->nodePath);

@@ -366,7 +366,7 @@ Biber::Config->setblxoption('maxitems', 2, 'PER_TYPE', 'unpublished');
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()
 $section->del_citekeys;
-$biber->prepare ;
+$biber->prepare;
 $section = $biber->sections->get_section(0);
 $main = $section->get_list('MAIN');
 

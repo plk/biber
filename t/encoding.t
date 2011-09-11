@@ -223,7 +223,7 @@ $biber->set_output_obj(Biber::Output::Test->new());
 Biber::Config->setoption('bibencoding', 'UTF-8');
 Biber::Config->setoption('bblencoding', 'UTF-8');
 Biber::Config->setoption('bblsafechars', 1);
-Biber::Config->setoption('bblsafecharsset', 'full');
+Biber::LaTeX::Recode->init_schemes('full', 'full'); # Need to do this to reset
 # Now generate the information
 $biber->prepare;
 # Get reference to output object

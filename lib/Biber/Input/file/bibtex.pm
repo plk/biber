@@ -29,7 +29,19 @@ use XML::LibXML::Simple;
 
 my $logger = Log::Log4perl::get_logger('main');
 
-our $cache = {};
+state $cache; # state variable so it's persistent across calles to extract_entries()
+use vars qw($cache);
+
+=head2 init_cache
+
+    Invalidate the T::B object cache. Used only in tests when we change the encoding
+    settings and therefore must force a re-read of the data
+
+=cut
+
+sub init_cache {
+  $cache = {};
+}
 
 # Handlers for field types
 # The names of these have nothing to do whatever with the biblatex field types
@@ -108,6 +120,12 @@ sub extract_entries {
     open OLDERR, '>&', \*STDERR;
     open STDERR, '>', '/dev/null';
   }
+
+  # Increment the number of times each datafile has been referenced
+  # For example, a datafile might be referenced in more than one section.
+  # Some things find this information useful, for example, setting preambles is global
+  # and so we need to know if we've already saved the preamble for a datafile.
+  $cache->{counts}{$filename}++;
 
   # Don't read the file again if it's already cached
   unless ($cache->{data}{$filename}) {
@@ -608,7 +626,6 @@ sub _list {
 
 sub cache_data {
   my ($biber, $filename) = @_;
-
   # Initialise this
   $cache->{preamble}{$filename} = [];
 
@@ -636,6 +653,15 @@ sub cache_data {
 
     # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing utf8 keys
     my $dskey = decode_utf8($entry->key);
+
+    # If we've already seen this key, ignore it and warn
+    if  (first {$_ eq $dskey} @{$biber->get_rawkeys}) {
+      $logger->warn("Duplicate entry key: '$dskey' in file '$filename', skipping ...");
+      next;
+    }
+    else {
+      $biber->add_rawkey($dskey);
+    }
 
     # Bad entry
     unless ($entry->parse_ok) {
@@ -697,19 +723,11 @@ sub preprocess_file {
     require File::Slurp::Unicode;
     my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
       or $logger->logdie("Can't read $ufilename");
-    require Biber::LaTeX::Recode;
     $logger->info('Decoding LaTeX character macros into UTF-8');
-    $buf = Biber::LaTeX::Recode::latex_decode($buf, strip_outer_braces => 1,
-                                              scheme => Biber::Config->getoption('decodecharsset'));
+    $buf = Biber::LaTeX::Recode::latex_decode($buf, strip_outer_braces => 1);
     File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
         or $logger->logdie("Can't write $ufilename");
   }
-
-  # Increment the number of times each datafile has been referenced
-  # For example, a datafile might be referenced in more than one section.
-  # Some things find this information useful, for example, setting preambles is global
-  # and so we need to know if we've already saved the preamble for a datafile.
-  $cache->{counts}{$filename}++;
 
   return $ufilename;
 }

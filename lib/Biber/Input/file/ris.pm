@@ -135,6 +135,16 @@ sub extract_entries {
         $biber->{warnings}++;
         next;
       }
+
+      # If we've already seen this key, ignore it and warn
+      if  (first {$_ eq $entry->{ID}} @{$biber->get_rawkeys}) {
+        $logger->warn("Duplicate entry key: '". $entry->{ID} . "' in file '$filename', skipping ...");
+        next;
+      }
+      else {
+        $biber->add_rawkey($entry->$entry->{ID});
+      }
+
       # We do this as otherwise we have no way of determining the origing .bib entry order
       # We need this in order to do sorting=none + allkeys because in this case, there is no
       # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
@@ -161,10 +171,10 @@ sub extract_entries {
       # This will also get the first match it finds
       if (my @entries = grep { lc($wanted_key) eq lc($_->{ID}) } @ris_entries) {
         if ($#entries > 0) {
-          $logger->warn("Found more than one entry for key '$wanted_key' in '$filename' - using the first one!");
+          $logger->warn("Found more than one entry for key '$wanted_key' in '$filename' - using the last one!");
           $biber->{warnings}++;
         }
-        my $entry = $entries[0];
+        my $entry = $entries[$#entries];
 
         $logger->debug("Found key '$wanted_key' in RIS file '$filename'");
         $logger->debug('Parsing RIS entry object ' . $entry->{ID});

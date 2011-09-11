@@ -135,6 +135,15 @@ sub extract_entries {
       # sanitise the key for LaTeX
       $key =~ s/\A\#item_/item_/xms;
 
+      # If we've already seen this key, ignore it and warn
+      if  (first {$_ eq $key} @{$biber->get_rawkeys}) {
+        $logger->warn("Duplicate entry key: '$key' in file '$filename', skipping ...");
+        next;
+      }
+      else {
+        $biber->add_rawkey($key);
+      }
+
       # We do this as otherwise we have no way of determining the origing .bib entry order
       # We need this in order to do sorting=none + allkeys because in this case, there is no
       # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
@@ -169,10 +178,10 @@ sub extract_entries {
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
           $logger->warn("Found more than one entry for key '$wanted_key' in '$filename': " .
-                       join(',', map {$_->getAttribute('rdf:about')} @entries) . ' - using the first one!');
+                       join(',', map {$_->getAttribute('rdf:about')} @entries) . ' - using the one!');
           $biber->{warnings}++;
         }
-        $entry = $entries[0];
+        $entry = $entries[$#entries];
 
         $logger->debug("Found key '$wanted_key' in Zotero RDF/XML file '$filename'");
         $logger->debug('Parsing Zotero RDF/XML entry object ' . $entry->nodePath);

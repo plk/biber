@@ -307,10 +307,7 @@ sub output {
 
           # If requested to convert UTF-8 to macros ...
           if (Biber::Config->getoption('bblsafechars')) {
-            $logger->info('Converting UTF-8 to TeX macros on output to .bbl');
-            require Biber::LaTeX::Recode;
-            $entry_string = Biber::LaTeX::Recode::latex_encode($entry_string,
-                                                               scheme => Biber::Config->getoption('bblsafecharsset'));
+            $entry_string = latex_recode_output($entry_string);
           }
           print $target $entry_string;
         }

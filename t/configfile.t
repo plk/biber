@@ -87,5 +87,5 @@ is(Biber::Config->getoption('sortlocale'), 'testlocale', 'Options 3 - from confi
 is_deeply(Biber::Config->getoption('collate_options'), \%colloptsA, 'Options 4 - from config file');
 is_deeply(Biber::Config->getoption('nosort'), \%nosort, 'Options 5 - from config file');
 is_deeply(Biber::Config->getoption('sortcase'), 0, 'Options 6 - from .bcf');
-is(Biber::Config->getoption('decodecharsset'), 'extra', 'Options 7 - from defaults');
+is(Biber::Config->getoption('decodecharsset'), 'base', 'Options 7 - from defaults');
 is_deeply(Biber::Config->getoption('map'), \%map, 'Options 8 - from config file');
