@@ -1,7 +1,13 @@
 Revision history for Biber
 
-0.9.6  (unreleased)
+0.9.6  14-09-2011
+       * Misc small bugs
        * Fixed biblatex bug tracker ticket #3399744
+       * Fixed bug tracker ticket #3402114
+       * max/minnames -> max/mincitenames
+       * max/min* now all per-type and per-entry
+       * uniquelist/uniquename now per-entry
+       * Re-factored recode module with XML data and XSL->HTML transform doc
 0.9.5  18-08-2011
        * Fixed auto-bblsafechars bug
        * refactored explicit "and others" in bibtex data sources
