@@ -111,16 +111,17 @@ sub extract_entries {
 
       # If we've already seen this key, ignore it and warn
       # Note the calls to lc() - we don't care about case when detecting duplicates
-      if  (first {$_ eq lc($entry->findvalue('./rec-number'))} @{$biber->get_everykey}) {
-        $logger->warn("Duplicate entry key: '". $entry->findvalue('./rec-number') . "' in file '$filename', skipping ...");
+      my $ek = $entry->findvalue('./rec-number');
+      if  (my $orig = first {lc($_) eq lc($ek)} @{$biber->get_everykey}) {
+        $logger->warn("Duplicate entry key: '$orig' and '$ek' in file '$filename', skipping '$ek' ...");
         next;
       }
       else {
-        $biber->add_everykey(lc($entry->findvalue('./rec-number')));
+        $biber->add_everykey($ek);
       }
 
       my $dbdid = $entry->findvalue('./foreign-keys/key/@db-id');
-      my $key = $entry->findvalue('./rec-number');
+      my $key = $ek;
 
       # We do this as otherwise we have no way of determining the origing .bib entry order
       # We need this in order to do sorting=none + allkeys because in this case, there is no

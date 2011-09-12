@@ -124,31 +124,31 @@ sub extract_entries {
         next;
       }
 
-      my $key = $entry->getAttribute('rdf:about');
+      my $ek = $entry->getAttribute('rdf:about');
 
       # sanitise the key for LaTeX
-      $key =~ s/\A\#item_/item_/xms;
+      $ek =~ s/\A\#item_/item_/xms;
 
       # If we've already seen this key, ignore it and warn
       # Note the calls to lc() - we don't care about case when detecting duplicates
-      if  (first {$_ eq lc($key)} @{$biber->get_everykey}) {
-        $logger->warn("Duplicate entry key: '$key' in file '$filename', skipping ...");
+      if  (my $orig = first {lc($_) eq lc($ek)} @{$biber->get_everykey}) {
+        $logger->warn("Duplicate entry key: '$orig' and '$ek' in file '$filename', skipping '$ek' ...");
         next;
       }
       else {
-        $biber->add_everykey(lc($key));
+        $biber->add_everykey($ek);
       }
 
       # We do this as otherwise we have no way of determining the origing .bib entry order
       # We need this in order to do sorting=none + allkeys because in this case, there is no
       # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
-      push @{$orig_key_order->{$filename}}, $key;
+      push @{$orig_key_order->{$filename}}, $ek;
 
       # We have to pass the datasource cased (and UTF-8ed) key to
       # create_entry() as this sub needs to know the datasource case of the
       # citation key so we can save it for output later after all the case-insensitive
       # work. If we lowercase before this, we lose this information.
-      create_entry($biber, $key, $entry);
+      create_entry($biber, $ek, $entry);
     }
 
     # if allkeys, push all bibdata keys into citekeys (if they are not already there)
