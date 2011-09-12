@@ -1000,6 +1000,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="location">
     <element name="location">
       <optional>
+        <ref name="att.lang"/>
+      </optional>
+      <optional>
         <ref name="att.lists"/>
       </optional>
       <optional>

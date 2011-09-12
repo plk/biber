@@ -190,7 +190,7 @@ att.lists = attribute andothers { "true" }
 institution = element institution { att.lists?, att.mode?, ( text | item+ ) }
 organisation = (element organisation { att.lists?, att.mode?, ( text | item+ ) } |
                 element organization { att.lists?, att.mode?, ( text | item+ ) } )
-location = element location { att.lists?, att.mode?, ( text | item+ ) }
+location = element location { att.lang?, att.lists?, att.mode?, ( text | item+ ) }
 origlocation = element origlocation { att.lists?, att.mode?, ( text | item+ ) }
 publisher = element publisher { att.lists?, att.mode?, ( text | pubitem+ ) }
 origpublisher = element origpublisher { att.lists?, att.mode?, ( text | pubitem+ ) }
@@ -226,10 +226,10 @@ sortname = element sortname { attlist.name?, att.mode?, (text | person+) }
 person = element person {
     attlist.person,
     ( text | (first &
-              prefix? &
-              middle? &
-              last &
-              suffix? ) )
+                prefix? &
+                middle? &
+                last &
+                suffix? ) )
   }
 attlist.person |=
   attribute id { text }?,
