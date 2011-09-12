@@ -115,12 +115,13 @@ sub extract_entries {
       }
 
       # If we've already seen this key, ignore it and warn
-      if  (first {$_ eq $entry->getAttribute('id')} @{$biber->get_rawkeys}) {
-        $logger->warn("Duplicate entry key: '". $entry->getAttribute('id') . "' in file '$filename', skipping ...");
+      # Note the calls to lc() - we don't care about case when detecting duplicates
+      if  (my $dup = first {$_ eq lc($entry->getAttribute('id'))} @{$biber->get_everykey}) {
+        $logger->warn("Duplicate entry key: '". $entry->getAttribute('id') . "' and '$dup' in file '$filename', skipping '$dup' ...");
         next;
       }
       else {
-        $biber->add_rawkey($entry->getAttribute('id'));
+        $biber->add_everykey(lc($entry->getAttribute('id')));
       }
 
       # We have to pass the datasource cased (and UTF-8ed) key to
@@ -151,16 +152,15 @@ sub extract_entries {
       $logger->debug("Looking for key '$wanted_key' in BibLaTeXML file '$filename'");
       # Cache index keys are lower-cased. This next line effectively implements
       # case insensitive citekeys
-      # This will also get the first match it finds
+      # FIXME NO IT DOESN'T. NEED TO SEARCH CASE_INSENSITIVE WITH XPATH 1.0
       if (my @entries = $xpc->findnodes("//$NS:entry[\@id='" . lc($wanted_key) . "']")) {
-        my $entry;
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
           $logger->warn("Found more than one entry for key '$wanted_key' in '$filename': " .
-                       join(',', map {$_->getAttribute('id')} @entries) . ' - using the last one!');
+                       join(',', map {$_->getAttribute('id')} @entries) . ' - skipping duplicates ...');
           $biber->{warnings}++;
         }
-        $entry = $entries[$#entries];
+        my $entry = $entries[0];
 
         $logger->debug("Found key '$wanted_key' in BibLaTeXML file '$filename'");
         $logger->debug('Parsing BibLaTeXML entry object ' . $entry->nodePath);

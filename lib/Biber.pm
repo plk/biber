@@ -123,26 +123,26 @@ sub sections {
 }
 
 
-=head2 get_rawkeys
+=head2 get_everykey
 
-    Returns an array ref of raw datasource keys from any datasource
+    Returns an array ref of all datasource keys
 
 =cut
 
-sub get_rawkeys {
+sub get_everykey {
   my $self = shift;
-  return $self->{rawkeys};
+  return $self->{everykey};
 }
 
-=head2 add_rawkey
+=head2 add_everykey
 
-    Adds a raw datasource key to the global list of all datasource keys
+    Adds a datasource key to the global list of all datasource keys
 
 =cut
 
-sub add_rawkey {
+sub add_everykey {
   my ($self, $key) = @_;
-  push @{$self->{rawkeys}}, $key;
+  push @{$self->{everykey}}, $key;
   return;
 }
 
@@ -781,7 +781,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 sub process_setup {
   my $self = shift;
   # reset global datasource key cache
-  $self->{rawkeys} = [];
+  $self->{everykey} = [];
 
   # Break structure information up into more processing-friendly formats
   # for use in verification checks later

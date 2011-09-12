@@ -131,12 +131,13 @@ sub extract_entries {
       }
 
       # If we've already seen this key, ignore it and warn
-      if  (first {$_ eq $entry->{ID}} @{$biber->get_rawkeys}) {
+      # Note the calls to lc() - we don't care about case when detecting duplicates
+      if  (first {$_ eq lc($entry->{ID})} @{$biber->get_everykey}) {
         $logger->warn("Duplicate entry key: '". $entry->{ID} . "' in file '$filename', skipping ...");
         next;
       }
       else {
-        $biber->add_rawkey($entry->$entry->{ID});
+        $biber->add_everykey(lc($entry->$entry->{ID}));
       }
 
       # We do this as otherwise we have no way of determining the origing .bib entry order
@@ -167,13 +168,13 @@ sub extract_entries {
       $logger->debug("Looking for key '$wanted_key' in RIS file '$filename'");
       # Cache index keys are lower-cased. This next line effectively implements
       # case insensitive citekeys
-      # This will also get the first match it finds
       if (my @entries = grep { lc($wanted_key) eq lc($_->{ID}) } @ris_entries) {
         if ($#entries > 0) {
-          $logger->warn("Found more than one entry for key '$wanted_key' in '$filename' - using the last one!");
+          $logger->warn("Found more than one entry for key '$wanted_key' in '$filename': " .
+                       join(',', map {$_->{ID}} @entries) . ' - skipping duplicates ...');
           $biber->{warnings}++;
         }
-        my $entry = $entries[$#entries];
+        my $entry = $entries[0];
 
         $logger->debug("Found key '$wanted_key' in RIS file '$filename'");
         $logger->debug('Parsing RIS entry object ' . $entry->{ID});

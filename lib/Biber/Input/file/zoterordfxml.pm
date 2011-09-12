@@ -130,12 +130,13 @@ sub extract_entries {
       $key =~ s/\A\#item_/item_/xms;
 
       # If we've already seen this key, ignore it and warn
-      if  (first {$_ eq $key} @{$biber->get_rawkeys}) {
+      # Note the calls to lc() - we don't care about case when detecting duplicates
+      if  (first {$_ eq lc($key)} @{$biber->get_everykey}) {
         $logger->warn("Duplicate entry key: '$key' in file '$filename', skipping ...");
         next;
       }
       else {
-        $biber->add_rawkey($key);
+        $biber->add_everykey(lc($key));
       }
 
       # We do this as otherwise we have no way of determining the origing .bib entry order
@@ -164,24 +165,22 @@ sub extract_entries {
     $logger->debug('Wanted keys: ' . join(', ', @$keys));
     foreach my $wanted_key (@$keys) {
       $logger->debug("Looking for key '$wanted_key' in Zotero RDF/XML file '$filename'");
-      # Cache index keys are lower-cased. This next line effectively implements
-      # case insensitive citekeys
-      # This will also get the first match it finds
 
       # Deal with messy Zotero auto-generated pseudo-keys
       my $temp_key = $wanted_key;
       $temp_key =~ s/\Aitem_/#item_/i;
 
-
+      # Cache index keys are lower-cased. This next line effectively implements
+      # case insensitive citekeys
+      # FIXME NO IT DOESN'T. NEED TO SEARCH CASE_INSENSITIVE WITH XPATH 1.0
       if (my @entries = $xpc->findnodes("/rdf:RDF/*[\@rdf:about='" . lc($temp_key) . "']")) {
-        my $entry;
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
           $logger->warn("Found more than one entry for key '$wanted_key' in '$filename': " .
-                       join(',', map {$_->getAttribute('rdf:about')} @entries) . ' - using the one!');
+                       join(',', map {$_->getAttribute('rdf:about')} @entries) . ' - skipping duplicates ...');
           $biber->{warnings}++;
         }
-        $entry = $entries[$#entries];
+        my $entry = $entries[0];
 
         my $key = $entry->getAttribute('rdf:about');
         $key =~ s/\A#item_/item_/i; # reverse of above

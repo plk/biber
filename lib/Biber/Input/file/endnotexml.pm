@@ -110,12 +110,13 @@ sub extract_entries {
       }
 
       # If we've already seen this key, ignore it and warn
-      if  (first {$_ eq $entry->findvalue('./rec-number')} @{$biber->get_rawkeys}) {
+      # Note the calls to lc() - we don't care about case when detecting duplicates
+      if  (first {$_ eq lc($entry->findvalue('./rec-number'))} @{$biber->get_everykey}) {
         $logger->warn("Duplicate entry key: '". $entry->findvalue('./rec-number') . "' in file '$filename', skipping ...");
         next;
       }
       else {
-        $biber->add_rawkey($entry->findvalue('./rec-number'));
+        $biber->add_everykey(lc($entry->findvalue('./rec-number')));
       }
 
       my $dbdid = $entry->findvalue('./foreign-keys/key/@db-id');
@@ -149,19 +150,18 @@ sub extract_entries {
       $logger->debug("Looking for key '$wanted_key' in Endnote XML file '$filename'");
       # Cache index keys are lower-cased. This next line effectively implements
       # case insensitive citekeys
-      # This will also get the first match it finds
+      # FIXME NO IT DOESN'T. NEED TO SEARCH CASE_INSENSITIVE WITH XPATH 1.0
 
       # Split key into parts
       my ($wdbid, $wnum) = split(/:/, $wanted_key);
 
       if (my @entries = $xpc->findnodes("/xml/records/record[rec-number[text()='$wnum']][foreign-keys/key[\@db-id='$wdbid']]")) {
-        my $entry;
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
-          $logger->warn("Found more than one entry for key '$wanted_key' in '$wdbid:$wnum' - using the last one!");
+          $logger->warn("Found more than one entry for key '$wanted_key' in '$wdbid:$wnum' - Skipping duplicates ...");
           $biber->{warnings}++;
         }
-        $entry = $entries[$#entries];
+        my $entry = $entries[0];
 
         my $dbid = $entry->findvalue('./foreign-keys/key/@db-id');
         my $key = $entry->findvalue('./rec-number');
