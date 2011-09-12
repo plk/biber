@@ -116,12 +116,6 @@ sub extract_entries {
     # Loop over all entries, creating objects
     foreach my $entry ($xpc->findnodes("/rdf:RDF/*")) {
       $logger->debug('Parsing Zotero RDF/XML entry object ' . $entry->nodePath);
-      # We have to pass the datasource cased key to
-      # create_entry() as this sub needs to know the original case of the
-      # citation key so we can do case-insensitive key/entry comparisons
-      # later but we need to put the original citation case when we write
-      # the .bbl. If we lowercase before this, we lose this information.
-      # Of course, with allkeys, "citation case" means "datasource entry case"
 
       # If an entry has no key, ignore it and warn
       unless ($entry->hasAttribute('rdf:about')) {
@@ -148,6 +142,11 @@ sub extract_entries {
       # We need this in order to do sorting=none + allkeys because in this case, there is no
       # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
       push @{$orig_key_order->{$filename}}, $key;
+
+      # We have to pass the datasource cased (and UTF-8ed) key to
+      # create_entry() as this sub needs to know the datasource case of the
+      # citation key so we can save it for output later after all the case-insensitive
+      # work. If we lowercase before this, we lose this information.
       create_entry($biber, $key, $entry);
     }
 
@@ -173,6 +172,7 @@ sub extract_entries {
       my $temp_key = $wanted_key;
       $temp_key =~ s/\Aitem_/#item_/i;
 
+
       if (my @entries = $xpc->findnodes("/rdf:RDF/*[\@rdf:about='" . lc($temp_key) . "']")) {
         my $entry;
         # Check to see if there is more than one entry with this key and warn if so
@@ -183,11 +183,14 @@ sub extract_entries {
         }
         $entry = $entries[$#entries];
 
+        my $key = $entry->getAttribute('rdf:about');
+        $key =~ s/\A#item_/item_/i; # reverse of above
+
         $logger->debug("Found key '$wanted_key' in Zotero RDF/XML file '$filename'");
         $logger->debug('Parsing Zotero RDF/XML entry object ' . $entry->nodePath);
         # See comment above about the importance of the case of the key
         # passed to create_entry()
-        create_entry($biber, $wanted_key, $entry);
+        create_entry($biber, $key, $entry);
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
@@ -212,20 +215,15 @@ sub create_entry {
   my $section = $biber->sections->get_section($secnum);
   my $struc = Biber::Config->get_structure;
   my $bibentries = $section->bibentries;
-
-  # Want a version of the key that is the same case as any citations which
-  # reference it, in case they are different. We use this as the .bbl
-  # entry key
-  # In case of allkeys, this will just be the datasource key as ->get_citekeys
-  # returns an empty list
-  my $citekey = first {lc($dskey) eq lc($_)} $section->get_citekeys;
-  $citekey = $dskey unless $citekey;
-  my $lc_key = lc($dskey);
-
   my $bibentry = new Biber::Entry;
-  # We record the original keys of both the datasource and citation. They may differ in case.
-  $bibentry->set_field('dskey', $dskey);
-  $bibentry->set_field('citekey', $citekey);
+
+  # Key casing is tricky. We need to note:
+  #
+  # Key matching is case-insensitive (BibTeX compat requirement)
+  # In the .bbl, we should use the datasource case for the key
+  # We don't care about the case of the citations themselves
+  $bibentry->set_field('citekey', $dskey);
+
   # We also record the datasource key in original case in the section object
   # because there are certain places which need this
   # (for example shorthand list output) which need to output the key in the
@@ -417,7 +415,7 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
   }
 
   $bibentry->set_field('datatype', 'zoterordfxml');
-  $bibentries->add_entry($lc_key, $bibentry);
+  $bibentries->add_entry(lc($dskey), $bibentry);
 
   return $bibentry; # We need to return the entry here for _partof() below
 }

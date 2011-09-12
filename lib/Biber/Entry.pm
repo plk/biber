@@ -75,7 +75,6 @@ sub clone {
   $new->{derivedfields}{datatype} = $self->{derivedfields}{datatype};
   # put in key if specified
   if ($newkey) {
-    $new->{derivedfields}{dskey} = $newkey;
     $new->{derivedfields}{citekey} = $newkey;
   }
   # de-reference and re-reference to make a copy
@@ -364,13 +363,13 @@ sub inherit_from {
           elsif (not $self->field_exists($field->{target}) or
                  $field_override_target eq 'true') {
             $logger->debug("    Entry '" .
-                           $self->get_field('dskey') .
+                           $self->get_field('citekey') .
                            "' is inheriting field '" .
                            $field->{source}.
                            "' as '" .
                            $field->{target} .
                            "' from entry '" .
-                           $parent->get_field('dskey') .
+                           $parent->get_field('citekey') .
                            "'");
             $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
           }
@@ -386,9 +385,9 @@ sub inherit_from {
       # Set the field if it doesn't exist or override is requested
       if (not $self->field_exists($field) or $override_target eq 'true') {
             $logger->debug("    Entry '" .
-                           $self->get_field('dskey') .
+                           $self->get_field('citekey') .
                            "' is inheriting field '$field' from entry '" .
-                           $parent->get_field('dskey') .
+                           $parent->get_field('citekey') .
                            "'");
         $self->set_datafield($field, $parent->get_field($field));
       }

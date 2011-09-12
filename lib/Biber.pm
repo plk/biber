@@ -738,11 +738,6 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         $key_flag = 1; # There is at least one key, used for error reporting below
         Biber::Config->incr_seenkey($key, $secnum);
       }
-      elsif (Biber::Config->get_keycase($key) ne $key) {
-        $logger->warn("Case mismatch error between cite keys '$key' and '" . Biber::Config->get_keycase($key) . "'");
-        $self->{warnings}++;
-        next;
-      }
     }
 
     unless ($bib_section->is_allkeys) {
@@ -825,7 +820,6 @@ sub instantiate_dynamic {
     my $be = new Biber::Entry;
     $be->set_field('entrytype', 'set');
     $be->set_field('entryset', join(',', @members));
-    $be->set_field('dskey', $dset);
     $be->set_field('citekey', $dset);
     $be->set_field('datatype', 'dynamic');
     $section->bibentries->add_entry($dset, $be);
@@ -1156,7 +1150,7 @@ sub process_extrayear {
   # Don't create disambiguation data for skiplab entries
   unless (Biber::Config->getblxoption('skiplab',
                                       $be->get_field('entrytype'),
-                                      $be->get_field('dskey'))) {
+                                      $be->get_field('citekey'))) {
     if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
       my $nameyear_string = "$name_string,$year_string";
       $logger->trace("Setting nameyear to '$nameyear_string' for entry '$citekey'");

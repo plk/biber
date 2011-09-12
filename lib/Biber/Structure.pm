@@ -265,7 +265,7 @@ sub check_mandatory_constraints {
   my $be = shift;
   my @warnings;
   my $et = $be->get_field('entrytype');
-  my $citekey = $be->get_field('dskey');
+  my $citekey = $be->get_field('citekey');
   foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{mandatory}},
                   @{$self->{legal_entrytypes}{$et}{constraints}{mandatory}})) {
     if (ref($c) eq 'ARRAY') {
@@ -325,7 +325,7 @@ sub check_conditional_constraints {
   my $be = shift;
   my @warnings;
   my $et = $be->get_field('entrytype');
-  my $citekey = $be->get_field('dskey');
+  my $citekey = $be->get_field('citekey');
 
   foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{conditional}},
                   @{$self->{legal_entrytypes}{$et}{constraints}{conditional}})) {
@@ -388,7 +388,7 @@ sub check_data_constraints {
   my $be = shift;
   my @warnings;
   my $et = $be->get_field('entrytype');
-  my $citekey = $be->get_field('dskey');
+  my $citekey = $be->get_field('citekey');
   foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{data}},
                   @{$self->{legal_entrytypes}{$et}{constraints}{data}})) {
     if ($c->{datatype} eq 'integer') {
@@ -433,7 +433,7 @@ sub check_date_components {
   my $be = shift;
   my @warnings;
   my $et = $be->get_field('entrytype');
-  my $citekey = $be->get_field('dskey');
+  my $citekey = $be->get_field('citekey');
 
   foreach my $f (@{$self->{legal_datetypes}}) {
     my ($d) = $f =~ m/\A(.*)date\z/xms;

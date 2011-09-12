@@ -44,7 +44,6 @@ Biber::Config - Configuration items which need to be saved across the
 our $CONFIG;
 $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{seenname} = {};
-$CONFIG->{state}{keycase} = {};
 
 # Disambiguation data for labelalpha. Used for labelalphatemplate autoinc method
 $CONFIG->{state}{ladisambiguation} = {};
@@ -95,7 +94,6 @@ sub _init {
   $CONFIG->{state}{seen_extrayear} = {};
   $CONFIG->{state}{seen_extrayearalpha} = {};
   $CONFIG->{state}{seenkeys} = {};
-  $CONFIG->{state}{keycase} = {};
   $CONFIG->{state}{datafiles} = [];
 
   return;
@@ -663,20 +661,6 @@ sub get_seenkey {
   }
 }
 
-=head2 get_keycase
-
-    Return a key in the original case it was cited with so we
-    can return mismatched cite key errors
-
-    Biber::Config->get_keycase($key);
-
-=cut
-
-sub get_keycase {
-  shift; # class method so don't care about class name
-  my $key = shift;
-  return $CONFIG->{state}{keycase}{lc($key)};
-}
 
 =head2 incr_seenkey
 
@@ -690,7 +674,6 @@ sub incr_seenkey {
   shift; # class method so don't care about class name
   my $key = shift;
   my $section = shift;
-  $CONFIG->{state}{keycase}{lc($key)} = $key;
   $CONFIG->{state}{seenkeys}{$section}{lc($key)}++;
   return;
 }
