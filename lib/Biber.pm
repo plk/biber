@@ -351,7 +351,7 @@ sub parse_ctrlfile {
                                                            qr/\Asortexclusion\z/,
                                                            qr/\Aexclusion\z/,
                                                            qr/\Asort\z/,
-                                                           qr/\Adisplaymode\z/,
+                                                           qr/\Adisplaymodes?\z/,
                                                            qr/\Amode\z/,
                                                            qr/\Amaps\z/,
                                                            qr/\Amap\z/,
@@ -445,13 +445,21 @@ sub parse_ctrlfile {
   # TODO This should not be optional any more when biblatex implements this so take
   # out this conditional
   if (exists($bcfxml->{displaymodes})) {
-    my $dms;
-    foreach my $dm (@{$bcfxml->{displaymodes}{displaymode}}) {
-      foreach my $dt (@{$dm->{dtarget}}) {
-        $dms->{$dt->{content}} = [ map {$_->{content}} @{$dm->{dmode}} ];
+    foreach my $dms (@{$bcfxml->{displaymodes}}) {
+      my $opt_dm;
+      foreach my $dm (@{$dms->{displaymode}}) {
+        foreach my $dt (@{$dm->{dtarget}}) {
+          $opt_dm->{$dt->{content}} = [ map {$_->{content}}  sort { $a->{order} <=> $b->{order} } @{$dm->{dmode}} ];
+        }
+      }
+      if (not exists($dms->{type}) or $dms->{type} eq 'global') {
+        Biber::Config->setblxoption('displaymode', $opt_dm);
+      }
+      else {
+        # per-type
+        Biber::Config->setblxoption('displaymode', $opt_dm, 'PER_TYPE', $dms->{type});
       }
     }
-    Biber::Config->setblxoption('displaymode', $dms);
   }
 
   # DATASOURCE MAPPING

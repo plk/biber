@@ -85,9 +85,9 @@ att.lang = attribute xml:lang {xsd:language}
 abstract = element abstract { att.lang?, formattext }
 addendum = element addendum { att.lang?, formattext }
 annotation = element annotation { att.lang?, formattext }
-booksubtitle = element booksubtitle { att.lang?, att.mode?, formattext }
-booktitle = element booktitle { att.lang?, att.mode?, formattext }
-booktitleaddon = element booktitleaddon { att.lang?, att.mode?, formattext }
+booksubtitle = element booksubtitle { att.lang?, formattext }
+booktitle = element booktitle { att.lang?, formattext }
+booktitleaddon = element booktitleaddon { att.lang?, formattext }
 chapter = element chapter { text }
 crossref = element crossref { text }
 doi = element doi { text }
@@ -96,7 +96,7 @@ eid = element eid { text }
 entryset = element entryset { item+ | text }
 entrysubtype = element entrysubtype { text }
 eprint = element eprint { attribute type {text}, attribute class {text}?, text }
-eventtitle = element eventtitle { att.lang?, att.mode?, formattext }
+eventtitle = element eventtitle { att.lang?, formattext }
 execute = element execute { text }
 file = element file { text }
 hyphenation = element hyphenation { text }
@@ -111,12 +111,12 @@ lccn = element lccn { text } #TODO validate with pattern
 ismn = element ismn { text } #TODO validate with pattern
 isrn = element isrn { text } #TODO validate with pattern
 issn = element issn { text } #TODO validate with pattern
-issue = element issue { att.lang?, att.mode?, formattext }
-issuetitle = element issuetitle { att.lang?, att.mode?, formattext }
-issuesubtitle = element issuesubtitle { att.lang?, att.mode?, formattext }
+issue = element issue { att.lang?, formattext }
+issuetitle = element issuetitle { att.lang?, formattext }
+issuesubtitle = element issuesubtitle { att.lang?, formattext }
 iswc = element iswc { text }
-journaltitle = element journaltitle { att.lang?, att.mode?, formattext }
-journalsubtitle = element journalsubtitle { att.lang?, att.mode?, formattext }
+journaltitle = element journaltitle { att.lang?, formattext }
+journalsubtitle = element journalsubtitle { att.lang?, formattext }
 label = element label { text }
 user.field = element user:* { text }
 library = element library { libraryitem+ }
@@ -124,10 +124,10 @@ libraryitem = element item { attribute location {text}?,
                              attribute ref {text}?,
                              attribute url {xsd:anyURI}?,
                              attribute note {text}? }
-mainsubtitle = element mainsubtitle { att.lang?, att.mode?, formattext }
-maintitle = element maintitle { att.lang?, att.mode?, formattext }
-maintitleaddon = element maintitleaddon { att.lang?, att.mode?, formattext }
-nameaddon = element nameaddon { att.mode?, text }
+mainsubtitle = element mainsubtitle { att.lang?, formattext }
+maintitle = element maintitle { att.lang?, formattext }
+maintitleaddon = element maintitleaddon { att.lang?, formattext }
+nameaddon = element nameaddon { text }
 note = element note { att.lang?, formattext }
 number = element number { text }
 options = element options {
@@ -137,25 +137,25 @@ options = element options {
     }
   | text )
 }
-origtitle = element origtitle { att.lang?, att.mode?, formattext }
+origtitle = element origtitle { att.lang?, formattext }
 pagetotal = element pagetotal { text }
 part = element part { text }
 presort = element presort { text }
-series = element series { att.lang?, att.mode?, formattext }
-shorthand = element shorthand { att.lang?, att.mode?, text }
-shorthandintro = element shorthandintro { att.lang?, att.mode?, text }
-shorttitle = element shorttitle { att.lang?, att.mode?, formattext }
-shortjournal = element shortjournal { att.lang?, att.mode?, formattext }
-shortseries = element shortseries { att.lang?, att.mode?, formattext }
+series = element series { att.lang?, formattext }
+shorthand = element shorthand { att.lang?, text }
+shorthandintro = element shorthandintro { att.lang?, text }
+shorttitle = element shorttitle { att.lang?, formattext }
+shortjournal = element shortjournal { att.lang?, formattext }
+shortseries = element shortseries { att.lang?, formattext }
 sortkey = element sortkey { text }
 sortyear = element sortyear { text }
-sorttitle = element sorttitle { att.mode?, text }
-subtitle = element subtitle { att.lang?, att.mode?, formattext }
-title = element title { att.lang?, att.mode?, formattext }
-titleaddon = element titleaddon { att.lang?, att.mode?, formattext }
+sorttitle = element sorttitle { text }
+subtitle = element subtitle { att.lang?, formattext }
+title = element title { att.lang?, formattext }
+titleaddon = element titleaddon { att.lang?, formattext }
 url = element url { xsd:anyURI }
 useprefix = element useprefix { text }
-venue = element venue { att.lang?, att.mode?, formattext }
+venue = element venue { att.lang?, formattext }
 version = element version { text }
 volume = element volume { ( text | volume.range )}
 volume.range = ( volume.list | range )
@@ -187,13 +187,13 @@ range.end = element end { text }
 
 # literal lists
 att.lists = attribute andothers { "true" }
-institution = element institution { att.lists?, att.mode?, ( text | item+ ) }
-organisation = (element organisation { att.lists?, att.mode?, ( text | item+ ) } |
-                element organization { att.lists?, att.mode?, ( text | item+ ) } )
-location = element location { att.lang?, att.lists?, att.mode?, ( text | item+ ) }
-origlocation = element origlocation { att.lists?, att.mode?, ( text | item+ ) }
-publisher = element publisher { att.lists?, att.mode?, ( text | pubitem+ ) }
-origpublisher = element origpublisher { att.lists?, att.mode?, ( text | pubitem+ ) }
+institution = element institution { att.lists?, ( text | item+ ) }
+organisation = (element organisation { att.lists?, ( text | item+ ) } |
+                element organization { att.lists?, ( text | item+ ) } )
+location = element location { att.lang?, att.lists?, ( text | item+ ) }
+origlocation = element origlocation { att.lists?, ( text | item+ ) }
+publisher = element publisher { att.lists?, ( text | pubitem+ ) }
+origpublisher = element origpublisher { att.lists?, ( text | pubitem+ ) }
 item = element item { formattext }
 pubitem = element item { publishername, location }
 publishername = element name { attribute id {text}?, formattext }
@@ -210,19 +210,19 @@ itemscript = element item { script.list }
 # NAME LISTS
 attlist.name = attribute class { "sub" | "vol" | "main" }?, att.gender?, att.lists?, attribute morenames {"1"}?
 att.gender = attribute gender { "sf" | "sm" | "sn" | "pf" | "pm" | "pn" | "pp" }
-author = element author { attlist.name?, att.mode?, ( text | person+ ) }
-editor = element editor { attlist.name?, att.mode?, (text | person+) }
-afterword = element afterword { attlist.name?, att.mode?, (text | person+) }
-annotator = element annotator { attlist.name?, att.mode?, (text | person+) }
-bookauthor = element bookauthor { attlist.name?, att.mode?, (text | person+) }
-commentator = element commentator { attlist.name?, att.mode?, (text | person+) }
-foreword = element foreword { attlist.name?, att.mode?, (text | person+) }
-holder = element holder { attlist.name?, att.mode?, (text | person+) }
-introduction = element introduction { attlist.name?, att.mode?, (text | person+) }
-translator = element translator { attlist.name?, att.mode?, (text | person+) }
-shortauthor = element shortauthor { attlist.name?, att.mode?, (text | person+) }
-shorteditor = element shorteditor { attlist.name?, att.mode?, (text | person+) }
-sortname = element sortname { attlist.name?, att.mode?, (text | person+) }
+author = element author { attlist.name?, ( text | person+ ) }
+editor = element editor { attlist.name?, (text | person+) }
+afterword = element afterword { attlist.name?, (text | person+) }
+annotator = element annotator { attlist.name?, (text | person+) }
+bookauthor = element bookauthor { attlist.name?, (text | person+) }
+commentator = element commentator { attlist.name?, (text | person+) }
+foreword = element foreword { attlist.name?, (text | person+) }
+holder = element holder { attlist.name?, (text | person+) }
+introduction = element introduction { attlist.name?, (text | person+) }
+translator = element translator { attlist.name?, (text | person+) }
+shortauthor = element shortauthor { attlist.name?, (text | person+) }
+shorteditor = element shorteditor { attlist.name?, (text | person+) }
+sortname = element sortname { attlist.name?, (text | person+) }
 person = element person {
     attlist.person,
     ( text | (first &
@@ -254,6 +254,7 @@ related = element related {
 
 article = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype { "article" } &
   author+ &
   title+ &
@@ -291,6 +292,7 @@ article = element entry {
 
 bibnote = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype { "bibnote" } &
   element note { text }
 }
@@ -298,6 +300,7 @@ bibnote = element entry {
 #########################################################
 book = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype {"book"} &
   author+ &
   title+ &
@@ -341,6 +344,7 @@ book = element entry {
 
 booklet = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype {"booklet"} &
   attribute howpublished { text }? &
   attribute type { text }? &
@@ -368,6 +372,7 @@ booklet = element entry {
 
 books = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype {"books"} &
   author+ &
   title+ &
@@ -403,6 +408,7 @@ books = element entry {
 
 bookmisc = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype { "inbook" | "bookinbook" | "suppbook" } &
   author+ &
   title+ &
@@ -449,6 +455,7 @@ bookmisc = element entry {
 
 collmisc = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype { "collection" | "reference" } &
   editor+ &
   title+ &
@@ -491,6 +498,7 @@ collmisc = element entry {
 
 collections = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype { "collections" } &
   author+ &
   title+ &
@@ -526,6 +534,7 @@ collections = element entry {
 
 inmisc = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype { "incollection" | "suppcollection" | "inreference" } &
   author+ &
   editor+ &
@@ -571,6 +580,7 @@ inmisc = element entry {
 
 inproceedings = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype { "inproceedings" } &
   author+ &
   editor+ &
@@ -611,6 +621,7 @@ inproceedings = element entry {
 
 manual = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype { "manual" } &
   attribute type { text } &
   (author | editor) &
@@ -643,6 +654,7 @@ manual = element entry {
 
 misc = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype { "misc" } &
   attribute howpublished { text } &
   attribute type { text } &
@@ -668,6 +680,7 @@ misc = element entry {
 
 online = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype { "online" } &
   (author | editor) &
   title+ &
@@ -689,6 +702,7 @@ online = element entry {
 
 patent = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype { "patent" } &
   attribute type { text } &
   author+ &
@@ -713,6 +727,7 @@ patent = element entry {
 
 periodical = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype { "periodical" } &
   editor+ &
   title+ &
@@ -739,6 +754,7 @@ periodical = element entry {
 
 proceedings = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype { "proceedings" } &
   editor+ &
   title+ &
@@ -776,6 +792,7 @@ proceedings = element entry {
 
 report = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype { "report" } &
   attribute type { text } &
   author+ &
@@ -805,6 +822,7 @@ report = element entry {
 
 thesis = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype { "thesis" } &
   attribute type { text } &
   author+ &
@@ -831,6 +849,7 @@ thesis = element entry {
 
 unpublished = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype { "unpublished" } &
   attribute howpublished { text } &
   author+ &
@@ -851,6 +870,7 @@ unpublished = element entry {
 
 set = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype { "set" } &
   attribute howpublished { text } &
   entryset &
@@ -861,6 +881,7 @@ set = element entry {
 
 misctypes = element entry {
   attribute id {text} &
+  att.mode? &
   attribute entrytype {
     "artwork" | "audio" | "commentary" | "image" | "jurisdiction" |
     "legal" | "legislation" | "letter" | "movie" | "music" |

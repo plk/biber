@@ -1666,8 +1666,8 @@ our %CONFIG_SCOPE_BIBLATEX = (
   alphaothers        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   controlversion     => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   debug              => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  dataonly           => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
-  displaymode        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  dataonly           => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
+  displaymode        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   inheritance        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   labelalpha         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelalphatemplate => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
@@ -1708,6 +1708,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
 # options like max/mincitenames which are not passed in the .bcf
 our %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS =  (
   dataonly      => {OUTPUT => 1, INPUT => ['skiplab', 'skiplos']},
+  displaymode   => {OUTPUT => 0},
   maxitems      => {OUTPUT => 1},
   minitems      => {OUTPUT => 1},
   maxbibnames   => {OUTPUT => 1},

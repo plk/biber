@@ -551,9 +551,8 @@ sub setblxoption {
     }
   }
   else { # Per-type/entry options need to specify type/entry too
-    $scopeval = lc($scopeval) if $scope eq 'PER_ENTRY';
     if ($CONFIG_SCOPE_BIBLATEX{$opt}->{$scope}) {
-      $CONFIG->{options}{biblatex}{$scope}{$scopeval}{$opt} = $val;
+      $CONFIG->{options}{biblatex}{$scope}{lc($scopeval)}{$opt} = $val;
     }
   }
   return;
@@ -583,9 +582,9 @@ sub getblxoption {
   }
   elsif (defined($entrytype) and
          $CONFIG_SCOPE_BIBLATEX{$opt}->{PER_TYPE} and
-         defined $CONFIG->{options}{biblatex}{PER_TYPE}{$entrytype} and
-         defined $CONFIG->{options}{biblatex}{PER_TYPE}{$entrytype}{$opt}) {
-    return $CONFIG->{options}{biblatex}{PER_TYPE}{$entrytype}{$opt};
+         defined $CONFIG->{options}{biblatex}{PER_TYPE}{lc($entrytype)} and
+         defined $CONFIG->{options}{biblatex}{PER_TYPE}{lc($entrytype)}{$opt}) {
+    return $CONFIG->{options}{biblatex}{PER_TYPE}{lc($entrytype)}{$opt};
   }
   elsif ($CONFIG_SCOPE_BIBLATEX{$opt}->{GLOBAL}) {
     return $CONFIG->{options}{biblatex}{GLOBAL}{$opt};

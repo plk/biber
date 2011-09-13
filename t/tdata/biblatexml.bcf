@@ -136,20 +136,29 @@
     </bcf:option>
   </bcf:options>
   <!-- DISPLAYMODES -->
-  <bcf:displaymodes>
+  <bcf:displaymodes type="global">
     <bcf:displaymode>
       <bcf:dtarget>*</bcf:dtarget>
-      <bcf:dmode>original</bcf:dmode>
-      <bcf:dmode>romanised</bcf:dmode>
-      <bcf:dmode>uniform</bcf:dmode>
-      <bcf:dmode>translated</bcf:dmode>
+      <bcf:dmode order="1">original</bcf:dmode>
+      <bcf:dmode order="2">romanised</bcf:dmode>
+      <bcf:dmode order="3">uniform</bcf:dmode>
+      <bcf:dmode order="4">translated</bcf:dmode>
     </bcf:displaymode>
     <bcf:displaymode>
       <bcf:dtarget>title</bcf:dtarget>
-      <bcf:dmode>translated</bcf:dmode>
-      <bcf:dmode>romanised</bcf:dmode>
-      <bcf:dmode>uniform</bcf:dmode>
-      <bcf:dmode>original</bcf:dmode>
+      <bcf:dmode order="1">translated</bcf:dmode>
+      <bcf:dmode order="2">romanised</bcf:dmode>
+      <bcf:dmode order="3">uniform</bcf:dmode>
+      <bcf:dmode order="4">original</bcf:dmode>
+    </bcf:displaymode>
+  </bcf:displaymodes>
+  <bcf:displaymodes type="misc">
+    <bcf:displaymode>
+      <bcf:dtarget>title</bcf:dtarget>
+      <bcf:dmode order="1">romanised</bcf:dmode>
+      <bcf:dmode order="2">translated</bcf:dmode>
+      <bcf:dmode order="3">uniform</bcf:dmode>
+      <bcf:dmode order="4">original</bcf:dmode>
     </bcf:displaymode>
   </bcf:displaymodes>
   <bcf:inheritance>

@@ -151,9 +151,14 @@
           </optional>
         </element>
       </zeroOrMore>
-      <optional>
-        <!-- Display modes definition -->
+      <zeroOrMore>
+        <!-- Display modes for biblatexml -->
         <element name="bcf:displaymodes">
+          <optional>
+            <attribute name="type">
+              <data type="NCName"/>
+            </attribute>
+          </optional>
           <oneOrMore>
             <element name="bcf:displaymode">
               <oneOrMore>
@@ -168,6 +173,9 @@
               </oneOrMore>
               <oneOrMore>
                 <element name="bcf:dmode">
+                  <attribute name="order">
+                    <data type="integer"/>
+                  </attribute>
                   <choice>
                     <value>original</value>
                     <value>uniform</value>
@@ -179,7 +187,7 @@
             </element>
           </oneOrMore>
         </element>
-      </optional>
+      </zeroOrMore>
       <optional>
         <!-- field/entrytype mapping -->
         <element name="bcf:sourcemap">

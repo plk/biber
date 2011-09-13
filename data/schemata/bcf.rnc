@@ -79,13 +79,17 @@ start =
       usetranslator?
     }*,
 
-    # Display modes definition
+    # Display modes for biblatexml
     element bcf:displaymodes {
+      attribute type { xsd:NCName }?,
       element bcf:displaymode {
         element bcf:dtarget { "*" | xsd:string {minLength="1"}}+,
-        element bcf:dmode { "original" | "uniform" | "romanised"  | "translated" }+
+        element bcf:dmode {
+          attribute order { xsd:integer },
+          ("original" | "uniform" | "romanised"  | "translated")
+        }+
       }+
-    }?,
+    }*,
 
     # field/entrytype mapping
     element bcf:sourcemap {

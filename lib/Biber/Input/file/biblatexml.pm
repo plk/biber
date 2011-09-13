@@ -431,14 +431,13 @@ sub parsename {
   my %namec;
 
   my $gender = $node->getAttribute('gender');
-
-  if (my $nc_node = $node->findnodes('not(*)')->get_node(1)) {
-    $namec{last} = $nc_node->textContent();
-    if (my $ni = $nc_node->getAttribute('initial')) {
+  if ( $node->firstChild->nodeName eq '#text') {
+    $namec{last} = $node->textContent();
+    if (my $ni = $node->getAttribute('initial')) {
       $namec{last_i} = [$ni];
     }
     else {
-      $namec{last_i} = [$namec{last}];
+      $namec{last_i} = [_gen_initials($namec{last})];
     }
   }
   else {
@@ -607,7 +606,7 @@ sub _split_list {
 sub _resolve_display_mode {
   my ($biber, $entry, $fieldname) = @_;
   my @nodelist;
-  my $dm = Biber::Config->getblxoption('displaymode');
+  my $dm = Biber::Config->getblxoption('displaymode', $entry->getAttribute('entrytype'), $entry->getAttribute('mode'));
   $logger->debug("Resolving display mode for '$fieldname' in node " . $entry->nodePath );
   # Either a fieldname specific mode or the default
   my $modelist = $dm->{_norm($fieldname)} || $dm->{'*'};
