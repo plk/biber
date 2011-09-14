@@ -220,6 +220,10 @@ sub create_entry {
   if (my $hp = $entry->getAttribute('howpublished')) {
     $bibentry->set_datafield('howpublished', $hp);
   }
+  # displaymode is set as an option so we benefit from option scope handling
+  if (my $mode = $entry->getAttribute('mode')) {
+    Biber::Config->setblxoption('displaymode', {'*' => [ $mode ] }, 'PER_ENTRY', $dskey);
+  }
 
   # We put all the fields we find modulo field aliases into the object.
   # Validation happens later and is not datasource dependent
@@ -257,7 +261,7 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
 sub _related {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f);
+  my $node = _resolve_display_mode($biber, $entry, $f, $dskey);
   # TODO
   # Current biblatex data model doesn't allow for multiple items here
   foreach my $item ($node->findnodes("./$NS:item")) {
@@ -274,7 +278,7 @@ sub _related {
 sub _verbatim {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f);
+  my $node = _resolve_display_mode($biber, $entry, $f, $dskey);
 
   # eprint is special case
   if ($f eq "$NS:eprint") {
@@ -293,7 +297,7 @@ sub _verbatim {
 sub _list {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f);
+  my $node = _resolve_display_mode($biber, $entry, $f, $dskey);
   $bibentry->set_datafield(_norm($to), _split_list($node));
   return;
 }
@@ -302,7 +306,7 @@ sub _list {
 sub _range {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f);
+  my $node = _resolve_display_mode($biber, $entry, $f, $dskey);
   # List of ranges/values
   if (my @rangelist = $node->findnodes("./$NS:list/$NS:item")) {
     my $rl;
@@ -385,7 +389,7 @@ sub _date {
 sub _name {
   my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
   # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f);
+  my $node = _resolve_display_mode($biber, $entry, $f, $dskey);
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), lc($dskey));
   my $names = new Biber::Entry::Names;
   foreach my $name ($node->findnodes("./$NS:person")) {
@@ -605,12 +609,14 @@ sub _split_list {
 
 # Given an entry and a fieldname, returns the field node with the right language mode
 sub _resolve_display_mode {
-  my ($biber, $entry, $fieldname) = @_;
+  my ($biber, $entry, $fieldname, $dskey) = @_;
   my @nodelist;
-  my $dm = Biber::Config->getblxoption('displaymode', $entry->getAttribute('entrytype'), $entry->getAttribute('mode'));
+  my $dm = Biber::Config->getblxoption('displaymode', $entry->getAttribute('entrytype'), $dskey);
   $logger->debug("Resolving display mode for '$fieldname' in node " . $entry->nodePath );
   # Either a fieldname specific mode or the default or a last-ditch fallback
   my $modelist = $dm->{_norm($fieldname)} || $dm->{'*'} || ['original'];
+  # Make sure there is an 'original' fallback in the list
+  push @$modelist, 'original' unless first {$_ eq 'original'} @$modelist;
   foreach my $mode (@$modelist) {
     my $modeattr;
     # mode is omissable if it is "original"
