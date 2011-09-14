@@ -2735,7 +2735,7 @@ sub fetch_data {
   $logger->debug('Building dependents for keys: ' . join(',', $section->get_citekeys));
   # dependent key list generation
   my @dependent_keys = ();
-  my $dep_map = {}; # a map of dependent keys to entry keys in case we need to delete
+  my $dep_map = {}; # Flag to say an entry has some deps so we can shortcut deletions
   foreach my $citekey ($section->get_citekeys) {
     # Dynamic sets don't exist yet but their members do
     if (my @dmems = $section->get_dynamic_set($citekey)) {
@@ -2743,7 +2743,7 @@ sub fetch_data {
       foreach my $dm (@dmems) {
         unless ($section->bibentry($dm)) {
           push @dependent_keys, $dm;
-          $dep_map->{$dm} = $citekey;
+          $dep_map->{$citekey} = 1;
         }
       }
       $logger->debug("Dynamic set entry '$citekey' has members: " . join(', ', @dmems));
@@ -2758,7 +2758,7 @@ sub fetch_data {
         # skip looking for dependent if it's already been directly cited
         push @dependent_keys, $refkey unless $section->bibentry($refkey);
         $logger->debug("Entry '$citekey' has cross/xref '$refkey'");
-        $dep_map->{$refkey} = $citekey;
+        $dep_map->{$citekey} = 1;
       }
       # static sets
       if ($be->get_field('entrytype') eq 'set') {
@@ -2767,7 +2767,7 @@ sub fetch_data {
         foreach my $sm (@smems) {
           unless ($section->bibentry($sm)) {
             push @dependent_keys, $sm;
-            $dep_map->{$sm} = $citekey;
+            $dep_map->{$citekey} = 1;
           }
         }
         $logger->debug("Static set entry '$citekey' has members: " . join(', ', @smems));
@@ -2779,13 +2779,17 @@ sub fetch_data {
         foreach my $rm (@rmems) {
           unless ($section->bibentry($rm)) {
             push @dependent_keys, $rm;
-            $dep_map->{$rm} = $citekey;
+            $dep_map->{$citekey} = 1;
           }
         }
         $logger->debug("Entry '$citekey' has related entries: " . join(', ', @rmems));
       }
     }
   }
+
+  # Remove repeated keys which are dependents of more than one entry
+  @dependent_keys = uniq @dependent_keys;
+
   if (@dependent_keys) {
     # Now look for the dependents of the directly cited keys
     @remaining_keys = @dependent_keys;
@@ -2803,7 +2807,7 @@ sub fetch_data {
     else {
       foreach my $datasource (@{$section->get_datasources}) {
         # shortcut if we have found all the keys now
-        last unless (@remaining_keys or $section->is_allkeys);
+        last unless (@remaining_keys);
         my $type = $datasource->{type};
         my $name = $datasource->{name};
         my $datatype = $datasource->{datatype};
@@ -2815,10 +2819,12 @@ sub fetch_data {
     }
 
     # error reporting
-    $logger->debug("Dependent keys not found for section '$secnum': " . join(',', @remaining_keys));
-    foreach my $citekey (@remaining_keys) {
-      $logger->debug("Removing missing dependent key '$citekey' from entries");
-      $self->remove_undef_dependent($dep_map, $citekey);
+    $logger->debug("Dependent keys not found for section '$secnum': " . join(', ', @remaining_keys));
+    foreach my $citekey ($section->get_citekeys) {
+      next unless $dep_map->{$citekey}; # only if we have some missing deps to delete
+      foreach my $missing_key (@remaining_keys) {
+        $self->remove_undef_dependent($citekey, $missing_key);
+      }
     }
   }
 
@@ -2836,31 +2842,29 @@ sub fetch_data {
 
 sub remove_undef_dependent {
   my $self = shift;
-  my $dep_map = shift;
-  my $missing_key = shift;
+  my ($citekey, $missing_key) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $entry_key = $dep_map->{$missing_key};
 
   # remove from any dynamic keys
-  if (my @dmems = $section->get_dynamic_set($entry_key)) {
-    $section->set_dynamic_set($entry_key, grep {$_ ne $missing_key} @dmems);
-    $logger->warn("I didn't find a database entry for dynamic set member '$missing_key' - ignoring (section $secnum)");
+  if (my @dmems = $section->get_dynamic_set($citekey)) {
+    $section->set_dynamic_set($citekey, grep {$_ ne $missing_key} @dmems);
+    $logger->warn("I didn't find a database entry for dynamic set member '$missing_key' - ignoring (section $secnum)") unless first {$_ eq $missing_key} @dmems;
     $self->{warnings}++;
   }
   else {
-    my $be = $section->bibentry($entry_key);
+    my $be = $section->bibentry($citekey);
     # remove any xrefs
     if ($be->get_field('xref') and ($be->get_field('xref') eq $missing_key)) {
       $be->del_field('xref');
-      $logger->warn("I didn't find a database entry for xref '$missing_key' in entry '$entry_key' - ignoring (section $secnum)");
+      $logger->warn("I didn't find a database entry for xref '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
       $self->{warnings}++;
     }
 
     # remove any crossrefs
     if ($be->get_field('crossref') and ($be->get_field('crossref') eq $missing_key)) {
       $be->del_field('crossref');
-      $logger->warn("I didn't find a database entry for crossref '$missing_key' in entry '$entry_key' - ignoring (section $secnum)");
+      $logger->warn("I didn't find a database entry for crossref '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
       $self->{warnings}++;
     }
 
@@ -2868,7 +2872,7 @@ sub remove_undef_dependent {
     if ($be->get_field('entrytype') eq 'set') {
       my @smems = split /\s*,\s*/, $be->get_field('entryset');
       $be->set_datafield('entryset', join(',', grep {$_ ne $missing_key} @smems));
-      $logger->warn("I didn't find a database entry for static set member '$missing_key' in entry '$entry_key' - ignoring (section $secnum)");
+      $logger->warn("I didn't find a database entry for static set member '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
       $self->{warnings}++;
     }
 
@@ -2881,7 +2885,7 @@ sub remove_undef_dependent {
         $be->del_field('relatedtype');
         $be->del_field('relatedstring');
       }
-      $logger->warn("I didn't find a database entry for related entry '$missing_key' in entry '$entry_key' - ignoring (section $secnum)");
+      $logger->warn("I didn't find a database entry for related entry '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
       $self->{warnings}++;
     }
   }

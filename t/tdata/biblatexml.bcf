@@ -154,7 +154,7 @@
   </bcf:displaymodes>
   <bcf:displaymodes type="misc">
     <bcf:displaymode>
-      <bcf:dtarget>title</bcf:dtarget>
+      <bcf:dtarget>*</bcf:dtarget>
       <bcf:dmode order="1">romanised</bcf:dmode>
       <bcf:dmode order="2">translated</bcf:dmode>
       <bcf:dmode order="3">uniform</bcf:dmode>

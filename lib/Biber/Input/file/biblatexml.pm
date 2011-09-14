@@ -430,8 +430,8 @@ sub parsename {
 
   my %namec;
 
-  my $gender = $node->getAttribute('gender');
-  if ( $node->firstChild->nodeName eq '#text') {
+  if ( $node->firstChild->nodeName eq '#text' and
+       not $node->findnodes("./$NS:last")) {
     $namec{last} = $node->textContent();
     if (my $ni = $node->getAttribute('initial')) {
       $namec{last_i} = [$ni];
@@ -525,7 +525,8 @@ sub parsename {
     suffix_i        => exists($namec{suffix}) ? $namec{suffix_i} : undef,
     namestring      => $namestring,
     nameinitstring  => $nameinitstr,
-    gender          => $gender
+    gender          => $node->getAttribute('gender')
+
     );
 }
 
@@ -608,8 +609,8 @@ sub _resolve_display_mode {
   my @nodelist;
   my $dm = Biber::Config->getblxoption('displaymode', $entry->getAttribute('entrytype'), $entry->getAttribute('mode'));
   $logger->debug("Resolving display mode for '$fieldname' in node " . $entry->nodePath );
-  # Either a fieldname specific mode or the default
-  my $modelist = $dm->{_norm($fieldname)} || $dm->{'*'};
+  # Either a fieldname specific mode or the default or a last-ditch fallback
+  my $modelist = $dm->{_norm($fieldname)} || $dm->{'*'} || ['original'];
   foreach my $mode (@$modelist) {
     my $modeattr;
     # mode is omissable if it is "original"
@@ -625,7 +626,7 @@ sub _resolve_display_mode {
       # Check to see if there is more than one entry with a mode and warn
       if ($#nodelist > 0) {
         $logger->warn("Found more than one mode '$mode' '$fieldname' field in entry '" .
-                      $entry->getAttribute('id') . "' - using the first one!");
+                      $entry->getAttribute('id') . "' - skipping duplicates ...");
         $biber->{warnings}++;
       }
       return $nodelist[0];

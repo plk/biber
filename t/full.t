@@ -11,7 +11,7 @@ use File::Temp;
 use File::Compare;
 
 SKIP: {
-  skip "Developer only test", 1 unless can_run('/opt/local/bin/perl');
+  skip "Developer only test", 2 unless can_run('/opt/local/bin/perl');
   my $tmpfile = File::Temp->new();
   my $bbl = $tmpfile->filename;
   my $stdout;
