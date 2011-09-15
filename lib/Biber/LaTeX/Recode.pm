@@ -207,6 +207,9 @@ The function accepts a number of options:
 
 sub latex_decode {
     my $text      = shift;
+    # Optimisation - if there are no macros, no point doing anything
+    return $text unless $text =~ m/\\/;
+
     my %opts      = @_;
     my $norm      = exists $opts{normalize} ? $opts{normalize} : 1;
     my $norm_form = exists $opts{normalization} ? $opts{normalization} : 'NFC';

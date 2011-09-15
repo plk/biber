@@ -722,6 +722,7 @@ sub preprocess_file {
     $buf = Biber::LaTeX::Recode::latex_decode($buf, strip_outer_braces => 1);
     File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
         or $logger->logdie("Can't write $ufilename");
+    $logger->info('Finished Decoding LaTeX character macros into UTF-8');
   }
 
   return $ufilename;
