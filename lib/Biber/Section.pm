@@ -26,6 +26,7 @@ sub new {
   $self->{bibentries} = new Biber::Entries;
   $self->{allkeys} = 0;
   $self->{citekeys} = [];
+  $self->{citekeys_h} = {}; # For faster hash-based lookup of individual keys
   $self->{labelcache_l} = {};
   $self->{dskeycache} = [];
   $self->{labelcache_v} = {};
@@ -106,6 +107,7 @@ sub del_bibentries {
 sub set_citekeys {
   my $self = shift;
   my $keys = shift;
+  map { $self->{citekeys_h}{$_} = 1} @$keys;
   $self->{citekeys} = $keys;
   return;
 }
@@ -185,9 +187,8 @@ sub get_orig_order_citekeys {
 sub has_citekey {
   my $self = shift;
   my $key = shift;
-  return defined ( first { lc($_) eq lc($key) } $self->get_citekeys ) ? 1 : 0;
+  return $self->{citekeys_h}{lc($key)} ? 1 : 0;
 }
-
 
 
 =head2 del_citekey
@@ -202,6 +203,7 @@ sub del_citekey {
   return unless $self->has_citekey($key);
   $self->{citekeys}            = [ grep {$_ ne $key} @{$self->{citekeys}} ];
   $self->{orig_order_citekeys} = [ grep {$_ ne $key} @{$self->{orig_order_citekeys}} ];
+  delete $self->{citekeys_h}{$key};
   return;
 }
 
@@ -213,8 +215,42 @@ sub del_citekey {
 
 sub del_citekeys {
   my $self = shift;
-  $self->{citekeys}            = [ ];
-  $self->{orig_order_citekeys} = [ ];
+  $self->{citekeys}            = [];
+  $self->{citekeys_h}          = {};
+  $self->{orig_order_citekeys} = [];
+  return;
+}
+
+=head2 add_citekeys
+
+    Adds citekeys to the Biber::Section object
+
+=cut
+
+sub add_citekeys {
+  my $self = shift;
+  my @keys = @_;
+  foreach my $key (@keys) {
+    next if $self->has_citekey($key);
+    $self->{citekeys_h}{$key} = 1;
+    push @{$self->{citekeys}}, $key;
+    push @{$self->{orig_order_citekeys}}, $key;
+  }
+  return;
+}
+
+=head2 add_undef_citekey
+
+    Adds a citekey to the Biber::Section object as an undefined
+    key. This allows us to output this information to the .bbl and
+    so biblatex can do better reporting to external utils like latexmk
+
+=cut
+
+sub add_undef_citekey {
+  my $self = shift;
+  my $key = shift;
+  push @{$self->{undef_citekeys}}, $key;
   return;
 }
 
@@ -309,39 +345,6 @@ sub get_dynamic_set {
 sub dynamic_set_keys {
   my $self = shift;
   return [keys %{$self->{dkeys}}];
-}
-
-
-=head2 add_citekeys
-
-    Adds citekeys to the Biber::Section object
-
-=cut
-
-sub add_citekeys {
-  my $self = shift;
-  my @keys = @_;
-  foreach my $key (@keys) {
-    next if $self->has_citekey($key);
-    push @{$self->{citekeys}}, $key;
-    push @{$self->{orig_order_citekeys}}, $key;
-  }
-  return;
-}
-
-=head2 add_undef_citekey
-
-    Adds a citekey to the Biber::Section object as an undefined
-    key. This allows us to output this information to the .bbl and
-    so biblatex can do better reporting to external utils like latexmk
-
-=cut
-
-sub add_undef_citekey {
-  my $self = shift;
-  my $key = shift;
-  push @{$self->{undef_citekeys}}, $key;
-  return;
 }
 
 

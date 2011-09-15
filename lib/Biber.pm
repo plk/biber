@@ -2802,7 +2802,7 @@ sub fetch_data {
     if ($section->is_allkeys) {
       my @missing;
       foreach my $dk (@dependent_keys) {
-        push @missing, $dk unless first {$_ eq $dk} $section->get_citekeys;
+        push @missing, $dk unless $section->has_citekey($dk);
       }
       @remaining_keys = @missing;
     }
@@ -2909,8 +2909,7 @@ sub create_output_section {
   my $section = $self->sections->get_section($secnum);
 
   # We rely on the order of this array for the order of the .bbl
-  my @citekeys = $section->get_citekeys;
-  foreach my $k (@citekeys) {
+  foreach my $k ($section->get_citekeys) {
     # Regular entry
     my $be = $section->bibentry($k) or $logger->logdie("Cannot find entry with key '$k' to output");
     $output_obj->set_output_entry($be, $section, Biber::Config->get_structure);
@@ -2920,9 +2919,8 @@ sub create_output_section {
   $output_obj->set_output_section($secnum, $section);
 
   # undef citekeys are global
-  my @undef_citekeys = $section->get_undef_citekeys;
   # Missing citekeys
-  foreach my $k (@undef_citekeys) {
+  foreach my $k ($section->get_undef_citekeys) {
     $output_obj->set_output_undefkey($k, $section);
   }
 
