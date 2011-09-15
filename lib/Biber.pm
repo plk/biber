@@ -125,13 +125,15 @@ sub sections {
 
 =head2 get_everykey
 
-    Returns an array ref of all datasource keys
+    Returns a boolean to say if we've seen a key in any datasource
+    This used to be an array ref which was checked using first() and it
+    was twenty times slower.
 
 =cut
 
 sub get_everykey {
-  my $self = shift;
-  return $self->{everykey};
+  my ($self, $key) = @_;
+  return $self->{everykey}{lc($key)};
 }
 
 =head2 add_everykey
@@ -142,7 +144,7 @@ sub get_everykey {
 
 sub add_everykey {
   my ($self, $key) = @_;
-  push @{$self->{everykey}}, $key;
+  $self->{everykey}{lc($key)} = 1;
   return;
 }
 
@@ -789,7 +791,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 sub process_setup {
   my $self = shift;
   # reset global datasource key cache
-  $self->{everykey} = [];
+  $self->{everykey} = {};
 
   # Break structure information up into more processing-friendly formats
   # for use in verification checks later

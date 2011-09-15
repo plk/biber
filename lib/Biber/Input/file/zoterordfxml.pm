@@ -131,8 +131,8 @@ sub extract_entries {
 
       # If we've already seen this key, ignore it and warn
       # Note the calls to lc() - we don't care about case when detecting duplicates
-      if  (my $orig = first {lc($_) eq lc($ek)} @{$biber->get_everykey}) {
-        $logger->warn("Duplicate entry key: '$orig' and '$ek' in file '$filename', skipping '$ek' ...");
+      if  ($biber->get_everykey($ek)) {
+        $logger->warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
         next;
       }
       else {

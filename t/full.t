@@ -19,5 +19,5 @@ SKIP: {
   run3  [ '/opt/local/bin/perl', 'bin/biber', '--nolog', "--outfile=$bbl", 't/tdata/full.bcf' ], \undef, \$stdout, \undef;
 
   ok(compare($bbl, 't/tdata/full1.bbl') == 0, 'Testing lossort case and sortinit for macros');
-  like($stdout, qr|WARN - Duplicate entry keys: 'F1' and 'f1' in file 't/tdata/full\.bib', skipping 'f1' \.\.\.|ms, 'Testing duplicate/case key warnings');
+  like($stdout, qr|WARN - Duplicate entry key: 'f1' in file 't/tdata/full\.bib', skipping \.\.\.|ms, 'Testing duplicate/case key warnings');
 }

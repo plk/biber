@@ -650,8 +650,8 @@ sub cache_data {
 
     # If we've already seen this key, ignore it and warn
     # Note the calls to lc() - we don't care about case when detecting duplicates
-    if  (my $orig = first {lc($_) eq lc($dskey)} @{$biber->get_everykey}) {
-      $logger->warn("Duplicate entry keys: '$orig' and '$dskey' in file '$filename', skipping '$dskey' ...");
+    if  ($biber->get_everykey($dskey)) {
+      $logger->warn("Duplicate entry key: '$dskey' in file '$filename', skipping ...");
       next;
     }
     else {
