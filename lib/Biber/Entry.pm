@@ -76,6 +76,7 @@ sub clone {
   # put in key if specified
   if ($newkey) {
     $new->{derivedfields}{citekey} = $newkey;
+    $new->{derivedfields}{bcfcase_citekey} = $newkey;
   }
   # de-reference and re-reference to make a copy
   $new->{blocked_datafields} = [@{$self->{blocked_datafields}}];

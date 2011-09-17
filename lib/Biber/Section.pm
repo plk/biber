@@ -28,7 +28,7 @@ sub new {
   $self->{citekeys} = [];
   $self->{citekeys_h} = {}; # For faster hash-based lookup of individual keys
   $self->{labelcache_l} = {};
-  $self->{dskeycache} = [];
+  $self->{bcfkeycache} = {};
   $self->{labelcache_v} = {};
   $self->{sortcache} = [];
   $self->{dkeys} = {};
@@ -430,29 +430,29 @@ sub get_list {
   return undef;
 }
 
-=head2 add_dskey
+=head2 add_bcfkey
 
-    Adds a data source cased key to the object
+    Adds a .bcf cased key to the object
 
 =cut
 
-sub add_dskey {
+sub add_bcfkey {
   my $self = shift;
-  my $dskey = shift;
-  push @{$self->{dskeycache}}, $dskey;
+  my $bcfkey = shift;
+  $self->{bcfkeycache}{lc($bcfkey)} = $bcfkey;
   return;
 }
 
-=head2 get_dskey
+=head2 get_bcfkey
 
-    Gets the original data source cased key
+    Gets the original .bcf cased key
 
 =cut
 
-sub get_dskey {
+sub get_bcfkey {
   my $self = shift;
   my $key = shift;
-  return first {lc($_) eq lc($key)} @{$self->{dskeycache}};
+  return $self->{bcfkeycache}{lc($key)};
 }
 
 
@@ -493,7 +493,7 @@ sub reset_caches {
   $self->{sortcache} = [];
   $self->{labelcache_l} = {};
   $self->{labelcache_v} = {};
-  $self->{dskeycache} = [];
+  $self->{bcfkeycache} = {};
   return;
 }
 

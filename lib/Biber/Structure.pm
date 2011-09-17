@@ -265,7 +265,7 @@ sub check_mandatory_constraints {
   my $be = shift;
   my @warnings;
   my $et = $be->get_field('entrytype');
-  my $citekey = $be->get_field('citekey');
+  my $key = $be->get_field('bcfcase_citekey');
   foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{mandatory}},
                   @{$self->{legal_entrytypes}{$et}{constraints}{mandatory}})) {
     if (ref($c) eq 'ARRAY') {
@@ -277,7 +277,7 @@ sub check_mandatory_constraints {
         foreach my $of (@fs) {
           if ($be->field_exists($of)) {
             if ($xorflag) {
-              push @warnings, "Mandatory fields - only one of '" . join(', ', @fs) . "' must be defined in entry '$citekey' ignoring field '$of'";
+              push @warnings, "Mandatory fields - only one of '" . join(', ', @fs) . "' must be defined in entry '$key' ignoring field '$of'";
               $be->del_field($of);
             }
             $flag = 1;
@@ -285,7 +285,7 @@ sub check_mandatory_constraints {
           }
         }
         unless ($flag) {
-          push @warnings, "Missing mandatory field - one of '" . join(', ', @fs) . "' must be defined in entry '$citekey'";
+          push @warnings, "Missing mandatory field - one of '" . join(', ', @fs) . "' must be defined in entry '$key'";
         }
       }
       # One or more of a set is mandatory
@@ -299,14 +299,14 @@ sub check_mandatory_constraints {
           }
         }
         unless ($flag) {
-          push @warnings, "Missing mandatory field - one of '" . join(', ', @fs) . "' must be defined in entry '$citekey'";
+          push @warnings, "Missing mandatory field - one of '" . join(', ', @fs) . "' must be defined in entry '$key'";
         }
       }
     }
     # Simple mandatory field
     else {
       unless ($be->field_exists($c)) {
-        push @warnings, "Missing mandatory field '$c' in entry '$citekey'";
+        push @warnings, "Missing mandatory field '$c' in entry '$key'";
       }
     }
   }
@@ -325,7 +325,7 @@ sub check_conditional_constraints {
   my $be = shift;
   my @warnings;
   my $et = $be->get_field('entrytype');
-  my $citekey = $be->get_field('citekey');
+  my $key = $be->get_field('bcfcase_citekey');
 
   foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{conditional}},
                   @{$self->{legal_entrytypes}{$et}{constraints}{conditional}})) {
@@ -388,7 +388,7 @@ sub check_data_constraints {
   my $be = shift;
   my @warnings;
   my $et = $be->get_field('entrytype');
-  my $citekey = $be->get_field('citekey');
+  my $key = $be->get_field('bcfcase_citekey');
   foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{data}},
                   @{$self->{legal_entrytypes}{$et}{constraints}{data}})) {
     if ($c->{datatype} eq 'integer') {
@@ -396,20 +396,20 @@ sub check_data_constraints {
       foreach my $f (@{$c->{fields}}) {
         if (my $fv = $be->get_field($f)) {
           unless ( $fv =~ /$dt/ ) {
-            push @warnings, "Invalid format (integer) of field '$f' - ignoring field in entry '$citekey'";
+            push @warnings, "Invalid format (integer) of field '$f' - ignoring field in entry '$key'";
             $be->del_field($f);
             next;
           }
           if (my $fmin = $c->{rangemin}) {
             unless ($fv >= $fmin) {
-              push @warnings, "Invalid value of field '$f' must be '>=$fmin' - ignoring field in entry '$citekey'";
+              push @warnings, "Invalid value of field '$f' must be '>=$fmin' - ignoring field in entry '$key'";
               $be->del_field($f);
               next;
             }
           }
           if (my $fmax = $c->{rangemax}) {
             unless ($fv <= $fmax) {
-              push @warnings, "Invalid value of field '$f' must be '<=$fmax' - ignoring field in entry '$citekey'";
+              push @warnings, "Invalid value of field '$f' must be '<=$fmax' - ignoring field in entry '$key'";
               $be->del_field($f);
               next;
             }
@@ -433,7 +433,7 @@ sub check_date_components {
   my $be = shift;
   my @warnings;
   my $et = $be->get_field('entrytype');
-  my $citekey = $be->get_field('citekey');
+  my $key = $be->get_field('bcfcase_citekey');
 
   foreach my $f (@{$self->{legal_datetypes}}) {
     my ($d) = $f =~ m/\A(.*)date\z/xms;
@@ -459,11 +459,11 @@ sub check_date_components {
       my $bmc = $bm  eq 'MM' ? '01' : $bm;
       my $bd = $be->get_datafield($d . 'day') || 'DD';
       my $bdc = $bd  eq 'DD' ? '01' : $bd;
-      $logger->debug("Checking '${d}date' date value '$byc/$bmc/$bdc' for key '$citekey'");
+      $logger->debug("Checking '${d}date' date value '$byc/$bmc/$bdc' for key '$key'");
       unless (Date::Simple->new("$byc$bmc$bdc")) {
         push @warnings, "Invalid date value '" .
           ($byc_d || $byc) .
-                "/$bm/$bd' - ignoring its components in entry '$citekey'";
+                "/$bm/$bd' - ignoring its components in entry '$key'";
         $be->del_datafield($d . 'year');
         $be->del_datafield($d . 'month');
         $be->del_datafield($d . 'day');
@@ -478,9 +478,9 @@ sub check_date_components {
       my $emc = $em  eq 'MM' ? '01' : $em;
       my $ed = $be->get_datafield($d . 'endday') || 'DD';
       my $edc = $ed  eq 'DD' ? '01' : $ed;
-      $logger->debug("Checking '${d}date' date value '$eyc/$emc/$edc' for key '$citekey'");
+      $logger->debug("Checking '${d}date' date value '$eyc/$emc/$edc' for key '$key'");
       unless (Date::Simple->new("$eyc$emc$edc")) {
-        push @warnings, "Invalid date value '$eyc/$em/$ed' - ignoring its components in entry '$citekey'";
+        push @warnings, "Invalid date value '$eyc/$em/$ed' - ignoring its components in entry '$key'";
         $be->del_datafield($d . 'endyear');
         $be->del_datafield($d . 'endmonth');
         $be->del_datafield($d . 'endday');

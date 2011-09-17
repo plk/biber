@@ -181,7 +181,7 @@ sub extract_entries {
         $logger->debug('Parsing RIS entry object ' . $entry->{ID});
         # See comment above about the importance of the case of the key
         # passed to create_entry()
-        create_entry($biber, $entry->{ID}, $entry);
+        create_entry($biber, $wanted_key, $entry);
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
@@ -199,7 +199,7 @@ sub extract_entries {
 =cut
 
 sub create_entry {
-  my ($biber, $dskey, $entry) = @_;
+  my ($biber, $key, $entry) = @_;
   my $secnum = $biber->get_current_section;
   my $section = $biber->sections->get_section($secnum);
   my $struc = Biber::Config->get_structure;
@@ -208,15 +208,21 @@ sub create_entry {
 
   # Key casing is tricky. We need to note:
   #
-  # Key matching is case-insensitive (BibTeX compat requirement)
-  # In the .bbl, we should use the datasource case for the key
-  # We don't care about the case of the citations themselves
-  $bibentry->set_field('citekey', $dskey);
+  # Key matching in biber between .bcf and datasources is case-INSENSITIVE (bibtex compat)
+  # Key matching in biblatex between citations and .bbl is case-SENSITIVE
+  #
+  # So, we must create the .bbl with keys cased as per the .bcf, not the datasource
+  # Therefore, we save to key versions, the original .bcf case and a lowercased variant
+  # for internal operations.
+  my $key_lc = lc($key);
+  $bibentry->set_field('bcfcase_citekey', $key);
+  $bibentry->set_field('citekey', $key_lc);
+
   # We also record the datasource key in original case in the section object
   # because there are certain places which need this
   # (for example shorthand list output) which need to output the key in the
   # right case but which have no access to entry objects
-  $section->add_dskey($dskey);
+  $section->add_bcfkey($key);
 
   # Get a reference to the map option, if it exists
   my $user_map;
@@ -275,10 +281,10 @@ FLOOP:  foreach my $f (keys %$entry) {
         while (my ($from_as, $to_as) = each %{$to_map->{alsoset}}) {
           if ($bibentry->field_exists(lc($from_as))) {
             if ($user_map->{bmap_overwrite}) {
-              $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$dskey'");
+              $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'");
             }
             else {
-              $biber->biber_warn($bibentry, "Not overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$dskey'");
+              $biber->biber_warn($bibentry, "Not overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'");
               next;
             }
           }
@@ -314,7 +320,7 @@ FLOOP:  foreach my $f (keys %$entry) {
       }
 
       # Now run any defined handler
-      &{$handlers{$from->{handler}}}($biber, $bibentry, $entry, $f, $to, $dskey);
+      &{$handlers{$from->{handler}}}($biber, $bibentry, $entry, $f, $to, $key);
     }
     # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
     elsif ($from = $dcfxml->{fields}{field}{$f}) {
@@ -325,7 +331,7 @@ FLOOP:  foreach my $f (keys %$entry) {
           if (my $t = $alias->{aliasfortype}) { # type-specific alias
             if (lc($t) eq lc($entry->{TY})) {
               my $a = $alias->{aliasof};
-              $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
+              $logger->debug("Found alias '$a' of field '$f' in entry '$key'");
               $from = $dcfxml->{fields}{field}{$a};
               $to = $a; # Field to set internally is the alias
               last;
@@ -333,7 +339,7 @@ FLOOP:  foreach my $f (keys %$entry) {
           }
           else {
             my $a = $alias->{aliasof}; # global alias
-            $logger->debug("Found alias '$a' of field '$f' in entry '$dskey'");
+            $logger->debug("Found alias '$a' of field '$f' in entry '$key'");
             $from = $dcfxml->{fields}{field}{$a};
             $to = $a; # Field to set internally is the alias
           }
@@ -347,11 +353,11 @@ FLOOP:  foreach my $f (keys %$entry) {
         }
       }
       elsif (my $alias = $from->{aliasof}) { # simple alias
-        $logger->debug("Found alias '$alias' of field '$f' in entry '$dskey'");
+        $logger->debug("Found alias '$alias' of field '$f' in entry '$key'");
         $from = $dcfxml->{fields}{field}{$alias};
         $to = $alias; # Field to set internally is the alias
       }
-      &{$handlers{$from->{handler}}}($biber, $bibentry, $entry, $f, $to, $dskey);
+      &{$handlers{$from->{handler}}}($biber, $bibentry, $entry, $f, $to, $key);
     }
     # Default if no explicit way to set the field
     else {
@@ -371,10 +377,10 @@ FLOOP:  foreach my $f (keys %$entry) {
       while (my ($from_as, $to_as) = each %{$to->{alsoset}}) { # any extra fields to set?
         if ($bibentry->field_exists(lc($from_as))) {
           if ($user_map->{bmap_overwrite}) {
-            $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($to->{bmap_target}) . "' in entry '$dskey'");
+            $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($to->{bmap_target}) . "' in entry '$key'");
           }
           else {
-            $biber->biber_warn($bibentry, "Not overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($to->{bmap_target}) . "' in entry '$dskey'");
+            $biber->biber_warn($bibentry, "Not overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($to->{bmap_target}) . "' in entry '$key'");
             next;
           }
         }
@@ -394,7 +400,7 @@ FLOOP:  foreach my $f (keys %$entry) {
     foreach my $alsoset (@{$ealias->{alsoset}}) {
       # drivers never overwrite existing fields
       if ($bibentry->field_exists(lc($alsoset->{target}))) {
-        $biber->biber_warn($bibentry, "Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$dskey'");
+        $biber->biber_warn($bibentry, "Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'");
         next;
       }
       $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
@@ -406,7 +412,7 @@ FLOOP:  foreach my $f (keys %$entry) {
   }
 
   $bibentry->set_field('datatype', 'ris');
-  $bibentries->add_entry(lc($dskey), $bibentry);
+  $bibentries->add_entry($key_lc, $bibentry);
 
   return;
 }

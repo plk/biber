@@ -79,12 +79,10 @@ sub set_output_entry {
   my $struc = shift; # Structure object
   my $acc = '';
   my $opts = '';
-  my $citekey; # entry key forced to case of any citations(s) which reference it
   my $secnum = $section->number;
 
-  if ( $be->get_field('citekey') ) {
-    $citekey = $be->get_field('citekey');
-  }
+  my $key = $be->get_field('bcfcase_citekey'); # Original case from .bcf
+  my $key_lc = $be->get_field('citekey');
 
   if ( $be->field_exists('options') ) {
     $opts = filter_entry_options($be->get_field('options'));
@@ -93,7 +91,7 @@ sub set_output_entry {
   $acc .= "% sortstring = " . $be->get_field('sortstring') . "\n"
     if (Biber::Config->getoption('debug') || Biber::Config->getblxoption('debug'));
 
-  $acc .= "  \\entry{$citekey}{" . $be->get_field('entrytype') . "}{$opts}\n";
+  $acc .= "  \\entry{$key}{" . $be->get_field('entrytype') . "}{$opts}\n";
 
   # Generate set information
   if ( $be->get_field('entrytype') eq 'set' ) {   # Set parents get \set entry ...
@@ -275,7 +273,7 @@ sub set_output_entry {
   $acc .= "  \\endentry\n\n";
 
   # Create an index by keyname for easy retrieval
-  $self->{output_data}{ENTRIES}{$secnum}{index}{lc($citekey)} = \$acc;
+  $self->{output_data}{ENTRIES}{$secnum}{index}{$key_lc} = \$acc;
   return;
 }
 
@@ -317,8 +315,8 @@ sub output {
           # We have completely lost the case of the keys by this point so find them again
           # We have no access here to the entry objects which is why we saved them in the
           # section object in the driver ...
-          my $casekey = $section->get_dskey($k);
-          print $target $casekey;
+          my $bcfkey = $section->get_bcfkey($k);
+          print $target $bcfkey;
         }
       }
     }
