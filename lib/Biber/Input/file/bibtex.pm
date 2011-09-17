@@ -140,11 +140,6 @@ sub extract_entries {
     $logger->debug("All cached citekeys will be used for section '$secnum'");
     # Loop over all entries, creating objects
     while (my (undef, $entry) = each %{$cache->{data}{$filename}}) {
-
-      # We have to pass the datasource cased (and UTF-8ed) key to
-      # create_entry() as this sub needs to know the datasource case of the
-      # citation key so we can save it for output later after all the case-insensitive
-      # work. If we lowercase before this, we lose this information.
       create_entry($biber, decode_utf8($entry->key), $entry);
     }
 
@@ -163,9 +158,7 @@ sub extract_entries {
     $logger->debug('Wanted keys: ' . join(', ', @$keys));
     foreach my $wanted_key (@$keys) {
       $logger->debug("Looking for key '$wanted_key' in Text::BibTeX cache");
-      # Cache index keys are lower-cased. This next line effectively implements
-      # case insensitive citekey matching
-      if (my $entry = $cache->{data}{$filename}{lc($wanted_key)}) {
+      if (my $entry = $cache->{data}{$filename}{$wanted_key}) {
         $logger->debug("Found key '$wanted_key' in Text::BibTeX cache");
         # See comment above about the importance of the case of the key
         # passed to create_entry()
@@ -203,23 +196,7 @@ sub create_entry {
   my $bibentries = $section->bibentries;
   my $bibentry = new Biber::Entry;
 
-  # Key casing is tricky. We need to note:
-  #
-  # Key matching in biber between .bcf and datasources is case-INSENSITIVE (bibtex compat)
-  # Key matching in biblatex between citations and .bbl is case-SENSITIVE
-  #
-  # So, we must create the .bbl with keys cased as per the .bcf, not the datasource
-  # Therefore, we save to key versions, the original .bcf case and a lowercased variant
-  # for internal operations.
-  my $key_lc = lc($key);
-  $bibentry->set_field('bcfcase_citekey', $key);
-  $bibentry->set_field('citekey', $key_lc);
-
-  # We also record the .bcf cased key in the section object
-  # because there are certain places which need this
-  # (for example shorthand list output) which need to output the key in the
-  # right case but which have no access to entry objects
-  $section->add_bcfkey($key);
+  $bibentry->set_field('citekey', $key);
 
   # Get a reference to the map option, if it exists
   my $user_map;
@@ -239,7 +216,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
       # to make them available for things that need them like parsename()
       if ($f eq 'options') {
         my $value = decode_utf8($entry->get($f));
-        $biber->process_entry_options($key_lc, $value);
+        $biber->process_entry_options($key, $value);
       }
 
       # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf
@@ -440,7 +417,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
     }
 
     $bibentry->set_field('datatype', 'bibtex');
-    $bibentries->add_entry($key_lc, $bibentry);
+    $bibentries->add_entry($key, $bibentry);
   }
 
   return;
@@ -450,7 +427,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
 
 # Literal fields
 sub _literal {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   my $value = decode_utf8($entry->get($f));
 
   # If we have already split some date fields into literal fields
@@ -471,7 +448,7 @@ sub _literal {
 
 # Verbatim fields
 sub _verbatim {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   my $value = decode_utf8($entry->get($f));
   $bibentry->set_datafield($to, $value);
   return;
@@ -479,7 +456,7 @@ sub _verbatim {
 
 # Range fields
 sub _range {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   my $values_ref;
   my @values = split(/\s*,\s*/, decode_utf8($entry->get($f)));
   # Here the "-–" contains two different chars even though they might
@@ -504,19 +481,18 @@ sub _range {
 
 # Names
 sub _name {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   my $secnum = $biber->get_current_section;
   my $section = $biber->sections->get_section($secnum);
   my @tmp = $entry->split($f);
-  my $lc_key = lc($dskey);
-  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $lc_key);
+  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
   my $names = new Biber::Entry::Names;
   foreach my $name (@tmp) {
 
     # Consecutive "and" causes Text::BibTeX::Name to segfault
     unless ($name) {
-      $biber->biber_warn($bibentry, "Name in key '$dskey' is empty (probably consecutive 'and'): skipping name");
-      $section->del_citekey($dskey);
+      $biber->biber_warn($bibentry, "Name in key '$key' is empty (probably consecutive 'and'): skipping name");
+      $section->del_citekey($key);
       next;
     }
 
@@ -529,14 +505,14 @@ sub _name {
       my @commas = $name =~ m/,/g;
       if ($#commas > 1) {
         $biber->biber_warn($bibentry, "Name \"$name\" has too many commas: skipping name");
-        $section->del_citekey($dskey);
+        $section->del_citekey($key);
         next;
       }
 
       # Consecutive commas cause Text::BibTeX::Name to segfault
       if ($name =~ /,,/) {
         $biber->biber_warn($bibentry, "Name \"$name\" is malformed (consecutive commas): skipping name");
-        $section->del_citekey($dskey);
+        $section->del_citekey($key);
         next;
       }
     }
@@ -558,7 +534,7 @@ sub _name {
 
 # Dates
 sub _date {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   my ($datetype) = $f =~ m/\A(.*)date\z/xms;
   my $date = decode_utf8($entry->get($f));
   # We are not validating dates here, just syntax parsing
@@ -577,12 +553,12 @@ sub _date {
     if ($byear and
         ($datetype . 'year' eq 'year') and
         $entry->get('year')) {
-      $biber->biber_warn($bibentry, "Overwriting field 'year' with year value from field 'date' for entry '$dskey'");
+      $biber->biber_warn($bibentry, "Overwriting field 'year' with year value from field 'date' for entry '$key'");
     }
     if ($bmonth and
         ($datetype . 'month' eq 'month') and
         $entry->get('month')) {
-      $biber->biber_warn($bibentry, "Overwriting field 'month' with month value from field 'date' for entry '$dskey'");
+      $biber->biber_warn($bibentry, "Overwriting field 'month' with month value from field 'date' for entry '$key'");
     }
 
     $bibentry->set_datafield($datetype . 'year', $byear)      if $byear;
@@ -598,14 +574,14 @@ sub _date {
     }
   }
   else {
-    $biber->biber_warn($bibentry, "Invalid format '$date' of date field '$f' in entry '$dskey' - ignoring");
+    $biber->biber_warn($bibentry, "Invalid format '$date' of date field '$f' in entry '$key' - ignoring");
   }
   return;
 }
 
 # List fields
 sub _list {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   my @tmp = $entry->split($f);
 
   @tmp = map { decode_utf8($_) } @tmp;
@@ -651,32 +627,37 @@ sub cache_data {
     }
 
     # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing utf8 keys
-    my $dskey = decode_utf8($entry->key);
+    my $key = decode_utf8($entry->key);
+
+
+    # If we've already seen a case variant, warn
+    if  (my $okey = $biber->has_everydupkey($key)) {
+      $logger->warn("Possible typo (case mismatch): '$key' and '$okey' in file '$filename', skipping '$key' ...");
+    }
 
     # If we've already seen this key, ignore it and warn
-    # Note the calls to lc() - we don't care about case when detecting duplicates
-    if  ($biber->get_everykey($dskey)) {
-      $logger->warn("Duplicate entry key: '$dskey' in file '$filename', skipping ...");
+    if  ($biber->has_everykey($key)) {
+      $logger->warn("Duplicate entry key: '$key' in file '$filename', skipping ...");
       next;
     }
     else {
-      $biber->add_everykey($dskey);
+      $biber->add_everykey($key);
     }
 
     # Bad entry
     unless ($entry->parse_ok) {
-      $logger->warn("Entry $dskey does not parse correctly: skipping");
+      $logger->warn("Entry $key does not parse correctly: skipping");
       next;
     }
 
     # Cache the entry so we don't have to read the file again on next pass.
     # Two reasons - So we avoid T::B macro redef warnings and speed
-    $cache->{data}{$filename}{lc($dskey)} = $entry;
+    $cache->{data}{$filename}{$key} = $entry;
     # We do this as otherwise we have no way of determining the origing .bib entry order
     # We need this in order to do sorting=none + allkeys because in this case, there is no
     # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
-    push @{$cache->{orig_key_order}{$filename}}, $dskey;
-    $logger->debug("Cached Text::BibTeX entry for key '$dskey' from bibtex file '$filename'");
+    push @{$cache->{orig_key_order}{$filename}}, $key;
+    $logger->debug("Cached Text::BibTeX entry for key '$key' from bibtex file '$filename'");
   }
 
   $bib->close; # If we don't do this, we can't unlink the temp file on Windows

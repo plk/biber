@@ -109,10 +109,14 @@ sub extract_entries {
         next;
       }
 
-      # If we've already seen this key, ignore it and warn
-      # Note the calls to lc() - we don't care about case when detecting duplicates
       my $ek = $entry->findvalue('./rec-number');
-      if  ($biber->get_everykey($ek)) {
+      # If we've already seen a case variant, warn
+      if (my $okey = $biber->has_everydupkey($ek)) {
+        $logger->warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
+      }
+
+      # If we've already seen this key, ignore it and warn
+      if ($biber->has_everykey($ek)) {
         $logger->warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
         next;
       }
@@ -127,11 +131,6 @@ sub extract_entries {
       # We need this in order to do sorting=none + allkeys because in this case, there is no
       # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
       push @{$orig_key_order->{$filename}}, "$dbdid:$key";
-
-      # We have to pass the datasource cased (and UTF-8ed) key to
-      # create_entry() as this sub needs to know the datasource case of the
-      # citation key so we can save it for output later after all the case-insensitive
-      # work. If we lowercase before this, we lose this information.
       create_entry($biber, "$dbdid:$key", $entry);
     }
 
@@ -149,10 +148,6 @@ sub extract_entries {
     $logger->debug('Wanted keys: ' . join(', ', @$keys));
     foreach my $wanted_key (@$keys) {
       $logger->debug("Looking for key '$wanted_key' in Endnote XML file '$filename'");
-      # Cache index keys are lower-cased. This next line effectively implements
-      # case insensitive citekeys
-      # FIXME NO IT DOESN'T. NEED TO SEARCH CASE_INSENSITIVE WITH XPATH 1.0
-
       # Split key into parts
       my ($wdbid, $wnum) = split(/:/, $wanted_key);
 
@@ -198,23 +193,7 @@ sub create_entry {
   my $bibentries = $section->bibentries;
   my $bibentry = new Biber::Entry;
 
-  # Key casing is tricky. We need to note:
-  #
-  # Key matching in biber between .bcf and datasources is case-INSENSITIVE (bibtex compat)
-  # Key matching in biblatex between citations and .bbl is case-SENSITIVE
-  #
-  # So, we must create the .bbl with keys cased as per the .bcf, not the datasource
-  # Therefore, we save to key versions, the original .bcf case and a lowercased variant
-  # for internal operations.
-  my $key_lc = lc($key);
-  $bibentry->set_field('bcfcase_citekey', $key);
-  $bibentry->set_field('citekey', $key_lc);
-
-  # We also record the datasource key in original case in the section object
-  # because there are certain places which need this
-  # (for example shorthand list output) which need to output the key in the
-  # right case but which have no access to entry objects
-  $section->add_bcfkey($key);
+  $bibentry->set_field('citekey', $key);
 
   # Get a reference to the map option, if it exists
   my $user_map;
@@ -408,28 +387,28 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
   }
 
   $bibentry->set_field('datatype', 'endnotexml');
-  $bibentries->add_entry($key_lc, $bibentry);
+  $bibentries->add_entry($key, $bibentry);
 
   return;
 }
 
 # List fields
 sub _list {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   $bibentry->set_datafield($to, [ _norm($entry->findvalue("./$f")) ]);
   return;
 }
 
 # literal fields
 sub _literal {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   $bibentry->set_datafield($to, _norm($entry->findvalue("(./$f|./titles/$f|./contributors/$f|./urls/web-urls/$f)")));
   return;
 }
 
 # Range fields
 sub _range {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   my $values_ref;
   my @values = split(/\s*,\s*/, _norm($entry->findvalue("./$f")));
   # Here the "-–" contains two different chars even though they might
@@ -453,7 +432,7 @@ sub _range {
 
 # Date fields
 sub _date {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   my $daten = $entry->findnodes("./dates/$f")->get_node(1);
   # Use Endnote explicit date attributes, if present
   # It's not clear if Endnote actually uses these attributes
@@ -492,7 +471,7 @@ sub _date {
       }
     }
     else {
-      $biber->biber_warn($bibentry, "Invalid format '$date' of date field '$f' in entry '$dskey' - ignoring");
+      $biber->biber_warn($bibentry, "Invalid format '$date' of date field '$f' in entry '$key' - ignoring");
     }
     return;
   }
@@ -500,9 +479,9 @@ sub _date {
 
 # Name fields
 sub _name {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   my $names = new Biber::Entry::Names;
-  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $dskey);
+  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
   foreach my $name ($entry->findnodes("./contributors/$f/*")) {
     $names->add_name(parsename($name, $f, {useprefix => $useprefix}));
   }
@@ -511,7 +490,7 @@ sub _name {
 }
 
 sub _keywords {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   if (my @s = $entry->findnodes("./$f/keyword")) {
     my @kws;
     foreach my $s (@s) {

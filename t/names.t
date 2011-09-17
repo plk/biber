@@ -703,40 +703,40 @@ is_deeply(Biber::Input::file::bibtex::parsename('J. C. G. de la Vallée Poussin'
 is_deeply(Biber::Input::file::bibtex::parsename('E. S. El-{M}allah', 'author'), $name15, 'parsename 15');
 is_deeply(Biber::Input::file::bibtex::parsename('E. S. {K}ent-{B}oswell', 'author'), $name16, 'parsename 16');
 
-is( $out->get_output_entry($main,'l1'), $l1, 'First Last') ;
-is( $out->get_output_entry($main,'l2'), $l2, 'First Initial. Last') ;
-is( $out->get_output_entry($main,'l3'), $l3, 'Initial. Initial. Last') ;
-is( $out->get_output_entry($main,'l4'), $l4, 'First Initial Last') ;
-is( $out->get_output_entry($main,'l5'), $l5, 'First prefix Last') ;
-is( $out->get_output_entry($main,'l6'), $l6, 'First prefix prefix Last') ;
-is( $out->get_output_entry($main,'l7'), $l7, 'First Initial. prefix Last') ;
-is( $out->get_output_entry($main,'l8'), $l8, 'First Initial prefix Last') ;
-is( $out->get_output_entry($main,'l9'), $l9, 'First {Last Last}') ;
-is( $out->get_output_entry($main,'l10'), $l10, 'Last, Suffix, First') ;
-is( $out->get_output_entry($main,'l10a'), $l10a, 'Last, Suffix, First Initial.') ;
-is( $out->get_output_entry($main,'l11'), $l11, 'prefix Last, Suffix, First') ;
-is( $out->get_output_entry($main,'l13'), $l13, 'Last Last Last, Initial. Initial.');
-is( $out->get_output_entry($main,'l14'), $l14, 'Last Last-Last, First');
-is( $out->get_output_entry($main,'l15'), $l15, 'First F.{\bibinitdelim }F. Last');
-is( $out->get_output_entry($main,'l16'), $l16, 'First {F.\bibinitdelim F.} Last');
-is( $out->get_output_entry($main,'l17'), $l17, 'Last, First {F.\bibinitdelim F.}');
-is( $out->get_output_entry($main,'l18'), $l18, 'Last, First F.{\bibinitdelim }F.');
-is( $out->get_output_entry($main,'l19'), $l19, 'Firstname with hyphen');
-is( $out->get_output_entry($main,'l20'), $l20, 'Protected dual first name');
-is( $out->get_output_entry($main,'l22'), $l22u, 'LaTeX encoded unicode lastname');
-is( $out->get_output_entry($main,'l23'), $l23, 'Unicode firstname');
-is( $out->get_output_entry($main,'l24'), $l24, 'Unicode lastname');
-is( $out->get_output_entry($main,'l25'), $l25, 'Single string name');
-is( $out->get_output_entry($main,'l26'), $l26, 'Hyphen at brace level <> 0');
-is($section->bibentry('l27')->get_field('author')->count_names, 1, 'Bad name with 3 commas');
-is( $out->get_output_entry($main,'l28'), $l28, 'Bad name with consecutive commas');
-is( $out->get_output_entry($main,'l29'), $l29, 'Escaped name with 3 commas');
+is( $out->get_output_entry($main,'L1'), $l1, 'First Last') ;
+is( $out->get_output_entry($main,'L2'), $l2, 'First Initial. Last') ;
+is( $out->get_output_entry($main,'L3'), $l3, 'Initial. Initial. Last') ;
+is( $out->get_output_entry($main,'L4'), $l4, 'First Initial Last') ;
+is( $out->get_output_entry($main,'L5'), $l5, 'First prefix Last') ;
+is( $out->get_output_entry($main,'L6'), $l6, 'First prefix prefix Last') ;
+is( $out->get_output_entry($main,'L7'), $l7, 'First Initial. prefix Last') ;
+is( $out->get_output_entry($main,'L8'), $l8, 'First Initial prefix Last') ;
+is( $out->get_output_entry($main,'L9'), $l9, 'First {Last Last}') ;
+is( $out->get_output_entry($main,'L10'), $l10, 'Last, Suffix, First') ;
+is( $out->get_output_entry($main,'L10a'), $l10a, 'Last, Suffix, First Initial.') ;
+is( $out->get_output_entry($main,'L11'), $l11, 'prefix Last, Suffix, First') ;
+is( $out->get_output_entry($main,'L13'), $l13, 'Last Last Last, Initial. Initial.');
+is( $out->get_output_entry($main,'L14'), $l14, 'Last Last-Last, First');
+is( $out->get_output_entry($main,'L15'), $l15, 'First F.{\bibinitdelim }F. Last');
+is( $out->get_output_entry($main,'L16'), $l16, 'First {F.\bibinitdelim F.} Last');
+is( $out->get_output_entry($main,'L17'), $l17, 'Last, First {F.\bibinitdelim F.}');
+is( $out->get_output_entry($main,'L18'), $l18, 'Last, First F.{\bibinitdelim }F.');
+is( $out->get_output_entry($main,'L19'), $l19, 'Firstname with hyphen');
+is( $out->get_output_entry($main,'L20'), $l20, 'Protected dual first name');
+is( $out->get_output_entry($main,'L22'), $l22u, 'LaTeX encoded unicode lastname');
+is( $out->get_output_entry($main,'L23'), $l23, 'Unicode firstname');
+is( $out->get_output_entry($main,'L24'), $l24, 'Unicode lastname');
+is( $out->get_output_entry($main,'L25'), $l25, 'Single string name');
+is( $out->get_output_entry($main,'L26'), $l26, 'Hyphen at brace level <> 0');
+is($section->bibentry('L27')->get_field('author')->count_names, 1, 'Bad name with 3 commas');
+is( $out->get_output_entry($main,'L28'), $l28, 'Bad name with consecutive commas');
+is( $out->get_output_entry($main,'L29'), $l29, 'Escaped name with 3 commas');
 
 # Checking visibility
 # Count does not include the "and others" as this "name" is delete in the output driver
-is($bibentries->entry('v1')->get_field($bibentries->entry('v1')->get_field('labelnamename'))->count_names, '2', 'Name count for "and others" - 1');
-is($bibentries->entry('v1')->get_field($bibentries->entry('v1')->get_field('labelnamename'))->get_visible_cite, '2', 'Visibility for "and others" - 1');
-is($bibentries->entry('v2')->get_field($bibentries->entry('v2')->get_field('labelnamename'))->get_visible_cite, '1', 'Visibility for "and others" - 2');
+is($bibentries->entry('V1')->get_field($bibentries->entry('v1')->get_field('labelnamename'))->count_names, '2', 'Name count for "and others" - 1');
+is($bibentries->entry('V1')->get_field($bibentries->entry('v1')->get_field('labelnamename'))->get_visible_cite, '2', 'Visibility for "and others" - 1');
+is($bibentries->entry('V2')->get_field($bibentries->entry('v2')->get_field('labelnamename'))->get_visible_cite, '1', 'Visibility for "and others" - 2');
 
 # A few tests depend set to non UTF-8 output
 # Have to use a new biber object when trying to change encoding as this isn't
@@ -758,8 +758,8 @@ $main = $section->get_list('MAIN');
 $bibentries = $section->bibentries;
 
 is_deeply($bibentries->entry('l21')->get_field($bibentries->entry('l21')->get_field('labelnamename'))->nth_name(1)->get_firstname_i, ['{\v S}'], 'Terseinitials 1');
-is( $out->get_output_entry($main,'l12'), $l12, 'First First First First prefix prefix Last Last') ;
-is( $out->get_output_entry($main,'l21'), $l21, 'LaTeX encoded unicode firstname');
-is( $out->get_output_entry($main,'l22'), $l22, 'LaTeX encoded unicode lastname');
-is( $out->get_output_entry($main,'l31'), $l31, 'LaTeX encoded unicode lastname with tie char');
+is( $out->get_output_entry($main,'L12'), $l12, 'First First First First prefix prefix Last Last') ;
+is( $out->get_output_entry($main,'L21'), $l21, 'LaTeX encoded unicode firstname');
+is( $out->get_output_entry($main,'L22'), $l22, 'LaTeX encoded unicode lastname');
+is( $out->get_output_entry($main,'L31'), $l31, 'LaTeX encoded unicode lastname with tie char');
 

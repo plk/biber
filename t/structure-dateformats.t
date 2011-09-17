@@ -268,61 +268,61 @@ my $l17e = q|  \entry{L17}{proceedings}{}
 
 |;
 
-is_deeply($bibentries->entry('l1')->get_field('warnings'), $l1, 'Date values test 1' ) ;
-ok(is_undef($bibentries->entry('l1')->get_field('origyear')), 'Date values test 1a - ORIGYEAR undef since ORIGDATE is bad' ) ;
-ok(is_undef($bibentries->entry('l1')->get_field('urlyear')), 'Date values test 1b - URLYEAR undef since URLDATE is bad' ) ;
-ok(is_undef($bibentries->entry('l1')->get_field('month')), 'Date values test 1c - MONTH undef since not integer' ) ;
-is_deeply($bibentries->entry('l2')->get_field('warnings'), $l2, 'Date values test 2' ) ;
-is_deeply($bibentries->entry('l3')->get_field('warnings'), $l3, 'Date values test 3' ) ;
-is_deeply($bibentries->entry('l4')->get_field('warnings'), $l4, 'Date values test 4' ) ;
-is_deeply($bibentries->entry('l5')->get_field('warnings'), $l5, 'Date values test 5' ) ;
-is_deeply($bibentries->entry('l6')->get_field('warnings'), $l6, 'Date values test 6' ) ;
-is_deeply($bibentries->entry('l7')->get_field('warnings'), $l7, 'Date values test 7' ) ;
-is($bibentries->entry('l8')->get_field('month'), '01', 'Date values test 8b - MONTH hacked to integer' ) ;
-ok(is_undef($bibentries->entry('l9')->get_field('warnings')), 'Date values test 9' ) ;
-ok(is_undef($bibentries->entry('l10')->get_field('warnings')), 'Date values test 10' ) ;
-is_deeply($bibentries->entry('l11')->get_field('warnings'), $l11, 'Date values test 11' );
-is($bibentries->entry('l11')->get_field('year'), '1996', 'Date values test 11a - DATE overrides YEAR' ) ;
-is_deeply($bibentries->entry('l12')->get_field('warnings'), $l12, 'Date values test 12' );
-is($bibentries->entry('l12')->get_field('month'), '01', 'Date values test 12a - DATE overrides MONTH' ) ;
+is_deeply($bibentries->entry('L1')->get_field('warnings'), $l1, 'Date values test 1' ) ;
+ok(is_undef($bibentries->entry('L1')->get_field('origyear')), 'Date values test 1a - ORIGYEAR undef since ORIGDATE is bad' ) ;
+ok(is_undef($bibentries->entry('L1')->get_field('urlyear')), 'Date values test 1b - URLYEAR undef since URLDATE is bad' ) ;
+ok(is_undef($bibentries->entry('L1')->get_field('month')), 'Date values test 1c - MONTH undef since not integer' ) ;
+is_deeply($bibentries->entry('L2')->get_field('warnings'), $l2, 'Date values test 2' ) ;
+is_deeply($bibentries->entry('L3')->get_field('warnings'), $l3, 'Date values test 3' ) ;
+is_deeply($bibentries->entry('L4')->get_field('warnings'), $l4, 'Date values test 4' ) ;
+is_deeply($bibentries->entry('L5')->get_field('warnings'), $l5, 'Date values test 5' ) ;
+is_deeply($bibentries->entry('L6')->get_field('warnings'), $l6, 'Date values test 6' ) ;
+is_deeply($bibentries->entry('L7')->get_field('warnings'), $l7, 'Date values test 7' ) ;
+is($bibentries->entry('L8')->get_field('month'), '01', 'Date values test 8b - MONTH hacked to integer' ) ;
+ok(is_undef($bibentries->entry('L9')->get_field('warnings')), 'Date values test 9' ) ;
+ok(is_undef($bibentries->entry('L10')->get_field('warnings')), 'Date values test 10' ) ;
+is_deeply($bibentries->entry('L11')->get_field('warnings'), $l11, 'Date values test 11' );
+is($bibentries->entry('L11')->get_field('year'), '1996', 'Date values test 11a - DATE overrides YEAR' ) ;
+is_deeply($bibentries->entry('L12')->get_field('warnings'), $l12, 'Date values test 12' );
+is($bibentries->entry('L12')->get_field('month'), '01', 'Date values test 12a - DATE overrides MONTH' ) ;
 # it means something if endyear is defined but null ("1935-")
-ok(is_def_and_null($bibentries->entry('l13')->get_field('endyear')), 'Date values test 13 - range with no end' ) ;
-ok(is_undef($bibentries->entry('l13')->get_field('endmonth')), 'Date values test 13a - ENDMONTH undef for open-ended range' ) ;
-ok(is_undef($bibentries->entry('l13')->get_field('endday')), 'Date values test 13b - ENDDAY undef for open-ended range' ) ;
-is( $out->get_output_entry($main,'l13'), $l13c, 'Date values test 13c - labelyear open-ended range' ) ;
-is( $out->get_output_entry($main,'l14'), $l14, 'Date values test 14 - labelyear same as YEAR when ENDYEAR == YEAR') ;
-is( $out->get_output_entry($main,'l15'), $l15, 'Date values test 15 - labelyear should be undef, no DATE or YEAR') ;
+ok(is_def_and_null($bibentries->entry('L13')->get_field('endyear')), 'Date values test 13 - range with no end' ) ;
+ok(is_undef($bibentries->entry('L13')->get_field('endmonth')), 'Date values test 13a - ENDMONTH undef for open-ended range' ) ;
+ok(is_undef($bibentries->entry('L13')->get_field('endday')), 'Date values test 13b - ENDDAY undef for open-ended range' ) ;
+is( $out->get_output_entry($main,'L13'), $l13c, 'Date values test 13c - labelyear open-ended range' ) ;
+is( $out->get_output_entry($main,'L14'), $l14, 'Date values test 14 - labelyear same as YEAR when ENDYEAR == YEAR') ;
+is( $out->get_output_entry($main,'L15'), $l15, 'Date values test 15 - labelyear should be undef, no DATE or YEAR') ;
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelyearspec', [ 'year', 'eventyear', 'origyear' ]);
-$bibentries->entry('l17')->del_field('year');
-$bibentries->entry('l17')->del_field('month');
-$bibentries->entry('l16')->del_field('warnings');
+$bibentries->entry('L17')->del_field('year');
+$bibentries->entry('L17')->del_field('month');
+$bibentries->entry('L16')->del_field('warnings');
 $biber->prepare;
 $out = $biber->get_output_obj;
 
-is($bibentries->entry('l16')->get_field('labelyearname'), 'eventyear', 'Date values test 16 - labelyearname = eventyear when YEAR is (mistakenly) missing' ) ;
-is($out->get_output_entry($main,'l16'), $l16, 'Date values test 16a - labelyear = EVENTYEAR value when YEAR is (mistakenly) missing' );
-is($bibentries->entry('l17')->get_field('labelyearname'), 'year', 'Date values test 17 - labelyearname = YEAR' ) ;
-is($out->get_output_entry($main,'l17'), $l17, 'Date values test 17a - labelyear = YEAR value when ENDYEAR is the same and ORIGYEAR is also present' ) ;
+is($bibentries->entry('L16')->get_field('labelyearname'), 'eventyear', 'Date values test 16 - labelyearname = eventyear when YEAR is (mistakenly) missing' ) ;
+is($out->get_output_entry($main,'L16'), $l16, 'Date values test 16a - labelyear = EVENTYEAR value when YEAR is (mistakenly) missing' );
+is($bibentries->entry('L17')->get_field('labelyearname'), 'year', 'Date values test 17 - labelyearname = YEAR' ) ;
+is($out->get_output_entry($main,'L17'), $l17, 'Date values test 17a - labelyear = YEAR value when ENDYEAR is the same and ORIGYEAR is also present' ) ;
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelyearspec', [ 'origyear', 'year', 'eventyear' ]);
-$bibentries->entry('l17')->del_field('year');
-$bibentries->entry('l17')->del_field('month');
+$bibentries->entry('L17')->del_field('year');
+$bibentries->entry('L17')->del_field('month');
 $biber->prepare;
 $out = $biber->get_output_obj;
 
-is($bibentries->entry('l17')->get_field('labelyearname'), 'origyear', 'Date values test 17b - labelyearname = ORIGYEAR' ) ;
-is($out->get_output_entry($main,'l17'), $l17c, 'Date values test 17c - labelyear = ORIGYEAR value when ENDORIGYEAR is the same and YEAR is also present' ) ;
+is($bibentries->entry('L17')->get_field('labelyearname'), 'origyear', 'Date values test 17b - labelyearname = ORIGYEAR' ) ;
+is($out->get_output_entry($main,'L17'), $l17c, 'Date values test 17c - labelyear = ORIGYEAR value when ENDORIGYEAR is the same and YEAR is also present' ) ;
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelyearspec', [ 'eventyear', 'year', 'origyear' ], 'PER_TYPE', 'proceedings');
-$bibentries->entry('l17')->del_field('year');
-$bibentries->entry('l17')->del_field('month');
+$bibentries->entry('L17')->del_field('year');
+$bibentries->entry('L17')->del_field('month');
 $biber->prepare;
 $out = $biber->get_output_obj;
 
-is($bibentries->entry('l17')->get_field('labelyearname'), 'eventyear', 'Date values test 17d - labelyearname = EVENTYEAR' ) ;
-is($out->get_output_entry($main,'l17'), $l17e, 'Date values test 17e - labelyear = ORIGYEAR-ORIGENDYEAR' ) ;
+is($bibentries->entry('L17')->get_field('labelyearname'), 'eventyear', 'Date values test 17d - labelyearname = EVENTYEAR' ) ;
+is($out->get_output_entry($main,'L17'), $l17e, 'Date values test 17e - labelyear = ORIGYEAR-ORIGENDYEAR' ) ;
 

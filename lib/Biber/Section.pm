@@ -430,31 +430,6 @@ sub get_list {
   return undef;
 }
 
-=head2 add_bcfkey
-
-    Adds a .bcf cased key to the object
-
-=cut
-
-sub add_bcfkey {
-  my $self = shift;
-  my $bcfkey = shift;
-  $self->{bcfkeycache}{lc($bcfkey)} = $bcfkey;
-  return;
-}
-
-=head2 get_bcfkey
-
-    Gets the original .bcf cased key
-
-=cut
-
-sub get_bcfkey {
-  my $self = shift;
-  my $key = shift;
-  return $self->{bcfkeycache}{lc($key)};
-}
-
 
 =head2 add_sort_cache
 

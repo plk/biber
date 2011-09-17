@@ -123,18 +123,32 @@ sub sections {
 }
 
 
-=head2 get_everykey
+=head2 has_everykey
 
-    Returns a boolean to say if we've seen a key in any datasource
+    Returns a boolean to say if we've seen a key in any datasource.
     This used to be an array ref which was checked using first() and it
     was twenty times slower.
 
 =cut
 
-sub get_everykey {
+sub has_everykey {
   my ($self, $key) = @_;
-  return $self->{everykey}{lc($key)};
+  return $self->{everykey}{$key} ? 1 : 0;
 }
+
+=head2 has_everydupkey
+
+    Returns a value to say if we've seen a key in any datasource.
+    <previouskey>  - we've seen a differently cased variant of this key so we can warn about this
+    0  - Not seen this key at all in any case variant before
+
+=cut
+
+sub has_everydupkey {
+  my ($self, $key) = @_;
+  return $self->{everykey_lc}{lc($key)} // undef;
+}
+
 
 =head2 add_everykey
 
@@ -144,7 +158,8 @@ sub get_everykey {
 
 sub add_everykey {
   my ($self, $key) = @_;
-  $self->{everykey}{lc($key)} = 1;
+  $self->{everykey}{$key} = 1;
+  $self->{everykey_lc}{lc($key)} = $key;
   return;
 }
 
@@ -390,17 +405,17 @@ sub parse_ctrlfile {
   foreach my $bcfopts (@{$bcfxml->{options}}) {
 
     # Biber options
-    if (lc($bcfopts->{component}) eq 'biber') {
+    if ($bcfopts->{component} eq 'biber') {
 
       # Global options
-      if (lc($bcfopts->{type}) eq 'global') {
+      if ($bcfopts->{type} eq 'global') {
         foreach my $bcfopt (@{$bcfopts->{option}}) {
           # unless already explicitly set from cmdline/config file
           unless (Biber::Config->isexplicitoption($bcfopt->{key}{content})) {
-            if (lc($bcfopt->{type}) eq 'singlevalued') {
+            if ($bcfopt->{type} eq 'singlevalued') {
               Biber::Config->setoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content});
             }
-            elsif (lc($bcfopt->{type}) eq 'multivalued') {
+            elsif ($bcfopt->{type} eq 'multivalued') {
               Biber::Config->setoption($bcfopt->{key}{content},
                 [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ]);
             }
@@ -410,15 +425,15 @@ sub parse_ctrlfile {
     }
 
     # BibLaTeX options
-    if (lc($bcfopts->{component}) eq 'biblatex') {
+    if ($bcfopts->{component} eq 'biblatex') {
 
       # Global options
-      if (lc($bcfopts->{type}) eq 'global') {
+      if ($bcfopts->{type} eq 'global') {
         foreach my $bcfopt (@{$bcfopts->{option}}) {
-          if (lc($bcfopt->{type}) eq 'singlevalued') {
+          if ($bcfopt->{type} eq 'singlevalued') {
             Biber::Config->setblxoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content});
           }
-          elsif (lc($bcfopt->{type}) eq 'multivalued') {
+          elsif ($bcfopt->{type} eq 'multivalued') {
             Biber::Config->setblxoption($bcfopt->{key}{content},
               [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ]);
           }
@@ -429,10 +444,10 @@ sub parse_ctrlfile {
       else {
         my $entrytype = $bcfopts->{type};
         foreach my $bcfopt (@{$bcfopts->{option}}) {
-          if (lc($bcfopt->{type}) eq 'singlevalued') {
+          if ($bcfopt->{type} eq 'singlevalued') {
             Biber::Config->setblxoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content}, 'PER_TYPE', $entrytype);
           }
-          elsif (lc($bcfopt->{type}) eq 'multivalued') {
+          elsif ($bcfopt->{type} eq 'multivalued') {
             Biber::Config->setblxoption($bcfopt->{key}{content},
               [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ],
               'PER_TYPE',
@@ -790,8 +805,9 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
 sub process_setup {
   my $self = shift;
-  # reset global datasource key cache
+  # reset global datasource key caches
   $self->{everykey} = {};
+  $self->{everykey_lc} = {};
 
   # Break structure information up into more processing-friendly formats
   # for use in verification checks later
@@ -830,8 +846,7 @@ sub instantiate_dynamic {
     my $be = new Biber::Entry;
     $be->set_field('entrytype', 'set');
     $be->set_field('entryset', join(',', @members));
-    $be->set_field('citekey', lc($dset));
-    $be->set_field('bcfcase_citekey', $dset);
+    $be->set_field('citekey', $dset);
     $be->set_field('datatype', 'dynamic');
     $section->bibentries->add_entry($dset, $be);
     # Setting dataonly for members is handled by process_sets()
@@ -902,9 +917,8 @@ sub process_crossrefs {
     my $be = $section->bibentry($citekey);
     if ($be->get_field('entrytype') eq 'set') {
       my @inset_keys = split /\s*,\s*/, $be->get_field('entryset');
-      foreach my $cinset_key (@inset_keys) {
-        my $inset_key = lc($cinset_key);
-        $logger->debug("  Adding set member '$cinset_key' to the citekeys (section $secnum)");
+      foreach my $inset_key (@inset_keys) {
+        $logger->debug("  Adding set member '$inset_key' to the citekeys (section $secnum)");
         $section->add_citekeys($inset_key);
       }
       # automatically crossref for the first set member using plain set inheritance
@@ -915,12 +929,11 @@ sub process_crossrefs {
       }
     }
     # Do crossrefs inheritance
-    if (my $ccrossrefkey = $be->get_field('crossref')) {
-      my $crossrefkey = lc($ccrossrefkey);
+    if (my $crossrefkey = $be->get_field('crossref')) {
       my $parent = $section->bibentry($crossrefkey);
-      $logger->debug("  Entry $citekey inheriting fields from parent $ccrossrefkey");
+      $logger->debug("  Entry $citekey inheriting fields from parent $crossrefkey");
       unless ($parent) {
-        $self->biber_warn($be, "Cannot inherit from crossref key '$ccrossrefkey' - does it exist?");
+        $self->biber_warn($be, "Cannot inherit from crossref key '$crossrefkey' - does it exist?");
       }
       else {
         $be->inherit_from($parent);
@@ -958,12 +971,12 @@ sub validate_structure {
   if (Biber::Config->getoption('validate_structure')) {
     foreach my $citekey ($section->get_citekeys) {
       my $be = $section->bibentry($citekey);
-      my $bcfkey = $be->get_field('bcfcase_citekey');
+      my $citekey = $be->get_field('citekey');
       my $et = $be->get_field('entrytype');
 
       # default entrytype to MISC type if not a known type
       unless ($struc->is_entrytype($et)) {
-        $self->biber_warn($be, "Entry '$bcfkey' - invalid entry type '" . $be->get_field('entrytype') . "' - defaulting to 'misc'");
+        $self->biber_warn($be, "Entry '$citekey' - invalid entry type '" . $be->get_field('entrytype') . "' - defaulting to 'misc'");
         $be->set_field('entrytype', 'misc');
         $et = 'misc';           # reset this too
       }
@@ -975,7 +988,7 @@ sub validate_structure {
       # * Valid because entrytype allows "ALL" fields
       foreach my $ef ($be->datafields) {
         unless ($struc->is_field_for_entrytype($et, $ef)) {
-          $self->biber_warn($be, "Entry '$bcfkey' - invalid field '$ef' for entrytype '$et'");
+          $self->biber_warn($be, "Entry '$citekey' - invalid field '$ef' for entrytype '$et'");
         }
       }
 
@@ -1196,13 +1209,12 @@ sub process_sets {
 
     # Enforce Biber parts of virtual "dataonly" for set members
     # Also automatically create an "entryset" field for the members
-    foreach my $cmember (@entrysetkeys) {
-      my $member = lc($cmember); # set keys may be arbitrary case, internaly we want lowercase
+    foreach my $member (@entrysetkeys) {
       Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $member);
       Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $member);
       my $me = $section->bibentry($member);
       if ($me->get_field('entryset')) {
-        $self->biber_warn($me, "Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry '$cmember'");
+        $self->biber_warn($me, "Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry '$member'");
         $me->del_field('entryset');
       }
       # This ends up setting \inset{} in the bib

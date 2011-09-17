@@ -118,6 +118,6 @@ is_deeply(Biber::Config->getblxoption('labelnamespec'), [ 'author' ], "Multi-val
 ok(Biber::Config->getoption('mincrossrefs') == 88, "Setting Biber options via control file");
 ok(Biber::Config->getblxoption('useprefix', 'book') == 1 , "Per-type single-valued options");
 is_deeply(Biber::Config->getblxoption('labelnamespec', 'book'), $bln, "Per-type multi-valued options");
-is($bibentries->entry('l1')->get_field('labelyearname'), 'year', 'Global labelyear setting' ) ;
-is( $out->get_output_entry($main,'l1'), $l1, 'Global labelyear setting - labelyear should be YEAR') ;
-is( $out->get_output_entry($main,'l2'), $l2, 'Entry-local biblatex option mappings - 1') ;
+is($bibentries->entry('L1')->get_field('labelyearname'), 'year', 'Global labelyear setting' ) ;
+is( $out->get_output_entry($main,'L1'), $l1, 'Global labelyear setting - labelyear should be YEAR') ;
+is( $out->get_output_entry($main,'L2'), $l2, 'Entry-local biblatex option mappings - 1') ;

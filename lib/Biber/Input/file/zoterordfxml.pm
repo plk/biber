@@ -129,9 +129,13 @@ sub extract_entries {
       # sanitise the key for LaTeX
       $ek =~ s/\A\#item_/item_/xms;
 
+      # If we've already seen a case variant, warn
+      if (my $okey = $biber->has_everydupkey($ek)) {
+        $logger->warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
+      }
+
       # If we've already seen this key, ignore it and warn
-      # Note the calls to lc() - we don't care about case when detecting duplicates
-      if  ($biber->get_everykey($ek)) {
+      if ($biber->has_everykey($ek)) {
         $logger->warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
         next;
       }
@@ -144,10 +148,6 @@ sub extract_entries {
       # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
       push @{$orig_key_order->{$filename}}, $ek;
 
-      # We have to pass the datasource cased (and UTF-8ed) key to
-      # create_entry() as this sub needs to know the datasource case of the
-      # citation key so we can save it for output later after all the case-insensitive
-      # work. If we lowercase before this, we lose this information.
       create_entry($biber, $ek, $entry);
     }
 
@@ -169,11 +169,7 @@ sub extract_entries {
       # Deal with messy Zotero auto-generated pseudo-keys
       my $temp_key = $wanted_key;
       $temp_key =~ s/\Aitem_/#item_/i;
-
-      # Cache index keys are lower-cased. This next line effectively implements
-      # case insensitive citekeys
-      # FIXME NO IT DOESN'T. NEED TO SEARCH CASE_INSENSITIVE WITH XPATH 1.0
-      if (my @entries = $xpc->findnodes("/rdf:RDF/*[\@rdf:about='" . lc($temp_key) . "']")) {
+      if (my @entries = $xpc->findnodes("/rdf:RDF/*[\@rdf:about='$temp_key']")) {
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
           $logger->warn("Found more than one entry for key '$wanted_key' in '$filename': " .
@@ -216,23 +212,7 @@ sub create_entry {
   my $bibentries = $section->bibentries;
   my $bibentry = new Biber::Entry;
 
-  # Key casing is tricky. We need to note:
-  #
-  # Key matching in biber between .bcf and datasources is case-INSENSITIVE (bibtex compat)
-  # Key matching in biblatex between citations and .bbl is case-SENSITIVE
-  #
-  # So, we must create the .bbl with keys cased as per the .bcf, not the datasource
-  # Therefore, we save to key versions, the original .bcf case and a lowercased variant
-  # for internal operations.
-  my $key_lc = lc($key);
-  $bibentry->set_field('bcfcase_citekey', $key);
-  $bibentry->set_field('citekey', $key_lc);
-
-  # We also record the datasource key in original case in the section object
-  # because there are certain places which need this
-  # (for example shorthand list output) which need to output the key in the
-  # right case but which have no access to entry objects
-  $section->add_bcfkey($key);
+  $bibentry->set_field('citekey', $key);
 
   # Get a reference to the map option, if it exists
   my $user_map;
@@ -419,21 +399,21 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
   }
 
   $bibentry->set_field('datatype', 'zoterordfxml');
-  $bibentries->add_entry($key_lc, $bibentry);
+  $bibentries->add_entry($key, $bibentry);
 
   return $bibentry; # We need to return the entry here for _partof() below
 }
 
 # List fields
 sub _list {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   $bibentry->set_datafield($to, [ $entry->findvalue("./$f") ]);
   return;
 }
 
 # literal fields
 sub _literal {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   # Special case - libraryCatalog is used only if hasn't already been set
   # by LCC
   if ($f eq 'z:libraryCatalog') {
@@ -445,7 +425,7 @@ sub _literal {
 
 # Range fields
 sub _range {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   my $values_ref;
   my @values = split(/\s*,\s*/, $entry->findvalue("./$f"));
   # Here the "-–" contains two different chars even though they might
@@ -469,7 +449,7 @@ sub _range {
 
 # Date fields
 sub _date {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   my $date = $entry->findvalue("./$f");
   # We are not validating dates here, just syntax parsing
     my $date_re = qr/(\d{4}) # year
@@ -491,14 +471,14 @@ sub _date {
     }
   }
   else {
-    $biber->biber_warn($bibentry, "Invalid format '$date' of date field '$f' in entry '$dskey' - ignoring");
+    $biber->biber_warn($bibentry, "Invalid format '$date' of date field '$f' in entry '$key' - ignoring");
   }
   return;
 }
 
 # Name fields
 sub _name {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   my $names = new Biber::Entry::Names;
   foreach my $name ($entry->findnodes("./$f/rdf:Seq/rdf:li/foaf:Person")) {
     $names->add_name(parsename($name, $f));
@@ -510,7 +490,7 @@ sub _name {
 # partof container
 # This essentially is a bit like biblatex inheritance, but not as fine-grained
 sub _partof {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   my $partof = $entry->findnodes("./$f")->get_node(1);
   my $itype = $entry->findvalue('./z:itemType') || $entry->nodeName;
   if ($partof->hasAttribute('rdf:resource')) { # remote ISSN resources aren't much use
@@ -523,8 +503,8 @@ sub _partof {
   }
 
   # create a dataonly entry for the partOf and add a crossref to it
-  my $crkey = $dskey . '_' . md5_hex($dskey);
-  $logger->debug("Creating a dataonly crossref '$crkey' for key '$dskey'");
+  my $crkey = $key . '_' . md5_hex($key);
+  $logger->debug("Creating a dataonly crossref '$crkey' for key '$key'");
   my $cref = create_entry($biber, $crkey, $partof->findnodes('*')->get_node(1));
   $cref->set_datafield('options', 'dataonly');
   Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $crkey);
@@ -551,7 +531,7 @@ sub _partof {
 }
 
 sub _publisher {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   if (my $org = $entry->findnodes("./$f/foaf:Organization")->get_node(1)) {
     # There is an address, set location.
     # Location is a list field in bibaltex, hence the array ref
@@ -568,7 +548,7 @@ sub _publisher {
 }
 
 sub _presentedat {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   if (my $conf = $entry->findnodes("./$f/bib:Conference")->get_node(1)) {
     $bibentry->set_datafield('eventtitle', $conf->findvalue('./dc:title'));
   }
@@ -576,7 +556,7 @@ sub _presentedat {
 }
 
 sub _subject {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   if (my $lib = $entry->findnodes("./$f/dcterms:LCC/rdf:value")->get_node(1)) {
     # This overrides any z:libraryCatalog node
     $bibentry->set_datafield('library', $lib->textContent());
@@ -592,7 +572,7 @@ sub _subject {
 }
 
 sub _identifier {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   if (my $url = $entry->findnodes("./$f/dcterms:URI/rdf:value")->get_node(1)) {
     $bibentry->set_datafield('url', $url->textContent());
   }

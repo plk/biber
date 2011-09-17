@@ -1,7 +1,7 @@
 Revision history for Biber
 
-0.9.6  14-09-2011
-       * Misc small bugs
+0.9.6  (unreleased)
+       * Matching of .bcf keys to datasource keys is now CASE_SENSITIVE
        * Fixed biblatex bug tracker ticket #3399744
        * Fixed bug tracker ticket #3402114
        * max/minnames -> max/mincitenames

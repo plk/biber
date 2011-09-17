@@ -130,10 +130,14 @@ sub extract_entries {
         next;
       }
 
-      # If we've already seen this key, ignore it and warn
-      # Note the calls to lc() - we don't care about case when detecting duplicates
       my $ek = $entry->{ID};
-      if  ($biber->get_everykey($ek)) {
+      # If we've already seen a case variant, warn
+      if (my $okey = $biber->has_everydupkey($ek)) {
+        $logger->warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
+      }
+
+      # If we've already seen this key, ignore it and warn
+      if ($biber->has_everykey($ek)) {
         $logger->warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
         next;
       }
@@ -146,10 +150,6 @@ sub extract_entries {
       # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
       push @{$orig_key_order->{$filename}}, $ek;
 
-      # We have to pass the datasource cased (and UTF-8ed) key to
-      # create_entry() as this sub needs to know the datasource case of the
-      # citation key so we can save it for output later after all the case-insensitive
-      # work. If we lowercase before this, we lose this information.
       create_entry($biber, $ek, $entry);
     }
 
@@ -167,9 +167,7 @@ sub extract_entries {
     $logger->debug('Wanted keys: ' . join(', ', @$keys));
     foreach my $wanted_key (@$keys) {
       $logger->debug("Looking for key '$wanted_key' in RIS file '$filename'");
-      # Cache index keys are lower-cased. This next line effectively implements
-      # case insensitive citekeys
-      if (my @entries = grep { lc($wanted_key) eq lc($_->{ID}) } @ris_entries) {
+      if (my @entries = grep { $wanted_key eq $_->{ID} } @ris_entries) {
         if ($#entries > 0) {
           $logger->warn("Found more than one entry for key '$wanted_key' in '$filename': " .
                        join(',', map {$_->{ID}} @entries) . ' - skipping duplicates ...');
@@ -206,23 +204,7 @@ sub create_entry {
   my $bibentries = $section->bibentries;
   my $bibentry = new Biber::Entry;
 
-  # Key casing is tricky. We need to note:
-  #
-  # Key matching in biber between .bcf and datasources is case-INSENSITIVE (bibtex compat)
-  # Key matching in biblatex between citations and .bbl is case-SENSITIVE
-  #
-  # So, we must create the .bbl with keys cased as per the .bcf, not the datasource
-  # Therefore, we save to key versions, the original .bcf case and a lowercased variant
-  # for internal operations.
-  my $key_lc = lc($key);
-  $bibentry->set_field('bcfcase_citekey', $key);
-  $bibentry->set_field('citekey', $key_lc);
-
-  # We also record the datasource key in original case in the section object
-  # because there are certain places which need this
-  # (for example shorthand list output) which need to output the key in the
-  # right case but which have no access to entry objects
-  $section->add_bcfkey($key);
+  $bibentry->set_field('citekey', $key);
 
   # Get a reference to the map option, if it exists
   my $user_map;
@@ -412,28 +394,28 @@ FLOOP:  foreach my $f (keys %$entry) {
   }
 
   $bibentry->set_field('datatype', 'ris');
-  $bibentries->add_entry($key_lc, $bibentry);
+  $bibentries->add_entry($key, $bibentry);
 
   return;
 }
 
 # Verbatim fields
 sub _verbatim {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   $bibentry->set_datafield($to, $entry->{$f});
   return;
 }
 
 # Range fields
 sub _range {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   $bibentry->set_datafield($to, _parse_range_list($entry->{$f}));
   return;
 }
 
 # Date fields
 sub _date {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   my $date = $entry->{$f};
   if ($date =~ m|\A([0-9]{4})/([0-9]{2})/([0-9]{2}/([^\n]+))\z|xms) {
     $bibentry->set_datafield('year', $1);
@@ -451,7 +433,7 @@ sub _date {
 
 # Name fields
 sub _name {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   my $names = $entry->{$f};
   my $names_obj = new Biber::Entry::Names;
   foreach my $name (@$names) {

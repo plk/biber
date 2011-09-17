@@ -114,10 +114,14 @@ sub extract_entries {
         next;
       }
 
-      # If we've already seen this key, ignore it and warn
-      # Note the calls to lc() - we don't care about case when detecting duplicates
       my $ek = $entry->getAttribute('id');
-      if  ($biber->get_everykey($ek)) {
+      # If we've already seen a case variant, warn
+      if (my $okey = $biber->has_everydupkey($ek)) {
+        $logger->warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
+      }
+
+      # If we've already seen this key, ignore it and warn
+      if ($biber->has_everykey($ek)) {
         $logger->warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
         next;
       }
@@ -125,10 +129,6 @@ sub extract_entries {
         $biber->add_everykey($ek);
       }
 
-      # We have to pass the datasource cased (and UTF-8ed) key to
-      # create_entry() as this sub needs to know the datasource case of the
-      # citation key so we can save it for output later after all the case-insensitive
-      # work. If we lowercase before this, we lose this information.
       create_entry($biber, $ek, $entry);
 
       # We do this as otherwise we have no way of determining the origing .bib entry order
@@ -151,10 +151,7 @@ sub extract_entries {
     $logger->debug('Wanted keys: ' . join(', ', @$keys));
     foreach my $wanted_key (@$keys) {
       $logger->debug("Looking for key '$wanted_key' in BibLaTeXML file '$filename'");
-      # Cache index keys are lower-cased. This next line effectively implements
-      # case insensitive citekeys
-      # FIXME NO IT DOESN'T. NEED TO SEARCH CASE_INSENSITIVE WITH XPATH 1.0
-      if (my @entries = $xpc->findnodes("//$NS:entry[\@id='" . lc($wanted_key) . "']")) {
+      if (my @entries = $xpc->findnodes("//$NS:entry[\@id='$wanted_key']")) {
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
           $logger->warn("Found more than one entry for key '$wanted_key' in '$filename': " .
@@ -195,23 +192,7 @@ sub create_entry {
   my $bibentries = $section->bibentries;
   my $bibentry = new Biber::Entry;
 
-  # Key casing is tricky. We need to note:
-  #
-  # Key matching in biber between .bcf and datasources is case-INSENSITIVE (bibtex compat)
-  # Key matching in biblatex between citations and .bbl is case-SENSITIVE
-  #
-  # So, we must create the .bbl with keys cased as per the .bcf, not the datasource
-  # Therefore, we save to key versions, the original .bcf case and a lowercased variant
-  # for internal operations.
-  my $key_lc = lc($key);
-  $bibentry->set_field('bcfcase_citekey', $key);
-  $bibentry->set_field('citekey', $key_lc);
-
-  # We also record the datasource key in original case in the section object
-  # because there are certain places which need this
-  # (for example shorthand list output) which need to output the key in the
-  # right case but which have no access to entry objects
-  $section->add_bcfkey($key);
+  $bibentry->set_field('citekey', $key);
 
   # Get a reference to the map option, if it exists
   my $user_map;
@@ -257,16 +238,16 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
 
   $bibentry->set_field('entrytype', $entry->getAttribute('entrytype'));
   $bibentry->set_field('datatype', 'biblatexml');
-  $bibentries->add_entry($key_lc, $bibentry);
+  $bibentries->add_entry($key, $bibentry);
 
   return;
 }
 
 # Related entries
 sub _related {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f, $dskey);
+  my $node = _resolve_display_mode($biber, $entry, $f, $key);
   # TODO
   # Current biblatex data model doesn't allow for multiple items here
   foreach my $item ($node->findnodes("./$NS:item")) {
@@ -281,9 +262,9 @@ sub _related {
 
 # Verbatim fields
 sub _verbatim {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f, $dskey);
+  my $node = _resolve_display_mode($biber, $entry, $f, $key);
 
   # eprint is special case
   if ($f eq "$NS:eprint") {
@@ -300,18 +281,18 @@ sub _verbatim {
 
 # List fields
 sub _list {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f, $dskey);
+  my $node = _resolve_display_mode($biber, $entry, $f, $key);
   $bibentry->set_datafield(_norm($to), _split_list($node));
   return;
 }
 
 # Range fields
 sub _range {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f, $dskey);
+  my $node = _resolve_display_mode($biber, $entry, $f, $key);
   # List of ranges/values
   if (my @rangelist = $node->findnodes("./$NS:list/$NS:item")) {
     my $rl;
@@ -333,7 +314,7 @@ sub _range {
 
 # Date fields
 sub _date {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   foreach my $node ($entry->findnodes("./$f")) {
     my $datetype = $node->getAttribute('datetype') // '';
     # We are not validating dates here, just syntax parsing
@@ -351,7 +332,7 @@ sub _date {
         $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
       }
       else {
-        $biber->biber_warn($bibentry, "Invalid format '" . $start->get_node(1)->textContent() . "' of date field '$f' range start in entry '$dskey' - ignoring");
+        $biber->biber_warn($bibentry, "Invalid format '" . $start->get_node(1)->textContent() . "' of date field '$f' range start in entry '$key' - ignoring");
       }
 
       # End of range
@@ -367,7 +348,7 @@ sub _date {
         }
       }
       else {
-        $biber->biber_warn($bibentry, "Invalid format '" . $end->get_node(1)->textContent() . "' of date field '$f' range end in entry '$dskey' - ignoring");
+        $biber->biber_warn($bibentry, "Invalid format '" . $end->get_node(1)->textContent() . "' of date field '$f' range end in entry '$key' - ignoring");
       }
     }
     else { # Simple date
@@ -383,7 +364,7 @@ sub _date {
         $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
       }
       else {
-        $biber->biber_warn($bibentry, "Invalid format '" . $node->textContent() . "' of date field '$f' in entry '$dskey' - ignoring");
+        $biber->biber_warn($bibentry, "Invalid format '" . $node->textContent() . "' of date field '$f' in entry '$key' - ignoring");
       }
     }
   }
@@ -392,10 +373,10 @@ sub _date {
 
 # Name fields
 sub _name {
-  my ($biber, $bibentry, $entry, $f, $to, $dskey) = @_;
+  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f, $dskey);
-  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), lc($dskey));
+  my $node = _resolve_display_mode($biber, $entry, $f, $key);
+  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
   my $names = new Biber::Entry::Names;
   foreach my $name ($node->findnodes("./$NS:person")) {
     $names->add_name(parsename($name, $f, {useprefix => $useprefix}));
@@ -614,9 +595,9 @@ sub _split_list {
 
 # Given an entry and a fieldname, returns the field node with the right language mode
 sub _resolve_display_mode {
-  my ($biber, $entry, $fieldname, $dskey) = @_;
+  my ($biber, $entry, $fieldname, $key) = @_;
   my @nodelist;
-  my $dm = Biber::Config->getblxoption('displaymode', $entry->getAttribute('entrytype'), $dskey);
+  my $dm = Biber::Config->getblxoption('displaymode', $entry->getAttribute('entrytype'), $key);
   $logger->debug("Resolving display mode for '$fieldname' in node " . $entry->nodePath );
   # Either a fieldname specific mode or the default or a last-ditch fallback
   my $modelist = $dm->{_norm($fieldname)} || $dm->{'*'} || ['original'];

@@ -213,7 +213,7 @@ sub get_output_entry {
   $section = '0' if not defined($section); # default - mainly for tests
   # Force a return of undef if there is no output for this key to avoid
   # dereferencing errors in tests
-  my $out = $self->{output_data}{ENTRIES}{$section}{index}{lc($key)};
+  my $out = $self->{output_data}{ENTRIES}{$section}{index}{$key};
   my $out_string = $list->instantiate_entry($out, $key);
   return $out ? $out_string : undef;
 }
@@ -257,7 +257,7 @@ sub set_output_entry {
   my $entry = shift;
   my $section = shift;
   my $struc = shift;
-  $self->{output_data}{ENTRIES}{$section}{index}{lc($entry->get_field('citekey'))} = $entry->dump;
+  $self->{output_data}{ENTRIES}{$section}{index}{$entry->get_field('citekey')} = $entry->dump;
   return;
 }
 

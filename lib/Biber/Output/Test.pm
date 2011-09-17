@@ -81,8 +81,7 @@ sub set_output_entry {
   my $opts = '';
   my $secnum = $section->number;
 
-  my $key = $be->get_field('bcfcase_citekey'); # Original case from .bcf
-  my $key_lc = $be->get_field('citekey');
+  my $key = $be->get_field('citekey');
 
   if ( $be->field_exists('options') ) {
     $opts = filter_entry_options($be->get_field('options'));
@@ -273,7 +272,7 @@ sub set_output_entry {
   $acc .= "  \\endentry\n\n";
 
   # Create an index by keyname for easy retrieval
-  $self->{output_data}{ENTRIES}{$secnum}{index}{$key_lc} = \$acc;
+  $self->{output_data}{ENTRIES}{$secnum}{index}{$key} = \$acc;
   return;
 }
 
@@ -299,7 +298,7 @@ sub output {
       my $listtype = $list->get_type;
       foreach my $k ($list->get_keys) {
         if ($listtype eq 'entry') {
-          my $entry = $data->{ENTRIES}{$secnum}{index}{lc($k)};
+          my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
 
           # Instantiate any dynamic, list specific entry information
           my $entry_string = $list->instantiate_entry($entry, $k);
@@ -312,11 +311,7 @@ sub output {
         }
         elsif ($listtype eq 'shorthand') {
           next if Biber::Config->getblxoption('skiplos', $section->bibentry($k), $k);
-          # We have completely lost the case of the keys by this point so find them again
-          # We have no access here to the entry objects which is why we saved them in the
-          # section object in the driver ...
-          my $bcfkey = $section->get_bcfkey($k);
-          print $target $bcfkey;
+          print $target $k;
         }
       }
     }
