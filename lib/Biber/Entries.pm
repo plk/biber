@@ -42,8 +42,7 @@ sub notnull {
 =cut
 
 sub entry_exists {
-  my $self = shift;
-  my $citekey = lc(shift);
+  my ($self, $citekey) = @_;
   return defined($self->{$citekey}) ? 1 : 0;
 }
 
@@ -55,8 +54,7 @@ sub entry_exists {
 =cut
 
 sub entry {
-  my $self = shift;
-  my $citekey = lc(shift);
+  my ($self, $citekey) = @_;
   return $self->{$citekey};
 }
 
@@ -69,7 +67,7 @@ sub entry {
 sub add_entry {
   my $self = shift;
   my ($key, $entry) = @_;
-  $self->{lc($key)} = $entry;
+  $self->{$key} = $entry;
   return;
 }
 

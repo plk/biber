@@ -260,7 +260,7 @@ sub has_keyword {
   my $self = shift;
   my $keyword = shift;
   if (my $keywords = $self->{datafields}{keywords}) {
-    return (first {lc($_) eq lc($keyword)} split(/\s*,\s*/, $keywords)) ? 1 : 0;
+    return (first {$_ eq $keyword} split(/\s*,\s*/, $keywords)) ? 1 : 0;
   }
   else {
     return 0;

@@ -96,11 +96,9 @@ sub get_listdata {
 =cut
 
 sub set_extrayeardata {
-  my $self = shift;
-  my $key = shift;
-  my $ed = shift;
+  my ($self, $key, $ed) = @_;
   return unless defined($key);
-  $self->{extrayeardata}{lc($key)} = $ed;
+  $self->{extrayeardata}{$key} = $ed;
   return;
 }
 
@@ -111,10 +109,9 @@ sub set_extrayeardata {
 =cut
 
 sub get_extrayeardata {
-  my $self = shift;
-  my $key = shift;
+  my ($self, $key) = @_;
   return unless defined($key);
-  return $self->{extrayeardata}{lc($key)};
+  return $self->{extrayeardata}{$key};
 }
 
 =head2 set_extraalphadata
@@ -124,11 +121,9 @@ sub get_extrayeardata {
 =cut
 
 sub set_extraalphadata {
-  my $self = shift;
-  my $key = shift;
-  my $ed = shift;
+  my ($self, $key, $ed) = @_;
   return unless defined($key);
-  $self->{extraalphadata}{lc($key)} = $ed;
+  $self->{extraalphadata}{$key} = $ed;
   return;
 }
 
@@ -139,10 +134,9 @@ sub set_extraalphadata {
 =cut
 
 sub get_extraalphadata {
-  my $self = shift;
-  my $key = shift;
+  my ($self, $key) = @_;
   return unless defined($key);
-  return $self->{extraalphadata}{lc($key)};
+  return $self->{extraalphadata}{$key};
 }
 
 =head2 set_sortdata
@@ -152,11 +146,9 @@ sub get_extraalphadata {
 =cut
 
 sub set_sortdata {
-  my $self = shift;
-  my $key = shift;
-  my $sd = shift;
+  my ($self, $key, $sd) = @_;
   return unless defined($key);
-  $self->{sortdata}{lc($key)} = $sd;
+  $self->{sortdata}{$key} = $sd;
   return;
 }
 
@@ -167,10 +159,9 @@ sub set_sortdata {
 =cut
 
 sub get_sortdata {
-  my $self = shift;
-  my $key = shift;
+  my ($self, $key) = @_;
   return unless defined($key);
-  return $self->{sortdata}{lc($key)};
+  return $self->{sortdata}{$key};
 }
 
 
@@ -181,11 +172,9 @@ sub get_sortdata {
 =cut
 
 sub set_sortinitdata {
-  my $self = shift;
-  my $key = shift;
-  my $sid = shift;
+  my ($self, $key, $sid) = @_;
   return unless defined($key);
-  $self->{sortinitdata}{lc($key)} = $sid;
+  $self->{sortinitdata}{$key} = $sid;
   return;
 }
 
@@ -197,10 +186,9 @@ sub set_sortinitdata {
 =cut
 
 sub get_sortinitdata {
-  my $self = shift;
-  my $key = shift;
+  my ($self, $key) = @_;
   return unless defined($key);
-  return $self->{sortinitdata}{lc($key)};
+  return $self->{sortinitdata}{$key};
 }
 
 
@@ -279,8 +267,7 @@ sub get_filters {
 =cut
 
 sub set_keys {
-  my $self = shift;
-  my $keys = shift;
+  my ($self, $keys) = @_;
   $self->{keys} = $keys;
   return;
 }

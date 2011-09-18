@@ -538,7 +538,7 @@ sub isexplicitoption {
 
 =head2 setblxoption
 
-    Set a biblatex option on the global or per entry-type scope
+    Set a biblatex option on the appropriate scope
 
 =cut
 
@@ -552,7 +552,7 @@ sub setblxoption {
   }
   else { # Per-type/entry options need to specify type/entry too
     if ($CONFIG_SCOPE_BIBLATEX{$opt}->{$scope}) {
-      $CONFIG->{options}{biblatex}{$scope}{lc($scopeval)}{$opt} = $val;
+      $CONFIG->{options}{biblatex}{$scope}{$scopeval}{$opt} = $val;
     }
   }
   return;
@@ -576,9 +576,9 @@ sub getblxoption {
   my ($opt, $entrytype, $citekey) = @_;
   if ( defined($citekey) and
        $CONFIG_SCOPE_BIBLATEX{$opt}->{PER_ENTRY} and
-       defined $CONFIG->{options}{biblatex}{PER_ENTRY}{lc($citekey)} and
-       defined $CONFIG->{options}{biblatex}{PER_ENTRY}{lc($citekey)}{$opt}) {
-    return $CONFIG->{options}{biblatex}{PER_ENTRY}{lc($citekey)}{$opt};
+       defined $CONFIG->{options}{biblatex}{PER_ENTRY}{$citekey} and
+       defined $CONFIG->{options}{biblatex}{PER_ENTRY}{$citekey}{$opt}) {
+    return $CONFIG->{options}{biblatex}{PER_ENTRY}{$citekey}{$opt};
   }
   elsif (defined($entrytype) and
          $CONFIG_SCOPE_BIBLATEX{$opt}->{PER_TYPE} and
@@ -649,12 +649,12 @@ sub get_seenkey {
   my $key = shift;
   my $section = shift; # If passed, return count for just this section
   if (defined($section)) {
-    return $CONFIG->{state}{seenkeys}{$section}{lc($key)};
+    return $CONFIG->{state}{seenkeys}{$section}{$key};
   }
   else {
     my $count;
     foreach my $section (keys %{$CONFIG->{state}{seenkeys}}) {
-      $count += $CONFIG->{state}{seenkeys}{$section}{lc($key)};
+      $count += $CONFIG->{state}{seenkeys}{$section}{$key};
     }
     return $count;
   }
@@ -673,7 +673,7 @@ sub incr_seenkey {
   shift; # class method so don't care about class name
   my $key = shift;
   my $section = shift;
-  $CONFIG->{state}{seenkeys}{$section}{lc($key)}++;
+  $CONFIG->{state}{seenkeys}{$section}{$key}++;
   return;
 }
 
@@ -1171,7 +1171,7 @@ sub get_crossrefkeys {
 sub get_crossrefkey {
   shift; # class method so don't care about class name
   my $k = shift;
-  return $CONFIG->{state}{crossrefkeys}{lc($k)};
+  return $CONFIG->{state}{crossrefkeys}{$k};
 }
 
 =head2 del_crossrefkey
@@ -1185,8 +1185,8 @@ sub get_crossrefkey {
 sub del_crossrefkey {
   shift; # class method so don't care about class name
   my $k = shift;
-  if (exists($CONFIG->{state}{crossrefkeys}{lc($k)})) {
-    delete $CONFIG->{state}{crossrefkeys}{lc($k)};
+  if (exists($CONFIG->{state}{crossrefkeys}{$k})) {
+    delete $CONFIG->{state}{crossrefkeys}{$k};
   }
   return;
 }
@@ -1202,7 +1202,7 @@ sub del_crossrefkey {
 sub incr_crossrefkey {
   shift; # class method so don't care about class name
   my $k = shift;
-  $CONFIG->{state}{crossrefkeys}{lc($k)}++;
+  $CONFIG->{state}{crossrefkeys}{$k}++;
   return;
 }
 
@@ -1225,9 +1225,8 @@ sub incr_crossrefkey {
 
 sub set_displaymode {
   shift; # class method so don't care about class name
-  my ($val, $entrytype, $fieldtype, $citekey) = @_;
+  my ($val, $entrytype, $fieldtype, $key) = @_;
   if ($citekey) {
-    my $key = lc($citekey);
     if ($fieldtype) {
       $CONFIG->{displaymodes}{PER_FIELD}{$key}{$fieldtype} = $val;
     }
@@ -1262,10 +1261,9 @@ sub set_displaymode {
 
 sub get_displaymode {
   shift; # class method so don't care about class name
-  my ($entrytype, $fieldtype, $citekey) = @_;
+  my ($entrytype, $fieldtype, $key) = @_;
   my $dm;
   if ($citekey) {
-    my $key = lc($citekey);
     if ($fieldtype and
       defined($CONFIG->{displaymodes}{PER_FIELD}) and
       defined($CONFIG->{displaymodes}{PER_FIELD}{$key}) and

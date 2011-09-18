@@ -734,9 +734,9 @@ is( $out->get_output_entry($main,'L29'), $l29, 'Escaped name with 3 commas');
 
 # Checking visibility
 # Count does not include the "and others" as this "name" is delete in the output driver
-is($bibentries->entry('V1')->get_field($bibentries->entry('v1')->get_field('labelnamename'))->count_names, '2', 'Name count for "and others" - 1');
-is($bibentries->entry('V1')->get_field($bibentries->entry('v1')->get_field('labelnamename'))->get_visible_cite, '2', 'Visibility for "and others" - 1');
-is($bibentries->entry('V2')->get_field($bibentries->entry('v2')->get_field('labelnamename'))->get_visible_cite, '1', 'Visibility for "and others" - 2');
+is($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_field('labelnamename'))->count_names, '2', 'Name count for "and others" - 1');
+is($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_field('labelnamename'))->get_visible_cite, '2', 'Visibility for "and others" - 1');
+is($bibentries->entry('V2')->get_field($bibentries->entry('V2')->get_field('labelnamename'))->get_visible_cite, '1', 'Visibility for "and others" - 2');
 
 # A few tests depend set to non UTF-8 output
 # Have to use a new biber object when trying to change encoding as this isn't
@@ -757,7 +757,7 @@ $section = $biber->sections->get_section(0);
 $main = $section->get_list('MAIN');
 $bibentries = $section->bibentries;
 
-is_deeply($bibentries->entry('l21')->get_field($bibentries->entry('l21')->get_field('labelnamename'))->nth_name(1)->get_firstname_i, ['{\v S}'], 'Terseinitials 1');
+is_deeply($bibentries->entry('L21')->get_field($bibentries->entry('L21')->get_field('labelnamename'))->nth_name(1)->get_firstname_i, ['{\v S}'], 'Terseinitials 1');
 is( $out->get_output_entry($main,'L12'), $l12, 'First First First First prefix prefix Last Last') ;
 is( $out->get_output_entry($main,'L21'), $l21, 'LaTeX encoded unicode firstname');
 is( $out->get_output_entry($main,'L22'), $l22, 'LaTeX encoded unicode lastname');

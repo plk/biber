@@ -68,9 +68,7 @@ sub is_allkeys {
 =cut
 
 sub bibentry {
-  my $self = shift;
-  my $key = shift;
-  $key = lc($key);
+  my ($self, $key) = @_;
   return $self->bibentries->entry($key);
 }
 
@@ -187,7 +185,7 @@ sub get_orig_order_citekeys {
 sub has_citekey {
   my $self = shift;
   my $key = shift;
-  return $self->{citekeys_h}{lc($key)} ? 1 : 0;
+  return $self->{citekeys_h}{$key} ? 1 : 0;
 }
 
 

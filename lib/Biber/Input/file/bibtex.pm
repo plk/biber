@@ -160,11 +160,13 @@ sub extract_entries {
       $logger->debug("Looking for key '$wanted_key' in Text::BibTeX cache");
       if (my $entry = $cache->{data}{$filename}{$wanted_key}) {
         $logger->debug("Found key '$wanted_key' in Text::BibTeX cache");
-        # See comment above about the importance of the case of the key
-        # passed to create_entry()
         create_entry($biber, $wanted_key, $entry);
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
+      }
+      elsif  (my $okey = $biber->has_badcasekey($wanted_key)) {
+        $logger->warn("Possible typo (case mismatch) between citation and datasource keys: '$wanted_key' and '$okey' in file '$filename'");
+        $biber->{warnings}++;
       }
       $logger->debug('Wanted keys now: ' . join(', ', @rkeys));
     }
@@ -629,15 +631,17 @@ sub cache_data {
     # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing utf8 keys
     my $key = decode_utf8($entry->key);
 
-
     # If we've already seen a case variant, warn
-    if  (my $okey = $biber->has_everydupkey($key)) {
-      $logger->warn("Possible typo (case mismatch): '$key' and '$okey' in file '$filename', skipping '$key' ...");
+    # This is case mismatch test of datasource entries with other datasource entries
+    if  (my $okey = $biber->has_badcasekey($key)) {
+      $logger->warn("Possible typo (case mismatch) between datasource keys: '$key' and '$okey' in file '$filename'");
+      $biber->{warnings}++;
     }
 
-    # If we've already seen this key, ignore it and warn
+    # If we've already seen this key in a datasource, ignore it and warn
     if  ($biber->has_everykey($key)) {
       $logger->warn("Duplicate entry key: '$key' in file '$filename', skipping ...");
+      $biber->{warnings}++;
       next;
     }
     else {
@@ -647,6 +651,7 @@ sub cache_data {
     # Bad entry
     unless ($entry->parse_ok) {
       $logger->warn("Entry $key does not parse correctly: skipping");
+      $biber->{warnings}++;
       next;
     }
 

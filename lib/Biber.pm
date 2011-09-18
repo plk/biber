@@ -136,17 +136,19 @@ sub has_everykey {
   return $self->{everykey}{$key} ? 1 : 0;
 }
 
-=head2 has_everydupkey
+=head2 has_badcasekey
 
-    Returns a value to say if we've seen a key in any datasource.
+    Returns a value to say if we've seen a key differing only in case before
     <previouskey>  - we've seen a differently cased variant of this key so we can warn about this
-    0  - Not seen this key at all in any case variant before
+    undef  - Not seen this key at all in any case variant before
 
 =cut
 
-sub has_everydupkey {
+sub has_badcasekey {
   my ($self, $key) = @_;
-  return $self->{everykey_lc}{lc($key)} // undef;
+  my $ckey = $self->{everykey_lc}{lc($key)};
+  return undef unless $ckey;
+  return $ckey ne $key ? $ckey : undef;
 }
 
 
@@ -2336,8 +2338,8 @@ sub generate_extra {
     my $be = $section->bibentry($key);
     my $bee = $be->get_field('entrytype');
     # Only generate extrayear and extraalpha if skiplab is not set.
-    # Don't forget that skiplab is implied for set members
-    unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
+    # Don't forget that skiplab is implied for set members 
+   unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
       # extrayear
       if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
         my $nameyear = $be->get_field('nameyear');

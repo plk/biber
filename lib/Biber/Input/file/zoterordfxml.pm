@@ -130,7 +130,7 @@ sub extract_entries {
       $ek =~ s/\A\#item_/item_/xms;
 
       # If we've already seen a case variant, warn
-      if (my $okey = $biber->has_everydupkey($ek)) {
+      if (my $okey = $biber->has_badcasekey($ek)) {
         $logger->warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
       }
 
