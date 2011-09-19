@@ -23,6 +23,7 @@ my $builder = $class->new(
     dist_version_from   => 'lib/Biber/Config.pm',
     build_recommends => {
        'Test::More'   => 0,
+       'File::Which'  => 0,
     },
     add_to_cleanup      => [ 'biber-*' ],
     configure_requires => { 'Module::Build' => 0.38 },
