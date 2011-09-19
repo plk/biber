@@ -2,7 +2,6 @@
   * Remove 'use feature ':5.10';', uncomment 'use 5.014001;' in all files
   * Get windows and cygwin installed with modules, test builds, check link
     lines in build scripts
-  * Change build script (deprecated module) in cygwin build
   * Change perl version requirements in doc
   * strings pragma and array/hash refs
 * TODO When biblatex implements mapping, remove greyed and add line from .bcf to remap in Figure 1 in docs
