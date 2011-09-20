@@ -28,6 +28,8 @@ sub new {
   $self->{citekeys} = [];
   $self->{citekeys_h} = {}; # For faster hash-based lookup of individual keys
   $self->{labelcache_l} = {};
+  $self->{everykey} = {};
+  $self->{everykey_lc} = {};
   $self->{bcfkeycache} = {};
   $self->{labelcache_v} = {};
   $self->{sortcache} = [];
@@ -36,6 +38,50 @@ sub new {
   $self->{undef_citekeys} = [];
   return $self;
 }
+
+=head2 has_badcasekey
+
+    Returns a value to say if we've seen a key differing only in case before
+    <previouskey>  - we've seen a differently cased variant of this key so we can warn about this
+    undef  - Not seen this key at all in any case variant before
+
+=cut
+
+sub has_badcasekey {
+  my ($self, $key) = @_;
+  my $ckey = $self->{everykey_lc}{lc($key)};
+  return undef unless $ckey;
+  return $ckey ne $key ? $ckey : undef;
+}
+
+
+=head2 add_everykey
+
+    Adds a datasource key to the section list of all datasource keys
+
+=cut
+
+sub add_everykey {
+  my ($self, $key) = @_;
+  $self->{everykey}{$key} = 1;
+  $self->{everykey_lc}{lc($key)} = $key;
+  return;
+}
+
+
+=head2 has_everykey
+
+    Returns a boolean to say if we've seen a key in any datasource for this section.
+    This used to be an array ref which was checked using first() and it
+    was twenty times slower.
+
+=cut
+
+sub has_everykey {
+  my ($self, $key) = @_;
+  return $self->{everykey}{$key} ? 1 : 0;
+}
+
 
 =head2 allkeys
 

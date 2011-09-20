@@ -164,7 +164,7 @@ sub extract_entries {
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
-      elsif  (my $okey = $biber->has_badcasekey($wanted_key)) {
+      elsif  (my $okey = $section->has_badcasekey($wanted_key)) {
         $logger->warn("Possible typo (case mismatch) between citation and datasource keys: '$wanted_key' and '$okey' in file '$filename'");
         $biber->{warnings}++;
       }
@@ -603,6 +603,9 @@ sub _list {
 
 sub cache_data {
   my ($biber, $filename) = @_;
+  my $secnum = $biber->get_current_section;
+  my $section = $biber->sections->get_section($secnum);
+
   # Initialise this
   $cache->{preamble}{$filename} = [];
 
@@ -633,19 +636,19 @@ sub cache_data {
 
     # If we've already seen a case variant, warn
     # This is case mismatch test of datasource entries with other datasource entries
-    if  (my $okey = $biber->has_badcasekey($key)) {
+    if  (my $okey = $section->has_badcasekey($key)) {
       $logger->warn("Possible typo (case mismatch) between datasource keys: '$key' and '$okey' in file '$filename'");
       $biber->{warnings}++;
     }
 
     # If we've already seen this key in a datasource, ignore it and warn
-    if  ($biber->has_everykey($key)) {
+    if  ($section->has_everykey($key)) {
       $logger->warn("Duplicate entry key: '$key' in file '$filename', skipping ...");
       $biber->{warnings}++;
       next;
     }
     else {
-      $biber->add_everykey($key);
+      $section->add_everykey($key);
     }
 
     # Bad entry

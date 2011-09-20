@@ -123,49 +123,6 @@ sub sections {
 }
 
 
-=head2 has_everykey
-
-    Returns a boolean to say if we've seen a key in any datasource.
-    This used to be an array ref which was checked using first() and it
-    was twenty times slower.
-
-=cut
-
-sub has_everykey {
-  my ($self, $key) = @_;
-  return $self->{everykey}{$key} ? 1 : 0;
-}
-
-=head2 has_badcasekey
-
-    Returns a value to say if we've seen a key differing only in case before
-    <previouskey>  - we've seen a differently cased variant of this key so we can warn about this
-    undef  - Not seen this key at all in any case variant before
-
-=cut
-
-sub has_badcasekey {
-  my ($self, $key) = @_;
-  my $ckey = $self->{everykey_lc}{lc($key)};
-  return undef unless $ckey;
-  return $ckey ne $key ? $ckey : undef;
-}
-
-
-=head2 add_everykey
-
-    Adds a datasource key to the global list of all datasource keys
-
-=cut
-
-sub add_everykey {
-  my ($self, $key) = @_;
-  $self->{everykey}{$key} = 1;
-  $self->{everykey_lc}{lc($key)} = $key;
-  return;
-}
-
-
 =head2 set_output_obj
 
     Sets the object used to output final results
@@ -807,9 +764,6 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
 sub process_setup {
   my $self = shift;
-  # reset global datasource key caches
-  $self->{everykey} = {};
-  $self->{everykey_lc} = {};
 
   # Break structure information up into more processing-friendly formats
   # for use in verification checks later

@@ -132,17 +132,17 @@ sub extract_entries {
 
       my $ek = $entry->{ID};
       # If we've already seen a case variant, warn
-      if (my $okey = $biber->has_badcasekey($ek)) {
+      if (my $okey = $section->has_badcasekey($ek)) {
         $logger->warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
       }
 
       # If we've already seen this key, ignore it and warn
-      if ($biber->has_everykey($ek)) {
+      if ($section->has_everykey($ek)) {
         $logger->warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
         next;
       }
       else {
-        $biber->add_everykey($ek);
+        $section->add_everykey($ek);
       }
 
       # We do this as otherwise we have no way of determining the origing .bib entry order
