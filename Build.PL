@@ -7,12 +7,20 @@ my $class = Module::Build->subclass
   (
    class => 'My::Builder',
    code => q{
+
        sub ACTION_test {
          my $self = shift;
          $ENV{'LANG'} = 'C'; # set LANG to something known for tests
          $self->SUPER::ACTION_test;
        }
-     },
+
+       sub ACTION_docs {
+         my $self = shift;
+         $self->depends_on('code');
+         $self->depends_on('manpages'); # skip html on perls where it's enabled
+      }
+
+     }
   );
 
 my $builder = $class->new(
