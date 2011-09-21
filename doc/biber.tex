@@ -1334,21 +1334,24 @@ in your \verb+.emacs+.
     (cond
      ;; Check whether Biber reports any warnings or errors.
      ((re-search-backward (concat
-                           "^(There \\(?:was\\|were\\) \\([0-9]+\\) "
-                           "\\(warnings?\\|error messages?\\))") nil t)
-      ;; Tell the user their number so that she sees whether the
-      ;; situation is getting better or worse.
+                           "^INFO - \\(WARNINGS\\|ERRORS\\): \\([0-9]+\\)") nil t)
       (message (concat "Biber finished with %s %s. "
                        "Type `%s' to display output.")
-               (match-string 1) (match-string 2)
+               (match-string 2) (downcase (match-string 1))
+               (substitute-command-keys
+                "\\<TeX-mode-map>\\[TeX-recenter-output-buffer]")))
+     ((re-search-backward (concat
+                           "^FATAL") nil t)
+      (message (concat "Biber had a fatal error and did not finish! "
+                       "Type `%s' to display output.")
                (substitute-command-keys
                 "\\<TeX-mode-map>\\[TeX-recenter-output-buffer]")))
      (t
       (message (concat "Biber finished successfully. "
                        "Run LaTeX again to get citations right."))))
     (setq TeX-command-next TeX-command-default))
-         )
   )
+)
 \end{verbatim}
 \normalsize
 
