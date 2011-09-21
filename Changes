@@ -1,6 +1,8 @@
 Revision history for Biber
 
 0.9.6  (unreleased)
+       * Warnings/error summary is now a more consistent format with all
+         other biber messages.
        * Matching of .bcf keys to datasource keys is now CASE_SENSITIVE
        * Fixed biblatex bug tracker ticket #3399744
        * Fixed bug tracker ticket #3402114

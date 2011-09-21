@@ -85,6 +85,14 @@ messy to enforce case-insensitivity in only \texttt{biber}'s matching of
 citations keys to datasource entry keys. If \texttt{biber} detects what
 looks like a case mismatch between citation keys, it will warn you.
 
+\noindent \textcolor{red}{Summary of warnings/errors is now a new format}.
+When \verb+biber+ finishes writing the \verb+.bbl+, it gives a summary
+count of errors/warnings. It used to do this in the same format as
+\verb+bibtex+, for compatibility. Now it uses a more consistent and easier
+to parse format which matches all other \verb+biber+ messages. Please note
+if you need to support \verb+biber+ in an external tool. I have updated the
+notes on AUCTeX support below to reflect this.
+
 \section{Introduction}\label{int}
 
 \subsection{About}
